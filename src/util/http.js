@@ -1,7 +1,7 @@
 // ajax全局设置
 
-import axios from "axios"
-import store from "../store"
+import axios from 'axios'
+import store from '../store'
 
 var service = axios.create({
     baseURL: '',

@@ -4,6 +4,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import axios from './util/http'
+import store from './store'
 // 引入ElementUI全部组件，也可以部分引入
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -11,11 +13,13 @@ import 'babel-polyfill'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
-
+Vue.prototype.$axios = axios
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
+    el: '#app',
+    axios,
+    store,
+    router,
+    components: {App},
+    template: '<App/>'
 })
