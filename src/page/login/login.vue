@@ -38,7 +38,7 @@
 <script>
     export default {
         name: 'login',
-        data () {
+        data() {
             var validateAccount = (rule, value, callback) => {
                 if (!value) {
                     return callback(new Error('用户名不能为空'))
@@ -49,7 +49,7 @@
             var validatePass = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请输入密码'))
-                } else if (!/^[/da-zA-Z]{6,8}$/.test(value)) {
+                } else if (!/^[\da-zA-Z]{6,8}$/.test(value)) {
                     callback(new Error('请输入6-8位密码!'))
                 } else {
                     callback()
@@ -73,7 +73,8 @@
         },
         methods: {
             // 登录
-            login () {
+            login() {
+                var _this = this
                 this.$refs.login.validate((valid) => {
                     if (valid) {
                         this.$axios.post('/register', this.formData).then(function (response) {
@@ -81,20 +82,19 @@
                         }).catch(function (err) {
                             console.log(err)
                         })
-                        this.$message('登录中...')
-                        this.$notify({
-                            title: '成功',
-                            message: '登录成功',
-                            type: 'success',
-                            duration: 2000
-                        })
+                        setTimeout(function () {
+                            _this.$router.push({name: 'home'})
+                        }, 3000)
                     } else {
+                        setTimeout(function () {
+                            _this.$router.push({name: 'home'})
+                        }, 3000)
                         return false
                     }
                 })
             },
             // 跳转注册
-            register () {
+            register() {
                 this.$router.push({name: 'register'})
             }
         }
