@@ -52,37 +52,37 @@
         name: 'register',
         data() {
             var checkPhone = (rule, value, callback) => {
-                if (!value) {
+                if (!this.trim(value)) {
                     return callback(new Error('手机号码不能为空'))
-                } else if (!Number.isInteger(value)) {
+                } else if (!Number.isInteger(this.trim(value))) {
                     callback(new Error('请输入数字值'))
-                } else if (!/^[\d]{11,12}$/.test(value)) {
+                } else if (!/^1[0-9]\d{10}$/.test(this.trim(value))) {
                     callback(new Error('请填写11位手机号码'))
                 } else {
                     callback()
                 }
             }
             var checkCode = (rule, value, callback) => {
-                if (!value) {
+                if (!this.trim(value)) {
                     return callback(new Error('短信验证码不能为空'))
                 } else {
                     callback()
                 }
             }
             var validatePass = (rule, value, callback) => {
-                if (value === '') {
+                if (this.trim(value) === '') {
                     callback(new Error('请输入密码'))
                 } else {
                     if (this.registerData.checkPass !== '') {
-                        this.$refs.registerData.validateField('checkPass')
+                        this.$refs.register.validateField('checkPass')
                     }
                     callback()
                 }
             }
             var validatePass2 = (rule, value, callback) => {
-                if (value === '') {
+                if (this.trim(value) === '') {
                     callback(new Error('请再次输入密码'))
-                } else if (value !== this.registerData.pass) {
+                } else if (this.trim(value) !== this.registerData.pass) {
                     callback(new Error('两次输入密码不一致!'))
                 } else {
                     callback()
@@ -116,11 +116,23 @@
         methods: {
             // 发送短信验证码
             sendVerifyCode() {
+                let _this = this
                 this.$refs.register.validateField('phoneNumber', (errMessage) => {
                     if (!errMessage) {
-                        // 发送短信验证码
                         this.codeMsg = '发送中...'
                         this.sendCodeDisabled = true
+                        // 发送短信验证码
+                        let delayTime = 10
+                        const timer = setInterval(
+                            () => {
+                                _this.codeMsg = '已发送(' + delayTime + 's)'
+                                delayTime--
+                                if (delayTime === -1) {
+                                    clearInterval(timer)
+                                    this.sendCodeDisabled = false
+                                    this.codeMsg = '重新点击发送验证码'
+                                }
+                            }, 1000)
                     } else {
                         return false
                     }
@@ -130,9 +142,9 @@
             register() {
                 this.$refs.register.validate((valid) => {
                     if (valid) {
-                        alert('submit!')
+                        // 请求注册接口
+                        this.$message('注册成功')
                     } else {
-                        console.log('error submit!!')
                         return false
                     }
                 })
@@ -143,6 +155,10 @@
             // 去登陆
             login() {
                 this.$router.push({name: 'login'})
+            },
+            // 去除字符的前后所有空格
+            trim(value) {
+                return value.toString().replace(/(^\s*) | (\s*$)/g, '')
             }
         }
     }

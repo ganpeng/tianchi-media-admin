@@ -40,16 +40,18 @@
         name: 'login',
         data() {
             var validateAccount = (rule, value, callback) => {
-                if (!value) {
+                if (!this.trim(value)) {
                     return callback(new Error('用户名不能为空'))
+                } else if (!/^1[0-9]{10}$/.test(this.trim(value))) {
+                    return callback(new Error('请填写正确账号'))
                 } else {
                     callback()
                 }
             }
             var validatePass = (rule, value, callback) => {
-                if (value === '') {
+                if (this.trim(value) === '') {
                     callback(new Error('请输入密码'))
-                } else if (!/^[\da-zA-Z]{6,8}$/.test(value)) {
+                } else if (!/^[\da-zA-Z]{6,8}$/.test(this.trim(value))) {
                     callback(new Error('请输入6-8位密码!'))
                 } else {
                     callback()
@@ -96,6 +98,10 @@
             // 跳转注册
             register() {
                 this.$router.push({name: 'register'})
+            },
+            // 去除字符的前后所有空格
+            trim(value) {
+                return value.toString().replace(/(^\s*) | (\s*$)/g, '')
             }
         }
     }
