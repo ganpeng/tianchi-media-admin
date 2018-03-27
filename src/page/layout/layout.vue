@@ -1,0 +1,63 @@
+<!--网页布局，包含页头、页脚、侧边栏以及主内容区-->
+<template>
+    <el-container class="main-container">
+        <el-header>
+            <!--页头-->
+            <v-header></v-header>
+        </el-header>
+        <el-container>
+            <!--侧边栏-->
+            <v-aside></v-aside>
+            <el-container>
+                <el-main>
+                    <!--主内容区-->
+                    <router-view></router-view>
+                </el-main>
+                <el-footer>
+                    <!--页脚-->
+                    <v-footer></v-footer>
+                </el-footer>
+            </el-container>
+        </el-container>
+    </el-container>
+</template>
+
+<script>
+    import vHeader from './vHeader.vue'
+    import vFooter from './vFooter.vue'
+    import vAside from './vAside.vue'
+
+    export default {
+        name: 'layout',
+        components: {
+            vHeader,
+            vAside,
+            vFooter
+        },
+        data() {
+            return {}
+        },
+        methods: {}
+    }
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="less">
+    .main-container {
+        height: 100%;
+    }
+
+    .el-header, .el-footer {
+        background-color: #B3C0D1;
+        color: #333;
+        text-align: center;
+        line-height: 60px;
+    }
+
+    .el-main {
+        background-color: #E9EEF3;
+        color: #333;
+        text-align: center;
+        line-height: 160px;
+    }
+</style>
