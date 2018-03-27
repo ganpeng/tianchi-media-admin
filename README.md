@@ -37,4 +37,6 @@ npm test
 
 you need install arc certificate in project root dir
 
+this is a new test
+
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
