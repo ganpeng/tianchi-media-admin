@@ -18,7 +18,7 @@
                                   placeholder="请输入密码"></el-input>
                     </el-form-item>
                     <el-form-item class="login-box">
-                        <el-button type="primary" @click="login">登录</el-button>
+                        <el-button type="primary" @click="submitForm">登录</el-button>
                     </el-form-item>
                     <el-form-item>
                         <el-checkbox label="记住密码" name="type" v-model="memory"></el-checkbox>
@@ -36,10 +36,11 @@
 </template>
 
 <script>
+
     export default {
         name: 'login',
         data() {
-            var validateAccount = (rule, value, callback) => {
+            let validateAccount = (rule, value, callback) => {
                 if (!this.trim(value)) {
                     return callback(new Error('用户名不能为空'))
                 } else if (!/^1[0-9]{10}$/.test(this.trim(value))) {
@@ -48,7 +49,7 @@
                     callback()
                 }
             }
-            var validatePass = (rule, value, callback) => {
+            let validatePass = (rule, value, callback) => {
                 if (this.trim(value) === '') {
                     callback(new Error('请输入密码'))
                 } else if (!/^[\da-zA-Z]{6,8}$/.test(this.trim(value))) {
@@ -75,14 +76,14 @@
         },
         methods: {
             // 登录
-            login() {
-                var _this = this
+            submitForm() {
+                let _this = this
                 this.$refs.login.validate((valid) => {
                     if (valid) {
-                        this.$axios.post('/register', this.formData).then(function (response) {
-                            console.log(response)
-                        }).catch(function (err) {
-                            console.log(err)
+                        this.$store.store.dispatch('user/login', this.formData).then(res => {
+                            console.log(res)
+                        }).catch(err => {
+                            console.error(err)
                         })
                         setTimeout(function () {
                             _this.$router.push({name: 'home'})
