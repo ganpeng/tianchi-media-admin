@@ -25,6 +25,7 @@
                 switch (command) {
                     // 跳转到设置页面
                     case 'set':
+                        this.$router.push({name: 'infoSetting'})
                         break
                     // 退出登录
                     case 'logout':

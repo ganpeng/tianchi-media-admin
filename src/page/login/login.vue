@@ -11,7 +11,7 @@
                 <el-form :model="formData" status-icon :rules="rules" ref="login" label-width="50px"
                          class="demo-ruleForm">
                     <el-form-item label="账号" prop="account" class="input-box">
-                        <el-input v-model="formData.account" auto-complete="off" placeholder="请输入账号"></el-input>
+                        <el-input v-model="formData.account" auto-complete="off" placeholder="请输入工作邮箱或者手机号码"></el-input>
                     </el-form-item>
                     <el-form-item label="密码" prop="pass" class="input-box">
                         <el-input type="password" v-model="formData.pass" auto-complete="off"
@@ -22,7 +22,7 @@
                     </el-form-item>
                     <el-form-item>
                         <el-checkbox label="记住密码" name="type" v-model="memory"></el-checkbox>
-                        <label @click="register">注册</label>
+                        <label @click="retrievePass">忘记密码</label>
                     </el-form-item>
                 </el-form>
             </div>
@@ -36,23 +36,24 @@
 </template>
 
 <script>
+    import util from '../../util/extend'
 
     export default {
         name: 'login',
         data() {
             let validateAccount = (rule, value, callback) => {
-                if (!this.trim(value)) {
+                if (!util.trim(value)) {
                     return callback(new Error('用户名不能为空'))
-                } else if (!/^1[0-9]{10}$/.test(this.trim(value))) {
+                } else if (!/^1[0-9]{10}$/.test(util.trim(value))) {
                     return callback(new Error('请填写正确账号'))
                 } else {
                     callback()
                 }
             }
             let validatePass = (rule, value, callback) => {
-                if (this.trim(value) === '') {
+                if (util.trim(value) === '') {
                     callback(new Error('请输入密码'))
-                } else if (!/^[\da-zA-Z]{6,8}$/.test(this.trim(value))) {
+                } else if (!/^[\da-zA-Z]{6,8}$/.test(util.trim(value))) {
                     callback(new Error('请输入6-8位密码!'))
                 } else {
                     callback()
@@ -96,9 +97,9 @@
                     }
                 })
             },
-            // 跳转注册
-            register() {
-                this.$router.push({name: 'register'})
+            // 跳转找回密码
+            retrievePass() {
+                this.$router.push({name: 'retrievePassword'})
             },
             // 去除字符的前后所有空格
             trim(value) {

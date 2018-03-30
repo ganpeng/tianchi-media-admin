@@ -2,13 +2,12 @@
     <el-container class="register-container">
         <el-header>
             <img src="../../assets/images/logo.png">
-            <label>后台管理系统 | 注册</label>
+            <label>后台管理系统 | 找回密码</label>
         </el-header>
         <el-main>
             <div class="form-box">
                 <div class="login-box">
                     <label>
-                        我已注册，
                         <i class="login" @click="login">直接登录</i>
                         <i class="el-icon-arrow-right"></i>
                     </label>
@@ -25,16 +24,16 @@
                                    :disabled="sendCodeDisabled">{{codeMsg}}
                         </el-button>
                     </el-form-item>
-                    <el-form-item label="密码" prop="pass">
-                        <el-input type="password" v-model="registerData.pass" auto-complete="off"
+                    <el-form-item label="密码" prop="password">
+                        <el-input type="password" v-model="registerData.password" auto-complete="off"
                                   placeholder="请填写密码"></el-input>
                     </el-form-item>
-                    <el-form-item label="确认密码" prop="checkPass">
-                        <el-input type="password" v-model="registerData.checkPass" auto-complete="off"
+                    <el-form-item label="确认密码" prop="checkPassword">
+                        <el-input type="password" v-model="registerData.checkPassword" auto-complete="off"
                                   placeholder="请再次确认密码"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="register">注册</el-button>
+                        <el-button type="primary" @click="retrievePassword">找回密码</el-button>
                         <el-button @click="resetForm">重置</el-button>
                     </el-form-item>
                 </el-form>
@@ -48,41 +47,43 @@
 </template>
 
 <script>
+    import util from '../../util/extend'
+
     export default {
-        name: 'register',
+        name: 'retrievePassword',
         data() {
-            var checkPhone = (rule, value, callback) => {
-                if (!this.trim(value)) {
+            let checkPhone = (rule, value, callback) => {
+                if (!util.trim(value)) {
                     return callback(new Error('手机号码不能为空'))
-                } else if (!Number.isInteger(this.trim(value))) {
+                } else if (!Number.isInteger(util.trim(value))) {
                     callback(new Error('请输入数字值'))
-                } else if (!/^1[0-9]\d{10}$/.test(this.trim(value))) {
+                } else if (!/^1[0-9]\d{10}$/.test(util.trim(value))) {
                     callback(new Error('请填写11位手机号码'))
                 } else {
                     callback()
                 }
             }
-            var checkCode = (rule, value, callback) => {
-                if (!this.trim(value)) {
+            let checkCode = (rule, value, callback) => {
+                if (!util.trim(value)) {
                     return callback(new Error('短信验证码不能为空'))
                 } else {
                     callback()
                 }
             }
-            var validatePass = (rule, value, callback) => {
-                if (this.trim(value) === '') {
+            let validatePassword = (rule, value, callback) => {
+                if (util.trim(value) === '') {
                     callback(new Error('请输入密码'))
                 } else {
-                    if (this.registerData.checkPass !== '') {
-                        this.$refs.register.validateField('checkPass')
+                    if (this.registerData.checkPassword !== '') {
+                        this.$refs.register.validateField('checkPassword')
                     }
                     callback()
                 }
             }
-            var validatePass2 = (rule, value, callback) => {
-                if (this.trim(value) === '') {
+            let validatePassword2 = (rule, value, callback) => {
+                if (util.trim(value) === '') {
                     callback(new Error('请再次输入密码'))
-                } else if (this.trim(value) !== this.registerData.pass) {
+                } else if (util.trim(value) !== this.registerData.password) {
                     callback(new Error('两次输入密码不一致!'))
                 } else {
                     callback()
@@ -91,8 +92,8 @@
             return {
                 registerData: {
                     phoneNumber: '',
-                    pass: '',
-                    checkPass: '',
+                    password: '',
+                    checkPassword: '',
                     code: ''
                 },
                 codeMsg: '点击发送短信验证码',
@@ -104,11 +105,11 @@
                     code: [
                         {validator: checkCode, trigger: 'blur'}
                     ],
-                    pass: [
-                        {validator: validatePass, trigger: 'blur'}
+                    password: [
+                        {validator: validatePassword, trigger: 'blur'}
                     ],
-                    checkPass: [
-                        {validator: validatePass2, trigger: 'blur'}
+                    checkPassword: [
+                        {validator: validatePassword2, trigger: 'blur'}
                     ]
                 }
             }
@@ -138,12 +139,12 @@
                     }
                 })
             },
-            // 注册
-            register() {
+            // 提交表单，找回密码
+            retrievePassword() {
                 this.$refs.register.validate((valid) => {
                     if (valid) {
-                        // 请求注册接口
-                        this.$message('注册成功')
+                        // 请求找回密码接口
+                        this.$message('找回密码成功')
                     } else {
                         return false
                     }
