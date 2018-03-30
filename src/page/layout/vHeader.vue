@@ -14,6 +14,7 @@
 </template>
 
 <script>
+
     export default {
         name: 'vHeader',
         data() {
@@ -27,7 +28,15 @@
                         break
                     // 退出登录
                     case 'logout':
-                        this.$router.push({name: 'login'})
+                        this.$store.store.dispatch('user/logout').then(() => {
+                            this.$router.push({
+                                name: 'login'
+                            })
+                        }).catch(err => {
+                            console.error(err)
+                        })
+                        break
+                    default:
                         break
                 }
             }
