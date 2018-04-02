@@ -1,32 +1,33 @@
-<!--个人中心信息设置组件-->
+<!--管理员详情组件-->
 <template>
     <div>
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>个人中心</el-breadcrumb-item>
-            <el-breadcrumb-item>信息设置</el-breadcrumb-item>
+            <el-breadcrumb-item>管理员管理</el-breadcrumb-item>
+            <el-breadcrumb-item>管理员列表</el-breadcrumb-item>
+            <el-breadcrumb-item>管理员详情</el-breadcrumb-item>
         </el-breadcrumb>
         <el-row>
             <el-col :span="10">
-                <div class="block-title">我的信息</div>
+                <div class="block-title">管理员信息</div>
                 <div class="grid-content bg-purple">
-                    <el-form :model="updateInfo" :rules="infoRules" :status-icon='editStatus' ref="updateInfo"
+                    <el-form :model="adminInfo" :rules="infoRules" :status-icon='editStatus' ref="adminInfo"
                              label-width="100px"
                              class="demo-ruleForm">
                         <el-form-item label="姓名" prop="name">
-                            <el-input v-model="updateInfo.name" readonly></el-input>
+                            <el-input v-model="adminInfo.name" readonly></el-input>
                         </el-form-item>
                         <el-form-item label="部门" prop="department">
-                            <el-input v-model="updateInfo.department" readonly></el-input>
+                            <el-input v-model="adminInfo.department" readonly></el-input>
                         </el-form-item>
                         <el-form-item label="职位" prop="position">
-                            <el-input v-model="updateInfo.position" readonly></el-input>
+                            <el-input v-model="adminInfo.position" readonly></el-input>
                         </el-form-item>
                         <el-form-item label="邮箱" prop="email">
-                            <el-input v-model="updateInfo.email" :readonly="!editStatus"></el-input>
+                            <el-input v-model="adminInfo.email" :readonly="!editStatus"></el-input>
                         </el-form-item>
                         <el-form-item label="手机" prop="phone">
-                            <el-input v-model="updateInfo.phone" :readonly="!editStatus"></el-input>
+                            <el-input v-model="adminInfo.phone" :readonly="!editStatus"></el-input>
                         </el-form-item>
                         <el-form-item class="tips">
                             <label class="tips">此账号创建于2018年3月29日</label>
@@ -35,8 +36,8 @@
                             <el-button type="primary" @click="editStatus = true" v-if="!editStatus">编辑信息
                             </el-button>
                             <template v-else>
-                                <el-button type="primary" @click="submitForm('updateInfo')">确定</el-button>
-                                <el-button @click="resetForm('updateInfo')">重置</el-button>
+                                <el-button type="primary" @click="submitForm('adminInfo')">确定</el-button>
+                                <el-button @click="resetForm('adminInfo')">重置</el-button>
                             </template>
                         </el-form-item>
                     </el-form>
@@ -64,7 +65,7 @@
     import util from '../../util/extend'
 
     export default {
-        name: 'infoSetting',
+        name: 'adminDetail',
         data() {
             let checkEmail = (rule, value, callback) => {
                 if (!this.editStatus) {
@@ -87,7 +88,7 @@
                 }
             }
             return {
-                updateInfo: {
+                adminInfo: {
                     name: '花想容',
                     department: '技术部',
                     position: '文字专员',

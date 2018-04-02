@@ -6,6 +6,7 @@ import App from './App'
 import router from './router'
 import axios from './util/http'
 import store from './store'
+import '../src/assets/css/global.less'
 // 引入ElementUI全部组件，也可以部分引入
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'

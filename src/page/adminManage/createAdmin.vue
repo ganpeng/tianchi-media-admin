@@ -1,48 +1,66 @@
-<!--个人中心信息设置组件-->
+<!--创建管理员账号组件-->
 <template>
     <div>
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>个人中心</el-breadcrumb-item>
-            <el-breadcrumb-item>信息设置</el-breadcrumb-item>
+            <el-breadcrumb-item>管理员管理</el-breadcrumb-item>
+            <el-breadcrumb-item>创建管理员</el-breadcrumb-item>
         </el-breadcrumb>
         <el-row>
-            <el-col :span="10">
-                <div class="block-title">我的信息</div>
+            <el-col :span="12">
                 <div class="grid-content bg-purple">
-                    <el-form :model="updateInfo" :rules="infoRules" :status-icon='editStatus' ref="updateInfo"
+                    <el-form :model="createInfo" :rules="infoRules" status-icon ref="createInfo"
                              label-width="100px"
                              class="demo-ruleForm">
-                        <el-form-item label="姓名" prop="name">
-                            <el-input v-model="updateInfo.name" readonly></el-input>
+                        <el-form-item label="姓名" prop="name" required>
+                            <el-input v-model="createInfo.name"></el-input>
                         </el-form-item>
-                        <el-form-item label="部门" prop="department">
-                            <el-input v-model="updateInfo.department" readonly></el-input>
+                        <el-form-item label="部门" required prop="department">
+                            <el-select placeholder="请选择部门" v-model="createInfo.department">
+                                <el-option label="剪辑部" value="0"></el-option>
+                                <el-option label="录入部" value="1"></el-option>
+                            </el-select>
+                            <el-button type="primary" @click="dialogFormVisible = true">新增</el-button>
                         </el-form-item>
-                        <el-form-item label="职位" prop="position">
-                            <el-input v-model="updateInfo.position" readonly></el-input>
+                        <el-form-item label="职位" required prop="position">
+                            <el-select placeholder="请选择部门" v-model="createInfo.position">
+                                <el-option label="剪辑师" value="0"></el-option>
+                                <el-option label="文字专员" value="1"></el-option>
+                            </el-select>
+                            <el-button type="primary" @click="dialogFormVisible = true">新增</el-button>
                         </el-form-item>
-                        <el-form-item label="邮箱" prop="email">
-                            <el-input v-model="updateInfo.email" :readonly="!editStatus"></el-input>
+                        <el-form-item label="邮箱" prop="email" required>
+                            <el-input v-model="createInfo.email"></el-input>
                         </el-form-item>
-                        <el-form-item label="手机" prop="phone">
-                            <el-input v-model="updateInfo.phone" :readonly="!editStatus"></el-input>
+                        <el-form-item label="电话" prop="telephone">
+                            <el-input v-model="createInfo.telephone"></el-input>
+                        </el-form-item>
+                        <el-form-item label="手机" prop="phone" required>
+                            <el-input v-model="createInfo.phone"></el-input>
                         </el-form-item>
                         <el-form-item class="tips">
-                            <label class="tips">此账号创建于2018年3月29日</label>
+                            <label class="tips">带 <i>*</i> 号的为必填项</label>
                         </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" @click="editStatus = true" v-if="!editStatus">编辑信息
-                            </el-button>
-                            <template v-else>
-                                <el-button type="primary" @click="submitForm('updateInfo')">确定</el-button>
-                                <el-button @click="resetForm('updateInfo')">重置</el-button>
-                            </template>
+                        <el-form-item class="operate">
+                            <el-button type="primary" @click="submitForm('createInfo')">创 建</el-button>
+                            <el-button @click="resetForm('createInfo')">重 置</el-button>
                         </el-form-item>
+                        <el-dialog title="新增部门" :visible.sync="dialogFormVisible">
+                            <el-form :model="form">
+                                <el-form-item label="部门名称" :label-width="formLabelWidth">
+                                    <el-input v-model="form.name" auto-complete="off"
+                                              placeholder="请填写部门名称"></el-input>
+                                </el-form-item>
+                            </el-form>
+                            <div slot="footer" class="dialog-footer">
+                                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                            </div>
+                        </el-dialog>
                     </el-form>
                 </div>
             </el-col>
-            <el-col :span="14">
+            <el-col :span="12">
                 <div class="grid-content bg-purple-light">
                     <el-upload
                         class="avatar-uploader"
@@ -64,7 +82,7 @@
     import util from '../../util/extend'
 
     export default {
-        name: 'infoSetting',
+        name: 'createAdmin',
         data() {
             let checkEmail = (rule, value, callback) => {
                 if (!this.editStatus) {
@@ -87,14 +105,14 @@
                 }
             }
             return {
-                updateInfo: {
-                    name: '花想容',
-                    department: '技术部',
-                    position: '文字专员',
-                    email: 'liuxiaofei2010S@163.com',
-                    phone: '15022547876'
+                createInfo: {
+                    name: '',
+                    department: '',
+                    position: '',
+                    telephone: '',
+                    email: '',
+                    phone: ''
                 },
-                editStatus: false,
                 infoRules: {
                     email: [
                         {validator: checkEmail, trigger: 'blur'}
@@ -103,6 +121,18 @@
                         {validator: checkPhone, trigger: 'blur'}
                     ]
                 },
+                dialogFormVisible: false,
+                form: {
+                    name: '',
+                    region: '',
+                    date1: '',
+                    date2: '',
+                    delivery: false,
+                    type: [],
+                    resource: '',
+                    desc: ''
+                },
+                formLabelWidth: '120px',
                 imageUrl: ''
             }
         },
@@ -144,15 +174,29 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-    .block-title {
-        padding: 30px 0 20px 20px;
-        line-height: 2;
-        text-align: left;
-        font-size: 22px;
-    }
 
-    .tips {
+    .demo-ruleForm {
+        margin-top: 60px;
+        width: 100%;
         text-align: left;
+        .el-input {
+            width: 70%;
+        }
+        .el-select {
+            margin-right: 10px;
+            width: 70%;
+        }
+        .operate {
+            margin-right: 100px;
+            text-align: center;
+        }
+        .tips {
+            text-align: left;
+            i {
+                color: #f56c6c;
+            }
+        }
+
     }
 
     .avatar-uploader i {

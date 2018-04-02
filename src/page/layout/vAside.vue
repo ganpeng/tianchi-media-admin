@@ -11,6 +11,14 @@
                 text-color="#fff"
                 router
                 active-text-color="#ffd04b">
+                <el-submenu index="2">
+                    <template slot="title">
+                        <i class="el-icon-setting"></i>
+                        <span>管理员管理</span>
+                    </template>
+                    <el-menu-item index="/admin-manage/list">管理员列表</el-menu-item>
+                    <el-menu-item index="/admin-manage/create">创建管理员</el-menu-item>
+                </el-submenu>
                 <el-submenu index="3">
                     <template slot="title">
                         <i class="el-icon-tickets"></i>

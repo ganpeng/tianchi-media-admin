@@ -1,4 +1,4 @@
-<!--首页组件-->
+<!--个人中心更改密码组件-->
 <template>
     <div>
         <el-breadcrumb separator-class="el-icon-arrow-right">

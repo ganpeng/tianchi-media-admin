@@ -9,7 +9,7 @@
             <!--侧边栏-->
             <v-aside></v-aside>
             <el-container>
-                <el-main>
+                <el-main class="main-content">
                     <!--主内容区-->
                     <router-view></router-view>
                 </el-main>
@@ -54,10 +54,13 @@
         line-height: 60px;
     }
 
-    .el-main {
+    .main-content {
         background-color: #E9EEF3;
         color: #333;
         text-align: center;
         line-height: 160px;
+        * {
+            line-height: 1;
+        }
     }
 </style>
