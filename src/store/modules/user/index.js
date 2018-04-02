@@ -25,13 +25,19 @@ const actions = {
     // 登录
     login({commit}, userInfo) {
         return new Promise((resolve, reject) => {
-            axios.post('/login', userInfo).then(res => {
+            axios.post('/api/admin/v1/auth/login',
+                {
+                    username: userInfo.username,
+                    password: userInfo.password
+                }
+            ).then(res => {
                 const data = res.data
-                console.log(data)
-                // 设置user模块
-                commit('setUID', data.uid)
-                commit('setName', data.name)
-                commit('setToken', data.token)
+                if (data.code === 0) {
+                    // 设置user模块
+                    commit('setUID', data.uid)
+                    commit('setName', data.name)
+                    commit('setToken', data.token)
+                }
                 resolve(res)
             }).catch(err => {
                 reject(err.data)

@@ -18,4 +18,4 @@ const store = new Vuex.Store({
     strict: true
 })
 
-export default {store}
+export default store

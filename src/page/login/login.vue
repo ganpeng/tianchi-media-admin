@@ -10,11 +10,12 @@
             <div class="form-box">
                 <el-form :model="formData" status-icon :rules="rules" ref="login" label-width="50px"
                          class="demo-ruleForm">
-                    <el-form-item label="账号" prop="account" class="input-box">
-                        <el-input v-model="formData.account" auto-complete="off" placeholder="请输入工作邮箱或者手机号码"></el-input>
+                    <el-form-item label="账号" prop="username" class="input-box">
+                        <el-input v-model="formData.username" auto-complete="off"
+                                  placeholder="请输入工作邮箱或者手机号码"></el-input>
                     </el-form-item>
-                    <el-form-item label="密码" prop="pass" class="input-box">
-                        <el-input type="password" v-model="formData.pass" auto-complete="off"
+                    <el-form-item label="密码" prop="password" class="input-box">
+                        <el-input type="password" v-model="formData.password" auto-complete="off"
                                   placeholder="请输入密码"></el-input>
                     </el-form-item>
                     <el-form-item class="login-box">
@@ -61,15 +62,15 @@
             }
             return {
                 formData: {
-                    account: '',
-                    pass: ''
+                    username: '',
+                    password: ''
                 },
                 memory: false,
                 rules: {
-                    account: [
+                    username: [
                         {validator: validateAccount, trigger: 'blur'}
                     ],
-                    pass: [
+                    password: [
                         {validator: validatePass, trigger: 'blur'}
                     ]
                 }
@@ -78,21 +79,19 @@
         methods: {
             // 登录
             submitForm() {
-                let _this = this
                 this.$refs.login.validate((valid) => {
                     if (valid) {
-                        this.$store.store.dispatch('user/login', this.formData).then(res => {
-                            console.log(res)
-                        }).catch(err => {
-                            console.error(err)
+                        this.$store.dispatch('user/login', this.formData).then(response => {
+                            const data = response.data
+                            if (data.code === 0) {
+                                this.$router.push({name: 'home'})
+                            } else {
+                                this.$message(data.message)
+                            }
+                        }).catch(() => {
+                            this.$message('网络异常')
                         })
-                        setTimeout(function () {
-                            _this.$router.push({name: 'home'})
-                        }, 3000)
                     } else {
-                        setTimeout(function () {
-                            _this.$router.push({name: 'home'})
-                        }, 3000)
                         return false
                     }
                 })
@@ -100,10 +99,6 @@
             // 跳转找回密码
             retrievePass() {
                 this.$router.push({name: 'retrievePassword'})
-            },
-            // 去除字符的前后所有空格
-            trim(value) {
-                return value.toString().replace(/(^\s*) | (\s*$)/g, '')
             }
         }
     }

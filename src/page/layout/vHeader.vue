@@ -29,7 +29,7 @@
                         break
                     // 退出登录
                     case 'logout':
-                        this.$store.store.dispatch('user/logout').then(() => {
+                        this.$store.dispatch('user/logout').then(() => {
                             this.$router.push({
                                 name: 'login'
                             })
