@@ -12,8 +12,8 @@
                     <el-form :model="createInfo" :rules="infoRules" status-icon ref="createInfo"
                              label-width="100px"
                              class="demo-ruleForm">
-                        <el-form-item label="姓名" prop="name" required>
-                            <el-input v-model="createInfo.name"></el-input>
+                        <el-form-item label="姓名" prop="username" required>
+                            <el-input v-model="createInfo.username" placeholder="请填写姓名"></el-input>
                         </el-form-item>
                         <el-form-item label="部门" required prop="department">
                             <el-select placeholder="请选择部门" v-model="createInfo.department">
@@ -30,24 +30,24 @@
                             <el-button type="primary" @click="dialogFormVisible = true">新增</el-button>
                         </el-form-item>
                         <el-form-item label="邮箱" prop="email" required>
-                            <el-input v-model="createInfo.email"></el-input>
+                            <el-input v-model="createInfo.email" placeholder="请填写邮箱地址"></el-input>
                         </el-form-item>
                         <el-form-item label="电话" prop="telephone">
-                            <el-input v-model="createInfo.telephone"></el-input>
+                            <el-input v-model="createInfo.telephone" placeholder="请填写电话号码"></el-input>
                         </el-form-item>
-                        <el-form-item label="手机" prop="phone" required>
-                            <el-input v-model="createInfo.phone"></el-input>
+                        <el-form-item label="手机" prop="mobile" required>
+                            <el-input v-model="createInfo.mobile" placeholder="请填写手机号码"></el-input>
                         </el-form-item>
                         <el-form-item class="tips">
                             <label class="tips">带 <i>*</i> 号的为必填项</label>
                         </el-form-item>
                         <el-form-item class="operate">
-                            <el-button type="primary" @click="submitForm('createInfo')">创 建</el-button>
-                            <el-button @click="resetForm('createInfo')">重 置</el-button>
+                            <el-button type="primary" @click="createAdmin">创 建</el-button>
+                            <el-button @click="reset">重 置</el-button>
                         </el-form-item>
                         <el-dialog title="新增部门" :visible.sync="dialogFormVisible">
                             <el-form :model="form">
-                                <el-form-item label="部门名称" :label-width="formLabelWidth">
+                                <el-form-item label="部门名称" label-width="120px">
                                     <el-input v-model="form.name" auto-complete="off"
                                               placeholder="请填写部门名称"></el-input>
                                 </el-form-item>
@@ -84,21 +84,47 @@
     export default {
         name: 'createAdmin',
         data() {
+            let checkUsername = (rule, value, callback) => {
+                if (util.isEmpty(value)) {
+                    return callback(new Error('姓名不能为空'))
+                } else {
+                    callback()
+                }
+            }
+            let checkDepartment = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('请选择部门'))
+                } else {
+                    callback()
+                }
+            }
+            let checkPosition = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('请选择职位'))
+                } else {
+                    callback()
+                }
+            }
             let checkEmail = (rule, value, callback) => {
-                if (!this.editStatus) {
-                } else if (!util.trim(value)) {
+                if (util.isEmpty(value)) {
                     return callback(new Error('邮箱地址不能为空'))
-                } else if (!/^[a-zA-Z0-9]+([._\\-]*[a-zA-Z0-9])*@([a-zA-Z0-9]+[-a-zA-Z0-9]*[a-zA-Z0-9]+\.){1,63}[a-zA-Z0-9]+$/.test(util.trim(value))) {
+                } else if (!util.isEmail(value)) {
                     return callback(new Error('请填写正确的邮箱地址'))
                 } else {
                     callback()
                 }
             }
-            let checkPhone = (rule, value, callback) => {
-                if (!this.editStatus) {
-                } else if (!util.trim(value)) {
+            let checkTelephone = (rule, value, callback) => {
+                if (!util.isEmpty(value) && !util.isTelephone(value)) {
+                    return callback(new Error('请填写正确的电话号码'))
+                } else {
+                    callback()
+                }
+            }
+            let checkMobile = (rule, value, callback) => {
+                if (util.isEmpty(value)) {
                     return callback(new Error('手机号码不能为空'))
-                } else if (!/^1[0-9]{10}$/.test(util.trim(value))) {
+                } else if (!util.isMobile(value)) {
                     return callback(new Error('请填写正确的手机号码'))
                 } else {
                     callback()
@@ -106,50 +132,73 @@
             }
             return {
                 createInfo: {
-                    name: '',
+                    username: '',
                     department: '',
                     position: '',
                     telephone: '',
                     email: '',
-                    phone: ''
+                    mobile: ''
                 },
                 infoRules: {
+                    username: [
+                        {validator: checkUsername, trigger: 'blur'}
+                    ],
+                    department: [
+                        {validator: checkDepartment, trigger: 'blur'}
+                    ],
+                    position: [
+                        {validator: checkPosition, trigger: 'blur'}
+                    ],
                     email: [
                         {validator: checkEmail, trigger: 'blur'}
                     ],
-                    phone: [
-                        {validator: checkPhone, trigger: 'blur'}
+                    telephone: [
+                        {validator: checkTelephone, trigger: 'blur'}
+                    ],
+                    mobile: [
+                        {validator: checkMobile, trigger: 'blur'}
                     ]
                 },
                 dialogFormVisible: false,
                 form: {
-                    name: '',
-                    region: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
+                    name: ''
                 },
-                formLabelWidth: '120px',
                 imageUrl: ''
             }
         },
+        mounted: function () {
+            this.initData()
+        },
         methods: {
-            // 上传信息
-            submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
+            // 初始化部门和职位信息
+            initData() {
+
+            },
+            // 创建管理员
+            createAdmin() {
+                this.$refs['createInfo'].validate((valid) => {
                     if (valid) {
-                        alert('submit!')
+                        // 请求接口
+                        this.$axios.post('/api/v1/admin', {
+                            email: this.createInfo.email,
+                            mobile: this.createInfo.mobile,
+                            username: this.createInfo.username
+                        }).then(response => {
+                            if (response.code === 0) {
+                                this.$message(response.data.username + '的账号创建成功')
+                            } else {
+                                this.$message(response.message)
+                            }
+                        }).catch(() => {
+                            this.$message('网络异常')
+                        })
                     } else {
-                        console.error('error submit!!')
                         return false
                     }
                 })
             },
-            resetForm(formName) {
-                this.$refs[formName].resetFields()
+            reset() {
+                this.$refs['createInfo'].resetFields()
             },
             // 成功上传回调
             handleAvatarSuccess(res, file) {

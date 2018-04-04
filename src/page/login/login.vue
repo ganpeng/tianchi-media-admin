@@ -43,18 +43,18 @@
         name: 'login',
         data() {
             let validateAccount = (rule, value, callback) => {
-                if (!util.trim(value)) {
+                if (util.isEmpty(value)) {
                     return callback(new Error('用户名不能为空'))
-                } else if (!/^1[0-9]{10}$/.test(util.trim(value))) {
+                } else if (!util.isMobile(value) && !util.isEmail(value)) {
                     return callback(new Error('请填写正确账号'))
                 } else {
                     callback()
                 }
             }
             let validatePass = (rule, value, callback) => {
-                if (util.trim(value) === '') {
+                if (util.isEmpty(value)) {
                     callback(new Error('请输入密码'))
-                } else if (!/^[\da-zA-Z]{6,8}$/.test(util.trim(value))) {
+                } else if (!util.isPassword(value)) {
                     callback(new Error('请输入6-8位密码!'))
                 } else {
                     callback()

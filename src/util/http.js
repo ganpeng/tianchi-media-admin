@@ -2,7 +2,6 @@
 
 import axios from 'axios'
 import store from '../store'
-import qs from 'qs'
 
 let service = axios.create({
     timeout: 5000,
@@ -17,10 +16,6 @@ service.interceptors.request.use(
     function (config) {
         if (store.state.user.token) {
             config.headers['x-tianchi-token'] = store.state.user.token
-        }
-        // 更改data数据类型为 form-data
-        if (config.method === 'post') {
-            config.data = qs.stringify(config.data)
         }
         return config
     },
