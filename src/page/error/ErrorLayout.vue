@@ -6,7 +6,7 @@
 </template>
 <script>
     export default {
-        name: 'errorLayout',
+        name: 'ErrorLayout',
         data() {
             return {}
         },

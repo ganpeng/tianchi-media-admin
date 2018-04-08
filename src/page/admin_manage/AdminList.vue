@@ -103,7 +103,7 @@
 
 <script>
     export default {
-        name: 'adminList',
+        name: 'AdminList',
         data() {
             return {
                 queryForm: {
@@ -188,7 +188,7 @@
                 console.log('submit!')
             },
             checkDetail() {
-                this.$router.push({name: 'adminDetail'})
+                this.$router.push({name: 'AdminDetail'})
             },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`)

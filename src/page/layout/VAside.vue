@@ -33,7 +33,7 @@
                     </template>
                     <el-menu-item index="/personal-center/info-setting">信息设置</el-menu-item>
                     <el-menu-item index="/personal-center/modify-password">修改密码</el-menu-item>
-                    <el-menu-item index="/login">退出登录</el-menu-item>
+                    <el-menu-item index @click="logout">退出登录</el-menu-item>
                 </el-submenu>
             </el-menu>
         </el-col>
@@ -41,8 +41,9 @@
 </template>
 
 <script>
+
     export default {
-        name: 'vAside',
+        name: 'VAside',
         data() {
             return {}
         },
@@ -52,6 +53,10 @@
             },
             handleClose(key, keyPath) {
                 console.log(key, keyPath)
+            },
+            // 退出登录
+            logout() {
+                this.$store.dispatch('user/logout')
             }
         }
     }

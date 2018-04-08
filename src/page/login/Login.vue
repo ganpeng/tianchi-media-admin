@@ -40,7 +40,7 @@
     import util from '../../util/extend'
 
     export default {
-        name: 'login',
+        name: 'Login',
         data() {
             let validateAccount = (rule, value, callback) => {
                 if (util.isEmpty(value)) {
@@ -84,7 +84,7 @@
                         this.$store.dispatch('user/login', this.formData).then(response => {
                             const data = response.data
                             if (data.code === 0) {
-                                this.$router.push({name: 'home'})
+                                this.$router.push({name: 'Home'})
                             } else {
                                 this.$message(data.message)
                             }
@@ -98,7 +98,7 @@
             },
             // 跳转找回密码
             retrievePass() {
-                this.$router.push({name: 'retrievePassword'})
+                this.$router.push({name: 'RetrievePassword'})
             }
         }
     }

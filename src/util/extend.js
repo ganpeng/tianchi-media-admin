@@ -16,7 +16,7 @@ let util = {
     /**
      *format string
      * @param {String} str  The base string
-     * @param {JSON} array An argument witch is an array that contains the keywords
+     * @param {Array} array An argument witch is an array that contains the keywords
      * @return {String} The final spelled string
      */
     format(str, array) {

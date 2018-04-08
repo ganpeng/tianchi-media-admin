@@ -1,5 +1,7 @@
 // 用户信息
 import axios from '../../../util/http'
+import router from '../../../router'
+import util from '../../../util/extend'
 import Cookies from 'js-cookie'
 
 const state = {
@@ -62,11 +64,15 @@ const actions = {
     },
     // 退出
     logout({commit}) {
-        return new Promise((resolve) => {
-            commit('setUID', '')
-            commit('setUsername', '')
-            commit('setToken', '')
-            resolve()
+        let token = Cookies.get('token')
+        // 清除cookie,跳转到登录页面
+        commit('setUID', '')
+        commit('setUsername', '')
+        commit('setToken', '')
+        router.push({name: 'Login'})
+        // 请求登出接口
+        return new Promise(() => {
+            axios.delete(util.format('/api/v1/auth/logout?token={0}', [token]))
         })
     },
     // 刷新页面，重新设置 user 模块

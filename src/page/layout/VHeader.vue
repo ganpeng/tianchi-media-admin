@@ -16,7 +16,7 @@
 <script>
 
     export default {
-        name: 'vHeader',
+        name: 'VHeader',
         data() {
             return {}
         },
@@ -25,17 +25,11 @@
                 switch (command) {
                     // 跳转到设置页面
                     case 'set':
-                        this.$router.push({name: 'infoSetting'})
+                        this.$router.push({name: 'InfoSetting'})
                         break
                     // 退出登录
                     case 'logout':
-                        this.$store.dispatch('user/logout').then(() => {
-                            this.$router.push({
-                                name: 'login'
-                            })
-                        }).catch(err => {
-                            console.error(err)
-                        })
+                        this.$store.dispatch('user/logout')
                         break
                     default:
                         break

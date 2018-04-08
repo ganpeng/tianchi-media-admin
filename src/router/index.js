@@ -2,23 +2,23 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store'
 import Cookies from 'js-cookie'
-import login from '../page/login/login'
-import retrievePassword from '../page/retrievePassword/retrievePassword'
-import layout from '../page/layout/layout'
-import home from '../page/home/home'
-import infoSetting from '../page/personalCenter/infoSetting'
-import modifyPassword from '../page/personalCenter/modifyPassword'
-import userList from '../page/userCenter/userList'
-import adminList from '../page/adminManage/adminList'
-import createAdmin from '../page/adminManage/createAdmin'
-import adminDetail from '../page/adminManage/adminDetail'
-import errorLayout from '../page/error/error'
-import errorNotFound from '../page/error/404'
+import Login from '../page/login/Login'
+import RetrievePassword from '../page/retrieve_password/RetrievePassword'
+import Layout from '../page/layout/Layout'
+import Home from '../page/home/Home'
+import InfoSetting from '../page/personal_center/InfoSetting'
+import ModifyPassword from '../page/personal_center/ModifyPassword'
+import UserList from '../page/user_center/UserList'
+import AdminList from '../page/admin_manage/AdminList'
+import CreateAdmin from '../page/admin_manage/CreateAdmin'
+import AdminDetail from '../page/admin_manage/AdminDetail'
+import ErrorLayout from '../page/error/ErrorLayout'
+import ErrorNotFound from '../page/error/404'
 
 Vue.use(Router)
 
 // 定义不需要token与权限的页面名称集合
-const whitePagesList = ['login', 'retrievePassword']
+const whitePagesList = ['Login', 'RetrievePassword']
 
 // 刷新页面时，保存Cookie信息到store中
 if (Cookies.get('token')) {
@@ -36,77 +36,77 @@ let router = new Router({
         // 登录页面
         {
             path: '/',
-            name: 'login',
             alias: '/login',
-            component: login
+            name: 'Login',
+            component: Login
         },
         // 找回密码页面
         {
             path: '/retrieve-password',
-            name: 'retrievePassword',
-            component: retrievePassword
+            name: 'RetrievePassword',
+            component: RetrievePassword
         },
         // 网站内容结构
         {
             path: '/layout',
-            name: 'layout',
-            component: layout,
+            name: 'Layout',
+            component: Layout,
             // 首页
             children: [
                 {
                     path: '/home',
-                    name: 'home',
-                    component: home
+                    name: 'Home',
+                    component: Home
                 },
                 // 个人中心-信息设置页面
                 {
                     path: '/personal-center/info-setting',
-                    name: 'infoSetting',
-                    component: infoSetting
+                    name: 'InfoSetting',
+                    component: InfoSetting
                 },
                 // 个人中心-修改密码页面
                 {
                     path: '/personal-center/modify-password',
-                    name: 'modifyPassword',
-                    component: modifyPassword
+                    name: 'ModifyPassword',
+                    component: ModifyPassword
                 },
                 // 管理员中心——管理员列表页面
                 {
                     path: '/admin-manage/list',
-                    name: 'adminList',
-                    component: adminList
+                    name: 'AdminList',
+                    component: AdminList
                 },
                 // 管理员管理——创建管理员页面
                 {
                     path: '/admin-manage/create',
-                    name: 'createAdmin',
-                    component: createAdmin
+                    name: 'CreateAdmin',
+                    component: CreateAdmin
                 },
                 // 管理员管理——管理员详情
                 {
                     path: '/admin-manage/detail',
-                    name: 'adminDetail',
-                    component: adminDetail
+                    name: 'AdminDetail',
+                    component: AdminDetail
                 },
                 // 用户中心-用户列表页面
                 {
                     path: '/user-center/list',
-                    name: 'userList',
-                    component: userList
+                    name: 'UserList',
+                    component: UserList
                 }
             ]
         },
         // 错误页面布局
         {
             path: '/error-layout',
-            name: 'errorLayout',
-            component: errorLayout,
+            name: 'ErrorLayout',
+            component: ErrorLayout,
             // 404页面
             children: [
                 {
                     path: '/error/404',
-                    name: 'errorNotFound',
-                    component: errorNotFound
+                    name: 'ErrorNotFound',
+                    component: ErrorNotFound
                 }
             ]
         }
@@ -140,16 +140,16 @@ router.beforeEach((to, from, next) => {
         next()
         // 白名单但是存在token,跳转到首页,防止手动更改url
     } else if (routerUtil.isWhitePage(to.name) && store.state.user.token) {
-        next({name: 'home'})
+        next({name: 'Home'})
         // 非白名单且不存在token，跳转到登录页面
     } else if (!store.state.user.token) {
-        next({name: 'login'})
+        next({name: 'Login'})
         // 非白名单、存在token、存在跳转路由，直接跳转
     } else if (to.name) {
         next()
         // 非白名单、存在token、不存在跳转路由，跳转到404页面
     } else {
-        next({name: 'errorNotFound'})
+        next({name: 'ErrorNotFound'})
     }
 })
 

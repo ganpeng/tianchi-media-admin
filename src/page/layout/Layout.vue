@@ -23,12 +23,12 @@
 </template>
 
 <script>
-    import vHeader from './vHeader.vue'
-    import vFooter from './vFooter.vue'
-    import vAside from './vAside.vue'
+    import vHeader from './VHeader.vue'
+    import vFooter from './VFooter.vue'
+    import vAside from './VAside.vue'
 
     export default {
-        name: 'layout',
+        name: 'Layout',
         components: {
             vHeader,
             vAside,

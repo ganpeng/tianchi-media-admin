@@ -8,7 +8,7 @@
 
 <script>
     export default {
-        name: 'vFooter',
+        name: 'VFooter',
         data() {
             return {}
         },

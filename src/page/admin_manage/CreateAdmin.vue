@@ -82,7 +82,7 @@
     import util from '../../util/extend'
 
     export default {
-        name: 'createAdmin',
+        name: 'CreateAdmin',
         data() {
             let checkUsername = (rule, value, callback) => {
                 if (util.isEmpty(value)) {

@@ -50,7 +50,7 @@
     import util from '../../util/extend'
 
     export default {
-        name: 'retrievePassword',
+        name: 'RetrievePassword',
         data() {
             let checkPhone = (rule, value, callback) => {
                 if (!util.trim(value)) {
@@ -155,7 +155,7 @@
             },
             // 去登陆
             login() {
-                this.$router.push({name: 'login'})
+                this.$router.push({name: 'Login'})
             },
             // 去除字符的前后所有空格
             trim(value) {

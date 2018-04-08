@@ -65,7 +65,7 @@
     import util from '../../util/extend'
 
     export default {
-        name: 'adminDetail',
+        name: 'AdminDetail',
         data() {
             let checkEmail = (rule, value, callback) => {
                 if (!this.editStatus) {

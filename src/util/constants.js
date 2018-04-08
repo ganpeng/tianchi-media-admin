@@ -1,17 +1,38 @@
-// 定义常量
+/**
+ * @fileOverview Define constants in an Object
+ */
 
-// 定义正则表达式
-// 空
+/**
+ * The RegExp of empty.
+ * @type {RegExp}
+ */
 const EMPTY = /^$/
-// 邮箱地址
+/**
+ * The RegExp of email address.
+ * @type {RegExp}
+ */
 const EMAIL = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/
-// 手机号码
+/**
+ * The RegExp of mobile number.
+ * @type {RegExp}
+ */
 const MOBILE = /^1[0-9]{10}$/
-// 固定电话号码
+/**
+ * The RegExp of telephone number.
+ * @type {RegExp}
+ */
 const TELEPHONE = /^((0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/
-// h5-admin项目中密码的要求，6-8位大小写字母或数字
+/**
+ * The RegExp of password in project of h5-admin.
+ * @type {RegExp}
+ */
 const PASSWORD = /^[\da-zA-Z]{6,8}$/
 
+/**
+ * The Object of RegExp.
+ * @type {Object.<RegExp>}
+ * @const
+ */
 let RegExpConstants = {
     EMPTY,
     EMAIL,
@@ -20,6 +41,11 @@ let RegExpConstants = {
     PASSWORD
 }
 
+/**
+ * The Object of constants Object.
+ * @type {Object.<Object>}
+ * @const
+ */
 let constants = {RegExpConstants}
 
 export default constants

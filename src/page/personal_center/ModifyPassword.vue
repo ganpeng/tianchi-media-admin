@@ -31,7 +31,7 @@
     import util from '../../util/extend'
 
     export default {
-        name: 'modifyPassword',
+        name: 'ModifyPassword',
         data() {
             let checkOriginPassword = (rule, value, callback) => {
                 if (!util.trim(value)) {
