@@ -19,6 +19,15 @@ npm install
 # serve with hot reload at localhost:8080
 npm run dev
 
+# run with development api in develop environment, same as 'npm run dev'
+npm run dev:dev
+
+# run with test api in develop environment
+npm run dev:test
+
+# run with production api in develop environment
+npm run dev:prod
+
 # build for production with minification in 'dist' folder
 npm run build
 

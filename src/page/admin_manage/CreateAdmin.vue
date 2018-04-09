@@ -179,7 +179,7 @@
                 this.$refs['createInfo'].validate((valid) => {
                     if (valid) {
                         // 请求接口
-                        this.$axios.post('/api/v1/admin', {
+                        this.$axios.post('/admin/v1/admin', {
                             email: this.createInfo.email,
                             mobile: this.createInfo.mobile,
                             username: this.createInfo.username

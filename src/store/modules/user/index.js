@@ -43,7 +43,7 @@ const actions = {
     // 登录
     login({commit}, userInfo) {
         return new Promise((resolve, reject) => {
-            axios.post('/api/v1/auth/login',
+            axios.post('/admin/v1/auth/login',
                 {
                     username: userInfo.username,
                     password: userInfo.password
@@ -72,7 +72,7 @@ const actions = {
         router.push({name: 'Login'})
         // 请求登出接口
         return new Promise(() => {
-            axios.delete(util.format('/api/v1/auth/logout?token={0}', [token]))
+            axios.delete(util.format('/admin/v1/auth/logout?token={0}', token))
         })
     },
     // 刷新页面，重新设置 user 模块

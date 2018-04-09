@@ -32,6 +32,7 @@ if (Cookies.get('token')) {
 
 // 定义路由
 let router = new Router({
+    mode: 'history',
     routes: [
         // 登录页面
         {

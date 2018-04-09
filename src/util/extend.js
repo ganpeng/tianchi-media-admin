@@ -1,7 +1,7 @@
 import constants from './constants'
 
 /**
- * 扩展公共方法的工具类模块
+ * 扩展公共方法的工具类模块，使用ES6 module
  * @type {{trim: ((value))}}
  */
 let util = {
@@ -16,14 +16,13 @@ let util = {
     /**
      *format string
      * @param {String} str  The base string
-     * @param {Array} array An argument witch is an array that contains the keywords
+     * @param {...args} ...args The arguments which amount is not defined
      * @return {String} The final spelled string
      */
-    format(str, array) {
-        for (let k = 0; k < array.length; k++) {
-            str = str.replace(new RegExp('\\{' + k + '\\}', 'g'), array[k])
-        }
-        return str
+    format(str, ...args) {
+        return str.replace(/{(\d+)}/g, function (match, number) {
+            return typeof args[number] !== 'undefined' ? args[number] : match
+        })
     },
     /**
      *Judge string is or not empty
