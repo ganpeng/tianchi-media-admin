@@ -30,7 +30,7 @@ let util = {
      * @return {Boolean} Is or not empty
      */
     isEmpty(str) {
-        return constants.RegExpConstants.EMPTY.test(this.trim(str))
+        return str === null || constants.RegExpConstants.EMPTY.test(this.trim(str))
     },
     /**
      *Judge string is or not an email address
@@ -63,6 +63,27 @@ let util = {
      */
     isPassword(str) {
         return constants.RegExpConstants.PASSWORD.test(this.trim(str))
+    },
+    /**
+     * Format the date with specified format
+     * @param {Date} date  The base string
+     * @param {String} format  supported format options: yyyy: full year, MM: month, DD: date, HH: hours, mm: minutes, SS: seconds
+     * @return {String} formated string
+     **/
+    formatDate(date, format) {
+        // handle yyyy
+        format = format.replace(/yyyy/g, date.getFullYear())
+        // handle MM
+        format = format.replace(/MM/g, date.getMonth() + 1)
+        // handle DD
+        format = format.replace(/DD/g, date.getDate())
+        // handle HH
+        format = format.replace(/HH/g, date.getHours())
+        // handle mm
+        format = format.replace(/mm/g, date.getMinutes())
+        // handle SS
+        format = format.replace(/SS/g, date.getSeconds())
+        return format
     }
 }
 

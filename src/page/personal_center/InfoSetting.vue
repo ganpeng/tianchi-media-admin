@@ -16,17 +16,14 @@
                         <el-form-item label="姓名" prop="name">
                             <el-input v-model="updateInfo.name" readonly></el-input>
                         </el-form-item>
-                        <el-form-item label="部门" prop="department">
-                            <el-input v-model="updateInfo.department" readonly></el-input>
-                        </el-form-item>
-                        <el-form-item label="职位" prop="position">
-                            <el-input v-model="updateInfo.position" readonly></el-input>
-                        </el-form-item>
                         <el-form-item label="邮箱" prop="email">
                             <el-input v-model="updateInfo.email" :readonly="!editStatus"></el-input>
                         </el-form-item>
-                        <el-form-item label="手机" prop="phone">
-                            <el-input v-model="updateInfo.phone" :readonly="!editStatus"></el-input>
+                        <el-form-item label="手机" prop="mobile">
+                            <el-input v-model="updateInfo.mobile" :readonly="!editStatus"></el-input>
+                        </el-form-item>
+                        <el-form-item label="电话" prop="telephone">
+                            <el-input v-model="updateInfo.telephone" :readonly="!editStatus"></el-input>
                         </el-form-item>
                         <el-form-item class="tips">
                             <label class="tips">此账号创建于2018年3月29日</label>
@@ -35,8 +32,8 @@
                             <el-button type="primary" @click="editStatus = true" v-if="!editStatus">编辑信息
                             </el-button>
                             <template v-else>
-                                <el-button type="primary" @click="submitForm('updateInfo')">确定</el-button>
-                                <el-button @click="resetForm('updateInfo')">重置</el-button>
+                                <el-button type="primary" @click="updateForm">确定</el-button>
+                                <el-button @click="resetForm">重置</el-button>
                             </template>
                         </el-form-item>
                     </el-form>
@@ -50,7 +47,7 @@
                         :show-file-list="false"
                         :on-success="handleAvatarSuccess"
                         :before-upload="beforeAvatarUpload">
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <img v-if="updateInfo.imageUrl" :src="updateInfo.imageUrl" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                     <label>用户头像</label>
@@ -61,65 +58,105 @@
 </template>
 
 <script>
-    import util from '../../util/extend'
 
     export default {
         name: 'InfoSetting',
         data() {
             let checkEmail = (rule, value, callback) => {
                 if (!this.editStatus) {
-                } else if (!util.trim(value)) {
+                    callback()
+                    return
+                }
+                if (this.$util.isEmpty(value)) {
                     return callback(new Error('邮箱地址不能为空'))
-                } else if (!/^[a-zA-Z0-9]+([._\\-]*[a-zA-Z0-9])*@([a-zA-Z0-9]+[-a-zA-Z0-9]*[a-zA-Z0-9]+\.){1,63}[a-zA-Z0-9]+$/.test(util.trim(value))) {
+                } else if (!this.$util.isEmail(value)) {
                     return callback(new Error('请填写正确的邮箱地址'))
                 } else {
                     callback()
                 }
             }
-            let checkPhone = (rule, value, callback) => {
+            let checkMobile = (rule, value, callback) => {
                 if (!this.editStatus) {
-                } else if (!util.trim(value)) {
+                    callback()
+                    return
+                }
+                if (this.$util.isEmpty(value)) {
                     return callback(new Error('手机号码不能为空'))
-                } else if (!/^1[0-9]{10}$/.test(util.trim(value))) {
+                } else if (!this.$util.isMobile(value)) {
                     return callback(new Error('请填写正确的手机号码'))
+                } else {
+                    callback()
+                }
+            }
+            let checkTelephone = (rule, value, callback) => {
+                if (!this.editStatus) {
+                    callback()
+                    return
+                }
+                if (!this.$util.isEmpty(value) && !this.$util.isTelephone(value)) {
+                    return callback(new Error('请填写正确的电话号码'))
                 } else {
                     callback()
                 }
             }
             return {
                 updateInfo: {
-                    name: '花想容',
-                    department: '技术部',
-                    position: '文字专员',
-                    email: 'liuxiaofei2010S@163.com',
-                    phone: '15022547876'
+                    id: '',
+                    name: '',
+                    email: '',
+                    mobile: '',
+                    telephone: '',
+                    imageUrl: ''
                 },
                 editStatus: false,
                 infoRules: {
                     email: [
                         {validator: checkEmail, trigger: 'blur'}
                     ],
-                    phone: [
-                        {validator: checkPhone, trigger: 'blur'}
+                    mobile: [
+                        {validator: checkMobile, trigger: 'blur'}
+                    ],
+                    telephone: [
+                        {validator: checkTelephone, trigger: 'blur'}
                     ]
-                },
-                imageUrl: ''
+                }
             }
         },
+        mounted() {
+            this.initData()
+        },
         methods: {
-            // 上传信息
-            submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
+            // 初始化个人信息
+            initData() {
+                this.$axios.get(this.$util.format('/v1/admin/{0}', this.$route.params.id)).then(response => {
+                    if (response) {
+                        this.updateInfo = response.data
+                    }
+                })
+            },
+            // 更新信息
+            updateForm() {
+                this.$refs['updateInfo'].validate((valid) => {
                     if (valid) {
-                        alert('submit!')
+                        // 请求接口
+                        this.$axios.put('/v1/admin', {
+                            id: this.editInfo.id,
+                            email: this.editInfo.email,
+                            telephone: this.editInfo.telephone,
+                            mobile: this.editInfo.mobile,
+                            name: this.editInfo.name
+                        }).then(response => {
+                            if (response) {
+                                this.$message('您的账号信息更新成功')
+                            }
+                        })
                     } else {
-                        console.error('error submit!!')
                         return false
                     }
                 })
             },
-            resetForm(formName) {
-                this.$refs[formName].resetFields()
+            resetForm() {
+                this.$refs['updateInfo'].resetFields()
             },
             // 成功上传回调
             handleAvatarSuccess(res, file) {

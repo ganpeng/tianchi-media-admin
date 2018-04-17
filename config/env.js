@@ -4,29 +4,31 @@
  * @fileOverview Define proxy url in the develop environment
  */
 
-const util = require('../build/extend')
-
 const npmEventName = process.env.npm_lifecycle_event
-let proxyENV
+let proxyTarget
 switch (npmEventName) {
     // develop url
+    case 'dev':
     case 'dev:dev':
-        proxyENV = 'dev-'
+        proxyTarget = 'http://dev-gateway.backend.tianchimedia.com'
         break
     // test url
     case 'dev:test':
-        proxyENV = 'test-'
+        proxyTarget = 'http://test-gateway.backend.tianchimedia.com'
         break
     // test url
     case 'dev:prod':
-        proxyENV = ''
+        proxyTarget = 'http://gateway.backend.tianchimedia.com'
+        break
+    // xiongbao gateway
+    case 'dev:xiongbao':
+        proxyTarget = 'http://10.0.3.244:8100'
         break
     // default is dev url
     default:
-        proxyENV = 'dev-'
+        proxyTarget = 'http://dev-gateway.backend.tianchimedia.com'
         break
 }
 
-const proxyTarget = util.format('http://{0}gateway.backend.tianchimedia.com', proxyENV)
 
 module.exports = {proxyTarget}

@@ -12,7 +12,7 @@ module.exports = {
         assetsSubDirectory: 'static',
         assetsPublicPath: '/',
         proxyTable: {
-            '/admin': {
+            '/admin/v': {
                 target: env.proxyTarget,
                 changeOrigin: true
             }

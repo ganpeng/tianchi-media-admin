@@ -12,6 +12,7 @@ import UserList from '../page/user_center/UserList'
 import AdminList from '../page/admin_manage/AdminList'
 import CreateAdmin from '../page/admin_manage/CreateAdmin'
 import AdminDetail from '../page/admin_manage/AdminDetail'
+import EditAdmin from '../page/admin_manage/EditAdmin'
 import ErrorLayout from '../page/error/ErrorLayout'
 import ErrorNotFound from '../page/error/404'
 
@@ -25,7 +26,7 @@ if (Cookies.get('token')) {
     store.dispatch('user/reLogin',
         {
             uid: Cookies.get('uid'),
-            username: Cookies.get('username'),
+            name: Cookies.get('name'),
             token: Cookies.get('token')
         })
 }
@@ -85,9 +86,15 @@ let router = new Router({
                 },
                 // 管理员管理——管理员详情
                 {
-                    path: '/admin-manage/detail',
+                    path: '/admin-manage/detail/:id',
                     name: 'AdminDetail',
                     component: AdminDetail
+                },
+                // 管理员管理——管理员信息编辑
+                {
+                    path: '/admin-manage/edit/:id',
+                    name: 'EditAdmin',
+                    component: EditAdmin
                 },
                 // 用户中心-用户列表页面
                 {

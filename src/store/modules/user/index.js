@@ -6,7 +6,7 @@ import Cookies from 'js-cookie'
 
 const state = {
     uid: '',
-    username: '',
+    name: '',
     token: ''
 }
 
@@ -21,13 +21,13 @@ const mutations = {
         }
         state.uid = data
     },
-    setUsername(state, data) {
+    setName(state, data) {
         if (data) {
-            Cookies.set('username', data)
+            Cookies.set('name', data)
         } else {
-            Cookies.remove('username')
+            Cookies.remove('name')
         }
-        state.username = data
+        state.name = data
     },
     setToken(state, data) {
         if (data) {
@@ -43,17 +43,17 @@ const actions = {
     // 登录
     login({commit}, userInfo) {
         return new Promise((resolve, reject) => {
-            axios.post('/admin/v1/auth/login',
+            axios.post('/v1/auth/login',
                 {
-                    username: userInfo.username,
+                    name: userInfo.name,
                     password: userInfo.password
                 }
             ).then(res => {
-                if (res.data.code === 0) {
-                    const data = res.data.data
+                if (res) {
+                    const data = res.data
                     // 设置user模块
                     commit('setUID', data.uid)
-                    commit('setUsername', data.userName)
+                    commit('setName', data.name)
                     commit('setToken', data.token)
                 }
                 resolve(res)
@@ -67,19 +67,19 @@ const actions = {
         let token = Cookies.get('token')
         // 清除cookie,跳转到登录页面
         commit('setUID', '')
-        commit('setUsername', '')
+        commit('setName', '')
         commit('setToken', '')
         router.push({name: 'Login'})
         // 请求登出接口
         return new Promise(() => {
-            axios.delete(util.format('/admin/v1/auth/logout?token={0}', token))
+            axios.delete(util.format('/v1/auth/logout?token={0}', token))
         })
     },
     // 刷新页面，重新设置 user 模块
     reLogin({commit}, userInfo) {
         return new Promise((resolve) => {
             commit('setUID', userInfo.uid)
-            commit('setUsername', userInfo.username)
+            commit('setName', userInfo.name)
             commit('setToken', userInfo.token)
             resolve()
         })

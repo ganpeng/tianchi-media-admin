@@ -6,86 +6,64 @@
             <el-breadcrumb-item>管理员管理</el-breadcrumb-item>
             <el-breadcrumb-item>管理员列表</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-form :inline="true" :model="queryForm" class="demo-form-inline search-form">
-            <el-form-item label="部门">
-                <el-select v-model="queryForm.department" placeholder="请选择部门">
-                    <el-option label="剪辑部" value="0"></el-option>
-                    <el-option label="录入部" value="1"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="职位">
-                <el-select v-model="queryForm.position" placeholder="请选择职位">
-                    <el-option label="剪辑师" value="0"></el-option>
-                    <el-option label="文字专员" value="1"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="创建时间">
-                <el-date-picker
-                    v-model="queryForm.createTime"
-                    type="daterange"
-                    align="right"
-                    unlink-panels
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期"
-                    :picker-options="pickerOptions2">
-                </el-date-picker>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="onSubmit">查询</el-button>
-            </el-form-item>
-            <el-form-item class="create-account">
-                <el-tag @click="onSubmit">创建管理员</el-tag>
-            </el-form-item>
+        <el-form :inline="true" class="demo-form-inline search-form">
             <el-form-item class="search">
                 <el-input v-model="searchContent" placeholder="搜索你想要的信息">
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                 </el-input>
             </el-form-item>
+            <el-form-item class="create-account">
+                <el-tag>
+                    <router-link to="/admin-manage/create">创建管理员</router-link>
+                </el-tag>
+            </el-form-item>
         </el-form>
         <el-table
-            :data="tableData"
+            :data="adminList"
             border
             style="width: 100%">
             <el-table-column
                 prop="name"
-                label="姓名"
-                width="180">
-            </el-table-column>
-            <el-table-column
-                prop="department"
-                label="部门">
-            </el-table-column>
-            <el-table-column
-                prop="position"
-                label="职位">
+                label="姓名">
             </el-table-column>
             <el-table-column
                 prop="email"
-                label="邮箱"
-                width="220">
+                label="邮箱">
             </el-table-column>
             <el-table-column
                 prop="telephone"
                 label="电话">
             </el-table-column>
             <el-table-column
-                prop="phone"
+                prop="mobile"
                 label="手机号码">
             </el-table-column>
             <el-table-column
-                prop="date"
-                label="创建日期"
-                width="180">
+                label="创建日期">
+                <template slot-scope="scope">
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                </template>
             </el-table-column>
             <el-table-column
-                fixed="right"
-                label="操作"
-                width="180">
+                label="最后登录时间">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="checkDetail">查看</el-button>
-                    <el-button type="text" size="small" @click="checkDetail">编辑</el-button>
-                    <el-button type="danger" size="mini" plain @click="confirm">删除</el-button>
+                    {{scope.row.lastLoginAt | formatDate('yyyy-MM-DD')}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             fixed="right"
+                             label="操作">
+                <template slot-scope="scope">
+                    <el-button type="text" size="small" @click="checkDetail(scope.row.id)">查看</el-button>
+                    <el-button type="text" size="small" @click="editAdminInfo(scope.row.id)">编辑</el-button>
+                    <el-button v-if="scope.row.status === 'NORMAL'" type="danger" size="mini" plain
+                               @click="disabledConfirm(scope.row.id,scope.row.status)">
+                        禁用
+                    </el-button>
+                    <el-button v-else type="success" size="mini" plain
+                               @click="recoverConfirm(scope.row.id,scope.row.status)">
+                        恢复
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -93,10 +71,10 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-sizes="[100, 200, 300, 400]"
-            :page-size="100"
+            :page-sizes="[10, 20, 30, 50]"
+            :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="400">
+            :total="totalAmount">
         </el-pagination>
     </div>
 </template>
@@ -106,111 +84,83 @@
         name: 'AdminList',
         data() {
             return {
-                queryForm: {
-                    department: '',
-                    position: '',
-                    createTime: ''
-                },
-                pickerOptions2: {
-                    shortcuts: [{
-                        text: '最近一周',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-                            picker.$emit('pick', [start, end])
-                        }
-                    }, {
-                        text: '最近一个月',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-                            picker.$emit('pick', [start, end])
-                        }
-                    }, {
-                        text: '最近三个月',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-                            picker.$emit('pick', [start, end])
-                        }
-                    }]
-                },
                 searchContent: '',
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    department: '编辑部',
-                    position: '编辑师',
-                    email: 'liuxiaofei@tianchimedia.com',
-                    telephone: '010-76654387',
-                    phone: '150225456787'
-                }, {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    department: '编辑部',
-                    position: '编辑师',
-                    email: 'liuxiaofei@tianchimedia.com',
-                    telephone: '010-76654387',
-                    phone: '150225456787'
-                }, {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    department: '编辑部',
-                    position: '编辑师',
-                    email: 'liuxiaofei@tianchimedia.com',
-                    telephone: '010-76654387',
-                    phone: '150225456787'
-                }, {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    department: '编辑部',
-                    position: '编辑师',
-                    email: 'liuxiaofei@tianchimedia.com',
-                    telephone: '010-76654387',
-                    phone: '150225456787'
-                }, {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    department: '编辑部',
-                    position: '编辑师',
-                    email: 'liuxiaofei@tianchimedia.com',
-                    telephone: '010-76654387',
-                    phone: '150225456787'
-                }],
-                currentPage: 3
+                adminList: [],
+                currentPage: 1,
+                pageSize: 10,
+                totalAmount: 0
             }
         },
+        mounted() {
+            this.getAdminList()
+        },
         methods: {
-            onSubmit() {
-                console.log('submit!')
+            // 获取管理员列表数据
+            getAdminList() {
+                this.$axios.get(this.$util.format('/v1/admin/list?pageNum={0}&pageSize={1}', this.currentPage, this.pageSize)).then(response => {
+                    if (response) {
+                        this.adminList = response.data.list
+                        this.totalAmount = response.data.total
+                    }
+                })
             },
-            checkDetail() {
-                this.$router.push({name: 'AdminDetail'})
+            // 跳转到详情页面
+            checkDetail(userId) {
+                this.$router.push({name: 'AdminDetail', params: {id: userId}})
             },
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`)
+            editAdminInfo(userId) {
+                this.$router.push({name: 'EditAdmin', params: {id: userId}})
             },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`)
+            handleSizeChange(pageSize) {
+                this.pageSize = pageSize
+                this.getAdminList()
             },
-            confirm() {
-                this.$confirm('此操作将永久删除该账号, 是否继续?', '提示', {
+            handleCurrentChange(currentPage) {
+                this.currentPage = currentPage
+                this.getAdminList()
+            },
+            // 禁用确认
+            disabledConfirm(userId, userStatus) {
+                this.$confirm('此操作将禁用该账号, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                    })
+                    this.setAdminStatus(userId, userStatus)
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    })
+                    this.$message('已取消禁用')
+                })
+            },
+            // 恢复确认
+            recoverConfirm(userId, userStatus) {
+                this.$confirm('此操作将恢复该账号, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.setAdminStatus(userId, userStatus)
+                }).catch(() => {
+                    this.$message('已取消恢复')
+                })
+            },
+            // 禁用或恢复管理员账号状态
+            setAdminStatus(userId, userStatus) {
+                let action = userStatus === 'NORMAL' ? 'FORBIDDEN' : 'NORMAL'
+                this.$axios.patch(this.$util.format('/v1/admin/{0}?status={1}', userId, action)).then(response => {
+                    if (response) {
+                        if (userStatus === 'NORMAL') {
+                            this.$message({
+                                type: 'success',
+                                message: '禁用成功!'
+                            })
+                        } else {
+                            this.$message({
+                                type: 'success',
+                                message: '恢复成功!'
+                            })
+                        }
+                        this.getAdminList()
+                    }
                 })
             }
         }
@@ -226,7 +176,7 @@
         &.search-form {
             margin-top: 60px;
         }
-        .search, .create-account {
+        .create-account {
             float: right;
             margin-right: 40px;
             i {
@@ -236,20 +186,19 @@
                 }
             }
         }
-        .create-account {
-            float: right;
-        }
         .el-tag {
             cursor: pointer;
+            a {
+                display: block;
+                height: 100%;
+                width: 100%;
+            }
         }
     }
 
     .el-table {
-        margin: 20px 10px;
         text-align: left;
-        td {
-            text-align: left;
-        }
+        margin: 20px 10px;
     }
 
     .el-pagination {

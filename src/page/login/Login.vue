@@ -10,8 +10,8 @@
             <div class="form-box">
                 <el-form :model="formData" status-icon :rules="rules" ref="login" label-width="50px"
                          class="demo-ruleForm">
-                    <el-form-item label="账号" prop="username" class="input-box">
-                        <el-input v-model="formData.username" auto-complete="off"
+                    <el-form-item label="账号" prop="name" class="input-box">
+                        <el-input v-model="formData.name" auto-complete="off"
                                   placeholder="请输入工作邮箱或者手机号码"></el-input>
                     </el-form-item>
                     <el-form-item label="密码" prop="password" class="input-box">
@@ -37,24 +37,23 @@
 </template>
 
 <script>
-    import util from '../../util/extend'
 
     export default {
         name: 'Login',
         data() {
             let validateAccount = (rule, value, callback) => {
-                if (util.isEmpty(value)) {
+                if (this.$util.isEmpty(value)) {
                     return callback(new Error('用户名不能为空'))
-                } else if (!util.isMobile(value) && !util.isEmail(value)) {
+                } else if (!this.$util.isMobile(value) && !this.$util.isEmail(value)) {
                     return callback(new Error('请填写正确账号'))
                 } else {
                     callback()
                 }
             }
-            let validatePass = (rule, value, callback) => {
-                if (util.isEmpty(value)) {
+            let validatePassword = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
                     callback(new Error('请输入密码'))
-                } else if (!util.isPassword(value)) {
+                } else if (!this.$util.isPassword(value)) {
                     callback(new Error('请输入6-8位密码!'))
                 } else {
                     callback()
@@ -62,16 +61,16 @@
             }
             return {
                 formData: {
-                    username: '',
+                    name: '',
                     password: ''
                 },
                 memory: false,
                 rules: {
-                    username: [
+                    name: [
                         {validator: validateAccount, trigger: 'blur'}
                     ],
                     password: [
-                        {validator: validatePass, trigger: 'blur'}
+                        {validator: validatePassword, trigger: 'blur'}
                     ]
                 }
             }
@@ -82,14 +81,9 @@
                 this.$refs.login.validate((valid) => {
                     if (valid) {
                         this.$store.dispatch('user/login', this.formData).then(response => {
-                            const data = response.data
-                            if (data.code === 0) {
+                            if (response) {
                                 this.$router.push({name: 'Home'})
-                            } else {
-                                this.$message(data.message)
                             }
-                        }).catch(() => {
-                            this.$message('网络异常')
                         })
                     } else {
                         return false

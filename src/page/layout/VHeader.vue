@@ -4,7 +4,7 @@
         <img src="../../assets/images/logo.png">
         <label>天驰传媒后台管理系统</label>
         <el-dropdown @command="handleCommand">
-            <span class="el-dropdown-link">James Bond<i class="el-icon-arrow-down el-icon--right"></i></span>
+            <span class="el-dropdown-link">{{name}}<i class="el-icon-arrow-down el-icon--right"></i></span>
             <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="set">设置</el-dropdown-item>
                 <el-dropdown-item command="logout">退出</el-dropdown-item>
@@ -14,11 +14,17 @@
 </template>
 
 <script>
+    import Cookies from 'js-cookie'
 
     export default {
         name: 'VHeader',
         data() {
-            return {}
+            return {
+                name: ''
+            }
+        },
+        created() {
+            this.name = Cookies.get('name')
         },
         methods: {
             handleCommand(command) {

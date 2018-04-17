@@ -1,34 +1,38 @@
-<!--创建管理员账号组件-->
+<!--编辑管理员账号组件-->
 <template>
     <div>
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>管理员管理</el-breadcrumb-item>
-            <el-breadcrumb-item>创建管理员</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/admin-manage/list' }">管理员列表</el-breadcrumb-item>
+            <el-breadcrumb-item>编辑管理员</el-breadcrumb-item>
         </el-breadcrumb>
         <el-row>
             <el-col :span="8">
+                <div class="block-title">管理员信息
+                    <el-tag size="mini">{{editInfo.status | displayStatus}}</el-tag>
+                </div>
                 <div class="grid-content bg-purple">
-                    <el-form :model="createInfo" :rules="infoRules" status-icon ref="createInfo"
+                    <el-form :model="editInfo" :rules="infoRules" status-icon ref="editInfo"
                              label-width="100px"
                              class="form-block">
                         <el-form-item label="姓名" prop="name" required>
-                            <el-input v-model="createInfo.name" placeholder="请填写姓名"></el-input>
+                            <el-input v-model="editInfo.name" placeholder="请填写姓名"></el-input>
                         </el-form-item>
                         <el-form-item label="邮箱" prop="email" required>
-                            <el-input v-model="createInfo.email" placeholder="请填写邮箱地址"></el-input>
-                        </el-form-item>
-                        <el-form-item label="电话" prop="telephone">
-                            <el-input v-model="createInfo.telephone" placeholder="请填写电话号码"></el-input>
+                            <el-input v-model="editInfo.email" placeholder="请填写邮箱地址"></el-input>
                         </el-form-item>
                         <el-form-item label="手机" prop="mobile" required>
-                            <el-input v-model="createInfo.mobile" placeholder="请填写手机号码"></el-input>
+                            <el-input v-model="editInfo.mobile" placeholder="请填写手机号码"></el-input>
+                        </el-form-item>
+                        <el-form-item label="电话" prop="telephone">
+                            <el-input v-model="editInfo.telephone" placeholder="请填写电话号码"></el-input>
                         </el-form-item>
                         <el-form-item class="tips">
                             <label class="tips">带 <i>*</i> 号的为必填项</label>
                         </el-form-item>
                         <el-form-item class="operate">
-                            <el-button type="primary" @click="createAdmin">创 建</el-button>
+                            <el-button type="primary" @click="updateAdminInfo">更 新</el-button>
                             <el-button @click="reset">重 置</el-button>
                         </el-form-item>
                     </el-form>
@@ -42,7 +46,7 @@
                         :show-file-list="false"
                         :on-success="handleAvatarSuccess"
                         :before-upload="beforeAvatarUpload">
-                        <img v-if="createInfo.imageUrl" :src="createInfo.imageUrl" class="avatar">
+                        <img v-if="editInfo.imageUrl" :src="editInfo.imageUrl" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                     <label>用户头像</label>
@@ -55,7 +59,7 @@
 <script>
 
     export default {
-        name: 'CreateAdmin',
+        name: 'EditInfo',
         data() {
             let checkName = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
@@ -90,11 +94,13 @@
                 }
             }
             return {
-                createInfo: {
+                editInfo: {
+                    id: '',
                     name: '',
                     telephone: '',
                     email: '',
                     mobile: '',
+                    status: 'NORMAL',
                     imageUrl: ''
                 },
                 infoRules: {
@@ -113,19 +119,39 @@
                 }
             }
         },
+        filters: {
+            displayStatus(status) {
+                if (status === 'NORMAL') {
+                    return '正常'
+                } else {
+                    return '失效'
+                }
+            }
+        },
+        mounted() {
+            this.initData()
+        },
         methods: {
-            // 创建管理员
-            createAdmin() {
-                this.$refs['createInfo'].validate((valid) => {
+            initData() {
+                this.$axios.get(this.$util.format('/v1/admin/{0}', this.$route.params.id)).then(response => {
+                    if (response) {
+                        this.editInfo = response.data
+                    }
+                })
+            },
+            // 更新管理员信息
+            updateAdminInfo() {
+                this.$refs['editInfo'].validate((valid) => {
                     if (valid) {
                         // 请求接口
-                        this.$axios.post('/v1/admin', {
-                            email: this.createInfo.email,
-                            mobile: this.createInfo.mobile,
-                            name: this.createInfo.name
+                        this.$axios.put(this.$util.format('/v1/admin/{0}', this.editInfo.id), {
+                            email: this.editInfo.email,
+                            telephone: this.editInfo.telephone,
+                            mobile: this.editInfo.mobile,
+                            name: this.editInfo.name
                         }).then(response => {
                             if (response) {
-                                this.$message(response.data.name + '的账号创建成功')
+                                this.$message(response.data.name + '的账号更新成功')
                             }
                         })
                     } else {
@@ -134,7 +160,7 @@
                 })
             },
             reset() {
-                this.$refs['createInfo'].resetFields()
+                this.$refs['editInfo'].resetFields()
             },
             // 成功上传回调
             handleAvatarSuccess(res, file) {
@@ -160,8 +186,14 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
 
+    .block-title {
+        padding: 30px 0 20px 20px;
+        line-height: 2;
+        text-align: left;
+        font-size: 22px;
+    }
+
     .form-block {
-        margin-top: 60px;
         text-align: left;
         .operate {
             text-align: center;

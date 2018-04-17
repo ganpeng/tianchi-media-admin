@@ -11,10 +11,13 @@ import '../src/assets/css/global.less'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'babel-polyfill'
+import util from './util/extend'
+import './util/filters'
 
 Vue.config.productionTip = false
-Vue.prototype.$axios = axios
 Vue.use(ElementUI)
+Vue.prototype.$axios = axios
+Vue.prototype.$util = util
 
 /* eslint-disable no-new */
 new Vue({
