@@ -1,25 +1,25 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import store from '../store'
-import Cookies from 'js-cookie'
-import Login from '../page/login/Login'
-import RetrievePassword from '../page/retrieve_password/RetrievePassword'
-import Layout from '../page/layout/Layout'
-import Home from '../page/home/Home'
-import InfoSetting from '../page/personal_center/InfoSetting'
-import ModifyPassword from '../page/personal_center/ModifyPassword'
-import UserList from '../page/user_center/UserList'
-import AdminList from '../page/admin_manage/AdminList'
-import CreateAdmin from '../page/admin_manage/CreateAdmin'
-import AdminDetail from '../page/admin_manage/AdminDetail'
-import EditAdmin from '../page/admin_manage/EditAdmin'
-import ErrorLayout from '../page/error/ErrorLayout'
-import ErrorNotFound from '../page/error/404'
+import Vue from 'vue';
+import Router from 'vue-router';
+import store from '../store';
+import Cookies from 'js-cookie';
+import Login from '../page/login/Login';
+import RetrievePassword from '../page/retrieve_password/RetrievePassword';
+import Layout from '../page/layout/Layout';
+import Home from '../page/home/Home';
+import InfoSetting from '../page/personal_center/InfoSetting';
+import ModifyPassword from '../page/personal_center/ModifyPassword';
+import UserList from '../page/user_center/UserList';
+import AdminList from '../page/admin_manage/AdminList';
+import CreateAdmin from '../page/admin_manage/CreateAdmin';
+import AdminDetail from '../page/admin_manage/AdminDetail';
+import EditAdmin from '../page/admin_manage/EditAdmin';
+import ErrorLayout from '../page/error/ErrorLayout';
+import ErrorNotFound from '../page/error/404';
 
-Vue.use(Router)
+Vue.use(Router);
 
 // 定义不需要token与权限的页面名称集合
-const whitePagesList = ['Login', 'RetrievePassword']
+const whitePagesList = ['Login', 'RetrievePassword'];
 
 // 刷新页面时，保存Cookie信息到store中
 if (Cookies.get('token')) {
@@ -28,7 +28,7 @@ if (Cookies.get('token')) {
             uid: Cookies.get('uid'),
             name: Cookies.get('name'),
             token: Cookies.get('token')
-        })
+        });
 }
 
 // 定义路由
@@ -119,7 +119,7 @@ let router = new Router({
             ]
         }
     ]
-})
+});
 
 /**
  * 关于路由的方法集合
@@ -134,31 +134,31 @@ let routerUtil = {
     isWhitePage(routerName) {
         for (let i = 0; i < whitePagesList.length; i++) {
             if (routerName === whitePagesList[i]) {
-                return true
+                return true;
             }
         }
-        return false
+        return false;
     }
-}
+};
 
 // 定义路由钩子函数，跳转时定义路由导航
 router.beforeEach((to, from, next) => {
     // 白名单而且没有token,直接跳转
     if (routerUtil.isWhitePage(to.name) && !store.state.user.token) {
-        next()
+        next();
         // 白名单但是存在token,跳转到首页,防止手动更改url
     } else if (routerUtil.isWhitePage(to.name) && store.state.user.token) {
-        next({name: 'Home'})
+        next({name: 'Home'});
         // 非白名单且不存在token，跳转到登录页面
     } else if (!store.state.user.token) {
-        next({name: 'Login'})
+        next({name: 'Login'});
         // 非白名单、存在token、存在跳转路由，直接跳转
     } else if (to.name) {
-        next()
+        next();
         // 非白名单、存在token、不存在跳转路由，跳转到404页面
     } else {
-        next({name: 'ErrorNotFound'})
+        next({name: 'ErrorNotFound'});
     }
-})
+});
 
-export default router
+export default router;

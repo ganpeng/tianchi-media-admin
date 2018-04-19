@@ -26,7 +26,7 @@
                             <el-input v-model="updateInfo.telephone" :readonly="!editStatus"></el-input>
                         </el-form-item>
                         <el-form-item class="tips">
-                            <label class="tips">此账号创建于2018年3月29日</label>
+                            <label class="tips">此账号创建于{{updateInfo.createdAt | formatDate('yyyy年MM月DD日')}}</label>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="editStatus = true" v-if="!editStatus">编辑信息
@@ -64,41 +64,41 @@
         data() {
             let checkEmail = (rule, value, callback) => {
                 if (!this.editStatus) {
-                    callback()
-                    return
+                    callback();
+                    return;
                 }
                 if (this.$util.isEmpty(value)) {
-                    return callback(new Error('邮箱地址不能为空'))
+                    return callback(new Error('邮箱地址不能为空'));
                 } else if (!this.$util.isEmail(value)) {
-                    return callback(new Error('请填写正确的邮箱地址'))
+                    return callback(new Error('请填写正确的邮箱地址'));
                 } else {
-                    callback()
+                    callback();
                 }
-            }
+            };
             let checkMobile = (rule, value, callback) => {
                 if (!this.editStatus) {
-                    callback()
-                    return
+                    callback();
+                    return;
                 }
                 if (this.$util.isEmpty(value)) {
-                    return callback(new Error('手机号码不能为空'))
+                    return callback(new Error('手机号码不能为空'));
                 } else if (!this.$util.isMobile(value)) {
-                    return callback(new Error('请填写正确的手机号码'))
+                    return callback(new Error('请填写正确的手机号码'));
                 } else {
-                    callback()
+                    callback();
                 }
-            }
+            };
             let checkTelephone = (rule, value, callback) => {
                 if (!this.editStatus) {
-                    callback()
-                    return
+                    callback();
+                    return;
                 }
                 if (!this.$util.isEmpty(value) && !this.$util.isTelephone(value)) {
-                    return callback(new Error('请填写正确的电话号码'))
+                    return callback(new Error('请填写正确的电话号码'));
                 } else {
-                    callback()
+                    callback();
                 }
-            }
+            };
             return {
                 updateInfo: {
                     id: '',
@@ -106,6 +106,7 @@
                     email: '',
                     mobile: '',
                     telephone: '',
+                    createdAt: '',
                     imageUrl: ''
                 },
                 editStatus: false,
@@ -120,19 +121,19 @@
                         {validator: checkTelephone, trigger: 'blur'}
                     ]
                 }
-            }
+            };
         },
         mounted() {
-            this.initData()
+            this.initData();
         },
         methods: {
             // 初始化个人信息
             initData() {
-                this.$axios.get(this.$util.format('/v1/admin/{0}', this.$route.params.id)).then(response => {
+                this.$axios.get('/v1/admin').then(response => {
                     if (response) {
-                        this.updateInfo = response.data
+                        this.updateInfo = response.data;
                     }
-                })
+                });
             },
             // 更新信息
             updateForm() {
@@ -140,43 +141,42 @@
                     if (valid) {
                         // 请求接口
                         this.$axios.put('/v1/admin', {
-                            id: this.editInfo.id,
-                            email: this.editInfo.email,
-                            telephone: this.editInfo.telephone,
-                            mobile: this.editInfo.mobile,
-                            name: this.editInfo.name
+                            email: this.updateInfo.email,
+                            telephone: this.updateInfo.telephone,
+                            mobile: this.updateInfo.mobile,
+                            name: this.updateInfo.name
                         }).then(response => {
                             if (response) {
-                                this.$message('您的账号信息更新成功')
+                                this.$message('您的账号信息更新成功');
                             }
-                        })
+                        });
                     } else {
-                        return false
+                        return false;
                     }
-                })
+                });
             },
             resetForm() {
-                this.$refs['updateInfo'].resetFields()
+                this.$refs['updateInfo'].resetFields();
             },
             // 成功上传回调
             handleAvatarSuccess(res, file) {
-                this.imageUrl = URL.createObjectURL(file.raw)
+                this.imageUrl = URL.createObjectURL(file.raw);
             },
             // 上传图片之前回调
             beforeAvatarUpload(file) {
-                const isJPG = file.type === 'image/jpeg'
-                const isLt2M = file.size / 1024 / 1024 < 2
+                const isJPG = file.type === 'image/jpeg';
+                const isLt2M = file.size / 1024 / 1024 < 2;
 
                 if (!isJPG) {
-                    this.$message.error('上传头像图片只能是 JPG 格式!')
+                    this.$message.error('上传头像图片只能是 JPG 格式!');
                 }
                 if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!')
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
                 }
-                return isJPG && isLt2M
+                return isJPG && isLt2M;
             }
         }
-    }
+    };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

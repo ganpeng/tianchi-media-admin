@@ -59,36 +59,36 @@
         data() {
             let checkName = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    return callback(new Error('姓名不能为空'))
+                    return callback(new Error('姓名不能为空'));
                 } else {
-                    callback()
+                    callback();
                 }
-            }
+            };
             let checkEmail = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    return callback(new Error('邮箱地址不能为空'))
+                    return callback(new Error('邮箱地址不能为空'));
                 } else if (!this.$util.isEmail(value)) {
-                    return callback(new Error('请填写正确的邮箱地址'))
+                    return callback(new Error('请填写正确的邮箱地址'));
                 } else {
-                    callback()
+                    callback();
                 }
-            }
+            };
             let checkTelephone = (rule, value, callback) => {
                 if (!this.$util.isEmpty(value) && !this.$util.isTelephone(value)) {
-                    return callback(new Error('请填写正确的电话号码'))
+                    return callback(new Error('请填写正确的电话号码'));
                 } else {
-                    callback()
+                    callback();
                 }
-            }
+            };
             let checkMobile = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    return callback(new Error('手机号码不能为空'))
+                    return callback(new Error('手机号码不能为空'));
                 } else if (!this.$util.isMobile(value)) {
-                    return callback(new Error('请填写正确的手机号码'))
+                    return callback(new Error('请填写正确的手机号码'));
                 } else {
-                    callback()
+                    callback();
                 }
-            }
+            };
             return {
                 createInfo: {
                     name: '',
@@ -111,7 +111,7 @@
                         {validator: checkMobile, trigger: 'blur'}
                     ]
                 }
-            }
+            };
         },
         methods: {
             // 创建管理员
@@ -125,36 +125,36 @@
                             name: this.createInfo.name
                         }).then(response => {
                             if (response) {
-                                this.$message(response.data.name + '的账号创建成功')
+                                this.$message(response.data.name + '的账号创建成功');
                             }
-                        })
+                        });
                     } else {
-                        return false
+                        return false;
                     }
-                })
+                });
             },
             reset() {
-                this.$refs['createInfo'].resetFields()
+                this.$refs['createInfo'].resetFields();
             },
             // 成功上传回调
             handleAvatarSuccess(res, file) {
-                this.imageUrl = URL.createObjectURL(file.raw)
+                this.imageUrl = URL.createObjectURL(file.raw);
             },
             // 上传图片之前回调
             beforeAvatarUpload(file) {
-                const isJPG = file.type === 'image/jpeg'
-                const isLt2M = file.size / 1024 / 1024 < 2
+                const isJPG = file.type === 'image/jpeg';
+                const isLt2M = file.size / 1024 / 1024 < 2;
 
                 if (!isJPG) {
-                    this.$message.error('上传头像图片只能是 JPG 格式!')
+                    this.$message.error('上传头像图片只能是 JPG 格式!');
                 }
                 if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!')
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
                 }
-                return isJPG && isLt2M
+                return isJPG && isLt2M;
             }
         }
-    }
+    };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

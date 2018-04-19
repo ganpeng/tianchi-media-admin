@@ -43,22 +43,22 @@
         data() {
             let validateAccount = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    return callback(new Error('用户名不能为空'))
+                    return callback(new Error('用户名不能为空'));
                 } else if (!this.$util.isMobile(value) && !this.$util.isEmail(value)) {
-                    return callback(new Error('请填写正确账号'))
+                    return callback(new Error('请填写正确账号'));
                 } else {
-                    callback()
+                    callback();
                 }
-            }
+            };
             let validatePassword = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    callback(new Error('请输入密码'))
+                    callback(new Error('请输入密码'));
                 } else if (!this.$util.isPassword(value)) {
-                    callback(new Error('请输入6-8位密码!'))
+                    callback(new Error('请输入6-8位密码!'));
                 } else {
-                    callback()
+                    callback();
                 }
-            }
+            };
             return {
                 formData: {
                     name: '',
@@ -73,7 +73,7 @@
                         {validator: validatePassword, trigger: 'blur'}
                     ]
                 }
-            }
+            };
         },
         methods: {
             // 登录
@@ -82,20 +82,20 @@
                     if (valid) {
                         this.$store.dispatch('user/login', this.formData).then(response => {
                             if (response) {
-                                this.$router.push({name: 'Home'})
+                                this.$router.push({name: 'Home'});
                             }
-                        })
+                        });
                     } else {
-                        return false
+                        return false;
                     }
-                })
+                });
             },
             // 跳转找回密码
             retrievePass() {
-                this.$router.push({name: 'RetrievePassword'})
+                this.$router.push({name: 'RetrievePassword'});
             }
         }
-    }
+    };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

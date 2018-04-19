@@ -2,17 +2,17 @@
 
 const state = {
     list: []
-}
+};
 
-const getters = {}
+const getters = {};
 
 const mutations = {
     setList(state, data) {
-        state.list = data
+        state.list = data;
     }
-}
+};
 
-const actions = {}
+const actions = {};
 
 export default {
     namespaced: true,
@@ -20,4 +20,4 @@ export default {
     getters,
     mutations,
     actions
-}
+};

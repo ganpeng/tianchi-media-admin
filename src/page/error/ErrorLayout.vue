@@ -8,10 +8,10 @@
     export default {
         name: 'ErrorLayout',
         data() {
-            return {}
+            return {};
         },
         methods: {}
-    }
+    };
 </script>
 
 <style scoped lang="less"></style>

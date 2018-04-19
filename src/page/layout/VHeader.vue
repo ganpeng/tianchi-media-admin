@@ -14,35 +14,35 @@
 </template>
 
 <script>
-    import Cookies from 'js-cookie'
+    import Cookies from 'js-cookie';
 
     export default {
         name: 'VHeader',
         data() {
             return {
                 name: ''
-            }
+            };
         },
         created() {
-            this.name = Cookies.get('name')
+            this.name = Cookies.get('name');
         },
         methods: {
             handleCommand(command) {
                 switch (command) {
                     // 跳转到设置页面
                     case 'set':
-                        this.$router.push({name: 'InfoSetting'})
-                        break
+                        this.$router.push({name: 'InfoSetting'});
+                        break;
                     // 退出登录
                     case 'logout':
-                        this.$store.dispatch('user/logout')
-                        break
+                        this.$store.dispatch('user/logout');
+                        break;
                     default:
-                        break
+                        break;
                 }
             }
         }
-    }
+    };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

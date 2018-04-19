@@ -1,9 +1,9 @@
-'use strict'
+'use strict';
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
 
-const path = require('path')
-const env = require('./env')
+const path = require('path');
+const env = require('./env');
 
 module.exports = {
     dev: {
@@ -79,4 +79,4 @@ module.exports = {
         // Set to `true` or `false` to always turn it on or off
         bundleAnalyzerReport: process.env.npm_config_report
     }
-}
+};

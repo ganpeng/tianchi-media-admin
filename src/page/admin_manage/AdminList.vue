@@ -89,35 +89,35 @@
                 currentPage: 1,
                 pageSize: 10,
                 totalAmount: 0
-            }
+            };
         },
         mounted() {
-            this.getAdminList()
+            this.getAdminList();
         },
         methods: {
             // 获取管理员列表数据
             getAdminList() {
                 this.$axios.get(this.$util.format('/v1/admin/list?pageNum={0}&pageSize={1}', this.currentPage, this.pageSize)).then(response => {
                     if (response) {
-                        this.adminList = response.data.list
-                        this.totalAmount = response.data.total
+                        this.adminList = response.data.list;
+                        this.totalAmount = response.data.total;
                     }
-                })
+                });
             },
             // 跳转到详情页面
             checkDetail(userId) {
-                this.$router.push({name: 'AdminDetail', params: {id: userId}})
+                this.$router.push({name: 'AdminDetail', params: {id: userId}});
             },
             editAdminInfo(userId) {
-                this.$router.push({name: 'EditAdmin', params: {id: userId}})
+                this.$router.push({name: 'EditAdmin', params: {id: userId}});
             },
             handleSizeChange(pageSize) {
-                this.pageSize = pageSize
-                this.getAdminList()
+                this.pageSize = pageSize;
+                this.getAdminList();
             },
             handleCurrentChange(currentPage) {
-                this.currentPage = currentPage
-                this.getAdminList()
+                this.currentPage = currentPage;
+                this.getAdminList();
             },
             // 禁用确认
             disabledConfirm(userId, userStatus) {
@@ -126,10 +126,10 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.setAdminStatus(userId, userStatus)
+                    this.setAdminStatus(userId, userStatus);
                 }).catch(() => {
-                    this.$message('已取消禁用')
-                })
+                    this.$message('已取消禁用');
+                });
             },
             // 恢复确认
             recoverConfirm(userId, userStatus) {
@@ -138,33 +138,33 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.setAdminStatus(userId, userStatus)
+                    this.setAdminStatus(userId, userStatus);
                 }).catch(() => {
-                    this.$message('已取消恢复')
-                })
+                    this.$message('已取消恢复');
+                });
             },
             // 禁用或恢复管理员账号状态
             setAdminStatus(userId, userStatus) {
-                let action = userStatus === 'NORMAL' ? 'FORBIDDEN' : 'NORMAL'
+                let action = userStatus === 'NORMAL' ? 'FORBIDDEN' : 'NORMAL';
                 this.$axios.patch(this.$util.format('/v1/admin/{0}?status={1}', userId, action)).then(response => {
                     if (response) {
                         if (userStatus === 'NORMAL') {
                             this.$message({
                                 type: 'success',
                                 message: '禁用成功!'
-                            })
+                            });
                         } else {
                             this.$message({
                                 type: 'success',
                                 message: '恢复成功!'
-                            })
+                            });
                         }
-                        this.getAdminList()
+                        this.getAdminList();
                     }
-                })
+                });
             }
         }
-    }
+    };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

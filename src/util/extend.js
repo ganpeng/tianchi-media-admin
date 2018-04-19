@@ -1,4 +1,4 @@
-import constants from './constants'
+import constants from './constants';
 
 /**
  * 扩展公共方法的工具类模块，使用ES6 module
@@ -11,7 +11,7 @@ let util = {
      * @return {String}
      */
     trim(value) {
-        return value.toString().replace(/(^\s*) | (\s*$)/g, '')
+        return value.toString().replace(/(^\s*) | (\s*$)/g, '');
     },
     /**
      *format string
@@ -21,8 +21,8 @@ let util = {
      */
     format(str, ...args) {
         return str.replace(/{(\d+)}/g, function (match, number) {
-            return typeof args[number] !== 'undefined' ? args[number] : match
-        })
+            return typeof args[number] !== 'undefined' ? args[number] : match;
+        });
     },
     /**
      *Judge string is or not empty
@@ -30,7 +30,7 @@ let util = {
      * @return {Boolean} Is or not empty
      */
     isEmpty(str) {
-        return str === null || constants.RegExpConstants.EMPTY.test(this.trim(str))
+        return str === null || constants.RegExpConstants.EMPTY.test(this.trim(str));
     },
     /**
      *Judge string is or not an email address
@@ -38,7 +38,7 @@ let util = {
      * @return {Boolean} Is or not an email address
      */
     isEmail(str) {
-        return constants.RegExpConstants.EMAIL.test(this.trim(str))
+        return constants.RegExpConstants.EMAIL.test(this.trim(str));
     },
     /**
      *Judge string is or not a mobile number
@@ -46,7 +46,7 @@ let util = {
      * @return {Boolean} Is or not a mobile number
      */
     isMobile(str) {
-        return constants.RegExpConstants.MOBILE.test(this.trim(str))
+        return constants.RegExpConstants.MOBILE.test(this.trim(str));
     },
     /**
      *Judge string is or not a telephone number
@@ -54,7 +54,7 @@ let util = {
      * @return {Boolean} Is or not a telephone number
      */
     isTelephone(str) {
-        return constants.RegExpConstants.TELEPHONE.test(this.trim(str))
+        return constants.RegExpConstants.TELEPHONE.test(this.trim(str));
     },
     /**
      *Judge string is or not a right password in h5-admin project
@@ -62,7 +62,7 @@ let util = {
      * @return {Boolean} Is or not a right password
      */
     isPassword(str) {
-        return constants.RegExpConstants.PASSWORD.test(this.trim(str))
+        return constants.RegExpConstants.PASSWORD.test(this.trim(str));
     },
     /**
      * Format the date with specified format
@@ -72,19 +72,19 @@ let util = {
      **/
     formatDate(date, format) {
         // handle yyyy
-        format = format.replace(/yyyy/g, date.getFullYear())
+        format = format.replace(/yyyy/g, date.getFullYear());
         // handle MM
-        format = format.replace(/MM/g, date.getMonth() + 1)
+        format = format.replace(/MM/g, date.getMonth() + 1);
         // handle DD
-        format = format.replace(/DD/g, date.getDate())
+        format = format.replace(/DD/g, date.getDate());
         // handle HH
-        format = format.replace(/HH/g, date.getHours())
+        format = format.replace(/HH/g, date.getHours());
         // handle mm
-        format = format.replace(/mm/g, date.getMinutes())
+        format = format.replace(/mm/g, date.getMinutes());
         // handle SS
-        format = format.replace(/SS/g, date.getSeconds())
-        return format
+        format = format.replace(/SS/g, date.getSeconds());
+        return format;
     }
-}
+};
 
-export default util
+export default util;

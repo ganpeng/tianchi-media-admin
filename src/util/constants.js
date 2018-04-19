@@ -27,13 +27,13 @@ let RegExpConstants = {
      * The RegExp of password in project of h5-admin.
      */
     PASSWORD: /^[\da-zA-Z]{6,8}$/
-}
+};
 
 /**
  * The Object of constants Object.
  * @type {Object.<Object>}
  * @const
  */
-let constants = {RegExpConstants}
+let constants = {RegExpConstants};
 
-export default constants
+export default constants;

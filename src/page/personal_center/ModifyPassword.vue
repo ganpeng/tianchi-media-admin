@@ -6,17 +6,17 @@
             <el-breadcrumb-item>个人中心</el-breadcrumb-item>
             <el-breadcrumb-item>修改密码</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-form :model="passwordForm" status-icon :rules="passwordRules" ref="passwordForm" label-width="100px"
+        <el-form :model="form" status-icon :rules="passwordRules" ref="form" label-width="100px"
                  class="demo-ruleForm">
-            <el-form-item label="原密码" prop="originPassword">
-                <el-input v-model="passwordForm.originPassword" placeholder="请输入原密码"></el-input>
+            <el-form-item label="原密码" prop="oldPassword">
+                <el-input v-model="form.oldPassword" placeholder="请输入原密码"></el-input>
             </el-form-item>
             <el-form-item label="新密码" prop="newPassword">
-                <el-input type="password" v-model="passwordForm.newPassword" auto-complete="off"
+                <el-input type="password" v-model="form.newPassword" auto-complete="off"
                           placeholder="请输入6-8位新密码"></el-input>
             </el-form-item>
             <el-form-item label="确认新密码" prop="checkPassword">
-                <el-input type="password" v-model="passwordForm.checkPassword" auto-complete="off"
+                <el-input type="password" v-model="form.checkPassword" auto-complete="off"
                           placeholder="请重新输入新密码"></el-input>
             </el-form-item>
             <el-form-item>
@@ -32,42 +32,42 @@
     export default {
         name: 'ModifyPassword',
         data() {
-            let checkOriginPassword = (rule, value, callback) => {
+            let checkOldPassword = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    return callback(new Error('原密码不能为空'))
+                    return callback(new Error('原密码不能为空'));
                 } else if (!this.$util.isPassword(value)) {
-                    return callback(new Error('请输入6-8位原密码'))
+                    return callback(new Error('请输入6-8位原密码'));
                 } else {
-                    callback()
+                    callback();
                 }
-            }
+            };
             let validateNewPassword = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    callback(new Error('请输入新密码'))
+                    callback(new Error('请输入新密码'));
                 } else if (!this.$util.isPassword(value)) {
-                    return callback(new Error('请输入6-8位新密码'))
+                    return callback(new Error('请输入6-8位新密码'));
                 } else {
-                    callback()
+                    callback();
                 }
-            }
+            };
             let validatePassword2 = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    callback(new Error('请再次输入密码'))
-                } else if (this.$util.trim(value) !== this.$util.trim(this.passwordForm.password)) {
-                    callback(new Error('两次输入密码不一致!'))
+                    callback(new Error('请再次输入密码'));
+                } else if (this.$util.trim(value) !== this.$util.trim(this.form.oldPassword)) {
+                    callback(new Error('两次输入密码不一致!'));
                 } else {
-                    callback()
+                    callback();
                 }
-            }
+            };
             return {
-                passwordForm: {
-                    originPassword: '',
+                form: {
+                    oldPassword: '',
                     newPassword: '',
                     checkPassword: ''
                 },
                 passwordRules: {
-                    originPassword: [
-                        {validator: checkOriginPassword, trigger: 'blur'}
+                    oldPassword: [
+                        {validator: checkOldPassword, trigger: 'blur'}
                     ],
                     newPassword: [
                         {validator: validateNewPassword, trigger: 'blur'}
@@ -76,37 +76,33 @@
                         {validator: validatePassword2, trigger: 'blur'}
                     ]
                 }
-            }
+            };
         },
         methods: {
             submitForm() {
-                this.$refs['passwordForm'].validate((valid) => {
+                this.$refs['form'].validate((valid) => {
                     if (valid) {
-                        this.updatePassword()
+                        this.updatePassword();
                     } else {
-                        return false
+                        return false;
                     }
-                })
+                });
             },
             resetForm() {
-                this.$refs['passwordForm'].resetFields()
+                this.$refs['form'].resetFields();
             },
             updatePassword() {
                 // 请求接口
-                this.$axios.put('/v1/admin', {
-                    id: this.editInfo.id,
-                    email: this.editInfo.email,
-                    telephone: this.editInfo.telephone,
-                    mobile: this.editInfo.mobile,
-                    name: this.editInfo.name
-                }).then(response => {
+                this.$axios.patch(
+                    this.$util.format('/v1/admin?oldPassword={0}&newPassword={1}', this.form.oldPassword, this.form.newPassword)
+                ).then(response => {
                     if (response) {
-                        this.$message(response.data.name + '的账号更新成功')
+                        this.$message('您的密码更新成功');
                     }
-                })
+                });
             }
         }
-    }
+    };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

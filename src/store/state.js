@@ -3,4 +3,4 @@
 export default {
     // 消息提醒的显示时间
     msgDuration: 3000
-}
+};

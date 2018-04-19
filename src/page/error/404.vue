@@ -9,10 +9,10 @@
     export default {
         name: 'ErrorNotFound',
         data() {
-            return {}
+            return {};
         },
         methods: {}
-    }
+    };
 </script>
 
 <style scoped lang="less">

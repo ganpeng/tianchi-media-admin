@@ -47,48 +47,48 @@
 </template>
 
 <script>
-    import util from '../../util/extend'
+    import util from '../../util/extend';
 
     export default {
         name: 'RetrievePassword',
         data() {
             let checkPhone = (rule, value, callback) => {
                 if (!util.trim(value)) {
-                    return callback(new Error('手机号码不能为空'))
+                    return callback(new Error('手机号码不能为空'));
                 } else if (!Number.isInteger(util.trim(value))) {
-                    callback(new Error('请输入数字值'))
+                    callback(new Error('请输入数字值'));
                 } else if (!/^1[0-9]\d{10}$/.test(util.trim(value))) {
-                    callback(new Error('请填写11位手机号码'))
+                    callback(new Error('请填写11位手机号码'));
                 } else {
-                    callback()
+                    callback();
                 }
-            }
+            };
             let checkCode = (rule, value, callback) => {
                 if (!util.trim(value)) {
-                    return callback(new Error('短信验证码不能为空'))
+                    return callback(new Error('短信验证码不能为空'));
                 } else {
-                    callback()
+                    callback();
                 }
-            }
+            };
             let validatePassword = (rule, value, callback) => {
                 if (util.trim(value) === '') {
-                    callback(new Error('请输入密码'))
+                    callback(new Error('请输入密码'));
                 } else {
                     if (this.registerData.checkPassword !== '') {
-                        this.$refs.register.validateField('checkPassword')
+                        this.$refs.register.validateField('checkPassword');
                     }
-                    callback()
+                    callback();
                 }
-            }
+            };
             let validatePassword2 = (rule, value, callback) => {
                 if (util.trim(value) === '') {
-                    callback(new Error('请再次输入密码'))
+                    callback(new Error('请再次输入密码'));
                 } else if (util.trim(value) !== this.registerData.password) {
-                    callback(new Error('两次输入密码不一致!'))
+                    callback(new Error('两次输入密码不一致!'));
                 } else {
-                    callback()
+                    callback();
                 }
-            }
+            };
             return {
                 registerData: {
                     phoneNumber: '',
@@ -112,57 +112,57 @@
                         {validator: validatePassword2, trigger: 'blur'}
                     ]
                 }
-            }
+            };
         },
         methods: {
             // 发送短信验证码
             sendVerifyCode() {
-                let _this = this
+                let _this = this;
                 this.$refs.register.validateField('phoneNumber', (errMessage) => {
                     if (!errMessage) {
-                        this.codeMsg = '发送中...'
-                        this.sendCodeDisabled = true
+                        this.codeMsg = '发送中...';
+                        this.sendCodeDisabled = true;
                         // 发送短信验证码
-                        let delayTime = 10
+                        let delayTime = 10;
                         const timer = setInterval(
                             () => {
-                                _this.codeMsg = '已发送(' + delayTime + 's)'
-                                delayTime--
+                                _this.codeMsg = '已发送(' + delayTime + 's)';
+                                delayTime--;
                                 if (delayTime === -1) {
-                                    clearInterval(timer)
-                                    this.sendCodeDisabled = false
-                                    this.codeMsg = '重新点击发送验证码'
+                                    clearInterval(timer);
+                                    this.sendCodeDisabled = false;
+                                    this.codeMsg = '重新点击发送验证码';
                                 }
-                            }, 1000)
+                            }, 1000);
                     } else {
-                        return false
+                        return false;
                     }
-                })
+                });
             },
             // 提交表单，找回密码
             retrievePassword() {
                 this.$refs.register.validate((valid) => {
                     if (valid) {
                         // 请求找回密码接口
-                        this.$message('找回密码成功')
+                        this.$message('找回密码成功');
                     } else {
-                        return false
+                        return false;
                     }
-                })
+                });
             },
             resetForm() {
-                this.$refs.register.resetFields()
+                this.$refs.register.resetFields();
             },
             // 去登陆
             login() {
-                this.$router.push({name: 'Login'})
+                this.$router.push({name: 'Login'});
             },
             // 去除字符的前后所有空格
             trim(value) {
-                return value.toString().replace(/(^\s*) | (\s*$)/g, '')
+                return value.toString().replace(/(^\s*) | (\s*$)/g, '');
             }
         }
-    }
+    };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

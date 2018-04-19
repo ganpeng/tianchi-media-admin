@@ -45,7 +45,7 @@
     export default {
         name: 'VAside',
         data() {
-            return {}
+            return {};
         },
         methods: {
             handleOpen(key, keyPath) {
@@ -54,10 +54,10 @@
             },
             // 退出登录
             logout() {
-                this.$store.dispatch('user/logout')
+                this.$store.dispatch('user/logout');
             }
         }
-    }
+    };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

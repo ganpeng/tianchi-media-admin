@@ -23,9 +23,9 @@
 </template>
 
 <script>
-    import vHeader from './VHeader.vue'
-    import vFooter from './VFooter.vue'
-    import vAside from './VAside.vue'
+    import vHeader from './VHeader.vue';
+    import vFooter from './VFooter.vue';
+    import vAside from './VAside.vue';
 
     export default {
         name: 'Layout',
@@ -35,10 +35,10 @@
             vFooter
         },
         data() {
-            return {}
+            return {};
         },
         methods: {}
-    }
+    };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -2,7 +2,7 @@
  * define a bunch of functions in commonjs
  */
 
-'use strict'
+'use strict';
 
 let util = {
     /**
@@ -13,9 +13,9 @@ let util = {
      */
     format(str, ...args) {
         return str.replace(/{(\d+)}/g, function (match, number) {
-            return typeof args[number] !== 'undefined' ? args[number] : match
-        })
+            return typeof args[number] !== 'undefined' ? args[number] : match;
+        });
     }
-}
+};
 
-module.exports = util
+module.exports = util;

@@ -28,7 +28,7 @@
                             <el-input v-model="adminInfo.telephone" readonly></el-input>
                         </el-form-item>
                         <el-form-item class="tips">
-                            <label class="tips">此账号创建于{{adminInfo.createdAt | formatDate('yyyy-MM-DD')}}</label>
+                            <label class="tips">此账号创建于{{adminInfo.createdAt | formatDate('yyyy年MM月DD日')}}</label>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="toEdit">编辑信息</el-button>
@@ -61,33 +61,33 @@
                     status: 'NORMAL',
                     imageUrl: ''
                 }
-            }
+            };
         },
         filters: {
             displayStatus(status) {
                 if (status === 'NORMAL') {
-                    return '正常'
+                    return '正常';
                 } else {
-                    return '失效'
+                    return '失效';
                 }
             }
         },
         mounted() {
-            this.initInfo()
+            this.initInfo();
         },
         methods: {
             initInfo() {
                 this.$axios.get(this.$util.format('/v1/admin/{0}', this.$route.params.id)).then(response => {
                     if (response) {
-                        this.adminInfo = response.data
+                        this.adminInfo = response.data;
                     }
-                })
+                });
             },
             toEdit() {
-                this.$router.push({name: 'EditAdmin', params: {id: this.$route.params.id}})
+                this.$router.push({name: 'EditAdmin', params: {id: this.$route.params.id}});
             }
         }
-    }
+    };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
