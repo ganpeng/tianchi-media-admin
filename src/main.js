@@ -13,11 +13,13 @@ import 'element-ui/lib/theme-chalk/index.css';
 import 'babel-polyfill';
 import util from './util/extend';
 import './util/filters';
+import dragula from 'dragula';
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.prototype.$axios = axios;
 Vue.prototype.$util = util;
+Vue.prototype.$dragula = dragula;
 
 /* eslint-disable no-new */
 new Vue({

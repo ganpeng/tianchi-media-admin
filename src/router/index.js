@@ -15,6 +15,8 @@ import AdminDetail from '../page/admin_manage/AdminDetail';
 import EditAdmin from '../page/admin_manage/EditAdmin';
 import ErrorLayout from '../page/error/ErrorLayout';
 import ErrorNotFound from '../page/error/404';
+import ColumnsSetting from '../page/content_manage/column_manage/ColumnsSetting';
+import TodayRecommended from '../page/content_manage/column_manage/TodayRecommended';
 
 Vue.use(Router);
 
@@ -101,6 +103,18 @@ let router = new Router({
                     path: '/user-center/list',
                     name: 'UserList',
                     component: UserList
+                },
+                // 内容管理-栏目管理-栏目项设置
+                {
+                    path: '/content-manage/column-manage/setting',
+                    name: 'ColumnsSetting',
+                    component: ColumnsSetting
+                },
+                // 内容管理-栏目管理-今日推荐设置
+                {
+                    path: '/content-manage/column-manage/today-recommended',
+                    name: 'TodayRecommended',
+                    component: TodayRecommended
                 }
             ]
         },
