@@ -2,7 +2,7 @@
     <el-container>
         <!--头部-->
         <el-header>
-            <img src="../../assets/images/logo.png">
+            <img src="~assets/img/logo.png">
             <label>天驰传媒后台管理系统</label>
         </el-header>
         <!--内容部分-->

@@ -1,7 +1,7 @@
 <!--页头组件-->
 <template>
     <div>
-        <img src="../../assets/images/logo.png">
+        <img src="~assets/img/logo.png">
         <label>天驰传媒后台管理系统</label>
         <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">{{name}}<i class="el-icon-arrow-down el-icon--right"></i></span>

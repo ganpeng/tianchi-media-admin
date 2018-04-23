@@ -1,7 +1,7 @@
 <template>
     <el-container class="register-container">
         <el-header>
-            <img src="../../assets/images/logo.png">
+            <img src="~assets/img/logo.png">
             <label>后台管理系统 | 找回密码</label>
         </el-header>
         <el-main>

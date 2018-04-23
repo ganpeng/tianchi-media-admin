@@ -38,7 +38,8 @@ module.exports = {
       '@': resolve('src'),
         'sysComponents': '@/components/locale',
         'util': '@/util',
-        'asset': '@/asset'
+        'assets': resolve('src/assets'),
+        'sysPage': resolve('src/page')
     }
   },
   module: {
