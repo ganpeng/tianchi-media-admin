@@ -15,7 +15,7 @@
                 <div class="live-channel">
                     <img src="~assets/img/temporary/column_manage/main-channel.png" alt="主推荐窗口">
                 </div>
-                <div class="ad-group">
+                <div class="ad-group" @click="toAdGroup">
                     <img src="~assets/img/temporary/column_manage/main-ad.png" alt="主推荐广告">
                 </div>
             </div>
@@ -171,6 +171,9 @@
         },
         methods: {
             init() {
+            },
+            toAdGroup() {
+                this.$router.push({name: 'AdGroup'});
             },
             prePublish() {
 

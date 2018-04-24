@@ -21,6 +21,7 @@ import PersonList from 'sysPage/person_manage/PersonList';
 import CreatePerson from 'sysPage/person_manage/CreatePerson';
 import EditPerson from 'sysPage/person_manage/EditPerson';
 import DisplayPerson from 'sysPage/person_manage/DisplayPerson';
+import AdGroup from 'sysPage/content_manage/column_manage/setting/AdGroup';
 
 Vue.use(Router);
 
@@ -110,15 +111,21 @@ let router = new Router({
                 },
                 // 内容管理-栏目管理-栏目项设置
                 {
-                    path: '/content-manage/column-manage/setting',
+                    path: '/column-manage/setting',
                     name: 'ColumnsSetting',
                     component: ColumnsSetting
                 },
                 // 内容管理-栏目管理-今日推荐设置
                 {
-                    path: '/content-manage/column-manage/today-recommended',
+                    path: '/column-manage/today-recommended',
                     name: 'TodayRecommended',
                     component: TodayRecommended
+                },
+                // 内容管理-栏目管理-广告组设置
+                {
+                    path: '/column-manage/setting/ad-group',
+                    name: 'AdGroup',
+                    component: AdGroup
                 },
                 {
                     path: '/person-manage/create',
