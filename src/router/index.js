@@ -17,6 +17,10 @@ import ErrorLayout from 'sysPage/error/ErrorLayout';
 import ErrorNotFound from 'sysPage/error/404';
 import ColumnsSetting from 'sysPage/content_manage/column_manage/ColumnsSetting';
 import TodayRecommended from 'sysPage/content_manage/column_manage/TodayRecommended';
+import PersonList from 'sysPage/person_manage/PersonList';
+import CreatePerson from 'sysPage/person_manage/CreatePerson';
+import EditPerson from 'sysPage/person_manage/EditPerson';
+import DisplayPerson from 'sysPage/person_manage/DisplayPerson';
 
 Vue.use(Router);
 
@@ -115,6 +119,26 @@ let router = new Router({
                     path: '/content-manage/column-manage/today-recommended',
                     name: 'TodayRecommended',
                     component: TodayRecommended
+                },
+                {
+                    path: '/person-manage/create',
+                    name: 'CreatePerson',
+                    component: CreatePerson
+                },
+                {
+                    path: '/person-manage/edit/:id',
+                    name: 'EditPerson',
+                    component: EditPerson
+                },
+                {
+                    path: '/person-manage/display/:id',
+                    name: 'DisplayPerson',
+                    component: DisplayPerson
+                },
+                {
+                    path: '/person-manage/list',
+                    name: 'PersonList',
+                    component: PersonList
                 }
             ]
         },
