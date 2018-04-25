@@ -23,7 +23,7 @@
                     </el-menu-item-group>
                     <el-submenu index="1-2">
                         <template slot="title">节目资源管理</template>
-                        <el-menu-item index="1-2-1">选项1</el-menu-item>
+                        <el-menu-item index="/program-manage/create">新增节目</el-menu-item>
                     </el-submenu>
                     <el-submenu index="1-3">
                         <template slot="title">人物资源管理</template>

@@ -21,6 +21,7 @@ import PersonList from 'sysPage/person_manage/PersonList';
 import CreatePerson from 'sysPage/person_manage/CreatePerson';
 import EditPerson from 'sysPage/person_manage/EditPerson';
 import DisplayPerson from 'sysPage/person_manage/DisplayPerson';
+import CreateProgram from 'sysPage/program-manage/CreateProgram';
 import AdGroup from 'sysPage/content_manage/column_manage/setting/AdGroup';
 
 Vue.use(Router);
@@ -127,25 +128,34 @@ let router = new Router({
                     name: 'AdGroup',
                     component: AdGroup
                 },
+                // 人物管理-新增人物
                 {
                     path: '/person-manage/create',
                     name: 'CreatePerson',
                     component: CreatePerson
                 },
+                // 人物管理-编辑人物
                 {
                     path: '/person-manage/edit/:id',
                     name: 'EditPerson',
                     component: EditPerson
                 },
+                // 人物管理-任务详情
                 {
                     path: '/person-manage/display/:id',
                     name: 'DisplayPerson',
                     component: DisplayPerson
                 },
+                // 人物管理-人物列表
                 {
                     path: '/person-manage/list',
                     name: 'PersonList',
                     component: PersonList
+                },
+                {
+                    path: '/program-manage/create',
+                    name: 'CreateProgram',
+                    component: CreateProgram
                 }
             ]
         },

@@ -9,7 +9,7 @@
         </el-breadcrumb>
         <el-row>
             <el-col :span="8">
-                <div class="grid-content bg-purple">
+                <!-- <div class="grid-content bg-purple"> -->
                     <el-form :model="person" :rules="infoRules" status-icon ref="createPerson"
                             label-width="100px"
                             class="form-block">
@@ -45,6 +45,18 @@
                         <el-form-item label="职业" prop="mainRole" required>
                             <el-input :readonly="readonly" v-model="person.mainRole" placeholder=""></el-input>
                         </el-form-item>
+                        <el-form-item label="人物图片">
+                            <el-upload
+                                class="upload-demo"
+                                action="https://jsonplaceholder.typicode.com/posts/"
+                                :on-preview="handlePreview"
+                                :on-remove="handleRemove"
+                                :file-list="fileList2"
+                                list-type="picture">
+                                <el-button size="small" type="primary">点击上传</el-button>
+                                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                            </el-upload>
+                        </el-form-item>
                         <el-form-item class="tips">
                             <label class="tips">带 <i>*</i> 号的为必填项</label>
                         </el-form-item>
@@ -54,22 +66,7 @@
                             <el-button @click="reset">重 置</el-button>
                         </el-form-item>
                     </el-form>
-                </div>
-            </el-col>
-            <el-col :span="16">
-                <div class="grid-content bg-purple-light">
-                    <el-upload
-                        class="avatar-uploader"
-                        :disabled="readonly"
-                        action="https://jsonplaceholder.typicode.com/posts/"
-                        :show-file-list="false"
-                        :on-success="handleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload">
-                        <img v-if="person.avatar" :src="person.avatar" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                    <label>人物照片</label>
-                </div>
+                <!-- </div> -->
             </el-col>
         </el-row>
     </div>
@@ -101,6 +98,16 @@
                     mainRole: '',
                     avatar: ''
                 },
+                fileList2: [
+                    {
+                        name: 'food.jpeg',
+                        url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+                    },
+                    {
+                        name: 'food2.jpeg',
+                        url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+                    }
+                ],
                 infoRules: {
                     name: [{ validator: checkName, trigger: 'blur' }]
                 },
@@ -122,7 +129,6 @@
         },
         created() {
             if (this.status === 1 || this.status === 2) {
-                let id = this.$route.params.id;
             }
         },
         computed: {
@@ -152,21 +158,27 @@
             reset() {
                 this.$refs['createPerson'].resetFields();
             },
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            handlePreview(file) {
+                console.log(file);
+            },
             // 成功上传回调
             handleAvatarSuccess(res, file) {
                 this.imageUrl = URL.createObjectURL(file.raw);
             },
             // 上传图片之前回调
             beforeAvatarUpload(file) {
-                const isJPG = file.type === 'image/jpeg';
-                const isLt2M = file.size / 1024 / 1024 < 2;
-                if (!isJPG) {
-                    this.$message.error('上传头像图片只能是 JPG 格式!');
-                }
-                if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!');
-                }
-                return isJPG && isLt2M;
+                // const isJPG = file.type === 'image/jpeg';
+                // const isLt2M = file.size / 1024 / 1024 < 2;
+                // if (!isJPG) {
+                //     this.$message.error('上传头像图片只能是 JPG 格式!');
+                // }
+                // if (!isLt2M) {
+                //     this.$message.error('上传头像图片大小不能超过 2MB!');
+                // }
+                // return isJPG && isLt2M;
             }
         }
     };
