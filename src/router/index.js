@@ -23,6 +23,7 @@ import EditPerson from 'sysPage/person_manage/EditPerson';
 import DisplayPerson from 'sysPage/person_manage/DisplayPerson';
 import CreateProgram from 'sysPage/program-manage/CreateProgram';
 import AdGroup from 'sysPage/content_manage/column_manage/setting/AdGroup';
+import AppendAd from 'sysPage/content_manage/column_manage/setting/AppendAd';
 
 Vue.use(Router);
 
@@ -127,6 +128,12 @@ let router = new Router({
                     path: '/column-manage/setting/ad-group',
                     name: 'AdGroup',
                     component: AdGroup
+                },
+                // 内容管理-栏目管理-单个广告设置
+                {
+                    path: '/column-manage/setting/ad',
+                    name: 'AppendAd',
+                    component: AppendAd
                 },
                 // 人物管理-新增人物
                 {

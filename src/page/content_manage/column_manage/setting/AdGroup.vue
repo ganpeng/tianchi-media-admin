@@ -10,7 +10,7 @@
         <el-row>
             <div class="block-title">广告组列表</div>
             <el-tag>
-                <router-link to="/column_manage/setting/ad">添加广告</router-link>
+                <router-link to="/column-manage/setting/ad">添加广告</router-link>
             </el-tag>
             <el-table
                 :data="adList"
