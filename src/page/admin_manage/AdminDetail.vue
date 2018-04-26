@@ -92,12 +92,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-    .block-title {
-        padding: 30px 0 20px 20px;
-        line-height: 2;
-        text-align: left;
-        font-size: 22px;
-    }
 
     .tips {
         text-align: left;

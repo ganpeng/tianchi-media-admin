@@ -26,6 +26,7 @@ import ProgramTypeManage from 'sysPage/program-manage/ProgramTypeManage';
 import ProgramList from 'sysPage/program-manage/ProgramList';
 import AdGroup from 'sysPage/content_manage/column_manage/setting/AdGroup';
 import AppendAd from 'sysPage/content_manage/column_manage/setting/AppendAd';
+import AppendProgram from 'sysPage/content_manage/column_manage/setting/AppendProgram';
 
 Vue.use(Router);
 
@@ -136,6 +137,12 @@ let router = new Router({
                     path: '/column-manage/setting/ad',
                     name: 'AppendAd',
                     component: AppendAd
+                },
+                // 内容管理-栏目管理-节目选择设置
+                {
+                    path: '/column-manage/setting/program',
+                    name: 'AppendProgram',
+                    component: AppendProgram
                 },
                 // 人物管理-新增人物
                 {

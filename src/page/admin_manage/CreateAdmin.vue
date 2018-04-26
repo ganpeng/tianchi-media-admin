@@ -160,21 +160,6 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
 
-    .form-block {
-        margin-top: 60px;
-        text-align: left;
-        .operate {
-            text-align: center;
-        }
-        .tips {
-            text-align: left;
-            i {
-                color: #f56c6c;
-            }
-        }
-
-    }
-
     .avatar-uploader i {
         margin-bottom: 20px;
         margin-top: 70px;

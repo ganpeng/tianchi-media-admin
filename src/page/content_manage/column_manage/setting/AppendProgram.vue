@@ -1,16 +1,15 @@
-<!--内容管理-栏目管理-广告选择组件-->
+<!--内容管理-栏目管理-节目选择组件-->
 <template>
     <div>
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
-            <el-breadcrumb-item>广告选择</el-breadcrumb-item>
+            <el-breadcrumb-item>节目选择</el-breadcrumb-item>
         </el-breadcrumb>
         <el-steps :active="activeStep" align-center>
-            <el-step title="步骤1" description="选择广告素材及排序"></el-step>
-            <el-step title="步骤2" description="选择广告匹配策略"></el-step>
-            <el-step title="步骤3" description="设置广告名称"></el-step>
+            <el-step title="步骤1" description="选择节目资源"></el-step>
+            <el-step title="步骤2" description="选择节目图片"></el-step>
         </el-steps>
         <keep-alive>
             <component :is="currentView">
@@ -18,24 +17,22 @@
             </component>
         </keep-alive>
         <div class="step-button">
-            <el-button @click="next" v-if="activeStep < 2">下一步</el-button>
-            <el-button @click="previous" v-if="activeStep > 0">上一步</el-button>
-            <el-button @click="complete" v-if="activeStep === 2">完成</el-button>
+            <el-button @click="next" v-if="activeStep === 0">下一步</el-button>
+            <el-button @click="previous" v-if="activeStep === 1">上一步</el-button>
+            <el-button @click="complete" v-if="activeStep === 1">完成</el-button>
         </div>
     </div>
 </template>
 
 <script>
-    import AdFirstStep from './AdFirstStep';
-    import AdSecondStep from './AdSecondStep';
-    import AdThirdStep from './AdThirdStep';
+    import ProgramFirstStep from './ProgramFirstStep';
+    import ProgramSecondStep from './ProgramSecondStep';
 
     export default {
-        name: 'AppendAd',
+        name: 'AppendProgram',
         components: {
-            AdFirstStep,
-            AdSecondStep,
-            AdThirdStep
+            ProgramFirstStep,
+            ProgramSecondStep
         },
         data() {
             return {
@@ -46,13 +43,11 @@
             currentView() {
                 switch (this.activeStep) {
                     case 0:
-                        return 'AdFirstStep';
+                        return 'ProgramFirstStep';
                     case 1:
-                        return 'AdSecondStep';
-                    case 2:
-                        return 'AdThirdStep';
+                        return 'ProgramSecondStep';
                     default:
-                        return 'AdFirstStep';
+                        return 'ProgramFirstStep';
                 }
             }
         },
@@ -73,7 +68,7 @@
             // 完成
             complete() {
                 this.$message({
-                    message: '设置广告成功',
+                    message: '设置节目成功',
                     type: 'success'
                 });
             }
