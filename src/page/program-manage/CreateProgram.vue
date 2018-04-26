@@ -49,7 +49,7 @@
                                     :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-button type="primary" plain>管理分类和类型</el-button>
+                            <el-button type="primary" @click="gotoProgramTypePage" plain>管理分类和类型</el-button>
                         </el-form-item>
                         <el-form-item label="节目类型">
                             <el-select v-model="program.programType" multiple placeholder="请选择">
@@ -70,7 +70,7 @@
                                     :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-button type="primary" plain>新增人物</el-button>
+                            <el-button type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                         </el-form-item>
                         <el-form-item label="节目导演">
                             <el-select v-model="program.programType" multiple placeholder="请选择">
@@ -81,7 +81,7 @@
                                     :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-button type="primary" plain>新增人物</el-button>
+                            <el-button type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                         </el-form-item>
                         <el-form-item label="节目图片">
                             <el-button type="primary" @click="imageUploadDialogVisible = true">添加节目图片<i class="el-icon-upload el-icon--right"></i></el-button>
@@ -239,17 +239,20 @@
         </div>
         <upload-program-image-dialog :imageUploadDialogVisible="imageUploadDialogVisible" v-on:changeImageDialogStatus="closeImageDialog($event)"></upload-program-image-dialog>
         <upload-program-video-dialog :videoUploadDialogVisible="videoUploadDialogVisible" v-on:changeVideoDialogStatus="closeVideoDialog($event)"></upload-program-video-dialog>
+        <create-person-dialog :createPersonDialogVisible="createPersonDialogVisible" v-on:changePersonDialogStatus="closePersonDialog($event)"></create-person-dialog>
     </div>
 </template>
 <script>
     import UploadProgramImageDialog from './UploadProgramImageDialog';
     import UploadProgramVideoDialog from './UploadProgramVideoDialog';
+    import CreatePersonDialog from './CreatePersonDialog';
 
     export default {
         name: 'CreateProgram',
         components: {
             UploadProgramImageDialog,
-            UploadProgramVideoDialog
+            UploadProgramVideoDialog,
+            CreatePersonDialog
         },
         data() {
             return {
@@ -270,9 +273,10 @@
                     desc: ''
                 },
                 imageUploadDialogVisible: false,
-                dialogImageUrl: '',
                 dialogVisible: false,
                 videoUploadDialogVisible: false,
+                createPersonDialogVisible: false,
+                dialogImageUrl: '',
                 areaOptions: [
                     {
                         value: '大陆',
@@ -368,11 +372,17 @@
             onSubmit() {
                 console.log('submit!');
             },
-            closeImageDialog(res) {
-                this.imageUploadDialogVisible = res;
+            closeImageDialog(status) {
+                this.imageUploadDialogVisible = status;
             },
-            closeVideoDialog(res) {
-                this.videoUploadDialogVisible = res;
+            closeVideoDialog(status) {
+                this.videoUploadDialogVisible = status;
+            },
+            closePersonDialog(status) {
+                this.createPersonDialogVisible = status;
+            },
+            gotoProgramTypePage() {
+                this.$router.push({name: 'ProgramTypeManage'});
             },
             handleRemove(file, fileList) {
                 console.log(file, fileList);

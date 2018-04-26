@@ -13,6 +13,9 @@
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                 </el-input>
             </el-form-item>
+            <el-form-item>
+                <el-button type="primary">搜索</el-button>
+            </el-form-item>
             <el-form-item class="create-account">
                 <el-tag>
                     <router-link to="/person-manage/create">新增人物</router-link>
@@ -77,11 +80,11 @@
         name: 'PersonList',
         data() {
             return {
-            searchContent: '',
-            personList: [],
-            currentPage: 1,
-            pageSize: 10,
-            totalAmount: 0
+                searchContent: '',
+                personList: [],
+                currentPage: 1,
+                pageSize: 10,
+                totalAmount: 0
             };
         },
         mounted() {
@@ -133,8 +136,6 @@
         }
     };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
     .el-form {
         margin-left: 20px;

@@ -22,6 +22,8 @@ import CreatePerson from 'sysPage/person_manage/CreatePerson';
 import EditPerson from 'sysPage/person_manage/EditPerson';
 import DisplayPerson from 'sysPage/person_manage/DisplayPerson';
 import CreateProgram from 'sysPage/program-manage/CreateProgram';
+import ProgramTypeManage from 'sysPage/program-manage/ProgramTypeManage';
+import ProgramList from 'sysPage/program-manage/ProgramList';
 import AdGroup from 'sysPage/content_manage/column_manage/setting/AdGroup';
 import AppendAd from 'sysPage/content_manage/column_manage/setting/AppendAd';
 
@@ -147,7 +149,7 @@ let router = new Router({
                     name: 'EditPerson',
                     component: EditPerson
                 },
-                // 人物管理-任务详情
+                // 人物管理-人物详情
                 {
                     path: '/person-manage/display/:id',
                     name: 'DisplayPerson',
@@ -159,10 +161,23 @@ let router = new Router({
                     name: 'PersonList',
                     component: PersonList
                 },
+                // 节目管理
+                // 新增节目
                 {
                     path: '/program-manage/create',
                     name: 'CreateProgram',
                     component: CreateProgram
+                },
+                {
+                    path: '/program-manage/list',
+                    name: 'ProgramList',
+                    component:ProgramList
+                },
+                // 节目类别管理
+                {
+                    path: '/program-manage/type',
+                    name: 'ProgramTypeManage',
+                    component: ProgramTypeManage
                 }
             ]
         },
