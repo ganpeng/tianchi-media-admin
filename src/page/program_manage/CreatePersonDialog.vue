@@ -1,4 +1,4 @@
-<!--添加节目-->
+<!--添加节目新增人物弹出层-->
 <template>
     <el-dialog
         title="新增人物"
@@ -8,8 +8,8 @@
         :close-on-press-escape="false">
         <person-form ref="personForm"></person-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="cancelHandler">取 消</el-button>
-            <el-button type="primary" @click="successHandler">创建</el-button>
+            <el-button @click="cancelHandler">取消</el-button>
+            <el-button type="primary" @click="createPerson">创建</el-button>
         </div>
     </el-dialog>
 </template>
@@ -21,11 +21,11 @@ export default {
     },
     props: ['createPersonDialogVisible'],
     methods: {
-        // 新增人物
         createPerson() {
             const personForm = this.$refs.personForm.$refs['createPerson'];
             personForm.validate(valid => {
                 if (valid) {
+                    this.cancelHandler();
                 } else {
                     return false;
                 }
@@ -35,9 +35,6 @@ export default {
             this.$emit('changePersonDialogStatus', false);
             const personForm = this.$refs.personForm.$refs['createPerson'];
             personForm.resetFields();
-        },
-        successHandler() {
-            this.cancelHandler();
         }
     }
 };

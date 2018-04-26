@@ -1,3 +1,4 @@
+<!-- 节目列表页组件 -->
 <template>
     <div class="program-list-container">
         <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -9,7 +10,7 @@
         <div class="table-container">
             <el-form :inline="true" class="demo-form-inline search-form">
                 <el-form-item class="search">
-                    <el-input v-model="searchContent" placeholder="搜索你想要的信息">
+                    <el-input v-model="searchFields.searsearchContent" placeholder="搜索你想要的信息">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                 </el-form-item>
@@ -30,31 +31,31 @@
             <el-form :inline="true" class="demo-form-inline">
                 <el-form-item label="上映时间">
                     <el-date-picker
-                        v-model="value1"
+                        v-model="searchFields.releaseTime"
                         type="year"
                         placeholder="请选择上映时间">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="地区">
-                    <el-select v-model="region" placeholder="请选择制片地区">
+                    <el-select v-model="searchFields.area" placeholder="请选择制片地区">
                         <el-option label="区域一" value="shanghai"></el-option>
                         <el-option label="区域二" value="beijing"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="分类">
-                    <el-select v-model="region" placeholder="请选择分类">
+                    <el-select v-model="searchFields.programClassification" placeholder="请选择分类">
                         <el-option label="区域一" value="shanghai"></el-option>
                         <el-option label="区域二" value="beijing"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="类型">
-                    <el-select v-model="region" placeholder="请选择类型">
+                    <el-select v-model="searchFields.programType" placeholder="请选择类型">
                         <el-option label="区域一" value="shanghai"></el-option>
                         <el-option label="区域二" value="beijing"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="状态">
-                    <el-select v-model="region" placeholder="请选择状态">
+                    <el-select v-model="searchFields.status" placeholder="请选择状态">
                         <el-option label="区域一" value="shanghai"></el-option>
                         <el-option label="区域二" value="beijing"></el-option>
                     </el-select>
@@ -98,11 +99,18 @@
     </div>
 </template>
 <script>
-
 export default {
     name: 'ProgramList',
     data() {
         return {
+            searchFields: {
+                releaseTime: '',
+                area: '',
+                programClassification: '',
+                programType: '',
+                status: '',
+                searchContent: ''
+            },
             searchContent: '',
             personList: [],
             currentPage: 1,
@@ -111,11 +119,11 @@ export default {
         };
     },
     methods: {
+        handleSizeChange() {},
+        handleCurrentChange() {}
     }
 };
 </script>
 <style lang="less" scoped>
 
 </style>
-
-

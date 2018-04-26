@@ -1,3 +1,4 @@
+<!-- 节目类型管理组件 -->
 <template>
     <div class="program-type-container">
         <el-breadcrumb separator-class="el-icon-arrow-right">

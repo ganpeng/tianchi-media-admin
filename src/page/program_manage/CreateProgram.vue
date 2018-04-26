@@ -11,9 +11,21 @@
             <el-col :span="24">
                 <el-col :span="8">
                     <div class="block-title">节目基本信息</div>
-                    <el-form ref="form" :model="program" label-width="100px" class="form-block">
+                    <el-form ref="createProgramForm" :rules="infoRules" status-icon :model="program" label-width="100px" class="form-block">
+                        <el-form-item label="全平台通用ID">
+                            <el-input v-model="program.id" readonly></el-input>
+                        </el-form-item>
                         <el-form-item label="节目名称">
                             <el-input v-model="program.name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="节目看点">
+                            <el-input v-model="program.point"></el-input>
+                        </el-form-item>
+                        <el-form-item label="节目状态">
+                            <el-input v-model="program.status" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="节目来源">
+                            <el-input v-model="program.source" readonly></el-input>
                         </el-form-item>
                         <el-form-item label="节目简介">
                             <el-input
@@ -55,6 +67,16 @@
                             <el-select v-model="program.programType" multiple placeholder="请选择">
                                 <el-option
                                     v-for="item in typeOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="关键字">
+                            <el-select v-model="program.keyWords" multiple placeholder="请选择">
+                                <el-option
+                                    v-for="item in keyWordsOptions"
                                     :key="item.value"
                                     :label="item.label"
                                     :value="item.value">
@@ -257,20 +279,20 @@
         data() {
             return {
                 program: {
+                    id: '2018040513444522777',
                     name: '',
                     area: '',
+                    point: '',
+                    status: '注册成功',
+                    source: '媒资系统注入',
                     programClassification: '',
                     programType: [],
                     leadActor: [],
                     director: [],
+                    keyWords: [],
                     releaseTime: '',
                     programImageList: [],
-                    profile: '',
-                    region: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    desc: ''
+                    profile: ''
                 },
                 imageUploadDialogVisible: false,
                 dialogVisible: false,
@@ -347,6 +369,16 @@
                         label: '斯皮尔伯格'
                     }
                 ],
+                keyWordsOptions: [
+                    {
+                        value: 'js',
+                        label: 'js'
+                    },
+                    {
+                        value: 'css',
+                        label: 'css'
+                    }
+                ],
                 tableData: [
                     {
                         date: '2016-05-02',
@@ -365,12 +397,40 @@
                         name: '王小虎',
                         address: '上海市普陀区金沙江路 1516 弄'
                     }
-                ]
+                ],
+                infoRules: {
+                    name: [
+                        { required: true, message: '请输入节目名称', trigger: 'change' }
+                    ],
+                    area: [
+                        { required: true, message: '请选择地区', trigger: 'change' }
+                    ],
+                    releaseTime: [
+                        { required: true, message: '请选择上映日期', trigger: 'change' }
+                    ],
+                    profile: [
+                        { required: true, message: '请输入节目简介', trigger: 'change' }
+                    ],
+                    programType: [
+                        { required: true, message: '请选择节目类型', trigger: 'change' }
+                    ],
+                    leadActor: [
+                        { required: true, message: '请选择节目主演', trigger: 'change' }
+                    ],
+                    director: [
+                        { required: true, message: '请选择节目导演', trigger: 'change' }
+                    ]
+                }
             };
         },
         methods: {
             onSubmit() {
-                console.log('submit!');
+                this.$refs.createProgramForm.validate(value => {
+                    if (value) {
+                    } else {
+                        return false;
+                    }
+                });
             },
             closeImageDialog(status) {
                 this.imageUploadDialogVisible = status;

@@ -1,17 +1,18 @@
+<!-- 新建人物的表单组件  -->
 <template>
     <el-form :model="person" :rules="infoRules" status-icon ref="createPerson"
             label-width="100px"
             class="form-block">
-        <el-form-item label="人物姓名" prop="name" required>
+        <el-form-item label="人物姓名" prop="name">
             <el-input v-model="person.name" :readonly="readonly" placeholder="请输入人物姓名"></el-input>
         </el-form-item>
-        <el-form-item label="人物简介" prop="profile" required>
+        <el-form-item label="人物简介" prop="profile">
             <el-input type="textarea" :readonly="readonly" :autosize="{ minRows: 4, maxRows: 12}" placeholder="请输入人物简介" v-model="person.profile"></el-input>
         </el-form-item>
         <el-form-item label="出生日期" prop="birthday">
             <el-date-picker v-model="person.birthday" :readonly="readonly" type="date" placeholder="年/月/日"></el-date-picker>
         </el-form-item>
-        <el-form-item label="所属地区" prop="area" required>
+        <el-form-item label="所属地区" prop="area">
             <el-select :disabled="readonly" v-model="person.area" placeholder="请选择地区">
                 <el-option
                     v-for="item in options"
@@ -31,7 +32,7 @@
                 <template slot="append">kg</template>
             </el-input>
         </el-form-item>
-        <el-form-item label="职业" prop="mainRole" required>
+        <el-form-item label="职业" prop="mainRole">
             <el-input :readonly="readonly" v-model="person.mainRole" placeholder=""></el-input>
         </el-form-item>
         <el-form-item label="人物图片" prop="imageList">
@@ -65,10 +66,6 @@ let personDefault = {
         {
             name: 'food.jpeg',
             url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        },
-        {
-            name: 'food2.jpeg',
-            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
         }
     ]
 };
@@ -90,17 +87,23 @@ export default {
         }
     },
     data() {
-        let checkName = (rule, value, callback) => {
-            if (this.$util.isEmpty(value)) {
-                return callback(new Error('姓名不能为空'));
-            } else {
-                callback();
-            }
-        };
-
         return {
             infoRules: {
-                name: [{ validator: checkName, trigger: 'blur' }]
+                name: [
+                    { required: true, message: '请输入人物名称', trigger: 'change' }
+                ],
+                profile: [
+                    { required: true, message: '请输入人物简介', trigger: 'change' }
+                ],
+                birthday: [
+                    { required: true, message: '请输入出生日期', trigger: 'change' }
+                ],
+                area: [
+                    { required: true, message: '请选择区域', trigger: 'change' }
+                ],
+                mainRole: [
+                    { required: true, message: '请输入人物职业', trigger: 'change' }
+                ]
             },
             options: [
                 {
