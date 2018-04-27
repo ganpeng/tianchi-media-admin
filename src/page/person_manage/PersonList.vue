@@ -16,6 +16,16 @@
             <el-form-item>
                 <el-button type="primary">搜索</el-button>
             </el-form-item>
+            <el-form-item label="地区">
+                <el-select v-model="area" placeholder="请选择">
+                    <el-option
+                        v-for="item in areaOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item class="create-account">
                 <el-tag>
                     <router-link to="/person-manage/create">新增人物</router-link>
@@ -81,10 +91,25 @@
         data() {
             return {
                 searchContent: '',
+                area: '',
                 personList: [],
                 currentPage: 1,
                 pageSize: 10,
-                totalAmount: 0
+                totalAmount: 0,
+                areaOptions: [
+                    {
+                        value: '大陆',
+                        label: '大陆'
+                    },
+                    {
+                        value: '香港',
+                        label: '香港'
+                    },
+                    {
+                        value: '台湾',
+                        label: '台湾'
+                    }
+                ]
             };
         },
         mounted() {

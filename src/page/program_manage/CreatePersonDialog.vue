@@ -5,7 +5,8 @@
         :visible.sync="createPersonDialogVisible"
         :show-close="false"
         :close-on-click-modal="false"
-        :close-on-press-escape="false">
+        :close-on-press-escape="false"
+        append-to-body>
         <person-form ref="personForm"></person-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="cancelHandler">取消</el-button>

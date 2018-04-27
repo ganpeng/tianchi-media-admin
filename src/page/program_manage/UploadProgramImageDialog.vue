@@ -1,11 +1,12 @@
 <!-- 上传节目图片的弹窗组件 -->
 <template>
     <el-dialog
-        title="上传节目图片"
+        :title="title"
         :visible.sync="imageUploadDialogVisible"
         :show-close="false"
         :close-on-click-modal="false"
-        :close-on-press-escape="false">
+        :close-on-press-escape="false"
+        append-to-body>
         <el-form :model="form" class="form-block" label-width="100px">
             <el-form-item label="规格尺寸">
                 <el-select v-model="form.spec" placeholder="请选择规格尺寸">
@@ -20,6 +21,20 @@
             </el-form-item>
             <el-form-item label="图片名称">
                 <el-input v-model="form.name" auto-complete="off" placeholder="请输入图片名称"></el-input>
+            </el-form-item>
+            <el-form-item label="上传图片">
+                <el-col :span="10">
+                    <el-upload
+                        class="upload-demo"
+                        action="https://jsonplaceholder.typicode.com/posts/"
+                        :on-preview="handlePreview"
+                        :on-remove="handleRemove"
+                        :file-list="fileList2"
+                        list-type="picture">
+                            <el-button size="small" type="primary">点击上传</el-button>
+                            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件</div>
+                    </el-upload>
+                </el-col>
             </el-form-item>
             <el-form-item label="图片大小">
                 <el-input v-model="form.size" readonly></el-input>
@@ -38,7 +53,7 @@
     import ImageSizeDialog from './ImageSizeDialog';
 
     export default {
-        props: ['imageUploadDialogVisible'],
+        props: ['imageUploadDialogVisible', 'title'],
         components: {
             ImageSizeDialog
         },
@@ -49,6 +64,7 @@
                     size: '5M',
                     spec: ''
                 },
+                fileList2: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
                 imageSizeOptions: [
                     {
                         value: '0',
@@ -75,6 +91,10 @@
             },
             closeImageSizeDialog(res) {
                 this.imageSizeDialogVisible = false;
+            },
+            handleRemove(file, fileList) {
+            },
+            handlePreview(file) {
             }
         }
     };

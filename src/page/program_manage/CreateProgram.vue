@@ -11,23 +11,23 @@
             <el-col :span="24">
                 <el-col :span="8">
                     <div class="block-title">节目基本信息</div>
-                    <el-form ref="createProgramForm" :rules="infoRules" status-icon :model="program" label-width="100px" class="form-block">
+                    <el-form ref="createProgramForm" :rules="programRules" status-icon :model="program" label-width="100px" class="form-block">
                         <el-form-item label="全平台通用ID">
                             <el-input v-model="program.id" readonly></el-input>
                         </el-form-item>
-                        <el-form-item label="节目名称">
+                        <el-form-item label="节目名称" prop="name">
                             <el-input v-model="program.name"></el-input>
                         </el-form-item>
-                        <el-form-item label="节目看点">
+                        <el-form-item label="节目看点" prop="point">
                             <el-input v-model="program.point"></el-input>
                         </el-form-item>
-                        <el-form-item label="节目状态">
+                        <el-form-item label="节目状态" prop="status">
                             <el-input v-model="program.status" readonly></el-input>
                         </el-form-item>
-                        <el-form-item label="节目来源">
+                        <el-form-item label="节目来源" prop="source">
                             <el-input v-model="program.source" readonly></el-input>
                         </el-form-item>
-                        <el-form-item label="节目简介">
+                        <el-form-item label="节目简介" prop="profile">
                             <el-input
                                 type="textarea"
                                 :autosize="{ minRows: 4, maxRows: 40}"
@@ -35,14 +35,14 @@
                                 v-model="program.profile">
                             </el-input>
                         </el-form-item>
-                        <el-form-item label="上映时间">
+                        <el-form-item label="上映时间" prop="releaseTime">
                             <el-date-picker
                                 v-model="program.releaseTime"
                                 type="year"
                                 placeholder="选择年">
                             </el-date-picker>
                         </el-form-item>
-                        <el-form-item label="所属地区">
+                        <el-form-item label="所属地区" prop="area">
                             <el-select v-model="program.area" placeholder="请选择">
                                 <el-option
                                     v-for="item in areaOptions"
@@ -52,7 +52,7 @@
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="节目分类">
+                        <el-form-item label="节目分类" prop="programClassification">
                             <el-select v-model="program.programClassification" placeholder="请选择">
                                 <el-option
                                     v-for="item in programOptions"
@@ -63,7 +63,7 @@
                             </el-select>
                             <el-button type="primary" @click="gotoProgramTypePage" plain>管理分类和类型</el-button>
                         </el-form-item>
-                        <el-form-item label="节目类型">
+                        <el-form-item label="节目类型" prop="programType">
                             <el-select v-model="program.programType" multiple placeholder="请选择">
                                 <el-option
                                     v-for="item in typeOptions"
@@ -73,7 +73,7 @@
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="关键字">
+                        <el-form-item label="关键字" prop="keyWords">
                             <el-select v-model="program.keyWords" multiple placeholder="请选择">
                                 <el-option
                                     v-for="item in keyWordsOptions"
@@ -83,7 +83,7 @@
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="节目主演">
+                        <el-form-item label="节目主演" prop="leadActor">
                             <el-select v-model="program.leadActor" multiple placeholder="请选择">
                                 <el-option
                                     v-for="item in leadOptions"
@@ -94,7 +94,7 @@
                             </el-select>
                             <el-button type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                         </el-form-item>
-                        <el-form-item label="节目导演">
+                        <el-form-item label="节目导演" prop="programType">
                             <el-select v-model="program.programType" multiple placeholder="请选择">
                                 <el-option
                                     v-for="item in directorOptions"
@@ -104,6 +104,44 @@
                                 </el-option>
                             </el-select>
                             <el-button type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
+                        </el-form-item>
+                        <el-form-item label="版权起始日期" prop="copyRightDateRange">
+                            <el-date-picker
+                                v-model="program.copyRightDateRange"
+                                type="daterange"
+                                range-separator="至"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期">
+                            </el-date-picker>
+                        </el-form-item>
+                        <el-form-item label="版权商" prop="copyRightDealer">
+                            <el-select v-model="program.copyRightDealer" placeholder="请选择">
+                                <el-option
+                                    v-for="item in copyRightDealerOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="运营商" prop="operator">
+                            <el-select v-model="program.operator" placeholder="请选择">
+                                <el-option
+                                    v-for="item in operatorOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="总集数" prop="episodes">
+                            <el-input v-model="program.episodes" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="实际播放量" prop="truePlayback">
+                            <el-input v-model="program.truePlayback" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="展示播放量" prop="displayPlayback">
+                            <el-input v-model="program.displayPlayback"></el-input>
                         </el-form-item>
                         <el-form-item label="节目图片">
                             <el-button type="primary" @click="imageUploadDialogVisible = true">添加节目图片<i class="el-icon-upload el-icon--right"></i></el-button>
@@ -259,7 +297,7 @@
         <div class="group">
             <el-button type="primary" @click="onSubmit">创建</el-button>
         </div>
-        <upload-program-image-dialog :imageUploadDialogVisible="imageUploadDialogVisible" v-on:changeImageDialogStatus="closeImageDialog($event)"></upload-program-image-dialog>
+        <upload-program-image-dialog title="上传节目图片" :imageUploadDialogVisible="imageUploadDialogVisible" v-on:changeImageDialogStatus="closeImageDialog($event)"></upload-program-image-dialog>
         <upload-program-video-dialog :videoUploadDialogVisible="videoUploadDialogVisible" v-on:changeVideoDialogStatus="closeVideoDialog($event)"></upload-program-video-dialog>
         <create-person-dialog :createPersonDialogVisible="createPersonDialogVisible" v-on:changePersonDialogStatus="closePersonDialog($event)"></create-person-dialog>
     </div>
@@ -283,7 +321,10 @@
                     name: '',
                     area: '',
                     point: '',
-                    status: '注册成功',
+                    copyRightDateRange: [],
+                    copyRightDealer: '',
+                    operator: '',
+                    status: '注入成功',
                     source: '媒资系统注入',
                     programClassification: '',
                     programType: [],
@@ -292,13 +333,15 @@
                     keyWords: [],
                     releaseTime: '',
                     programImageList: [],
-                    profile: ''
+                    profile: '',
+                    episodes: '30',
+                    truePlayback: 30,
+                    displayPlayback: 30000
                 },
                 imageUploadDialogVisible: false,
                 dialogVisible: false,
                 videoUploadDialogVisible: false,
                 createPersonDialogVisible: false,
-                dialogImageUrl: '',
                 areaOptions: [
                     {
                         value: '大陆',
@@ -379,6 +422,34 @@
                         label: 'css'
                     }
                 ],
+                copyRightDealerOptions: [
+                    {
+                        value: '1',
+                        label: 'cibn'
+                    },
+                    {
+                        value: '2',
+                        label: '另一个'
+                    },
+                    {
+                        value: '3',
+                        label: '其他'
+                    }
+                ],
+                operatorOptions: [
+                    {
+                        value: '1',
+                        label: '爱奇艺'
+                    },
+                    {
+                        value: '2',
+                        label: '腾讯'
+                    },
+                    {
+                        value: '3',
+                        label: '乐视'
+                    }
+                ],
                 tableData: [
                     {
                         date: '2016-05-02',
@@ -398,12 +469,15 @@
                         address: '上海市普陀区金沙江路 1516 弄'
                     }
                 ],
-                infoRules: {
+                programRules: {
                     name: [
                         { required: true, message: '请输入节目名称', trigger: 'change' }
                     ],
                     area: [
                         { required: true, message: '请选择地区', trigger: 'change' }
+                    ],
+                    point: [
+                        { required: true, message: '请输入节目看点', trigger: 'change' }
                     ],
                     releaseTime: [
                         { required: true, message: '请选择上映日期', trigger: 'change' }
@@ -419,6 +493,9 @@
                     ],
                     director: [
                         { required: true, message: '请选择节目导演', trigger: 'change' }
+                    ],
+                    newTag: [
+                        { required: true, message: '请选择是否有new标签', trigger: 'change' }
                     ]
                 }
             };
@@ -444,15 +521,7 @@
             gotoProgramTypePage() {
                 this.$router.push({name: 'ProgramTypeManage'});
             },
-            handleRemove(file, fileList) {
-                console.log(file, fileList);
-            },
-            handlePictureCardPreview(file) {
-                this.dialogImageUrl = file.url;
-                this.dialogVisible = true;
-            },
             handleClick(row) {
-                console.log(row);
             }
         }
     };
