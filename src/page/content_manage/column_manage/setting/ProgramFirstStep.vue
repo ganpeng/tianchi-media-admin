@@ -327,8 +327,6 @@
     }
 
     .el-table {
-        text-align: left;
-        margin: 20px 10px;
         img {
             width: 120px;
             cursor: zoom-in;
@@ -346,7 +344,4 @@
         }
     }
 
-    .el-pagination {
-        text-align: right;
-    }
 </style>

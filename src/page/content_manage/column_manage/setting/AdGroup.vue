@@ -161,8 +161,6 @@
     }
 
     .el-table {
-        text-align: left;
-        margin: 20px 10px;
         .imagesList {
             display: flex;
             justify-content: left;

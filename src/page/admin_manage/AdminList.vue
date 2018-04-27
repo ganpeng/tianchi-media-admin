@@ -195,13 +195,4 @@
             }
         }
     }
-
-    .el-table {
-        text-align: left;
-        margin: 20px 10px;
-    }
-
-    .el-pagination {
-        text-align: right;
-    }
 </style>

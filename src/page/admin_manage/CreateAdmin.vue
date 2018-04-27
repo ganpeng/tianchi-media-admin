@@ -8,7 +8,7 @@
         </el-breadcrumb>
         <el-row>
             <el-col :span="8">
-                <div class="grid-content bg-purple">
+                <div>
                     <el-form :model="createInfo" :rules="infoRules" status-icon ref="createInfo"
                              label-width="100px"
                              class="form-block">
@@ -159,6 +159,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
+
+    .el-row {
+        margin-top: 50px;
+    }
 
     .avatar-uploader i {
         margin-bottom: 20px;

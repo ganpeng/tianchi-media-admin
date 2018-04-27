@@ -3,6 +3,7 @@
     <el-aside width="200px">
         <el-col :span="12">
             <el-menu
+                unique-opened
                 default-active="2"
                 class="el-menu-vertical-demo"
                 @open="handleOpen"
@@ -17,9 +18,11 @@
                         <span>内容管理</span>
                     </template>
                     <el-menu-item-group>
-                        <template slot="title">栏目管理</template>
-                        <el-menu-item index="/column-manage/setting">栏目项设置</el-menu-item>
-                        <el-menu-item index="/column-manage/today-recommended">今日推荐</el-menu-item>
+                        <el-submenu index="1-1">
+                            <template slot="title">栏目管理</template>
+                            <el-menu-item index="/column-manage/setting">栏目项设置</el-menu-item>
+                            <el-menu-item index="/column-manage/today-recommended">今日推荐</el-menu-item>
+                        </el-submenu>
                     </el-menu-item-group>
                     <el-submenu index="1-2">
                         <template slot="title">节目资源管理</template>
@@ -32,6 +35,12 @@
                         <el-menu-item index="/person-manage/create">新增人物</el-menu-item>
                         <el-menu-item index="/person-manage/list">人物列表</el-menu-item>
                     </el-submenu>
+                    <el-menu-item-group>
+                        <el-submenu index="1-4">
+                            <template slot="title">专题管理</template>
+                            <el-menu-item index="/subject-manage/create">新增专题</el-menu-item>
+                        </el-submenu>
+                    </el-menu-item-group>
                 </el-submenu>
                 <el-submenu index="2">
                     <template slot="title">
