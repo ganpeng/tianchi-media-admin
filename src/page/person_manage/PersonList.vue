@@ -17,7 +17,7 @@
                 <el-button type="primary">搜索</el-button>
             </el-form-item>
             <el-form-item label="地区">
-                <el-select v-model="area" placeholder="请选择">
+                <el-select v-model="area" filterable clearable placeholder="请选择">
                     <el-option
                         v-for="item in areaOptions"
                         :key="item.value"
@@ -62,14 +62,6 @@
                 <template slot-scope="scope">
                     <el-button type="text" size="small" @click="displayPerson(scope.row.id)">查看</el-button>
                     <el-button type="text" size="small" @click="editPerson(scope.row.id)">编辑</el-button>
-                    <el-button v-if="scope.row.status === 'NORMAL'" type="danger" size="mini" plain
-                               @click="disabledConfirm(scope.row.id,scope.row.status)">
-                        禁用
-                    </el-button>
-                    <el-button v-else type="success" size="mini" plain
-                               @click="recoverConfirm(scope.row.id,scope.row.status)">
-                        恢复
-                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -84,7 +76,6 @@
         </el-pagination>
     </div>
 </template>
-
 <script>
     export default {
         name: 'PersonList',
@@ -96,28 +87,22 @@
                 currentPage: 1,
                 pageSize: 10,
                 totalAmount: 0,
-                areaOptions: [
-                    {
-                        value: '大陆',
-                        label: '大陆'
-                    },
-                    {
-                        value: '香港',
-                        label: '香港'
-                    },
-                    {
-                        value: '台湾',
-                        label: '台湾'
-                    }
-                ]
+                areaOptions: this.$util.countryList()
             };
         },
         mounted() {
             this.getPersonList();
         },
         methods: {
-            // 获取用户列表
+            // 获取人物列表
             getPersonList() {
+                this.$axios.post('/v1/figure/list', {}, {
+                    params: {
+                        pageNum: this.currentPage,
+                        pageSize: this.pageSize
+                    }
+                }).then((res) => {
+                });
             },
             // 跳转到详情页面
             displayPerson(userId) {
@@ -128,78 +113,14 @@
             },
             handleSizeChange(pageSize) {
                 this.pageSize = pageSize;
-                this._getPersonList();
+                this.getPersonList();
             },
             handleCurrentChange(currentPage) {
                 this.currentPage = currentPage;
-                this._getPersonList();
-            },
-            // 禁用确认
-            disabledConfirm(userId, userStatus) {
-                this.$confirm('此操作将禁用该账号, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.setPersonStatus(userId, userStatus);
-                }).catch(() => {
-                    this.$message('已取消禁用');
-                });
-            },
-            // 恢复确认
-            recoverConfirm(userId, userStatus) {
-                this.$confirm('此操作将恢复该账号, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.setPersonStatus(userId, userStatus);
-                }).catch(() => {
-                    this.$message('已取消恢复');
-                });
+                this.getPersonList();
             }
         }
     };
 </script>
 <style scoped lang="less">
-    .el-form {
-        margin-left: 20px;
-        text-align: left;
-        &.search-form {
-            margin-top: 60px;
-        }
-        .create-account {
-            float: right;
-            margin-right: 40px;
-            i {
-                cursor: pointer;
-                &:hover {
-                    color: #409eff;
-                }
-            }
-        }
-        .el-tag {
-            cursor: pointer;
-            a {
-                display: block;
-                height: 100%;
-                width: 100%;
-            }
-        }
-    }
-
-    .el-table {
-        text-align: left;
-        margin: 20px 10px;
-    }
-
-    .el-pagination {
-        text-align: right;
-    }
-
-    .person-image {
-        display: inline-block;
-        width: 60px;
-        height: 60px;
-    }
 </style>

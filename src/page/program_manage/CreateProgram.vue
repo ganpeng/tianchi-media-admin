@@ -43,7 +43,7 @@
                             </el-date-picker>
                         </el-form-item>
                         <el-form-item label="所属地区" prop="area">
-                            <el-select v-model="program.area" placeholder="请选择">
+                            <el-select v-model="program.area" clearable filterable placeholder="请选择">
                                 <el-option
                                     v-for="item in areaOptions"
                                     :key="item.value"
@@ -151,168 +151,28 @@
             </el-col>
             <el-col :span="24">
                 <div class="block-title">节目视频</div>
-                <div class="block-title text-left">
-                    <el-button size="small" type="primary" @click="videoUploadDialogVisible = true">添加视频</el-button>
-                </div>
+                <program-table :status="3" :data-list="testData"></program-table>
             </el-col>
         </el-row>
-        <!-- 电影表格 -->
-        <el-row class="block-title">
-            <h2 class="table-title">电影</h2>
-            <el-table
-                :data="tableData"
-                border
-                style="width: 100%">
-                <el-table-column
-                prop="date"
-                label="序号"
-                width="180">
-                </el-table-column>
-                <el-table-column
-                prop="name"
-                label="子集名称"
-                width="180">
-                </el-table-column>
-                <el-table-column
-                prop="address"
-                label="子集简介">
-                </el-table-column>
-                <el-table-column
-                prop="address"
-                label="视频地址">
-                </el-table-column>
-                <el-table-column
-                prop="address"
-                label="视频类型">
-                </el-table-column>
-                <el-table-column
-                prop="address"
-                label="上传时间">
-                </el-table-column>
-                <el-table-column
-                    label="操作"
-                    width="160">
-                    <template slot-scope="scope">
-                        <el-button @click="handleClick(scope.row)" type="danger" size="small">删除</el-button>
-                        <el-button @click="handleClick(scope.row)" type="primary" size="small">编辑</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </el-row>
-        <!-- 电视剧表格 -->
-        <el-row class="block-title">
-            <h2 class="table-title">电视剧</h2>
-            <el-table
-                :data="tableData"
-                border
-                style="width: 100%">
-                <el-table-column
-                    prop="date"
-                    label="序号"
-                    width="180">
-                </el-table-column>
-                <el-table-column
-                    prop="name"
-                    label="子集名称"
-                    width="180">
-                </el-table-column>
-                <el-table-column
-                    prop="address"
-                    label="子集简介">
-                </el-table-column>
-                <el-table-column
-                    prop="address"
-                    label="关联正片">
-                </el-table-column>
-                <el-table-column
-                    prop="address"
-                    label="视频地址">
-                </el-table-column>
-                <el-table-column
-                    prop="address"
-                    label="视频类型">
-                </el-table-column>
-                <el-table-column
-                    prop="address"
-                    label="上传时间">
-                </el-table-column>
-                <el-table-column
-                    label="操作"
-                    width="160">
-                    <template slot-scope="scope">
-                        <el-button @click="handleClick(scope.row)" type="danger" size="small">删除</el-button>
-                        <el-button @click="handleClick(scope.row)" type="primary" size="small">编辑</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </el-row>
-        <!-- 综艺表格 -->
-        <el-row class="block-title">
-            <h2 class="table-title">综艺</h2>
-            <el-table
-                :data="tableData"
-                border
-                style="width: 100%">
-                <el-table-column
-                    prop="date"
-                    label="序号"
-                    width="180">
-                </el-table-column>
-                <el-table-column
-                    prop="name"
-                    label="子集名称"
-                    width="180">
-                </el-table-column>
-                <el-table-column
-                    prop="address"
-                    label="子集简介">
-                </el-table-column>
-                <el-table-column
-                    prop="address"
-                    label="关联正片">
-                </el-table-column>
-                <el-table-column
-                    prop="address"
-                    label="视频地址">
-                </el-table-column>
-                <el-table-column
-                    prop="address"
-                    label="视频类型">
-                </el-table-column>
-                <el-table-column
-                    prop="address"
-                    label="上传时间">
-                </el-table-column>
-                <el-table-column
-                    label="操作"
-                    width="220">
-                    <template slot-scope="scope">
-                        <el-button @click="handleClick(scope.row)" type="danger" size="small">删除</el-button>
-                        <el-button @click="handleClick(scope.row)" type="primary" size="small">编辑</el-button>
-                        <el-button @click="handleClick(scope.row)" type="warning" size="small">下架</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </el-row>
+
         <div class="group">
             <el-button type="primary" @click="onSubmit">创建</el-button>
         </div>
         <upload-program-image-dialog title="上传节目图片" :imageUploadDialogVisible="imageUploadDialogVisible" v-on:changeImageDialogStatus="closeImageDialog($event)"></upload-program-image-dialog>
-        <upload-program-video-dialog :videoUploadDialogVisible="videoUploadDialogVisible" v-on:changeVideoDialogStatus="closeVideoDialog($event)"></upload-program-video-dialog>
         <create-person-dialog :createPersonDialogVisible="createPersonDialogVisible" v-on:changePersonDialogStatus="closePersonDialog($event)"></create-person-dialog>
     </div>
 </template>
 <script>
     import UploadProgramImageDialog from './UploadProgramImageDialog';
-    import UploadProgramVideoDialog from './UploadProgramVideoDialog';
     import CreatePersonDialog from './CreatePersonDialog';
+    import ProgramTable from './ProgramTable';
 
     export default {
         name: 'CreateProgram',
         components: {
             UploadProgramImageDialog,
-            UploadProgramVideoDialog,
-            CreatePersonDialog
+            CreatePersonDialog,
+            ProgramTable
         },
         data() {
             return {
@@ -342,20 +202,7 @@
                 dialogVisible: false,
                 videoUploadDialogVisible: false,
                 createPersonDialogVisible: false,
-                areaOptions: [
-                    {
-                        value: '大陆',
-                        label: '大陆'
-                    },
-                    {
-                        value: '香港',
-                        label: '香港'
-                    },
-                    {
-                        value: '台湾',
-                        label: '台湾'
-                    }
-                ],
+                areaOptions: this.$util.countryList,
                 programOptions: [
                     {
                         value: '电视剧',
@@ -450,23 +297,19 @@
                         label: '乐视'
                     }
                 ],
-                tableData: [
+                testData: [
                     {
-                        date: '2016-05-02',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1518 弄'
-                    }, {
-                        date: '2016-05-04',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1517 弄'
-                    }, {
-                        date: '2016-05-01',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1519 弄'
-                    }, {
-                        date: '2016-05-03',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1516 弄'
+                        id: '2018040513444522777-1',
+                        name: '战狼1',
+                        sortNumber: '2',
+                        description: '是第一部的延续',
+                        positive: '老男孩第二集',
+                        url: 'http://www.baidu.com',
+                        contentType: '正片',
+                        typeId: '高清',
+                        needPay: '是',
+                        duration: '1:20:30',
+                        createdAt: '2018-04-05 9:00'
                     }
                 ],
                 programRules: {
@@ -511,9 +354,6 @@
             },
             closeImageDialog(status) {
                 this.imageUploadDialogVisible = status;
-            },
-            closeVideoDialog(status) {
-                this.videoUploadDialogVisible = status;
             },
             closePersonDialog(status) {
                 this.createPersonDialogVisible = status;

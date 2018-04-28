@@ -1,12 +1,12 @@
 <!-- 上传节目视频的弹窗组件 -->
 <template>
     <el-dialog
-        title="添加视频"
+        :title="title"
         :visible.sync="videoUploadDialogVisible"
         :show-close="false"
         :close-on-click-modal="false"
         :close-on-press-escape="false">
-        <el-form :model="form" class="form-block" label-width="100px">
+        <el-form :model="form" :rules="uploadVideoRules" ref="uploadVideoForm" class="form-block" label-width="100px">
             <el-form-item label="视频ID">
                 <el-input v-model="form.id" readonly></el-input>
             </el-form-item>
@@ -34,7 +34,7 @@
             <el-form-item label="视频时长">
                 <el-input v-model="form.duration" readonly></el-input>
             </el-form-item>
-            <el-form-item label="关联正片">
+            <el-form-item label="关联正片" prop="positive">
                 <el-select v-model="form.positive" placeholder="请选择要关联的正片">
                     <el-option
                         v-for="item in videoPositive"
@@ -44,7 +44,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="内容类型">
+            <el-form-item label="内容类型" prop="contentType">
                 <el-select v-model="form.contentType" placeholder="请选择内容类型">
                     <el-option
                         v-for="item in contentTypeOptions"
@@ -54,7 +54,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="视频类型">
+            <el-form-item label="视频类型" prop="type">
                 <el-select v-model="form.type" placeholder="请选择视频类型">
                     <el-option
                         v-for="item in videoType"
@@ -71,15 +71,28 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="cancelHandler">取 消</el-button>
-            <el-button type="primary" @click="successHandler">确 定</el-button>
+            <el-button
+                type="primary"
+                @click="successHandler"
+                v-loading.fullscreen.lock="isLoading">确 定</el-button>
         </div>
     </el-dialog>
 </template>
 <script>
     export default {
-        props: ['videoUploadDialogVisible'],
+        props: {
+            videoUploadDialogVisible: {
+                type: Boolean,
+                default: false
+            },
+            title: {
+                type: String,
+                default: '编辑视频'
+            }
+        },
         data() {
             return {
+                isLoading: false,
                 form: {
                     id: '2018040405573345',
                     name: '',
@@ -146,7 +159,17 @@
                         value: '4',
                         label: '预告'
                     }
-                ]
+                ],
+                uploadVideoRules: {
+                    name: [{ required: true, message: '请输入视频名称', trigger: 'change' }],
+                    description: [{ required: true, message: '请输入视频简介', trigger: 'change' }],
+                    type: [{ required: true, message: '请选择视频类型', trigger: 'change' }],
+                    duration: '1:20:30',
+                    positive: [{ required: true, message: '请选择要关联的正片', trigger: 'change' }],
+                    sortNumber: [{ required: true, message: '请选择视频的排序', trigger: 'change' }],
+                    contentType: [{ required: true, message: '请选择视频内容类型', trigger: 'change' }],
+                    needPay: [{ required: true, message: '请选择是否付费', trigger: 'change' }]
+                }
             };
         },
         methods: {
@@ -154,7 +177,17 @@
                 this.$emit('changeVideoDialogStatus', false);
             },
             successHandler() {
-                this.cancelHandler();
+                this.$refs.uploadVideoForm.validate(value => {
+                    if (value) {
+                        this.isLoading = true;
+                        setTimeout(() => {
+                            this.isLoading = false;
+                            this.cancelHandler();
+                        }, 3000);
+                    } else {
+
+                    }
+                });
             }
         }
     };

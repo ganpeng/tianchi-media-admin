@@ -1,4 +1,5 @@
 import constants from './constants';
+let countryObj = require('../assets/json/country.json');
 
 /**
  * 扩展公共方法的工具类模块，使用ES6 module
@@ -84,6 +85,18 @@ let util = {
         // handle SS
         format = format.replace(/SS/g, date.getSeconds());
         return format;
+    },
+    serializeCountryList(countryObj) {
+        let keys = Object.keys(countryObj);
+        return keys.map((key) => {
+            return {
+                value: key,
+                label: countryObj[key]
+            };
+        });
+    },
+    countryList() {
+        return this.serializeCountryList(countryObj);
     }
 };
 

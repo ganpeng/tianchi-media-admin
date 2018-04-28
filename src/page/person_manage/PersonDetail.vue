@@ -12,7 +12,11 @@
                 <person-form :status="status" :readonly="readonly" ref="personForm"></person-form>
                 <div class="form-btn" v-show="!readonly">
                     <el-button v-show="isEdit" type="primary" @click="editPerson">编辑</el-button>
-                    <el-button v-show="!isEdit" type="primary" @click="createPerson">创 建</el-button>
+                    <el-button
+                        v-show="!isEdit"
+                        type="primary"
+                        @click="createPerson"
+                        v-loading.fullscreen.lock="isLoading">创 建</el-button>
                     <el-button @click="reset">重 置</el-button>
                 </div>
             </el-col>
@@ -32,6 +36,11 @@
                 type: Number
             }
         },
+        data() {
+            return {
+                isLoading: false
+            };
+        },
         created() {
             if (this.status === 1 || this.status === 2) {
             }
@@ -49,7 +58,14 @@
             // 新增人物
             createPerson() {
                 this.$refs.personForm.$refs['createPerson'].validate(valid => {
+                    let person = this.$refs.personForm.person;
                     if (valid) {
+                        this.isLoading = true;
+                        this.$axios.post('/v1/figure', person).then((res) => {
+                                this.$message.success('创建人物成功');
+                            }).finally(() => {
+                                this.isLoading = false;
+                            });
                     } else {
                         return false;
                     }
@@ -58,6 +74,20 @@
             // 修改人物资料
             editPerson() {
                 this.$refs.personForm.$refs['createPerson'].validate(valid => {
+                    let person = this.$refs.personForm.person;
+                    let id = this.$route.params.id;
+                    if (valid) {
+                        this.isLoading = true;
+                        this.$axios.put(`/v1/figure/${id}`, person).then((res) => {
+                                if (res) {
+                                    this.$message.success('编辑人物成功');
+                                }
+                            }).finally(() => {
+                                this.isLoading = false;
+                            });
+                    } else {
+                        return false;
+                    }
                 });
             },
             // 重制表单

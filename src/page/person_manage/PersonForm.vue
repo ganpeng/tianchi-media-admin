@@ -7,16 +7,16 @@
             <el-form-item label="人物姓名" prop="name">
                 <el-input v-model="person.name" :readonly="readonly" placeholder="请输入人物姓名"></el-input>
             </el-form-item>
-            <el-form-item label="人物简介" prop="profile">
-                <el-input type="textarea" :readonly="readonly" :autosize="{ minRows: 4, maxRows: 12}" placeholder="请输入人物简介" v-model="person.profile"></el-input>
+            <el-form-item label="人物简介" prop="description">
+                <el-input type="textarea" :readonly="readonly" :autosize="{ minRows: 4, maxRows: 12}" placeholder="请输入人物简介" v-model="person.description"></el-input>
             </el-form-item>
             <el-form-item label="出生日期" prop="birthday">
                 <el-date-picker v-model="person.birthday" :readonly="readonly" type="date" placeholder="年/月/日"></el-date-picker>
             </el-form-item>
             <el-form-item label="所属地区" prop="area">
-                <el-select :disabled="readonly" v-model="person.area" placeholder="请选择地区">
+                <el-select :disabled="readonly" clearable filterable v-model="person.area" placeholder="请选择地区">
                     <el-option
-                        v-for="item in options"
+                        v-for="item in areaOptions"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -52,19 +52,13 @@ import UploadProgramImageDialog from '../program_manage/UploadProgramImageDialog
 // 默认的person
 let personDefault = {
     name: '',
-    profile: '',
+    description: '',
     birthday: '',
     area: '',
     height: '',
     weight: '',
     mainRole: '',
-    avatar: '',
-    imageList: [
-        {
-            name: 'food.jpeg',
-            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        }
-    ]
+    avatar: ''
 };
 
 export default {
@@ -106,20 +100,7 @@ export default {
                 ]
             },
             imageUploadDialogVisible: false,
-            options: [
-                {
-                    value: '大陆',
-                    label: '大陆'
-                },
-                {
-                    value: '香港',
-                    label: '香港'
-                },
-                {
-                    value: '台湾',
-                    label: '台湾'
-                }
-            ]
+            areaOptions: this.$util.countryList()
         };
     },
     methods: {
