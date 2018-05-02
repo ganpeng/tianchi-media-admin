@@ -129,7 +129,7 @@
         methods: {
             // 初始化个人信息
             initData() {
-                this.$axios.get('/v1/admin').then(response => {
+                this.$service.getAdminSelfInfo().then(response => {
                     if (response) {
                         this.updateInfo = response.data;
                     }
@@ -140,7 +140,7 @@
                 this.$refs['updateInfo'].validate((valid) => {
                     if (valid) {
                         // 请求接口
-                        this.$axios.put('/v1/admin', {
+                        this.$service.updateAdminSelfInfo({
                             email: this.updateInfo.email,
                             telephone: this.updateInfo.telephone,
                             mobile: this.updateInfo.mobile,

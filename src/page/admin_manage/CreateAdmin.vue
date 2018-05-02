@@ -119,7 +119,7 @@
                 this.$refs['createInfo'].validate((valid) => {
                     if (valid) {
                         // 请求接口
-                        this.$axios.post('/v1/admin', {
+                        this.$service.createAdmin({
                             email: this.createInfo.email,
                             mobile: this.createInfo.mobile,
                             name: this.createInfo.name

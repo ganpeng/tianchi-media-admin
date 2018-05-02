@@ -133,7 +133,7 @@
         },
         methods: {
             initData() {
-                this.$axios.get(this.$util.format('/v1/admin/{0}', this.$route.params.id)).then(response => {
+                this.$service.getAdminInfo({id: this.$route.params.id}).then(response => {
                     if (response) {
                         this.editInfo = response.data;
                     }
@@ -144,7 +144,8 @@
                 this.$refs['editInfo'].validate((valid) => {
                     if (valid) {
                         // 请求接口
-                        this.$axios.put(this.$util.format('/v1/admin/{0}', this.editInfo.id), {
+                        this.$service.updateAdminInfo({
+                            id: this.editInfo.id,
                             email: this.editInfo.email,
                             telephone: this.editInfo.telephone,
                             mobile: this.editInfo.mobile,

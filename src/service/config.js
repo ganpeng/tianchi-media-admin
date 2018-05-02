@@ -1,4 +1,6 @@
-// ajax全局设置
+/**
+ * @fileOverview The config of http request
+ */
 
 import axios from 'axios';
 import store from '../store';

@@ -8,8 +8,8 @@
         </el-breadcrumb>
         <el-form :model="form" status-icon :rules="passwordRules" ref="form" label-width="100px"
                  class="demo-ruleForm">
-            <el-form-item label="原密码" prop="oldPassword">
-                <el-input v-model="form.oldPassword" placeholder="请输入原密码"></el-input>
+            <el-form-item label="原密码" prop="password">
+                <el-input v-model="form.password" placeholder="请输入原密码"></el-input>
             </el-form-item>
             <el-form-item label="新密码" prop="newPassword">
                 <el-input type="password" v-model="form.newPassword" auto-complete="off"
@@ -53,7 +53,7 @@
             let validatePassword2 = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     callback(new Error('请再次输入密码'));
-                } else if (this.$util.trim(value) !== this.$util.trim(this.form.oldPassword)) {
+                } else if (this.$util.trim(value) !== this.$util.trim(this.form.newPassword)) {
                     callback(new Error('两次输入密码不一致!'));
                 } else {
                     callback();
@@ -61,12 +61,12 @@
             };
             return {
                 form: {
-                    oldPassword: '',
+                    password: '',
                     newPassword: '',
                     checkPassword: ''
                 },
                 passwordRules: {
-                    oldPassword: [
+                    password: [
                         {validator: checkOldPassword, trigger: 'blur'}
                     ],
                     newPassword: [
@@ -93,9 +93,10 @@
             },
             updatePassword() {
                 // 请求接口
-                this.$axios.patch(
-                    this.$util.format('/v1/admin?oldPassword={0}&newPassword={1}', this.form.oldPassword, this.form.newPassword)
-                ).then(response => {
+                this.$service.updateAdminSelfPassword({
+                    password: this.form.password,
+                    newPassword: this.form.newPassword
+                }).then(response => {
                     if (response) {
                         this.$message('您的密码更新成功');
                     }

@@ -4,7 +4,7 @@
 import Vue from 'vue';
 import App from './App';
 import router from './router';
-import axios from './util/http';
+import service from './service';
 import store from './store';
 import '../src/assets/css/global.less';
 // 引入ElementUI全部组件，也可以部分引入
@@ -17,14 +17,13 @@ import dragula from 'dragula';
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
-Vue.prototype.$axios = axios;
+Vue.prototype.$service = service;
 Vue.prototype.$util = util;
 Vue.prototype.$dragula = dragula;
 
 /* eslint-disable no-new */
 new Vue({
     el: '#app',
-    axios,
     store,
     router,
     components: {App},

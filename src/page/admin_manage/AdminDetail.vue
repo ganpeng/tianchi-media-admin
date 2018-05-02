@@ -77,7 +77,7 @@
         },
         methods: {
             initInfo() {
-                this.$axios.get(this.$util.format('/v1/admin/{0}', this.$route.params.id)).then(response => {
+                this.$service.getAdminInfo({id: this.$route.params.id}).then(response => {
                     if (response) {
                         this.adminInfo = response.data;
                     }

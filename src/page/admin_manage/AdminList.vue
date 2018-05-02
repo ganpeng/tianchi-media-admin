@@ -97,7 +97,10 @@
         methods: {
             // 获取管理员列表数据
             getAdminList() {
-                this.$axios.get(this.$util.format('/v1/admin/list?pageNum={0}&pageSize={1}', this.currentPage, this.pageSize)).then(response => {
+                this.$service.getAdminList({
+                    pageNum: this.currentPage,
+                    pageSize: this.pageSize
+                }).then(response => {
                     if (response) {
                         this.adminList = response.data.list;
                         this.totalAmount = response.data.total;
@@ -145,8 +148,8 @@
             },
             // 禁用或恢复管理员账号状态
             setAdminStatus(userId, userStatus) {
-                let action = userStatus === 'NORMAL' ? 'FORBIDDEN' : 'NORMAL';
-                this.$axios.patch(this.$util.format('/v1/admin/{0}?status={1}', userId, action)).then(response => {
+                let status = userStatus === 'NORMAL' ? 'FORBIDDEN' : 'NORMAL';
+                this.$service.setAdminStatus({id: userId, status: status}).then(response => {
                     if (response) {
                         if (userStatus === 'NORMAL') {
                             this.$message({
