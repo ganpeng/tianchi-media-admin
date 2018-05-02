@@ -183,6 +183,7 @@
                         setTimeout(() => {
                             this.isLoading = false;
                             this.cancelHandler();
+                            this.$refs.uploadVideoForm.resetFields();
                         }, 3000);
                     } else {
 

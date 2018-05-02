@@ -11,11 +11,18 @@
             <el-form-item label="规格名称" prop="name">
                 <el-input v-model="form.name" placeholder="请输入规格名称，如今日推荐轮播图"></el-input>
             </el-form-item>
-            <el-form-item label="规格尺寸">
-                <el-input class="size-input" v-model="form.leftSize" placeholder="宽"></el-input>
-                <span> * </span>
-                <el-input class="size-input" v-model="form.rightSize" placeholder="高"></el-input>
-            </el-form-item>
+            <el-col :span="24">
+                <el-col :span="6">
+                    <el-form-item label="规格尺寸" prop="width">
+                        <el-input class="size-input" v-model="form.width" placeholder="宽"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item prop="height" label-width="30px">
+                        <el-input class="size-input" v-model="form.height" placeholder="高"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-col>
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="cancelHandler">取 消</el-button>
@@ -33,13 +40,13 @@
             return {
                 form: {
                     name: '',
-                    leftSize: '',
-                    rightSize: ''
+                    width: '',
+                    height: ''
                 },
                 imageSizeRules: {
                     name: [{ required: true, message: '请输入规格名称', trigger: 'change' }],
-                    leftSize: [{ required: true, message: '请输入规格尺寸', trigger: 'change' }],
-                    rightSize: [{ required: true, message: '请输入规格尺寸', trigger: 'change' }]
+                    width: [{ required: true, message: '请输入宽度', trigger: 'change' }],
+                    height: [{ required: true, message: '请输入高度', trigger: 'change' }]
                 },
                 isLoading: false
             };
@@ -55,6 +62,7 @@
                         setTimeout(() => {
                             this.isLoading = false;
                             this.cancelHandler();
+                            this.$refs.imageSizeForm.resetFields();
                         }, 3000);
                     } else {
 

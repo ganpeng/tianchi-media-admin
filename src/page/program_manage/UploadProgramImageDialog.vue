@@ -29,6 +29,7 @@
                         action="https://jsonplaceholder.typicode.com/posts/"
                         :on-preview="handlePreview"
                         :on-remove="handleRemove"
+                        :before-upload="beforeUploadHandler"
                         v-model="form.imageFiles"
                         :file-list="form.imageFiles"
                         :on-success="uploadSuccessHandler"
@@ -53,7 +54,6 @@
     </el-dialog>
 </template>
 <script>
-
     import ImageSizeDialog from './ImageSizeDialog';
 
     export default {
@@ -103,6 +103,7 @@
                         setTimeout(() => {
                             this.isLoading = false;
                             this.cancelHandler();
+                            this.$refs.uploadImageForm.resetFields();
                         }, 3000);
                     } else {
                         return false;
@@ -111,6 +112,42 @@
             },
             closeImageSizeDialog(res) {
                 this.imageSizeDialogVisible = false;
+            },
+            async beforeUploadHandler(file) {
+                try {
+                    let src = await this.loadFile(file);
+                    let img = await this.loadImg(src);
+                    return this.checkImage(img);
+                } catch (err) {
+                }
+            },
+            loadImg(url) {
+                return new Promise((resolve, reject) => {
+                    let img = new Image();
+                    img.src = url;
+                    img.onload = function () {
+                        resolve(img);
+                    };
+                    img.onerror = function (err) {
+                        reject(err);
+                    };
+                });
+            },
+            checkImage(img) {
+                // Todo check
+                return false;
+            },
+            loadFile(file) {
+                return new Promise((resolve, reject) => {
+                    let reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = (theFile) => {
+                        resolve(theFile.target.result);
+                    };
+                    reader.onerror = (err) => {
+                        reject(err);
+                    };
+                });
             },
             handleRemove(file, fileList) {
             },

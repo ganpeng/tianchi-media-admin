@@ -86,7 +86,7 @@ export default {
                 name: [
                     { required: true, message: '请输入人物名称', trigger: 'change' }
                 ],
-                profile: [
+                description: [
                     { required: true, message: '请输入人物简介', trigger: 'change' }
                 ],
                 birthday: [

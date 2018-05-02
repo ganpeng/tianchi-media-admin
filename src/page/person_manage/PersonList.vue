@@ -34,7 +34,7 @@
                 <el-tag>导出</el-tag>
             </el-form-item>
         </el-form>
-        <el-table :data="personList" border style="width: 100%">
+        <el-table :data="personList" border style="width:100%">
             <el-table-column prop="id" align="center" label="编号"></el-table-column>
             <el-table-column label="照片" align="center" >
                 <template slot-scope="scope">
@@ -48,14 +48,9 @@
             <el-table-column prop="height" align="center" label="身高"></el-table-column>
             <el-table-column prop="weight" align="center" label="体重"></el-table-column>
             <el-table-column prop="mainRole" align="center" label="职业"></el-table-column>
-            <el-table-column align="center" label="创建日期">
+            <el-table-column align="center" label="更新时间">
                 <template slot-scope="scope">
                     {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
-                </template>
-            </el-table-column>
-            <el-table-column align="center" label="最后登录时间">
-                <template slot-scope="scope">
-                    {{scope.row.lastLoginAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
             <el-table-column align="center" fixed="right" label="操作">
