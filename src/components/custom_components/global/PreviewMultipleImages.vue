@@ -2,12 +2,12 @@
 <template>
     <div>
         <el-dialog :visible.sync="previewMultipleImages.display">
-            <el-carousel
-                v-if="previewMultipleImages.display"
-                trigger="click"
-                indicator-position="outside"
-                :autoplay='previewMultipleImages.autoplay'
-                :initial-index="previewMultipleImages.activeIndex">
+            <el-carousel class="text-center"
+                         v-if="previewMultipleImages.display"
+                         trigger="click"
+                         indicator-position="outside"
+                         :autoplay='previewMultipleImages.autoplay'
+                         :initial-index="previewMultipleImages.activeIndex">
                 <el-carousel-item v-for="(item,index) in previewMultipleImages.list" :key="index">
                     <span>{{ item.name }}</span>
                     <img :src="item.url" alt="预览图片">

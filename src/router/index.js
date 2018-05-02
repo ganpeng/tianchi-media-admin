@@ -28,6 +28,9 @@ import AdGroup from 'sysPage/content_manage/column_manage/setting/AdGroup';
 import AppendAd from 'sysPage/content_manage/column_manage/setting/AppendAd';
 import AppendProgram from 'sysPage/content_manage/column_manage/setting/AppendProgram';
 import CreateProgramSubject from 'sysPage/content_manage/subject_manage/CreateProgramSubject';
+import CreatePersonSubject from 'sysPage/content_manage/subject_manage/CreatePersonSubject';
+import AppendProgramsToSubject from 'sysPage/content_manage/subject_manage/AppendProgramsToSubject';
+import AppendPersonsToSubject from 'sysPage/content_manage/subject_manage/AppendPersonsToSubject';
 
 Vue.use(Router);
 
@@ -145,11 +148,29 @@ let router = new Router({
                     name: 'AppendProgram',
                     component: AppendProgram
                 },
-                // 内容管理-专题管理-新增专题
+                // 内容管理-专题管理-新增节目专题
                 {
-                    path: '/subject-manage/create',
+                    path: '/subject-manage/program-create',
                     name: 'CreateProgramSubject',
                     component: CreateProgramSubject
+                },
+                // 内容管理-专题管理-新增人物专题
+                {
+                    path: '/subject-manage/person-create',
+                    name: 'CreatePersonSubject',
+                    component: CreatePersonSubject
+                },
+                // 内容管理-专题管理-节目专题添加节目
+                {
+                    path: '/subject-manage/program-append',
+                    name: 'AppendProgramsToSubject',
+                    component: AppendProgramsToSubject
+                },
+                // 内容管理-专题管理-人物专题添加人物
+                {
+                    path: '/subject-manage/person-append',
+                    name: 'AppendPersonsToSubject',
+                    component: AppendPersonsToSubject
                 },
                 // 人物管理-新增人物
                 {

@@ -1,4 +1,4 @@
-<!--内容管理-栏目管理-节目选择第一步组件-->
+<!--选择多个节目组件-->
 <template>
     <div>
         <el-form :inline="true" class="demo-form-inline search-form">
@@ -50,7 +50,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item class="search">
-                <el-input v-model="searchContent" placeholder="请填写关键字">
+                <el-input v-model="searchContent" placeholder="请输入关键字">
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                 </el-input>
             </el-form-item>
@@ -58,7 +58,12 @@
         <el-table
             :data="programList"
             border
-            style="width: 100%">
+            style="width: 100%"
+            @selection-change="handleSelectionChange">
+            <el-table-column
+                type="selection"
+                width="55">
+            </el-table-column>
             <el-table-column
                 prop="id"
                 label="编号">
@@ -130,13 +135,6 @@
                     {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
-            <el-table-column align="center"
-                             label="操作"
-                             class="operate">
-                <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="appendProgram(scope.row.id)">添加</el-button>
-                </template>
-            </el-table-column>
         </el-table>
         <el-pagination
             @size-change="handleSizeChange"
@@ -147,6 +145,7 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="totalAmount">
         </el-pagination>
+        <el-button type="success" @click="appendProgram" size="small">添加所选节目</el-button>
         <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
     </div>
 </template>
@@ -155,8 +154,10 @@
     import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
 
     export default {
-        name: 'ProgramFirstStep',
-        components: {PreviewSingleImage},
+        name: 'SelectMultipleProgram',
+        components: {
+            PreviewSingleImage
+        },
         data() {
             return {
                 previewImage: {
@@ -281,7 +282,8 @@
                         status: 'NORMAL',
                         updatedAt: 1402233166999
                     }
-                ]
+                ],
+                multipleSelection: []
             };
         },
         mounted() {
@@ -299,13 +301,16 @@
             },
             // 添加节目
             appendProgram() {
-
+                this.$emit('setProgram', this.multipleSelection);
             },
             // 放大预览图片
             displayImage(image) {
                 this.previewImage.title = image.name;
                 this.previewImage.display = true;
                 this.previewImage.url = image.url;
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
             }
         }
     };

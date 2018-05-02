@@ -38,7 +38,8 @@
                     <el-menu-item-group>
                         <el-submenu index="1-4">
                             <template slot="title">专题管理</template>
-                            <el-menu-item index="/subject-manage/create">新增专题</el-menu-item>
+                            <el-menu-item index="/subject-manage/program-create">新增节目专题</el-menu-item>
+                            <el-menu-item index="/subject-manage/person-create">新增人物专题</el-menu-item>
                         </el-submenu>
                     </el-menu-item-group>
                 </el-submenu>

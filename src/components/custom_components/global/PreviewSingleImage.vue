@@ -1,6 +1,6 @@
 <!--单张图片预览组件-->
 <template>
-    <div>
+    <div class="text-center">
         <el-dialog :title="previewSingleImage.title" :visible.sync="previewSingleImage.display">
             <img :src="previewSingleImage.url">
         </el-dialog>
