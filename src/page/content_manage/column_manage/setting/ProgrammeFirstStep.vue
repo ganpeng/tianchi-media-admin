@@ -56,7 +56,7 @@
             </el-form-item>
         </el-form>
         <el-table
-            :data="programList"
+            :data="programmeList"
             border
             style="width: 100%">
             <el-table-column
@@ -134,7 +134,7 @@
                              label="操作"
                              class="operate">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="appendProgram(scope.row.id)">添加</el-button>
+                    <el-button type="text" size="small" @click="appendProgramme(scope.row.id)">添加</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -155,7 +155,7 @@
     import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
 
     export default {
-        name: 'ProgramFirstStep',
+        name: 'ProgrammeFirstStep',
         components: {PreviewSingleImage},
         data() {
             return {
@@ -216,7 +216,7 @@
                 currentPage: 1,
                 pageSize: 10,
                 totalAmount: 0,
-                programList: [
+                programmeList: [
                     {
                         id: 1,
                         name: '琅琊榜',
@@ -289,7 +289,7 @@
         },
         methods: {
             init() {
-                this.totalAmount = this.programList.length;
+                this.totalAmount = this.programmeList.length;
             },
             handleSizeChange(pageSize) {
                 this.pageSize = pageSize;
@@ -298,7 +298,7 @@
                 this.currentPage = currentPage;
             },
             // 添加节目
-            appendProgram() {
+            appendProgramme() {
 
             },
             // 放大预览图片

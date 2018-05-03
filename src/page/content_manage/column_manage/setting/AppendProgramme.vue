@@ -25,14 +25,14 @@
 </template>
 
 <script>
-    import ProgramFirstStep from './ProgramFirstStep';
-    import ProgramSecondStep from './ProgramSecondStep';
+    import ProgrammeFirstStep from './ProgrammeFirstStep';
+    import ProgrammeSecondStep from './ProgrammeSecondStep';
 
     export default {
-        name: 'AppendProgram',
+        name: 'AppendProgramme',
         components: {
-            ProgramFirstStep,
-            ProgramSecondStep
+            ProgrammeFirstStep,
+            ProgrammeSecondStep
         },
         data() {
             return {
@@ -43,11 +43,11 @@
             currentView() {
                 switch (this.activeStep) {
                     case 0:
-                        return 'ProgramFirstStep';
+                        return 'ProgrammeFirstStep';
                     case 1:
-                        return 'ProgramSecondStep';
+                        return 'ProgrammeSecondStep';
                     default:
-                        return 'ProgramFirstStep';
+                        return 'ProgrammeFirstStep';
                 }
             }
         },

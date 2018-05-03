@@ -19,7 +19,7 @@
     import CreateSubjectForm from './CreateSubjectForm';
 
     export default {
-        name: 'CreateProgramSubject',
+        name: 'CreateProgrammeSubject',
         components: {
             CreateSubjectForm
         },

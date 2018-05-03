@@ -8,17 +8,17 @@
             <el-breadcrumb-item>添加专题节目</el-breadcrumb-item>
         </el-breadcrumb>
         <div class="block-box text-left">
-            <select-multiple-program
-                v-on:setProgram="setProgram">
-            </select-multiple-program>
+            <select-multiple-programme
+                v-on:setProgram="setProgramme">
+            </select-multiple-programme>
             <el-tag>已选节目</el-tag>
-            <div v-if="selectedProgramList.length === 0" class="no-program">目前暂无选择的节目</div>
-            <ul class="program-list" v-else>
-                <li v-for="(item,index) in selectedProgramList" :key="index">
+            <div v-if="selectedProgrammeList.length === 0" class="no-programme">目前暂无选择的节目</div>
+            <ul class="programme-list" v-else>
+                <li v-for="(item,index) in selectedProgrammeList" :key="index">
                     <el-card :body-style="{ padding: '0px' }" class="text-center">
                         <img :src="item.url">
                         <label>{{item.name}}</label>
-                        <el-button type="text" @click="removeProgram(index)">删除</el-button>
+                        <el-button type="text" @click="removeProgramme(index)">删除</el-button>
                     </el-card>
                 </li>
             </ul>
@@ -27,26 +27,26 @@
 </template>
 
 <script>
-    import SelectMultipleProgram from './SelectMultipleProgram';
+    import SelectMultipleProgramme from './SelectMultipleProgramme';
 
     export default {
-        name: 'AppendProgramsToSubject',
+        name: 'AppendProgrammesToSubject',
         components: {
-            SelectMultipleProgram
+            SelectMultipleProgramme
         },
         data() {
             return {
-                selectedProgramList: []
+                selectedProgrammeList: []
             };
         },
         methods: {
             // 删除选中的节目
-            removeProgram(index) {
-                this.selectedProgramList.splice(index, 1);
+            removeProgramme(index) {
+                this.selectedProgrammeList.splice(index, 1);
             },
             // 设置选择的节目
-            setProgram(selectedProgram) {
-                this.selectedProgramList = selectedProgram;
+            setProgramme(selectedProgramme) {
+                this.selectedProgrammeList = selectedProgramme;
             }
         }
     };
@@ -61,7 +61,7 @@
         }
     }
 
-    .program-list {
+    .programme-list {
         display: flex;
         margin-top: 30px;
         margin-bottom: 30px;
@@ -91,7 +91,7 @@
         }
     }
 
-    .no-program {
+    .no-programme {
         margin-top: 40px;
         margin-bottom: 50px;
     }

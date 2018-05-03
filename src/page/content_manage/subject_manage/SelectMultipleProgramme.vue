@@ -56,7 +56,7 @@
             </el-form-item>
         </el-form>
         <el-table
-            :data="programList"
+            :data="programmeList"
             border
             style="width: 100%"
             @selection-change="handleSelectionChange">
@@ -145,7 +145,7 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="totalAmount">
         </el-pagination>
-        <el-button type="success" @click="appendProgram" size="small">添加所选节目</el-button>
+        <el-button type="success" @click="appendProgramme" size="small">添加所选节目</el-button>
         <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
     </div>
 </template>
@@ -154,7 +154,7 @@
     import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
 
     export default {
-        name: 'SelectMultipleProgram',
+        name: 'SelectMultipleProgramme',
         components: {
             PreviewSingleImage
         },
@@ -217,7 +217,7 @@
                 currentPage: 1,
                 pageSize: 10,
                 totalAmount: 0,
-                programList: [
+                programmeList: [
                     {
                         id: 1,
                         name: '琅琊榜',
@@ -291,7 +291,7 @@
         },
         methods: {
             init() {
-                this.totalAmount = this.programList.length;
+                this.totalAmount = this.programmeList.length;
             },
             handleSizeChange(pageSize) {
                 this.pageSize = pageSize;
@@ -300,8 +300,8 @@
                 this.currentPage = currentPage;
             },
             // 添加节目
-            appendProgram() {
-                this.$emit('setProgram', this.multipleSelection);
+            appendProgramme() {
+                this.$emit('setProgramme', this.multipleSelection);
             },
             // 放大预览图片
             displayImage(image) {

@@ -20,7 +20,7 @@
                 </div>
             </div>
             <ul id="recommend-three">
-                <li @click="toAppendProgram">
+                <li @click="toAppendProgramme">
                     <img src="~assets/img/temporary/column_manage/three-recommend.png" alt="推荐节目">
                 </li>
                 <li>
@@ -172,8 +172,8 @@
         methods: {
             init() {
             },
-            toAppendProgram() {
-                this.$router.push({name: 'AppendProgram'});
+            toAppendProgramme() {
+                this.$router.push({name: 'AppendProgramme'});
             },
             toAdGroup() {
                 this.$router.push({name: 'AdGroup'});

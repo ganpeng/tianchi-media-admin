@@ -26,11 +26,12 @@ import ProgramTypeManage from 'sysPage/program_manage/ProgramTypeManage';
 import ProgramList from 'sysPage/program_manage/ProgramList';
 import AdGroup from 'sysPage/content_manage/column_manage/setting/AdGroup';
 import AppendAd from 'sysPage/content_manage/column_manage/setting/AppendAd';
-import AppendProgram from 'sysPage/content_manage/column_manage/setting/AppendProgram';
-import CreateProgramSubject from 'sysPage/content_manage/subject_manage/CreateProgramSubject';
+import AppendProgramme from 'sysPage/content_manage/column_manage/setting/AppendProgramme';
+import CreateProgrammeSubject from 'sysPage/content_manage/subject_manage/CreateProgrammeSubject';
 import CreatePersonSubject from 'sysPage/content_manage/subject_manage/CreatePersonSubject';
-import AppendProgramsToSubject from 'sysPage/content_manage/subject_manage/AppendProgramsToSubject';
+import AppendProgrammesToSubject from 'sysPage/content_manage/subject_manage/AppendProgrammesToSubject';
 import AppendPersonsToSubject from 'sysPage/content_manage/subject_manage/AppendPersonsToSubject';
+import SubjectList from 'sysPage/content_manage/subject_manage/SubjectList';
 
 Vue.use(Router);
 
@@ -144,15 +145,15 @@ let router = new Router({
                 },
                 // 内容管理-栏目管理-节目选择设置
                 {
-                    path: '/column-manage/setting/program',
-                    name: 'AppendProgram',
-                    component: AppendProgram
+                    path: '/column-manage/setting/programme',
+                    name: 'AppendProgramme',
+                    component: AppendProgramme
                 },
                 // 内容管理-专题管理-新增节目专题
                 {
-                    path: '/subject-manage/program-create',
-                    name: 'CreateProgramSubject',
-                    component: CreateProgramSubject
+                    path: '/subject-manage/programme-create',
+                    name: 'CreateProgrammeSubject',
+                    component: CreateProgrammeSubject
                 },
                 // 内容管理-专题管理-新增人物专题
                 {
@@ -162,15 +163,21 @@ let router = new Router({
                 },
                 // 内容管理-专题管理-节目专题添加节目
                 {
-                    path: '/subject-manage/program-append',
-                    name: 'AppendProgramsToSubject',
-                    component: AppendProgramsToSubject
+                    path: '/subject-manage/programme-append',
+                    name: 'AppendProgrammesToSubject',
+                    component: AppendProgrammesToSubject
                 },
                 // 内容管理-专题管理-人物专题添加人物
                 {
                     path: '/subject-manage/person-append',
                     name: 'AppendPersonsToSubject',
                     component: AppendPersonsToSubject
+                },
+                // 内容管理-专题管理-专题列表
+                {
+                    path: '/subject-manage/list',
+                    name: 'SubjectList',
+                    component: SubjectList
                 },
                 // 人物管理-新增人物
                 {

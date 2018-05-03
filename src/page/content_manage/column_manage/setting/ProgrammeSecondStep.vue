@@ -16,7 +16,7 @@
     import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
 
     export default {
-        name: 'ProgramSecondStep',
+        name: 'ProgrammeSecondStep',
         components: {PreviewMultipleImages},
         data() {
             return {
