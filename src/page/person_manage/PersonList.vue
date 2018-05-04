@@ -14,7 +14,7 @@
                 </el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary">搜索</el-button>
+                <el-button type="primary" @click="searchHandler">搜索</el-button>
             </el-form-item>
             <el-form-item label="地区">
                 <el-select v-model="area" filterable clearable placeholder="请选择">
@@ -42,9 +42,13 @@
                 </template>
             </el-table-column>
             <el-table-column prop="name" align="center" label="名字"></el-table-column>
-            <el-table-column prop="profile" align="center" width="300px" label="人物简介"></el-table-column>
+            <el-table-column prop="description" align="center" width="300px" label="人物简介"></el-table-column>
             <el-table-column prop="area" align="center" label="地区"></el-table-column>
-            <el-table-column prop="birthday" align="center" label="出生日期"></el-table-column>
+            <el-table-column prop="birthday" align="center" label="出生日期">
+                <template slot-scope="scope">
+                    {{scope.row.birthday | formatDate('yyyy-MM-DD')}}
+                </template>
+            </el-table-column>
             <el-table-column prop="height" align="center" label="身高"></el-table-column>
             <el-table-column prop="weight" align="center" label="体重"></el-table-column>
             <el-table-column prop="mainRole" align="center" label="职业"></el-table-column>
@@ -86,18 +90,18 @@
             };
         },
         mounted() {
-            this.getPersonList();
+            this.getPersonList({pageSize: this.pageSize, pageNum: this.currentPage});
         },
         methods: {
             // 获取人物列表
-            getPersonList() {
-                this.$axios.post('/v1/figure/list', {}, {
-                    params: {
-                        pageNum: this.currentPage,
-                        pageSize: this.pageSize
-                    }
-                }).then((res) => {
-                });
+            getPersonList({pageSize, pageNum, name, area}) {
+                this.$service.getPersonList({pageSize, pageNum, name, area})
+                    .then((res) => {
+                        if (res && res.code === 0) {
+                            this.personList = res.data.list;
+                            this.totalAmount = 1;
+                        }
+                    });
             },
             // 跳转到详情页面
             displayPerson(userId) {
@@ -113,6 +117,11 @@
             handleCurrentChange(currentPage) {
                 this.currentPage = currentPage;
                 this.getPersonList();
+            },
+            searchHandler() {
+                this.currentPage = 1;
+                this.pageSize = 10;
+                this.getPersonList({pageSize: this.pageSize, pageNum: this.currentPage, name: this.searchContent});
             }
         }
     };

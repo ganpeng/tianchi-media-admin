@@ -62,22 +62,21 @@
                     label="操作"
                     width="160">
                     <template slot-scope="scope">
-                        <el-button @click="editVideo(scope.row)" type="primary" size="small">查看</el-button>
+                        <el-button @click="displayVideo(scope.row)" type="primary" size="small">查看</el-button>
                         <el-button v-if="status === 3" @click="editVideo(scope.row)" type="warning" size="small">编辑</el-button>
                     </template>
                 </el-table-column>
             </el-table>
         </el-row>
-
-        <upload-program-video-dialog :videoUploadDialogVisible="videoUploadDialogVisible" v-on:changeVideoDialogStatus="closeVideoDialog($event)"></upload-program-video-dialog>
+        <upload-programme-video-dialog :isEdit="isEdit" :videoUploadDialogVisible="videoUploadDialogVisible" v-on:changeVideoDialogStatus="closeVideoDialog($event)"></upload-programme-video-dialog>
     </div>
 </template>
 <script>
-import UploadProgramVideoDialog from './UploadProgramVideoDialog';
+import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 export default {
-    name: 'ProgramTable',
+    name: 'ProgrammeTable',
     components: {
-        UploadProgramVideoDialog
+        UploadProgrammeVideoDialog
     },
     props: {
         dataList: {
@@ -95,20 +94,31 @@ export default {
     },
     data() {
         return {
-            videoUploadDialogVisible: false
+            videoUploadDialogVisible: false,
+            isEdit: true,
+            currentVideo: {}
         };
     },
     methods: {
         editVideo(id) {
             this.videoUploadDialogVisible = true;
+            this.isEdit = true;
+            this.setVideo(id);
+        },
+        displayVideo(id) {
+            this.videoUploadDialogVisible = true;
+            this.isEdit = false;
+            this.setVideo(id);
         },
         closeVideoDialog(status) {
             this.videoUploadDialogVisible = status;
+        },
+        setVideo(id) {
+            let video = this.dataList.find((video) => video.id === id);
+            this.currentVideo = video;
         }
     }
 };
-
 </script>
 <style lang="less" scoped>
-
 </style>

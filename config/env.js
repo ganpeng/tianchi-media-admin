@@ -22,6 +22,9 @@ switch (npmEventName) {
         break;
     // xiongbao gateway
     case 'dev:xiongbao':
+        proxyTarget = 'http://10.0.3.232:8100';
+        break;
+    case 'dev:lian':
         proxyTarget = 'http://10.0.3.244:8100';
         break;
     // default is dev url

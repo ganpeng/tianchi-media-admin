@@ -1,6 +1,6 @@
 <!--显示人物-->
 <template>
-    <person-detail :status='1'></person-detail>
+    <person-detail :person="person" :status='1'></person-detail>
 </template>
 <script>
     import PersonDetail from './PersonDetail';
@@ -8,6 +8,20 @@
         name: 'DisplayPerson',
         components: {
             PersonDetail
+        },
+        data() {
+            return {
+                person: {}
+            };
+        },
+        mounted() {
+            let {id} = this.$route.params;
+            this.$service.getPersonInfo({id})
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        this.person = res.data;
+                    }
+                });
         }
     };
 </script>

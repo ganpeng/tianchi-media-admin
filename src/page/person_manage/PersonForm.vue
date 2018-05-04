@@ -1,4 +1,4 @@
-<!-- 新建人物的表单组件  -->
+<!-- 新建人物的表单组件 -->
 <template>
     <div class="person-form-container">
         <el-form :model="person" :rules="infoRules" status-icon ref="createPerson"
@@ -34,7 +34,17 @@
                 </el-input>
             </el-form-item>
             <el-form-item label="职业" prop="mainRole">
-                <el-input :readonly="readonly" v-model="person.mainRole" placeholder=""></el-input>
+                <el-select
+                    :disabled="readonly"
+                    v-model="person.mainRole"
+                    placeholder="请选择职业">
+                    <el-option
+                    v-for="item in mainRoleoptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                    </el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="人物图片">
                 <el-button type="primary" @click="uploadImageHandler">上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
@@ -43,11 +53,11 @@
                 <label class="tips">带 <i>*</i> 号的为必填项</label>
             </el-form-item>
         </el-form>
-        <upload-program-image-dialog title="上传人物图片" :imageUploadDialogVisible="imageUploadDialogVisible" v-on:changeImageDialogStatus="closeImageDialog($event)"></upload-program-image-dialog>
+        <upload-programme-image-dialog title="上传人物图片" :imageUploadDialogVisible="imageUploadDialogVisible" v-on:changeImageDialogStatus="closeImageDialog($event)"></upload-programme-image-dialog>
     </div>
 </template>
 <script>
-import UploadProgramImageDialog from '../program_manage/UploadProgramImageDialog';
+import UploadProgrammeImageDialog from '../programme_manage/UploadProgrammeImageDialog';
 
 // 默认的person
 let personDefault = {
@@ -78,7 +88,7 @@ export default {
         }
     },
     components: {
-        UploadProgramImageDialog
+        UploadProgrammeImageDialog
     },
     data() {
         return {
@@ -100,7 +110,25 @@ export default {
                 ]
             },
             imageUploadDialogVisible: false,
-            areaOptions: this.$util.countryList()
+            areaOptions: this.$util.countryList(),
+            mainRoleoptions: [
+                {
+                    value: 'DIRECTOR',
+                    label: '导演'
+                },
+                {
+                    value: 'VICE_DIRECTOR',
+                    label: '副导演'
+                },
+                {
+                    value: 'CHIEF_ACTOR',
+                    label: '主演'
+                },
+                {
+                    value: 'ACTOR',
+                    label: '演员'
+                }
+            ]
         };
     },
     methods: {

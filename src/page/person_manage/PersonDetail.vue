@@ -9,7 +9,7 @@
         </el-breadcrumb>
         <el-row>
             <el-col :span="8">
-                <person-form :status="status" :readonly="readonly" ref="personForm"></person-form>
+                <person-form :person="person" :status="status" :readonly="readonly" ref="personForm"></person-form>
                 <div class="form-btn" v-show="!readonly">
                     <el-button v-show="isEdit" type="primary" @click="editPerson">编辑</el-button>
                     <el-button
@@ -34,6 +34,10 @@
         props: {
             status: { // status 有三种状态，0代表创建 "create", 1代表显示 "display", 2代表编辑 "edit"
                 type: Number
+            },
+            person: {
+                type: Object,
+                default: () => {}
             }
         },
         data() {
@@ -61,8 +65,11 @@
                     let person = this.$refs.personForm.person;
                     if (valid) {
                         this.isLoading = true;
-                        this.$axios.post('/v1/figure', person).then((res) => {
-                                this.$message.success('创建人物成功');
+                        this.$service.createPerson(person)
+                            .then((res) => {
+                                if (res) {
+                                    this.$message.success('创建人物成功');
+                                }
                             }).finally(() => {
                                 this.isLoading = false;
                             });
@@ -78,7 +85,8 @@
                     let id = this.$route.params.id;
                     if (valid) {
                         this.isLoading = true;
-                        this.$axios.put(`/v1/figure/${id}`, person).then((res) => {
+                        this.$service.updatePersonInfo({id, person})
+                            .then((res) => {
                                 if (res) {
                                     this.$message.success('编辑人物成功');
                                 }

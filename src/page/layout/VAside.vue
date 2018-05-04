@@ -26,9 +26,9 @@
                     </el-menu-item-group>
                     <el-submenu index="1-2">
                         <template slot="title">节目资源管理</template>
-                        <el-menu-item index="/program-manage/create">新增节目</el-menu-item>
-                        <el-menu-item index="/program-manage/list">节目列表</el-menu-item>
-                        <el-menu-item index="/program-manage/type">节目类别管理</el-menu-item>
+                        <el-menu-item index="/programme-manage/create">新增节目</el-menu-item>
+                        <el-menu-item index="/programme-manage/list">节目列表</el-menu-item>
+                        <el-menu-item index="/programme-manage/type">节目类别管理</el-menu-item>
                     </el-submenu>
                     <el-submenu index="1-3">
                         <template slot="title">人物资源管理</template>

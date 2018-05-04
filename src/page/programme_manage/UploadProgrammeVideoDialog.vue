@@ -1,7 +1,7 @@
 <!-- 上传节目视频的弹窗组件 -->
 <template>
     <el-dialog
-        :title="title"
+        :title="isEdit ? '编辑视频' : '显示视频'"
         :visible.sync="videoUploadDialogVisible"
         :show-close="false"
         :close-on-click-modal="false"
@@ -72,6 +72,7 @@
         <div slot="footer" class="dialog-footer">
             <el-button @click="cancelHandler">取 消</el-button>
             <el-button
+                v-if="isEdit"
                 type="primary"
                 @click="successHandler"
                 v-loading.fullscreen.lock="isLoading">确 定</el-button>
@@ -85,9 +86,9 @@
                 type: Boolean,
                 default: false
             },
-            title: {
-                type: String,
-                default: '编辑视频'
+            isEdit: {
+                type: Boolean,
+                default: true
             }
         },
         data() {

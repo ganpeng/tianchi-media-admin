@@ -151,28 +151,28 @@
             </el-col>
             <el-col :span="24">
                 <div class="block-title">节目视频</div>
-                <program-table :status="3" :data-list="testData"></program-table>
+                <programme-table :status="3" :data-list="testData"></programme-table>
             </el-col>
         </el-row>
 
         <div class="group">
             <el-button type="primary" @click="onSubmit">创建</el-button>
         </div>
-        <upload-program-image-dialog title="上传节目图片" :imageUploadDialogVisible="imageUploadDialogVisible" v-on:changeImageDialogStatus="closeImageDialog($event)"></upload-program-image-dialog>
+        <upload-programme-image-dialog title="上传节目图片" :imageUploadDialogVisible="imageUploadDialogVisible" v-on:changeImageDialogStatus="closeImageDialog($event)"></upload-programme-image-dialog>
         <create-person-dialog :createPersonDialogVisible="createPersonDialogVisible" v-on:changePersonDialogStatus="closePersonDialog($event)"></create-person-dialog>
     </div>
 </template>
 <script>
-    import UploadProgramImageDialog from './UploadProgramImageDialog';
+    import UploadProgrammeImageDialog from './UploadProgrammeImageDialog';
     import CreatePersonDialog from './CreatePersonDialog';
-    import ProgramTable from './ProgramTable';
+    import ProgrammeTable from './ProgrammeTable';
 
     export default {
-        name: 'CreateProgram',
+        name: 'CreateProgramme',
         components: {
-            UploadProgramImageDialog,
+            UploadProgrammeImageDialog,
             CreatePersonDialog,
-            ProgramTable
+            ProgrammeTable
         },
         data() {
             return {

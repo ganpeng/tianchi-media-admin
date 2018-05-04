@@ -21,9 +21,9 @@ import PersonList from 'sysPage/person_manage/PersonList';
 import CreatePerson from 'sysPage/person_manage/CreatePerson';
 import EditPerson from 'sysPage/person_manage/EditPerson';
 import DisplayPerson from 'sysPage/person_manage/DisplayPerson';
-import CreateProgram from 'sysPage/program_manage/CreateProgram';
-import ProgramTypeManage from 'sysPage/program_manage/ProgramTypeManage';
-import ProgramList from 'sysPage/program_manage/ProgramList';
+import CreateProgramme from 'sysPage/programme_manage/CreateProgramme';
+import ProgrammeTypeManage from 'sysPage/programme_manage/ProgrammeTypeManage';
+import ProgrammeList from 'sysPage/programme_manage/ProgrammeList';
 import AdGroup from 'sysPage/content_manage/column_manage/setting/AdGroup';
 import AppendAd from 'sysPage/content_manage/column_manage/setting/AppendAd';
 import AppendProgramme from 'sysPage/content_manage/column_manage/setting/AppendProgramme';
@@ -206,20 +206,20 @@ let router = new Router({
                 // 节目管理
                 // 新增节目
                 {
-                    path: '/program-manage/create',
-                    name: 'CreateProgram',
-                    component: CreateProgram
+                    path: '/programme-manage/create',
+                    name: 'CreateProgramme',
+                    component: CreateProgramme
                 },
                 {
-                    path: '/program-manage/list',
-                    name: 'ProgramList',
-                    component: ProgramList
+                    path: '/programme-manage/list',
+                    name: 'ProgrammeList',
+                    component: ProgrammeList
                 },
                 // 节目类别管理
                 {
-                    path: '/program-manage/type',
-                    name: 'ProgramTypeManage',
-                    component: ProgramTypeManage
+                    path: '/programme-manage/type',
+                    name: 'ProgrammeTypeManage',
+                    component: ProgrammeTypeManage
                 }
             ]
         },

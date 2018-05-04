@@ -69,11 +69,11 @@
         <preview-multiple-images
             :previewMultipleImages="previewImage">
         </preview-multiple-images>
-        <upload-program-image-dialog
+        <upload-programme-image-dialog
             title="节目专题封面设置"
             :imageUploadDialogVisible="imageUploadDialogVisible"
             v-on:changeImageDialogStatus="closeImageDialog($event)">
-        </upload-program-image-dialog>
+        </upload-programme-image-dialog>
         <el-dialog
             title="提示"
             :visible.sync="dialogVisible"
@@ -90,13 +90,13 @@
 
 <script>
     import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
-    import UploadProgramImageDialog from '../../program_manage/UploadProgramImageDialog';
+    import UploadProgrammeImageDialog from '../../programme_manage/UploadProgrammeImageDialog';
 
     export default {
         name: 'CreateSubjectForm',
         components: {
             PreviewMultipleImages,
-            UploadProgramImageDialog
+            UploadProgrammeImageDialog
         },
         /* status: 0代表创建节目专题，1代表创建人物专题 */
         props: ['status'],
