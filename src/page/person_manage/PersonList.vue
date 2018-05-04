@@ -17,7 +17,13 @@
                 <el-button type="primary" @click="searchHandler">搜索</el-button>
             </el-form-item>
             <el-form-item label="地区">
-                <el-select v-model="area" filterable clearable placeholder="请选择">
+                <el-select
+                    v-model="area"
+                    filterable
+                    clearable
+                    placeholder="请选择地区"
+                    @change="searchHandler"
+                    >
                     <el-option
                         v-for="item in areaOptions"
                         :key="item.value"
@@ -41,9 +47,13 @@
                     <img class="person-image" :src="scope.row.avatar" alt="">
                 </template>
             </el-table-column>
-            <el-table-column prop="name" align="center" label="名字"></el-table-column>
+            <el-table-column prop="name" align="center" width="200px" label="名字"></el-table-column>
             <el-table-column prop="description" align="center" width="300px" label="人物简介"></el-table-column>
-            <el-table-column prop="area" align="center" label="地区"></el-table-column>
+            <el-table-column prop="area" align="center" label="地区">
+                <template slot-scope="scope">
+                    {{areaLabel(scope.row.area)}}
+                </template>
+            </el-table-column>
             <el-table-column prop="birthday" align="center" label="出生日期">
                 <template slot-scope="scope">
                     {{scope.row.birthday | formatDate('yyyy-MM-DD')}}
@@ -51,7 +61,11 @@
             </el-table-column>
             <el-table-column prop="height" align="center" label="身高"></el-table-column>
             <el-table-column prop="weight" align="center" label="体重"></el-table-column>
-            <el-table-column prop="mainRole" align="center" label="职业"></el-table-column>
+            <el-table-column prop="mainRole" align="center" label="职业">
+                <template slot-scope="scope">
+                    {{mainRoleLabel(scope.row.mainRole)}}
+                </template>
+            </el-table-column>
             <el-table-column align="center" label="更新时间">
                 <template slot-scope="scope">
                     {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
@@ -68,7 +82,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-sizes="[10, 20, 30, 50]"
+            :page-sizes="[5, 10, 20, 30, 50]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="totalAmount">
@@ -84,9 +98,28 @@
                 area: '',
                 personList: [],
                 currentPage: 1,
-                pageSize: 10,
+                pageSize: 5,
                 totalAmount: 0,
-                areaOptions: this.$util.countryList()
+                areaOptions: this.$util.countryList(),
+                selectFlag: false,
+                mainRoleOptions: [
+                    {
+                        value: 'DIRECTOR',
+                        label: '导演'
+                    },
+                    {
+                        value: 'VICE_DIRECTOR',
+                        label: '副导演'
+                    },
+                    {
+                        value: 'CHIEF_ACTOR',
+                        label: '主演'
+                    },
+                    {
+                        value: 'ACTOR',
+                        label: '演员'
+                    }
+                ]
             };
         },
         mounted() {
@@ -99,9 +132,15 @@
                     .then((res) => {
                         if (res && res.code === 0) {
                             this.personList = res.data.list;
-                            this.totalAmount = 1;
+                            this.totalAmount = res.data.total;
                         }
                     });
+            },
+            areaLabel(areaValue) {
+                return this.areaOptions.find((areaItem) => areaItem.value === areaValue).label;
+            },
+            mainRoleLabel(mainRoleValue) {
+                return this.mainRoleOptions.find((mainRoleItem) => mainRoleItem.value === mainRoleValue).label;
             },
             // 跳转到详情页面
             displayPerson(userId) {
@@ -112,16 +151,15 @@
             },
             handleSizeChange(pageSize) {
                 this.pageSize = pageSize;
-                this.getPersonList();
+                this.getPersonList({pageSize: this.pageSize, pageNum: this.currentPage, name: this.searchContent ? this.searchContent : undefined, area: this.area ? this.area : undefined});
             },
             handleCurrentChange(currentPage) {
                 this.currentPage = currentPage;
-                this.getPersonList();
+                this.getPersonList({pageSize: this.pageSize, pageNum: this.currentPage, name: this.searchContent ? this.searchContent : undefined, area: this.area ? this.area : undefined});
             },
             searchHandler() {
                 this.currentPage = 1;
-                this.pageSize = 10;
-                this.getPersonList({pageSize: this.pageSize, pageNum: this.currentPage, name: this.searchContent});
+                this.getPersonList({pageSize: this.pageSize, pageNum: this.currentPage, name: this.searchContent ? this.searchContent : undefined, area: this.area ? this.area : undefined});
             }
         }
     };

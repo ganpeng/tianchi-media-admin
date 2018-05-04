@@ -26,13 +26,14 @@
                 <el-col :span="10">
                     <el-upload
                         class="upload-demo"
-                        action="https://jsonplaceholder.typicode.com/posts/"
+                        action="/v1/media/file"
                         :on-preview="handlePreview"
                         :on-remove="handleRemove"
                         :before-upload="beforeUploadHandler"
                         v-model="form.imageFiles"
                         :file-list="form.imageFiles"
                         :on-success="uploadSuccessHandler"
+                        with-credentials="true"
                         list-type="picture">
                             <el-button size="small" type="primary">点击上传</el-button>
                             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件</div>

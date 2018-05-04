@@ -1,6 +1,8 @@
 <!--显示人物-->
 <template>
-    <person-detail :person="person" :status='1'></person-detail>
+    <div>
+        <person-detail :person="person" :status='1'></person-detail>
+    </div>
 </template>
 <script>
     import PersonDetail from './PersonDetail';

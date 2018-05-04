@@ -46,7 +46,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="人物图片">
+            <el-form-item v-if="!readonly" label="人物图片">
                 <el-button type="primary" @click="uploadImageHandler">上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
             </el-form-item>
             <el-form-item class="tips">
