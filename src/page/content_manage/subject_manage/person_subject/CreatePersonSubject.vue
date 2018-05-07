@@ -8,20 +8,20 @@
             <el-breadcrumb-item>创建人物专题</el-breadcrumb-item>
         </el-breadcrumb>
         <div class="block-box">
-            <create-subject-form
+            <subject-basic-info-form
                 status="1">
-            </create-subject-form>
+            </subject-basic-info-form>
         </div>
     </div>
 </template>
 
 <script>
-    import CreateSubjectForm from '../CreateSubjectForm';
+    import SubjectBasicInfoForm from '../SubjectBasicInfoForm';
 
     export default {
         name: 'CreatePersonSubject',
         components: {
-            CreateSubjectForm
+            SubjectBasicInfoForm
         },
         data() {
             return {};

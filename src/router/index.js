@@ -34,7 +34,9 @@ import AppendPersonsToSubject from 'sysPage/content_manage/subject_manage/person
 import SubjectList from 'sysPage/content_manage/subject_manage/SubjectList';
 import AdvertResourceList from 'sysPage/advert_manage/advert_resources_manage/AdvertResourceList';
 import PersonSubjectDetail from 'sysPage/content_manage/subject_manage/person_subject/PersonSubjectDetail';
+import EditPersonSubject from 'sysPage/content_manage/subject_manage/person_subject/EditPersonSubjectBasicInfo';
 import ProgrammeSubjectDetail from 'sysPage/content_manage/subject_manage/programme_subject/ProgrammeSubjectDetail';
+import EditProgrammeSubject from 'sysPage/content_manage/subject_manage/programme_subject/EditProgrammeSubjectBasicInfo';
 
 Vue.use(Router);
 
@@ -193,6 +195,18 @@ let router = new Router({
                     path: '/subject-manage/programme/detail/:id',
                     name: 'ProgrammeSubjectDetail',
                     component: ProgrammeSubjectDetail
+                },
+                // 内容管理-专题管理-人物专题-编辑
+                {
+                    path: '/subject-manage/person/edit/:id',
+                    name: 'EditPersonSubject',
+                    component: EditPersonSubject
+                },
+                // 内容管理-专题管理-节目专题-编辑
+                {
+                    path: '/subject-manage/programme/edit/:id',
+                    name: 'EditProgrammeSubject',
+                    component: EditProgrammeSubject
                 },
                 // 人物管理-新增人物
                 {

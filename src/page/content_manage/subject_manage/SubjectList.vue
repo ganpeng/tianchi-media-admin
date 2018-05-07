@@ -133,8 +133,8 @@
                                  class="operate">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" @click="checkSubjectDetail(scope.row)">查看</el-button>
-                        <el-button type="text" size="small" @click="editBasicInfo(scope.row.id)">编辑基本信息</el-button>
-                        <el-button type="text" size="small" @click="editSubjectContainer(scope.row.id)">增删内容</el-button>
+                        <el-button type="text" size="small" @click="editBasicInfo(scope.row)">编辑基本信息</el-button>
+                        <el-button type="text" size="small" @click="editSubjectContainer(scope.row)">增删内容</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -258,8 +258,10 @@
                 });
             },
             // 编辑专题基本信息
-            editBasicInfo() {
-
+            editBasicInfo(item) {
+                this.$router.push({
+                    name: item.type === '人物' ? 'EditPersonSubject' : 'EditProgrammeSubject', params: {id: item.id}
+                });
             },
             // 编辑专题包含项
             editSubjectContainer() {

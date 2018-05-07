@@ -1,4 +1,4 @@
-<!--创建专题表单组件-->
+<!--专题基本信息表单组件-->
 <template>
     <div>
         <el-form :model="subjectInfo" :rules="infoRules" status-icon ref="subjectInfo"
@@ -7,7 +7,7 @@
             <el-form-item label="名称" prop="name" required>
                 <el-input v-model="subjectInfo.name" placeholder="请填写30个字以内的名称"></el-input>
             </el-form-item>
-            <template v-if="status === '0'">
+            <template v-if="status === '0' || status === '2'">
                 <el-form-item label="节目专题类别" prop="type" required>
                     <el-select v-model="subjectInfo.type" multiple placeholder="请选择节目专题类别">
                         <el-option
@@ -24,7 +24,8 @@
                     v-model="subjectInfo.description"
                     placeholder="请填写150个字以内的简介"
                     type="textarea"
-                    :rows="4"></el-input>
+                    :rows="4">
+                </el-input>
             </el-form-item>
             <el-form-item label="请选择标签" prop="tags" required>
                 <el-select v-model="subjectInfo.tags" multiple placeholder="请选择标签">
@@ -62,7 +63,9 @@
                 <label class="tips">带 <i>*</i> 号的为必填项</label>
             </el-form-item>
             <el-form-item class="operate">
-                <el-button type="primary" @click="createAdmin">创 建</el-button>
+                <el-button type="primary" @click="createAdmin">
+                    {{this.status === '0' || this.status === '1' ? '创建' : '更新'}}
+                </el-button>
                 <el-button @click="reset">重 置</el-button>
             </el-form-item>
         </el-form>
@@ -79,10 +82,11 @@
             :visible.sync="dialogVisible"
             width="30%"
             :before-close="handleClose">
-            <span>成功创建{{ status=== '0' ? '节目':'人物'}}专题，关闭本对话框可继续添加专题，请选择：</span>
+            <span>{{remainder}}</span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">前往专题列表页面</el-button>
-                <el-button type="primary" @click="toAppend">前往添加专题{{ status === '0' ? '节目':'人物'}}</el-button>
+                <el-button type="primary" @click="toAppend" v-if="status === '0' || status === '1'">前往添加专题{{ status === '0' ? '节目':'人物'}}</el-button>
+                <el-button type="primary" @click="toAppend" v-if="status === '2' || status === '3'">前往编辑专题{{ status === '2' ? '节目':'人物'}}</el-button>
             </span>
         </el-dialog>
     </div>
@@ -98,7 +102,7 @@
             PreviewMultipleImages,
             UploadProgrammeImageDialog
         },
-        /* status: 0代表创建节目专题，1代表创建人物专题 */
+        /* status: 0代表创建节目专题，1代表创建人物专题，2代表编辑节目专题，3代表编辑人物专题 */
         props: ['status'],
         data() {
             let checkName = (rule, value, callback) => {
@@ -111,7 +115,8 @@
                 }
             };
             let checkTypes = (rule, value, callback) => {
-                if (this.status === '0') {
+                // 对于创建或者编辑节目专题，不存在当前字段，也不校验
+                if (this.status === '1' || this.status === '3') {
                     return;
                 }
                 if (!this.subjectInfo.types) {
@@ -217,11 +222,65 @@
                 dialogVisible: false
             };
         },
+        computed: {
+            remainder() {
+                switch (this.status) {
+                    case 0:
+                        return '成功创建节目专题，关闭本对话框可继续添加专题，请选择：';
+                    case 1:
+                        return '成功创建人物专题，关闭本对话框可继续添加专题，请选择：';
+                    case 2:
+                        return '成功更新节目专题，关闭本对话框可继续编辑专题，请选择：';
+                    case 3:
+                        return '成功更新人物专题，关闭本对话框可继续编辑专题，请选择：';
+                    default:
+                        break;
+                }
+            }
+        },
+        mounted() {
+            this.init();
+        },
         methods: {
-            // 创建专题
+            // 初始化数据
+            init() {
+                switch (this.status) {
+                    // 创建节目专题，获取节目类型等数据
+                    case 0:
+                        break;
+                    // 创建人物专题
+                    case 1:
+                        break;
+                    // 编辑节目专题，初始化当前专题信息
+                    case 2:
+                        break;
+                    // 编辑人物专题，初始化当前专题信息
+                    case 3:
+                        break;
+                    default:
+                        break;
+                }
+            },
+            // 创建或更新专题
             createAdmin() {
                 this.$refs['subjectInfo'].validate((valid) => {
                     if (valid) {
+                        switch (this.status) {
+                            // 创建节目专题
+                            case 0:
+                                break;
+                            // 创建人物专题
+                            case 1:
+                                break;
+                            // 更新节目专题
+                            case 2:
+                                break;
+                            // 更新人物专题
+                            case 3:
+                                break;
+                            default:
+                                break;
+                        }
                         this.dialogVisible = true;
                     } else {
                         return false;

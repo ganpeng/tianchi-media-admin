@@ -58,6 +58,11 @@
                 </el-table-column>
             </el-table>
         </div>
+        <div class="operate-list">
+            <el-button type="primary" @click="editBasicInfo">编辑基本信息</el-button>
+            <el-button type="primary">编辑节目</el-button>
+            <el-button type="danger" @click="removeSubject">删 除</el-button>
+        </div>
         <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
     </div>
 </template>
@@ -121,6 +126,31 @@
                 this.previewImage.title = image.name;
                 this.previewImage.display = true;
                 this.previewImage.url = image.url;
+            },
+            // 删除当前专题，并跳转专题列表页面
+            removeSubject() {
+                this.$confirm('此操作将删除当前专题, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                    this.$router.push({name: 'SubjectList'});
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            // 编辑当前专题基本信息
+            editBasicInfo() {
+                this.$router.push({
+                    name: 'EditPersonSubject', params: this.$route.params
+                });
             }
         }
     };
@@ -153,6 +183,13 @@
         }
         .more {
             float: right;
+        }
+    }
+
+    .operate-list {
+        .el-button {
+            margin-right: 30px;
+            width: 124px;
         }
     }
 </style>
