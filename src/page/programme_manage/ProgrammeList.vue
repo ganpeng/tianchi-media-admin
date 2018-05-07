@@ -22,7 +22,7 @@
                 </el-form-item>
                 <el-form-item class="create-account">
                     <el-tag>
-                        <router-link to="/program-manage/create">新增节目</router-link>
+                        <router-link to="/programme-manage/create">新增节目</router-link>
                     </el-tag>
                     <el-tag>导入</el-tag>
                     <el-tag>导出</el-tag>

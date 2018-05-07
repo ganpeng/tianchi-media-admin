@@ -23,18 +23,18 @@
                             <el-menu-item index="/column-manage/setting">栏目项设置</el-menu-item>
                             <el-menu-item index="/column-manage/today-recommended">今日推荐</el-menu-item>
                         </el-submenu>
+                        <el-submenu index="1-2">
+                            <template slot="title">节目资源管理</template>
+                            <el-menu-item index="/programme-manage/create">新增节目</el-menu-item>
+                            <el-menu-item index="/programme-manage/list">节目列表</el-menu-item>
+                            <el-menu-item index="/programme-manage/type">节目类别管理</el-menu-item>
+                        </el-submenu>
+                        <el-submenu index="1-3">
+                            <template slot="title">人物资源管理</template>
+                            <el-menu-item index="/person-manage/create">新增人物</el-menu-item>
+                            <el-menu-item index="/person-manage/list">人物列表</el-menu-item>
+                        </el-submenu>
                     </el-menu-item-group>
-                    <el-submenu index="1-2">
-                        <template slot="title">节目资源管理</template>
-                        <el-menu-item index="/programme-manage/create">新增节目</el-menu-item>
-                        <el-menu-item index="/programme-manage/list">节目列表</el-menu-item>
-                        <el-menu-item index="/programme-manage/type">节目类别管理</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="1-3">
-                        <template slot="title">人物资源管理</template>
-                        <el-menu-item index="/person-manage/create">新增人物</el-menu-item>
-                        <el-menu-item index="/person-manage/list">人物列表</el-menu-item>
-                    </el-submenu>
                     <el-menu-item-group>
                         <el-submenu index="1-4">
                             <template slot="title">专题管理</template>
@@ -58,6 +58,26 @@
                         <span>用户管理</span>
                     </template>
                     <el-menu-item index="/user-center/list">用户列表</el-menu-item>
+                </el-submenu>
+                <el-submenu index="5">
+                    <template slot="title">
+                        <i class="el-icon-tickets"></i>
+                        <span>广告管理</span>
+                    </template>
+                    <el-menu-item-group>
+                        <el-submenu index="5-1">
+                            <template slot="title">广告资源管理</template>
+                            <el-menu-item index="/advert-resource/list">广告资源列表</el-menu-item>
+                        </el-submenu>
+                        <el-submenu index="5-2">
+                            <template slot="title">广告投放管理</template>
+                            <el-submenu index="5-2-1">
+                                <template slot="title">开机广告管理</template>
+                                <el-menu-item index="/user-center/list">开机广告列表</el-menu-item>
+                                <el-menu-item index="/user-center/list">新增开机广告</el-menu-item>
+                            </el-submenu>
+                        </el-submenu>
+                    </el-menu-item-group>
                 </el-submenu>
                 <el-submenu index="4">
                     <template slot="title">

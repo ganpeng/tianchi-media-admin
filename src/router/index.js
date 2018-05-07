@@ -32,6 +32,7 @@ import CreatePersonSubject from 'sysPage/content_manage/subject_manage/person_su
 import AppendProgrammesToSubject from 'sysPage/content_manage/subject_manage/programme_subject/AppendProgrammesToSubject';
 import AppendPersonsToSubject from 'sysPage/content_manage/subject_manage/person_subject/AppendPersonsToSubject';
 import SubjectList from 'sysPage/content_manage/subject_manage/SubjectList';
+import AdvertResourceList from 'sysPage/advert_manage/advert_resources_manage/AdvertResourceList';
 import PersonSubjectDetail from 'sysPage/content_manage/subject_manage/person_subject/PersonSubjectDetail';
 import ProgrammeSubjectDetail from 'sysPage/content_manage/subject_manage/programme_subject/ProgrammeSubjectDetail';
 
@@ -234,6 +235,13 @@ let router = new Router({
                     path: '/programme-manage/type',
                     name: 'ProgrammeTypeManage',
                     component: ProgrammeTypeManage
+                },
+                //  广告管理
+                // 广告资源列表
+                {
+                    path: '/advert-resource/list',
+                    name: 'AdvertResourceList',
+                    component: AdvertResourceList
                 }
             ]
         },

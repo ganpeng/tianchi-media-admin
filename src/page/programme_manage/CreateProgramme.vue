@@ -359,7 +359,7 @@
                 this.createPersonDialogVisible = status;
             },
             gotoProgramTypePage() {
-                this.$router.push({name: 'ProgramTypeManage'});
+                this.$router.push({name: 'ProgrammeTypeManage'});
             },
             handleClick(row) {
             }
