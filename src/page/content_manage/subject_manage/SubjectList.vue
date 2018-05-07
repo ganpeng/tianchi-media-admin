@@ -132,7 +132,7 @@
                                  label="操作"
                                  class="operate">
                     <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="checkSubjectDetail(scope.row.id)">查看</el-button>
+                        <el-button type="text" size="small" @click="checkSubjectDetail(scope.row)">查看</el-button>
                         <el-button type="text" size="small" @click="editBasicInfo(scope.row.id)">编辑基本信息</el-button>
                         <el-button type="text" size="small" @click="editSubjectContainer(scope.row.id)">增删内容</el-button>
                     </template>
@@ -252,8 +252,10 @@
                 this.currentPage = currentPage;
             },
             // 查询专题详情
-            checkSubjectDetail() {
-
+            checkSubjectDetail(item) {
+                this.$router.push({
+                    name: item.type === '人物' ? 'PersonSubjectDetail' : 'ProgrammeSubjectDetail', params: {id: item.id}
+                });
             },
             // 编辑专题基本信息
             editBasicInfo() {

@@ -27,11 +27,13 @@ import ProgrammeList from 'sysPage/programme_manage/ProgrammeList';
 import AdGroup from 'sysPage/content_manage/column_manage/setting/AdGroup';
 import AppendAd from 'sysPage/content_manage/column_manage/setting/AppendAd';
 import AppendProgramme from 'sysPage/content_manage/column_manage/setting/AppendProgramme';
-import CreateProgrammeSubject from 'sysPage/content_manage/subject_manage/CreateProgrammeSubject';
-import CreatePersonSubject from 'sysPage/content_manage/subject_manage/CreatePersonSubject';
-import AppendProgrammesToSubject from 'sysPage/content_manage/subject_manage/AppendProgrammesToSubject';
-import AppendPersonsToSubject from 'sysPage/content_manage/subject_manage/AppendPersonsToSubject';
+import CreateProgrammeSubject from 'sysPage/content_manage/subject_manage/programme_subject/CreateProgrammeSubject';
+import CreatePersonSubject from 'sysPage/content_manage/subject_manage/person_subject/CreatePersonSubject';
+import AppendProgrammesToSubject from 'sysPage/content_manage/subject_manage/programme_subject/AppendProgrammesToSubject';
+import AppendPersonsToSubject from 'sysPage/content_manage/subject_manage/person_subject/AppendPersonsToSubject';
 import SubjectList from 'sysPage/content_manage/subject_manage/SubjectList';
+import PersonSubjectDetail from 'sysPage/content_manage/subject_manage/person_subject/PersonSubjectDetail';
+import ProgrammeSubjectDetail from 'sysPage/content_manage/subject_manage/programme_subject/ProgrammeSubjectDetail';
 
 Vue.use(Router);
 
@@ -167,7 +169,7 @@ let router = new Router({
                     name: 'AppendProgrammesToSubject',
                     component: AppendProgrammesToSubject
                 },
-                // 内容管理-专题管理-人物专题添加人物
+                // 内容管理-专题管理-人物专题-添加人物
                 {
                     path: '/subject-manage/person-append',
                     name: 'AppendPersonsToSubject',
@@ -178,6 +180,18 @@ let router = new Router({
                     path: '/subject-manage/list',
                     name: 'SubjectList',
                     component: SubjectList
+                },
+                // 内容管理-专题管理-人物专题-详情
+                {
+                    path: '/subject-manage/person/detail/:id',
+                    name: 'PersonSubjectDetail',
+                    component: PersonSubjectDetail
+                },
+                // 内容管理-专题管理-节目专题-详情
+                {
+                    path: '/subject-manage/programme/detail/:id',
+                    name: 'ProgrammeSubjectDetail',
+                    component: ProgrammeSubjectDetail
                 },
                 // 人物管理-新增人物
                 {
