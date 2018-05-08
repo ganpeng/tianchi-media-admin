@@ -56,7 +56,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-dropdown @command="handleCommand">
+                    <el-dropdown @command="createSubject">
                         <el-button type="primary">
                             创建专题<i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
@@ -264,11 +264,13 @@
                 });
             },
             // 编辑专题包含项
-            editSubjectContainer() {
-
+            editSubjectContainer(item) {
+                this.$router.push({
+                    name: item.type === '人物' ? 'EditSubjectPersons' : 'EditSubjectProgrammes', params: {id: item.id}
+                });
             },
             // 创建专题
-            handleCommand(command) {
+            createSubject(command) {
                 this.$router.push({name: command === 'PROGRAMME' ? 'CreateProgrammeSubject' : 'CreatePersonSubject'});
             }
         }

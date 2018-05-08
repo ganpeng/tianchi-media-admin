@@ -84,9 +84,9 @@
             :before-close="handleClose">
             <span>{{remainder}}</span>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">前往专题列表页面</el-button>
+                <el-button @click="toSubjectList">前往专题列表页面</el-button>
                 <el-button type="primary" @click="toAppend" v-if="status === '0' || status === '1'">前往添加专题{{ status === '0' ? '节目':'人物'}}</el-button>
-                <el-button type="primary" @click="toAppend" v-if="status === '2' || status === '3'">前往编辑专题{{ status === '2' ? '节目':'人物'}}</el-button>
+                <el-button type="primary" @click="toEdit" v-if="status === '2' || status === '3'">前往编辑专题{{ status === '2' ? '节目':'人物'}}</el-button>
             </span>
         </el-dialog>
     </div>
@@ -225,13 +225,13 @@
         computed: {
             remainder() {
                 switch (this.status) {
-                    case 0:
+                    case '0':
                         return '成功创建节目专题，关闭本对话框可继续添加专题，请选择：';
-                    case 1:
+                    case '1':
                         return '成功创建人物专题，关闭本对话框可继续添加专题，请选择：';
-                    case 2:
+                    case '2':
                         return '成功更新节目专题，关闭本对话框可继续编辑专题，请选择：';
-                    case 3:
+                    case '3':
                         return '成功更新人物专题，关闭本对话框可继续编辑专题，请选择：';
                     default:
                         break;
@@ -246,16 +246,16 @@
             init() {
                 switch (this.status) {
                     // 创建节目专题，获取节目类型等数据
-                    case 0:
+                    case '0':
                         break;
                     // 创建人物专题
-                    case 1:
+                    case '1':
                         break;
                     // 编辑节目专题，初始化当前专题信息
-                    case 2:
+                    case '2':
                         break;
                     // 编辑人物专题，初始化当前专题信息
-                    case 3:
+                    case '3':
                         break;
                     default:
                         break;
@@ -267,16 +267,16 @@
                     if (valid) {
                         switch (this.status) {
                             // 创建节目专题
-                            case 0:
+                            case '0':
                                 break;
                             // 创建人物专题
-                            case 1:
+                            case '1':
                                 break;
                             // 更新节目专题
-                            case 2:
+                            case '2':
                                 break;
                             // 更新人物专题
-                            case 3:
+                            case '3':
                                 break;
                             default:
                                 break;
@@ -303,8 +303,16 @@
             handleClose() {
                 this.dialogVisible = false;
             },
+            // 添加节目或者人物
             toAppend() {
-                this.$router.push({name: this.status === '0' ? 'AppendProgramsToSubject' : 'AppendPersonsToSubject'});
+                this.$router.push({name: this.status === '0' ? 'AppendProgrammesToSubject' : 'AppendPersonsToSubject'});
+            },
+            // 编辑专题内的节目或者人物
+            toEdit() {
+                this.$router.push({name: this.status === '2' ? 'EditSubjectProgrammes' : 'EditSubjectPersons'});
+            },
+            toSubjectList() {
+                this.$router.push({name: 'SubjectList'});
             }
         }
     };

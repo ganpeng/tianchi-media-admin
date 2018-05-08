@@ -35,8 +35,10 @@ import SubjectList from 'sysPage/content_manage/subject_manage/SubjectList';
 import AdvertResourceList from 'sysPage/advert_manage/advert_resources_manage/AdvertResourceList';
 import PersonSubjectDetail from 'sysPage/content_manage/subject_manage/person_subject/PersonSubjectDetail';
 import EditPersonSubject from 'sysPage/content_manage/subject_manage/person_subject/EditPersonSubjectBasicInfo';
+import EditSubjectPersons from 'sysPage/content_manage/subject_manage/person_subject/EditSubjectPersons';
 import ProgrammeSubjectDetail from 'sysPage/content_manage/subject_manage/programme_subject/ProgrammeSubjectDetail';
 import EditProgrammeSubject from 'sysPage/content_manage/subject_manage/programme_subject/EditProgrammeSubjectBasicInfo';
+import EditSubjectProgrammes from 'sysPage/content_manage/subject_manage/programme_subject/EditSubjectProgrammes';
 
 Vue.use(Router);
 
@@ -156,25 +158,25 @@ let router = new Router({
                 },
                 // 内容管理-专题管理-新增节目专题
                 {
-                    path: '/subject-manage/programme-create',
+                    path: '/subject-manage/programme/create',
                     name: 'CreateProgrammeSubject',
                     component: CreateProgrammeSubject
                 },
                 // 内容管理-专题管理-新增人物专题
                 {
-                    path: '/subject-manage/person-create',
+                    path: '/subject-manage/person/create',
                     name: 'CreatePersonSubject',
                     component: CreatePersonSubject
                 },
                 // 内容管理-专题管理-节目专题添加节目
                 {
-                    path: '/subject-manage/programme-append',
+                    path: '/subject-manage/programme/append',
                     name: 'AppendProgrammesToSubject',
                     component: AppendProgrammesToSubject
                 },
                 // 内容管理-专题管理-人物专题-添加人物
                 {
-                    path: '/subject-manage/person-append',
+                    path: '/subject-manage/person/append',
                     name: 'AppendPersonsToSubject',
                     component: AppendPersonsToSubject
                 },
@@ -196,17 +198,29 @@ let router = new Router({
                     name: 'ProgrammeSubjectDetail',
                     component: ProgrammeSubjectDetail
                 },
-                // 内容管理-专题管理-人物专题-编辑
+                // 内容管理-专题管理-人物专题-编辑基本信息
                 {
-                    path: '/subject-manage/person/edit/:id',
+                    path: '/subject-manage/person/edit-basic/:id',
                     name: 'EditPersonSubject',
                     component: EditPersonSubject
                 },
-                // 内容管理-专题管理-节目专题-编辑
+                // 内容管理-专题管理-节目专题-编辑基本信息
                 {
-                    path: '/subject-manage/programme/edit/:id',
+                    path: '/subject-manage/programme/edit-basic/:id',
                     name: 'EditProgrammeSubject',
                     component: EditProgrammeSubject
+                },
+                // 内容管理-专题管理-人物专题-编辑内容
+                {
+                    path: '/subject-manage/person/edit-content/:id',
+                    name: 'EditSubjectPersons',
+                    component: EditSubjectPersons
+                },
+                // 内容管理-专题管理-节目专题-编辑内容
+                {
+                    path: '/subject-manage/programme/edit-content/:id',
+                    name: 'EditSubjectProgrammes',
+                    component: EditSubjectProgrammes
                 },
                 // 人物管理-新增人物
                 {
