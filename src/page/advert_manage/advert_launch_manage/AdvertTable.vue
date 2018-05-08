@@ -1,12 +1,6 @@
-<!-- 广告列表页面 -->
+<!--  广告的表格组件 -->
 <template>
-    <div class="advert-resource-list">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>广告管理</el-breadcrumb-item>
-            <el-breadcrumb-item>广告资源管理</el-breadcrumb-item>
-            <el-breadcrumb-item>广告资源列表</el-breadcrumb-item>
-        </el-breadcrumb>
+    <div class="advert-table-container">
         <el-form :inline="true" class="demo-form-inline search-form">
             <el-form-item class="search">
                 <el-input v-model="filter.name" placeholder="请输入素材名称">
@@ -46,36 +40,26 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item class="create-account">
-                <el-button @click="createAdvert">新增广告资源</el-button>
-            </el-form-item>
         </el-form>
-        <el-table :data="advertList" border style="width:100%">
+        <el-table :data="advertList" border style="width:100%;margin-left:0">
+            <el-table-column prop="id" align="center" label="选择">
+                <template slot-scope="scope">
+                    <el-checkbox v-model="scope.row.checked"></el-checkbox>
+                </template>
+            </el-table-column>
             <el-table-column prop="id" align="center" label="编号"></el-table-column>
             <el-table-column label="素材预览" align="center" >
                 <template slot-scope="scope">
                     <img class="person-image" :src="scope.row.avatar" alt="">
                 </template>
             </el-table-column>
-            <el-table-column prop="name" align="center" width="200px" label="素材名称">
-                <template slot-scope="scope">
-                    <div @dblclick="editName(scope.row.id)">
-                        <el-input v-if="scope.row.isEdit" @blur="saveAdvertName(scope.row.id)" v-model="scope.row.name" placeholder="请输入内容"></el-input>
-                        <p v-if="!scope.row.isEdit">{{scope.row.name}}</p>
-                    </div>
-                </template>
-            </el-table-column>
-            <el-table-column prop="format" align="center" width="300px" label="素材格式"></el-table-column>
+            <el-table-column prop="name" align="center" width="200px" label="素材名称"></el-table-column>
+            <el-table-column prop="format" align="center" label="素材格式"></el-table-column>
             <el-table-column prop="dimension" align="center" label="素材尺寸"></el-table-column>
             <el-table-column prop="size" align="center" label="素材大小"></el-table-column>
             <el-table-column align="center" label="上传时间">
                 <template slot-scope="scope">
                     {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
-                </template>
-            </el-table-column>
-            <el-table-column align="center" fixed="right" label="操作">
-                <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="deleteAdvert(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -88,37 +72,20 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="totalAmount">
         </el-pagination>
-        <el-dialog :title="dialogTitle" :visible.sync="advertFormDialog">
-            <advert-form :dimensionOptions="dimensionOptions"></advert-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="hideAdvertFormDialog">取 消</el-button>
-                <el-button v-if="dialogStatus !== 2" type="primary" @click="hideAdvertFormDialog">确定</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 <script>
-import AdvertForm from './AdvertForm';
 export default {
-    name: 'AdvertResourceList',
-    components: {
-        AdvertForm
-    },
+    name: 'AdvertTable',
     data() {
         return {
             pageSize: 5,
             totalAmount: 11,
-            advertFormDialog: false,
             currentPage: 1,
-            dialogStatus: 1, // 0 代表新增， 1 代表编辑， 2 代表显示
             filter: {
                 format: '',
                 dimension: '',
                 name: ''
-            },
-            advert: {
-                name: '',
-                dimension: ''
             },
             advertList: [
                 {
@@ -128,7 +95,7 @@ export default {
                     format: 'jpg',
                     dimension: '1232*3432',
                     size: '5M',
-                    isEdit: false,
+                    checked: false,
                     createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
                 },
                 {
@@ -138,30 +105,22 @@ export default {
                     format: 'jpg',
                     dimension: '1232*3432',
                     size: '4M',
-                    isEdit: false,
+                    checked: true,
                     createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
                 }
             ],
             dimensionOptions: [
-                //  暂停广告
                 {
-                    value: '800*500',
-                    label: '800*500'
+                    value: '1232*3432',
+                    label: '1232*3432'
                 },
-                // 音量/换台广告
                 {
-                    value: '435*220',
-                    label: '435*220'
+                    value: '1920*1080',
+                    label: '1920*1080'
                 },
-                // 弹窗广告
                 {
-                    value: '500*250',
-                    label: '500*250'
-                },
-                // 会员广告
-                {
-                    value: '316*146',
-                    label: '316*146'
+                    value: '1024*768',
+                    label: '1024*768'
                 }
             ],
             formatOptions: [
@@ -176,45 +135,12 @@ export default {
             ]
         };
     },
-    computed: {
-        dialogTitle() {
-            switch (this.dialogStatus) {
-                case 0:
-                    return '新增广告资源';
-                case 1:
-                    return '编辑广告资源';
-                case 2:
-                    return '显示广告资源';
-                default:
-                    return '新增广告资源';
-            }
-        }
-    },
     methods: {
-        showAdvertFormDialog() {
-            this.advertFormDialog = true;
-        },
-        hideAdvertFormDialog() {
-            this.advertFormDialog = false;
-        },
-        createAdvert() {
-            this.dialogStatus = 0;
-            this.showAdvertFormDialog();
-        },
-        deleteAdvert(id) {
-            // Todo
-        },
-        editName(id) {
-            let advert = this.advertList.find((advert) => advert.id === id);
-            advert.isEdit = !advert.isEdit;
-        },
-        saveAdvertName(id) {
-            this.editName(id);
-        },
         handleSizeChange() {},
         handleCurrentChange() {}
     }
 };
 </script>
 <style lang="less" scoped>
+
 </style>

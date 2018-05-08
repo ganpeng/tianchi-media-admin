@@ -71,11 +71,7 @@
                         </el-submenu>
                         <el-submenu index="5-2">
                             <template slot="title">广告投放管理</template>
-                            <el-submenu index="5-2-1">
-                                <template slot="title">开机广告管理</template>
-                                <el-menu-item index="/user-center/list">开机广告列表</el-menu-item>
-                                <el-menu-item index="/user-center/list">新增开机广告</el-menu-item>
-                            </el-submenu>
+                            <el-menu-item index="/advert-launch/starting-advert-group/list">开机广告列表</el-menu-item>
                         </el-submenu>
                     </el-menu-item-group>
                 </el-submenu>

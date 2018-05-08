@@ -37,6 +37,7 @@ import PersonSubjectDetail from 'sysPage/content_manage/subject_manage/person_su
 import EditPersonSubject from 'sysPage/content_manage/subject_manage/person_subject/EditPersonSubjectBasicInfo';
 import EditSubjectPersons from 'sysPage/content_manage/subject_manage/person_subject/EditSubjectPersons';
 import ProgrammeSubjectDetail from 'sysPage/content_manage/subject_manage/programme_subject/ProgrammeSubjectDetail';
+import StartingAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/StartingAdvertGroupList';
 import EditProgrammeSubject from 'sysPage/content_manage/subject_manage/programme_subject/EditProgrammeSubjectBasicInfo';
 import EditSubjectProgrammes from 'sysPage/content_manage/subject_manage/programme_subject/EditSubjectProgrammes';
 
@@ -270,6 +271,12 @@ let router = new Router({
                     path: '/advert-resource/list',
                     name: 'AdvertResourceList',
                     component: AdvertResourceList
+                },
+                // 开机广告列表
+                {
+                    path: '/advert-launch/starting-advert-group/list',
+                    name: 'StartingAdvertGroupList',
+                    component: StartingAdvertGroupList
                 }
             ]
         },
