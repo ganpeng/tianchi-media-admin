@@ -336,9 +336,10 @@
             display: flex;
             margin-right: 30px;
             flex-direction: column;
-            justify-content: space-around;
+            justify-content: space-between;
             height: 230px;
             &:last-child {
+                justify-content: center;
                 width: 180px;
                 height: 180px;
                 border: 1px dotted gray;

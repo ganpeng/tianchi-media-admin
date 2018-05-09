@@ -27,6 +27,8 @@ import ProgrammeList from 'sysPage/programme_manage/ProgrammeList';
 import AdGroup from 'sysPage/content_manage/column_manage/setting/AdGroup';
 import AppendAd from 'sysPage/content_manage/column_manage/setting/AppendAd';
 import AppendProgramme from 'sysPage/content_manage/column_manage/setting/AppendProgramme';
+import SingleAppendSubject from 'sysPage/content_manage/column_manage/setting/SingleAppendSubject';
+import BlockAppendSubject from 'sysPage/content_manage/column_manage/setting/BlockAppendSubject';
 import CreateProgrammeSubject from 'sysPage/content_manage/subject_manage/programme_subject/CreateProgrammeSubject';
 import CreatePersonSubject from 'sysPage/content_manage/subject_manage/person_subject/CreatePersonSubject';
 import AppendProgrammesToSubject from 'sysPage/content_manage/subject_manage/programme_subject/AppendProgrammesToSubject';
@@ -156,6 +158,18 @@ let router = new Router({
                     path: '/column-manage/setting/programme',
                     name: 'AppendProgramme',
                     component: AppendProgramme
+                },
+                // 内容管理-栏目管理-单个推荐位选择专题
+                {
+                    path: '/column-manage/setting/single-append-subject',
+                    name: 'SingleAppendSubject',
+                    component: SingleAppendSubject
+                },
+                // 内容管理-栏目管理-模块推荐位选择专题
+                {
+                    path: '/column-manage/setting/block-append-subject',
+                    name: 'BlockAppendSubject',
+                    component: BlockAppendSubject
                 },
                 // 内容管理-专题管理-新增节目专题
                 {

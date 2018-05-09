@@ -23,7 +23,7 @@
                 <li @click="toAppendProgramme">
                     <img src="~assets/img/temporary/column_manage/three-recommend.png" alt="推荐节目">
                 </li>
-                <li>
+                <li @click="toSingleAppendSubject">
                     <img src="~assets/img/temporary/column_manage/three-recommend.png" alt="推荐节目">
                 </li>
                 <li>
@@ -152,7 +152,7 @@
             </ul>
             <div class="append">
                 <el-tooltip class="item" effect="dark" content="添加模块" placement="top">
-                    <i class="el-icon-circle-plus-outline"></i>
+                    <i class="el-icon-circle-plus-outline" @click="addBlock"></i>
                 </el-tooltip>
             </div>
         </div>
@@ -175,8 +175,15 @@
             toAppendProgramme() {
                 this.$router.push({name: 'AppendProgramme'});
             },
+            toSingleAppendSubject() {
+                this.$router.push({name: 'SingleAppendSubject'});
+            },
             toAdGroup() {
                 this.$router.push({name: 'AdGroup'});
+            },
+            // 添加模块，设置模块内的专题
+            addBlock() {
+                this.$router.push({name: 'BlockAppendSubject'});
             },
             prePublish() {
 
