@@ -28,7 +28,7 @@
         </el-select>
         <div class="model-block">
             <ul :class="'model-' + modelArray[0].length">
-                <li v-for="(item,index) in modelArray[0]" :key="index">{{item}}</li>
+                <li v-for="(item,index) in modelArray[0]" :key="index" @click="dialogTableVisible = true">{{item}}</li>
             </ul>
             <ul :class="'model-' + modelArray[1].length">
                 <li v-for="(item,index) in modelArray[1]" :key="index">{{item}}</li>
@@ -37,20 +37,26 @@
                 <li v-for="(item,index) in modelArray[2]" :key="index">{{item}}</li>
             </ul>
         </div>
+        <el-dialog title="设置模块内的节目" :visible.sync="dialogTableVisible">
+            <set-subject-programme></set-subject-programme>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import SelectSingleSubject from './SelectSingleSubject';
+    import SetSubjectProgramme from './SetSubjectProgramme';
     import blockModel from '@/util/config/block_model';
 
     export default {
         name: 'BlockAppendSubject',
         components: {
-            SelectSingleSubject
+            SelectSingleSubject,
+            SetSubjectProgramme
         },
         data() {
             return {
+                dialogTableVisible: false,
                 blockName: '',
                 currentSubject: {},
                 modelOptions: blockModel.TYPE,

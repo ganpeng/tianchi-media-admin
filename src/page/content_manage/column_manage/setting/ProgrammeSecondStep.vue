@@ -5,7 +5,7 @@
         <ul>
             <li v-for="(item,index) in imageList" v-bind:key="index">
                 <img :src="item.url" :alt="item.name" @click="displayImage(index)">
-                <el-radio v-model="radio" :label="item.id">{{item.name}}</el-radio>
+                <el-radio v-model="programmeImage" :label="item.id">{{item.name}}</el-radio>
             </li>
         </ul>
         <preview-multiple-images :previewMultipleImages="previewImage"></preview-multiple-images>
@@ -20,7 +20,7 @@
         components: {PreviewMultipleImages},
         data() {
             return {
-                radio: '',
+                programmeImage: '',
                 previewImage: {
                     display: false,
                     autoplay: false,
