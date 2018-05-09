@@ -1,11 +1,11 @@
-<!-- 开机广告组件 -->
+<!-- 屏保广告组件 -->
 <template>
-    <advert-group-list :type="1"></advert-group-list>
+    <advert-group-list :type="3"></advert-group-list>
 </template>
 <script>
 import AdvertGroupList from './AdvertGroupList';
 export default {
-    name: 'StartingAdvertGroupList',
+    name: 'ScreensaverAdvertGroupList',
     components: {
         AdvertGroupList
     }

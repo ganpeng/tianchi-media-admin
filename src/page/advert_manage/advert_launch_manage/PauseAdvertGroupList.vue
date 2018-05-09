@@ -1,11 +1,11 @@
-<!-- 开机广告组件 -->
+<!-- 暂停广告组件 -->
 <template>
-    <advert-group-list :type="1"></advert-group-list>
+    <advert-group-list :type="4"></advert-group-list>
 </template>
 <script>
 import AdvertGroupList from './AdvertGroupList';
 export default {
-    name: 'StartingAdvertGroupList',
+    name: 'PauseAdvertGroupList',
     components: {
         AdvertGroupList
     }

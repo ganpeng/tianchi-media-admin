@@ -71,7 +71,14 @@
                         </el-submenu>
                         <el-submenu index="5-2">
                             <template slot="title">广告投放管理</template>
-                            <el-menu-item index="/advert-launch/starting-advert-group/list">开机广告列表</el-menu-item>
+                            <el-menu-item index="/advert-launch/starting/list">开机广告列表</el-menu-item>
+                            <el-menu-item index="/advert-launch/preprogramme/list">节目前置广告列表</el-menu-item>
+                            <el-menu-item index="/advert-launch/screensaver/list">屏保广告列表</el-menu-item>
+                            <el-menu-item index="/advert-launch/pause/list">暂停广告列表</el-menu-item>
+                            <el-menu-item index="/advert-launch/live/list">直播换台广告列表</el-menu-item>
+                            <el-menu-item index="/advert-launch/volumebar/list">音量条广告列表</el-menu-item>
+                            <el-menu-item index="/advert-launch/dialog/list">弹窗广告列表</el-menu-item>
+                            <el-menu-item index="/advert-launch/detailpage/list">详情页广告列表</el-menu-item>
                         </el-submenu>
                     </el-menu-item-group>
                 </el-submenu>

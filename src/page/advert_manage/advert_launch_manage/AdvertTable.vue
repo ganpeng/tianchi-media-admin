@@ -75,6 +75,7 @@
     </div>
 </template>
 <script>
+import constantObj from '@/util/config/advert_dimension';
 export default {
     name: 'AdvertTable',
     data() {
@@ -109,20 +110,7 @@ export default {
                     createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
                 }
             ],
-            dimensionOptions: [
-                {
-                    value: '1232*3432',
-                    label: '1232*3432'
-                },
-                {
-                    value: '1920*1080',
-                    label: '1920*1080'
-                },
-                {
-                    value: '1024*768',
-                    label: '1024*768'
-                }
-            ],
+            dimensionOptions: constantObj.ADVERT_DIMENSION,
             formatOptions: [
                 {
                     value: 'jpg',

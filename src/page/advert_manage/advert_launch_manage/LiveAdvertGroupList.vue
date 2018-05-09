@@ -1,11 +1,11 @@
-<!-- 开机广告组件 -->
+<!-- 直播换台广告组件 -->
 <template>
-    <advert-group-list :type="1"></advert-group-list>
+    <advert-group-list :type="5"></advert-group-list>
 </template>
 <script>
 import AdvertGroupList from './AdvertGroupList';
 export default {
-    name: 'StartingAdvertGroupList',
+    name: 'LiveAdvertGroupList',
     components: {
         AdvertGroupList
     }

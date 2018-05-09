@@ -42,6 +42,13 @@ import ProgrammeSubjectDetail from 'sysPage/content_manage/subject_manage/progra
 import StartingAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/StartingAdvertGroupList';
 import EditProgrammeSubject from 'sysPage/content_manage/subject_manage/programme_subject/EditProgrammeSubjectBasicInfo';
 import EditSubjectProgrammes from 'sysPage/content_manage/subject_manage/programme_subject/EditSubjectProgrammes';
+import PreProgrammeAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/PreProgrammeAdvertGroupList';
+import ScreensaverAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/ScreensaverAdvertGroupList';
+import PauseAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/PauseAdvertGroupList';
+import LiveAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/LiveAdvertGroupList';
+import VolumeBarAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/VolumeBarAdvertGroupList';
+import DialogAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/DialogAdvertGroupList';
+import DetailPageAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/DetailPageAdvertGroupList';
 
 Vue.use(Router);
 
@@ -288,9 +295,51 @@ let router = new Router({
                 },
                 // 开机广告列表
                 {
-                    path: '/advert-launch/starting-advert-group/list',
+                    path: '/advert-launch/starting/list',
                     name: 'StartingAdvertGroupList',
                     component: StartingAdvertGroupList
+                },
+                //  前置节目广告列表
+                {
+                    path: '/advert-launch/preprogramme/list',
+                    name: 'PreProgrammeAdvertGroupList',
+                    component: PreProgrammeAdvertGroupList
+                },
+                //  屏保广告列表
+                {
+                    path: '/advert-launch/screensaver/list',
+                    name: 'ScreensaverrammeAdvertGroupList',
+                    component: ScreensaverAdvertGroupList
+                },
+                //  暂停广告列表
+                {
+                    path: '/advert-launch/pause/list',
+                    name: 'PauseAdvertGroupList',
+                    component: PauseAdvertGroupList
+                },
+                //  直播换台广告列表
+                {
+                    path: '/advert-launch/live/list',
+                    name: 'LiveAdvertGroupList',
+                    component: LiveAdvertGroupList
+                },
+                //  音量条广告列表
+                {
+                    path: '/advert-launch/volumebar/list',
+                    name: 'VolumeBarAdvertGroupList',
+                    component: VolumeBarAdvertGroupList
+                },
+                //  弹窗广告列表
+                {
+                    path: '/advert-launch/dialog/list',
+                    name: 'DialogAdvertGroupList',
+                    component: DialogAdvertGroupList
+                },
+                //  详情页广告列表
+                {
+                    path: '/advert-launch/detailpage/list',
+                    name: 'DetailPageAdvertList',
+                    component: DetailPageAdvertGroupList
                 }
             ]
         },

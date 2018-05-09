@@ -1,11 +1,11 @@
-<!-- 开机广告组件 -->
+<!-- 弹窗广告组件 -->
 <template>
-    <advert-group-list :type="1"></advert-group-list>
+    <advert-group-list :type="7"></advert-group-list>
 </template>
 <script>
 import AdvertGroupList from './AdvertGroupList';
 export default {
-    name: 'StartingAdvertGroupList',
+    name: 'DialogAdvertGroupList',
     components: {
         AdvertGroupList
     }
