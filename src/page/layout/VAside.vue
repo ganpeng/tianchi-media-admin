@@ -61,7 +61,7 @@
                 </el-submenu>
                 <el-submenu index="5">
                     <template slot="title">
-                        <i class="el-icon-tickets"></i>
+                        <i class="el-icon-goods"></i>
                         <span>广告管理</span>
                     </template>
                     <el-menu-item-group>

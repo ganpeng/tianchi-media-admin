@@ -66,7 +66,7 @@
                     </el-select>
                 </el-form-item>
             </el-form>
-            <el-table :data="programList" border style="width: 100%">
+            <el-table :data="programmeList" border style="width: 100%">
                 <el-table-column prop="id" align="center" label="节目编号"></el-table-column>
                 <el-table-column label="节目图片" width="200px" align="center" >
                     <template slot-scope="scope">

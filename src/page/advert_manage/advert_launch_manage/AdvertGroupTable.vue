@@ -47,7 +47,7 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="totalAmount">
         </el-pagination>
-        <advert-group-dialog :dialogStatus="dialogStatus" :dialogVisible="dialogVisible"  v-on:closeDialog="changeDialogVisible($event)"></advert-group-dialog>
+        <advert-group-dialog :type="type" :dialogStatus="dialogStatus" :dialogVisible="dialogVisible"  v-on:closeDialog="changeDialogVisible($event)"></advert-group-dialog>
     </div>
 </template>
 <script>
@@ -56,6 +56,11 @@ export default {
     name: 'AdvertTable',
     components: {
         AdvertGroupDialog
+    },
+    props: {
+        type: {
+            type: Number
+        }
     },
     data() {
         return {
