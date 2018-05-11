@@ -151,9 +151,15 @@
                 </li>
             </ul>
             <div class="append">
-                <el-tooltip class="item" effect="dark" content="添加模块" placement="top">
-                    <i class="el-icon-circle-plus-outline" @click="addBlock"></i>
-                </el-tooltip>
+                <el-dropdown @command="addBlockSubject" placement="bottom">
+                 <span class="el-dropdown-link">
+                    <i class="el-icon-circle-plus-outline"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="PROGRAMME">添加节目专题</el-dropdown-item>
+                        <el-dropdown-item command="PERSON">添加人物专题</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
             </div>
         </div>
         <el-button type="primary" @click="prePublish">预发布</el-button>
@@ -172,19 +178,23 @@
         methods: {
             init() {
             },
+            // 单个推荐位设置节目
             toAppendProgramme() {
                 this.$router.push({name: 'AppendProgramme'});
             },
+            // 单个推荐位设置专题
             toSingleAppendSubject() {
                 this.$router.push({name: 'SingleAppendSubject'});
             },
+            // 跳转到广告组列表页面
             toAdGroup() {
                 this.$router.push({name: 'AdGroup'});
             },
             // 添加模块，设置模块内的专题
-            addBlock() {
-                this.$router.push({name: 'BlockAppendSubject'});
+            addBlockSubject(val) {
+                this.$router.push({name: val === 'PROGRAMME' ? 'BlockAppendProgrammeSubject' : 'BlockAppendPersonSubject'});
             },
+            // 点击预发布
             prePublish() {
 
             }

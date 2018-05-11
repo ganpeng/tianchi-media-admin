@@ -13,6 +13,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import 'babel-polyfill';
 import util from './util/extend';
 import './util/filters';
+import './util/directives';
 import dragula from 'dragula';
 
 Vue.config.productionTip = false;

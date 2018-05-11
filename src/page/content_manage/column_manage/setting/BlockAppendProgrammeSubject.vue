@@ -1,19 +1,19 @@
-<!--内容管理-栏目管理-模块推荐位选择专题-->
+<!--内容管理-栏目管理-节目模块设置-->
 <template>
     <div class="text-left">
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
-            <el-breadcrumb-item>模块推荐位选择专题</el-breadcrumb-item>
+            <el-breadcrumb-item>节目模块设置</el-breadcrumb-item>
         </el-breadcrumb>
-        <h3 class="text-left">1.请输入模块名称：</h3>
+        <h3 class="text-left">1.请输入节目模块名称：</h3>
         <el-input
             placeholder="请输入模块名称，30个字符以内"
             v-model="blockName"
             clearable>
         </el-input>
-        <h3 class="text-left">2.请选择要推荐的专题：</h3>
+        <h3 class="text-left">2.请选择要推荐的节目专题：</h3>
         <select-single-subject
             v-on:selectSubject="selectSubject">
         </select-single-subject>
@@ -49,7 +49,7 @@
     import blockModel from '@/util/config/block_model';
 
     export default {
-        name: 'BlockAppendSubject',
+        name: 'BlockAppendProgrammeSubject',
         components: {
             SelectSingleSubject,
             SetSubjectProgramme

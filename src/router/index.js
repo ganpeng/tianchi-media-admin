@@ -28,7 +28,8 @@ import AdGroup from 'sysPage/content_manage/column_manage/setting/AdGroup';
 import AppendAd from 'sysPage/content_manage/column_manage/setting/AppendAd';
 import AppendProgramme from 'sysPage/content_manage/column_manage/setting/AppendProgramme';
 import SingleAppendSubject from 'sysPage/content_manage/column_manage/setting/SingleAppendSubject';
-import BlockAppendSubject from 'sysPage/content_manage/column_manage/setting/BlockAppendSubject';
+import BlockAppendProgrammeSubject from 'sysPage/content_manage/column_manage/setting/BlockAppendProgrammeSubject';
+import BlockAppendPersonSubject from 'sysPage/content_manage/column_manage/setting/BlockAppendPersonSubject';
 import CreateProgrammeSubject from 'sysPage/content_manage/subject_manage/programme_subject/CreateProgrammeSubject';
 import CreatePersonSubject from 'sysPage/content_manage/subject_manage/person_subject/CreatePersonSubject';
 import AppendProgrammesToSubject from 'sysPage/content_manage/subject_manage/programme_subject/AppendProgrammesToSubject';
@@ -172,11 +173,17 @@ let router = new Router({
                     name: 'SingleAppendSubject',
                     component: SingleAppendSubject
                 },
-                // 内容管理-栏目管理-模块推荐位选择专题
+                // 内容管理-栏目管理-模块推荐位选择节目专题
                 {
-                    path: '/column-manage/setting/block-append-subject',
-                    name: 'BlockAppendSubject',
-                    component: BlockAppendSubject
+                    path: '/column-manage/setting/block-append-programme-subject',
+                    name: 'BlockAppendProgrammeSubject',
+                    component: BlockAppendProgrammeSubject
+                },
+                // 内容管理-栏目管理-模块推荐位选择人物专题
+                {
+                    path: '/column-manage/setting/block-append-person-subject',
+                    name: 'BlockAppendPersonSubject',
+                    component: BlockAppendPersonSubject
                 },
                 // 内容管理-专题管理-新增节目专题
                 {

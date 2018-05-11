@@ -1,6 +1,6 @@
 <!--专题基本信息表单组件-->
 <template>
-    <div>
+    <div class="text-left">
         <el-form :model="subjectInfo" :rules="infoRules" status-icon ref="subjectInfo"
                  label-width="140px"
                  class="form-block">
@@ -364,7 +364,4 @@
         }
     }
 
-    div {
-        text-align: left;
-    }
 </style>

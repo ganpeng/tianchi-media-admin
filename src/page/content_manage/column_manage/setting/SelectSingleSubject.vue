@@ -97,10 +97,6 @@
                 label="节目专题类型">
             </el-table-column>
             <el-table-column
-                prop="status"
-                label="是否被推荐">
-            </el-table-column>
-            <el-table-column
                 label="创建时间">
                 <template slot-scope="scope">
                     {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
@@ -174,7 +170,6 @@
                         owner: 'xiaofei.liu',
                         type: '节目',
                         category: '娱乐',
-                        status: '否',
                         createdAt: 1402233166999
                     }, {
                         id: 2,
@@ -185,7 +180,6 @@
                         owner: 'xiaofei.liu',
                         type: '节目',
                         category: '电视剧',
-                        status: '是',
                         createdAt: 1402233166999
                     }, {
                         id: 3,
@@ -196,7 +190,6 @@
                         owner: 'xiaofei.liu',
                         type: '人物',
                         category: '',
-                        status: '是',
                         createdAt: 1402533166977
                     }, {
                         id: 4,
@@ -207,7 +200,6 @@
                         owner: 'xiaofei.liu',
                         type: '节目',
                         category: '电影',
-                        status: '是',
                         createdAt: 1402233166999
                     }
                 ]
