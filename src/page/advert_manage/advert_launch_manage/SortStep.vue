@@ -2,9 +2,9 @@
 <template>
     <div class="container">
         <ul class="items" id="items">
-            <li class="item" v-for="(item, index) in items" :key="index">
+            <li class="item" v-for="(item, index) in checkedAdvertList" :key="index">
                 <div class="container">
-                    <img :src="item.url" width="200px" height="130px">
+                    <img :src="item.img" width="200px" height="130px">
                     <div class="word">{{item.title}}</div>
                     <el-button @click="setAdvert(item.id)" v-if="statusOne" type="primary" class="btn">设置广告落地页</el-button>
                     <p v-if="statusOne">{{item.programmeName}}</p>
@@ -48,38 +48,18 @@ export default {
     props: {
         type: {
             type: Number
+        },
+        checkedAdvertList: {
+            type: Array,
+            default: () => []
         }
     },
     data() {
         return {
             dialogVisible: false,
             linkType: '',
-            // linkLabel: '',
             currentAdvertId: '',
-            link: '',
-            items: [
-                {
-                    id: 1,
-                    title: '图片1',
-                    link: '',
-                    programmeName: '节目名称',
-                    url: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7'
-                },
-                {
-                    id: 2,
-                    title: '图片2',
-                    link: 'www.baidu.com',
-                    programmeName: '节目名称',
-                    url: 'http://photocdn.sohu.com/20160107/Img433729049.jpg'
-                },
-                {
-                    id: 3,
-                    title: '图片3',
-                    link: '',
-                    programmeName: '节目名称',
-                    url: 'http://pic.4j4j.cn/upload/pic/20151015/465ce1d4b0.jpg'
-                }
-            ]
+            link: ''
         };
     },
     methods: {
@@ -99,7 +79,7 @@ export default {
             if (this.link === '' || this.linkType === '') {
                 return false;
             } else {
-                let item = this.items.find((item) => item.id === this.currentAdvertId);
+                let item = this.checkedAdvertList.find((item) => item.id === this.currentAdvertId);
                 item.programmeName = this.link;
                 this.link = '';
                 this.currentAdvertId = '';

@@ -53,7 +53,14 @@
                 <label class="tips">带 <i>*</i> 号的为必填项</label>
             </el-form-item>
         </el-form>
-        <upload-programme-image-dialog title="上传人物图片" :imageUploadDialogVisible="imageUploadDialogVisible" v-on:changeImageDialogStatus="closeImageDialog($event)"></upload-programme-image-dialog>
+        <upload-programme-image-dialog
+            :size='size'
+            title="上传人物图片"
+            ref="uploadImageDialog"
+            :imageUploadDialogVisible="imageUploadDialogVisible"
+            v-on:changeImageDialogStatus="closeImageDialog($event)"
+            v-on:uploadSuccess="uploadSuccess($event)"
+        ></upload-programme-image-dialog>
     </div>
 </template>
 <script>
@@ -67,8 +74,7 @@ let personDefault = {
     area: '',
     height: '',
     weight: '',
-    mainRole: '',
-    avatar: ''
+    mainRole: ''
 };
 
 export default {
@@ -111,6 +117,7 @@ export default {
             },
             imageUploadDialogVisible: false,
             areaOptions: this.$util.countryList(),
+            posterImageList: [],
             mainRoleoptions: [
                 {
                     value: 'DIRECTOR',
@@ -127,6 +134,16 @@ export default {
                 {
                     value: 'ACTOR',
                     label: '演员'
+                }
+            ],
+            size: [
+                {
+                    value: '200*200',
+                    label: '200*200'
+                },
+                {
+                    value: '700*1000',
+                    label: '700*1000'
                 }
             ]
         };

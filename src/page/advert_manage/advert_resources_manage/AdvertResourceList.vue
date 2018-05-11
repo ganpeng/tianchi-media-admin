@@ -54,7 +54,7 @@
             <el-table-column prop="id" align="center" label="编号"></el-table-column>
             <el-table-column label="素材预览" align="center" >
                 <template slot-scope="scope">
-                    <img class="person-image" :src="scope.row.avatar" alt="">
+                    <img width="100px" height="60px" :src="scope.row.img" alt="">
                 </template>
             </el-table-column>
             <el-table-column prop="name" align="center" width="200px" label="素材名称">
@@ -129,6 +129,7 @@ export default {
                     format: 'jpg',
                     dimension: '1232*3432',
                     size: '5M',
+                    img: 'http://pic.4j4j.cn/upload/pic/20151015/465ce1d4b0.jpg',
                     isEdit: false,
                     createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
                 },
@@ -139,6 +140,7 @@ export default {
                     format: 'jpg',
                     dimension: '1232*3432',
                     size: '4M',
+                    img: 'http://pic.4j4j.cn/upload/pic/20151015/465ce1d4b0.jpg',
                     isEdit: false,
                     createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
                 }
@@ -183,6 +185,21 @@ export default {
         },
         deleteAdvert(id) {
             // Todo
+            this.$confirm('此操作将永久删除该广告, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'error'
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
         },
         editName(id) {
             let advert = this.advertList.find((advert) => advert.id === id);

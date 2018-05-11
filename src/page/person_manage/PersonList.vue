@@ -131,7 +131,7 @@
                 this.$service.getPersonList({pageSize, pageNum, name, area})
                     .then((res) => {
                         if (res && res.code === 0) {
-                            this.personList = res.data.list;
+                            this.personList = res.data.list.sort((prev, curr) => prev.updatedAt - curr.updatedAt);
                             this.totalAmount = res.data.total;
                         }
                     });

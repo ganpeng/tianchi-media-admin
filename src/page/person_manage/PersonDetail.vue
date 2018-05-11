@@ -9,7 +9,9 @@
         </el-breadcrumb>
         <el-row>
             <el-col :span="8">
-                <person-form :person="person" :status="status" :readonly="readonly" ref="personForm"></person-form>
+                <person-form
+                v-on:uploadSuccess="uploadSuccess($event)"
+                :person="person" :status="status" :readonly="readonly" ref="personForm"></person-form>
                 <div class="form-btn">
                     <span class="btn-wrapper" v-show="!readonly">
                         <el-button v-show="isEdit" type="primary" @click="editPerson">编辑</el-button>
@@ -72,6 +74,7 @@
                             .then((res) => {
                                 if (res) {
                                     this.$message.success('创建人物成功');
+                                    this.reset();
                                     this.$router.push({ name: 'PersonList' });
                                 }
                             }).finally(() => {
@@ -93,6 +96,7 @@
                             .then((res) => {
                                 if (res) {
                                     this.$message.success('编辑人物成功');
+                                    this.reset();
                                     this.$router.push({ name: 'PersonList' });
                                 }
                             }).finally(() => {

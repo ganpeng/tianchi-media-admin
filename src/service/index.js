@@ -5,12 +5,14 @@
 import * as adminRoutes from './routes/admin_manage';
 import * as authorizeRoutes from './routes/authorize_manage';
 import * as personRoutes from './routes/person_manage';
+import * as programmeRoutes from './routes/programme_manage';
+import * as uploadRoutes from './routes/upload';
 
 /**
  * The object including all service functions.
  * notice.Each module function should have a unique name. Otherwise，they will override each other.
  * @type {Object}
  */
-let service = Object.assign({}, adminRoutes, authorizeRoutes, personRoutes);
+let service = Object.assign({}, adminRoutes, authorizeRoutes, personRoutes, programmeRoutes, uploadRoutes);
 
 export default service;

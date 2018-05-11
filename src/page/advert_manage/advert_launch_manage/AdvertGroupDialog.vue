@@ -14,9 +14,9 @@
             <el-step title="输入广告组名称"></el-step>
         </el-steps>
         <!-- 第一步 -->
-        <advert-table v-show="active === 0"></advert-table>
+        <advert-table :advertList="advertList" v-show="active === 0" ref="advertTable"></advert-table>
         <!-- 第二步 -->
-        <sort-step v-show="active === 1 && totalStep === 2 && type !== 7" :type="type" ref="sortStep"></sort-step>
+        <sort-step :checkedAdvertList="checkedAdvertList" v-show="active === 1 && totalStep === 2 && type !== 7" :type="type" ref="sortStep"></sort-step>
         <div v-show="active === 1 && type === 7" class="display-system">
             <label>选择展现系统：</label>
               <el-select v-model="displaySystem" placeholder="请选择">
@@ -85,7 +85,32 @@ export default {
         return {
             active: 0,
             advertGroupName: '',
-            displaySystem: ''
+            displaySystem: '',
+            checkedAdvertList: [],
+            advertList: [
+                {
+                    id: 1,
+                    preview: '素材预览',
+                    name: '广告图片名称',
+                    format: 'jpg',
+                    dimension: '1232*3432',
+                    size: '5M',
+                    checked: false,
+                    img: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
+                    createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
+                },
+                {
+                    id: 2,
+                    preview: '素材预览',
+                    name: '广告图片名称',
+                    format: 'jpg',
+                    dimension: '1232*3432',
+                    size: '4M',
+                    checked: true,
+                    img: 'http://pic.4j4j.cn/upload/pic/20151015/465ce1d4b0.jpg',
+                    createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
+                }
+            ]
         };
     },
     methods: {
@@ -97,6 +122,12 @@ export default {
             this.active -= 1;
         },
         nextStepHandler() {
+            if (this.active === 0 && this.$refs.advertTable.checkedAdvertList.length <= 0) {
+                return false;
+            } else {
+                this.checkedAdvertList = this.$refs.advertTable.checkedAdvertList;
+            }
+
             this.active += 1;
             if (this.active === 1) {
                 this.$refs.sortStep.initDragula();

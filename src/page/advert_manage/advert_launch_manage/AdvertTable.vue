@@ -4,9 +4,9 @@
         <!-- 已经选中的广告的表格 -->
         <el-table :data="checkedAdvertList" border style="width:100%;margin-left:0">
             <el-table-column prop="id" align="center" label="编号"></el-table-column>
-            <el-table-column label="素材预览" width="170px" align="center" >
+            <el-table-column label="素材预览" align="center" >
                 <template slot-scope="scope">
-                    <img width="150px" height="100px" :src="scope.row.img" alt="">
+                    <img width="100px" height="60px" :src="scope.row.img" alt="">
                 </template>
             </el-table-column>
             <el-table-column prop="name" align="center" width="200px" label="素材名称"></el-table-column>
@@ -71,9 +71,9 @@
                 </template>
             </el-table-column>
             <el-table-column prop="id" align="center" label="编号"></el-table-column>
-            <el-table-column label="素材预览" width="170px" align="center" >
+            <el-table-column label="素材预览" align="center" >
                 <template slot-scope="scope">
-                    <img width="150px" height="100px" :src="scope.row.img" alt="">
+                    <img width="100px" height="60px" :src="scope.row.img" alt="">
                 </template>
             </el-table-column>
             <el-table-column prop="name" align="center" width="200px" label="素材名称"></el-table-column>
@@ -101,6 +101,15 @@
 import constantObj from '@/util/config/advert_dimension';
 export default {
     name: 'AdvertTable',
+    props: {
+        advertList: {
+            type: Array,
+            default: () => []
+        }
+    },
+    created() {
+        this.checkedAdvertList = this.advertList.filter((advert) => advert.checked);
+    },
     data() {
         return {
             pageSize: 5,
@@ -111,43 +120,7 @@ export default {
                 dimension: '',
                 name: ''
             },
-            checkedAdvertList: [
-                {
-                    id: 2,
-                    preview: '素材预览',
-                    name: '广告图片名称',
-                    format: 'jpg',
-                    dimension: '1232*3432',
-                    size: '4M',
-                    checked: true,
-                    img: 'http://pic.4j4j.cn/upload/pic/20151015/465ce1d4b0.jpg',
-                    createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
-                }
-            ],
-            advertList: [
-                {
-                    id: 1,
-                    preview: '素材预览',
-                    name: '广告图片名称',
-                    format: 'jpg',
-                    dimension: '1232*3432',
-                    size: '5M',
-                    checked: false,
-                    img: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
-                    createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
-                },
-                {
-                    id: 2,
-                    preview: '素材预览',
-                    name: '广告图片名称',
-                    format: 'jpg',
-                    dimension: '1232*3432',
-                    size: '4M',
-                    checked: true,
-                    img: 'http://pic.4j4j.cn/upload/pic/20151015/465ce1d4b0.jpg',
-                    createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
-                }
-            ],
+            checkedAdvertList: [],
             dimensionOptions: constantObj.ADVERT_DIMENSION,
             formatOptions: [
                 {
@@ -172,7 +145,9 @@ export default {
         },
         deleteCheckedAdvert(id) {
             let advert = this.advertList.find((advert) => advert.id === id);
-            advert.checked = false;
+            if (advert) {
+                advert.checked = false;
+            }
             this.checkedAdvertList = this.checkedAdvertList.filter((advert) => advert.id !== id);
         },
         handleSizeChange() {},
@@ -181,5 +156,4 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-
 </style>

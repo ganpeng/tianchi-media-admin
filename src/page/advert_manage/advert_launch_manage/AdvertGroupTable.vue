@@ -20,7 +20,7 @@
             <el-table-column label="广告图片" align="center" :width="imgColWidth">
                 <template slot-scope="scope">
                     <div class="img-wrapper">
-                        <img width="150px" height="100px" v-for="(item, index) in scope.row.imgList" :key="index" :src="item" alt="">
+                        <img width="100px" height="60px" v-for="(item, index) in scope.row.imgList" :key="index" :src="item" alt="">
                     </div>
                 </template>
             </el-table-column>
@@ -29,7 +29,7 @@
                     {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
-            <el-table-column prop="size" align="center" label="跳转链接">
+            <el-table-column v-if="!noLink" prop="size" align="center" label="跳转链接">
                 <template slot-scope="scope">
                     <a href="http://www.baidu.com">百度</a>
                 </template>
@@ -120,7 +120,10 @@ export default {
         imgColWidth() {
             let advertGroupList = JSON.parse(JSON.stringify(this.advertGroupList));
             let len = advertGroupList.sort((prev, curr) => curr.imgList.length - prev.imgList.length)[0].imgList.length;
-            return (len * 150) + (len * 10) + 'px';
+            return (len * 100) + ((len + 1) * 10) + 'px';
+        },
+        noLink() {
+            return this.type === 4 || this.type === 5 || this.type === 6;
         }
     }
 };

@@ -140,6 +140,11 @@ export default {
             totalAmount: 0
         };
     },
+    created() {
+        this.$service.getProgrammeList({pageSize: this.pageSize, pageNum: this.currentPage})
+            .then((res) => {
+            });
+    },
     methods: {
         clearSearchFields() {
             this.searchFields = {
