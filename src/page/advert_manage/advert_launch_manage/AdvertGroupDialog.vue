@@ -1,7 +1,7 @@
 <!-- 广告组弹出框 -->
 <template>
     <el-dialog
-        :title="dialogStatus === 0 ? '新增广告组' : '编辑广告组'"
+        :title="dialogTitle"
         :show-close="false"
         :visible.sync="dialogVisible"
         :close-on-click-modal="false"
@@ -111,6 +111,51 @@ export default {
         totalStep() {
             let type = Number(this.type);
             return type === 4 || type === 5 || type === 6 ? 1 : 2;
+        },
+        dialogTitle() {
+            if (this.dialogStatus === 0) {
+                switch (Number(this.type)) {
+                    case 1:
+                        return '新增开机广告组';
+                    case 2:
+                        return '新增节目前置广告组';
+                    case 3:
+                        return '新增屏保广告组';
+                    case 4:
+                        return '新增暂停广告组';
+                    case 5:
+                        return '新增直播换台广告组';
+                    case 6:
+                        return '新增音量条广告组';
+                    case 7:
+                        return '新增弹窗广告组';
+                    case 8:
+                        return '新增节目详情页广告组';
+                    default:
+                        return '';
+                }
+            } else {
+                switch (Number(this.type)) {
+                    case 1:
+                        return '编辑开机广告组';
+                    case 2:
+                        return '编辑节目前置广告组';
+                    case 3:
+                        return '编辑屏保广告组';
+                    case 4:
+                        return '编辑暂停广告组';
+                    case 5:
+                        return '编辑直播换台广告组';
+                    case 6:
+                        return '编辑音量条广告组';
+                    case 7:
+                        return '编辑弹窗广告组';
+                    case 8:
+                        return '编辑节目详情页广告组';
+                    default:
+                        return '';
+                }
+            }
         }
     }
 };

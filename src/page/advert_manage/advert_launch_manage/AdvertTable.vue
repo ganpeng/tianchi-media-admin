@@ -1,6 +1,29 @@
 <!--  广告的表格组件 -->
 <template>
     <div class="advert-table-container">
+        <!-- 已经选中的广告的表格 -->
+        <el-table :data="checkedAdvertList" border style="width:100%;margin-left:0">
+            <el-table-column prop="id" align="center" label="编号"></el-table-column>
+            <el-table-column label="素材预览" width="170px" align="center" >
+                <template slot-scope="scope">
+                    <img width="150px" height="100px" :src="scope.row.img" alt="">
+                </template>
+            </el-table-column>
+            <el-table-column prop="name" align="center" width="200px" label="素材名称"></el-table-column>
+            <el-table-column prop="format" align="center" label="素材格式"></el-table-column>
+            <el-table-column prop="dimension" align="center" label="素材尺寸"></el-table-column>
+            <el-table-column prop="size" align="center" label="素材大小"></el-table-column>
+            <el-table-column align="center" label="上传时间">
+                <template slot-scope="scope">
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="操作">
+                <template slot-scope="scope">
+                    <el-button type="text" size="small" @click="deleteCheckedAdvert(scope.row.id)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
         <el-form :inline="true" class="demo-form-inline search-form">
             <el-form-item class="search">
                 <el-input v-model="filter.name" placeholder="请输入素材名称">
@@ -44,13 +67,13 @@
         <el-table :data="advertList" border style="width:100%;margin-left:0">
             <el-table-column prop="id" align="center" label="选择">
                 <template slot-scope="scope">
-                    <el-checkbox v-model="scope.row.checked"></el-checkbox>
+                    <el-checkbox @change="advertChangeHandler($event, scope.row.id)" v-model="scope.row.checked"></el-checkbox>
                 </template>
             </el-table-column>
             <el-table-column prop="id" align="center" label="编号"></el-table-column>
-            <el-table-column label="素材预览" align="center" >
+            <el-table-column label="素材预览" width="170px" align="center" >
                 <template slot-scope="scope">
-                    <img class="person-image" :src="scope.row.avatar" alt="">
+                    <img width="150px" height="100px" :src="scope.row.img" alt="">
                 </template>
             </el-table-column>
             <el-table-column prop="name" align="center" width="200px" label="素材名称"></el-table-column>
@@ -88,6 +111,19 @@ export default {
                 dimension: '',
                 name: ''
             },
+            checkedAdvertList: [
+                {
+                    id: 2,
+                    preview: '素材预览',
+                    name: '广告图片名称',
+                    format: 'jpg',
+                    dimension: '1232*3432',
+                    size: '4M',
+                    checked: true,
+                    img: 'http://pic.4j4j.cn/upload/pic/20151015/465ce1d4b0.jpg',
+                    createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
+                }
+            ],
             advertList: [
                 {
                     id: 1,
@@ -97,6 +133,7 @@ export default {
                     dimension: '1232*3432',
                     size: '5M',
                     checked: false,
+                    img: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
                     createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
                 },
                 {
@@ -107,6 +144,7 @@ export default {
                     dimension: '1232*3432',
                     size: '4M',
                     checked: true,
+                    img: 'http://pic.4j4j.cn/upload/pic/20151015/465ce1d4b0.jpg',
                     createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
                 }
             ],
@@ -124,6 +162,19 @@ export default {
         };
     },
     methods: {
+        advertChangeHandler(checked, id) {
+            let advert = this.advertList.find((advert) => advert.id === id);
+            if (checked) {
+                this.checkedAdvertList.push(advert);
+            } else {
+                this.checkedAdvertList = this.checkedAdvertList.filter((advert) => advert.id !== id);
+            }
+        },
+        deleteCheckedAdvert(id) {
+            let advert = this.advertList.find((advert) => advert.id === id);
+            advert.checked = false;
+            this.checkedAdvertList = this.checkedAdvertList.filter((advert) => advert.id !== id);
+        },
         handleSizeChange() {},
         handleCurrentChange() {}
     }

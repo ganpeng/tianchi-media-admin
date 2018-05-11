@@ -17,12 +17,14 @@
         <el-table :data="advertGroupList" border style="width:100%">
             <el-table-column prop="id" align="center" label="编号"></el-table-column>
             <el-table-column prop="name" align="center" width="200px" label="广告组名称"></el-table-column>
-            <el-table-column label="广告图片" align="center" >
+            <el-table-column label="广告图片" align="center" :width="imgColWidth">
                 <template slot-scope="scope">
-                    <img class="person-image" :src="scope.row.avatar" alt="">
+                    <div class="img-wrapper">
+                        <img width="150px" height="100px" v-for="(item, index) in scope.row.imgList" :key="index" :src="item" alt="">
+                    </div>
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="创建时间">
+            <el-table-column align="center" width="150px" label="创建时间">
                 <template slot-scope="scope">
                     {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
                 </template>
@@ -78,11 +80,22 @@ export default {
                 {
                     id: 1,
                     name: '广告图片名称',
+                    imgList: [
+                        'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
+                        'http://photocdn.sohu.com/20160107/Img433729049.jpg',
+                        'http://pic.4j4j.cn/upload/pic/20151015/465ce1d4b0.jpg',
+                        'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
+                        'http://pic.4j4j.cn/upload/pic/20151015/465ce1d4b0.jpg'
+                    ],
                     createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
                 },
                 {
                     id: 2,
                     name: '广告图片名称',
+                    imgList: [
+                        'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
+                        'http://pic.4j4j.cn/upload/pic/20151015/465ce1d4b0.jpg'
+                    ],
                     createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
                 }
             ]
@@ -102,8 +115,21 @@ export default {
         changeDialogVisible(status) {
             this.dialogVisible = status;
         }
+    },
+    computed: {
+        imgColWidth() {
+            let advertGroupList = JSON.parse(JSON.stringify(this.advertGroupList));
+            let len = advertGroupList.sort((prev, curr) => curr.imgList.length - prev.imgList.length)[0].imgList.length;
+            return (len * 150) + (len * 10) + 'px';
+        }
     }
 };
 </script>
 <style lang="less" scoped>
+.img-wrapper {
+    display: flex;
+    img + img {
+        margin-left: 10px;
+    }
+}
 </style>
