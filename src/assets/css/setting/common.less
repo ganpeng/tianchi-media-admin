@@ -43,7 +43,6 @@
     filter: alpha(opacity=20);
 }
 
-
 // 大标题的样式
 .block-title {
     padding: 30px 0 20px 20px;
@@ -61,7 +60,7 @@
     .tips {
         text-align: left;
         i {
-        color: #f56c6c;
+            color: #f56c6c;
         }
     }
 }
@@ -117,4 +116,35 @@
     display: inline-block;
     width: 60px;
     height: 60px;
+}
+
+// 不可设置模块
+.no-settable {
+    background: #8D949C;
+    cursor: not-allowed;
+}
+
+// 可设置的模块
+.settable {
+    position: relative;
+    background-color: #154F8B;
+    transition: background-color 0.5s;
+    color: #fff;
+    cursor: pointer;
+    * {
+        cursor: pointer;
+    }
+    &:hover {
+        animation: pulse 3s ease 0s infinite normal;
+        background-color: #409EFF;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.03);
+    }
 }

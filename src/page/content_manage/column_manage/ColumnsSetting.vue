@@ -148,8 +148,10 @@
                 height: 120px;
                 width: 120px;
                 border: 1px solid #13ce66;
+                cursor: grab;
                 label {
                     color: #13ce66;
+                    cursor: grab;
                 }
                 &.disabled-column {
                     border: 1px dotted gray;

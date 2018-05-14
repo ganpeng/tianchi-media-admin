@@ -24,6 +24,7 @@ import DisplayPerson from 'sysPage/person_manage/DisplayPerson';
 import CreateProgramme from 'sysPage/programme_manage/CreateProgramme';
 import ProgrammeTypeManage from 'sysPage/programme_manage/ProgrammeTypeManage';
 import ProgrammeList from 'sysPage/programme_manage/ProgrammeList';
+import SetChannel from 'sysPage/content_manage/column_manage/setting/SetChannel';
 import AdGroup from 'sysPage/content_manage/column_manage/setting/AdGroup';
 import AppendAd from 'sysPage/content_manage/column_manage/setting/AppendAd';
 import AppendProgramme from 'sysPage/content_manage/column_manage/setting/AppendProgramme';
@@ -148,6 +149,12 @@ let router = new Router({
                     path: '/column-manage/today-recommended',
                     name: 'TodayRecommended',
                     component: TodayRecommended
+                },
+                // 内容管理-栏目管理-直播频道设置
+                {
+                    path: '/column-manage/setting/channel',
+                    name: 'SetChannel',
+                    component: SetChannel
                 },
                 // 内容管理-栏目管理-广告组设置
                 {
