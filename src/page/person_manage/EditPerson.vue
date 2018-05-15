@@ -1,27 +1,23 @@
 <!--编辑人物-->
 <template>
-    <person-detail :person="person" :status='2'></person-detail>
+    <person-detail :status='2'></person-detail>
 </template>
 <script>
+    import { mapActions } from 'vuex';
     import PersonDetail from './PersonDetail';
     export default {
         name: 'EditPerson',
         components: {
             PersonDetail
         },
-        data() {
-            return {
-                person: {}
-            };
-        },
-        mounted() {
+        created() {
             let {id} = this.$route.params;
-            this.$service.getPersonInfo({id})
-                .then((res) => {
-                    if (res && res.code === 0) {
-                        this.person = res.data;
-                    }
-                });
+            this.getPerson(id);
+        },
+        methods: {
+            ...mapActions({
+                getPerson: 'person/getPerson'
+            })
         }
     };
 </script>

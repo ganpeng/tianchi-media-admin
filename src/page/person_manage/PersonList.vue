@@ -9,20 +9,25 @@
         </el-breadcrumb>
         <el-form :inline="true" class="demo-form-inline search-form">
             <el-form-item class="search">
-                <el-input v-model="searchContent" placeholder="搜索你想要的信息">
+                <el-input
+                    :value="searchStr"
+                    @input="inputChangeHandler"
+                    placeholder="搜索你想要的信息"
+                    clearable
+                >
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                 </el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="searchHandler">搜索</el-button>
+                <el-button type="primary" @click="getPersonList">搜索</el-button>
             </el-form-item>
             <el-form-item label="地区">
                 <el-select
-                    v-model="area"
+                    :value="area"
                     filterable
                     clearable
                     placeholder="请选择地区"
-                    @change="searchHandler"
+                    @change="areaChangeHandler"
                     >
                     <el-option
                         v-for="item in areaOptions"
@@ -40,7 +45,7 @@
                 <el-tag>导出</el-tag>
             </el-form-item>
         </el-form>
-        <el-table :data="personList" border style="width:100%">
+        <el-table :data="list" border style="width:100%">
             <el-table-column prop="id" align="center" label="编号"></el-table-column>
             <el-table-column label="照片" align="center" >
                 <template slot-scope="scope">
@@ -81,27 +86,21 @@
         <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="currentPage"
+            :current-page="pagination.pageNum"
             :page-sizes="[5, 10, 20, 30, 50]"
-            :page-size="pageSize"
+            :page-size="pagination.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="totalAmount">
+            :total="pagination.total">
         </el-pagination>
     </div>
 </template>
 <script>
+    import {mapGetters, mapMutations, mapActions} from 'vuex';
     export default {
         name: 'PersonList',
         data() {
             return {
-                searchContent: '',
-                area: '',
-                personList: [],
-                currentPage: 1,
-                pageSize: 5,
-                totalAmount: 0,
                 areaOptions: this.$util.countryList(),
-                selectFlag: false,
                 mainRoleOptions: [
                     {
                         value: 'DIRECTOR',
@@ -122,20 +121,27 @@
                 ]
             };
         },
-        mounted() {
-            this.getPersonList({pageSize: this.pageSize, pageNum: this.currentPage});
+        created() {
+            this.getPersonList();
+        },
+        computed: {
+            ...mapGetters({
+                area: 'person/area',
+                list: 'person/list',
+                pagination: 'person/pagination',
+                searchStr: 'person/searchStr'
+            })
         },
         methods: {
+            ...mapMutations({
+                setSearchStr: 'person/setSearchStr',
+                setArea: 'person/setArea',
+                setPagination: 'person/setPagination'
+            }),
+            ...mapActions({
+                getPersonList: 'person/getPersonList'
+            }),
             // 获取人物列表
-            getPersonList({pageSize, pageNum, name, area}) {
-                this.$service.getPersonList({pageSize, pageNum, name, area})
-                    .then((res) => {
-                        if (res && res.code === 0) {
-                            this.personList = res.data.list.sort((prev, curr) => prev.updatedAt - curr.updatedAt);
-                            this.totalAmount = res.data.total;
-                        }
-                    });
-            },
             areaLabel(areaValue) {
                 return this.areaOptions.find((areaItem) => areaItem.value === areaValue).label;
             },
@@ -150,16 +156,19 @@
                 this.$router.push({ name: 'EditPerson', params: { id: userId } });
             },
             handleSizeChange(pageSize) {
-                this.pageSize = pageSize;
-                this.getPersonList({pageSize: this.pageSize, pageNum: this.currentPage, name: this.searchContent ? this.searchContent : undefined, area: this.area ? this.area : undefined});
+                this.setPagination({pageSize});
+                this.getPersonList();
             },
-            handleCurrentChange(currentPage) {
-                this.currentPage = currentPage;
-                this.getPersonList({pageSize: this.pageSize, pageNum: this.currentPage, name: this.searchContent ? this.searchContent : undefined, area: this.area ? this.area : undefined});
+            handleCurrentChange(pageNum) {
+                this.setPagination({pageNum});
+                this.getPersonList();
             },
-            searchHandler() {
-                this.currentPage = 1;
-                this.getPersonList({pageSize: this.pageSize, pageNum: this.currentPage, name: this.searchContent ? this.searchContent : undefined, area: this.area ? this.area : undefined});
+            areaChangeHandler(value) {
+                this.setArea({area: value});
+                this.getPersonList();
+            },
+            inputChangeHandler(searchStr) {
+                this.setSearchStr({searchStr});
             }
         }
     };

@@ -1,29 +1,25 @@
 <!--显示人物-->
 <template>
     <div>
-        <person-detail :person="person" :status='1'></person-detail>
+        <person-detail :status='1'></person-detail>
     </div>
 </template>
 <script>
+    import { mapActions } from 'vuex';
     import PersonDetail from './PersonDetail';
     export default {
         name: 'DisplayPerson',
         components: {
             PersonDetail
         },
-        data() {
-            return {
-                person: {}
-            };
-        },
-        mounted() {
+        created() {
             let {id} = this.$route.params;
-            this.$service.getPersonInfo({id})
-                .then((res) => {
-                    if (res && res.code === 0) {
-                        this.person = res.data;
-                    }
-                });
+            this.getPerson(id);
+        },
+        methods: {
+            ...mapActions({
+                getPerson: 'person/getPerson'
+            })
         }
     };
 </script>

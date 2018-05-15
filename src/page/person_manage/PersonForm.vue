@@ -5,16 +5,41 @@
                 label-width="100px"
                 class="form-block">
             <el-form-item label="人物姓名" prop="name">
-                <el-input v-model="person.name" :readonly="readonly" placeholder="请输入人物姓名"></el-input>
+                <el-input
+                    :value="person.name"
+                    :readonly="readonly"
+                    @input="inputHandler($event, 'name')"
+                    placeholder="请输入人物姓名"
+                ></el-input>
             </el-form-item>
             <el-form-item label="人物简介" prop="description">
-                <el-input type="textarea" :readonly="readonly" :autosize="{ minRows: 4, maxRows: 12}" placeholder="请输入人物简介" v-model="person.description"></el-input>
+                <el-input
+                    type="textarea"
+                    :readonly="readonly"
+                    :autosize="{ minRows: 4, maxRows: 12}"
+                    placeholder="请输入人物简介"
+                    :value="person.description"
+                    @input="inputHandler($event, 'description')"
+                ></el-input>
             </el-form-item>
             <el-form-item label="出生日期" prop="birthday">
-                <el-date-picker v-model="person.birthday" :readonly="readonly" type="date" placeholder="年/月/日"></el-date-picker>
+                <el-date-picker
+                    :value="person.birthday"
+                    :readonly="readonly"
+                    type="date"
+                    placeholder="年/月/日"
+                    @input="inputHandler($event, 'birthday')"
+                ></el-date-picker>
             </el-form-item>
             <el-form-item label="所属地区" prop="area">
-                <el-select :disabled="readonly" clearable filterable v-model="person.area" placeholder="请选择地区">
+                <el-select
+                    :disabled="readonly"
+                    clearable
+                    filterable
+                    :value="person.area"
+                    placeholder="请选择地区"
+                    @input="inputHandler($event, 'area')"
+                >
                     <el-option
                         v-for="item in areaOptions"
                         :key="item.value"
@@ -24,20 +49,32 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="身高" prop="height">
-                <el-input :readonly="readonly" placeholder="" v-model="person.height">
+                <el-input
+                    :readonly="readonly"
+                    placeholder=""
+                    :value="person.height"
+                    @input="inputHandler($event, 'height')"
+                >
                     <template slot="append">cm</template>
                 </el-input>
             </el-form-item>
             <el-form-item label="体重" prop="weight">
-                <el-input :readonly="readonly" placeholder="" v-model="person.weight">
+                <el-input
+                    :readonly="readonly"
+                    placeholder=""
+                    :value="person.weight"
+                    @input="inputHandler($event, 'weight')"
+                >
                     <template slot="append">kg</template>
                 </el-input>
             </el-form-item>
             <el-form-item label="职业" prop="mainRole">
                 <el-select
                     :disabled="readonly"
-                    v-model="person.mainRole"
-                    placeholder="请选择职业">
+                    :value="person.mainRole"
+                    placeholder="请选择职业"
+                    @input="inputHandler($event, 'mainRole')"
+                >
                     <el-option
                     v-for="item in mainRoleoptions"
                     :key="item.value"
@@ -53,37 +90,22 @@
                 <label class="tips">带 <i>*</i> 号的为必填项</label>
             </el-form-item>
         </el-form>
-        <upload-programme-image-dialog
+        <person-image-upload
             :size='size'
-            title="上传人物图片"
             ref="uploadImageDialog"
             :imageUploadDialogVisible="imageUploadDialogVisible"
             v-on:changeImageDialogStatus="closeImageDialog($event)"
-            v-on:uploadSuccess="uploadSuccess($event)"
-        ></upload-programme-image-dialog>
+        >
+        </person-image-upload>
     </div>
 </template>
 <script>
-import UploadProgrammeImageDialog from '../programme_manage/UploadProgrammeImageDialog';
-
-// 默认的person
-let personDefault = {
-    name: '',
-    description: '',
-    birthday: '',
-    area: '',
-    height: '',
-    weight: '',
-    mainRole: ''
-};
+import {mapGetters, mapMutations} from 'vuex';
+import PersonImageUpload from './PersonImageUpload';
 
 export default {
     name: 'PersonForm',
     props: {
-        person: {
-            type: Object,
-            default: () => personDefault
-        },
         status: {
             type: Number,
             default: 0
@@ -94,7 +116,12 @@ export default {
         }
     },
     components: {
-        UploadProgrammeImageDialog
+        PersonImageUpload
+    },
+    computed: {
+        ...mapGetters({
+            person: 'person/currentPerson'
+        })
     },
     data() {
         return {
@@ -117,7 +144,6 @@ export default {
             },
             imageUploadDialogVisible: false,
             areaOptions: this.$util.countryList(),
-            posterImageList: [],
             mainRoleoptions: [
                 {
                     value: 'DIRECTOR',
@@ -149,6 +175,9 @@ export default {
         };
     },
     methods: {
+        ...mapMutations({
+            updateCurrentPerson: 'person/updateCurrentPerson'
+        }),
         uploadImageHandler() {
             if (!this.readonly) {
                 this.imageUploadDialogVisible = true;
@@ -156,6 +185,9 @@ export default {
         },
         closeImageDialog(status) {
             this.imageUploadDialogVisible = status;
+        },
+        inputHandler(value, haha) {
+            this.updateCurrentPerson({[haha]: value});
         }
     }
 };

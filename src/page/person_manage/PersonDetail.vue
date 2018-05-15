@@ -10,15 +10,18 @@
         <el-row>
             <el-col :span="8">
                 <person-form
-                v-on:uploadSuccess="uploadSuccess($event)"
-                :person="person" :status="status" :readonly="readonly" ref="personForm"></person-form>
+                    v-on:uploadSuccess="uploadSuccess($event)"
+                    :status="status"
+                    :readonly="readonly"
+                    ref="personForm"
+                ></person-form>
                 <div class="form-btn">
                     <span class="btn-wrapper" v-show="!readonly">
-                        <el-button v-show="isEdit" type="primary" @click="editPerson">编辑</el-button>
+                        <el-button v-show="isEdit" type="primary" @click="_updatePerson">编辑</el-button>
                         <el-button
                             v-show="!isEdit"
                             type="primary"
-                            @click="createPerson"
+                            @click="_createPerson"
                             v-loading.fullscreen.lock="isLoading">创 建</el-button>
                         <el-button @click="reset">重 置</el-button>
                     </span>
@@ -29,6 +32,7 @@
     </div>
 </template>
 <script>
+    import { mapActions } from 'vuex';
     import PersonForm from './PersonForm';
 
     export default {
@@ -39,10 +43,6 @@
         props: {
             status: { // status 有三种状态，0代表创建 "create", 1代表显示 "display", 2代表编辑 "edit"
                 type: Number
-            },
-            person: {
-                type: Object,
-                default: () => {}
             }
         },
         data() {
@@ -64,19 +64,18 @@
             }
         },
         methods: {
+            ...mapActions({
+                createPerson: 'person/createPerson',
+                updatePerson: 'person/updatePerson'
+            }),
             // 新增人物
-            createPerson() {
+            _createPerson() {
                 this.$refs.personForm.$refs['createPerson'].validate(valid => {
-                    let person = this.$refs.personForm.person;
                     if (valid) {
                         this.isLoading = true;
-                        this.$service.createPerson(person)
-                            .then((res) => {
-                                if (res) {
-                                    this.$message.success('创建人物成功');
-                                    this.reset();
-                                    this.$router.push({ name: 'PersonList' });
-                                }
+                        this.createPerson()
+                            .then(() => {
+                                this.$message.success('创建人物成功');
                             }).finally(() => {
                                 this.isLoading = false;
                             });
@@ -86,19 +85,13 @@
                 });
             },
             // 修改人物资料
-            editPerson() {
+            _updatePerson() {
                 this.$refs.personForm.$refs['createPerson'].validate(valid => {
-                    let person = this.$refs.personForm.person;
-                    let id = this.$route.params.id;
                     if (valid) {
                         this.isLoading = true;
-                        this.$service.updatePersonInfo({id, person})
-                            .then((res) => {
-                                if (res) {
-                                    this.$message.success('编辑人物成功');
-                                    this.reset();
-                                    this.$router.push({ name: 'PersonList' });
-                                }
+                        this.updatePerson()
+                            .then(() => {
+                                this.$message.success('编辑人物成功');
                             }).finally(() => {
                                 this.isLoading = false;
                             });
