@@ -20,13 +20,13 @@
             <el-tag type="success">可调整栏目</el-tag>
             <ul class="flexible" id="flexible">
                 <li v-for="(item,index) in flexibleColumn" v-bind:key="index"
-                    :class="{'disabled-column':!item.isExist}">
+                    :class="{'disabled-column':!item.visible}">
                     <el-card class="box-card" :body-style="elCardBodyStyle">
                         <label>{{item.name}}</label>
                         <el-switch
                             active-text="显示"
                             inactive-text="隐藏"
-                            v-model="item.isExist"
+                            v-model="item.visible"
                             :active-color="activeColor"
                             @change="switchDisplay">
                         </el-switch>
@@ -46,7 +46,7 @@
 
 <script>
     export default {
-        name: 'ColumnsSetting',
+        name: 'NaviBarSetting',
         data() {
             return {
                 elCardBodyStyle: {
@@ -65,15 +65,15 @@
                     {name: '直播'}
                 ],
                 flexibleColumn: [
-                    {name: '电视剧', isExist: true},
-                    {name: '电影', isExist: true},
-                    {name: '娱乐', isExist: true},
-                    {name: '网视专区', isExist: true},
-                    {name: '佳家易购', isExist: true},
-                    {name: '新闻', isExist: true},
-                    {name: '儿童', isExist: true},
-                    {name: '体育', isExist: true},
-                    {name: '纪实', isExist: true}
+                    {name: '电视剧', visible: true},
+                    {name: '电影', visible: true},
+                    {name: '娱乐', visible: true},
+                    {name: '网视专区', visible: true},
+                    {name: '佳家易购', visible: true},
+                    {name: '新闻', visible: true},
+                    {name: '儿童', visible: true},
+                    {name: '体育', visible: true},
+                    {name: '纪实', visible: true}
                 ],
                 previewColumn: []
             };
@@ -83,6 +83,11 @@
         },
         methods: {
             init() {
+                this.$service.getNaviBarList().then(response => {
+                    if (response) {
+                        // 初始化数据
+                    }
+                });
                 let that = this;
                 // 初始化栏目项预览
                 this.previewColumn = this.fixedColumn.concat(this.flexibleColumn);

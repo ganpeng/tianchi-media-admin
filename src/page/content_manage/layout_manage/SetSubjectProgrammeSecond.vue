@@ -20,7 +20,7 @@
 </template>
 
 <script>
-    import UploadProgrammeImageDialog from '../../../programme_manage/UploadProgrammeImageDialog';
+    import UploadProgrammeImageDialog from '../../programme_manage/UploadProgrammeImageDialog';
 
     export default {
         name: 'SetSubjectProgrammeSecond',

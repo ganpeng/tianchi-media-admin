@@ -15,8 +15,8 @@ import AdminDetail from 'sysPage/admin_manage/AdminDetail';
 import EditAdmin from 'sysPage/admin_manage/EditAdmin';
 import ErrorLayout from 'sysPage/error/ErrorLayout';
 import ErrorNotFound from 'sysPage/error/404';
-import ColumnsSetting from 'sysPage/content_manage/column_manage/ColumnsSetting';
-import TodayRecommended from 'sysPage/content_manage/column_manage/TodayRecommended';
+import NaviBarSetting from 'sysPage/content_manage/nav_bar_manage/NaviBarSetting';
+import TodayRecommended from 'sysPage/content_manage/nav_bar_manage/TodayRecommended';
 import PersonList from 'sysPage/person_manage/PersonList';
 import CreatePerson from 'sysPage/person_manage/CreatePerson';
 import EditPerson from 'sysPage/person_manage/EditPerson';
@@ -24,13 +24,13 @@ import DisplayPerson from 'sysPage/person_manage/DisplayPerson';
 import CreateProgramme from 'sysPage/programme_manage/CreateProgramme';
 import ProgrammeTypeManage from 'sysPage/programme_manage/ProgrammeTypeManage';
 import ProgrammeList from 'sysPage/programme_manage/ProgrammeList';
-import SetChannel from 'sysPage/content_manage/column_manage/setting/SetChannel';
-import AdGroup from 'sysPage/content_manage/column_manage/setting/AdGroup';
-import AppendAd from 'sysPage/content_manage/column_manage/setting/AppendAd';
-import AppendProgramme from 'sysPage/content_manage/column_manage/setting/AppendProgramme';
-import SingleAppendSubject from 'sysPage/content_manage/column_manage/setting/SingleAppendSubject';
-import BlockAppendProgrammeSubject from 'sysPage/content_manage/column_manage/setting/BlockAppendProgrammeSubject';
-import BlockAppendPersonSubject from 'sysPage/content_manage/column_manage/setting/BlockAppendPersonSubject';
+import SetChannel from 'sysPage/content_manage/layout_manage/SetChannel';
+import AdGroup from 'sysPage/content_manage/layout_manage/AdGroup';
+import AppendAd from 'sysPage/content_manage/layout_manage/AppendAd';
+import AppendProgramme from 'sysPage/content_manage/layout_manage/AppendProgramme';
+import SingleAppendSubject from 'sysPage/content_manage/layout_manage/SingleAppendSubject';
+import BlockAppendProgrammeSubject from 'sysPage/content_manage/layout_manage/BlockAppendProgrammeSubject';
+import BlockAppendPersonSubject from 'sysPage/content_manage/layout_manage/BlockAppendPersonSubject';
 import CreateProgrammeSubject from 'sysPage/content_manage/subject_manage/programme_subject/CreateProgrammeSubject';
 import CreatePersonSubject from 'sysPage/content_manage/subject_manage/person_subject/CreatePersonSubject';
 import AppendProgrammesToSubject from 'sysPage/content_manage/subject_manage/programme_subject/AppendProgrammesToSubject';
@@ -140,55 +140,55 @@ let router = new Router({
                 },
                 // 内容管理-栏目管理-栏目项设置
                 {
-                    path: '/column-manage/setting',
-                    name: 'ColumnsSetting',
-                    component: ColumnsSetting
+                    path: '/nav-bar-manage/setting',
+                    name: 'NaviBarSetting',
+                    component: NaviBarSetting
                 },
                 // 内容管理-栏目管理-今日推荐设置
                 {
-                    path: '/column-manage/today-recommended',
+                    path: '/nav-bar-manage/today-recommended',
                     name: 'TodayRecommended',
                     component: TodayRecommended
                 },
-                // 内容管理-栏目管理-直播频道设置
+                // 内容管理-栏目管理-直播频道设置(根据naviBarId设置对应的直播频道)
                 {
-                    path: '/column-manage/setting/channel',
+                    path: '/layout-manage/channel/:naviBarId',
                     name: 'SetChannel',
                     component: SetChannel
                 },
                 // 内容管理-栏目管理-广告组设置
                 {
-                    path: '/column-manage/setting/ad-group',
+                    path: '/layout-manage/ad-group',
                     name: 'AdGroup',
                     component: AdGroup
                 },
                 // 内容管理-栏目管理-单个广告设置
                 {
-                    path: '/column-manage/setting/ad',
+                    path: '/layout-manage/ad',
                     name: 'AppendAd',
                     component: AppendAd
                 },
                 // 内容管理-栏目管理-节目选择设置
                 {
-                    path: '/column-manage/setting/programme',
+                    path: '/layout-manage/programme',
                     name: 'AppendProgramme',
                     component: AppendProgramme
                 },
                 // 内容管理-栏目管理-单个推荐位选择专题
                 {
-                    path: '/column-manage/setting/single-append-subject',
+                    path: '/layout-manage/single-append-subject',
                     name: 'SingleAppendSubject',
                     component: SingleAppendSubject
                 },
                 // 内容管理-栏目管理-模块推荐位选择节目专题
                 {
-                    path: '/column-manage/setting/block-append-programme-subject',
+                    path: '/layout-manage/block-append-programme-subject',
                     name: 'BlockAppendProgrammeSubject',
                     component: BlockAppendProgrammeSubject
                 },
                 // 内容管理-栏目管理-模块推荐位选择人物专题
                 {
-                    path: '/column-manage/setting/block-append-person-subject',
+                    path: '/layout-manage/block-append-person-subject',
                     name: 'BlockAppendPersonSubject',
                     component: BlockAppendPersonSubject
                 },

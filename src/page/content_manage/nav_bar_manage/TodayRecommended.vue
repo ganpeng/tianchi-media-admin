@@ -227,6 +227,7 @@
         name: 'TodayRecommended',
         data() {
             return {
+                naviBarId: 0,
                 sortDialogVisible: false
             };
         },
@@ -238,7 +239,7 @@
             },
             // 设置直播频道
             setChannel() {
-                this.$router.push({name: 'SetChannel'});
+                this.$router.push({name: 'SetChannel', params: {naviBarId: this.naviBarId}});
             },
             // 跳转到广告组列表页面
             toAdGroup() {

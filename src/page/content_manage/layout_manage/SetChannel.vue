@@ -48,11 +48,11 @@
             };
             return {
                 channelOptions: [
-                    {id: 1, name: 'CCTV1'},
-                    {id: 2, name: 'CCTV2'},
-                    {id: 3, name: 'CCTV3'},
-                    {id: 4, name: 'CCTV4'},
-                    {id: 5, name: 'CCTV5'}
+                    {id: 1, name: 'CCTV1', no: '00001'},
+                    {id: 2, name: 'CCTV2', no: '00002'},
+                    {id: 3, name: 'CCTV3', no: '00003'},
+                    {id: 4, name: 'CCTV4', no: '00004'},
+                    {id: 5, name: 'CCTV5', no: '00005'}
                 ],
                 channelInfo: {
                     channel: '',

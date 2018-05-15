@@ -20,8 +20,8 @@
                     <el-menu-item-group>
                         <el-submenu index="1-1">
                             <template slot="title">栏目管理</template>
-                            <el-menu-item index="/column-manage/setting">栏目项设置</el-menu-item>
-                            <el-menu-item index="/column-manage/today-recommended">今日推荐</el-menu-item>
+                            <el-menu-item index="/nav-bar-manage/setting">栏目项设置</el-menu-item>
+                            <el-menu-item index="/nav-bar-manage/today-recommended">今日推荐</el-menu-item>
                         </el-submenu>
                         <el-submenu index="1-2">
                             <template slot="title">节目资源管理</template>
