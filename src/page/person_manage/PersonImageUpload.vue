@@ -64,7 +64,7 @@
         data() {
             return {
                 form: {
-                    fileName: '',
+                    name: '',
                     size: '5M',
                     spec: '',
                     imageFiles: []
@@ -83,9 +83,9 @@
             ...mapMutations({
                 addPosterImage: 'person/addPosterImage'
             }),
-
             cancelHandler() {
                 this.$emit('changeImageDialogStatus', false);
+                this.$refs.uploadImageForm.resetFields();
             },
             async beforeUploadHandler(file) {
                 try {
@@ -136,7 +136,7 @@
                 if (!checkedStatus) {
                     let formData = new FormData();
                     formData.append('file', obj.file);
-                    this.$service.uploadImage({formData, fileName: this.fileName})
+                    this.$service.uploadImage({formData, fileName: this.form.name})
                         .then((res) => {
                             if (res && res.code === 0) {
                                 let data = res.data;

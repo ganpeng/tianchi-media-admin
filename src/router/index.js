@@ -23,6 +23,8 @@ import EditPerson from 'sysPage/person_manage/EditPerson';
 import DisplayPerson from 'sysPage/person_manage/DisplayPerson';
 import CreateProgramme from 'sysPage/programme_manage/CreateProgramme';
 import ProgrammeTypeManage from 'sysPage/programme_manage/ProgrammeTypeManage';
+import EditProgramme from 'sysPage/programme_manage/EditProgramme';
+import DisplayProgramme from 'sysPage/programme_manage/DisplayProgramme';
 import ProgrammeList from 'sysPage/programme_manage/ProgrammeList';
 import SetChannel from 'sysPage/content_manage/layout_manage/SetChannel';
 import AdGroup from 'sysPage/content_manage/layout_manage/AdGroup';
@@ -289,6 +291,19 @@ let router = new Router({
                     name: 'CreateProgramme',
                     component: CreateProgramme
                 },
+                // 节目管理-编辑节目
+                {
+                    path: '/progrmme-manage/edit/:id',
+                    name: 'EditProgramme',
+                    component: EditProgramme
+                },
+                // 节目管理-节目详情
+                {
+                    path: '/progrmme-manage/display/:id',
+                    name: 'DisplayProgramme',
+                    component: DisplayProgramme
+                },
+                // 节目管理-节目列表
                 {
                     path: '/programme-manage/list',
                     name: 'ProgrammeList',

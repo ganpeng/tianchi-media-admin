@@ -23,12 +23,12 @@ export const getProgrammeList = ({pageNum, pageSize}) => {
  *  根据节目的id获取节目
  */
 export const getProgrammeInfo = ({id}) => {
-    return service.get(util.format('/v1/content/programme/{id}', id));
+    return service.get(`/v1/content/programme/${id}`);
 };
 
 /**
  * 根据节目的id更新节目信息
  */
-export const updateProgrammeInfo = ({id, person}) => {
-    return service.put(util.format('/v1/content/programme/{id}', id), person);
+export const updateProgrammeInfo = ({id, programme}) => {
+    return service.put(`/v1/content/programme/${id}`, programme);
 };
