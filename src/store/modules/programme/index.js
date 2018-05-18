@@ -25,8 +25,11 @@ const defaultProgramme = {
     releaseStatus: '',
     // 节目分类
     programmeCategory: '',
+<<<<<<< HEAD
+=======
     // 节目类型
     programType: '',
+>>>>>>> dev_v1.0
     // 发行商
     businessOperator: '',
     // 正片数量
@@ -42,14 +45,25 @@ const defaultProgramme = {
     // 关键字
     tagList: [],
     // 节目类型
+<<<<<<< HEAD
+    typeList: [],
+    // 下面是自定义的前端数据结构，不是服务端返回的
+    // 后续会去掉的节目类型
+    programmeType: '',
+=======
     typeVoList: [],
     // 下面是自定义的前端数据结构，不是服务端返回的
+>>>>>>> dev_v1.0
     // 主演
     leadActor: [],
     // 导演
     director: [],
     // 版权起止日期
+<<<<<<< HEAD
+    copyrightRange: ''
+=======
     copyrightRange: []
+>>>>>>> dev_v1.0
 };
 
 const state = {
@@ -105,7 +119,11 @@ const mutations = {
     setCurrentProgramme(state, payload) {
         state.currentProgramme = payload.currentProgramme;
     },
+<<<<<<< HEAD
+    updateCurrentProgramme(state, payload) {
+=======
     updateCurrentPerson(state, payload) {
+>>>>>>> dev_v1.0
         state.currentProgramme = Object.assign({}, state.currentProgramme, payload);
     },
     resetProgramme(state) {
@@ -113,6 +131,21 @@ const mutations = {
     }
 };
 
+<<<<<<< HEAD
+function formatProgrammeData(programmeData) {
+    return Object.assign({}, programmeData, {
+        // 版权开始日期
+        copyrightStartedAt: programmeData.copyrightRange[0],
+        // 版权结束日期
+        copyrightEndedAt: programmeData.copyrightRange[1],
+
+        tagList: [],
+        typeList: []
+    });
+}
+
+=======
+>>>>>>> dev_v1.0
 const actions = {
     getProgrammeList({commit, state}) {
         service.getProgrammeList(_.pick(state, searchFields))
@@ -135,7 +168,12 @@ const actions = {
     },
 
     createProgramme({commit, state}) {
+<<<<<<< HEAD
+        let currentProgramme = formatProgrammeData(state.currentProgramme);
+        service.createProgramme(currentProgramme)
+=======
         service.createProgramme(state.currentProgramme)
+>>>>>>> dev_v1.0
             .then((res) => {
                 if (res && res.code === 0) {
                     router.push({ name: 'ProgrammeList' });

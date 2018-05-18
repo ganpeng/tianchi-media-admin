@@ -109,7 +109,9 @@ const actions = {
     },
 
     createPerson({commit, state}) {
-        service.createPerson(state.currentPerson)
+        let person = JSON.parse(JSON.stringify(state.currentPerson));
+        delete person.createdAt;
+        service.createPerson(person)
             .then((res) => {
                 if (res && res.code === 0) {
                     router.push({ name: 'PersonList' });
@@ -117,8 +119,9 @@ const actions = {
             });
     },
     updatePerson({commit, state}) {
-        let {currentPerson} = state;
-        service.updatePersonInfo({id: currentPerson.id, person: currentPerson})
+        let person = JSON.parse(JSON.stringify(state.currentPerson));
+        delete person.createdAt;
+        service.updatePersonInfo({id: person.id, person: person})
             .then((res) => {
                 if (res && res.code === 0) {
                     router.push({ name: 'PersonList' });

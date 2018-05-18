@@ -32,7 +32,7 @@
     </div>
 </template>
 <script>
-    import { mapActions } from 'vuex';
+    import { mapActions, mapGetters } from 'vuex';
     import PersonForm from './PersonForm';
 
     export default {
@@ -55,6 +55,9 @@
             }
         },
         computed: {
+            ...mapGetters({
+                person: 'person/currentPerson'
+            }),
             readonly() {
                 return this.status === 1;
             },
@@ -72,13 +75,15 @@
             _createPerson() {
                 this.$refs.personForm.$refs['createPerson'].validate(valid => {
                     if (valid) {
-                        this.isLoading = true;
-                        this.createPerson()
-                            .then(() => {
-                                this.$message.success('创建人物成功');
-                            }).finally(() => {
-                                this.isLoading = false;
-                            });
+                        this.checkImageLength(() => {
+                            this.isLoading = true;
+                            this.createPerson()
+                                .then(() => {
+                                    this.$message.success('创建人物成功');
+                                }).finally(() => {
+                                    this.isLoading = false;
+                                });
+                        });
                     } else {
                         return false;
                     }
@@ -88,17 +93,28 @@
             _updatePerson() {
                 this.$refs.personForm.$refs['createPerson'].validate(valid => {
                     if (valid) {
-                        this.isLoading = true;
-                        this.updatePerson()
-                            .then(() => {
-                                this.$message.success('编辑人物成功');
-                            }).finally(() => {
-                                this.isLoading = false;
-                            });
+                        this.checkImageLength(() => {
+                            this.isLoading = true;
+                            this.updatePerson()
+                                .then(() => {
+                                    this.$message.success('编辑人物成功');
+                                }).finally(() => {
+                                    this.isLoading = false;
+                                });
+                        });
                     } else {
                         return false;
                     }
                 });
+            },
+            checkImageLength(next) {
+                let {posterImageList} = this.person;
+                if (posterImageList.length <= 0) {
+                    this.$message.error('请上传图片');
+                    return false;
+                } else {
+                    next();
+                }
             },
             // 重制表单
             reset() {

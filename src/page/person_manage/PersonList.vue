@@ -49,7 +49,7 @@
             <el-table-column prop="id" align="center" label="编号"></el-table-column>
             <el-table-column label="照片" align="center" >
                 <template slot-scope="scope">
-                    <img class="person-image" :src="scope.row.avatar" alt="">
+                    <img width="80px" height="80px" class="person-image" :src="(scope.row.posterImageList[0] ? scope.row.posterImageList[0].uri :'' )" alt="">
                 </template>
             </el-table-column>
             <el-table-column prop="name" align="center" width="200px" label="名字"></el-table-column>
@@ -73,7 +73,7 @@
             </el-table-column>
             <el-table-column align="center" label="更新时间">
                 <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
             <el-table-column align="center" fixed="right" label="操作">

@@ -38,7 +38,7 @@
                     filterable
                     :value="person.area"
                     placeholder="请选择地区"
-                    @input="inputHandler($event, 'area')"
+                    @change="inputHandler($event, 'area')"
                 >
                     <el-option
                         v-for="item in areaOptions"
@@ -73,7 +73,7 @@
                     :disabled="readonly"
                     :value="person.mainRole"
                     placeholder="请选择职业"
-                    @input="inputHandler($event, 'mainRole')"
+                    @change="inputHandler($event, 'mainRole')"
                 >
                     <el-option
                     v-for="item in mainRoleoptions"
@@ -97,6 +97,11 @@
             v-on:changeImageDialogStatus="closeImageDialog($event)"
         >
         </person-image-upload>
+        <ul class="img-list">
+            <li v-for="(img, index) in person.posterImageList" :key="index" class="img-item">
+                <img width="60px" height="60px" :src="img.uri" alt="">
+            </li>
+        </ul>
     </div>
 </template>
 <script>
@@ -192,8 +197,16 @@ export default {
     }
 };
 </script>
-<style scoped>
+<style lang="less" scoped>
 .person-form-container {
     margin-top: 60px;
+}
+.img-list {
+    display: flex;
+    margin-left: 120px;
+    margin-bottom: 20px;
+    .img-item {
+        margin-right: 20px;
+    }
 }
 </style>
