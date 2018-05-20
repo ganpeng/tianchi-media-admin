@@ -81,6 +81,7 @@ const mutations = {
     },
     resetPerson(state) {
         state.currentPerson = defaultPerson;
+        state.currentPerson.posterImageList = [];
     },
     addPosterImage(state, payload) {
         state.currentPerson.posterImageList.push(payload.posterImage);
@@ -114,7 +115,7 @@ const actions = {
         service.createPerson(person)
             .then((res) => {
                 if (res && res.code === 0) {
-                    router.push({ name: 'PersonList' });
+                    return res;
                 }
             });
     },

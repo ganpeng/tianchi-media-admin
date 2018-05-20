@@ -7,26 +7,55 @@
         :close-on-click-modal="false"
         :close-on-press-escape="false"
         append-to-body>
-        <person-form ref="personForm"></person-form>
+        <person-form
+            :isDialog="true"
+            ref="personForm">
+        </person-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="cancelHandler">取消</el-button>
-            <el-button type="primary" @click="createPerson">创建</el-button>
+            <el-button type="primary" @click="_createPerson">创建</el-button>
         </div>
     </el-dialog>
 </template>
 <script>
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import PersonForm from '../person_manage/PersonForm';
 export default {
     components: {
         PersonForm
     },
     props: ['createPersonDialogVisible'],
+    data() {
+        return {
+            isLoading: false
+        };
+    },
+    computed: {
+        ...mapGetters({
+            person: 'person/currentPerson'
+        })
+    },
     methods: {
-        createPerson() {
+        ...mapMutations({
+            resetPerson: 'person/resetPerson'
+        }),
+        ...mapActions({
+            createPerson: 'person/createPerson'
+        }),
+        _createPerson() {
             const personForm = this.$refs.personForm.$refs['createPerson'];
             personForm.validate(valid => {
                 if (valid) {
-                    this.cancelHandler();
+                    this.checkImageLength(() => {
+                        this.isLoading = true;
+                        this.createPerson()
+                            .then(() => {
+                                this.$message.success('创建人物成功');
+                                this.cancelHandler();
+                            }).finally(() => {
+                                this.isLoading = false;
+                            });
+                    });
                 } else {
                     return false;
                 }
@@ -34,8 +63,16 @@ export default {
         },
         cancelHandler() {
             this.$emit('changePersonDialogStatus', false);
-            const personForm = this.$refs.personForm.$refs['createPerson'];
-            personForm.resetFields();
+            this.resetPerson();
+        },
+        checkImageLength(next) {
+            let {posterImageList} = this.person;
+            if (posterImageList.length <= 0) {
+                this.$message.error('请上传图片');
+                return false;
+            } else {
+                next();
+            }
         }
     }
 };

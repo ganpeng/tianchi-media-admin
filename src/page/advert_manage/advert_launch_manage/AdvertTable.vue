@@ -98,7 +98,7 @@
     </div>
 </template>
 <script>
-import constantObj from '@/util/config/advert_dimension';
+import constantObj from '@/util/config/image_dimension';
 export default {
     name: 'AdvertTable',
     props: {
@@ -121,7 +121,7 @@ export default {
                 name: ''
             },
             checkedAdvertList: [],
-            dimensionOptions: constantObj.ADVERT_DIMENSION,
+            dimensionOptions: constantObj.image_dimension,
             formatOptions: [
                 {
                     value: 'jpg',

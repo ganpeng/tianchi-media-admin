@@ -122,6 +122,7 @@
             };
         },
         created() {
+            this.resetPerson();
             this.getPersonList();
         },
         computed: {
@@ -136,7 +137,9 @@
             ...mapMutations({
                 setSearchStr: 'person/setSearchStr',
                 setArea: 'person/setArea',
-                setPagination: 'person/setPagination'
+                setPagination: 'person/setPagination',
+                resetPerson: 'person/resetPerson',
+                resetPosterImageList: 'person/resetPosterImageList'
             }),
             ...mapActions({
                 getPersonList: 'person/getPersonList'

@@ -99,7 +99,7 @@
 </template>
 <script>
 import AdvertForm from './AdvertForm';
-import obj from '@/util/config/advert_dimension';
+import obj from '@/util/config/image_dimension';
 export default {
     name: 'AdvertResourceList',
     components: {
@@ -145,7 +145,7 @@ export default {
                     createdAt: new Date().getTime() + (Math.floor(Math.random() * 1000000000))
                 }
             ],
-            dimensionOptions: obj.ADVERT_DIMENSION,
+            dimensionOptions: obj.image_dimension,
             formatOptions: [
                 {
                     value: 'jpg',

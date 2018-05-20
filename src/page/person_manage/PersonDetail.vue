@@ -8,13 +8,14 @@
             <el-breadcrumb-item>新增人物</el-breadcrumb-item>
         </el-breadcrumb>
         <el-row>
-            <el-col :span="8">
-                <person-form
-                    v-on:uploadSuccess="uploadSuccess($event)"
-                    :status="status"
-                    :readonly="readonly"
-                    ref="personForm"
-                ></person-form>
+            <person-form
+                v-on:uploadSuccess="uploadSuccess($event)"
+                :isDialog="false"
+                :status="status"
+                :readonly="readonly"
+                ref="personForm"
+            ></person-form>
+            <el-col :span="24">
                 <div class="form-btn">
                     <span class="btn-wrapper" v-show="!readonly">
                         <el-button v-show="isEdit" type="primary" @click="_updatePerson">编辑</el-button>
@@ -80,6 +81,7 @@
                             this.createPerson()
                                 .then(() => {
                                     this.$message.success('创建人物成功');
+                                    this.$router.push({ name: 'PersonList' });
                                 }).finally(() => {
                                     this.isLoading = false;
                                 });

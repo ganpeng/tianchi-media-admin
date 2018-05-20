@@ -4,109 +4,116 @@
         <el-form :model="person" :rules="infoRules" status-icon ref="createPerson"
                 label-width="100px"
                 class="form-block">
-            <el-form-item label="人物姓名" prop="name">
-                <el-input
-                    :value="person.name"
-                    :readonly="readonly"
-                    @input="inputHandler($event, 'name')"
-                    placeholder="请输入人物姓名"
-                ></el-input>
-            </el-form-item>
-            <el-form-item label="人物简介" prop="description">
-                <el-input
-                    type="textarea"
-                    :readonly="readonly"
-                    :autosize="{ minRows: 4, maxRows: 12}"
-                    placeholder="请输入人物简介"
-                    :value="person.description"
-                    @input="inputHandler($event, 'description')"
-                ></el-input>
-            </el-form-item>
-            <el-form-item label="出生日期" prop="birthday">
-                <el-date-picker
-                    :value="person.birthday"
-                    :readonly="readonly"
-                    type="date"
-                    placeholder="年/月/日"
-                    @input="inputHandler($event, 'birthday')"
-                ></el-date-picker>
-            </el-form-item>
-            <el-form-item label="所属地区" prop="area">
-                <el-select
-                    :disabled="readonly"
-                    clearable
-                    filterable
-                    :value="person.area"
-                    placeholder="请选择地区"
-                    @change="inputHandler($event, 'area')"
-                >
-                    <el-option
-                        v-for="item in areaOptions"
+            <el-col :span="isDialog ? 24 : 8">
+                <el-form-item label="人物姓名" prop="name">
+                    <el-input
+                        :value="person.name"
+                        :readonly="readonly"
+                        @input="inputHandler($event, 'name')"
+                        placeholder="请输入人物姓名"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item label="人物简介" prop="description">
+                    <el-input
+                        type="textarea"
+                        :readonly="readonly"
+                        :autosize="{ minRows: 4, maxRows: 12}"
+                        placeholder="请输入人物简介"
+                        :value="person.description"
+                        @input="inputHandler($event, 'description')"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item label="出生日期" prop="birthday">
+                    <el-date-picker
+                        :value="person.birthday"
+                        :readonly="readonly"
+                        type="date"
+                        placeholder="年/月/日"
+                        @input="inputHandler($event, 'birthday')"
+                    ></el-date-picker>
+                </el-form-item>
+                <el-form-item label="所属地区" prop="area">
+                    <el-select
+                        :disabled="readonly"
+                        clearable
+                        filterable
+                        :value="person.area"
+                        placeholder="请选择地区"
+                        @change="inputHandler($event, 'area')"
+                    >
+                        <el-option
+                            v-for="item in areaOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="身高" prop="height">
+                    <el-input
+                        :readonly="readonly"
+                        placeholder=""
+                        :value="person.height"
+                        @input="inputHandler($event, 'height')"
+                    >
+                        <template slot="append">cm</template>
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="体重" prop="weight">
+                    <el-input
+                        :readonly="readonly"
+                        placeholder=""
+                        :value="person.weight"
+                        @input="inputHandler($event, 'weight')"
+                    >
+                        <template slot="append">kg</template>
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="职业" prop="mainRole">
+                    <el-select
+                        :disabled="readonly"
+                        :value="person.mainRole"
+                        placeholder="请选择职业"
+                        @change="inputHandler($event, 'mainRole')"
+                    >
+                        <el-option
+                        v-for="item in mainRoleoptions"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="身高" prop="height">
-                <el-input
-                    :readonly="readonly"
-                    placeholder=""
-                    :value="person.height"
-                    @input="inputHandler($event, 'height')"
-                >
-                    <template slot="append">cm</template>
-                </el-input>
-            </el-form-item>
-            <el-form-item label="体重" prop="weight">
-                <el-input
-                    :readonly="readonly"
-                    placeholder=""
-                    :value="person.weight"
-                    @input="inputHandler($event, 'weight')"
-                >
-                    <template slot="append">kg</template>
-                </el-input>
-            </el-form-item>
-            <el-form-item label="职业" prop="mainRole">
-                <el-select
-                    :disabled="readonly"
-                    :value="person.mainRole"
-                    placeholder="请选择职业"
-                    @change="inputHandler($event, 'mainRole')"
-                >
-                    <el-option
-                    v-for="item in mainRoleoptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item v-if="!readonly" label="人物图片">
-                <el-button type="primary" @click="uploadImageHandler">上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
-            </el-form-item>
-            <el-form-item class="tips">
-                <label class="tips">带 <i>*</i> 号的为必填项</label>
-            </el-form-item>
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="24">
+                <el-form-item label="人物图片" required>
+                    <el-button v-if="!readonly" type="primary" @click="uploadImageHandler">上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
+                    <ul class="cover-list">
+                        <li v-for="(img, index) in person.posterImageList" :key="index" class="img-item">
+                            <img :src="img.uri" alt="">
+                        </li>
+                    </ul>
+                </el-form-item>
+                <el-form-item class="tips">
+                    <label class="tips">带 <i>*</i> 号的为必填项</label>
+                </el-form-item>
+            </el-col>
         </el-form>
-        <person-image-upload
+        <upload-image
             :size='size'
+            title="上传人物图片"
             ref="uploadImageDialog"
+            :successHandler="addPosterImage"
             :imageUploadDialogVisible="imageUploadDialogVisible"
             v-on:changeImageDialogStatus="closeImageDialog($event)"
         >
-        </person-image-upload>
-        <ul class="img-list">
-            <li v-for="(img, index) in person.posterImageList" :key="index" class="img-item">
-                <img width="60px" height="60px" :src="img.uri" alt="">
-            </li>
-        </ul>
+        </upload-image>
     </div>
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex';
-import PersonImageUpload from './PersonImageUpload';
+import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+import imageDimension from '@/util/config/image_dimension';
 
 export default {
     name: 'PersonForm',
@@ -118,10 +125,14 @@ export default {
         readonly: {
             type: Boolean,
             default: false
+        },
+        isDialog: {
+            type: Boolean,
+            default: false
         }
     },
     components: {
-        PersonImageUpload
+        UploadImage
     },
     computed: {
         ...mapGetters({
@@ -167,21 +178,13 @@ export default {
                     label: '演员'
                 }
             ],
-            size: [
-                {
-                    value: '200*200',
-                    label: '200*200'
-                },
-                {
-                    value: '700*1000',
-                    label: '700*1000'
-                }
-            ]
+            size: imageDimension.PERSON_DIMENSION
         };
     },
     methods: {
         ...mapMutations({
-            updateCurrentPerson: 'person/updateCurrentPerson'
+            updateCurrentPerson: 'person/updateCurrentPerson',
+            addPosterImage: 'person/addPosterImage'
         }),
         uploadImageHandler() {
             if (!this.readonly) {
@@ -201,12 +204,22 @@ export default {
 .person-form-container {
     margin-top: 60px;
 }
-.img-list {
-    display: flex;
-    margin-left: 120px;
-    margin-bottom: 20px;
-    .img-item {
-        margin-right: 20px;
+.cover-list {
+    margin-top: 30px;
+    overflow: hidden;
+    li {
+        float: left;
+        margin-right: 30px;
+        height: 230px;
+        img {
+            display: block;
+            height: 180px;
+            cursor: zoom-in;
+        }
+        label {
+            text-align: center;
+            font-size: 16px;
+        }
     }
 }
 </style>

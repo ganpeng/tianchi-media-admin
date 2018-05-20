@@ -16,11 +16,7 @@
                             <el-input :value="123455" readonly></el-input>
                         </el-form-item>
                         <el-form-item label="节目名称" prop="name">
-<<<<<<< HEAD
                             <el-input @input="inputHandler($event, 'name')" :value="programme.name"></el-input>
-=======
-                            <el-input :value="programme.name"></el-input>
->>>>>>> dev_v1.0
                         </el-form-item>
                         <el-form-item label="节目看点">
                             <el-input :value="'非常好看'"></el-input>
@@ -34,10 +30,7 @@
                         <el-form-item label="节目简介" prop="description">
                             <el-input
                                 type="textarea"
-<<<<<<< HEAD
                                 @input="inputHandler($event, 'description')"
-=======
->>>>>>> dev_v1.0
                                 :autosize="{ minRows: 4, maxRows: 40}"
                                 placeholder="请输入内容"
                                 :value="programme.description">
@@ -46,10 +39,7 @@
                         <el-form-item label="上映时间" prop="announceAt">
                             <el-date-picker
                                 :value="programme.announceAt"
-<<<<<<< HEAD
                                 @input="inputHandler($event, 'announceAt')"
-=======
->>>>>>> dev_v1.0
                                 type="year"
                                 placeholder="选择年">
                             </el-date-picker>
@@ -57,10 +47,7 @@
                         <el-form-item label="所属地区" prop="releaseArea">
                             <el-select
                                 :value="programme.releaseArea"
-<<<<<<< HEAD
                                 @change="inputHandler($event, 'releaseArea')"
-=======
->>>>>>> dev_v1.0
                                 clearable
                                 filterable
                                 placeholder="请选择"
@@ -74,15 +61,11 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="节目分类" prop="programmeCategory">
-<<<<<<< HEAD
                             <el-select
                                 :value="programme.programmeCategory"
                                 placeholder="请选择"
                                 @input="inputHandler($event, 'programmeCategory')"
                             >
-=======
-                            <el-select :value="programme.programmeCategory" placeholder="请选择">
->>>>>>> dev_v1.0
                                 <el-option
                                     v-for="item in programOptions"
                                     :key="item.value"
@@ -92,7 +75,6 @@
                             </el-select>
                             <el-button type="primary" @click="gotoProgramTypePage" plain>管理分类和类型</el-button>
                         </el-form-item>
-<<<<<<< HEAD
                         <el-form-item label="节目类型" prop="typeList">
                             <el-select
                                 :value="programme.typeList"
@@ -100,10 +82,6 @@
                                 placeholder="请选择"
                                 @change="inputHandler($event, 'typeList')"
                             >
-=======
-                        <el-form-item label="节目类型" prop="programmeType">
-                            <el-select :value="programme.programmeType" multiple placeholder="请选择">
->>>>>>> dev_v1.0
                                 <el-option
                                     v-for="item in typeOptions"
                                     :key="item.value"
@@ -113,16 +91,12 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="关键字" prop="tagList">
-<<<<<<< HEAD
                             <el-select
                                 :value="programme.tagList"
                                 multiple
                                 placeholder="请选择"
                                 @change="inputHandler($event, 'tagList')"
                             >
-=======
-                            <el-select :value="programme.tagList" multiple placeholder="请选择">
->>>>>>> dev_v1.0
                                 <el-option
                                     v-for="item in keyWordsOptions"
                                     :key="item.value"
@@ -132,18 +106,17 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="节目主演" prop="leadActor">
-<<<<<<< HEAD
                             <el-select
                                 :value="programme.leadActor"
                                 multiple
+                                filterable
+                                remote
                                 placeholder="请选择"
                                 @change="inputHandler($event, 'leadActor')"
+                                :remote-method="getPerson"
                             >
-=======
-                            <el-select v-model="programme.leadActor" multiple placeholder="请选择">
->>>>>>> dev_v1.0
                                 <el-option
-                                    v-for="item in leadOptions"
+                                    v-for="item in programme.leadActorResult"
                                     :key="item.value"
                                     :label="item.label"
                                     :value="item.value">
@@ -152,16 +125,12 @@
                             <el-button type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                         </el-form-item>
                         <el-form-item label="节目导演" prop="director">
-<<<<<<< HEAD
                             <el-select
                                 :value="programme.director"
                                 multiple
                                 placeholder="请选择"
                                 @change="inputHandler($event, 'director')"
                             >
-=======
-                            <el-select :value="programme.director" multiple placeholder="请选择">
->>>>>>> dev_v1.0
                                 <el-option
                                     v-for="item in directorOptions"
                                     :key="item.value"
@@ -175,25 +144,18 @@
                             <el-date-picker
                                 :value="programme.copyrightRange"
                                 type="daterange"
-<<<<<<< HEAD
                                 @input="inputHandler($event, 'copyrightRange')"
-=======
->>>>>>> dev_v1.0
                                 range-separator="至"
                                 start-placeholder="开始日期"
                                 end-placeholder="结束日期">
                             </el-date-picker>
                         </el-form-item>
                         <el-form-item label="版权商" prop="copyrightReserver">
-<<<<<<< HEAD
                             <el-select
                                 :value="programme.copyrightReserver"
                                 placeholder="请选择"
                                 @input="inputHandler($event, 'copyrightReserver')"
                             >
-=======
-                            <el-select :value="programme.copyrightReserver" placeholder="请选择">
->>>>>>> dev_v1.0
                                 <el-option
                                     v-for="item in copyRightDealerOptions"
                                     :key="item.value"
@@ -203,15 +165,11 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="运营商" prop="businessOperator">
-<<<<<<< HEAD
                             <el-select
                                 :value="programme.businessOperator"
                                 placeholder="请选择"
                                 @input="inputHandler($event, 'businessOperator')"
                             >
-=======
-                            <el-select :value="programme.businessOperator" placeholder="请选择">
->>>>>>> dev_v1.0
                                 <el-option
                                     v-for="item in operatorOptions"
                                     :key="item.value"
@@ -221,7 +179,6 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="总集数" prop="featureVideoCount">
-<<<<<<< HEAD
                             <el-input
                                 :value="programme.featureVideoCount"
                                 @input="inputHandler($event, 'featureVideoCount')"
@@ -234,12 +191,6 @@
                                 @input="inputHandler($event, 'playCountBasic')"
                                 readonly>
                             </el-input>
-=======
-                            <el-input :value="programme.featureVideoCount" readonly></el-input>
-                        </el-form-item>
-                        <el-form-item label="实际播放量" prop="playCountBasic">
-                            <el-input :value="programme.playCountBasic" readonly></el-input>
->>>>>>> dev_v1.0
                         </el-form-item>
                         <el-form-item label="展示播放量">
                             <el-input :value="12"></el-input>
@@ -261,20 +212,27 @@
             <el-button v-if="status === 2" type="primary" @click="_editProgramme">编辑</el-button>
             <el-button type="primary" @click="goBack">返回列表页</el-button>
         </div>
-        <upload-programme-image-dialog title="上传节目图片" :imageUploadDialogVisible="imageUploadDialogVisible" v-on:changeImageDialogStatus="closeImageDialog($event)"></upload-programme-image-dialog>
+        <upload-image
+            title="上传节目图片"
+            :size="size"
+            :successHandler="addPosterImage"
+            :imageUploadDialogVisible="imageUploadDialogVisible"
+            v-on:changeImageDialogStatus="closeImageDialog($event)">
+        </upload-image>
         <create-person-dialog :createPersonDialogVisible="createPersonDialogVisible" v-on:changePersonDialogStatus="closePersonDialog($event)"></create-person-dialog>
     </div>
 </template>
 <script>
     import { mapMutations, mapGetters, mapActions } from 'vuex';
-    import UploadProgrammeImageDialog from './UploadProgrammeImageDialog';
     import CreatePersonDialog from './CreatePersonDialog';
     import ProgrammeTable from './ProgrammeTable';
+    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import imageDimension from '@/util/config/image_dimension';
 
     export default {
         name: 'ProgrammeDetail',
         components: {
-            UploadProgrammeImageDialog,
+            UploadImage,
             CreatePersonDialog,
             ProgrammeTable
         },
@@ -292,11 +250,7 @@
                 dialogVisible: false,
                 videoUploadDialogVisible: false,
                 createPersonDialogVisible: false,
-<<<<<<< HEAD
                 areaOptions: this.$util.countryList(),
-=======
-                areaOptions: this.$util.countryList,
->>>>>>> dev_v1.0
                 programOptions: [
                     {
                         value: '电视剧',
@@ -313,7 +267,6 @@
                 ],
                 typeOptions: [
                     {
-<<<<<<< HEAD
                         value: 1,
                         label: '战争'
                     },
@@ -323,17 +276,6 @@
                     },
                     {
                         value: 3,
-=======
-                        value: '战争',
-                        label: '战争'
-                    },
-                    {
-                        value: '警匪',
-                        label: '警匪'
-                    },
-                    {
-                        value: '爱情',
->>>>>>> dev_v1.0
                         label: '爱情'
                     }
                 ],
@@ -417,7 +359,8 @@
                         duration: '1:20:30',
                         createdAt: '2018-04-05 9:00'
                     }
-                ]
+                ],
+                size: imageDimension.PROGRAMME_DIMENSION
             };
         },
         computed: {
@@ -427,28 +370,20 @@
         },
         methods: {
             ...mapMutations({
-<<<<<<< HEAD
                 updateCurrentProgramme: 'programme/updateCurrentProgramme',
-=======
->>>>>>> dev_v1.0
-                resetProgramme: 'programme/resetProgramme'
+                resetProgramme: 'programme/resetProgramme',
+                setSearchStr: 'person/setSearchStr',
+                addPosterImage: 'programme/addPosterImage'
             }),
             ...mapActions({
                 createProgramme: 'programme/createProgramme',
                 updateProgramme: 'programme/updateProgramme'
             }),
             _createProgramme() {
-<<<<<<< HEAD
                 this.createProgramme();
             },
             _editProgramme() {
                 this.updateProgramme();
-=======
-
-            },
-            _editProgramme() {
-
->>>>>>> dev_v1.0
             },
             onSubmit() {
                 this.$refs.createProgramForm.validate(value => {
@@ -471,12 +406,27 @@
             },
             goBack() {
                 this.$router.push({name: 'ProgrammeList'});
-<<<<<<< HEAD
             },
             inputHandler(value, haha) {
                 this.updateCurrentProgramme({[haha]: value});
-=======
->>>>>>> dev_v1.0
+            },
+            getPerson(name) {
+                setTimeout(() => {
+                    this.$service.findPerson({name})
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                // leadActorResult
+                                let list = res.data.list === null ? [] : res.data.list;
+                                let leadActorResult = list.map((person) => {
+                                    return {
+                                        value: person.id,
+                                        label: person.name
+                                    };
+                                });
+                                this.updateCurrentProgramme({'leadActorResult': leadActorResult});
+                            }
+                        });
+                }, 1000);
             }
         }
     };

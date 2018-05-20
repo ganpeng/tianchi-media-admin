@@ -13,10 +13,12 @@
         },
         created() {
             this.resetProgramme();
+            this.resetPerson();
         },
         methods: {
             ...mapMutations({
-                resetProgramme: 'programme/resetProgramme'
+                resetProgramme: 'programme/resetProgramme',
+                resetPerson: 'person/resetPerson'
             })
         }
     };

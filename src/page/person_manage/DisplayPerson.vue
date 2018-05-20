@@ -5,7 +5,7 @@
     </div>
 </template>
 <script>
-    import { mapActions } from 'vuex';
+    import { mapActions, mapMutations } from 'vuex';
     import PersonDetail from './PersonDetail';
     export default {
         name: 'DisplayPerson',
@@ -14,11 +14,15 @@
         },
         created() {
             let {id} = this.$route.params;
+            this.resetPerson();
             this.getPerson(id);
         },
         methods: {
             ...mapActions({
                 getPerson: 'person/getPerson'
+            }),
+            ...mapMutations({
+                resetPerson: 'person/resetPerson'
             })
         }
     };

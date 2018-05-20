@@ -37,3 +37,9 @@ export const getPersonInfo = ({id}) => {
 export const updatePersonInfo = ({id, person}) => {
     return service.put(util.format('/v1/content/figure/{0}', id), person);
 };
+
+export const findPerson = ({name}) => {
+    return service.get('/v1/content/figure/list', {
+        params: { name }
+    });
+};
