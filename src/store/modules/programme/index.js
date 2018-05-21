@@ -68,7 +68,7 @@ const state = {
     pageNum: 1,
     pageSize: 5,
     total: 0,
-    categoryObj: {}
+    categoryList: []
 };
 
 const searchFields = ['figure', 'releaseStatus', 'releaseArea', 'releaseAt', 'programmeCategory', 'programmeType', 'pageNum', 'pageSize'];
@@ -89,6 +89,9 @@ const getters = {
     },
     searchFields(state) {
         return _.pick(state, searchFields);
+    },
+    categroyList(state) {
+        return state.categoryList;
     }
 };
 
@@ -119,6 +122,9 @@ const mutations = {
     },
     addPosterImage(state, payload) {
         state.currentProgramme.posterImages.push(payload.posterImage);
+    },
+    setCategroyList(state, payload) {
+        state.categoryList = payload.list ? payload.list : [];
     }
 };
 
@@ -170,6 +176,23 @@ const actions = {
             .then((res) => {
                 if (res && res.code === 0) {
                     router.push({ name: 'ProgrammeList' });
+                }
+            });
+    },
+    getProgrammeCategory({commit, state}) {
+        service.getProgrammeCategory()
+            .then((res) => {
+                if (res && res.code === 0) {
+                    commit('setCategroyList', {list: res.data});
+                    return res;
+                }
+            });
+    },
+    updateProgrammeCategory({commit, state}, categoryObj) {
+        return service.updateProgrammeCategory({categoryObj})
+            .then((res) => {
+                if (res && res.code === 0) {
+                    return res;
                 }
             });
     }

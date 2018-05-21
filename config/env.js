@@ -25,7 +25,7 @@ switch (npmEventName) {
         proxyTarget = 'http://10.0.3.232:8100';
         break;
     case 'dev:lian':
-        proxyTarget = 'http://10.0.3.237:8100';
+        proxyTarget = 'http://10.0.3.236:8100';
         break;
     // default is dev url
     default:

@@ -31,6 +31,18 @@
                     v-model="form.desc">
                 </el-input>
             </el-form-item>
+            <el-form-item label="选择视频">
+                <el-upload
+                    class="upload-demo"
+                    ref="upload"
+                    :auto-upload="false"
+                    :http-request="uploadRequest"
+                    :show-file-list="false"
+                    :with-credentials="true">
+                        <el-button size="small" type="primary">选择视频</el-button>
+                </el-upload>
+                <el-button size="small" type="primary" @click="submitUpload">点击上传</el-button>
+            </el-form-item>
             <el-form-item label="视频时长">
                 <el-input v-model="form.duration" readonly></el-input>
             </el-form-item>
@@ -190,6 +202,20 @@
 
                     }
                 });
+            },
+            async uploadRequest(obj) {
+                let formData = new FormData();
+                formData.append('file', obj.file);
+                this.$service.uploadVideo({formData, fileName: this.form.name})
+                    .then((res) => {
+                        if (res && res.code === 0) {
+                        }
+                    }).finally(() => {
+                        this.isLoading = false;
+                    });
+            },
+            submitUpload() {
+
             }
         }
     };

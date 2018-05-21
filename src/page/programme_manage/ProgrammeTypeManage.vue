@@ -18,11 +18,12 @@
                 </el-tree>
             </el-col>
         </div>
+        <el-button type="primary" @click="_updateProgrammeCategory">保存</el-button>
     </div>
 </template>
-
 <script>
-  let id = 1000;
+import {mapActions} from 'vuex';
+let id = 1000;
 
   export default {
     data() {
@@ -71,29 +72,58 @@
         treeData: JSON.parse(JSON.stringify(data))
       };
     },
-
+    created() {
+        this.getProgrammeCategory();
+    },
     methods: {
-      append(data) {
-        this.$prompt('请输入新类型', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消'
-        }).then(({ value }) => {
-            const newChild = { id: id++, label: value, children: [] };
-            if (!data.children) {
-            this.$set(data, 'children', []);
-            }
-            data.children.push(newChild);
-            this.$message({
-                type: 'success',
-                message: `新类型${value}创建成功`
+        ...mapActions({
+            getProgrammeCategory: 'programme/getProgrammeCategory',
+            updateProgrammeCategory: 'programme/updateProgrammeCategory'
+        }),
+        _updateProgrammeCategory() {
+            let categoryObj = [
+                {
+                    name: '电影',
+                    visible: true,
+                    programmeTypeList: []
+                },
+                {
+                    name: '电视剧',
+                    visible: true,
+                    programmeTypeList: []
+                },
+                {
+                    name: '综艺',
+                    visible: true,
+                    programmeTypeList: []
+                }
+            ];
+
+            this.updateProgrammeCategory(categoryObj)
+                .then((res) => {
+                });
+        },
+        append(data) {
+            this.$prompt('请输入新类型', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消'
+            }).then(({ value }) => {
+                const newChild = { id: id++, label: value, children: [] };
+                if (!data.children) {
+                    this.$set(data, 'children', []);
+                }
+                data.children.push(newChild);
+                this.$message({
+                    type: 'success',
+                    message: `新类型${value}创建成功`
+                });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '取消输入'
+                });
             });
-        }).catch(() => {
-            this.$message({
-                type: 'info',
-                message: '取消输入'
-            });
-        });
-      },
+        },
       remove(node, data) {
         this.$confirm('此操作将永久删除该节目类型, 是否继续?', '提示', {
             confirmButtonText: '确定',

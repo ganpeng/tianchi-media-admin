@@ -1,7 +1,3 @@
-/**
- * @fileOverview Define the API functions of admin module
- */
-
 import service from '../config';
 import util from '../../util/extend';
 
@@ -37,7 +33,7 @@ export const updateProgrammeInfo = ({id, programme}) => {
 /**
  * 获取节目类型
  */
-export const createProgrammeCategory = () => {
+export const getProgrammeCategory = () => {
     return service.get(`/v1/content/programme-category`);
 };
 

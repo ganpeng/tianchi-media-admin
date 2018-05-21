@@ -27,8 +27,7 @@
                     filterable
                     clearable
                     placeholder="请选择地区"
-                    @change="areaChangeHandler"
-                    >
+                    @change="areaChangeHandler">
                     <el-option
                         v-for="item in areaOptions"
                         :key="item.value"
@@ -41,8 +40,6 @@
                 <el-tag>
                     <router-link to="/person-manage/create">新增人物</router-link>
                 </el-tag>
-                <el-tag>导入</el-tag>
-                <el-tag>导出</el-tag>
             </el-form-item>
         </el-form>
         <el-table :data="list" border style="width:100%">

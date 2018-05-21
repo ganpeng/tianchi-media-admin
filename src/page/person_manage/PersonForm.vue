@@ -91,6 +91,12 @@
                     <ul class="cover-list">
                         <li v-for="(img, index) in person.posterImageList" :key="index" class="img-item">
                             <img :src="img.uri" alt="">
+                            <div v-if="!readonly" class="delete-layer">
+                                <i
+                                    @click="_deletePosterImage(img.fileId)"
+                                    class="el-icon-delete">
+                                </i>
+                            </div>
                         </li>
                     </ul>
                 </el-form-item>
@@ -111,9 +117,17 @@
     </div>
 </template>
 <script>
+
+/**
+ *
+ * 图片上传的逻辑，每种尺寸的图片必须且只能传一张, 如果都传了就不现实长传图片的按钮，传过的图片的尺寸，不能在尺寸列表中显示该尺寸， 图片支持删除
+ *
+ */
+
 import {mapGetters, mapMutations} from 'vuex';
 import UploadImage from 'sysComponents/custom_components/global/UploadImage';
-import imageDimension from '@/util/config/image_dimension';
+import dimension from '@/util/config/dimension';
+import role from '@/util/config/role';
 
 export default {
     name: 'PersonForm',
@@ -160,31 +174,15 @@ export default {
             },
             imageUploadDialogVisible: false,
             areaOptions: this.$util.countryList(),
-            mainRoleoptions: [
-                {
-                    value: 'DIRECTOR',
-                    label: '导演'
-                },
-                {
-                    value: 'VICE_DIRECTOR',
-                    label: '副导演'
-                },
-                {
-                    value: 'CHIEF_ACTOR',
-                    label: '主演'
-                },
-                {
-                    value: 'ACTOR',
-                    label: '演员'
-                }
-            ],
-            size: imageDimension.PERSON_DIMENSION
+            mainRoleoptions: role.MAIN_ROLE_OPTIONS,
+            size: dimension.PERSON_DIMENSION
         };
     },
     methods: {
         ...mapMutations({
             updateCurrentPerson: 'person/updateCurrentPerson',
-            addPosterImage: 'person/addPosterImage'
+            addPosterImage: 'person/addPosterImage',
+            deletePosterImage: 'person/deletePosterImage'
         }),
         uploadImageHandler() {
             if (!this.readonly) {
@@ -196,6 +194,20 @@ export default {
         },
         inputHandler(value, haha) {
             this.updateCurrentPerson({[haha]: value});
+        },
+        _deletePosterImage(id) {
+            this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.deletePosterImage({id});
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
         }
     }
 };
@@ -208,17 +220,43 @@ export default {
     margin-top: 30px;
     overflow: hidden;
     li {
+        position: relative;
         float: left;
         margin-right: 30px;
+        min-width: 100px;
         height: 230px;
+        margin-bottom: 20px;
         img {
             display: block;
-            height: 180px;
+            height: 230px;
             cursor: zoom-in;
         }
         label {
             text-align: center;
             font-size: 16px;
+        }
+        .delete-layer {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+        }
+    }
+    li:hover {
+        .delete-layer {
+            display: block;
+            i {
+                position:absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                color: #fff;
+                cursor: pointer;
+                font-size: 2em;
+            }
         }
     }
 }

@@ -227,7 +227,7 @@
     import CreatePersonDialog from './CreatePersonDialog';
     import ProgrammeTable from './ProgrammeTable';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
-    import imageDimension from '@/util/config/image_dimension';
+    import dimension from '@/util/config/dimension';
 
     export default {
         name: 'ProgrammeDetail',
@@ -360,7 +360,7 @@
                         createdAt: '2018-04-05 9:00'
                     }
                 ],
-                size: imageDimension.PROGRAMME_DIMENSION
+                size: dimension.PROGRAMME_DIMENSION
             };
         },
         computed: {
@@ -411,7 +411,7 @@
                 this.updateCurrentProgramme({[haha]: value});
             },
             getPerson(name) {
-                setTimeout(() => {
+                if (!name) {
                     this.$service.findPerson({name})
                         .then((res) => {
                             if (res && res.code === 0) {
@@ -426,7 +426,7 @@
                                 this.updateCurrentProgramme({'leadActorResult': leadActorResult});
                             }
                         });
-                }, 1000);
+                }
             }
         }
     };

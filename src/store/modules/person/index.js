@@ -45,6 +45,9 @@ const getters = {
     },
     currentPerson(state) {
         return state.currentPerson;
+    },
+    posterImageList(state) {
+        return state.currentPerson && state.currentPerson.posterImageList;
     }
 };
 
@@ -85,6 +88,12 @@ const mutations = {
     },
     addPosterImage(state, payload) {
         state.currentPerson.posterImageList.push(payload.posterImage);
+    },
+    deletePosterImage(state, payload) {
+        let {posterImageList} = state.currentPerson;
+        state.currentPerson.posterImageList = posterImageList.filter((image) => {
+            return image.fileId !== payload.id;
+        });
     }
 };
 
