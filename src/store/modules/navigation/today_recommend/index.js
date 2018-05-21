@@ -29,7 +29,7 @@ const actions = {
         return new Promise((resolve) => {
             commit('setLiveChannelList', liveChannelList);
             // 保存信息到sessionStorage中
-            wsCache.sessionStorage.set('todayRecommend', {liveChannelList: liveChannelList});
+            wsCache.localStorage.set('todayRecommend', {liveChannelList: liveChannelList});
             resolve('success');
         });
     }
