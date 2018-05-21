@@ -265,9 +265,19 @@
             sortBlock() {
                 this.sortDialogVisible = true;
             },
-            // 点击发布
+            // 点击发布,设置直播频道
             publish() {
-
+                let liveChannelList = this.$store.state.todayRecommend.liveChannelList;
+                if (liveChannelList.length !== 0) {
+                    this.$service.setLiveChannelLayout(liveChannelList).then(response => {
+                        if (response) {
+                            this.$message({
+                                message: '直播频道设置成功',
+                                type: 'success'
+                            });
+                        }
+                    });
+                }
             }
         }
     };

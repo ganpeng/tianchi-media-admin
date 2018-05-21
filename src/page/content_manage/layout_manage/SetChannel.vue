@@ -21,13 +21,13 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="作用时间:">
-                <label>{{channelInfo.duration}}</label>
+                <label>全局</label>
             </el-form-item>
             <el-form-item label="状态:">
-                <label>{{channelInfo.status}}</label>
+                <label>正常</label>
             </el-form-item>
             <el-form-item class="operate">
-                <el-button type="primary" @click="updateChannel">更 新</el-button>
+                <el-button type="primary" @click="updateChannel">保 存</el-button>
                 <el-button @click="reset">重 置</el-button>
             </el-form-item>
         </el-form>
@@ -40,7 +40,7 @@
         name: 'SetChannel',
         data() {
             let checkChannel = (rule, value, callback) => {
-                if (!this.channelInfo.channel) {
+                if (!this.liveChannel) {
                     return callback(new Error('请选择直播频道'));
                 } else {
                     callback();
@@ -55,12 +55,10 @@
                     {id: 5, name: 'CCTV5', no: '00005'}
                 ],
                 channelInfo: {
-                    channel: '',
-                    duration: '全局',
-                    status: '运行'
+                    channel: ''
                 },
                 infoRules: {
-                    channel: [
+                    liveChannel: [
                         {validator: checkChannel, trigger: 'change'}
                     ]
                 }
@@ -71,15 +69,50 @@
         },
         methods: {
             init() {
+                // 优先使用本地数据
+                let liveChannelList = this.$store.state.todayRecommend.liveChannelList;
+                if (liveChannelList && liveChannelList.length !== 0) {
+                    this.channelInfo.channel = liveChannelList[0].liveChannelVo.id;
+                } else {
+                    // 请求线上数据
+                }
             },
             // 设置直播频道
             updateChannel() {
                 this.$refs['channelInfo'].validate((valid) => {
                     if (valid) {
+                        // 组合频道信息
+                        let liveChannelList = [
+                            {
+                                liveChannelType: 'LIVE_CHANNEL',
+                                liveChannelVo: this.getLiveChannel(this.channelInfo.channel),
+                                navBarId: this.$route.params.naviBarId,
+                                priority: 1,
+                                releaseStatus: 'RELEASED'
+                            }
+                        ];
+                        // 保存信息到store的today_recommended模块
+                        this.$store.dispatch('todayRecommend/setLiveChannels', liveChannelList).then(response => {
+                            if (response) {
+                                this.$message({
+                                    message: '保存频道信息成功',
+                                    type: 'success'
+                                });
+                            } else {
+                                this.$message.error('保存信息失败');
+                            }
+                        });
                     } else {
                         return false;
                     }
                 });
+            },
+            getLiveChannel(id) {
+                for (let i = 0; i < this.channelOptions.length; i++) {
+                    if (this.channelOptions[i].id === id) {
+                        return this.channelOptions[i];
+                    }
+                }
             },
             // 重置表单
             reset() {

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import store from '../store';
-import Cookies from 'js-cookie';
+import './reload';
 import Login from 'sysPage/login/Login';
 import RetrievePassword from 'sysPage/retrieve_password/RetrievePassword';
 import Layout from 'sysPage/layout/Layout';
@@ -58,16 +58,6 @@ Vue.use(Router);
 
 // 定义不需要token与权限的页面名称集合
 const whitePagesList = ['Login', 'RetrievePassword'];
-
-// 刷新页面时，保存Cookie信息到store中
-if (Cookies.get('token')) {
-    store.dispatch('user/reLogin',
-        {
-            uid: Cookies.get('uid'),
-            name: Cookies.get('name'),
-            token: Cookies.get('token')
-        });
-}
 
 // 定义路由
 let router = new Router({
