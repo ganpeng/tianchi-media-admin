@@ -15,7 +15,7 @@ import AdminDetail from 'sysPage/admin_manage/AdminDetail';
 import EditAdmin from 'sysPage/admin_manage/EditAdmin';
 import ErrorLayout from 'sysPage/error/ErrorLayout';
 import ErrorNotFound from 'sysPage/error/404';
-import NaviBarSetting from 'sysPage/content_manage/nav_bar_manage/NaviBarSetting';
+import NavBarSetting from 'sysPage/content_manage/nav_bar_manage/NavBarSetting';
 import TodayRecommended from 'sysPage/content_manage/nav_bar_manage/TodayRecommended';
 import PersonList from 'sysPage/person_manage/PersonList';
 import CreatePerson from 'sysPage/person_manage/CreatePerson';
@@ -133,8 +133,8 @@ let router = new Router({
                 // 内容管理-栏目管理-栏目项设置
                 {
                     path: '/nav-bar-manage/setting',
-                    name: 'NaviBarSetting',
-                    component: NaviBarSetting
+                    name: 'NavBarSetting',
+                    component: NavBarSetting
                 },
                 // 内容管理-栏目管理-今日推荐设置
                 {
@@ -142,9 +142,9 @@ let router = new Router({
                     name: 'TodayRecommended',
                     component: TodayRecommended
                 },
-                // 内容管理-栏目管理-直播频道设置(根据naviBarId设置对应的直播频道)
+                // 内容管理-栏目管理-直播频道设置(根据navBarId设置对应的直播频道)
                 {
-                    path: '/layout-manage/channel/:naviBarId',
+                    path: '/layout-manage/channel/:navBarId',
                     name: 'SetChannel',
                     component: SetChannel
                 },

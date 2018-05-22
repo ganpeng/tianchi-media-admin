@@ -8,13 +8,12 @@ import wsCache from '@/util/webStorage';
 
 if (Cookies.get('token') && !store.state.user.token) {
     // 设置cookie中的系统用户信息
-    store.dispatch('user/reLogin',
-        {
-            name: Cookies.get('name'),
-            token: Cookies.get('token')
-        });
+    store.dispatch('user/reLogin', {
+        name: Cookies.get('name'),
+        token: Cookies.get('token')
+    });
     // 设置sessionStorage中的系统信息
     if (wsCache.localStorage.get('todayRecommend')) {
-        store.dispatch('todayRecommend/setStateForAll', wsCache.localStorage.get('todayRecommend').liveChannelList);
+        store.dispatch('todayRecommend/setLiveChannelList', wsCache.localStorage.get('todayRecommend').liveChannelList);
     }
 }

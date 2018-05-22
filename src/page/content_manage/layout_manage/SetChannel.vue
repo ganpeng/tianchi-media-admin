@@ -48,11 +48,11 @@
             };
             return {
                 channelOptions: [
-                    {id: 1, name: 'CCTV1', no: '00001'},
-                    {id: 2, name: 'CCTV2', no: '00002'},
-                    {id: 3, name: 'CCTV3', no: '00003'},
-                    {id: 4, name: 'CCTV4', no: '00004'},
-                    {id: 5, name: 'CCTV5', no: '00005'}
+                    {id: '1', name: 'CCTV1', no: '00001'},
+                    {id: '2', name: 'CCTV2', no: '00002'},
+                    {id: '3', name: 'CCTV3', no: '00003'},
+                    {id: '4', name: 'CCTV4', no: '00004'},
+                    {id: '5', name: 'CCTV5', no: '00005'}
                 ],
                 channelInfo: {
                     channel: ''
@@ -72,9 +72,19 @@
                 // 优先使用本地数据
                 let liveChannelList = this.$store.state.todayRecommend.liveChannelList;
                 if (liveChannelList && liveChannelList.length !== 0) {
-                    this.channelInfo.channel = liveChannelList[0].liveChannelVo.id;
+                    this.channelInfo.channel = liveChannelList[0].liveChannel.id;
                 } else {
                     // 请求线上数据
+                    this.$service.getLiveChannelLayoutList({
+                        navBarId: parseInt(this.$route.params.navBarId),
+                        releaseStatus: 'RELEASED',
+                        pageNum: 1,
+                        pageSize: 10
+                    }).then(response => {
+                        if (response) {
+                            this.channelInfo.channel = response.data.list[0].liveChannel.id;
+                        }
+                    });
                 }
             },
             // 设置直播频道
@@ -85,14 +95,14 @@
                         let liveChannelList = [
                             {
                                 liveChannelType: 'LIVE_CHANNEL',
-                                liveChannelVo: this.getLiveChannel(this.channelInfo.channel),
-                                navBarId: this.$route.params.naviBarId,
+                                liveChannel: this.getLiveChannel(this.channelInfo.channel),
+                                navBarId: this.$route.params.navBarId,
                                 priority: 1,
                                 releaseStatus: 'RELEASED'
                             }
                         ];
                         // 保存信息到store的today_recommended模块
-                        this.$store.dispatch('todayRecommend/setLiveChannels', liveChannelList).then(response => {
+                        this.$store.dispatch('todayRecommend/setLiveChannelList', liveChannelList).then(response => {
                             if (response) {
                                 this.$message({
                                     message: '保存频道信息成功',

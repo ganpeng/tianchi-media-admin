@@ -10,16 +10,16 @@
         <el-row>
             <div class="block-title">现有栏目及排序</div>
             <el-tag type="success">固定栏目</el-tag>
-            <ul class="fixed">
-                <li v-for="(item,index) in fixedColumn" v-bind:key="index">
+            <ul class="system">
+                <li v-for="(item,index) in systemNavBarList" v-bind:key="index">
                     <el-card class="box-card" :body-style="elCardBodyStyle">
                         <label>{{item.name}}</label>
                     </el-card>
                 </li>
             </ul>
             <el-tag type="success">可调整栏目</el-tag>
-            <ul class="flexible" id="flexible">
-                <li v-for="(item,index) in flexibleColumn" v-bind:key="index"
+            <ul class="custom" id="custom">
+                <li v-for="(item,index) in customNavBarList" v-bind:key="index"
                     :class="{'disabled-column':!item.visible}">
                     <el-card class="box-card" :body-style="elCardBodyStyle">
                         <label>{{item.name}}</label>
@@ -27,7 +27,7 @@
                             active-text="显示"
                             inactive-text="隐藏"
                             v-model="item.visible"
-                            :active-color="activeColor"
+                            active-color="#13ce66"
                             @change="switchDisplay">
                         </el-switch>
                     </el-card>
@@ -35,18 +35,18 @@
             </ul>
             <el-tag type="success">栏目项预览</el-tag>
             <ul class="preview" id="preview">
-                <li v-for="(item,index) in previewColumn" v-bind:key="index">
+                <li v-for="(item,index) in previewNavBarList" :class="{ active: item.visible }" :key="index">
                     <el-tag>{{item.name}}</el-tag>
                 </li>
             </ul>
-            <el-button type="primary" @click="prePublish">预发布</el-button>
+            <el-button type="primary" @click="publish">发布</el-button>
         </el-row>
     </div>
 </template>
 
 <script>
     export default {
-        name: 'NaviBarSetting',
+        name: 'NavBarSetting',
         data() {
             return {
                 elCardBodyStyle: {
@@ -57,25 +57,9 @@
                     'height': '100%',
                     'width': '100%'
                 },
-                activeColor: '#13ce66',
-                fixedColumn: [
-                    {name: '搜索'},
-                    {name: '我的'},
-                    {name: '今日推荐'},
-                    {name: '直播'}
-                ],
-                flexibleColumn: [
-                    {name: '电视剧', visible: true},
-                    {name: '电影', visible: true},
-                    {name: '娱乐', visible: true},
-                    {name: '网视专区', visible: true},
-                    {name: '佳家易购', visible: true},
-                    {name: '新闻', visible: true},
-                    {name: '儿童', visible: true},
-                    {name: '体育', visible: true},
-                    {name: '纪实', visible: true}
-                ],
-                previewColumn: []
+                systemNavBarList: [],
+                customNavBarList: [],
+                previewNavBarList: []
             };
         },
         mounted() {
@@ -83,19 +67,19 @@
         },
         methods: {
             init() {
-                this.$service.getNaviBarList().then(response => {
+                let that = this;
+                this.$service.getNavBarList().then(response => {
                     if (response) {
-                        // 初始化数据
+                        this.previewNavBarList = response.data;
+                        this.systemNavBarList = this.previewNavBarList.slice(0, 3);
+                        this.customNavBarList = this.previewNavBarList.slice(3);
                     }
                 });
-                let that = this;
-                // 初始化栏目项预览
-                this.previewColumn = this.fixedColumn.concat(this.flexibleColumn);
                 // 拖拽设置
-                this.$dragula([document.getElementById('flexible')], {
+                this.$dragula([document.getElementById('custom')], {
                     // 设置隐藏栏目不可以拖动
                     moves: function (el) {
-                        return !el.classList.contains('disabled-column');
+                        return !el.classList.contains('disabled-nav-bar');
                     },
                     direction: 'horizontal'
                 }).on('drop', function () {
@@ -110,15 +94,28 @@
             },
             // 预览栏目调整情况
             preview() {
-                let nodes = this.$el.querySelectorAll('#flexible li:not(.disabled-column)');
+                let nodes = this.$el.querySelectorAll('#custom li');
                 let array = [];
                 for (let i = 0; i < nodes.length; i++) {
-                    array.push({name: nodes[i].querySelector('label').innerText});
+                    for (let k = 0; k < this.customNavBarList.length; k++) {
+                        if (nodes[i].querySelector('label').innerText === this.customNavBarList[k].name) {
+                            this.customNavBarList[k].sort = i + 3;
+                            array.push(this.customNavBarList[k]);
+                        }
+                    }
                 }
-                this.previewColumn = this.fixedColumn.concat(array);
+                this.previewNavBarList = this.systemNavBarList.concat(array);
             },
-            // 预发布
-            prePublish() {
+            // 发布
+            publish() {
+                this.$service.setNavBarList(this.previewNavBarList).then(response => {
+                    if (response) {
+                        this.$message({
+                            message: '导航栏设置成功',
+                            type: 'success'
+                        });
+                    }
+                });
             }
         }
     };
@@ -130,7 +127,7 @@
     .el-row {
         text-align: left;
         /*固定栏目*/
-        ul.fixed {
+        ul.system {
             display: flex;
             justify-content: space-around;
             li {
@@ -144,7 +141,7 @@
             }
         }
         /*可调整栏目*/
-        .flexible {
+        .custom {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -158,7 +155,7 @@
                     color: #13ce66;
                     cursor: grab;
                 }
-                &.disabled-column {
+                &.disabled-nav-bar {
                     border: 1px dotted gray;
                     label {
                         color: gray;
@@ -171,7 +168,11 @@
             display: flex;
             justify-content: flex-start;
             li {
+                display: none;
                 margin-right: 20px;
+                &.active {
+                    display: inline-block;
+                }
             }
         }
         .el-tag {

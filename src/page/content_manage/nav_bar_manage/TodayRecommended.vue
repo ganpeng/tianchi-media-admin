@@ -227,7 +227,7 @@
         name: 'TodayRecommended',
         data() {
             return {
-                naviBarId: 0,
+                naviBarId: 1,
                 sortDialogVisible: false
             };
         },
@@ -239,7 +239,7 @@
             },
             // 设置直播频道
             setChannel() {
-                this.$router.push({name: 'SetChannel', params: {naviBarId: this.naviBarId}});
+                this.$router.push({name: 'SetChannel', params: {navBarId: this.naviBarId}});
             },
             // 跳转到广告组列表页面
             toAdGroup() {
@@ -271,6 +271,7 @@
                 if (liveChannelList.length !== 0) {
                     this.$service.setLiveChannelLayout(liveChannelList).then(response => {
                         if (response) {
+                            this.$wsCache.localStorage.remove('todayRecommend');
                             this.$message({
                                 message: '直播频道设置成功',
                                 type: 'success'

@@ -9,10 +9,6 @@ const state = {
 const getters = {};
 
 const mutations = {
-    // state的全量更新
-    setStateForAll(state, data) {
-        state.liveChannelList = data;
-    },
     // 设置直播频道列表
     setLiveChannelList(state, data) {
         state.liveChannelList = data;
@@ -20,12 +16,8 @@ const mutations = {
 };
 
 const actions = {
-    // state的全量更新
-    setStateForAll({commit}, todayRecommendData) {
-        commit('setStateForAll', todayRecommendData);
-    },
     // 设置直播频道
-    setLiveChannels({commit}, liveChannelList) {
+    setLiveChannelList({commit}, liveChannelList) {
         return new Promise((resolve) => {
             commit('setLiveChannelList', liveChannelList);
             // 保存信息到sessionStorage中
