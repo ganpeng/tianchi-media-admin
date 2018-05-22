@@ -125,6 +125,36 @@ const mutations = {
     },
     setCategroyList(state, payload) {
         state.categoryList = payload.list ? payload.list : [];
+    },
+    deleteProgrammeCategory(state, payload) {
+        let {node, data} = payload;
+        let parentId = node.parent.data.id;
+        let childrenId = data.id;
+        state.categoryList = state.categoryList.map((category) => {
+            if (category.id === parentId) {
+                category.programmeTypeList = category.programmeTypeList.filter((item) => item.id !== childrenId);
+                return category;
+            } else {
+                return category;
+            }
+        });
+    },
+    addProgrammeCategory(state, payload) {
+        let {name, data: {id}} = payload;
+        state.categoryList = state.categoryList.map((category) => {
+            if (category.id === id) {
+                let obj = {
+                    id: _.uniqueId('category_'),
+                    name,
+                    visible: true
+                };
+                category.programmeTypeList = category.programmeTypeList || [];
+                category.programmeTypeList.push(obj);
+                return category;
+            } else {
+                return category;
+            }
+        });
     }
 };
 
@@ -134,7 +164,6 @@ function formatProgrammeData(programmeData) {
         copyrightStartedAt: programmeData.copyrightRange[0],
         // 版权结束日期
         copyrightEndedAt: programmeData.copyrightRange[1],
-
         tagList: [],
         typeList: []
     });
@@ -184,15 +213,22 @@ const actions = {
             .then((res) => {
                 if (res && res.code === 0) {
                     commit('setCategroyList', {list: res.data});
-                    return res;
                 }
             });
     },
-    updateProgrammeCategory({commit, state}, categoryObj) {
-        return service.updateProgrammeCategory({categoryObj})
+    updateProgrammeCategory({commit, state}) {
+        let categoryList = JSON.parse(JSON.stringify(state.categoryList));
+        categoryList.forEach((item) => {
+            item.programmeTypeList.forEach((innerItem) => {
+                if (/^category_/.test(innerItem.id)) {
+                    delete innerItem.id;
+                }
+            });
+        });
+        service.updateProgrammeCategory({categoryList})
             .then((res) => {
                 if (res && res.code === 0) {
-                    return res;
+                    commit('setCategroyList', {list: res.data});
                 }
             });
     }

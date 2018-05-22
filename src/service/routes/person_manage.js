@@ -16,11 +16,8 @@ export const createPerson = (person) => {
  * 获取人物列表
  */
 export const getPersonList = ({pageNum, pageSize, name, area}) => {
-    return service.get(util.format('/v1/content/figure/list?pageNum={0}&pageSize={1}', pageNum, pageSize), {
-        params: {
-            name: name,
-            area: area
-        }
+    return service.get('/v1/content/figure/page', {
+        params: { pageNum, pageSize, name, area }
     });
 };
 
@@ -39,7 +36,7 @@ export const updatePersonInfo = ({id, person}) => {
 };
 
 export const findPerson = ({name}) => {
-    return service.get('/v1/content/figure/list', {
+    return service.get('/v1/content/figure/page', {
         params: { name }
     });
 };

@@ -120,7 +120,7 @@
         },
         created() {
             this.resetPerson();
-            this.getPersonList();
+            this.getPersonList({isProgramme: false});
         },
         computed: {
             ...mapGetters({

@@ -1,5 +1,4 @@
 import service from '../config';
-import util from '../../util/extend';
 
 /**
  * 新增节目
@@ -12,7 +11,7 @@ export const createProgramme = (programme) => {
  * 获取节目列表
  */
 export const getProgrammeList = ({pageNum, pageSize}) => {
-    return service.get(util.format('/v1/content/programme/list?pageNum={0}&pageSize={1}', pageNum, pageSize));
+    return service.get('/v1/content/programme/page', { params: { pageNum, pageSize } });
 };
 
 /**
@@ -40,6 +39,6 @@ export const getProgrammeCategory = () => {
 /**
  * 更新节目类型
  */
-export const updateProgrammeCategory = ({categoryObj}) => {
-    return service.put(`/v1/content/programme-category`, categoryObj);
+export const updateProgrammeCategory = ({categoryList}) => {
+    return service.put(`/v1/content/programme-category`, categoryList);
 };

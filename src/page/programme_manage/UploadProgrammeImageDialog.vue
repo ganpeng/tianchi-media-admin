@@ -148,7 +148,6 @@
                             obj.height = img.height;
                             obj.width = img.width;
                             obj.uri = data.url;
-                            console.log(obj);
                             this.cancelHandler();
                         }).finally(() => {
                             this.isLoading = false;

@@ -106,38 +106,57 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="节目主演" prop="leadActor">
-                            <el-select
+                            <multiselect
+                                id="lead"
+                                class="multiselect-container"
                                 :value="programme.leadActor"
-                                multiple
-                                filterable
-                                remote
-                                placeholder="请选择"
-                                @change="inputHandler($event, 'leadActor')"
-                                :remote-method="getPerson"
-                            >
-                                <el-option
-                                    v-for="item in programme.leadActorResult"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
+                                label="name"
+                                track-by="name"
+                                placeholder=""
+                                :options="programme.leadActorResult"
+                                :multiple="true"
+                                :searchable="true"
+                                :loading="isLoading"
+                                :close-on-select="true"
+                                :max-height="600"
+                                open-direction="bottom"
+                                :show-no-results="true"
+                                :hideSelected="true"
+                                @input="updateLeadActorValue"
+                                @search-change="findLeadActor">
+                                <template slot="tag" slot-scope="props">
+                                    <span> {{ props.option.name}} </span>
+                                    <span class="custom__remove" @click="props.remove(props.option)"><i class="el-icon-close"></i></span>
+                                </template>
+                                <span slot="noResult">您搜索的人物不存在</span>
+                            </multiselect>
                             <el-button type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                         </el-form-item>
                         <el-form-item label="节目导演" prop="director">
-                            <el-select
+                            <multiselect
+                                id="director"
+                                class="multiselect-container"
                                 :value="programme.director"
-                                multiple
-                                placeholder="请选择"
-                                @change="inputHandler($event, 'director')"
-                            >
-                                <el-option
-                                    v-for="item in directorOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
+                                label="name"
+                                track-by="name"
+                                placeholder=""
+                                :options="programme.directorResult"
+                                :multiple="true"
+                                :searchable="true"
+                                :loading="isLoading"
+                                :close-on-select="true"
+                                :max-height="600"
+                                open-direction="bottom"
+                                :show-no-results="true"
+                                :hideSelected="true"
+                                @input="updateDirectorValue"
+                                @search-change="findDirector">
+                                <template slot="tag" slot-scope="props">
+                                    <span> {{ props.option.name}} </span>
+                                    <span class="custom__remove" @click="props.remove(props.option)"><i class="el-icon-close"></i></span>
+                                </template>
+                                <span slot="noResult">您搜索的人物不存在</span>
+                            </multiselect>
                             <el-button type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                         </el-form-item>
                         <el-form-item label="版权起始日期" prop="copyrightRange">
@@ -223,6 +242,7 @@
     </div>
 </template>
 <script>
+    import Multiselect from 'vue-multiselect';
     import { mapMutations, mapGetters, mapActions } from 'vuex';
     import CreatePersonDialog from './CreatePersonDialog';
     import ProgrammeTable from './ProgrammeTable';
@@ -232,6 +252,7 @@
     export default {
         name: 'ProgrammeDetail',
         components: {
+            Multiselect,
             UploadImage,
             CreatePersonDialog,
             ProgrammeTable
@@ -246,6 +267,9 @@
         },
         data() {
             return {
+                selectedCountries: [],
+                countries: [],
+                isLoading: false,
                 imageUploadDialogVisible: false,
                 dialogVisible: false,
                 videoUploadDialogVisible: false,
@@ -377,7 +401,8 @@
             }),
             ...mapActions({
                 createProgramme: 'programme/createProgramme',
-                updateProgramme: 'programme/updateProgramme'
+                updateProgramme: 'programme/updateProgramme',
+                getPersonList: 'person/getPersonList'
             }),
             _createProgramme() {
                 this.createProgramme();
@@ -410,26 +435,44 @@
             inputHandler(value, haha) {
                 this.updateCurrentProgramme({[haha]: value});
             },
-            getPerson(name) {
-                if (!name) {
-                    this.$service.findPerson({name})
+            findDirector(name) {
+                if (name) {
+                    this.isLoading = true;
+                    this.getPersonList({name, isProgramme: true})
                         .then((res) => {
-                            if (res && res.code === 0) {
-                                // leadActorResult
-                                let list = res.data.list === null ? [] : res.data.list;
-                                let leadActorResult = list.map((person) => {
-                                    return {
-                                        value: person.id,
-                                        label: person.name
-                                    };
-                                });
-                                this.updateCurrentProgramme({'leadActorResult': leadActorResult});
-                            }
+                            this.updateCurrentProgramme({'directorResult': res.data.list});
+                        }).finally(() => {
+                            this.isLoading = false;
+                        });
+                }
+            },
+            updateDirectorValue(value) {
+                this.updateCurrentProgramme({'director': value});
+            },
+            updateLeadActorValue(value) {
+                this.updateCurrentProgramme({'leadActor': value});
+            },
+            findLeadActor() {
+                if (name) {
+                    this.isLoading = true;
+                    this.getPersonList({name, isProgramme: true})
+                        .then((res) => {
+                            this.updateCurrentProgramme({'leadActorResult': res.data.list});
+                        }).finally(() => {
+                            this.isLoading = false;
                         });
                 }
             }
         }
     };
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style lang="less" scoped>
+.multiselect-container {
+    width: 194px;
+    display: inline-block;
+}
+.multiselect__tags {
+    padding: 0!important;
+}
 </style>
