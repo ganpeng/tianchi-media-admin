@@ -60,35 +60,48 @@
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="节目分类" prop="programmeCategory">
-                            <el-select
-                                :value="programme.programmeCategory"
-                                placeholder="请选择"
-                                @input="inputHandler($event, 'programmeCategory')"
-                            >
-                                <el-option
-                                    v-for="item in programOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
+                        <el-form-item label="节目分类" prop="category">
+                            <multiselect
+                                id="category"
+                                class="multiselect-container"
+                                :value="programme.category"
+                                label="name"
+                                track-by="name"
+                                placeholder=""
+                                :options="categroyList"
+                                :close-on-select="true"
+                                open-direction="bottom"
+                                :hideSelected="true"
+                                selectLabel=""
+                                @input="updateCategoryValue">
+                                <template slot="tag" slot-scope="props">
+                                    <span> {{ props.option.name}} </span>
+                                    <span class="custom__remove" @click="props.remove(props.option)"><i class="el-icon-close"></i></span>
+                                </template>
+                            </multiselect>
                             <el-button type="primary" @click="gotoProgramTypePage" plain>管理分类和类型</el-button>
                         </el-form-item>
                         <el-form-item label="节目类型" prop="typeList">
-                            <el-select
+                            <multiselect
+                                id="category"
+                                class="multiselect-container"
                                 :value="programme.typeList"
-                                multiple
-                                placeholder="请选择"
-                                @change="inputHandler($event, 'typeList')"
-                            >
-                                <el-option
-                                    v-for="item in typeOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
+                                label="name"
+                                track-by="name"
+                                placeholder=""
+                                :options="programme.currentTypeList"
+                                :close-on-select="true"
+                                :multiple="true"
+                                open-direction="bottom"
+                                :preselect-first="true"
+                                :hideSelected="true"
+                                selectLabel=""
+                                @input="updateTypeListValue">
+                                <template slot="tag" slot-scope="props">
+                                    <span> {{ props.option.name}} </span>
+                                    <span class="custom__remove" @click="props.remove(props.option)"><i class="el-icon-close"></i></span>
+                                </template>
+                            </multiselect>
                         </el-form-item>
                         <el-form-item label="关键字" prop="tagList">
                             <el-select
@@ -106,6 +119,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="节目主演" prop="leadActor">
+                            <label for="leadActor"></label>
                             <multiselect
                                 id="lead"
                                 class="multiselect-container"
@@ -122,6 +136,7 @@
                                 open-direction="bottom"
                                 :show-no-results="true"
                                 :hideSelected="true"
+                                selectLabel=""
                                 @input="updateLeadActorValue"
                                 @search-change="findLeadActor">
                                 <template slot="tag" slot-scope="props">
@@ -133,6 +148,7 @@
                             <el-button type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                         </el-form-item>
                         <el-form-item label="节目导演" prop="director">
+                            <label for="director"></label>
                             <multiselect
                                 id="director"
                                 class="multiselect-container"
@@ -149,6 +165,7 @@
                                 open-direction="bottom"
                                 :show-no-results="true"
                                 :hideSelected="true"
+                                selectLabel=""
                                 @input="updateDirectorValue"
                                 @search-change="findDirector">
                                 <template slot="tag" slot-scope="props">
@@ -264,6 +281,7 @@
         },
         created() {
             this.resetProgramme();
+            this.getProgrammeCategory();
         },
         data() {
             return {
@@ -333,12 +351,20 @@
                 ],
                 keyWordsOptions: [
                     {
-                        value: 'js',
-                        label: 'js'
+                        value: '好看',
+                        label: '好看'
                     },
                     {
-                        value: 'css',
-                        label: 'css'
+                        value: '精彩',
+                        label: '精彩'
+                    },
+                    {
+                        value: '不错',
+                        label: '不错'
+                    },
+                    {
+                        value: '非常好',
+                        label: '非常好'
                     }
                 ],
                 copyRightDealerOptions: [
@@ -389,7 +415,8 @@
         },
         computed: {
             ...mapGetters({
-                programme: 'programme/currentProgramme'
+                programme: 'programme/currentProgramme',
+                categroyList: 'programme/categroyList'
             })
         },
         methods: {
@@ -402,7 +429,8 @@
             ...mapActions({
                 createProgramme: 'programme/createProgramme',
                 updateProgramme: 'programme/updateProgramme',
-                getPersonList: 'person/getPersonList'
+                getPersonList: 'person/getPersonList',
+                getProgrammeCategory: 'programme/getProgrammeCategory'
             }),
             _createProgramme() {
                 this.createProgramme();
@@ -452,7 +480,16 @@
             updateLeadActorValue(value) {
                 this.updateCurrentProgramme({'leadActor': value});
             },
-            findLeadActor() {
+            updateCategoryValue(value) {
+                this.updateCurrentProgramme({'category': value});
+                let currentTypeList = this.categroyList.find((category) => category.id === value.id).programmeTypeList;
+                this.updateCurrentProgramme({currentTypeList});
+                this.updateCurrentProgramme({'typeList': []});
+            },
+            updateTypeListValue(value) {
+                this.updateCurrentProgramme({'typeList': value});
+            },
+            findLeadActor(name) {
                 if (name) {
                     this.isLoading = true;
                     this.getPersonList({name, isProgramme: true})
@@ -472,7 +509,18 @@
     width: 194px;
     display: inline-block;
 }
+</style>
+<style>
 .multiselect__tags {
-    padding: 0!important;
+    padding: 0 0 0 5px!important;
+}
+.multiselect__input, .multiselect__single {
+    line-height: 40px;
+}
+.multiselect__option--highlight {
+    background: gray;
+}
+.multiselect__input, .multiselect__single {
+    margin-bottom: 0;
 }
 </style>

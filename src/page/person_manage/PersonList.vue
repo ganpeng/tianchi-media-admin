@@ -93,29 +93,13 @@
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
+    import role from '@/util/config/role';
     export default {
         name: 'PersonList',
         data() {
             return {
                 areaOptions: this.$util.countryList(),
-                mainRoleOptions: [
-                    {
-                        value: 'DIRECTOR',
-                        label: '导演'
-                    },
-                    {
-                        value: 'VICE_DIRECTOR',
-                        label: '副导演'
-                    },
-                    {
-                        value: 'CHIEF_ACTOR',
-                        label: '主演'
-                    },
-                    {
-                        value: 'ACTOR',
-                        label: '演员'
-                    }
-                ]
+                mainRoleOptions: role.MAIN_ROLE_OPTIONS
             };
         },
         created() {
@@ -157,15 +141,15 @@
             },
             handleSizeChange(pageSize) {
                 this.setPagination({pageSize});
-                this.getPersonList();
+                this.getPersonList({isProgramme: false});
             },
             handleCurrentChange(pageNum) {
                 this.setPagination({pageNum});
-                this.getPersonList();
+                this.getPersonList({isProgramme: false});
             },
             areaChangeHandler(value) {
                 this.setArea({area: value});
-                this.getPersonList();
+                this.getPersonList({isProgramme: false});
             },
             inputChangeHandler(searchStr) {
                 this.setSearchStr({searchStr});

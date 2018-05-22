@@ -22,9 +22,9 @@ const defaultProgramme = {
     // 发布地区
     releaseArea: '',
     // 节目发布状态
-    releaseStatus: '',
+    // releaseStatus: 'RELEASED',
     // 节目分类
-    programmeCategory: '',
+    category: {},
     // 发行商
     businessOperator: '',
     // 正片数量
@@ -42,8 +42,6 @@ const defaultProgramme = {
     // 节目类型
     typeList: [],
     // 下面是自定义的前端数据结构，不是服务端返回的
-    // 后续会去掉的节目类型
-    programmeType: '',
     // 主演
     leadActor: [],
     // 主演搜索结果
@@ -53,7 +51,9 @@ const defaultProgramme = {
     // 导演搜索结果
     directorResult: [],
     // 版权起止日期
-    copyrightRange: ''
+    copyrightRange: '',
+    // 当前选中的节目分类下的类型
+    currentTypeList: []
 };
 
 const state = {
@@ -61,7 +61,7 @@ const state = {
     releaseStatus: '',
     releaseAt: '',
     releaseArea: '',
-    programmeCategory: '',
+    category: {},
     programmeType: '',
     currentProgramme: {},
     list: [],
@@ -164,8 +164,20 @@ function formatProgrammeData(programmeData) {
         copyrightStartedAt: programmeData.copyrightRange[0],
         // 版权结束日期
         copyrightEndedAt: programmeData.copyrightRange[1],
-        tagList: [],
-        typeList: []
+        // 人物
+        figureList: [].concat(programmeData.leadActor.map((item) => {
+            let obj = {};
+            obj.role = 'DIRECTOR';
+            obj.id = item.id;
+            obj.name = item.name;
+            return obj;
+        })).concat(programmeData.director.map((item) => {
+            let obj = {};
+            obj.role = 'CHIEF_ACTOR';
+            obj.id = item.id;
+            obj.name = item.name;
+            return obj;
+        }))
     });
 }
 

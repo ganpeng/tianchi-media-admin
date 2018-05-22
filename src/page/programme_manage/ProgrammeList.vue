@@ -26,8 +26,6 @@
                     <el-tag>
                         <router-link to="/programme-manage/create">新增节目</router-link>
                     </el-tag>
-                    <el-tag>导入</el-tag>
-                    <el-tag>导出</el-tag>
                 </el-form-item>
             </el-form>
             <el-form :inline="true" class="demo-form-inline">
