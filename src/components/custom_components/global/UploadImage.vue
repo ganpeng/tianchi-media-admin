@@ -21,13 +21,13 @@
             <el-form-item label="图片名称" prop="name">
                 <el-input v-model="form.name" auto-complete="off" placeholder="请输入图片名称"></el-input>
             </el-form-item>
-            <el-form-item label="上传图片" prop="imageFiles">
+            <el-form-item ref="uploadItem" label="上传图片" prop="file">
                 <el-col :span="10">
                     <el-upload
                         class="upload-demo"
                         ref="upload"
                         action="/admin/v1/media/image"
-                        v-model="form.imageFiles"
+                        :on-change="fileChangeHandler"
                         :auto-upload="false"
                         :http-request="uploadRequest"
                         :show-file-list="false"
@@ -37,7 +37,7 @@
                 </el-col>
             </el-form-item>
             <el-form-item label="图片大小">
-                <el-input v-model="form.size" readonly></el-input>
+                <el-input :value="convertFileSize" readonly></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -73,24 +73,51 @@
             return {
                 form: {
                     name: '',
-                    size: '5M',
+                    size: '',
                     spec: '',
-                    imageFiles: []
+                    file: null
                 },
                 isLoading: false,
                 isChecked: false,
                 posterImageList: [],
                 imageUploadRules: {
                     name: [ { required: true, message: '请输入图片名称', trigger: 'change' } ],
-                    spec: [ { required: true, message: '请选择图片规格尺寸', trigger: 'change' } ]
-                },
-                imageSizeDialogVisible: false
+                    spec: [ { required: true, message: '请选择图片规格尺寸', trigger: 'change' } ],
+                    file: [ { required: true, message: '请选择图片', trigger: 'change' } ]
+                }
             };
+        },
+        computed: {
+            convertFileSize() {
+                let kb = 1024;
+                let mb = kb * 1024;
+                let gb = mb * 1024;
+                let {size} = this.form;
+                if (!size) {
+                    return '';
+                }
+                if (size >= gb) {
+                    return Math.round(size / gb) + 'Gb';
+                } else if (size >= mb) {
+                    let f = size / mb;
+                    return Math.round(f) + 'Mb';
+                } else if (size >= kb) {
+                    let f = size / kb;
+                    return Math.round(f) + 'Kb';
+                } else {
+                    return size + 'Byte';
+                }
+            }
         },
         methods: {
             ...mapMutations({
                 addPosterImage: 'person/addPosterImage'
             }),
+            fileChangeHandler(file, fileList) {
+                this.form.file = file;
+                this.form.size = file.size;
+                this.$refs.uploadItem.clearValidate();
+            },
             cancelHandler() {
                 this.$emit('changeImageDialogStatus', false);
                 this.$refs.uploadImageForm.resetFields();
@@ -144,6 +171,7 @@
                 if (!checkedStatus) {
                     let formData = new FormData();
                     formData.append('file', obj.file);
+                    this.isLoading = true;
                     this.$service.uploadImage({formData, fileName: this.form.name})
                         .then((res) => {
                             if (res && res.code === 0) {
@@ -155,18 +183,21 @@
                                 obj.uri = data.url;
                                 this.successHandler({posterImage: obj});
                                 this.cancelHandler();
+                            } else if (res && res.code === 3300) {
+                                this.$refs.uploadImageForm.resetFields();
                             }
                         }).finally(() => {
                             this.isLoading = false;
                         });
                 } else {
-                     this.$message.error('选择的图片与选择的图片尺寸不一致，请重新选择图片');
+                    this.$message.error('选择的图片与选择的图片尺寸不一致，请重新选择图片');
+                    this.$refs.upload.clearFiles();
+                    this.$refs.uploadImageForm.resetFields();
                 }
             },
             submitUpload() {
                 this.$refs.uploadImageForm.validate(value => {
                     if (value) {
-                        this.isLoading = true;
                         this.$refs.upload.submit();
                     } else {
                         return false;

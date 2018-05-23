@@ -1,20 +1,29 @@
 <!-- 上传节目视频的弹窗组件 -->
 <template>
     <el-dialog
-        :title="isEdit ? '编辑视频' : '显示视频'"
+        :title="title"
         :visible.sync="videoUploadDialogVisible"
         :show-close="false"
         :close-on-click-modal="false"
         :close-on-press-escape="false">
-        <el-form :model="form" :rules="uploadVideoRules" ref="uploadVideoForm" class="form-block" label-width="100px">
+        <el-form :model="video" :rules="uploadVideoRules" ref="uploadVideoForm" class="form-block" label-width="100px">
             <el-form-item label="视频ID">
-                <el-input v-model="form.id" readonly></el-input>
+                <el-input :value="video.commonId" readonly></el-input>
             </el-form-item>
             <el-form-item label="视频名称" prop="name">
-                <el-input v-model="form.name" auto-complete="off" placeholder="请输入子集名称"></el-input>
+                <el-input
+                    :value="video.name"
+                    auto-complete="off"
+                    placeholder="请输入子集名称"
+                    @input="inputHandler($event, 'name')"
+                ></el-input>
             </el-form-item>
-            <el-form-item label="视频排序" prop="sortNumber">
-                <el-select v-model="form.sortNumber" placeholder="请选择视频排序">
+            <el-form-item label="视频排序" prop="sort">
+                <el-select
+                    :value="video.sort"
+                    placeholder="请选择视频排序"
+                    @change="inputHandler($event, 'sort')"
+                >
                     <el-option
                         v-for="item in videoSortOptions"
                         :key="item.value"
@@ -23,51 +32,55 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="视频简介" prop="desc">
+            <el-form-item label="视频简介" prop="description">
                 <el-input
                     type="textarea"
                     :autosize="{ minRows: 4, maxRows: 14}"
                     placeholder="请输入子集简介"
-                    v-model="form.desc">
+                    :value="video.description"
+                    @input="inputHandler($event, 'description')"
+                >
                 </el-input>
             </el-form-item>
             <el-form-item label="选择视频">
-                <el-upload
-                    class="upload-demo"
-                    ref="upload"
-                    :auto-upload="false"
-                    :http-request="uploadRequest"
-                    :show-file-list="false"
-                    :with-credentials="true">
-                        <el-button size="small" type="primary">选择视频</el-button>
-                </el-upload>
+                <el-col :span="3">
+                    <el-upload
+                        class="upload-demo"
+                        ref="upload"
+                        action="/"
+                        :auto-upload="false"
+                        :http-request="uploadRequest"
+                        :show-file-list="false"
+                        :with-credentials="true">
+                            <el-button size="small" type="primary">选择视频</el-button>
+                    </el-upload>
+                </el-col>
                 <el-button size="small" type="primary" @click="submitUpload">点击上传</el-button>
             </el-form-item>
             <el-form-item label="视频时长">
-                <el-input v-model="form.duration" readonly></el-input>
+                <el-input :value="video.takeTimeInSec" readonly></el-input>
             </el-form-item>
-            <el-form-item label="关联正片" prop="positive">
-                <el-select v-model="form.positive" placeholder="请选择要关联的正片">
+            <el-form-item label="关联正片" prop="parentId">
+                <el-select
+                    :value="video.parentId"
+                    placeholder="请选择要关联的正片"
+                    @change="inputHandler($event, 'parentId')"
+                >
                     <el-option
                         v-for="item in videoPositive"
                         :key="item.value"
                         :label="item.label"
-                        :value="item.value">
+                        :value="item.value"
+                    >
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="内容类型" prop="contentType">
-                <el-select v-model="form.contentType" placeholder="请选择内容类型">
-                    <el-option
-                        v-for="item in contentTypeOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="视频类型" prop="type">
-                <el-select v-model="form.type" placeholder="请选择视频类型">
+            <el-form-item label="内容类型" prop="type">
+                <el-select
+                    :value="video.type"
+                    placeholder="请选择内容类型"
+                    @change="inputHandler($event, 'type')"
+                >
                     <el-option
                         v-for="item in videoType"
                         :key="item.value"
@@ -76,15 +89,34 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="是否付费" prop="needPay">
-                <el-radio v-model="form.needPay" label="1">是</el-radio>
-                <el-radio v-model="form.needPay" label="2">否</el-radio>
+            <el-form-item label="视频类型" prop="quality">
+                <el-select
+                    :value="video.quality"
+                    placeholder="请选择视频类型"
+                    @change="inputHandler($event, 'quality')"
+                >
+                    <el-option
+                        v-for="item in qualityType"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="是否付费" prop="free">
+                <el-radio-group
+                    :value="video.free"
+                    @input="inputHandler($event, 'free')"
+                >
+                    <el-radio :label="true">是</el-radio>
+                    <el-radio :label="false">否</el-radio>
+                </el-radio-group>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="cancelHandler">取 消</el-button>
             <el-button
-                v-if="isEdit"
+                v-if="videoStatus !== 2"
                 type="primary"
                 @click="successHandler"
                 v-loading.fullscreen.lock="isLoading">确 定</el-button>
@@ -92,49 +124,25 @@
     </el-dialog>
 </template>
 <script>
+    import {mapGetters, mapMutations} from 'vuex';
+    import role from '@/util/config/role';
+
     export default {
         props: {
             videoUploadDialogVisible: {
                 type: Boolean,
                 default: false
             },
-            isEdit: {
-                type: Boolean,
-                default: true
+            videoStatus: {
+                type: Number,
+                default: 0
             }
         },
         data() {
             return {
                 isLoading: false,
-                form: {
-                    id: '2018040405573345',
-                    name: '',
-                    desc: '',
-                    type: '',
-                    duration: '1:20:30',
-                    positive: '',
-                    sortNumber: '',
-                    contentType: '1',
-                    needPay: '1'
-                },
-                videoType: [
-                    {
-                        value: '1',
-                        label: '高清'
-                    },
-                    {
-                        value: '2',
-                        label: '标清'
-                    },
-                    {
-                        value: '3',
-                        label: '3d'
-                    },
-                    {
-                        value: '4',
-                        label: '杜比'
-                    }
-                ],
+                videoType: role.VIDEO_TYPE,
+                qualityType: role.QUALITY_TYPE,
                 videoPositive: [
                     {
                         value: '正片1',
@@ -176,28 +184,49 @@
                 uploadVideoRules: {
                     name: [{ required: true, message: '请输入视频名称', trigger: 'change' }],
                     description: [{ required: true, message: '请输入视频简介', trigger: 'change' }],
-                    type: [{ required: true, message: '请选择视频类型', trigger: 'change' }],
-                    duration: '1:20:30',
-                    positive: [{ required: true, message: '请选择要关联的正片', trigger: 'change' }],
-                    sortNumber: [{ required: true, message: '请选择视频的排序', trigger: 'change' }],
-                    contentType: [{ required: true, message: '请选择视频内容类型', trigger: 'change' }],
-                    needPay: [{ required: true, message: '请选择是否付费', trigger: 'change' }]
+                    type: [{ required: true, message: '请选择视频内容类型', trigger: 'change' }],
+                    takeTimeInSec: [{ required: true, message: '请选择要关联的正片', trigger: 'change' }],
+                    sort: [{ required: true, message: '请选择视频的排序', trigger: 'change' }],
+                    quality: [{ required: true, message: '请选择视频类型', trigger: 'change' }],
+                    free: [{ required: true, message: '请选择是否付费', trigger: 'change' }]
                 }
             };
         },
+        computed: {
+            ...mapGetters({
+                'video': 'programmeVideo/currentProgrammeVideo'
+            }),
+            title() {
+                switch (parseInt(this.videoStatus)) {
+                    case 0:
+                        return '创建视频';
+                    case 1:
+                        return '编辑视频';
+                    case 2:
+                        return '显示视频';
+                    default:
+                        return '创建视频';
+                }
+            }
+        },
         methods: {
+            ...mapMutations({
+                updateCurrentProgrammeVideo: 'programmeVideo/updateCurrentProgrammeVideo',
+                resetProgrammeVideo: 'programmeVideo/resetProgrammeVideo',
+                addVideoToList: 'programmeVideo/addVideoToList'
+            }),
             cancelHandler() {
                 this.$emit('changeVideoDialogStatus', false);
+                // 清楚表单中的数据
+                this.resetProgrammeVideo();
+                // 清楚校验的规则
+                this.$refs.uploadVideoForm.clearValidate();
             },
             successHandler() {
                 this.$refs.uploadVideoForm.validate(value => {
                     if (value) {
-                        this.isLoading = true;
-                        setTimeout(() => {
-                            this.isLoading = false;
-                            this.cancelHandler();
-                            this.$refs.uploadVideoForm.resetFields();
-                        }, 3000);
+                        this.addVideoToList();
+                        this.cancelHandler();
                     } else {
 
                     }
@@ -216,6 +245,9 @@
             },
             submitUpload() {
 
+            },
+            inputHandler(value, key) {
+                this.updateCurrentProgrammeVideo({[key]: value});
             }
         }
     };

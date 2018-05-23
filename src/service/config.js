@@ -38,6 +38,7 @@ service.interceptors.response.use((response) => {
             message: response.data.message,
             type: 'warning'
         });
+        return response.data;
     }
 }, () => {
     Message({

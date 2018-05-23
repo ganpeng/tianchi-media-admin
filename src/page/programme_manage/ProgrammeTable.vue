@@ -68,7 +68,7 @@
                 </el-table-column>
             </el-table>
         </el-row>
-        <upload-programme-video-dialog :isEdit="isEdit" :videoUploadDialogVisible="videoUploadDialogVisible" v-on:changeVideoDialogStatus="closeVideoDialog($event)"></upload-programme-video-dialog>
+        <upload-programme-video-dialog :videoStatus="videoStatus" :videoUploadDialogVisible="videoUploadDialogVisible" v-on:changeVideoDialogStatus="closeVideoDialog($event)"></upload-programme-video-dialog>
     </div>
 </template>
 <script>
@@ -96,18 +96,20 @@ export default {
         return {
             videoUploadDialogVisible: false,
             isEdit: true,
+            //  videoStatus 有三中状态，0：表示创建， 1: 表示编辑， 2： 表示查看
+            videoStatus: 1,
             currentVideo: {}
         };
     },
     methods: {
         editVideo(id) {
             this.videoUploadDialogVisible = true;
-            this.isEdit = true;
+            this.videoStatus = 1;
             this.setVideo(id);
         },
         displayVideo(id) {
             this.videoUploadDialogVisible = true;
-            this.isEdit = false;
+            this.videoStatus = 2;
             this.setVideo(id);
         },
         closeVideoDialog(status) {

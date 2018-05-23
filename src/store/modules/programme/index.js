@@ -2,7 +2,19 @@ import service from '../../../service';
 import router from '../../../router';
 import _ from 'lodash';
 
+const programmePostFields = ['copyrightStartedAt', 'copyrightEndedAt', 'name', 'playCountBasic', 'price', 'quality', 'releaseArea', 'category', 'businessOperator', 'featureVideoCount', 'description', 'announceAt', 'posterImages', 'figureList', 'tagList', 'typeList'];
+
 const defaultProgramme = {
+    // 全平台通用id，从媒资系统过来
+    commonId: '',
+    // 名称拼音首字母
+    namePy: '',
+    // 名称拼音
+    namePinYin: '',
+    // 评分
+    score: '',
+    // 节目来源 ENUM('MEDIA_SYS','CONTENT_CENTER') DEFAULT 'CONTENT_CENTER'
+    origin: '',
     // 版权商
     copyrightReserver: '',
     // 版权开始日期
@@ -11,37 +23,43 @@ const defaultProgramme = {
     copyrightEndedAt: '',
     // 节目名称
     name: '',
-    // 播放量
+    // 播放基数(显示播放量)
     playCountBasic: 0,
     // 价格
     price: 0,
-    // 视频质量
+    // 正片清晰度 ENUM('HD_4K', 'HD_2K', 'HD_1080', 'HD_720', 'HD_480') DEFAULT 'HD_4K'
     quality: 'HD_480',
     // 发布时间
     releaseAt: '',
     // 发布地区
     releaseArea: '',
-    // 节目发布状态
+    // 节目发布状态 ENUM('RELEASED', 'DRAFT', 'PRE_RELEASED') DEFAULT 'DRAFT'
     // releaseStatus: 'RELEASED',
-    // 节目分类
+    // 节目类别
     category: {},
     // 发行商
     businessOperator: '',
-    // 正片数量
+    // 正片数量,总集数（电视剧是预知的，综艺节目是变化的）
     featureVideoCount: '',
     // 节目描述
     description: '',
     // 发行时间
     announceAt: '',
-    // 节目图片
+    // 状态 ENUM('NORMAL', 'DELETE') DEFAULT 'NORMAL'
+    status: '',
+    // 节目海报，json字符串存储，包含以下几个字段，fileId，uri，width，high")
     posterImages: [],
-    // 人物列表
+    // 相关人物
     figureList: [],
     // 关键字
     tagList: [],
-    // 节目类型
+    // 节目类型，关联节目类型id的引用
     typeList: [],
+    // 节目视频列表，video的id引用
+    // videoIdList: [],
+
     // 下面是自定义的前端数据结构，不是服务端返回的
+
     // 主演
     leadActor: [],
     // 主演搜索结果
@@ -158,6 +176,9 @@ const mutations = {
     }
 };
 
+/**
+ * 对节目数据做处理
+ */
 function formatProgrammeData(programmeData) {
     return Object.assign({}, programmeData, {
         // 版权开始日期
@@ -203,11 +224,11 @@ const actions = {
     },
 
     createProgramme({commit, state}) {
-        let currentProgramme = formatProgrammeData(state.currentProgramme);
-        service.createProgramme(currentProgramme)
+        let currentProgramme = _.pick(formatProgrammeData(state.currentProgramme), programmePostFields);
+        return service.createProgramme(currentProgramme)
             .then((res) => {
                 if (res && res.code === 0) {
-                    router.push({ name: 'ProgrammeList' });
+                    return res;
                 }
             });
     },

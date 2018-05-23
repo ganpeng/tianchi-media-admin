@@ -21,11 +21,8 @@
                         <el-form-item label="节目看点">
                             <el-input :value="'非常好看'"></el-input>
                         </el-form-item>
-                        <el-form-item label="节目状态">
-                            <el-input :value="'状态很好'" readonly></el-input>
-                        </el-form-item>
                         <el-form-item label="节目来源">
-                            <el-input :value="'节目来源'" readonly></el-input>
+                            <el-input :value="'内容中心'" readonly></el-input>
                         </el-form-item>
                         <el-form-item label="节目简介" prop="description">
                             <el-input
@@ -217,19 +214,19 @@
                         <el-form-item label="总集数" prop="featureVideoCount">
                             <el-input
                                 :value="programme.featureVideoCount"
-                                @input="inputHandler($event, 'featureVideoCount')"
-                                readonly>
+                                @input="inputHandler($event, 'featureVideoCount')" >
                             </el-input>
                         </el-form-item>
-                        <el-form-item label="实际播放量" prop="playCountBasic">
+                        <el-form-item label="显示播放量" prop="playCountBasic">
                             <el-input
                                 :value="programme.playCountBasic"
-                                @input="inputHandler($event, 'playCountBasic')"
-                                readonly>
+                                @input="inputHandler($event, 'playCountBasic')">
                             </el-input>
                         </el-form-item>
-                        <el-form-item label="展示播放量">
-                            <el-input :value="12"></el-input>
+                        <el-form-item label="实际播放量">
+                            <el-input :value="12"
+                                readonly>
+                            </el-input>
                         </el-form-item>
                         <el-form-item label="节目图片">
                             <el-button type="primary" @click="imageUploadDialogVisible = true">添加节目图片<i class="el-icon-upload el-icon--right"></i></el-button>
@@ -239,7 +236,8 @@
             </el-col>
             <el-col :span="24">
                 <div class="block-title">节目视频</div>
-                <programme-table :status="3" :data-list="testData"></programme-table>
+                <el-button type="primary" @click="videoUploadDialogVisible = true">添加视频<i class="el-icon-upload el-icon--right"></i></el-button>
+                <programme-table :status="3" :data-list="[{}]"></programme-table>
             </el-col>
         </el-row>
 
@@ -256,6 +254,7 @@
             v-on:changeImageDialogStatus="closeImageDialog($event)">
         </upload-image>
         <create-person-dialog :createPersonDialogVisible="createPersonDialogVisible" v-on:changePersonDialogStatus="closePersonDialog($event)"></create-person-dialog>
+        <upload-programme-video-dialog :videoStatus="0" :videoUploadDialogVisible="videoUploadDialogVisible" v-on:changeVideoDialogStatus="closeVideoDialog($event)"></upload-programme-video-dialog>
     </div>
 </template>
 <script>
@@ -265,6 +264,7 @@
     import ProgrammeTable from './ProgrammeTable';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import dimension from '@/util/config/dimension';
+    import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 
     export default {
         name: 'ProgrammeDetail',
@@ -272,7 +272,8 @@
             Multiselect,
             UploadImage,
             CreatePersonDialog,
-            ProgrammeTable
+            ProgrammeTable,
+            UploadProgrammeVideoDialog
         },
         props: {
             status: { // status 有三种状态，0代表创建 "create", 1代表显示 "display", 2代表编辑 "edit"
@@ -293,62 +294,6 @@
                 videoUploadDialogVisible: false,
                 createPersonDialogVisible: false,
                 areaOptions: this.$util.countryList(),
-                programOptions: [
-                    {
-                        value: '电视剧',
-                        label: '电视剧'
-                    },
-                    {
-                        value: '电影',
-                        label: '电影'
-                    },
-                    {
-                        value: '综艺',
-                        label: '综艺'
-                    }
-                ],
-                typeOptions: [
-                    {
-                        value: 1,
-                        label: '战争'
-                    },
-                    {
-                        value: 2,
-                        label: '警匪'
-                    },
-                    {
-                        value: 3,
-                        label: '爱情'
-                    }
-                ],
-                leadOptions: [
-                    {
-                        value: '王力宏',
-                        label: '王力宏'
-                    },
-                    {
-                        value: '刘德华',
-                        label: '刘德华'
-                    },
-                    {
-                        value: '杰克逊',
-                        label: '杰克逊'
-                    }
-                ],
-                directorOptions: [
-                    {
-                        value: '张艺谋',
-                        label: '张艺谋'
-                    },
-                    {
-                        value: '管虎',
-                        label: '管虎'
-                    },
-                    {
-                        value: '斯皮尔伯格',
-                        label: '斯皮尔伯格'
-                    }
-                ],
                 keyWordsOptions: [
                     {
                         value: '好看',
@@ -395,21 +340,6 @@
                         label: '乐视'
                     }
                 ],
-                testData: [
-                    {
-                        id: '2018040513444522777-1',
-                        name: '战狼1',
-                        sortNumber: '2',
-                        description: '是第一部的延续',
-                        positive: '老男孩第二集',
-                        url: 'http://www.baidu.com',
-                        contentType: '正片',
-                        typeId: '高清',
-                        needPay: '是',
-                        duration: '1:20:30',
-                        createdAt: '2018-04-05 9:00'
-                    }
-                ],
                 size: dimension.PROGRAMME_DIMENSION
             };
         },
@@ -424,16 +354,25 @@
                 updateCurrentProgramme: 'programme/updateCurrentProgramme',
                 resetProgramme: 'programme/resetProgramme',
                 setSearchStr: 'person/setSearchStr',
-                addPosterImage: 'programme/addPosterImage'
+                addPosterImage: 'programme/addPosterImage',
+                setProgrammeId: 'programmeVideo/setProgrammeId'
             }),
             ...mapActions({
                 createProgramme: 'programme/createProgramme',
                 updateProgramme: 'programme/updateProgramme',
                 getPersonList: 'person/getPersonList',
-                getProgrammeCategory: 'programme/getProgrammeCategory'
+                getProgrammeCategory: 'programme/getProgrammeCategory',
+                createMultProgrammeVideo: 'programmeVideo/createMultProgrammeVideo'
             }),
             _createProgramme() {
-                this.createProgramme();
+                this.createProgramme()
+                    .then((res) => {
+                        this.setProgrammeId({programmeId: res.data.id});
+                        this.createMultProgrammeVideo()
+                            .then((...res) => {
+                                this.$router.push({ name: 'ProgrammeList' });
+                            });
+                    });
             },
             _editProgramme() {
                 this.updateProgramme();
@@ -452,6 +391,9 @@
             closePersonDialog(status) {
                 this.createPersonDialogVisible = status;
             },
+            closeVideoDialog(status) {
+                this.videoUploadDialogVisible = status;
+            },
             gotoProgramTypePage() {
                 this.$router.push({name: 'ProgrammeTypeManage'});
             },
@@ -460,8 +402,8 @@
             goBack() {
                 this.$router.push({name: 'ProgrammeList'});
             },
-            inputHandler(value, haha) {
-                this.updateCurrentProgramme({[haha]: value});
+            inputHandler(value, key) {
+                this.updateCurrentProgramme({[key]: value});
             },
             findDirector(name) {
                 if (name) {

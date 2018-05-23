@@ -192,8 +192,8 @@ export default {
         closeImageDialog(status) {
             this.imageUploadDialogVisible = status;
         },
-        inputHandler(value, haha) {
-            this.updateCurrentPerson({[haha]: value});
+        inputHandler(value, key) {
+            this.updateCurrentPerson({[key]: value});
         },
         _deletePosterImage(id) {
             this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
