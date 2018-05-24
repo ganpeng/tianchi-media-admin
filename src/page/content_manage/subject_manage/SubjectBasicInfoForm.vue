@@ -27,32 +27,27 @@
                     :rows="4">
                 </el-input>
             </el-form-item>
-            <el-form-item label="请选择标签" prop="tags" required>
-                <el-select v-model="subjectInfo.tags" multiple placeholder="请选择标签">
+            <el-form-item label="专题标签" prop="tagList" required>
+                <el-select
+                    v-model="subjectInfo.tagList"
+                    multiple
+                    filterable
+                    allow-create
+                    default-first-option
+                    placeholder="请选择或填写专题标签">
                     <el-option
                         v-for="item in tagOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        :key="item"
+                        :label="item"
+                        :value="item">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="是否显示在往日推荐" prop="pastPush">
-                <el-popover
-                    placement="top"
-                    title="往日推荐"
-                    width="200"
-                    trigger="hover"
-                    content="设置当前专题是否出现在栏目中的'更多'下拉专题瀑布流中">
-                    <el-button slot="reference" type="text">?</el-button>
-                </el-popover>
-                <el-switch v-model="subjectInfo.pastPush"></el-switch>
-            </el-form-item>
             <el-form-item label="上传专题封面：" prop="coverUrls">
                 <ul class="cover-list">
-                    <li v-for="(item,index) in subjectInfo.coverUrls" :key="index">
-                        <img :src="item.url" :alt="item.name" @click="displayImage(index)">
-                        <label>{{item.name}}</label>
+                    <li v-for="(item,index) in subjectInfo.posterImageList" :key="index">
+                        <img :src="item.uri" :alt="item.name" @click="displayImage(index)">
+                        <label @click="removePosterImage(index)">删除</label>
                     </li>
                     <li @click="imageUploadDialogVisible = true">
                         <i class="el-icon-plus"></i>
@@ -72,11 +67,13 @@
         <preview-multiple-images
             :previewMultipleImages="previewImage">
         </preview-multiple-images>
-        <upload-programme-image-dialog
-            title="节目专题封面设置"
+        <upload-image
+            :size='size'
+            title="上传专题封面图片"
+            :successHandler="addPosterImage"
             :imageUploadDialogVisible="imageUploadDialogVisible"
             v-on:changeImageDialogStatus="closeImageDialog($event)">
-        </upload-programme-image-dialog>
+        </upload-image>
         <el-dialog
             title="提示"
             :visible.sync="dialogVisible"
@@ -93,14 +90,15 @@
 </template>
 
 <script>
+    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
-    import UploadProgrammeImageDialog from '../../programme_manage/UploadProgrammeImageDialog';
+    import {PROGRAMME_DIMENSION as subjectDimension} from '@/util/config/dimension';
 
     export default {
         name: 'CreateSubjectForm',
         components: {
-            PreviewMultipleImages,
-            UploadProgrammeImageDialog
+            UploadImage,
+            PreviewMultipleImages
         },
         /* status: 0代表创建节目专题，1代表创建人物专题，2代表编辑节目专题，3代表编辑人物专题 */
         props: ['status'],
@@ -134,40 +132,21 @@
                     callback();
                 }
             };
-            let checkTags = (rule, value, callback) => {
-                if (this.subjectInfo.tags.length === 0) {
-                    return callback(new Error('请选择专题角标'));
-                } else {
-                    callback();
-                }
-            };
-            let checkCoverUrls = (rule, value, callback) => {
-                if (this.subjectInfo.coverUrls.length === 0) {
-                    return callback(new Error('请填写上传专题的封面图片'));
+            let checkTagList = (rule, value, callback) => {
+                if (this.subjectInfo.tagList.length === 0) {
+                    return callback(new Error('请选择专题标签'));
                 } else {
                     callback();
                 }
             };
             return {
+                size: subjectDimension,
                 subjectInfo: {
                     name: '',
                     types: [],
                     description: '',
-                    tags: [],
-                    pastPush: true,
-                    coverUrls: [{
-                        id: 1,
-                        name: '定妆照',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7'
-                    }, {
-                        id: 2,
-                        name: '发布会照片',
-                        url: 'http://photocdn.sohu.com/20160107/Img433729049.jpg'
-                    }, {
-                        id: 3,
-                        name: '通稿照片',
-                        url: 'http://pic.4j4j.cn/upload/pic/20151015/465ce1d4b0.jpg'
-                    }]
+                    tagList: [],
+                    posterImageList: []
                 },
                 typeOptions: [{
                     label: '电视剧',
@@ -179,22 +158,12 @@
                     label: '娱乐',
                     value: 3
                 }],
-                tagOptions: [{
-                    value: '1',
-                    label: '奥斯卡'
-                }, {
-                    value: '2',
-                    label: '爱情'
-                }, {
-                    value: '3',
-                    label: '古装'
-                }, {
-                    value: '4',
-                    label: '年代'
-                }, {
-                    value: '5',
-                    label: '乡村'
-                }],
+                tagOptions: [
+                    '奥斯卡',
+                    '爱情',
+                    '古装',
+                    '年代',
+                    '乡村'],
                 previewImage: {
                     display: false,
                     autoplay: false,
@@ -212,11 +181,8 @@
                     description: [
                         {validator: checkDescription, trigger: 'blur'}
                     ],
-                    tags: [
-                        {validator: checkTags, trigger: 'change'}
-                    ],
-                    coverUrls: [
-                        {validator: checkCoverUrls, trigger: 'change'}
+                    tagList: [
+                        {validator: checkTagList, trigger: 'change'}
                     ]
                 },
                 dialogVisible: false
@@ -261,6 +227,35 @@
                         break;
                 }
             },
+            // 添加封面图片
+            addPosterImage(newPosterImage) {
+                for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
+                    if (newPosterImage.posterImage.fileId === this.subjectInfo.posterImageList[i].fileId) {
+                        this.$message('该图片已经添加到当前专题中');
+                        return;
+                    }
+                }
+                this.subjectInfo.posterImageList.push(newPosterImage.posterImage);
+            },
+            // 删除封面图片
+            removePosterImage(index) {
+                this.$confirm('此操作将删除该封面图片, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.subjectInfo.posterImageList.splice(index, 1);
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
             // 创建或更新专题
             createAdmin() {
                 this.$refs['subjectInfo'].validate((valid) => {
@@ -269,8 +264,17 @@
                             // 创建节目专题
                             case '0':
                                 break;
-                            // 创建人物专题
+                            // 创建人物专题，subjectInfo中没有types属性,删除
                             case '1':
+                                delete this.subjectInfo.types;
+                                this.$service.createFigureSubject(this.subjectInfo).then(response => {
+                                    if (response) {
+                                        this.$message({
+                                            message: '创建人物专题成功',
+                                            type: 'success'
+                                        });
+                                    }
+                                });
                                 break;
                             // 更新节目专题
                             case '2':
@@ -281,7 +285,6 @@
                             default:
                                 break;
                         }
-                        this.dialogVisible = true;
                     } else {
                         return false;
                     }
@@ -294,7 +297,7 @@
             // 放大预览图片
             displayImage(index) {
                 this.previewImage.display = true;
-                this.previewImage.list = this.subjectInfo.coverUrls;
+                this.previewImage.list = this.subjectInfo.posterImageList;
                 this.previewImage.activeIndex = index;
             },
             reset() {
@@ -352,14 +355,22 @@
                     }
                 }
             }
+            &:hover {
+                label {
+                    visibility: visible;
+                }
+            }
             img {
                 display: block;
                 height: 180px;
                 cursor: zoom-in;
             }
             label {
+                visibility: hidden;
                 text-align: center;
                 font-size: 16px;
+                color: orangered;
+                cursor: pointer;
             }
         }
     }

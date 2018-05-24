@@ -1,3 +1,7 @@
+/**
+ * @fileOverview Define the dimension of images.
+ */
+
 //  广告图片尺寸
 export const ADVERT_DIMENSION = [
     //  暂停广告
@@ -22,7 +26,10 @@ export const ADVERT_DIMENSION = [
     }
 ];
 
-// 节目图片尺寸
+/**
+ * 节目图片尺寸
+ * 专题封面图片尺寸，与节目图片尺寸一致
+ */
 export const PROGRAMME_DIMENSION = [
     //  推荐页轮播图大
     {

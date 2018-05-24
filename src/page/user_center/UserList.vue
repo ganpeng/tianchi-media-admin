@@ -9,9 +9,10 @@
         <el-upload
             ref="upload"
             :headers="uploadHeaders"
-            action="/admin/v1/media/file"
+            action="/v1/media/video"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
+            :http-request="uploadVideo"
             :file-list="fileList"
             :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
@@ -41,6 +42,8 @@
             handleRemove(file, fileList) {
             },
             handlePreview(file) {
+            },
+            uploadVideo(arg) {
             }
         }
     };

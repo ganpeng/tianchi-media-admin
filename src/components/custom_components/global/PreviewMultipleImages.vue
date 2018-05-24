@@ -10,7 +10,7 @@
                          :initial-index="previewMultipleImages.activeIndex">
                 <el-carousel-item v-for="(item,index) in previewMultipleImages.list" :key="index">
                     <span>{{ item.name }}</span>
-                    <img :src="item.url" alt="预览图片">
+                    <img :src="item.uri" alt="预览图片">
                 </el-carousel-item>
             </el-carousel>
         </el-dialog>
