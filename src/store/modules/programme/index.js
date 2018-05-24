@@ -1,8 +1,9 @@
 import service from '../../../service';
 import router from '../../../router';
+import axios from 'axios';
 import _ from 'lodash';
 
-const programmePostFields = ['copyrightStartedAt', 'copyrightEndedAt', 'name', 'playCountBasic', 'price', 'quality', 'releaseArea', 'category', 'businessOperator', 'featureVideoCount', 'description', 'announceAt', 'posterImages', 'figureList', 'tagList', 'typeList'];
+const programmePostFields = ['copyrightStartedAt', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'price', 'quality', 'releaseArea', 'category', 'businessOperator', 'featureVideoCount', 'description', 'announceAt', 'posterImages', 'figureList', 'tagList', 'typeList'];
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
@@ -56,7 +57,7 @@ const defaultProgramme = {
     // 节目类型，关联节目类型id的引用
     typeList: [],
     // 节目视频列表，video的id引用
-    // videoIdList: [],
+    videoIdList: [],
 
     // 下面是自定义的前端数据结构，不是服务端返回的
 
@@ -69,12 +70,12 @@ const defaultProgramme = {
     // 导演搜索结果
     directorResult: [],
     // 版权起止日期
-    copyrightRange: '',
+    copyrightRange: [],
     // 当前选中的节目分类下的类型
     currentTypeList: []
 };
 
-const state = {
+const defaultState = {
     figure: '',
     releaseStatus: '',
     releaseAt: '',
@@ -86,10 +87,27 @@ const state = {
     pageNum: 1,
     pageSize: 5,
     total: 0,
-    categoryList: []
+    categoryList: [],
+    currentProgrammeVideoObj: {
+        list: [],
+        pageNum: 1,
+        pageSize: 5,
+        total: 0
+    }
 };
 
+const state = JSON.parse(JSON.stringify(defaultState));
+
 const searchFields = ['figure', 'releaseStatus', 'releaseArea', 'releaseAt', 'programmeCategory', 'programmeType', 'pageNum', 'pageSize'];
+
+/**
+ *  通过id获取节目
+ */
+function getProgrammeById(id) {
+    return state.list.find((item) => {
+        return item.id === id;
+    });
+}
 
 const getters = {
     list(state) {
@@ -102,6 +120,32 @@ const getters = {
             pageNum: state.pageNum
         };
     },
+    categoryName(state) {
+        return (id) => {
+            let programme = getProgrammeById(id);
+            return programme ? (programme.category ? programme.category.name : '') : '';
+        };
+    },
+    typeList(state) {
+        return (id) => {
+            let programme = getProgrammeById(id);
+            return programme.typeList.map((item) => item.name).join(', ');
+        };
+    },
+    getDirector(state) {
+        return (id) => {
+            let programme = getProgrammeById(id);
+            let director = programme.figureList.filter((figure) => figure.role === 'DIRECTOR');
+            return director.map((item) => item.name).join(', ');
+        };
+    },
+    getChiefActor(state) {
+        return (id) => {
+            let programme = getProgrammeById(id);
+            let chiefActor = programme.figureList.filter((figure) => figure.role === 'CHIEF_ACTOR');
+            return chiefActor.map((item) => item.name).join(', ');
+        };
+    },
     currentProgramme(state) {
         return state.currentProgramme;
     },
@@ -110,6 +154,9 @@ const getters = {
     },
     categroyList(state) {
         return state.categoryList;
+    },
+    currentVideoIdList(state) {
+        return state.currentProgramme.videoIdList || [];
     }
 };
 
@@ -134,9 +181,11 @@ const mutations = {
     updateCurrentProgramme(state, payload) {
         state.currentProgramme = Object.assign({}, state.currentProgramme, payload);
     },
+    resetCurrentProgramme(state) {
+        state.currentProgramme = Object.assign({}, defaultProgramme);
+    },
     resetProgramme(state) {
-        state.currentProgramme = defaultProgramme;
-        state.currentProgramme.posterImages = [];
+        state = Object.assign({}, defaultState);
     },
     addPosterImage(state, payload) {
         state.currentProgramme.posterImages.push(payload.posterImage);
@@ -173,6 +222,14 @@ const mutations = {
                 return category;
             }
         });
+    },
+    setProgrammeVideoObj(state, payload) {
+        state.currentProgrammeVideoObj = Object.assign({}, payload);
+    },
+    setCurrentTypeList(state) {
+        let {id} = state.currentProgramme.category;
+        let currentTypeList = state.categoryList.find((item) => item.id === id);
+        state.currentProgramme.currentTypeList = currentTypeList.programmeTypeList;
     }
 };
 
@@ -202,6 +259,17 @@ function formatProgrammeData(programmeData) {
     });
 }
 
+/**
+ *  序列化服务端返回的数据
+ */
+function serializeProgrammData(programmeData) {
+    return Object.assign(defaultProgramme, programmeData, {
+        copyrightRange: [programmeData.copyrightStartedAt, programmeData.copyrightEndedAt],
+        director: programmeData.figureList.filter((item) => item.role === 'DIRECTOR'),
+        leadActor: programmeData.figureList.filter((item) => item.role === 'CHIEF_ACTOR')
+    });
+}
+
 const actions = {
     getProgrammeList({commit, state}) {
         service.getProgrammeList(_.pick(state, searchFields))
@@ -218,7 +286,7 @@ const actions = {
         service.getProgrammeInfo({id})
             .then((res) => {
                 if (res && res.code === 0) {
-                    commit('setCurrentProgramme', {currentPerson: res.data});
+                    commit('setCurrentProgramme', {currentProgramme: res.data});
                 }
             });
     },
@@ -232,9 +300,9 @@ const actions = {
                 }
             });
     },
-    updateProgramme({commit, state}) {
-        let {currentProgramme} = state;
-        service.updateProgrammeInfo({id: currentProgramme.id, person: currentProgramme})
+    updateProgramme({commit, state}, id) {
+        let currentProgramme = _.pick(formatProgrammeData(state.currentProgramme), programmePostFields);
+        service.updateProgrammeInfo({id, programme: currentProgramme})
             .then((res) => {
                 if (res && res.code === 0) {
                     router.push({ name: 'ProgrammeList' });
@@ -264,6 +332,28 @@ const actions = {
                     commit('setCategroyList', {list: res.data});
                 }
             });
+    },
+    getProgrammeVideoListById({commit, state}, id) {
+        let {pageSize, pageNum} = state;
+        return service.getProgrammeVideoListById({pageSize, pageNum, programmeId: id})
+            .then((res) => {
+                if (res && res.code === 0) {
+                    let {pageNum, pageSize, total, list} = res.data;
+                    commit('setProgrammeVideoObj', {list, pageSize, pageNum, total});
+                }
+            });
+    },
+    getProgrammeAndGetProgrammeCategory({commit, state}, id) {
+        axios.all([service.getProgrammeInfo({id}), service.getProgrammeCategory()])
+            .then(axios.spread((...res) => {
+                if (res[0] && res[0].code === 0) {
+                    commit('setCurrentProgramme', {currentProgramme: serializeProgrammData(res[0].data)});
+                }
+                if (res[1] && res[1].code === 0) {
+                    commit('setCategroyList', {list: res[1].data});
+                }
+                commit('setCurrentTypeList');
+            }));
     }
 };
 

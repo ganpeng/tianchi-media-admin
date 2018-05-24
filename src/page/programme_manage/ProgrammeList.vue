@@ -83,26 +83,50 @@
                     </el-select>
                 </el-form-item>
             </el-form>
-            <el-table :data="programmeList" border style="width: 100%">
-                <el-table-column prop="id" align="center" label="节目编号"></el-table-column>
+            <el-table :data="list" border style="width: 100%">
+                <el-table-column prop="id" align="center" width="240px" label="节目编号"></el-table-column>
                 <el-table-column label="节目图片" width="200px" align="center" >
                     <template slot-scope="scope">
                         <img class="" :src="scope.row.avatar" alt="">
                     </template>
                 </el-table-column>
-                <el-table-column prop="name" align="center" label="节目名称"></el-table-column>
+                <el-table-column prop="name" align="center" min-width="100px" label="节目名称"></el-table-column>
                 <el-table-column prop="description" align="center" width="300px" label="节目简介"></el-table-column>
-                <el-table-column prop="" align="center" label="正片数量"></el-table-column>
-                <el-table-column prop="" align="center" label="相关视频数量"></el-table-column>
-                <el-table-column prop="releaseAt" align="center" width="200px" label="上映时间">
+                <el-table-column prop="featureVideoCount" min-width="100px" align="center" label="正片数量"></el-table-column>
+                <el-table-column prop="" align="center" min-width="120px" label="相关视频数量"></el-table-column>
+                <el-table-column prop="announceAt" align="center" width="100px" label="上映时间">
+                    <template slot-scope="scope">
+                        {{scope.row.announceAt | formatDate('yyyy-MM-DD')}}
+                    </template>
                 </el-table-column>
-                <el-table-column prop="area" align="center" label="地区"></el-table-column>
-                <el-table-column prop="area" align="center" label="分类"></el-table-column>
-                <el-table-column prop="area" align="center" label="类型"></el-table-column>
-                <el-table-column prop="" align="center" label="主演"></el-table-column>
-                <el-table-column prop="" align="center" label="导演"></el-table-column>
-                <el-table-column prop="area" align="center" label="状态"></el-table-column>
-                <el-table-column align="center" label="更新时间">
+                <el-table-column prop="releaseArea" align="center" label="地区">
+                    <template slot-scope="scope">
+                        {{areaLabel(scope.row.releaseArea)}}
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" width="100px" label="分类">
+                    <template slot-scope="scope">
+                        {{categoryName(scope.row.id)}}
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" min-width="100px" label="类型">
+                    <template slot-scope="scope">
+                        {{typeList(scope.row.id)}}
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" min-width="100px" label="主演">
+                    <template slot-scope="scope">
+                        {{getChiefActor(scope.row.id)}}
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" min-width="100px" label="导演">
+                    <template slot-scope="scope">
+                        {{getDirector(scope.row.id)}}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
+                </el-table-column>
+                <el-table-column align="center" min-width="100px" label="更新时间">
                     <template slot-scope="scope">
                         {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
                     </template>
@@ -132,26 +156,6 @@ export default {
     name: 'ProgrammeList',
     data() {
         return {
-            programmeList: [
-                {
-                    id: '1',
-                    code: '000000001',
-                    name: '战狼1',
-                    description: '战狼1的介绍吴京扮演的军人',
-                    releaseAt: '2018-05-02T06:24:08.555Z',
-                    area: '香港',
-                    typeId: ''
-                },
-                {
-                    id: '2',
-                    code: '00l000002',
-                    name: '战狼2',
-                    description: '战狼1的介绍吴京扮演的军人',
-                    releaseAt: '2018-05-02T06:24:08.555Z',
-                    area: '香港',
-                    typeId: ''
-                }
-            ],
             areaOptions: this.$util.countryList()
         };
     },
@@ -162,7 +166,11 @@ export default {
         ...mapGetters({
             list: 'programme/list',
             pagination: 'programme/pagination',
-            searchFields: 'programme/searchFields'
+            searchFields: 'programme/searchFields',
+            categoryName: 'programme/categoryName',
+            typeList: 'programme/typeList',
+            getDirector: 'programme/getDirector',
+            getChiefActor: 'programme/getChiefActor'
         })
     },
     methods: {
@@ -175,6 +183,9 @@ export default {
         },
         displayProgramme(id) {
             this.$router.push({ name: 'DisplayProgramme', params: { id } });
+        },
+        areaLabel(areaValue) {
+            return this.areaOptions.find((areaItem) => areaItem.value === areaValue).label;
         },
         handleSizeChange() {},
         handleCurrentChange() {}

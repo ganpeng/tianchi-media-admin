@@ -47,3 +47,10 @@ export const updateProgrammeVideoInfo = ({id, video}) => {
 export const toggleVisible = ({id}) => {
     return service.patch(`/v1/content/programme/video/${id}/visible`);
 };
+
+/**
+ * 获取节目视频子集列表
+ */
+export const getProgrammeVideoListById = ({pageNum, pageSize, programmeId}) => {
+    return service.get('/v1/content/programme/video/page', {params: {pageNum, pageSize, programmeId}});
+};

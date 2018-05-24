@@ -3,7 +3,7 @@
     <programme-detail :status="1"></programme-detail>
 </template>
 <script>
-    import { mapActions } from 'vuex';
+    import { mapActions, mapMutations } from 'vuex';
     import ProgrammeDetail from './ProgrammeDetail';
 
     export default {
@@ -13,11 +13,20 @@
         },
         created() {
             let {id} = this.$route.params;
-            this.getProgramme(id);
+            this.resetCurrentProgramme();
+            this.getProgrammeAndGetProgrammeCategory(id)
+                .then(() => {
+                    this.getProgrammeVideoListById(id);
+                });
         },
         methods: {
+            ...mapMutations({
+                resetCurrentProgramme: 'programme/resetCurrentProgramme'
+            }),
             ...mapActions({
-                getProgramme: 'programme/getProgramme'
+                getProgramme: 'programme/getProgramme',
+                getProgrammeVideoListById: 'programme/getProgrammeVideoListById',
+                getProgrammeAndGetProgrammeCategory: 'programme/getProgrammeAndGetProgrammeCategory'
             })
         }
     };

@@ -16,7 +16,11 @@
                             <el-input :value="123455" readonly></el-input>
                         </el-form-item>
                         <el-form-item label="节目名称" prop="name">
-                            <el-input @input="inputHandler($event, 'name')" :value="programme.name"></el-input>
+                            <el-input
+                                :readonly="readonly"
+                                @input="inputHandler($event, 'name')"
+                                :value="programme.name">
+                            </el-input>
                         </el-form-item>
                         <el-form-item label="节目看点">
                             <el-input :value="'非常好看'"></el-input>
@@ -27,6 +31,7 @@
                         <el-form-item label="节目简介" prop="description">
                             <el-input
                                 type="textarea"
+                                :readonly="readonly"
                                 @input="inputHandler($event, 'description')"
                                 :autosize="{ minRows: 4, maxRows: 40}"
                                 placeholder="请输入内容"
@@ -35,6 +40,7 @@
                         </el-form-item>
                         <el-form-item label="上映时间" prop="announceAt">
                             <el-date-picker
+                                :readonly="readonly"
                                 :value="programme.announceAt"
                                 @input="inputHandler($event, 'announceAt')"
                                 type="year"
@@ -48,6 +54,7 @@
                                 clearable
                                 filterable
                                 placeholder="请选择"
+                                :disabled="readonly"
                             >
                                 <el-option
                                     v-for="item in areaOptions"
@@ -70,6 +77,7 @@
                                 open-direction="bottom"
                                 :hideSelected="true"
                                 selectLabel=""
+                                :disabled="readonly"
                                 @input="updateCategoryValue">
                                 <template slot="tag" slot-scope="props">
                                     <span> {{ props.option.name}} </span>
@@ -93,6 +101,7 @@
                                 :preselect-first="true"
                                 :hideSelected="true"
                                 selectLabel=""
+                                :disabled="readonly"
                                 @input="updateTypeListValue">
                                 <template slot="tag" slot-scope="props">
                                     <span> {{ props.option.name}} </span>
@@ -106,6 +115,7 @@
                                 multiple
                                 placeholder="请选择"
                                 @change="inputHandler($event, 'tagList')"
+                                :disabled="readonly"
                             >
                                 <el-option
                                     v-for="item in keyWordsOptions"
@@ -135,6 +145,7 @@
                                 :hideSelected="true"
                                 selectLabel=""
                                 @input="updateLeadActorValue"
+                                :disabled="readonly"
                                 @search-change="findLeadActor">
                                 <template slot="tag" slot-scope="props">
                                     <span> {{ props.option.name}} </span>
@@ -164,6 +175,7 @@
                                 :hideSelected="true"
                                 selectLabel=""
                                 @input="updateDirectorValue"
+                                :disabled="readonly"
                                 @search-change="findDirector">
                                 <template slot="tag" slot-scope="props">
                                     <span> {{ props.option.name}} </span>
@@ -176,6 +188,7 @@
                         <el-form-item label="版权起始日期" prop="copyrightRange">
                             <el-date-picker
                                 :value="programme.copyrightRange"
+                                :readonly="readonly"
                                 type="daterange"
                                 @input="inputHandler($event, 'copyrightRange')"
                                 range-separator="至"
@@ -185,6 +198,7 @@
                         </el-form-item>
                         <el-form-item label="版权商" prop="copyrightReserver">
                             <el-select
+                                :disabled="readonly"
                                 :value="programme.copyrightReserver"
                                 placeholder="请选择"
                                 @input="inputHandler($event, 'copyrightReserver')"
@@ -199,6 +213,7 @@
                         </el-form-item>
                         <el-form-item label="运营商" prop="businessOperator">
                             <el-select
+                                :disabled="readonly"
                                 :value="programme.businessOperator"
                                 placeholder="请选择"
                                 @input="inputHandler($event, 'businessOperator')"
@@ -213,12 +228,14 @@
                         </el-form-item>
                         <el-form-item label="总集数" prop="featureVideoCount">
                             <el-input
+                                :readonly="readonly"
                                 :value="programme.featureVideoCount"
                                 @input="inputHandler($event, 'featureVideoCount')" >
                             </el-input>
                         </el-form-item>
                         <el-form-item label="显示播放量" prop="playCountBasic">
                             <el-input
+                                :readonly="readonly"
                                 :value="programme.playCountBasic"
                                 @input="inputHandler($event, 'playCountBasic')">
                             </el-input>
@@ -229,18 +246,17 @@
                             </el-input>
                         </el-form-item>
                         <el-form-item label="节目图片">
-                            <el-button type="primary" @click="imageUploadDialogVisible = true">添加节目图片<i class="el-icon-upload el-icon--right"></i></el-button>
+                            <el-button type="primary" @click="uploadImageHandler">添加节目图片<i class="el-icon-upload el-icon--right"></i></el-button>
                         </el-form-item>
                     </el-form>
                 </el-col>
             </el-col>
             <el-col :span="24">
                 <div class="block-title">节目视频</div>
-                <el-button type="primary" @click="videoUploadDialogVisible = true">添加视频<i class="el-icon-upload el-icon--right"></i></el-button>
-                <programme-table :status="3" :data-list="[{}]"></programme-table>
+                <el-button v-if="!readonly" type="primary" @click="videoUploadDialogVisible = true">添加视频<i class="el-icon-upload el-icon--right"></i></el-button>
+                <programme-table :status="3" :data-list="currentVideoIdList"></programme-table>
             </el-col>
         </el-row>
-
         <div class="group">
             <el-button v-if="status === 0" type="primary" @click="_createProgramme">创建</el-button>
             <el-button v-if="status === 2" type="primary" @click="_editProgramme">编辑</el-button>
@@ -346,8 +362,12 @@
         computed: {
             ...mapGetters({
                 programme: 'programme/currentProgramme',
-                categroyList: 'programme/categroyList'
-            })
+                categroyList: 'programme/categroyList',
+                currentVideoIdList: 'programme/currentVideoIdList'
+            }),
+            readonly() {
+                return parseInt(this.status) === 1;
+            }
         },
         methods: {
             ...mapMutations({
@@ -375,7 +395,8 @@
                     });
             },
             _editProgramme() {
-                this.updateProgramme();
+                let {id} = this.$route.params;
+                this.updateProgramme(id);
             },
             onSubmit() {
                 this.$refs.createProgramForm.validate(value => {
@@ -396,8 +417,6 @@
             },
             gotoProgramTypePage() {
                 this.$router.push({name: 'ProgrammeTypeManage'});
-            },
-            handleClick(row) {
             },
             goBack() {
                 this.$router.push({name: 'ProgrammeList'});
@@ -440,6 +459,11 @@
                         }).finally(() => {
                             this.isLoading = false;
                         });
+                }
+            },
+            uploadImageHandler() {
+                if (!this.readonly) {
+                    this.imageUploadDialogVisible = true;
                 }
             }
         }
