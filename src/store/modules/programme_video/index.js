@@ -1,6 +1,5 @@
 import service from '../../../service';
 import axios from 'axios';
-import _ from 'lodash';
 
 const defaultProgrammeVideo = {
     // 全平台通用id，从媒资系统过来
@@ -44,58 +43,22 @@ const state = {
     parentId: '',
     videoType: '',
     currentProgrammeVideo: {},
-    list: [],
-    pageNum: 1,
-    pageSize: 5,
-    total: 0,
     // 当前节目下上传的视频的列表
     videoList: []
 };
 
-const searchFields = ['programmeId', 'parentId', 'videoType', 'pageNum', 'pageSize'];
-
 const getters = {
-    list(state) {
-        return state.list;
-    },
-    pagination(state) {
-        return {
-            pageSize: state.pageSize,
-            total: state.total,
-            pageNum: state.pageNum
-        };
-    },
     currentProgrammeVideo(state) {
         return state.currentProgrammeVideo;
-    },
-    searchFields(state) {
-        return _.pick(state, searchFields);
     }
 };
 
 const mutations = {
-    setProgrammeVideoList(state, payload) {
-        state.list = payload.list;
-    },
-    setPagination(state, payload) {
-        if (payload.pageSize) {
-            state.pageSize = payload.pageSize;
-        }
-        if (payload.pageNum) {
-            state.pageNum = payload.pageNum;
-        }
-        if (payload.total) {
-            state.total = payload.total;
-        }
-    },
     setCurrentProgrammeVideo(state, payload) {
         state.currentProgrammeVideo = payload.currentProgrammeVideo;
     },
     updateCurrentProgrammeVideo(state, payload) {
         state.currentProgrammeVideo = Object.assign({}, state.currentProgrammeVideo, payload);
-    },
-    setProgrammeId(state, payload) {
-        state.programmeId = payload.programmeId;
     },
     resetProgrammeVideo(state) {
         state.currentProgrammeVideo = defaultProgrammeVideo;
@@ -124,17 +87,6 @@ function filterProgrammeVideoData(videoList, programmeId) {
 }
 
 const actions = {
-    getProgrammeVideoList({commit, state}) {
-        service.getProgrammeVideoList(_.pick(state, searchFields))
-            .then((res) => {
-                if (res && res.code === 0) {
-                    let {pageNum, pageSize, total, list} = res.data;
-                    commit('setProgrammeVideoList', {list});
-                    commit('setPagination', {pageSize, pageNum, total});
-                }
-            });
-    },
-
     getProgrammeVideo({commit, state}, id) {
         service.getProgrammeVideoInfo({id})
             .then((res) => {
@@ -143,7 +95,6 @@ const actions = {
                 }
             });
     },
-
     createProgrammeVideo({commit, state}) {
         return service.createProgrammeVideo(state.currentProgrammeVideo)
             .then((res) => {

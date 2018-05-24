@@ -1,9 +1,8 @@
 import service from '../../../service';
-import router from '../../../router';
 import axios from 'axios';
 import _ from 'lodash';
 
-const programmePostFields = ['copyrightStartedAt', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'price', 'quality', 'releaseArea', 'category', 'businessOperator', 'featureVideoCount', 'description', 'announceAt', 'posterImages', 'figureList', 'tagList', 'typeList'];
+const programmePostFields = ['copyrightStartedAt', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'price', 'quality', 'releaseArea', 'category', 'businessOperator', 'featureVideoCount', 'description', 'announceAt', 'posterImages', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
@@ -25,9 +24,9 @@ const defaultProgramme = {
     // 节目名称
     name: '',
     // 播放基数(显示播放量)
-    playCountBasic: 0,
+    playCountBasic: '',
     // 价格
-    price: 0,
+    price: '',
     // 正片清晰度 ENUM('HD_4K', 'HD_2K', 'HD_1080', 'HD_720', 'HD_480') DEFAULT 'HD_4K'
     quality: 'HD_480',
     // 发布时间
@@ -35,7 +34,7 @@ const defaultProgramme = {
     // 发布地区
     releaseArea: '',
     // 节目发布状态 ENUM('RELEASED', 'DRAFT', 'PRE_RELEASED') DEFAULT 'DRAFT'
-    // releaseStatus: 'RELEASED',
+    releaseStatus: '',
     // 节目类别
     category: {},
     // 发行商
@@ -97,7 +96,6 @@ const defaultState = {
 };
 
 const state = JSON.parse(JSON.stringify(defaultState));
-
 const searchFields = ['figure', 'releaseStatus', 'releaseArea', 'releaseAt', 'programmeCategory', 'programmeType', 'pageNum', 'pageSize'];
 
 /**
@@ -146,6 +144,12 @@ const getters = {
             return chiefActor.map((item) => item.name).join(', ');
         };
     },
+    getPostImage(state) {
+        return (id) => {
+            let programme = getProgrammeById(id);
+            return programme.posterImages[0] ? programme.posterImages[0].uri : '';
+        };
+    },
     currentProgramme(state) {
         return state.currentProgramme;
     },
@@ -157,6 +161,12 @@ const getters = {
     },
     currentVideoIdList(state) {
         return state.currentProgramme.videoIdList || [];
+    },
+    programmeVideoList(state) {
+        return state.currentProgrammeVideoObj.list;
+    },
+    programmeVideoPagination(state) {
+        return _.pick(state.currentProgrammeVideoObj, ['pageSIze', 'pageSize', 'total']);
     }
 };
 
@@ -189,6 +199,9 @@ const mutations = {
     },
     addPosterImage(state, payload) {
         state.currentProgramme.posterImages.push(payload.posterImage);
+    },
+    deletePosterImage(state, payload) {
+        state.currentProgramme.posterImages = state.currentProgramme.posterImages.filter((img) => img.id !== payload.id);
     },
     setCategroyList(state, payload) {
         state.categoryList = payload.list ? payload.list : [];
@@ -263,7 +276,7 @@ function formatProgrammeData(programmeData) {
  *  序列化服务端返回的数据
  */
 function serializeProgrammData(programmeData) {
-    return Object.assign(defaultProgramme, programmeData, {
+    return Object.assign({}, defaultProgramme, programmeData, {
         copyrightRange: [programmeData.copyrightStartedAt, programmeData.copyrightEndedAt],
         director: programmeData.figureList.filter((item) => item.role === 'DIRECTOR'),
         leadActor: programmeData.figureList.filter((item) => item.role === 'CHIEF_ACTOR')
@@ -302,10 +315,10 @@ const actions = {
     },
     updateProgramme({commit, state}, id) {
         let currentProgramme = _.pick(formatProgrammeData(state.currentProgramme), programmePostFields);
-        service.updateProgrammeInfo({id, programme: currentProgramme})
+        return service.updateProgrammeInfo({id, programme: currentProgramme})
             .then((res) => {
                 if (res && res.code === 0) {
-                    router.push({ name: 'ProgrammeList' });
+                    return res;
                 }
             });
     },
@@ -330,6 +343,18 @@ const actions = {
             .then((res) => {
                 if (res && res.code === 0) {
                     commit('setCategroyList', {list: res.data});
+                }
+            });
+    },
+    getProgrammeTypeCount({commit, state}, programmeTypeId) {
+        return service.getProgrammeTypeCount({programmeTypeId})
+            .then((res) => {
+                if (res && res.code === 0) {
+                    if (res.data.count === 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
             });
     },

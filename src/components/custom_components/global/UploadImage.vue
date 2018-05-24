@@ -174,18 +174,20 @@
                     this.isLoading = true;
                     this.$service.uploadImage({formData, fileName: this.form.name})
                         .then((res) => {
-                            if (res && res.code === 0) {
+                            if (res && (res.code === 0 || res.code === 3300)) {
                                 let data = res.data;
                                 let obj = {};
-                                obj.fileId = data.id;
+                                obj.id = data.id;
                                 obj.height = img.height;
                                 obj.width = img.width;
                                 obj.uri = data.url;
+                                obj.name = data.name;
                                 this.successHandler({posterImage: obj});
                                 this.cancelHandler();
-                            } else if (res && res.code === 3300) {
-                                this.$refs.uploadImageForm.resetFields();
                             }
+                            // else if (res && res.code === 3300) {
+                            //     this.$refs.uploadImageForm.resetFields();
+                            // }
                         }).finally(() => {
                             this.isLoading = false;
                         });

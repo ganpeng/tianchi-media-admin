@@ -97,6 +97,28 @@ let util = {
     },
     countryList() {
         return this.serializeCountryList(countryObj);
+    },
+    fromSecondsToTime(seconds) {
+        if (!seconds) {
+            return 0;
+        }
+        let time = parseInt(seconds) + '秒';
+        if (parseInt(seconds) > 60) {
+            let second = parseInt(seconds) % 60;
+            let min = parseInt(seconds / 60);
+            time = min + '分' + second + '秒';
+            if (min > 60) {
+                min = parseInt(seconds / 60) % 60;
+                var hour = parseInt(parseInt(seconds / 60) / 60);
+                time = hour + '小时' + min + '分' + second + '秒';
+                if (hour > 24) {
+                    hour = parseInt(parseInt(seconds / 60) / 60) % 24;
+                    let day = parseInt(parseInt(parseInt(seconds / 60) / 60) / 24);
+                    time = day + '天' + hour + '小时' + min + '分' + second + '秒';
+                }
+            }
+        }
+        return time;
     }
 };
 

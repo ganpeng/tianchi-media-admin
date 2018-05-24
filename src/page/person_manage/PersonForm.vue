@@ -93,7 +93,7 @@
                             <img :src="img.uri" alt="">
                             <div v-if="!readonly" class="delete-layer">
                                 <i
-                                    @click="_deletePosterImage(img.fileId)"
+                                    @click="_deletePosterImage(img.id)"
                                     class="el-icon-delete">
                                 </i>
                             </div>
@@ -215,49 +215,5 @@ export default {
 <style lang="less" scoped>
 .person-form-container {
     margin-top: 60px;
-}
-.cover-list {
-    margin-top: 30px;
-    overflow: hidden;
-    li {
-        position: relative;
-        float: left;
-        margin-right: 30px;
-        min-width: 100px;
-        height: 230px;
-        margin-bottom: 20px;
-        img {
-            display: block;
-            height: 230px;
-            cursor: zoom-in;
-        }
-        label {
-            text-align: center;
-            font-size: 16px;
-        }
-        .delete-layer {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.2);
-        }
-    }
-    li:hover {
-        .delete-layer {
-            display: block;
-            i {
-                position:absolute;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                color: #fff;
-                cursor: pointer;
-                font-size: 2em;
-            }
-        }
-    }
 }
 </style>

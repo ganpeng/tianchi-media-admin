@@ -247,6 +247,17 @@
                         </el-form-item>
                         <el-form-item label="节目图片">
                             <el-button type="primary" @click="uploadImageHandler">添加节目图片<i class="el-icon-upload el-icon--right"></i></el-button>
+                            <ul class="cover-list">
+                                <li v-for="(img, index) in programme.posterImages" :key="index" class="img-item">
+                                    <img :src="img.uri" alt="">
+                                    <div v-if="!readonly" class="delete-layer">
+                                        <i
+                                            @click="_deletePosterImage(img.id)"
+                                            class="el-icon-delete">
+                                        </i>
+                                    </div>
+                                </li>
+                            </ul>
                         </el-form-item>
                     </el-form>
                 </el-col>
@@ -254,7 +265,7 @@
             <el-col :span="24">
                 <div class="block-title">节目视频</div>
                 <el-button v-if="!readonly" type="primary" @click="videoUploadDialogVisible = true">添加视频<i class="el-icon-upload el-icon--right"></i></el-button>
-                <programme-table :status="3" :data-list="currentVideoIdList"></programme-table>
+                <programme-table :status="3" :data-list="programmeVideoList"></programme-table>
             </el-col>
         </el-row>
         <div class="group">
@@ -363,7 +374,9 @@
             ...mapGetters({
                 programme: 'programme/currentProgramme',
                 categroyList: 'programme/categroyList',
-                currentVideoIdList: 'programme/currentVideoIdList'
+                currentVideoIdList: 'programme/currentVideoIdList',
+                programmeVideoList: 'programme/programmeVideoList',
+                programmeVideoPagination: 'programme/programmeVideoPagination'
             }),
             readonly() {
                 return parseInt(this.status) === 1;
@@ -375,6 +388,7 @@
                 resetProgramme: 'programme/resetProgramme',
                 setSearchStr: 'person/setSearchStr',
                 addPosterImage: 'programme/addPosterImage',
+                deletePosterImage: 'programme/deletePosterImage',
                 setProgrammeId: 'programmeVideo/setProgrammeId'
             }),
             ...mapActions({
@@ -388,7 +402,7 @@
                 this.createProgramme()
                     .then((res) => {
                         this.setProgrammeId({programmeId: res.data.id});
-                        this.createMultProgrammeVideo()
+                        this.createMultProgrammeVideo(res.data.id)
                             .then((...res) => {
                                 this.$router.push({ name: 'ProgrammeList' });
                             });
@@ -396,7 +410,14 @@
             },
             _editProgramme() {
                 let {id} = this.$route.params;
-                this.updateProgramme(id);
+                this.updateProgramme(id)
+                    .then((res) => {
+                        this.setProgrammeId({programmeId: id});
+                        this.createMultProgrammeVideo(id)
+                            .then((...res) => {
+                                this.$router.push({ name: 'ProgrammeList' });
+                            });
+                    });
             },
             onSubmit() {
                 this.$refs.createProgramForm.validate(value => {
@@ -465,6 +486,20 @@
                 if (!this.readonly) {
                     this.imageUploadDialogVisible = true;
                 }
+            },
+            _deletePosterImage(id) {
+                this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    }).then(() => {
+                        this.deletePosterImage({id});
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
             }
         }
     };

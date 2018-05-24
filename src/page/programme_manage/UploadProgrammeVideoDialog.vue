@@ -124,7 +124,7 @@
     </el-dialog>
 </template>
 <script>
-    import {mapGetters, mapMutations} from 'vuex';
+    import {mapGetters, mapMutations, mapActions} from 'vuex';
     import role from '@/util/config/role';
 
     export default {
@@ -215,6 +215,9 @@
                 resetProgrammeVideo: 'programmeVideo/resetProgrammeVideo',
                 addVideoToList: 'programmeVideo/addVideoToList'
             }),
+            ...mapActions({
+                updateProgrammeVideo: 'programmeVideo/updateProgrammeVideo'
+            }),
             cancelHandler() {
                 this.$emit('changeVideoDialogStatus', false);
                 // 清楚表单中的数据
@@ -225,10 +228,15 @@
             successHandler() {
                 this.$refs.uploadVideoForm.validate(value => {
                     if (value) {
-                        this.addVideoToList();
-                        this.cancelHandler();
-                    } else {
-
+                        if (parseInt(this.videoStatus) !== 1) {
+                            this.addVideoToList();
+                            this.cancelHandler();
+                        } else {
+                            this.updateProgrammeVideo()
+                                .then(() => {
+                                    this.cancelHandler();
+                                });
+                        }
                     }
                 });
             },

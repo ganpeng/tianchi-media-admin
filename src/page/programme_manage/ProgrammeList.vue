@@ -87,7 +87,7 @@
                 <el-table-column prop="id" align="center" width="240px" label="节目编号"></el-table-column>
                 <el-table-column label="节目图片" width="200px" align="center" >
                     <template slot-scope="scope">
-                        <img class="" :src="scope.row.avatar" alt="">
+                        <img class="person-image" :src="getPostImage(scope.row.id)" alt="">
                     </template>
                 </el-table-column>
                 <el-table-column prop="name" align="center" min-width="100px" label="节目名称"></el-table-column>
@@ -142,7 +142,7 @@
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="pagination.pageNum"
-                :page-sizes="[10, 20, 30, 50]"
+                :page-sizes="[5, 10, 20, 30, 50]"
                 :page-size="pagination.pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="pagination.total">
@@ -151,7 +151,7 @@
     </div>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 export default {
     name: 'ProgrammeList',
     data() {
@@ -170,10 +170,14 @@ export default {
             categoryName: 'programme/categoryName',
             typeList: 'programme/typeList',
             getDirector: 'programme/getDirector',
-            getChiefActor: 'programme/getChiefActor'
+            getChiefActor: 'programme/getChiefActor',
+            getPostImage: 'programme/getPostImage'
         })
     },
     methods: {
+        ...mapMutations({
+            setPagination: 'programme/setPagination'
+        }),
         ...mapActions({
             getProgrammeList: 'programme/getProgrammeList'
         }),
@@ -187,8 +191,14 @@ export default {
         areaLabel(areaValue) {
             return this.areaOptions.find((areaItem) => areaItem.value === areaValue).label;
         },
-        handleSizeChange() {},
-        handleCurrentChange() {}
+        handleSizeChange(pageSize) {
+            this.setPagination({pageSize});
+            this.getProgrammeList();
+        },
+        handleCurrentChange(pageNum) {
+            this.setPagination({pageNum});
+            this.getProgrammeList();
+        }
     }
 };
 </script>

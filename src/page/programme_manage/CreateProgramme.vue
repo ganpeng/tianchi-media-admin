@@ -13,6 +13,7 @@
         },
         created() {
             // 重置当前节目的所有数据
+            this.resetProgramme();
             this.resetCurrentProgramme();
             // 重置人物的所有数据
             this.resetPerson();

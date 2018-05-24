@@ -51,7 +51,8 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
         }),
         ...mapActions({
             getProgrammeCategory: 'programme/getProgrammeCategory',
-            updateProgrammeCategory: 'programme/updateProgrammeCategory'
+            updateProgrammeCategory: 'programme/updateProgrammeCategory',
+            getProgrammeTypeCount: 'programme/getProgrammeTypeCount'
         }),
         _updateProgrammeCategory() {
             this.updateProgrammeCategory();
@@ -79,11 +80,21 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
             cancelButtonText: '取消',
             type: 'error'
         }).then(() => {
-            this.deleteProgrammeCategory({node, data});
-            this.$message({
-                type: 'success',
-                message: '删除成功!'
-            });
+            this.getProgrammeTypeCount(data.id)
+                .then((noCount) => {
+                    if (noCount) {
+                        this.deleteProgrammeCategory({node, data});
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: '该类型下面有节目，不能删除!'
+                        });
+                    }
+                });
         }).catch(() => {
             this.$message({
                 type: 'info',

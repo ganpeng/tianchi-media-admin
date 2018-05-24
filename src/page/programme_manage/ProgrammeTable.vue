@@ -10,60 +10,83 @@
                 <el-table-column
                     prop="id"
                     label="视频ID"
-                    width="180">
+                    align="center"
+                    width="240px">
                 </el-table-column>
                 <el-table-column
                     prop="name"
                     label="视频名称"
+                    align="center"
                     width="180">
                 </el-table-column>
                 <el-table-column
                     v-if="status !== 2"
-                    prop="sortNumber"
+                    prop="sort"
+                    align="center"
                     label="视频排序">
                 </el-table-column>
                 <el-table-column
                     prop="description"
                     width="200px"
+                    align="center"
                     label="视频简介">
                 </el-table-column>
                 <el-table-column
                     v-if="status !== 2"
                     prop="positive"
+                    align="center"
                     label="关联正片">
                 </el-table-column>
                 <el-table-column
-                    prop="url"
-                    width="200px"
+                    prop="playUrl"
+                    min-width="240px"
+                    align="center"
                     label="视频地址">
                 </el-table-column>
                 <el-table-column
-                    prop="contentType"
+                    prop="type"
+                    align="center"
+                    min-width="120px"
                     label="内容类型">
                 </el-table-column>
                 <el-table-column
-                    prop="typeId"
+                    prop="quality"
+                    align="center"
+                    min-width="120px"
                     label="视频类型">
                 </el-table-column>
                 <el-table-column
                     v-if="status === 1"
                     prop="needPay"
+                    align="center"
                     label="是否付费">
                 </el-table-column>
                 <el-table-column
                     prop="duration"
+                    align="center"
+                    min-width="120px"
                     label="时长">
+                    <template slot-scope="scope">
+                        {{duration(scope.row.takeTimeInSec)}}
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="createdAt"
+                    align="center"
+                    min-width="120px"
                     label="上传时间">
+                    <template slot-scope="scope">
+                        {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                    </template>
                 </el-table-column>
                 <el-table-column
+                    fixed="right"
                     label="操作"
+                    align="center"
                     width="160">
                     <template slot-scope="scope">
-                        <el-button @click="displayVideo(scope.row)" type="primary" size="small">查看</el-button>
-                        <el-button v-if="status === 3" @click="editVideo(scope.row)" type="warning" size="small">编辑</el-button>
+                        <el-button @click="displayVideo(scope.row.id)" type="text" size="small">查看</el-button>
+                        <el-button v-if="status === 3" @click="editVideo(scope.row.id)" type="text" size="small">编辑</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -72,6 +95,7 @@
     </div>
 </template>
 <script>
+import {mapActions} from 'vuex';
 import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 export default {
     name: 'ProgrammeTable',
@@ -97,27 +121,36 @@ export default {
             videoUploadDialogVisible: false,
             isEdit: true,
             //  videoStatus 有三中状态，0：表示创建， 1: 表示编辑， 2： 表示查看
-            videoStatus: 1,
-            currentVideo: {}
+            videoStatus: 1
         };
     },
+    computed: {
+        duration() {
+            return (seconds) => {
+                return this.$util.fromSecondsToTime(seconds);
+            };
+        }
+    },
     methods: {
+        ...mapActions({
+            getProgrammeVideo: 'programmeVideo/getProgrammeVideo'
+        }),
         editVideo(id) {
-            this.videoUploadDialogVisible = true;
-            this.videoStatus = 1;
-            this.setVideo(id);
+            this.getProgrammeVideo(id)
+                .then((res) => {
+                    this.videoUploadDialogVisible = true;
+                    this.videoStatus = 1;
+                });
         },
         displayVideo(id) {
-            this.videoUploadDialogVisible = true;
-            this.videoStatus = 2;
-            this.setVideo(id);
+            this.getProgrammeVideo(id)
+                .then((res) => {
+                    this.videoUploadDialogVisible = true;
+                    this.videoStatus = 2;
+                });
         },
         closeVideoDialog(status) {
             this.videoUploadDialogVisible = status;
-        },
-        setVideo(id) {
-            let video = this.dataList.find((video) => video.id === id);
-            this.currentVideo = video;
         }
     }
 };

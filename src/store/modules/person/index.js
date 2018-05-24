@@ -28,7 +28,7 @@ const state = {
 
 const getters = {
     list(state) {
-        return state.list;
+        return Array.from(state.list).sort((prev, curr) => curr.updatedAt - prev.updatedAt);
     },
     pagination(state) {
         return {
@@ -100,7 +100,6 @@ const mutations = {
 const actions = {
     getPersonList({commit, state}, {isProgramme, name}) {
         let searchName = !name ? state.searchStr : name;
-        // service.getPersonList({ pageNum: state.pageNum, pageSize: state.pageSize, name: state.searchStr, area: state.area })
         return service.getPersonList({ pageNum: state.pageNum, pageSize: state.pageSize, name: searchName, area: state.area })
             .then((res) => {
                 if (res && res.code === 0) {
