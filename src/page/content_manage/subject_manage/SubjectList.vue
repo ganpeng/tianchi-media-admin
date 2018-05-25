@@ -31,16 +31,6 @@
                         </el-select>
                     </el-form-item>
                 </template>
-                <el-form-item label="是否被推荐">
-                    <el-select v-model="pastPushValue" clearable placeholder="请选择推荐状态">
-                        <el-option
-                            v-for="item in pastPushOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
                 <el-form-item label="创建时间">
                     <el-date-picker
                         v-model="createRangeTime"
@@ -72,7 +62,7 @@
                 border
                 style="width: 100%">
                 <el-table-column
-                    prop="id"
+                    prop="code"
                     width="60px"
                     label="编号">
                 </el-table-column>
@@ -100,10 +90,10 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="tags"
+                    prop="tagList"
                     label="专题标签">
                     <template slot-scope="scope">
-                        <label>{{scope.row.tags.join(',')}}</label>
+                        <label>{{scope.row.tagList.join(',')}}</label>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -111,16 +101,18 @@
                     label="专题创建者">
                 </el-table-column>
                 <el-table-column
-                    prop="type"
-                    label="专题类型">
-                </el-table-column>
-                <el-table-column
                     prop="category"
-                    label="节目专题类型">
+                    label="专题类型">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.category === 'FIGURE'?'人物' : '节目'}}</label>
+                    </template>
                 </el-table-column>
                 <el-table-column
-                    prop="status"
-                    label="是否被推荐">
+                    prop="type"
+                    label="节目专题类型">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.type ?scope.row.type : '------' }}</label>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     label="创建时间">
@@ -189,53 +181,7 @@
                 currentPage: 1,
                 pageSize: 10,
                 totalAmount: 0,
-                programmeList: [
-                    {
-                        id: 1,
-                        name: '探宝寻密',
-                        includingCount: '13',
-                        description: '十二年前七万赤焰军被奸人所害导致全军覆没，冤死梅岭，只剩少帅林殊（张哲瀚 饰）侥幸生还。十二年后林殊改头换面化身“麒麟才子”梅长苏（胡歌 饰），建立江左盟，以“琅琊榜”第一才子的身份重返帝都。梅长苏背负血海深仇，暗中帮助昔日挚友靖王（王凯 饰）周旋于太子（高鑫 饰）与誉王（黄维德 饰）的斗争之中，同时又遇到了昔日未婚妻——云南王郡主穆霓凰（刘涛 饰）却不能相见。梅长苏以病弱之躯为昭雪冤案、为振兴河山，踏上了一条黑暗又惊心动魄的夺嫡之路。',
-                        tags: ['奥斯卡', '国外'],
-                        owner: 'xiaofei.liu',
-                        type: '节目',
-                        category: '娱乐',
-                        status: '否',
-                        createdAt: 1402233166999
-                    }, {
-                        id: 2,
-                        name: '僵尸战争',
-                        includingCount: '13',
-                        description: '十二年前七万赤焰军被奸人所害导致全军覆没，冤死梅岭，只剩少帅林殊（张哲瀚 饰）侥幸生还。十二年后林殊改头换面化身“麒麟才子”梅长苏（胡歌 饰），建立江左盟，以“琅琊榜”第一才子的身份重返帝都。梅长苏背负血海深仇，暗中帮助昔日挚友靖王（王凯 饰）周旋于太子（高鑫 饰）与誉王（黄维德 饰）的斗争之中，同时又遇到了昔日未婚妻——云南王郡主穆霓凰（刘涛 饰）却不能相见。梅长苏以病弱之躯为昭雪冤案、为振兴河山，踏上了一条黑暗又惊心动魄的夺嫡之路。',
-                        tags: ['奥斯卡', '国外'],
-                        owner: 'xiaofei.liu',
-                        type: '节目',
-                        category: '电视剧',
-                        status: '是',
-                        createdAt: 1402233166999
-                    }, {
-                        id: 3,
-                        name: '美丽的邂逅，经典的流传',
-                        includingCount: '13',
-                        description: '十二年前七万赤焰军被奸人所害导致全军覆没，冤死梅岭，只剩少帅林殊（张哲瀚 饰）侥幸生还。十二年后林殊改头换面化身“麒麟才子”梅长苏（胡歌 饰），建立江左盟，以“琅琊榜”第一才子的身份重返帝都。梅长苏背负血海深仇，暗中帮助昔日挚友靖王（王凯 饰）周旋于太子（高鑫 饰）与誉王（黄维德 饰）的斗争之中，同时又遇到了昔日未婚妻——云南王郡主穆霓凰（刘涛 饰）却不能相见。梅长苏以病弱之躯为昭雪冤案、为振兴河山，踏上了一条黑暗又惊心动魄的夺嫡之路。',
-                        tags: ['奥斯卡', '国外'],
-                        owner: 'xiaofei.liu',
-                        type: '人物',
-                        category: '',
-                        status: '是',
-                        createdAt: 1402533166977
-                    }, {
-                        id: 4,
-                        name: '红色光环照耀，纪念反法西斯战争70周年',
-                        includingCount: '13',
-                        description: '十二年前七万赤焰军被奸人所害导致全军覆没，冤死梅岭，只剩少帅林殊（张哲瀚 饰）侥幸生还。十二年后林殊改头换面化身“麒麟才子”梅长苏（胡歌 饰），建立江左盟，以“琅琊榜”第一才子的身份重返帝都。梅长苏背负血海深仇，暗中帮助昔日挚友靖王（王凯 饰）周旋于太子（高鑫 饰）与誉王（黄维德 饰）的斗争之中，同时又遇到了昔日未婚妻——云南王郡主穆霓凰（刘涛 饰）却不能相见。梅长苏以病弱之躯为昭雪冤案、为振兴河山，踏上了一条黑暗又惊心动魄的夺嫡之路。',
-                        tags: ['抗日', '战争'],
-                        owner: 'xiaofei.liu',
-                        type: '节目',
-                        category: '电影',
-                        status: '是',
-                        createdAt: 1402233166999
-                    }
-                ]
+                programmeList: []
             };
         },
         mounted() {
@@ -243,7 +189,18 @@
         },
         methods: {
             init() {
-                this.totalAmount = this.programmeList.length;
+                this.$service.getSubjectList({
+                    name: '',
+                    subjectCategory: '',
+                    subjectType: '',
+                    pageNum: 1,
+                    pageSize: 10
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.programmeList = response.data.list;
+                        this.totalAmount = this.programmeList.length;
+                    }
+                });
             },
             handleSizeChange(pageSize) {
                 this.pageSize = pageSize;
@@ -254,19 +211,22 @@
             // 查询专题详情
             checkSubjectDetail(item) {
                 this.$router.push({
-                    name: item.type === '人物' ? 'PersonSubjectDetail' : 'ProgrammeSubjectDetail', params: {id: item.id}
+                    name: item.category === 'FIGURE' ? 'PersonSubjectDetail' : 'ProgrammeSubjectDetail',
+                    params: {id: item.id}
                 });
             },
             // 编辑专题基本信息
             editBasicInfo(item) {
                 this.$router.push({
-                    name: item.type === '人物' ? 'EditPersonSubject' : 'EditProgrammeSubject', params: {id: item.id}
+                    name: item.category === 'FIGURE' ? 'EditPersonSubject' : 'EditProgrammeSubject',
+                    params: {id: item.id}
                 });
             },
             // 编辑专题包含项
             editSubjectContainer(item) {
                 this.$router.push({
-                    name: item.type === '人物' ? 'EditSubjectPersons' : 'EditSubjectProgrammes', params: {id: item.id}
+                    name: item.category === 'FIGURE' ? 'EditSubjectPersons' : 'EditSubjectProgrammes',
+                    params: {id: item.id}
                 });
             },
             // 创建专题

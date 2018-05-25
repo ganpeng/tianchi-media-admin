@@ -8,10 +8,10 @@
                 <el-input v-model="subjectInfo.name" placeholder="请填写30个字以内的名称"></el-input>
             </el-form-item>
             <template v-if="status === '0' || status === '2'">
-                <el-form-item label="节目专题类别" prop="type" required>
-                    <el-select v-model="subjectInfo.type" multiple placeholder="请选择节目专题类别">
+                <el-form-item label="节目专题类别" prop="typeList" required>
+                    <el-select v-model="subjectInfo.typeList" multiple placeholder="请选择节目专题类别">
                         <el-option
-                            v-for="item in typeOptions"
+                            v-for="item in typeListOptions"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -47,7 +47,13 @@
                 <ul class="cover-list">
                     <li v-for="(item,index) in subjectInfo.posterImageList" :key="index">
                         <img :src="item.uri" :alt="item.name" @click="displayImage(index)">
-                        <label @click="removePosterImage(index)">删除</label>
+                        <div class="info">
+                            <div class="name">{{item.name}}</div>
+                            <div>
+                                <label>{{item.width}}*{{item.height}}</label>
+                                <label @click="removePosterImage(index)" class="remove">删除</label>
+                            </div>
+                        </div>
                     </li>
                     <li @click="imageUploadDialogVisible = true">
                         <i class="el-icon-plus"></i>
@@ -112,12 +118,12 @@
                     callback();
                 }
             };
-            let checkTypes = (rule, value, callback) => {
+            let checkTypeList = (rule, value, callback) => {
                 // 对于创建或者编辑节目专题，不存在当前字段，也不校验
                 if (this.status === '1' || this.status === '3') {
                     return;
                 }
-                if (!this.subjectInfo.types) {
+                if (!this.subjectInfo.typeList) {
                     return callback(new Error('请选择节目专题类别'));
                 } else {
                     callback();
@@ -143,27 +149,22 @@
                 size: subjectDimension,
                 subjectInfo: {
                     name: '',
-                    types: [],
+                    typeList: [],
                     description: '',
                     tagList: [],
                     posterImageList: []
                 },
-                typeOptions: [{
+                typeListOptions: [{
                     label: '电视剧',
-                    value: 1
+                    value: 'TV_DRAMA'
                 }, {
                     label: '电影',
-                    value: 2
+                    value: 'MOVIE'
                 }, {
                     label: '娱乐',
-                    value: 3
+                    value: 'VARIETY_SHOW'
                 }],
-                tagOptions: [
-                    '奥斯卡',
-                    '爱情',
-                    '古装',
-                    '年代',
-                    '乡村'],
+                tagOptions: [],
                 previewImage: {
                     display: false,
                     autoplay: false,
@@ -175,8 +176,8 @@
                     name: [
                         {validator: checkName, trigger: 'blur'}
                     ],
-                    types: [
-                        {validator: checkTypes, trigger: 'change'}
+                    typeList: [
+                        {validator: checkTypeList, trigger: 'change'}
                     ],
                     description: [
                         {validator: checkDescription, trigger: 'blur'}
@@ -210,6 +211,12 @@
         methods: {
             // 初始化数据
             init() {
+                // 初始化专题标签列表
+                this.$service.getSubjectTagList().then(response => {
+                    if (response) {
+                        this.tagOptions = response.data;
+                    }
+                });
                 switch (this.status) {
                     // 创建节目专题，获取节目类型等数据
                     case '0':
@@ -263,16 +270,18 @@
                         switch (this.status) {
                             // 创建节目专题
                             case '0':
+                                this.$service.createProgrammeSubject(this.subjectInfo).then(response => {
+                                    if (response && response.code === 0) {
+                                        this.dialogVisible = true;
+                                    }
+                                });
                                 break;
-                            // 创建人物专题，subjectInfo中没有types属性,删除
+                            // 创建人物专题，subjectInfo中没有typeList属性,删除
                             case '1':
-                                delete this.subjectInfo.types;
+                                delete this.subjectInfo.typeList;
                                 this.$service.createFigureSubject(this.subjectInfo).then(response => {
-                                    if (response) {
-                                        this.$message({
-                                            message: '创建人物专题成功',
-                                            type: 'success'
-                                        });
+                                    if (response && response.code === 0) {
+                                        this.dialogVisible = true;
                                     }
                                 });
                                 break;
@@ -360,17 +369,29 @@
                     visibility: visible;
                 }
             }
+            .info {
+                .name {
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+                div {
+                    display: flex;
+                    justify-content: space-between;
+                    height: 32px;
+                }
+            }
             img {
                 display: block;
                 height: 180px;
                 cursor: zoom-in;
             }
             label {
-                visibility: hidden;
-                text-align: center;
-                font-size: 16px;
-                color: orangered;
-                cursor: pointer;
+                font-size: 14px;
+                &.remove {
+                    color: #409EFF;
+                    cursor: pointer;
+                }
             }
         }
     }

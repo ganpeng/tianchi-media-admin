@@ -3,7 +3,7 @@
     <div>
         <el-form :inline="true" class="demo-form-inline search-form">
             <el-form-item label="地区">
-                <el-select v-model="areaValue" placeholder="请选择地区">
+                <el-select v-model="area" placeholder="请选择地区">
                     <el-option
                         v-for="item in areaOptions"
                         :key="item.value"
@@ -13,7 +13,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item class="search">
-                <el-input v-model="searchContent" placeholder="请输入关键字">
+                <el-input v-model="name" placeholder="请输入关键字">
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                 </el-input>
             </el-form-item>
@@ -38,12 +38,12 @@
             <el-table-column
                 label="图片">
                 <template slot-scope="scope">
-                    <img :src="scope.row.url" @click="displayImage(scope.row)" alt="人物图片">
+                    <img :src="scope.row.posterImageList[0].uri" @click="displayImage(scope.row)" alt="人物图片">
                 </template>
             </el-table-column>
             <el-table-column
                 prop="description"
-                label="简介">
+                label="人物简介">
                 <template slot-scope="scope">
                     <label>{{scope.row.description}}</label>
                     <el-popover
@@ -70,7 +70,7 @@
         <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="currentPage"
+            :current-page="pageNum"
             :page-sizes="[10, 20, 30, 50]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
@@ -94,7 +94,7 @@
                 previewImage: {
                     title: '',
                     display: false,
-                    url: ''
+                    ur: ''
                 },
                 releasedValue: '',
                 areaOptions: [{
@@ -110,45 +110,12 @@
                     value: '4',
                     label: '海外'
                 }],
-                areaValue: '',
-                searchContent: '',
-                currentPage: 1,
+                area: '',
+                name: '',
+                pageNum: 1,
                 pageSize: 10,
                 totalAmount: 0,
-                personList: [
-                    {
-                        id: 1,
-                        name: '胡歌',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
-                        description: '十二年前七万赤焰军被奸人所害导致全军覆没，冤死梅岭，只剩少帅林殊（张哲瀚 饰）侥幸生还。十二年后林殊改头换面化身“麒麟才子”梅长苏（胡歌 饰），建立江左盟，以“琅琊榜”第一才子的身份重返帝都。梅长苏背负血海深仇，暗中帮助昔日挚友靖王（王凯 饰）周旋于太子（高鑫 饰）与誉王（黄维德 饰）的斗争之中，同时又遇到了昔日未婚妻——云南王郡主穆霓凰（刘涛 饰）却不能相见。梅长苏以病弱之躯为昭雪冤案、为振兴河山，踏上了一条黑暗又惊心动魄的夺嫡之路。',
-                        area: '中国大陆',
-                        updatedAt: 1402233166999
-                    },
-                    {
-                        id: 2,
-                        name: '胡歌',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
-                        description: '十二年前七万赤焰军被奸人所害导致全军覆没，冤死梅岭，只剩少帅林殊（张哲瀚 饰）侥幸生还。十二年后林殊改头换面化身“麒麟才子”梅长苏（胡歌 饰），建立江左盟，以“琅琊榜”第一才子的身份重返帝都。梅长苏背负血海深仇，暗中帮助昔日挚友靖王（王凯 饰）周旋于太子（高鑫 饰）与誉王（黄维德 饰）的斗争之中，同时又遇到了昔日未婚妻——云南王郡主穆霓凰（刘涛 饰）却不能相见。梅长苏以病弱之躯为昭雪冤案、为振兴河山，踏上了一条黑暗又惊心动魄的夺嫡之路。',
-                        area: '中国大陆',
-                        updatedAt: 1402233166999
-                    },
-                    {
-                        id: 3,
-                        name: '胡歌',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
-                        description: '十二年前七万赤焰军被奸人所害导致全军覆没，冤死梅岭，只剩少帅林殊（张哲瀚 饰）侥幸生还。十二年后林殊改头换面化身“麒麟才子”梅长苏（胡歌 饰），建立江左盟，以“琅琊榜”第一才子的身份重返帝都。梅长苏背负血海深仇，暗中帮助昔日挚友靖王（王凯 饰）周旋于太子（高鑫 饰）与誉王（黄维德 饰）的斗争之中，同时又遇到了昔日未婚妻——云南王郡主穆霓凰（刘涛 饰）却不能相见。梅长苏以病弱之躯为昭雪冤案、为振兴河山，踏上了一条黑暗又惊心动魄的夺嫡之路。',
-                        area: '中国大陆',
-                        updatedAt: 1402233166999
-                    },
-                    {
-                        id: 4,
-                        name: '胡歌',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
-                        description: '十二年前七万赤焰军被奸人所害导致全军覆没，冤死梅岭，只剩少帅林殊（张哲瀚 饰）侥幸生还。十二年后林殊改头换面化身“麒麟才子”梅长苏（胡歌 饰），建立江左盟，以“琅琊榜”第一才子的身份重返帝都。梅长苏背负血海深仇，暗中帮助昔日挚友靖王（王凯 饰）周旋于太子（高鑫 饰）与誉王（黄维德 饰）的斗争之中，同时又遇到了昔日未婚妻——云南王郡主穆霓凰（刘涛 饰）却不能相见。梅长苏以病弱之躯为昭雪冤案、为振兴河山，踏上了一条黑暗又惊心动魄的夺嫡之路。',
-                        area: '中国大陆',
-                        updatedAt: 1402233166999
-                    }
-                ],
+                personList: [],
                 multipleSelection: []
             };
         },
@@ -157,13 +124,28 @@
         },
         methods: {
             init() {
-                this.totalAmount = this.personList.length;
+                this.getPersonList();
+            },
+            getPersonList() {
+                this.$service.getPersonList({
+                    name: this.name,
+                    area: this.area,
+                    pageNum: this.pageNum,
+                    pageSize: this.pageSize
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.personList = response.data.list;
+                        this.totalAmount = this.personList.length;
+                    }
+                });
             },
             handleSizeChange(pageSize) {
                 this.pageSize = pageSize;
+                this.getPersonList();
             },
-            handleCurrentChange(currentPage) {
-                this.currentPage = currentPage;
+            handleCurrentChange(pageNum) {
+                this.pageNum = pageNum;
+                this.getPersonList();
             },
             // 添加人物
             appendProgram() {
