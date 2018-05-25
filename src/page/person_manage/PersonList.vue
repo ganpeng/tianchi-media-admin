@@ -43,7 +43,7 @@
             </el-form-item>
         </el-form>
         <el-table :data="list" border style="width:100%">
-            <el-table-column prop="id" align="center" label="编号"></el-table-column>
+            <el-table-column prop="id" align="center" width="240px" label="编号"></el-table-column>
             <el-table-column label="照片" align="center" >
                 <template slot-scope="scope">
                     <img width="80px" height="80px" class="person-image" :src="(scope.row.posterImageList[0] ? scope.row.posterImageList[0].uri :'' )" alt="">
@@ -73,7 +73,7 @@
                     {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
-            <el-table-column align="center" fixed="right" label="操作">
+            <el-table-column align="center" width="120px" fixed="right" label="操作">
                 <template slot-scope="scope">
                     <el-button type="text" size="small" @click="displayPerson(scope.row.id)">查看</el-button>
                     <el-button type="text" size="small" @click="editPerson(scope.row.id)">编辑</el-button>

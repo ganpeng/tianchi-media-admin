@@ -17,7 +17,7 @@
                         </el-form-item>
                         <el-form-item label="节目名称" prop="name">
                             <el-input
-                                :readonly="readonly"
+                                :disabled="readonly"
                                 @input="inputHandler($event, 'name')"
                                 :value="programme.name">
                             </el-input>
@@ -31,7 +31,7 @@
                         <el-form-item label="节目简介" prop="description">
                             <el-input
                                 type="textarea"
-                                :readonly="readonly"
+                                :disabled="readonly"
                                 @input="inputHandler($event, 'description')"
                                 :autosize="{ minRows: 4, maxRows: 40}"
                                 placeholder="请输入内容"
@@ -40,7 +40,7 @@
                         </el-form-item>
                         <el-form-item label="上映时间" prop="announceAt">
                             <el-date-picker
-                                :readonly="readonly"
+                                :disabled="readonly"
                                 :value="programme.announceAt"
                                 @input="inputHandler($event, 'announceAt')"
                                 type="year"
@@ -65,49 +65,34 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="节目分类" prop="category">
-                            <multiselect
-                                id="category"
-                                class="multiselect-container"
-                                :value="programme.category"
-                                label="name"
-                                track-by="name"
-                                placeholder=""
-                                :options="categroyList"
-                                :close-on-select="true"
-                                open-direction="bottom"
-                                :hideSelected="true"
-                                selectLabel=""
+                            <el-select
+                                :value="serializeCategory"
+                                @change="categoryChangeHandler"
                                 :disabled="readonly"
-                                @input="updateCategoryValue">
-                                <template slot="tag" slot-scope="props">
-                                    <span> {{ props.option.name}} </span>
-                                    <span class="custom__remove" @click="props.remove(props.option)"><i class="el-icon-close"></i></span>
-                                </template>
-                            </multiselect>
+                                placeholder="请选择">
+                                <el-option
+                                    v-for="item in categroyList"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
                             <el-button type="primary" @click="gotoProgramTypePage" plain>管理分类和类型</el-button>
                         </el-form-item>
                         <el-form-item label="节目类型" prop="typeList">
-                            <multiselect
-                                id="category"
-                                class="multiselect-container"
-                                :value="programme.typeList"
-                                label="name"
-                                track-by="name"
-                                placeholder=""
-                                :options="programme.currentTypeList"
-                                :close-on-select="true"
-                                :multiple="true"
-                                open-direction="bottom"
-                                :preselect-first="true"
-                                :hideSelected="true"
-                                selectLabel=""
+                            <el-select
+                                :value="serializeTypeList"
+                                multiple
                                 :disabled="readonly"
-                                @input="updateTypeListValue">
-                                <template slot="tag" slot-scope="props">
-                                    <span> {{ props.option.name}} </span>
-                                    <span class="custom__remove" @click="props.remove(props.option)"><i class="el-icon-close"></i></span>
-                                </template>
-                            </multiselect>
+                                @change="typeListChangeHandler"
+                                placeholder="请选择">
+                                <el-option
+                                    v-for="item in programme.currentTypeList"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
                         </el-form-item>
                         <el-form-item label="关键字" prop="tagList">
                             <el-select
@@ -127,68 +112,49 @@
                         </el-form-item>
                         <el-form-item label="节目主演" prop="leadActor">
                             <label for="leadActor"></label>
-                            <multiselect
-                                id="lead"
-                                class="multiselect-container"
-                                :value="programme.leadActor"
-                                label="name"
-                                track-by="name"
-                                placeholder=""
-                                :options="programme.leadActorResult"
-                                :multiple="true"
-                                :searchable="true"
-                                :loading="isLoading"
-                                :close-on-select="true"
-                                :max-height="600"
-                                open-direction="bottom"
-                                :show-no-results="true"
-                                :hideSelected="true"
-                                selectLabel=""
-                                @input="updateLeadActorValue"
+                            <el-select
+                                :value="leadActorValue"
+                                multiple
+                                filterable
+                                remote
                                 :disabled="readonly"
-                                @search-change="findLeadActor">
-                                <template slot="tag" slot-scope="props">
-                                    <span> {{ props.option.name}} </span>
-                                    <span class="custom__remove" @click="props.remove(props.option)"><i class="el-icon-close"></i></span>
-                                </template>
-                                <span slot="noResult">您搜索的人物不存在</span>
-                            </multiselect>
+                                placeholder="请输入人物名称"
+                                @change="updateLeadActorValue"
+                                :remote-method="findLeadActor"
+                                :loading="isLeadActorLoading">
+                                <el-option
+                                    v-for="item in programme.leadActorResult"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
                             <el-button type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                         </el-form-item>
                         <el-form-item label="节目导演" prop="director">
-                            <label for="director"></label>
-                            <multiselect
-                                id="director"
-                                class="multiselect-container"
-                                :value="programme.director"
-                                label="name"
-                                track-by="name"
-                                placeholder=""
-                                :options="programme.directorResult"
-                                :multiple="true"
-                                :searchable="true"
-                                :loading="isLoading"
-                                :close-on-select="true"
-                                :max-height="600"
-                                open-direction="bottom"
-                                :show-no-results="true"
-                                :hideSelected="true"
-                                selectLabel=""
-                                @input="updateDirectorValue"
+                            <el-select
+                                :value="directorValue"
+                                multiple
+                                filterable
+                                remote
                                 :disabled="readonly"
-                                @search-change="findDirector">
-                                <template slot="tag" slot-scope="props">
-                                    <span> {{ props.option.name}} </span>
-                                    <span class="custom__remove" @click="props.remove(props.option)"><i class="el-icon-close"></i></span>
-                                </template>
-                                <span slot="noResult">您搜索的人物不存在</span>
-                            </multiselect>
+                                placeholder="请输入人物名称"
+                                @change="updateDirectorValue"
+                                :remote-method="findDirector"
+                                :loading="isDirectorLoading">
+                                <el-option
+                                    v-for="item in programme.directorResult"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
                             <el-button type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                         </el-form-item>
                         <el-form-item label="版权起始日期" prop="copyrightRange">
                             <el-date-picker
                                 :value="programme.copyrightRange"
-                                :readonly="readonly"
+                                :disabled="readonly"
                                 type="daterange"
                                 @input="inputHandler($event, 'copyrightRange')"
                                 range-separator="至"
@@ -228,14 +194,14 @@
                         </el-form-item>
                         <el-form-item label="总集数" prop="featureVideoCount">
                             <el-input
-                                :readonly="readonly"
+                                :disabled="readonly"
                                 :value="programme.featureVideoCount"
                                 @input="inputHandler($event, 'featureVideoCount')" >
                             </el-input>
                         </el-form-item>
                         <el-form-item label="显示播放量" prop="playCountBasic">
                             <el-input
-                                :readonly="readonly"
+                                :disabled="readonly"
                                 :value="programme.playCountBasic"
                                 @input="inputHandler($event, 'playCountBasic')">
                             </el-input>
@@ -265,7 +231,17 @@
             <el-col :span="24">
                 <div class="block-title">节目视频</div>
                 <el-button v-if="!readonly" type="primary" @click="videoUploadDialogVisible = true">添加视频<i class="el-icon-upload el-icon--right"></i></el-button>
-                <programme-table :status="3" :data-list="programmeVideoList"></programme-table>
+                <programme-table title="待添加视频列表" :tableStatus="0" :status="3" :data-list="unSavedVideoList"></programme-table>
+                <programme-table title="已添加视频列表" :tableStatus="1" :status="3" :data-list="programmeVideoList"></programme-table>
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="pagination.pageNum"
+                    :page-sizes="[5, 10, 20, 30, 50]"
+                    :page-size="pagination.pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="pagination.total">
+                </el-pagination>
             </el-col>
         </el-row>
         <div class="group">
@@ -285,7 +261,6 @@
     </div>
 </template>
 <script>
-    import Multiselect from 'vue-multiselect';
     import { mapMutations, mapGetters, mapActions } from 'vuex';
     import CreatePersonDialog from './CreatePersonDialog';
     import ProgrammeTable from './ProgrammeTable';
@@ -296,7 +271,6 @@
     export default {
         name: 'ProgrammeDetail',
         components: {
-            Multiselect,
             UploadImage,
             CreatePersonDialog,
             ProgrammeTable,
@@ -309,13 +283,15 @@
         },
         created() {
             this.resetProgramme();
+            this.resetVideoList();
             this.getProgrammeCategory();
         },
         data() {
             return {
                 selectedCountries: [],
                 countries: [],
-                isLoading: false,
+                isLeadActorLoading: false,
+                isDirectorLoading: false,
                 imageUploadDialogVisible: false,
                 dialogVisible: false,
                 videoUploadDialogVisible: false,
@@ -376,7 +352,12 @@
                 categroyList: 'programme/categroyList',
                 currentVideoIdList: 'programme/currentVideoIdList',
                 programmeVideoList: 'programme/programmeVideoList',
-                programmeVideoPagination: 'programme/programmeVideoPagination'
+                pagination: 'programme/programmeVideoPagination',
+                serializeCategory: 'programme/serializeCategory',
+                serializeTypeList: 'programme/serializeTypeList',
+                leadActorValue: 'programme/leadActorValue',
+                directorValue: 'programme/directorValue',
+                unSavedVideoList: 'programmeVideo/unSavedVideoList'
             }),
             readonly() {
                 return parseInt(this.status) === 1;
@@ -389,19 +370,26 @@
                 setSearchStr: 'person/setSearchStr',
                 addPosterImage: 'programme/addPosterImage',
                 deletePosterImage: 'programme/deletePosterImage',
-                setProgrammeId: 'programmeVideo/setProgrammeId'
+                resetVideoList: 'programmeVideo/resetVideoList',
+                setVideoPagination: 'programme/setVideoPagination',
+                updateCategoryValue: 'programme/updateCategoryValue',
+                updateTypeList: 'programme/updateTypeList',
+                updateLeadActor: 'programme/updateLeadActor',
+                updateDirector: 'programme/updateDirector',
+                updateLeadActorResult: 'programme/updateLeadActorResult',
+                updateDirectorResult: 'programme/updateDirectorResult'
             }),
             ...mapActions({
                 createProgramme: 'programme/createProgramme',
                 updateProgramme: 'programme/updateProgramme',
                 getPersonList: 'person/getPersonList',
                 getProgrammeCategory: 'programme/getProgrammeCategory',
-                createMultProgrammeVideo: 'programmeVideo/createMultProgrammeVideo'
+                createMultProgrammeVideo: 'programmeVideo/createMultProgrammeVideo',
+                getProgrammeVideoListById: 'programme/getProgrammeVideoListById'
             }),
             _createProgramme() {
                 this.createProgramme()
                     .then((res) => {
-                        this.setProgrammeId({programmeId: res.data.id});
                         this.createMultProgrammeVideo(res.data.id)
                             .then((...res) => {
                                 this.$router.push({ name: 'ProgrammeList' });
@@ -412,7 +400,6 @@
                 let {id} = this.$route.params;
                 this.updateProgramme(id)
                     .then((res) => {
-                        this.setProgrammeId({programmeId: id});
                         this.createMultProgrammeVideo(id)
                             .then((...res) => {
                                 this.$router.push({ name: 'ProgrammeList' });
@@ -447,38 +434,29 @@
             },
             findDirector(name) {
                 if (name) {
-                    this.isLoading = true;
+                    this.isDirectorLoading = true;
                     this.getPersonList({name, isProgramme: true})
                         .then((res) => {
-                            this.updateCurrentProgramme({'directorResult': res.data.list});
+                            this.updateDirectorResult({'directorResult': res.data.list});
                         }).finally(() => {
-                            this.isLoading = false;
+                            this.isDirectorLoading = false;
                         });
                 }
             },
             updateDirectorValue(value) {
-                this.updateCurrentProgramme({'director': value});
+                this.updateDirector({directorIdList: value});
             },
             updateLeadActorValue(value) {
-                this.updateCurrentProgramme({'leadActor': value});
-            },
-            updateCategoryValue(value) {
-                this.updateCurrentProgramme({'category': value});
-                let currentTypeList = this.categroyList.find((category) => category.id === value.id).programmeTypeList;
-                this.updateCurrentProgramme({currentTypeList});
-                this.updateCurrentProgramme({'typeList': []});
-            },
-            updateTypeListValue(value) {
-                this.updateCurrentProgramme({'typeList': value});
+                this.updateLeadActor({leadActorIdList: value});
             },
             findLeadActor(name) {
                 if (name) {
-                    this.isLoading = true;
+                    this.isLeadActorLoading = true;
                     this.getPersonList({name, isProgramme: true})
                         .then((res) => {
-                            this.updateCurrentProgramme({'leadActorResult': res.data.list});
+                            this.updateLeadActorResult({'leadActorResult': res.data.list});
                         }).finally(() => {
-                            this.isLoading = false;
+                            this.isLeadActorLoading = false;
                         });
                 }
             },
@@ -500,28 +478,26 @@
                             message: '已取消删除'
                         });
                     });
+            },
+            handleSizeChange(pageSize) {
+                let {id} = this.$route.params;
+                this.setVideoPagination({pageSize});
+                this.getProgrammeVideoListById(id);
+            },
+            handleCurrentChange(pageNum) {
+                let {id} = this.$route.params;
+                this.setVideoPagination({pageNum});
+                this.getProgrammeVideoListById(id);
+            },
+            categoryChangeHandler(id) {
+                this.updateCategoryValue({id});
+                this.updateCurrentProgramme({'typeList': []});
+            },
+            typeListChangeHandler(value) {
+                this.updateTypeList({type: value});
             }
         }
     };
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style lang="less" scoped>
-.multiselect-container {
-    width: 194px;
-    display: inline-block;
-}
-</style>
-<style>
-.multiselect__tags {
-    padding: 0 0 0 5px!important;
-}
-.multiselect__input, .multiselect__single {
-    line-height: 40px;
-}
-.multiselect__option--highlight {
-    background: gray;
-}
-.multiselect__input, .multiselect__single {
-    margin-bottom: 0;
-}
 </style>

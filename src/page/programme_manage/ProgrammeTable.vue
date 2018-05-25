@@ -9,6 +9,7 @@
                 style="width: 100%">
                 <el-table-column
                     prop="id"
+                    v-if="tableStatus === 1"
                     label="视频ID"
                     align="center"
                     width="240px">
@@ -71,6 +72,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                    v-if="tableStatus === 1"
                     prop="createdAt"
                     align="center"
                     min-width="120px"
@@ -85,8 +87,9 @@
                     align="center"
                     width="160">
                     <template slot-scope="scope">
-                        <el-button @click="displayVideo(scope.row.id)" type="text" size="small">查看</el-button>
-                        <el-button v-if="status === 3" @click="editVideo(scope.row.id)" type="text" size="small">编辑</el-button>
+                        <el-button v-if="tableStatus !== 0" @click="displayVideo(scope.row.id)" type="text" size="small">查看</el-button>
+                        <el-button v-if="status === 3 && tableStatus !== 0" @click="editVideo(scope.row.id)" type="text" size="small">编辑</el-button>
+                        <el-button v-if="tableStatus === 0" @click="deleteUnsavedVideo(scope.row.uid)" type="text" size="small">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -95,7 +98,7 @@
     </div>
 </template>
 <script>
-import {mapActions} from 'vuex';
+import {mapActions, mapMutations} from 'vuex';
 import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 export default {
     name: 'ProgrammeTable',
@@ -109,11 +112,14 @@ export default {
         },
         title: {
             type: String,
-            default: '电视剧'
+            default: ''
         },
         status: {
             type: Number, // 1表示“电视剧”， 2表示“电影”， 3表示“综艺”
             default: 1
+        },
+        tableStatus: {
+            type: Number // 0表示“待添加视频列表“ 1表示”已添加视频列表“
         }
     },
     data() {
@@ -132,6 +138,9 @@ export default {
         }
     },
     methods: {
+        ...mapMutations({
+            deleteVideoFromList: 'programmeVideo/deleteVideoFromList'
+        }),
         ...mapActions({
             getProgrammeVideo: 'programmeVideo/getProgrammeVideo'
         }),
@@ -151,6 +160,20 @@ export default {
         },
         closeVideoDialog(status) {
             this.videoUploadDialogVisible = status;
+        },
+        deleteUnsavedVideo(uid) {
+            this.$confirm('此操作将永久删除该视频, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'error'
+            }).then(() => {
+                this.deleteVideoFromList({uid});
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
         }
     }
 };

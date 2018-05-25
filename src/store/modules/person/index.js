@@ -100,13 +100,13 @@ const mutations = {
 const actions = {
     getPersonList({commit, state}, {isProgramme, name}) {
         let searchName = !name ? state.searchStr : name;
-        return service.getPersonList({ pageNum: state.pageNum, pageSize: state.pageSize, name: searchName, area: state.area })
+        return service.getPersonList({ pageNum: state.pageNum - 1, pageSize: state.pageSize, name: searchName, area: state.area })
             .then((res) => {
                 if (res && res.code === 0) {
                     let {pageNum, pageSize, total, list} = res.data;
                     if (!isProgramme) {
                         commit('setPersonList', {list});
-                        commit('setPagination', {pageSize, pageNum, total});
+                        commit('setPagination', {pageSize, pageNum: pageNum + 1, total});
                     } else {
                         return res;
                     }

@@ -15,6 +15,10 @@ module.exports = {
             '/admin/v': {
                 target: env.proxyTarget,
                 changeOrigin: true
+            },
+            '/storage/v': {
+                target: env.proxyTarget,
+                changeOrigin: true
             }
         },
 

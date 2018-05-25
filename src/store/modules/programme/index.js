@@ -79,9 +79,10 @@ const defaultState = {
     releaseStatus: '',
     releaseAt: '',
     releaseArea: '',
-    category: {},
-    programmeType: '',
-    currentProgramme: {},
+    programmeCategory: {},
+    currentTypeList: [],
+    programmeType: {},
+    currentProgramme: defaultProgramme,
     list: [],
     pageNum: 1,
     pageSize: 5,
@@ -124,11 +125,38 @@ const getters = {
             return programme ? (programme.category ? programme.category.name : '') : '';
         };
     },
+    serializeCategory(state) {
+        return state.currentProgramme.category.id;
+    },
+    searchCategory(state) {
+        return state.programmeCategory.id;
+    },
+    serializeTypeList(state) {
+        return state.currentProgramme.typeList.map((item) => item.id);
+    },
+    searchType(state) {
+        return state.programmeType.id;
+    },
+    searchCurrentTypeList(state) {
+        return state.currentTypeList;
+    },
+    releaseArea(state) {
+        return state.releaseArea;
+    },
+    releaseAt(state) {
+        return state.releaseAt;
+    },
     typeList(state) {
         return (id) => {
             let programme = getProgrammeById(id);
             return programme.typeList.map((item) => item.name).join(', ');
         };
+    },
+    leadActorValue(state) {
+        return state.currentProgramme.leadActor.map((item) => item.id);
+    },
+    directorValue() {
+        return state.currentProgramme.director.map((item) => item.id);
     },
     getDirector(state) {
         return (id) => {
@@ -166,7 +194,7 @@ const getters = {
         return state.currentProgrammeVideoObj.list;
     },
     programmeVideoPagination(state) {
-        return _.pick(state.currentProgrammeVideoObj, ['pageSIze', 'pageSize', 'total']);
+        return _.pick(state.currentProgrammeVideoObj, ['pageNum', 'pageSize', 'total']);
     }
 };
 
@@ -185,17 +213,94 @@ const mutations = {
             state.total = payload.total;
         }
     },
+    setVideoPagination(state, payload) {
+        if (payload.pageSize) {
+            state.currentProgrammeVideoObj.pageSize = payload.pageSize;
+        }
+        if (payload.pageNum) {
+            state.currentProgrammeVideoObj.pageNum = payload.pageNum;
+        }
+        if (payload.total) {
+            state.currentProgrammeVideoObj.total = payload.total;
+        }
+    },
     setCurrentProgramme(state, payload) {
         state.currentProgramme = payload.currentProgramme;
     },
     updateCurrentProgramme(state, payload) {
         state.currentProgramme = Object.assign({}, state.currentProgramme, payload);
     },
+    setSearchField(state, payload) {
+        if (payload.releaseArea) {
+            state.releaseArea = payload.releaseArea;
+        }
+        if (payload.releaseAt) {
+            state.releaseAt = payload.releaseAt;
+        }
+    },
     resetCurrentProgramme(state) {
         state.currentProgramme = Object.assign({}, defaultProgramme);
     },
     resetProgramme(state) {
         state = Object.assign({}, defaultState);
+    },
+    updateCategoryValue(state, payload) {
+        let category = state.categoryList.find((item) => {
+            return item.id === payload.id;
+        });
+        state.currentProgramme.category = category;
+        state.currentProgramme.currentTypeList = category.programmeTypeList;
+    },
+    updateSearchCategoryValue(state, payload) {
+        if (payload.id) {
+            let category = state.categoryList.find((item) => {
+                return item.id === payload.id;
+            });
+            state.programmeCategory = category;
+            state.currentTypeList = category.programmeTypeList;
+        }
+    },
+    updateTypeList(state, payload) {
+        state.currentProgramme.typeList = payload.type.map((id) => {
+            return state.currentProgramme.currentTypeList.find((item) => {
+                return item.id === id;
+            });
+        });
+    },
+    updateSearchType(state, payload) {
+        if (payload.id) {
+            state.programmeType = state.currentTypeList.find((item) => item.id === payload.id);
+        }
+    },
+    resetSearchCategory(state) {
+        state.programmeCategory = {};
+        state.currentTypeList = [];
+        state.programmeType = {};
+    },
+    resetSearchType(state) {
+        state.programmeType = {};
+    },
+    updateLeadActor(state, payload) {
+        state.currentProgramme.leadActor = payload.leadActorIdList.map((id) => {
+            return state.currentProgramme.leadActorResult.find((item) => {
+                return item.id === id;
+            });
+        });
+    },
+    updateDirector(state, payload) {
+        state.currentProgramme.director = payload.directorIdList.map((id) => {
+            return state.currentProgramme.directorResult.find((item) => {
+                return item.id === id;
+            });
+        });
+    },
+    updateLeadActorResult(state, payload) {
+        let {leadActorResult} = state.currentProgramme;
+        state.currentProgramme.leadActorResult = _.uniqBy(leadActorResult.concat(payload.leadActorResult), 'id');
+    },
+    updateDirectorResult(state, payload) {
+        let {directorResult} = state.currentProgramme;
+        state.currentProgramme.directorResult = _.uniqBy(directorResult.concat(payload.directorResult), 'id');
     },
     addPosterImage(state, payload) {
         state.currentProgramme.posterImages.push(payload.posterImage);
@@ -243,6 +348,18 @@ const mutations = {
         let {id} = state.currentProgramme.category;
         let currentTypeList = state.categoryList.find((item) => item.id === id);
         state.currentProgramme.currentTypeList = currentTypeList.programmeTypeList;
+    },
+    updateCurrentProgrammeVideoItem(state, payload) {
+        let {video} = payload;
+        let id = video.id;
+        let list = state.currentProgrammeVideoObj.list;
+        state.currentProgrammeVideoObj.list = list.map((videoItem) => {
+            if (videoItem.id === id) {
+                return video;
+            } else {
+                return videoItem;
+            }
+        });
     }
 };
 
@@ -250,7 +367,7 @@ const mutations = {
  * 对节目数据做处理
  */
 function formatProgrammeData(programmeData) {
-    return Object.assign({}, programmeData, {
+    let result = Object.assign({}, programmeData, {
         // 版权开始日期
         copyrightStartedAt: programmeData.copyrightRange[0],
         // 版权结束日期
@@ -270,27 +387,44 @@ function formatProgrammeData(programmeData) {
             return obj;
         }))
     });
+
+    delete result.category.programmeTypeList;
+    return result;
 }
 
 /**
  *  序列化服务端返回的数据
  */
 function serializeProgrammData(programmeData) {
+    let director = programmeData.figureList.filter((item) => item.role === 'DIRECTOR');
+    let leadActor = programmeData.figureList.filter((item) => item.role === 'CHIEF_ACTOR');
+    let directorResult = [];
+    let leadActorResult = [];
+
+    if (director.length > 0) {
+        directorResult = director;
+    }
+    if (leadActor.length > 0) {
+        leadActorResult = leadActor;
+    }
+
     return Object.assign({}, defaultProgramme, programmeData, {
         copyrightRange: [programmeData.copyrightStartedAt, programmeData.copyrightEndedAt],
-        director: programmeData.figureList.filter((item) => item.role === 'DIRECTOR'),
-        leadActor: programmeData.figureList.filter((item) => item.role === 'CHIEF_ACTOR')
+        director,
+        leadActor,
+        directorResult,
+        leadActorResult
     });
 }
 
 const actions = {
     getProgrammeList({commit, state}) {
-        service.getProgrammeList(_.pick(state, searchFields))
+        service.getProgrammeList(Object.assign({}, _.pick(state, searchFields), {pageNum: state.pageNum - 1}))
             .then((res) => {
                 if (res && res.code === 0) {
                     let {pageNum, pageSize, total, list} = res.data;
                     commit('setProgrammeList', {list});
-                    commit('setPagination', {pageSize, pageNum, total});
+                    commit('setPagination', {pageSize, pageNum: pageNum + 1, total});
                 }
             });
     },
@@ -359,12 +493,12 @@ const actions = {
             });
     },
     getProgrammeVideoListById({commit, state}, id) {
-        let {pageSize, pageNum} = state;
-        return service.getProgrammeVideoListById({pageSize, pageNum, programmeId: id})
+        let {pageSize, pageNum} = state.currentProgrammeVideoObj;
+        return service.getProgrammeVideoListById({pageSize, pageNum: pageNum - 1, programmeId: id})
             .then((res) => {
                 if (res && res.code === 0) {
                     let {pageNum, pageSize, total, list} = res.data;
-                    commit('setProgrammeVideoObj', {list, pageSize, pageNum, total});
+                    commit('setProgrammeVideoObj', {list, pageSize, pageNum: pageNum + 1, total});
                 }
             });
     },

@@ -32,16 +32,19 @@
                 <span class="search-title">筛选条件：</span>
                 <el-form-item label="上映时间">
                     <el-date-picker
-                        :value="searchFields.releaseAt"
+                        :value="releaseAt"
                         type="year"
+                        clearable
+                        @input="inputHandler($event, 'releaseAt')"
                         placeholder="请选择上映时间">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="地区">
                     <el-select
-                        :value="searchFields.releaseArea"
+                        :value="releaseArea"
                         clearable
                         filterable
+                        @change="inputHandler($event, 'releaseArea')"
                         placeholder="请选择制片地区"
                     >
                         <el-option
@@ -54,22 +57,32 @@
                 </el-form-item>
                 <el-form-item label="分类">
                     <el-select
-                        :value="searchFields.programmeCategory"
+                        :value="searchCategory"
                         clearable
-                        placeholder="请选择分类"
-                    >
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                        @clear="clearSearchCategory"
+                        @change="categoryChangeHandler"
+                        placeholder="请选择">
+                        <el-option
+                            v-for="item in categroyList"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="类型">
                     <el-select
-                        :value="searchFields.programmeType"
+                        :value="searchType"
+                        @change="typeListChangeHandler"
                         clearable
-                        placeholder="请选择类型"
-                    >
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                        @clear="clearSearchType"
+                        placeholder="请选择">
+                        <el-option
+                            v-for="item in searchCurrentTypeList"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="状态">
@@ -161,6 +174,7 @@ export default {
     },
     created() {
         this.getProgrammeList();
+        this.getProgrammeCategory();
     },
     computed: {
         ...mapGetters({
@@ -171,15 +185,27 @@ export default {
             typeList: 'programme/typeList',
             getDirector: 'programme/getDirector',
             getChiefActor: 'programme/getChiefActor',
-            getPostImage: 'programme/getPostImage'
+            getPostImage: 'programme/getPostImage',
+            searchCategory: 'programme/searchCategory',
+            searchType: 'programme/searchType',
+            searchCurrentTypeList: 'programme/searchCurrentTypeList',
+            releaseArea: 'programme/releaseArea',
+            releaseAt: 'programme/releaseAt',
+            categroyList: 'programme/categroyList'
         })
     },
     methods: {
         ...mapMutations({
-            setPagination: 'programme/setPagination'
+            setPagination: 'programme/setPagination',
+            updateSearchCategoryValue: 'programme/updateSearchCategoryValue',
+            updateSearchType: 'programme/updateSearchType',
+            resetSearchCategory: 'programme/resetSearchCategory',
+            resetSearchType: 'programme/resetSearchType',
+            setSearchField: 'programme/setSearchField'
         }),
         ...mapActions({
-            getProgrammeList: 'programme/getProgrammeList'
+            getProgrammeList: 'programme/getProgrammeList',
+            getProgrammeCategory: 'programme/getProgrammeCategory'
         }),
         clearSearchFields() {},
         editProgramme(id) {
@@ -198,6 +224,21 @@ export default {
         handleCurrentChange(pageNum) {
             this.setPagination({pageNum});
             this.getProgrammeList();
+        },
+        categoryChangeHandler(id) {
+            this.updateSearchCategoryValue({id});
+        },
+        typeListChangeHandler(value) {
+            this.updateSearchType({id: value});
+        },
+        clearSearchCategory() {
+            this.resetSearchCategory();
+        },
+        clearSearchType() {
+            this.resetSearchType();
+        },
+        inputHandler(value, key) {
+            this.setSearchField({[key]: value});
         }
     }
 };

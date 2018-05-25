@@ -1,5 +1,6 @@
 import service from '../../../service';
 import axios from 'axios';
+import uuid from 'uuid';
 
 const defaultProgrammeVideo = {
     // 全平台通用id，从媒资系统过来
@@ -31,11 +32,13 @@ const defaultProgrammeVideo = {
     // 截止播放时间
     displayDeadlineAt: '',
     // 状态 ENUM('NORMAL', 'DELETE') DEFAULT 'NORMAL'
-    poStatus: '',
+    // poStatus: '',
+    status: 'NORMAL',
     // 创建时间
     createdAt: '',
     // 修改时间
-    updatedAt: ''
+    updatedAt: '',
+    uid: ''
 };
 
 const state = {
@@ -50,6 +53,9 @@ const state = {
 const getters = {
     currentProgrammeVideo(state) {
         return state.currentProgrammeVideo;
+    },
+    unSavedVideoList(state) {
+        return state.videoList;
     }
 };
 
@@ -63,12 +69,16 @@ const mutations = {
     resetProgrammeVideo(state) {
         state.currentProgrammeVideo = defaultProgrammeVideo;
     },
+    resetVideoList(state) {
+        state.videoList = [];
+    },
     addVideoToList(state) {
+        state.currentProgrammeVideo.uid = uuid();
         state.videoList.push(state.currentProgrammeVideo);
     },
     deleteVideoFromList(state, payload) {
         state.videoList = state.videoList.filter((video) => {
-            return video.id !== payload.id;
+            return video.uid !== payload.uid;
         });
     }
 };
@@ -78,11 +88,14 @@ const mutations = {
  */
 function filterProgrammeVideoData(videoList, programmeId) {
     return videoList.map((video) => {
-        return Object.assign({}, video, {
+        let result = Object.assign({}, video, {
             playUrl: 'http://www.w3school.com.cn/i/movie.ogg',
             programmeId,
-            parentId: undefined
+            parentId: undefined,
+            status: 'NORMAL',
+            uid: uuid()
         });
+        return result;
     });
 }
 
@@ -112,9 +125,9 @@ const actions = {
                 }
             });
     },
-    createMultProgrammeVideo({commit, state}) {
+    createMultProgrammeVideo({commit, state}, id) {
         let {videoList} = state;
-        let copiedVideoList = filterProgrammeVideoData(videoList, state.programmeId).map((video) => {
+        let copiedVideoList = filterProgrammeVideoData(videoList, id).map((video) => {
             return service.createProgrammeVideo(video);
         });
         return service.createMultProgrammeVideo(copiedVideoList)

@@ -19,18 +19,13 @@
                 ></el-input>
             </el-form-item>
             <el-form-item label="视频排序" prop="sort">
-                <el-select
+                <el-input
                     :value="video.sort"
-                    placeholder="请选择视频排序"
-                    @change="inputHandler($event, 'sort')"
-                >
-                    <el-option
-                        v-for="item in videoSortOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
+                    auto-complete="off"
+                    type="number"
+                    placeholder="请输入排序编号"
+                    @input="inputHandler($event, 'sort')"
+                ></el-input>
             </el-form-item>
             <el-form-item label="视频简介" prop="description">
                 <el-input
@@ -153,16 +148,6 @@
                         label: '正片2'
                     }
                 ],
-                videoSortOptions: [
-                    {
-                        value: '1',
-                        label: '1'
-                    },
-                    {
-                        value: '2',
-                        label: '2'
-                    }
-                ],
                 contentTypeOptions: [
                     {
                         value: '1',
@@ -213,7 +198,8 @@
             ...mapMutations({
                 updateCurrentProgrammeVideo: 'programmeVideo/updateCurrentProgrammeVideo',
                 resetProgrammeVideo: 'programmeVideo/resetProgrammeVideo',
-                addVideoToList: 'programmeVideo/addVideoToList'
+                addVideoToList: 'programmeVideo/addVideoToList',
+                updateCurrentProgrammeVideoItem: 'programme/updateCurrentProgrammeVideoItem'
             }),
             ...mapActions({
                 updateProgrammeVideo: 'programmeVideo/updateProgrammeVideo'
@@ -233,7 +219,8 @@
                             this.cancelHandler();
                         } else {
                             this.updateProgrammeVideo()
-                                .then(() => {
+                                .then((res) => {
+                                    this.updateCurrentProgrammeVideoItem({video: res.data});
                                     this.cancelHandler();
                                 });
                         }
