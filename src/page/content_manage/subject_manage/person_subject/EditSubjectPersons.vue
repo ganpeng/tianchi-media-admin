@@ -9,11 +9,12 @@
         </el-breadcrumb>
         <div class="block-box text-left">
             <select-multiple-person
-                v-on:setPerson="setPerson">
+                ref="selectMultiplePerson"
+                :selectedPersonList="selectedPersonList"
+                v-on:setPersonList="setPerson">
             </select-multiple-person>
             <el-tag>已选人物</el-tag>
-            <div v-if="selectedPersonList.length === 0" class="no-person">目前暂无选择的人物</div>
-            <template v-else>
+            <template>
                 <el-table
                     :data="selectedPersonList"
                     border
@@ -58,7 +59,7 @@
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="text-center">
+            <div class="text-center update-btn">
                 <el-button type="success" @click="updateSubjectPersons">更 新</el-button>
             </div>
         </div>
@@ -83,14 +84,28 @@
         },
         methods: {
             init() {
+                this.$service.getSubjectDetail(this.$route.params.id).then(response => {
+                    if (response) {
+                        if (response.data.subjectItemList) {
+                            this.selectedPersonList = response.data.subjectItemList;
+                        }
+                        this.$nextTick(function () {
+                            this.$refs.selectMultiplePerson.init();
+                        });
+                    }
+                });
             },
             // 删除选中的人物
             removePerson(index) {
-                this.selectedPersonList.splice(index, 1);
+                let removedRow = this.selectedPersonList.splice(index, 1)[0];
+                this.$refs.selectMultiplePerson.cancelSelectRow(removedRow);
             },
             // 设置选择的人物
-            setPerson(selectedPerson) {
-                this.selectedPersonList = selectedPerson;
+            setPerson(selectedPersons) {
+                this.selectedPersonList.length = 0;
+                for (let i = 0; i < selectedPersons.length; i++) {
+                    this.selectedPersonList.push(selectedPersons[i]);
+                }
             },
             // 更新专题人物列表
             updateSubjectPersons() {
@@ -116,38 +131,26 @@
         }
     }
 
-    .person-list {
-        display: flex;
-        margin-top: 30px;
-        margin-bottom: 30px;
-        justify-content: left;
-        li {
-            display: flex;
-            margin-right: 30px;
-            flex-direction: column;
-            justify-content: space-around;
-            .el-card {
-                position: relative;
-                padding-bottom: 10px;
-            }
-            img {
-                display: block;
-                margin-bottom: 10px;
-                height: 180px;
-            }
-            label {
-                font-size: 16px;
-            }
-            .el-button {
-                position: absolute;
-                bottom: 0px;
-                right: 10px;
-            }
+    .el-table {
+        label {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            -ms-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+        }
+        .more {
+            float: right;
         }
     }
 
     .no-person {
         margin-top: 40px;
         margin-bottom: 50px;
+    }
+
+    .update-btn {
+        margin: 80px 0 40px 0;
     }
 </style>

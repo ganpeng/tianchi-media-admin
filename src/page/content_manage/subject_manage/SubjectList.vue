@@ -71,8 +71,11 @@
                     label="名称">
                 </el-table-column>
                 <el-table-column
-                    prop="includingCount"
+                    prop="itemCount"
                     label="包含节目/人物数">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.subjectItemList === null ? 0 : scope.row.subjectItemList.length}}</label>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="description"

@@ -2,7 +2,7 @@
 <template>
     <div class="text-center">
         <el-dialog :title="previewSingleImage.title" :visible.sync="previewSingleImage.display">
-            <img :src="previewSingleImage.url">
+            <img :src="previewSingleImage.uri">
         </el-dialog>
     </div>
 </template>

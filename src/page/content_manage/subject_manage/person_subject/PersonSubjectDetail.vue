@@ -9,16 +9,17 @@
         </el-breadcrumb>
         <div class="block-box text-left">
             <subject-basic-info-detail
+                :subjectInfo="subjectInfo"
                 status="1">
             </subject-basic-info-detail>
             <label class="list-title">专题内人物列表:</label>
             <el-table
-                :data="personList"
+                :data="subjectInfo.subjectItemList"
                 border
                 style="width: 100%">
                 <el-table-column
                     width="80px"
-                    prop="id"
+                    prop="code"
                     label="编号">
                 </el-table-column>
                 <el-table-column
@@ -28,7 +29,7 @@
                 <el-table-column
                     label="图片">
                     <template slot-scope="scope">
-                        <img :src="scope.row.url" @click="displayImage(scope.row)" alt="人物图片">
+                        <img :src="scope.row.uri" @click="displayImage(scope.row)" alt="人物图片">
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -60,7 +61,7 @@
         </div>
         <div class="operate-list">
             <el-button type="primary" @click="editBasicInfo">编辑基本信息</el-button>
-            <el-button type="primary">编辑节目</el-button>
+            <el-button type="primary" @click="editSubjectPersons">编辑人物</el-button>
             <el-button type="danger" @click="removeSubject">删 除</el-button>
         </div>
         <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
@@ -84,48 +85,25 @@
                     display: false,
                     url: ''
                 },
-                personList: [
-                    {
-                        id: 1,
-                        name: '胡歌',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
-                        description: '十二年前七万赤焰军被奸人所害导致全军覆没，冤死梅岭，只剩少帅林殊（张哲瀚 饰）侥幸生还。十二年后林殊改头换面化身“麒麟才子”梅长苏（胡歌 饰），建立江左盟，以“琅琊榜”第一才子的身份重返帝都。梅长苏背负血海深仇，暗中帮助昔日挚友靖王（王凯 饰）周旋于太子（高鑫 饰）与誉王（黄维德 饰）的斗争之中，同时又遇到了昔日未婚妻——云南王郡主穆霓凰（刘涛 饰）却不能相见。梅长苏以病弱之躯为昭雪冤案、为振兴河山，踏上了一条黑暗又惊心动魄的夺嫡之路。',
-                        area: '中国大陆',
-                        updatedAt: 1402233166999
-                    },
-                    {
-                        id: 2,
-                        name: '胡歌',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
-                        description: '十二年前七万赤焰军被奸人所害导致全军覆没，冤死梅岭，只剩少帅林殊（张哲瀚 饰）侥幸生还。十二年后林殊改头换面化身“麒麟才子”梅长苏（胡歌 饰），建立江左盟，以“琅琊榜”第一才子的身份重返帝都。梅长苏背负血海深仇，暗中帮助昔日挚友靖王（王凯 饰）周旋于太子（高鑫 饰）与誉王（黄维德 饰）的斗争之中，同时又遇到了昔日未婚妻——云南王郡主穆霓凰（刘涛 饰）却不能相见。梅长苏以病弱之躯为昭雪冤案、为振兴河山，踏上了一条黑暗又惊心动魄的夺嫡之路。',
-                        area: '中国大陆',
-                        updatedAt: 1402233166999
-                    },
-                    {
-                        id: 3,
-                        name: '胡歌',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
-                        description: '十二年前七万赤焰军被奸人所害导致全军覆没，冤死梅岭，只剩少帅林殊（张哲瀚 饰）侥幸生还。十二年后林殊改头换面化身“麒麟才子”梅长苏（胡歌 饰），建立江左盟，以“琅琊榜”第一才子的身份重返帝都。梅长苏背负血海深仇，暗中帮助昔日挚友靖王（王凯 饰）周旋于太子（高鑫 饰）与誉王（黄维德 饰）的斗争之中，同时又遇到了昔日未婚妻——云南王郡主穆霓凰（刘涛 饰）却不能相见。梅长苏以病弱之躯为昭雪冤案、为振兴河山，踏上了一条黑暗又惊心动魄的夺嫡之路。',
-                        area: '中国大陆',
-                        updatedAt: 1402233166999
-                    },
-                    {
-                        id: 4,
-                        name: '胡歌',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
-                        description: '十二年前七万赤焰军被奸人所害导致全军覆没，冤死梅岭，只剩少帅林殊（张哲瀚 饰）侥幸生还。十二年后林殊改头换面化身“麒麟才子”梅长苏（胡歌 饰），建立江左盟，以“琅琊榜”第一才子的身份重返帝都。梅长苏背负血海深仇，暗中帮助昔日挚友靖王（王凯 饰）周旋于太子（高鑫 饰）与誉王（黄维德 饰）的斗争之中，同时又遇到了昔日未婚妻——云南王郡主穆霓凰（刘涛 饰）却不能相见。梅长苏以病弱之躯为昭雪冤案、为振兴河山，踏上了一条黑暗又惊心动魄的夺嫡之路。',
-                        area: '中国大陆',
-                        updatedAt: 1402233166999
-                    }
-                ]
+                subjectInfo: {}
             };
         },
+        mounted() {
+            this.init();
+        },
         methods: {
+            init() {
+                this.$service.getSubjectDetail(this.$route.params.id).then(response => {
+                    if (response && response.code === 0) {
+                        this.subjectInfo = response.data;
+                    }
+                });
+            },
             // 放大预览图片
             displayImage(image) {
                 this.previewImage.title = image.name;
                 this.previewImage.display = true;
-                this.previewImage.url = image.url;
+                this.previewImage.uri = image.uri;
             },
             // 删除当前专题，并跳转专题列表页面
             removeSubject() {
@@ -134,11 +112,15 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
+                    this.$service.deleteSubject(this.$route.params.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            this.$router.push({name: 'SubjectList'});
+                        }
                     });
-                    this.$router.push({name: 'SubjectList'});
                 }).catch(() => {
                     this.$message({
                         type: 'info',
@@ -150,6 +132,12 @@
             editBasicInfo() {
                 this.$router.push({
                     name: 'EditPersonSubject', params: this.$route.params
+                });
+            },
+            // 编辑当前专题人物信息
+            editSubjectPersons() {
+                this.$router.push({
+                    name: 'EditSubjectPersons', params: this.$route.params
                 });
             }
         }

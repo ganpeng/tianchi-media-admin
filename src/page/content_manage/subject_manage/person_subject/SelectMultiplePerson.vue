@@ -12,17 +12,19 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item class="search">
-                <el-input v-model="name" placeholder="请输入关键字">
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
+            <el-form-item class="search" label="姓名">
+                <el-input v-model="name" placeholder="请输入人物姓名"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="success" @click="getPersonList">查 询</el-button>
             </el-form-item>
         </el-form>
         <el-table
             :data="personList"
             border
             style="width: 100%"
-            @selection-change="handleSelectionChange">
+            ref="multiplePerson"
+            @select="selectRow">
             <el-table-column
                 type="selection"
                 width="55">
@@ -33,12 +35,13 @@
             </el-table-column>
             <el-table-column
                 prop="name"
-                label="名称">
+                label="姓名">
             </el-table-column>
             <el-table-column
                 label="图片">
                 <template slot-scope="scope">
-                    <img :src="scope.row.posterImageList[0].uri" @click="displayImage(scope.row)" alt="人物图片">
+                    <img :src="scope.row.posterImageList[0].uri" @click="displayImage(scope.row.posterImageList[0])"
+                         alt="人物图片">
                 </template>
             </el-table-column>
             <el-table-column
@@ -60,23 +63,17 @@
                 prop="area"
                 label="地区">
             </el-table-column>
-            <el-table-column
-                label="更新时间">
-                <template slot-scope="scope">
-                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
-                </template>
-            </el-table-column>
         </el-table>
         <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="pageNum"
-            :page-sizes="[10, 20, 30, 50]"
+            :page-sizes="[5, 10, 20, 50]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="totalAmount">
         </el-pagination>
-        <el-button type="success" @click="appendProgram" size="small">添加所选人物</el-button>
+        <el-button type="success" @click="appendPerson" size="small">添加/更新所选人物</el-button>
         <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
     </div>
 </template>
@@ -89,14 +86,15 @@
         components: {
             PreviewSingleImage
         },
+        // 当前外部选中的人物列表
+        props: ['selectedPersonList'],
         data() {
             return {
                 previewImage: {
                     title: '',
                     display: false,
-                    ur: ''
+                    uri: ''
                 },
-                releasedValue: '',
                 areaOptions: [{
                     value: '1',
                     label: '大陆'
@@ -113,17 +111,22 @@
                 area: '',
                 name: '',
                 pageNum: 1,
-                pageSize: 10,
+                pageSize: 5,
                 totalAmount: 0,
+                // 人物列表
                 personList: [],
+                // 当前内部选中的人物列表（包含各个分页的）
                 multipleSelection: []
             };
         },
         mounted() {
-            this.init();
         },
         methods: {
             init() {
+                // 初始化选中的项
+                for (let i = 0; i < this.selectedPersonList.length; i++) {
+                    this.multipleSelection.push(this.selectedPersonList[i]);
+                }
                 this.getPersonList();
             },
             getPersonList() {
@@ -135,7 +138,17 @@
                 }).then(response => {
                     if (response && response.code === 0) {
                         this.personList = response.data.list;
-                        this.totalAmount = this.personList.length;
+                        this.totalAmount = response.data.total;
+                        // 对于选择的项进行勾选
+                        for (let i = 0; i < this.multipleSelection.length; i++) {
+                            for (let k = 0; k < this.personList.length; k++) {
+                                if (this.multipleSelection[i].id === this.personList[k].id) {
+                                    this.$nextTick(function () {
+                                        this.$refs.multiplePerson.toggleRowSelection(this.personList[k], true);
+                                    });
+                                }
+                            }
+                        }
                     }
                 });
             },
@@ -148,17 +161,48 @@
                 this.getPersonList();
             },
             // 添加人物
-            appendProgram() {
-                this.$emit('setPerson', this.multipleSelection);
+            appendPerson() {
+                this.$emit('setPersonList', this.multipleSelection);
             },
             // 放大预览图片
             displayImage(image) {
                 this.previewImage.title = image.name;
                 this.previewImage.display = true;
-                this.previewImage.url = image.url;
+                this.previewImage.uri = image.uri;
             },
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
+            selectRow(selection, row) {
+                let checkStatus;
+                for (let i = 0; i < selection.length; i++) {
+                    if (selection[i].id === row.id) {
+                        checkStatus = true;
+                    }
+                }
+                if (checkStatus) {
+                    for (let k = 0; k < this.multipleSelection.length; k++) {
+                        if (this.multipleSelection[k].id === row.id) {
+                            return;
+                        }
+                    }
+                    this.multipleSelection.push(row);
+                } else {
+                    for (let n = 0; n < this.multipleSelection.length; n++) {
+                        if (this.multipleSelection[n].id === row.id) {
+                            this.multipleSelection.splice(n, 1);
+                        }
+                    }
+                }
+            },
+            cancelSelectRow(row) {
+                for (let i = 0; i < this.multipleSelection.length; i++) {
+                    if (row.id === this.multipleSelection[i].id) {
+                        this.multipleSelection.splice(i, 1);
+                    }
+                }
+                for (let i = 0; i < this.personList.length; i++) {
+                    if (row.id === this.personList[i].id) {
+                        this.$refs.multiplePerson.toggleRowSelection(this.personList[i], false);
+                    }
+                }
             }
         }
     };
