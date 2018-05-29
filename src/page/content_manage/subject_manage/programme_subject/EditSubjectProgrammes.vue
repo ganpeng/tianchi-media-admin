@@ -9,19 +9,65 @@
         </el-breadcrumb>
         <div class="block-box text-left">
             <select-multiple-programme
+                :selectedProgrammeList="selectedProgrammeList"
+                ref="selectMultipleProgramme"
+                model="MULTIPLE"
                 v-on:setProgramme="setProgramme">
             </select-multiple-programme>
             <el-tag>已选节目</el-tag>
-            <div v-if="selectedProgrammeList.length === 0" class="no-programme">目前暂无选择的节目</div>
-            <ul class="programme-list" v-else>
-                <li v-for="(item,index) in selectedProgrammeList" :key="index">
-                    <el-card :body-style="{ padding: '0px' }" class="text-center">
-                        <img :src="item.url">
-                        <label>{{item.name}}</label>
-                        <el-button type="text" @click="removeProgramme(index)">删除</el-button>
-                    </el-card>
-                </li>
-            </ul>
+            <el-table
+                :data="selectedProgrammeList"
+                border
+                style="width: 100%">
+                <el-table-column
+                    label="序号"
+                    width="55">
+                    <template slot-scope="scope">
+                        <label>{{scope.$index + 1}}</label>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="code"
+                    label="编号">
+                </el-table-column>
+                <el-table-column
+                    prop="name"
+                    label="名称">
+                </el-table-column>
+                <el-table-column
+                    prop="description"
+                    label="简介">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.description}}</label>
+                        <el-popover
+                            placement="right"
+                            :title="scope.row.name + '简介'"
+                            width="250"
+                            trigger="hover"
+                            :content="scope.row.description">
+                            <el-button slot="reference" type="text" class="more">更多</el-button>
+                        </el-popover>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="actor"
+                    label="主演">
+                </el-table-column>
+                <el-table-column
+                    prop="director"
+                    label="导演">
+                </el-table-column>
+                <el-table-column align="center"
+                                 label="操作"
+                                 class="operate">
+                    <template slot-scope="scope">
+                        <el-button type="text" size="small" @click="removeProgramme(scope.$index)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="text-center update-btn">
+                <el-button type="success" @click="updateSubjectProgrammes">更 新</el-button>
+            </div>
         </div>
     </div>
 </template>
@@ -44,48 +90,39 @@
         },
         methods: {
             init() {
-                this.selectedProgrammeList = [
-                    {
-                        id: 1,
-                        name: '琅琊榜',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
-                        description: '十二年前七万赤焰军被奸人所害导致全军覆没，冤死梅岭，只剩少帅林殊（张哲瀚 饰）侥幸生还。十二年后林殊改头换面化身“麒麟才子”梅长苏（胡歌 饰），建立江左盟，以“琅琊榜”第一才子的身份重返帝都。梅长苏背负血海深仇，暗中帮助昔日挚友靖王（王凯 饰）周旋于太子（高鑫 饰）与誉王（黄维德 饰）的斗争之中，同时又遇到了昔日未婚妻——云南王郡主穆霓凰（刘涛 饰）却不能相见。梅长苏以病弱之躯为昭雪冤案、为振兴河山，踏上了一条黑暗又惊心动魄的夺嫡之路。',
-                        feature: '54',
-                        relative: '23',
-                        released: '1462243166999',
-                        area: '中国大陆',
-                        category: '电视剧',
-                        type: '剧情/古装',
-                        actor: ['胡歌', '刘涛', '王凯', '陈龙'],
-                        director: ['孔笙', '李雪'],
-                        status: 'NORMAL',
-                        updatedAt: 1402233166999
-                    },
-                    {
-                        id: 2,
-                        name: '琅琊榜',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7',
-                        description: '十二年前七万赤焰军被奸人所害导致全军覆没，冤死梅岭，只剩少帅林殊（张哲瀚 饰）侥幸生还。十二年后林殊改头换面化身“麒麟才子”梅长苏（胡歌 饰），建立江左盟，以“琅琊榜”第一才子的身份重返帝都。梅长苏背负血海深仇，暗中帮助昔日挚友靖王（王凯 饰）周旋于太子（高鑫 饰）与誉王（黄维德 饰）的斗争之中，同时又遇到了昔日未婚妻——云南王郡主穆霓凰（刘涛 饰）却不能相见。梅长苏以病弱之躯为昭雪冤案、为振兴河山，踏上了一条黑暗又惊心动魄的夺嫡之路。',
-                        feature: '54',
-                        relative: '23',
-                        released: '1462243166999',
-                        area: '中国大陆',
-                        category: '电视剧',
-                        type: '剧情/古装',
-                        actor: ['胡歌', '刘涛', '王凯', '陈龙'],
-                        director: ['孔笙', '李雪'],
-                        status: 'NORMAL',
-                        updatedAt: 1402233166999
+                this.$service.getSubjectDetail(this.$route.params.id).then(response => {
+                    if (response) {
+                        if (response.data.subjectItemList) {
+                            this.selectedProgrammeList = response.data.subjectItemList;
+                        }
+                        this.$nextTick(function () {
+                            this.$refs.selectMultipleProgramme.init();
+                        });
                     }
-                ];
+                });
             },
             // 删除选中的节目
             removeProgramme(index) {
-                this.selectedProgrammeList.splice(index, 1);
+                let removedRow = this.selectedProgrammeList.splice(index, 1)[0];
+                this.$refs.selectMultipleProgramme.cancelSelectRow(removedRow);
             },
             // 设置选择的节目
-            setProgramme(selectedProgramme) {
-                this.selectedProgrammeList = selectedProgramme;
+            setProgramme(selectedProgrammes) {
+                this.selectedProgrammeList.length = 0;
+                for (let i = 0; i < selectedProgrammes.length; i++) {
+                    this.selectedProgrammeList.push(selectedProgrammes[i]);
+                }
+            },
+            // 更新专题节目列表
+            updateSubjectProgrammes() {
+                this.$service.updateSubjectItemList({
+                    id: this.$route.params.id,
+                    subjectItemList: this.selectedProgrammeList
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message('更新节目列表成功');
+                    }
+                });
             }
         }
     };
@@ -100,38 +137,25 @@
         }
     }
 
-    .programme-list {
-        display: flex;
-        margin-top: 30px;
-        margin-bottom: 30px;
-        justify-content: left;
-        li {
-            display: flex;
-            margin-right: 30px;
-            flex-direction: column;
-            justify-content: space-around;
-            .el-card {
-                position: relative;
-                padding-bottom: 10px;
-            }
-            img {
-                display: block;
-                margin-bottom: 10px;
-                height: 180px;
-            }
-            label {
-                font-size: 16px;
-            }
-            .el-button {
-                position: absolute;
-                bottom: 0px;
-                right: 10px;
-            }
+    .el-table {
+        img {
+            width: 120px;
+            cursor: zoom-in;
+        }
+        label {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            -ms-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+        }
+        .more {
+            float: right;
         }
     }
 
-    .no-programme {
-        margin-top: 40px;
-        margin-bottom: 50px;
+    .update-btn {
+        margin: 80px 0 40px 0;
     }
 </style>

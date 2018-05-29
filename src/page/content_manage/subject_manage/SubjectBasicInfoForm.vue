@@ -64,7 +64,7 @@
                 <label class="tips">带 <i>*</i> 号的为必填项</label>
             </el-form-item>
             <el-form-item class="operate">
-                <el-button type="primary" @click="createAdmin">
+                <el-button type="primary" @click="operateSubject">
                     {{this.status === '0' || this.status === '1' ? '创建' : '更新'}}
                 </el-button>
                 <el-button @click="reset">重 置</el-button>
@@ -261,9 +261,10 @@
                 });
             },
             // 创建或更新专题
-            createAdmin() {
+            operateSubject() {
                 this.$refs['subjectInfo'].validate((valid) => {
                     if (valid) {
+                        // 创建专题
                         if (this.status === '0' || this.status === '1') {
                             this.subjectInfo.category = this.status === '0' ? 'PROGRAMME' : 'FIGURE';
                             this.$service.createSubject(this.subjectInfo).then(response => {
@@ -273,6 +274,8 @@
                                 }
                             });
                         } else {
+                            // 更新专题
+                            this.subjectInfo.id = this.$route.params.id;
                             this.$service.updateSubjectBasicInfo(this.subjectInfo).then(response => {
                                 if (response && response.code === 0) {
                                     this.subjectId = response.data.id;
@@ -297,8 +300,13 @@
             },
             reset() {
                 this.$refs['subjectInfo'].resetFields();
+                this.subjectInfo.posterImageList = [];
             },
+            // 关闭对话框
             handleClose() {
+                if (this.status === '0' || this.status === '1') {
+                    this.reset();
+                }
                 this.dialogVisible = false;
             },
             // 编辑专题内的节目或者人物

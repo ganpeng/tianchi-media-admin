@@ -111,7 +111,7 @@
                 area: '',
                 name: '',
                 pageNum: 1,
-                pageSize: 5,
+                pageSize: 10,
                 totalAmount: 0,
                 // 人物列表
                 personList: [],

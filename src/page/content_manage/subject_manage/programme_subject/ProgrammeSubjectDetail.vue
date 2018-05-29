@@ -18,7 +18,13 @@
                 border
                 style="width: 100%">
                 <el-table-column
-                    prop="id"
+                    label="序号">
+                    <template slot-scope="scope">
+                        {{scope.$index + 1}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="code"
                     label="编号">
                 </el-table-column>
                 <el-table-column
@@ -28,7 +34,11 @@
                 <el-table-column
                     label="图片">
                     <template slot-scope="scope">
-                        <img :src="scope.row.uri" @click="displayImage(scope.row)" alt="节目图片">
+                        <img
+                            :src="scope.row.posterImages && scope.row.posterImages[0] ? scope.row.posterImages[0].uri : ''"
+                            @click="displayImage(scope.row)" alt="节目图片"
+                            v-if="scope.row.posterImages && scope.row.posterImages[0]">
+                        <label v-else>------</label>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -47,28 +57,36 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="feature"
+                    prop="featureVideoCount"
                     label="正片数量">
                 </el-table-column>
                 <el-table-column
-                    prop="relative"
+                    prop="extraVideoCount"
                     label="相关视频数量">
                 </el-table-column>
                 <el-table-column
-                    prop="released"
+                    prop="announceAt"
                     label="上映时间">
+                    <template slot-scope="scope">
+                        {{scope.row.announceAt | formatDate('yyyy-MM-DD')}}
+                    </template>
                 </el-table-column>
                 <el-table-column
-                    prop="area"
+                    prop="releaseArea"
                     label="地区">
                 </el-table-column>
                 <el-table-column
-                    prop="category"
                     label="分类">
+                    <template slot-scope="scope">
+                        {{scope.row.category}}
+                    </template>
                 </el-table-column>
                 <el-table-column
-                    prop="type"
+                    prop="typeList"
                     label="类型">
+                    <template slot-scope="scope">
+                        {{scope.row.typeList | jsonJoin('name')}}
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="actor"
@@ -79,8 +97,11 @@
                     label="导演">
                 </el-table-column>
                 <el-table-column
-                    prop="status"
+                    prop="visible"
                     label="状态">
+                    <template slot-scope="scope">
+                        {{scope.row.visible ? '正常' :'已下架'}}
+                    </template>
                 </el-table-column>
                 <el-table-column
                     label="更新时间">

@@ -81,7 +81,7 @@
                         pageNum: 1,
                         pageSize: 10
                     }).then(response => {
-                        if (response) {
+                        if (response && response.code === 0 && response.data.list.length !== 0) {
                             this.channelInfo.channel = response.data.list[0].liveChannel.id;
                         }
                     });

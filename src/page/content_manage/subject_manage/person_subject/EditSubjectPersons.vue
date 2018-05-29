@@ -14,51 +14,49 @@
                 v-on:setPersonList="setPerson">
             </select-multiple-person>
             <el-tag>已选人物</el-tag>
-            <template>
-                <el-table
-                    :data="selectedPersonList"
-                    border
-                    style="width: 100%">
-                    <el-table-column
-                        type="index"
-                        label="序号">
-                    </el-table-column>
-                    <el-table-column
-                        prop="id"
-                        label="编号">
-                    </el-table-column>
-                    <el-table-column
-                        prop="name"
-                        label="名称">
-                    </el-table-column>
-                    <el-table-column
-                        prop="description"
-                        label="人物简介">
-                        <template slot-scope="scope">
-                            <label>{{scope.row.description}}</label>
-                            <el-popover
-                                placement="right"
-                                :title="scope.row.name + '简介'"
-                                width="250"
-                                trigger="hover"
-                                :content="scope.row.description">
-                                <el-button slot="reference" type="text" class="more">更多</el-button>
-                            </el-popover>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="area"
-                        label="地区">
-                    </el-table-column>
-                    <el-table-column align="center"
-                                     label="操作"
-                                     class="operate">
-                        <template slot-scope="scope">
-                            <el-button type="text" size="small" @click="removePerson(scope.$index)">删除</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </template>
+            <el-table
+                :data="selectedPersonList"
+                border
+                style="width: 100%">
+                <el-table-column
+                    type="index"
+                    label="序号">
+                </el-table-column>
+                <el-table-column
+                    prop="id"
+                    label="编号">
+                </el-table-column>
+                <el-table-column
+                    prop="name"
+                    label="名称">
+                </el-table-column>
+                <el-table-column
+                    prop="description"
+                    label="人物简介">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.description}}</label>
+                        <el-popover
+                            placement="right"
+                            :title="scope.row.name + '简介'"
+                            width="250"
+                            trigger="hover"
+                            :content="scope.row.description">
+                            <el-button slot="reference" type="text" class="more">更多</el-button>
+                        </el-popover>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="area"
+                    label="地区">
+                </el-table-column>
+                <el-table-column align="center"
+                                 label="操作"
+                                 class="operate">
+                    <template slot-scope="scope">
+                        <el-button type="text" size="small" @click="removePerson(scope.$index)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
             <div class="text-center update-btn">
                 <el-button type="success" @click="updateSubjectPersons">更 新</el-button>
             </div>
@@ -109,7 +107,7 @@
             },
             // 更新专题人物列表
             updateSubjectPersons() {
-                this.$service.updateSubjectPersonList({
+                this.$service.updateSubjectItemList({
                     id: this.$route.params.id,
                     subjectItemList: this.selectedPersonList
                 }).then(response => {

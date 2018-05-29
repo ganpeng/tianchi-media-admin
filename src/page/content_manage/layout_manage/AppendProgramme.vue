@@ -12,7 +12,12 @@
             <el-step title="步骤2" description="选择节目图片"></el-step>
         </el-steps>
         <keep-alive>
-            <component :is="currentView">
+            <component :is="currentView"
+                       :selectedProgrammeList="selectedProgrammeList"
+                       ref="selectMultipleProgramme"
+                       model="SINGLE"
+                       v-on:setProgramme="setProgramme"
+                       :programmeId="programmeId">
                 <!-- 非活动组件将被缓存！ -->
             </component>
         </keep-alive>
@@ -25,29 +30,31 @@
 </template>
 
 <script>
-    import ProgrammeFirstStep from './ProgrammeFirstStep';
     import ProgrammeSecondStep from './ProgrammeSecondStep';
+    import SelectMultipleProgramme from '../subject_manage/programme_subject/SelectMultipleProgramme';
 
     export default {
         name: 'AppendProgramme',
         components: {
-            ProgrammeFirstStep,
-            ProgrammeSecondStep
+            ProgrammeSecondStep,
+            SelectMultipleProgramme
         },
         data() {
             return {
-                activeStep: 0
+                selectedProgrammeList: [],
+                activeStep: 0,
+                programmeId: ''
             };
         },
         computed: {
             currentView() {
                 switch (this.activeStep) {
                     case 0:
-                        return 'ProgrammeFirstStep';
+                        return 'SelectMultipleProgramme';
                     case 1:
                         return 'ProgrammeSecondStep';
                     default:
-                        return 'ProgrammeFirstStep';
+                        return 'SelectMultipleProgramme';
                 }
             }
         },
@@ -56,10 +63,22 @@
         },
         methods: {
             init() {
+                this.$refs.selectMultipleProgramme.init();
+            },
+            setProgramme(programme) {
+                this.selectedProgrammeList[0] = programme;
+                this.programmeId = programme.id;
             },
             // 点击下一步
             next() {
-                this.activeStep++;
+                if (!this.programmeId) {
+                    this.$message({
+                        message: '请先选择节目',
+                        type: 'warning'
+                    });
+                } else {
+                    this.activeStep++;
+                }
             },
             // 点击下一步
             previous() {

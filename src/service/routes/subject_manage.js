@@ -46,11 +46,11 @@ export const getSubjectTagList = () => {
 };
 
 /**
- * 修改人物专题人物列表
- * @param id The id of figure.
- * @param subjectItemList An array of subject's figures.
+ * 修改专题中的人物或者节目
+ * @param id The id of subject.
+ * @param subjectItemList An array of subject's figures or programme.
  */
-export const updateSubjectPersonList = ({id, subjectItemList}) => {
+export const updateSubjectItemList = ({id, subjectItemList}) => {
     return service.patch(util.format('/v1/content/subject/{0}', id), {
         subjectItemList
     });

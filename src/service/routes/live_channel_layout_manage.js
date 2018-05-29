@@ -13,7 +13,7 @@ import util from '@/util/extend';
  * @param pageSize 每一页的数据量
  */
 export let getLiveChannelLayoutList = ({navBarId, releaseStatus, pageNum, pageSize}) => {
-    return service.get(util.format('/v1/ad/live-channel-layout/page?navBarId={0}&releaseStatus={1}&pageNum={2}&pageSize={3}', navBarId, releaseStatus, pageNum, pageSize));
+    return service.get(util.format('/v1/ad/live-channel-layout/page?navBarId={0}&releaseStatus={1}&pageNum={2}&pageSize={3}', navBarId, releaseStatus, pageNum - 1, pageSize));
 };
 
 /**

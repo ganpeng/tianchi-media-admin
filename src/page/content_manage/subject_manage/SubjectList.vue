@@ -10,20 +10,20 @@
         <div class="block-box">
             <el-form :inline="true" class="demo-form-inline search-form">
                 <el-form-item label="专题类型">
-                    <el-select v-model="typeValue" clearable placeholder="请选择专题类型">
+                    <el-select v-model="listQueryParams.subjectCategory" clearable placeholder="请选择专题类型">
                         <el-option
-                            v-for="item in typeOptions"
+                            v-for="item in categoryOptions"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <template v-if="typeValue === '1'">
+                <template v-if="listQueryParams.subjectCategory === 'PROGRAMME'">
                     <el-form-item label="节目类别">
-                        <el-select v-model="categoryValue" clearable placeholder="请选择节目类别">
+                        <el-select v-model="subjectType" clearable placeholder="请选择节目类别">
                             <el-option
-                                v-for="item in categoryOptions"
+                                v-for="item in typeListOptions"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
@@ -40,10 +40,12 @@
                         end-placeholder="结束日期">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item class="search">
-                    <el-input v-model="searchContent" placeholder="请填写关键字">
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                <el-form-item label="专题名称">
+                    <el-input v-model="listQueryParams.name" placeholder="请填写专题名称">
                     </el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="success" @click="getSubjectList">查 询</el-button>
                 </el-form-item>
                 <el-form-item>
                     <el-dropdown @command="createSubject">
@@ -136,9 +138,9 @@
             <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                :current-page="currentPage"
+                :current-page="listQueryParams.currentPage"
                 :page-sizes="[10, 20, 30, 50]"
-                :page-size="pageSize"
+                :page-size="listQueryParams.pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="totalAmount">
             </el-pagination>
@@ -147,42 +149,35 @@
 </template>
 
 <script>
-
     export default {
         name: 'SubjectList',
         data() {
             return {
-                typeOptions: [{
-                    value: '1',
+                listQueryParams: {
+                    subjectCategory: '',
+                    subjectType: '',
+                    name: '',
+                    pageNum: 1,
+                    pageSize: 10
+                },
+                createRangeTime: '',
+                categoryOptions: [{
+                    value: 'PROGRAMME',
                     label: '节目专题'
                 }, {
-                    value: '2',
+                    value: 'FIGURE',
                     label: '人物专题'
                 }],
-                typeValue: '',
-                categoryOptions: [{
-                    value: '1',
-                    label: '电视剧'
+                typeListOptions: [{
+                    label: '电视剧',
+                    value: 'TV_DRAMA'
                 }, {
-                    value: '2',
-                    label: '电影'
+                    label: '电影',
+                    value: 'MOVIE'
                 }, {
-                    value: '3',
-                    label: '娱乐'
+                    label: '娱乐',
+                    value: 'VARIETY_SHOW'
                 }],
-                categoryValue: '',
-                pastPushOptions: [{
-                    value: '1',
-                    label: '是'
-                }, {
-                    value: '2',
-                    label: '否'
-                }],
-                pastPushValue: '',
-                createRangeTime: '',
-                searchContent: '',
-                currentPage: 1,
-                pageSize: 10,
                 totalAmount: 0,
                 programmeList: []
             };
@@ -192,13 +187,10 @@
         },
         methods: {
             init() {
-                this.$service.getSubjectList({
-                    name: '',
-                    subjectCategory: '',
-                    subjectType: '',
-                    pageNum: 1,
-                    pageSize: 10
-                }).then(response => {
+                this.getSubjectList();
+            },
+            getSubjectList() {
+                this.$service.getSubjectList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.programmeList = response.data.list;
                         this.totalAmount = this.programmeList.length;
@@ -206,10 +198,12 @@
                 });
             },
             handleSizeChange(pageSize) {
-                this.pageSize = pageSize;
+                this.listQueryParams.pageSize = pageSize;
+                this.getSubjectList();
             },
             handleCurrentChange(currentPage) {
-                this.currentPage = currentPage;
+                this.listQueryParams.currentPage = currentPage;
+                this.getSubjectList();
             },
             // 查询专题详情
             checkSubjectDetail(item) {
@@ -252,10 +246,6 @@
         text-align: left;
         &.search-form {
             margin-top: 60px;
-            .search {
-                margin-left: 50px;
-                margin-right: 30px;
-            }
         }
     }
 

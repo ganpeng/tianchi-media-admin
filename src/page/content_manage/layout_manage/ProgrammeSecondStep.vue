@@ -18,6 +18,7 @@
     export default {
         name: 'ProgrammeSecondStep',
         components: {PreviewMultipleImages},
+        props: ['programmeId'],
         data() {
             return {
                 programmeImage: '',
@@ -47,6 +48,11 @@
         },
         methods: {
             init() {
+                // 获取节目详情
+                this.$service.getProgrammeInfo(this.programmeId).then(response => {
+                    if (response && response.code === 0) {
+                    }
+                });
             },
             // 放大预览图片
             displayImage(index) {

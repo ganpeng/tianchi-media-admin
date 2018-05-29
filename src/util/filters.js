@@ -13,6 +13,15 @@ import util from './extend';
 const FILTERS = {
     formatDate(milliseconds, format) {
         return milliseconds ? util.formatDate(new Date(milliseconds), format) : '';
+    },
+    // 转化对象数组中的某一个属性为字符
+    jsonJoin(array, attr) {
+        if (!array) return;
+        let str = '';
+        for (let i = 0; i < array.length; i++) {
+            str = str + ',' + array[i][attr];
+        }
+        return str.slice(1);
     }
 };
 
