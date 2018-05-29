@@ -57,3 +57,10 @@ export const getProgrammeTagList = () => {
 export const getProgrammeTypeCount = ({programmeTypeId}) => {
     return service.get(`/v1/content/programme-category/${programmeTypeId}/programme-count`);
 };
+
+/**
+ *  子集下架
+ */
+export const deleteProgrammeVideo = ({id}) => {
+    return service.patch(`/v1/content/programme/video/${id}/visible`);
+};

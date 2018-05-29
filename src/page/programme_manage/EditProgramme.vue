@@ -15,8 +15,11 @@
             let {id} = this.$route.params;
             this.resetCurrentProgramme();
             this.getProgrammeAndGetProgrammeCategory(id)
-                .then(() => {
+                .then((res) => {
                     this.getProgrammeVideoListById(id);
+                    if (res[0] && res[0].code === 0) {
+                        this.getVideoFeatureList({id: id, pageSize: res[0].data.featureVideoCount});
+                    }
                 });
         },
         methods: {
@@ -26,7 +29,8 @@
             ...mapActions({
                 getProgramme: 'programme/getProgramme',
                 getProgrammeVideoListById: 'programme/getProgrammeVideoListById',
-                getProgrammeAndGetProgrammeCategory: 'programme/getProgrammeAndGetProgrammeCategory'
+                getProgrammeAndGetProgrammeCategory: 'programme/getProgrammeAndGetProgrammeCategory',
+                getVideoFeatureList: 'programmeVideo/getVideoFeatureList'
             })
         }
     };

@@ -162,7 +162,7 @@
                                 end-placeholder="结束日期">
                             </el-date-picker>
                         </el-form-item>
-                        <el-form-item label="版权商" prop="copyrightReserver">
+                        <el-form-item label="牌照方" prop="copyrightReserver">
                             <el-select
                                 :disabled="readonly"
                                 :value="programme.copyrightReserver"
@@ -177,7 +177,7 @@
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="运营商" prop="businessOperator">
+                        <el-form-item label="版权方" prop="businessOperator">
                             <el-select
                                 :disabled="readonly"
                                 :value="programme.businessOperator"
@@ -231,8 +231,8 @@
             <el-col :span="24">
                 <div class="block-title">节目视频</div>
                 <el-button v-if="!readonly" type="primary" @click="videoUploadDialogVisible = true">添加视频<i class="el-icon-upload el-icon--right"></i></el-button>
-                <programme-table title="待添加视频列表" :tableStatus="0" :status="3" :data-list="unSavedVideoList"></programme-table>
-                <programme-table title="已添加视频列表" :tableStatus="1" :status="3" :data-list="programmeVideoList"></programme-table>
+                <programme-table title="待添加视频列表" :tableStatus="0" :status="status" :data-list="unSavedVideoList"></programme-table>
+                <programme-table title="已添加视频列表" :tableStatus="1" :status="status" :data-list="programmeVideoList"></programme-table>
                 <el-pagination
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
@@ -246,7 +246,7 @@
         </el-row>
         <div class="group">
             <el-button v-if="status === 0" type="primary" @click="_createProgramme">创建</el-button>
-            <el-button v-if="status === 2" type="primary" @click="_editProgramme">编辑</el-button>
+            <el-button v-if="status === 2" type="primary" @click="_editProgramme">保存</el-button>
             <el-button type="primary" @click="goBack">返回列表页</el-button>
         </div>
         <upload-image
@@ -392,7 +392,10 @@
                     .then((res) => {
                         this.createMultProgrammeVideo(res.data.id)
                             .then((...res) => {
-                                this.$router.push({ name: 'ProgrammeList' });
+                                this.$message({
+                                    type: 'success',
+                                    message: '保存成功'
+                                });
                             });
                     });
             },
@@ -402,7 +405,10 @@
                     .then((res) => {
                         this.createMultProgrammeVideo(id)
                             .then((...res) => {
-                                this.$router.push({ name: 'ProgrammeList' });
+                                this.$message({
+                                    type: 'success',
+                                    message: '保存成功'
+                                });
                             });
                     });
             },

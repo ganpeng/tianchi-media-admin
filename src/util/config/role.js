@@ -20,22 +20,22 @@ export const MAIN_ROLE_OPTIONS = [
 
 //  视频内容类型
 export const VIDEO_TYPE = [
-    //  'FEATURE', 'PRE_SHOW', 'EXTRAS', 'HIGH_LIGHT'
+    // 正片，预告，花絮，看点  'FEATURE', 'PRE_SHOW', 'EXTRAS', 'HIGH_LIGHT'
     {
         value: 'FEATURE',
-        label: 'FEATURE'
+        label: '正片'
     },
     {
         value: 'PRE_SHOW',
-        label: 'PRE_SHOW'
+        label: '预告'
     },
     {
         value: 'EXTRAS',
-        label: 'EXTRAS'
+        label: '花絮'
     },
     {
         value: 'HIGH_LIGHT',
-        label: 'HIGH_LIGHT'
+        label: '看点'
     }
 ];
 
@@ -63,4 +63,11 @@ export const QUALITY_TYPE = [
     }
 ];
 
-export default {MAIN_ROLE_OPTIONS, VIDEO_TYPE, QUALITY_TYPE};
+export const VIDEO_TYPE_OBJ = {
+    FEATURE: '正片',
+    PRE_SHOW: '预告',
+    EXTRAS: '花絮',
+    HIGH_LIGHT: '看点'
+};
+
+export default {MAIN_ROLE_OPTIONS, VIDEO_TYPE, QUALITY_TYPE, VIDEO_TYPE_OBJ};

@@ -18,7 +18,9 @@
                     @input="inputHandler($event, 'name')"
                 ></el-input>
             </el-form-item>
-            <el-form-item label="视频排序" prop="sort">
+            <el-form-item
+                v-if="video.type === 'FEATURE'"
+                label="视频排序" prop="sort">
                 <el-input
                     :value="video.sort"
                     auto-complete="off"
@@ -55,17 +57,19 @@
             <el-form-item label="视频时长">
                 <el-input :value="video.takeTimeInSec" readonly></el-input>
             </el-form-item>
-            <el-form-item label="关联正片" prop="parentId">
+            <el-form-item
+                v-if="video.type !== 'FEATURE'"
+                label="关联正片" prop="parentId">
                 <el-select
                     :value="video.parentId"
                     placeholder="请选择要关联的正片"
                     @change="inputHandler($event, 'parentId')"
                 >
                     <el-option
-                        v-for="item in videoPositive"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
+                        v-for="item in featureVideoList"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id"
                     >
                     </el-option>
                 </el-select>
@@ -138,40 +142,12 @@
                 isLoading: false,
                 videoType: role.VIDEO_TYPE,
                 qualityType: role.QUALITY_TYPE,
-                videoPositive: [
-                    {
-                        value: '正片1',
-                        label: '正片1'
-                    },
-                    {
-                        value: '正片2',
-                        label: '正片2'
-                    }
-                ],
-                contentTypeOptions: [
-                    {
-                        value: '1',
-                        label: '正片'
-                    },
-                    {
-                        value: '2',
-                        label: '花絮'
-                    },
-                    {
-                        value: '3',
-                        label: '看点'
-                    },
-                    {
-                        value: '4',
-                        label: '预告'
-                    }
-                ],
                 uploadVideoRules: {
                     name: [{ required: true, message: '请输入视频名称', trigger: 'change' }],
                     description: [{ required: true, message: '请输入视频简介', trigger: 'change' }],
                     type: [{ required: true, message: '请选择视频内容类型', trigger: 'change' }],
                     takeTimeInSec: [{ required: true, message: '请选择要关联的正片', trigger: 'change' }],
-                    sort: [{ required: true, message: '请选择视频的排序', trigger: 'change' }],
+                    sort: [{ required: true, message: '请输入视频的排序', trigger: 'change' }],
                     quality: [{ required: true, message: '请选择视频类型', trigger: 'change' }],
                     free: [{ required: true, message: '请选择是否付费', trigger: 'change' }]
                 }
@@ -179,7 +155,8 @@
         },
         computed: {
             ...mapGetters({
-                'video': 'programmeVideo/currentProgrammeVideo'
+                'video': 'programmeVideo/currentProgrammeVideo',
+                featureVideoList: 'programmeVideo/featureVideoList'
             }),
             title() {
                 switch (parseInt(this.videoStatus)) {
@@ -202,7 +179,8 @@
                 updateCurrentProgrammeVideoItem: 'programme/updateCurrentProgrammeVideoItem'
             }),
             ...mapActions({
-                updateProgrammeVideo: 'programmeVideo/updateProgrammeVideo'
+                updateProgrammeVideo: 'programmeVideo/updateProgrammeVideo',
+                getVideoFeatureList: 'programmeVideo/getVideoFeatureList'
             }),
             cancelHandler() {
                 this.$emit('changeVideoDialogStatus', false);

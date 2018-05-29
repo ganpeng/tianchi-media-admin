@@ -17,12 +17,17 @@
             this.resetCurrentProgramme();
             // 重置人物的所有数据
             this.resetPerson();
+            // 重置节目视频的所有数据
+            this.resetProgrammeVideoState();
+            this.resetCurrentProgrammeVideoObj();
         },
         methods: {
             ...mapMutations({
                 resetProgramme: 'programme/resetProgramme',
                 resetCurrentProgramme: 'programme/resetCurrentProgramme',
-                resetPerson: 'person/resetPerson'
+                resetPerson: 'person/resetPerson',
+                resetProgrammeVideoState: 'programmeVideo/resetProgrammeVideoState',
+                resetCurrentProgrammeVideoObj: 'programme/resetCurrentProgrammeVideoObj'
             })
         }
     };

@@ -49,6 +49,9 @@
                     align="center"
                     min-width="120px"
                     label="内容类型">
+                        <template slot-scope="scope">
+                            {{getVideoType(scope.row.type)}}
+                        </template>
                 </el-table-column>
                 <el-table-column
                     prop="quality"
@@ -58,9 +61,21 @@
                 </el-table-column>
                 <el-table-column
                     v-if="status === 1"
-                    prop="needPay"
+                    prop="free"
                     align="center"
                     label="是否付费">
+                        <template slot-scope="scope">
+                            {{scope.row.free ? '是' : '否'}}
+                        </template>
+                </el-table-column>
+                <el-table-column
+                    prop="duration"
+                    align="center"
+                    min-width="120px"
+                    label="时长">
+                    <template slot-scope="scope">
+                        {{duration(scope.row.takeTimeInSec)}}
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="duration"
@@ -82,13 +97,26 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                    v-if="tableStatus === 1"
                     fixed="right"
                     label="操作"
                     align="center"
                     width="160">
                     <template slot-scope="scope">
                         <el-button v-if="tableStatus !== 0" @click="displayVideo(scope.row.id)" type="text" size="small">查看</el-button>
-                        <el-button v-if="status === 3 && tableStatus !== 0" @click="editVideo(scope.row.id)" type="text" size="small">编辑</el-button>
+                        <el-button v-if="status !== 1" @click="editVideo(scope.row.id)" type="text" size="small">编辑</el-button>
+                        <el-button v-if="status !== 1" @click="deleteVideo(scope.row.id)" type="text" size="small">
+                            {{scope.row.visible ? '下架' : '上架'}}
+                        </el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    v-if="tableStatus === 0"
+                    fixed="right"
+                    label="操作"
+                    align="center"
+                    width="160">
+                    <template slot-scope="scope">
                         <el-button v-if="tableStatus === 0" @click="deleteUnsavedVideo(scope.row.uid)" type="text" size="small">删除</el-button>
                     </template>
                 </el-table-column>
@@ -100,6 +128,7 @@
 <script>
 import {mapActions, mapMutations} from 'vuex';
 import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
+import role from '@/util/config/role';
 export default {
     name: 'ProgrammeTable',
     components: {
@@ -135,6 +164,11 @@ export default {
             return (seconds) => {
                 return this.$util.fromSecondsToTime(seconds);
             };
+        },
+        getVideoType() {
+            return (key) => {
+                return role.VIDEO_TYPE_OBJ[key];
+            };
         }
     },
     methods: {
@@ -142,7 +176,8 @@ export default {
             deleteVideoFromList: 'programmeVideo/deleteVideoFromList'
         }),
         ...mapActions({
-            getProgrammeVideo: 'programmeVideo/getProgrammeVideo'
+            getProgrammeVideo: 'programmeVideo/getProgrammeVideo',
+            deleteProgrammeVideo: 'programme/deleteProgrammeVideo'
         }),
         editVideo(id) {
             this.getProgrammeVideo(id)
@@ -157,6 +192,9 @@ export default {
                     this.videoUploadDialogVisible = true;
                     this.videoStatus = 2;
                 });
+        },
+        deleteVideo(id) {
+            this.deleteProgrammeVideo(id);
         },
         closeVideoDialog(status) {
             this.videoUploadDialogVisible = status;

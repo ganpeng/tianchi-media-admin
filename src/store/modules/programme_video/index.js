@@ -47,7 +47,8 @@ const state = {
     videoType: '',
     currentProgrammeVideo: {},
     // 当前节目下上传的视频的列表
-    videoList: []
+    videoList: [],
+    featureList: []
 };
 
 const getters = {
@@ -56,12 +57,18 @@ const getters = {
     },
     unSavedVideoList(state) {
         return state.videoList;
+    },
+    featureVideoList(state) {
+        return state.featureList;
     }
 };
 
 const mutations = {
     setCurrentProgrammeVideo(state, payload) {
         state.currentProgrammeVideo = payload.currentProgrammeVideo;
+    },
+    setFeatureList(state, payload) {
+        state.featureList = payload.list;
     },
     updateCurrentProgrammeVideo(state, payload) {
         state.currentProgrammeVideo = Object.assign({}, state.currentProgrammeVideo, payload);
@@ -71,6 +78,16 @@ const mutations = {
     },
     resetVideoList(state) {
         state.videoList = [];
+    },
+    resetProgrammeVideoState(state) {
+        state = {
+            programmeId: '',
+            parentId: '',
+            videoType: '',
+            currentProgrammeVideo: Object.assign({}, defaultProgrammeVideo),
+            videoList: [],
+            featureList: []
+        };
     },
     addVideoToList(state) {
         state.currentProgrammeVideo.uid = uuid();
@@ -134,6 +151,14 @@ const actions = {
             .then(axios.spread((...res) => {
                 return res;
             }));
+    },
+    getVideoFeatureList({commit, state}, {id, pageSize}) {
+        return service.getProgrammeVideoListById({programmeId: id, pageSize, pageNum: 0, type: 'FEATURE'})
+            .then((res) => {
+                if (res && res.code === 0) {
+                    commit('setFeatureList', {list: res.data.list});
+                }
+            });
     }
 };
 

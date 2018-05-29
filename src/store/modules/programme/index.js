@@ -74,6 +74,13 @@ const defaultProgramme = {
     currentTypeList: []
 };
 
+const defaultCurrentProgrammeVideoObj = {
+    list: [],
+    pageNum: 1,
+    pageSize: 5,
+    total: 0
+};
+
 const defaultState = {
     figure: '',
     releaseStatus: '',
@@ -82,18 +89,13 @@ const defaultState = {
     programmeCategory: {},
     currentTypeList: [],
     programmeType: {},
-    currentProgramme: defaultProgramme,
+    currentProgramme: Object.assign({}, defaultProgramme),
     list: [],
     pageNum: 1,
     pageSize: 5,
     total: 0,
     categoryList: [],
-    currentProgrammeVideoObj: {
-        list: [],
-        pageNum: 1,
-        pageSize: 5,
-        total: 0
-    }
+    currentProgrammeVideoObj: Object.assign({}, defaultCurrentProgrammeVideoObj)
 };
 
 const state = JSON.parse(JSON.stringify(defaultState));
@@ -244,6 +246,19 @@ const mutations = {
     resetProgramme(state) {
         state = Object.assign({}, defaultState);
     },
+    resetCurrentProgrammeVideoObj(state) {
+        state.currentProgrammeVideoObj = Object.assign({}, defaultCurrentProgrammeVideoObj);
+    },
+    updateProgrammeVideoVisible(state, payload) {
+        state.currentProgrammeVideoObj.list = state.currentProgrammeVideoObj.list.map((item) => {
+            if (item.id === payload.id) {
+                item.visible = !item.visible;
+                return item;
+            } else {
+                return item;
+            }
+        });
+    },
     updateCategoryValue(state, payload) {
         let category = state.categoryList.find((item) => {
             return item.id === payload.id;
@@ -280,6 +295,14 @@ const mutations = {
     resetSearchType(state) {
         state.programmeType = {};
     },
+    resetSearchField(state) {
+        state.figure = '';
+        state.releaseStatus = '';
+        state.releaseAt = '';
+        state.releaseArea = '';
+        state.programmeCategory = {};
+        state.programmeType = {};
+   },
     updateLeadActor(state, payload) {
         state.currentProgramme.leadActor = payload.leadActorIdList.map((id) => {
             return state.currentProgramme.leadActorResult.find((item) => {
@@ -503,7 +526,7 @@ const actions = {
             });
     },
     getProgrammeAndGetProgrammeCategory({commit, state}, id) {
-        axios.all([service.getProgrammeInfo({id}), service.getProgrammeCategory()])
+        return axios.all([service.getProgrammeInfo({id}), service.getProgrammeCategory()])
             .then(axios.spread((...res) => {
                 if (res[0] && res[0].code === 0) {
                     commit('setCurrentProgramme', {currentProgramme: serializeProgrammData(res[0].data)});
@@ -512,7 +535,16 @@ const actions = {
                     commit('setCategroyList', {list: res[1].data});
                 }
                 commit('setCurrentTypeList');
+                return res;
             }));
+    },
+    deleteProgrammeVideo({commit, state}, id) {
+        return service.deleteProgrammeVideo({id})
+            .then((res) => {
+                if (res && res.code === 0) {
+                    commit('updateProgrammeVideoVisible', {id});
+                }
+            });
     }
 };
 

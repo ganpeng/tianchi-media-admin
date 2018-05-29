@@ -85,6 +85,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <!--
                 <el-form-item label="状态">
                     <el-select
                         :value="searchFields.releaseStatus"
@@ -95,6 +96,7 @@
                         <el-option label="区域二" value="beijing"></el-option>
                     </el-select>
                 </el-form-item>
+                -->
             </el-form>
             <el-table :data="list" border style="width: 100%">
                 <el-table-column prop="id" align="center" width="240px" label="节目编号"></el-table-column>
@@ -201,13 +203,16 @@ export default {
             updateSearchType: 'programme/updateSearchType',
             resetSearchCategory: 'programme/resetSearchCategory',
             resetSearchType: 'programme/resetSearchType',
-            setSearchField: 'programme/setSearchField'
+            setSearchField: 'programme/setSearchField',
+            resetSearchField: 'programme/resetSearchField'
         }),
         ...mapActions({
             getProgrammeList: 'programme/getProgrammeList',
             getProgrammeCategory: 'programme/getProgrammeCategory'
         }),
-        clearSearchFields() {},
+        clearSearchFields() {
+            this.resetSearchField();
+        },
         editProgramme(id) {
             this.$router.push({ name: 'EditProgramme', params: { id } });
         },

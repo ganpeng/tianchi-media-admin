@@ -51,6 +51,8 @@ export const toggleVisible = ({id}) => {
 /**
  * 获取节目视频子集列表
  */
-export const getProgrammeVideoListById = ({pageNum, pageSize, programmeId}) => {
-    return service.get('/v1/content/programme/video/page', {params: {pageNum, pageSize, programmeId}});
+export const getProgrammeVideoListById = ({pageNum, pageSize, programmeId, parentId, type}) => {
+    return service.get('/v1/content/programme/video/page', {params: {
+        pageNum, pageSize, programmeId, parentId, type
+    }});
 };
