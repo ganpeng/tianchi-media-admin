@@ -60,6 +60,14 @@ const getters = {
     },
     featureVideoList(state) {
         return state.featureList;
+    },
+    getFeatureVideoName(state) {
+        return (id) => {
+            let video = state.featureList.find((item) => {
+                return item.id === id;
+            });
+            return video ? video.name : '';
+        };
     }
 };
 
@@ -108,7 +116,6 @@ function filterProgrammeVideoData(videoList, programmeId) {
         let result = Object.assign({}, video, {
             playUrl: 'http://www.w3school.com.cn/i/movie.ogg',
             programmeId,
-            parentId: undefined,
             status: 'NORMAL',
             uid: uuid()
         });

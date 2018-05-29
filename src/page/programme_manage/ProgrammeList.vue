@@ -11,13 +11,16 @@
             <el-form :inline="true" class="demo-form-inline search-form">
                 <el-form-item class="search">
                     <el-input
-                        :value="searchFields.figure"
+                        :value="figure"
+                        clearable
+                        @clear="clearSearchField('figure')"
+                        @input="inputHandler($event, 'figure')"
                         placeholder="搜索你想要的信息">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary">搜索</el-button>
+                    <el-button @click="searchHandler" type="primary">搜索</el-button>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="warning" @click="clearSearchFields">清空筛选条件</el-button>
@@ -35,6 +38,7 @@
                         :value="releaseAt"
                         type="year"
                         clearable
+                        @clear="clearSearchField('releaseAt')"
                         @input="inputHandler($event, 'releaseAt')"
                         placeholder="请选择上映时间">
                     </el-date-picker>
@@ -44,6 +48,7 @@
                         :value="releaseArea"
                         clearable
                         filterable
+                        @clear="clearSearchField('releaseArea')"
                         @change="inputHandler($event, 'releaseArea')"
                         placeholder="请选择制片地区"
                     >
@@ -85,18 +90,6 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <!--
-                <el-form-item label="状态">
-                    <el-select
-                        :value="searchFields.releaseStatus"
-                        clearable
-                        placeholder="请选择状态"
-                    >
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
-                    </el-select>
-                </el-form-item>
-                -->
             </el-form>
             <el-table :data="list" border style="width: 100%">
                 <el-table-column prop="id" align="center" width="240px" label="节目编号"></el-table-column>
@@ -193,6 +186,7 @@ export default {
             searchCurrentTypeList: 'programme/searchCurrentTypeList',
             releaseArea: 'programme/releaseArea',
             releaseAt: 'programme/releaseAt',
+            figure: 'programme/figure',
             categroyList: 'programme/categroyList'
         })
     },
@@ -212,6 +206,9 @@ export default {
         }),
         clearSearchFields() {
             this.resetSearchField();
+        },
+        clearSearchField(key) {
+            this.setSearchField({[key]: ''});
         },
         editProgramme(id) {
             this.$router.push({ name: 'EditProgramme', params: { id } });
@@ -244,6 +241,9 @@ export default {
         },
         inputHandler(value, key) {
             this.setSearchField({[key]: value});
+        },
+        searchHandler() {
+            this.getProgrammeList();
         }
     }
 };

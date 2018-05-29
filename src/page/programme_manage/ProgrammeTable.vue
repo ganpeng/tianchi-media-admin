@@ -37,6 +37,9 @@
                     prop="positive"
                     align="center"
                     label="关联正片">
+                        <template slot-scope="scope">
+                            {{(scope.row.parentId ? getFeatureVideoName(scope.row.parentId) : '')}}
+                        </template>
                 </el-table-column>
                 <el-table-column
                     prop="playUrl"
@@ -81,9 +84,9 @@
                     prop="duration"
                     align="center"
                     min-width="120px"
-                    label="时长">
+                    label="上下架">
                     <template slot-scope="scope">
-                        {{duration(scope.row.takeTimeInSec)}}
+                        {{scope.row.visible ? '已上架' : '已下架'}}
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -126,7 +129,7 @@
     </div>
 </template>
 <script>
-import {mapActions, mapMutations} from 'vuex';
+import {mapGetters, mapActions, mapMutations} from 'vuex';
 import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 import role from '@/util/config/role';
 export default {
@@ -160,6 +163,9 @@ export default {
         };
     },
     computed: {
+        ...mapGetters({
+            getFeatureVideoName: 'programmeVideo/getFeatureVideoName'
+        }),
         duration() {
             return (seconds) => {
                 return this.$util.fromSecondsToTime(seconds);

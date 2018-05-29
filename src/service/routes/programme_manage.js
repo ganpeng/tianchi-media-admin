@@ -10,8 +10,8 @@ export const createProgramme = (programme) => {
 /**
  * 获取节目列表
  */
-export const getProgrammeList = ({pageNum, pageSize}) => {
-    return service.get('/v1/content/programme/page', { params: { pageNum, pageSize } });
+export const getProgrammeList = ({pageNum, pageSize, figure, releaseAt, releaseArea, programmeCategory, programmeType}) => {
+    return service.get('/v1/content/programme/page', { params: {pageNum, pageSize, figure, releaseAt, releaseArea, programmeCategory, programmeType} });
 };
 
 /**

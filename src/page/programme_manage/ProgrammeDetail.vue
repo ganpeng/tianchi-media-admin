@@ -103,12 +103,13 @@
                                 :disabled="readonly"
                             >
                                 <el-option
-                                    v-for="item in keyWordsOptions"
+                                    v-for="item in programmeTagList"
                                     :key="item.value"
                                     :label="item.label"
                                     :value="item.value">
                                 </el-option>
                             </el-select>
+                            <el-button type="primary" plain @click="addTag">新增关键字</el-button>
                         </el-form-item>
                         <el-form-item label="节目主演" prop="leadActor">
                             <label for="leadActor"></label>
@@ -285,6 +286,7 @@
             this.resetProgramme();
             this.resetVideoList();
             this.getProgrammeCategory();
+            this.getProgrammeTagList();
         },
         data() {
             return {
@@ -297,24 +299,6 @@
                 videoUploadDialogVisible: false,
                 createPersonDialogVisible: false,
                 areaOptions: this.$util.countryList(),
-                keyWordsOptions: [
-                    {
-                        value: '好看',
-                        label: '好看'
-                    },
-                    {
-                        value: '精彩',
-                        label: '精彩'
-                    },
-                    {
-                        value: '不错',
-                        label: '不错'
-                    },
-                    {
-                        value: '非常好',
-                        label: '非常好'
-                    }
-                ],
                 copyRightDealerOptions: [
                     {
                         value: '1',
@@ -350,6 +334,7 @@
             ...mapGetters({
                 programme: 'programme/currentProgramme',
                 categroyList: 'programme/categroyList',
+                programmeTagList: 'programme/programmeTagList',
                 currentVideoIdList: 'programme/currentVideoIdList',
                 programmeVideoList: 'programme/programmeVideoList',
                 pagination: 'programme/programmeVideoPagination',
@@ -377,7 +362,8 @@
                 updateLeadActor: 'programme/updateLeadActor',
                 updateDirector: 'programme/updateDirector',
                 updateLeadActorResult: 'programme/updateLeadActorResult',
-                updateDirectorResult: 'programme/updateDirectorResult'
+                updateDirectorResult: 'programme/updateDirectorResult',
+                addProgrammeTag: 'programme/addProgrammeTag'
             }),
             ...mapActions({
                 createProgramme: 'programme/createProgramme',
@@ -385,17 +371,20 @@
                 getPersonList: 'person/getPersonList',
                 getProgrammeCategory: 'programme/getProgrammeCategory',
                 createMultProgrammeVideo: 'programmeVideo/createMultProgrammeVideo',
-                getProgrammeVideoListById: 'programme/getProgrammeVideoListById'
+                getProgrammeVideoListById: 'programme/getProgrammeVideoListById',
+                getProgrammeTagList: 'programme/getProgrammeTagList'
             }),
             _createProgramme() {
                 this.createProgramme()
                     .then((res) => {
-                        this.createMultProgrammeVideo(res.data.id)
+                        let {id} = res.data;
+                        this.createMultProgrammeVideo(id)
                             .then((...res) => {
                                 this.$message({
                                     type: 'success',
                                     message: '保存成功'
                                 });
+                                this.getProgrammeVideoListById(id);
                             });
                     });
             },
@@ -409,6 +398,7 @@
                                     type: 'success',
                                     message: '保存成功'
                                 });
+                                this.getProgrammeVideoListById(id);
                             });
                     });
             },
@@ -501,6 +491,23 @@
             },
             typeListChangeHandler(value) {
                 this.updateTypeList({type: value});
+            },
+            addTag() {
+                this.$prompt('请输入新关键字', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消'
+                }).then(({ value }) => {
+                    this.addProgrammeTag({tag: value});
+                    this.$message({
+                        type: 'success',
+                        message: `新关键字${value}添加成功`
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消输入'
+                    });
+                });
             }
         }
     };

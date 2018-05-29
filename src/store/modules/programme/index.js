@@ -95,6 +95,7 @@ const defaultState = {
     pageSize: 5,
     total: 0,
     categoryList: [],
+    programmeTagList: [],
     currentProgrammeVideoObj: Object.assign({}, defaultCurrentProgrammeVideoObj)
 };
 
@@ -147,6 +148,17 @@ const getters = {
     },
     releaseAt(state) {
         return state.releaseAt;
+    },
+    figure(state) {
+        return state.figure;
+    },
+    programmeTagList(state) {
+        return state.programmeTagList.map((item) => {
+            return {
+                value: item,
+                label: item
+            };
+        });
     },
     typeList(state) {
         return (id) => {
@@ -226,18 +238,27 @@ const mutations = {
             state.currentProgrammeVideoObj.total = payload.total;
         }
     },
+    setProgrammeTagList(state, payload) {
+        state.programmeTagList = payload.list;
+    },
     setCurrentProgramme(state, payload) {
         state.currentProgramme = payload.currentProgramme;
     },
     updateCurrentProgramme(state, payload) {
         state.currentProgramme = Object.assign({}, state.currentProgramme, payload);
     },
+    addProgrammeTag(state, payload) {
+        state.programmeTagList.push(payload.tag);
+    },
     setSearchField(state, payload) {
-        if (payload.releaseArea) {
+        if (payload.releaseArea !== undefined) {
             state.releaseArea = payload.releaseArea;
         }
-        if (payload.releaseAt) {
+        if (payload.releaseAt !== undefined) {
             state.releaseAt = payload.releaseAt;
+        }
+        if (payload.figure !== undefined) {
+            state.figure = payload.figure;
         }
     },
     resetCurrentProgramme(state) {
@@ -442,7 +463,11 @@ function serializeProgrammData(programmeData) {
 
 const actions = {
     getProgrammeList({commit, state}) {
-        service.getProgrammeList(Object.assign({}, _.pick(state, searchFields), {pageNum: state.pageNum - 1}))
+        let searchObj = _.pick(state, searchFields);
+        searchObj.programmeCategory = searchObj.programmeCategory.id;
+        searchObj.programmeType = searchObj.programmeType.id;
+        delete searchObj.releaseAt;
+        service.getProgrammeList(Object.assign({}, searchObj, {pageNum: state.pageNum - 1}))
             .then((res) => {
                 if (res && res.code === 0) {
                     let {pageNum, pageSize, total, list} = res.data;
@@ -543,6 +568,14 @@ const actions = {
             .then((res) => {
                 if (res && res.code === 0) {
                     commit('updateProgrammeVideoVisible', {id});
+                }
+            });
+    },
+    getProgrammeTagList({commit, state}) {
+        return service.getProgrammeTagList()
+            .then((res) => {
+                if (res && res.code === 0) {
+                    commit('setProgrammeTagList', {list: res.data});
                 }
             });
     }
