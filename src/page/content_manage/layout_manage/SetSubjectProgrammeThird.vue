@@ -2,9 +2,12 @@
 <template>
     <div>
         <h3 class="text-left">请勾选需要展示的角标：</h3>
-        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-        <div style="margin: 15px 0;"></div>
-        <el-checkbox-group v-model="checkedCornerMarks" @change="checkedCornerMarksChange">
+        <el-checkbox :indeterminate="isIndeterminate"
+                     v-model="checkAll"
+                     @change="handleCheckAllChange"
+                     class="text-left">全选
+        </el-checkbox>
+        <el-checkbox-group v-model="checkedCornerMarks" @change="checkedCornerMarksChange" class="text-left">
             <el-checkbox v-for="(item,index) in cornerMarks" :label="item.id" :key="index">
                 <label>{{item.position}}</label>
                 <label>{{item.type}}</label>
@@ -19,6 +22,7 @@
 
     export default {
         name: 'SetSubjectProgrammeThird',
+        props: ['markList'],
         data() {
             return {
                 checkAll: false,
@@ -28,14 +32,42 @@
             };
         },
         methods: {
+            // 选择所有
             handleCheckAllChange(val) {
                 this.checkedCornerMarks = val ? [1, 2, 3, 4] : [];
                 this.isIndeterminate = false;
+                this.$emit('setCornerMarks', this.getCornerMarksSetting());
             },
+            // 选择某一个
             checkedCornerMarksChange(value) {
                 let checkedCount = value.length;
                 this.checkAll = checkedCount === this.cornerMarks.length;
                 this.isIndeterminate = checkedCount > 0 && checkedCount < this.cornerMarks.length;
+                this.$emit('setCornerMarks', this.getCornerMarksSetting());
+            },
+            getCornerMarksSetting() {
+                return {
+                    leftTop: {
+                        'caption': '爱奇艺',
+                        'imageUrl': '',
+                        'markType': 'COPYRIGHT_RESERVER'
+                    },
+                    leftBottom: {
+                        'caption': '45集',
+                        'imageUrl': '',
+                        'markType': 'EPISODES_NUMBER'
+                    },
+                    rightTop: {
+                        'caption': '最新',
+                        'imageUrl': '',
+                        'markType': 'CUSTOM'
+                    },
+                    rightBottom: {
+                        'caption': '9.4分',
+                        'imageUrl': '',
+                        'markType': 'SCORE'
+                    }
+                };
             }
         }
     };

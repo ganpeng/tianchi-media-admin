@@ -160,13 +160,13 @@ let router = new Router({
                 },
                 // 内容管理-栏目管理-节目选择设置
                 {
-                    path: '/layout-manage/programme',
+                    path: '/layout-manage/programme/:row/:index',
                     name: 'AppendProgramme',
                     component: AppendProgramme
                 },
                 // 内容管理-栏目管理-单个推荐位选择专题
                 {
-                    path: '/layout-manage/single-append-subject',
+                    path: '/layout-manage/single-append-subject/:row/:index',
                     name: 'SingleAppendSubject',
                     component: SingleAppendSubject
                 },

@@ -9,18 +9,20 @@
         </el-breadcrumb>
         <h3 class="text-left">请选择要推荐的专题：</h3>
         <select-single-subject
-            v-on:selectSubject="selectSubject">
+            v-on:setSubject="setSubject">
         </select-single-subject>
         <h3 class="text-left">请选择专题的封面海报：</h3>
-        <ul class="cover-list">
-            <li v-for="(item,index) in coverUrls" :key="index">
-                <img :src="item.url" :alt="item.name" @click="displayImage(index)">
-                <label>{{item.name}}</label>
+        <ul>
+            <li v-for="(item,index) in posterImageList" :key="index">
+                <img :src="item.uri" :alt="item.name" @click="displayImage(index)">
+                <el-radio v-model="programmeImage" :label="item.id" @change="setPosterImage(index)">{{item.name}}
+                </el-radio>
             </li>
-            <li @click="toAddCover">
+            <li @click="toAddPosterImage">
                 <i class="el-icon-plus"></i>
             </li>
         </ul>
+        <el-button type="success" @click="saveSubject">保 存</el-button>
         <preview-multiple-images
             :previewMultipleImages="previewImage">
         </preview-multiple-images>
@@ -40,7 +42,9 @@
         data() {
             return {
                 currentSubject: {},
-                coverUrls: [],
+                posterImageList: [],
+                programmeImage: '',
+                coverImage: {},
                 previewImage: {
                     display: false,
                     autoplay: false,
@@ -51,33 +55,73 @@
         },
         methods: {
             // 选择某一个专题
-            selectSubject(item) {
+            setSubject(item) {
                 this.currentSubject = item;
-                this.coverUrls = [{
-                    id: 1,
-                    name: '定妆照',
-                    url: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7'
-                }, {
-                    id: 2,
-                    name: '发布会照片',
-                    url: 'http://photocdn.sohu.com/20160107/Img433729049.jpg'
-                }, {
-                    id: 3,
-                    name: '通稿照片',
-                    url: 'http://pic.4j4j.cn/upload/pic/20151015/465ce1d4b0.jpg'
-                }];
+                this.posterImageList = item.posterImageList;
+                this.coverImage = {};
+                this.programmeImage = '';
             },
             // 放大预览图片
             displayImage(index) {
                 this.previewImage.display = true;
-                this.previewImage.list = this.coverUrls;
+                this.previewImage.list = this.posterImageList;
                 this.previewImage.activeIndex = index;
             },
             // 到本专题的编辑基本信息页面，添加专题封面
-            toAddCover() {
-                this.$router.push({
-                    name: this.currentSubject.type === '人物' ? 'EditPersonSubject' : 'EditProgrammeSubject',
-                    params: {id: this.currentSubject.id}
+            toAddPosterImage() {
+                if (!this.currentSubject.id) {
+                    this.$message({
+                        message: '请选择专题',
+                        type: 'warning'
+                    });
+                } else {
+                    this.$router.push({
+                        name: this.currentSubject.category === 'PROGRAMME' ? 'EditProgrammeSubject' : 'EditPersonSubject',
+                        params: {id: this.currentSubject.id}
+                    });
+                }
+            },
+            setPosterImage(index) {
+                this.coverImage = this.posterImageList[index];
+            },
+            // 保存信息
+            saveSubject() {
+                if (!this.currentSubject.id) {
+                    this.$message({
+                        message: '请选择专题',
+                        type: 'warning'
+                    });
+                    return;
+                } else if (!this.coverImage.id) {
+                    this.$message({
+                        message: '请选择封面图片',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                // 组建推荐节目对象，保存到store中
+                let subject = {
+                    coverImage: this.coverImage,
+                    id: this.currentSubject.id,
+                    itemType: 'SUBJECT'
+                };
+                this.$store.dispatch('todayRecommend/setRecommendItem', {
+                    row: this.$route.params.row,
+                    index: this.$route.params.index,
+                    item: subject
+                }).then(response => {
+                    if (response === 'success') {
+                        this.$message({
+                            message: '设置推荐专题成功',
+                            type: 'success'
+                        });
+                        this.$store.dispatch('todayRecommend/setTodayRecommendCache');
+                    } else {
+                        this.$message({
+                            message: '设置推荐专题失败',
+                            type: 'warning'
+                        });
+                    }
                 });
             }
         }
@@ -93,7 +137,7 @@
         font-size: 18px;
     }
 
-    .cover-list {
+    ul {
         display: flex;
         margin-top: 30px;
         justify-content: left;
@@ -101,7 +145,7 @@
             display: flex;
             margin-right: 30px;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: space-around;
             height: 230px;
             &:last-child {
                 justify-content: center;
@@ -122,8 +166,7 @@
                 height: 180px;
                 cursor: zoom-in;
             }
-            label {
-                text-align: center;
+            .el-radio {
                 font-size: 16px;
             }
         }

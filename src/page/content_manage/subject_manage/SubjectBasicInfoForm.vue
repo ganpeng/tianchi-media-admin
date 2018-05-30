@@ -8,10 +8,10 @@
                 <el-input v-model="subjectInfo.name" placeholder="请填写30个字以内的名称"></el-input>
             </el-form-item>
             <template v-if="status === '0' || status === '2'">
-                <el-form-item label="节目专题类别" prop="typeList" required>
-                    <el-select v-model="subjectInfo.typeList" multiple placeholder="请选择节目专题类别">
+                <el-form-item label="节目专题类别" prop="programmeCategoryList" required>
+                    <el-select v-model="subjectInfo.programmeCategoryList" multiple placeholder="请选择节目专题类别">
                         <el-option
-                            v-for="item in typeListOptions"
+                            v-for="item in programmeCategoryListOptions"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -119,12 +119,12 @@
                     callback();
                 }
             };
-            let checkTypeList = (rule, value, callback) => {
+            let checkProgrammeCategoryList = (rule, value, callback) => {
                 // 对于创建或者编辑节目专题，不存在当前字段，也不校验
                 if (this.status === '1' || this.status === '3') {
                     return;
                 }
-                if (!this.subjectInfo.typeList) {
+                if (!this.subjectInfo.programmeCategoryList) {
                     return callback(new Error('请选择节目专题类别'));
                 } else {
                     callback();
@@ -150,12 +150,12 @@
                 size: subjectDimension,
                 subjectInfo: {
                     name: '',
-                    typeList: [],
+                    programmeCategoryList: [],
                     description: '',
                     tagList: [],
                     posterImageList: []
                 },
-                typeListOptions: [{
+                programmeCategoryListOptions: [{
                     label: '电视剧',
                     value: 'TV_DRAMA'
                 }, {
@@ -177,8 +177,8 @@
                     name: [
                         {validator: checkName, trigger: 'blur'}
                     ],
-                    typeList: [
-                        {validator: checkTypeList, trigger: 'change'}
+                    programmeCategoryList: [
+                        {validator: checkProgrammeCategoryList, trigger: 'change'}
                     ],
                     description: [
                         {validator: checkDescription, trigger: 'blur'}
@@ -223,7 +223,7 @@
                     this.$service.getSubjectDetail(this.$route.params.id).then(response => {
                         if (response && response.code === 0) {
                             this.subjectInfo.name = response.data.name;
-                            this.subjectInfo.typeList = response.data.typeList ? response.data.typeList : [];
+                            this.subjectInfo.programmeCategoryList = response.data.programmeCategoryList ? response.data.programmeCategoryList : [];
                             this.subjectInfo.description = response.data.description;
                             this.subjectInfo.tagList = response.data.tagList;
                             this.subjectInfo.posterImageList = response.data.posterImageList;

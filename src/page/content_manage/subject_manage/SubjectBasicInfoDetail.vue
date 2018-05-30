@@ -13,7 +13,7 @@
             </el-form-item>
             <el-form-item label="专题节目类别：" v-if="status === '0'">
                 <ul class="type-list">
-                    <li v-for="(item, index) in subjectInfo.typeList" :key="index">
+                    <li v-for="(item, index) in subjectInfo.programmeCategoryList" :key="index">
                         <el-tag type="success">{{item}}</el-tag>
                     </li>
                 </ul>

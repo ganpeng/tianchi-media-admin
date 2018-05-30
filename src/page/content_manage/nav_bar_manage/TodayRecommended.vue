@@ -18,49 +18,11 @@
                 </div>
             </div>
             <ul class="recommend-three recommend-line">
-                <li class="settable recommend-item">
-                    <div class="ab-center">
+                <li class="settable recommend-item" v-for="(item,index) in recommendFirstLayoutList" :key="index">
+                    <div class="ab-center image-box">
+                        <img :src="item.coverImage.uri"/>
                         <div class="recommend-operate">
-                            <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-                                <i class="el-icon-edit" @click="editRecommend"></i>
-                            </el-tooltip>
-                            <el-dropdown @command="setRecommend" placement="bottom">
-                            <span class="el-dropdown-link">
-                                <i class="el-icon-circle-plus-outline"></i>
-                            </span>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
-                                    <el-dropdown-item command="PERSON">设置为专题</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                        </div>
-                    </div>
-                </li>
-                <li class="settable recommend-item">
-                    <div class="ab-center">
-                        <div class="recommend-operate">
-                            <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-                                <i class="el-icon-edit" @click="editRecommend"></i>
-                            </el-tooltip>
-                            <el-dropdown @command="setRecommend" placement="bottom">
-                            <span class="el-dropdown-link">
-                                <i class="el-icon-circle-plus-outline"></i>
-                            </span>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
-                                    <el-dropdown-item command="PERSON">设置为专题</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                        </div>
-                    </div>
-                </li>
-                <li class="settable recommend-item">
-                    <div class="ab-center">
-                        <div class="recommend-operate">
-                            <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-                                <i class="el-icon-edit" @click="editRecommend"></i>
-                            </el-tooltip>
-                            <el-dropdown @command="setRecommend" placement="bottom">
+                            <el-dropdown @command="setRecommend($event,0,index)" placement="bottom">
                             <span class="el-dropdown-link">
                                 <i class="el-icon-circle-plus-outline"></i>
                             </span>
@@ -74,31 +36,11 @@
                 </li>
             </ul>
             <ul class="recommend-two recommend-line">
-                <li class="settable recommend-item">
-                    <div class="ab-center">
+                <li class="settable recommend-item" v-for="(item,index) in recommendSecondLayoutList" :key="index">
+                    <div class="ab-center image-box">
+                        <img :src="item.coverImage.uri"/>
                         <div class="recommend-operate">
-                            <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-                                <i class="el-icon-edit" @click="editRecommend"></i>
-                            </el-tooltip>
-                            <el-dropdown @command="setRecommend" placement="bottom">
-                            <span class="el-dropdown-link">
-                                <i class="el-icon-circle-plus-outline"></i>
-                            </span>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
-                                    <el-dropdown-item command="PERSON">设置为专题</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                        </div>
-                    </div>
-                </li>
-                <li class="settable recommend-item">
-                    <div class="ab-center">
-                        <div class="recommend-operate">
-                            <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-                                <i class="el-icon-edit" @click="editRecommend"></i>
-                            </el-tooltip>
-                            <el-dropdown @command="setRecommend" placement="bottom">
+                            <el-dropdown @command="setRecommend($event,1,index)" placement="bottom">
                             <span class="el-dropdown-link">
                                 <i class="el-icon-circle-plus-outline"></i>
                             </span>
@@ -227,8 +169,13 @@
         name: 'TodayRecommended',
         data() {
             return {
-                naviBarId: 1,
-                sortDialogVisible: false
+                navBarId: 1,
+                sortDialogVisible: false,
+                layoutInfo: {},
+                liveChannelList: [],
+                recommendFirstLayoutList: [],
+                recommendSecondLayoutList: [],
+                subjectLayoutList: []
             };
         },
         mounted() {
@@ -236,22 +183,28 @@
         },
         methods: {
             init() {
+                // 判断是否本地改动，没有改动，获取线上数据
+                // 本地改动，获取本地数据初始化
+                this.layoutInfo = this.$store.getters['todayRecommend/getCurrentState'];
+                this.liveChannelList = this.layoutInfo.liveChannelList;
+                this.subjectLayoutList = this.layoutInfo.subjectLayoutList;
+                this.recommendFirstLayoutList = this.layoutInfo.recommendLayoutList[0].recommendLayoutItemList;
+                this.recommendSecondLayoutList = this.layoutInfo.recommendLayoutList[1].recommendLayoutItemList;
             },
             // 设置直播频道
             setChannel() {
-                this.$router.push({name: 'SetChannel', params: {navBarId: this.naviBarId}});
+                this.$router.push({name: 'SetChannel', params: {navBarId: this.navBarId}});
             },
             // 跳转到广告组列表页面
             toAdGroup() {
                 this.$router.push({name: 'AdGroup'});
             },
-            // 编辑当前推荐位
-            editRecommend(val) {
-                this.$router.push({name: val === 'PROGRAMME' ? 'AppendProgramme' : 'SingleAppendSubject'});
-            },
             // 设置推荐位为节目或者专题
-            setRecommend(val) {
-                this.$router.push({name: val === 'PROGRAMME' ? 'AppendProgramme' : 'SingleAppendSubject'});
+            setRecommend(val, row, index) {
+                this.$router.push({
+                    name: val === 'PROGRAMME' ? 'AppendProgramme' : 'SingleAppendSubject',
+                    params: {row: row, index: index}
+                });
             },
             // 编辑节目模块或者人物模块内容
             editBlock(val) {
@@ -470,6 +423,15 @@
             text-align: left;
             margin-right: 20px;
             cursor: grab;
+        }
+    }
+
+    .image-box {
+        overflow: hidden;
+        img {
+            display: block;
+            height: 100%;
+            width: 100%;
         }
     }
 

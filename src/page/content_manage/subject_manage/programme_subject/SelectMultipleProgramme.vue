@@ -77,7 +77,7 @@
                 label="编号">
                 <template slot-scope="scope">
                     <i class="el-icon-success" v-if="model==='SINGLE'"></i>
-                    <label>{{scope.row.id}}</label>
+                    <label>{{scope.row.code}}</label>
                 </template>
             </el-table-column>
             <el-table-column
@@ -333,7 +333,6 @@
                 }
             },
             setProgramme(row) {
-                this.currentRow = row;
                 this.$emit('setProgramme', row);
             }
         }

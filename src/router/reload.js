@@ -14,6 +14,6 @@ if (Cookies.get('token') && !store.state.user.token) {
     });
     // 设置sessionStorage中的系统信息
     if (wsCache.localStorage.get('todayRecommend')) {
-        store.dispatch('todayRecommend/setLiveChannelList', wsCache.localStorage.get('todayRecommend').liveChannelList);
+        store.dispatch('todayRecommend/reloadData', wsCache.localStorage.get('todayRecommend'));
     }
 }
