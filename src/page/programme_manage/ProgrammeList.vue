@@ -95,7 +95,7 @@
                 <el-table-column prop="id" align="center" width="240px" label="节目编号"></el-table-column>
                 <el-table-column label="节目图片" width="200px" align="center" >
                     <template slot-scope="scope">
-                        <img class="person-image" :src="getPostImage(scope.row.id)" alt="">
+                        <img @click="displayImage(getPostImage(scope.row.id))" class="person-image pointer" :src="getPostImage(scope.row.id).uri" alt="">
                     </template>
                 </el-table-column>
                 <el-table-column prop="name" align="center" min-width="100px" label="节目名称"></el-table-column>
@@ -156,15 +156,25 @@
                 :total="pagination.total">
             </el-pagination>
         </div>
+        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
     </div>
 </template>
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
+import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
 export default {
     name: 'ProgrammeList',
+    components: {
+        PreviewSingleImage
+    },
     data() {
         return {
-            areaOptions: this.$util.countryList()
+            areaOptions: this.$util.countryList(),
+            previewImage: {
+                title: '',
+                display: false,
+                uri: ''
+            }
         };
     },
     created() {
@@ -244,6 +254,12 @@ export default {
         },
         searchHandler() {
             this.getProgrammeList();
+        },
+        // 放大预览图片
+        displayImage(image) {
+            this.previewImage.title = image.name;
+            this.previewImage.display = true;
+            this.previewImage.uri = image.uri;
         }
     }
 };

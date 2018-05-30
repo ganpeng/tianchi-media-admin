@@ -46,7 +46,7 @@
             <el-table-column prop="id" align="center" width="240px" label="编号"></el-table-column>
             <el-table-column label="照片" align="center" >
                 <template slot-scope="scope">
-                    <img width="80px" height="80px" class="person-image" :src="(scope.row.posterImageList[0] ? scope.row.posterImageList[0].uri :'' )" alt="">
+                    <img @click="displayImage(scope.row.posterImageList[0] ? scope.row.posterImageList[0] : {} )" width="80px" height="80px" class="person-image pointer" :src="(scope.row.posterImageList[0] ? scope.row.posterImageList[0].uri :'' )" alt="">
                 </template>
             </el-table-column>
             <el-table-column prop="name" align="center" width="200px" label="名字"></el-table-column>
@@ -89,17 +89,27 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="pagination.total">
         </el-pagination>
+        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
     </div>
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
+    import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
     import role from '@/util/config/role';
     export default {
         name: 'PersonList',
+        components: {
+            PreviewSingleImage
+        },
         data() {
             return {
                 areaOptions: this.$util.countryList(),
-                mainRoleOptions: role.MAIN_ROLE_OPTIONS
+                mainRoleOptions: role.MAIN_ROLE_OPTIONS,
+                previewImage: {
+                    title: '',
+                    display: false,
+                    uri: ''
+                }
             };
         },
         created() {
@@ -153,6 +163,12 @@
             },
             inputChangeHandler(searchStr) {
                 this.setSearchStr({searchStr});
+            },
+            // 放大预览图片
+            displayImage(image) {
+                this.previewImage.title = image.name;
+                this.previewImage.display = true;
+                this.previewImage.uri = image.uri;
             }
         }
     };

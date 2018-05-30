@@ -189,7 +189,7 @@ const getters = {
     getPostImage(state) {
         return (id) => {
             let programme = getProgrammeById(id);
-            return programme.posterImages[0] ? programme.posterImages[0].uri : '';
+            return programme.posterImages[0] ? programme.posterImages[0] : '';
         };
     },
     currentProgramme(state) {
@@ -279,6 +279,9 @@ const mutations = {
                 return item;
             }
         });
+    },
+    updateProgrammeVisible(state) {
+        state.currentProgramme.visible = !state.currentProgramme.visible;
     },
     updateCategoryValue(state, payload) {
         let category = state.categoryList.find((item) => {
@@ -569,6 +572,12 @@ const actions = {
                 if (res && res.code === 0) {
                     commit('updateProgrammeVideoVisible', {id});
                 }
+            });
+    },
+    deleteProgramme({commit, state}, id) {
+        return service.deleteProgramme({id})
+            .then((res) => {
+                commit('updateProgrammeVisible');
             });
     },
     getProgrammeTagList({commit, state}) {

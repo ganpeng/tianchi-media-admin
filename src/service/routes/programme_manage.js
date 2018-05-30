@@ -64,3 +64,10 @@ export const getProgrammeTypeCount = ({programmeTypeId}) => {
 export const deleteProgrammeVideo = ({id}) => {
     return service.patch(`/v1/content/programme/video/${id}/visible`);
 };
+
+/**
+ * 节目下架
+ */
+export const deleteProgramme = ({id}) => {
+    return service.patch(`/v1/content/programme/${id}/visible`);
+};

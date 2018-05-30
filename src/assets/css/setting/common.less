@@ -179,19 +179,23 @@
             bottom: 0;
             background: rgba(0, 0, 0, 0.2);
         }
+        i {
+            position: absolute;
+            display: none;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            cursor: pointer;
+            font-size: 2em;
+        }
     }
     li:hover {
         .delete-layer {
             display: block;
-            i {
-                position:absolute;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                color: #fff;
-                cursor: pointer;
-                font-size: 2em;
-            }
+        }
+        i {
+            display: block;
         }
     }
 }

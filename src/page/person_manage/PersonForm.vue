@@ -90,13 +90,15 @@
                     <el-button v-if="!readonly" type="primary" @click="uploadImageHandler">上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
                     <ul class="cover-list">
                         <li v-for="(img, index) in person.posterImageList" :key="index" class="img-item">
-                            <img :src="img.uri" alt="">
-                            <div v-if="!readonly" class="delete-layer">
-                                <i
-                                    @click="_deletePosterImage(img.id)"
-                                    class="el-icon-delete">
-                                </i>
+                            <div @click="displayImage(index)">
+                                <img :src="img.uri" alt="">
+                                <div v-if="!readonly" class="delete-layer">
                             </div>
+                            </div>
+                            <i
+                                @click="_deletePosterImage(img.id)"
+                                class="el-icon-delete">
+                            </i>
                         </li>
                     </ul>
                 </el-form-item>
@@ -114,6 +116,7 @@
             v-on:changeImageDialogStatus="closeImageDialog($event)"
         >
         </upload-image>
+        <preview-multiple-images :previewMultipleImages="previewImage"></preview-multiple-images>
     </div>
 </template>
 <script>
@@ -126,6 +129,7 @@
 
 import {mapGetters, mapMutations} from 'vuex';
 import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
 import dimension from '@/util/config/dimension';
 import role from '@/util/config/role';
 
@@ -146,7 +150,8 @@ export default {
         }
     },
     components: {
-        UploadImage
+        UploadImage,
+        PreviewMultipleImages
     },
     computed: {
         ...mapGetters({
@@ -175,7 +180,13 @@ export default {
             imageUploadDialogVisible: false,
             areaOptions: this.$util.countryList(),
             mainRoleoptions: role.MAIN_ROLE_OPTIONS,
-            size: dimension.PERSON_DIMENSION
+            size: dimension.PERSON_DIMENSION,
+            previewImage: {
+                display: false,
+                autoplay: false,
+                activeIndex: 0,
+                list: []
+            }
         };
     },
     methods: {
@@ -208,6 +219,11 @@ export default {
                         message: '已取消删除'
                     });
                 });
+        },
+        displayImage(index) {
+            this.previewImage.display = true;
+            this.previewImage.list = this.person.posterImageList;
+            this.previewImage.activeIndex = index;
         }
     }
 };
