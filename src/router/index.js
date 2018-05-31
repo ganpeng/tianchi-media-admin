@@ -172,13 +172,13 @@ let router = new Router({
                 },
                 // 内容管理-栏目管理-模块推荐位选择节目专题
                 {
-                    path: '/layout-manage/block-append-programme-subject',
+                    path: '/layout-manage/block-append-programme-subject/:row',
                     name: 'BlockAppendProgrammeSubject',
                     component: BlockAppendProgrammeSubject
                 },
                 // 内容管理-栏目管理-模块推荐位选择人物专题
                 {
-                    path: '/layout-manage/block-append-person-subject',
+                    path: '/layout-manage/block-append-person-subject/:row',
                     name: 'BlockAppendPersonSubject',
                     component: BlockAppendPersonSubject
                 },

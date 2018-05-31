@@ -15,10 +15,11 @@
         </el-input>
         <h3 class="text-left">2.请选择要推荐的节目专题：</h3>
         <select-single-subject
-            v-on:selectSubject="selectSubject">
+            ref="selectSingleSubject"
+            v-on:setSubject="setSubject">
         </select-single-subject>
         <h3 class="text-left">3.请选择模块板式：</h3>
-        <el-select v-model="model" clearable placeholder="请选择模块板式">
+        <el-select v-model="model" clearable placeholder="请选择模块板式" @change="setBlockModel">
             <el-option
                 v-for="item in modelOptions"
                 :key="item.id"
@@ -36,6 +37,9 @@
             <ul :class="'model-' + modelArray[2].length">
                 <li v-for="(item,index) in modelArray[2]" :key="index">{{item}}</li>
             </ul>
+        </div>
+        <div class="text-center save-btn">
+            <el-button type="success" @click="saveBlock">保 存</el-button>
         </div>
         <el-dialog title="设置模块内的节目" :visible.sync="dialogTableVisible">
             <set-subject-programme></set-subject-programme>
@@ -60,7 +64,8 @@
                 blockName: '',
                 currentSubject: {},
                 modelOptions: blockModel.TYPE,
-                model: ''
+                model: '',
+                programmeList: []
             };
         },
         computed: {
@@ -80,8 +85,65 @@
         },
         methods: {
             // 选择某一个专题
-            selectSubject(item) {
-                this.currentSubject = item;
+            setSubject(item) {
+                if (!item.subjectItemList || item.subjectItemList.length < 7) {
+                    this.$message({
+                        message: '该专题人物数少于7个，不可选择',
+                        type: 'warning'
+                    });
+                    this.currentSubject = {};
+                    this.programmeList = [];
+                    // 取消选择
+                    this.$refs.selectSingleSubject.cancelSubject();
+                } else {
+                    this.currentSubject = item;
+                    this.programmeList = item.subjectItemList;
+                }
+            },
+            // 选择模块板式
+            setBlockModel() {
+                let num = 0;
+                let array = this.model.split('+');
+                for (let k = 0; k < this.model.split('+').length; k++) {
+                    num = num + parseInt(array[k]);
+                }
+            },
+            // 保存信息到store中
+            saveBlock() {
+                if (!this.title) {
+                    this.$message({
+                        message: '请填写模块名称',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                if (!this.currentSubject.id) {
+                    this.$message({
+                        message: '请选择专题',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                // 组建模块专题对象
+                let programme = {};
+                // 保存到store中
+                this.$store.dispatch('todayRecommend/setSubjectLayoutItem', {
+                    row: this.$route.params.row,
+                    item: programme
+                }).then(response => {
+                    if (response === 'success') {
+                        this.$message({
+                            message: '设置模块专题成功',
+                            type: 'success'
+                        });
+                        this.$store.dispatch('todayRecommend/setTodayRecommendCache');
+                    } else {
+                        this.$message({
+                            message: '设置模块专题失败',
+                            type: 'warning'
+                        });
+                    }
+                });
             }
         }
     };
@@ -122,43 +184,41 @@
         }
         .model-1 {
             li {
-                height: 0;
-                width: 89%;
-                padding-bottom: 11%;
+                width: 100%;
+                padding-bottom: 12%;
             }
         }
 
         .model-2 {
             li {
-                height: 0;
-                width: 79%;
-                padding-bottom: 21%;
+                width: 48%;
+                padding-top: 13%;
             }
         }
 
         .model-3 {
             li {
-                height: 0;
-                width: 70%;
-                padding-bottom: 30%;
+                width: 31%;
+                padding-top: 13%;
             }
         }
 
         .model-4 {
             li {
-                height: 0;
-                width: 63%;
-                padding-bottom: 37%;
+                width: 23%;
+                padding-top: 13%;
             }
         }
 
         .model-6 {
             li {
-                height: 0;
-                width: 41%;
-                padding-bottom: 59%
+                width: 14%;
+                padding-top: 20%;
             }
         }
     }
 
+    .save-btn {
+        margin: 60px 0 40px 0;
+    }
 </style>

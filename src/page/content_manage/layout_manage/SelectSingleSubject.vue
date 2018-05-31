@@ -14,12 +14,12 @@
             </el-form-item>
             <template v-if="listQueryParams.subjectCategory === 'PROGRAMME'">
                 <el-form-item label="节目类别">
-                    <el-select v-model="subjectType" clearable placeholder="请选择节目类别">
+                    <el-select v-model="listQueryParams.subjectType" clearable placeholder="请选择节目类别">
                         <el-option
                             v-for="item in typeListOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -42,8 +42,9 @@
             </el-form-item>
         </el-form>
         <el-table
-            :data="programmeList"
+            :data="subjectList"
             border
+            ref="singleSubject"
             highlight-current-row
             @current-change="setSubject"
             style="width: 100%">
@@ -152,18 +153,11 @@
                     value: 'FIGURE',
                     label: '人物专题'
                 }],
-                typeListOptions: [{
-                    label: '电视剧',
-                    value: 'TV_DRAMA'
-                }, {
-                    label: '电影',
-                    value: 'MOVIE'
-                }, {
-                    label: '娱乐',
-                    value: 'VARIETY_SHOW'
-                }],
+                typeListOptions: [],
                 totalAmount: 0,
-                programmeList: []
+                subjectList: [],
+                // 当前是否处于取消选择操作中
+                cancelStatus: false
             };
         },
         mounted() {
@@ -172,17 +166,30 @@
         methods: {
             init() {
                 this.getSubjectList();
+                this.$service.getProgrammeCategory().then(response => {
+                    if (response && response.code === 0) {
+                        this.typeListOptions = response.data;
+                    }
+                });
             },
             getSubjectList() {
                 this.$service.getSubjectList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
-                        this.programmeList = response.data.list;
+                        this.subjectList = response.data.list;
                         this.totalAmount = response.data.total;
                     }
                 });
             },
             setSubject(row) {
-                this.$emit('setSubject', row);
+                if (!this.cancelStatus) {
+                    this.$emit('setSubject', row);
+                } else {
+                    this.cancelStatus = false;
+                }
+            },
+            cancelSubject() {
+                this.cancelStatus = true;
+                this.$refs.singleSubject.setCurrentRow();
             },
             handleSizeChange(pageSize) {
                 this.listQueryParams.pageSize = pageSize;

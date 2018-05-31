@@ -24,9 +24,9 @@
                         <el-select v-model="subjectType" clearable placeholder="请选择节目类别">
                             <el-option
                                 v-for="item in typeListOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -168,16 +168,7 @@
                     value: 'FIGURE',
                     label: '人物专题'
                 }],
-                typeListOptions: [{
-                    label: '电视剧',
-                    value: 'TV_DRAMA'
-                }, {
-                    label: '电影',
-                    value: 'MOVIE'
-                }, {
-                    label: '娱乐',
-                    value: 'VARIETY_SHOW'
-                }],
+                typeListOptions: [],
                 totalAmount: 0,
                 programmeList: []
             };
@@ -188,6 +179,11 @@
         methods: {
             init() {
                 this.getSubjectList();
+                this.$service.getProgrammeCategory().then(response => {
+                    if (response && response.code === 0) {
+                        this.typeListOptions = response.data;
+                    }
+                });
             },
             getSubjectList() {
                 this.$service.getSubjectList(this.listQueryParams).then(response => {

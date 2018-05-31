@@ -120,7 +120,7 @@
                         <el-tooltip class="item" effect="dark" content="编辑" placement="top">
                             <i class="el-icon-edit" @click="editBlock('PERSON')"></i>
                         </el-tooltip>
-                        <el-dropdown @command="addBlockSubject" placement="bottom">
+                        <el-dropdown @command="addBlockSubject($event,2)" placement="bottom">
                             <span class="el-dropdown-link">
                                 <i class="el-icon-circle-plus-outline"></i>
                             </span>
@@ -211,8 +211,11 @@
                 this.$router.push({name: val === 'PROGRAMME' ? 'BlockAppendProgrammeSubject' : 'BlockAppendPersonSubject'});
             },
             // 添加模块，设置模块内的专题
-            addBlockSubject(val) {
-                this.$router.push({name: val === 'PROGRAMME' ? 'BlockAppendProgrammeSubject' : 'BlockAppendPersonSubject'});
+            addBlockSubject(val, row) {
+                this.$router.push({
+                    name: val === 'PROGRAMME' ? 'BlockAppendProgrammeSubject' : 'BlockAppendPersonSubject',
+                    params: {row: row}
+                });
             },
             // 模块排序
             sortBlock() {
@@ -249,27 +252,15 @@
     // 第一行主推荐
     #live {
         display: flex;
-        position: relative;
-        width: 100%;
-        &:after {
-            display: block;
-            content: "";
-            visibility: hidden;
-            clear: both;
-        }
+        justify-content: space-between;
         .record {
-            float: left;
             width: 11%;
             padding-top: 24%;
-            flex-grow: 1;
         }
         .live-channel, .ad-group {
             position: relative;
-            float: left;
             width: 43%;
             padding-top: 24%;
-            margin-left: 20px;
-            flex-grow: 12;
             font-size: 30px;
             div {
                 display: flex;

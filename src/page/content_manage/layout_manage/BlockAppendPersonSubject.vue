@@ -10,20 +10,25 @@
         <h3 class="text-left">1.请输入人物模块名称：</h3>
         <el-input
             placeholder="请输入模块名称，30个字符以内"
-            v-model="blockName"
+            v-model="title"
             clearable>
         </el-input>
         <h3 class="text-left">2.请选择要推荐的人物专题：</h3>
         <select-single-subject
-            v-on:selectSubject="selectSubject">
+            ref="selectSingleSubject"
+            v-on:setSubject="setSubject">
         </select-single-subject>
         <h3 class="text-left">3.请对专题中的人物排序：</h3>
-        <ul id="person-list" v-dragula="{direction: 'horizontal',data:personList}">
-            <li v-for="(item, index) in personList" :key="index" :index="index">
-                <img :src="item.url" :alt="item.name"/>
+        <label v-if="personList.length === 0">暂无选中的人物</label>
+        <ul id="person-list" v-else>
+            <li v-for="(item, index) in personList" :key="index" :data-id="item.id">
+                <img :src="item.uri" :alt="item.name"/>
                 <label>{{item.name}}</label>
             </li>
         </ul>
+        <div class="text-center save-btn">
+            <el-button type="success" @click="saveBlock">保 存</el-button>
+        </div>
     </div>
 </template>
 
@@ -37,85 +42,9 @@
         },
         data() {
             return {
-                blockName: '',
+                title: '',
                 currentSubject: {},
-                personList: [
-                    {
-                        id: 1,
-                        name: '胡歌',
-                        url: 'https://tse3-mm.cn.bing.net/th?id=OIP.1-acNShtMsNIMQJsroHMuwHaKI&w=158&h=216&c=7&o=5&pid=1.7'
-                    },
-                    {
-                        id: 2,
-                        name: '高圆圆',
-                        url: 'https://tse4-mm.cn.bing.net/th?id=OIP.22zt7hCq2Em5PD0DumIP5gHaKp&w=202&h=290&c=7&o=5&pid=1.7'
-                    },
-                    {
-                        id: 3,
-                        name: '韩雪',
-                        url: 'https://tse4-mm.cn.bing.net/th?id=OIP.o74CBfjLIX0xK99xUulMyQHaEo&w=202&h=126&c=7&o=5&pid=1.7'
-                    },
-                    {
-                        id: 4,
-                        name: '吴秀波',
-                        url: 'https://tse2-mm.cn.bing.net/th?id=OIP.fSKNRnnI4tnlYuGHP-8voAHaHa&w=197&h=197&c=7&o=5&pid=1.7'
-                    },
-                    {
-                        id: 5,
-                        name: '林允儿',
-                        url: 'https://tse3-mm.cn.bing.net/th?id=OIP.NqtiBSJBvQXIzh5VWhd6GAHaL2&w=146&h=216&c=7&o=5&pid=1.7'
-                    },
-                    {
-                        id: 6,
-                        name: '吴磊',
-                        url: 'https://tse4-mm.cn.bing.net/th?id=OIP.RBLvxnKlbS1a7cZOh3TedgHaLH&w=199&h=299&c=7&o=5&pid=1.7'
-                    },
-                    {
-                        id: 7,
-                        name: '张歆艺',
-                        url: 'https://tse2-mm.cn.bing.net/th?id=OIP.oK9RHAqmuLXhGnRjI7D7cwHaHa&w=202&h=202&c=7&o=5&pid=1.7'
-                    },
-                    {
-                        id: 8,
-                        name: '张一山',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.b8k03mWs8v3G7HE-7SIExwHaEo&w=202&h=126&c=7&o=5&pid=1.7'
-                    },
-                    {
-                        id: 9,
-                        name: '宋祖儿',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.QuIRAXQDDUYPXjW4tBljkAHaI0&w=202&h=240&c=7&o=5&pid=1.7'
-                    },
-                    {
-                        id: 10,
-                        name: '韩东君',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.Y_owRPO1KuYUUcFDjsKvPQHaJ0&w=202&h=267&c=7&o=5&pid=1.7'
-                    },
-                    {
-                        id: 11,
-                        name: '罗晋',
-                        url: 'https://tse2-mm.cn.bing.net/th?id=OIP.PBOQ2It90CEAY6j3jNva1QHaJ4&w=202&h=269&c=7&o=5&pid=1.7'
-                    },
-                    {
-                        id: 12,
-                        name: '戚薇',
-                        url: 'https://tse2-mm.cn.bing.net/th?id=OIP.ud2NpVUJ47791VsD4uksJQHaJ5&w=202&h=269&c=7&o=5&pid=1.7'
-                    },
-                    {
-                        id: 13,
-                        name: '黄晓明',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.-5j-asMrQhANaoiEWsgs5gHaGl&w=247&h=217&c=7&o=5&pid=1.7'
-                    },
-                    {
-                        id: 14,
-                        name: '刘德华',
-                        url: 'https://tse1-mm.cn.bing.net/th?id=OIP.a1_0YYQ5SuE6dHx4gGsyFgHaIK&w=198&h=218&c=7&o=5&pid=1.7'
-                    },
-                    {
-                        id: 15,
-                        name: '文章',
-                        url: 'https://tse4-mm.cn.bing.net/th?id=OIP.ZqzRpdPAD5kdqmb8PLrqVgHaJR&w=202&h=253&c=7&o=5&pid=1.7'
-                    }
-                ]
+                personList: []
             };
         },
         mounted() {
@@ -125,8 +54,80 @@
             init() {
             },
             // 选择某一个专题
-            selectSubject(item) {
-                this.currentSubject = item;
+            setSubject(item) {
+                if (!item.subjectItemList || item.subjectItemList.length < 7) {
+                    this.$message({
+                        message: '该专题人物数少于7个，不可选择',
+                        type: 'warning'
+                    });
+                    this.currentSubject = {};
+                    this.personList = [];
+                    // 取消选择
+                    this.$refs.selectSingleSubject.cancelSubject();
+                } else {
+                    this.currentSubject = item;
+                    this.personList = item.subjectItemList;
+                    this.$nextTick(function () {
+                        // 拖拽设置
+                        this.$dragula([document.getElementById('person-list')], {
+                            direction: 'horizontal'
+                        });
+                    });
+                }
+            },
+            // 保存信息到store中
+            saveBlock() {
+                if (!this.title) {
+                    this.$message({
+                        message: '请填写模块名称',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                if (!this.currentSubject.id) {
+                    this.$message({
+                        message: '请选择专题',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                let nodes = this.$el.querySelectorAll('#person-list li');
+                let subjectLayoutItemList = [];
+                for (let i = 0; i < nodes.length; i++) {
+                    for (let k = 0; k < this.personList.length; k++) {
+                        if (nodes[i].getAttribute('data-id') === this.personList[k].id) {
+                            subjectLayoutItemList.push({
+                                targetId: this.personList[k].id,
+                                posterImg: this.personList[k].posterImageList
+                            });
+                        }
+                    }
+                }
+                // 组建模块专题对象
+                let person = {
+                    subjectId: this.currentSubject.id,
+                    title: this.title,
+                    subjectCategory: 'FIGURE',
+                    subjectLayoutItemList: subjectLayoutItemList
+                };
+                // 保存到store中
+                this.$store.dispatch('todayRecommend/setSubjectLayoutItem', {
+                    row: this.$route.params.row,
+                    item: person
+                }).then(response => {
+                    if (response === 'success') {
+                        this.$message({
+                            message: '设置模块专题成功',
+                            type: 'success'
+                        });
+                        this.$store.dispatch('todayRecommend/setTodayRecommendCache');
+                    } else {
+                        this.$message({
+                            message: '设置模块专题失败',
+                            type: 'warning'
+                        });
+                    }
+                });
             }
         }
     };
@@ -202,5 +203,9 @@
         cursor: grab;
         cursor: -moz-grab;
         cursor: -webkit-grab;
+    }
+
+    .save-btn {
+        margin: 60px 0 40px 0;
     }
 </style>

@@ -133,7 +133,7 @@
                 this.$service.getPersonList({
                     name: this.name,
                     area: this.area,
-                    pageNum: this.pageNum,
+                    pageNum: this.pageNum - 1,
                     pageSize: this.pageSize
                 }).then(response => {
                     if (response && response.code === 0) {
