@@ -1,4 +1,6 @@
 import service from '../config';
+import qs from 'querystring';
+import _ from 'lodash';
 
 /**
  * 新增节目
@@ -10,8 +12,21 @@ export const createProgramme = (programme) => {
 /**
  * 获取节目列表
  */
-export const getProgrammeList = ({pageNum, pageSize, figure, releaseAt, releaseArea, programmeCategory, programmeType}) => {
-    return service.get('/v1/content/programme/page', { params: {pageNum, pageSize, figure, releaseAt, releaseArea, programmeCategory, programmeType} });
+export const getProgrammeList = ({pageNum, pageSize, figure, releaseAt, releaseArea, programmeCategoryId, programmeTypeIdList}) => {
+    const params = {
+            pageNum,
+            pageSize,
+            figure,
+            releaseAt,
+            releaseArea,
+            programmeCategoryId,
+            programmeTypeIdList
+        };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+    return service.get(`/v1/content/programme/page?${paramsStr}`);
 };
 
 /**

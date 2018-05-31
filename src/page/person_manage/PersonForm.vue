@@ -8,7 +8,7 @@
                 <el-form-item label="人物姓名" prop="name">
                     <el-input
                         :value="person.name"
-                        :readonly="readonly"
+                        :disabled="readonly"
                         @input="inputHandler($event, 'name')"
                         placeholder="请输入人物姓名"
                     ></el-input>
@@ -16,7 +16,7 @@
                 <el-form-item label="人物简介" prop="description">
                     <el-input
                         type="textarea"
-                        :readonly="readonly"
+                        :disabled="readonly"
                         :autosize="{ minRows: 4, maxRows: 12}"
                         placeholder="请输入人物简介"
                         :value="person.description"
@@ -26,7 +26,7 @@
                 <el-form-item label="出生日期" prop="birthday">
                     <el-date-picker
                         :value="person.birthday"
-                        :readonly="readonly"
+                        :disabled="readonly"
                         type="date"
                         placeholder="年/月/日"
                         @input="inputHandler($event, 'birthday')"
@@ -51,7 +51,7 @@
                 </el-form-item>
                 <el-form-item label="身高" prop="height">
                     <el-input
-                        :readonly="readonly"
+                        :disabled="readonly"
                         placeholder=""
                         :value="person.height"
                         @input="inputHandler($event, 'height')"
@@ -61,7 +61,7 @@
                 </el-form-item>
                 <el-form-item label="体重" prop="weight">
                     <el-input
-                        :readonly="readonly"
+                        :disabled="readonly"
                         placeholder=""
                         :value="person.weight"
                         @input="inputHandler($event, 'weight')"
@@ -96,6 +96,7 @@
                             </div>
                             </div>
                             <i
+                                v-if="!readonly"
                                 @click="_deletePosterImage(img.id)"
                                 class="el-icon-delete">
                             </i>

@@ -13,7 +13,7 @@
                     <el-form ref="createProgramForm" status-icon :model="programme" label-width="100px" class="form-block">
                         <el-col :span="8">
                             <el-form-item label="全平台通用ID">
-                                <el-input :value="123455" readonly></el-input>
+                                <el-input :value="123455" disabled></el-input>
                             </el-form-item>
                             <el-form-item label="节目名称" prop="name">
                                 <el-input
@@ -23,10 +23,16 @@
                                 </el-input>
                             </el-form-item>
                             <el-form-item label="节目看点">
-                                <el-input :value="'非常好看'"></el-input>
+                                <el-input
+                                    :value="'非常好看'"
+                                    disabled
+                                ></el-input>
                             </el-form-item>
                             <el-form-item label="节目来源">
-                                <el-input :value="'内容中心'" readonly></el-input>
+                                <el-input
+                                    :value="'内容中心'"
+                                    disabled
+                                ></el-input>
                             </el-form-item>
                             <el-form-item label="节目简介" prop="description">
                                 <el-input
@@ -208,8 +214,9 @@
                                 </el-input>
                             </el-form-item>
                             <el-form-item label="实际播放量">
-                                <el-input :value="12"
-                                    readonly>
+                                <el-input
+                                    :value="12"
+                                    disabled>
                                 </el-input>
                             </el-form-item>
                         </el-col>
@@ -380,7 +387,8 @@
                 updateDirector: 'programme/updateDirector',
                 updateLeadActorResult: 'programme/updateLeadActorResult',
                 updateDirectorResult: 'programme/updateDirectorResult',
-                addProgrammeTag: 'programme/addProgrammeTag'
+                addProgrammeTag: 'programme/addProgrammeTag',
+                deleteVideoList: 'programmeVideo/deleteVideoList'
             }),
             ...mapActions({
                 createProgramme: 'programme/createProgramme',
@@ -416,6 +424,7 @@
                                     type: 'success',
                                     message: '保存成功'
                                 });
+                                this.deleteVideoList({list: res});
                                 this.getProgrammeVideoListById(id);
                             });
                     });

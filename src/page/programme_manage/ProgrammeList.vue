@@ -80,6 +80,7 @@
                         :value="searchType"
                         @change="typeListChangeHandler"
                         clearable
+                        multiple
                         @clear="clearSearchType"
                         placeholder="请选择">
                         <el-option
@@ -239,9 +240,10 @@ export default {
         },
         categoryChangeHandler(id) {
             this.updateSearchCategoryValue({id});
+            this.updateSearchType({list: []});
         },
         typeListChangeHandler(value) {
-            this.updateSearchType({id: value});
+            this.updateSearchType({list: value});
         },
         clearSearchCategory() {
             this.resetSearchCategory();

@@ -88,7 +88,7 @@ const defaultState = {
     releaseArea: '',
     programmeCategory: {},
     currentTypeList: [],
-    programmeType: {},
+    programmeType: [],
     currentProgramme: Object.assign({}, defaultProgramme),
     list: [],
     pageNum: 1,
@@ -138,7 +138,7 @@ const getters = {
         return state.currentProgramme.typeList.map((item) => item.id);
     },
     searchType(state) {
-        return state.programmeType.id;
+        return state.programmeType;
     },
     searchCurrentTypeList(state) {
         return state.currentTypeList;
@@ -307,9 +307,8 @@ const mutations = {
         });
     },
     updateSearchType(state, payload) {
-        if (payload.id) {
-            state.programmeType = state.currentTypeList.find((item) => item.id === payload.id);
-        }
+        // state.programmeType = state.currentTypeList.find((item) => item.id === payload.id);
+        state.programmeType = payload.list;
     },
     resetSearchCategory(state) {
         state.programmeCategory = {};
@@ -467,8 +466,8 @@ function serializeProgrammData(programmeData) {
 const actions = {
     getProgrammeList({commit, state}) {
         let searchObj = _.pick(state, searchFields);
-        searchObj.programmeCategory = searchObj.programmeCategory.id;
-        searchObj.programmeType = searchObj.programmeType.id;
+        searchObj.programmeCategoryId = searchObj.programmeCategory.id;
+        searchObj.programmeTypeIdList = searchObj.programmeType;
         delete searchObj.releaseAt;
         service.getProgrammeList(Object.assign({}, searchObj, {pageNum: state.pageNum - 1}))
             .then((res) => {

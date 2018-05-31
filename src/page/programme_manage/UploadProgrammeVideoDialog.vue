@@ -8,10 +8,11 @@
         :close-on-press-escape="false">
         <el-form :model="video" :rules="uploadVideoRules" ref="uploadVideoForm" class="form-block" label-width="100px">
             <el-form-item label="视频ID">
-                <el-input :value="video.commonId" readonly></el-input>
+                <el-input :value="video.commonId" disabled></el-input>
             </el-form-item>
             <el-form-item label="视频名称" prop="name">
                 <el-input
+                    :disabled="readonly"
                     :value="video.name"
                     auto-complete="off"
                     placeholder="请输入子集名称"
@@ -22,6 +23,7 @@
                 v-if="video.type === 'FEATURE'"
                 label="视频排序" prop="sort">
                 <el-input
+                    :disabled="readonly"
                     :value="video.sort"
                     auto-complete="off"
                     type="number"
@@ -31,6 +33,7 @@
             </el-form-item>
             <el-form-item label="视频简介" prop="description">
                 <el-input
+                    :disabled="readonly"
                     type="textarea"
                     :autosize="{ minRows: 4, maxRows: 14}"
                     placeholder="请输入子集简介"
@@ -55,12 +58,16 @@
                 <el-button size="small" type="primary" @click="submitUpload">点击上传</el-button>
             </el-form-item>
             <el-form-item label="视频时长">
-                <el-input :value="video.takeTimeInSec" readonly></el-input>
+                <el-input
+                    :value="video.takeTimeInSec"
+                    :disabled="readonly"
+                ></el-input>
             </el-form-item>
             <el-form-item
                 v-if="video.type !== 'FEATURE'"
                 label="关联正片" prop="parentId">
                 <el-select
+                    :disabled="readonly"
                     :value="video.parentId"
                     placeholder="请选择要关联的正片"
                     @change="inputHandler($event, 'parentId')"
@@ -76,6 +83,7 @@
             </el-form-item>
             <el-form-item label="内容类型" prop="type">
                 <el-select
+                    :disabled="readonly"
                     :value="video.type"
                     placeholder="请选择内容类型"
                     @change="inputHandler($event, 'type')"
@@ -90,6 +98,7 @@
             </el-form-item>
             <el-form-item label="视频类型" prop="quality">
                 <el-select
+                    :disabled="readonly"
                     :value="video.quality"
                     placeholder="请选择视频类型"
                     @change="inputHandler($event, 'quality')"
@@ -104,6 +113,7 @@
             </el-form-item>
             <el-form-item label="是否付费" prop="free">
                 <el-radio-group
+                    :disabled="readonly"
                     :value="video.free"
                     @input="inputHandler($event, 'free')"
                 >
@@ -169,6 +179,9 @@
                     default:
                         return '创建视频';
                 }
+            },
+            readonly() {
+                return this.videoStatus === 2;
             }
         },
         methods: {
@@ -184,10 +197,12 @@
             }),
             cancelHandler() {
                 this.$emit('changeVideoDialogStatus', false);
-                // 清楚表单中的数据
-                this.resetProgrammeVideo();
                 // 清楚校验的规则
                 this.$refs.uploadVideoForm.clearValidate();
+                // 清楚表单中的数据
+                setTimeout(() => {
+                    this.resetProgrammeVideo();
+                }, 100);
             },
             successHandler() {
                 this.$refs.uploadVideoForm.validate(value => {

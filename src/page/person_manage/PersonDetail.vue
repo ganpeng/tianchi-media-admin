@@ -18,7 +18,7 @@
             <el-col :span="24">
                 <div class="form-btn">
                     <span class="btn-wrapper" v-show="!readonly">
-                        <el-button v-show="isEdit" type="primary" @click="_updatePerson">编辑</el-button>
+                        <el-button v-show="isEdit" type="primary" @click="_updatePerson">保存</el-button>
                         <el-button
                             v-show="!isEdit"
                             type="primary"

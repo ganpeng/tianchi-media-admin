@@ -55,7 +55,13 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
             getProgrammeTypeCount: 'programme/getProgrammeTypeCount'
         }),
         _updateProgrammeCategory() {
-            this.updateProgrammeCategory();
+            this.updateProgrammeCategory()
+                .then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '节目类型保存成功'
+                    });
+                });
         },
         append(data) {
             this.$prompt('请输入新类型', '提示', {

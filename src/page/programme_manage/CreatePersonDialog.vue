@@ -63,8 +63,8 @@ export default {
         },
         cancelHandler() {
             this.$emit('changePersonDialogStatus', false);
-            this.$refs.personForm.$refs['createPerson'].resetFields();
             this.resetPerson();
+            this.$refs.personForm.$refs['createPerson'].clearValidate();
         },
         checkImageLength(next) {
             let {posterImageList} = this.person;

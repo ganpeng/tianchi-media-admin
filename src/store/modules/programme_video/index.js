@@ -105,6 +105,17 @@ const mutations = {
         state.videoList = state.videoList.filter((video) => {
             return video.uid !== payload.uid;
         });
+    },
+    deleteVideoList(state, payload) {
+        let indexList = payload.list.filter((item, index) => {
+            if (item.code !== 0) {
+                return index;
+            }
+        });
+        // Todo
+        state.videoList = state.videoList.filter((item, index) => {
+            return indexList.indexOf(index) > -1;
+        });
     }
 };
 
