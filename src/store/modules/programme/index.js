@@ -2,7 +2,7 @@ import service from '../../../service';
 import axios from 'axios';
 import _ from 'lodash';
 
-const programmePostFields = ['copyrightStartedAt', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'price', 'quality', 'releaseArea', 'category', 'businessOperator', 'featureVideoCount', 'description', 'announceAt', 'posterImages', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
+const programmePostFields = ['copyrightStartedAt', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'score', 'price', 'quality', 'releaseArea', 'category', 'businessOperator', 'featureVideoCount', 'description', 'announceAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
@@ -48,7 +48,7 @@ const defaultProgramme = {
     // 状态 ENUM('NORMAL', 'DELETE') DEFAULT 'NORMAL'
     status: '',
     // 节目海报，json字符串存储，包含以下几个字段，fileId，uri，width，high")
-    posterImages: [],
+    posterImageList: [],
     // 相关人物
     figureList: [],
     // 关键字
@@ -195,7 +195,7 @@ const getters = {
     getPostImage(state) {
         return (id) => {
             let programme = getProgrammeById(id);
-            return programme.posterImages[0] ? programme.posterImages[0] : '';
+            return programme.posterImageList[0] ? programme.posterImageList[0] : '';
         };
     },
     currentProgramme(state) {
@@ -355,10 +355,10 @@ const mutations = {
         state.currentProgramme.directorResult = _.uniqBy(directorResult.concat(payload.directorResult), 'id');
     },
     addPosterImage(state, payload) {
-        state.currentProgramme.posterImages.push(payload.posterImage);
+        state.currentProgramme.posterImageList.push(payload.posterImage);
     },
     deletePosterImage(state, payload) {
-        state.currentProgramme.posterImages = state.currentProgramme.posterImages.filter((img) => img.id !== payload.id);
+        state.currentProgramme.posterImageList = state.currentProgramme.posterImageList.filter((img) => img.id !== payload.id);
     },
     setCategroyList(state, payload) {
         state.categoryList = payload.list ? payload.list : [];

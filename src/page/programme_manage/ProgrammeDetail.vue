@@ -206,6 +206,14 @@
                                     @input="inputHandler($event, 'featureVideoCount')" >
                                 </el-input>
                             </el-form-item>
+                            <el-form-item label="评分" prop="score">
+                                <el-input
+                                    :disabled="readonly"
+                                    type="number"
+                                    :value="programme.score"
+                                    @input="inputHandler($event, 'score')">
+                                </el-input>
+                            </el-form-item>
                             <el-form-item label="显示播放量" prop="playCountBasic">
                                 <el-input
                                     :disabled="readonly"
@@ -224,7 +232,7 @@
                             <el-form-item label="节目图片">
                                 <el-button v-if="!readonly" type="primary" @click="uploadImageHandler">添加节目图片<i class="el-icon-upload el-icon--right"></i></el-button>
                                 <ul class="cover-list">
-                                    <li v-for="(img, index) in programme.posterImages" :key="index" class="img-item">
+                                    <li v-for="(img, index) in programme.posterImageList" :key="index" class="img-item">
                                         <div @click="displayImage(index)">
                                             <img :src="img.uri" alt="">
                                             <div v-if="!readonly" class="delete-layer">
@@ -553,7 +561,7 @@
             },
             displayImage(index) {
                 this.previewImage.display = true;
-                this.previewImage.list = this.programme.posterImages;
+                this.previewImage.list = this.programme.posterImageList;
                 this.previewImage.activeIndex = index;
             }
         }
