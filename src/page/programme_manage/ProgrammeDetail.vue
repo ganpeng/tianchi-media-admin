@@ -83,7 +83,7 @@
                                         :value="item.id">
                                     </el-option>
                                 </el-select>
-                                <el-button type="primary" @click="gotoProgramTypePage" plain>管理分类和类型</el-button>
+                                <el-button v-if="!readonly" type="primary" @click="gotoProgramTypePage" plain>管理分类和类型</el-button>
                             </el-form-item>
                             <el-form-item label="节目类型" prop="typeList">
                                 <el-select
@@ -115,7 +115,7 @@
                                         :value="item.value">
                                     </el-option>
                                 </el-select>
-                                <el-button type="primary" plain @click="addTag">新增关键字</el-button>
+                                <el-button v-if="!readonly" type="primary" plain @click="addTag">新增关键字</el-button>
                             </el-form-item>
                             <el-form-item label="节目主演" prop="leadActor">
                                 <label for="leadActor"></label>
@@ -136,7 +136,7 @@
                                         :value="item.id">
                                     </el-option>
                                 </el-select>
-                                <el-button type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
+                                <el-button v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                             </el-form-item>
                             <el-form-item label="节目导演" prop="director">
                                 <el-select
@@ -156,7 +156,7 @@
                                         :value="item.id">
                                     </el-option>
                                 </el-select>
-                                <el-button type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
+                                <el-button v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                             </el-form-item>
                             <el-form-item label="版权起始日期" prop="copyrightRange">
                                 <el-date-picker
@@ -222,7 +222,7 @@
                         </el-col>
                         <el-col :span="24">
                             <el-form-item label="节目图片">
-                                <el-button type="primary" @click="uploadImageHandler">添加节目图片<i class="el-icon-upload el-icon--right"></i></el-button>
+                                <el-button v-if="!readonly" type="primary" @click="uploadImageHandler">添加节目图片<i class="el-icon-upload el-icon--right"></i></el-button>
                                 <ul class="cover-list">
                                     <li v-for="(img, index) in programme.posterImages" :key="index" class="img-item">
                                         <div @click="displayImage(index)">
@@ -431,7 +431,18 @@
             },
             _deleteProgramme() {
                 let {id} = this.$route.params;
-                this.deleteProgramme(id);
+                this.$confirm(`您确定要${this.programme.visible ? '上架节目' : '下架节目'}吗, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    }).then(() => {
+                        this.deleteProgramme(id);
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
             },
             onSubmit() {
                 this.$refs.createProgramForm.validate(value => {

@@ -172,10 +172,10 @@ export default {
                     { required: true, message: '请输入出生日期', trigger: 'change' }
                 ],
                 area: [
-                    { required: true, message: '请选择区域', trigger: 'change' }
+                    { required: true, message: '请选择区域', trigger: 'blur' }
                 ],
                 mainRole: [
-                    { required: true, message: '请输入人物职业', trigger: 'change' }
+                    { required: true, message: '请输入人物职业', trigger: 'blur' }
                 ]
             },
             imageUploadDialogVisible: false,

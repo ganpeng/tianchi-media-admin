@@ -122,6 +122,12 @@ const getters = {
             pageNum: state.pageNum
         };
     },
+    isTvPlay(state) {
+        return state.currentProgramme.category.name === '电视剧';
+    },
+    isShow(state) {
+        return state.currentProgramme.category.name === '综艺';
+    },
     categoryName(state) {
         return (id) => {
             let programme = getProgrammeById(id);

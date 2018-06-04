@@ -20,7 +20,7 @@
                 ></el-input>
             </el-form-item>
             <el-form-item
-                v-if="video.type === 'FEATURE'"
+                v-if="video.type === 'FEATURE' && isTvPlay"
                 label="视频排序" prop="sort">
                 <el-input
                     :disabled="readonly"
@@ -153,20 +153,21 @@
                 videoType: role.VIDEO_TYPE,
                 qualityType: role.QUALITY_TYPE,
                 uploadVideoRules: {
-                    name: [{ required: true, message: '请输入视频名称', trigger: 'change' }],
-                    description: [{ required: true, message: '请输入视频简介', trigger: 'change' }],
-                    type: [{ required: true, message: '请选择视频内容类型', trigger: 'change' }],
-                    takeTimeInSec: [{ required: true, message: '请选择要关联的正片', trigger: 'change' }],
-                    sort: [{ required: true, message: '请输入视频的排序', trigger: 'change' }],
-                    quality: [{ required: true, message: '请选择视频类型', trigger: 'change' }],
-                    free: [{ required: true, message: '请选择是否付费', trigger: 'change' }]
+                    name: [{ required: true, message: '请输入视频名称', trigger: 'blur, change' }],
+                    description: [{ required: true, message: '请输入视频简介', trigger: 'blur, change' }],
+                    type: [{ required: true, message: '请选择视频内容类型', trigger: 'blur' }],
+                    takeTimeInSec: [{ required: true, message: '请选择要关联的正片', trigger: 'blur, change' }],
+                    sort: [{ required: true, message: '请输入视频的排序', trigger: 'blur, change' }],
+                    quality: [{ required: true, message: '请选择视频类型', trigger: 'blur' }],
+                    free: [{ required: true, message: '请选择是否付费', trigger: 'blur, change' }]
                 }
             };
         },
         computed: {
             ...mapGetters({
-                'video': 'programmeVideo/currentProgrammeVideo',
-                featureVideoList: 'programmeVideo/featureVideoList'
+                video: 'programmeVideo/currentProgrammeVideo',
+                featureVideoList: 'programmeVideo/featureVideoList',
+                isTvPlay: 'programme/isTvPlay'
             }),
             title() {
                 switch (parseInt(this.videoStatus)) {

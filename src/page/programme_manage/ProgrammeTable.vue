@@ -108,7 +108,7 @@
                     <template slot-scope="scope">
                         <el-button v-if="tableStatus !== 0" @click="displayVideo(scope.row.id)" type="text" size="small">查看</el-button>
                         <el-button v-if="status !== 1" @click="editVideo(scope.row.id)" type="text" size="small">编辑</el-button>
-                        <el-button v-if="status !== 1" @click="deleteVideo(scope.row.id)" type="text" size="small">
+                        <el-button v-if="status !== 1 && isShow" @click="deleteVideo(scope.row.id, scope.row.visible)" type="text" size="small">
                             {{scope.row.visible ? '下架' : '上架'}}
                         </el-button>
                     </template>
@@ -164,7 +164,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            getFeatureVideoName: 'programmeVideo/getFeatureVideoName'
+            getFeatureVideoName: 'programmeVideo/getFeatureVideoName',
+            isShow: 'programme/isShow'
         }),
         duration() {
             return (seconds) => {
@@ -199,8 +200,19 @@ export default {
                     this.videoStatus = 2;
                 });
         },
-        deleteVideo(id) {
-            this.deleteProgrammeVideo(id);
+        deleteVideo(id, visible) {
+            this.$confirm(`您确定要${visible ? '上架视频' : '下架视频'}吗, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.deleteProgrammeVideo(id);
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
         },
         closeVideoDialog(status) {
             this.videoUploadDialogVisible = status;
