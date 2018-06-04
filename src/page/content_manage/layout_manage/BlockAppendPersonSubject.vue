@@ -22,7 +22,7 @@
         <label v-if="personList.length === 0">暂无选中的人物</label>
         <ul id="person-list" v-else>
             <li v-for="(item, index) in personList" :key="index" :data-id="item.id">
-                <img :src="item.uri" :alt="item.name"/>
+                <img :src="item.posterImageList[0] ? item.posterImageList[0].uri : ''" :alt="item.name"/>
                 <label>{{item.name}}</label>
             </li>
         </ul>
@@ -97,14 +97,15 @@
                     for (let k = 0; k < this.personList.length; k++) {
                         if (nodes[i].getAttribute('data-id') === this.personList[k].id) {
                             subjectLayoutItemList.push({
-                                targetId: this.personList[k].id,
-                                posterImg: this.personList[k].posterImageList
+                                id: this.personList[k].id,
+                                // 筛选其中一张符合尺寸的照片
+                                coverImage: this.personList[k].posterImageList[0]
                             });
                         }
                     }
                 }
                 // 组建模块专题对象
-                let person = {
+                let personModel = {
                     subjectId: this.currentSubject.id,
                     title: this.title,
                     subjectCategory: 'FIGURE',
@@ -113,7 +114,7 @@
                 // 保存到store中
                 this.$store.dispatch('todayRecommend/setSubjectLayoutItem', {
                     row: this.$route.params.row,
-                    item: person
+                    item: personModel
                 }).then(response => {
                     if (response === 'success') {
                         this.$message({

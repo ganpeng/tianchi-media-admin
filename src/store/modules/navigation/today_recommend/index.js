@@ -2,6 +2,7 @@
 import wsCache from '@/util/webStorage';
 
 const state = {
+    navBarId: 1,
     // 直播频道
     liveChannelList: [],
     recommendLayoutList: [{

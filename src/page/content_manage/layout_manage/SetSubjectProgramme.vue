@@ -7,7 +7,13 @@
             <el-step title="步骤3" description="设置角标"></el-step>
         </el-steps>
         <keep-alive>
-            <component :is="currentView">
+            <component
+                :is="currentView"
+                :programmeList="programmeList"
+                :programme="programme"
+                v-on:setProgramme="setProgramme"
+                v-on:setCoverImage="setCoverImage"
+                v-on:setCornerMarks="setCornerMarks">
                 <!-- 非活动组件将被缓存！ -->
             </component>
         </keep-alive>
@@ -31,9 +37,13 @@
             SetSubjectProgrammeSecond,
             SetSubjectProgrammeThird
         },
+        props: ['programmeList'],
         data() {
             return {
-                activeStep: 0
+                activeStep: 0,
+                programme: {},
+                coverImage: {},
+                checkedCornerMarks: {}
             };
         },
         computed: {
@@ -56,8 +66,31 @@
         methods: {
             init() {
             },
+            setProgramme(programme) {
+                this.programme = programme;
+            },
+            setCoverImage(coverImage) {
+                this.coverImage = coverImage;
+            },
+            setCornerMarks(cornerMarks) {
+                this.checkedCornerMarks = cornerMarks;
+            },
             // 点击下一步
             next() {
+                if (this.activeStep === 0 && !this.programme.id) {
+                    this.$message({
+                        message: '请选择节目',
+                        type: 'warning'
+                    });
+                    return;
+                    // } else if (this.activeStep === 1 && !this.coverImage.id) {
+                } else if (this.activeStep === 1 && this.coverImage.id) {
+                    this.$message({
+                        message: '请选择封面图片',
+                        type: 'warning'
+                    });
+                    return;
+                }
                 this.activeStep++;
             },
             // 点击下一步
@@ -66,6 +99,13 @@
             },
             // 完成
             complete() {
+                // 组成节目
+                let programmeItem = {
+                    id: this.programme.id,
+                    coverImage: this.coverImage,
+                    cornerMark: this.checkedCornerMarks
+                };
+                this.$emit('setCurrentSubjectItem', programmeItem);
                 this.$message({
                     message: '设置专题内的节目成功',
                     type: 'success'

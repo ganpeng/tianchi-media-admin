@@ -3,47 +3,38 @@
     <div>
         <h3 class="text-left">找到以下符合该位置尺寸要求的图片：</h3>
         <ul class="cover-list">
-            <li v-for="(item,index) in coverUrls" :key="index">
-                <img :src="item.url" :alt="item.name">
-                <el-radio v-model="programmeImage" :label="item.id">{{item.name}}</el-radio>
+            <li v-for="(item,index) in programme.posterImageList" :key="index">
+                <img :src="item.uri" :alt="item.name">
+                <el-radio v-model="programmeImageIndex" :label="index" @change="setCoverImage">{{item.name}}</el-radio>
             </li>
             <li @click="addCover">
                 <i class="el-icon-plus"></i>
             </li>
         </ul>
-        <upload-programme-image-dialog
-            title="节目专题封面设置"
+        <upload-image
+            :size='size'
+            title="上传节目封面图片"
+            :successHandler="addPosterImage"
             :imageUploadDialogVisible="imageUploadDialogVisible"
             v-on:changeImageDialogStatus="closeImageDialog($event)">
-        </upload-programme-image-dialog>
+        </upload-image>
     </div>
 </template>
 
 <script>
-    import UploadProgrammeImageDialog from '../../programme_manage/UploadProgrammeImageDialog';
+    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import {PROGRAMME_DIMENSION as subjectDimension} from '@/util/config/dimension';
 
     export default {
         name: 'SetSubjectProgrammeSecond',
         components: {
-            UploadProgrammeImageDialog
+            UploadImage
         },
+        props: ['programme'],
         data() {
             return {
-                programmeImage: '',
-                currentSubject: {},
-                coverUrls: [{
-                    id: 1,
-                    name: '定妆照',
-                    url: 'https://tse1-mm.cn.bing.net/th?id=OIP.zn7At_hL_CSW6MsoVrzGuAHaEo&w=300&h=187&c=7&o=5&pid=1.7'
-                }, {
-                    id: 2,
-                    name: '发布会照片',
-                    url: 'http://photocdn.sohu.com/20160107/Img433729049.jpg'
-                }, {
-                    id: 3,
-                    name: '通稿照片',
-                    url: 'http://pic.4j4j.cn/upload/pic/20151015/465ce1d4b0.jpg'
-                }],
+                size: subjectDimension,
+                programmeImageIndex: '',
                 previewImage: {
                     display: false,
                     autoplay: false,
@@ -54,6 +45,9 @@
             };
         },
         methods: {
+            setCoverImage() {
+                this.$emit('setCoverImage', this.programme.posterImageList[this.programmeImageIndex]);
+            },
             // 添加节目封面图片
             addCover() {
                 this.imageUploadDialogVisible = true;
@@ -61,6 +55,24 @@
             // 关闭上传图片对话框
             closeImageDialog(status) {
                 this.imageUploadDialogVisible = status;
+            },
+            // 添加封面图片
+            addPosterImage(newPosterImage) {
+                for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
+                    if (newPosterImage.posterImage.fileId === this.programme.posterImageList[i].fileId) {
+                        this.$message('该图片已经添加到当前节目封面中');
+                        return;
+                    }
+                }
+                // 更新当前节目中的封面图片
+                this.$service.updateProgrammeInfo({
+                    id: this.programme.id,
+                    programme: this.subjectInfo.posterImageList.splice().push(newPosterImage.posterImage)
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.subjectInfo.posterImageList.push(newPosterImage.posterImage);
+                    }
+                });
             }
         }
     };
@@ -77,6 +89,7 @@
 
     .cover-list {
         display: flex;
+        flex-wrap: wrap;
         margin-top: 30px;
         justify-content: left;
         li {

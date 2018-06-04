@@ -3,110 +3,97 @@
  */
 
 const DATA = {
-    '_id': '5af42cebd6f2c32295278900',
-    '_class': 'com.tianchi.services.content.domain.Layout',
-    'navBarId': 'todayRecommend',
+    'id': 'string',
+    'navBarId': 'string',
     'recommendLayoutList': [
         {
-            'title': '电视剧二级分类',
-            'renderType': 'PROGRAMME_TYPE',
-            'layoutTemplate': 'LT_2_6',
+            'layoutTemplate': 'LT_4',
             'recommendLayoutItemList': [
                 {
-                    'itemType': 'PROGRAMME_TYPE',
-                    'targetId': 'programmeTypeId',
-                    'programmeTypeName': '惊悚剧'
-                },
-                {
-                    'itemType': 'PROGRAMME_TYPE',
-                    'targetId': 'programmeTypeId',
-                    'programmeTypeName': '爱情剧'
-                },
-                {
-                    'itemType': 'PROGRAMME_TYPE',
-                    'targetId': 'programmeTypeId',
-                    'programmeTypeName': '悬疑剧'
-                }
-            ]
-        },
-        {
-            'title': '推荐的视频和专题',
-            'renderType': 'RECOMMEND_ITEM',
-            'layoutTemplate': 'LT_2_6',
-            'recommendLayoutItemList': [
-                {
-                    'itemType': 'PROGRAMME',
-                    'targetId': 'programmeId',
-                    'posterImg': {
-                        'uri': '1.jpg'
-                    },
                     'cornerMark': {
-                        'leftTop': {
-                            'markType': 'EPISODES_NUMBER'
+                        'leftBottom': {
+                            'caption': 'string',
+                            'imageUrl': 'string',
+                            'markType': 'SCORE'
                         },
-                        'rightTop': {
+                        'leftTop': {
+                            'caption': 'string',
+                            'imageUrl': 'string',
                             'markType': 'SCORE'
                         },
                         'rightBottom': {
-                            'markType': 'CUSTOM'
+                            'caption': 'string',
+                            'imageUrl': 'string',
+                            'markType': 'SCORE'
                         },
-                        'leftBottom': {
-                            'markType': 'COPYRIGHT_RESERVER'
+                        'rightTop': {
+                            'caption': 'string',
+                            'imageUrl': 'string',
+                            'markType': 'SCORE'
                         }
-                    }
+                    },
+                    'coverImage': {
+                        'height': 'string',
+                        'id': 'string',
+                        'name': 'string',
+                        'uri': 'string',
+                        'width': 'string'
+                    },
+                    'id': 'string',
+                    'itemType': 'SUBJECT',
+                    'name': 'string'
                 }
-            ]
+            ],
+            'renderType': 'RECOMMEND_ITEM',
+            'title': 'string'
         }
     ],
+    'releaseStatus': 'DRAFT',
     'subjectLayoutList': [
         {
-            '_id': null,
-            'subjectId': 'subjectId',
-            'title': '热门视频推荐',
-            'subjectCategory': 'PROGRAMME',
-            'layoutTemplate': 'LT_2_6',
+            'createdAt': '2018-05-31T02:08:14.618Z',
+            'id': 'string',
+            'layoutTemplate': 'LT_4',
+            'releaseStatus': 'DRAFT',
+            'status': 'NORMAL',
+            'subjectCategory': 'FIGURE',
+            'subjectId': 'string',
             'subjectLayoutItemList': [
                 {
-                    'targetId': 'programmeId1',
-                    'posterImg': {
-                        'uri': 'programme.jpg'
-                    },
                     'cornerMar': {
-                        'leftTop': {
-                            'markType': 'CUSTOM'
+                        'leftBottom': {
+                            'caption': 'string',
+                            'imageUrl': 'string',
+                            'markType': 'SCORE'
                         },
-                        'rightTop': {
-                            'markType': 'COPYRIGHT_RESERVER'
+                        'leftTop': {
+                            'caption': 'string',
+                            'imageUrl': 'string',
+                            'markType': 'SCORE'
                         },
                         'rightBottom': {
-                            'markType': 'EPISODES_NUMBER'
-                        },
-                        'leftBottom': {
+                            'caption': 'string',
+                            'imageUrl': 'string',
                             'markType': 'SCORE'
-                        }
-                    }
-                },
-                {
-                    'targetId': 'programmeId2',
-                    'posterImg': {
-                        'uri': 'programme.jpg'
-                    },
-                    'cornerMar': {
-                        'leftTop': {
-                            'markType': 'CUSTOM'
                         },
                         'rightTop': {
-                            'markType': 'COPYRIGHT_RESERVER'
-                        },
-                        'rightBottom': {
-                            'markType': 'EPISODES_NUMBER'
-                        },
-                        'leftBottom': {
+                            'caption': 'string',
+                            'imageUrl': 'string',
                             'markType': 'SCORE'
                         }
-                    }
+                    },
+                    'coverImage': {
+                        'height': 'string',
+                        'id': 'string',
+                        'name': 'string',
+                        'uri': 'string',
+                        'width': 'string'
+                    },
+                    'id': 'string',
+                    'name': 'string'
                 }
-            ]
+            ],
+            'title': 'string'
         }
     ]
 };

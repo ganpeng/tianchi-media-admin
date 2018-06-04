@@ -22,7 +22,6 @@
 
     export default {
         name: 'SetSubjectProgrammeThird',
-        props: ['markList'],
         data() {
             return {
                 checkAll: false,

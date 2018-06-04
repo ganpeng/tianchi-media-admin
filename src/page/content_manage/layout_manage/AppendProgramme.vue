@@ -21,8 +21,7 @@
                        v-on:setPosterImage="setPosterImage"
                        v-on:setCornerMarks="setCornerMarks"
                        :programmeId="programmeId"
-                       :posterImages="posterImages"
-                       :markList="markList">
+                       :posterImages="posterImages">
                 <!-- 非活动组件将被缓存！ -->
             </component>
         </keep-alive>
@@ -52,7 +51,6 @@
                 activeStep: 0,
                 programmeId: '',
                 posterImages: [],
-                markList: [],
                 posterImage: {},
                 checkedCornerMarks: {}
             };

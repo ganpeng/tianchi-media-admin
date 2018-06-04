@@ -69,7 +69,7 @@
                         <el-tooltip class="item" effect="dark" content="编辑" placement="top">
                             <i class="el-icon-edit" @click="editBlock('PROGRAMME')"></i>
                         </el-tooltip>
-                        <el-dropdown @command="addBlockSubject" placement="bottom">
+                        <el-dropdown @command="addBlockSubject($event,0)" placement="bottom">
                             <span class="el-dropdown-link">
                                 <i class="el-icon-circle-plus-outline"></i>
                             </span>
@@ -94,7 +94,7 @@
                         <el-tooltip class="item" effect="dark" content="编辑" placement="top">
                             <i class="el-icon-edit" @click="editBlock('PROGRAMME')"></i>
                         </el-tooltip>
-                        <el-dropdown @command="addBlockSubject" placement="bottom">
+                        <el-dropdown @command="addBlockSubject($event,1)" placement="bottom">
                             <span class="el-dropdown-link">
                                 <i class="el-icon-circle-plus-outline"></i>
                             </span>
@@ -190,6 +190,7 @@
                 this.subjectLayoutList = this.layoutInfo.subjectLayoutList;
                 this.recommendFirstLayoutList = this.layoutInfo.recommendLayoutList[0].recommendLayoutItemList;
                 this.recommendSecondLayoutList = this.layoutInfo.recommendLayoutList[1].recommendLayoutItemList;
+                // 设置模块推荐位
             },
             // 设置直播频道
             setChannel() {
@@ -221,8 +222,9 @@
             sortBlock() {
                 this.sortDialogVisible = true;
             },
-            // 点击发布,设置直播频道
+            // 点击发布
             publish() {
+                // 设置直播频道
                 let liveChannelList = this.$store.state.todayRecommend.liveChannelList;
                 if (liveChannelList.length !== 0) {
                     this.$service.setLiveChannelLayout(liveChannelList).then(response => {
@@ -235,6 +237,15 @@
                         }
                     });
                 }
+                // 设置推荐位布局
+                this.$service.modifyContentLayout({
+                    id: this.navBarId,
+                    contentLayout: this.$store.state.todayRecommend
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message({message: '设置布局成功', type: 'success'});
+                    }
+                });
             }
         }
     };

@@ -10,7 +10,7 @@
         <h3 class="text-left">1.请输入节目模块名称：</h3>
         <el-input
             placeholder="请输入模块名称，30个字符以内"
-            v-model="blockName"
+            v-model="title"
             clearable>
         </el-input>
         <h3 class="text-left">2.请选择要推荐的节目专题：</h3>
@@ -19,7 +19,8 @@
             v-on:setSubject="setSubject">
         </select-single-subject>
         <h3 class="text-left">3.请选择模块板式：</h3>
-        <el-select v-model="model" clearable placeholder="请选择模块板式" @change="setBlockModel">
+        <el-select v-model="model" clearable placeholder="请选择模块板式" @change="setBlockModel"
+                   :disabled="!currentSubject.id">
             <el-option
                 v-for="item in modelOptions"
                 :key="item.id"
@@ -28,21 +29,25 @@
             </el-option>
         </el-select>
         <div class="model-block">
-            <ul :class="'model-' + modelArray[0].length">
-                <li v-for="(item,index) in modelArray[0]" :key="index" @click="dialogTableVisible = true">{{item}}</li>
-            </ul>
-            <ul :class="'model-' + modelArray[1].length">
-                <li v-for="(item,index) in modelArray[1]" :key="index">{{item}}</li>
-            </ul>
-            <ul :class="'model-' + modelArray[2].length">
-                <li v-for="(item,index) in modelArray[2]" :key="index">{{item}}</li>
+            <ul :class="'model-' + row.length" v-for="(row,rowIndex) in subjectLayoutItemList" :key="rowIndex">
+                <li v-for="(item,index) in row" :key="index" @click="setModelItem(rowIndex,index)">
+                    <div class="ab-center">
+                        <img :src="item.coverImage ? item.coverImage.uri : ''"
+                             :alt="item.coverImage.name"
+                             v-if="item.coverImage">
+                    </div>
+                </li>
             </ul>
         </div>
         <div class="text-center save-btn">
             <el-button type="success" @click="saveBlock">保 存</el-button>
         </div>
         <el-dialog title="设置模块内的节目" :visible.sync="dialogTableVisible">
-            <set-subject-programme></set-subject-programme>
+            <set-subject-programme
+                v-if="dialogTableVisible"
+                :programmeList="programmeList"
+                v-on:setCurrentSubjectItem="setCurrentSubjectItem">
+            </set-subject-programme>
         </el-dialog>
     </div>
 </template>
@@ -61,34 +66,26 @@
         data() {
             return {
                 dialogTableVisible: false,
-                blockName: '',
+                title: '',
                 currentSubject: {},
                 modelOptions: blockModel.TYPE,
                 model: '',
-                programmeList: []
+                // 布局一定的节目列表
+                subjectLayoutItemList: [[], [], []],
+                // 当前专题中的节目列表
+                programmeList: [],
+                // 当前设置节目所在行数
+                currentRow: '',
+                // 当前设置节目所在某行的index
+                currentIndex: ''
             };
-        },
-        computed: {
-            modelArray() {
-                let array = {
-                    0: [],
-                    1: [],
-                    2: []
-                };
-                for (let k = 0; k < this.model.split('+').length; k++) {
-                    for (let i = 0; i < this.model.split('+')[k]; i++) {
-                        array[k].push(i);
-                    }
-                }
-                return array;
-            }
         },
         methods: {
             // 选择某一个专题
             setSubject(item) {
-                if (!item.subjectItemList || item.subjectItemList.length < 7) {
+                if (!item.subjectItemList || item.subjectItemList.length === 0) {
                     this.$message({
-                        message: '该专题人物数少于7个，不可选择',
+                        message: '该专题中没有节目，不可选择',
                         type: 'warning'
                     });
                     this.currentSubject = {};
@@ -102,11 +99,57 @@
             },
             // 选择模块板式
             setBlockModel() {
+                if (!this.model) {
+                    return;
+                }
+                if (this.getModelCount() > this.programmeList.length) {
+                    this.$message({
+                        message: '该模块板式需要节目数量多于专题节目数量，不可选择',
+                        type: 'warning'
+                    });
+                    this.model = '';
+                    return;
+                } else if (this.getModelCount() === this.programmeList.length) {
+                    // 模块板式没有最后一个'更多'的位置
+                } else {
+                    // 模块板式有最后一个'更多'的位置
+                }
+                // 初始化模块列表
+                this.subjectLayoutItemList = [[], [], []];
+                for (let k = 0; k < this.model.split('+').length; k++) {
+                    for (let i = 0; i < this.model.split('+')[k]; i++) {
+                        this.subjectLayoutItemList[k].push(i);
+                    }
+                }
+                // 重置节目列表
+                this.programmeList.map(programme => {
+                    delete programme.selected;
+                });
+            },
+            getModelCount() {
                 let num = 0;
                 let array = this.model.split('+');
                 for (let k = 0; k < this.model.split('+').length; k++) {
                     num = num + parseInt(array[k]);
                 }
+                return num;
+            },
+            // 设置模板样式中的节目项
+            setModelItem(row, index) {
+                this.currentRow = row;
+                this.currentIndex = index;
+                this.dialogTableVisible = true;
+            },
+            // 设置专题某一项内容
+            setCurrentSubjectItem(programmeItem) {
+                this.subjectLayoutItemList[this.currentRow][this.currentIndex] = programmeItem;
+                this.dialogTableVisible = false;
+                // 设置节目为已选
+                this.programmeList.map(programme => {
+                    if (programme.id === programmeItem.id) {
+                        programme.selected = true;
+                    }
+                });
             },
             // 保存信息到store中
             saveBlock() {
@@ -124,12 +167,42 @@
                     });
                     return;
                 }
+                let completeItemCount = 0;
+                // 检查是否设置完成模块的每一项
+                this.subjectLayoutItemList.map(rowArray => {
+                    rowArray.map(programme => {
+                        if (programme.id) {
+                            completeItemCount++;
+                        }
+                    });
+                });
+                if (completeItemCount < this.getModelCount()) {
+                    this.$message({
+                        message: '请完整设置模块中的节目',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                // 定义模块布局模式
+                let layoutTemplate = 'LT_' + this.model.replace(/\+/g, '_');
+                let itemList = [];
+                this.subjectLayoutItemList.map(itemArray => {
+                    itemArray.map(item => {
+                        itemList.push(item);
+                    });
+                });
                 // 组建模块专题对象
-                let programme = {};
+                let programmeModel = {
+                    layoutTemplate: layoutTemplate,
+                    subjectCategory: 'PROGRAMME',
+                    subjectId: this.currentSubject.id,
+                    title: this.title,
+                    subjectLayoutItemList: itemList
+                };
                 // 保存到store中
                 this.$store.dispatch('todayRecommend/setSubjectLayoutItem', {
                     row: this.$route.params.row,
-                    item: programme
+                    item: programmeModel
                 }).then(response => {
                     if (response === 'success') {
                         this.$message({
@@ -173,10 +246,16 @@
             margin-top: 30px;
             justify-content: space-between;
             li {
+                position: relative;
                 margin-right: 30px;
                 flex-grow: 1;
                 background: #5daf34;
                 cursor: pointer;
+                img {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                }
                 &:last-child {
                     margin-right: 0px;
                 }

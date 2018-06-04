@@ -165,7 +165,7 @@
         <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="listQueryParams.pageNum"
+            :current-page="pageNum"
             :page-sizes="[5, 10, 20, 50]"
             :page-size="listQueryParams.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
@@ -196,9 +196,10 @@
                     programmeCategory: '',
                     programmeType: '',
                     visible: '',
-                    pageNum: 1,
-                    pageSize: 5
+                    pageNum: '',
+                    pageSize: 10
                 },
+                pageNum: 1,
                 releaseAt: '',
                 previewImage: {
                     display: false,
@@ -253,7 +254,12 @@
                 });
             },
             getProgrammeList() {
-                this.listQueryParams.releaseAt = this.releaseAt ? Date.parse(this.releaseAt) : '';
+                if (this.releaseAt) {
+                    this.listQueryParams.releaseAt = Date.parse(this.releaseAt);
+                } else {
+                    delete this.listQueryParams.releaseAt;
+                }
+                this.listQueryParams.pageNum = parseInt(this.pageNum) - 1;
                 this.$service.getProgrammeList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.programmeList = response.data.list;
