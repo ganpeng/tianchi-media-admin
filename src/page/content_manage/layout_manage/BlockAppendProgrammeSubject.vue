@@ -185,19 +185,13 @@
                 }
                 // 定义模块布局模式
                 let layoutTemplate = 'LT_' + this.model.replace(/\+/g, '_');
-                let itemList = [];
-                this.subjectLayoutItemList.map(itemArray => {
-                    itemArray.map(item => {
-                        itemList.push(item);
-                    });
-                });
                 // 组建模块专题对象
                 let programmeModel = {
                     layoutTemplate: layoutTemplate,
                     subjectCategory: 'PROGRAMME',
                     subjectId: this.currentSubject.id,
                     title: this.title,
-                    subjectLayoutItemList: itemList
+                    subjectLayoutItemMultiList: this.subjectLayoutItemList
                 };
                 // 保存到store中
                 this.$store.dispatch('todayRecommend/setSubjectLayoutItem', {

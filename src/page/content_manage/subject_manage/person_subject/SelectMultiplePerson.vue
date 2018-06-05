@@ -40,7 +40,8 @@
             <el-table-column
                 label="图片">
                 <template slot-scope="scope">
-                    <img :src="scope.row.posterImageList[0].uri" @click="displayImage(scope.row.posterImageList[0])"
+                    <img :src="scope.row.posterImageList[0] ? scope.row.posterImageList[0].uri : ''"
+                         @click="displayImage(scope.row.posterImageList[0])"
                          alt="人物图片">
                 </template>
             </el-table-column>

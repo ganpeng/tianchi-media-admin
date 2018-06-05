@@ -104,12 +104,14 @@
                         }
                     }
                 }
-                // 组建模块专题对象
+                // 组建人物模块专题对象
+                let list = [[]];
+                list[0] = subjectLayoutItemList;
                 let personModel = {
                     subjectId: this.currentSubject.id,
                     title: this.title,
                     subjectCategory: 'FIGURE',
-                    subjectLayoutItemList: subjectLayoutItemList
+                    subjectLayoutItemMultiList: list
                 };
                 // 保存到store中
                 this.$store.dispatch('todayRecommend/setSubjectLayoutItem', {

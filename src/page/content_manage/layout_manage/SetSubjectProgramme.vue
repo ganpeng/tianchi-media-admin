@@ -83,8 +83,7 @@
                         type: 'warning'
                     });
                     return;
-                    // } else if (this.activeStep === 1 && !this.coverImage.id) {
-                } else if (this.activeStep === 1 && this.coverImage.id) {
+                } else if (this.activeStep === 1 && !this.coverImage.id) {
                     this.$message({
                         message: '请选择封面图片',
                         type: 'warning'

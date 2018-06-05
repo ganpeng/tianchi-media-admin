@@ -234,7 +234,7 @@
             // 添加封面图片
             addPosterImage(newPosterImage) {
                 for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
-                    if (newPosterImage.posterImage.fileId === this.subjectInfo.posterImageList[i].fileId) {
+                    if (newPosterImage.posterImage.id === this.subjectInfo.posterImageList[i].id) {
                         this.$message('该图片已经添加到当前专题中');
                         return;
                     }

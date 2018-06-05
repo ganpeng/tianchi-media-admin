@@ -106,6 +106,7 @@
                     itemType: 'SUBJECT'
                 };
                 this.$store.dispatch('todayRecommend/setRecommendItem', {
+                    block: this.$route.params.block,
                     row: this.$route.params.row,
                     index: this.$route.params.index,
                     item: subject

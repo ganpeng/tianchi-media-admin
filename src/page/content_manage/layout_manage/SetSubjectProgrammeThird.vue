@@ -22,6 +22,7 @@
 
     export default {
         name: 'SetSubjectProgrammeThird',
+        props: ['programme'],
         data() {
             return {
                 checkAll: false,
@@ -30,7 +31,17 @@
                 isIndeterminate: true
             };
         },
+        mounted() {
+            this.init();
+        },
         methods: {
+            init() {
+                this.$service.getProgrammeInfo({id: this.programme.id}).then(response => {
+                    if (response && response.code === 0) {
+
+                    }
+                });
+            },
             // 选择所有
             handleCheckAllChange(val) {
                 this.checkedCornerMarks = val ? [1, 2, 3, 4] : [];
@@ -48,12 +59,10 @@
                 return {
                     leftTop: {
                         'caption': '爱奇艺',
-                        'imageUrl': '',
                         'markType': 'COPYRIGHT_RESERVER'
                     },
                     leftBottom: {
                         'caption': '45集',
-                        'imageUrl': '',
                         'markType': 'EPISODES_NUMBER'
                     },
                     rightTop: {
@@ -63,7 +72,6 @@
                     },
                     rightBottom: {
                         'caption': '9.4分',
-                        'imageUrl': '',
                         'markType': 'SCORE'
                     }
                 };

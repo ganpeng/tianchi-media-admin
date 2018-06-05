@@ -58,19 +58,21 @@
             },
             // 添加封面图片
             addPosterImage(newPosterImage) {
-                for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
-                    if (newPosterImage.posterImage.fileId === this.programme.posterImageList[i].fileId) {
+                for (let i = 0; i < this.programme.posterImageList.length; i++) {
+                    if (newPosterImage.posterImage.id === this.programme.posterImageList[i].id) {
                         this.$message('该图片已经添加到当前节目封面中');
                         return;
                     }
                 }
+                let imageList = this.programme.posterImageList.slice();
+                imageList.push(newPosterImage.posterImage);
                 // 更新当前节目中的封面图片
                 this.$service.updateProgrammeInfo({
                     id: this.programme.id,
-                    programme: this.subjectInfo.posterImageList.splice().push(newPosterImage.posterImage)
+                    programme: {posterImages: imageList}
                 }).then(response => {
                     if (response && response.code === 0) {
-                        this.subjectInfo.posterImageList.push(newPosterImage.posterImage);
+                        this.programme.posterImageList.push(newPosterImage.posterImage);
                     }
                 });
             }

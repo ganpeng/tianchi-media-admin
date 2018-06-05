@@ -14,14 +14,14 @@ export const createProgramme = (programme) => {
  */
 export const getProgrammeList = ({pageNum, pageSize, figure, releaseAt, releaseArea, programmeCategoryId, programmeTypeIdList}) => {
     const params = {
-            pageNum,
-            pageSize,
-            figure,
-            releaseAt,
-            releaseArea,
-            programmeCategoryId,
-            programmeTypeIdList
-        };
+        pageNum,
+        pageSize,
+        figure,
+        releaseAt,
+        releaseArea,
+        programmeCategoryId,
+        programmeTypeIdList
+    };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
         return item !== '' && item !== undefined;

@@ -6,7 +6,7 @@ const DATA = [
     {
         // 目前只有唯一的一个值，枚举类型
         liveChannelType: 'LIVE_CHANNEL',
-        liveChannelVo: {
+        liveChannel: {
             id: 'string',
             name: 'cctv5',
             no: '1'

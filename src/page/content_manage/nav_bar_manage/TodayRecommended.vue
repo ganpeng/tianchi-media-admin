@@ -11,7 +11,9 @@
             <div id="live">
                 <div class="record no-settable"></div>
                 <div class="live-channel settable" @click="setChannel">
-                    <div class="ab-center">点击设置 / 查看<label>直播频道</label></div>
+                    <div class="ab-center">点击设置 / 查看
+                        <label>直播频道 {{liveChannelList.liveChannel ? liveChannelList.liveChannel.name : ''}}</label>
+                    </div>
                 </div>
                 <div class="ad-group settable" @click="toAdGroup">
                     <div class="ab-center">点击设置 / 查看<label>广告组</label></div>
@@ -20,9 +22,12 @@
             <ul class="recommend-three recommend-line">
                 <li class="settable recommend-item" v-for="(item,index) in recommendFirstLayoutList" :key="index">
                     <div class="ab-center image-box">
-                        <img :src="item.coverImage.uri"/>
+                        <img
+                            v-if='item.coverImage'
+                            :src="item.coverImage ? item.coverImage.uri : ''"
+                            :alt="item.coverImage ? item.coverImage.name : ''"/>
                         <div class="recommend-operate">
-                            <el-dropdown @command="setRecommend($event,0,index)" placement="bottom">
+                            <el-dropdown @command="setRecommend($event,0,0,index)" placement="bottom">
                             <span class="el-dropdown-link">
                                 <i class="el-icon-circle-plus-outline"></i>
                             </span>
@@ -38,9 +43,12 @@
             <ul class="recommend-two recommend-line">
                 <li class="settable recommend-item" v-for="(item,index) in recommendSecondLayoutList" :key="index">
                     <div class="ab-center image-box">
-                        <img :src="item.coverImage.uri"/>
+                        <img
+                            v-if='item.coverImage'
+                            :src="item.coverImage ? item.coverImage.uri : ''"
+                            :alt="item.coverImage ? item.coverImage.name : ''"/>
                         <div class="recommend-operate">
-                            <el-dropdown @command="setRecommend($event,1,index)" placement="bottom">
+                            <el-dropdown @command="setRecommend($event,1,0,index)" placement="bottom">
                             <span class="el-dropdown-link">
                                 <i class="el-icon-circle-plus-outline"></i>
                             </span>
@@ -147,6 +155,7 @@
                 </el-tooltip>
             </div>
         </div>
+        <el-button v-if="modified" type="primary" @click="clearModify" class="column-publish">清除修改</el-button>
         <el-button type="primary" @click="publish" class="column-publish">发 布</el-button>
         <el-dialog title="模块排序" :visible.sync="sortDialogVisible">
             <ul v-dragula="{direction:'horizontal'}" id="block-sort-list">
@@ -169,7 +178,7 @@
         name: 'TodayRecommended',
         data() {
             return {
-                navBarId: 1,
+                navBarId: '5b03d1c2dd10352f7de61c67',
                 sortDialogVisible: false,
                 layoutInfo: {},
                 liveChannelList: [],
@@ -178,19 +187,27 @@
                 subjectLayoutList: []
             };
         },
+        computed: {
+            modified() {
+                return this.$store.state.todayRecommend.modified;
+            }
+        },
         mounted() {
             this.init();
         },
         methods: {
             init() {
-                // 判断是否本地改动，没有改动，获取线上数据
-                // 本地改动，获取本地数据初始化
                 this.layoutInfo = this.$store.getters['todayRecommend/getCurrentState'];
                 this.liveChannelList = this.layoutInfo.liveChannelList;
                 this.subjectLayoutList = this.layoutInfo.subjectLayoutList;
-                this.recommendFirstLayoutList = this.layoutInfo.recommendLayoutList[0].recommendLayoutItemList;
-                this.recommendSecondLayoutList = this.layoutInfo.recommendLayoutList[1].recommendLayoutItemList;
-                // 设置模块推荐位
+                this.recommendFirstLayoutList = this.layoutInfo.recommendLayoutList[0].recommendLayoutItemMultiList[0];
+                this.recommendSecondLayoutList = this.layoutInfo.recommendLayoutList[1].recommendLayoutItemMultiList[0];
+                // 展示线上数据，并保存在state中
+                this.$service.getContentLayout({navBarId: this.navBarId}).then(response => {
+                    if (response && response.code === 0) {
+
+                    }
+                });
             },
             // 设置直播频道
             setChannel() {
@@ -201,10 +218,10 @@
                 this.$router.push({name: 'AdGroup'});
             },
             // 设置推荐位为节目或者专题
-            setRecommend(val, row, index) {
+            setRecommend(val, block, row, index) {
                 this.$router.push({
                     name: val === 'PROGRAMME' ? 'AppendProgramme' : 'SingleAppendSubject',
-                    params: {row: row, index: index}
+                    params: {block: block, row: row, index: index}
                 });
             },
             // 编辑节目模块或者人物模块内容
@@ -221,6 +238,14 @@
             // 模块排序
             sortBlock() {
                 this.sortDialogVisible = true;
+            },
+            // 恢复state中的数据，清除localStorage中的当前页面数据
+            clearModify() {
+                this.$store.dispatch('todayRecommend/resumeState').then(response => {
+                    if (response === 'success') {
+                        this.$message('当前页面修改数据已清除');
+                    }
+                });
             },
             // 点击发布
             publish() {
@@ -412,6 +437,7 @@
     }
 
     .column-publish {
+        margin-right: 60px;
         margin-bottom: 50px;
         width: 180px;
         height: 60px;

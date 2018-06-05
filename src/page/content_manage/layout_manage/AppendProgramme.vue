@@ -21,6 +21,7 @@
                        v-on:setPosterImage="setPosterImage"
                        v-on:setCornerMarks="setCornerMarks"
                        :programmeId="programmeId"
+                       :programme="selectedProgrammeList[0]"
                        :posterImages="posterImages">
                 <!-- 非活动组件将被缓存！ -->
             </component>
@@ -81,7 +82,7 @@
                 this.$service.getProgrammeInfo({id: this.programmeId}).then(response => {
                     if (response && response.code === 0) {
                         // 根据尺寸筛选图片
-                        this.posterImages = response.data.posterImages;
+                        this.posterImages = response.data.posterImageList;
                     }
                 });
             },
@@ -126,6 +127,7 @@
                     itemType: 'PROGRAMME'
                 };
                 this.$store.dispatch('todayRecommend/setRecommendItem', {
+                    block: this.$route.params.block,
                     row: this.$route.params.row,
                     index: this.$route.params.index,
                     item: programme
