@@ -292,6 +292,7 @@
     import ProgrammeTable from './ProgrammeTable';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import dimension from '@/util/config/dimension';
+    import role from '@/util/config/role';
     import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 
     export default {
@@ -325,34 +326,8 @@
                 videoUploadDialogVisible: false,
                 createPersonDialogVisible: false,
                 areaOptions: this.$util.countryList(),
-                copyRightDealerOptions: [
-                    {
-                        value: '1',
-                        label: 'cibn'
-                    },
-                    {
-                        value: '2',
-                        label: '另一个'
-                    },
-                    {
-                        value: '3',
-                        label: '其他'
-                    }
-                ],
-                operatorOptions: [
-                    {
-                        value: '1',
-                        label: '爱奇艺'
-                    },
-                    {
-                        value: '2',
-                        label: '腾讯'
-                    },
-                    {
-                        value: '3',
-                        label: '乐视'
-                    }
-                ],
+                copyRightDealerOptions: role.COPYRIGHT_RESERVER,
+                operatorOptions: role.BUSINESS_OPERATOR,
                 size: dimension.PROGRAMME_DIMENSION,
                 previewImage: {
                     display: false,
@@ -412,29 +387,44 @@
                 this.createProgramme()
                     .then((res) => {
                         let {id} = res.data;
-                        this.createMultProgrammeVideo(id)
-                            .then((...res) => {
-                                this.$message({
-                                    type: 'success',
-                                    message: '保存成功'
+                        if (res && res.code === 0) {
+                            this.createMultProgrammeVideo(id)
+                                .then((...resList) => {
+                                    this.deleteVideoList({list: resList});
+                                    this.getProgrammeVideoListById(id);
+                                    this.$message({
+                                        type: 'success',
+                                        message: '保存成功'
+                                    });
                                 });
-                                this.getProgrammeVideoListById(id);
+                        } else {
+                            this.$message({
+                                type: 'error',
+                                message: '节目保存失败'
                             });
+                        }
                     });
             },
             _editProgramme() {
                 let {id} = this.$route.params;
                 this.updateProgramme(id)
                     .then((res) => {
-                        this.createMultProgrammeVideo(id)
-                            .then((...res) => {
-                                this.$message({
-                                    type: 'success',
-                                    message: '保存成功'
+                        if (res && res.code === 0) {
+                            this.createMultProgrammeVideo(id)
+                                .then((...resList) => {
+                                    this.deleteVideoList({list: resList});
+                                    this.getProgrammeVideoListById(id);
+                                    this.$message({
+                                        type: 'success',
+                                        message: '保存成功'
+                                    });
                                 });
-                                this.deleteVideoList({list: res});
-                                this.getProgrammeVideoListById(id);
+                        } else {
+                            this.$message({
+                                type: 'error',
+                                message: '节目保存失败'
                             });
+                        }
                     });
             },
             _deleteProgramme() {

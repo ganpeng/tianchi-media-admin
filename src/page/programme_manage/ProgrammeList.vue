@@ -134,6 +134,9 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
+                    <template slot-scope="scope">
+                        {{mapReleaseStatus(scope.row.releaseStatus)}}
+                    </template>
                 </el-table-column>
                 <el-table-column align="center" min-width="100px" label="更新时间">
                     <template slot-scope="scope">
@@ -163,6 +166,7 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
+import role from '@/util/config/role';
 export default {
     name: 'ProgrammeList',
     components: {
@@ -179,6 +183,7 @@ export default {
         };
     },
     created() {
+        this.resetSearchField();
         this.getProgrammeList();
         this.getProgrammeCategory();
     },
@@ -215,6 +220,9 @@ export default {
             getProgrammeList: 'programme/getProgrammeList',
             getProgrammeCategory: 'programme/getProgrammeCategory'
         }),
+        mapReleaseStatus(key) {
+            return role.RELEASE_STATUS[key];
+        },
         clearSearchFields() {
             this.resetSearchField();
         },
@@ -228,7 +236,8 @@ export default {
             this.$router.push({ name: 'DisplayProgramme', params: { id } });
         },
         areaLabel(areaValue) {
-            return this.areaOptions.find((areaItem) => areaItem.value === areaValue).label;
+            let area = this.areaOptions.find((areaItem) => areaItem.value === areaValue);
+            return area ? area.label ? area.label : '' : '';
         },
         handleSizeChange(pageSize) {
             this.setPagination({pageSize});

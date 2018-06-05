@@ -319,10 +319,10 @@ const mutations = {
     resetSearchCategory(state) {
         state.programmeCategory = {};
         state.currentTypeList = [];
-        state.programmeType = {};
+        state.programmeType = [];
     },
     resetSearchType(state) {
-        state.programmeType = {};
+        state.programmeType = [];
     },
     resetSearchField(state) {
         state.figure = '';
@@ -330,7 +330,7 @@ const mutations = {
         state.releaseAt = '';
         state.releaseArea = '';
         state.programmeCategory = {};
-        state.programmeType = {};
+        state.programmeType = [];
    },
     updateLeadActor(state, payload) {
         state.currentProgramme.leadActor = payload.leadActorIdList.map((id) => {

@@ -70,4 +70,52 @@ export const VIDEO_TYPE_OBJ = {
     HIGH_LIGHT: '看点'
 };
 
-export default {MAIN_ROLE_OPTIONS, VIDEO_TYPE, QUALITY_TYPE, VIDEO_TYPE_OBJ};
+export const BUSINESS_OPERATOR = [
+    {
+        value: 'IQIYI',
+        label: '爱奇艺'
+    },
+    {
+        value: 'YOUKU',
+        label: '优酷'
+    },
+    {
+        value: 'TENCENT',
+        label: '腾讯'
+    },
+    {
+        value: 'MANGGUO',
+        label: '芒果'
+    },
+    {
+        value: 'SOHU',
+        label: '搜狐'
+    }
+];
+
+export const BUSINESS_OPERATOR_OBJ = {
+    IQIYI: '爱奇艺',
+    YOUKU: '优酷',
+    TENCENT: '腾讯',
+    MANGGUO: '芒果',
+    SOHU: '搜狐'
+};
+
+export const COPYRIGHT_RESERVER = [
+    {
+        value: 'CIBN',
+        label: 'CIBN'
+    }
+];
+
+export const COPYRIGHT_RESERVER_OBJ = {
+    CIBN: 'CIBN'
+};
+
+export const RELEASE_STATUS = {
+    DRAFT: '草稿',
+    RELEASED: '已发布',
+    PRE_RELEASED: '预发布'
+};
+
+export default {MAIN_ROLE_OPTIONS, VIDEO_TYPE, QUALITY_TYPE, VIDEO_TYPE_OBJ, BUSINESS_OPERATOR, BUSINESS_OPERATOR_OBJ, COPYRIGHT_RESERVER, COPYRIGHT_RESERVER_OBJ, RELEASE_STATUS};
