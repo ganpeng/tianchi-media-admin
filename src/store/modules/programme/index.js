@@ -2,7 +2,7 @@ import service from '../../../service';
 import axios from 'axios';
 import _ from 'lodash';
 
-const programmePostFields = ['copyrightStartedAt', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'score', 'price', 'quality', 'releaseArea', 'category', 'businessOperator', 'featureVideoCount', 'description', 'announceAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
+const programmePostFields = ['copyrightStartedAt', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'releaseArea', 'category', 'businessOperator', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
@@ -41,6 +41,8 @@ const defaultProgramme = {
     businessOperator: '',
     // 正片数量,总集数（电视剧是预知的，综艺节目是变化的）
     featureVideoCount: '',
+    // 节目看点
+    desc: '',
     // 节目描述
     description: '',
     // 发行时间
@@ -82,7 +84,7 @@ const defaultCurrentProgrammeVideoObj = {
 };
 
 const defaultState = {
-    figure: '',
+    keyword: '',
     releaseStatus: '',
     releaseAt: '',
     releaseArea: '',
@@ -100,7 +102,7 @@ const defaultState = {
 };
 
 const state = JSON.parse(JSON.stringify(defaultState));
-const searchFields = ['figure', 'releaseStatus', 'releaseArea', 'releaseAt', 'programmeCategory', 'programmeType', 'pageNum', 'pageSize'];
+const searchFields = ['keyword', 'releaseStatus', 'releaseArea', 'releaseAt', 'programmeCategory', 'programmeType', 'pageNum', 'pageSize'];
 
 /**
  *  通过id获取节目
@@ -155,8 +157,8 @@ const getters = {
     releaseAt(state) {
         return state.releaseAt;
     },
-    figure(state) {
-        return state.figure;
+    keyword(state) {
+        return state.keyword;
     },
     programmeTagList(state) {
         return state.programmeTagList.map((item) => {
@@ -263,8 +265,8 @@ const mutations = {
         if (payload.releaseAt !== undefined) {
             state.releaseAt = payload.releaseAt;
         }
-        if (payload.figure !== undefined) {
-            state.figure = payload.figure;
+        if (payload.keyword !== undefined) {
+            state.keyword = payload.keyword;
         }
     },
     resetCurrentProgramme(state) {
@@ -325,7 +327,7 @@ const mutations = {
         state.programmeType = [];
     },
     resetSearchField(state) {
-        state.figure = '';
+        state.keyword = '';
         state.releaseStatus = '';
         state.releaseAt = '';
         state.releaseArea = '';
@@ -474,7 +476,6 @@ const actions = {
         let searchObj = _.pick(state, searchFields);
         searchObj.programmeCategoryId = searchObj.programmeCategory.id;
         searchObj.programmeTypeIdList = searchObj.programmeType;
-        delete searchObj.releaseAt;
         service.getProgrammeList(Object.assign({}, searchObj, {pageNum: state.pageNum - 1}))
             .then((res) => {
                 if (res && res.code === 0) {
@@ -540,7 +541,7 @@ const actions = {
         return service.getProgrammeTypeCount({programmeTypeId})
             .then((res) => {
                 if (res && res.code === 0) {
-                    if (res.data.count === 0) {
+                    if (res.data === 0) {
                         return true;
                     } else {
                         return false;

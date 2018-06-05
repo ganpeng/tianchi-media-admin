@@ -11,10 +11,10 @@
             <el-form :inline="true" class="demo-form-inline search-form">
                 <el-form-item class="search">
                     <el-input
-                        :value="figure"
+                        :value="keyword"
                         clearable
-                        @clear="clearSearchField('figure')"
-                        @input="inputHandler($event, 'figure')"
+                        @clear="clearSearchField('keyword')"
+                        @input="inputHandler($event, 'keyword')"
                         placeholder="搜索你想要的信息">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
@@ -103,9 +103,9 @@
                 <el-table-column prop="description" align="center" width="300px" label="节目简介"></el-table-column>
                 <el-table-column prop="featureVideoCount" min-width="100px" align="center" label="正片数量"></el-table-column>
                 <el-table-column prop="" align="center" min-width="120px" label="相关视频数量"></el-table-column>
-                <el-table-column prop="announceAt" align="center" width="100px" label="上映时间">
+                <el-table-column prop="releaseAt" align="center" width="100px" label="上映时间">
                     <template slot-scope="scope">
-                        {{scope.row.announceAt | formatDate('yyyy-MM-DD')}}
+                        {{ scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="releaseArea" align="center" label="地区">
@@ -202,7 +202,7 @@ export default {
             searchCurrentTypeList: 'programme/searchCurrentTypeList',
             releaseArea: 'programme/releaseArea',
             releaseAt: 'programme/releaseAt',
-            figure: 'programme/figure',
+            keyword: 'programme/keyword',
             categroyList: 'programme/categroyList'
         })
     },

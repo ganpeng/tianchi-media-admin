@@ -10,7 +10,7 @@
         <el-row>
             <el-col :span="24">
                     <div class="block-title">节目基本信息</div>
-                    <el-form ref="createProgramForm" status-icon :model="programme" label-width="100px" class="form-block">
+                    <el-form :validate="formValidate" :rules="rules" ref="createProgramForm" status-icon :model="programme" label-width="100px" class="form-block">
                         <el-col :span="8">
                             <el-form-item label="全平台通用ID">
                                 <el-input :value="123455" disabled></el-input>
@@ -22,10 +22,11 @@
                                     :value="programme.name">
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="节目看点">
+                            <el-form-item label="节目看点" prop="desc">
                                 <el-input
-                                    :value="'非常好看'"
-                                    disabled
+                                    :value="programme.desc"
+                                    :disabled="readonly"
+                                    @input="inputHandler($event, 'desc')"
                                 ></el-input>
                             </el-form-item>
                             <el-form-item label="节目来源">
@@ -44,11 +45,11 @@
                                     :value="programme.description">
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="上映时间" prop="announceAt">
+                            <el-form-item label="上映时间" prop="releaseAt">
                                 <el-date-picker
                                     :disabled="readonly"
-                                    :value="programme.announceAt"
-                                    @input="inputHandler($event, 'announceAt')"
+                                    :value="programme.releaseAt"
+                                    @input="inputHandler($event, 'releaseAt')"
                                     type="year"
                                     placeholder="选择年">
                                 </el-date-picker>
@@ -117,7 +118,7 @@
                                 </el-select>
                                 <el-button v-if="!readonly" type="primary" plain @click="addTag">新增关键字</el-button>
                             </el-form-item>
-                            <el-form-item label="节目主演" prop="leadActor">
+                            <el-form-item label="节目主演" prop="leadActorValue">
                                 <label for="leadActor"></label>
                                 <el-select
                                     :value="leadActorValue"
@@ -199,7 +200,7 @@
                                     </el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="总集数" prop="featureVideoCount">
+                            <el-form-item v-if="isTvPlay" label="总集数" prop="featureVideoCount">
                                 <el-input
                                     :disabled="readonly"
                                     :value="programme.featureVideoCount"
@@ -293,6 +294,7 @@
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import dimension from '@/util/config/dimension';
     import role from '@/util/config/role';
+    import {checkScore} from '@/util/formValidate';
     import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 
     export default {
@@ -334,6 +336,38 @@
                     autoplay: false,
                     activeIndex: 0,
                     list: []
+                },
+                rules: {
+                    name: [
+                        { required: true, message: '请输入节目名称', trigger: 'blur' }
+                    ],
+                    desc: [
+                        { required: true, message: '请输入节目看点', trigger: 'blur' }
+                    ],
+                    description: [
+                        { required: true, message: '请输入节目描述', trigger: 'blur' }
+                    ],
+                    score: [
+                        { validator: checkScore, trigger: 'blur' }
+                    ],
+                    releaseAt: [
+                        { required: true, message: '请输入上映日期', trigger: 'blur' }
+                    ],
+                    releaseArea: [
+                        { required: true, message: '请输入所属地区', trigger: 'blur' }
+                    ],
+                    category: [
+                        { required: true, message: '请选择节目分类', trigger: 'blur' }
+                    ],
+                    typeList: [
+                        { required: true, message: '请选择节目类型', trigger: 'blur' }
+                    ],
+                    copyrightReserver: [
+                        { required: true, message: '请选择节目牌照方', trigger: 'blur' }
+                    ],
+                    businessOperator: [
+                        { required: true, message: '请选择节目版权方', trigger: 'blur' }
+                    ]
                 }
             };
         },
@@ -349,7 +383,8 @@
                 serializeTypeList: 'programme/serializeTypeList',
                 leadActorValue: 'programme/leadActorValue',
                 directorValue: 'programme/directorValue',
-                unSavedVideoList: 'programmeVideo/unSavedVideoList'
+                unSavedVideoList: 'programmeVideo/unSavedVideoList',
+                isTvPlay: 'programme/isTvPlay'
             }),
             readonly() {
                 return parseInt(this.status) === 1;
@@ -384,48 +419,60 @@
                 deleteProgramme: 'programme/deleteProgramme'
             }),
             _createProgramme() {
-                this.createProgramme()
-                    .then((res) => {
-                        let {id} = res.data;
-                        if (res && res.code === 0) {
-                            this.createMultProgrammeVideo(id)
-                                .then((...resList) => {
-                                    this.deleteVideoList({list: resList});
-                                    this.getProgrammeVideoListById(id);
+                this.$refs.createProgramForm.validate(value => {
+                    if (value) {
+                        this.createProgramme()
+                            .then((res) => {
+                                let {id} = res.data;
+                                if (res && res.code === 0) {
+                                    this.createMultProgrammeVideo(id)
+                                        .then((...resList) => {
+                                            this.deleteVideoList({list: resList});
+                                            this.getProgrammeVideoListById(id);
+                                            this.$message({
+                                                type: 'success',
+                                                message: '保存成功'
+                                            });
+                                        });
+                                } else {
                                     this.$message({
-                                        type: 'success',
-                                        message: '保存成功'
+                                        type: 'error',
+                                        message: '节目保存失败'
                                     });
-                                });
-                        } else {
-                            this.$message({
-                                type: 'error',
-                                message: '节目保存失败'
+                                }
                             });
-                        }
-                    });
+                    } else {
+                        return false;
+                    }
+                });
             },
             _editProgramme() {
                 let {id} = this.$route.params;
-                this.updateProgramme(id)
-                    .then((res) => {
-                        if (res && res.code === 0) {
-                            this.createMultProgrammeVideo(id)
-                                .then((...resList) => {
-                                    this.deleteVideoList({list: resList});
-                                    this.getProgrammeVideoListById(id);
+                this.$refs.createProgramForm.validate(value => {
+                    if (value) {
+                        this.updateProgramme(id)
+                            .then((res) => {
+                                if (res && res.code === 0) {
+                                    this.createMultProgrammeVideo(id)
+                                        .then((...resList) => {
+                                            this.deleteVideoList({list: resList});
+                                            this.getProgrammeVideoListById(id);
+                                            this.$message({
+                                                type: 'success',
+                                                message: '保存成功'
+                                            });
+                                        });
+                                } else {
                                     this.$message({
-                                        type: 'success',
-                                        message: '保存成功'
+                                        type: 'error',
+                                        message: '节目保存失败'
                                     });
-                                });
-                        } else {
-                            this.$message({
-                                type: 'error',
-                                message: '节目保存失败'
+                                }
                             });
-                        }
-                    });
+                    } else {
+                        return false;
+                    }
+                });
             },
             _deleteProgramme() {
                 let {id} = this.$route.params;
@@ -553,6 +600,9 @@
                 this.previewImage.display = true;
                 this.previewImage.list = this.programme.posterImageList;
                 this.previewImage.activeIndex = index;
+            },
+            formValidate(obj) {
+                console.log(obj);
             }
         }
     };

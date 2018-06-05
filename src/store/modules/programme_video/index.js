@@ -125,7 +125,7 @@ const mutations = {
 function filterProgrammeVideoData(videoList, programmeId) {
     return videoList.map((video) => {
         let result = Object.assign({}, video, {
-            playUrl: 'http://www.w3school.com.cn/i/movie.ogg',
+            playUrl: 'http://vjs.zencdn.net/v/oceans.mp4',
             programmeId,
             status: 'NORMAL',
             uid: uuid()
@@ -153,6 +153,8 @@ const actions = {
     },
     updateProgrammeVideo({commit, state}) {
         let {currentProgrammeVideo} = state;
+        //  临时代码, 后续删除
+        currentProgrammeVideo.playUrl = 'http://vjs.zencdn.net/v/oceans.mp4';
         return service.updateProgrammeVideoInfo({id: currentProgrammeVideo.id, video: currentProgrammeVideo})
             .then((res) => {
                 if (res && res.code === 0) {
@@ -171,7 +173,7 @@ const actions = {
             }));
     },
     getVideoFeatureList({commit, state}, {id, pageSize}) {
-        return service.getProgrammeVideoListById({programmeId: id, pageSize, pageNum: 0, type: 'FEATURE'})
+        return service.getProgrammeVideoListById({programmeId: id, pageSize: pageSize <= 0 ? 1 : pageSize, pageNum: 0, type: 'FEATURE'})
             .then((res) => {
                 if (res && res.code === 0) {
                     commit('setFeatureList', {list: res.data.list});

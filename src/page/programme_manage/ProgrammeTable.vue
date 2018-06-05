@@ -81,6 +81,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                    v-if="tableStatus === 1"
                     prop="duration"
                     align="center"
                     min-width="120px"

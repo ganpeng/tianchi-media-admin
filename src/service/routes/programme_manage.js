@@ -12,12 +12,12 @@ export const createProgramme = (programme) => {
 /**
  * 获取节目列表
  */
-export const getProgrammeList = ({pageNum, pageSize, figure, releaseAt, releaseArea, programmeCategoryId, programmeTypeIdList}) => {
+export const getProgrammeList = ({pageNum, pageSize, keyword, releaseAt, releaseArea, programmeCategoryId, programmeTypeIdList}) => {
     const params = {
         pageNum,
         pageSize,
-        figure,
-        releaseAt,
+        keyword,
+        releaseAt: releaseAt ? new Date(releaseAt).getTime() : '',
         releaseArea,
         programmeCategoryId,
         programmeTypeIdList
@@ -26,6 +26,7 @@ export const getProgrammeList = ({pageNum, pageSize, figure, releaseAt, releaseA
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
         return item !== '' && item !== undefined;
     }));
+
     return service.get(`/v1/content/programme/page?${paramsStr}`);
 };
 
