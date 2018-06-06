@@ -10,7 +10,7 @@
         <el-row>
             <el-col :span="24">
                     <div class="block-title">节目基本信息</div>
-                    <el-form :validate="formValidate" :rules="rules" ref="createProgramForm" status-icon :model="programme" label-width="100px" class="form-block">
+                    <el-form :rules="rules" ref="createProgramForm" status-icon :model="programme" label-width="100px" class="form-block">
                         <el-col :span="8">
                             <el-form-item label="全平台通用ID">
                                 <el-input :value="123455" disabled></el-input>
@@ -202,15 +202,16 @@
                             </el-form-item>
                             <el-form-item v-if="isTvPlay" label="总集数" prop="featureVideoCount">
                                 <el-input
+                                    type="number"
                                     :disabled="readonly"
                                     :value="programme.featureVideoCount"
                                     @input="inputHandler($event, 'featureVideoCount')" >
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="评分" prop="score">
+                            <el-form-item label="评分" required prop="score">
                                 <el-input
-                                    :disabled="readonly"
                                     type="number"
+                                    :disabled="readonly"
                                     :value="programme.score"
                                     @input="inputHandler($event, 'score')">
                                 </el-input>
@@ -242,7 +243,12 @@
                                         <i
                                             v-if="!readonly"
                                             @click="_deletePosterImage(img.id)"
-                                            class="el-icon-delete">
+                                            class="el-icon-delete delete-btn">
+                                        </i>
+                                        <i
+                                            v-if="!readonly"
+                                            @click="checkPosterImage({id: img.id})"
+                                            :class='[img.checked ? "el-icon-circle-check" : "el-icon-circle-check-outline", "select-btn"]'>
                                         </i>
                                     </li>
                                 </ul>
@@ -367,6 +373,9 @@
                     ],
                     businessOperator: [
                         { required: true, message: '请选择节目版权方', trigger: 'blur' }
+                    ],
+                    featureVideoCount: [
+                        { required: true, message: '请输入总集数', trigger: 'blur' }
                     ]
                 }
             };
@@ -406,6 +415,7 @@
                 updateLeadActorResult: 'programme/updateLeadActorResult',
                 updateDirectorResult: 'programme/updateDirectorResult',
                 addProgrammeTag: 'programme/addProgrammeTag',
+                checkPosterImage: 'programme/checkPosterImage',
                 deleteVideoList: 'programmeVideo/deleteVideoList'
             }),
             ...mapActions({
@@ -600,9 +610,6 @@
                 this.previewImage.display = true;
                 this.previewImage.list = this.programme.posterImageList;
                 this.previewImage.activeIndex = index;
-            },
-            formValidate(obj) {
-                console.log(obj);
             }
         }
     };

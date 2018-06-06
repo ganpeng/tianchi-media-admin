@@ -19,18 +19,6 @@
                     @input="inputHandler($event, 'name')"
                 ></el-input>
             </el-form-item>
-            <el-form-item
-                v-if="video.type === 'FEATURE' && isTvPlay"
-                label="视频排序" prop="sort">
-                <el-input
-                    :disabled="readonly"
-                    :value="video.sort"
-                    auto-complete="off"
-                    type="number"
-                    placeholder="请输入排序编号"
-                    @input="inputHandler($event, 'sort')"
-                ></el-input>
-            </el-form-item>
             <el-form-item label="视频简介" prop="description">
                 <el-input
                     :disabled="readonly"
@@ -41,6 +29,21 @@
                     @input="inputHandler($event, 'description')"
                 >
                 </el-input>
+            </el-form-item>
+            <el-form-item label="内容类型" prop="type">
+                <el-select
+                    :disabled="readonly"
+                    :value="video.type"
+                    placeholder="请选择内容类型"
+                    @change="inputHandler($event, 'type')"
+                >
+                    <el-option
+                        v-for="item in videoType"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="选择视频">
                 <el-col :span="3">
@@ -64,6 +67,18 @@
                 ></el-input>
             </el-form-item>
             <el-form-item
+                v-if="video.type === 'FEATURE' && isTvPlay"
+                label="视频排序" prop="sort">
+                <el-input
+                    :disabled="readonly"
+                    :value="video.sort"
+                    auto-complete="off"
+                    type="number"
+                    placeholder="请输入排序编号"
+                    @input="inputHandler($event, 'sort')"
+                ></el-input>
+            </el-form-item>
+            <el-form-item
                 v-if="video.type !== 'FEATURE'"
                 label="关联正片" prop="parentId">
                 <el-select
@@ -78,21 +93,6 @@
                         :label="item.name"
                         :value="item.id"
                     >
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="内容类型" prop="type">
-                <el-select
-                    :disabled="readonly"
-                    :value="video.type"
-                    placeholder="请选择内容类型"
-                    @change="inputHandler($event, 'type')"
-                >
-                    <el-option
-                        v-for="item in videoType"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>

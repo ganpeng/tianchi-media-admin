@@ -2,6 +2,8 @@ import service from '../../../service';
 import axios from 'axios';
 import _ from 'lodash';
 
+import {checkImageExist} from '@/util/formValidate';
+
 const programmePostFields = ['copyrightStartedAt', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'releaseArea', 'category', 'businessOperator', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
 
 const defaultProgramme = {
@@ -357,10 +359,23 @@ const mutations = {
         state.currentProgramme.directorResult = _.uniqBy(directorResult.concat(payload.directorResult), 'id');
     },
     addPosterImage(state, payload) {
-        state.currentProgramme.posterImageList.push(payload.posterImage);
+        if (!checkImageExist(state.currentProgramme.posterImageList, payload.posterImage)) {
+            state.currentProgramme.posterImageList.push(payload.posterImage);
+        }
     },
     deletePosterImage(state, payload) {
         state.currentProgramme.posterImageList = state.currentProgramme.posterImageList.filter((img) => img.id !== payload.id);
+    },
+    checkPosterImage(state, payload) {
+        state.currentProgramme.posterImageList = state.currentProgramme.posterImageList.map((img) => {
+            if (img.id === payload.id) {
+                img.checked = true;
+            } else {
+                delete img.checked;
+            }
+
+            return img;
+        });
     },
     setCategroyList(state, payload) {
         state.categoryList = payload.list ? payload.list : [];
@@ -538,16 +553,20 @@ const actions = {
             });
     },
     getProgrammeTypeCount({commit, state}, programmeTypeId) {
-        return service.getProgrammeTypeCount({programmeTypeId})
-            .then((res) => {
-                if (res && res.code === 0) {
-                    if (res.data === 0) {
-                        return true;
-                    } else {
-                        return false;
+        if (/^category_/.test(programmeTypeId)) {
+            return Promise.resolve(true);
+        } else {
+            return service.getProgrammeTypeCount({programmeTypeId})
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        if (res.data === 0) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
-                }
-            });
+                });
+        }
     },
     getProgrammeVideoListById({commit, state}, id) {
         let {pageSize, pageNum} = state.currentProgrammeVideoObj;

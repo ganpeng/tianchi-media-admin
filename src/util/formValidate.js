@@ -11,7 +11,7 @@ export const checkScore = (rule, value, callback) => {
     if (!_.isNumber(parseFloat(value))) {
         callback(new Error('请输入数字值'));
     } else {
-        if (String(value).split('.')[1].length > 1) {
+        if (String(value).split('.')[1] && String(value).split('.')[1].length > 1) {
             return callback(new Error('评分只能保留一位小数'));
         }
         if (value > 10 || value < 1) {
@@ -22,6 +22,15 @@ export const checkScore = (rule, value, callback) => {
     }
 };
 
+/**
+ * 检查图片是否已经存在
+ */
+export const checkImageExist = (imageList, img) => {
+    let index = imageList.findIndex((item) => item.id === img.id);
+    return index >= 0;
+};
+
 export default {
-    checkScore
+    checkScore,
+    checkImageExist
 };

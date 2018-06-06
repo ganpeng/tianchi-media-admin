@@ -66,7 +66,9 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
         append(data) {
             this.$prompt('请输入新类型', '提示', {
                 confirmButtonText: '确定',
-                cancelButtonText: '取消'
+                cancelButtonText: '取消',
+                inputPattern: /\S/,
+                inputErrorMessage: '类型不能为空'
             }).then(({ value }) => {
                 this.addProgrammeCategory({name: value, data});
                 this.$message({

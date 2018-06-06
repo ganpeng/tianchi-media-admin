@@ -98,7 +98,13 @@
                             <i
                                 v-if="!readonly"
                                 @click="_deletePosterImage(img.id)"
-                                class="el-icon-delete">
+                                class="el-icon-delete delete-btn">
+                            </i>
+
+                            <i
+                                v-if="!readonly"
+                                @click="checkPosterImage({id: img.id})"
+                                :class='[img.checked ? "el-icon-circle-check" : "el-icon-circle-check-outline", "select-btn"]'>
                             </i>
                         </li>
                     </ul>
@@ -194,7 +200,8 @@ export default {
         ...mapMutations({
             updateCurrentPerson: 'person/updateCurrentPerson',
             addPosterImage: 'person/addPosterImage',
-            deletePosterImage: 'person/deletePosterImage'
+            deletePosterImage: 'person/deletePosterImage',
+            checkPosterImage: 'person/checkPosterImage'
         }),
         uploadImageHandler() {
             if (!this.readonly) {

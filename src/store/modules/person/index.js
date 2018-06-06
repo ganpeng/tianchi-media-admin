@@ -1,5 +1,6 @@
 import service from '../../../service';
 import router from '../../../router';
+import {checkImageExist} from '@/util/formValidate';
 
 const defaultPerson = {
     area: '',
@@ -87,12 +88,25 @@ const mutations = {
         state.currentPerson.posterImageList = [];
     },
     addPosterImage(state, payload) {
-        state.currentPerson.posterImageList.push(payload.posterImage);
+        if (!checkImageExist(state.currentPerson.posterImageList, payload.posterImage)) {
+            state.currentPerson.posterImageList.push(payload.posterImage);
+        }
     },
     deletePosterImage(state, payload) {
         let {posterImageList} = state.currentPerson;
         state.currentPerson.posterImageList = posterImageList.filter((image) => {
             return image.fileId !== payload.id;
+        });
+    },
+    checkPosterImage(state, payload) {
+        state.currentPerson.posterImageList = state.currentPerson.posterImageList.map((img) => {
+            if (img.id === payload.id) {
+                img.checked = true;
+            } else {
+                delete img.checked;
+            }
+
+            return img;
         });
     }
 };
