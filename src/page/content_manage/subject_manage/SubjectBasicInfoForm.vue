@@ -8,13 +8,13 @@
                 <el-input v-model="subjectInfo.name" placeholder="请填写30个字以内的名称"></el-input>
             </el-form-item>
             <template v-if="status === '0' || status === '2'">
-                <el-form-item label="节目专题类别" prop="programmeCategoryList" required>
-                    <el-select v-model="subjectInfo.programmeCategoryList" multiple placeholder="请选择节目专题类别">
+                <el-form-item label="节目专题类别" required>
+                    <el-select v-model="programmeCategoryList" multiple placeholder="请选择节目专题类别">
                         <el-option
                             v-for="item in programmeCategoryListOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -124,7 +124,7 @@
                 if (this.status === '1' || this.status === '3') {
                     return;
                 }
-                if (!this.subjectInfo.programmeCategoryList) {
+                if (!this.programmeCategoryList) {
                     return callback(new Error('请选择节目专题类别'));
                 } else {
                     callback();
@@ -155,16 +155,8 @@
                     tagList: [],
                     posterImageList: []
                 },
-                programmeCategoryListOptions: [{
-                    label: '电视剧',
-                    value: 'TV_DRAMA'
-                }, {
-                    label: '电影',
-                    value: 'MOVIE'
-                }, {
-                    label: '娱乐',
-                    value: 'VARIETY_SHOW'
-                }],
+                programmeCategoryList: [],
+                programmeCategoryListOptions: [],
                 tagOptions: [],
                 previewImage: {
                     display: false,
@@ -219,11 +211,19 @@
                         this.tagOptions = response.data;
                     }
                 });
+                // 初始化专题类别
+                this.$service.getProgrammeCategory().then(response => {
+                    if (response && response.code === 0) {
+                        this.programmeCategoryListOptions = response.data;
+                    }
+                });
                 if (this.status === '2' || this.status === '3') {
                     this.$service.getSubjectDetail(this.$route.params.id).then(response => {
                         if (response && response.code === 0) {
                             this.subjectInfo.name = response.data.name;
-                            this.subjectInfo.programmeCategoryList = response.data.programmeCategoryList ? response.data.programmeCategoryList : [];
+                            response.data.programmeCategoryList.map(categoryItem => {
+                                this.programmeCategoryList.push(categoryItem.id);
+                            });
                             this.subjectInfo.description = response.data.description;
                             this.subjectInfo.tagList = response.data.tagList;
                             this.subjectInfo.posterImageList = response.data.posterImageList;
@@ -264,6 +264,20 @@
             operateSubject() {
                 this.$refs['subjectInfo'].validate((valid) => {
                     if (valid) {
+                        if (this.status === '0' || this.status === '2') {
+                            // 组装节目类别对象
+                            this.subjectInfo.programmeCategoryList = [];
+                            this.programmeCategoryList.map(categoryId => {
+                                this.programmeCategoryListOptions.map(categoryOption => {
+                                    if (categoryId === categoryOption.id) {
+                                        this.subjectInfo.programmeCategoryList.push({
+                                            id: categoryId,
+                                            name: categoryOption.name
+                                        });
+                                    }
+                                });
+                            });
+                        }
                         // 创建专题
                         if (this.status === '0' || this.status === '1') {
                             this.subjectInfo.category = this.status === '0' ? 'PROGRAMME' : 'FIGURE';

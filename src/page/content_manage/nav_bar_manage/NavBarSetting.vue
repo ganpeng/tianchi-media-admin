@@ -69,7 +69,7 @@
             init() {
                 let that = this;
                 this.$service.getNavBarList().then(response => {
-                    if (response) {
+                    if (response && response.code === 0) {
                         this.previewNavBarList = response.data;
                         this.systemNavBarList = this.previewNavBarList.slice(0, 3);
                         this.customNavBarList = this.previewNavBarList.slice(3);

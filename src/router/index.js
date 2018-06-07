@@ -31,8 +31,8 @@ import AdGroup from 'sysPage/content_manage/layout_manage/AdGroup';
 import AppendAd from 'sysPage/content_manage/layout_manage/AppendAd';
 import AppendProgramme from 'sysPage/content_manage/layout_manage/AppendProgramme';
 import SingleAppendSubject from 'sysPage/content_manage/layout_manage/SingleAppendSubject';
-import BlockAppendProgrammeSubject from 'sysPage/content_manage/layout_manage/BlockAppendProgrammeSubject';
-import BlockAppendPersonSubject from 'sysPage/content_manage/layout_manage/BlockAppendPersonSubject';
+import ModelAppendProgrammeSubject from 'sysPage/content_manage/layout_manage/ModelAppendProgrammeSubject';
+import ModelAppendPersonSubject from 'sysPage/content_manage/layout_manage/ModelAppendPersonSubject';
 import CreateProgrammeSubject from 'sysPage/content_manage/subject_manage/programme_subject/CreateProgrammeSubject';
 import CreatePersonSubject from 'sysPage/content_manage/subject_manage/person_subject/CreatePersonSubject';
 import SubjectList from 'sysPage/content_manage/subject_manage/SubjectList';
@@ -160,27 +160,27 @@ let router = new Router({
                 },
                 // 内容管理-栏目管理-节目选择设置
                 {
-                    path: '/layout-manage/programme/:block/:row/:index',
+                    path: '/layout-manage/programme/:model/:row/:index',
                     name: 'AppendProgramme',
                     component: AppendProgramme
                 },
                 // 内容管理-栏目管理-单个推荐位选择专题
                 {
-                    path: '/layout-manage/single-append-subject/:block/:row/:index',
+                    path: '/layout-manage/single-append-subject/:model/:row/:index',
                     name: 'SingleAppendSubject',
                     component: SingleAppendSubject
                 },
                 // 内容管理-栏目管理-模块推荐位选择节目专题
                 {
-                    path: '/layout-manage/block-append-programme-subject/:row',
-                    name: 'BlockAppendProgrammeSubject',
-                    component: BlockAppendProgrammeSubject
+                    path: '/layout-manage/model-append-programme-subject/:row',
+                    name: 'ModelAppendProgrammeSubject',
+                    component: ModelAppendProgrammeSubject
                 },
                 // 内容管理-栏目管理-模块推荐位选择人物专题
                 {
-                    path: '/layout-manage/block-append-person-subject/:row',
-                    name: 'BlockAppendPersonSubject',
-                    component: BlockAppendPersonSubject
+                    path: '/layout-manage/model-append-person-subject/:row',
+                    name: 'ModelAppendPersonSubject',
+                    component: ModelAppendPersonSubject
                 },
                 // 内容管理-专题管理-新增节目专题
                 {

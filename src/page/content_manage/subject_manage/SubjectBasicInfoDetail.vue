@@ -2,8 +2,8 @@
 <template>
     <div>
         <el-form label-position="right" label-width="120px" :model="subjectInfo">
-            <el-form-item label="创建人：">
-                <label>{{subjectInfo.creator}}</label>
+            <el-form-item label="创建人：" v-if="subjectInfo.authorName">
+                <label>{{subjectInfo.authorName}}</label>
             </el-form-item>
             <el-form-item label="专题名称：">
                 <label>{{subjectInfo.name}}</label>
@@ -14,7 +14,7 @@
             <el-form-item label="专题节目类别：" v-if="status === '0'">
                 <ul class="type-list">
                     <li v-for="(item, index) in subjectInfo.programmeCategoryList" :key="index">
-                        <el-tag type="success">{{item}}</el-tag>
+                        <el-tag type="success">{{item.name}}</el-tag>
                     </li>
                 </ul>
             </el-form-item>

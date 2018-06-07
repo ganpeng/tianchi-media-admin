@@ -98,6 +98,7 @@
                         if (nodes[i].getAttribute('data-id') === this.personList[k].id) {
                             subjectLayoutItemList.push({
                                 id: this.personList[k].id,
+                                name: this.personList[k].name,
                                 // 筛选其中一张符合尺寸的照片
                                 coverImage: this.personList[k].posterImageList[0]
                             });

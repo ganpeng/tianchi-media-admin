@@ -59,10 +59,11 @@ export const updateSubjectItemList = ({id, subjectItemList}) => {
 /**
  * 修改专题基本信息
  */
-export const updateSubjectBasicInfo = ({id, name, description, tagList, posterImageList}) => {
+export const updateSubjectBasicInfo = ({id, name, programmeCategoryList, description, tagList, posterImageList}) => {
     return service.patch(util.format('/v1/content/subject/{0}', id), {
         id,
         name,
+        programmeCategoryList,
         description,
         tagList,
         posterImageList

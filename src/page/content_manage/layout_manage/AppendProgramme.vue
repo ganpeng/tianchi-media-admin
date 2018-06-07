@@ -127,7 +127,7 @@
                     itemType: 'PROGRAMME'
                 };
                 this.$store.dispatch('todayRecommend/setRecommendItem', {
-                    block: this.$route.params.block,
+                    model: this.$route.params.model,
                     row: this.$route.params.row,
                     index: this.$route.params.index,
                     item: programme

@@ -17,6 +17,11 @@ const state = {
         renderType: 'RECOMMEND_ITEM',
         title: '',
         recommendLayoutItemMultiList: [[{}, {}]]
+    }, {
+        layoutTemplate: 'LT_L',
+        renderType: 'CATALOGUE',
+        title: '',
+        recommendLayoutItemMultiList: [[{}, {}, {}, {}, {}]]
     }],
     subjectLayoutList: []
 };
@@ -34,8 +39,13 @@ const mutations = {
         state.modified = true;
     },
     // 设置推荐位置的节目或者专题
-    setRecommendItem(state, {block, row, index, item}) {
-        state.recommendLayoutList[block].recommendLayoutItemMultiList[row][index] = item;
+    setRecommendItem(state, {model, row, index, item}) {
+        state.recommendLayoutList[model].recommendLayoutItemMultiList[row][index] = item;
+        state.modified = true;
+    },
+    // 设置推荐节目类型或者直播频道
+    setCatalogue(state, {model, item}) {
+        state.recommendLayoutList[model] = item;
         state.modified = true;
     },
     // 设置模块的专题项
@@ -45,7 +55,7 @@ const mutations = {
     },
     // 重新加载缓存的数据
     reloadData(state, reloadData) {
-        state.modified = true;
+        state.modified = reloadData.modified;
         state.liveChannelList = reloadData.liveChannelList ? reloadData.liveChannelList : [];
         state.recommendLayoutList = reloadData.recommendLayoutList ? reloadData.recommendLayoutList : [{
             layoutTemplate: 'LT_3',
@@ -57,6 +67,11 @@ const mutations = {
             renderType: 'RECOMMEND_ITEM',
             title: '',
             recommendLayoutItemMultiList: [[{}, {}]]
+        }, {
+            layoutTemplate: 'LT_L',
+            renderType: 'CATALOGUE',
+            title: '',
+            recommendLayoutItemMultiList: [[{}, {}, {}, {}, {}]]
         }];
         state.subjectLayoutList = reloadData.subjectLayoutList ? reloadData.subjectLayoutList : [];
     }
@@ -70,10 +85,17 @@ const actions = {
             resolve('success');
         });
     },
-    // 设置推荐节目或者专题
-    setRecommendItem({commit}, {block, row, index, item}) {
+    // 设置推荐单个节目或者专题
+    setRecommendItem({commit}, {model, row, index, item}) {
         return new Promise((resolve) => {
-            commit('setRecommendItem', {block, row, index, item});
+            commit('setRecommendItem', {model, row, index, item});
+            resolve('success');
+        });
+    },
+    // 设置推荐节目类型或者直播频道
+    setCatalogue({commit}, {model, item}) {
+        return new Promise((resolve) => {
+            commit('setCatalogue', {model, item});
             resolve('success');
         });
     },
@@ -90,7 +112,10 @@ const actions = {
     },
     // 刷新的时候从localStorage中赋值给state
     reloadData({commit}, reloadData) {
-        commit('reloadData', reloadData);
+        return new Promise(resolve => {
+            commit('reloadData', reloadData);
+            resolve('success');
+        });
     },
     // 恢复state初始状态，删除localStorage中相应的数据
     resumeState({commit}) {
