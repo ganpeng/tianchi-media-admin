@@ -6,6 +6,7 @@ import person from './person';
 import todayRecommend from './navigation/today_recommend';
 import programme from './programme';
 import programmeVideo from './programme_video';
+import video from './video';
 
 export default {
     permission,
@@ -13,5 +14,6 @@ export default {
     person,
     todayRecommend,
     programme,
-    programmeVideo
+    programmeVideo,
+    video
 };

@@ -13,6 +13,8 @@ const defaultProgrammeVideo = {
     playUrl: '',
     // 详情
     description: '',
+    // 视频封面图
+    coverImage: {},
     // 时长,单位杪
     takeTimeInSec: '',
     // 用于排序，返回数据时倒叙排列
@@ -96,6 +98,9 @@ const mutations = {
             videoList: [],
             featureList: []
         };
+    },
+    setCoverImage(state, payload) {
+        state.currentProgrammeVideo.coverImage = payload.posterImage;
     },
     addVideoToList(state) {
         state.currentProgrammeVideo.uid = uuid();

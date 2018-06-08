@@ -46,6 +46,11 @@ export const PROGRAMME_DIMENSION = [
         value: '240*350',
         label: '推荐位六分位图：240*350'
     },
+    // 横版海报图  节目必须海报图
+    {
+        value: '240*350',
+        label: '横版海报图：240*350'
+    },
     // 推荐位四分位图
     {
         value: '386*225',
@@ -87,4 +92,12 @@ export const PERSON_DIMENSION = [
     }
 ];
 
-export default {ADVERT_DIMENSION, PROGRAMME_DIMENSION, PERSON_DIMENSION};
+//  视频封面图
+export const VIDEO_COVER_DIMENSION = [
+    {
+        value: '370*209',
+        label: '视频封面图：370*209'
+    }
+];
+
+export default {ADVERT_DIMENSION, PROGRAMME_DIMENSION, PERSON_DIMENSION, VIDEO_COVER_DIMENSION};

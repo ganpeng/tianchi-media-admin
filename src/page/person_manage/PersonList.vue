@@ -137,7 +137,8 @@
             }),
             // 获取人物列表
             areaLabel(areaValue) {
-                return this.areaOptions.find((areaItem) => areaItem.value === areaValue).label;
+                let area = this.areaOptions.find((areaItem) => areaItem.value === areaValue);
+                return area ? area.label : '';
             },
             mainRoleLabel(mainRoleValue) {
                 return this.mainRoleOptions.find((mainRoleItem) => mainRoleItem.value === mainRoleValue).label;

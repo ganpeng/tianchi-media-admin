@@ -51,6 +51,7 @@ import LiveAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/Live
 import VolumeBarAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/VolumeBarAdvertGroupList';
 import DialogAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/DialogAdvertGroupList';
 import DetailPageAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/DetailPageAdvertGroupList';
+import VideoList from 'sysPage/video_manage/VideoList';
 
 Vue.use(Router);
 
@@ -345,6 +346,12 @@ let router = new Router({
                     path: '/advert-launch/detailpage/list',
                     name: 'DetailPageAdvertList',
                     component: DetailPageAdvertGroupList
+                },
+                //  视频管理
+                {
+                    path: '/video-manage/list',
+                    name: 'VideoList',
+                    component: VideoList
                 }
             ]
         },

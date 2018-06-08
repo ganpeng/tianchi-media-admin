@@ -14,7 +14,8 @@ const defaultPerson = {
     posterImageList: [],
     programmeList: [],
     updatedAt: '',
-    weight: ''
+    weight: '',
+    avatarImage: {}
 };
 
 const state = {
@@ -49,6 +50,9 @@ const getters = {
     },
     posterImageList(state) {
         return state.currentPerson && state.currentPerson.posterImageList;
+    },
+    avatarImage(state) {
+        return state.currentPerson && state.currentPerson.avatarImage;
     }
 };
 
@@ -102,6 +106,7 @@ const mutations = {
         state.currentPerson.posterImageList = state.currentPerson.posterImageList.map((img) => {
             if (img.id === payload.id) {
                 img.checked = true;
+                state.currentPerson.avatarImage = img;
             } else {
                 delete img.checked;
             }

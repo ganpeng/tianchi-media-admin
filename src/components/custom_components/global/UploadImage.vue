@@ -148,7 +148,7 @@
             checkImage(img) {
                 let {width, height} = img;
                 let [sizeWidth, sizeHeight] = this.form.spec.split('*');
-                if (width !== sizeWidth || height !== sizeHeight) {
+                if (width !== parseInt(sizeWidth) || height !== parseInt(sizeHeight)) {
                     return false;
                 } else {
                     return true;
@@ -168,7 +168,7 @@
             },
             async uploadRequest(obj) {
                 let { checkedStatus, img } = await this.beforeUploadHandler(obj.file);
-                if (!checkedStatus) {
+                if (checkedStatus) {
                     let formData = new FormData();
                     formData.append('file', obj.file);
                     this.isLoading = true;
@@ -185,9 +185,6 @@
                                 this.successHandler({posterImage: obj});
                                 this.cancelHandler();
                             }
-                            // else if (res && res.code === 3300) {
-                            //     this.$refs.uploadImageForm.resetFields();
-                            // }
                         }).finally(() => {
                             this.isLoading = false;
                         });

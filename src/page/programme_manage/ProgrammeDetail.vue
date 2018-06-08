@@ -208,7 +208,7 @@
                                     @input="inputHandler($event, 'featureVideoCount')" >
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="评分" required prop="score">
+                            <el-form-item label="评分" prop="score">
                                 <el-input
                                     type="number"
                                     :disabled="readonly"
@@ -354,6 +354,7 @@
                         { required: true, message: '请输入节目描述', trigger: 'blur' }
                     ],
                     score: [
+                        { required: true, message: '请输入节目评分', trigger: 'blur' },
                         { validator: checkScore, trigger: 'blur' }
                     ],
                     releaseAt: [

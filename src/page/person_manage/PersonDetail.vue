@@ -114,9 +114,27 @@
                 if (posterImageList.length <= 0) {
                     this.$message.error('请上传图片');
                     return false;
-                } else {
-                    next();
                 }
+
+                if (posterImageList.length > 2) {
+                    this.$message.error('只能上传两张图片');
+                    return false;
+                }
+
+                let sizeOne = posterImageList.findIndex((img) => img.width === '200' && img.height === '200');
+                let sizeTwo = posterImageList.findIndex((img) => img.width === '700' && img.height === '1000');
+
+                if (sizeOne < 0 || sizeTwo < 0) {
+                    this.$message.error('人物的头像和背景图都必须上传且只能上传一张');
+                    return false;
+                }
+
+                if (!this.person.avatarImage) {
+                    this.$message.error('请选择人物默认的封面图');
+                    return false;
+                }
+
+                next();
             },
             // 重制表单
             reset() {
