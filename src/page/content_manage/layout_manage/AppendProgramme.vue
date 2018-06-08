@@ -15,7 +15,7 @@
         <keep-alive>
             <component :is="currentView"
                        :selectedProgrammeList="selectedProgrammeList"
-                       ref="selectMultipleProgramme"
+                       ref="currentComponent"
                        model="SINGLE"
                        v-on:setProgramme="setProgramme"
                        v-on:setPosterImage="setPosterImage"
@@ -37,14 +37,14 @@
 <script>
     import ProgrammeSecondStep from './ProgrammeSecondStep';
     import SelectMultipleProgramme from '../subject_manage/programme_subject/SelectMultipleProgramme';
-    import SetSubjectProgrammeThird from './SetSubjectProgrammeThird';
+    import SetCornerMarks from './SetCornerMarks';
 
     export default {
         name: 'AppendProgramme',
         components: {
             ProgrammeSecondStep,
             SelectMultipleProgramme,
-            SetSubjectProgrammeThird
+            SetCornerMarks
         },
         data() {
             return {
@@ -64,7 +64,7 @@
                     case 1:
                         return 'ProgrammeSecondStep';
                     case 2:
-                        return 'SetSubjectProgrammeThird';
+                        return 'SetCornerMarks';
                     default:
                         return 'SelectMultipleProgramme';
                 }
@@ -75,7 +75,7 @@
         },
         methods: {
             init() {
-                this.$refs.selectMultipleProgramme.init();
+                this.$refs.currentComponent.init();
             },
             // 获取节目详情
             getProgrammeDetail() {
@@ -119,6 +119,10 @@
             },
             // 完成
             complete() {
+                // 检测当前是否完成角标设置
+                if (!this.$refs.currentComponent.setCornerMarksSetting()) {
+                    return;
+                }
                 // 组建推荐节目对象，保存到store中
                 let programme = {
                     cornerMark: this.checkedCornerMarks,

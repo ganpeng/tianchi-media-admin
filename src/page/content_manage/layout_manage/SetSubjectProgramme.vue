@@ -8,6 +8,7 @@
         </el-steps>
         <keep-alive>
             <component
+                ref="SetSubjectProgrammeCornerMarks"
                 :is="currentView"
                 :programmeList="programmeList"
                 :programme="programme"
@@ -28,14 +29,14 @@
 <script>
     import SetSubjectProgrammeFirst from './SetSubjectProgrammeFirst';
     import SetSubjectProgrammeSecond from './SetSubjectProgrammeSecond';
-    import SetSubjectProgrammeThird from './SetSubjectProgrammeThird';
+    import SetCornerMarks from './SetCornerMarks';
 
     export default {
         name: 'SetSubjectProgramme',
         components: {
             SetSubjectProgrammeFirst,
             SetSubjectProgrammeSecond,
-            SetSubjectProgrammeThird
+            SetCornerMarks
         },
         props: ['programmeList'],
         data() {
@@ -54,7 +55,7 @@
                     case 1:
                         return 'SetSubjectProgrammeSecond';
                     case 2:
-                        return 'SetSubjectProgrammeThird';
+                        return 'SetCornerMarks';
                     default:
                         return 'SetSubjectProgrammeFirst';
                 }
@@ -98,9 +99,14 @@
             },
             // 完成
             complete() {
+                // 检测当前是否完成角标设置
+                if (!this.$refs.SetSubjectProgrammeCornerMarks.setCornerMarksSetting()) {
+                    return;
+                }
                 // 组成节目
                 let programmeItem = {
                     id: this.programme.id,
+                    name: this.programme.name,
                     coverImage: this.coverImage,
                     cornerMark: this.checkedCornerMarks
                 };

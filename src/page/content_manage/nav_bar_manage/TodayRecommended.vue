@@ -40,12 +40,12 @@
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
-                        <template v-if="item.cornerMark">
-                            <span class="corner-mark left-top">{{item.cornerMark.leftTop.caption}}</span>
-                            <span class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
-                            <span class="corner-mark right-top">{{item.cornerMark.rightTop.caption}}</span>
-                            <span class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
-                        </template>
+                        <span v-if="item.cornerMark && item.cornerMark.leftTop" class="corner-mark left-top">{{item.cornerMark.leftTop.caption}}</span>
+                        <span v-if="item.cornerMark && item.cornerMark.leftBottom" class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
+                        <span v-if="item.cornerMark && item.cornerMark.rightTop" class="corner-mark right-top">
+                            <img :src="item.cornerMark.rightTop.imageUri" :alt="item.cornerMark.rightTop.caption">
+                        </span>
+                        <span v-if="item.cornerMark && item.cornerMark.rightBottom" class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
                     </div>
                 </li>
             </ul>
@@ -68,12 +68,12 @@
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
-                        <template v-if="item.cornerMark">
-                            <span class="corner-mark left-top">{{item.cornerMark.leftTop.caption}}</span>
-                            <span class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
-                            <span class="corner-mark right-top">{{item.cornerMark.rightTop.caption}}</span>
-                            <span class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
-                        </template>
+                        <span v-if="item.cornerMark && item.cornerMark.leftTop" class="corner-mark left-top">{{item.cornerMark.leftTop.caption}}</span>
+                        <span v-if="item.cornerMark && item.cornerMark.leftBottom" class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
+                        <span v-if="item.cornerMark && item.cornerMark.rightTop" class="corner-mark right-top">
+                            <img :src="item.cornerMark.rightTop.imageUri" :alt="item.cornerMark.rightTop.caption">
+                        </span>
+                        <span v-if="item.cornerMark && item.cornerMark.rightBottom" class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
                     </div>
                 </li>
             </ul>
@@ -99,12 +99,14 @@
                                 <img :src="item.coverImage.uri" :alt="item.coverImage.name"/>
                                 <div class="figure-name">{{item.name}}</div>
                             </div>
-                            <template v-if="item.cornerMark">
-                                <span class="corner-mark left-top">{{item.cornerMark.leftTop.caption}}</span>
-                                <span class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
-                                <span class="corner-mark right-top">{{item.cornerMark.rightTop.caption}}</span>
-                                <span class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
-                            </template>
+                            <span v-if="item.cornerMark && item.cornerMark.leftTop" class="corner-mark left-top">{{item.cornerMark.leftTop.caption}}</span>
+                            <span v-if="item.cornerMark && item.cornerMark.leftBottom" class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
+                            <span v-if="item.cornerMark && item.cornerMark.rightTop" class="corner-mark right-top">
+                            <img :src="item.cornerMark.rightTop.imageUri"
+                                 :alt="item.cornerMark.rightTop.caption">
+                            </span>
+                            <span v-if="item.cornerMark && item.cornerMark.rightBottom"
+                                  class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
                         </li>
                     </ul>
                     <div class="model-operate">
