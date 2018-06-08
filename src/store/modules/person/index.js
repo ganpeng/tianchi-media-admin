@@ -73,10 +73,16 @@ const mutations = {
     },
     setCurrentPerson(state, payload) {
         state.currentPerson = payload.currentPerson;
-        let { posterImageList } = state.currentPerson;
+        let { posterImageList, avatarImage } = state.currentPerson;
         if (!Array.isArray(posterImageList)) {
             state.currentPerson.posterImageList = [];
         }
+        state.currentPerson.posterImageList = state.currentPerson.posterImageList.map((item) => {
+            if (item.id === (avatarImage ? avatarImage.id : '')) {
+                item.checked = true;
+            }
+            return item;
+        });
     },
     updateCurrentPerson(state, payload) {
         state.currentPerson = Object.assign({}, state.currentPerson, payload);
@@ -99,7 +105,7 @@ const mutations = {
     deletePosterImage(state, payload) {
         let {posterImageList} = state.currentPerson;
         state.currentPerson.posterImageList = posterImageList.filter((image) => {
-            return image.fileId !== payload.id;
+            return image.id !== payload.id;
         });
     },
     checkPosterImage(state, payload) {

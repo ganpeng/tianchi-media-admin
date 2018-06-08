@@ -10,7 +10,7 @@ switch (npmEventName) {
     // develop url
     case 'dev':
     case 'dev:dev':
-        proxyTarget = 'http://dev-gateway.backend.tianchimedia.com';
+        proxyTarget = 'http://dev-admin.tianchiapi.com';
         break;
     // test url
     case 'dev:test':

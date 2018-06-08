@@ -48,8 +48,8 @@ export const PROGRAMME_DIMENSION = [
     },
     // 横版海报图  节目必须海报图
     {
-        value: '240*350',
-        label: '横版海报图：240*350'
+        value: '250*360',
+        label: '横版海报图：250*360'
     },
     // 推荐位四分位图
     {

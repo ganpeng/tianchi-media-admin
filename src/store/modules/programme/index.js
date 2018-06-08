@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import {checkImageExist} from '@/util/formValidate';
 
-const programmePostFields = ['copyrightStartedAt', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'releaseArea', 'category', 'businessOperator', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
+const programmePostFields = ['copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'releaseArea', 'category', 'businessOperator', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
@@ -37,6 +37,8 @@ const defaultProgramme = {
     releaseArea: '',
     // 节目发布状态 ENUM('RELEASED', 'DRAFT', 'PRE_RELEASED') DEFAULT 'DRAFT'
     releaseStatus: '',
+    // 节目默认图片
+    coverImage: {},
     // 节目类别
     category: {},
     // 发行商
@@ -253,6 +255,13 @@ const mutations = {
     },
     setCurrentProgramme(state, payload) {
         state.currentProgramme = payload.currentProgramme;
+        let {coverImage} = state.currentProgramme;
+        state.currentProgramme.posterImageList = state.currentProgramme.posterImageList.map((item) => {
+            if (item.id === (coverImage ? coverImage.id : '')) {
+                item.checked = true;
+            }
+            return item;
+        });
     },
     updateCurrentProgramme(state, payload) {
         state.currentProgramme = Object.assign({}, state.currentProgramme, payload);
@@ -370,6 +379,7 @@ const mutations = {
         state.currentProgramme.posterImageList = state.currentProgramme.posterImageList.map((img) => {
             if (img.id === payload.id) {
                 img.checked = true;
+                state.currentProgramme.coverImage = img;
             } else {
                 delete img.checked;
             }

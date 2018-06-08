@@ -171,17 +171,18 @@
                 if (checkedStatus) {
                     let formData = new FormData();
                     formData.append('file', obj.file);
+                    formData.append('fileNames', this.form.name);
                     this.isLoading = true;
-                    this.$service.uploadImage({formData, fileName: this.form.name})
+                    this.$service.uploadImage({formData})
                         .then((res) => {
-                            if (res && (res.code === 0 || res.code === 3300)) {
-                                let data = res.data;
+                            if (res && (res.code === 0)) {
+                                let data = res.data[0];
                                 let obj = {};
                                 obj.id = data.id;
                                 obj.height = img.height;
                                 obj.width = img.width;
                                 obj.uri = data.url;
-                                obj.name = data.name;
+                                obj.name = data.fileName;
                                 this.successHandler({posterImage: obj});
                                 this.cancelHandler();
                             }

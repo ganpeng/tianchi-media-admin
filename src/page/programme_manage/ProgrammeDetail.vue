@@ -461,25 +461,27 @@
                 let {id} = this.$route.params;
                 this.$refs.createProgramForm.validate(value => {
                     if (value) {
-                        this.updateProgramme(id)
-                            .then((res) => {
-                                if (res && res.code === 0) {
-                                    this.createMultProgrammeVideo(id)
-                                        .then((...resList) => {
-                                            this.deleteVideoList({list: resList});
-                                            this.getProgrammeVideoListById(id);
-                                            this.$message({
-                                                type: 'success',
-                                                message: '保存成功'
+                        this.checkImage(() => {
+                            this.updateProgramme(id)
+                                .then((res) => {
+                                    if (res && res.code === 0) {
+                                        this.createMultProgrammeVideo(id)
+                                            .then((...resList) => {
+                                                this.deleteVideoList({list: resList});
+                                                this.getProgrammeVideoListById(id);
+                                                this.$message({
+                                                    type: 'success',
+                                                    message: '保存成功'
+                                                });
                                             });
+                                    } else {
+                                        this.$message({
+                                            type: 'error',
+                                            message: '节目保存失败'
                                         });
-                                } else {
-                                    this.$message({
-                                        type: 'error',
-                                        message: '节目保存失败'
-                                    });
-                                }
-                            });
+                                    }
+                                });
+                        });
                     } else {
                         return false;
                     }
@@ -611,6 +613,37 @@
                 this.previewImage.display = true;
                 this.previewImage.list = this.programme.posterImageList;
                 this.previewImage.activeIndex = index;
+            },
+            checkImage(next) {
+                const {posterImageList, coverImage} = this.programme;
+                if (posterImageList && posterImageList.length < 2) {
+                    this.$message({type: 'error', message: '推荐位六分位图和横版海报图必须上传且只能上传一张'});
+                    return false;
+                }
+
+                let sizeOne = posterImageList.findIndex((img) => {
+                    return parseInt(img.width) === 240 && parseInt(img.height) === 350;
+                });
+                let sizeTwo = posterImageList.findIndex((img) => {
+                    return parseInt(img.width) === 250 && parseInt(img.height) === 360;
+                });
+
+                if (sizeOne < 0) {
+                    this.$message({type: 'error', message: '推荐位六分位图必须上传且只能上传一张'});
+                    return false;
+                }
+
+                if (sizeTwo < 0) {
+                    this.$message({type: 'error', message: '横版海报图必须上传且只能上传一张'});
+                    return false;
+                }
+
+                if (!coverImage) {
+                    this.$message({type: 'error', message: '请选择默认的节目海报'});
+                    return false;
+                }
+
+                next();
             }
         }
     };

@@ -121,8 +121,8 @@
                     return false;
                 }
 
-                let sizeOne = posterImageList.findIndex((img) => img.width === '200' && img.height === '200');
-                let sizeTwo = posterImageList.findIndex((img) => img.width === '700' && img.height === '1000');
+                let sizeOne = posterImageList.findIndex((img) => parseInt(img.width) === 200 && parseInt(img.height) === 200);
+                let sizeTwo = posterImageList.findIndex((img) => parseInt(img.width) === 700 && parseInt(img.height) === 1000);
 
                 if (sizeOne < 0 || sizeTwo < 0) {
                     this.$message.error('人物的头像和背景图都必须上传且只能上传一张');
