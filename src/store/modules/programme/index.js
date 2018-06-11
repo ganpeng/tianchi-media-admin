@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import {checkImageExist} from '@/util/formValidate';
 
-const programmePostFields = ['copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'releaseArea', 'category', 'businessOperator', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
+const programmePostFields = ['copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'category', 'businessOperator', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
@@ -34,7 +34,7 @@ const defaultProgramme = {
     // 发布时间
     releaseAt: '',
     // 发布地区
-    releaseArea: '',
+    produceAreaList: [],
     // 节目发布状态 ENUM('RELEASED', 'DRAFT', 'PRE_RELEASED') DEFAULT 'DRAFT'
     releaseStatus: '',
     // 节目默认图片
@@ -91,7 +91,7 @@ const defaultState = {
     keyword: '',
     releaseStatus: '',
     releaseAt: '',
-    releaseArea: '',
+    produceAreaList: [],
     programmeCategory: {},
     currentTypeList: [],
     programmeType: [],
@@ -106,7 +106,7 @@ const defaultState = {
 };
 
 const state = JSON.parse(JSON.stringify(defaultState));
-const searchFields = ['keyword', 'releaseStatus', 'releaseArea', 'releaseAt', 'programmeCategory', 'programmeType', 'pageNum', 'pageSize'];
+const searchFields = ['keyword', 'releaseStatus', 'produceAreaList', 'releaseAt', 'programmeCategory', 'programmeType', 'pageNum', 'pageSize'];
 
 /**
  *  通过id获取节目
@@ -155,8 +155,8 @@ const getters = {
     searchCurrentTypeList(state) {
         return state.currentTypeList;
     },
-    releaseArea(state) {
-        return state.releaseArea;
+    produceAreaList(state) {
+        return state.produceAreaList;
     },
     releaseAt(state) {
         return state.releaseAt;
@@ -270,8 +270,12 @@ const mutations = {
         state.programmeTagList.push(payload.tag);
     },
     setSearchField(state, payload) {
-        if (payload.releaseArea !== undefined) {
-            state.releaseArea = payload.releaseArea;
+        if (payload.produceAreaList !== undefined) {
+            if (payload.produceAreaList === '') {
+                state.produceAreaList = [];
+            } else {
+                state.produceAreaList = payload.produceAreaList;
+            }
         }
         if (payload.releaseAt !== undefined) {
             state.releaseAt = payload.releaseAt;
@@ -341,7 +345,7 @@ const mutations = {
         state.keyword = '';
         state.releaseStatus = '';
         state.releaseAt = '';
-        state.releaseArea = '';
+        state.produceAreaList = [];
         state.programmeCategory = {};
         state.programmeType = [];
    },

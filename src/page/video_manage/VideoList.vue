@@ -23,32 +23,7 @@
                 <el-button type="primary" plain @click="showVideoUploadDialog">新增视频</el-button>
             </el-form-item>
         </el-form>
-        <el-table :data="video.list" border style="width:100%">
-            <el-table-column prop="id" align="center" width="240px" label="编号"></el-table-column>
-            <el-table-column prop="name" align="center" width="200px" label="视频名称"></el-table-column>
-            <el-table-column prop="link" align="center" width="300px" label="视频链接"></el-table-column>
-            <el-table-column prop="duration" align="center" label="视频时长"></el-table-column>
-            <el-table-column align="center" width="120px" label="上传日期">
-                <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
-                </template>
-            </el-table-column>
-            <el-table-column align="center" width="120px" fixed="right" label="操作">
-                <template slot-scope="scope">
-                    <el-button type="text" size="small">查看</el-button>
-                    <el-button type="text" size="small">编辑</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="video.pageNum"
-            :page-sizes="[5, 10, 20, 30, 50]"
-            :page-size="video.pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="video.total">
-        </el-pagination>
+        <video-table></video-table>
         <el-dialog
             title="上传视频"
             :visible.sync="videoUploadDialogVisible"
@@ -78,8 +53,12 @@
 </template>
 <script>
     import {mapGetters} from 'vuex';
+    import VideoTable from './VideoTable';
     export default {
         name: 'PersonList',
+        components: {
+            VideoTable
+        },
         data() {
             return {
                 videoUploadDialogVisible: false,

@@ -45,11 +45,12 @@
                 </el-form-item>
                 <el-form-item label="地区">
                     <el-select
-                        :value="releaseArea"
+                        :value="produceAreaList"
                         clearable
                         filterable
-                        @clear="clearSearchField('releaseArea')"
-                        @change="inputHandler($event, 'releaseArea')"
+                        multiple
+                        @clear="clearSearchField('produceAreaList')"
+                        @change="inputHandler($event, 'produceAreaList')"
                         placeholder="请选择制片地区"
                     >
                         <el-option
@@ -108,9 +109,9 @@
                         {{ scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
                     </template>
                 </el-table-column>
-                <el-table-column prop="releaseArea" align="center" label="地区">
+                <el-table-column prop="produceAreaList" align="center" label="地区">
                     <template slot-scope="scope">
-                        {{areaLabel(scope.row.releaseArea)}}
+                        {{areaLabel(scope.row.produceAreaList)}}
                     </template>
                 </el-table-column>
                 <el-table-column align="center" width="100px" label="分类">
@@ -200,7 +201,7 @@ export default {
             searchCategory: 'programme/searchCategory',
             searchType: 'programme/searchType',
             searchCurrentTypeList: 'programme/searchCurrentTypeList',
-            releaseArea: 'programme/releaseArea',
+            produceAreaList: 'programme/produceAreaList',
             releaseAt: 'programme/releaseAt',
             keyword: 'programme/keyword',
             categroyList: 'programme/categroyList'

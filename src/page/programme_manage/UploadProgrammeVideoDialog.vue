@@ -6,67 +6,47 @@
         :show-close="false"
         :close-on-click-modal="false"
         :close-on-press-escape="false">
-
-        <!-- 步骤组件  -->
-        <el-steps v-if="false" style="text-align:left;" align-c1nter :active="active" finish-status="success">
-            <el-step title="请选择视频"></el-step>
-            <el-step title="完善视频信息"></el-step>
-        </el-steps>
-
-        <!--  第一步的内容 -->
-        <div v-if="false" class="video-list">
-            <el-form :inline="true" class="demo-form-inline search-form">
-                <el-form-item class="search">
-                    <el-input
-                        placeholder="搜索你想要的信息"
-                        clearable
-                    >
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary">搜索</el-button>
-                </el-form-item>
-            </el-form>
-            <el-table :data="videoListObj.list" border style="width:100%;margin-left:0">
-                <el-table-column prop="id" align="center" label="选择">
-                    <template slot-scope="scope">
-                        <el-checkbox @change="advertChangeHandler($event, scope.row.id)" v-model="scope.row.checked"></el-checkbox>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="id" align="center" width="240px" label="编号"></el-table-column>
-                <el-table-column prop="name" align="center" width="200px" label="视频名称"></el-table-column>
-                <el-table-column prop="link" align="center" width="300px" label="视频链接"></el-table-column>
-                <el-table-column prop="duration" align="center" label="视频时长"></el-table-column>
-                <el-table-column align="center" width="120px" label="上传日期">
-                    <template slot-scope="scope">
-                        {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" width="120px" fixed="right" label="操作">
-                    <template slot-scope="scope">
-                        <el-button type="text" size="small">查看</el-button>
-                        <el-button type="text" size="small">编辑</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="videoListObj.pageNum"
-                :page-sizes="[5, 10, 20, 30, 50]"
-                :page-size="videoListObj.pageSize"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="videoListObj.total">
-            </el-pagination>
-        </div>
-
-        <!-- 第二步的内容 -->
+        <!-- 选择视频的表格 -->
+        <el-dialog
+            title="选择视频"
+            width="80%"
+            :visible.sync="selectVideoDialogVisible"
+            :show-close="false"
+            :close-on-click-modal="false"
+            :close-on-press-escape="false"
+            :append-to-body="true">
+            <div class="video-list">
+                <el-form :inline="true">
+                    <el-form-item class="search">
+                        <el-input
+                            placeholder="搜索你想要的信息"
+                            clearable
+                        >
+                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary">搜索</el-button>
+                    </el-form-item>
+                </el-form>
+                <video-table></video-table>
+                <div slot="footer" class="dialog-footer text-right margin-top-l">
+                    <el-button @click="closeSelectVideoDialog">取 消</el-button>
+                    <el-button type="primary" @click="selectVideoEnter">确 定</el-button>
+                </div>
+            </div>
+        </el-dialog>
         <el-form :model="video" :rules="uploadVideoRules" ref="uploadVideoForm" class="form-block" label-width="100px">
+            <el-form-item label="选择视频">
+                <el-button v-if="!readonly" type="primary" @click="selectVideo">选择</el-button>
+            </el-form-item>
             <el-form-item label="视频ID">
                 <el-input :value="video.commonId" disabled></el-input>
             </el-form-item>
-            <el-form-item label="视频名称" prop="name">
+            <el-form-item
+                ref="name"
+                label="视频名称"
+                prop="name">
                 <el-input
                     :disabled="readonly"
                     :value="video.name"
@@ -103,18 +83,16 @@
             </el-form-item>
             <el-form-item label="视频封面图">
                 <el-button v-if="!readonly" type="primary" @click="uploadImageHandler">上传封面图<i class="el-icon-upload el-icon--right"></i></el-button>
-                    <ul v-if="video.coverImage" class="cover-list">
-                        <li class="img-item">
-                            <div>
-                                <img :src=" video.coverImage.uri" alt="">
-                            </div>
-                        </li>
-                    </ul>
+                <ul v-if="video.coverImage" class="cover-list">
+                    <li class="img-item">
+                        <img :src="video.coverImage.uri" alt="">
+                    </li>
+                </ul>
             </el-form-item>
             <el-form-item label="视频时长">
                 <el-input
-                    :value="video.takeTimeInSec"
-                    :disabled="readonly"
+                    :value="duration(video.takeTimeInSec)"
+                    :disabled="true"
                 ></el-input>
             </el-form-item>
             <el-form-item
@@ -175,10 +153,6 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="cancelHandler">取 消</el-button>
-            <!--
-            <el-button v-if="active === 1" @click="cancelHandler">上一步</el-button>
-            <el-button v-if="active === 0" @click="cancelHandler">下一步</el-button>
-            -->
             <el-button
                 v-if="videoStatus !== 2"
                 type="primary"
@@ -199,6 +173,7 @@
     import role from '@/util/config/role';
     import dimension from '@/util/config/dimension';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import VideoTable from '../video_manage/VideoTable';
 
     export default {
         props: {
@@ -212,7 +187,8 @@
             }
         },
         components: {
-            UploadImage
+            UploadImage,
+            VideoTable
         },
         data() {
             return {
@@ -222,6 +198,7 @@
                 size: dimension.VIDEO_COVER_DIMENSION,
                 active: 0,
                 imageUploadDialogVisible: false,
+                selectVideoDialogVisible: false,
                 uploadVideoRules: {
                     name: [{ required: true, message: '请输入视频名称', trigger: 'blur, change' }],
                     description: [{ required: true, message: '请输入视频简介', trigger: 'blur, change' }],
@@ -254,6 +231,11 @@
             },
             readonly() {
                 return this.videoStatus === 2;
+            },
+            duration() {
+                return (seconds) => {
+                    return this.$util.fromSecondsToTime(seconds);
+                };
             }
         },
         methods: {
@@ -262,7 +244,8 @@
                 resetProgrammeVideo: 'programmeVideo/resetProgrammeVideo',
                 addVideoToList: 'programmeVideo/addVideoToList',
                 setCoverImage: 'programmeVideo/setCoverImage',
-                updateCurrentProgrammeVideoItem: 'programme/updateCurrentProgrammeVideoItem'
+                updateCurrentProgrammeVideoItem: 'programme/updateCurrentProgrammeVideoItem',
+                syncVideoMetaData: 'programmeVideo/syncVideoMetaData'
             }),
             ...mapActions({
                 updateProgrammeVideo: 'programmeVideo/updateProgrammeVideo',
@@ -271,11 +254,8 @@
             cancelHandler() {
                 this.$emit('changeVideoDialogStatus', false);
                 // 清楚校验的规则
+                this.resetProgrammeVideo();
                 this.$refs.uploadVideoForm.clearValidate();
-                // 清楚表单中的数据
-                setTimeout(() => {
-                    this.resetProgrammeVideo();
-                }, 100);
             },
             successHandler() {
                 this.$refs.uploadVideoForm.validate(value => {
@@ -303,6 +283,28 @@
             },
             closeImageDialog() {
                 this.imageUploadDialogVisible = false;
+            },
+            closeSelectVideoDialog() {
+                this.selectVideoDialogVisible = false;
+            },
+            selectVideo() {
+                this.selectVideoDialogVisible = true;
+            },
+            selectVideoEnter() {
+                let id = this.videoListObj.selectedVideoId;
+                let videoList = this.videoListObj.list;
+                if (id) {
+                    let videoObj = videoList.find((item) => item.id === id);
+                    if (videoObj) {
+                        this.syncVideoMetaData({video: videoObj});
+                        this.closeSelectVideoDialog();
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: '视频选择失败'
+                        });
+                    }
+                }
             }
         }
     };

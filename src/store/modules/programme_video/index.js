@@ -40,6 +40,7 @@ const defaultProgrammeVideo = {
     createdAt: '',
     // 修改时间
     updatedAt: '',
+    // 前端需要用到的id
     uid: ''
 };
 
@@ -101,6 +102,10 @@ const mutations = {
     },
     setCoverImage(state, payload) {
         state.currentProgrammeVideo.coverImage = payload.posterImage;
+    },
+    syncVideoMetaData(state, payload) {
+        state.currentProgrammeVideo.playUrl = payload.video.playUrl;
+        state.currentProgrammeVideo.takeTimeInSec = payload.video.takeTimeInSec;
     },
     addVideoToList(state) {
         state.currentProgrammeVideo.uid = uuid();

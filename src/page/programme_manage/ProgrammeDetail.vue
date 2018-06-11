@@ -54,10 +54,11 @@
                                     placeholder="选择年">
                                 </el-date-picker>
                             </el-form-item>
-                            <el-form-item label="所属地区" prop="releaseArea">
+                            <el-form-item label="所属地区" prop="produceAreaList">
                                 <el-select
-                                    :value="programme.releaseArea"
-                                    @change="inputHandler($event, 'releaseArea')"
+                                    :value="programme.produceAreaList"
+                                    @change="inputHandler($event, 'produceAreaList')"
+                                    multiple
                                     clearable
                                     filterable
                                     placeholder="请选择"
@@ -360,7 +361,7 @@
                     releaseAt: [
                         { required: true, message: '请输入上映日期', trigger: 'blur' }
                     ],
-                    releaseArea: [
+                    produceAreaList: [
                         { required: true, message: '请输入所属地区', trigger: 'blur' }
                     ],
                     category: [
@@ -595,7 +596,9 @@
             addTag() {
                 this.$prompt('请输入新关键字', '提示', {
                     confirmButtonText: '确定',
-                    cancelButtonText: '取消'
+                    cancelButtonText: '取消',
+                    inputPattern: /\S/,
+                    inputErrorMessage: '关键字不能为空'
                 }).then(({ value }) => {
                     this.addProgrammeTag({tag: value});
                     this.$message({
@@ -615,33 +618,33 @@
                 this.previewImage.activeIndex = index;
             },
             checkImage(next) {
-                const {posterImageList, coverImage} = this.programme;
-                if (posterImageList && posterImageList.length < 2) {
-                    this.$message({type: 'error', message: '推荐位六分位图和横版海报图必须上传且只能上传一张'});
-                    return false;
-                }
+                // const {posterImageList, coverImage} = this.programme;
+                // if (posterImageList && posterImageList.length < 2) {
+                //     this.$message({type: 'error', message: '推荐位六分位图和横版海报图必须上传且只能上传一张'});
+                //     return false;
+                // }
 
-                let sizeOne = posterImageList.findIndex((img) => {
-                    return parseInt(img.width) === 240 && parseInt(img.height) === 350;
-                });
-                let sizeTwo = posterImageList.findIndex((img) => {
-                    return parseInt(img.width) === 250 && parseInt(img.height) === 360;
-                });
+                // let sizeOne = posterImageList.findIndex((img) => {
+                //     return parseInt(img.width) === 240 && parseInt(img.height) === 350;
+                // });
+                // let sizeTwo = posterImageList.findIndex((img) => {
+                //     return parseInt(img.width) === 250 && parseInt(img.height) === 360;
+                // });
 
-                if (sizeOne < 0) {
-                    this.$message({type: 'error', message: '推荐位六分位图必须上传且只能上传一张'});
-                    return false;
-                }
+                // if (sizeOne < 0) {
+                //     this.$message({type: 'error', message: '推荐位六分位图必须上传且只能上传一张'});
+                //     return false;
+                // }
 
-                if (sizeTwo < 0) {
-                    this.$message({type: 'error', message: '横版海报图必须上传且只能上传一张'});
-                    return false;
-                }
+                // if (sizeTwo < 0) {
+                //     this.$message({type: 'error', message: '横版海报图必须上传且只能上传一张'});
+                //     return false;
+                // }
 
-                if (!coverImage) {
-                    this.$message({type: 'error', message: '请选择默认的节目海报'});
-                    return false;
-                }
+                // if (!coverImage) {
+                //     this.$message({type: 'error', message: '请选择默认的节目海报'});
+                //     return false;
+                // }
 
                 next();
             }

@@ -1,17 +1,18 @@
 const state = {
+    selectedVideoId: '',
     list: [
         {
             id: 1,
             name: '视频1',
-            link: 'http://vjs.zencdn.net/v/oceans.mp4',
-            duration: '1:20:30',
+            playUrl: 'http://vjs.zencdn.net/v/oceans.mp4',
+            takeTimeInSec: '6000000',
             createdAt: new Date()
         },
         {
             id: 2,
             name: '视频2',
-            link: 'http://vjs.zencdn.net/v/oceans.mp4',
-            duration: '2:30:10',
+            playUrl: 'http://vjs.zencdn.net/v/oceans.mp4',
+            takeTimeInSec: '8000000',
             createdAt: new Date()
         }
     ],
@@ -32,6 +33,10 @@ const mutations = {
         state.pageSize = payload.pageSize;
         state.pageNum = payload.pageNum;
         state.total = payload.total;
+    },
+
+    setSelectedVideoId(state, payload) {
+        state.selectedVideoId = payload.id;
     }
 };
 
