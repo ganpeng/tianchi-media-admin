@@ -108,7 +108,7 @@
             PreviewMultipleImages
         },
         /* status: 0代表创建节目专题，1代表创建人物专题，2代表编辑节目专题，3代表编辑人物专题 */
-        props: ['status'],
+        props: ['status', 'subjectInfo'],
         data() {
             let checkName = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
@@ -148,13 +148,6 @@
             };
             return {
                 size: subjectDimension,
-                subjectInfo: {
-                    name: '',
-                    programmeCategoryList: [],
-                    description: '',
-                    tagList: [],
-                    posterImageList: []
-                },
                 programmeCategoryList: [],
                 programmeCategoryListOptions: [],
                 tagOptions: [],
@@ -217,19 +210,12 @@
                         this.programmeCategoryListOptions = response.data;
                     }
                 });
-                if (this.status === '2' || this.status === '3') {
-                    this.$service.getSubjectDetail(this.$route.params.id).then(response => {
-                        if (response && response.code === 0) {
-                            this.subjectInfo.name = response.data.name;
-                            response.data.programmeCategoryList.map(categoryItem => {
-                                this.programmeCategoryList.push(categoryItem.id);
-                            });
-                            this.subjectInfo.description = response.data.description;
-                            this.subjectInfo.tagList = response.data.tagList;
-                            this.subjectInfo.posterImageList = response.data.posterImageList;
-                        }
-                    });
-                }
+            },
+            // 初始化节目专题类别
+            initProgrammeCatagoryList() {
+                this.subjectInfo.programmeCategoryList.map(categoryItem => {
+                    this.programmeCategoryList.push(categoryItem.id);
+                });
             },
             // 添加封面图片
             addPosterImage(newPosterImage) {
@@ -314,6 +300,7 @@
             },
             reset() {
                 this.$refs['subjectInfo'].resetFields();
+                this.programmeCategoryList = [];
                 this.subjectInfo.posterImageList = [];
             },
             // 关闭对话框
@@ -358,22 +345,24 @@
             justify-content: space-between;
             height: 230px;
             &:last-child {
+                display: flex;
                 justify-content: center;
+                flex-direction: column;
                 width: 180px;
                 height: 180px;
                 border: 1px dotted gray;
                 text-align: center;
                 cursor: pointer;
+                i {
+                    display: inline;
+                    position: static;
+                    color: gray;
+                }
                 &:hover {
                     border: 1px dotted #409EFF;
                     i {
                         color: #409EFF;
                     }
-                }
-            }
-            &:hover {
-                label {
-                    visibility: visible;
                 }
             }
             .info {

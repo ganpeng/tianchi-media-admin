@@ -5,7 +5,7 @@
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>专题管理</el-breadcrumb-item>
-            <el-breadcrumb-item>人物专题详情</el-breadcrumb-item>
+            <el-breadcrumb-item><label class="subject-name">{{subjectInfo.name}}</label>人物专题详情</el-breadcrumb-item>
         </el-breadcrumb>
         <div class="block-box text-left">
             <subject-basic-info-detail
@@ -18,44 +18,31 @@
                 border
                 style="width: 100%">
                 <el-table-column
-                    width="80px"
+                    label="序号">
+                    <template slot-scope="scope">
+                        {{scope.$index + 1}}
+                    </template>
+                </el-table-column>
+                <el-table-column
                     prop="code"
                     label="编号">
                 </el-table-column>
                 <el-table-column
                     prop="name"
-                    label="名称">
+                    label="姓名">
                 </el-table-column>
                 <el-table-column
-                    label="图片">
+                    label="头像">
                     <template slot-scope="scope">
-                        <img :src="scope.row.uri" @click="displayImage(scope.row)" alt="人物图片">
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="description"
-                    label="简介">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.description}}</label>
-                        <el-popover
-                            placement="right"
-                            :title="scope.row.name + '简介'"
-                            width="250"
-                            trigger="hover"
-                            :content="scope.row.description">
-                            <el-button slot="reference" type="text" class="more">更多</el-button>
-                        </el-popover>
+                        <img v-if="scope.row.avatarImage" :src="scope.row.avatarImage ? scope.row.avatarImage.uri : ''"
+                             @click="displayImage(scope.row)"
+                             :alt="scope.row.avatarImage ? scope.row.avatarImage.name : ''">
+                        <label>------</label>
                     </template>
                 </el-table-column>
                 <el-table-column
                     prop="area"
                     label="地区">
-                </el-table-column>
-                <el-table-column
-                    label="更新时间">
-                    <template slot-scope="scope">
-                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
-                    </template>
                 </el-table-column>
             </el-table>
         </div>
@@ -145,6 +132,12 @@
 </script>
 
 <style lang="less" scoped>
+
+    .subject-name {
+        font-style: italic;
+        font-weight: bold;
+        font-size: 16px;
+    }
 
     .block-box {
         margin-top: 50px;

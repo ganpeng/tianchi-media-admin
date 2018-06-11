@@ -4,7 +4,7 @@
         <el-form :inline="true" class="demo-form-inline search-form">
             <el-form-item label="上映时间">
                 <el-date-picker
-                    v-model="releaseAt"
+                    v-model="listQueryParams.releaseAt"
                     type="year"
                     placeholder="请选择上映时间">
                 </el-date-picker>
@@ -20,7 +20,9 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="分类">
-                <el-select v-model="listQueryParams.programmeCategory" clearable placeholder="请选择分类"
+                <el-select v-model="listQueryParams.programmeCategoryId"
+                           clearable
+                           placeholder="请选择分类"
                            @change="setCategory">
                     <el-option
                         v-for="item in categoryOptions"
@@ -30,8 +32,9 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="类型" v-if="listQueryParams.programmeCategory">
-                <el-select v-model="listQueryParams.programmeType" clearable placeholder="请选择类型">
+            <el-form-item label="类型" v-if="listQueryParams.programmeCategoryId">
+                <el-select v-model="listQueryParams.programmeTypeIdList"
+                           multiple clearable placeholder="请选择类型">
                     <el-option
                         v-for="item in typeOptions"
                         :key="item.id"
@@ -51,7 +54,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item class="search">
-                <el-input v-model="searchContent" placeholder="请输入关键字">
+                <el-input v-model="listQueryParams.keyword" placeholder="请输入关键字">
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                 </el-input>
             </el-form-item>
@@ -87,9 +90,10 @@
             <el-table-column
                 label="图片">
                 <template slot-scope="scope">
-                    <img :src="scope.row.posterImages && scope.row.posterImages[0] ? scope.row.posterImages[0].uri : ''"
-                         @click="displayImage(scope.row)" alt="节目图片"
-                         v-if="scope.row.posterImages && scope.row.posterImages[0]">
+                    <img
+                        :src="scope.row.coverImage ? scope.row.coverImage.uri : ''"
+                        :alt="scope.row.coverImage.name"
+                        v-if="scope.row.coverImage">
                     <label v-else>------</label>
                 </template>
             </el-table-column>
@@ -141,12 +145,22 @@
                 </template>
             </el-table-column>
             <el-table-column
-                prop="actor"
+                prop="chiefActor"
                 label="主演">
+                <template slot-scope="scope">
+                    <label v-if="scope.row.chiefActor && scope.row.chiefActor.length !== 0">{{scope.row.chiefActor |
+                        jsonJoin('name')}}</label>
+                    <label v-else>------</label>
+                </template>
             </el-table-column>
             <el-table-column
                 prop="director"
                 label="导演">
+                <template slot-scope="scope">
+                    <label v-if="scope.row.director && scope.row.director.length !== 0">{{scope.row.director |
+                        jsonJoin('name')}}</label>
+                    <label v-else>------</label>
+                </template>
             </el-table-column>
             <el-table-column
                 prop="visible"
@@ -172,20 +186,13 @@
             :total="totalAmount">
         </el-pagination>
         <el-button type="success" @click="appendProgramme" size="small" v-if="model==='MULTIPLE'">添加所选节目</el-button>
-        <preview-multiple-images
-            :previewMultipleImages="previewImage">
-        </preview-multiple-images>
     </div>
 </template>
 
 <script>
-    import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
 
     export default {
         name: 'SelectMultipleProgramme',
-        components: {
-            PreviewMultipleImages
-        },
         // 当前外部选中的人物列表
         props: ['selectedProgrammeList', 'model'],
         data() {
@@ -193,20 +200,14 @@
                 listQueryParams: {
                     releaseAt: '',
                     releaseArea: '',
-                    programmeCategory: '',
-                    programmeType: '',
+                    programmeCategoryId: '',
+                    programmeTypeIdList: '',
                     visible: '',
+                    keyword: '',
                     pageNum: '',
                     pageSize: 10
                 },
                 pageNum: 1,
-                releaseAt: '',
-                previewImage: {
-                    display: false,
-                    autoplay: false,
-                    activeIndex: 0,
-                    list: []
-                },
                 areaOptions: [{
                     value: '1',
                     label: '大陆'
@@ -242,23 +243,21 @@
         },
         methods: {
             init() {
+                // 下架状态的节目可以被选为专题中
                 // 初始化选中的项
                 for (let i = 0; i < this.selectedProgrammeList.length; i++) {
                     this.multipleSelection.push(this.selectedProgrammeList[i]);
                 }
                 this.getProgrammeList();
+                // 节目类型分类
                 this.$service.getProgrammeCategory().then(response => {
                     if (response && response.code === 0) {
                         this.categoryOptions = response.data;
                     }
                 });
             },
+            // 请求数据
             getProgrammeList() {
-                if (this.releaseAt) {
-                    this.listQueryParams.releaseAt = Date.parse(this.releaseAt);
-                } else {
-                    delete this.listQueryParams.releaseAt;
-                }
                 this.listQueryParams.pageNum = parseInt(this.pageNum) - 1;
                 this.$service.getProgrammeList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
@@ -280,8 +279,9 @@
             // 设置节目的分类，例如电视剧
             setCategory() {
                 for (let i = 0; i < this.categoryOptions.length; i++) {
-                    if (this.categoryOptions[i].id === this.listQueryParams.programmeCategory) {
+                    if (this.categoryOptions[i].id === this.listQueryParams.programmeCategoryId) {
                         this.typeOptions = this.categoryOptions[i].programmeTypeList;
+                        this.listQueryParams.programmeTypeIdList = '';
                         return;
                     }
                 }
@@ -299,12 +299,9 @@
             appendProgramme() {
                 this.$emit('setProgramme', this.multipleSelection);
             },
-            // 放大预览图片
-            displayImage(row) {
-                this.previewImage.display = true;
-                this.previewImage.list = row.posterImages;
-            },
+            // 多选的模式中选择或取消某一行
             selectRow(selection, row) {
+                // 判断当前行为，选择或者取消
                 let checkStatus;
                 for (let i = 0; i < selection.length; i++) {
                     if (selection[i].id === row.id) {
@@ -363,7 +360,6 @@
     .el-table {
         img {
             width: 120px;
-            cursor: zoom-in;
         }
         label {
             display: -webkit-box;

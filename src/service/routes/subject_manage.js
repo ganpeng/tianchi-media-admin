@@ -14,12 +14,12 @@ import util from '../../util/extend';
  * @param tagList Array of tags.
  * @param coverImage Object of coverImage including id、uri、height、width attribute.
  */
-export const createSubject = ({category, name, typeList, description, tagList, posterImageList}) => {
+export const createSubject = ({category, name, programmeCategoryList, description, tagList, posterImageList}) => {
     return service.post('/v1/content/subject', {
         category,
         releaseStatus: 'RELEASED',
         name,
-        typeList,
+        programmeCategoryList,
         description,
         tagList,
         posterImageList

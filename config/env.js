@@ -10,15 +10,15 @@ switch (npmEventName) {
     // develop url
     case 'dev':
     case 'dev:dev':
-        proxyTarget = 'http://dev-admin.tianchiapi.com';
+        proxyTarget = 'http://dev-gateway.tianchiapi.com';
         break;
     // test url
     case 'dev:test':
-        proxyTarget = 'http://test-gateway.backend.tianchimedia.com';
+        proxyTarget = 'http://test-gateway.tianchiapi.com';
         break;
     // test url
     case 'dev:prod':
-        proxyTarget = 'http://gateway.backend.tianchimedia.com';
+        proxyTarget = 'http://gateway.tianchiapi.com';
         break;
     // xiongbao gateway
     case 'dev:xiongbao':

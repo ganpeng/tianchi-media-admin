@@ -5,7 +5,7 @@
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>专题管理</el-breadcrumb-item>
-            <el-breadcrumb-item>节目专题详情</el-breadcrumb-item>
+            <el-breadcrumb-item><label class="subject-name">{{subjectInfo.name}}</label>节目专题详情</el-breadcrumb-item>
         </el-breadcrumb>
         <div class="block-box text-left">
             <subject-basic-info-detail
@@ -35,78 +35,29 @@
                     label="图片">
                     <template slot-scope="scope">
                         <img
-                            :src="scope.row.posterImages && scope.row.posterImages[0] ? scope.row.posterImages[0].uri : ''"
-                            @click="displayImage(scope.row)" alt="节目图片"
-                            v-if="scope.row.posterImages && scope.row.posterImages[0]">
+                            :src="scope.row.coverImage ? scope.row.coverImage.uri : ''"
+                            :alt="scope.row.coverImage.name"
+                            @click="displayImage(scope.row)"
+                            v-if="scope.row.coverImage">
                         <label v-else>------</label>
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="description"
-                    label="简介">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.description}}</label>
-                        <el-popover
-                            placement="right"
-                            :title="scope.row.name + '简介'"
-                            width="250"
-                            trigger="hover"
-                            :content="scope.row.description">
-                            <el-button slot="reference" type="text" class="more">更多</el-button>
-                        </el-popover>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="featureVideoCount"
-                    label="正片数量">
-                </el-table-column>
-                <el-table-column
-                    prop="extraVideoCount"
-                    label="相关视频数量">
-                </el-table-column>
-                <el-table-column
-                    prop="announceAt"
-                    label="上映时间">
-                    <template slot-scope="scope">
-                        {{scope.row.announceAt | formatDate('yyyy-MM-DD')}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="releaseArea"
-                    label="地区">
-                </el-table-column>
-                <el-table-column
-                    label="分类">
-                    <template slot-scope="scope">
-                        {{scope.row.category}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="typeList"
-                    label="类型">
-                    <template slot-scope="scope">
-                        {{scope.row.typeList | jsonJoin('name')}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="actor"
+                    prop="chiefActor"
                     label="主演">
+                    <template slot-scope="scope">
+                        <label v-if="scope.row.chiefActor && scope.row.chiefActor.length !== 0">{{scope.row.chiefActor |
+                            jsonJoin('name')}}</label>
+                        <label v-else>------</label>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="director"
                     label="导演">
-                </el-table-column>
-                <el-table-column
-                    prop="visible"
-                    label="状态">
                     <template slot-scope="scope">
-                        {{scope.row.visible ? '正常' :'已下架'}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    label="更新时间">
-                    <template slot-scope="scope">
-                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
+                        <label v-if="scope.row.director && scope.row.director.length !== 0">{{scope.row.director |
+                            jsonJoin('name')}}</label>
+                        <label v-else>------</label>
                     </template>
                 </el-table-column>
             </el-table>
@@ -155,7 +106,7 @@
             displayImage(image) {
                 this.previewImage.title = image.name;
                 this.previewImage.display = true;
-                this.previewImage.url = image.url;
+                this.previewImage.url = image.uri;
             },
             // 删除当前专题，并跳转专题列表页面
             removeSubject() {
@@ -197,6 +148,12 @@
 </script>
 
 <style lang="less" scoped>
+
+    .subject-name {
+        font-style: italic;
+        font-weight: bold;
+        font-size: 16px;
+    }
 
     .block-box {
         margin-top: 50px;

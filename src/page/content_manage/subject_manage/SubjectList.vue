@@ -160,6 +160,7 @@
                     pageNum: 1,
                     pageSize: 10
                 },
+                subjectType: {},
                 createRangeTime: '',
                 categoryOptions: [{
                     value: 'PROGRAMME',

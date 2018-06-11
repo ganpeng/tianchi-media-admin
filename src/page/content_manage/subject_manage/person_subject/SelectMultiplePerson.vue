@@ -30,7 +30,7 @@
                 width="55">
             </el-table-column>
             <el-table-column
-                prop="id"
+                prop="code"
                 label="编号">
             </el-table-column>
             <el-table-column
@@ -38,11 +38,12 @@
                 label="姓名">
             </el-table-column>
             <el-table-column
-                label="图片">
+                label="头像">
                 <template slot-scope="scope">
-                    <img :src="scope.row.posterImageList[0] ? scope.row.posterImageList[0].uri : ''"
-                         @click="displayImage(scope.row.posterImageList[0])"
-                         alt="人物图片">
+                    <img v-if="scope.row.avatarImage" :src="scope.row.avatarImage ? scope.row.avatarImage.uri : ''"
+                         @click="displayImage(scope.row)"
+                         :alt="scope.row.avatarImage ? scope.row.avatarImage.name : ''">
+                    <label>------</label>
                 </template>
             </el-table-column>
             <el-table-column

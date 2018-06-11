@@ -5,7 +5,8 @@
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>专题管理</el-breadcrumb-item>
-            <el-breadcrumb-item>编辑专题中的节目</el-breadcrumb-item>
+            <el-breadcrumb-item>编辑<label class="subject-name">{{subjectName}}</label>专题的节目
+            </el-breadcrumb-item>
         </el-breadcrumb>
         <div class="block-box text-left">
             <select-multiple-programme
@@ -35,27 +36,22 @@
                     label="名称">
                 </el-table-column>
                 <el-table-column
-                    prop="description"
-                    label="简介">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.description}}</label>
-                        <el-popover
-                            placement="right"
-                            :title="scope.row.name + '简介'"
-                            width="250"
-                            trigger="hover"
-                            :content="scope.row.description">
-                            <el-button slot="reference" type="text" class="more">更多</el-button>
-                        </el-popover>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="actor"
+                    prop="chiefActor"
                     label="主演">
+                    <template slot-scope="scope">
+                        <label v-if="scope.row.chiefActor && scope.row.chiefActor.length !== 0">{{scope.row.chiefActor |
+                            jsonJoin('name')}}</label>
+                        <label v-else>------</label>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="director"
                     label="导演">
+                    <template slot-scope="scope">
+                        <label v-if="scope.row.director && scope.row.director.length !== 0">{{scope.row.director |
+                            jsonJoin('name')}}</label>
+                        <label v-else>------</label>
+                    </template>
                 </el-table-column>
                 <el-table-column align="center"
                                  label="操作"
@@ -82,6 +78,7 @@
         },
         data() {
             return {
+                subjectName: '',
                 selectedProgrammeList: []
             };
         },
@@ -91,9 +88,10 @@
         methods: {
             init() {
                 this.$service.getSubjectDetail(this.$route.params.id).then(response => {
-                    if (response) {
+                    if (response && response.code === 0) {
                         if (response.data.subjectItemList) {
                             this.selectedProgrammeList = response.data.subjectItemList;
+                            this.subjectName = response.data.name;
                         }
                         this.$nextTick(function () {
                             this.$refs.selectMultipleProgramme.init();
@@ -108,7 +106,7 @@
             },
             // 设置选择的节目
             setProgramme(selectedProgrammes) {
-                this.selectedProgrammeList.length = 0;
+                this.selectedProgrammeList = [];
                 for (let i = 0; i < selectedProgrammes.length; i++) {
                     this.selectedProgrammeList.push(selectedProgrammes[i]);
                 }
@@ -129,6 +127,12 @@
 </script>
 
 <style lang="less" scoped>
+
+    .subject-name {
+        font-style: italic;
+        font-weight: bold;
+        font-size: 16px;
+    }
 
     .block-box {
         margin-top: 50px;

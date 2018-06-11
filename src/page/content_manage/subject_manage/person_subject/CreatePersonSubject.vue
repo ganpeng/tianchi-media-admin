@@ -9,6 +9,7 @@
         </el-breadcrumb>
         <div class="block-box">
             <subject-basic-info-form
+                :subjectInfo="subjectInfo"
                 status="1">
             </subject-basic-info-form>
         </div>
@@ -24,7 +25,9 @@
             SubjectBasicInfoForm
         },
         data() {
-            return {};
+            return {
+                subjectInfo: {}
+            };
         },
         methods: {}
     };

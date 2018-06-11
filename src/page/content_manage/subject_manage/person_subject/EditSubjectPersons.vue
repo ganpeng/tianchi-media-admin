@@ -5,7 +5,7 @@
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>专题管理</el-breadcrumb-item>
-            <el-breadcrumb-item>编辑专题中的人物</el-breadcrumb-item>
+            <el-breadcrumb-item>编辑<label class="subject-name">{{subjectName}}</label>专题的人物</el-breadcrumb-item>
         </el-breadcrumb>
         <div class="block-box text-left">
             <select-multiple-person
@@ -23,27 +23,12 @@
                     label="序号">
                 </el-table-column>
                 <el-table-column
-                    prop="id"
+                    prop="code"
                     label="编号">
                 </el-table-column>
                 <el-table-column
                     prop="name"
                     label="名称">
-                </el-table-column>
-                <el-table-column
-                    prop="description"
-                    label="人物简介">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.description}}</label>
-                        <el-popover
-                            placement="right"
-                            :title="scope.row.name + '简介'"
-                            width="250"
-                            trigger="hover"
-                            :content="scope.row.description">
-                            <el-button slot="reference" type="text" class="more">更多</el-button>
-                        </el-popover>
-                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="area"
@@ -74,6 +59,7 @@
         },
         data() {
             return {
+                subjectName: '',
                 selectedPersonList: []
             };
         },
@@ -86,6 +72,7 @@
                     if (response) {
                         if (response.data.subjectItemList) {
                             this.selectedPersonList = response.data.subjectItemList;
+                            this.subjectName = response.data.name;
                         }
                         this.$nextTick(function () {
                             this.$refs.selectMultiplePerson.init();
@@ -121,6 +108,12 @@
 </script>
 
 <style lang="less" scoped>
+
+    .subject-name {
+        font-style: italic;
+        font-weight: bold;
+        font-size: 16px;
+    }
 
     .block-box {
         margin-top: 50px;
