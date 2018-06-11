@@ -23,10 +23,12 @@
     "babel-polyfill": "^6.26.0",
     "dragula": "^3.7.2",
     "element-ui": "^2.2.2",
+    "hls.js": "^0.9.1",
     "js-cookie": "^2.2.0",
     "mockjs": "^1.0.1-beta3",
     "store": "^2.0.12",
     "vue": "^2.5.2",
+    "vue-dplayer": "0.0.10",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
   },

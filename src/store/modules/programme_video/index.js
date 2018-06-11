@@ -101,6 +101,7 @@ const mutations = {
         };
     },
     setCoverImage(state, payload) {
+        payload.posterImage.uri = payload.posterImage.uri.replace('local', 'test');
         state.currentProgrammeVideo.coverImage = payload.posterImage;
     },
     syncVideoMetaData(state, payload) {

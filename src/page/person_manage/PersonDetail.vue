@@ -35,6 +35,7 @@
 <script>
     import { mapActions, mapGetters } from 'vuex';
     import PersonForm from './PersonForm';
+    import _ from 'lodash';
 
     export default {
         name: 'PersonDetail',
@@ -128,8 +129,7 @@
                     this.$message.error('人物的头像和背景图都必须上传且只能上传一张');
                     return false;
                 }
-
-                if (!this.person.avatarImage) {
+                if (_.isEmpty(this.person.avatarImage)) {
                     this.$message.error('请选择人物默认的封面图');
                     return false;
                 }

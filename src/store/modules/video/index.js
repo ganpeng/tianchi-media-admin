@@ -4,14 +4,14 @@ const state = {
         {
             id: 1,
             name: '视频1',
-            playUrl: 'http://vjs.zencdn.net/v/oceans.mp4',
+            playUrl: 'http://cdn.can.cibntv.net/12/201702161000/rexuechangan01/rexuechangan01.m3u8',
             takeTimeInSec: '6000000',
             createdAt: new Date()
         },
         {
             id: 2,
             name: '视频2',
-            playUrl: 'http://vjs.zencdn.net/v/oceans.mp4',
+            playUrl: 'https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8',
             takeTimeInSec: '8000000',
             createdAt: new Date()
         }

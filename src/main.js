@@ -22,6 +22,8 @@ Vue.prototype.$util = util;
 Vue.prototype.$dragula = dragula;
 Vue.prototype.$wsCache = wsCache;
 
+window.Hls = require('hls.js');
+
 /* eslint-disable no-new */
 new Vue({
     el: '#app',

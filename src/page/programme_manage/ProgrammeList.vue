@@ -109,7 +109,7 @@
                         {{ scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
                     </template>
                 </el-table-column>
-                <el-table-column prop="produceAreaList" align="center" label="地区">
+                <el-table-column prop="produceAreaList" min-width="150px" align="center" label="地区">
                     <template slot-scope="scope">
                         {{areaLabel(scope.row.produceAreaList)}}
                     </template>
@@ -141,7 +141,7 @@
                 </el-table-column>
                 <el-table-column align="center" min-width="100px" label="更新时间">
                     <template slot-scope="scope">
-                        {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
                     </template>
                 </el-table-column>
                 <el-table-column fixed="right" align="center" width="120px" label="操作">
@@ -237,8 +237,10 @@ export default {
             this.$router.push({ name: 'DisplayProgramme', params: { id } });
         },
         areaLabel(areaValue) {
-            let area = this.areaOptions.find((areaItem) => areaItem.value === areaValue);
-            return area ? area.label ? area.label : '' : '';
+            return areaValue.map((item) => {
+                let area = this.areaOptions.find((areaItem) => areaItem.value === item);
+                return area ? area.label ? area.label : '' : '';
+            }).join(',');
         },
         handleSizeChange(pageSize) {
             this.setPagination({pageSize});

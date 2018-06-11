@@ -98,6 +98,11 @@ const mutations = {
         state.currentPerson.posterImageList = [];
     },
     addPosterImage(state, payload) {
+        // Todo 后续要删除的代码
+        payload.posterImage.uri = payload.posterImage.uri.replace('local', 'test');
+        if (!state.currentPerson.posterImageList) {
+            state.currentPerson.posterImageList = [];
+        }
         if (!checkImageExist(state.currentPerson.posterImageList, payload.posterImage)) {
             state.currentPerson.posterImageList.push(payload.posterImage);
         }

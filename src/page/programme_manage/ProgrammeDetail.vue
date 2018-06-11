@@ -618,33 +618,33 @@
                 this.previewImage.activeIndex = index;
             },
             checkImage(next) {
-                // const {posterImageList, coverImage} = this.programme;
-                // if (posterImageList && posterImageList.length < 2) {
-                //     this.$message({type: 'error', message: '推荐位六分位图和横版海报图必须上传且只能上传一张'});
-                //     return false;
-                // }
+                const {posterImageList, coverImage} = this.programme;
+                if (posterImageList && posterImageList.length < 2) {
+                    this.$message({type: 'error', message: '推荐位六分位图和横版海报图必须上传且只能上传一张'});
+                    return false;
+                }
 
-                // let sizeOne = posterImageList.findIndex((img) => {
-                //     return parseInt(img.width) === 240 && parseInt(img.height) === 350;
-                // });
-                // let sizeTwo = posterImageList.findIndex((img) => {
-                //     return parseInt(img.width) === 250 && parseInt(img.height) === 360;
-                // });
+                let sizeOne = posterImageList.findIndex((img) => {
+                    return parseInt(img.width) === 240 && parseInt(img.height) === 350;
+                });
+                let sizeTwo = posterImageList.findIndex((img) => {
+                    return parseInt(img.width) === 250 && parseInt(img.height) === 360;
+                });
 
-                // if (sizeOne < 0) {
-                //     this.$message({type: 'error', message: '推荐位六分位图必须上传且只能上传一张'});
-                //     return false;
-                // }
+                if (sizeOne < 0) {
+                    this.$message({type: 'error', message: '推荐位六分位图必须上传且只能上传一张'});
+                    return false;
+                }
 
-                // if (sizeTwo < 0) {
-                //     this.$message({type: 'error', message: '横版海报图必须上传且只能上传一张'});
-                //     return false;
-                // }
+                if (sizeTwo < 0) {
+                    this.$message({type: 'error', message: '横版海报图必须上传且只能上传一张'});
+                    return false;
+                }
 
-                // if (!coverImage) {
-                //     this.$message({type: 'error', message: '请选择默认的节目海报'});
-                //     return false;
-                // }
+                if (!coverImage) {
+                    this.$message({type: 'error', message: '请选择默认的节目海报'});
+                    return false;
+                }
 
                 next();
             }
