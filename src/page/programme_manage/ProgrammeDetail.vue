@@ -295,13 +295,14 @@
 </template>
 <script>
     import { mapMutations, mapGetters, mapActions } from 'vuex';
+    import _ from 'lodash';
     import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
     import CreatePersonDialog from './CreatePersonDialog';
     import ProgrammeTable from './ProgrammeTable';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import dimension from '@/util/config/dimension';
     import role from '@/util/config/role';
-    import {checkScore} from '@/util/formValidate';
+    import {checkScore, checkCategory} from '@/util/formValidate';
     import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 
     export default {
@@ -346,38 +347,39 @@
                 },
                 rules: {
                     name: [
-                        { required: true, message: '请输入节目名称', trigger: 'blur' }
+                        { required: true, message: '请输入节目名称' }
                     ],
                     desc: [
-                        { required: true, message: '请输入节目看点', trigger: 'blur' }
+                        { required: true, message: '请输入节目看点' }
                     ],
                     description: [
-                        { required: true, message: '请输入节目描述', trigger: 'blur' }
+                        { required: true, message: '请输入节目描述' }
                     ],
                     score: [
-                        { required: true, message: '请输入节目评分', trigger: 'blur' },
-                        { validator: checkScore, trigger: 'blur' }
+                        { required: true, message: '请输入节目评分' },
+                        { validator: checkScore }
                     ],
                     releaseAt: [
-                        { required: true, message: '请输入上映日期', trigger: 'blur' }
+                        { required: true, message: '请输入上映日期' }
                     ],
                     produceAreaList: [
-                        { required: true, message: '请输入所属地区', trigger: 'blur' }
+                        { required: true, message: '请输入所属地区' }
                     ],
                     category: [
-                        { required: true, message: '请选择节目分类', trigger: 'blur' }
+                        { required: true, message: '请选择节目分类' },
+                        { validator: checkCategory }
                     ],
                     typeList: [
-                        { required: true, message: '请选择节目类型', trigger: 'blur' }
+                        { required: true, message: '请选择节目类型' }
                     ],
                     copyrightReserver: [
-                        { required: true, message: '请选择节目牌照方', trigger: 'blur' }
+                        { required: true, message: '请选择节目牌照方' }
                     ],
                     businessOperator: [
-                        { required: true, message: '请选择节目版权方', trigger: 'blur' }
+                        { required: true, message: '请选择节目版权方' }
                     ],
                     featureVideoCount: [
-                        { required: true, message: '请输入总集数', trigger: 'blur' }
+                        { required: true, message: '请输入总集数' }
                     ]
                 }
             };
@@ -433,26 +435,28 @@
             _createProgramme() {
                 this.$refs.createProgramForm.validate(value => {
                     if (value) {
-                        this.createProgramme()
-                            .then((res) => {
-                                let {id} = res.data;
-                                if (res && res.code === 0) {
-                                    this.createMultProgrammeVideo(id)
-                                        .then((...resList) => {
-                                            this.deleteVideoList({list: resList});
-                                            this.getProgrammeVideoListById(id);
-                                            this.$message({
-                                                type: 'success',
-                                                message: '保存成功'
+                        this.checkImage(() => {
+                            this.createProgramme()
+                                .then((res) => {
+                                    let {id} = res.data;
+                                    if (res && res.code === 0) {
+                                        this.createMultProgrammeVideo(id)
+                                            .then((...resList) => {
+                                                this.deleteVideoList({list: resList});
+                                                this.getProgrammeVideoListById(id);
+                                                this.$message({
+                                                    type: 'success',
+                                                    message: '保存成功'
+                                                });
                                             });
+                                    } else {
+                                        this.$message({
+                                            type: 'error',
+                                            message: '节目保存失败'
                                         });
-                                } else {
-                                    this.$message({
-                                        type: 'error',
-                                        message: '节目保存失败'
-                                    });
-                                }
-                            });
+                                    }
+                                });
+                        });
                     } else {
                         return false;
                     }
@@ -641,7 +645,7 @@
                     return false;
                 }
 
-                if (!coverImage) {
+                if (_.isEmpty(coverImage)) {
                     this.$message({type: 'error', message: '请选择默认的节目海报'});
                     return false;
                 }

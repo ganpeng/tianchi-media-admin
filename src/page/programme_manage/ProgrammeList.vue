@@ -97,7 +97,7 @@
                 <el-table-column prop="id" align="center" width="240px" label="节目编号"></el-table-column>
                 <el-table-column label="节目图片" width="200px" align="center" >
                     <template slot-scope="scope">
-                        <img @click="displayImage(getPostImage(scope.row.id))" class="person-image pointer" :src="getPostImage(scope.row.id).uri" alt="">
+                        <img @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="person-image pointer" :src="(scope.row.coverImage ? scope.row.coverImage.uri : '')" alt="">
                     </template>
                 </el-table-column>
                 <el-table-column prop="name" align="center" min-width="100px" label="节目名称"></el-table-column>

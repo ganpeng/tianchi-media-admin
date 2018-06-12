@@ -29,7 +29,7 @@
                         <el-button type="primary">搜索</el-button>
                     </el-form-item>
                 </el-form>
-                <video-table></video-table>
+                <video-table :hasRadio="true"></video-table>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
                     <el-button @click="closeSelectVideoDialog">取 消</el-button>
                     <el-button type="primary" @click="selectVideoEnter">确 定</el-button>
@@ -200,13 +200,13 @@
                 imageUploadDialogVisible: false,
                 selectVideoDialogVisible: false,
                 uploadVideoRules: {
-                    name: [{ required: true, message: '请输入视频名称', trigger: 'blur, change' }],
-                    description: [{ required: true, message: '请输入视频简介', trigger: 'blur, change' }],
-                    type: [{ required: true, message: '请选择视频内容类型', trigger: 'blur' }],
-                    takeTimeInSec: [{ required: true, message: '请选择要关联的正片', trigger: 'blur, change' }],
-                    sort: [{ required: true, message: '请输入视频的排序', trigger: 'blur, change' }],
-                    quality: [{ required: true, message: '请选择视频类型', trigger: 'blur' }],
-                    free: [{ required: true, message: '请选择是否付费', trigger: 'blur, change' }]
+                    name: [{ required: true, message: '请输入视频名称' }],
+                    description: [{ required: true, message: '请输入视频简介' }],
+                    type: [{ required: true, message: '请选择视频内容类型' }],
+                    takeTimeInSec: [{ required: true, message: '请选择要关联的正片' }],
+                    sort: [{ required: true, message: '请输入视频的排序' }],
+                    quality: [{ required: true, message: '请选择视频类型' }],
+                    free: [{ required: true, message: '请选择是否付费' }]
                 }
             };
         },
@@ -255,7 +255,7 @@
                 this.$emit('changeVideoDialogStatus', false);
                 // 清楚校验的规则
                 this.resetProgrammeVideo();
-                this.$refs.uploadVideoForm.clearValidate();
+                // this.$refs.uploadVideoForm.clearValidate();
             },
             successHandler() {
                 this.$refs.uploadVideoForm.validate(value => {

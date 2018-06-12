@@ -5,6 +5,7 @@
             :show-close="false"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
+            :append-to-body="true"
             @open="initVideo">
                 <div>
                     <video-player ref="player" @play="play" :video="{url, type: 'hls'}" :contextmenu="contextmenu" ></video-player>

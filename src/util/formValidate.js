@@ -23,6 +23,28 @@ export const checkScore = (rule, value, callback) => {
 };
 
 /**
+ * 分类校验
+ */
+export const checkCategory = (rule, value, callback) => {
+    if (_.isEmpty(value)) {
+        return callback(new Error('分类不能为空'));
+    }
+    callback();
+};
+
+/**
+ *  必填项的校验
+ */
+export const requiredValidator = (msg) => {
+    return (rule, value, callback) => {
+        if (_.isEmpty(value)) {
+            return callback(new Error(msg));
+        }
+        callback();
+    };
+};
+
+/**
  * 检查图片是否已经存在
  */
 export const checkImageExist = (imageList, img) => {
@@ -32,5 +54,7 @@ export const checkImageExist = (imageList, img) => {
 
 export default {
     checkScore,
+    checkCategory,
+    requiredValidator,
     checkImageExist
 };

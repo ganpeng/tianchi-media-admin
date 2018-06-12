@@ -46,7 +46,7 @@
             <el-table-column prop="id" align="center" width="240px" label="编号"></el-table-column>
             <el-table-column label="照片" align="center" >
                 <template slot-scope="scope">
-                    <img @click="displayImage(scope.row.posterImageList[0] ? scope.row.posterImageList[0] : {} )" width="80px" height="80px" class="person-image pointer" :src="(scope.row.posterImageList[0] ? scope.row.posterImageList[0].uri :'' )" alt="">
+                    <img @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="80px" height="80px" class="person-image pointer" :src="(scope.row.avatarImage ? scope.row.avatarImage.uri :'' )" alt="">
                 </template>
             </el-table-column>
             <el-table-column prop="name" align="center" width="200px" label="名字"></el-table-column>

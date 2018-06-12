@@ -39,7 +39,7 @@
                         filterable
                         :value="person.area"
                         placeholder="请选择地区"
-                        @change="inputHandler($event, 'area')"
+                        @input="inputHandler($event, 'area')"
                     >
                         <el-option
                             v-for="item in areaOptions"
@@ -74,13 +74,13 @@
                         :disabled="readonly"
                         :value="person.mainRole"
                         placeholder="请选择职业"
-                        @change="inputHandler($event, 'mainRole')"
+                        @input="inputHandler($event, 'mainRole')"
                     >
                         <el-option
-                        v-for="item in mainRoleoptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                            v-for="item in mainRoleoptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -139,6 +139,7 @@ import UploadImage from 'sysComponents/custom_components/global/UploadImage';
 import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
 import dimension from '@/util/config/dimension';
 import role from '@/util/config/role';
+import {requiredValidator} from '@/util/formValidate';
 
 export default {
     name: 'PersonForm',
@@ -169,19 +170,21 @@ export default {
         return {
             infoRules: {
                 name: [
-                    { required: true, message: '请输入人物名称', trigger: 'change' }
+                    { required: true, message: '请输入人物名称' }
                 ],
                 description: [
-                    { required: true, message: '请输入人物简介', trigger: 'change' }
+                    { required: true, message: '请输入人物简介' }
                 ],
                 birthday: [
-                    { required: true, message: '请输入出生日期', trigger: 'change' }
+                    { required: true, message: '请输入出生日期' }
                 ],
                 area: [
-                    { required: true, message: '请选择区域', trigger: 'blur' }
+                    { required: true, message: '请选择区域' },
+                    { validator: requiredValidator('请选择区域') }
                 ],
                 mainRole: [
-                    { required: true, message: '请输入人物职业', trigger: 'blur' }
+                    { required: true, message: '请输入人物职业' },
+                    { validator: requiredValidator('请输入人物职业') }
                 ]
             },
             imageUploadDialogVisible: false,

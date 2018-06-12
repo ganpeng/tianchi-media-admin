@@ -1,7 +1,7 @@
 <template>
     <div class="video-table-container">
         <el-table :data="video.list" border style="width:100%;margin:20px 0;">
-            <el-table-column align="center" label="选择">
+            <el-table-column v-if="hasRadio" align="center" label="选择">
                 <template slot-scope="scope">
                     <el-radio :value="video.selectedVideoId" :label="scope.row.id" @input="setSelectedVideoId({id: scope.row.id})">&nbsp;</el-radio>
                 </template>
@@ -51,6 +51,12 @@ import DisplayVideoDialog from './DisplayVideoDialog';
 export default {
     components: {
         DisplayVideoDialog
+    },
+    props: {
+        hasRadio: {
+            type: Boolean,
+            default: false
+        }
     },
     data() {
         return {
