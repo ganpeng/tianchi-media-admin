@@ -2,8 +2,8 @@
   <div class="dplayer"></div>
 </template>
 <script>
-  import DPlayer from 'DPlayer';
-  import 'vue-dplayer/dist/vue-dplayer.css';
+  import DPlayer from 'dplayer';
+  import 'dplayer/dist/DPlayer.min.css';
   export default {
         props: {
         autoplay: {
