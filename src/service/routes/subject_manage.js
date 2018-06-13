@@ -4,6 +4,8 @@
 
 import service from '../config';
 import util from '../../util/extend';
+import qs from 'querystring';
+import _ from 'lodash';
 
 /**
  * 创建专题
@@ -34,8 +36,22 @@ export const createSubject = ({category, name, programmeCategoryList, descriptio
  * @param pageNum The current page number.
  * @param pageSize The size of one page.
  */
-export const getSubjectList = ({name, subjectCategory, subjectType, pageNum, pageSize}) => {
-    return service.get(util.format('/v1/content/subject/page?name={0}&subjectCategory={1}&subjectType={2}&pageNum={3}&pageSize={4}', name, subjectCategory, subjectType, pageNum - 1, pageSize));
+export const getSubjectList = ({name, subjectCategory, programmeCategoryIdList, createdAtBegin, createdAtEnd, pageNum, pageSize}) => {
+    const params = {
+        pageNum: pageNum - 1,
+        pageSize,
+        name,
+        subjectCategory,
+        programmeCategoryIdList,
+        createdAtBegin,
+        createdAtEnd
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/content/subject/page?${paramsStr}`);
 };
 
 /**

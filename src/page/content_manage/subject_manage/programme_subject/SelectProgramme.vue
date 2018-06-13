@@ -179,7 +179,7 @@
         <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="pageNum"
+            :current-page="listQueryParams.pageNum"
             :page-sizes="[5, 10, 20, 50]"
             :page-size="listQueryParams.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
@@ -204,10 +204,9 @@
                     programmeTypeIdList: '',
                     visible: '',
                     keyword: '',
-                    pageNum: '',
+                    pageNum: 1,
                     pageSize: 10
                 },
-                pageNum: 1,
                 areaOptions: [{
                     value: '1',
                     label: '大陆'
@@ -258,12 +257,11 @@
             },
             // 请求数据
             getProgrammeList() {
-                this.listQueryParams.pageNum = parseInt(this.pageNum) - 1;
                 this.$service.getProgrammeList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.programmeList = response.data.list;
                         this.totalAmount = response.data.total;
-                        // 对于选择的项进行勾选
+                        // 对于选择的多选项项进行勾选
                         for (let i = 0; i < this.multipleSelection.length; i++) {
                             for (let k = 0; k < this.programmeList.length; k++) {
                                 if (this.multipleSelection[i].id === this.programmeList[k].id) {
@@ -273,6 +271,7 @@
                                 }
                             }
                         }
+                        // 对于选择的单选项进行勾选
                     }
                 });
             },
@@ -291,8 +290,8 @@
                 this.listQueryParams.pageSize = pageSize;
                 this.getProgrammeList();
             },
-            handleCurrentChange(currentPage) {
-                this.listQueryParams.pageNum = currentPage;
+            handleCurrentChange(pageNum) {
+                this.listQueryParams.pageNum = pageNum;
                 this.getProgrammeList();
             },
             // 添加节目
@@ -336,7 +335,9 @@
                 }
             },
             setProgramme(row) {
-                this.$emit('setProgramme', row);
+                if (row) {
+                    this.$emit('setProgramme', row);
+                }
             }
         }
     };

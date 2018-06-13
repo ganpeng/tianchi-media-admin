@@ -116,15 +116,14 @@
                 };
                 // 保存到store中
                 this.$store.dispatch('todayRecommend/setSubjectLayoutItem', {
-                    row: this.$route.params.row,
-                    item: personModel
+                    model: this.$route.params.model,
+                    subjectModel: personModel
                 }).then(response => {
                     if (response === 'success') {
                         this.$message({
                             message: '设置模块专题成功',
                             type: 'success'
                         });
-                        this.$store.dispatch('todayRecommend/setTodayRecommendCache');
                     } else {
                         this.$message({
                             message: '设置模块专题失败',

@@ -17,119 +17,115 @@
                             liveChannelList[0].liveChannel.name : ''}}</label>
                     </div>
                 </div>
-                <div class="ad-group settable" @click="toAdGroup">
-                    <div class="ab-center">点击设置 / 查看<label>广告组</label></div>
-                </div>
-            </div>
-            <!--单个推荐位第一行三个-->
-            <ul class="recommend-three recommend-line">
-                <li class="settable recommend-item"
-                    v-for="(item,index) in recommendLayoutList[0].recommendLayoutItemMultiList[0]" :key="index">
-                    <div class="ab-center image-box">
-                        <img v-if='item.coverImage'
-                             :src="item.coverImage ? item.coverImage.uri : ''"
-                             :alt="item.coverImage ? item.coverImage.name : ''"/>
-                        <div class="recommend-operate">
-                            <el-dropdown @command="setRecommend($event,0,0,index)" placement="bottom">
-                            <span class="el-dropdown-link">
-                                <i class="el-icon-circle-plus-outline"></i>
-                            </span>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
-                                    <el-dropdown-item command="PERSON">设置为专题</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                        </div>
-                        <span v-if="item.cornerMark && item.cornerMark.leftTop" class="corner-mark left-top">{{item.cornerMark.leftTop.caption}}</span>
-                        <span v-if="item.cornerMark && item.cornerMark.leftBottom" class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
-                        <span v-if="item.cornerMark && item.cornerMark.rightTop" class="corner-mark right-top">
-                            <img :src="item.cornerMark.rightTop.imageUri" :alt="item.cornerMark.rightTop.caption">
-                        </span>
-                        <span v-if="item.cornerMark && item.cornerMark.rightBottom" class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
+                <div class="ad-group settable">
+                    <div class="ab-center">
+                        <img v-if="rightTopRecommend.coverImage"
+                             :src="rightTopRecommend.coverImage ? rightTopRecommend.coverImage.uri : ''"
+                             :alt="rightTopRecommend.coverImage ? rightTopRecommend.coverImage.name : ''"/>
                     </div>
-                </li>
-            </ul>
-            <!--单个推荐位第二行两个-->
-            <ul class="recommend-two recommend-line">
-                <li class="settable recommend-item"
-                    v-for="(item,index) in recommendLayoutList[1].recommendLayoutItemMultiList[0]" :key="index">
-                    <div class="ab-center image-box">
-                        <img v-if='item.coverImage'
-                             :src="item.coverImage ? item.coverImage.uri : ''"
-                             :alt="item.coverImage ? item.coverImage.name : ''"/>
-                        <div class="recommend-operate">
-                            <el-dropdown @command="setRecommend($event,1,0,index)" placement="bottom">
-                            <span class="el-dropdown-link">
-                                <i class="el-icon-circle-plus-outline"></i>
-                            </span>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
-                                    <el-dropdown-item command="PERSON">设置为专题</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                        </div>
-                        <span v-if="item.cornerMark && item.cornerMark.leftTop" class="corner-mark left-top">{{item.cornerMark.leftTop.caption}}</span>
-                        <span v-if="item.cornerMark && item.cornerMark.leftBottom" class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
-                        <span v-if="item.cornerMark && item.cornerMark.rightTop" class="corner-mark right-top">
-                            <img :src="item.cornerMark.rightTop.imageUri" :alt="item.cornerMark.rightTop.caption">
-                        </span>
-                        <span v-if="item.cornerMark && item.cornerMark.rightBottom" class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
-                    </div>
-                </li>
-            </ul>
-            <!--推荐频道或者节目类型-->
-            <sort-catalogue
-                :pickedCatalogueList="catalogueList"
-                :blockIndex="catalogueBlockIndex"
-                categoryName="电视剧"
-                v-on:setCatalogue="setCatalogue">
-            </sort-catalogue>
-            <!--模块推荐位-->
-            <ul id="feature-model">
-                <li class="feature settable"
-                    v-if="blockItem"
-                    v-for="(blockItem, blockIndex) in subjectLayoutList"
-                    :key="blockIndex">
-                    <h3>{{blockItem.title}}</h3>
-                    <ul
-                        :class="'model-line '+ (blockItem.subjectCategory === 'FIGURE' ? 'model-figure' : 'model-' + rowItem.length)"
-                        v-for="(rowItem, rowIndex) in blockItem.subjectLayoutItemMultiList" :key="rowIndex">
-                        <li v-for="(item, index) in rowItem" :key="index">
-                            <div class="ab-center">
-                                <img :src="item.coverImage.uri" :alt="item.coverImage.name"/>
-                                <div class="figure-name">{{item.name}}</div>
-                            </div>
-                            <span v-if="item.cornerMark && item.cornerMark.leftTop" class="corner-mark left-top">{{item.cornerMark.leftTop.caption}}</span>
-                            <span v-if="item.cornerMark && item.cornerMark.leftBottom" class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
-                            <span v-if="item.cornerMark && item.cornerMark.rightTop" class="corner-mark right-top">
-                            <img :src="item.cornerMark.rightTop.imageUri"
-                                 :alt="item.cornerMark.rightTop.caption">
-                            </span>
-                            <span v-if="item.cornerMark && item.cornerMark.rightBottom"
-                                  class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
-                        </li>
-                    </ul>
-                    <div class="model-operate">
-                        <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-                            <i class="el-icon-edit" @click="editModel('PROGRAMME')"></i>
-                        </el-tooltip>
-                        <el-dropdown @command="addModelSubject($event,blockIndex)" placement="bottom">
-                            <span class="el-dropdown-link">
-                                <i class="el-icon-circle-plus-outline"></i>
-                            </span>
+                    <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.leftTop"
+                          class="corner-mark left-top">
+                        <img :src="rightTopRecommend.cornerMark.leftTop.caption | setCopyRightImage"
+                             :alt="rightTopRecommend.cornerMark.leftTop.caption">
+                    </span>
+                    <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.leftBottom"
+                          class="corner-mark left-bottom">更新到{{rightTopRecommend.cornerMark.leftBottom.caption}}</span>
+                    <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.rightTop"
+                          class="corner-mark right-top">
+                    <img :src="rightTopRecommend.cornerMark.rightTop.imageUri"
+                         :alt="rightTopRecommend.cornerMark.rightTop.caption">
+                    </span>
+                    <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.rightBottom"
+                          class="corner-mark right-bottom">{{rightTopRecommend.cornerMark.rightBottom.caption}}</span>
+                    <div class="recommend-operate">
+                        <el-dropdown @command="setRecommend($event,0,0,0)" placement="bottom">
+                    <span class="el-dropdown-link">
+                    <i class="el-icon-circle-plus-outline"></i>
+                    </span>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="PROGRAMME">添加节目专题</el-dropdown-item>
-                                <el-dropdown-item command="PERSON">添加人物专题</el-dropdown-item>
+                                <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
+                                <el-dropdown-item command="PERSON">设置为专题</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
-                </li>
-            </ul>
+                </div>
+            </div>
+            <!--整个List布局-->
+            <div v-for="(layoutBlockItem,blockIndex) in massLayoutBlockList" :key="blockIndex">
+                <!--色块-->
+                <sort-catalogue
+                    v-if="layoutBlockItem.renderType === 'CATALOGUE'"
+                    :pickedCatalogueList="layoutBlockItem.layoutItemMultiList[0]"
+                    :blockIndex="blockIndex + 1"
+                    categoryName="电视剧"
+                    v-on:setCatalogue="setCatalogue">
+                </sort-catalogue>
+                <!--节目或者人物-->
+                <div v-if="layoutBlockItem.renderType === 'PROGRAMME' || layoutBlockItem.renderType === 'FIGURE'"
+                     :class="'feature ' + (layoutBlockItem.subjectId ? 'settable' : '')">
+                    <h3>{{layoutBlockItem.title}}</h3>
+                    <ul
+                        v-for="(rowItem, rowIndex) in layoutBlockItem.layoutItemMultiList" :key="rowIndex"
+                        :class="'model-line '+ (layoutBlockItem.renderType === 'FIGURE' ? 'model-figure' : 'model-' + rowItem.length)">
+                        <li v-for="(item, index) in rowItem" :key="index"
+                            :class="!layoutBlockItem.subjectId ? 'settable' : ''">
+                            <div class="ab-center">
+                                <img class="item-image" :src="item.coverImage.uri" :alt="item.coverImage.name"/>
+                                <div class="figure-name"
+                                     v-if="layoutBlockItem.renderType === 'FIGURE' || rowItem.length === 6">
+                                    {{item.name}}
+                                </div>
+                            </div>
+                            <span v-if="item.cornerMark && item.cornerMark.leftTop"
+                                  class="corner-mark left-top">
+                                 <img :src="item.cornerMark.leftTop.caption | setCopyRightImage"
+                                      :alt="item.cornerMark.leftTop.caption">
+                             </span>
+                            <span v-if="item.cornerMark && item.cornerMark.leftBottom"
+                                  class="corner-mark left-bottom">更新到{{item.cornerMark.leftBottom.caption}}</span>
+                            <span v-if="item.cornerMark && item.cornerMark.rightTop" class="corner-mark right-top">
+                                <img :src="item.cornerMark.rightTop.imageUri"
+                                     :alt="item.cornerMark.rightTop.caption">
+                                </span>
+                            <span v-if="item.cornerMark && item.cornerMark.rightBottom"
+                                  class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
+                            <!--单个位置的设置操作-->
+                            <div class="recommend-operate" v-if="!layoutBlockItem.subjectId">
+                                <el-dropdown @command="setRecommend($event,blockIndex + 1,rowIndex,index)"
+                                             placement="bottom">
+                                <span class="el-dropdown-link">
+                                <i class="el-icon-circle-plus-outline"></i>
+                                  </span>
+                                    <el-dropdown-menu slot="dropdown">
+                                        <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
+                                        <el-dropdown-item command="PERSON">设置为专题</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
+                            </div>
+                        </li>
+                        <!--模块推荐操作-->
+                        <div class="model-operate" v-if="layoutBlockItem.subjectId">
+                            <el-tooltip class="item" effect="dark" content="编辑" placement="top">
+                                <i class="el-icon-edit" @click="editModel('PROGRAMME')"></i>
+                            </el-tooltip>
+                            <el-dropdown @command="addModelSubject($event,blockIndex + 1)" placement="bottom">
+                        <span class="el-dropdown-link">
+                        <i class="el-icon-circle-plus-outline"></i>
+                        </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item command="PROGRAMME">添加节目专题</el-dropdown-item>
+                                    <el-dropdown-item command="PERSON">添加人物专题</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </div>
+                    </ul>
+                </div>
+            </div>
             <div class="append-model">
-                <el-dropdown @command="addModelSubject($event,subjectLayoutList.length)" placement="bottom">
-                 <span class="el-dropdown-link">
-                    <i class="el-icon-circle-plus-outline"></i>
-                    </span>
+                <el-dropdown @command="addModelSubject($event,layoutBlockList.length)" placement="bottom">
+            <span class="el-dropdown-link">
+            <i class="el-icon-circle-plus-outline"></i>
+            </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item command="PROGRAMME">添加节目模块</el-dropdown-item>
                         <el-dropdown-item command="PERSON">添加人物模块</el-dropdown-item>
@@ -160,6 +156,7 @@
 
 <script>
     import SortCatalogue from '../layout_manage/SortCatalogue';
+    import copyRightImage from '@/util/config/import_image.js';
 
     export default {
         name: 'TodayRecommended',
@@ -171,16 +168,14 @@
                 sortDialogVisible: false,
                 // 推荐位布局结构
                 layoutInfo: {},
-                // 节目分类模块index
-                catalogueBlockIndex: 2,
-                // 节目分类
-                catalogueList: [{}, {}, {}, {}, {}],
                 // 直播频道列表
                 liveChannelList: [],
-                // 单个推荐位
-                recommendLayoutList: [{recommendLayoutItemMultiList: []}, {recommendLayoutItemMultiList: []}],
-                // 模块推荐位列表
-                subjectLayoutList: []
+                // 布局模块整体列表
+                layoutBlockList: [],
+                layoutBlockFirstLayer: {},
+                massLayoutBlockList: [],
+                // 右上角推荐位
+                rightTopRecommend: {}
             };
         },
         computed: {
@@ -188,16 +183,24 @@
                 return this.$store.state.todayRecommend.modified;
             }
         },
+        filters: {
+            setCopyRightImage(copyRightCaptain) {
+                return copyRightImage[copyRightCaptain];
+            }
+        },
         mounted() {
             this.init();
         },
         methods: {
             init() {
+                // 获取本地数据展示
                 this.layoutInfo = this.$store.getters['todayRecommend/getCurrentState'];
                 this.liveChannelList = this.layoutInfo.liveChannelList;
-                this.recommendLayoutList = this.layoutInfo.recommendLayoutList;
-                this.catalogueList = this.recommendLayoutList[2] && this.recommendLayoutList[2].recommendLayoutItemMultiList ? this.recommendLayoutList[2].recommendLayoutItemMultiList[0] : [{}, {}, {}, {}, {}];
-                this.subjectLayoutList = this.layoutInfo.subjectLayoutList;
+                this.layoutBlockList = this.layoutInfo.layoutBlockList;
+                this.layoutBlockFirstLayer = this.layoutBlockList[0];
+                this.massLayoutBlockList = this.layoutBlockList.slice();
+                this.massLayoutBlockList.shift();
+                this.rightTopRecommend = this.layoutBlockFirstLayer ? this.layoutBlockFirstLayer.layoutItemMultiList[0][0] : {};
                 this.setNavBarId();
             },
             // 获取当前导航栏的id
@@ -234,11 +237,14 @@
                         }
                     }
                 });
-                // 推荐位布局
+                // 线上推荐位布局展示
                 this.$service.getContentLayout({navBarId: this.navBarId}).then(response => {
                     if (response && response.code === 0) {
-                        this.recommendLayoutList = response.data.recommendLayoutList;
-                        this.subjectLayoutList = response.data.subjectLayoutList;
+                        this.layoutBlockList = response.data.layoutBlockList;
+                        this.layoutBlockFirstLayer = this.layoutBlockList[0];
+                        this.massLayoutBlockList = this.layoutBlockList.slice();
+                        this.massLayoutBlockList.shift();
+                        this.rightTopRecommend = this.layoutBlockFirstLayer.layoutItemMultiList[0][0];
                         if (++count === 2) {
                             this.setStoreData();
                         }
@@ -250,25 +256,16 @@
                 this.$store.dispatch('todayRecommend/reloadData', {
                     modified: false,
                     liveChannelList: this.liveChannelList,
-                    recommendLayoutList: this.recommendLayoutList,
-                    subjectLayoutList: this.subjectLayoutList
-                }).then(response => {
-                    if (response === 'success') {
-                        this.$store.dispatch('todayRecommend/setTodayRecommendCache');
-                    }
+                    layoutBlockList: this.layoutBlockList
                 });
             },
             // 设置直播频道
             setChannel() {
                 this.$router.push({name: 'SetChannel', params: {navBarId: this.navBarId}});
             },
-            // 跳转到广告组列表页面
-            toAdGroup() {
-                this.$router.push({name: 'AdGroup'});
-            },
             // 设置节目类型推荐
-            setCatalogue(pickedCatalogueList) {
-                this.catalogueList = pickedCatalogueList;
+            setCatalogue(pickedCatalogueList, blockIndex) {
+                this.$set(this.massLayoutBlockList, blockIndex - 1, pickedCatalogueList);
             },
             // 设置推荐位为节目或者专题
             setRecommend(val, model, row, index) {
@@ -282,10 +279,10 @@
                 this.$router.push({name: val === 'PROGRAMME' ? 'ModelAppendProgrammeSubject' : 'ModelAppendPersonSubject'});
             },
             // 添加模块，设置模块内的专题
-            addModelSubject(val, row) {
+            addModelSubject(val, model) {
                 this.$router.push({
                     name: val === 'PROGRAMME' ? 'ModelAppendProgrammeSubject' : 'ModelAppendPersonSubject',
-                    params: {row: row}
+                    params: {model: model}
                 });
             },
             // 模块排序
@@ -366,33 +363,42 @@
     // 角标样式
     span.corner-mark {
         position: absolute;
-        height: 30px;
-        width: 60px;
         line-height: 30px;
         background: #5daf34;
         color: #fff;
         font-size: 16px;
         border-radius: 6px;
+        img {
+            width: 100%;
+            height: auto;
+        }
     }
 
     span.left-bottom {
         left: 10px;
         bottom: 10px;
+        height: 30px;
+        width: 100px;
     }
 
     span.left-top {
         left: 10px;
         top: 10px;
+        background: transparent;
     }
 
     span.right-top {
         right: 10px;
         top: 10px;
+        height: 30px;
+        width: 60px;
     }
 
     span.right-bottom {
         right: 10px;
         bottom: 10px;
+        height: 30px;
+        width: 60px;
     }
 
     // 第一行主推荐
@@ -403,7 +409,7 @@
             width: 11%;
             padding-top: 24%;
         }
-        .live-channel, .ad-group {
+        .live-channel {
             position: relative;
             width: 43%;
             padding-top: 24%;
@@ -419,125 +425,113 @@
                 }
             }
         }
-    }
-
-    // 推荐位样式设置
-    .recommend-line {
-        display: flex;
-        margin-top: 20px;
-        &.recommend-three {
-            li {
-                width: 31%;
-                padding-top: 13%;
-            }
-        }
-
-        &.recommend-two {
-            li {
-                width: 48%;
-                padding-top: 13%;
-            }
-        }
-    }
-
-    .recommend-item {
-        margin-right: 30px;
-        flex-grow: 1;
-        &:last-child {
-            margin-right: 0px;
-        }
-        .recommend-operate {
-            position: absolute;
-            right: 60px;
-            top: 14px;
-            .el-tooltip {
-                margin-right: 26px;
-            }
-            i {
-                margin-right: 16px;
-                font-size: 24px;
-                color: white;
-                cursor: pointer;
-            }
-        }
-    }
-
-    // 模块列表
-    #feature-model {
-        overflow: hidden;
-        // 模块通用样式
-        .feature {
+        .ad-group {
             position: relative;
-            margin-top: 30px;
-            h3 {
-                font-size: 50px;
-                color: #ffffff;
-                text-align: left;
-            }
-            ul.model-line {
-                display: flex;
-                margin-top: 30px;
-                li {
-                    position: relative;
-                    margin-right: 30px;
-                    flex-grow: 1;
-                    background: #8D949C;
-                    &:last-child {
-                        margin-right: 0px;
-                    }
-                    img {
-                        display: block;
-                        height: 100%;
-                        width: 100%;
-                    }
-                }
-            }
-        }
-        // 每行的样式
-        ul.model-1 {
-            li {
+            width: 43%;
+            padding-top: 24%;
+            font-size: 30px;
+            img {
+                display: block;
+                height: 100%;
                 width: 100%;
-                padding-top: 12%;
             }
         }
-        ul.model-2 {
-            li {
-                width: 48%;
-                padding-top: 13%;
-            }
+    }
+
+    .recommend-operate {
+        position: absolute;
+        right: 60px;
+        top: 14px;
+        .el-tooltip {
+            margin-right: 26px;
         }
-        ul.model-3 {
-            li {
-                width: 31%;
-                padding-top: 13%;
-            }
+        i {
+            margin-right: 16px;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
         }
-        ul.model-4 {
-            li {
-                width: 23%;
-                padding-top: 13%;
-            }
+    }
+
+    // 模块通用样式
+    .feature {
+        position: relative;
+        margin-top: 30px;
+        overflow: hidden;
+        h3 {
+            font-size: 50px;
+            color: #ffffff;
+            text-align: left;
         }
-        ul.model-6 {
+        ul.model-line {
+            display: flex;
+            margin-top: 30px;
             li {
-                width: 14%;
-                padding-top: 20%;
-            }
-        }
-        ul.model-figure {
-            padding-bottom: 50px;
-            li {
-                flex-shrink: 0;
-                width: 12%;
-                padding-top: 12%;
-                img {
-                    border-radius: 50%;
+                position: relative;
+                margin-right: 30px;
+                flex-grow: 1;
+                background: #8D949C;
+                &:last-child {
+                    margin-right: 0px;
                 }
-                .figure-name {
-                    margin-top: 20px;
-                    font-size: 20px;
-                    color: #fff;
+                img.item-image {
+                    display: block;
+                    height: 100%;
+                    width: 100%;
                 }
+            }
+        }
+    }
+
+    // 每行的样式
+    ul.model-1 {
+        li {
+            width: 100%;
+            padding-top: 12%;
+        }
+    }
+
+    ul.model-2 {
+        li {
+            width: 48%;
+            padding-top: 13%;
+        }
+    }
+
+    ul.model-3 {
+        li {
+            width: 31%;
+            padding-top: 13%;
+        }
+    }
+
+    ul.model-4 {
+        li {
+            width: 23%;
+            padding-top: 13%;
+        }
+    }
+
+    ul.model-6 {
+        li {
+            width: 14%;
+            padding-top: 20%;
+        }
+    }
+
+    ul.model-figure {
+        padding-bottom: 50px;
+        li {
+            flex-shrink: 0;
+            width: 12%;
+            padding-top: 12%;
+            img {
+                border-radius: 50%;
+            }
+            .figure-name {
+                margin-top: 20px;
+                font-size: 20px;
+                color: #fff;
             }
         }
     }

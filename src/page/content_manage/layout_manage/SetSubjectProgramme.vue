@@ -107,6 +107,7 @@
                 let programmeItem = {
                     id: this.programme.id,
                     name: this.programme.name,
+                    layoutItemType: 'PROGRAMME',
                     coverImage: this.coverImage,
                     cornerMark: this.checkedCornerMarks
                 };

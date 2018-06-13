@@ -12,7 +12,7 @@ if (Cookies.get('token') && !store.state.user.token) {
         name: Cookies.get('name'),
         token: Cookies.get('token')
     });
-    // 设置sessionStorage中的系统信息
+    // 设置localStorage中的系统信息
     if (wsCache.localStorage.get('todayRecommend')) {
         store.dispatch('todayRecommend/reloadData', wsCache.localStorage.get('todayRecommend'));
     }

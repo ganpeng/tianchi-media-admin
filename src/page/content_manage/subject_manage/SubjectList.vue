@@ -21,9 +21,10 @@
                 </el-form-item>
                 <template v-if="listQueryParams.subjectCategory === 'PROGRAMME'">
                     <el-form-item label="节目类别">
-                        <el-select v-model="subjectType" clearable placeholder="请选择节目类别">
+                        <el-select v-model="listQueryParams.programmeCategoryIdList" multiple clearable
+                                   placeholder="请选择节目类别">
                             <el-option
-                                v-for="item in typeListOptions"
+                                v-for="item in programmeCategoryIdListOptions"
                                 :key="item.id"
                                 :label="item.name"
                                 :value="item.id">
@@ -60,7 +61,7 @@
                 </el-form-item>
             </el-form>
             <el-table
-                :data="programmeList"
+                :data="subjectList"
                 border
                 style="width: 100%">
                 <el-table-column
@@ -102,8 +103,11 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="owner"
+                    prop="authorName"
                     label="专题创建者">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.authorName ? scope.row.authorName : '------' }}</label>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="category"
@@ -113,10 +117,12 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="type"
+                    prop="programmeCategoryList"
                     label="节目专题类型">
                     <template slot-scope="scope">
-                        <label>{{scope.row.type ?scope.row.type : '------' }}</label>
+                        <label v-if="scope.row.programmeCategoryList && scope.row.programmeCategoryList.length !== 0">
+                            {{scope.row.programmeCategoryList | jsonJoin('name') }}</label>
+                        <label v-else>------</label>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -155,13 +161,14 @@
             return {
                 listQueryParams: {
                     subjectCategory: '',
-                    subjectType: '',
+                    programmeCategoryIdList: [],
+                    createdAtBegin: '',
+                    createdAtEnd: '',
                     name: '',
                     pageNum: 1,
                     pageSize: 10
                 },
-                subjectType: {},
-                createRangeTime: '',
+                createRangeTime: [],
                 categoryOptions: [{
                     value: 'PROGRAMME',
                     label: '节目专题'
@@ -169,9 +176,9 @@
                     value: 'FIGURE',
                     label: '人物专题'
                 }],
-                typeListOptions: [],
+                programmeCategoryIdListOptions: [],
                 totalAmount: 0,
-                programmeList: []
+                subjectList: []
             };
         },
         mounted() {
@@ -182,15 +189,20 @@
                 this.getSubjectList();
                 this.$service.getProgrammeCategory().then(response => {
                     if (response && response.code === 0) {
-                        this.typeListOptions = response.data;
+                        this.programmeCategoryIdListOptions = response.data;
                     }
                 });
             },
             getSubjectList() {
+                // 设置请求参数
+                if (this.createRangeTime.length === 2) {
+                    this.listQueryParams.createdAtBegin = Date.parse(this.createRangeTime[0]);
+                    this.listQueryParams.createdAtEnd = Date.parse(this.createRangeTime[1]);
+                }
                 this.$service.getSubjectList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
-                        this.programmeList = response.data.list;
-                        this.totalAmount = this.programmeList.length;
+                        this.subjectList = response.data.list;
+                        this.totalAmount = response.data.total;
                     }
                 });
             },
@@ -198,8 +210,8 @@
                 this.listQueryParams.pageSize = pageSize;
                 this.getSubjectList();
             },
-            handleCurrentChange(currentPage) {
-                this.listQueryParams.currentPage = currentPage;
+            handleCurrentChange(pageNum) {
+                this.listQueryParams.pageNum = pageNum;
                 this.getSubjectList();
             },
             // 查询专题详情

@@ -103,9 +103,10 @@
                 let subject = {
                     coverImage: this.coverImage,
                     id: this.currentSubject.id,
+                    name: this.currentSubject.name,
                     itemType: 'SUBJECT'
                 };
-                this.$store.dispatch('todayRecommend/setRecommendItem', {
+                this.$store.dispatch('todayRecommend/setSingleRecommendItem', {
                     model: this.$route.params.model,
                     row: this.$route.params.row,
                     index: this.$route.params.index,
@@ -116,7 +117,6 @@
                             message: '设置推荐专题成功',
                             type: 'success'
                         });
-                        this.$store.dispatch('todayRecommend/setTodayRecommendCache');
                     } else {
                         this.$message({
                             message: '设置推荐专题失败',

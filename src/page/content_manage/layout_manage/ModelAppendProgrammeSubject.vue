@@ -188,22 +188,21 @@
                 // 组建模块专题对象
                 let programmeModel = {
                     layoutTemplate: layoutTemplate,
-                    subjectCategory: 'PROGRAMME',
+                    renderType: 'PROGRAMME',
                     subjectId: this.currentSubject.id,
                     title: this.title,
-                    subjectLayoutItemMultiList: this.subjectLayoutItemList
+                    layoutItemMultiList: this.subjectLayoutItemList
                 };
                 // 保存到store中
                 this.$store.dispatch('todayRecommend/setSubjectLayoutItem', {
-                    row: this.$route.params.row,
-                    item: programmeModel
+                    model: this.$route.params.model,
+                    subjectModel: programmeModel
                 }).then(response => {
                     if (response === 'success') {
                         this.$message({
                             message: '设置模块专题成功',
                             type: 'success'
                         });
-                        this.$store.dispatch('todayRecommend/setTodayRecommendCache');
                     } else {
                         this.$message({
                             message: '设置模块专题失败',

@@ -173,13 +173,13 @@ let router = new Router({
                 },
                 // 内容管理-栏目管理-模块推荐位选择节目专题
                 {
-                    path: '/layout-manage/model-append-programme-subject/:row',
+                    path: '/layout-manage/model-append-programme-subject/:model',
                     name: 'ModelAppendProgrammeSubject',
                     component: ModelAppendProgrammeSubject
                 },
                 // 内容管理-栏目管理-模块推荐位选择人物专题
                 {
-                    path: '/layout-manage/model-append-person-subject/:row',
+                    path: '/layout-manage/model-append-person-subject/:model',
                     name: 'ModelAppendPersonSubject',
                     component: ModelAppendPersonSubject
                 },

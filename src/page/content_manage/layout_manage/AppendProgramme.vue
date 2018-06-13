@@ -36,14 +36,14 @@
 
 <script>
     import ProgrammeSecondStep from './ProgrammeSecondStep';
-    import SelectMultipleProgramme from '../subject_manage/programme_subject/SelectMultipleProgramme';
+    import SelectProgramme from '../subject_manage/programme_subject/SelectProgramme';
     import SetCornerMarks from './SetCornerMarks';
 
     export default {
         name: 'AppendProgramme',
         components: {
             ProgrammeSecondStep,
-            SelectMultipleProgramme,
+            SelectProgramme,
             SetCornerMarks
         },
         data() {
@@ -60,13 +60,13 @@
             currentView() {
                 switch (this.activeStep) {
                     case 0:
-                        return 'SelectMultipleProgramme';
+                        return 'SelectProgramme';
                     case 1:
                         return 'ProgrammeSecondStep';
                     case 2:
                         return 'SetCornerMarks';
                     default:
-                        return 'SelectMultipleProgramme';
+                        return 'SelectProgramme';
                 }
             }
         },
@@ -127,10 +127,11 @@
                 let programme = {
                     cornerMark: this.checkedCornerMarks,
                     coverImage: this.posterImage,
+                    name: this.selectedProgrammeList[0].name,
                     id: this.programmeId,
-                    itemType: 'PROGRAMME'
+                    layoutItemType: 'PROGRAMME'
                 };
-                this.$store.dispatch('todayRecommend/setRecommendItem', {
+                this.$store.dispatch('todayRecommend/setSingleRecommendItem', {
                     model: this.$route.params.model,
                     row: this.$route.params.row,
                     index: this.$route.params.index,
@@ -141,7 +142,6 @@
                             message: '设置节目成功',
                             type: 'success'
                         });
-                        this.$store.dispatch('todayRecommend/setTodayRecommendCache');
                     } else {
                         this.$message({
                             message: '设置节目失败',

@@ -9,12 +9,12 @@
             </el-breadcrumb-item>
         </el-breadcrumb>
         <div class="block-box text-left">
-            <select-multiple-programme
+            <select-programme
                 :selectedProgrammeList="selectedProgrammeList"
                 ref="selectMultipleProgramme"
                 model="MULTIPLE"
                 v-on:setProgramme="setProgramme">
-            </select-multiple-programme>
+            </select-programme>
             <el-tag>已选节目</el-tag>
             <el-table
                 :data="selectedProgrammeList"
@@ -69,12 +69,12 @@
 </template>
 
 <script>
-    import SelectMultipleProgramme from './SelectMultipleProgramme';
+    import SelectProgramme from './SelectProgramme';
 
     export default {
         name: 'EditSubjectProgrammes',
         components: {
-            SelectMultipleProgramme
+            SelectProgramme
         },
         data() {
             return {

@@ -116,20 +116,20 @@
                     layoutTemplate: 'LT_L',
                     renderType: 'CATALOGUE',
                     title: '',
-                    recommendLayoutItemMultiList: list
+                    subjectId: '',
+                    layoutItemMultiList: list
                 };
                 // 保存数据到本地store，并展示，关闭弹出框
                 this.$store.dispatch('todayRecommend/setCatalogue', {
-                    block: this.blockIndex,
-                    item: catalogueItem
+                    model: this.blockIndex,
+                    catalogueModel: catalogueItem
                 }).then(response => {
                     if (response === 'success') {
                         this.$message({
                             message: '设置推荐节目类别成功',
                             type: 'success'
                         });
-                        this.$emit('setCatalogue', list[0]);
-                        this.$store.dispatch('todayRecommend/setTodayRecommendCache');
+                        this.$emit('setCatalogue', catalogueItem, this.blockIndex);
                         this.pickCatalogueVisible = false;
                     } else {
                         this.$message({
