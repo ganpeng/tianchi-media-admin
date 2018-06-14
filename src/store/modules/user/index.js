@@ -42,6 +42,8 @@ const actions = {
                     // 设置user模块
                     commit('setName', data.name);
                     commit('setToken', data.token);
+                    // 获取图片的根路径
+                    service.getImageBaseUri();
                 }
                 resolve(res);
             }).catch(err => {

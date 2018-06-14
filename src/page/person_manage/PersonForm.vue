@@ -17,6 +17,8 @@
                     <el-input
                         type="textarea"
                         :disabled="readonly"
+                        :maxlength="300"
+                        :minlength="110"
                         :autosize="{ minRows: 4, maxRows: 12}"
                         placeholder="请输入人物简介"
                         :value="person.description"
@@ -51,6 +53,7 @@
                 </el-form-item>
                 <el-form-item label="身高" prop="height">
                     <el-input
+                        type="number"
                         :disabled="readonly"
                         placeholder=""
                         :value="person.height"
@@ -61,6 +64,7 @@
                 </el-form-item>
                 <el-form-item label="体重" prop="weight">
                     <el-input
+                        type="number"
                         :disabled="readonly"
                         placeholder=""
                         :value="person.weight"
@@ -69,12 +73,13 @@
                         <template slot="append">kg</template>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="职业" prop="mainRole">
+                <el-form-item label="职业" prop="mainRoleList">
                     <el-select
+                        multiple
                         :disabled="readonly"
-                        :value="person.mainRole"
+                        :value="(person.mainRoleList ? person.mainRoleList : [])"
                         placeholder="请选择职业"
-                        @input="inputHandler($event, 'mainRole')"
+                        @input="inputHandler($event, 'mainRoleList')"
                     >
                         <el-option
                             v-for="item in mainRoleoptions"
@@ -91,7 +96,7 @@
                     <ul class="cover-list">
                         <li v-for="(img, index) in person.posterImageList" :key="index" class="img-item">
                             <div @click="displayImage(index)">
-                                <img :src="img.uri" alt="">
+                                <img :src="img.uri | imageUrl" alt="">
                                 <div v-if="!readonly" class="delete-layer">
                             </div>
                             </div>
@@ -133,7 +138,6 @@
  * 图片上传的逻辑，每种尺寸的图片必须且只能传一张, 如果都传了就不现实长传图片的按钮，传过的图片的尺寸，不能在尺寸列表中显示该尺寸， 图片支持删除
  *
  */
-
 import {mapGetters, mapMutations} from 'vuex';
 import UploadImage from 'sysComponents/custom_components/global/UploadImage';
 import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
@@ -182,7 +186,7 @@ export default {
                     { required: true, message: '请选择区域' },
                     { validator: requiredValidator('请选择区域') }
                 ],
-                mainRole: [
+                mainRoleList: [
                     { required: true, message: '请输入人物职业' },
                     { validator: requiredValidator('请输入人物职业') }
                 ]

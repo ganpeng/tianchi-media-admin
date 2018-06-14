@@ -20,7 +20,8 @@
                 <el-button type="primary">搜索</el-button>
             </el-form-item>
             <el-form-item class="create-account">
-                <el-button type="primary" plain @click="showVideoUploadDialog">新增视频</el-button>
+                <el-button type="primary" plain @click="showVideoUploadDialog">上传点播视频</el-button>
+                <el-button type="primary" plain @click="showVideoUploadDialog">上传轮播视频</el-button>
             </el-form-item>
         </el-form>
         <video-table></video-table>
@@ -85,7 +86,7 @@
                 let formData = new FormData();
                 formData.append('file', obj.file);
                 this.isLoading = true;
-                this.$service.uploadImage({formData})
+                this.$service.uploadVideo({formData})
                     .then((res) => {
                         if (res && (res.code === 0)) {
                             this.cancelHandler();

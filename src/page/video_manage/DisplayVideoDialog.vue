@@ -8,14 +8,13 @@
             :append-to-body="true"
             @open="initVideo">
                 <div>
-                    <video-player ref="player" @play="play" :video="{url, type: 'hls'}" :contextmenu="contextmenu" ></video-player>
+                    <video-player ref="player" @play="play" :video="{url, type: 'hls'}" :contextmenu="contextmenu"></video-player>
                 </div>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="cancelHandler">关闭</el-button>
                 </div>
         </el-dialog>
 </template>
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
 import VideoPlayer from './VideoPlayer';
 export default {
@@ -32,20 +31,15 @@ export default {
     },
     data() {
         return {
-            video: {
-                url: 'https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8',
-                pic: 'http://static.smartisanos.cn/pr/img/video/video_03_cc87ce5bdb.jpg',
-                type: 'hls'
-            },
             autoplay: false,
             player: null,
             contextmenu: [
                 {
-                    text: 'GitHub',
+                    text: '天驰传媒',
                     link: 'https://github.com/MoePlayer/vue-dplayer'
                 }
             ]
-        }
+        };
     },
     methods: {
         initVideo() {
@@ -54,7 +48,7 @@ export default {
                 this.player.switchVideo({url: this.url});
             }, 0);
         },
-        cancelHandler(){
+        cancelHandler() {
             this.$emit('changeDisplayVideoDialogStatus', false);
         },
         play() {}

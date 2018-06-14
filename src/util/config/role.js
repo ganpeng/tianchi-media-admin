@@ -118,4 +118,48 @@ export const RELEASE_STATUS = {
     PRE_RELEASED: '预发布'
 };
 
+// 年级
+export const GRADE = [
+    {
+        value: 'ONE',
+        label: '一年级'
+    },
+    {
+        value: 'TWO',
+        label: '二年级'
+    },
+    {
+        value: 'THREE',
+        label: '三年级'
+    }
+];
+
+// 规格
+export const SPEC = [
+    {
+        value: 'HLW',
+        label: '好莱坞'
+    },
+    {
+        value: 'YX',
+        label: '院线'
+    }
+];
+
+// 科目
+export const SUBJECT = [
+    {
+        value: 'YUWEN',
+        label: '语文'
+    },
+    {
+        value: 'YINGYU',
+        label: '英语'
+    },
+    {
+        value: 'SHUXUE',
+        label: '数学'
+    }
+];
+
 export default {MAIN_ROLE_OPTIONS, VIDEO_TYPE, QUALITY_TYPE, VIDEO_TYPE_OBJ, BUSINESS_OPERATOR, BUSINESS_OPERATOR_OBJ, COPYRIGHT_RESERVER, COPYRIGHT_RESERVER_OBJ, RELEASE_STATUS};

@@ -4,7 +4,7 @@ const state = {
         {
             id: 1,
             name: '视频1',
-            playUrl: 'http://cdn.can.cibntv.net/12/201702161000/rexuechangan01/rexuechangan01.m3u8',
+            playUrl: 'http://test-video.tianchiapi.com/group1/M00/00/03/CgEBIVsg7m6AFsYpAAAcnK8oMY069.m3u8',
             takeTimeInSec: '6000000',
             createdAt: new Date()
         },

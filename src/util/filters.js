@@ -22,6 +22,10 @@ const FILTERS = {
             str = str + ',' + array[i][attr];
         }
         return str.slice(1);
+    },
+    imageUrl(uri) {
+        let baseUri = window.localStorage.getItem('imageBaseUri');
+        return baseUri + uri;
     }
 };
 

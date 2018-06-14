@@ -51,6 +51,7 @@
                     :disabled="readonly"
                     :value="video.name"
                     auto-complete="off"
+                    :maxlength="30"
                     placeholder="请输入子集名称"
                     @input="inputHandler($event, 'name')"
                 ></el-input>
@@ -59,6 +60,7 @@
                 <el-input
                     :disabled="readonly"
                     type="textarea"
+                    :maxlength="50"
                     :autosize="{ minRows: 4, maxRows: 14}"
                     placeholder="请输入子集简介"
                     :value="video.description"
@@ -85,7 +87,7 @@
                 <el-button v-if="!readonly" type="primary" @click="uploadImageHandler">上传封面图<i class="el-icon-upload el-icon--right"></i></el-button>
                 <ul v-if="video.coverImage" class="cover-list">
                     <li class="img-item">
-                        <img :src="video.coverImage.uri" alt="">
+                        <img :src="video.coverImage.uri | imageUrl" alt="">
                     </li>
                 </ul>
             </el-form-item>
@@ -200,13 +202,13 @@
                 imageUploadDialogVisible: false,
                 selectVideoDialogVisible: false,
                 uploadVideoRules: {
-                    name: [{ required: true, message: '请输入视频名称' }],
-                    description: [{ required: true, message: '请输入视频简介' }],
-                    type: [{ required: true, message: '请选择视频内容类型' }],
-                    takeTimeInSec: [{ required: true, message: '请选择要关联的正片' }],
-                    sort: [{ required: true, message: '请输入视频的排序' }],
-                    quality: [{ required: true, message: '请选择视频类型' }],
-                    free: [{ required: true, message: '请选择是否付费' }]
+                    type: [{ required: true, message: '请选择视频内容类型' }]
+                    // name: [{ required: true, message: '请输入视频名称' }],
+                    // description: [{ required: true, message: '请输入视频简介' }],
+                    // takeTimeInSec: [{ required: true, message: '请选择要关联的正片' }],
+                    // sort: [{ required: true, message: '请输入视频的排序' }],
+                    // quality: [{ required: true, message: '请选择视频类型' }],
+                    // free: [{ required: true, message: '请选择是否付费' }]
                 }
             };
         },
@@ -255,7 +257,6 @@
                 this.$emit('changeVideoDialogStatus', false);
                 // 清楚校验的规则
                 this.resetProgrammeVideo();
-                // this.$refs.uploadVideoForm.clearValidate();
             },
             successHandler() {
                 this.$refs.uploadVideoForm.validate(value => {

@@ -6,11 +6,13 @@
 
 const npmEventName = process.env.npm_lifecycle_event;
 let proxyTarget;
+let uploadProxyTarget;
 switch (npmEventName) {
     // develop url
     case 'dev':
     case 'dev:dev':
         proxyTarget = 'http://dev-gateway.tianchiapi.com';
+        uploadProxyTarget = 'http://dev-storage.tianchiapi.com';
         break;
     // test url
     case 'dev:test':
@@ -25,7 +27,7 @@ switch (npmEventName) {
         proxyTarget = 'http://10.0.3.246:8100';
         break;
     case 'dev:lian':
-        proxyTarget = 'http://10.0.3.236:8100';
+        proxyTarget = 'http://10.0.3.252:8100';
         break;
     // default is dev url
     default:
@@ -33,4 +35,4 @@ switch (npmEventName) {
         break;
 }
 
-module.exports = {proxyTarget};
+module.exports = {proxyTarget, uploadProxyTarget};

@@ -17,3 +17,15 @@ export const login = ({name, password}) => {
 export const logout = () => {
     return service.delete('/v1/auth/logout');
 };
+
+/**
+ * 获取图片地址的根路径
+ */
+export const getImageBaseUri = () => {
+    return service.get('/v1/sys/config/version')
+        .then((res) => {
+            if (res && res.code === 0) {
+                window.localStorage.setItem('imageBaseUri', res.data);
+            }
+        });
+};

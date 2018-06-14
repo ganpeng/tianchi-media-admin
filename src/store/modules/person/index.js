@@ -7,7 +7,7 @@ const defaultPerson = {
     birthday: '',
     description: '',
     height: '',
-    mainRole: '',
+    mainRoleList: [],
     name: '',
     namePinYin: '',
     namePy: '',

@@ -46,7 +46,7 @@
                 let formData = new FormData();
                 formData.append('file', obj.file);
                 this.isLoading = true;
-                this.$service.uploadImage({formData})
+                this.$service.uploadVideo({formData})
                     .then((res) => {
                         if (res && (res.code === 0)) {
                             this.cancelHandler();

@@ -7,6 +7,7 @@ import todayRecommend from './navigation/today_recommend';
 import programme from './programme';
 import programmeVideo from './programme_video';
 import video from './video';
+import live from './live';
 
 export default {
     permission,
@@ -15,5 +16,6 @@ export default {
     todayRecommend,
     programme,
     programmeVideo,
-    video
+    video,
+    live
 };

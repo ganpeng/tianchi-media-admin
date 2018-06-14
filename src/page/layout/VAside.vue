@@ -39,6 +39,10 @@
                             <template slot="title">视频资源管理</template>
                             <el-menu-item index="/video-manage/list">视频列表</el-menu-item>
                         </el-submenu>
+                        <el-submenu index="1-5">
+                            <template slot="title">直播频道管理</template>
+                            <el-menu-item index="/live-manage/list">直播频道列表</el-menu-item>
+                        </el-submenu>
                     </el-menu-item-group>
                     <el-menu-item-group>
                         <el-submenu index="1-4">

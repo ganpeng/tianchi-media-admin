@@ -10,10 +10,16 @@
         <el-row>
             <el-col :span="24">
                     <div class="block-title">节目基本信息</div>
-                    <el-form :rules="rules" ref="createProgramForm" status-icon :model="programme" label-width="100px" class="form-block">
+                    <el-form :rules="rules" ref="createProgramForm" status-icon :model="programme" label-width="120px" class="form-block">
                         <el-col :span="8">
                             <el-form-item label="全平台通用ID">
                                 <el-input :value="123455" disabled></el-input>
+                            </el-form-item>
+                            <el-form-item label="节目来源">
+                                <el-input
+                                    :value="'内容中心'"
+                                    disabled
+                                ></el-input>
                             </el-form-item>
                             <el-form-item label="节目名称" prop="name">
                                 <el-input
@@ -22,17 +28,18 @@
                                     :value="programme.name">
                                 </el-input>
                             </el-form-item>
+                            <el-form-item label="内部节目名称" prop="innerName">
+                                <el-input
+                                    :disabled="readonly"
+                                    @input="inputHandler($event, 'innerName')"
+                                    :value="programme.innerName">
+                                </el-input>
+                            </el-form-item>
                             <el-form-item label="节目看点" prop="desc">
                                 <el-input
                                     :value="programme.desc"
                                     :disabled="readonly"
                                     @input="inputHandler($event, 'desc')"
-                                ></el-input>
-                            </el-form-item>
-                            <el-form-item label="节目来源">
-                                <el-input
-                                    :value="'内容中心'"
-                                    disabled
                                 ></el-input>
                             </el-form-item>
                             <el-form-item label="节目简介" prop="description">
@@ -171,12 +178,12 @@
                                     end-placeholder="结束日期">
                                 </el-date-picker>
                             </el-form-item>
-                            <el-form-item label="牌照方" prop="copyrightReserver">
+                            <el-form-item label="牌照方" prop="licence">
                                 <el-select
                                     :disabled="readonly"
-                                    :value="programme.copyrightReserver"
+                                    :value="programme.licence"
                                     placeholder="请选择"
-                                    @input="inputHandler($event, 'copyrightReserver')"
+                                    @input="inputHandler($event, 'licence')"
                                 >
                                     <el-option
                                         v-for="item in copyRightDealerOptions"
@@ -186,12 +193,80 @@
                                     </el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="版权方" prop="businessOperator">
+                            <el-form-item label="版权方" prop="copyrightReserver">
                                 <el-select
                                     :disabled="readonly"
-                                    :value="programme.businessOperator"
+                                    :value="programme.copyrightReserver"
                                     placeholder="请选择"
-                                    @input="inputHandler($event, 'businessOperator')"
+                                    @input="inputHandler($event, 'copyrightReserver')"
+                                >
+                                    <el-option
+                                        v-for="item in operatorOptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item
+                                v-if="isMovie"
+                                label="出品频道" prop="producer">
+                                <el-select
+                                    :disabled="readonly"
+                                    :value="programme.producer"
+                                    placeholder="请选择"
+                                    @input="inputHandler($event, 'producer')"
+                                >
+                                    <el-option
+                                        v-for="item in operatorOptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item
+                                v-if="isMovie"
+                                label="规格" prop="spec">
+                                <el-select
+                                    :disabled="readonly"
+                                    :value="programme.spec"
+                                    placeholder="请选择"
+                                    @input="inputHandler($event, 'spec')"
+                                >
+                                    <el-option
+                                        v-for="item in operatorOptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item
+                                v-if="isEducation"
+                                label="年级" prop="grade">
+                                <el-select
+                                    :disabled="readonly"
+                                    :value="programme.grade"
+                                    placeholder="请选择"
+                                    @input="inputHandler($event, 'grade')"
+                                >
+                                    <el-option
+                                        v-for="item in operatorOptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item
+                                v-if="isEducation"
+                                label="科目" prop="subject">
+                                <el-select
+                                    :disabled="readonly"
+                                    :value="programme.subject"
+                                    placeholder="请选择"
+                                    @input="inputHandler($event, 'subject')"
                                 >
                                     <el-option
                                         v-for="item in operatorOptions"
@@ -237,7 +312,7 @@
                                 <ul class="cover-list">
                                     <li v-for="(img, index) in programme.posterImageList" :key="index" class="img-item">
                                         <div @click="displayImage(index)">
-                                            <img :src="img.uri" alt="">
+                                            <img :src="img.uri | imageUrl" alt="">
                                             <div v-if="!readonly" class="delete-layer">
                                         </div>
                                         </div>
@@ -349,21 +424,11 @@
                     name: [
                         { required: true, message: '请输入节目名称' }
                     ],
-                    desc: [
-                        { required: true, message: '请输入节目看点' }
-                    ],
-                    description: [
-                        { required: true, message: '请输入节目描述' }
+                    innerName: [
+                        { required: true, message: '请输入内部节目名称' }
                     ],
                     score: [
-                        { required: true, message: '请输入节目评分' },
                         { validator: checkScore }
-                    ],
-                    releaseAt: [
-                        { required: true, message: '请输入上映日期' }
-                    ],
-                    produceAreaList: [
-                        { required: true, message: '请输入所属地区' }
                     ],
                     category: [
                         { required: true, message: '请选择节目分类' },
@@ -371,16 +436,28 @@
                     ],
                     typeList: [
                         { required: true, message: '请选择节目类型' }
-                    ],
-                    copyrightReserver: [
-                        { required: true, message: '请选择节目牌照方' }
-                    ],
-                    businessOperator: [
-                        { required: true, message: '请选择节目版权方' }
-                    ],
-                    featureVideoCount: [
-                        { required: true, message: '请输入总集数' }
                     ]
+                    // desc: [
+                    //     { required: true, message: '请输入节目看点' }
+                    // ],
+                    // description: [
+                    //     { required: true, message: '请输入节目描述' }
+                    // ],
+                    // releaseAt: [
+                    //     { required: true, message: '请输入上映日期' }
+                    // ],
+                    // produceAreaList: [
+                    //     { required: true, message: '请输入所属地区' }
+                    // ],
+                    // copyrightReserver: [
+                    //     { required: true, message: '请选择节目牌照方' }
+                    // ],
+                    // businessOperator: [
+                    //     { required: true, message: '请选择节目版权方' }
+                    // ],
+                    // featureVideoCount: [
+                    //     { required: true, message: '请输入总集数' }
+                    // ],
                 }
             };
         },
@@ -397,7 +474,9 @@
                 leadActorValue: 'programme/leadActorValue',
                 directorValue: 'programme/directorValue',
                 unSavedVideoList: 'programmeVideo/unSavedVideoList',
-                isTvPlay: 'programme/isTvPlay'
+                isTvPlay: 'programme/isTvPlay',
+                isMovie: 'programme/isMovie',
+                isEducation: 'programme/isEducation'
             }),
             readonly() {
                 return parseInt(this.status) === 1;
@@ -632,7 +711,7 @@
                     return parseInt(img.width) === 240 && parseInt(img.height) === 350;
                 });
                 let sizeTwo = posterImageList.findIndex((img) => {
-                    return parseInt(img.width) === 250 && parseInt(img.height) === 360;
+                    return parseInt(img.width) === 807 && parseInt(img.height) === 455;
                 });
 
                 if (sizeOne < 0) {

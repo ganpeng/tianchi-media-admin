@@ -46,7 +46,7 @@
             <el-table-column prop="id" align="center" width="240px" label="编号"></el-table-column>
             <el-table-column label="照片" align="center" >
                 <template slot-scope="scope">
-                    <img @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="80px" height="80px" class="person-image pointer" :src="(scope.row.avatarImage ? scope.row.avatarImage.uri :'' )" alt="">
+                    <img @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="80px" height="80px" class="person-image pointer" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">
                 </template>
             </el-table-column>
             <el-table-column prop="name" align="center" width="200px" label="名字"></el-table-column>
@@ -63,9 +63,9 @@
             </el-table-column>
             <el-table-column prop="height" align="center" label="身高"></el-table-column>
             <el-table-column prop="weight" align="center" label="体重"></el-table-column>
-            <el-table-column prop="mainRole" align="center" label="职业">
+            <el-table-column prop="mainRole" align="center" min-width="150" label="职业">
                 <template slot-scope="scope">
-                    {{mainRoleLabel(scope.row.mainRole)}}
+                    {{mainRoleLabel(scope.row.mainRoleList)}}
                 </template>
             </el-table-column>
             <el-table-column align="center" width="120px" label="更新时间">
@@ -141,7 +141,13 @@
                 return area ? area.label : '';
             },
             mainRoleLabel(mainRoleValue) {
-                return this.mainRoleOptions.find((mainRoleItem) => mainRoleItem.value === mainRoleValue).label;
+                if (Array.isArray(mainRoleValue)) {
+                    return mainRoleValue.map((item) => {
+                        return this.mainRoleOptions.find((mainRoleItem) => mainRoleItem.value === item).label;
+                    }).join(' ,');
+                } else {
+                    return mainRoleValue;
+                }
             },
             // 跳转到详情页面
             displayPerson(userId) {

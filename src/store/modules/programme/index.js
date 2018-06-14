@@ -4,11 +4,15 @@ import _ from 'lodash';
 
 import {checkImageExist} from '@/util/formValidate';
 
-const programmePostFields = ['copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'category', 'businessOperator', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
+const programmePostFields = ['spec', 'innerName', 'licence', 'grade', 'spec', 'subject', 'announcer', 'copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'category', 'announcer', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
     commonId: '',
+    // 节目名称
+    name: '',
+    // 内部名字
+    innerName: '',
     // 名称拼音首字母
     namePy: '',
     // 名称拼音
@@ -17,14 +21,14 @@ const defaultProgramme = {
     score: '',
     // 节目来源 ENUM('MEDIA_SYS','CONTENT_CENTER') DEFAULT 'CONTENT_CENTER'
     origin: '',
+    // 牌照方
+    licence: '',
     // 版权商
     copyrightReserver: '',
     // 版权开始日期
     copyrightStartedAt: '',
     // 版权结束日期
     copyrightEndedAt: '',
-    // 节目名称
-    name: '',
     // 播放基数(显示播放量)
     playCountBasic: '',
     // 价格
@@ -42,7 +46,15 @@ const defaultProgramme = {
     // 节目类别
     category: {},
     // 发行商
-    businessOperator: '',
+    announcer: '', // announcer
+    // 年级
+    grade: '',
+    // 规格
+    spec: '',
+    // 科目
+    subject: '',
+    // 出品方
+    producer: '',
     // 正片数量,总集数（电视剧是预知的，综艺节目是变化的）
     featureVideoCount: '',
     // 节目看点
@@ -63,9 +75,7 @@ const defaultProgramme = {
     typeList: [],
     // 节目视频列表，video的id引用
     videoIdList: [],
-
     // 下面是自定义的前端数据结构，不是服务端返回的
-
     // 主演
     leadActor: [],
     // 主演搜索结果
@@ -133,6 +143,12 @@ const getters = {
     },
     isShow(state) {
         return state.currentProgramme.category.name === '综艺';
+    },
+    isMovie(state) {
+        return state.currentProgramme.category.name === '电影';
+    },
+    isEducation(state) {
+        return state.currentProgramme.category.name === '教育';
     },
     categoryName(state) {
         return (id) => {
@@ -565,6 +581,12 @@ const actions = {
                 }
             });
         });
+        // let list = ['电影', '电视剧', '新闻', '网视', '体育', '儿童', '纪实', '教育', '卫视综艺', '网络综艺', '音乐', '曲艺', '幽默', '科普中国', '新时代党建'].map((item) => {
+        //     return {
+        //         name: item,
+        //         programmeTypeList: []
+        //     };
+        // });
         service.updateProgrammeCategory({categoryList})
             .then((res) => {
                 if (res && res.code === 0) {

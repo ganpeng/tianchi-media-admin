@@ -16,8 +16,8 @@ module.exports = {
                 target: env.proxyTarget,
                 changeOrigin: true
             },
-            '/storage/v': {
-                target: env.proxyTarget,
+            '/v': {
+                target: env.uploadProxyTarget,
                 changeOrigin: true
             }
         },
