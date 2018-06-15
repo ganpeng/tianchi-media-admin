@@ -10,6 +10,7 @@
             class="upload-demo"
             ref="upload"
             action="/admin/v1/media/image"
+            multiple
             :auto-upload="false"
             :http-request="uploadRequest"
             :show-file-list="false"

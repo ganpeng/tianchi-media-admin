@@ -22,7 +22,7 @@ export const logout = () => {
  * 获取图片地址的根路径
  */
 export const getImageBaseUri = () => {
-    return service.get('/v1/sys/config/version')
+    return service.get('/v1/sys/config/image/url-prefix')
         .then((res) => {
             if (res && res.code === 0) {
                 window.localStorage.setItem('imageBaseUri', res.data);

@@ -122,9 +122,10 @@ const searchFields = ['keyword', 'releaseStatus', 'produceAreaList', 'releaseAt'
  *  通过id获取节目
  */
 function getProgrammeById(id) {
-    return state.list.find((item) => {
+    let programme = state.list.find((item) => {
         return item.id === id;
     });
+    return programme;
 }
 
 const getters = {
@@ -203,14 +204,14 @@ const getters = {
     getDirector(state) {
         return (id) => {
             let programme = getProgrammeById(id);
-            let director = programme.figureList.filter((figure) => figure.role === 'DIRECTOR');
+            let director = programme.figureListMap['DIRECTOR'] ? programme.figureListMap['DIRECTOR'] : [];
             return director.map((item) => item.name).join(', ');
         };
     },
     getChiefActor(state) {
         return (id) => {
             let programme = getProgrammeById(id);
-            let chiefActor = programme.figureList.filter((figure) => figure.role === 'CHIEF_ACTOR');
+            let chiefActor = programme.figureListMap['CHIEF_ACTOR'] ? programme.figureListMap['CHIEF_ACTOR'] : [];
             return chiefActor.map((item) => item.name).join(', ');
         };
     },
@@ -501,8 +502,8 @@ function formatProgrammeData(programmeData) {
  *  序列化服务端返回的数据
  */
 function serializeProgrammData(programmeData) {
-    let director = programmeData.figureList.filter((item) => item.role === 'DIRECTOR');
-    let leadActor = programmeData.figureList.filter((item) => item.role === 'CHIEF_ACTOR');
+    let director = programmeData.figureListMap['DIRECTOR'] ? programmeData.figureListMap['DIRECTOR'] : [];
+    let leadActor = programmeData.figureListMap['CHIEF_ACTOR'] ? programmeData.figureListMap['CHIEF_ACTOR'] : [];
     let directorResult = [];
     let leadActorResult = [];
 
@@ -581,12 +582,6 @@ const actions = {
                 }
             });
         });
-        // let list = ['电影', '电视剧', '新闻', '网视', '体育', '儿童', '纪实', '教育', '卫视综艺', '网络综艺', '音乐', '曲艺', '幽默', '科普中国', '新时代党建'].map((item) => {
-        //     return {
-        //         name: item,
-        //         programmeTypeList: []
-        //     };
-        // });
         service.updateProgrammeCategory({categoryList})
             .then((res) => {
                 if (res && res.code === 0) {

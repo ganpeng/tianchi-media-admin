@@ -162,4 +162,15 @@ export const SUBJECT = [
     }
 ];
 
-export default {MAIN_ROLE_OPTIONS, VIDEO_TYPE, QUALITY_TYPE, VIDEO_TYPE_OBJ, BUSINESS_OPERATOR, BUSINESS_OPERATOR_OBJ, COPYRIGHT_RESERVER, COPYRIGHT_RESERVER_OBJ, RELEASE_STATUS};
+const SIGN_CODE = ['MOVIE', 'TV_DRAMA', 'NEWS', 'NETWORK', 'SPORTS', 'CHILD', 'RECORD', 'EDU', 'TV_SHOW_SATELLITE', 'TV_SHOW_NETWORK', 'MUSIC', 'TUNE_ART', 'HUMOROUS', 'SCIENCE', 'COMMUNIST_PARTY_BUILD'];
+
+// 一级分类
+export const CATEGORY = ['电影', '电视剧', '新闻', '网视', '体育', '儿童', '纪实', '教育', '卫视综艺', '网络综艺', '音乐', '曲艺', '幽默', '科普中国', '新时代党建'].map((item, index) => {
+    return {
+        name: item,
+        programmeTypeList: [],
+        signCode: SIGN_CODE[index]
+    };
+});
+
+export default {MAIN_ROLE_OPTIONS, VIDEO_TYPE, QUALITY_TYPE, VIDEO_TYPE_OBJ, BUSINESS_OPERATOR, BUSINESS_OPERATOR_OBJ, COPYRIGHT_RESERVER, COPYRIGHT_RESERVER_OBJ, RELEASE_STATUS, CATEGORY};

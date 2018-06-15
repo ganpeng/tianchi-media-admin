@@ -7,7 +7,7 @@ import store from '../store';
 import {Message} from 'element-ui';
 
 let service = axios.create({
-    timeout: 5000,
+    // timeout: 5000,
     headers: {
         'Accept': 'application/json',
         'x-tianchi-client': '{"role":"ADVISER","version":"v1.1.1","deviceId":"1234fads"}'
