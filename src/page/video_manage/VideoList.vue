@@ -38,7 +38,8 @@
                 :auto-upload="false"
                 :http-request="uploadRequest"
                 :show-file-list="false"
-                :with-credentials="true">
+                :with-credentials="true"
+                multiple>
                     <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
             <div slot="footer" class="dialog-footer">
