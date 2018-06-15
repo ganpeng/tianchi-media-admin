@@ -16,7 +16,7 @@ import EditAdmin from 'sysPage/admin_manage/EditAdmin';
 import ErrorLayout from 'sysPage/error/ErrorLayout';
 import ErrorNotFound from 'sysPage/error/404';
 import NavBarSetting from 'sysPage/content_manage/nav_bar_manage/NavBarSetting';
-import TodayRecommended from 'sysPage/content_manage/nav_bar_manage/TodayRecommended';
+import NavBarLayoutSetting from 'sysPage/content_manage/nav_bar_manage/NavBarLayoutSetting';
 import PersonList from 'sysPage/person_manage/PersonList';
 import CreatePerson from 'sysPage/person_manage/CreatePerson';
 import EditPerson from 'sysPage/person_manage/EditPerson';
@@ -135,11 +135,11 @@ let router = new Router({
                     name: 'NavBarSetting',
                     component: NavBarSetting
                 },
-                // 内容管理-栏目管理-今日推荐设置
+                // 内容管理-栏目管理-布局设置
                 {
-                    path: '/nav-bar-manage/today-recommended',
-                    name: 'TodayRecommended',
-                    component: TodayRecommended
+                    path: '/nav-bar-manage/layout-setting/:navBarId',
+                    name: 'NavBarLayoutSetting',
+                    component: NavBarLayoutSetting
                 },
                 // 内容管理-栏目管理-直播频道设置(根据navBarId设置对应的直播频道)
                 {

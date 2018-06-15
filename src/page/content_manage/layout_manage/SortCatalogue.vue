@@ -1,34 +1,51 @@
 <!--内容管理-栏目管理-为频道或者类型等目录排序-->
 <template>
     <div>
-        <ul class="recommend-type recommend-line">
-            <li class="settable recommend-item" @click="setPickCatalogueVisible(true)"
-                v-for="(item,index) in pickedCatalogueList" :key="index">
-                <div class="ab-center">{{item.name}}</div>
+        <ul class="recommend-type">
+            <li class="operator" @click="setPickCatalogueVisible(true)">
+                <div class="ab-center">设置<br/>分类</div>
             </li>
-            <li class="settable recommend-item">
-                <div class="ab-center">更多</div>
+            <li v-for="(item,index) in pickedCatalogueList" :key="index">
+                <div class="ab-center">
+                    <img v-if="item.coverImage" :src="item.coverImage ? item.coverImage.uri : ''"
+                         :alt="item.coverImage ? item.coverImage.name : ''"/>
+                </div>
             </li>
         </ul>
-        <el-dialog title="设置电视剧推荐类型" :visible.sync="pickCatalogueVisible">
+        <el-dialog :title="setCatalogueTitle" :visible.sync="pickCatalogueVisible">
             <template v-if="pickCatalogueVisible">
                 <ul class="pick-list" id="pick-list">
-                    <li v-for="(item, index) in pickedCatalogueList" :key="index"
-                        v-if="item.id"
+                    <li v-for="(item, index) in pickedCatalogueSettingList" :key="index"
                         :data-id="item.id"
-                        :data-name="item.name">
-                        <el-card shadow="always">
-                            {{item.name}}
-                        </el-card>
-                    </li>
-                </ul>
-                <ul class="type-list" id="type-list">
-                    <li v-for="(item, index) in typeList" :key="index"
-                        :data-id="item.id"
-                        :data-name="item.name">
-                        <el-card shadow="always">
-                            {{item.name}}
-                        </el-card>
+                        :class="item.layoutItemType === 'ALL' ? 'all' : ''">
+                        <div class="image-box">
+                            <div class="ab-center">
+                                <img v-if="item.coverImage" :src="item.coverImage ? item.coverImage.uri : ''"
+                                     :alt="item.coverImage ? item.coverImage.name : ''"/>
+                                <label v-else>预览图片</label>
+                            </div>
+                        </div>
+                        <el-select v-if="item.layoutItemType !== 'ALL'" v-model="item.id" placeholder="请选择"
+                                   @change="setOptionsStatus">
+                            <el-option
+                                v-for="item in typeList"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id"
+                                :disabled="item.disabled">
+                            </el-option>
+                        </el-select>
+                        <!--'全部'的id默认设置为1-->
+                        <el-select v-else v-model="item.id" placeholder="请选择">
+                            <el-option
+                                v-for="item in [{id:'1',name:'全部'}]"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id"
+                                :disabled="item.disabled">
+                            </el-option>
+                        </el-select>
+                        <el-button type="success" size="mini" plain @click="setItemCoverImage(index)">设置图片</el-button>
                     </li>
                 </ul>
                 <div slot="footer" class="dialog-footer">
@@ -37,52 +54,65 @@
                 </div>
             </template>
         </el-dialog>
+        <upload-image
+            :size='size'
+            title="上传节目封面图片"
+            :successHandler="addPosterImage"
+            :imageUploadDialogVisible="imageUploadDialogVisible"
+            v-on:changeImageDialogStatus="closeImageDialog($event)">
+        </upload-image>
     </div>
 </template>
 
 <script>
+
+    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import {PROGRAMME_DIMENSION as subjectDimension} from '@/util/config/dimension';
+
     export default {
         name: 'SortCatalogue',
-        props: ['categoryName', 'pickedCatalogueList', 'blockIndex'],
+        props: ['categoryName', 'blockIndex', 'setCatalogueTitle', 'pickedCatalogueList'],
+        components: {
+            UploadImage
+        },
         data() {
             return {
+                size: subjectDimension,
                 pickCatalogueVisible: false,
-                typeList: []
+                typeList: [],
+                valueList: [],
+                valueAll: '全部',
+                imageUploadDialogVisible: false,
+                imageIndex: '',
+                pickedCatalogueSettingList: []
             };
         },
         methods: {
-            initTypeList() {
+            getTypeList() {
                 this.$service.getProgrammeCategory().then(response => {
                     if (response && response.code === 0) {
                         response.data.map(item => {
                             if (item.name === this.categoryName) {
                                 this.typeList = item.programmeTypeList;
-                                // 去除已选的类型
-                                for (let i = 0; i < this.pickedCatalogueList.length; i++) {
-                                    for (let k = 0; k < this.typeList.length; k++) {
-                                        if (this.pickedCatalogueList[i].id === this.typeList[k].id) {
-                                            this.typeList.splice(k, 1);
-                                        }
-                                    }
-                                }
-                                this.initDragula();
+                                this.setOptionsStatus();
                             }
                         });
                     }
                 });
             },
             initDragula() {
+                let that = this;
                 this.$nextTick(function () {
                     // 拖拽设置
-                    this.$dragula([document.getElementById('type-list'), document.getElementById('pick-list')], {
+                    this.$dragula([document.getElementById('pick-list')], {
                         direction: 'horizontal',
+                        // '全部'的标签不可以移动
+                        moves: function (el) {
+                            return !el.classList.contains('all');
+                        },
+                        // 其它标签不可以移动到'全部'标签之后
                         accepts: function (el, target, source, sibling) {
-                            if (target.id === 'pick-list') {
-                                if (target.querySelectorAll('li').length >= 5) {
-                                    return false;
-                                }
-                            }
-                            return true;
+                            return !(that.pickedCatalogueList[that.pickedCatalogueList.length - 1].layoutItemType === 'ALL' && sibling === null);
                         }
                     });
                 });
@@ -91,14 +121,52 @@
             setPickCatalogueVisible(isVisible) {
                 this.pickCatalogueVisible = isVisible;
                 if (isVisible) {
-                    this.initTypeList();
+                    this.pickedCatalogueSettingList = this.pickedCatalogueList;
+                    this.initDragula();
+                    this.getTypeList();
                 }
+            },
+            // 设置目录项是否可选
+            setOptionsStatus() {
+                this.typeList.map(type => {
+                    type.disabled = false;
+                    this.pickedCatalogueSettingList.map(selectItem => {
+                        if (type.id === selectItem.id) {
+                            type.disabled = true;
+                        }
+                    });
+                });
+            },
+            // 设置目录项图片
+            setItemCoverImage(index) {
+                this.imageIndex = index;
+                this.closeImageDialog(true);
+            },
+            // 关闭上传图片对话框
+            closeImageDialog(status) {
+                this.imageUploadDialogVisible = status;
+            },
+            // 设置色块图片
+            addPosterImage(newPosterImage) {
+                this.pickedCatalogueSettingList[this.imageIndex].coverImage = newPosterImage.posterImage;
+            },
+            // 检测是否设置完成
+            checkSettingStatus() {
+                if (this.pickedCatalogueSettingList.length !== 6) {
+                    return false;
+                }
+                this.pickedCatalogueSettingList.map(item => {
+                    if (!item.id || !item.coverImage) {
+                        return false;
+                    }
+                });
+                return true;
             },
             // 设置目录
             setCatalogue() {
-                if (this.$el.querySelectorAll('#pick-list li').length !== 5) {
+                if (!this.checkSettingStatus()) {
                     this.$message({
-                        message: '请设置五个推荐类型',
+                        message: '请完整设置六个推荐类型',
                         type: 'warning'
                     });
                     return;
@@ -106,10 +174,10 @@
                 let list = [[]];
                 let nodeList = this.$el.querySelectorAll('#pick-list li');
                 for (let i = 0; i < nodeList.length; i++) {
-                    list[0].push({
-                        id: nodeList[i].getAttribute('data-id'),
-                        name: nodeList[i].getAttribute('data-name'),
-                        itemType: 'PROGRAMME_TYPE'
+                    this.pickedCatalogueSettingList.map(item => {
+                        if (nodeList[i].getAttribute('data-id') === item.id) {
+                            list[0].push(item);
+                        }
                     });
                 }
                 let catalogueItem = {
@@ -145,20 +213,32 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
+
     // 推荐节目类型或者直播频道
     .recommend-type {
         display: flex;
         margin-top: 20px;
         justify-content: space-between;
         li {
+            position: relative;
             width: 14%;
             padding-top: 8%;
             background: #008178;
+            color: #fff;
+            &.operator {
+                width: 80px;
+                border-radius: 10px;
+                cursor: pointer;
+            }
             div {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                font-size: 40px;
+                font-size: 20px;
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
             }
         }
     }
@@ -167,36 +247,38 @@
         display: flex;
         justify-content: space-around;
         align-items: center;
-        flex-wrap: wrap;
         height: 200px;
         margin-bottom: 30px;
         border: 1px solid gray;
         li {
             margin-bottom: 16px;
             margin-right: 12px;
+            width: 14%;
             cursor: grab;
-            .el-card {
+            &.all {
+                cursor: default;
+            }
+            .image-box {
+                position: relative;
                 flex-shrink: 0;
+                width: 100%;
+                padding-top: 57%;
                 background: #008178;
                 color: #fff;
                 font-size: 14px;
+                .ab-center {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                }
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
             }
-        }
-    }
-
-    .type-list {
-        display: flex;
-        flex-wrap: wrap;
-        li {
-            margin-bottom: 16px;
-            margin-right: 12px;
-            cursor: grab;
-        }
-        .el-card {
-            flex-shrink: 0;
-            background: #606266;
-            color: #fff;
-            font-size: 14px;
+            .el-button {
+                margin-top: 20px;
+            }
         }
     }
 
@@ -210,11 +292,27 @@
         cursor: -webkit-grabbing;
         background-color: rgba(0, 0, 0, 0.2);
         transition: opacity 0.4s ease-in-out;
-        .el-card {
+        text-align: center;
+        .image-box {
+            position: relative;
             flex-shrink: 0;
-            background: #606266;
+            width: 100%;
+            padding-top: 57%;
+            background: #008178;
             color: #fff;
             font-size: 14px;
+            .ab-center {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .el-button {
+            margin-top: 20px;
         }
     }
 

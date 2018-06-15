@@ -144,57 +144,68 @@ const DATA = {
                 [
                     {
                         "id": "5b0d1de6dd10354bfd0cef82",
-                        "layoutItemType": "PROGRAMME_TYPE",
+                        "layoutItemType": "TV_DRAMA_PROGRAMME_TYPE",
                         "name": "言情",
                         "coverImage": {
                             "height": "168",
                             "id": "5b17b031dd1035122d9110d7",
                             "name": "服务",
-                            "uri": "http://dev-image.tianchiapi.com/86c14a7a8bdcea8c8de0ae6d8204041c.jpeg",
+                            "uri": "https://tse3.mm.bing.net/th?id=OIP.7Z_A-6JSySeDAYGAUY9mTAHaEo&pid=Api",
                             "width": "300"
                         }
                     }, {
                     "id": "5b0d1de6dd10354bfd0cef83",
-                    "layoutItemType": "PROGRAMME_TYPE",
+                    "layoutItemType": "TV_DRAMA_PROGRAMME_TYPE",
                     "name": "玄幻",
                     "coverImage": {
                         "height": "168",
                         "id": "5b17b031dd1035122d9110d7",
                         "name": "服务",
-                        "uri": "http://dev-image.tianchiapi.com/86c14a7a8bdcea8c8de0ae6d8204041c.jpeg",
+                        "uri": "https://tse4.mm.bing.net/th?id=OIP.tigp8jivgiCNbjzPBUXY_gHaEK&pid=Api",
                         "width": "300"
                     }
                 }, {
                     "id": "5b165f61dd10358ce93d5d42",
-                    "layoutItemType": "PROGRAMME_TYPE",
+                    "layoutItemType": "TV_DRAMA_PROGRAMME_TYPE",
                     "name": "科幻",
                     "coverImage": {
                         "height": "168",
                         "id": "5b17b031dd1035122d9110d7",
                         "name": "服务",
-                        "uri": "http://dev-image.tianchiapi.com/86c14a7a8bdcea8c8de0ae6d8204041c.jpeg",
+                        "uri": "https://tse3.mm.bing.net/th?id=OIP.7Z_A-6JSySeDAYGAUY9mTAHaEo&pid=Api",
                         "width": "300"
                     }
                 }, {
                     "id": "5b165f61dd10358ce93d5d43",
-                    "layoutItemType": "PROGRAMME_TYPE",
+                    "layoutItemType": "TV_DRAMA_PROGRAMME_TYPE",
                     "name": "犯罪",
                     "coverImage": {
                         "height": "168",
                         "id": "5b17b031dd1035122d9110d7",
                         "name": "服务",
-                        "uri": "http://dev-image.tianchiapi.com/86c14a7a8bdcea8c8de0ae6d8204041c.jpeg",
+                        "uri": "https://tse3.mm.bing.net/th?id=OIP.7Z_A-6JSySeDAYGAUY9mTAHaEo&pid=Api",
                         "width": "300"
                     }
                 }, {
                     "id": "5b165f61dd10358ce93d5d44",
-                    "layoutItemType": "PROGRAMME_TYPE",
+                    "layoutItemType": "TV_DRAMA_PROGRAMME_TYPE",
                     "name": "医疗",
                     "coverImage": {
                         "height": "168",
                         "id": "5b17b031dd1035122d9110d7",
                         "name": "服务",
-                        "uri": "http://dev-image.tianchiapi.com/86c14a7a8bdcea8c8de0ae6d8204041c.jpeg",
+                        "uri": "https://tse3.mm.bing.net/th?id=OIP.7Z_A-6JSySeDAYGAUY9mTAHaEo&pid=Api",
+                        "width": "300"
+                    }
+                }, {
+                    "id": "1",
+                    "layoutItemType": "ALL",
+                    "name": "全部",
+                    "coverImage": {
+                        "height": "168",
+                        "id": "5b17b031dd1035122d9110d7",
+                        "name": "服务",
+                        "uri": "https://tse4.mm.bing.net/th?id=OIP.tigp8jivgiCNbjzPBUXY_gHaEK&pid=Api",
                         "width": "300"
                     }
                 }]

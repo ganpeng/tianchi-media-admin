@@ -6,8 +6,6 @@
                 unique-opened
                 default-active="2"
                 class="el-menu-vertical-demo"
-                @open="handleOpen"
-                @close="handleClose"
                 background-color="#545c64"
                 text-color="#fff"
                 router
@@ -21,7 +19,10 @@
                         <el-submenu index="1-1">
                             <template slot="title">栏目管理</template>
                             <el-menu-item index="/nav-bar-manage/setting">栏目项设置</el-menu-item>
-                            <el-menu-item index="/nav-bar-manage/today-recommended">今日推荐</el-menu-item>
+                            <el-menu-item v-for="(item, index) in navBarList" :key='index'
+                                          :index="'/nav-bar-manage/layout-setting/' + item.id">
+                                {{item.name}}
+                            </el-menu-item>
                         </el-submenu>
                         <el-submenu index="1-2">
                             <template slot="title">节目资源管理</template>
@@ -105,12 +106,20 @@
     export default {
         name: 'VAside',
         data() {
-            return {};
+            return {
+                navBarList: []
+            };
+        },
+        mounted() {
+            this.init();
         },
         methods: {
-            handleOpen(key, keyPath) {
-            },
-            handleClose(key, keyPath) {
+            init() {
+                this.$service.getNavBarList().then(response => {
+                    if (response && response.code === 0) {
+                        this.navBarList = response.data;
+                    }
+                });
             },
             // 退出登录
             logout() {

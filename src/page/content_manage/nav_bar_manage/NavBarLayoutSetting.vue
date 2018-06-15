@@ -5,9 +5,17 @@
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
-            <el-breadcrumb-item>今日推荐设置</el-breadcrumb-item>
+            <el-breadcrumb-item><label class="nav-bar-name">{{navBarName}}</label> 布局设置</el-breadcrumb-item>
         </el-breadcrumb>
         <div id="setting">
+            <ul id="nav-bar-list">
+                <li v-for="(item, index) in navBarList"
+                    :key="index"
+                    @click="switchNavBar(item.id)"
+                    :class="item.id === navBarId ? 'current-nav-bar' : ''">
+                    {{item.name}}
+                </li>
+            </ul>
             <div id="live">
                 <div class="record no-settable"></div>
                 <div class="live-channel settable" @click="setChannel">
@@ -58,6 +66,7 @@
                     :pickedCatalogueList="layoutBlockItem.layoutItemMultiList[0]"
                     :blockIndex="blockIndex + 1"
                     categoryName="电视剧"
+                    setCatalogueTitle="设置电视剧推荐类型"
                     v-on:setCatalogue="setCatalogue">
                 </sort-catalogue>
                 <!--节目或者人物-->
@@ -159,12 +168,12 @@
     import copyRightImage from '@/util/config/import_image.js';
 
     export default {
-        name: 'TodayRecommended',
+        name: 'NavBarLayoutSetting',
         components: {SortCatalogue},
         data() {
             return {
-                navBarName: '今日推荐',
-                navBarId: '',
+                navBarList: [],
+                navBarName: '',
                 sortDialogVisible: false,
                 // 推荐位布局结构
                 layoutInfo: {},
@@ -181,6 +190,9 @@
         computed: {
             modified() {
                 return this.$store.state.todayRecommend.modified;
+            },
+            navBarId() {
+                return this.$route.params.navBarId;
             }
         },
         filters: {
@@ -188,12 +200,39 @@
                 return copyRightImage[copyRightCaptain];
             }
         },
+        watch: {
+            '$route'(to, from) {
+                this.init();
+            }
+        },
         mounted() {
             this.init();
         },
         methods: {
             init() {
+                this.getNavBarList();
                 // 获取本地数据展示
+                if (this.modified) {
+                    this.displayLocalData();
+                } else {
+                    this.getOnlionLayoutInfo();
+                }
+            },
+            // 获取当前导航栏的id
+            getNavBarList() {
+                this.$service.getNavBarList().then(response => {
+                    if (response && response.code === 0) {
+                        this.navBarList = response.data;
+                        this.navBarList.map(item => {
+                            if (item.id === this.navBarId) {
+                                this.navBarName = item.name;
+                            }
+                        });
+                    }
+                });
+            },
+            // 展示本地数据
+            displayLocalData() {
                 this.layoutInfo = this.$store.getters['todayRecommend/getCurrentState'];
                 this.liveChannelList = this.layoutInfo.liveChannelList;
                 this.layoutBlockList = this.layoutInfo.layoutBlockList;
@@ -201,24 +240,6 @@
                 this.massLayoutBlockList = this.layoutBlockList.slice();
                 this.massLayoutBlockList.shift();
                 this.rightTopRecommend = this.layoutBlockFirstLayer ? this.layoutBlockFirstLayer.layoutItemMultiList[0][0] : {};
-                this.setNavBarId();
-            },
-            // 获取当前导航栏的id
-            setNavBarId() {
-                this.$service.getNavBarList().then(response => {
-                    if (response && response.code === 0) {
-                        let navBarList = response.data;
-                        navBarList.map(navBar => {
-                            if (navBar.name === this.navBarName) {
-                                this.navBarId = navBar.id;
-                                if (!this.layoutInfo.modified) {
-                                    // 获取线上布局，展示
-                                    this.getOnlionLayoutInfo();
-                                }
-                            }
-                        });
-                    }
-                });
             },
             // 获取线上的布局,并保存在state中
             getOnlionLayoutInfo() {
@@ -258,6 +279,12 @@
                     liveChannelList: this.liveChannelList,
                     layoutBlockList: this.layoutBlockList
                 });
+            },
+            // 跳转到响应的导航栏布局页面
+            switchNavBar(navBarId) {
+                if (navBarId !== this.navBarId) {
+                    this.$router.push({name: 'NavBarLayoutSetting', params: {navBarId: navBarId}});
+                }
             },
             // 设置直播频道
             setChannel() {
@@ -353,11 +380,36 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
+
+    .nav-bar-name {
+        font-style: italic;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
     #setting {
         margin: 50px 0px;
         padding: 30px 0px;
         background-image: linear-gradient(0deg, #283974 3%, #022c68 35%, #011530 100%);
         width: 100%;
+    }
+
+    #nav-bar-list {
+        display: flex;
+        margin-bottom: 30px;
+        justify-content: space-around;
+        li {
+            opacity: 0.5;
+            padding: 8px 16px;
+            font-size: 30px;
+            color: #ffffff;
+            text-align: center;
+            cursor: pointer;
+            &.current-nav-bar, &:hover {
+                background: orange;
+                border-radius: 16px;
+            }
+        }
     }
 
     // 角标样式
@@ -414,6 +466,7 @@
             width: 43%;
             padding-top: 24%;
             font-size: 30px;
+            background-color: #154F8B;
             div {
                 display: flex;
                 flex-direction: column;
@@ -430,6 +483,7 @@
             width: 43%;
             padding-top: 24%;
             font-size: 30px;
+            background-color: #154F8B;
             img {
                 display: block;
                 height: 100%;

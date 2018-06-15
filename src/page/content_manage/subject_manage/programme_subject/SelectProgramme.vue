@@ -65,7 +65,7 @@
         <el-table
             :data="programmeList"
             border
-            ref="multipleProgramme"
+            ref="selectProgramme"
             style="width: 100%"
             :highlight-current-row="model==='SINGLE'"
             @current-change="setProgramme"
@@ -179,7 +179,7 @@
         <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="listQueryParams.pageNum"
+            :current-page="pageNum"
             :page-sizes="[5, 10, 20, 50]"
             :page-size="listQueryParams.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
@@ -204,9 +204,10 @@
                     programmeTypeIdList: '',
                     visible: '',
                     keyword: '',
-                    pageNum: 1,
+                    pageNum: 0,
                     pageSize: 10
                 },
+                pageNum: 1,
                 areaOptions: [{
                     value: '1',
                     label: '大陆'
@@ -235,7 +236,9 @@
                 searchContent: '',
                 totalAmount: 0,
                 programmeList: [],
-                multipleSelection: []
+                multipleSelection: [],
+                // 单选节目
+                singleProgramme: {}
             };
         },
         mounted() {
@@ -257,21 +260,34 @@
             },
             // 请求数据
             getProgrammeList() {
+                this.listQueryParams.pageNum = this.pageNum - 1;
                 this.$service.getProgrammeList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.programmeList = response.data.list;
                         this.totalAmount = response.data.total;
                         // 对于选择的多选项项进行勾选
-                        for (let i = 0; i < this.multipleSelection.length; i++) {
-                            for (let k = 0; k < this.programmeList.length; k++) {
-                                if (this.multipleSelection[i].id === this.programmeList[k].id) {
-                                    this.$nextTick(function () {
-                                        this.$refs.multipleProgramme.toggleRowSelection(this.programmeList[k], true);
-                                    });
+                        if (this.model === 'MULTIPLE') {
+                            for (let i = 0; i < this.multipleSelection.length; i++) {
+                                for (let k = 0; k < this.programmeList.length; k++) {
+                                    if (this.multipleSelection[i].id === this.programmeList[k].id) {
+                                        this.$nextTick(function () {
+                                            this.$refs.selectProgramme.toggleRowSelection(this.programmeList[k], true);
+                                        });
+                                    }
                                 }
                             }
                         }
                         // 对于选择的单选项进行勾选
+                        if (this.model === 'SINGLE') {
+                            for (let k = 0; k < this.programmeList.length; k++) {
+                                if (this.singleProgramme.id === this.programmeList[k].id) {
+                                    this.$nextTick(function () {
+                                        this.$refs.selectProgramme.setCurrentRow(this.programmeList[k]);
+                                        this.$emit('setProgramme', this.programmeList[k]);
+                                    });
+                                }
+                            }
+                        }
                     }
                 });
             },
@@ -291,7 +307,7 @@
                 this.getProgrammeList();
             },
             handleCurrentChange(pageNum) {
-                this.listQueryParams.pageNum = pageNum;
+                this.pageNum = pageNum;
                 this.getProgrammeList();
             },
             // 添加节目
@@ -330,12 +346,13 @@
                 }
                 for (let i = 0; i < this.programmeList.length; i++) {
                     if (row.id === this.programmeList[i].id) {
-                        this.$refs.multipleProgramme.toggleRowSelection(this.programmeList[i], false);
+                        this.$refs.selectProgramme.toggleRowSelection(this.programmeList[i], false);
                     }
                 }
             },
             setProgramme(row) {
                 if (row) {
+                    this.singleProgramme = row;
                     this.$emit('setProgramme', row);
                 }
             }
