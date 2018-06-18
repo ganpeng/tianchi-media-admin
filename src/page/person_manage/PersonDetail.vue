@@ -33,7 +33,7 @@
     </div>
 </template>
 <script>
-    import { mapActions, mapGetters } from 'vuex';
+    import { mapActions, mapGetters, mapMutations } from 'vuex';
     import PersonForm from './PersonForm';
     import _ from 'lodash';
 
@@ -69,6 +69,9 @@
             }
         },
         methods: {
+            ...mapMutations({
+                setAvatarImage: 'person/setAvatarImage'
+            }),
             ...mapActions({
                 createPerson: 'person/createPerson',
                 updatePerson: 'person/updatePerson'
@@ -129,6 +132,9 @@
                     this.$message.error('人物的头像和背景图都必须上传且只能上传一张');
                     return false;
                 }
+                // 设置默认图
+                this.setAvatarImage();
+
                 if (_.isEmpty(this.person.avatarImage)) {
                     this.$message.error('请选择人物默认的封面图');
                     return false;

@@ -95,7 +95,7 @@
             </el-form>
             <el-table :data="list" border style="width: 100%">
                 <el-table-column prop="id" align="center" width="240px" label="节目编号"></el-table-column>
-                <el-table-column label="节目图片" width="200px" align="center" >
+                <el-table-column label="节目图片" align="center" >
                     <template slot-scope="scope">
                         <img @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="person-image pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
                     </template>
@@ -136,7 +136,7 @@
                 </el-table-column>
                 <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
                     <template slot-scope="scope">
-                        {{mapReleaseStatus(scope.row.releaseStatus)}}
+                        {{scope.row.visible ? '已上架' : '已下架'}}
                     </template>
                 </el-table-column>
                 <el-table-column align="center" min-width="100px" label="更新时间">
@@ -167,7 +167,6 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
-import role from '@/util/config/role';
 export default {
     name: 'ProgrammeList',
     components: {
@@ -221,9 +220,6 @@ export default {
             getProgrammeList: 'programme/getProgrammeList',
             getProgrammeCategory: 'programme/getProgrammeCategory'
         }),
-        mapReleaseStatus(key) {
-            return role.RELEASE_STATUS[key];
-        },
         clearSearchFields() {
             this.resetSearchField();
         },

@@ -1,10 +1,11 @@
-import service from '../../../service';
 import axios from 'axios';
 import _ from 'lodash';
+import service from '../../../service';
+import wsCache from '@/util/webStorage';
 
 import {checkImageExist} from '@/util/formValidate';
 
-const programmePostFields = ['spec', 'innerName', 'licence', 'grade', 'spec', 'subject', 'announcer', 'copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'category', 'announcer', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
+const programmePostFields = ['innerName', 'licence', 'grade', 'subject', 'announcer', 'copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'category', 'announcer', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
@@ -50,7 +51,7 @@ const defaultProgramme = {
     // 年级
     grade: '',
     // 规格
-    spec: '',
+    spec: [],
     // 科目
     subject: '',
     // 出品方
@@ -143,7 +144,7 @@ const getters = {
         return state.currentProgramme.category.name === '电视剧';
     },
     isShow(state) {
-        return state.currentProgramme.category.name === '综艺';
+        return state.currentProgramme.category.name === '卫视综艺' || state.currentProgramme.category.name === '网络综艺';
     },
     isMovie(state) {
         return state.currentProgramme.category.name === '电影';
@@ -347,7 +348,6 @@ const mutations = {
         });
     },
     updateSearchType(state, payload) {
-        // state.programmeType = state.currentTypeList.find((item) => item.id === payload.id);
         state.programmeType = payload.list;
     },
     resetSearchCategory(state) {
@@ -401,6 +401,11 @@ const mutations = {
             state.currentProgramme.coverImage = {};
         }
         state.currentProgramme.posterImageList = posterImageList.filter((img) => img.id !== payload.id);
+    },
+    setCoverImage(state) {
+        state.currentProgramme.coverImage = state.currentProgramme.posterImageList.find((img) => {
+            return parseInt(img.width) === 240 && parseInt(img.height) === 350;
+        });
     },
     checkPosterImage(state, payload) {
         state.currentProgramme.posterImageList = state.currentProgramme.posterImageList.map((img) => {
@@ -466,6 +471,15 @@ const mutations = {
                 return videoItem;
             }
         });
+    },
+    saveProgramme(state) {
+        wsCache.localStorage.set('programme', state.currentProgramme);
+    },
+    removeProgramme(state) {
+        wsCache.localStorage.remove('programme');
+    },
+    getProgrammeFromLocalStorage() {
+        return wsCache.localStorage.get('programme');
     }
 };
 

@@ -113,6 +113,11 @@ const mutations = {
             return image.id !== payload.id;
         });
     },
+    setAvatarImage(state) {
+        state.currentPerson.avatarImage = state.currentPerson.posterImageList.find((img) => {
+            return parseInt(img.width) === 200 && parseInt(img.height) === 200;
+        });
+    },
     checkPosterImage(state, payload) {
         state.currentPerson.posterImageList = state.currentPerson.posterImageList.map((img) => {
             if (img.id === payload.id) {

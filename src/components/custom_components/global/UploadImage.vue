@@ -30,7 +30,7 @@
                         :on-change="fileChangeHandler"
                         :auto-upload="false"
                         :http-request="uploadRequest"
-                        :show-file-list="false"
+                        :file-list="fileList"
                         :with-credentials="true">
                             <el-button size="small" type="primary">点击上传</el-button>
                     </el-upload>
@@ -79,6 +79,7 @@
                 },
                 isLoading: false,
                 isChecked: false,
+                fileList: [],
                 posterImageList: [],
                 imageUploadRules: {
                     name: [ { required: true, message: '请输入图片名称', trigger: 'change' } ],
@@ -121,6 +122,7 @@
             cancelHandler() {
                 this.$emit('changeImageDialogStatus', false);
                 this.$refs.uploadImageForm.resetFields();
+                this.fileList = [];
             },
             async beforeUploadHandler(file) {
                 try {

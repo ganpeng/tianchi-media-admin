@@ -131,6 +131,42 @@ export const GRADE = [
     {
         value: 'THREE',
         label: '三年级'
+    },
+    {
+        value: 'FOUR',
+        label: '四年级'
+    },
+    {
+        value: 'FIVE',
+        label: '五年级'
+    },
+    {
+        value: 'SIX',
+        label: '六年级'
+    },
+    {
+        value: 'CZ_ONE',
+        label: '初中一年级'
+    },
+    {
+        value: 'CZ_TWO',
+        label: '初中二年级'
+    },
+    {
+        value: 'CZ_THREE',
+        label: '初中三年级'
+    },
+    {
+        value: 'GZ_ONE',
+        label: '高中一年级'
+    },
+    {
+        value: 'GZ_TWO',
+        label: '高中二年级'
+    },
+    {
+        value: 'GZ_THREE',
+        label: '高中三年级'
     }
 ];
 
@@ -143,22 +179,58 @@ export const SPEC = [
     {
         value: 'YX',
         label: '院线'
+    },
+    {
+        value: 'WLDDY',
+        label: '网络大电影'
+    },
+    {
+        value: 'DB',
+        label: '杜比'
+    },
+    {
+        value: 'YS',
+        label: '原声'
     }
 ];
 
-// 科目
+// 科目: 语文，数学，英语，物理，化学，历史，地理，政治，生物
 export const SUBJECT = [
     {
         value: 'YUWEN',
         label: '语文'
     },
     {
+        value: 'SHUXUE',
+        label: '数学'
+    },
+    {
         value: 'YINGYU',
         label: '英语'
     },
     {
-        value: 'SHUXUE',
-        label: '数学'
+        value: 'WULI',
+        label: '物理'
+    },
+    {
+        value: 'HUAXUE',
+        label: '化学'
+    },
+    {
+        value: 'LISHI',
+        label: '历史'
+    },
+    {
+        value: 'DILI',
+        label: '地理'
+    },
+    {
+        value: 'ZHENGZHI',
+        label: '政治'
+    },
+    {
+        value: 'SHENGWU',
+        label: '生物'
     }
 ];
 
@@ -173,4 +245,18 @@ export const CATEGORY = ['电影', '电视剧', '新闻', '网视', '体育', '�
     };
 });
 
-export default {MAIN_ROLE_OPTIONS, VIDEO_TYPE, QUALITY_TYPE, VIDEO_TYPE_OBJ, BUSINESS_OPERATOR, BUSINESS_OPERATOR_OBJ, COPYRIGHT_RESERVER, COPYRIGHT_RESERVER_OBJ, RELEASE_STATUS, CATEGORY};
+export default {
+    MAIN_ROLE_OPTIONS,
+    VIDEO_TYPE,
+    QUALITY_TYPE,
+    VIDEO_TYPE_OBJ,
+    BUSINESS_OPERATOR,
+    BUSINESS_OPERATOR_OBJ,
+    COPYRIGHT_RESERVER,
+    COPYRIGHT_RESERVER_OBJ,
+    RELEASE_STATUS,
+    CATEGORY,
+    GRADE,
+    SPEC,
+    SUBJECT
+};

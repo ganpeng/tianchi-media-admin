@@ -1,3 +1,5 @@
+import service from '../../../service';
+
 const state = {
     selectedVideoId: '',
     list: [
@@ -40,7 +42,11 @@ const mutations = {
     }
 };
 
-const actions = {};
+const actions = {
+    getVideoList() {
+        return service.getVideoList({});
+    }
+};
 
 export default {
     namespaced: true,

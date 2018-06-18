@@ -28,16 +28,16 @@
         <el-dialog
             title="上传视频"
             :visible.sync="videoUploadDialogVisible"
+            :headers="uploadHeaders"
             :show-close="false"
             :close-on-click-modal="false"
             :close-on-press-escape="false">
             <el-upload
                 class="upload-demo"
                 ref="upload"
-                action="/admin/v1/media/image"
+                action="/v1/storage/video"
                 :auto-upload="false"
-                :http-request="uploadRequest"
-                :show-file-list="false"
+                :file-list="fileList"
                 :with-credentials="true"
                 multiple>
                     <el-button size="small" type="primary">点击上传</el-button>
@@ -54,7 +54,7 @@
     </div>
 </template>
 <script>
-    import {mapGetters} from 'vuex';
+    import {mapGetters, mapActions} from 'vuex';
     import VideoTable from './VideoTable';
     export default {
         name: 'PersonList',
@@ -64,7 +64,13 @@
         data() {
             return {
                 videoUploadDialogVisible: false,
-                isLoading: false
+                isLoading: false,
+                fileList: [],
+                uploadHeaders: {
+                    'Accept': 'application/json',
+                    'x-tianchi-client': '{"role":"ADVISER","version":"v1.1.1","deviceId":"1234fads"}',
+                    'x-tianchi-token': this.$store.state.user.token
+                }
             };
         },
         computed: {
@@ -72,7 +78,13 @@
                 video: 'video/videoObj'
             })
         },
+        created() {
+            this.getVideoList();
+        },
         methods: {
+            ...mapActions({
+                getVideoList: 'video/getVideoList'
+            }),
             handleSizeChange(pageSize) {
             },
             handleCurrentChange(pageNum) {
@@ -82,6 +94,7 @@
             },
             cancelHandler() {
                 this.videoUploadDialogVisible = false;
+                this.fileList = [];
             },
             uploadRequest(obj) {
                 let formData = new FormData();

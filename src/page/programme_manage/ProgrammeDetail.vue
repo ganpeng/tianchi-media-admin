@@ -209,7 +209,7 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item
-                                v-if="isMovie"
+                                v-if="isShow"
                                 label="出品频道" prop="producer">
                                 <el-select
                                     :disabled="readonly"
@@ -232,10 +232,11 @@
                                     :disabled="readonly"
                                     :value="programme.spec"
                                     placeholder="请选择"
+                                    multiple
                                     @input="inputHandler($event, 'spec')"
                                 >
                                     <el-option
-                                        v-for="item in operatorOptions"
+                                        v-for="item in specOptions"
                                         :key="item.value"
                                         :label="item.label"
                                         :value="item.value">
@@ -252,7 +253,7 @@
                                     @input="inputHandler($event, 'grade')"
                                 >
                                     <el-option
-                                        v-for="item in operatorOptions"
+                                        v-for="item in gradeOptions"
                                         :key="item.value"
                                         :label="item.label"
                                         :value="item.value">
@@ -269,7 +270,7 @@
                                     @input="inputHandler($event, 'subject')"
                                 >
                                     <el-option
-                                        v-for="item in operatorOptions"
+                                        v-for="item in subjectOptions"
                                         :key="item.value"
                                         :label="item.label"
                                         :value="item.value">
@@ -413,6 +414,9 @@
                 areaOptions: this.$util.countryList(),
                 copyRightDealerOptions: role.COPYRIGHT_RESERVER,
                 operatorOptions: role.BUSINESS_OPERATOR,
+                gradeOptions: role.GRADE,
+                specOptions: role.SPEC,
+                subjectOptions: role.SUBJECT,
                 size: dimension.PROGRAMME_DIMENSION,
                 previewImage: {
                     display: false,
@@ -437,27 +441,6 @@
                     typeList: [
                         { required: true, message: '请选择节目类型' }
                     ]
-                    // desc: [
-                    //     { required: true, message: '请输入节目看点' }
-                    // ],
-                    // description: [
-                    //     { required: true, message: '请输入节目描述' }
-                    // ],
-                    // releaseAt: [
-                    //     { required: true, message: '请输入上映日期' }
-                    // ],
-                    // produceAreaList: [
-                    //     { required: true, message: '请输入所属地区' }
-                    // ],
-                    // copyrightReserver: [
-                    //     { required: true, message: '请选择节目牌照方' }
-                    // ],
-                    // businessOperator: [
-                    //     { required: true, message: '请选择节目版权方' }
-                    // ],
-                    // featureVideoCount: [
-                    //     { required: true, message: '请输入总集数' }
-                    // ],
                 }
             };
         },
@@ -476,7 +459,8 @@
                 unSavedVideoList: 'programmeVideo/unSavedVideoList',
                 isTvPlay: 'programme/isTvPlay',
                 isMovie: 'programme/isMovie',
-                isEducation: 'programme/isEducation'
+                isEducation: 'programme/isEducation',
+                isShow: 'programme/isShow'
             }),
             readonly() {
                 return parseInt(this.status) === 1;
@@ -499,7 +483,8 @@
                 updateDirectorResult: 'programme/updateDirectorResult',
                 addProgrammeTag: 'programme/addProgrammeTag',
                 checkPosterImage: 'programme/checkPosterImage',
-                deleteVideoList: 'programmeVideo/deleteVideoList'
+                deleteVideoList: 'programmeVideo/deleteVideoList',
+                setCoverImage: 'programme/setCoverImage'
             }),
             ...mapActions({
                 createProgramme: 'programme/createProgramme',
@@ -723,6 +708,9 @@
                     this.$message({type: 'error', message: '横版海报图必须上传且只能上传一张'});
                     return false;
                 }
+
+                // 设置默认图
+                this.setCoverImage();
 
                 if (_.isEmpty(coverImage)) {
                     this.$message({type: 'error', message: '请选择默认的节目海报'});
