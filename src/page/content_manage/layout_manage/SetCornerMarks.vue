@@ -13,14 +13,14 @@
             <el-checkbox label="CUSTOM">
                 <label>右上角标</label>
                 <label>运营角标</label>
-                <img v-if="customImageUrl" :src="customImageUrl" class="custom-image">
+                <img v-if="customImageUrl" :src="customImageUrl | imageUrl" class="custom-image">
                 <el-button size="mini" type="success" @click="customCornerMarkVisible = true">选择运营角标</el-button>
             </el-checkbox>
         </el-checkbox-group>
         <el-dialog title="设置运营角标" :visible.sync="customCornerMarkVisible">
             <el-radio-group v-model="selectImageUrl">
                 <el-radio :label="item.imageUrl" v-for="(item, index) in customCornerMarkList" :key="index">
-                    <img :src="item.imageUrl" :alt="item.captain">
+                    <img :src="item.imageUrl | imageUrl" :alt="item.captain">
                 </el-radio>
             </el-radio-group>
             <el-button @click="addCover">添加图片</el-button>

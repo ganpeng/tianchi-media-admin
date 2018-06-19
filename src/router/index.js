@@ -138,13 +138,13 @@ let router = new Router({
                 },
                 // 内容管理-栏目管理-布局设置
                 {
-                    path: '/nav-bar-manage/layout-setting/:navBarId',
+                    path: '/nav-bar-manage/layout-setting/:navBarSignCode/:navBarId',
                     name: 'NavBarLayoutSetting',
                     component: NavBarLayoutSetting
                 },
                 // 内容管理-栏目管理-直播频道设置(根据navBarId设置对应的直播频道)
                 {
-                    path: '/layout-manage/channel/:navBarId',
+                    path: '/layout-manage/channel/:navBarSignCode/:navBarId',
                     name: 'SetChannel',
                     component: SetChannel
                 },
@@ -162,25 +162,25 @@ let router = new Router({
                 },
                 // 内容管理-栏目管理-节目选择设置
                 {
-                    path: '/layout-manage/programme/:model/:row/:index',
+                    path: '/layout-manage/programme/:navBarId/:navBarSignCode/:model/:row/:index',
                     name: 'AppendProgramme',
                     component: AppendProgramme
                 },
                 // 内容管理-栏目管理-单个推荐位选择专题
                 {
-                    path: '/layout-manage/single-append-subject/:model/:row/:index',
+                    path: '/layout-manage/single-append-subject/:navBarId/:navBarSignCode/:model/:row/:index',
                     name: 'SingleAppendSubject',
                     component: SingleAppendSubject
                 },
                 // 内容管理-栏目管理-模块推荐位选择节目专题
                 {
-                    path: '/layout-manage/model-append-programme-subject/:model',
+                    path: '/layout-manage/model-append-programme-subject/:navBarId/:navBarSignCode/:model/:operate',
                     name: 'ModelAppendProgrammeSubject',
                     component: ModelAppendProgrammeSubject
                 },
                 // 内容管理-栏目管理-模块推荐位选择人物专题
                 {
-                    path: '/layout-manage/model-append-person-subject/:model',
+                    path: '/layout-manage/model-append-person-subject/:navBarId/:navBarSignCode/:model/:operate',
                     name: 'ModelAppendPersonSubject',
                     component: ModelAppendPersonSubject
                 },

@@ -71,7 +71,7 @@
 
     export default {
         name: 'SortCatalogue',
-        props: ['categoryName', 'blockIndex', 'setCatalogueTitle', 'pickedCatalogueList'],
+        props: ['categoryName', 'blockIndex', 'setCatalogueTitle', 'pickedCatalogueList', 'navBarId', 'navBarSignCode'],
         components: {
             UploadImage
         },
@@ -121,7 +121,7 @@
             setPickCatalogueVisible(isVisible) {
                 this.pickCatalogueVisible = isVisible;
                 if (isVisible) {
-                    this.pickedCatalogueSettingList = this.pickedCatalogueList;
+                    this.pickedCatalogueSettingList = JSON.parse(JSON.stringify(this.pickedCatalogueList));
                     this.initDragula();
                     this.getTypeList();
                 }
@@ -188,24 +188,18 @@
                     layoutItemMultiList: list
                 };
                 // 保存数据到本地store，并展示，关闭弹出框
-                this.$store.dispatch('todayRecommend/setCatalogue', {
+                this.$store.commit('layout/setCatalogue', {
+                    navBarId: this.navBarId,
+                    navBarSignCode: this.navBarSignCode,
                     model: this.blockIndex,
                     catalogueModel: catalogueItem
-                }).then(response => {
-                    if (response === 'success') {
-                        this.$message({
-                            message: '设置推荐节目类别成功',
-                            type: 'success'
-                        });
-                        this.$emit('setCatalogue', catalogueItem, this.blockIndex);
-                        this.pickCatalogueVisible = false;
-                    } else {
-                        this.$message({
-                            message: '设置推荐节目类别失败',
-                            type: 'warning'
-                        });
-                    }
                 });
+                this.$message({
+                    message: '设置推荐节目类别成功',
+                    type: 'success'
+                });
+                this.$emit('setCatalogue', catalogueItem, this.blockIndex);
+                this.pickCatalogueVisible = false;
             }
         }
     };

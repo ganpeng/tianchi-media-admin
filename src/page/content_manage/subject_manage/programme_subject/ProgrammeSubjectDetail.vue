@@ -35,7 +35,7 @@
                     label="图片">
                     <template slot-scope="scope">
                         <img
-                            :src="scope.row.coverImage ? scope.row.coverImage.uri : ''"
+                            :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl"
                             :alt="scope.row.coverImage.name"
                             @click="displayImage(scope.row)"
                             v-if="scope.row.coverImage">

@@ -134,6 +134,59 @@ const DATA = {
                     }
                 }]
             ]
+        }, {
+            "layoutTemplate": "LT_2",
+            "renderType": "PROGRAMME",
+            "subjectId": null,
+            "title": "",
+            "layoutItemMultiList": [
+                [
+                    {
+                        "id": "5b1a2cb1dd10358740f21c00",
+                        "layoutItemType": "PROGRAMME",
+                        "name": "",
+                        "cornerMark": {
+                            "leftBottom": {
+                                "caption": "55",
+                                "imageUri": null,
+                                "markType": "EPISODES_NUMBER"
+                            },
+                            "leftTop": {
+                                "caption": "TENCENT",
+                                "imageUri": null,
+                                "markType": "COPYRIGHT_RESERVER"
+                            },
+                            "rightBottom": {
+                                "caption": "4.8",
+                                "imageUri": null,
+                                "markType": "SCORE"
+                            },
+                            "rightTop": {
+                                "caption": "",
+                                "imageUri": "http://pic26.nipic.com/20121214/11208347_175526604000_2.jpg",
+                                "markType": "CUSTOM"
+                            }
+                        },
+                        "coverImage": {
+                            "height": "168",
+                            "id": "5b1a2cabdd103588a75e06b9",
+                            "name": "fsfsf",
+                            "uri": "http://dev-image.tianchiapi.com/c884c0407ff4b1561b2aa8b6a89414f7.jpeg",
+                            "width": "300"
+                        }
+                    }, {
+                    "id": "5b17bd62dd103510c76a4c27",
+                    "layoutItemType": "SUBJECT",
+                    "name": "",
+                    "coverImage": {
+                        "height": "189",
+                        "id": "5b14dafddd10353a4e609686",
+                        "name": "dasd",
+                        "uri": "http://dev-image.tianchiapi.com/2a8d4167d0fb13c1668590045eb3b520.jpeg",
+                        "width": "144"
+                    }
+                }]
+            ]
         },
         {
             "layoutTemplate": "LT_L",

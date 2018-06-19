@@ -5,6 +5,10 @@
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
+            <el-breadcrumb-item
+                :to="'/nav-bar-manage/layout-setting/' + currentNavBarInfo.signCode + '/' + currentNavBarInfo.id">
+                {{currentNavBarInfo.name}}页面设置
+            </el-breadcrumb-item>
             <el-breadcrumb-item>人物模块设置</el-breadcrumb-item>
         </el-breadcrumb>
         <h3 class="text-left">1.请输入人物模块名称：</h3>
@@ -22,7 +26,7 @@
         <label v-if="personList.length === 0">暂无选中的人物</label>
         <ul id="person-list" v-else>
             <li v-for="(item, index) in personList" :key="index" :data-id="item.id">
-                <img :src="item.posterImageList[0] ? item.posterImageList[0].uri : ''" :alt="item.name"/>
+                <img :src="item.posterImageList[0] ? item.posterImageList[0].uri : '' | imageUrl" :alt="item.name"/>
                 <label>{{item.name}}</label>
             </li>
         </ul>
@@ -36,16 +40,25 @@
     import SelectSingleSubject from './SelectSingleSubject';
 
     export default {
-        name: 'BlockAppendPersonSubject',
+        name: 'ModelAppendPersonSubject',
         components: {
             SelectSingleSubject
         },
         data() {
             return {
+                navBarId: this.$route.params.navBarId,
+                navBarSignCode: this.$route.params.navBarSignCode,
                 title: '',
                 currentSubject: {},
                 personList: []
             };
+        },
+        computed: {
+            currentNavBarInfo() {
+                return this.$store.getters['layout/getNavBarInfo']({
+                    navBarId: this.navBarId
+                });
+            }
         },
         mounted() {
             this.init();
@@ -109,27 +122,23 @@
                 let list = [[]];
                 list[0] = subjectLayoutItemList;
                 let personModel = {
+                    layoutTemplate: 'LT_L',
                     subjectId: this.currentSubject.id,
                     title: this.title,
-                    subjectCategory: 'FIGURE',
-                    subjectLayoutItemMultiList: list
+                    renderType: 'FIGURE',
+                    layoutItemMultiList: list
                 };
                 // 保存到store中
-                this.$store.dispatch('todayRecommend/setSubjectLayoutItem', {
+                this.$store.commit('layout/setSubjectLayoutItem', {
+                    navBarId: this.navBarId,
+                    navBarSignCode: this.navBarSignCode,
                     model: this.$route.params.model,
-                    subjectModel: personModel
-                }).then(response => {
-                    if (response === 'success') {
-                        this.$message({
-                            message: '设置模块专题成功',
-                            type: 'success'
-                        });
-                    } else {
-                        this.$message({
-                            message: '设置模块专题失败',
-                            type: 'warning'
-                        });
-                    }
+                    subjectModel: personModel,
+                    operate: this.$route.params.operate
+                });
+                this.$message({
+                    message: '设置模块专题成功',
+                    type: 'success'
                 });
             }
         }

@@ -11,7 +11,7 @@
             <ul id="nav-bar-list">
                 <li v-for="(item, index) in navBarList"
                     :key="index"
-                    @click="switchNavBar(item.id)"
+                    @click="switchNavBar(item.id,item.signCode)"
                     :class="item.id === navBarId ? 'current-nav-bar' : ''">
                     {{item.name}}
                 </li>
@@ -28,7 +28,7 @@
                 <div class="ad-group settable">
                     <div class="ab-center">
                         <img v-if="rightTopRecommend.coverImage"
-                             :src="rightTopRecommend.coverImage ? rightTopRecommend.coverImage.uri : ''"
+                             :src="rightTopRecommend.coverImage ? rightTopRecommend.coverImage.uri : '' | imageUrl"
                              :alt="rightTopRecommend.coverImage ? rightTopRecommend.coverImage.name : ''"/>
                     </div>
                     <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.leftTop"
@@ -48,7 +48,7 @@
                     <div class="recommend-operate">
                         <el-dropdown @command="setRecommend($event,0,0,0)" placement="bottom">
                     <span class="el-dropdown-link">
-                    <i class="el-icon-circle-plus-outline"></i>
+                    <i class="el-icon-edit"></i>
                     </span>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
@@ -63,6 +63,8 @@
                 <!--色块-->
                 <sort-catalogue
                     v-if="layoutBlockItem.renderType === 'CATALOGUE'"
+                    :navBarId="navBarId"
+                    :navBarSignCode="navBarSignCode"
                     :pickedCatalogueList="layoutBlockItem.layoutItemMultiList[0]"
                     :blockIndex="blockIndex + 1"
                     categoryName="电视剧"
@@ -79,7 +81,13 @@
                         <li v-for="(item, index) in rowItem" :key="index"
                             :class="!layoutBlockItem.subjectId ? 'settable' : ''">
                             <div class="ab-center">
-                                <img class="item-image" :src="item.coverImage.uri" :alt="item.coverImage.name"/>
+                                <div class="figure-image" v-if="layoutBlockItem.renderType === 'FIGURE'">
+                                    <img class="item-image" :src="item.coverImage? item.coverImage.uri : '' | imageUrl"
+                                         :alt="item.coverImage ? item.coverImage.name:''"/>
+                                </div>
+                                <img v-else class="item-image"
+                                     :src="item.coverImage? item.coverImage.uri : '' | imageUrl"
+                                     :alt="item.coverImage ? item.coverImage.name:''"/>
                                 <div class="figure-name"
                                      v-if="layoutBlockItem.renderType === 'FIGURE' || rowItem.length === 6">
                                     {{item.name}}
@@ -100,10 +108,11 @@
                                   class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
                             <!--单个位置的设置操作-->
                             <div class="recommend-operate" v-if="!layoutBlockItem.subjectId">
-                                <el-dropdown @command="setRecommend($event,blockIndex + 1,rowIndex,index)"
-                                             placement="bottom">
+                                <el-dropdown
+                                    @command="setRecommend($event,blockIndex + 1,rowIndex,index)"
+                                    placement="bottom">
                                 <span class="el-dropdown-link">
-                                <i class="el-icon-circle-plus-outline"></i>
+                                <i class="el-icon-edit"></i>
                                   </span>
                                     <el-dropdown-menu slot="dropdown">
                                         <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
@@ -114,24 +123,30 @@
                         </li>
                         <!--模块推荐操作-->
                         <div class="model-operate" v-if="layoutBlockItem.subjectId">
-                            <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-                                <i class="el-icon-edit" @click="editModel('PROGRAMME')"></i>
-                            </el-tooltip>
                             <el-dropdown @command="addModelSubject($event,blockIndex + 1)" placement="bottom">
-                        <span class="el-dropdown-link">
-                        <i class="el-icon-circle-plus-outline"></i>
-                        </span>
+                                <span class="el-dropdown-link"><i class="el-icon-circle-plus-outline"></i></span>
                                 <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item command="PROGRAMME">添加节目专题</el-dropdown-item>
                                     <el-dropdown-item command="PERSON">添加人物专题</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
+                            <el-dropdown @command="editModelSubject($event,blockIndex + 1)" placement="bottom">
+                                <span class="el-dropdown-link"><i class="el-icon-edit"></i></span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item command="PROGRAMME">编辑节目专题</el-dropdown-item>
+                                    <el-dropdown-item command="PERSON">编辑人物专题</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                            <el-tooltip class="item" effect="dark" content="删除" placement="top">
+                                <i class="el-icon-delete"
+                                   @click="removeModel(layoutBlockItem.title,blockIndex + 1)"></i>
+                            </el-tooltip>
                         </div>
                     </ul>
                 </div>
             </div>
             <div class="append-model">
-                <el-dropdown @command="addModelSubject($event,layoutBlockList.length)" placement="bottom">
+                <el-dropdown @command="editModelSubject($event,layoutBlockList.length)" placement="bottom">
             <span class="el-dropdown-link">
             <i class="el-icon-circle-plus-outline"></i>
             </span>
@@ -140,25 +155,30 @@
                         <el-dropdown-item command="PERSON">添加人物模块</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <el-tooltip class="item" effect="dark" content="模块排序" placement="top">
-                    <i class="el-icon-sort" @click="sortModel"></i>
+                <el-tooltip v-if="massLayoutBlockList.length > 1"
+                            class="item"
+                            effect="dark"
+                            content="模块排序"
+                            placement="top">
+                    <i class="el-icon-sort" @click="sortDialogVisible = true"></i>
                 </el-tooltip>
             </div>
         </div>
         <el-button v-if="modified" type="primary" @click="clearModify" class="column-publish">清除修改</el-button>
         <el-button type="primary" @click="publish" class="column-publish">发 布</el-button>
-        <el-dialog title="模块排序" :visible.sync="sortDialogVisible">
+        <el-dialog title="模块专题排序" :visible.sync="sortDialogVisible">
             <ul v-dragula="{direction:'horizontal'}" id="model-sort-list">
-                <li>
-                    <el-tag type="success">最新上线大片</el-tag>
-                </li>
-                <li>
-                    <el-tag type="success">热播电视剧</el-tag>
-                </li>
-                <li>
-                    <el-tag type="success">热门人物</el-tag>
+                <li v-if="item.subjectId"
+                    :data-index="index + 1"
+                    v-for="(item,index) in massLayoutBlockList"
+                    :key="index">
+                    {{item.title}}
                 </li>
             </ul>
+            <span slot="footer" class="dialog-footer">
+            <el-button @click="sortDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="sortModelList">确 定</el-button>
+            </span>
         </el-dialog>
     </div>
 </template>
@@ -184,20 +204,21 @@
                 layoutBlockFirstLayer: {},
                 massLayoutBlockList: [],
                 // 右上角推荐位
-                rightTopRecommend: {}
+                rightTopRecommend: {},
+                modified: false
             };
-        },
-        computed: {
-            modified() {
-                return this.$store.state.todayRecommend.modified;
-            },
-            navBarId() {
-                return this.$route.params.navBarId;
-            }
         },
         filters: {
             setCopyRightImage(copyRightCaptain) {
                 return copyRightImage[copyRightCaptain];
+            }
+        },
+        computed: {
+            navBarId() {
+                return this.$route.params.navBarId;
+            },
+            navBarSignCode() {
+                return this.$route.params.navBarSignCode;
             }
         },
         watch: {
@@ -210,6 +231,9 @@
         },
         methods: {
             init() {
+                this.modified = this.$store.getters['layout/getCurrentLayoutStatus']({
+                    navBarSignCode: this.navBarSignCode
+                });
                 this.getNavBarList();
                 // 获取本地数据展示
                 if (this.modified) {
@@ -233,13 +257,17 @@
             },
             // 展示本地数据
             displayLocalData() {
-                this.layoutInfo = this.$store.getters['todayRecommend/getCurrentState'];
+                this.layoutInfo = this.$store.getters['layout/getCurrentLayout']({
+                    navBarSignCode: this.navBarSignCode,
+                    navBarId: this.navBarId
+                });
                 this.liveChannelList = this.layoutInfo.liveChannelList;
                 this.layoutBlockList = this.layoutInfo.layoutBlockList;
                 this.layoutBlockFirstLayer = this.layoutBlockList[0];
                 this.massLayoutBlockList = this.layoutBlockList.slice();
                 this.massLayoutBlockList.shift();
                 this.rightTopRecommend = this.layoutBlockFirstLayer ? this.layoutBlockFirstLayer.layoutItemMultiList[0][0] : {};
+                this.modified = true;
             },
             // 获取线上的布局,并保存在state中
             getOnlionLayoutInfo() {
@@ -251,10 +279,11 @@
                     pageNum: 1,
                     pageSize: 10
                 }).then(response => {
-                    if (response && response.code === 0 && response.data.list.length !== 0) {
+                    if (response && response.code === 0) {
                         this.liveChannelList = response.data.list;
                         if (++count === 2) {
                             this.setStoreData();
+                            this.modified = false;
                         }
                     }
                 });
@@ -268,53 +297,123 @@
                         this.rightTopRecommend = this.layoutBlockFirstLayer.layoutItemMultiList[0][0];
                         if (++count === 2) {
                             this.setStoreData();
+                            this.modified = false;
                         }
                     }
                 });
             },
             setStoreData() {
                 // 本地没有更改数据的情况下，将线上数据同步到本地store中
-                this.$store.dispatch('todayRecommend/reloadData', {
-                    modified: false,
-                    liveChannelList: this.liveChannelList,
-                    layoutBlockList: this.layoutBlockList
+                this.$store.commit('layout/setSingleNavBarLayout', {
+                    navBarSignCode: this.navBarSignCode,
+                    singleNavBarLayout: {
+                        modified: false,
+                        navBarId: this.navBarId,
+                        liveChannelList: this.liveChannelList,
+                        layoutBlockList: this.layoutBlockList
+                    }
                 });
             },
             // 跳转到响应的导航栏布局页面
-            switchNavBar(navBarId) {
+            switchNavBar(navBarId, navBarSignCode) {
                 if (navBarId !== this.navBarId) {
-                    this.$router.push({name: 'NavBarLayoutSetting', params: {navBarId: navBarId}});
+                    this.$router.push({
+                        name: 'NavBarLayoutSetting',
+                        params: {navBarSignCode: navBarSignCode, navBarId: navBarId}
+                    });
                 }
             },
             // 设置直播频道
             setChannel() {
-                this.$router.push({name: 'SetChannel', params: {navBarId: this.navBarId}});
+                this.$router.push({
+                    name: 'SetChannel',
+                    params: {navBarSignCode: this.navBarSignCode, navBarId: this.navBarId}
+                });
             },
             // 设置节目类型推荐
             setCatalogue(pickedCatalogueList, blockIndex) {
                 this.$set(this.massLayoutBlockList, blockIndex - 1, pickedCatalogueList);
+                this.modified = true;
             },
             // 设置推荐位为节目或者专题
             setRecommend(val, model, row, index) {
                 this.$router.push({
                     name: val === 'PROGRAMME' ? 'AppendProgramme' : 'SingleAppendSubject',
-                    params: {model: model, row: row, index: index}
+                    params: {
+                        navBarId: this.navBarId,
+                        navBarSignCode: this.navBarSignCode,
+                        model: model,
+                        row: row,
+                        index: index
+                    }
                 });
             },
-            // 编辑节目模块或者人物模块内容
-            editModel(val) {
-                this.$router.push({name: val === 'PROGRAMME' ? 'ModelAppendProgrammeSubject' : 'ModelAppendPersonSubject'});
+            // 删除某一个模块专题
+            removeModel(title, model) {
+                this.$confirm('此操作将删除' + title + '模块专题, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$store.commit('layout/removeModel', {
+                        navBarSignCode: this.navBarSignCode,
+                        model: model
+                    });
+                    this.displayLocalData();
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            // 编辑模块，设置模块内的专题
+            editModelSubject(val, model) {
+                this.$router.push({
+                    name: val === 'PROGRAMME' ? 'ModelAppendProgrammeSubject' : 'ModelAppendPersonSubject',
+                    params: {
+                        navBarId: this.navBarId,
+                        navBarSignCode: this.navBarSignCode,
+                        model: model,
+                        operate: 'edit'
+                    }
+                });
             },
             // 添加模块，设置模块内的专题
             addModelSubject(val, model) {
                 this.$router.push({
                     name: val === 'PROGRAMME' ? 'ModelAppendProgrammeSubject' : 'ModelAppendPersonSubject',
-                    params: {model: model}
+                    params: {
+                        navBarId: this.navBarId,
+                        navBarSignCode: this.navBarSignCode,
+                        model: model,
+                        operate: 'add'
+                    }
                 });
             },
-            // 模块排序
-            sortModel() {
-                this.sortDialogVisible = true;
+            // 更新模块排序
+            sortModelList() {
+                let nodes = this.$el.querySelectorAll('#model-sort-list li');
+                let modelIndexList = [];
+                for (let i = 0; i < nodes.length; i++) {
+                    modelIndexList.push(nodes[i].getAttribute('data-index'));
+                }
+                this.$store.commit('layout/sortModelList', {
+                    navBarId: this.$route.params.navBarId,
+                    navBarSignCode: this.$route.params.navBarSignCode,
+                    modelIndexList: modelIndexList
+                });
+                this.$message({
+                    message: '模块成功排序',
+                    type: 'success'
+                });
+                this.sortDialogVisible = false;
+                this.displayLocalData();
+                this.modified = true;
             },
             // 恢复state中的数据，清除localStorage中的当前页面数据
             clearModify() {
@@ -323,12 +422,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$store.dispatch('todayRecommend/resumeState').then(response => {
-                        if (response === 'success') {
-                            this.$message('当前页面修改数据已清除');
-                            this.getOnlionLayoutInfo();
-                        }
-                    });
+                    this.getOnlionLayoutInfo();
                 }).catch(() => {
                     this.$message({
                         type: 'info',
@@ -338,33 +432,48 @@
             },
             // 点击发布
             publish() {
-                this.$confirm('此操作将发布数据到线上, 是否继续?', '提示', {
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
+                    let count = 0;
                     // 设置直播频道
-                    let liveChannelList = this.$store.state.todayRecommend.liveChannelList;
+                    let liveChannelList = this.$store.getters['layout/getLiveChannelList']({
+                        navBarSignCode: this.navBarSignCode
+                    });
                     if (liveChannelList.length !== 0) {
                         this.$service.setLiveChannelLayout(liveChannelList).then(response => {
-                            if (response) {
-                                this.$wsCache.localStorage.remove('todayRecommend');
+                            if (response && response.code === 0) {
+                                count++;
                                 this.$message({
                                     message: '直播频道设置成功',
                                     type: 'success'
                                 });
+                                if (++count === 2) {
+                                    this.modified = false;
+                                }
                             }
                         });
+                    } else {
+                        count++;
                     }
                     // 设置推荐位布局
                     this.$service.modifyContentLayout({
                         id: this.navBarId,
-                        contentLayout: this.$store.state.todayRecommend
+                        contentLayout: this.$store.getters['layout/getCurrentLayout']({
+                            navBarSignCode: this.navBarSignCode,
+                            navBarId: this.navBarId
+                        })
                     }).then(response => {
                         if (response && response.code === 0) {
-                            this.$message({message: '设置布局成功', type: 'success'});
-                            this.$store.dispatch('todayRecommend/resumeState');
-                            this.getOnlionLayoutInfo();
+                            this.$message({
+                                message: '设置布局成功',
+                                type: 'success'
+                            });
+                            if (++count === 2) {
+                                this.modified = false;
+                            }
                         }
                     });
                 }).catch(() => {
@@ -399,9 +508,10 @@
         margin-bottom: 30px;
         justify-content: space-around;
         li {
-            opacity: 0.5;
             padding: 8px 16px;
-            font-size: 30px;
+            flex-shrink: 1;
+            opacity: 0.5;
+            font-size: 0.5rem;
             color: #ffffff;
             text-align: center;
             cursor: pointer;
@@ -465,15 +575,15 @@
             position: relative;
             width: 43%;
             padding-top: 24%;
-            font-size: 30px;
+            font-size: 1rem;
             background-color: #154F8B;
             div {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 label {
-                    padding-top: 30px;
-                    font-size: 34px;
+                    padding-top: 1rem;
+                    font-size: 1rem;
                     font-weight: bold;
                 }
             }
@@ -513,13 +623,16 @@
         margin-top: 30px;
         overflow: hidden;
         h3 {
-            font-size: 50px;
+            font-size: 1.4rem;
             color: #ffffff;
             text-align: left;
         }
         ul.model-line {
             display: flex;
             margin-top: 30px;
+            &.model-0 {
+                margin-top: 0px;
+            }
             li {
                 position: relative;
                 margin-right: 30px;
@@ -579,8 +692,14 @@
             flex-shrink: 0;
             width: 12%;
             padding-top: 12%;
-            img {
+            border-radius: 50%;
+            div.figure-image {
                 border-radius: 50%;
+                overflow: hidden;
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
             }
             .figure-name {
                 margin-top: 20px;
@@ -630,11 +749,47 @@
     // 模块排序列表
     #model-sort-list {
         display: flex;
+        padding: 0px 20px 20px 20px;
+        border: 1px solid gray;
+        flex-wrap: wrap;
         li {
-            text-align: left;
             margin-right: 20px;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #008178;
+            border-radius: 5px;
+            text-align: center;
+            color: #fff;
+            font-size: 16px;
             cursor: grab;
         }
+    }
+
+    /*
+    * 设置拖拽效果样式
+    */
+
+    .gu-mirror {
+        cursor: grabbing;
+        cursor: -moz-grabbing;
+        cursor: -webkit-grabbing;
+        background-color: rgba(0, 0, 0, 0.2);
+        transition: opacity 0.4s ease-in-out;
+        margin-right: 20px;
+        margin-top: 20px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-align: center;
+        color: #fff;
+        font-size: 16px;
+        cursor: grab;
+    }
+
+    .container > div {
+        cursor: move;
+        cursor: grab;
+        cursor: -moz-grab;
+        cursor: -webkit-grab;
     }
 
     .image-box {

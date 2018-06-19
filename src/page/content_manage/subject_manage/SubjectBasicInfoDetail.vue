@@ -28,7 +28,7 @@
             <el-form-item label="专题封面：">
                 <ul class="cover-list">
                     <li v-for="(item,index) in subjectInfo.posterImageList" :key="index">
-                        <img :src="item.uri" :alt="item.name" @click="displayImage(index)">
+                        <img :src="item.uri | imageUrl" :alt="item.name" @click="displayImage(index)">
                         <label>{{item.name}}</label>
                     </li>
                 </ul>

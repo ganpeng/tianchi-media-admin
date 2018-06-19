@@ -5,6 +5,10 @@
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
+            <el-breadcrumb-item
+                :to="'/nav-bar-manage/layout-setting/' + currentNavBarInfo.signCode + '/' + currentNavBarInfo.id">
+                {{currentNavBarInfo.name}}页面设置
+            </el-breadcrumb-item>
             <el-breadcrumb-item>单个推荐位选择专题</el-breadcrumb-item>
         </el-breadcrumb>
         <h3 class="text-left">请选择要推荐的专题：</h3>
@@ -14,7 +18,7 @@
         <h3 class="text-left">请选择专题的封面海报：</h3>
         <ul>
             <li v-for="(item,index) in posterImageList" :key="index">
-                <img :src="item.uri" :alt="item.name" @click="displayImage(index)">
+                <img :src="item.uri | imageUrl" :alt="item.name" @click="displayImage(index)">
                 <el-radio v-model="programmeImage" :label="item.id" @change="setPosterImage(index)">{{item.name}}
                 </el-radio>
             </li>
@@ -41,6 +45,8 @@
         },
         data() {
             return {
+                navBarId: this.$route.params.navBarId,
+                navBarSignCode: this.$route.params.navBarSignCode,
                 currentSubject: {},
                 posterImageList: [],
                 programmeImage: '',
@@ -52,6 +58,13 @@
                     list: []
                 }
             };
+        },
+        computed: {
+            currentNavBarInfo() {
+                return this.$store.getters['layout/getNavBarInfo']({
+                    navBarId: this.navBarId
+                });
+            }
         },
         methods: {
             // 选择某一个专题
@@ -106,23 +119,17 @@
                     name: this.currentSubject.name,
                     itemType: 'SUBJECT'
                 };
-                this.$store.dispatch('todayRecommend/setSingleRecommendItem', {
+                this.$store.commit('layout/setSingleRecommendItem', {
+                    navBarId: this.$route.params.navBarId,
+                    navBarSignCode: this.$route.params.navBarSignCode,
                     model: this.$route.params.model,
                     row: this.$route.params.row,
                     index: this.$route.params.index,
                     item: subject
-                }).then(response => {
-                    if (response === 'success') {
-                        this.$message({
-                            message: '设置推荐专题成功',
-                            type: 'success'
-                        });
-                    } else {
-                        this.$message({
-                            message: '设置推荐专题失败',
-                            type: 'warning'
-                        });
-                    }
+                });
+                this.$message({
+                    message: '设置推荐专题成功',
+                    type: 'success'
                 });
             }
         }

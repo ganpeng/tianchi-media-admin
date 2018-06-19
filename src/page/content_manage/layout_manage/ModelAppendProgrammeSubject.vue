@@ -5,6 +5,10 @@
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
+            <el-breadcrumb-item
+                :to="'/nav-bar-manage/layout-setting/' + currentNavBarInfo.signCode + '/' + currentNavBarInfo.id">
+                {{currentNavBarInfo.name}}页面设置
+            </el-breadcrumb-item>
             <el-breadcrumb-item>节目模块设置</el-breadcrumb-item>
         </el-breadcrumb>
         <h3 class="text-left">1.请输入节目模块名称：</h3>
@@ -32,7 +36,7 @@
             <ul :class="'model-' + row.length" v-for="(row,rowIndex) in subjectLayoutItemList" :key="rowIndex">
                 <li v-for="(item,index) in row" :key="index" @click="setModelItem(rowIndex,index)">
                     <div class="ab-center">
-                        <img :src="item.coverImage ? item.coverImage.uri : ''"
+                        <img :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
                              :alt="item.coverImage.name"
                              v-if="item.coverImage">
                     </div>
@@ -58,13 +62,15 @@
     import blockModel from '@/util/config/block_model';
 
     export default {
-        name: 'BlockAppendProgrammeSubject',
+        name: 'ModelAppendProgrammeSubject',
         components: {
             SelectSingleSubject,
             SetSubjectProgramme
         },
         data() {
             return {
+                navBarId: this.$route.params.navBarId,
+                navBarSignCode: this.$route.params.navBarSignCode,
                 dialogTableVisible: false,
                 title: '',
                 currentSubject: {},
@@ -79,6 +85,13 @@
                 // 当前设置节目所在某行的index
                 currentIndex: ''
             };
+        },
+        computed: {
+            currentNavBarInfo() {
+                return this.$store.getters['layout/getNavBarInfo']({
+                    navBarId: this.navBarId
+                });
+            }
         },
         methods: {
             // 选择某一个专题
@@ -194,21 +207,16 @@
                     layoutItemMultiList: this.subjectLayoutItemList
                 };
                 // 保存到store中
-                this.$store.dispatch('todayRecommend/setSubjectLayoutItem', {
+                this.$store.commit('layout/setSubjectLayoutItem', {
+                    navBarId: this.navBarId,
+                    navBarSignCode: this.navBarSignCode,
                     model: this.$route.params.model,
-                    subjectModel: programmeModel
-                }).then(response => {
-                    if (response === 'success') {
-                        this.$message({
-                            message: '设置模块专题成功',
-                            type: 'success'
-                        });
-                    } else {
-                        this.$message({
-                            message: '设置模块专题失败',
-                            type: 'warning'
-                        });
-                    }
+                    subjectModel: programmeModel,
+                    operate: this.$route.params.operate
+                });
+                this.$message({
+                    message: '设置模块专题成功',
+                    type: 'success'
                 });
             }
         }

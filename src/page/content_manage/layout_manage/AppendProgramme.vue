@@ -5,6 +5,10 @@
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
+            <el-breadcrumb-item
+                :to="'/nav-bar-manage/layout-setting/' + currentNavBarInfo.signCode + '/' + currentNavBarInfo.id">
+                {{currentNavBarInfo.name}}页面设置
+            </el-breadcrumb-item>
             <el-breadcrumb-item>节目选择</el-breadcrumb-item>
         </el-breadcrumb>
         <el-steps :active="activeStep" align-center>
@@ -48,6 +52,8 @@
         },
         data() {
             return {
+                navBarId: this.$route.params.navBarId,
+                navBarSignCode: this.$route.params.navBarSignCode,
                 selectedProgrammeList: [],
                 activeStep: 0,
                 programmeId: '',
@@ -68,6 +74,11 @@
                     default:
                         return 'SelectProgramme';
                 }
+            },
+            currentNavBarInfo() {
+                return this.$store.getters['layout/getNavBarInfo']({
+                    navBarId: this.navBarId
+                });
             }
         },
         mounted() {
@@ -113,7 +124,7 @@
                     this.activeStep++;
                 }
             },
-            // 点击下一步
+            // 点击上一步
             previous() {
                 this.activeStep--;
             },
@@ -131,23 +142,17 @@
                     id: this.programmeId,
                     layoutItemType: 'PROGRAMME'
                 };
-                this.$store.dispatch('todayRecommend/setSingleRecommendItem', {
+                this.$store.commit('layout/setSingleRecommendItem', {
+                    navBarId: this.$route.params.navBarId,
+                    navBarSignCode: this.$route.params.navBarSignCode,
                     model: this.$route.params.model,
                     row: this.$route.params.row,
                     index: this.$route.params.index,
                     item: programme
-                }).then(response => {
-                    if (response === 'success') {
-                        this.$message({
-                            message: '设置节目成功',
-                            type: 'success'
-                        });
-                    } else {
-                        this.$message({
-                            message: '设置节目失败',
-                            type: 'warning'
-                        });
-                    }
+                });
+                this.$message({
+                    message: '设置节目成功',
+                    type: 'success'
                 });
             }
         }

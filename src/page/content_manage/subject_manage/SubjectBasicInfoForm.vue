@@ -46,7 +46,7 @@
             <el-form-item label="上传专题封面：" prop="coverUrls">
                 <ul class="cover-list">
                     <li v-for="(item,index) in subjectInfo.posterImageList" :key="index">
-                        <img :src="item.uri" :alt="item.name" @click="displayImage(index)">
+                        <img :src="item.uri | imageUrl" :alt="item.name" @click="displayImage(index)">
                         <div class="info">
                             <div class="name">{{item.name}}</div>
                             <div>

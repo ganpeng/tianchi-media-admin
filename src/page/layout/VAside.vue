@@ -20,7 +20,7 @@
                             <template slot="title">栏目管理</template>
                             <el-menu-item index="/nav-bar-manage/setting">栏目项设置</el-menu-item>
                             <el-menu-item v-for="(item, index) in navBarList" :key='index'
-                                          :index="'/nav-bar-manage/layout-setting/' + item.id">
+                                          :index="'/nav-bar-manage/layout-setting/' + item.signCode + '/' + item.id">
                                 {{item.name}}
                             </el-menu-item>
                         </el-submenu>
@@ -122,6 +122,10 @@
                 this.$service.getNavBarList().then(response => {
                     if (response && response.code === 0) {
                         this.navBarList = response.data;
+                        // 将导航栏数据保存在store中
+                        this.$store.commit('layout/setNavBarList', {
+                            navBarList: this.navBarList
+                        });
                     }
                 });
             },

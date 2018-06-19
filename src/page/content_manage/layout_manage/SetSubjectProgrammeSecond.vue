@@ -4,7 +4,7 @@
         <h3 class="text-left">找到以下符合该位置尺寸要求的图片：</h3>
         <ul class="cover-list">
             <li v-for="(item,index) in programme.posterImageList" :key="index">
-                <img :src="item.uri" :alt="item.name">
+                <img :src="item.uri  | imageUrl" :alt="item.name">
                 <el-radio v-model="programmeImageIndex" :label="index" @change="setCoverImage">{{item.name}}</el-radio>
             </li>
             <li @click="addCover">

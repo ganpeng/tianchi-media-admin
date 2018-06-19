@@ -34,7 +34,8 @@
                 <el-table-column
                     label="头像">
                     <template slot-scope="scope">
-                        <img v-if="scope.row.avatarImage" :src="scope.row.avatarImage ? scope.row.avatarImage.uri : ''"
+                        <img v-if="scope.row.avatarImage"
+                             :src="scope.row.avatarImage ? scope.row.avatarImage.uri : '' | imageUrl"
                              @click="displayImage(scope.row)"
                              :alt="scope.row.avatarImage ? scope.row.avatarImage.name : ''">
                         <label>------</label>

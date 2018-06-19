@@ -4,7 +4,7 @@
         <div class="text-left">符合该位置的图片如下，请选择：</div>
         <ul>
             <li v-for="(item,index) in posterImages" v-bind:key="index">
-                <img :src="item.uri" :alt="item.name" @click="displayImage(index)">
+                <img :src="item.uri | imageUrl" :alt="item.name" @click="displayImage(index)">
                 <el-radio v-model="programmeImage" :label="item.id" @change="setPosterImage(index)">{{item.name}}
                 </el-radio>
             </li>

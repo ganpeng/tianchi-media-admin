@@ -5,6 +5,10 @@
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
+            <el-breadcrumb-item
+                :to="'/nav-bar-manage/layout-setting/' + currentNavBarInfo.signCode + '/' + currentNavBarInfo.id">
+                {{currentNavBarInfo.name}}页面设置
+            </el-breadcrumb-item>
             <el-breadcrumb-item>频道设置</el-breadcrumb-item>
         </el-breadcrumb>
         <el-form :model="channelInfo" :rules="infoRules" status-icon ref="channelInfo"
@@ -47,6 +51,8 @@
                 }
             };
             return {
+                navBarId: this.$route.params.navBarId,
+                navBarSignCode: this.$route.params.navBarSignCode,
                 channelOptions: [
                     {id: '1', name: 'CCTV1', no: '00001'},
                     {id: '2', name: 'CCTV2', no: '00002'},
@@ -64,28 +70,39 @@
                 }
             };
         },
+        computed: {
+            currentNavBarInfo() {
+                return this.$store.getters['layout/getNavBarInfo']({
+                    navBarId: this.navBarId
+                });
+            }
+        },
         mounted() {
             this.init();
         },
         methods: {
             init() {
-                // 优先使用本地数据
-                let liveChannelList = this.$store.state.todayRecommend.liveChannelList;
-                if (liveChannelList && liveChannelList.length !== 0) {
-                    this.channelInfo.channel = liveChannelList[0].liveChannel.id;
+                if (this.$store.getters['layout/getLiveChannelStatus']({
+                        navBarSignCode: this.navBarSignCode
+                    })) {
+                    this.channelInfo.channel = this.$store.getters['layout/getLiveChannelList']({
+                        navBarSignCode: this.navBarSignCode
+                    })[0].liveChannel.id;
                 } else {
-                    // 请求线上数据
-                    this.$service.getLiveChannelLayoutList({
-                        navBarId: parseInt(this.$route.params.navBarId),
-                        releaseStatus: 'RELEASED',
-                        pageNum: 1,
-                        pageSize: 10
-                    }).then(response => {
-                        if (response && response.code === 0 && response.data.list.length !== 0) {
-                            this.channelInfo.channel = response.data.list[0].liveChannel.id;
-                        }
-                    });
+                    this.getLiveChannelLayoutList();
                 }
+            },
+            getLiveChannelLayoutList() {
+                this.$service.getLiveChannelLayoutList({
+                    navBarId: this.navBarId,
+                    releaseStatus: 'RELEASED',
+                    pageNum: 1,
+                    pageSize: 10
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.channelInfo.channel = response.data.list[0] ? response.data.list[0].liveChannel.id : '';
+                    }
+                });
             },
             // 设置直播频道
             updateChannel() {
@@ -96,24 +113,21 @@
                             {
                                 liveChannelType: 'LIVE_CHANNEL',
                                 liveChannel: this.getLiveChannel(this.channelInfo.channel),
-                                navBarId: this.$route.params.navBarId,
+                                navBarId: this.navBarId,
                                 priority: 1,
                                 releaseStatus: 'RELEASED'
                             }
                         ];
-                        // 保存信息到store的today_recommended模块
-                        this.$store.dispatch('todayRecommend/setLiveChannelList', liveChannelList).then(response => {
-                            if (response) {
-                                this.$message({
-                                    message: '保存频道信息成功',
-                                    type: 'success'
-                                });
-                            } else {
-                                this.$message.error('保存信息失败');
-                            }
+                        // 保存信息到store的layout中
+                        this.$store.commit('layout/setLiveChannel', {
+                            navBarId: this.currentNavBarInfo.id,
+                            liveChannelList: liveChannelList,
+                            navBarSignCode: this.navBarSignCode
                         });
-                    } else {
-                        return false;
+                        this.$message({
+                            message: '保存直播频道信息成功',
+                            type: 'success'
+                        });
                     }
                 });
             },

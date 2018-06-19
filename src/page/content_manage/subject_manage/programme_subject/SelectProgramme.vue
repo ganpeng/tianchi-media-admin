@@ -90,10 +90,9 @@
             <el-table-column
                 label="图片">
                 <template slot-scope="scope">
-                    <img
-                        :src="scope.row.coverImage ? scope.row.coverImage.uri : ''"
-                        :alt="scope.row.coverImage.name"
-                        v-if="scope.row.coverImage">
+                    <img :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl"
+                         :alt="scope.row.coverImage.name"
+                         v-if="scope.row.coverImage">
                     <label v-else>------</label>
                 </template>
             </el-table-column>
