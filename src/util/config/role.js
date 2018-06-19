@@ -41,14 +41,14 @@ export const VIDEO_TYPE = [
 
 export const QUALITY_TYPE = [
     // 'HD_4K', 'HD_2K', 'HD_1080', 'HD_720', 'HD_480'
-    {
-        value: 'HD_4K',
-        label: 'HD_4K'
-    },
-    {
-        value: 'HD_2K',
-        label: 'HD_2K'
-    },
+    // {
+    //     value: 'HD_4K',
+    //     label: 'HD_4K'
+    // },
+    // {
+    //     value: 'HD_2K',
+    //     label: 'HD_2K'
+    // },
     {
         value: 'HD_1080',
         label: 'HD_1080'
@@ -245,6 +245,15 @@ export const CATEGORY = ['电影', '电视剧', '新闻', '网视', '体育', '�
     };
 });
 
+// 视频注入的状态
+export const VIDEO_UPLOAD_STATUS = {
+    // 成功(COMPLETED) | 注入中(INJECTING) | 失败(FAILED)
+    COMPLETED: '成功',
+    INJECTING: '注入中',
+    FAILED: '失败',
+    SUCCESS: '成功'
+};
+
 export default {
     MAIN_ROLE_OPTIONS,
     VIDEO_TYPE,
@@ -258,5 +267,6 @@ export default {
     CATEGORY,
     GRADE,
     SPEC,
-    SUBJECT
+    SUBJECT,
+    VIDEO_UPLOAD_STATUS
 };

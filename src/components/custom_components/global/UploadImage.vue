@@ -183,7 +183,7 @@
                                 obj.id = data.id;
                                 obj.height = img.height;
                                 obj.width = img.width;
-                                obj.uri = data.url;
+                                obj.uri = data.uri;
                                 obj.name = data.fileName;
                                 this.successHandler({posterImage: obj});
                                 this.cancelHandler();

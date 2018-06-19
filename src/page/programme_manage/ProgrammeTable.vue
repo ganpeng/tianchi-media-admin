@@ -56,12 +56,12 @@
                             {{getVideoType(scope.row.type)}}
                         </template>
                 </el-table-column>
-                <el-table-column
+                <!-- <el-table-column
                     prop="quality"
                     align="center"
                     min-width="120px"
                     label="视频类型">
-                </el-table-column>
+                </el-table-column> -->
                 <el-table-column
                     v-if="status === 1"
                     prop="free"

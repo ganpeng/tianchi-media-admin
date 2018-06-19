@@ -44,8 +44,26 @@
                 <el-input :value="video.commonId" disabled></el-input>
             </el-form-item>
             <el-form-item
+                label="视频文件名">
+                <el-input
+                    :disabled="true"
+                    :value="video.originName"
+                ></el-input>
+            </el-form-item>
+            <el-form-item label="视频时长">
+                <el-input
+                    :value="duration(video.takeTimeInSec)"
+                    :disabled="true"
+                ></el-input>
+            </el-form-item>
+            <el-form-item label="视频清晰度">
+                <el-tag type="info">HD_480</el-tag>
+                <el-tag type="info">HD_720</el-tag>
+                <el-tag type="info">HD_1080</el-tag>
+            </el-form-item>
+            <el-form-item
                 ref="name"
-                label="视频名称"
+                label="视频展示名"
                 prop="name">
                 <el-input
                     :disabled="readonly"
@@ -91,12 +109,6 @@
                     </li>
                 </ul>
             </el-form-item>
-            <el-form-item label="视频时长">
-                <el-input
-                    :value="duration(video.takeTimeInSec)"
-                    :disabled="true"
-                ></el-input>
-            </el-form-item>
             <el-form-item
                 v-if="video.type === 'FEATURE' && isTvPlay"
                 label="视频排序" prop="sort">
@@ -124,21 +136,6 @@
                         :label="item.name"
                         :value="item.id"
                     >
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="视频类型" prop="quality">
-                <el-select
-                    :disabled="readonly"
-                    :value="video.quality"
-                    placeholder="请选择视频类型"
-                    @change="inputHandler($event, 'quality')"
-                >
-                    <el-option
-                        v-for="item in qualityType"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -176,6 +173,7 @@
     import dimension from '@/util/config/dimension';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import VideoTable from '../video_manage/VideoTable';
+    // import _ from 'lodash';
 
     export default {
         props: {
@@ -196,19 +194,13 @@
             return {
                 isLoading: false,
                 videoType: role.VIDEO_TYPE,
-                qualityType: role.QUALITY_TYPE,
                 size: dimension.VIDEO_COVER_DIMENSION,
+                qualityOptions: role.QUALITY_TYPE,
                 active: 0,
                 imageUploadDialogVisible: false,
                 selectVideoDialogVisible: false,
                 uploadVideoRules: {
                     type: [{ required: true, message: '请选择视频内容类型' }]
-                    // name: [{ required: true, message: '请输入视频名称' }],
-                    // description: [{ required: true, message: '请输入视频简介' }],
-                    // takeTimeInSec: [{ required: true, message: '请选择要关联的正片' }],
-                    // sort: [{ required: true, message: '请输入视频的排序' }],
-                    // quality: [{ required: true, message: '请选择视频类型' }],
-                    // free: [{ required: true, message: '请选择是否付费' }]
                 }
             };
         },
@@ -217,7 +209,7 @@
                 video: 'programmeVideo/currentProgrammeVideo',
                 featureVideoList: 'programmeVideo/featureVideoList',
                 isTvPlay: 'programme/isTvPlay',
-                videoListObj: 'video/videoObj'
+                videoListObj: 'video/video'
             }),
             title() {
                 switch (parseInt(this.videoStatus)) {
@@ -247,7 +239,8 @@
                 addVideoToList: 'programmeVideo/addVideoToList',
                 setCoverImage: 'programmeVideo/setCoverImage',
                 updateCurrentProgrammeVideoItem: 'programme/updateCurrentProgrammeVideoItem',
-                syncVideoMetaData: 'programmeVideo/syncVideoMetaData'
+                syncVideoMetaData: 'programmeVideo/syncVideoMetaData',
+                setSelectedVideoId: 'video/setSelectedVideoId'
             }),
             ...mapActions({
                 updateProgrammeVideo: 'programmeVideo/updateProgrammeVideo',
@@ -257,25 +250,47 @@
                 this.$emit('changeVideoDialogStatus', false);
                 // 清楚校验的规则
                 this.resetProgrammeVideo();
+                this.setSelectedVideoId({id: ''});
             },
             successHandler() {
-                this.$refs.uploadVideoForm.validate(value => {
-                    if (value) {
-                        if (parseInt(this.videoStatus) !== 1) {
-                            this.addVideoToList();
-                            this.cancelHandler();
-                        } else {
-                            this.updateProgrammeVideo()
-                                .then((res) => {
-                                    this.updateCurrentProgrammeVideoItem({video: res.data});
+                // if (!_.isEmpty(this.getSelectedVideo())) {
+                    this.$refs.uploadVideoForm.validate(value => {
+                        if (value) {
+                                if (parseInt(this.videoStatus) !== 1) {
+                                    this.addVideoToList();
                                     this.cancelHandler();
-                                });
+                                } else {
+                                    this.updateProgrammeVideo()
+                                        .then((res) => {
+                                            this.updateCurrentProgrammeVideoItem({video: res.data});
+                                            this.cancelHandler();
+                                        });
+                                }
                         }
-                    }
-                });
+                    });
+                // } else {
+                //     this.$message({
+                //         type: 'error',
+                //         message: '请先选择视频'
+                //     });
+                // }
             },
             inputHandler(value, key) {
                 this.updateCurrentProgrammeVideo({[key]: value});
+                // if (key === 'quality') {
+                //     let video = this.getSelectedVideo();
+                //     let playUrl = '';
+                //     if (value === 'HD_480') {
+                //         playUrl = video.m3u8For480P;
+                //     }
+                //     if (value === 'HD_720') {
+                //         playUrl = video.m3u8For720P;
+                //     }
+                //     if (value === 'HD_1080') {
+                //         playUrl = video.m3u8For1080P;
+                //     }
+                //     this.updateCurrentProgrammeVideo({playUrl});
+                // }
             },
             uploadImageHandler() {
                 if (!this.readonly) {
@@ -291,20 +306,22 @@
             selectVideo() {
                 this.selectVideoDialogVisible = true;
             },
-            selectVideoEnter() {
+            getSelectedVideo() {
                 let id = this.videoListObj.selectedVideoId;
                 let videoList = this.videoListObj.list;
-                if (id) {
-                    let videoObj = videoList.find((item) => item.id === id);
-                    if (videoObj) {
-                        this.syncVideoMetaData({video: videoObj});
-                        this.closeSelectVideoDialog();
-                    } else {
-                        this.$message({
-                            type: 'error',
-                            message: '视频选择失败'
-                        });
-                    }
+                let videoObj = videoList.find((item) => item.id === id);
+                return videoObj;
+            },
+            selectVideoEnter() {
+                let videoObj = this.getSelectedVideo();
+                if (videoObj) {
+                    this.syncVideoMetaData({video: videoObj});
+                    this.closeSelectVideoDialog();
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: '视频选择失败'
+                    });
                 }
             }
         }

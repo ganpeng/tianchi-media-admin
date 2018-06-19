@@ -101,12 +101,14 @@ const mutations = {
         };
     },
     setCoverImage(state, payload) {
-        payload.posterImage.uri = payload.posterImage.uri.replace('local', 'test');
         state.currentProgrammeVideo.coverImage = payload.posterImage;
     },
     syncVideoMetaData(state, payload) {
-        state.currentProgrammeVideo.playUrl = payload.video.playUrl;
         state.currentProgrammeVideo.takeTimeInSec = payload.video.takeTimeInSec;
+        state.currentProgrammeVideo.originName = payload.video.originName;
+        state.currentProgrammeVideo.m3u8For480P = payload.video.m3u8For480P;
+        state.currentProgrammeVideo.m3u8For720P = payload.video.m3u8For720P;
+        state.currentProgrammeVideo.m3u8For1080P = payload.video.m3u8For1080P;
     },
     addVideoToList(state) {
         state.currentProgrammeVideo.uid = uuid();

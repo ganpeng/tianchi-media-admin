@@ -113,6 +113,7 @@
                                 <el-select
                                     :value="programme.tagList"
                                     multiple
+                                    filterable
                                     placeholder="请选择"
                                     @change="inputHandler($event, 'tagList')"
                                     :disabled="readonly"

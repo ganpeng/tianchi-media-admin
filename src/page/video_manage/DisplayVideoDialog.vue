@@ -50,6 +50,7 @@ export default {
         },
         cancelHandler() {
             this.$emit('changeDisplayVideoDialogStatus', false);
+            this.player.pause();
         },
         play() {}
     }

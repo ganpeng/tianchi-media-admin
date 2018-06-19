@@ -35,6 +35,7 @@
             <el-upload
                 class="upload-demo"
                 ref="upload"
+                :headers="uploadHeaders"
                 action="/v1/storage/video"
                 :auto-upload="false"
                 :file-list="fileList"
@@ -54,7 +55,7 @@
     </div>
 </template>
 <script>
-    import {mapGetters, mapActions} from 'vuex';
+    import {mapGetters} from 'vuex';
     import VideoTable from './VideoTable';
     export default {
         name: 'PersonList',
@@ -74,40 +75,15 @@
             };
         },
         computed: {
-            ...mapGetters({
-                video: 'video/videoObj'
-            })
-        },
-        created() {
-            this.getVideoList();
+            ...mapGetters({})
         },
         methods: {
-            ...mapActions({
-                getVideoList: 'video/getVideoList'
-            }),
-            handleSizeChange(pageSize) {
-            },
-            handleCurrentChange(pageNum) {
-            },
             showVideoUploadDialog() {
                 this.videoUploadDialogVisible = true;
             },
             cancelHandler() {
                 this.videoUploadDialogVisible = false;
                 this.fileList = [];
-            },
-            uploadRequest(obj) {
-                let formData = new FormData();
-                formData.append('file', obj.file);
-                this.isLoading = true;
-                this.$service.uploadVideo({formData})
-                    .then((res) => {
-                        if (res && (res.code === 0)) {
-                            this.cancelHandler();
-                        }
-                    }).finally(() => {
-                        this.isLoading = false;
-                    });
             },
             submitUpload() {
                 this.$refs.upload.submit();

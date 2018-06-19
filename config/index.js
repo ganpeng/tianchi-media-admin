@@ -7,7 +7,6 @@ const env = require('./env');
 
 module.exports = {
     dev: {
-
         // Paths
         assetsSubDirectory: 'static',
         assetsPublicPath: '/',
