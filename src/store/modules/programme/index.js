@@ -21,13 +21,13 @@ const defaultProgramme = {
     // 评分
     score: '',
     // 节目来源 ENUM('MEDIA_SYS','CONTENT_CENTER') DEFAULT 'CONTENT_CENTER'
-    origin: '',
+    origin: null,
     // 牌照方
-    licence: '',
+    licence: null,
     // 节目总集数
     totalSets: '',
     // 版权商
-    copyrightReserver: '',
+    copyrightReserver: null,
     // 版权开始日期
     copyrightStartedAt: '',
     // 版权结束日期
@@ -43,7 +43,7 @@ const defaultProgramme = {
     // 发布地区
     produceAreaList: [],
     // 节目发布状态 ENUM('RELEASED', 'DRAFT', 'PRE_RELEASED') DEFAULT 'DRAFT'
-    releaseStatus: '',
+    releaseStatus: null,
     // 节目默认图片
     coverImage: {},
     // 节目类别
@@ -67,7 +67,7 @@ const defaultProgramme = {
     // 发行时间
     announceAt: '',
     // 状态 ENUM('NORMAL', 'DELETE') DEFAULT 'NORMAL'
-    status: '',
+    status: null,
     // 节目海报，json字符串存储，包含以下几个字段，fileId，uri，width，high")
     posterImageList: [],
     // 相关人物
@@ -143,20 +143,20 @@ const getters = {
         };
     },
     isTvPlay(state) {
-        return true;
-        // return state.currentProgramme.category.name === '电视剧';
+        let index = state.currentProgramme.categoryList.findIndex((item) => item.name === '电视剧');
+        return index >= 0;
     },
     isShow(state) {
-        return true;
-        // return state.currentProgramme.category.name === '卫视综艺' || state.currentProgramme.category.name === '网络综艺';
+        let index = state.currentProgramme.categoryList.findIndex((item) => (item.name === '卫视综艺' || item.name === '网络综艺'));
+        return index >= 0;
     },
     isMovie(state) {
-        return true;
-        // return state.currentProgramme.category.name === '电影';
+        let index = state.currentProgramme.categoryList.findIndex((item) => item.name === '电影');
+        return index >= 0;
     },
     isEducation(state) {
-        return true;
-        // return state.currentProgramme.category.name === '教育';
+        let index = state.currentProgramme.categoryList.findIndex((item) => item.name === '教育');
+        return index >= 0;
     },
     categoryName(state) {
         return (id) => {
@@ -165,7 +165,6 @@ const getters = {
         };
     },
     serializeCategory(state) {
-        // return state.currentProgramme.category.id;
         return state.currentProgramme.categoryList.map((category) => category.id);
     },
     searchCategory(state) {
@@ -522,6 +521,8 @@ function formatProgrammeData(programmeData) {
         // 版权结束日期
         copyrightEndedAt: programmeData.copyrightRange[1],
         // 人物
+        licence: programmeData.licence === '' ? null : programmeData.licence,
+        copyrightReserver: programmeData.copyrightReserver === '' ? null : programmeData.copyrightReserver,
         figureList: [].concat(programmeData.leadActor.map((item) => {
             let obj = {};
             obj.role = 'DIRECTOR';
