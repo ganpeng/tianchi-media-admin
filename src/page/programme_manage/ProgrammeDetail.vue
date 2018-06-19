@@ -79,9 +79,10 @@
                                     </el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="节目分类" prop="category">
+                            <el-form-item label="节目分类">
                                 <el-select
-                                    :value="serializeCategory"
+                                    :value="serializeCategoryList"
+                                    multiple
                                     @change="categoryChangeHandler"
                                     :disabled="readonly"
                                     placeholder="请选择">
@@ -379,7 +380,8 @@
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import dimension from '@/util/config/dimension';
     import role from '@/util/config/role';
-    import {checkScore, checkCategory} from '@/util/formValidate';
+    // import {checkScore, checkCategory} from '@/util/formValidate';
+    import {checkScore} from '@/util/formValidate';
     import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 
     export default {
@@ -434,14 +436,14 @@
                     ],
                     score: [
                         { validator: checkScore }
-                    ],
-                    category: [
-                        { required: true, message: '请选择节目分类' },
-                        { validator: checkCategory }
-                    ],
-                    typeList: [
-                        { required: true, message: '请选择节目类型' }
                     ]
+                    // category: [
+                    //     { required: true, message: '请选择节目分类' },
+                    //     { validator: checkCategory }
+                    // ],
+                    // typeList: [
+                    //     { required: true, message: '请选择节目类型' }
+                    // ]
                 }
             };
         },
@@ -455,6 +457,7 @@
                 pagination: 'programme/programmeVideoPagination',
                 serializeCategory: 'programme/serializeCategory',
                 serializeTypeList: 'programme/serializeTypeList',
+                serializeCategoryList: 'programme/serializeCategoryList',
                 leadActorValue: 'programme/leadActorValue',
                 directorValue: 'programme/directorValue',
                 unSavedVideoList: 'programmeVideo/unSavedVideoList',
@@ -655,8 +658,8 @@
                 this.setVideoPagination({pageNum});
                 this.getProgrammeVideoListById(id);
             },
-            categoryChangeHandler(id) {
-                this.updateCategoryValue({id});
+            categoryChangeHandler(ids) {
+                this.updateCategoryValue({ids});
                 this.updateCurrentProgramme({'typeList': []});
             },
             typeListChangeHandler(value) {

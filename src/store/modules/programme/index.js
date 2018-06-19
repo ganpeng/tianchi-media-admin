@@ -5,7 +5,7 @@ import wsCache from '@/util/webStorage';
 
 import {checkImageExist} from '@/util/formValidate';
 
-const programmePostFields = ['innerName', 'licence', 'grade', 'subject', 'announcer', 'copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'category', 'announcer', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
+const programmePostFields = ['totalSets', 'spec', 'innerName', 'licence', 'grade', 'subject', 'announcer', 'copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'categoryList', 'announcer', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
@@ -24,6 +24,8 @@ const defaultProgramme = {
     origin: '',
     // 牌照方
     licence: '',
+    // 节目总集数
+    totalSets: '',
     // 版权商
     copyrightReserver: '',
     // 版权开始日期
@@ -45,7 +47,7 @@ const defaultProgramme = {
     // 节目默认图片
     coverImage: {},
     // 节目类别
-    category: {},
+    categoryList: [],
     // 发行商
     announcer: '', // announcer
     // 年级
@@ -141,16 +143,20 @@ const getters = {
         };
     },
     isTvPlay(state) {
-        return state.currentProgramme.category.name === '电视剧';
+        return true;
+        // return state.currentProgramme.category.name === '电视剧';
     },
     isShow(state) {
-        return state.currentProgramme.category.name === '卫视综艺' || state.currentProgramme.category.name === '网络综艺';
+        return true;
+        // return state.currentProgramme.category.name === '卫视综艺' || state.currentProgramme.category.name === '网络综艺';
     },
     isMovie(state) {
-        return state.currentProgramme.category.name === '电影';
+        return true;
+        // return state.currentProgramme.category.name === '电影';
     },
     isEducation(state) {
-        return state.currentProgramme.category.name === '教育';
+        return true;
+        // return state.currentProgramme.category.name === '教育';
     },
     categoryName(state) {
         return (id) => {
@@ -159,10 +165,14 @@ const getters = {
         };
     },
     serializeCategory(state) {
-        return state.currentProgramme.category.id;
+        // return state.currentProgramme.category.id;
+        return state.currentProgramme.categoryList.map((category) => category.id);
     },
     searchCategory(state) {
         return state.programmeCategory.id;
+    },
+    serializeCategoryList(state) {
+        return state.currentProgramme.categoryList.map((category) => category.id);
     },
     serializeTypeList(state) {
         return state.currentProgramme.typeList.map((item) => item.id);
@@ -189,6 +199,11 @@ const getters = {
                 label: item
             };
         });
+    },
+    categoryListString(state) {
+        return (categoryList) => {
+            return categoryList.map((item) => item.name).join(',');
+        };
     },
     typeList(state) {
         return (id) => {
@@ -325,11 +340,18 @@ const mutations = {
         state.currentProgramme.visible = !state.currentProgramme.visible;
     },
     updateCategoryValue(state, payload) {
-        let category = state.categoryList.find((item) => {
-            return item.id === payload.id;
+        state.currentProgramme.categoryList = payload.ids.map((id) => {
+            let c = state.categoryList.find((category) => id === category.id);
+            return c;
         });
-        state.currentProgramme.category = category;
-        state.currentProgramme.currentTypeList = category.programmeTypeList;
+        let currentTypeList = [];
+        payload.ids.forEach((id) => {
+            let c = state.categoryList.find((category) => id === category.id);
+            c.programmeTypeList.forEach((type) => {
+                currentTypeList.push(type);
+            });
+        });
+        state.currentProgramme.currentTypeList = currentTypeList;
     },
     updateSearchCategoryValue(state, payload) {
         if (payload.id) {
@@ -456,9 +478,16 @@ const mutations = {
         state.currentProgrammeVideoObj = Object.assign({}, payload);
     },
     setCurrentTypeList(state) {
-        let {id} = state.currentProgramme.category;
-        let currentTypeList = state.categoryList.find((item) => item.id === id);
-        state.currentProgramme.currentTypeList = currentTypeList.programmeTypeList;
+        let currentTypeList = [];
+        state.currentProgramme.categoryList.forEach((category) => {
+            let list = state.categoryList.find((item) => item.id === category.id);
+            if (list) {
+                list.programmeTypeList.forEach((item) => {
+                    currentTypeList.push(item);
+                });
+            }
+        });
+        state.currentProgramme.currentTypeList = currentTypeList;
     },
     updateCurrentProgrammeVideoItem(state, payload) {
         let {video} = payload;
@@ -508,7 +537,7 @@ function formatProgrammeData(programmeData) {
         }))
     });
 
-    delete result.category.programmeTypeList;
+    // delete result.category.programmeTypeList;
     return result;
 }
 

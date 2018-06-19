@@ -116,7 +116,7 @@
                 </el-table-column>
                 <el-table-column align="center" width="100px" label="分类">
                     <template slot-scope="scope">
-                        {{categoryName(scope.row.id)}}
+                        {{categoryListString(scope.row.categoryList)}}
                     </template>
                 </el-table-column>
                 <el-table-column align="center" min-width="100px" label="类型">
@@ -194,6 +194,7 @@ export default {
             searchFields: 'programme/searchFields',
             categoryName: 'programme/categoryName',
             typeList: 'programme/typeList',
+            categoryListString: 'programme/categoryListString',
             getDirector: 'programme/getDirector',
             getChiefActor: 'programme/getChiefActor',
             getPostImage: 'programme/getPostImage',
