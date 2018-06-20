@@ -430,9 +430,10 @@ const mutations = {
         state.currentProgramme.posterImageList = posterImageList.filter((img) => img.id !== payload.id);
     },
     setCoverImage(state) {
-        state.currentProgramme.coverImage = state.currentProgramme.posterImageList.find((img) => {
+        let coverImage = state.currentProgramme.posterImageList.find((img) => {
             return parseInt(img.width) === 240 && parseInt(img.height) === 350;
         });
+        state.currentProgramme.coverImage = coverImage;
     },
     checkPosterImage(state, payload) {
         state.currentProgramme.posterImageList = state.currentProgramme.posterImageList.map((img) => {

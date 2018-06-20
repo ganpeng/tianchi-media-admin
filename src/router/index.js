@@ -52,7 +52,8 @@ import VolumeBarAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage
 import DialogAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/DialogAdvertGroupList';
 import DetailPageAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/DetailPageAdvertGroupList';
 import VideoList from 'sysPage/video_manage/VideoList';
-import LiveChannelList from 'sysPage/live_manage/LiveChannelList';
+import LiveChannelList from 'sysPage/channel_manage/LiveChannelList';
+import ChannelCategory from 'sysPage/channel_manage/ChannelCategory';
 
 Vue.use(Router);
 
@@ -356,10 +357,17 @@ let router = new Router({
                 },
                 //  直播频道管理
                 {
-                    path: '/live-manage/list',
+                    path: '/channel-manage/live/list',
                     name: 'LiveChannelList',
                     component: LiveChannelList
+                },
+                //  频道类别管理
+                {
+                    path: '/channel-manage/category',
+                    name: 'ChannelCategory',
+                    component: ChannelCategory
                 }
+
             ]
         },
         // 错误页面布局

@@ -689,7 +689,7 @@
                 this.previewImage.activeIndex = index;
             },
             checkImage(next) {
-                const {posterImageList, coverImage} = this.programme;
+                const {posterImageList} = this.programme;
                 if (posterImageList && posterImageList.length < 2) {
                     this.$message({type: 'error', message: '推荐位六分位图和横版海报图必须上传且只能上传一张'});
                     return false;
@@ -714,8 +714,7 @@
 
                 // 设置默认图
                 this.setCoverImage();
-
-                if (_.isEmpty(coverImage)) {
+                if (_.isEmpty(this.programme.coverImage)) {
                     this.$message({type: 'error', message: '请选择默认的节目海报'});
                     return false;
                 }

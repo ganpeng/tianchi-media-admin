@@ -40,8 +40,12 @@
                             <el-menu-item index="/video-manage/list">视频列表</el-menu-item>
                         </el-submenu>
                         <el-submenu index="1-5">
-                            <template slot="title">直播频道管理</template>
-                            <el-menu-item index="/live-manage/list">直播频道列表</el-menu-item>
+                            <template slot="title">频道管理</template>
+                            <el-submenu index="1-5-1">
+                                <template slot="title">直播频道管理</template>
+                                <el-menu-item index="/channel-manage/live/list">直播频道列表</el-menu-item>
+                            </el-submenu>
+                            <el-menu-item index="/channel-manage/category">频道类别管理</el-menu-item>
                         </el-submenu>
                     </el-menu-item-group>
                     <el-menu-item-group>

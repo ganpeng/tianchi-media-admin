@@ -133,8 +133,8 @@ export const PERSON_DIMENSION = [
     },
     // 人物背景图
     {
-        value: '700*1000',
-        label: '人物背景图：700*1000'
+        value: '1920*1080',
+        label: '人物背景图：1920*1080'
     }
 ];
 
