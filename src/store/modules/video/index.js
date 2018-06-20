@@ -5,6 +5,9 @@ import role from '@/util/config/role';
 // 'https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8',
 const state = {
     selectedVideoId: '',
+    searchFields: {
+        name: ''
+    },
     list: [],
     pageSize: 5,
     pageNum: 1,
@@ -19,6 +22,9 @@ const getters = {
         return (status) => {
             return role.VIDEO_UPLOAD_STATUS[status];
         };
+    },
+    searchFields(state) {
+        return state.searchFields;
     },
     qualityOptions(state) {
         let video = state.list.find((video) => video.id === state.selectedVideoId);
@@ -72,6 +78,10 @@ const mutations = {
     },
     setSelectedVideoId(state, payload) {
         state.selectedVideoId = payload.id;
+    },
+    updateSearchFields(state, payload) {
+        let {key, value} = payload;
+        state.searchFields[key] = value;
     }
 };
 
@@ -79,13 +89,23 @@ const actions = {
     async getVideoList({commit, state}) {
         try {
             let {pageNum, pageSize} = state;
-            let result = await service.getVideoList({pageNum: pageNum > 0 ? pageNum - 1 : 0, pageSize});
+            let {name} = state.searchFields;
+            let result = await service.getVideoList({pageNum: pageNum > 0 ? pageNum - 1 : 0, pageSize, name});
             if (result && result.code === 0) {
                 let {list, pageSize, pageNum, total} = result.data;
                 commit('setVideo', {list, pageSize, pageNum: pageNum + 1, total});
             }
         } catch (err) {
 
+        }
+    },
+
+    async deleteVideoById({commit, state}, id) {
+        try {
+            let result = await service.deleteVideoById(id);
+            return result;
+        } catch (err) {
+            console.log(err);
         }
     }
 };

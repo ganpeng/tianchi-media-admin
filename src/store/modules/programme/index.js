@@ -5,7 +5,7 @@ import wsCache from '@/util/webStorage';
 
 import {checkImageExist} from '@/util/formValidate';
 
-const programmePostFields = ['totalSets', 'spec', 'innerName', 'licence', 'grade', 'subject', 'announcer', 'copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'categoryList', 'announcer', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
+const programmePostFields = ['contest', 'platform', 'totalSets', 'specList', 'innerName', 'licence', 'grade', 'subject', 'announcer', 'copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'categoryList', 'announcer', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
@@ -34,6 +34,8 @@ const defaultProgramme = {
     copyrightEndedAt: '',
     // 播放基数(显示播放量)
     playCountBasic: '',
+    // 实际播放量
+    playCountReal: '',
     // 价格
     price: '',
     // 正片清晰度 ENUM('HD_4K', 'HD_2K', 'HD_1080', 'HD_720', 'HD_480') DEFAULT 'HD_4K'
@@ -53,9 +55,13 @@ const defaultProgramme = {
     // 年级
     grade: '',
     // 规格
-    spec: [],
+    specList: [],
     // 科目
     subject: '',
+    // 赛事
+    contest: '',
+    // 播放平台
+    platform: [],
     // 出品方
     producer: '',
     // 正片数量,总集数（电视剧是预知的，综艺节目是变化的）
@@ -87,6 +93,9 @@ const defaultProgramme = {
     director: [],
     // 导演搜索结果
     directorResult: [],
+    // 编剧
+    scenarist: [],
+    scenaristResult: [],
     // 版权起止日期
     copyrightRange: [],
     // 当前选中的节目分类下的类型
@@ -158,6 +167,10 @@ const getters = {
         let index = state.currentProgramme.categoryList.findIndex((item) => item.name === '教育');
         return index >= 0;
     },
+    isSports(state) {
+        let index = state.currentProgramme.categoryList.findIndex((item) => item.name === '体育');
+        return index >= 0;
+    },
     categoryName(state) {
         return (id) => {
             let programme = getProgrammeById(id);
@@ -215,6 +228,9 @@ const getters = {
     },
     directorValue() {
         return state.currentProgramme.director.map((item) => item.id);
+    },
+    scenaristValue() {
+        return state.currentProgramme.scenarist.map((item) => item.id);
     },
     getDirector(state) {
         return (id) => {
@@ -296,7 +312,8 @@ const mutations = {
         });
     },
     updateCurrentProgramme(state, payload) {
-        state.currentProgramme = Object.assign({}, state.currentProgramme, payload);
+        let {key, value} = payload;
+        state.currentProgramme[key] = value;
     },
     addProgrammeTag(state, payload) {
         state.programmeTagList.push(payload.tag);
@@ -407,6 +424,13 @@ const mutations = {
             });
         });
     },
+    updateScenarist(state, payload) {
+        state.currentProgramme.scenarist = payload.scenaristIdList.map((id) => {
+            return state.currentProgramme.scenaristResult.find((item) => {
+                return item.id === id;
+            });
+        });
+    },
     updateLeadActorResult(state, payload) {
         let {leadActorResult} = state.currentProgramme;
         state.currentProgramme.leadActorResult = _.uniqBy(leadActorResult.concat(payload.leadActorResult), 'id');
@@ -414,6 +438,10 @@ const mutations = {
     updateDirectorResult(state, payload) {
         let {directorResult} = state.currentProgramme;
         state.currentProgramme.directorResult = _.uniqBy(directorResult.concat(payload.directorResult), 'id');
+    },
+    updateScenaristResult(state, payload) {
+        let {scenaristResult} = state.currentProgramme;
+        state.currentProgramme.scenaristResult = _.uniqBy(scenaristResult.concat(payload.scenaristResult), 'id');
     },
     addPosterImage(state, payload) {
         payload.posterImage.uri = payload.posterImage.uri.replace('local', 'test');
@@ -542,10 +570,15 @@ function formatProgrammeData(programmeData) {
             obj.id = item.id;
             obj.name = item.name;
             return obj;
+        })).concat(programmeData.scenarist.map((item) => {
+            let obj = {};
+            obj.role = 'SCENARIST';
+            obj.id = item.id;
+            obj.name = item.name;
+            return obj;
         }))
     });
 
-    // delete result.category.programmeTypeList;
     return result;
 }
 
@@ -555,8 +588,10 @@ function formatProgrammeData(programmeData) {
 function serializeProgrammData(programmeData) {
     let director = programmeData.figureListMap['DIRECTOR'] ? programmeData.figureListMap['DIRECTOR'] : [];
     let leadActor = programmeData.figureListMap['CHIEF_ACTOR'] ? programmeData.figureListMap['CHIEF_ACTOR'] : [];
+    let scenarist = programmeData.figureListMap['SCENARIST'] ? programmeData.figureListMap['SCENARIST'] : [];
     let directorResult = [];
     let leadActorResult = [];
+    let scenaristResult = [];
 
     if (director.length > 0) {
         directorResult = director;
@@ -564,13 +599,18 @@ function serializeProgrammData(programmeData) {
     if (leadActor.length > 0) {
         leadActorResult = leadActor;
     }
+    if (scenarist.length > 0) {
+        scenaristResult = scenarist;
+    }
 
     return Object.assign({}, defaultProgramme, programmeData, {
         copyrightRange: [programmeData.copyrightStartedAt, programmeData.copyrightEndedAt],
         director,
         leadActor,
+        scenarist,
         directorResult,
-        leadActorResult
+        leadActorResult,
+        scenaristResult
     });
 }
 

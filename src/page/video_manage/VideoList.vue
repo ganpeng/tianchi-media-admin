@@ -10,14 +10,16 @@
         <el-form :inline="true" class="demo-form-inline search-form">
             <el-form-item class="search">
                 <el-input
+                    :value="searchFields.name"
                     placeholder="搜索你想要的信息"
                     clearable
+                    @input="inputHandler($event, 'name')"
                 >
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                 </el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary">搜索</el-button>
+                <el-button type="primary" @click="searchHandler">搜索</el-button>
             </el-form-item>
             <el-form-item class="create-account">
                 <el-button type="primary" plain @click="showVideoUploadDialog">上传点播视频</el-button>
@@ -55,7 +57,7 @@
     </div>
 </template>
 <script>
-    import {mapGetters} from 'vuex';
+    import {mapGetters, mapMutations, mapActions} from 'vuex';
     import VideoTable from './VideoTable';
     export default {
         name: 'PersonList',
@@ -75,9 +77,17 @@
             };
         },
         computed: {
-            ...mapGetters({})
+            ...mapGetters({
+                searchFields: 'video/searchFields'
+            })
         },
         methods: {
+            ...mapMutations({
+                updateSearchFields: 'video/updateSearchFields'
+            }),
+            ...mapActions({
+                getVideoList: 'video/getVideoList'
+            }),
             showVideoUploadDialog() {
                 this.videoUploadDialogVisible = true;
             },
@@ -87,6 +97,12 @@
             },
             submitUpload() {
                 this.$refs.upload.submit();
+            },
+            inputHandler(value, key) {
+                this.updateSearchFields({key, value});
+            },
+            searchHandler() {
+                this.getVideoList();
             }
         }
     };

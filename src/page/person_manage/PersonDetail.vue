@@ -24,7 +24,7 @@
                             type="primary"
                             @click="_createPerson"
                             v-loading.fullscreen.lock="isLoading">创 建</el-button>
-                        <el-button @click="reset">重 置</el-button>
+                        <!-- <el-button @click="reset">重 置</el-button> -->
                     </span>
                     <el-button type="primary" @click="goBack">返回人物列表</el-button>
                 </div>
@@ -126,7 +126,7 @@
                 }
 
                 let sizeOne = posterImageList.findIndex((img) => parseInt(img.width) === 200 && parseInt(img.height) === 200);
-                let sizeTwo = posterImageList.findIndex((img) => parseInt(img.width) === 700 && parseInt(img.height) === 1000);
+                let sizeTwo = posterImageList.findIndex((img) => parseInt(img.width) === 1920 && parseInt(img.height) === 1080);
 
                 if (sizeOne < 0 || sizeTwo < 0) {
                     this.$message.error('人物的头像和背景图都必须上传且只能上传一张');

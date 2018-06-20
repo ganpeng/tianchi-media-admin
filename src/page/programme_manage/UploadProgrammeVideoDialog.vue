@@ -173,7 +173,6 @@
     import dimension from '@/util/config/dimension';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import VideoTable from '../video_manage/VideoTable';
-    // import _ from 'lodash';
 
     export default {
         props: {
@@ -278,7 +277,7 @@
                 });
             },
             inputHandler(value, key) {
-                this.updateCurrentProgrammeVideo({[key]: value});
+                this.updateCurrentProgrammeVideo({key, value});
             },
             uploadImageHandler() {
                 if (!this.readonly) {

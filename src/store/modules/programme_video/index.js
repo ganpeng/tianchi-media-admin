@@ -14,7 +14,7 @@ const defaultProgrammeVideo = {
     // 详情
     description: '',
     // 视频封面图
-    coverImage: {},
+    coverImage: null,
     // 时长,单位杪
     takeTimeInSec: '',
     // 用于排序，返回数据时倒叙排列
@@ -54,7 +54,7 @@ const state = {
     programmeId: '',
     parentId: '',
     videoType: '',
-    currentProgrammeVideo: {},
+    currentProgrammeVideo: JSON.parse(JSON.stringify(defaultProgrammeVideo)),
     // 当前节目下上传的视频的列表
     videoList: [],
     featureList: []
@@ -88,7 +88,9 @@ const mutations = {
         state.featureList = payload.list;
     },
     updateCurrentProgrammeVideo(state, payload) {
-        state.currentProgrammeVideo = Object.assign({}, state.currentProgrammeVideo, payload);
+        let {key, value} = payload;
+        state.currentProgrammeVideo[key] = value;
+        console.log(state.currentProgrammeVideo);
     },
     resetProgrammeVideo(state) {
         state.currentProgrammeVideo = defaultProgrammeVideo;
@@ -146,7 +148,6 @@ const mutations = {
 function filterProgrammeVideoData(videoList, programmeId) {
     return videoList.map((video) => {
         let result = Object.assign({}, video, {
-            playUrl: 'http://vjs.zencdn.net/v/oceans.mp4',
             programmeId,
             status: 'NORMAL',
             uid: uuid()

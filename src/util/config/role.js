@@ -8,6 +8,14 @@ export const MAIN_ROLE_OPTIONS = [
         value: 'VICE_DIRECTOR',
         label: '副导演'
     },
+    // {
+    //     value: 'SCENARIST',
+    //     label: '编剧'
+    // },
+    // {
+    //     value: 'SINGER',
+    //     label: '歌手'
+    // },
     {
         value: 'CHIEF_ACTOR',
         label: '主演'
@@ -234,6 +242,56 @@ export const SUBJECT = [
     }
 ];
 
+//  播出平台
+const PLATFORM = [
+    '腾讯',
+    '爱奇艺',
+    '优酷',
+    '搜狐',
+    '芒果',
+    '中央电视台',
+    '浙江卫视',
+    '东方卫视',
+    '江苏卫视',
+    '湖南卫视',
+    '安徽卫视',
+    '北京卫视',
+    '其他'
+];
+
+// 赛事
+const CONTEST = [
+    'NBA',
+    'CBA',
+    '足球世界杯',
+    '英超',
+    '意甲',
+    '西甲',
+    '德甲',
+    '欧冠',
+    '中超',
+    '苏迪曼杯',
+    '乒乓球世界杯',
+    '乒乓球世锦赛',
+    '电竞系列赛',
+    'LOL全明星赛',
+    'UFC',
+    'WWE',
+    '拳王争霸赛',
+    '斯诺克',
+    '其他'
+];
+
+// 发行方
+const ANNOUNCER = [
+    'CCTV',
+    'BBC',
+    'Discovery',
+    '国家地理',
+    '五洲传播中心',
+    '其他'
+];
+
 const SIGN_CODE = ['MOVIE', 'TV_DRAMA', 'NEWS', 'NETWORK', 'SPORTS', 'CHILD', 'RECORD', 'EDU', 'TV_SHOW_SATELLITE', 'TV_SHOW_NETWORK', 'MUSIC', 'TUNE_ART', 'HUMOROUS', 'SCIENCE', 'COMMUNIST_PARTY_BUILD'];
 
 // 一级分类
@@ -268,5 +326,8 @@ export default {
     GRADE,
     SPEC,
     SUBJECT,
-    VIDEO_UPLOAD_STATUS
+    VIDEO_UPLOAD_STATUS,
+    CONTEST,
+    PLATFORM,
+    ANNOUNCER
 };

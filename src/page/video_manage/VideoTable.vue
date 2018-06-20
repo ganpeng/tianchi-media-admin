@@ -43,14 +43,14 @@
                     {{getStatus(scope.row.status)}}
                 </template>
             </el-table-column>
-            <el-table-column align="center" width="120px" label="上传日期">
+            <el-table-column align="center" width="220px" label="上传日期">
                 <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                 </template>
             </el-table-column>
             <el-table-column v-if="!hasRadio" align="center" width="120px" fixed="right" label="操作">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small">删除</el-button>
+                    <el-button type="text" @click="_deleteVideoById(scope.row.id)" size="small">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -109,7 +109,8 @@ export default {
             setPagination: 'video/setPagination'
         }),
         ...mapActions({
-            getVideoList: 'video/getVideoList'
+            getVideoList: 'video/getVideoList',
+            deleteVideoById: 'video/deleteVideoById'
         }),
         handleSizeChange(pageSize) {
             this.setPagination({pageSize});
@@ -125,6 +126,25 @@ export default {
         displayVideo(url) {
             this.displayVideoDialogVisible = true;
             this.url = `http://dev-video.tianchiapi.com${url}`;
+        },
+        _deleteVideoById(id) {
+            this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'error'
+            }).then(() => {
+                this.deleteVideoById(id)
+                    .then((res) => {
+                        if (res && res.code === 0) {
+                            this.getVideoList();
+                        }
+                    });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
         }
     }
 };

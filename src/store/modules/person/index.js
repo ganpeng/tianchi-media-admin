@@ -42,6 +42,9 @@ const getters = {
     area(state) {
         return state.area;
     },
+    getArea(state) {
+        return state.currentPerson.area;
+    },
     searchStr(state) {
         return state.searchStr;
     },
@@ -85,7 +88,10 @@ const mutations = {
         });
     },
     updateCurrentPerson(state, payload) {
-        state.currentPerson = Object.assign({}, state.currentPerson, payload);
+        // state.currentPerson = Object.assign({}, state.currentPerson, payload);
+        console.log(payload.key);
+        console.log(payload.value);
+        state.currentPerson[payload.key] = payload.value;
     },
     setSearchStr(state, payload) {
         state.searchStr = payload.searchStr;
@@ -98,8 +104,6 @@ const mutations = {
         state.currentPerson.posterImageList = [];
     },
     addPosterImage(state, payload) {
-        // Todo 后续要删除的代码
-        payload.posterImage.uri = payload.posterImage.uri.replace('local', 'test');
         if (!state.currentPerson.posterImageList) {
             state.currentPerson.posterImageList = [];
         }

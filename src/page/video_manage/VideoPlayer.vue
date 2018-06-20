@@ -59,7 +59,7 @@
             autoplay: this.autoplay,
             theme: this.theme,
             loop: this.loop,
-            lang: this.lang,
+            lang: 'zh-cn',
             screenshot: this.screenshot,
             hotkey: this.hotkey,
             preload: this.preload,

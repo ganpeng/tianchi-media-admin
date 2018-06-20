@@ -12,8 +12,10 @@
                     <div class="block-title">节目基本信息</div>
                     <el-form :rules="rules" ref="createProgramForm" status-icon :model="programme" label-width="120px" class="form-block">
                         <el-col :span="8">
-                            <el-form-item label="全平台通用ID">
-                                <el-input :value="123455" disabled></el-input>
+                            <el-form-item
+                                v-if="status !== 0"
+                            label="全平台通用ID">
+                                <el-input :value="programme.code" disabled></el-input>
                             </el-form-item>
                             <el-form-item label="节目来源">
                                 <el-input
@@ -169,6 +171,28 @@
                                 </el-select>
                                 <el-button v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                             </el-form-item>
+
+                            <el-form-item label="节目编剧" prop="scenarist">
+                                <el-select
+                                    :value="scenaristValue"
+                                    multiple
+                                    filterable
+                                    remote
+                                    :disabled="readonly"
+                                    placeholder="请输入人物名称"
+                                    @change="updateScenaristValue"
+                                    :remote-method="findScenarist"
+                                    :loading="isScenaristLoading">
+                                    <el-option
+                                        v-for="item in programme.scenaristResult"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                    </el-option>
+                                </el-select>
+                                <el-button v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
+                            </el-form-item>
+
                             <el-form-item label="版权起始日期" prop="copyrightRange">
                                 <el-date-picker
                                     :value="programme.copyrightRange"
@@ -184,6 +208,7 @@
                                 <el-select
                                     :disabled="readonly"
                                     :value="programme.licence"
+                                    filterable
                                     placeholder="请选择"
                                     @input="inputHandler($event, 'licence')"
                                 >
@@ -198,6 +223,7 @@
                             <el-form-item label="版权方" prop="copyrightReserver">
                                 <el-select
                                     :disabled="readonly"
+                                    filterable
                                     :value="programme.copyrightReserver"
                                     placeholder="请选择"
                                     @input="inputHandler($event, 'copyrightReserver')"
@@ -207,6 +233,22 @@
                                         :key="item.value"
                                         :label="item.label"
                                         :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="发行方" prop="announcer">
+                                <el-select
+                                    :disabled="readonly"
+                                    filterable
+                                    :value="programme.announcer"
+                                    placeholder="请选择"
+                                    @input="inputHandler($event, 'announcer')"
+                                >
+                                    <el-option
+                                        v-for="item in announcerOptions"
+                                        :key="item"
+                                        :label="item"
+                                        :value="item">
                                     </el-option>
                                 </el-select>
                             </el-form-item>
@@ -229,13 +271,13 @@
                             </el-form-item>
                             <el-form-item
                                 v-if="isMovie"
-                                label="规格" prop="spec">
+                                label="规格" prop="specList">
                                 <el-select
                                     :disabled="readonly"
-                                    :value="programme.spec"
+                                    :value="programme.specList"
                                     placeholder="请选择"
                                     multiple
-                                    @input="inputHandler($event, 'spec')"
+                                    @input="inputHandler($event, 'specList')"
                                 >
                                     <el-option
                                         v-for="item in specOptions"
@@ -279,6 +321,40 @@
                                     </el-option>
                                 </el-select>
                             </el-form-item>
+                            <el-form-item
+                                v-if="isSports"
+                                label="赛事">
+                                <el-select
+                                    :disabled="readonly"
+                                    :value="programme.contest"
+                                    placeholder="请选择"
+                                    @input="inputHandler($event, 'contest')"
+                                >
+                                    <el-option
+                                        v-for="item in contestOptions"
+                                        :key="item"
+                                        :label="item"
+                                        :value="item">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item
+                                label="播放平台">
+                                <el-select
+                                    :disabled="readonly"
+                                    :value="programme.platform"
+                                    multiple
+                                    placeholder="请选择"
+                                    @input="inputHandler($event, 'platform')"
+                                >
+                                    <el-option
+                                        v-for="item in platformOptions"
+                                        :key="item"
+                                        :label="item"
+                                        :value="item">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
                             <el-form-item v-if="isTvPlay" label="总集数" prop="featureVideoCount">
                                 <el-input
                                     type="number"
@@ -304,7 +380,7 @@
                             </el-form-item>
                             <el-form-item label="实际播放量">
                                 <el-input
-                                    :value="12"
+                                    :value="programme.playCountReal"
                                     disabled>
                                 </el-input>
                             </el-form-item>
@@ -409,6 +485,7 @@
                 countries: [],
                 isLeadActorLoading: false,
                 isDirectorLoading: false,
+                isScenaristLoading: false,
                 imageUploadDialogVisible: false,
                 dialogVisible: false,
                 videoUploadDialogVisible: false,
@@ -419,6 +496,9 @@
                 gradeOptions: role.GRADE,
                 specOptions: role.SPEC,
                 subjectOptions: role.SUBJECT,
+                contestOptions: role.CONTEST,
+                platformOptions: role.PLATFORM,
+                announcerOptions: role.ANNOUNCER,
                 size: dimension.PROGRAMME_DIMENSION,
                 previewImage: {
                     display: false,
@@ -459,11 +539,13 @@
                 serializeCategoryList: 'programme/serializeCategoryList',
                 leadActorValue: 'programme/leadActorValue',
                 directorValue: 'programme/directorValue',
+                scenaristValue: 'programme/scenaristValue',
                 unSavedVideoList: 'programmeVideo/unSavedVideoList',
                 isTvPlay: 'programme/isTvPlay',
                 isMovie: 'programme/isMovie',
                 isEducation: 'programme/isEducation',
-                isShow: 'programme/isShow'
+                isShow: 'programme/isShow',
+                isSports: 'programme/isSports'
             }),
             readonly() {
                 return parseInt(this.status) === 1;
@@ -482,8 +564,10 @@
                 updateTypeList: 'programme/updateTypeList',
                 updateLeadActor: 'programme/updateLeadActor',
                 updateDirector: 'programme/updateDirector',
+                updateScenarist: 'programme/updateScenarist',
                 updateLeadActorResult: 'programme/updateLeadActorResult',
                 updateDirectorResult: 'programme/updateDirectorResult',
+                updateScenaristResult: 'programme/updateScenaristResult',
                 addProgrammeTag: 'programme/addProgrammeTag',
                 checkPosterImage: 'programme/checkPosterImage',
                 deleteVideoList: 'programmeVideo/deleteVideoList',
@@ -598,7 +682,7 @@
                 this.$router.push({name: 'ProgrammeList'});
             },
             inputHandler(value, key) {
-                this.updateCurrentProgramme({[key]: value});
+                this.updateCurrentProgramme({key, value});
             },
             findDirector(name) {
                 if (name) {
@@ -611,12 +695,6 @@
                         });
                 }
             },
-            updateDirectorValue(value) {
-                this.updateDirector({directorIdList: value});
-            },
-            updateLeadActorValue(value) {
-                this.updateLeadActor({leadActorIdList: value});
-            },
             findLeadActor(name) {
                 if (name) {
                     this.isLeadActorLoading = true;
@@ -627,6 +705,26 @@
                             this.isLeadActorLoading = false;
                         });
                 }
+            },
+            findScenarist(name) {
+                if (name) {
+                    this.isScenaristLoading = true;
+                    this.getPersonList({name, isProgramme: true})
+                        .then((res) => {
+                            this.updateScenaristResult({'scenaristResult': res.data.list});
+                        }).finally(() => {
+                            this.isScenaristLoading = false;
+                        });
+                }
+            },
+            updateDirectorValue(value) {
+                this.updateDirector({directorIdList: value});
+            },
+            updateLeadActorValue(value) {
+                this.updateLeadActor({leadActorIdList: value});
+            },
+            updateScenaristValue(value) {
+                this.updateScenarist({scenaristIdList: value});
             },
             uploadImageHandler() {
                 if (!this.readonly) {
