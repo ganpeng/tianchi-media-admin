@@ -18,13 +18,20 @@
 
 <script>
     import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
+    import {LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
 
     export default {
         name: 'ProgrammeSecondStep',
         components: {PreviewMultipleImages},
         props: ['programmeId', 'posterImages'],
+        computed: {
+            specPosterImages() {
+                return this.posterImages.filter(image => parseInt(image.width) === this.imageSpec.width && parseInt(image.height) === this.imageSpec.height);
+            }
+        },
         data() {
             return {
+                imageSpec: LAYOUT_IMAGE_DIMENSION[this.$route.params.imageSpec],
                 programmeImage: '',
                 previewImage: {
                     display: false,
@@ -33,6 +40,8 @@
                     list: []
                 }
             };
+        },
+        mounted() {
         },
         methods: {
             // 放大预览图片

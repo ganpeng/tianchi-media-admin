@@ -19,8 +19,8 @@
             </component>
         </keep-alive>
         <div class="step-button">
-            <el-button @click="next" v-if="activeStep < 2">下一步</el-button>
             <el-button @click="previous" v-if="activeStep > 0">上一步</el-button>
+            <el-button @click="next" v-if="activeStep < 2">下一步</el-button>
             <el-button @click="complete" v-if="activeStep === 2">完成</el-button>
         </div>
     </div>

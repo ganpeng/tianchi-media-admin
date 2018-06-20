@@ -78,6 +78,52 @@ export const PROGRAMME_DIMENSION = [
     }
 ];
 
+/**
+ * layout image dimension
+ */
+export const LAYOUT_IMAGE_DIMENSION = {
+    /**
+     *推荐页轮播图大
+     */
+    'carousel-1': {
+        width: 824,
+        height: 463
+    },
+    /**
+     *推荐页轮播图小
+     */
+    'carousel-2': {
+        width: 733,
+        height: 413
+    },
+    /**
+     *推荐位横全图
+     */
+    'model-1': {
+        width: 1700,
+        height: 200
+    },
+    /**
+     *推荐位二分位图
+     */
+    'model-2': {
+        width: 824,
+        height: 225
+    },
+    'model-3': {
+        width: 532,
+        height: 225
+    },
+    'model-4': {
+        width: 386,
+        height: 225
+    },
+    'model-6': {
+        width: 240,
+        height: 350
+    }
+};
+
 // 人物图片尺寸
 export const PERSON_DIMENSION = [
     // 人物头像
@@ -100,4 +146,4 @@ export const VIDEO_COVER_DIMENSION = [
     }
 ];
 
-export default {ADVERT_DIMENSION, PROGRAMME_DIMENSION, PERSON_DIMENSION, VIDEO_COVER_DIMENSION};
+export default {ADVERT_DIMENSION, PROGRAMME_DIMENSION, LAYOUT_IMAGE_DIMENSION, PERSON_DIMENSION, VIDEO_COVER_DIMENSION};

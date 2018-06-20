@@ -162,7 +162,7 @@ let router = new Router({
                 },
                 // 内容管理-栏目管理-节目选择设置
                 {
-                    path: '/layout-manage/programme/:navBarId/:navBarSignCode/:model/:row/:index',
+                    path: '/layout-manage/programme/:navBarId/:navBarSignCode/:model/:row/:index/:imageSpec',
                     name: 'AppendProgramme',
                     component: AppendProgramme
                 },

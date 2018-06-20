@@ -17,15 +17,19 @@
                 </li>
             </ul>
             <div id="live">
-                <div class="record no-settable"></div>
-                <div class="live-channel settable" @click="setChannel">
+                <div class="record no-settable"
+                     v-if="navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL'"></div>
+                <div
+                    :class="'live-channel settable ' + (navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'small' : 'big')"
+                    @click="setChannel">
                     <div class="ab-center">点击设置 / 查看
                         <label>直播频道
                             {{liveChannelList[0] && liveChannelList[0].liveChannel ?
                             liveChannelList[0].liveChannel.name : ''}}</label>
                     </div>
                 </div>
-                <div class="ad-group settable">
+                <div
+                    :class="'ad-group settable ' + (navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'small' : 'big')">
                     <div class="ab-center">
                         <img v-if="rightTopRecommend.coverImage"
                              :src="rightTopRecommend.coverImage ? rightTopRecommend.coverImage.uri : '' | imageUrl"
@@ -46,7 +50,9 @@
                     <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.rightBottom"
                           class="corner-mark right-bottom">{{rightTopRecommend.cornerMark.rightBottom.caption}}</span>
                     <div class="recommend-operate">
-                        <el-dropdown @command="setRecommend($event,0,0,0)" placement="bottom">
+                        <el-dropdown
+                            @command="setRecommend($event,0,0,0,(navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'carousel-2' : 'carousel-1'))"
+                            placement="bottom">
                     <span class="el-dropdown-link">
                     <i class="el-icon-edit"></i>
                     </span>
@@ -98,7 +104,7 @@
                                       :alt="item.cornerMark.leftTop.caption">
                              </span>
                             <span v-if="item.cornerMark && item.cornerMark.leftBottom"
-                                  class="corner-mark left-bottom">更新到{{item.cornerMark.leftBottom.caption}}</span>
+                                  class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
                             <span v-if="item.cornerMark && item.cornerMark.rightTop" class="corner-mark right-top">
                                 <img :src="item.cornerMark.rightTop.imageUri"
                                      :alt="item.cornerMark.rightTop.caption">
@@ -108,7 +114,7 @@
                             <!--单个位置的设置操作-->
                             <div class="recommend-operate" v-if="!layoutBlockItem.subjectId">
                                 <el-dropdown
-                                    @command="setRecommend($event,blockIndex + 1,rowIndex,index)"
+                                    @command="setRecommend($event,blockIndex + 1,rowIndex,index,('model-' + rowItem.length))"
                                     placement="bottom">
                                 <span class="el-dropdown-link">
                                 <i class="el-icon-edit"></i>
@@ -335,7 +341,7 @@
                 this.modified = true;
             },
             // 设置推荐位为节目或者专题
-            setRecommend(val, model, row, index) {
+            setRecommend(val, model, row, index, imageSpec) {
                 this.$router.push({
                     name: val === 'PROGRAMME' ? 'AppendProgramme' : 'SingleAppendSubject',
                     params: {
@@ -343,7 +349,8 @@
                         navBarSignCode: this.navBarSignCode,
                         model: model,
                         row: row,
-                        index: index
+                        index: index,
+                        imageSpec: imageSpec
                     }
                 });
             },
@@ -529,7 +536,7 @@
         line-height: 30px;
         background: #5daf34;
         color: #fff;
-        font-size: 16px;
+        font-size: 14px;
         border-radius: 6px;
         img {
             width: 100%;
@@ -574,10 +581,17 @@
         }
         .live-channel {
             position: relative;
-            width: 43%;
-            padding-top: 24%;
             font-size: 1rem;
             background-color: #154F8B;
+            cursor: pointer;
+            &.small {
+                width: 43%;
+                padding-top: 24%;
+            }
+            &.big {
+                width: 48.5%;
+                padding-top: 27%;
+            }
             div {
                 display: flex;
                 flex-direction: column;
@@ -595,6 +609,14 @@
             padding-top: 24%;
             font-size: 30px;
             background-color: #154F8B;
+            &.small {
+                width: 43%;
+                padding-top: 24%;
+            }
+            &.big {
+                width: 48.5%;
+                padding-top: 27%;
+            }
             img {
                 display: block;
                 height: 100%;

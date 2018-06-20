@@ -20,7 +20,7 @@
         <el-dialog title="设置运营角标" :visible.sync="customCornerMarkVisible">
             <el-radio-group v-model="selectImageUrl">
                 <el-radio :label="item.imageUrl" v-for="(item, index) in customCornerMarkList" :key="index">
-                    <img :src="item.imageUrl | imageUrl" :alt="item.captain">
+                    <img :src="item.imageUrl" :alt="item.captain">
                 </el-radio>
             </el-radio-group>
             <el-button @click="addCover">添加图片</el-button>

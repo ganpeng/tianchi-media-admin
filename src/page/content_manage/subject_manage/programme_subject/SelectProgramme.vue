@@ -133,7 +133,7 @@
             <el-table-column
                 label="分类">
                 <template slot-scope="scope">
-                    {{scope.row.category.name}}
+                    {{scope.row.categoryList | jsonJoin('name')}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -185,7 +185,7 @@
 <script>
 
     export default {
-        name: 'SelectMultipleProgramme',
+        name: 'SelectProgramme',
         // 当前外部选中的人物列表
         props: ['selectedProgrammeList', 'model'],
         data() {

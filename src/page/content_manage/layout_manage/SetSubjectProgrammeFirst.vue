@@ -13,7 +13,7 @@
                 width="60px"
                 label="编号">
                 <template slot-scope="scope">
-                    <label><i class="el-icon-success"></i>{{scope.$index}}</label>
+                    <label><i class="el-icon-success"></i>{{scope.$index + 1}}</label>
                 </template>
             </el-table-column>
             <el-table-column
@@ -21,17 +21,15 @@
                 label="节目名称">
             </el-table-column>
             <el-table-column
-                prop="chiefActor"
-                label="节目主演">
+                label="主演">
                 <template slot-scope="scope">
-                    <label>{{scope.row.chiefActor.join(',')}}</label>
+                    <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
                 </template>
             </el-table-column>
             <el-table-column
-                prop="director"
-                label="节目导演">
+                label="导演">
                 <template slot-scope="scope">
-                    <label>{{scope.row.director.join(',')}}</label>
+                    <label>{{scope.row.figureListMap | displayFigures('DIRECTOR')}}</label>
                 </template>
             </el-table-column>
             <el-table-column
