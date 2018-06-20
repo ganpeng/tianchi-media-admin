@@ -12,14 +12,14 @@ export const createProgramme = (programme) => {
 /**
  * 获取节目列表
  */
-export const getProgrammeList = ({pageNum, pageSize, keyword, releaseAt, produceAreaList, programmeCategoryId, programmeTypeIdList, visible}) => {
+export const getProgrammeList = ({pageNum, pageSize, keyword, releaseAt, produceAreaList, programmeCategoryIdList, programmeTypeIdList, visible}) => {
     const params = {
         pageNum,
         pageSize,
         keyword,
         releaseAt: releaseAt ? new Date(releaseAt).getTime() : '',
         produceAreaList,
-        programmeCategoryId,
+        programmeCategoryIdList,
         programmeTypeIdList,
         visible
     };

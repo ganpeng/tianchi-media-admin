@@ -79,7 +79,7 @@
                                     </el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="节目分类">
+                            <el-form-item label="节目分类" prop="categoryList">
                                 <el-select
                                     :value="serializeCategoryList"
                                     multiple
@@ -380,8 +380,7 @@
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import dimension from '@/util/config/dimension';
     import role from '@/util/config/role';
-    // import {checkScore, checkCategory} from '@/util/formValidate';
-    import {checkScore} from '@/util/formValidate';
+    import {checkScore, checkCategory} from '@/util/formValidate';
     import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 
     export default {
@@ -436,14 +435,14 @@
                     ],
                     score: [
                         { validator: checkScore }
+                    ],
+                    categoryList: [
+                        { required: true, message: '请选择节目分类' },
+                        { validator: checkCategory }
+                    ],
+                    typeList: [
+                        { required: true, message: '请选择节目类型' }
                     ]
-                    // category: [
-                    //     { required: true, message: '请选择节目分类' },
-                    //     { validator: checkCategory }
-                    // ],
-                    // typeList: [
-                    //     { required: true, message: '请选择节目类型' }
-                    // ]
                 }
             };
         },

@@ -64,8 +64,7 @@
                 <el-form-item label="分类">
                     <el-select
                         :value="searchCategory"
-                        clearable
-                        @clear="clearSearchCategory"
+                        multiple
                         @change="categoryChangeHandler"
                         placeholder="请选择">
                         <el-option
@@ -192,7 +191,6 @@ export default {
             list: 'programme/list',
             pagination: 'programme/pagination',
             searchFields: 'programme/searchFields',
-            categoryName: 'programme/categoryName',
             typeList: 'programme/typeList',
             categoryListString: 'programme/categoryListString',
             getDirector: 'programme/getDirector',
@@ -247,8 +245,8 @@ export default {
             this.setPagination({pageNum});
             this.getProgrammeList();
         },
-        categoryChangeHandler(id) {
-            this.updateSearchCategoryValue({id});
+        categoryChangeHandler(idList) {
+            this.updateSearchCategoryValue({idList});
             this.updateSearchType({list: []});
         },
         typeListChangeHandler(value) {

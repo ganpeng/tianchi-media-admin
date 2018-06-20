@@ -105,7 +105,7 @@ const defaultState = {
     releaseStatus: '',
     releaseAt: '',
     produceAreaList: [],
-    programmeCategory: {},
+    programmeCategoryIdList: [],
     currentTypeList: [],
     programmeType: [],
     currentProgramme: Object.assign({}, defaultProgramme),
@@ -119,7 +119,7 @@ const defaultState = {
 };
 
 const state = JSON.parse(JSON.stringify(defaultState));
-const searchFields = ['keyword', 'releaseStatus', 'produceAreaList', 'releaseAt', 'programmeCategory', 'programmeType', 'pageNum', 'pageSize'];
+const searchFields = ['keyword', 'releaseStatus', 'produceAreaList', 'releaseAt', 'programmeCategoryIdList', 'programmeType', 'pageNum', 'pageSize'];
 
 /**
  *  通过id获取节目
@@ -168,7 +168,7 @@ const getters = {
         return state.currentProgramme.categoryList.map((category) => category.id);
     },
     searchCategory(state) {
-        return state.programmeCategory.id;
+        return state.programmeCategoryIdList;
     },
     serializeCategoryList(state) {
         return state.currentProgramme.categoryList.map((category) => category.id);
@@ -353,12 +353,18 @@ const mutations = {
         state.currentProgramme.currentTypeList = currentTypeList;
     },
     updateSearchCategoryValue(state, payload) {
-        if (payload.id) {
-            let category = state.categoryList.find((item) => {
-                return item.id === payload.id;
+        if (payload.idList) {
+            let currentTypeList = [];
+            state.programmeCategoryIdList = payload.idList;
+            payload.idList.forEach((id) => {
+                let category = state.categoryList.find((category) => {
+                    return category.id === id;
+                });
+                if (category.programmeTypeList) {
+                    currentTypeList = currentTypeList.concat(category.programmeTypeList);
+                }
             });
-            state.programmeCategory = category;
-            state.currentTypeList = category.programmeTypeList;
+            state.currentTypeList = currentTypeList;
         }
     },
     updateTypeList(state, payload) {
@@ -372,7 +378,7 @@ const mutations = {
         state.programmeType = payload.list;
     },
     resetSearchCategory(state) {
-        state.programmeCategory = {};
+        state.programmeCategoryIdList = [];
         state.currentTypeList = [];
         state.programmeType = [];
     },
@@ -384,7 +390,7 @@ const mutations = {
         state.releaseStatus = '';
         state.releaseAt = '';
         state.produceAreaList = [];
-        state.programmeCategory = {};
+        state.programmeCategoryIdList = [];
         state.programmeType = [];
    },
     updateLeadActor(state, payload) {
@@ -570,7 +576,6 @@ function serializeProgrammData(programmeData) {
 const actions = {
     getProgrammeList({commit, state}) {
         let searchObj = _.pick(state, searchFields);
-        searchObj.programmeCategoryId = searchObj.programmeCategory.id;
         searchObj.programmeTypeIdList = searchObj.programmeType;
         service.getProgrammeList(Object.assign({}, searchObj, {pageNum: state.pageNum - 1}))
             .then((res) => {

@@ -15,6 +15,13 @@
                     width="240px">
                 </el-table-column>
                 <el-table-column
+                    prop="videoId"
+                    v-if="tableStatus === 0"
+                    label="视频ID"
+                    align="center"
+                    width="240px">
+                </el-table-column>
+                <el-table-column
                     prop="name"
                     label="视频名称"
                     align="center"
@@ -46,6 +53,32 @@
                     min-width="240px"
                     align="center"
                     label="视频地址">
+                    <template slot-scope="scope">
+                        <el-button
+                            v-if="scope.row.m3u8For4K"
+                            type="text"
+                            @click="displayVideoPlayer(scope.row.m3u8For4K)"
+                            size="small"
+                            >4K</el-button>
+                        <el-button
+                            v-if="scope.row.m3u8For1080P"
+                            type="text"
+                            size="small"
+                            @click="displayVideoPlayer(scope.row.m3u8For1080P)"
+                            >1080</el-button>
+                        <el-button
+                            v-if="scope.row.m3u8For720P"
+                            type="text"
+                            size="small"
+                            @click="displayVideoPlayer(scope.row.m3u8For720P)"
+                            >720</el-button>
+                        <el-button
+                            v-if="scope.row.m3u8For480P"
+                            type="text"
+                            size="small"
+                            @click="displayVideoPlayer(scope.row.m3u8For480P)"
+                            >480</el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="type"
@@ -56,12 +89,6 @@
                             {{getVideoType(scope.row.type)}}
                         </template>
                 </el-table-column>
-                <!-- <el-table-column
-                    prop="quality"
-                    align="center"
-                    min-width="120px"
-                    label="视频类型">
-                </el-table-column> -->
                 <el-table-column
                     v-if="status === 1"
                     prop="free"
@@ -127,16 +154,23 @@
             </el-table>
         </el-row>
         <upload-programme-video-dialog :videoStatus="videoStatus" :videoUploadDialogVisible="videoUploadDialogVisible" v-on:changeVideoDialogStatus="closeVideoDialog($event)"></upload-programme-video-dialog>
+        <display-video-dialog
+            :url="url"
+            :displayVideoDialogVisible="displayVideoDialogVisible"
+            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
+        </display-video-dialog>
     </div>
 </template>
 <script>
 import {mapGetters, mapActions, mapMutations} from 'vuex';
 import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
+import DisplayVideoDialog from '../video_manage/DisplayVideoDialog';
 import role from '@/util/config/role';
 export default {
     name: 'ProgrammeTable',
     components: {
-        UploadProgrammeVideoDialog
+        UploadProgrammeVideoDialog,
+        DisplayVideoDialog
     },
     props: {
         dataList: {
@@ -158,6 +192,8 @@ export default {
     data() {
         return {
             videoUploadDialogVisible: false,
+            displayVideoDialogVisible: false,
+            url: '',
             isEdit: true,
             //  videoStatus 有三中状态，0：表示创建， 1: 表示编辑， 2： 表示查看
             videoStatus: 1
@@ -231,6 +267,13 @@ export default {
                     message: '已取消删除'
                 });
             });
+        },
+        closeDisplayVideoDialog(status) {
+            this.displayVideoDialogVisible = status;
+        },
+        displayVideoPlayer(url) {
+            this.displayVideoDialogVisible = true;
+            this.url = `http://dev-video.tianchiapi.com${url}`;
         }
     }
 };

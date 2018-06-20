@@ -193,6 +193,7 @@
         data() {
             return {
                 isLoading: false,
+                selectedVideo: false,
                 videoType: role.VIDEO_TYPE,
                 size: dimension.VIDEO_COVER_DIMENSION,
                 qualityOptions: role.QUALITY_TYPE,
@@ -253,44 +254,31 @@
                 this.setSelectedVideoId({id: ''});
             },
             successHandler() {
-                // if (!_.isEmpty(this.getSelectedVideo())) {
-                    this.$refs.uploadVideoForm.validate(value => {
-                        if (value) {
-                                if (parseInt(this.videoStatus) !== 1) {
+                this.$refs.uploadVideoForm.validate(value => {
+                    if (value) {
+                            if (parseInt(this.videoStatus) !== 1) {
+                                if (this.selectedVideo) {
                                     this.addVideoToList();
                                     this.cancelHandler();
                                 } else {
-                                    this.updateProgrammeVideo()
-                                        .then((res) => {
-                                            this.updateCurrentProgrammeVideoItem({video: res.data});
-                                            this.cancelHandler();
-                                        });
+                                    this.$message({
+                                        type: 'error',
+                                        message: '请先选择视频'
+                                    });
                                 }
-                        }
-                    });
-                // } else {
-                //     this.$message({
-                //         type: 'error',
-                //         message: '请先选择视频'
-                //     });
-                // }
+                            } else {
+                                this.updateProgrammeVideo()
+                                    .then((res) => {
+                                        this.updateCurrentProgrammeVideoItem({video: res.data});
+                                        this.cancelHandler();
+                                    });
+                            }
+                            this.selectedVideo = false;
+                    }
+                });
             },
             inputHandler(value, key) {
                 this.updateCurrentProgrammeVideo({[key]: value});
-                // if (key === 'quality') {
-                //     let video = this.getSelectedVideo();
-                //     let playUrl = '';
-                //     if (value === 'HD_480') {
-                //         playUrl = video.m3u8For480P;
-                //     }
-                //     if (value === 'HD_720') {
-                //         playUrl = video.m3u8For720P;
-                //     }
-                //     if (value === 'HD_1080') {
-                //         playUrl = video.m3u8For1080P;
-                //     }
-                //     this.updateCurrentProgrammeVideo({playUrl});
-                // }
             },
             uploadImageHandler() {
                 if (!this.readonly) {
@@ -317,6 +305,7 @@
                 if (videoObj) {
                     this.syncVideoMetaData({video: videoObj});
                     this.closeSelectVideoDialog();
+                    this.selectedVideo = true;
                 } else {
                     this.$message({
                         type: 'error',

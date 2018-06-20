@@ -41,7 +41,13 @@ const defaultProgrammeVideo = {
     // 修改时间
     updatedAt: '',
     // 前端需要用到的id
-    uid: ''
+    uid: '',
+    m3u8For480P: '',
+    m3u8For720P: '',
+    m3u8For1080P: '',
+    m3u8For4K: '',
+    // 临时的视频id
+    videoId: ''
 };
 
 const state = {
@@ -109,6 +115,8 @@ const mutations = {
         state.currentProgrammeVideo.m3u8For480P = payload.video.m3u8For480P;
         state.currentProgrammeVideo.m3u8For720P = payload.video.m3u8For720P;
         state.currentProgrammeVideo.m3u8For1080P = payload.video.m3u8For1080P;
+        state.currentProgrammeVideo.m3u8For4K = payload.video.m3u8For4K;
+        state.currentProgrammeVideo.videoId = payload.video.id;
     },
     addVideoToList(state) {
         state.currentProgrammeVideo.uid = uuid();
