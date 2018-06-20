@@ -68,10 +68,11 @@
 
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import {PROGRAMME_DIMENSION as subjectDimension} from '@/util/config/dimension';
+    import CATALOGUE_CONFIG_MAP from '@/util/config/catalogue';
 
     export default {
         name: 'SortCatalogue',
-        props: ['categoryName', 'blockIndex', 'setCatalogueTitle', 'pickedCatalogueList', 'navBarId', 'navBarSignCode'],
+        props: ['blockIndex', 'setCatalogueTitle', 'pickedCatalogueList', 'navBarId', 'navBarSignCode'],
         components: {
             UploadImage
         },
@@ -87,15 +88,27 @@
                 pickedCatalogueSettingList: []
             };
         },
+        computed: {
+            catalogueConfig() {
+                return CATALOGUE_CONFIG_MAP[this.navBarSignCode];
+            }
+        },
         methods: {
             getTypeList() {
                 this.$service.getProgrammeCategory().then(response => {
                     if (response && response.code === 0) {
                         response.data.map(item => {
-                            if (item.name === this.categoryName) {
+                            if (this.catalogueConfig.level === 'SECOND' && item.signCode === this.catalogueConfig.categorySignCode) {
                                 this.typeList = item.programmeTypeList;
-                                this.setOptionsStatus();
+                                // 色块展示一级类别，例如'娱乐'
+                            } else if (this.catalogueConfig.level === 'FIRST') {
+                                for (let i = 0; i < this.catalogueConfig.categorySignCode.length; i++) {
+                                    if (item.signCode === this.catalogueConfig.categorySignCode[i]) {
+                                        this.typeList.push(item);
+                                    }
+                                }
                             }
+                            this.setOptionsStatus();
                         });
                     }
                 });
@@ -123,6 +136,7 @@
                 if (isVisible) {
                     this.pickedCatalogueSettingList = JSON.parse(JSON.stringify(this.pickedCatalogueList));
                     this.initDragula();
+                    this.typeList = [];
                     this.getTypeList();
                 }
             },
@@ -162,6 +176,13 @@
                 });
                 return true;
             },
+            getTypeInfo(id) {
+                for (let i = 0; i < this.typeList.length; i++) {
+                    if (this.typeList[i].id === id) {
+                        return this.typeList[i];
+                    }
+                }
+            },
             // 设置目录
             setCatalogue() {
                 if (!this.checkSettingStatus()) {
@@ -176,6 +197,20 @@
                 for (let i = 0; i < nodeList.length; i++) {
                     this.pickedCatalogueSettingList.map(item => {
                         if (nodeList[i].getAttribute('data-id') === item.id) {
+                            // 选择全部
+                            if (item.id === '1') {
+                                item.name = '全部';
+                                item.layoutItemType = 'ALL';
+                            } else {
+                                item.name = this.getTypeInfo(item.id).name;
+                                // 推荐二级分类
+                                if (this.catalogueConfig.level === 'SECOND') {
+                                    item.layoutItemType = this.catalogueConfig.layoutItemType.type;
+                                } else if (this.catalogueConfig.level === 'FIRST') {
+                                    let signCode = this.getTypeInfo(item.id).signCode;
+                                    item.layoutItemType = this.catalogueConfig.layoutItemType[signCode].category;
+                                }
+                            }
                             list[0].push(item);
                         }
                     });

@@ -254,7 +254,7 @@ const mutations = {
         let sortedLayoutBlockList = [];
         // 添加非模块推荐位
         for (let i = 0; i < minModelIndex; i++) {
-            sortedLayoutBlockList.push(JSON.parse(JSON.stringify(state[navBarSignCode].layoutBlockList)));
+            sortedLayoutBlockList.push(JSON.parse(JSON.stringify(state[navBarSignCode].layoutBlockList[i])));
         }
         // 添加模块推荐位
         for (let m = 0; m < modelIndexList.length; m++) {

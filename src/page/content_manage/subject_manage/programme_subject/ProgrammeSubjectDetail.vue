@@ -43,21 +43,15 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="chiefActor"
                     label="主演">
                     <template slot-scope="scope">
-                        <label v-if="scope.row.chiefActor && scope.row.chiefActor.length !== 0">{{scope.row.chiefActor |
-                            jsonJoin('name')}}</label>
-                        <label v-else>------</label>
+                        <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="director"
                     label="导演">
                     <template slot-scope="scope">
-                        <label v-if="scope.row.director && scope.row.director.length !== 0">{{scope.row.director |
-                            jsonJoin('name')}}</label>
-                        <label v-else>------</label>
+                        <label>{{scope.row.figureListMap | displayFigures('DIRECTOR')}}</label>
                     </template>
                 </el-table-column>
             </el-table>

@@ -26,6 +26,18 @@ const FILTERS = {
     imageUrl(uri) {
         let baseUri = window.localStorage.getItem('imageBaseUri');
         return baseUri + uri;
+    },
+    // 展示节目中不同类型人物列表
+    displayFigures(figureMap, figureKey) {
+        let str = '';
+        if (figureMap && figureMap[figureKey] && figureMap[figureKey].length !== 0) {
+            figureMap[figureKey].map(figure => {
+                str = str + ',' + figure.name;
+            });
+            return str.slice(1);
+        } else {
+            return '------';
+        }
     }
 };
 

@@ -67,8 +67,7 @@
                     :navBarSignCode="navBarSignCode"
                     :pickedCatalogueList="layoutBlockItem.layoutItemMultiList[0]"
                     :blockIndex="blockIndex + 1"
-                    categoryName="电视剧"
-                    setCatalogueTitle="设置电视剧推荐类型"
+                    :setCatalogueTitle="'设置' + navBarName + '推荐'"
                     v-on:setCatalogue="setCatalogue">
                 </sort-catalogue>
                 <!--节目或者人物-->
@@ -121,28 +120,28 @@
                                 </el-dropdown>
                             </div>
                         </li>
-                        <!--模块推荐操作-->
-                        <div class="model-operate" v-if="layoutBlockItem.subjectId">
-                            <el-dropdown @command="addModelSubject($event,blockIndex + 1)" placement="bottom">
-                                <span class="el-dropdown-link"><i class="el-icon-circle-plus-outline"></i></span>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="PROGRAMME">添加节目专题</el-dropdown-item>
-                                    <el-dropdown-item command="PERSON">添加人物专题</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                            <el-dropdown @command="editModelSubject($event,blockIndex + 1)" placement="bottom">
-                                <span class="el-dropdown-link"><i class="el-icon-edit"></i></span>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="PROGRAMME">编辑节目专题</el-dropdown-item>
-                                    <el-dropdown-item command="PERSON">编辑人物专题</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                            <el-tooltip class="item" effect="dark" content="删除" placement="top">
-                                <i class="el-icon-delete"
-                                   @click="removeModel(layoutBlockItem.title,blockIndex + 1)"></i>
-                            </el-tooltip>
-                        </div>
                     </ul>
+                    <!--模块推荐操作-->
+                    <div class="model-operate" v-if="layoutBlockItem.subjectId">
+                        <el-dropdown @command="addModelSubject($event,blockIndex + 1)" placement="bottom">
+                            <span class="el-dropdown-link"><i class="el-icon-circle-plus-outline"></i></span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="PROGRAMME">添加节目专题</el-dropdown-item>
+                                <el-dropdown-item command="PERSON">添加人物专题</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <el-dropdown @command="editModelSubject($event,blockIndex + 1)" placement="bottom">
+                            <span class="el-dropdown-link"><i class="el-icon-edit"></i></span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="PROGRAMME">编辑节目专题</el-dropdown-item>
+                                <el-dropdown-item command="PERSON">编辑人物专题</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <el-tooltip class="item" effect="dark" content="删除" placement="top">
+                            <i class="el-icon-delete"
+                               @click="removeModel(layoutBlockItem.title,blockIndex + 1)"></i>
+                        </el-tooltip>
+                    </div>
                 </div>
             </div>
             <div class="append-model">
@@ -432,7 +431,7 @@
             },
             // 点击发布
             publish() {
-                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                this.$confirm('此操作将发布设置数据到线上, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -452,6 +451,7 @@
                                 });
                                 if (++count === 2) {
                                     this.modified = false;
+                                    this.getOnlionLayoutInfo();
                                 }
                             }
                         });
@@ -473,6 +473,7 @@
                             });
                             if (++count === 2) {
                                 this.modified = false;
+                                this.getOnlionLayoutInfo();
                             }
                         }
                     });
@@ -702,7 +703,7 @@
                 }
             }
             .figure-name {
-                margin-top: 20px;
+                margin-top: 8px;
                 font-size: 20px;
                 color: #fff;
             }
@@ -712,7 +713,7 @@
     .model-operate {
         position: absolute;
         right: 20px;
-        top: 18px;
+        top: 0px;
         .el-tooltip {
             margin-right: 30px;
         }
