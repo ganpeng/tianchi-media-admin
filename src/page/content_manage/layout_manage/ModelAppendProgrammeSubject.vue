@@ -35,12 +35,32 @@
         <div class="model-block">
             <ul :class="'model-' + row.length" v-for="(row,rowIndex) in subjectLayoutItemList" :key="rowIndex">
                 <li v-for="(item,index) in row" :key="index"
-                    @click="setModelItem(rowIndex,index,('model-' + row.length))">
-                    <div class="ab-center">
+                    @click="setModelItem(rowIndex,index,('model-' + row.length),item.layoutItemType === 'ALL')">
+                    <div class="ab-center text-center">
                         <img :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
                              :alt="item.coverImage.name"
-                             v-if="item.coverImage">
+                             v-if="item.coverImage && item.coverImage.id">
+                        <label class="all-tip"
+                               v-if="item.layoutItemType === 'ALL' && !item.coverImage.id">此处为“更多“入口，点击上传图片</label>
                     </div>
+                    <!--左上角标-->
+                    <span v-if="item.cornerMark && item.cornerMark.leftTop"
+                          class="corner-mark left-top">
+                                 <img :src="item.cornerMark.leftTop.caption | setCopyRightImage"
+                                      :alt="item.cornerMark.leftTop.caption">
+                             </span>
+                    <!--左下角标-->
+                    <span v-if="item.cornerMark && item.cornerMark.leftBottom"
+                          class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
+                    <!--右上角标-->
+                    <span v-if="item.cornerMark && item.cornerMark.rightTop"
+                          class="corner-mark right-top">
+                                <img :src="item.cornerMark.rightTop.imageUri | imageUrl"
+                                     :alt="item.cornerMark.rightTop.caption">
+                                </span>
+                    <!--右下角标-->
+                    <span v-if="item.cornerMark && item.cornerMark.rightBottom"
+                          class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
                 </li>
             </ul>
         </div>
@@ -55,6 +75,13 @@
                 v-on:setCurrentSubjectItem="setCurrentSubjectItem">
             </set-subject-programme>
         </el-dialog>
+        <upload-image
+            :size='size'
+            title="上传'全部'图片"
+            :successHandler="addProgrammeAllImage"
+            :imageUploadDialogVisible="imageUploadDialogVisible"
+            v-on:changeImageDialogStatus="closeImageDialog($event)">
+        </upload-image>
     </div>
 </template>
 
@@ -62,16 +89,21 @@
     import SelectSingleSubject from './SelectSingleSubject';
     import SetSubjectProgramme from './SetSubjectProgramme';
     import blockModel from '@/util/config/block_model';
-    import {LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
+    import {LAYOUT_IMAGE_DIMENSION, PROGRAMME_DIMENSION} from '@/util/config/dimension';
+    import copyRightImage from '@/util/config/import_image.js';
+    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
 
     export default {
         name: 'ModelAppendProgrammeSubject',
         components: {
             SelectSingleSubject,
-            SetSubjectProgramme
+            SetSubjectProgramme,
+            UploadImage
         },
         data() {
             return {
+                size: PROGRAMME_DIMENSION,
+                imageUploadDialogVisible: false,
                 navBarId: this.$route.params.navBarId,
                 navBarSignCode: this.$route.params.navBarSignCode,
                 dialogTableVisible: false,
@@ -80,7 +112,7 @@
                 modelOptions: blockModel.TYPE,
                 model: '',
                 // 布局一定的节目列表
-                subjectLayoutItemList: [[], [], []],
+                subjectLayoutItemList: [],
                 // 当前专题中的节目列表
                 programmeList: [],
                 // 当前设置节目所在行数
@@ -90,11 +122,22 @@
                 imageSpec: {}
             };
         },
+        filters: {
+            setCopyRightImage(copyRightCaptain) {
+                return copyRightImage[copyRightCaptain];
+            }
+        },
         computed: {
             currentNavBarInfo() {
                 return this.$store.getters['layout/getNavBarInfo']({
                     navBarId: this.navBarId
                 });
+            },
+            lastRow() {
+                return this.subjectLayoutItemList.length - 1;
+            },
+            lastIndex() {
+                return this.subjectLayoutItemList[this.lastRow].length - 1;
             }
         },
         methods: {
@@ -112,11 +155,18 @@
                 } else {
                     this.currentSubject = item;
                     this.programmeList = item.subjectItemList;
+                    this.resetModel();
                 }
+            },
+            // 初始化模块板式
+            resetModel() {
+                this.model = '';
+                this.subjectLayoutItemList = [];
             },
             // 选择模块板式
             setBlockModel() {
                 if (!this.model) {
+                    this.resetModel();
                     return;
                 }
                 if (this.getModelCount() > this.programmeList.length) {
@@ -124,19 +174,31 @@
                         message: '该模块板式需要节目数量多于专题节目数量，不可选择',
                         type: 'warning'
                     });
-                    this.model = '';
+                    this.resetModel();
                     return;
-                } else if (this.getModelCount() === this.programmeList.length) {
-                    // 模块板式没有最后一个'更多'的位置
-                } else {
-                    // 模块板式有最后一个'更多'的位置
                 }
                 // 初始化模块列表
-                this.subjectLayoutItemList = [[], [], []];
+                this.subjectLayoutItemList = [];
                 for (let k = 0; k < this.model.split('+').length; k++) {
+                    this.subjectLayoutItemList[k] = [];
                     for (let i = 0; i < this.model.split('+')[k]; i++) {
-                        this.subjectLayoutItemList[k].push(i);
+                        this.subjectLayoutItemList[k].push({});
                     }
+                }
+                // 模块板式有最后一个'更多'的位置
+                if (this.getModelCount() < this.programmeList.length) {
+                    this.subjectLayoutItemList[this.lastRow][this.lastIndex] = {
+                        id: '1',
+                        layoutItemType: 'ALL',
+                        name: '全部',
+                        coverImage: {
+                            height: '',
+                            id: '',
+                            name: '',
+                            uri: '',
+                            width: ''
+                        }
+                    };
                 }
                 // 重置节目列表
                 this.programmeList.map(programme => {
@@ -152,11 +214,23 @@
                 return num;
             },
             // 设置模板样式中的节目项
-            setModelItem(row, index, imageModel) {
+            setModelItem(row, index, imageModel, isAll) {
+                if (isAll) {
+                    this.imageUploadDialogVisible = true;
+                    return;
+                }
                 this.imageSpec = LAYOUT_IMAGE_DIMENSION[imageModel];
                 this.currentRow = row;
                 this.currentIndex = index;
                 this.dialogTableVisible = true;
+            },
+            // 关闭上传图片对话框
+            closeImageDialog(status) {
+                this.imageUploadDialogVisible = status;
+            },
+            // 添加节目'全部'图片
+            addProgrammeAllImage(newProgammeAllImage) {
+                this.subjectLayoutItemList[this.lastRow][this.lastIndex].coverImage = newProgammeAllImage.posterImage;
             },
             // 设置专题某一项内容
             setCurrentSubjectItem(programmeItem) {
@@ -257,6 +331,15 @@
                 flex-grow: 1;
                 background: #5daf34;
                 cursor: pointer;
+                div {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                }
+                .all-tip {
+                    font-size: 20px;
+                    color: #fff;
+                }
                 img {
                     display: block;
                     width: 100%;
@@ -301,6 +384,47 @@
                 padding-top: 20%;
             }
         }
+    }
+
+    // 角标样式
+    span.corner-mark {
+        position: absolute;
+        line-height: 30px;
+        background: #5daf34;
+        color: #fff;
+        font-size: 14px;
+        border-radius: 6px;
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    span.left-bottom {
+        left: 10px;
+        bottom: 10px;
+        height: 30px;
+        width: 100px;
+    }
+
+    span.left-top {
+        left: 10px;
+        top: 10px;
+        background: transparent;
+    }
+
+    span.right-top {
+        right: 10px;
+        top: 10px;
+        height: 30px;
+        width: 60px;
+    }
+
+    span.right-bottom {
+        right: 10px;
+        bottom: 10px;
+        height: 30px;
+        width: 60px;
     }
 
     .save-btn {

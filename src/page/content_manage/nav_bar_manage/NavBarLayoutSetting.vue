@@ -35,18 +35,22 @@
                              :src="rightTopRecommend.coverImage ? rightTopRecommend.coverImage.uri : '' | imageUrl"
                              :alt="rightTopRecommend.coverImage ? rightTopRecommend.coverImage.name : ''"/>
                     </div>
+                    <!--左上角标-->
                     <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.leftTop"
                           class="corner-mark left-top">
                         <img :src="rightTopRecommend.cornerMark.leftTop.caption | setCopyRightImage"
                              :alt="rightTopRecommend.cornerMark.leftTop.caption">
                     </span>
+                    <!--左下角标-->
                     <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.leftBottom"
-                          class="corner-mark left-bottom">更新到{{rightTopRecommend.cornerMark.leftBottom.caption}}</span>
+                          class="corner-mark left-bottom">{{rightTopRecommend.cornerMark.leftBottom.caption}}</span>
+                    <!--右上角标-->
                     <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.rightTop"
                           class="corner-mark right-top">
-                    <img :src="rightTopRecommend.cornerMark.rightTop.imageUri"
+                    <img :src="rightTopRecommend.cornerMark.rightTop.imageUri | imageUrl"
                          :alt="rightTopRecommend.cornerMark.rightTop.caption">
                     </span>
+                    <!--右下角标-->
                     <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.rightBottom"
                           class="corner-mark right-bottom">{{rightTopRecommend.cornerMark.rightBottom.caption}}</span>
                     <div class="recommend-operate">
@@ -98,17 +102,21 @@
                                     {{item.name}}
                                 </div>
                             </div>
+                            <!--左上角标-->
                             <span v-if="item.cornerMark && item.cornerMark.leftTop"
                                   class="corner-mark left-top">
                                  <img :src="item.cornerMark.leftTop.caption | setCopyRightImage"
                                       :alt="item.cornerMark.leftTop.caption">
                              </span>
+                            <!--左下角标-->
                             <span v-if="item.cornerMark && item.cornerMark.leftBottom"
                                   class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
+                            <!--右上角标-->
                             <span v-if="item.cornerMark && item.cornerMark.rightTop" class="corner-mark right-top">
-                                <img :src="item.cornerMark.rightTop.imageUri"
+                                <img :src="item.cornerMark.rightTop.imageUri | imageUrl"
                                      :alt="item.cornerMark.rightTop.caption">
                                 </span>
+                            <!--右下角标-->
                             <span v-if="item.cornerMark && item.cornerMark.rightBottom"
                                   class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
                             <!--单个位置的设置操作-->

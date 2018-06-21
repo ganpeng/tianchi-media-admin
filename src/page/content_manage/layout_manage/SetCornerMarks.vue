@@ -13,26 +13,31 @@
             <el-checkbox label="CUSTOM">
                 <label>右上角标</label>
                 <label>运营角标</label>
-                <img v-if="customImageUrl" :src="customImageUrl | imageUrl" class="custom-image">
+                <img v-if="customImageUri" :src="customImageUri | imageUrl" class="custom-image">
                 <el-button size="mini" type="success" @click="customCornerMarkVisible = true">选择运营角标</el-button>
             </el-checkbox>
         </el-checkbox-group>
-        <el-dialog title="设置运营角标" :visible.sync="customCornerMarkVisible">
-            <el-radio-group v-model="selectImageUrl">
-                <el-radio :label="item.imageUrl" v-for="(item, index) in customCornerMarkList" :key="index">
-                    <img :src="item.imageUrl" :alt="item.captain">
+        <el-dialog title="设置运营角标"
+                   :visible.sync="customCornerMarkVisible"
+                   class="text-center"
+                   append-to-body>
+            <el-radio-group v-model="selectImageUri" class="text-center">
+                <el-radio :label="item.imageUri" v-for="(item, index) in customCornerMarkList" :key="index">
+                    <img :src="item.imageUri | imageUrl" :alt="item.captain">
                 </el-radio>
             </el-radio-group>
-            <el-button @click="addCover">添加图片</el-button>
+            <div class="text-center">
+                <el-button @click="addCover">添加图片</el-button>
+            </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="customCornerMarkVisible = false">取 消</el-button>
-                <el-button type="primary" @click="setCustomImageUrl">确 定</el-button>
+                <el-button type="primary" @click="setCustomImageUri">确 定</el-button>
             </div>
         </el-dialog>
         <upload-image
             :size='size'
             title="上传运营角标图片"
-            :successHandler="addPosterImage"
+            :successHandler="addCustomCornerMarkImage"
             :imageUploadDialogVisible="imageUploadDialogVisible"
             v-on:changeImageDialogStatus="closeImageDialog($event)">
         </upload-image>
@@ -42,7 +47,7 @@
 <script>
     import cornerMarkOptions from '@/util/config/corner_mark';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
-    import {PROGRAMME_DIMENSION as subjectDimension} from '@/util/config/dimension';
+    import {OPERATE_CORNER_MARK_DIMENSION} from '@/util/config/dimension';
 
     export default {
         name: 'SetCornerMarks',
@@ -52,24 +57,15 @@
         },
         data() {
             return {
-                size: subjectDimension,
+                size: OPERATE_CORNER_MARK_DIMENSION,
                 customCornerMarkVisible: false,
                 imageUploadDialogVisible: false,
-                customImageUrl: '',
-                selectImageUrl: '',
+                customImageUri: '',
+                selectImageUri: '',
                 checkedCornerMarks: [],
                 currentMarks: {},
                 cornerMarks: cornerMarkOptions,
-                customCornerMarkList: [{
-                    imageUrl: 'http://pic41.nipic.com/20140425/17567795_234801330000_2.jpg',
-                    captain: '独家'
-                }, {
-                    imageUrl: 'http://pic26.nipic.com/20121214/11208347_175526604000_2.jpg',
-                    captain: '热映'
-                }, {
-                    imageUrl: 'http://pic12.nipic.com/20110219/6608733_144445985000_2.jpg',
-                    captain: '最热'
-                }]
+                customCornerMarkList: []
             };
         },
         filters: {
@@ -109,6 +105,11 @@
                     }
                 });
                 // 获取运营角标列表
+                this.$service.getCornerMarkList({markType: 'CUSTOM'}).then(response => {
+                    if (response && response.code === 0) {
+                        this.customCornerMarkList = response.data.list;
+                    }
+                });
             },
             // 设置节目中的角标是否显示在当前页面中
             checkVisible(markType) {
@@ -132,35 +133,32 @@
                 this.imageUploadDialogVisible = status;
             },
             // 添加角标图片
-            addPosterImage(newPosterImage) {
+            addCustomCornerMarkImage(newCustomCornerMarkImage) {
                 for (let i = 0; i < this.customCornerMarkList.length; i++) {
-                    if (newPosterImage.posterImage.id === this.customCornerMarkList[i].id) {
+                    if (newCustomCornerMarkImage.posterImage.id === this.customCornerMarkList[i].id) {
                         this.$message('该图片已经添加到角标图片中');
                         return;
                     }
                 }
-                let imageList = this.customCornerMarkList.slice();
-                imageList.push({imageUri: newPosterImage.posterImage.uri, captain: newPosterImage.posterImage.name});
                 this.customCornerMarkList.push({
-                    imageUri: newPosterImage.posterImage.uri,
-                    captain: newPosterImage.posterImage.name
+                    imageUri: newCustomCornerMarkImage.posterImage.uri,
+                    captain: newCustomCornerMarkImage.posterImage.name
                 });
-                // 更新当前节目中的封面图片
             },
             // 选择某一个
             checkedCornerMarksChange() {
-                if (this.checkedCornerMarks.toString().indexOf('CUSTOM') !== -1 && this.customImageUrl === '') {
+                if (this.checkedCornerMarks.toString().indexOf('CUSTOM') !== -1 && this.customImageUri === '') {
                     this.$message('请选择运营角标');
                 }
             },
             // 设置定制角标的imageUrl
-            setCustomImageUrl() {
-                this.customImageUrl = this.selectImageUrl;
+            setCustomImageUri() {
+                this.customImageUri = this.selectImageUri;
                 this.customCornerMarkVisible = false;
             },
             // 设置角标信息
             setCornerMarksSetting() {
-                if (this.checkedCornerMarks.toString().indexOf('CUSTOM') !== -1 && this.customImageUrl === '') {
+                if (this.checkedCornerMarks.toString().indexOf('CUSTOM') !== -1 && this.customImageUri === '') {
                     this.$message('请选择运营角标');
                     return false;
                 }
@@ -186,7 +184,7 @@
                         if (markType === 'CUSTOM') {
                             this.currentMarks.rightTop = {
                                 captain: '',
-                                imageUri: this.customImageUrl,
+                                imageUri: this.customImageUri,
                                 markType: 'CUSTOM'
                             };
                         }

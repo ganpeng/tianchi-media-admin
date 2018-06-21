@@ -124,6 +124,26 @@ export const LAYOUT_IMAGE_DIMENSION = {
     }
 };
 
+/**
+ * catalogue image dimension
+ */
+export const CATALOGUE_DIMENSION = [
+    {
+        value: '240*134',
+        label: '色块图片：240*134'
+    }
+];
+
+/**
+ * operate corner mark image dimension
+ */
+export const OPERATE_CORNER_MARK_DIMENSION = [
+    {
+        value: '54*30',
+        label: '运营角标图片：54*30'
+    }
+];
+
 // 人物图片尺寸
 export const PERSON_DIMENSION = [
     // 人物头像
@@ -146,4 +166,12 @@ export const VIDEO_COVER_DIMENSION = [
     }
 ];
 
-export default {ADVERT_DIMENSION, PROGRAMME_DIMENSION, LAYOUT_IMAGE_DIMENSION, PERSON_DIMENSION, VIDEO_COVER_DIMENSION};
+export default {
+    ADVERT_DIMENSION,
+    PROGRAMME_DIMENSION,
+    LAYOUT_IMAGE_DIMENSION,
+    CATALOGUE_DIMENSION,
+    OPERATE_CORNER_MARK_DIMENSION,
+    PERSON_DIMENSION,
+    VIDEO_COVER_DIMENSION
+};

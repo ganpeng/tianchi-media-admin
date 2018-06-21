@@ -7,7 +7,7 @@
             </li>
             <li v-for="(item,index) in pickedCatalogueList" :key="index">
                 <div class="ab-center">
-                    <img v-if="item.coverImage" :src="item.coverImage ? item.coverImage.uri : ''"
+                    <img v-if="item.coverImage" :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
                          :alt="item.coverImage ? item.coverImage.name : ''"/>
                 </div>
             </li>
@@ -20,7 +20,7 @@
                         :class="item.layoutItemType === 'ALL' ? 'all' : ''">
                         <div class="image-box">
                             <div class="ab-center">
-                                <img v-if="item.coverImage" :src="item.coverImage ? item.coverImage.uri : ''"
+                                <img v-if="item.coverImage" :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
                                      :alt="item.coverImage ? item.coverImage.name : ''"/>
                                 <label v-else>预览图片</label>
                             </div>
@@ -67,7 +67,7 @@
 <script>
 
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
-    import {PROGRAMME_DIMENSION as subjectDimension} from '@/util/config/dimension';
+    import {CATALOGUE_DIMENSION} from '@/util/config/dimension';
     import CATALOGUE_CONFIG_MAP from '@/util/config/catalogue';
 
     export default {
@@ -78,7 +78,7 @@
         },
         data() {
             return {
-                size: subjectDimension,
+                size: CATALOGUE_DIMENSION,
                 pickCatalogueVisible: false,
                 typeList: [],
                 valueList: [],

@@ -14,7 +14,7 @@ import _ from 'lodash';
  * @param typeList An array of programme subject's types, such as TV_DRAMA、MOVIE、VARIETY_SHOW.
  * @param description The description of subject.
  * @param tagList Array of tags.
- * @param coverImage Object of coverImage including id、uri、height、width attribute.
+ * @param posterImageList The list of coverImages including id、uri、height、width attribute.
  */
 export const createSubject = ({category, name, programmeCategoryList, description, tagList, posterImageList}) => {
     return service.post('/v1/content/subject', {
@@ -100,4 +100,12 @@ export const getSubjectDetail = (id) => {
  */
 export const deleteSubject = (id) => {
     return service.delete(util.format('/v1/content/subject/{0}', id));
+};
+
+/**
+ * 获取角标的列表
+ * @param markType The mark type such as SCORE、EPISODES_NUMBER、COPYRIGHT_RESERVER、LICENCE、CUSTOM.
+ */
+export const getCornerMarkList = ({markType}) => {
+    return service.get(util.format('/v1/content/subject/mark-custom/list?markType={0}', markType));
 };
