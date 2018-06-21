@@ -3,7 +3,7 @@
     <div>
         <h3 class="text-left">找到以下符合该位置尺寸要求的图片：</h3>
         <ul class="cover-list">
-            <li v-for="(item,index) in programme.posterImageList" :key="index">
+            <li v-for="(item,index) in specPosterImages" :key="index">
                 <img :src="item.uri  | imageUrl" :alt="item.name">
                 <el-radio v-model="programmeImageIndex" :label="index" @change="setCoverImage">{{item.name}}</el-radio>
             </li>
@@ -30,7 +30,7 @@
         components: {
             UploadImage
         },
-        props: ['programme'],
+        props: ['programme', 'imageSpec'],
         data() {
             return {
                 size: subjectDimension,
@@ -44,9 +44,14 @@
                 imageUploadDialogVisible: false
             };
         },
+        computed: {
+            specPosterImages() {
+                return this.programme.posterImageList.filter(image => parseInt(image.width) === this.imageSpec.width && parseInt(image.height) === this.imageSpec.height);
+            }
+        },
         methods: {
             setCoverImage() {
-                this.$emit('setCoverImage', this.programme.posterImageList[this.programmeImageIndex]);
+                this.$emit('setCoverImage', this.specPosterImages[this.programmeImageIndex]);
             },
             // 添加节目封面图片
             addCover() {
@@ -58,13 +63,13 @@
             },
             // 添加封面图片
             addPosterImage(newPosterImage) {
-                for (let i = 0; i < this.programme.posterImageList.length; i++) {
-                    if (newPosterImage.posterImage.id === this.programme.posterImageList[i].id) {
+                for (let i = 0; i < this.specPosterImages.length; i++) {
+                    if (newPosterImage.posterImage.id === this.specPosterImages[i].id) {
                         this.$message('该图片已经添加到当前节目封面中');
                         return;
                     }
                 }
-                let imageList = this.programme.posterImageList.slice();
+                let imageList = this.specPosterImages.slice();
                 imageList.push(newPosterImage.posterImage);
                 // 更新当前节目中的封面图片
                 this.$service.updateProgrammeInfo({
@@ -72,7 +77,7 @@
                     programme: {posterImages: imageList}
                 }).then(response => {
                     if (response && response.code === 0) {
-                        this.programme.posterImageList.push(newPosterImage.posterImage);
+                        this.specPosterImages.push(newPosterImage.posterImage);
                     }
                 });
             }
@@ -102,12 +107,19 @@
             justify-content: space-between;
             height: 230px;
             &:last-child {
+                display: flex;
                 justify-content: center;
+                flex-direction: column;
                 width: 180px;
                 height: 180px;
                 border: 1px dotted gray;
                 text-align: center;
                 cursor: pointer;
+                i {
+                    display: inline;
+                    position: static;
+                    color: gray;
+                }
                 &:hover {
                     border: 1px dotted #409EFF;
                     i {

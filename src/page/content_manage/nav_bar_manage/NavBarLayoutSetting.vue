@@ -321,6 +321,9 @@
             },
             // 跳转到响应的导航栏布局页面
             switchNavBar(navBarId, navBarSignCode) {
+                if (navBarSignCode === 'SEARCH') {
+                    return;
+                }
                 if (navBarId !== this.navBarId) {
                     this.$router.push({
                         name: 'NavBarLayoutSetting',

@@ -338,6 +338,7 @@
         display: flex;
         margin-top: 30px;
         justify-content: left;
+        flex-wrap: wrap;
         li {
             display: flex;
             margin-right: 30px;

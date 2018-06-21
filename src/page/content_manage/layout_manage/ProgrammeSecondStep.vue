@@ -3,7 +3,7 @@
     <div>
         <div class="text-left">符合该位置的图片如下，请选择：</div>
         <ul>
-            <li v-for="(item,index) in posterImages" v-bind:key="index">
+            <li v-for="(item,index) in specPosterImages" v-bind:key="index">
                 <img :src="item.uri | imageUrl" :alt="item.name" @click="displayImage(index)">
                 <el-radio v-model="programmeImage" :label="item.id" @change="setPosterImage(index)">{{item.name}}
                 </el-radio>
@@ -47,12 +47,12 @@
             // 放大预览图片
             displayImage(index) {
                 this.previewImage.display = true;
-                this.previewImage.list = this.posterImages;
+                this.previewImage.list = this.specPosterImages;
                 this.previewImage.activeIndex = index;
             },
             // 选择海报图片
             setPosterImage(index) {
-                this.$emit('setPosterImage', this.posterImages[index]);
+                this.$emit('setPosterImage', this.specPosterImages[index]);
             },
             // 跳转到节目编辑页面
             toEditProgramme() {

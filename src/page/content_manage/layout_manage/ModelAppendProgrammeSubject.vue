@@ -34,7 +34,8 @@
         </el-select>
         <div class="model-block">
             <ul :class="'model-' + row.length" v-for="(row,rowIndex) in subjectLayoutItemList" :key="rowIndex">
-                <li v-for="(item,index) in row" :key="index" @click="setModelItem(rowIndex,index)">
+                <li v-for="(item,index) in row" :key="index"
+                    @click="setModelItem(rowIndex,index,('model-' + row.length))">
                     <div class="ab-center">
                         <img :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
                              :alt="item.coverImage.name"
@@ -46,9 +47,10 @@
         <div class="text-center save-btn">
             <el-button type="success" @click="saveBlock">保 存</el-button>
         </div>
-        <el-dialog title="设置模块内的节目" :visible.sync="dialogTableVisible">
+        <el-dialog title="设置模块内的节目" center :visible.sync="dialogTableVisible">
             <set-subject-programme
                 v-if="dialogTableVisible"
+                :imageSpec="imageSpec"
                 :programmeList="programmeList"
                 v-on:setCurrentSubjectItem="setCurrentSubjectItem">
             </set-subject-programme>
@@ -60,6 +62,7 @@
     import SelectSingleSubject from './SelectSingleSubject';
     import SetSubjectProgramme from './SetSubjectProgramme';
     import blockModel from '@/util/config/block_model';
+    import {LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
 
     export default {
         name: 'ModelAppendProgrammeSubject',
@@ -83,7 +86,8 @@
                 // 当前设置节目所在行数
                 currentRow: '',
                 // 当前设置节目所在某行的index
-                currentIndex: ''
+                currentIndex: '',
+                imageSpec: {}
             };
         },
         computed: {
@@ -148,7 +152,8 @@
                 return num;
             },
             // 设置模板样式中的节目项
-            setModelItem(row, index) {
+            setModelItem(row, index, imageModel) {
+                this.imageSpec = LAYOUT_IMAGE_DIMENSION[imageModel];
                 this.currentRow = row;
                 this.currentIndex = index;
                 this.dialogTableVisible = true;

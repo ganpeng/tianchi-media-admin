@@ -16,8 +16,8 @@
             v-on:setSubject="setSubject">
         </select-single-subject>
         <h3 class="text-left">请选择专题的封面海报：</h3>
-        <ul>
-            <li v-for="(item,index) in posterImageList" :key="index">
+        <ul class="cover-list">
+            <li v-for="(item,index) in specPosterImages" :key="index">
                 <img :src="item.uri | imageUrl" :alt="item.name" @click="displayImage(index)">
                 <el-radio v-model="programmeImage" :label="item.id" @change="setPosterImage(index)">{{item.name}}
                 </el-radio>
@@ -36,6 +36,7 @@
 <script>
     import SelectSingleSubject from './SelectSingleSubject';
     import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
+    import {LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
 
     export default {
         name: 'SingleAppendSubject',
@@ -45,6 +46,7 @@
         },
         data() {
             return {
+                imageSpec: LAYOUT_IMAGE_DIMENSION[this.$route.params.imageSpec],
                 navBarId: this.$route.params.navBarId,
                 navBarSignCode: this.$route.params.navBarSignCode,
                 currentSubject: {},
@@ -64,6 +66,9 @@
                 return this.$store.getters['layout/getNavBarInfo']({
                     navBarId: this.navBarId
                 });
+            },
+            specPosterImages() {
+                return this.posterImageList.filter(image => parseInt(image.width) === this.imageSpec.width && parseInt(image.height) === this.imageSpec.height);
             }
         },
         methods: {
@@ -77,7 +82,7 @@
             // 放大预览图片
             displayImage(index) {
                 this.previewImage.display = true;
-                this.previewImage.list = this.posterImageList;
+                this.previewImage.list = this.specPosterImages;
                 this.previewImage.activeIndex = index;
             },
             // 到本专题的编辑基本信息页面，添加专题封面
@@ -88,14 +93,25 @@
                         type: 'warning'
                     });
                 } else {
-                    this.$router.push({
-                        name: this.currentSubject.category === 'PROGRAMME' ? 'EditProgrammeSubject' : 'EditPersonSubject',
-                        params: {id: this.currentSubject.id}
+                    this.$confirm('此操作将跳转页面,不会保存当前数据 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.$router.push({
+                            name: this.currentSubject.category === 'PROGRAMME' ? 'EditProgrammeSubject' : 'EditPersonSubject',
+                            params: {id: this.currentSubject.id}
+                        });
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消跳转'
+                        });
                     });
                 }
             },
             setPosterImage(index) {
-                this.coverImage = this.posterImageList[index];
+                this.coverImage = this.specPosterImages[index];
             },
             // 保存信息
             saveSubject() {
@@ -145,10 +161,11 @@
         font-size: 18px;
     }
 
-    ul {
+    ul.cover-list {
         display: flex;
         margin-top: 30px;
         justify-content: left;
+        flex-wrap: wrap;
         li {
             display: flex;
             margin-right: 30px;
@@ -156,12 +173,19 @@
             justify-content: space-around;
             height: 230px;
             &:last-child {
+                display: flex;
                 justify-content: center;
+                flex-direction: column;
                 width: 180px;
                 height: 180px;
                 border: 1px dotted gray;
                 text-align: center;
                 cursor: pointer;
+                i {
+                    display: inline;
+                    position: static;
+                    color: gray;
+                }
                 &:hover {
                     border: 1px dotted #409EFF;
                     i {

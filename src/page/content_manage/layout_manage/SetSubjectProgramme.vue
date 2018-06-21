@@ -1,6 +1,6 @@
 <!--内容管理-栏目管理-设置专题内的节目组件-->
 <template>
-    <div>
+    <div class="text-center">
         <el-steps :active="activeStep" align-center>
             <el-step title="步骤1" description="请选择节目"></el-step>
             <el-step title="步骤2" description="选择图片"></el-step>
@@ -12,6 +12,7 @@
                 :is="currentView"
                 :programmeList="programmeList"
                 :programme="programme"
+                :imageSpec="imageSpec"
                 v-on:setProgramme="setProgramme"
                 v-on:setCoverImage="setCoverImage"
                 v-on:setCornerMarks="setCornerMarks">
@@ -38,7 +39,7 @@
             SetSubjectProgrammeSecond,
             SetCornerMarks
         },
-        props: ['programmeList'],
+        props: ['programmeList', 'imageSpec'],
         data() {
             return {
                 activeStep: 0,
