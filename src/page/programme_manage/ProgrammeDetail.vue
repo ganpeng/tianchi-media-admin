@@ -213,12 +213,13 @@
                                     @input="inputHandler($event, 'licence')"
                                 >
                                     <el-option
-                                        v-for="item in copyRightDealerOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
+                                        v-for="item in licenceList"
+                                        :key="item"
+                                        :label="item"
+                                        :value="item">
                                     </el-option>
                                 </el-select>
+                                <el-button v-if="!readonly" type="primary" plain @click="addLicence">新增牌照方</el-button>
                             </el-form-item>
                             <el-form-item label="版权方" prop="copyrightReserver">
                                 <el-select
@@ -229,12 +230,13 @@
                                     @input="inputHandler($event, 'copyrightReserver')"
                                 >
                                     <el-option
-                                        v-for="item in operatorOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
+                                        v-for="item in copyrightReserverList"
+                                        :key="item"
+                                        :label="item"
+                                        :value="item">
                                     </el-option>
                                 </el-select>
+                                <el-button v-if="!readonly" type="primary" plain @click="addCopyrightReserver">新增版权方</el-button>
                             </el-form-item>
                             <el-form-item label="发行方" prop="announcer">
                                 <el-select
@@ -245,12 +247,13 @@
                                     @input="inputHandler($event, 'announcer')"
                                 >
                                     <el-option
-                                        v-for="item in announcerOptions"
+                                        v-for="item in announcerList"
                                         :key="item"
                                         :label="item"
                                         :value="item">
                                     </el-option>
                                 </el-select>
+                                <el-button v-if="!readonly" type="primary" plain @click="addAnnouncer">新增发行方</el-button>
                             </el-form-item>
                             <el-form-item
                                 v-if="isShow"
@@ -355,7 +358,7 @@
                                     </el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item v-if="isTvPlay" label="总集数" prop="featureVideoCount">
+                            <el-form-item label="总集数" prop="featureVideoCount">
                                 <el-input
                                     type="number"
                                     :disabled="readonly"
@@ -531,6 +534,9 @@
                 programme: 'programme/currentProgramme',
                 categroyList: 'programme/categroyList',
                 programmeTagList: 'programme/programmeTagList',
+                licenceList: 'programme/licenceList',
+                announcerList: 'programme/announcerList',
+                copyrightReserverList: 'programme/copyrightReserverList',
                 currentVideoIdList: 'programme/currentVideoIdList',
                 programmeVideoList: 'programme/programmeVideoList',
                 pagination: 'programme/programmeVideoPagination',
@@ -569,6 +575,9 @@
                 updateDirectorResult: 'programme/updateDirectorResult',
                 updateScenaristResult: 'programme/updateScenaristResult',
                 addProgrammeTag: 'programme/addProgrammeTag',
+                addProgrammeLicence: 'programme/addProgrammeLicence',
+                addProgrammeAnnouncer: 'programme/addProgrammeAnnouncer',
+                addProgrammeCopyrightReserver: 'programme/addProgrammeCopyrightReserver',
                 checkPosterImage: 'programme/checkPosterImage',
                 deleteVideoList: 'programmeVideo/deleteVideoList',
                 setCoverImage: 'programme/setCoverImage'
@@ -769,7 +778,7 @@
                     inputPattern: /\S/,
                     inputErrorMessage: '关键字不能为空'
                 }).then(({ value }) => {
-                    this.addProgrammeTag({tag: value});
+                    this.addProgrammeTag({value});
                     this.$message({
                         type: 'success',
                         message: `新关键字${value}添加成功`
@@ -818,6 +827,63 @@
                 }
 
                 next();
+            },
+            addLicence() {
+                this.$prompt('请输入新牌照方', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /\S/,
+                    inputErrorMessage: '牌照方不能为空'
+                }).then(({ value }) => {
+                    this.addProgrammeLicence({value});
+                    this.$message({
+                        type: 'success',
+                        message: `牌照方${value}添加成功`
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消输入'
+                    });
+                });
+            },
+            addCopyrightReserver() {
+                this.$prompt('请输入新版权方', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /\S/,
+                    inputErrorMessage: '版权方不能为空'
+                }).then(({ value }) => {
+                    this.addProgrammeCopyrightReserver({value});
+                    this.$message({
+                        type: 'success',
+                        message: `版权方${value}添加成功`
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消输入'
+                    });
+                });
+            },
+            addAnnouncer() {
+                this.$prompt('请输入新发行方', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /\S/,
+                    inputErrorMessage: '发行方不能为空'
+                }).then(({ value }) => {
+                    this.addProgrammeAnnouncer({value});
+                    this.$message({
+                        type: 'success',
+                        message: `发行方${value}添加成功`
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消输入'
+                    });
+                });
             }
         }
     };

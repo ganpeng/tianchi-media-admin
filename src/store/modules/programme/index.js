@@ -23,11 +23,13 @@ const defaultProgramme = {
     // 节目来源 ENUM('MEDIA_SYS','CONTENT_CENTER') DEFAULT 'CONTENT_CENTER'
     origin: null,
     // 牌照方
-    licence: null,
+    licence: '', // 单选
+    // 发行商
+    announcer: '', // 单选
+    // 版权商
+    copyrightReserver: '', // 多选
     // 节目总集数
     totalSets: '',
-    // 版权商
-    copyrightReserver: null,
     // 版权开始日期
     copyrightStartedAt: '',
     // 版权结束日期
@@ -50,8 +52,6 @@ const defaultProgramme = {
     coverImage: {},
     // 节目类别
     categoryList: [],
-    // 发行商
-    announcer: '', // announcer
     // 年级
     grade: '',
     // 规格
@@ -124,6 +124,9 @@ const defaultState = {
     total: 0,
     categoryList: [],
     programmeTagList: [],
+    licenceList: [],
+    announcerList: [],
+    copyrightReserverList: [],
     currentProgrammeVideoObj: Object.assign({}, defaultCurrentProgrammeVideoObj)
 };
 
@@ -211,6 +214,15 @@ const getters = {
                 label: item
             };
         });
+    },
+    licenceList(state) {
+        return state.licenceList;
+    },
+    announcerList() {
+        return state.announcerList;
+    },
+    copyrightReserverList() {
+        return state.copyrightReserverList;
     },
     categoryListString(state) {
         return (categoryList) => {
@@ -316,7 +328,16 @@ const mutations = {
         state.currentProgramme[key] = value;
     },
     addProgrammeTag(state, payload) {
-        state.programmeTagList.push(payload.tag);
+        state.programmeTagList.push(payload.value);
+    },
+    addProgrammeLicence(state, payload) {
+        state.licenceList.push(payload.value);
+    },
+    addProgrammeAnnouncer(state, payload) {
+        state.announcerList.push(payload.value);
+    },
+    addProgrammeCopyrightReserver(state, payload) {
+        state.copyrightReserverList.push(payload.value);
     },
     setSearchField(state, payload) {
         if (payload.produceAreaList !== undefined) {
