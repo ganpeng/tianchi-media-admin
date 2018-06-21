@@ -392,21 +392,16 @@
                             <el-form-item label="节目图片">
                                 <el-button v-if="!readonly" type="primary" @click="uploadImageHandler">添加节目图片<i class="el-icon-upload el-icon--right"></i></el-button>
                                 <ul class="cover-list">
-                                    <li v-for="(img, index) in programme.posterImageList" :key="index" class="img-item">
-                                        <div @click="displayImage(index)">
-                                            <img :src="img.uri | imageUrl" alt="">
-                                            <div v-if="!readonly" class="delete-layer">
-                                        </div>
+                                    <li v-for="(img, index) in programme.posterImageList" :key="index">
+                                        <div
+                                            class="image-box"
+                                            :style="{'background-image': 'url(' + appendImagePrefix(img.uri) + ')'}"
+                                            @click="displayImage(index)">
                                         </div>
                                         <i
                                             v-if="!readonly"
                                             @click="_deletePosterImage(img.id)"
                                             class="el-icon-delete delete-btn">
-                                        </i>
-                                        <i
-                                            v-if="!readonly"
-                                            @click="checkPosterImage({id: img.id})"
-                                            :class='[img.checked ? "el-icon-circle-check" : "el-icon-circle-check-outline", "select-btn"]'>
                                         </i>
                                     </li>
                                 </ul>
@@ -884,9 +879,55 @@
                         message: '取消输入'
                     });
                 });
+            },
+            appendImagePrefix(uri) {
+                let baseUri = window.localStorage.getItem('imageBaseUri');
+                return baseUri + uri;
             }
         }
     };
 </script>
 <style lang="less" scoped>
+.cover-list {
+    display: flex;
+    margin-top: 30px;
+    justify-content: left;
+    flex-wrap: wrap;
+    li {
+        display: flex;
+        position: relative;
+        margin-right: 30px;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 230px;
+        .image-box {
+            height: 150px;
+            width: 150px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            cursor: zoom-in;
+        }
+        label {
+            text-align: center;
+            font-size: 16px;
+        }
+        i {
+            position: absolute;
+            top: 20px;
+            color: red;
+            cursor: pointer;
+            font-size: 2em;
+        }
+        .delete-btn {
+            right: 20px;
+            display: none;
+        }
+        &:hover {
+            i {
+                display: block;
+            }
+        }
+    }
+}
 </style>
