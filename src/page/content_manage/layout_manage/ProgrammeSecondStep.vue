@@ -84,6 +84,7 @@
         display: flex;
         margin-top: 30px;
         justify-content: left;
+        flex-wrap: wrap;
         li {
             display: flex;
             margin-right: 30px;
@@ -106,7 +107,8 @@
             }
             img {
                 display: block;
-                height: 180px;
+                max-height: 180px;
+                max-width: 400px;
                 cursor: zoom-in;
             }
             .el-radio {

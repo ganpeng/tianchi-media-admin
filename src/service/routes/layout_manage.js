@@ -19,3 +19,11 @@ export const modifyContentLayout = ({id, contentLayout}) => {
 export const getContentLayout = ({navBarId}) => {
     return service.get(util.format('/v1/content/layout?navBarId={0}', navBarId));
 };
+
+/**
+ * 获取角标的列表
+ * @param markType The mark type such as SCORE、EPISODES_NUMBER、COPYRIGHT_RESERVER、LICENCE、CUSTOM.
+ */
+export const getCornerMarkList = ({markType}) => {
+    return service.get(util.format('/v1/content/layout/mark/list?markType={0}', markType));
+};

@@ -43,10 +43,13 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="上传专题封面：" prop="coverUrls">
+            <el-form-item label="上传专题封面：">
                 <ul class="cover-list">
                     <li v-for="(item,index) in subjectInfo.posterImageList" :key="index">
-                        <img :src="item.uri | imageUrl" :alt="item.name" @click="displayImage(index)">
+                        <div :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
+                             class="image-box"
+                             @click="displayImage(index)">
+                        </div>
                         <div class="info">
                             <div class="name">{{item.name}}</div>
                             <div>
@@ -216,6 +219,10 @@
                 this.subjectInfo.programmeCategoryList.map(categoryItem => {
                     this.programmeCategoryList.push(categoryItem.id);
                 });
+            },
+            appendImagePrefix(uri) {
+                let baseUri = window.localStorage.getItem('imageBaseUri');
+                return baseUri + uri;
             },
             // 添加封面图片
             addPosterImage(newPosterImage) {
@@ -393,4 +400,12 @@
         }
     }
 
+    .image-box {
+        height: 150px;
+        width: 150px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        cursor: zoom-in;
+    }
 </style>

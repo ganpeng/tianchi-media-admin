@@ -28,7 +28,9 @@
             <el-form-item label="专题封面：">
                 <ul class="cover-list">
                     <li v-for="(item,index) in subjectInfo.posterImageList" :key="index">
-                        <img :src="item.uri | imageUrl" :alt="item.name" @click="displayImage(index)">
+                        <div :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
+                             class="image-box"
+                             @click="displayImage(index)"></div>
                         <label>{{item.name}}</label>
                     </li>
                 </ul>
@@ -61,6 +63,10 @@
             };
         },
         methods: {
+            appendImagePrefix(uri) {
+                let baseUri = window.localStorage.getItem('imageBaseUri');
+                return baseUri + uri;
+            },
             // 放大预览图片
             displayImage(index) {
                 this.previewImage.display = true;
@@ -92,9 +98,12 @@
             flex-direction: column;
             justify-content: space-around;
             height: 230px;
-            img {
-                display: block;
-                height: 180px;
+            .image-box {
+                height: 150px;
+                width: 150px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
                 cursor: zoom-in;
             }
             label {

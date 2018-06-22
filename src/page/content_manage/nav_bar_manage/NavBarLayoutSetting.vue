@@ -182,7 +182,7 @@
         <el-dialog title="模块专题排序" :visible.sync="sortDialogVisible">
             <ul v-dragula="{direction:'horizontal'}" id="model-sort-list">
                 <li v-if="item.subjectId"
-                    :data-index="index + 1"
+                    :data-id="item.subjectId"
                     v-for="(item,index) in massLayoutBlockList"
                     :key="index">
                     {{item.title}}
@@ -415,14 +415,14 @@
             // 更新模块排序
             sortModelList() {
                 let nodes = this.$el.querySelectorAll('#model-sort-list li');
-                let modelIndexList = [];
+                let modelSubjectIdList = [];
                 for (let i = 0; i < nodes.length; i++) {
-                    modelIndexList.push(nodes[i].getAttribute('data-index'));
+                    modelSubjectIdList.push(nodes[i].getAttribute('data-id'));
                 }
                 this.$store.commit('layout/sortModelList', {
                     navBarId: this.$route.params.navBarId,
                     navBarSignCode: this.$route.params.navBarSignCode,
-                    modelIndexList: modelIndexList
+                    modelSubjectIdList: modelSubjectIdList
                 });
                 this.$message({
                     message: '模块成功排序',

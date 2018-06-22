@@ -241,24 +241,26 @@ const mutations = {
     /**
      * 设置模块推荐位的专题项
      * @param state
-     * @param model The index of layoutBlockList
      */
-    sortModelList(state, {navBarId, navBarSignCode, modelIndexList}) {
-        let minModelIndex = modelIndexList[0];
-        let len = modelIndexList.length;
-        for (let i = 1; i < len; i++) {
-            if (modelIndexList[i] < minModelIndex) {
-                minModelIndex = modelIndexList[i];
+    sortModelList(state, {navBarId, navBarSignCode, modelSubjectIdList}) {
+        let minModelIndex = 0;
+        for (let i = 0; i < state[navBarSignCode].layoutBlockList.length; i++) {
+            if (!state[navBarSignCode].layoutBlockList[i].subjectId) {
+                minModelIndex = i;
             }
         }
         let sortedLayoutBlockList = [];
         // 添加非模块推荐位
-        for (let i = 0; i < minModelIndex; i++) {
+        for (let i = 0; i < minModelIndex + 1; i++) {
             sortedLayoutBlockList.push(JSON.parse(JSON.stringify(state[navBarSignCode].layoutBlockList[i])));
         }
         // 添加模块推荐位
-        for (let m = 0; m < modelIndexList.length; m++) {
-            sortedLayoutBlockList.push(JSON.parse(JSON.stringify(state[navBarSignCode].layoutBlockList[modelIndexList[m]])));
+        for (let m = 0; m < modelSubjectIdList.length; m++) {
+            for (let k = 0; k < state[navBarSignCode].layoutBlockList.length; k++) {
+                if (modelSubjectIdList[m] === state[navBarSignCode].layoutBlockList[k].subjectId) {
+                    sortedLayoutBlockList.push(JSON.parse(JSON.stringify(state[navBarSignCode].layoutBlockList[k])));
+                }
+            }
         }
         state[navBarSignCode].layoutBlockList = sortedLayoutBlockList;
         state[navBarSignCode].modified = true;

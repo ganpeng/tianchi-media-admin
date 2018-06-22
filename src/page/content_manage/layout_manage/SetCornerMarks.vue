@@ -107,7 +107,7 @@
                 // 获取运营角标列表
                 this.$service.getCornerMarkList({markType: 'CUSTOM'}).then(response => {
                     if (response && response.code === 0) {
-                        this.customCornerMarkList = response.data.list;
+                        this.customCornerMarkList = response.data;
                     }
                 });
             },

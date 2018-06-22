@@ -4,13 +4,18 @@
         <h3 class="text-left">找到以下符合该位置尺寸要求的图片：</h3>
         <ul class="cover-list">
             <li v-for="(item,index) in specPosterImages" :key="index">
-                <img :src="item.uri  | imageUrl" :alt="item.name">
+                <div :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
+                     class="image-box"
+                     @click="displayImage(index)"></div>
                 <el-radio v-model="programmeImageIndex" :label="index" @change="setCoverImage">{{item.name}}</el-radio>
             </li>
-            <li @click="addCover">
-                <i class="el-icon-plus"></i>
-            </li>
         </ul>
+        <div class="add-box">
+            <el-button type="success" @click="addCover">添加图片</el-button>
+        </div>
+        <preview-multiple-images
+            :previewMultipleImages="previewImage">
+        </preview-multiple-images>
         <upload-image
             :size='size'
             title="上传节目封面图片"
@@ -24,11 +29,13 @@
 <script>
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import {PROGRAMME_DIMENSION as subjectDimension} from '@/util/config/dimension';
+    import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
 
     export default {
         name: 'SetSubjectProgrammeSecond',
         components: {
-            UploadImage
+            UploadImage,
+            PreviewMultipleImages
         },
         props: ['programme', 'imageSpec'],
         data() {
@@ -50,12 +57,22 @@
             }
         },
         methods: {
+            appendImagePrefix(uri) {
+                let baseUri = window.localStorage.getItem('imageBaseUri');
+                return baseUri + uri;
+            },
             setCoverImage() {
                 this.$emit('setCoverImage', this.specPosterImages[this.programmeImageIndex]);
             },
             // 添加节目封面图片
             addCover() {
                 this.imageUploadDialogVisible = true;
+            },
+            // 放大预览图片
+            displayImage(index) {
+                this.previewImage.display = true;
+                this.previewImage.list = this.specPosterImages;
+                this.previewImage.activeIndex = index;
             },
             // 关闭上传图片对话框
             closeImageDialog(status) {
@@ -69,15 +86,15 @@
                         return;
                     }
                 }
-                let imageList = this.specPosterImages.slice();
+                let imageList = this.programme.posterImageList.slice();
                 imageList.push(newPosterImage.posterImage);
                 // 更新当前节目中的封面图片
                 this.$service.updateProgrammeInfo({
                     id: this.programme.id,
-                    programme: {posterImages: imageList}
+                    programme: {posterImageList: imageList}
                 }).then(response => {
                     if (response && response.code === 0) {
-                        this.specPosterImages.push(newPosterImage.posterImage);
+                        this.programme.posterImageList.push(newPosterImage.posterImage);
                     }
                 });
             }
@@ -106,30 +123,18 @@
             flex-direction: column;
             justify-content: space-between;
             height: 230px;
-            &:last-child {
-                display: flex;
-                justify-content: center;
-                flex-direction: column;
-                width: 180px;
-                height: 180px;
-                border: 1px dotted gray;
-                text-align: center;
-                cursor: pointer;
-                i {
-                    display: inline;
-                    position: static;
-                    color: gray;
-                }
-                &:hover {
-                    border: 1px dotted #409EFF;
-                    i {
-                        color: #409EFF;
-                    }
-                }
+            .image-box {
+                height: 150px;
+                width: 500px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                cursor: zoom-in;
             }
             img {
                 display: block;
-                height: 180px;
+                max-height: 180px;
+                max-width: 300px;
             }
             label {
                 text-align: center;

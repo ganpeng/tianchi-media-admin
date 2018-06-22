@@ -53,6 +53,7 @@ import DialogAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/Di
 import DetailPageAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/DetailPageAdvertGroupList';
 import VideoList from 'sysPage/video_manage/VideoList';
 import LiveChannelList from 'sysPage/channel_manage/LiveChannelList';
+import SlideChannelList from 'sysPage/channel_manage/slide_channel_manage/SlideChannelList';
 import ChannelCategory from 'sysPage/channel_manage/ChannelCategory';
 
 Vue.use(Router);
@@ -360,6 +361,12 @@ let router = new Router({
                     path: '/channel-manage/live/list',
                     name: 'LiveChannelList',
                     component: LiveChannelList
+                },
+                // 轮播频道列表
+                {
+                    path: '/channel-manage/slide/list',
+                    name: 'SlideChannelList',
+                    component: SlideChannelList
                 },
                 //  频道类别管理
                 {

@@ -133,7 +133,7 @@
                     coverImage: this.coverImage,
                     id: this.currentSubject.id,
                     name: this.currentSubject.name,
-                    itemType: 'SUBJECT'
+                    layoutItemType: 'SUBJECT'
                 };
                 this.$store.commit('layout/setSingleRecommendItem', {
                     navBarId: this.$route.params.navBarId,
@@ -195,7 +195,8 @@
             }
             img {
                 display: block;
-                height: 180px;
+                max-height: 180px;
+                max-width: 400px;
                 cursor: zoom-in;
             }
             .el-radio {

@@ -1,7 +1,7 @@
 <!--多张图片预览组件-->
 <template>
     <div>
-        <el-dialog :visible.sync="previewMultipleImages.display">
+        <el-dialog :visible.sync="previewMultipleImages.display" append-to-body>
             <el-carousel class="text-center"
                          v-if="previewMultipleImages.display"
                          trigger="click"
@@ -9,8 +9,9 @@
                          :autoplay='previewMultipleImages.autoplay'
                          :initial-index="previewMultipleImages.activeIndex">
                 <el-carousel-item v-for="(item,index) in previewMultipleImages.list" :key="index">
-                    <span>{{ item.name }}</span>
-                    <img :src="item.uri | imageUrl" alt="预览图片">
+                    <div class="title">{{ item.name }}</div>
+                    <div class="image-box"
+                         :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"></div>
                 </el-carousel-item>
             </el-carousel>
         </el-dialog>
@@ -26,7 +27,12 @@
         },
         mounted() {
         },
-        methods: {}
+        methods: {
+            appendImagePrefix(uri) {
+                let baseUri = window.localStorage.getItem('imageBaseUri');
+                return baseUri + uri;
+            }
+        }
     };
 </script>
 
@@ -34,7 +40,7 @@
 <style lang="less" scoped>
 
     .el-carousel {
-        height: 300px;
+        height: 360px;
         .el-carousel-item {
             display: flex;
             flex-direction: column;
@@ -45,9 +51,17 @@
         }
     }
 
-    img {
-        display: block;
-        margin: 10px auto 0px auto;
-        height: 260px;
+    .title {
+        margin-bottom: 30px;
+        font-size: 20px;
     }
+
+    .image-box {
+        margin: 30px auto 0px auto;
+        height: 200px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
 </style>
