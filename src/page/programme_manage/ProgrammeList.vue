@@ -32,7 +32,6 @@
                 </el-form-item>
             </el-form>
             <el-form :inline="true" class="demo-form-inline">
-                <span class="search-title">筛选条件：</span>
                 <el-form-item label="上映时间">
                     <el-date-picker
                         :value="releaseAt"
@@ -88,6 +87,20 @@
                             :key="item.id"
                             :label="item.name"
                             :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="节目状态">
+                    <el-select
+                        :value="visible"
+                        @change="inputHandler($event, 'visible')"
+                        clearable
+                        placeholder="请选择">
+                        <el-option
+                            v-for="item in visibleOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -174,6 +187,16 @@ export default {
     data() {
         return {
             areaOptions: this.$util.countryList(),
+            visibleOptions: [
+                {
+                    value: true,
+                    label: '已上架'
+                },
+                {
+                    value: false,
+                    label: '已下架'
+                }
+            ],
             previewImage: {
                 title: '',
                 display: false,
@@ -190,7 +213,7 @@ export default {
         ...mapGetters({
             list: 'programme/list',
             pagination: 'programme/pagination',
-            searchFields: 'programme/searchFields',
+            visible: 'programme/visible',
             typeList: 'programme/typeList',
             categoryListString: 'programme/categoryListString',
             getDirector: 'programme/getDirector',

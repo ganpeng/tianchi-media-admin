@@ -5,7 +5,7 @@ import wsCache from '@/util/webStorage';
 
 import {checkImageExist} from '@/util/formValidate';
 
-const programmePostFields = ['contest', 'platFormList', 'totalSets', 'specList', 'innerName', 'licence', 'grade', 'subject', 'announcer', 'copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'categoryList', 'announcer', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
+const programmePostFields = ['contest', 'platformList', 'totalSets', 'specList', 'innerName', 'licence', 'grade', 'subject', 'announcer', 'copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'categoryList', 'announcer', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
@@ -27,7 +27,7 @@ const defaultProgramme = {
     // 发行商
     announcer: '', // 单选
     // 版权商
-    copyrightReserver: '', // 多选
+    copyrightReserver: '', // 单选
     // 节目总集数
     totalSets: '',
     // 版权开始日期
@@ -40,8 +40,6 @@ const defaultProgramme = {
     playCountReal: '',
     // 价格
     price: '',
-    // 正片清晰度 ENUM('HD_4K', 'HD_2K', 'HD_1080', 'HD_720', 'HD_480') DEFAULT 'HD_4K'
-    quality: 'HD_480',
     // 发布时间
     releaseAt: '',
     // 发布地区
@@ -61,9 +59,7 @@ const defaultProgramme = {
     // 赛事
     contest: '',
     // 播放平台
-    platFormList: [],
-    // 出品方
-    producer: '',
+    platformList: [],
     // 正片数量,总集数（电视剧是预知的，综艺节目是变化的）
     featureVideoCount: '',
     // 节目看点
@@ -113,11 +109,12 @@ const defaultState = {
     keyword: '',
     releaseStatus: '',
     releaseAt: '',
+    visible: '',
     produceAreaList: [],
     programmeCategoryIdList: [],
     currentTypeList: [],
     programmeType: [],
-    currentProgramme: Object.assign({}, defaultProgramme),
+    currentProgramme: _.cloneDeep(defaultProgramme),
     list: [],
     pageNum: 1,
     pageSize: 5,
@@ -128,12 +125,12 @@ const defaultState = {
     announcerList: [],
     copyrightReserverList: [],
     contestList: [],
-    platFormList: [],
-    currentProgrammeVideoObj: Object.assign({}, defaultCurrentProgrammeVideoObj)
+    platformList: [],
+    currentProgrammeVideoObj: _.cloneDeep(defaultCurrentProgrammeVideoObj)
 };
 
-const state = JSON.parse(JSON.stringify(defaultState));
-const searchFields = ['keyword', 'releaseStatus', 'produceAreaList', 'releaseAt', 'programmeCategoryIdList', 'programmeType', 'pageNum', 'pageSize'];
+const state = _.clone(defaultState);
+const searchFields = ['keyword', 'visible', 'releaseStatus', 'produceAreaList', 'releaseAt', 'programmeCategoryIdList', 'programmeType', 'pageNum', 'pageSize'];
 
 /**
  *  通过id获取节目
@@ -226,8 +223,8 @@ const getters = {
     contestList(state) {
         return state.contestList;
     },
-    platFormList(state) {
-        return state.platFormList;
+    platformList(state) {
+        return state.platformList;
     },
     copyrightReserverList() {
         return state.copyrightReserverList;
@@ -278,6 +275,9 @@ const getters = {
     searchFields(state) {
         return _.pick(state, searchFields);
     },
+    visible(state) {
+        return state.visible;
+    },
     categroyList(state) {
         return state.categoryList;
     },
@@ -323,9 +323,13 @@ const mutations = {
     },
     setCurrentProgramme(state, payload) {
         state.currentProgramme = payload.currentProgramme;
-        if (state.currentProgramme.platFormList === null) {
-            state.currentProgramme.platFormList = [];
+        if (state.currentProgramme.platformList === null) {
+            state.currentProgramme.platformList = [];
         }
+    },
+    updateState(state, payload) {
+        let {key, value} = payload;
+        state[key] = value;
     },
     updateCurrentProgramme(state, payload) {
         let {key, value} = payload;
@@ -344,7 +348,7 @@ const mutations = {
         state.contestList.push(payload.value);
     },
     addProgrammePlatForm(state, payload) {
-        state.platFormList.push(payload.value);
+        state.platformList.push(payload.value);
     },
     addProgrammeCopyrightReserver(state, payload) {
         state.copyrightReserverList.push(payload.value);
@@ -363,15 +367,18 @@ const mutations = {
         if (payload.keyword !== undefined) {
             state.keyword = payload.keyword;
         }
+        if (payload.visible !== undefined) {
+            state.visible = payload.visible;
+        }
     },
     resetCurrentProgramme(state) {
-        state.currentProgramme = Object.assign({}, defaultProgramme);
+        state.currentProgramme = _.cloneDeep(defaultProgramme);
     },
     resetProgramme(state) {
-        state = Object.assign({}, defaultState);
+        state = _.clone(defaultState);
     },
     resetCurrentProgrammeVideoObj(state) {
-        state.currentProgrammeVideoObj = Object.assign({}, defaultCurrentProgrammeVideoObj);
+        state.currentProgrammeVideoObj = _.cloneDeep(defaultCurrentProgrammeVideoObj);
     },
     updateProgrammeVideoVisible(state, payload) {
         state.currentProgrammeVideoObj.list = state.currentProgrammeVideoObj.list.map((item) => {
@@ -770,7 +777,38 @@ const actions = {
                     commit('setProgrammeTagList', {list: res.data});
                 }
             });
+    },
+    async getProgrammeAnnouncerList({commit, state}) {
+        let res = await service.getProgrammeAnnouncerList();
+        if (res && res.code === 0) {
+            commit('updateState', {key: 'announcerList', value: res.data});
+        }
+    },
+    async getProgrammeContestList({commit, state}) {
+        let res = await service.getProgrammeContestList();
+        if (res && res.code === 0) {
+            commit('updateState', {key: 'contestList', value: res.data});
+        }
+    },
+    async getProgrammeCopyrightList({commit, state}) {
+        let res = await service.getProgrammeCopyrightList();
+        if (res && res.code === 0) {
+            commit('updateState', {key: 'copyrightReserverList', value: res.data});
+        }
+    },
+    async getProgrammeLicenceList({commit, state}) {
+        let res = await service.getProgrammeLicenceList();
+        if (res && res.code === 0) {
+            commit('updateState', {key: 'licenceList', value: res.data});
+        }
+    },
+    async getProgrammePlatformList({commit, state}) {
+        let res = await service.getProgrammePlatformList();
+        if (res && res.code === 0) {
+            commit('updateState', {key: 'platformList', value: res.data});
+        }
     }
+
 };
 
 export default {

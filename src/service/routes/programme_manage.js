@@ -68,6 +68,26 @@ export const getProgrammeTagList = () => {
     return service.get('/v1/content/programme/tag/list');
 };
 
+export const getProgrammeAnnouncerList = () => {
+    return service.get('/v1/content/programme/announcer/list');
+};
+
+export const getProgrammeContestList = () => {
+    return service.get('/v1/content/programme/contest/list');
+};
+
+export const getProgrammeCopyrightList = () => {
+    return service.get('/v1/content/programme/copyright/list');
+};
+
+export const getProgrammeLicenceList = () => {
+    return service.get('/v1/content/programme/licence/list');
+};
+
+export const getProgrammePlatformList = () => {
+    return service.get('/v1/content/programme/platform/list');
+};
+
 /**
  *  查询该类别下的节目数量
  */

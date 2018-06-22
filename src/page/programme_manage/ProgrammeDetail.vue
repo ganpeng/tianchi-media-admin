@@ -346,13 +346,13 @@
                                 label="播放平台">
                                 <el-select
                                     :disabled="readonly"
-                                    :value="programme.platFormList"
+                                    :value="programme.platformList"
                                     multiple
                                     placeholder="请选择"
-                                    @input="inputHandler($event, 'platFormList')"
+                                    @input="inputHandler($event, 'platformList')"
                                 >
                                     <el-option
-                                        v-for="item in platFormList"
+                                        v-for="item in platformList"
                                         :key="item"
                                         :label="item"
                                         :value="item">
@@ -478,6 +478,11 @@
             this.resetVideoList();
             this.getProgrammeCategory();
             this.getProgrammeTagList();
+            this.getProgrammeAnnouncerList();
+            this.getProgrammeContestList();
+            this.getProgrammeCopyrightList();
+            this.getProgrammeLicenceList();
+            this.getProgrammePlatformList();
         },
         data() {
             return {
@@ -535,7 +540,7 @@
                 announcerList: 'programme/announcerList',
                 copyrightReserverList: 'programme/copyrightReserverList',
                 contestList: 'programme/contestList',
-                platFormList: 'programme/platFormList',
+                platformList: 'programme/platformList',
                 currentVideoIdList: 'programme/currentVideoIdList',
                 programmeVideoList: 'programme/programmeVideoList',
                 pagination: 'programme/programmeVideoPagination',
@@ -591,6 +596,11 @@
                 createMultProgrammeVideo: 'programmeVideo/createMultProgrammeVideo',
                 getProgrammeVideoListById: 'programme/getProgrammeVideoListById',
                 getProgrammeTagList: 'programme/getProgrammeTagList',
+                getProgrammeAnnouncerList: 'programme/getProgrammeAnnouncerList',
+                getProgrammeContestList: 'programme/getProgrammeContestList',
+                getProgrammeCopyrightList: 'programme/getProgrammeCopyrightList',
+                getProgrammeLicenceList: 'programme/getProgrammeLicenceList',
+                getProgrammePlatformList: 'programme/getProgrammePlatformList',
                 deleteProgramme: 'programme/deleteProgramme'
             }),
             _createProgramme() {
