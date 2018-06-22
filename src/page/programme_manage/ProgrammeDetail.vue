@@ -221,13 +221,13 @@
                                 </el-select>
                                 <el-button v-if="!readonly" type="primary" plain @click="addLicence">新增牌照方</el-button>
                             </el-form-item>
-                            <el-form-item label="版权方" prop="copyrightReserver">
+                            <el-form-item label="版权方" prop="copyrightReserved">
                                 <el-select
                                     :disabled="readonly"
                                     filterable
-                                    :value="programme.copyrightReserver"
+                                    :value="programme.copyrightReserved"
                                     placeholder="请选择"
-                                    @input="inputHandler($event, 'copyrightReserver')"
+                                    @input="inputHandler($event, 'copyrightReserved')"
                                 >
                                     <el-option
                                         v-for="item in copyrightReserverList"
@@ -360,12 +360,14 @@
                                 </el-select>
                                 <el-button v-if="!readonly" type="primary" plain @click="addPlatForm">新增播放平台</el-button>
                             </el-form-item>
-                            <el-form-item label="总集数" prop="featureVideoCount">
+                            <el-form-item
+                                :rules="isTvPlay ? [{ required: true, message: '请输入总集数' }] : []"
+                                label="总集数" prop="totalSets">
                                 <el-input
                                     type="number"
                                     :disabled="readonly"
-                                    :value="programme.featureVideoCount"
-                                    @input="inputHandler($event, 'featureVideoCount')" >
+                                    :value="programme.totalSets"
+                                    @input="inputHandler($event, 'totalSets')" >
                                 </el-input>
                             </el-form-item>
                             <el-form-item label="评分" prop="score">
@@ -665,7 +667,7 @@
             },
             _deleteProgramme() {
                 let {id} = this.$route.params;
-                this.$confirm(`您确定要${this.programme.visible ? '上架节目' : '下架节目'}吗, 是否继续?`, '提示', {
+                this.$confirm(`您确定要${this.programme.visible ? '下架节目' : '上架节目'}吗, 是否继续?`, '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'error'

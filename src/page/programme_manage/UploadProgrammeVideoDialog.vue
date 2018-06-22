@@ -103,21 +103,26 @@
             </el-form-item>
             <el-form-item label="视频封面图">
                 <el-button v-if="!readonly" type="primary" @click="uploadImageHandler">上传封面图<i class="el-icon-upload el-icon--right"></i></el-button>
-                <ul v-if="video.coverImage" class="cover-list">
-                    <li class="img-item">
-                        <img :src="video.coverImage.uri | imageUrl" alt="">
+                <ul
+                    v-if="video.coverImage"
+                    class="cover-list">
+                    <li>
+                        <div
+                            class="image-box"
+                            :style="{'background-image': 'url(' + appendImagePrefix(video.coverImage.uri) + ')'}">
+                        </div>
                     </li>
                 </ul>
             </el-form-item>
             <el-form-item
-                v-if="video.type === 'FEATURE' && isTvPlay"
-                label="视频排序" prop="sort">
+                :rules="video.type === 'FEATURE' ? [{ required: true, message: '请输入邮箱地址' }] : []"
+                label="集数/期号" prop="sort">
                 <el-input
                     :disabled="readonly"
                     :value="video.sort"
-                    auto-complete="off"
+                    min="1"
                     type="number"
-                    placeholder="请输入排序编号"
+                    placeholder="请输入集数/期号"
                     @input="inputHandler($event, 'sort')"
                 ></el-input>
             </el-form-item>
@@ -311,9 +316,55 @@
                         message: '视频选择失败'
                     });
                 }
+            },
+            appendImagePrefix(uri) {
+                let baseUri = window.localStorage.getItem('imageBaseUri');
+                return baseUri + uri;
             }
         }
     };
 </script>
 <style lang="less" scoped>
+.cover-list {
+    display: flex;
+    margin-top: 30px;
+    justify-content: left;
+    flex-wrap: wrap;
+    li {
+        display: flex;
+        position: relative;
+        margin-right: 30px;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 230px;
+        .image-box {
+            height: 150px;
+            width: 150px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            cursor: zoom-in;
+        }
+        label {
+            text-align: center;
+            font-size: 16px;
+        }
+        i {
+            position: absolute;
+            top: 20px;
+            color: red;
+            cursor: pointer;
+            font-size: 2em;
+        }
+        .delete-btn {
+            right: 20px;
+            display: none;
+        }
+        &:hover {
+            i {
+                display: block;
+            }
+        }
+    }
+}
 </style>

@@ -5,7 +5,7 @@ import wsCache from '@/util/webStorage';
 
 import {checkImageExist} from '@/util/formValidate';
 
-const programmePostFields = ['contest', 'platformList', 'totalSets', 'specList', 'innerName', 'licence', 'grade', 'subject', 'announcer', 'copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'categoryList', 'announcer', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
+const programmePostFields = ['contest', 'platformList', 'totalSets', 'specList', 'innerName', 'licence', 'grade', 'subject', 'announcer', 'copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserved', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'categoryList', 'announcer', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
@@ -27,7 +27,7 @@ const defaultProgramme = {
     // 发行商
     announcer: '', // 单选
     // 版权商
-    copyrightReserver: '', // 单选
+    copyrightReserved: '', //  单选
     // 节目总集数
     totalSets: '',
     // 版权开始日期
@@ -595,7 +595,7 @@ function formatProgrammeData(programmeData) {
         copyrightEndedAt: programmeData.copyrightRange[1],
         // 人物
         licence: programmeData.licence === '' ? null : programmeData.licence,
-        copyrightReserver: programmeData.copyrightReserver === '' ? null : programmeData.copyrightReserver,
+        copyrightReserved: programmeData.copyrightReserved === '' ? null : programmeData.copyrightReserved,
         figureList: [].concat(programmeData.leadActor.map((item) => {
             let obj = {};
             obj.role = 'DIRECTOR';

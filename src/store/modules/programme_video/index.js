@@ -1,6 +1,7 @@
 import service from '../../../service';
 import axios from 'axios';
 import uuid from 'uuid';
+import _ from 'lodash';
 
 const defaultProgrammeVideo = {
     // 全平台通用id，从媒资系统过来
@@ -54,7 +55,7 @@ const state = {
     programmeId: '',
     parentId: '',
     videoType: '',
-    currentProgrammeVideo: JSON.parse(JSON.stringify(defaultProgrammeVideo)),
+    currentProgrammeVideo: _.cloneDeep(defaultProgrammeVideo),
     // 当前节目下上传的视频的列表
     videoList: [],
     featureList: []
@@ -90,10 +91,9 @@ const mutations = {
     updateCurrentProgrammeVideo(state, payload) {
         let {key, value} = payload;
         state.currentProgrammeVideo[key] = value;
-        console.log(state.currentProgrammeVideo);
     },
     resetProgrammeVideo(state) {
-        state.currentProgrammeVideo = defaultProgrammeVideo;
+        state.currentProgrammeVideo = _.cloneDeep(defaultProgrammeVideo);
     },
     resetVideoList(state) {
         state.videoList = [];
@@ -103,7 +103,7 @@ const mutations = {
             programmeId: '',
             parentId: '',
             videoType: '',
-            currentProgrammeVideo: Object.assign({}, defaultProgrammeVideo),
+            currentProgrammeVideo: _.cloneDeep(defaultProgrammeVideo),
             videoList: [],
             featureList: []
         };
