@@ -1,9 +1,4 @@
-/**
- * @fileOverview Define the API functions of admin module
- */
-
 import service from '../config';
-import util from '../../util/extend';
 
 /**
  * 新增人物
@@ -24,15 +19,15 @@ export const getPersonList = ({pageNum, pageSize, name, area}) => {
 /**
  *  根据人物的id获取人物
  */
-export const getPersonInfo = ({id}) => {
-    return service.get(util.format('/v1/content/figure/{0}', id));
+export const getPersonById = (id) => {
+    return service.get((`/v1/content/figure/${id}`));
 };
 
 /**
  * 根据人物的id更新人物的信息
  */
-export const updatePersonInfo = ({id, person}) => {
-    return service.put(util.format('/v1/content/figure/{0}', id), person);
+export const updatePersonById = (id, person) => {
+    return service.put(`/v1/content/figure/${id}`, person);
 };
 
 export const findPerson = ({name}) => {

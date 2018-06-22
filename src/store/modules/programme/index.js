@@ -5,7 +5,7 @@ import wsCache from '@/util/webStorage';
 
 import {checkImageExist} from '@/util/formValidate';
 
-const programmePostFields = ['contest', 'platform', 'totalSets', 'specList', 'innerName', 'licence', 'grade', 'subject', 'announcer', 'copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'categoryList', 'announcer', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
+const programmePostFields = ['contest', 'platFormList', 'totalSets', 'specList', 'innerName', 'licence', 'grade', 'subject', 'announcer', 'copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserver', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'categoryList', 'announcer', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
@@ -61,7 +61,7 @@ const defaultProgramme = {
     // 赛事
     contest: '',
     // 播放平台
-    platform: [],
+    platFormList: [],
     // 出品方
     producer: '',
     // 正片数量,总集数（电视剧是预知的，综艺节目是变化的）
@@ -127,6 +127,8 @@ const defaultState = {
     licenceList: [],
     announcerList: [],
     copyrightReserverList: [],
+    contestList: [],
+    platFormList: [],
     currentProgrammeVideoObj: Object.assign({}, defaultCurrentProgrammeVideoObj)
 };
 
@@ -218,8 +220,14 @@ const getters = {
     licenceList(state) {
         return state.licenceList;
     },
-    announcerList() {
+    announcerList(state) {
         return state.announcerList;
+    },
+    contestList(state) {
+        return state.contestList;
+    },
+    platFormList(state) {
+        return state.platFormList;
     },
     copyrightReserverList() {
         return state.copyrightReserverList;
@@ -315,13 +323,9 @@ const mutations = {
     },
     setCurrentProgramme(state, payload) {
         state.currentProgramme = payload.currentProgramme;
-        let {coverImage} = state.currentProgramme;
-        state.currentProgramme.posterImageList = state.currentProgramme.posterImageList.map((item) => {
-            if (item.id === (coverImage ? coverImage.id : '')) {
-                item.checked = true;
-            }
-            return item;
-        });
+        if (state.currentProgramme.platFormList === null) {
+            state.currentProgramme.platFormList = [];
+        }
     },
     updateCurrentProgramme(state, payload) {
         let {key, value} = payload;
@@ -335,6 +339,12 @@ const mutations = {
     },
     addProgrammeAnnouncer(state, payload) {
         state.announcerList.push(payload.value);
+    },
+    addProgrammeContest(state, payload) {
+        state.contestList.push(payload.value);
+    },
+    addProgrammePlatForm(state, payload) {
+        state.platFormList.push(payload.value);
     },
     addProgrammeCopyrightReserver(state, payload) {
         state.copyrightReserverList.push(payload.value);

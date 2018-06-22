@@ -1,6 +1,8 @@
-import service from '../../../service';
+import { checkImageExist } from '@/util/formValidate';
+import _ from 'lodash';
 import router from '../../../router';
-import {checkImageExist} from '@/util/formValidate';
+import service from '../../../service';
+import {MAIN_ROLE_OPTIONS} from '@/util/config/role';
 
 const defaultPerson = {
     area: '',
@@ -18,35 +20,33 @@ const defaultPerson = {
     avatarImage: {}
 };
 
-const state = {
-    searchStr: '',
-    area: '',
-    currentPerson: {},
-    list: [],
+const defaultSearchFields = {
+    name: '',
+    area: ''
+};
+
+const defaultPagination = {
     pageNum: 1,
     pageSize: 5,
     total: 0
 };
 
+const state = {
+    searchFields: _.cloneDeep(defaultSearchFields),
+    currentPerson: _.cloneDeep(defaultPerson),
+    list: [],
+    pagination: _.cloneDeep(defaultPagination)
+};
+
 const getters = {
     list(state) {
-        return Array.from(state.list).sort((prev, curr) => curr.updatedAt - prev.updatedAt);
+        return state.list;
     },
     pagination(state) {
-        return {
-            pageSize: state.pageSize,
-            total: state.total,
-            pageNum: state.pageNum
-        };
+        return state.pagination;
     },
-    area(state) {
-        return state.area;
-    },
-    getArea(state) {
-        return state.currentPerson.area;
-    },
-    searchStr(state) {
-        return state.searchStr;
+    searchFields(state) {
+        return state.searchFields;
     },
     currentPerson(state) {
         return state.currentPerson;
@@ -54,8 +54,12 @@ const getters = {
     posterImageList(state) {
         return state.currentPerson && state.currentPerson.posterImageList;
     },
-    avatarImage(state) {
-        return state.currentPerson && state.currentPerson.avatarImage;
+    mainRoleLabel(state) {
+        return (mainRoleList) => {
+            return mainRoleList.map((item) => {
+                return MAIN_ROLE_OPTIONS.find((mainRoleItem) => mainRoleItem.value === item).label;
+            }).join(' ,');
+        };
     }
 };
 
@@ -64,44 +68,33 @@ const mutations = {
         state.list = payload.list;
     },
     setPagination(state, payload) {
-        if (payload.pageSize) {
-            state.pageSize = payload.pageSize;
-        }
-        if (payload.pageNum) {
-            state.pageNum = payload.pageNum;
-        }
-        if (payload.total) {
-            state.total = payload.total;
-        }
+        state.pagination.pageSize = payload.pageSize;
+        state.pagination.pageNum = payload.pageNum;
+        state.pagination.total = payload.total;
+    },
+    updatePagination(state, payload) {
+        let {key, value} = payload;
+        state.pagination[key] = value;
     },
     setCurrentPerson(state, payload) {
         state.currentPerson = payload.currentPerson;
-        let { posterImageList, avatarImage } = state.currentPerson;
+        let { posterImageList } = state.currentPerson;
         if (!Array.isArray(posterImageList)) {
             state.currentPerson.posterImageList = [];
         }
-        state.currentPerson.posterImageList = state.currentPerson.posterImageList.map((item) => {
-            if (item.id === (avatarImage ? avatarImage.id : '')) {
-                item.checked = true;
-            }
-            return item;
-        });
     },
     updateCurrentPerson(state, payload) {
-        // state.currentPerson = Object.assign({}, state.currentPerson, payload);
-        console.log(payload.key);
-        console.log(payload.value);
         state.currentPerson[payload.key] = payload.value;
     },
-    setSearchStr(state, payload) {
-        state.searchStr = payload.searchStr;
+    updateSearchFields(state, payload) {
+        let {key, value} = payload;
+        state.searchFields[key] = value;
     },
-    setArea(state, payload) {
-        state.area = payload.area;
+    resetSearchFields(state) {
+        state.searchFields = _.cloneDeep(defaultSearchFields);
     },
     resetPerson(state) {
-        state.currentPerson = defaultPerson;
-        state.currentPerson.posterImageList = [];
+        state.currentPerson = _.cloneDeep(defaultPerson);
     },
     addPosterImage(state, payload) {
         if (!state.currentPerson.posterImageList) {
@@ -121,66 +114,60 @@ const mutations = {
         state.currentPerson.avatarImage = state.currentPerson.posterImageList.find((img) => {
             return parseInt(img.width) === 200 && parseInt(img.height) === 200;
         });
-    },
-    checkPosterImage(state, payload) {
-        state.currentPerson.posterImageList = state.currentPerson.posterImageList.map((img) => {
-            if (img.id === payload.id) {
-                img.checked = true;
-                state.currentPerson.avatarImage = img;
-            } else {
-                delete img.checked;
-            }
-
-            return img;
-        });
     }
 };
 
 const actions = {
-    getPersonList({commit, state}, {isProgramme, name}) {
-        let searchName = !name ? state.searchStr : name;
-        return service.getPersonList({ pageNum: state.pageNum - 1, pageSize: state.pageSize, name: searchName, area: state.area })
-            .then((res) => {
-                if (res && res.code === 0) {
-                    let {pageNum, pageSize, total, list} = res.data;
-                    if (!isProgramme) {
-                        commit('setPersonList', {list});
-                        commit('setPagination', {pageSize, pageNum: pageNum + 1, total});
-                    } else {
-                        return res;
-                    }
-                }
-            });
-    },
-
-    getPerson({commit, state}, id) {
-        service.getPersonInfo({id})
-            .then((res) => {
-                if (res && res.code === 0) {
-                    commit('setCurrentPerson', {currentPerson: res.data});
-                }
-            });
-    },
-
-    createPerson({commit, state}) {
-        let person = JSON.parse(JSON.stringify(state.currentPerson));
-        delete person.createdAt;
-        service.createPerson(person)
-            .then((res) => {
-                if (res && res.code === 0) {
+    async getPersonList({commit, state}, {isProgramme, name}) {
+        try {
+            let searchName = !name ? state.searchFields.name : name;
+            let {pageNum, pageSize} = state.pagination;
+            let {area} = state.searchFields;
+            let res = await service.getPersonList({ pageNum: pageNum - 1, pageSize, name: searchName, area });
+            if (res && res.code === 0) {
+                let {pageNum, pageSize, total, list} = res.data;
+                if (!isProgramme) {
+                    commit('setPersonList', {list});
+                    commit('setPagination', {pageSize, pageNum: pageNum + 1, total});
+                } else {
                     return res;
                 }
-            });
+            }
+        } catch (err) {
+        }
     },
-    updatePerson({commit, state}) {
-        let person = JSON.parse(JSON.stringify(state.currentPerson));
-        delete person.createdAt;
-        service.updatePersonInfo({id: person.id, person: person})
-            .then((res) => {
-                if (res && res.code === 0) {
-                    router.push({ name: 'PersonList' });
-                }
-            });
+
+    async getPersonById({commit, state}, id) {
+        try {
+            let res = await service.getPersonById(id);
+            if (res && res.code === 0) {
+                commit('setCurrentPerson', {currentPerson: res.data});
+            }
+        } catch (err) {
+        }
+    },
+
+    async createPerson({commit, state}) {
+        try {
+            let person = _.cloneDeep(state.currentPerson);
+            delete person.createdAt;
+            let res = await service.createPerson(person);
+            if (res && res.code === 0) {
+                return res;
+            }
+        } catch (err) {
+        }
+    },
+    async updatePersonById({commit, state}) {
+        try {
+            let person = _.cloneDeep(state.currentPerson);
+            delete person.createdAt;
+            let res = service.updatePersonById(person.id, person);
+            if (res && res.code === 0) {
+                router.push({ name: 'PersonList' });
+            }
+        } catch (err) {
+        }
     }
 };
 

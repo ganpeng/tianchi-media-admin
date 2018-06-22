@@ -10,8 +10,8 @@
         <el-form :inline="true" class="demo-form-inline search-form">
             <el-form-item class="search">
                 <el-input
-                    :value="searchStr"
-                    @input="inputChangeHandler"
+                    :value="searchFields.name"
+                    @input="inputHandler($event, 'name')"
                     placeholder="搜索你想要的信息"
                     clearable
                 >
@@ -23,11 +23,11 @@
             </el-form-item>
             <el-form-item label="地区">
                 <el-select
-                    :value="area"
+                    :value="searchFields.area"
                     filterable
                     clearable
                     placeholder="请选择地区"
-                    @change="areaChangeHandler">
+                    @input="inputHandler($event, 'area')">
                     <el-option
                         v-for="item in areaOptions"
                         :key="item.value"
@@ -81,8 +81,8 @@
             </el-table-column>
         </el-table>
         <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
+            @size-change="handlePaginationChange($event, 'pageSize')"
+            @current-change="handlePaginationChange($event, 'pageNum')"
             :current-page="pagination.pageNum"
             :page-sizes="[5, 10, 20, 30, 50]"
             :page-size="pagination.pageSize"
@@ -95,7 +95,6 @@
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
-    import role from '@/util/config/role';
     export default {
         name: 'PersonList',
         components: {
@@ -104,7 +103,6 @@
         data() {
             return {
                 areaOptions: this.$util.countryList(),
-                mainRoleOptions: role.MAIN_ROLE_OPTIONS,
                 previewImage: {
                     title: '',
                     display: false,
@@ -118,19 +116,17 @@
         },
         computed: {
             ...mapGetters({
-                area: 'person/area',
                 list: 'person/list',
+                searchFields: 'person/searchFields',
                 pagination: 'person/pagination',
-                searchStr: 'person/searchStr'
+                mainRoleLabel: 'person/mainRoleLabel'
             })
         },
         methods: {
             ...mapMutations({
-                setSearchStr: 'person/setSearchStr',
-                setArea: 'person/setArea',
-                setPagination: 'person/setPagination',
-                resetPerson: 'person/resetPerson',
-                resetPosterImageList: 'person/resetPosterImageList'
+                updateSearchFields: 'person/updateSearchFields',
+                updatePagination: 'person/updatePagination',
+                resetPerson: 'person/resetPerson'
             }),
             ...mapActions({
                 getPersonList: 'person/getPersonList'
@@ -140,15 +136,6 @@
                 let area = this.areaOptions.find((areaItem) => areaItem.value === areaValue);
                 return area ? area.label : '';
             },
-            mainRoleLabel(mainRoleValue) {
-                if (Array.isArray(mainRoleValue)) {
-                    return mainRoleValue.map((item) => {
-                        return this.mainRoleOptions.find((mainRoleItem) => mainRoleItem.value === item).label;
-                    }).join(' ,');
-                } else {
-                    return mainRoleValue;
-                }
-            },
             // 跳转到详情页面
             displayPerson(userId) {
                 this.$router.push({ name: 'DisplayPerson', params: { id: userId } });
@@ -156,20 +143,12 @@
             editPerson(userId) {
                 this.$router.push({ name: 'EditPerson', params: { id: userId } });
             },
-            handleSizeChange(pageSize) {
-                this.setPagination({pageSize});
+            handlePaginationChange(value, key) {
+                this.updatePagination({value, key});
                 this.getPersonList({isProgramme: false});
             },
-            handleCurrentChange(pageNum) {
-                this.setPagination({pageNum});
-                this.getPersonList({isProgramme: false});
-            },
-            areaChangeHandler(value) {
-                this.setArea({area: value});
-                this.getPersonList({isProgramme: false});
-            },
-            inputChangeHandler(searchStr) {
-                this.setSearchStr({searchStr});
+            inputHandler(value, key) {
+                this.updateSearchFields({key, value});
             },
             // 放大预览图片
             displayImage(image) {

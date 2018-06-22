@@ -201,8 +201,7 @@ export default {
         ...mapMutations({
             updateCurrentPerson: 'person/updateCurrentPerson',
             addPosterImage: 'person/addPosterImage',
-            deletePosterImage: 'person/deletePosterImage',
-            checkPosterImage: 'person/checkPosterImage'
+            deletePosterImage: 'person/deletePosterImage'
         }),
         uploadImageHandler() {
             if (!this.readonly) {

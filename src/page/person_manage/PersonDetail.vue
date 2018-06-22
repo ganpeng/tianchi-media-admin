@@ -53,7 +53,12 @@
             };
         },
         created() {
+            this.resetPerson();
             if (this.status === 1 || this.status === 2) {
+                let {id} = this.$route.params;
+                if (id) {
+                    this.getPersonById(id);
+                }
             }
         },
         computed: {
@@ -70,11 +75,13 @@
         },
         methods: {
             ...mapMutations({
-                setAvatarImage: 'person/setAvatarImage'
+                setAvatarImage: 'person/setAvatarImage',
+                resetPerson: 'person/resetPerson'
             }),
             ...mapActions({
                 createPerson: 'person/createPerson',
-                updatePerson: 'person/updatePerson'
+                updatePersonById: 'person/updatePersonById',
+                getPersonById: 'person/getPersonById'
             }),
             // 新增人物
             _createPerson() {
@@ -101,7 +108,7 @@
                     if (valid) {
                         this.checkImageLength(() => {
                             this.isLoading = true;
-                            this.updatePerson()
+                            this.updatePersonById()
                                 .then(() => {
                                     this.$message.success('编辑人物成功');
                                 }).finally(() => {

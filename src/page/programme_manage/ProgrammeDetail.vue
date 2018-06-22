@@ -334,29 +334,31 @@
                                     @input="inputHandler($event, 'contest')"
                                 >
                                     <el-option
-                                        v-for="item in contestOptions"
+                                        v-for="item in contestList"
                                         :key="item"
                                         :label="item"
                                         :value="item">
                                     </el-option>
                                 </el-select>
+                                <el-button v-if="!readonly" type="primary" plain @click="addContest">新增赛事</el-button>
                             </el-form-item>
                             <el-form-item
                                 label="播放平台">
                                 <el-select
                                     :disabled="readonly"
-                                    :value="programme.platform"
+                                    :value="programme.platFormList"
                                     multiple
                                     placeholder="请选择"
-                                    @input="inputHandler($event, 'platform')"
+                                    @input="inputHandler($event, 'platFormList')"
                                 >
                                     <el-option
-                                        v-for="item in platformOptions"
+                                        v-for="item in platFormList"
                                         :key="item"
                                         :label="item"
                                         :value="item">
                                     </el-option>
                                 </el-select>
+                                <el-button v-if="!readonly" type="primary" plain @click="addPlatForm">新增播放平台</el-button>
                             </el-form-item>
                             <el-form-item label="总集数" prop="featureVideoCount">
                                 <el-input
@@ -532,6 +534,8 @@
                 licenceList: 'programme/licenceList',
                 announcerList: 'programme/announcerList',
                 copyrightReserverList: 'programme/copyrightReserverList',
+                contestList: 'programme/contestList',
+                platFormList: 'programme/platFormList',
                 currentVideoIdList: 'programme/currentVideoIdList',
                 programmeVideoList: 'programme/programmeVideoList',
                 pagination: 'programme/programmeVideoPagination',
@@ -573,6 +577,8 @@
                 addProgrammeLicence: 'programme/addProgrammeLicence',
                 addProgrammeAnnouncer: 'programme/addProgrammeAnnouncer',
                 addProgrammeCopyrightReserver: 'programme/addProgrammeCopyrightReserver',
+                addProgrammePlatForm: 'programme/addProgrammePlatForm',
+                addProgrammeContest: 'programme/addProgrammeContest',
                 checkPosterImage: 'programme/checkPosterImage',
                 deleteVideoList: 'programmeVideo/deleteVideoList',
                 setCoverImage: 'programme/setCoverImage'
@@ -872,6 +878,44 @@
                     this.$message({
                         type: 'success',
                         message: `发行方${value}添加成功`
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消输入'
+                    });
+                });
+            },
+            addPlatForm() {
+                this.$prompt('请输入新播放平台', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /\S/,
+                    inputErrorMessage: '播放平台不能为空'
+                }).then(({ value }) => {
+                    this.addProgrammePlatForm({value});
+                    this.$message({
+                        type: 'success',
+                        message: `播放平台${value}添加成功`
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消输入'
+                    });
+                });
+            },
+            addContest() {
+                this.$prompt('请输入新赛事', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /\S/,
+                    inputErrorMessage: '赛事不能为空'
+                }).then(({ value }) => {
+                    this.addProgrammeContest({value});
+                    this.$message({
+                        type: 'success',
+                        message: `赛事${value}添加成功`
                     });
                 }).catch(() => {
                     this.$message({
