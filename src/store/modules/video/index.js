@@ -1,8 +1,6 @@
 import service from '../../../service';
 import role from '@/util/config/role';
 
-// 'http://test-video.tianchiapi.com/group1/M00/00/03/CgEBIVsg7m6AFsYpAAAcnK8oMY069.m3u8',
-// 'https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8',
 const state = {
     selectedVideoId: '',
     searchFields: {
@@ -105,7 +103,6 @@ const actions = {
             let result = await service.deleteVideoById(id);
             return result;
         } catch (err) {
-            console.log(err);
         }
     }
 };

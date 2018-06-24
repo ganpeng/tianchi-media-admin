@@ -91,7 +91,7 @@
                     :disabled="readonly"
                     :value="video.type"
                     placeholder="请选择内容类型"
-                    @change="inputHandler($event, 'type')"
+                    @input="inputHandler($event, 'type')"
                 >
                     <el-option
                         v-for="item in videoType"
@@ -115,7 +115,7 @@
                 </ul>
             </el-form-item>
             <el-form-item
-                :rules="video.type === 'FEATURE' ? [{ required: true, message: '请输入邮箱地址' }] : []"
+                :rules="video.type === 'FEATURE' ? [{ required: true, message: '请输入集号/期号', trigger: 'change' }] : []"
                 label="集数/期号" prop="sort">
                 <el-input
                     :disabled="readonly"
@@ -136,7 +136,7 @@
                     @change="inputHandler($event, 'parentId')"
                 >
                     <el-option
-                        v-for="item in featureVideoList"
+                        v-for="item in featureList"
                         :key="item.id"
                         :label="item.name"
                         :value="item.id"
@@ -166,7 +166,7 @@
         <upload-image
             title="上传节目图片"
             :size="size"
-            :successHandler="setCoverImage"
+            :successHandler="setVideoCoverImage"
             :imageUploadDialogVisible="imageUploadDialogVisible"
             v-on:changeImageDialogStatus="closeImageDialog($event)">
         </upload-image>
@@ -200,8 +200,6 @@
                 selectedVideo: false,
                 videoType: role.VIDEO_TYPE,
                 size: dimension.VIDEO_COVER_DIMENSION,
-                qualityOptions: role.QUALITY_TYPE,
-                active: 0,
                 imageUploadDialogVisible: false,
                 selectVideoDialogVisible: false,
                 uploadVideoRules: {
@@ -211,9 +209,10 @@
         },
         computed: {
             ...mapGetters({
-                video: 'programmeVideo/currentProgrammeVideo',
-                featureVideoList: 'programmeVideo/featureVideoList',
+                // 新加
+                video: 'programme/currentVideo',
                 isTvPlay: 'programme/isTvPlay',
+                featureList: 'programme/featureList',
                 videoListObj: 'video/video'
             }),
             title() {
@@ -239,22 +238,22 @@
         },
         methods: {
             ...mapMutations({
-                updateCurrentProgrammeVideo: 'programmeVideo/updateCurrentProgrammeVideo',
-                resetProgrammeVideo: 'programmeVideo/resetProgrammeVideo',
-                addVideoToList: 'programmeVideo/addVideoToList',
-                setCoverImage: 'programmeVideo/setCoverImage',
-                updateCurrentProgrammeVideoItem: 'programme/updateCurrentProgrammeVideoItem',
-                syncVideoMetaData: 'programmeVideo/syncVideoMetaData',
+                updateVideo: 'programme/updateVideo',
+                setVideoCoverImage: 'programme/setVideoCoverImage',
+                resetCurrentVideo: 'programme/resetCurrentVideo',
+                addVideoToTempList: 'programme/addVideoToTempList',
+                syncVideoMetaData: 'programme/syncVideoMetaData',
+                updateCurrentVideo: 'programme/updateCurrentVideo',
                 setSelectedVideoId: 'video/setSelectedVideoId'
             }),
             ...mapActions({
-                updateProgrammeVideo: 'programmeVideo/updateProgrammeVideo',
-                getVideoFeatureList: 'programmeVideo/getVideoFeatureList'
+                updateProgrammeVideoById: 'programme/updateProgrammeVideoById',
+                getFeatureVideoList: 'programme/getFeatureVideoList'
             }),
             cancelHandler() {
                 this.$emit('changeVideoDialogStatus', false);
                 // 清楚校验的规则
-                this.resetProgrammeVideo();
+                this.resetCurrentVideo();
                 this.setSelectedVideoId({id: ''});
             },
             successHandler() {
@@ -262,7 +261,7 @@
                     if (value) {
                             if (parseInt(this.videoStatus) !== 1) {
                                 if (this.selectedVideo) {
-                                    this.addVideoToList();
+                                    this.addVideoToTempList();
                                     this.cancelHandler();
                                 } else {
                                     this.$message({
@@ -271,9 +270,9 @@
                                     });
                                 }
                             } else {
-                                this.updateProgrammeVideo()
+                                this.updateProgrammeVideoById()
                                     .then((res) => {
-                                        this.updateCurrentProgrammeVideoItem({video: res.data});
+                                        this.updateCurrentVideo({video: res.data});
                                         this.cancelHandler();
                                     });
                             }
@@ -282,7 +281,7 @@
                 });
             },
             inputHandler(value, key) {
-                this.updateCurrentProgrammeVideo({key, value});
+                this.updateVideo({key, value});
             },
             uploadImageHandler() {
                 if (!this.readonly) {

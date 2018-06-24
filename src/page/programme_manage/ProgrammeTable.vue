@@ -22,34 +22,55 @@
                     width="240px">
                 </el-table-column>
                 <el-table-column
-                    prop="name"
-                    label="视频名称"
+                    prop="originName"
+                    label="视频文件名"
                     align="center"
                     width="180">
                 </el-table-column>
                 <el-table-column
-                    v-if="status !== 2"
+                    prop="name"
+                    v-if="tableStatus === 1"
+                    label="视频展示名"
+                    align="center"
+                    width="180">
+                </el-table-column>
+                <el-table-column
+                    prop="sort"
+                    v-if="tableStatus === 1"
+                    label="集号/期号"
+                    align="center"
+                    width="180">
+                </el-table-column>
+                <el-table-column
+                    v-if="status !== 2 && tableStatus === 1"
                     prop="sort"
                     align="center"
                     label="视频排序">
                 </el-table-column>
                 <el-table-column
                     prop="description"
+                    v-if="tableStatus === 1"
                     width="200px"
                     align="center"
                     label="视频简介">
                 </el-table-column>
                 <el-table-column
-                    v-if="status !== 2"
-                    prop="positive"
+                    v-if="tableStatus === 1"
                     align="center"
-                    label="关联正片">
+                    label="视频封面">
                         <template slot-scope="scope">
-                            {{(scope.row.parentId ? getFeatureVideoName(scope.row.parentId) : '')}}
+                            <img @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="person-image pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
                         </template>
                 </el-table-column>
                 <el-table-column
-                    prop="playUrl"
+                    v-if="tableStatus === 1"
+                    align="center"
+                    label="关联正片">
+                        <template slot-scope="scope">
+                            {{(scope.row.parentId ? featureVideoName(scope.row.parentId) : '/')}}
+                        </template>
+                </el-table-column>
+                <el-table-column
                     min-width="240px"
                     align="center"
                     label="视频地址">
@@ -82,6 +103,7 @@
                 </el-table-column>
                 <el-table-column
                     prop="type"
+                    v-if="tableStatus === 1"
                     align="center"
                     min-width="120px"
                     label="内容类型">
@@ -90,7 +112,7 @@
                         </template>
                 </el-table-column>
                 <el-table-column
-                    v-if="status === 1"
+                    v-if="status === 1 && tableStatus === 1"
                     prop="free"
                     align="center"
                     label="是否付费">
@@ -159,18 +181,21 @@
             :displayVideoDialogVisible="displayVideoDialogVisible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
+        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
     </div>
 </template>
 <script>
 import {mapGetters, mapActions, mapMutations} from 'vuex';
 import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 import DisplayVideoDialog from '../video_manage/DisplayVideoDialog';
+import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
 import role from '@/util/config/role';
 export default {
     name: 'ProgrammeTable',
     components: {
         UploadProgrammeVideoDialog,
-        DisplayVideoDialog
+        DisplayVideoDialog,
+        PreviewSingleImage
     },
     props: {
         dataList: {
@@ -196,12 +221,17 @@ export default {
             url: '',
             isEdit: true,
             //  videoStatus 有三中状态，0：表示创建， 1: 表示编辑， 2： 表示查看
-            videoStatus: 1
+            videoStatus: 1,
+            previewImage: {
+                title: '',
+                display: false,
+                uri: ''
+            }
         };
     },
     computed: {
         ...mapGetters({
-            getFeatureVideoName: 'programmeVideo/getFeatureVideoName',
+            featureVideoName: 'programme/featureVideoName',
             isShow: 'programme/isShow'
         }),
         duration() {
@@ -217,21 +247,21 @@ export default {
     },
     methods: {
         ...mapMutations({
-            deleteVideoFromList: 'programmeVideo/deleteVideoFromList'
+            deleteVideoFromTempList: 'programme/deleteVideoFromTempList'
         }),
         ...mapActions({
-            getProgrammeVideo: 'programmeVideo/getProgrammeVideo',
+            getProgrammeVideoById: 'programme/getProgrammeVideoById',
             deleteProgrammeVideo: 'programme/deleteProgrammeVideo'
         }),
         editVideo(id) {
-            this.getProgrammeVideo(id)
+            this.getProgrammeVideoById(id)
                 .then((res) => {
                     this.videoUploadDialogVisible = true;
                     this.videoStatus = 1;
                 });
         },
         displayVideo(id) {
-            this.getProgrammeVideo(id)
+            this.getProgrammeVideoById(id)
                 .then((res) => {
                     this.videoUploadDialogVisible = true;
                     this.videoStatus = 2;
@@ -260,7 +290,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'error'
             }).then(() => {
-                this.deleteVideoFromList({uid});
+                this.deleteVideoFromTempList({uid});
             }).catch(() => {
                 this.$message({
                     type: 'info',
@@ -274,6 +304,12 @@ export default {
         displayVideoPlayer(url) {
             this.displayVideoDialogVisible = true;
             this.url = `http://dev-video.tianchiapi.com${url}`;
+        },
+        // 放大预览图片
+        displayImage(image) {
+            this.previewImage.title = image.name;
+            this.previewImage.display = true;
+            this.previewImage.uri = image.uri;
         }
     }
 };

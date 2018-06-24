@@ -11,9 +11,8 @@
             <el-form :inline="true" class="demo-form-inline search-form">
                 <el-form-item class="search">
                     <el-input
-                        :value="keyword"
+                        :value="programmeSearchFields.keyword"
                         clearable
-                        @clear="clearSearchField('keyword')"
                         @input="inputHandler($event, 'keyword')"
                         placeholder="搜索你想要的信息">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
@@ -34,21 +33,19 @@
             <el-form :inline="true" class="demo-form-inline">
                 <el-form-item label="上映时间">
                     <el-date-picker
-                        :value="releaseAt"
+                        :value="programmeSearchFields.releaseAt"
                         type="year"
                         clearable
-                        @clear="clearSearchField('releaseAt')"
                         @input="inputHandler($event, 'releaseAt')"
                         placeholder="请选择上映时间">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="地区">
                     <el-select
-                        :value="produceAreaList"
+                        :value="programmeSearchFields.produceAreaList"
                         clearable
                         filterable
                         multiple
-                        @clear="clearSearchField('produceAreaList')"
                         @change="inputHandler($event, 'produceAreaList')"
                         placeholder="请选择制片地区"
                     >
@@ -62,12 +59,12 @@
                 </el-form-item>
                 <el-form-item label="分类">
                     <el-select
-                        :value="searchCategory"
+                        :value="programmeSearchFields.programmeCategoryIdList"
                         multiple
-                        @change="categoryChangeHandler"
+                        @change="inputHandler($event, 'programmeCategoryIdList')"
                         placeholder="请选择">
                         <el-option
-                            v-for="item in categroyList"
+                            v-for="item in global.categoryList"
                             :key="item.id"
                             :label="item.name"
                             :value="item.id">
@@ -76,14 +73,13 @@
                 </el-form-item>
                 <el-form-item label="类型">
                     <el-select
-                        :value="searchType"
-                        @change="typeListChangeHandler"
+                        :value="programmeSearchFields.programmeTypeIdList"
+                        @change="inputHandler($event, 'programmeTypeIdList')"
                         clearable
                         multiple
-                        @clear="clearSearchType"
                         placeholder="请选择">
                         <el-option
-                            v-for="item in searchCurrentTypeList"
+                            v-for="item in programmeTypeOptions"
                             :key="item.id"
                             :label="item.name"
                             :value="item.id">
@@ -92,7 +88,7 @@
                 </el-form-item>
                 <el-form-item label="节目状态">
                     <el-select
-                        :value="visible"
+                        :value="programmeSearchFields.visible"
                         @change="inputHandler($event, 'visible')"
                         clearable
                         placeholder="请选择">
@@ -164,13 +160,13 @@
                 </el-table-column>
             </el-table>
             <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="pagination.pageNum"
+                @size-change="handlePaginationChange($event, 'pageSize')"
+                @current-change="handlePaginationChange($event, 'pageNum')"
+                :current-page="programmePagination.pageNum"
                 :page-sizes="[5, 10, 20, 30, 50]"
-                :page-size="pagination.pageSize"
+                :page-size="programmePagination.pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
-                :total="pagination.total">
+                :total="programmePagination.total">
             </el-pagination>
         </div>
         <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
@@ -205,48 +201,39 @@ export default {
         };
     },
     created() {
-        this.resetSearchField();
+        this.resetProgrammeSearchFields();
         this.getProgrammeList();
         this.getProgrammeCategory();
     },
     computed: {
         ...mapGetters({
-            list: 'programme/list',
-            pagination: 'programme/pagination',
-            visible: 'programme/visible',
+            // 新加开始
+            programmePagination: 'programme/programmePagination',
+            programmeSearchFields: 'programme/programmeSearchFields',
+            programmeTypeOptions: 'programme/programmeTypeOptions',
+            global: 'programme/global',
+            // 新加结束
+            list: 'programme/programmeList',
             typeList: 'programme/typeList',
             categoryListString: 'programme/categoryListString',
             getDirector: 'programme/getDirector',
-            getChiefActor: 'programme/getChiefActor',
-            getPostImage: 'programme/getPostImage',
-            searchCategory: 'programme/searchCategory',
-            searchType: 'programme/searchType',
-            searchCurrentTypeList: 'programme/searchCurrentTypeList',
-            produceAreaList: 'programme/produceAreaList',
-            releaseAt: 'programme/releaseAt',
-            keyword: 'programme/keyword',
-            categroyList: 'programme/categroyList'
+            getChiefActor: 'programme/getChiefActor'
         })
     },
     methods: {
         ...mapMutations({
-            setPagination: 'programme/setPagination',
-            updateSearchCategoryValue: 'programme/updateSearchCategoryValue',
-            updateSearchType: 'programme/updateSearchType',
-            resetSearchCategory: 'programme/resetSearchCategory',
-            resetSearchType: 'programme/resetSearchType',
-            setSearchField: 'programme/setSearchField',
-            resetSearchField: 'programme/resetSearchField'
+            // 新加开始
+            updateProgrammePagination: 'programme/updateProgrammePagination',
+            updateProgrammeSearchFields: 'programme/updateProgrammeSearchFields',
+            resetProgrammeSearchFields: 'programme/resetProgrammeSearchFields'
+            // 新加结束
         }),
         ...mapActions({
             getProgrammeList: 'programme/getProgrammeList',
             getProgrammeCategory: 'programme/getProgrammeCategory'
         }),
         clearSearchFields() {
-            this.resetSearchField();
-        },
-        clearSearchField(key) {
-            this.setSearchField({[key]: ''});
+            this.resetProgrammeSearchFields();
         },
         editProgramme(id) {
             this.$router.push({ name: 'EditProgramme', params: { id } });
@@ -260,29 +247,11 @@ export default {
                 return area ? area.label ? area.label : '' : '';
             }).join(',');
         },
-        handleSizeChange(pageSize) {
-            this.setPagination({pageSize});
-            this.getProgrammeList();
-        },
-        handleCurrentChange(pageNum) {
-            this.setPagination({pageNum});
-            this.getProgrammeList();
-        },
-        categoryChangeHandler(idList) {
-            this.updateSearchCategoryValue({idList});
-            this.updateSearchType({list: []});
-        },
-        typeListChangeHandler(value) {
-            this.updateSearchType({list: value});
-        },
-        clearSearchCategory() {
-            this.resetSearchCategory();
-        },
-        clearSearchType() {
-            this.resetSearchType();
-        },
         inputHandler(value, key) {
-            this.setSearchField({[key]: value});
+            this.updateProgrammeSearchFields({key, value});
+            if (key === 'programmeCategoryIdList') {
+                this.updateProgrammeSearchFields({key: 'programmeTypeIdList', value: []});
+            }
         },
         searchHandler() {
             this.getProgrammeList();
@@ -292,6 +261,10 @@ export default {
             this.previewImage.title = image.name;
             this.previewImage.display = true;
             this.previewImage.uri = image.uri;
+        },
+        handlePaginationChange(value, key) {
+            this.updateProgrammePagination({key, value});
+            this.getProgrammeList();
         }
     }
 };

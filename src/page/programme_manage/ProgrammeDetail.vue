@@ -83,14 +83,14 @@
                             </el-form-item>
                             <el-form-item label="节目分类" prop="categoryList">
                                 <el-select
-                                    :value="serializeCategoryList"
+                                    :value="programme.categoryList"
                                     multiple
-                                    @change="categoryChangeHandler"
+                                    @input="inputHandler($event, 'categoryList')"
                                     :disabled="readonly"
                                     placeholder="请选择">
                                     <el-option
-                                        v-for="item in categroyList"
-                                        :key="item.id"
+                                        v-for="(item, index) in global.categoryList"
+                                        :key="index"
                                         :label="item.name"
                                         :value="item.id">
                                     </el-option>
@@ -99,14 +99,14 @@
                             </el-form-item>
                             <el-form-item label="节目类型" prop="typeList">
                                 <el-select
-                                    :value="serializeTypeList"
+                                    :value="programme.typeList"
                                     multiple
                                     :disabled="readonly"
-                                    @change="typeListChangeHandler"
+                                    @input="inputHandler($event, 'typeList')"
                                     placeholder="请选择">
                                     <el-option
-                                        v-for="item in programme.currentTypeList"
-                                        :key="item.id"
+                                        v-for="(item, index) in typeListOptions"
+                                        :key="index"
                                         :label="item.name"
                                         :value="item.id">
                                     </el-option>
@@ -122,24 +122,24 @@
                                     :disabled="readonly"
                                 >
                                     <el-option
-                                        v-for="item in programmeTagList"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
+                                        v-for="item in global.programmeTagList"
+                                        :key="item"
+                                        :label="item"
+                                        :value="item">
                                     </el-option>
                                 </el-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="addTag">新增关键字</el-button>
+                                <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('programmeTagList')">新增关键字</el-button>
                             </el-form-item>
                             <el-form-item label="节目主演" prop="leadActorValue">
                                 <label for="leadActor"></label>
                                 <el-select
-                                    :value="leadActorValue"
+                                    :value="role('leadActor')"
                                     multiple
                                     filterable
                                     remote
                                     :disabled="readonly"
                                     placeholder="请输入人物名称"
-                                    @change="updateLeadActorValue"
+                                    @change="updatePersonHandler($event, 'leadActor')"
                                     :remote-method="findLeadActor"
                                     :loading="isLeadActorLoading">
                                     <el-option
@@ -153,13 +153,13 @@
                             </el-form-item>
                             <el-form-item label="节目导演" prop="director">
                                 <el-select
-                                    :value="directorValue"
+                                    :value="role('director')"
                                     multiple
                                     filterable
                                     remote
                                     :disabled="readonly"
                                     placeholder="请输入人物名称"
-                                    @change="updateDirectorValue"
+                                    @change="updatePersonHandler($event, 'director')"
                                     :remote-method="findDirector"
                                     :loading="isDirectorLoading">
                                     <el-option
@@ -174,13 +174,13 @@
 
                             <el-form-item label="节目编剧" prop="scenarist">
                                 <el-select
-                                    :value="scenaristValue"
+                                    :value="role('scenarist')"
                                     multiple
                                     filterable
                                     remote
                                     :disabled="readonly"
                                     placeholder="请输入人物名称"
-                                    @change="updateScenaristValue"
+                                    @change="updatePersonHandler($event, 'scenarist')"
                                     :remote-method="findScenarist"
                                     :loading="isScenaristLoading">
                                     <el-option
@@ -213,13 +213,13 @@
                                     @input="inputHandler($event, 'licence')"
                                 >
                                     <el-option
-                                        v-for="item in licenceList"
+                                        v-for="item in global.licenceList"
                                         :key="item"
                                         :label="item"
                                         :value="item">
                                     </el-option>
                                 </el-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="addLicence">新增牌照方</el-button>
+                                <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('licenceList')">新增牌照方</el-button>
                             </el-form-item>
                             <el-form-item label="版权方" prop="copyrightReserved">
                                 <el-select
@@ -230,13 +230,13 @@
                                     @input="inputHandler($event, 'copyrightReserved')"
                                 >
                                     <el-option
-                                        v-for="item in copyrightReserverList"
+                                        v-for="item in global.copyrightReserverList"
                                         :key="item"
                                         :label="item"
                                         :value="item">
                                     </el-option>
                                 </el-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="addCopyrightReserver">新增版权方</el-button>
+                                <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('copyrightReserverList')">新增版权方</el-button>
                             </el-form-item>
                             <el-form-item label="发行方" prop="announcer">
                                 <el-select
@@ -247,30 +247,13 @@
                                     @input="inputHandler($event, 'announcer')"
                                 >
                                     <el-option
-                                        v-for="item in announcerList"
+                                        v-for="item in global.announcerList"
                                         :key="item"
                                         :label="item"
                                         :value="item">
                                     </el-option>
                                 </el-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="addAnnouncer">新增发行方</el-button>
-                            </el-form-item>
-                            <el-form-item
-                                v-if="isShow"
-                                label="出品频道" prop="producer">
-                                <el-select
-                                    :disabled="readonly"
-                                    :value="programme.producer"
-                                    placeholder="请选择"
-                                    @input="inputHandler($event, 'producer')"
-                                >
-                                    <el-option
-                                        v-for="item in operatorOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                    </el-option>
-                                </el-select>
+                                <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('announcerList')">新增发行方</el-button>
                             </el-form-item>
                             <el-form-item
                                 v-if="isMovie"
@@ -334,13 +317,13 @@
                                     @input="inputHandler($event, 'contest')"
                                 >
                                     <el-option
-                                        v-for="item in contestList"
+                                        v-for="item in global.contestList"
                                         :key="item"
                                         :label="item"
                                         :value="item">
                                     </el-option>
                                 </el-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="addContest">新增赛事</el-button>
+                                <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('contestList')">新增赛事</el-button>
                             </el-form-item>
                             <el-form-item
                                 label="播放平台">
@@ -352,13 +335,13 @@
                                     @input="inputHandler($event, 'platformList')"
                                 >
                                     <el-option
-                                        v-for="item in platformList"
+                                        v-for="item in global.platformList"
                                         :key="item"
                                         :label="item"
                                         :value="item">
                                     </el-option>
                                 </el-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="addPlatForm">新增播放平台</el-button>
+                                <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('platformList')">新增播放平台</el-button>
                             </el-form-item>
                             <el-form-item
                                 :rules="isTvPlay ? [{ required: true, message: '请输入总集数' }] : []"
@@ -416,16 +399,16 @@
             <el-col :span="24">
                 <div class="block-title">节目视频</div>
                 <el-button v-if="!readonly" type="primary" @click="videoUploadDialogVisible = true">添加视频<i class="el-icon-upload el-icon--right"></i></el-button>
-                <programme-table title="待添加视频列表" :tableStatus="0" :status="status" :data-list="unSavedVideoList"></programme-table>
-                <programme-table title="已添加视频列表" :tableStatus="1" :status="status" :data-list="programmeVideoList"></programme-table>
+                <programme-table title="待添加视频列表" :tableStatus="0" :status="status" :data-list="video.tempList"></programme-table>
+                <programme-table title="已添加视频列表" :tableStatus="1" :status="status" :data-list="video.list"></programme-table>
                 <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="pagination.pageNum"
+                    @size-change="handlePaginationChange($event, 'pageSize')"
+                    @current-change="handlePaginationChange($event, 'pageNum')"
+                    :current-page="video.pagination.pageNum"
                     :page-sizes="[5, 10, 20, 30, 50]"
-                    :page-size="pagination.pageSize"
+                    :page-size="video.pagination.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="pagination.total">
+                    :total="video.pagination.total">
                 </el-pagination>
             </el-col>
         </el-row>
@@ -477,7 +460,6 @@
         },
         created() {
             this.resetProgramme();
-            this.resetVideoList();
             this.getProgrammeCategory();
             this.getProgrammeTagList();
             this.getProgrammeAnnouncerList();
@@ -498,20 +480,23 @@
                 videoUploadDialogVisible: false,
                 createPersonDialogVisible: false,
                 areaOptions: this.$util.countryList(),
-                copyRightDealerOptions: role.COPYRIGHT_RESERVER,
-                operatorOptions: role.BUSINESS_OPERATOR,
                 gradeOptions: role.GRADE,
-                specOptions: role.SPEC,
+                subjectOptionsspecOptions: role.SPEC,
                 subjectOptions: role.SUBJECT,
-                contestOptions: role.CONTEST,
-                platformOptions: role.PLATFORM,
-                announcerOptions: role.ANNOUNCER,
                 size: dimension.PROGRAMME_DIMENSION,
                 previewImage: {
                     display: false,
                     autoplay: false,
                     activeIndex: 0,
                     list: []
+                },
+                selectItemObj: {
+                    programmeTagList: '关键字',
+                    licenceList: '牌照方',
+                    copyrightReserverList: '版权方',
+                    announcerList: '发行方',
+                    contestList: '赛事',
+                    platformList: '播放平台'
                 },
                 rules: {
                     name: [
@@ -535,24 +520,12 @@
         },
         computed: {
             ...mapGetters({
-                programme: 'programme/currentProgramme',
-                categroyList: 'programme/categroyList',
-                programmeTagList: 'programme/programmeTagList',
-                licenceList: 'programme/licenceList',
-                announcerList: 'programme/announcerList',
-                copyrightReserverList: 'programme/copyrightReserverList',
-                contestList: 'programme/contestList',
-                platformList: 'programme/platformList',
-                currentVideoIdList: 'programme/currentVideoIdList',
-                programmeVideoList: 'programme/programmeVideoList',
-                pagination: 'programme/programmeVideoPagination',
-                serializeCategory: 'programme/serializeCategory',
-                serializeTypeList: 'programme/serializeTypeList',
-                serializeCategoryList: 'programme/serializeCategoryList',
-                leadActorValue: 'programme/leadActorValue',
-                directorValue: 'programme/directorValue',
-                scenaristValue: 'programme/scenaristValue',
-                unSavedVideoList: 'programmeVideo/unSavedVideoList',
+                global: 'programme/global',
+                programme: 'programme/programme',
+                programmeVisible: 'programme/programmeVisible',
+                typeListOptions: 'programme/typeListOptions',
+                role: 'programme/role',
+                video: 'programme/video',
                 isTvPlay: 'programme/isTvPlay',
                 isMovie: 'programme/isMovie',
                 isEducation: 'programme/isEducation',
@@ -565,37 +538,28 @@
         },
         methods: {
             ...mapMutations({
-                updateCurrentProgramme: 'programme/updateCurrentProgramme',
+                // 新加
+                addSelectItem: 'programme/addSelectItem',
+                updateGlobal: 'programme/updateGlobal',
+                updateProgramme: 'programme/updateProgramme',
+                updatePersonResult: 'programme/updatePersonResult',
+                updatePerson: 'programme/updatePerson',
+                updateVideoPagination: 'programme/updateVideoPagination',
+                deleteTempList: 'programme/deleteTempList',
+                // 新加结束
                 resetProgramme: 'programme/resetProgramme',
-                setSearchStr: 'person/setSearchStr',
                 addPosterImage: 'programme/addPosterImage',
                 deletePosterImage: 'programme/deletePosterImage',
-                resetVideoList: 'programmeVideo/resetVideoList',
-                setVideoPagination: 'programme/setVideoPagination',
-                updateCategoryValue: 'programme/updateCategoryValue',
-                updateTypeList: 'programme/updateTypeList',
-                updateLeadActor: 'programme/updateLeadActor',
-                updateDirector: 'programme/updateDirector',
-                updateScenarist: 'programme/updateScenarist',
-                updateLeadActorResult: 'programme/updateLeadActorResult',
-                updateDirectorResult: 'programme/updateDirectorResult',
-                updateScenaristResult: 'programme/updateScenaristResult',
-                addProgrammeTag: 'programme/addProgrammeTag',
-                addProgrammeLicence: 'programme/addProgrammeLicence',
-                addProgrammeAnnouncer: 'programme/addProgrammeAnnouncer',
-                addProgrammeCopyrightReserver: 'programme/addProgrammeCopyrightReserver',
-                addProgrammePlatForm: 'programme/addProgrammePlatForm',
-                addProgrammeContest: 'programme/addProgrammeContest',
-                checkPosterImage: 'programme/checkPosterImage',
-                deleteVideoList: 'programmeVideo/deleteVideoList',
                 setCoverImage: 'programme/setCoverImage'
             }),
             ...mapActions({
+                // 新加
+                updateProgrammeById: 'programme/updateProgrammeById',
+                createMultProgrammeVideo: 'programme/createMultProgrammeVideo',
+                // 新加结束
                 createProgramme: 'programme/createProgramme',
-                updateProgramme: 'programme/updateProgramme',
                 getPersonList: 'person/getPersonList',
                 getProgrammeCategory: 'programme/getProgrammeCategory',
-                createMultProgrammeVideo: 'programmeVideo/createMultProgrammeVideo',
                 getProgrammeVideoListById: 'programme/getProgrammeVideoListById',
                 getProgrammeTagList: 'programme/getProgrammeTagList',
                 getProgrammeAnnouncerList: 'programme/getProgrammeAnnouncerList',
@@ -611,11 +575,11 @@
                         this.checkImage(() => {
                             this.createProgramme()
                                 .then((res) => {
-                                    let {id} = res.data;
                                     if (res && res.code === 0) {
-                                        this.createMultProgrammeVideo(id)
+                                        let id = res.data.id;
+                                        this.createMultProgrammeVideo({id})
                                             .then((...resList) => {
-                                                this.deleteVideoList({list: resList});
+                                                this.deleteTempList({list: resList});
                                                 this.getProgrammeVideoListById(id);
                                                 this.$message({
                                                     type: 'success',
@@ -640,12 +604,12 @@
                 this.$refs.createProgramForm.validate(value => {
                     if (value) {
                         this.checkImage(() => {
-                            this.updateProgramme(id)
+                            this.updateProgrammeById(id)
                                 .then((res) => {
                                     if (res && res.code === 0) {
-                                        this.createMultProgrammeVideo(id)
+                                        this.createMultProgrammeVideo({id})
                                             .then((...resList) => {
-                                                this.deleteVideoList({list: resList});
+                                                this.deleteTempList({list: resList});
                                                 this.getProgrammeVideoListById(id);
                                                 this.$message({
                                                     type: 'success',
@@ -680,14 +644,6 @@
                         });
                     });
             },
-            onSubmit() {
-                this.$refs.createProgramForm.validate(value => {
-                    if (value) {
-                    } else {
-                        return false;
-                    }
-                });
-            },
             closeImageDialog(status) {
                 this.imageUploadDialogVisible = status;
             },
@@ -704,14 +660,17 @@
                 this.$router.push({name: 'ProgrammeList'});
             },
             inputHandler(value, key) {
-                this.updateCurrentProgramme({key, value});
+                this.updateProgramme({key, value});
+                if (key === 'categoryList') {
+                    this.updateProgramme({key: 'typeList', value: []});
+                }
             },
             findDirector(name) {
                 if (name) {
                     this.isDirectorLoading = true;
                     this.getPersonList({name, isProgramme: true})
                         .then((res) => {
-                            this.updateDirectorResult({'directorResult': res.data.list});
+                            this.updatePersonResult({key: 'directorResult', value: res.data.list});
                         }).finally(() => {
                             this.isDirectorLoading = false;
                         });
@@ -722,7 +681,7 @@
                     this.isLeadActorLoading = true;
                     this.getPersonList({name, isProgramme: true})
                         .then((res) => {
-                            this.updateLeadActorResult({'leadActorResult': res.data.list});
+                            this.updatePersonResult({key: 'leadActorResult', value: res.data.list});
                         }).finally(() => {
                             this.isLeadActorLoading = false;
                         });
@@ -733,20 +692,11 @@
                     this.isScenaristLoading = true;
                     this.getPersonList({name, isProgramme: true})
                         .then((res) => {
-                            this.updateScenaristResult({'scenaristResult': res.data.list});
+                            this.updatePersonResult({key: 'scenaristResult', value: res.data.list});
                         }).finally(() => {
                             this.isScenaristLoading = false;
                         });
                 }
-            },
-            updateDirectorValue(value) {
-                this.updateDirector({directorIdList: value});
-            },
-            updateLeadActorValue(value) {
-                this.updateLeadActor({leadActorIdList: value});
-            },
-            updateScenaristValue(value) {
-                this.updateScenarist({scenaristIdList: value});
             },
             uploadImageHandler() {
                 if (!this.readonly) {
@@ -767,34 +717,17 @@
                         });
                     });
             },
-            handleSizeChange(pageSize) {
-                let {id} = this.$route.params;
-                this.setVideoPagination({pageSize});
-                this.getProgrammeVideoListById(id);
-            },
-            handleCurrentChange(pageNum) {
-                let {id} = this.$route.params;
-                this.setVideoPagination({pageNum});
-                this.getProgrammeVideoListById(id);
-            },
-            categoryChangeHandler(ids) {
-                this.updateCategoryValue({ids});
-                this.updateCurrentProgramme({'typeList': []});
-            },
-            typeListChangeHandler(value) {
-                this.updateTypeList({type: value});
-            },
-            addTag() {
-                this.$prompt('请输入新关键字', '提示', {
+            addSelectItemHandler(key) {
+                this.$prompt(`请输入新${this.selectItemObj[key]}`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     inputPattern: /\S/,
-                    inputErrorMessage: '关键字不能为空'
+                    inputErrorMessage: `${this.selectItemObj[key]}不能为空`
                 }).then(({ value }) => {
-                    this.addProgrammeTag({value});
+                    this.addSelectItem({key, value});
                     this.$message({
                         type: 'success',
-                        message: `新关键字${value}添加成功`
+                        message: `新${this.selectItemObj[key]}${value}添加成功`
                     });
                 }).catch(() => {
                     this.$message({
@@ -841,104 +774,17 @@
 
                 next();
             },
-            addLicence() {
-                this.$prompt('请输入新牌照方', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    inputPattern: /\S/,
-                    inputErrorMessage: '牌照方不能为空'
-                }).then(({ value }) => {
-                    this.addProgrammeLicence({value});
-                    this.$message({
-                        type: 'success',
-                        message: `牌照方${value}添加成功`
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '取消输入'
-                    });
-                });
-            },
-            addCopyrightReserver() {
-                this.$prompt('请输入新版权方', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    inputPattern: /\S/,
-                    inputErrorMessage: '版权方不能为空'
-                }).then(({ value }) => {
-                    this.addProgrammeCopyrightReserver({value});
-                    this.$message({
-                        type: 'success',
-                        message: `版权方${value}添加成功`
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '取消输入'
-                    });
-                });
-            },
-            addAnnouncer() {
-                this.$prompt('请输入新发行方', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    inputPattern: /\S/,
-                    inputErrorMessage: '发行方不能为空'
-                }).then(({ value }) => {
-                    this.addProgrammeAnnouncer({value});
-                    this.$message({
-                        type: 'success',
-                        message: `发行方${value}添加成功`
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '取消输入'
-                    });
-                });
-            },
-            addPlatForm() {
-                this.$prompt('请输入新播放平台', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    inputPattern: /\S/,
-                    inputErrorMessage: '播放平台不能为空'
-                }).then(({ value }) => {
-                    this.addProgrammePlatForm({value});
-                    this.$message({
-                        type: 'success',
-                        message: `播放平台${value}添加成功`
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '取消输入'
-                    });
-                });
-            },
-            addContest() {
-                this.$prompt('请输入新赛事', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    inputPattern: /\S/,
-                    inputErrorMessage: '赛事不能为空'
-                }).then(({ value }) => {
-                    this.addProgrammeContest({value});
-                    this.$message({
-                        type: 'success',
-                        message: `赛事${value}添加成功`
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '取消输入'
-                    });
-                });
-            },
             appendImagePrefix(uri) {
                 let baseUri = window.localStorage.getItem('imageBaseUri');
                 return baseUri + uri;
+            },
+            updatePersonHandler(idList, key) {
+                this.updatePerson({key, idList});
+            },
+            handlePaginationChange(value, key) {
+                let {id} = this.$route.params;
+                this.updateVideoPagination({key, value});
+                this.getProgrammeVideoListById(id);
             }
         }
     };

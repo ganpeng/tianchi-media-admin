@@ -10,7 +10,7 @@
         <div class="block type-tree">
             <el-col :span="8">
                 <el-tree
-                    :data="categroyList"
+                    :data="global.categoryList"
                     node-key="id"
                     :props="defaultProps"
                     default-expand-all
@@ -41,7 +41,7 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
     },
     computed: {
         ...mapGetters({
-            categroyList: 'programme/categroyList'
+            global: 'programme/global'
         })
     },
     methods: {

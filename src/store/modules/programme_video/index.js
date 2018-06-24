@@ -176,7 +176,6 @@ const actions = {
     updateProgrammeVideo({commit, state}) {
         let {currentProgrammeVideo} = state;
         //  临时代码, 后续删除
-        currentProgrammeVideo.playUrl = 'http://vjs.zencdn.net/v/oceans.mp4';
         return service.updateProgrammeVideoInfo({id: currentProgrammeVideo.id, video: currentProgrammeVideo})
             .then((res) => {
                 if (res && res.code === 0) {

@@ -13,24 +13,21 @@
         },
         created() {
             let {id} = this.$route.params;
-            this.resetCurrentProgramme();
             this.getProgrammeAndGetProgrammeCategory(id)
                 .then((res) => {
                     this.getProgrammeVideoListById(id);
                     if (res[0] && res[0].code === 0) {
-                        this.getVideoFeatureList({id: id, pageSize: res[0].data.featureVideoCount});
+                        this.getFeatureVideoList({id: id, pageSize: res[0].data.featureVideoCount});
                     }
                 });
         },
         methods: {
-            ...mapMutations({
-                resetCurrentProgramme: 'programme/resetCurrentProgramme'
-            }),
+            ...mapMutations({}),
             ...mapActions({
                 getProgramme: 'programme/getProgramme',
                 getProgrammeVideoListById: 'programme/getProgrammeVideoListById',
                 getProgrammeAndGetProgrammeCategory: 'programme/getProgrammeAndGetProgrammeCategory',
-                getVideoFeatureList: 'programmeVideo/getVideoFeatureList'
+                getFeatureVideoList: 'programme/getFeatureVideoList'
             })
         }
     };

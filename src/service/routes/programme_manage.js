@@ -77,7 +77,7 @@ export const getProgrammeContestList = () => {
 };
 
 export const getProgrammeCopyrightList = () => {
-    return service.get('/v1/content/programme/copyright/list');
+    return service.get('/v1/content/programme/copyright_reserved/list');
 };
 
 export const getProgrammeLicenceList = () => {
