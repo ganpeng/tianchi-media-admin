@@ -464,12 +464,13 @@
             this.getProgrammeTagList();
             this.getProgrammeAnnouncerList();
             this.getProgrammeContestList();
-            this.getProgrammeCopyrightList();
+            // this.getProgrammeCopyrightList();
             this.getProgrammeLicenceList();
             this.getProgrammePlatformList();
         },
         data() {
             return {
+                isLoading: false,
                 selectedCountries: [],
                 countries: [],
                 isLeadActorLoading: false,
@@ -481,7 +482,7 @@
                 createPersonDialogVisible: false,
                 areaOptions: this.$util.countryList(),
                 gradeOptions: role.GRADE,
-                subjectOptionsspecOptions: role.SPEC,
+                specOptions: role.SPEC,
                 subjectOptions: role.SUBJECT,
                 size: dimension.PROGRAMME_DIMENSION,
                 previewImage: {
@@ -573,26 +574,32 @@
                 this.$refs.createProgramForm.validate(value => {
                     if (value) {
                         this.checkImage(() => {
-                            this.createProgramme()
-                                .then((res) => {
-                                    if (res && res.code === 0) {
-                                        let id = res.data.id;
-                                        this.createMultProgrammeVideo({id})
-                                            .then((...resList) => {
-                                                this.deleteTempList({list: resList});
-                                                this.getProgrammeVideoListById(id);
-                                                this.$message({
-                                                    type: 'success',
-                                                    message: '保存成功'
+                            if (!this.isLoading) {
+                                this.isLoading = true;
+                                this.createProgramme()
+                                    .then((res) => {
+                                        if (res && res.code === 0) {
+                                            let id = res.data.id;
+                                            this.createMultProgrammeVideo(id)
+                                                .then((...resList) => {
+                                                    this.deleteTempList({list: resList});
+                                                    this.getProgrammeVideoListById(id);
+                                                    this.$message({
+                                                        type: 'success',
+                                                        message: '保存成功'
+                                                    });
+                                                    this.goBack();
                                                 });
+                                        } else {
+                                            this.$message({
+                                                type: 'error',
+                                                message: '节目保存失败'
                                             });
-                                    } else {
-                                        this.$message({
-                                            type: 'error',
-                                            message: '节目保存失败'
-                                        });
-                                    }
-                                });
+                                        }
+                                    }).finally(() => {
+                                        this.isLoading = false;
+                                    });
+                            }
                         });
                     } else {
                         return false;
@@ -604,25 +611,31 @@
                 this.$refs.createProgramForm.validate(value => {
                     if (value) {
                         this.checkImage(() => {
-                            this.updateProgrammeById(id)
-                                .then((res) => {
-                                    if (res && res.code === 0) {
-                                        this.createMultProgrammeVideo({id})
-                                            .then((...resList) => {
-                                                this.deleteTempList({list: resList});
-                                                this.getProgrammeVideoListById(id);
-                                                this.$message({
-                                                    type: 'success',
-                                                    message: '保存成功'
+                            if (!this.isLoading) {
+                                this.isLoading = true;
+                                this.updateProgrammeById(id)
+                                    .then((res) => {
+                                        if (res && res.code === 0) {
+                                            this.createMultProgrammeVideo(id)
+                                                .then((...resList) => {
+                                                    this.deleteTempList({list: resList});
+                                                    this.getProgrammeVideoListById(id);
+                                                    this.$message({
+                                                        type: 'success',
+                                                        message: '保存成功'
+                                                    });
+                                                    this.goBack();
                                                 });
+                                        } else {
+                                            this.$message({
+                                                type: 'error',
+                                                message: '节目保存失败'
                                             });
-                                    } else {
-                                        this.$message({
-                                            type: 'error',
-                                            message: '节目保存失败'
-                                        });
-                                    }
-                                });
+                                        }
+                                    }).finally(() => {
+                                        this.isLoading = false;
+                                    });
+                            }
                         });
                     } else {
                         return false;

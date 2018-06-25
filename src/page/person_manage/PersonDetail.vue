@@ -76,7 +76,8 @@
         methods: {
             ...mapMutations({
                 setAvatarImage: 'person/setAvatarImage',
-                resetPerson: 'person/resetPerson'
+                resetPerson: 'person/resetPerson',
+                setBackgroundImage: 'person/setBackgroundImage'
             }),
             ...mapActions({
                 createPerson: 'person/createPerson',
@@ -141,6 +142,7 @@
                 }
                 // 设置默认图
                 this.setAvatarImage();
+                this.setBackgroundImage();
 
                 if (_.isEmpty(this.person.avatarImage)) {
                     this.$message.error('请选择人物默认的封面图');

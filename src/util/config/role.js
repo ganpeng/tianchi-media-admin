@@ -1,5 +1,6 @@
 // 人物的角色
 export const MAIN_ROLE_OPTIONS = [
+    //  演员、导演、制片人、编剧, 歌手
     {
         value: 'DIRECTOR',
         label: '导演'
@@ -8,14 +9,14 @@ export const MAIN_ROLE_OPTIONS = [
         value: 'VICE_DIRECTOR',
         label: '副导演'
     },
-    // {
-    //     value: 'SCENARIST',
-    //     label: '编剧'
-    // },
-    // {
-    //     value: 'SINGER',
-    //     label: '歌手'
-    // },
+    {
+        value: 'SCENARIST',
+        label: '编剧'
+    },
+    {
+        value: 'SINGER',
+        label: '歌手'
+    },
     {
         value: 'CHIEF_ACTOR',
         label: '主演'
@@ -23,6 +24,10 @@ export const MAIN_ROLE_OPTIONS = [
     {
         value: 'ACTOR',
         label: '演员'
+    },
+    {
+        value: 'PRODUCER',
+        label: '制片人'
     }
 ];
 

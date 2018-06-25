@@ -111,7 +111,8 @@
                 <el-table-column prop="name" align="center" min-width="100px" label="节目名称"></el-table-column>
                 <el-table-column prop="description" align="center" width="300px" label="节目简介"></el-table-column>
                 <el-table-column prop="featureVideoCount" min-width="100px" align="center" label="正片数量"></el-table-column>
-                <el-table-column prop="" align="center" min-width="120px" label="相关视频数量"></el-table-column>
+                <el-table-column prop="extraVideoCount" align="center" min-width="120px" label="相关视频数量">
+                </el-table-column>
                 <el-table-column prop="releaseAt" align="center" width="100px" label="上映时间">
                     <template slot-scope="scope">
                         {{ scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
@@ -132,7 +133,7 @@
                         {{typeList(scope.row.id)}}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" min-width="100px" label="主演">
+                <el-table-column align="center" min-width="100px" label="演员">
                     <template slot-scope="scope">
                         {{getChiefActor(scope.row.id)}}
                     </template>
@@ -140,6 +141,11 @@
                 <el-table-column align="center" min-width="100px" label="导演">
                     <template slot-scope="scope">
                         {{getDirector(scope.row.id)}}
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" min-width="100px" label="编剧">
+                    <template slot-scope="scope">
+                        {{getScenarist(scope.row.id)}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
@@ -217,7 +223,8 @@ export default {
             typeList: 'programme/typeList',
             categoryListString: 'programme/categoryListString',
             getDirector: 'programme/getDirector',
-            getChiefActor: 'programme/getChiefActor'
+            getChiefActor: 'programme/getChiefActor',
+            getScenarist: 'programme/getScenarist'
         })
     },
     methods: {

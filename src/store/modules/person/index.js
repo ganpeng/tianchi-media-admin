@@ -114,6 +114,11 @@ const mutations = {
         state.currentPerson.avatarImage = state.currentPerson.posterImageList.find((img) => {
             return parseInt(img.width) === 200 && parseInt(img.height) === 200;
         });
+    },
+    setBackgroundImage(state) {
+        state.currentPerson.backgroundImage = state.currentPerson.posterImageList.find((img) => {
+            return parseInt(img.width) === 1920 && parseInt(img.height) === 1080;
+        });
     }
 };
 

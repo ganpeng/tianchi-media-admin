@@ -6,7 +6,39 @@ import wsCache from '@/util/webStorage';
 
 import {checkImageExist} from '@/util/formValidate';
 
-const programmePostFields = ['contest', 'platformList', 'totalSets', 'specList', 'innerName', 'licence', 'grade', 'subject', 'announcer', 'copyrightStartedAt', 'coverImage', 'copyrightEndedAt', 'copyrightReserved', 'name', 'playCountBasic', 'desc', 'score', 'price', 'quality', 'produceAreaList', 'categoryList', 'announcer', 'featureVideoCount', 'description', 'releaseAt', 'posterImageList', 'figureList', 'tagList', 'typeList', 'releaseStatus'];
+const programmePostFields = [
+    'contest',
+    'horizontalCoverImage',
+    'platformList',
+    'totalSets',
+    'specList',
+    'innerName',
+    'licence',
+    'grade',
+    'subject',
+    'announcer',
+    'copyrightStartedAt',
+    'coverImage',
+    'copyrightEndedAt',
+    'copyrightReserved',
+    'name',
+    // 'playCountBasic',
+    'desc',
+    'score',
+    // 'price',
+    // 'quality',
+    'produceAreaList',
+    'categoryList',
+    'announcer',
+    // 'featureVideoCount',
+    'description',
+    'releaseAt',
+    'posterImageList',
+    'figureList',
+    'tagList',
+    'typeList'
+    // 'releaseStatus'
+];
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
@@ -49,6 +81,8 @@ const defaultProgramme = {
     releaseStatus: null,
     // 节目默认图片
     coverImage: {},
+    //  默认的横版海报图
+    horizontalCoverImage: {},
     // 节目类别
     categoryList: [],
     // 年级
@@ -274,23 +308,35 @@ const getters = {
     },
     // 新方法结束
     isTvPlay(state) {
-        let index = state.programme.categoryList.findIndex((item) => item.name === '电视剧');
+        let category = state.global.categoryList.find((item) => item.name === '电视剧');
+        let id = category ? category.id : '';
+        let index = state.programme.categoryList.findIndex((item) => item === id);
         return index >= 0;
     },
     isShow(state) {
-        let index = state.programme.categoryList.findIndex((item) => (item.name === '卫视综艺' || item.name === '网络综艺'));
+        let category1 = state.global.categoryList.find((item) => item.name === '卫视综艺');
+        let category2 = state.global.categoryList.find((item) => item.name === '网络综艺');
+        let id1 = category1 ? category1.id : '';
+        let id2 = category2 ? category2.id : '';
+        let index = state.programme.categoryList.findIndex((item) => (item === id1 || item === id2));
         return index >= 0;
     },
     isMovie(state) {
-        let index = state.programme.categoryList.findIndex((item) => item.name === '电影');
+        let category = state.global.categoryList.find((item) => item.name === '电影');
+        let id = category ? category.id : '';
+        let index = state.programme.categoryList.findIndex((item) => item === id);
         return index >= 0;
     },
     isEducation(state) {
-        let index = state.programme.categoryList.findIndex((item) => item.name === '教育');
+        let category = state.global.categoryList.find((item) => item.name === '教育');
+        let id = category ? category.id : '';
+        let index = state.programme.categoryList.findIndex((item) => item === id);
         return index >= 0;
     },
     isSports(state) {
-        let index = state.programme.categoryList.findIndex((item) => item.name === '体育');
+        let category = state.global.categoryList.find((item) => item.name === '体育');
+        let id = category ? category.id : '';
+        let index = state.programme.categoryList.findIndex((item) => item === id);
         return index >= 0;
     },
     categoryListString(state) {
@@ -316,6 +362,13 @@ const getters = {
             let programme = getProgrammeById(id);
             let chiefActor = programme.figureListMap['CHIEF_ACTOR'] ? programme.figureListMap['CHIEF_ACTOR'] : [];
             return chiefActor.map((item) => item.name).join(', ');
+        };
+    },
+    getScenarist(state) {
+        return (id) => {
+            let programme = getProgrammeById(id);
+            let scenarist = programme.figureListMap['SCENARIST'] ? programme.figureListMap['SCENARIST'] : [];
+            return scenarist.map((item) => item.name).join(', ');
         };
     }
 };
@@ -467,15 +520,8 @@ const mutations = {
             }
         });
     },
-    deleteTempList(state, payload) {
-        let indexList = payload.list.filter((item, index) => {
-            if (item.code !== 0) {
-                return index;
-            }
-        });
-        state.video.tempList = state.video.tempList.filter((item, index) => {
-            return parseInt(indexList.indexOf(index)) === -1;
-        });
+    deleteTempList(state) {
+        state.video.tempList = [];
     },
     resetVideo(state) {
     },
@@ -484,7 +530,11 @@ const mutations = {
         let coverImage = state.programme.posterImageList.find((img) => {
             return parseInt(img.width) === 240 && parseInt(img.height) === 350;
         });
+        let horizontalCoverImage = state.programme.posterImageList.find((img) => {
+            return parseInt(img.width) === 807 && parseInt(img.height) === 455;
+        });
         state.programme.coverImage = coverImage;
+        state.programme.horizontalCoverImage = horizontalCoverImage;
     },
     // 新加代码结束
     addPosterImage(state, payload) {
@@ -574,6 +624,7 @@ function formatProgramme(programme, state) {
             return type;
         }),
         // 人物
+        licence: programme.licence === '' ? null : programme.licence,
         figureList: [].concat(programme.leadActor.map((item) => {
             let obj = {};
             obj.role = 'DIRECTOR';
