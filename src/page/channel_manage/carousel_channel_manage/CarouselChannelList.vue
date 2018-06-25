@@ -46,7 +46,7 @@
                     width="60px"
                     label="序号">
                     <template slot-scope="scope">
-                        <label>{{scope.row.$index + 1}}</label>
+                        <label>{{scope.$index + 1}}</label>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -93,7 +93,7 @@
 
 <script>
     export default {
-        name: 'SlideChannelList',
+        name: 'CarouselChannelList',
         data() {
             return {
                 listQueryParams: {
@@ -118,7 +118,13 @@
                     label: '禁播'
                 }],
                 totalAmount: 0,
-                channelList: []
+                channelList: [{
+                    id: '001',
+                    name: '甄嬛传',
+                    code: '001',
+                    status: '正常',
+                    categoryList: ['电视剧', '电影']
+                }]
             };
         },
         mounted() {
@@ -142,14 +148,14 @@
             // 查看详情
             checkChannelDetail(item) {
                 this.$router.push({
-                    name: 'SlideChannelDetail',
+                    name: 'CarouselChannelDetail',
                     params: {id: item.id}
                 });
             },
             // 编辑信息
             editChannelInfo(item) {
                 this.$router.push({
-                    name: 'EditSlideChannel',
+                    name: 'EditCarouselChannel',
                     params: {id: item.id}
                 });
             }

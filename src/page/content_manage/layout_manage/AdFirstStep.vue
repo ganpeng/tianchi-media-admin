@@ -43,7 +43,7 @@
                     <img :src="scope.row.resource" v-if="scope.row.type !== 'mp4'">
                     <template v-else>
                         <video src="~assets/swf/test.mp4">您的浏览器不支持 video 标签</video>
-                        <i class="el-icon-caret-right play" @click="preview"></i>
+                        <i class="el-icon-caret-right play"></i>
                     </template>
                 </template>
             </el-table-column>
@@ -94,26 +94,15 @@
                 </el-tag>
             </li>
         </ul>
-        <!--视频预览-->
-        <preview-video
-            :previewVideo="previewVideo"
-        ></preview-video>
     </div>
 </template>
 
 <script>
-    import PreviewVideo from 'sysComponents/custom_components/global/PreviewVideo';
 
     export default {
         name: 'AdFirstStep',
-        components: {PreviewVideo},
         data() {
             return {
-                previewVideo: {
-                    display: false,
-                    resource: '',
-                    title: '视频预览'
-                },
                 searchContent: '',
                 currentPage: 1,
                 pageSize: 10,
@@ -232,7 +221,6 @@
             },
             // 视频预览
             preview() {
-                this.previewVideo.display = true;
             },
             // 添加素材
             appendAd() {

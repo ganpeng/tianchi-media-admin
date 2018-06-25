@@ -53,7 +53,9 @@ import DialogAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/Di
 import DetailPageAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/DetailPageAdvertGroupList';
 import VideoList from 'sysPage/video_manage/VideoList';
 import LiveChannelList from 'sysPage/channel_manage/LiveChannelList';
-import SlideChannelList from 'sysPage/channel_manage/slide_channel_manage/SlideChannelList';
+import CarouselChannelList from 'sysPage/channel_manage/carousel_channel_manage/CarouselChannelList';
+import CarouselChannelDetail from 'sysPage/channel_manage/carousel_channel_manage/CarouselChannelDetail';
+import EditCarouselChannel from 'sysPage/channel_manage/carousel_channel_manage/EditCarouselChannel';
 import ChannelCategory from 'sysPage/channel_manage/ChannelCategory';
 
 Vue.use(Router);
@@ -364,9 +366,21 @@ let router = new Router({
                 },
                 // 轮播频道列表
                 {
-                    path: '/channel-manage/slide/list',
-                    name: 'SlideChannelList',
-                    component: SlideChannelList
+                    path: '/channel-manage/carousel/list',
+                    name: 'CarouselChannelList',
+                    component: CarouselChannelList
+                },
+                // 轮播频道详情
+                {
+                    path: '/channel-manage/carousel/detail/:id',
+                    name: 'CarouselChannelDetail',
+                    component: CarouselChannelDetail
+                },
+                // 编辑轮播频道
+                {
+                    path: '/channel-manage/carousel/edit/:id',
+                    name: 'EditCarouselChannel',
+                    component: EditCarouselChannel
                 },
                 //  频道类别管理
                 {

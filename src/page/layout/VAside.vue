@@ -49,7 +49,7 @@
                             </el-submenu>
                             <el-submenu index="1-5-2">
                                 <template slot="title">轮播频道管理</template>
-                                <el-menu-item index="/channel-manage/slide/list">轮播频道列表</el-menu-item>
+                                <el-menu-item index="/channel-manage/carousel/list">轮播频道列表</el-menu-item>
                             </el-submenu>
                             <el-menu-item index="/channel-manage/category">频道类别管理</el-menu-item>
                         </el-submenu>
