@@ -108,3 +108,16 @@ export const deleteProgrammeVideo = ({id}) => {
 export const deleteProgramme = ({id}) => {
     return service.patch(`/v1/content/programme/${id}/visible`);
 };
+
+/**
+ * 获取字典数据
+ */
+export const getDict = (categoryList) => {
+    const params = {
+        categoryList
+    };
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+    return service.get(`/v1/content/programme-dict/list?${paramsStr}`);
+};

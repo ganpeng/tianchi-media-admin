@@ -77,7 +77,7 @@
                                         v-for="(item, index) in areaOptions"
                                         :key="index"
                                         :label="item.name"
-                                        :value="item.name">
+                                        :value="item.code">
                                     </el-option>
                                 </el-select>
                             </el-form-item>
@@ -213,10 +213,10 @@
                                     @input="inputHandler($event, 'licence')"
                                 >
                                     <el-option
-                                        v-for="item in global.licenceList"
-                                        :key="item"
-                                        :label="item"
-                                        :value="item">
+                                        v-for="(item, index) in global.licenceList"
+                                        :key="index"
+                                        :label="item.value"
+                                        :value="item.value">
                                     </el-option>
                                 </el-select>
                                 <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('licenceList')">新增牌照方</el-button>
@@ -230,10 +230,10 @@
                                     @input="inputHandler($event, 'copyrightReserved')"
                                 >
                                     <el-option
-                                        v-for="item in global.copyrightReserverList"
-                                        :key="item"
-                                        :label="item"
-                                        :value="item">
+                                        v-for="(item, index) in global.copyrightReserverList"
+                                        :key="index"
+                                        :label="item.value"
+                                        :value="item.value">
                                     </el-option>
                                 </el-select>
                                 <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('copyrightReserverList')">新增版权方</el-button>
@@ -247,10 +247,10 @@
                                     @input="inputHandler($event, 'announcer')"
                                 >
                                     <el-option
-                                        v-for="item in global.announcerList"
-                                        :key="item"
-                                        :label="item"
-                                        :value="item">
+                                        v-for="(item, index) in global.announcerList"
+                                        :key="index"
+                                        :label="item.value"
+                                        :value="item.value">
                                     </el-option>
                                 </el-select>
                                 <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('announcerList')">新增发行方</el-button>
@@ -317,10 +317,10 @@
                                     @input="inputHandler($event, 'contest')"
                                 >
                                     <el-option
-                                        v-for="item in global.contestList"
-                                        :key="item"
-                                        :label="item"
-                                        :value="item">
+                                        v-for="(item, index) in global.contestList"
+                                        :key="index"
+                                        :label="item.value"
+                                        :value="item.value">
                                     </el-option>
                                 </el-select>
                                 <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('contestList')">新增赛事</el-button>
@@ -335,10 +335,10 @@
                                     @input="inputHandler($event, 'platformList')"
                                 >
                                     <el-option
-                                        v-for="item in global.platformList"
-                                        :key="item"
-                                        :label="item"
-                                        :value="item">
+                                        v-for="(item, index) in global.platformList"
+                                        :key="index"
+                                        :label="item.value"
+                                        :value="item.value">
                                     </el-option>
                                 </el-select>
                                 <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('platformList')">新增播放平台</el-button>
@@ -557,6 +557,7 @@
                 // 新加
                 updateProgrammeById: 'programme/updateProgrammeById',
                 createMultProgrammeVideo: 'programme/createMultProgrammeVideo',
+                getDict: 'programme/getDict',
                 // 新加结束
                 createProgramme: 'programme/createProgramme',
                 getPersonList: 'person/getPersonList',
@@ -680,6 +681,7 @@
                 this.updateProgramme({key, value});
                 if (key === 'categoryList') {
                     this.updateProgramme({key: 'typeList', value: []});
+                    this.getDict(value);
                 }
             },
             findDirector(name) {

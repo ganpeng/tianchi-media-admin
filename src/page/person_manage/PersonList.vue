@@ -29,10 +29,10 @@
                     placeholder="请选择地区"
                     @input="inputHandler($event, 'area')">
                     <el-option
-                        v-for="item in areaOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        v-for="(item, index) in areaOptions"
+                        :key="index"
+                        :label="item.name"
+                        :value="item.code">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -51,7 +51,11 @@
             </el-table-column>
             <el-table-column prop="name" align="center" width="200px" label="名字"></el-table-column>
             <el-table-column prop="description" align="center" width="300px" label="人物简介"></el-table-column>
-            <el-table-column prop="area" width="120px" align="center" label="地区"></el-table-column>
+            <el-table-column prop="area" width="120px" align="center" label="地区">
+                <template slot-scope="scope">
+                    {{areaLabel(scope.row.area)}}
+                </template>
+            </el-table-column>
             <el-table-column prop="birthday" width="120px" align="center" label="出生日期">
                 <template slot-scope="scope">
                     {{scope.row.birthday | formatDate('yyyy-MM-DD')}}
@@ -90,6 +94,7 @@
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
+    import store from 'store';
     import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
     export default {
         name: 'PersonList',
@@ -98,6 +103,7 @@
         },
         data() {
             return {
+                areaOptions: store.get('areaList'),
                 previewImage: {
                     title: '',
                     display: false,
@@ -126,6 +132,10 @@
             ...mapActions({
                 getPersonList: 'person/getPersonList'
             }),
+            areaLabel(code) {
+                let area = this.areaOptions.find((area) => area.code === code);
+                return area ? area.name : '';
+            },
             // 跳转到详情页面
             displayPerson(userId) {
                 this.$router.push({ name: 'DisplayPerson', params: { id: userId } });

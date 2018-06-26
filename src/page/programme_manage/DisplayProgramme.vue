@@ -15,6 +15,8 @@
             let {id} = this.$route.params;
             this.getProgrammeAndGetProgrammeCategory(id)
                 .then((res) => {
+                    let categoryList = res[0].data ? res[0].data.categoryList.map((item) => item.id) : [];
+                    this.getDict(categoryList);
                     this.getProgrammeVideoListById(id);
                     if (res[0] && res[0].code === 0) {
                         this.getFeatureVideoList({id: id, pageSize: res[0].data.featureVideoCount});
@@ -27,7 +29,8 @@
                 getProgramme: 'programme/getProgramme',
                 getProgrammeVideoListById: 'programme/getProgrammeVideoListById',
                 getProgrammeAndGetProgrammeCategory: 'programme/getProgrammeAndGetProgrammeCategory',
-                getFeatureVideoList: 'programme/getFeatureVideoList'
+                getFeatureVideoList: 'programme/getFeatureVideoList',
+                getDict: 'programme/getDict'
             })
         }
     };

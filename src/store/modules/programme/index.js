@@ -424,7 +424,7 @@ const mutations = {
     // 选择列表项的添加
     addSelectItem(state, payload) {
         let {key, value} = payload;
-        state.global[key].unshift(value);
+        state.global[key].unshift({value});
     },
     updatePersonResult(state, payload) {
         let {key, value} = payload;
@@ -940,6 +940,36 @@ const actions = {
             let res = await service.deleteProgrammeVideo({id});
             if (res && res.code === 0) {
                 commit('updateVideoVisible', {id});
+            }
+        } catch (err) {
+        }
+    },
+    //  字典
+    async getDict({commit, state}, categoryList) {
+        try {
+            let res = await service.getDict(categoryList);
+            if (res && res.code === 0) {
+                let licenceList = _.uniqBy(res.data.reduce((res, item) => {
+                    return item.name === 'LICENCE' ? res.concat(item.optionList) : res;
+                 }, []), 'value');
+                let announcerList = _.uniqBy(res.data.reduce((res, item) => {
+                    return item.name === 'ANNOUNCER' ? res.concat(item.optionList) : res;
+                 }, []), 'value');
+                let copyrightReserverList = _.uniqBy(res.data.reduce((res, item) => {
+                    return item.name === 'COPYRIGHT_RESERVED' ? res.concat(item.optionList) : res;
+                 }, []), 'value');
+                let contestList = _.uniqBy(res.data.reduce((res, item) => {
+                    return item.name === 'CONTEST' ? res.concat(item.optionList) : res;
+                 }, []), 'value');
+                let platformList = _.uniqBy(res.data.reduce((res, item) => {
+                    return item.name === 'PLATFORM' ? res.concat(item.optionList) : res;
+                 }, []), 'value');
+
+                 commit('updateGlobal', {key: 'licenceList', value: licenceList});
+                 commit('updateGlobal', {key: 'announcerList', value: announcerList});
+                 commit('updateGlobal', {key: 'copyrightReserverList', value: copyrightReserverList});
+                 commit('updateGlobal', {key: 'contestList', value: contestList});
+                 commit('updateGlobal', {key: 'platformList', value: platformList});
             }
         } catch (err) {
         }

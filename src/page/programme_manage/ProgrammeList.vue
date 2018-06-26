@@ -50,10 +50,10 @@
                         placeholder="请选择制片地区"
                     >
                         <el-option
-                            v-for="item in areaOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            v-for="(item, index) in areaOptions"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.code">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -120,7 +120,8 @@
                 </el-table-column>
                 <el-table-column prop="produceAreaList" min-width="150px" align="center" label="地区">
                     <template slot-scope="scope">
-                        {{scope.row.produceAreaList ? scope.row.produceAreaList.join(', ') : ''}}
+                        {{areaLabel(scope.row.produceAreaList)}}
+                        <!-- {{scope.row.produceAreaList ? scope.row.produceAreaList.join(', ') : ''}} -->
                     </template>
                 </el-table-column>
                 <el-table-column align="center" width="100px" label="分类">
@@ -180,6 +181,7 @@
 </template>
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
+import store from 'store';
 import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
 export default {
     name: 'ProgrammeList',
@@ -188,6 +190,7 @@ export default {
     },
     data() {
         return {
+            areaOptions: store.get('areaList'),
             visibleOptions: [
                 {
                     value: true,
@@ -240,6 +243,12 @@ export default {
         }),
         clearSearchFields() {
             this.resetProgrammeSearchFields();
+        },
+        areaLabel(areaList) {
+            return areaList.reduce((res, curr) => {
+                let area = this.areaOptions.find((item) => item.code === curr);
+                return area ? `${res}, ${area.name}` : res;
+            }, '').replace(/^,/, '');
         },
         editProgramme(id) {
             this.$router.push({ name: 'EditProgramme', params: { id } });
