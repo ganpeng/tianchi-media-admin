@@ -79,6 +79,16 @@ export const PROGRAMME_DIMENSION = [
 ];
 
 /**
+ * The background image of subject
+ */
+export const SUBJECT_BACKGROUND_IMAGE_DIMENSION = [
+    {
+        value: '1920*1080',
+        label: '专题背景图片：1920*1080'
+    }
+];
+
+/**
  * layout image dimension
  */
 export const LAYOUT_IMAGE_DIMENSION = {
@@ -169,6 +179,7 @@ export const VIDEO_COVER_DIMENSION = [
 export default {
     ADVERT_DIMENSION,
     PROGRAMME_DIMENSION,
+    SUBJECT_BACKGROUND_IMAGE_DIMENSION,
     LAYOUT_IMAGE_DIMENSION,
     CATALOGUE_DIMENSION,
     OPERATE_CORNER_MARK_DIMENSION,

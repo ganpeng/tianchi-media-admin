@@ -131,6 +131,12 @@
                         {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
                     </template>
                 </el-table-column>
+                <el-table-column
+                    label="状态">
+                    <template slot-scope="scope">
+                        {{scope.row.visible ? '已上架' : '已下架'}}
+                    </template>
+                </el-table-column>
                 <el-table-column align="center"
                                  label="操作"
                                  class="operate">
@@ -219,6 +225,27 @@
                 this.$router.push({
                     name: item.category === 'FIGURE' ? 'PersonSubjectDetail' : 'ProgrammeSubjectDetail',
                     params: {id: item.id}
+                });
+            },
+            // 设置专题的上下架
+            setSubjectVisible(row) {
+                this.$confirm('此操作将' + (row.visible ? '下架该专题' : '上架该专题') + ', 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }
+                ).then(() => {
+                    this.$service.setSubjectVisible(row.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message(row.visible ? '下架成功' : '上架成功');
+                            row.visible = !row.visible;
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消' + (row.visible ? '下架该专题' : '上架该专题')
+                    });
                 });
             },
             // 编辑专题基本信息

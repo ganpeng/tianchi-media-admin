@@ -24,7 +24,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="code"
+                    prop="id"
                     label="编号">
                 </el-table-column>
                 <el-table-column
@@ -36,9 +36,9 @@
                     <template slot-scope="scope">
                         <img v-if="scope.row.avatarImage"
                              :src="scope.row.avatarImage ? scope.row.avatarImage.uri : '' | imageUrl"
-                             @click="displayImage(scope.row)"
+                             @click="displayImage(scope.row.avatarImage)"
                              :alt="scope.row.avatarImage ? scope.row.avatarImage.name : ''">
-                        <label>------</label>
+                        <label v-else>------</label>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -50,7 +50,8 @@
         <div class="operate-list">
             <el-button type="primary" @click="editBasicInfo">编辑基本信息</el-button>
             <el-button type="primary" @click="editSubjectPersons">编辑人物</el-button>
-            <el-button type="danger" @click="removeSubject">删 除</el-button>
+            <el-button type="danger" @click="setSubjectVisible">{{subjectInfo.visible ? '下架' : '上架'}}</el-button>
+            <el-button type="danger" @click="removeSubject" v-if="!subjectInfo.visible">删 除</el-button>
         </div>
         <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
     </div>
@@ -92,6 +93,27 @@
                 this.previewImage.title = image.name;
                 this.previewImage.display = true;
                 this.previewImage.uri = image.uri;
+            },
+            // 设置专题的上下架
+            setSubjectVisible() {
+                this.$confirm('此操作将' + (this.subjectInfo.visible ? '下架该专题' : '上架该专题') + ', 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }
+                ).then(() => {
+                    this.$service.setSubjectVisible(this.subjectInfo.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message(this.subjectInfo.visible ? '下架成功' : '上架成功');
+                            this.subjectInfo.visible = !this.subjectInfo.visible;
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消' + (this.subjectInfo.visible ? '下架该专题' : '上架该专题')
+                    });
+                });
             },
             // 删除当前专题，并跳转专题列表页面
             removeSubject() {

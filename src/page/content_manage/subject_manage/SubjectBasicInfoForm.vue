@@ -43,26 +43,45 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="上传专题封面：">
-                <ul class="cover-list">
-                    <li v-for="(item,index) in subjectInfo.posterImageList" :key="index">
-                        <div :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
-                             class="image-box"
-                             @click="displayImage(index)">
-                        </div>
-                        <div class="info">
-                            <div class="name">{{item.name}}</div>
-                            <div>
-                                <label>{{item.width}}*{{item.height}}</label>
-                                <label @click="removePosterImage(index)" class="remove">删除</label>
+            <!--只有节目专题有封面图片-->
+            <template v-if="status === '0' || status === '2'">
+                <el-form-item label="上传专题封面：" class="cover-image-block">
+                    <el-button type="primary" @click="popUploadImage('COVERIMAGE')">上传封面<i
+                        class="el-icon-upload el-icon--right"></i></el-button>
+                    <ul class="cover-list">
+                        <li v-for="(item,index) in subjectInfo.posterImageList" :key="index">
+                            <div :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
+                                 class="image-box"
+                                 @click="displayImage(index)">
                             </div>
+                            <div class="info">
+                                <div class="name">{{item.name}}</div>
+                                <div>
+                                    <label>{{item.width}}*{{item.height}}</label>
+                                    <label @click="removePosterImage(index)" class="remove">删除</label>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </el-form-item>
+                <!--只有节目专题有背景图片-->
+                <el-form-item label="上传专题背景图片：">
+                    <el-button type="primary" @click="popUploadImage('BACKGROUNDIMAGE')">上传背景
+                        <i class="el-icon-upload el-icon--right"></i>
+                    </el-button>
+                    <div v-if="subjectInfo.backgroundImage && subjectInfo.backgroundImage.uri"
+                         :style="{ 'background-image': 'url(' + appendImagePrefix(subjectInfo.backgroundImage.uri) + ')'}"
+                         class="background-image">
+                    </div>
+                    <div class="info background" v-if="subjectInfo.backgroundImage && subjectInfo.backgroundImage.name">
+                        <div class="name">{{subjectInfo.backgroundImage.name}}</div>
+                        <div>
+                            <label>{{subjectInfo.backgroundImage.width}}*{{subjectInfo.backgroundImage.height}}</label>
+                            <label @click="removeBackgroundImage" class="remove">删除</label>
                         </div>
-                    </li>
-                    <li @click="imageUploadDialogVisible = true">
-                        <i class="el-icon-plus"></i>
-                    </li>
-                </ul>
-            </el-form-item>
+                    </div>
+                </el-form-item>
+            </template>
             <el-form-item class="tips">
                 <label class="tips">带 <i>*</i> 号的为必填项</label>
             </el-form-item>
@@ -78,7 +97,7 @@
         </preview-multiple-images>
         <upload-image
             :size='size'
-            title="上传专题封面图片"
+            :title='uploadImageTitle'
             :successHandler="addPosterImage"
             :imageUploadDialogVisible="imageUploadDialogVisible"
             v-on:changeImageDialogStatus="closeImageDialog($event)">
@@ -102,7 +121,10 @@
 <script>
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
-    import {PROGRAMME_DIMENSION as subjectDimension} from '@/util/config/dimension';
+    import {
+        PROGRAMME_DIMENSION as SUBJECT_DIMENSION,
+        SUBJECT_BACKGROUND_IMAGE_DIMENSION
+    } from '@/util/config/dimension';
 
     export default {
         name: 'CreateSubjectForm',
@@ -150,7 +172,7 @@
                 }
             };
             return {
-                size: subjectDimension,
+                uploadImageMode: 'COVERIMAGE',
                 programmeCategoryList: [],
                 programmeCategoryListOptions: [],
                 tagOptions: [],
@@ -193,6 +215,12 @@
                     default:
                         break;
                 }
+            },
+            size() {
+                return this.uploadImageMode === 'COVERIMAGE' ? SUBJECT_DIMENSION : SUBJECT_BACKGROUND_IMAGE_DIMENSION;
+            },
+            uploadImageTitle() {
+                return this.uploadImageMode === 'COVERIMAGE' ? '上传专题封面图片' : '上传专题背景图片';
             }
         },
         mounted() {
@@ -224,15 +252,27 @@
                 let baseUri = window.localStorage.getItem('imageBaseUri');
                 return baseUri + uri;
             },
-            // 添加封面图片
+            popUploadImage(mode) {
+                this.uploadImageMode = mode;
+                this.imageUploadDialogVisible = true;
+            },
+            // 添加图片
             addPosterImage(newPosterImage) {
-                for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
-                    if (newPosterImage.posterImage.id === this.subjectInfo.posterImageList[i].id) {
-                        this.$message('该图片已经添加到当前专题中');
-                        return;
+                // 添加封面图片
+                if (this.uploadImageMode === 'COVERIMAGE') {
+                    for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
+                        if (newPosterImage.posterImage.id === this.subjectInfo.posterImageList[i].id) {
+                            this.$message('该图片已经添加到当前专题中');
+                            return;
+                        }
                     }
+                    this.subjectInfo.posterImageList.push(newPosterImage.posterImage);
+                    return;
                 }
-                this.subjectInfo.posterImageList.push(newPosterImage.posterImage);
+                // 添加背景图片
+                if (this.uploadImageMode === 'BACKGROUNDIMAGE') {
+                    this.subjectInfo.backgroundImage = newPosterImage.posterImage;
+                }
             },
             // 删除封面图片
             removePosterImage(index) {
@@ -246,6 +286,21 @@
                         type: 'success',
                         message: '删除成功!'
                     });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            // 删除背景图片
+            removeBackgroundImage() {
+                this.$confirm('此操作将删除该背景图片, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.subjectInfo.backgroundImage = {};
                 }).catch(() => {
                     this.$message({
                         type: 'info',
@@ -341,9 +396,14 @@
         width: 600px;
     }
 
+    .cover-image-block {
+        margin-bottom: 0px;
+    }
+
     .cover-list {
         display: flex;
         margin-top: 30px;
+        margin-bottom: 60px;
         justify-content: left;
         flex-wrap: wrap;
         li {
@@ -352,52 +412,47 @@
             flex-direction: column;
             justify-content: space-between;
             height: 230px;
-            &:last-child {
-                display: flex;
-                justify-content: center;
-                flex-direction: column;
-                width: 180px;
-                height: 180px;
-                border: 1px dotted gray;
-                text-align: center;
-                cursor: pointer;
-                i {
-                    display: inline;
-                    position: static;
-                    color: gray;
-                }
-                &:hover {
-                    border: 1px dotted #409EFF;
-                    i {
-                        color: #409EFF;
-                    }
-                }
-            }
-            .info {
-                .name {
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                }
-                div {
-                    display: flex;
-                    justify-content: space-between;
-                    height: 32px;
-                }
-            }
             img {
                 display: block;
                 height: 180px;
                 cursor: zoom-in;
             }
-            label {
-                font-size: 14px;
-                &.remove {
-                    color: #409EFF;
-                    cursor: pointer;
-                }
+        }
+    }
+
+    // 图片信息
+    .info {
+        &.background {
+            width: 40%;
+        }
+        .name {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        div {
+            display: flex;
+            justify-content: space-between;
+            height: 32px;
+        }
+        label {
+            font-size: 14px;
+            &.remove {
+                color: #409EFF;
+                cursor: pointer;
             }
         }
+    }
+
+    .background-image {
+        width: 40%;
+        padding-top: 23%;
+        height: 0px;
+        overflow: hidden;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+        border: 1px solid red;
     }
 
     .image-box {

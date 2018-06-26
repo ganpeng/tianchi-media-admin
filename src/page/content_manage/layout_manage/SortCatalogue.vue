@@ -56,7 +56,7 @@
         </el-dialog>
         <upload-image
             :size='size'
-            title="上传节目封面图片"
+            title="上传图片"
             :successHandler="addPosterImage"
             :imageUploadDialogVisible="imageUploadDialogVisible"
             v-on:changeImageDialogStatus="closeImageDialog($event)">
@@ -206,6 +206,7 @@
                                 // 推荐二级分类
                                 if (this.catalogueConfig.level === 'SECOND') {
                                     item.layoutItemType = this.catalogueConfig.layoutItemType.type;
+                                    // 推荐一级分类
                                 } else if (this.catalogueConfig.level === 'FIRST') {
                                     let signCode = this.getTypeInfo(item.id).signCode;
                                     item.layoutItemType = this.catalogueConfig.layoutItemType[signCode].category;

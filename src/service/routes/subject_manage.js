@@ -16,7 +16,7 @@ import _ from 'lodash';
  * @param tagList Array of tags.
  * @param posterImageList The list of coverImages including id、uri、height、width attribute.
  */
-export const createSubject = ({category, name, programmeCategoryList, description, tagList, posterImageList}) => {
+export const createSubject = ({category, name, programmeCategoryList, description, tagList, posterImageList, backgroundImage}) => {
     return service.post('/v1/content/subject', {
         category,
         releaseStatus: 'RELEASED',
@@ -24,7 +24,8 @@ export const createSubject = ({category, name, programmeCategoryList, descriptio
         programmeCategoryList,
         description,
         tagList,
-        posterImageList
+        posterImageList,
+        backgroundImage
     });
 };
 
@@ -75,14 +76,15 @@ export const updateSubjectItemList = ({id, subjectItemList}) => {
 /**
  * 修改专题基本信息
  */
-export const updateSubjectBasicInfo = ({id, name, programmeCategoryList, description, tagList, posterImageList}) => {
+export const updateSubjectBasicInfo = ({id, name, programmeCategoryList, description, tagList, posterImageList, backgroundImage}) => {
     return service.patch(util.format('/v1/content/subject/{0}', id), {
         id,
         name,
         programmeCategoryList,
         description,
         tagList,
-        posterImageList
+        posterImageList,
+        backgroundImage
     });
 };
 
@@ -100,4 +102,12 @@ export const getSubjectDetail = (id) => {
  */
 export const deleteSubject = (id) => {
     return service.delete(util.format('/v1/content/subject/{0}', id));
+};
+
+/**
+ * 专题的上下架，假如线上是上架状态，请求之后会更改为下架状态，反之亦然
+ * @param id The id of subject.
+ */
+export const setSubjectVisible = (id) => {
+    return service.patch(util.format('/v1/content/subject/{0}/visible', id));
 };

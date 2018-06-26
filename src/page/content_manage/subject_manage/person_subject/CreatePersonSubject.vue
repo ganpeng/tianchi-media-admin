@@ -26,7 +26,7 @@
         },
         data() {
             return {
-                subjectInfo: {}
+                subjectInfo: {posterImageList: []}
             };
         },
         methods: {}

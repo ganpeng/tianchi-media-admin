@@ -1,4 +1,5 @@
 import constants from './constants';
+
 let countryObj = require('../assets/json/country.json');
 
 /**
@@ -31,7 +32,7 @@ let util = {
      * @return {Boolean} Is or not empty
      */
     isEmpty(str) {
-        return str === null || constants.RegExpConstants.EMPTY.test(this.trim(str));
+        return str === null || str === undefined || constants.RegExpConstants.EMPTY.test(this.trim(str));
     },
     /**
      *Judge string is or not an email address

@@ -1,17 +1,20 @@
 <!--专题基本信息详情组件-->
 <template>
     <div>
-        <el-form label-position="right" label-width="120px" :model="subjectInfo">
+        <el-form label-position="right" label-width="100px" :model="subjectInfo">
             <el-form-item label="创建人：" v-if="subjectInfo.authorName">
                 <label>{{subjectInfo.authorName}}</label>
             </el-form-item>
             <el-form-item label="专题名称：">
                 <label>{{subjectInfo.name}}</label>
             </el-form-item>
+            <el-form-item label="专题状态：">
+                <label>{{subjectInfo.visible ? '已上架' :'已下架'}}</label>
+            </el-form-item>
             <el-form-item label="专题简介：">
                 <label>{{subjectInfo.description}}</label>
             </el-form-item>
-            <el-form-item label="专题节目类别：" v-if="status === '0'">
+            <el-form-item label="节目类别：" v-if="status === '0'">
                 <ul class="type-list">
                     <li v-for="(item, index) in subjectInfo.programmeCategoryList" :key="index">
                         <el-tag type="success">{{item.name}}</el-tag>
@@ -25,7 +28,7 @@
                     </li>
                 </ul>
             </el-form-item>
-            <el-form-item label="专题封面：">
+            <el-form-item label="专题封面：" v-if="subjectInfo.posterImageList && subjectInfo.posterImageList.length > 0">
                 <ul class="cover-list">
                     <li v-for="(item,index) in subjectInfo.posterImageList" :key="index">
                         <div :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
@@ -34,6 +37,11 @@
                         <label>{{item.name}}</label>
                     </li>
                 </ul>
+            </el-form-item>
+            <el-form-item label="专题背景图片：" v-if="subjectInfo.backgroundImage && subjectInfo.backgroundImage.uri">
+                <div :style="{ 'background-image': 'url(' + appendImagePrefix(subjectInfo.backgroundImage.uri) + ')'}"
+                     class="background-image">
+                </div>
             </el-form-item>
         </el-form>
         <preview-multiple-images
@@ -87,6 +95,10 @@
         }
     }
 
+    .el-form-item {
+        margin-bottom: 10px;
+    }
+
     .cover-list {
         display: flex;
         margin-top: 30px;
@@ -111,6 +123,17 @@
                 font-size: 16px;
             }
         }
+    }
+
+    .background-image {
+        width: 40%;
+        padding-top: 23%;
+        height: 0px;
+        overflow: hidden;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+        border: 1px solid red;
     }
 
 </style>

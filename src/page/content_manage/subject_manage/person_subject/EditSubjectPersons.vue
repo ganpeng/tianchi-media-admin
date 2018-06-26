@@ -23,7 +23,7 @@
                     label="序号">
                 </el-table-column>
                 <el-table-column
-                    prop="code"
+                    prop="id"
                     label="编号">
                 </el-table-column>
                 <el-table-column

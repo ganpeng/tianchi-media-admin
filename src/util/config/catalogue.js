@@ -124,8 +124,8 @@ const CATALOGUE_CONFIG_MAP = {
         level: 'SECOND',
         categorySignCode: 'CHINA_SCIENCE',
         layoutItemType: {
-            category: 'SCIENCE_PROGRAMME_CATEGORY',
-            type: 'SCIENCE_PROGRAMME_TYPE'
+            category: 'CHINA_SCIENCE_PROGRAMME_CATEGORY',
+            type: 'CHINA_SCIENCE_PROGRAMME_TYPE'
         },
         allExist: true
     },

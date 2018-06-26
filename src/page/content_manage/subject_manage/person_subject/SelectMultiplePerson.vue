@@ -30,7 +30,7 @@
                 width="55">
             </el-table-column>
             <el-table-column
-                prop="code"
+                prop="id"
                 label="编号">
             </el-table-column>
             <el-table-column
@@ -42,7 +42,7 @@
                 <template slot-scope="scope">
                     <img v-if="scope.row.avatarImage"
                          :src="scope.row.avatarImage ? scope.row.avatarImage.uri : '' | imageUrl"
-                         @click="displayImage(scope.row)"
+                         @click="displayImage(scope.row.avatarImage)"
                          :alt="scope.row.avatarImage ? scope.row.avatarImage.name : ''">
                     <label v-else>------</label>
                 </template>
