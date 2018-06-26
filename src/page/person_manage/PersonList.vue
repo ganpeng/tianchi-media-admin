@@ -98,7 +98,6 @@
         },
         data() {
             return {
-                areaOptions: this.$util.countryList(),
                 previewImage: {
                     title: '',
                     display: false,
@@ -127,11 +126,6 @@
             ...mapActions({
                 getPersonList: 'person/getPersonList'
             }),
-            // 获取人物列表
-            areaLabel(areaValue) {
-                let area = this.areaOptions.find((areaItem) => areaItem.value === areaValue);
-                return area ? area.label : '';
-            },
             // 跳转到详情页面
             displayPerson(userId) {
                 this.$router.push({ name: 'DisplayPerson', params: { id: userId } });

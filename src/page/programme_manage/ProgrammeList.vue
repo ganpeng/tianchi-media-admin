@@ -188,7 +188,6 @@ export default {
     },
     data() {
         return {
-            areaOptions: this.$util.countryList(),
             visibleOptions: [
                 {
                     value: true,
@@ -247,12 +246,6 @@ export default {
         },
         displayProgramme(id) {
             this.$router.push({ name: 'DisplayProgramme', params: { id } });
-        },
-        areaLabel(areaValue) {
-            return areaValue.map((item) => {
-                let area = this.areaOptions.find((areaItem) => areaItem.value === item);
-                return area ? area.label ? area.label : '' : '';
-            }).join(',');
         },
         inputHandler(value, key) {
             this.updateProgrammeSearchFields({key, value});
