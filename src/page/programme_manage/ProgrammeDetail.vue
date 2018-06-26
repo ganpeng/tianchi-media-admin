@@ -523,7 +523,6 @@
             ...mapGetters({
                 global: 'programme/global',
                 programme: 'programme/programme',
-                programmeVisible: 'programme/programmeVisible',
                 typeListOptions: 'programme/typeListOptions',
                 role: 'programme/role',
                 video: 'programme/video',
@@ -582,7 +581,7 @@
                                             let id = res.data.id;
                                             this.createMultProgrammeVideo(id)
                                                 .then((...resList) => {
-                                                    this.deleteTempList({list: resList});
+                                                    this.deleteTempList();
                                                     this.getProgrammeVideoListById(id);
                                                     this.$message({
                                                         type: 'success',
@@ -618,7 +617,7 @@
                                         if (res && res.code === 0) {
                                             this.createMultProgrammeVideo(id)
                                                 .then((...resList) => {
-                                                    this.deleteTempList({list: resList});
+                                                    this.deleteTempList();
                                                     this.getProgrammeVideoListById(id);
                                                     this.$message({
                                                         type: 'success',

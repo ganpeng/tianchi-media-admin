@@ -37,7 +37,7 @@
                 <el-table-column
                     prop="sort"
                     v-if="tableStatus === 1"
-                    label="集号/期号"
+                    label="集数/期号"
                     align="center"
                     width="180">
                 </el-table-column>

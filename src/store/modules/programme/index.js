@@ -6,6 +6,7 @@ import wsCache from '@/util/webStorage';
 
 import {checkImageExist} from '@/util/formValidate';
 
+//  节目保存时候需要提交到服务端的字段列表
 const programmePostFields = [
     'contest',
     'horizontalCoverImage',
@@ -22,22 +23,17 @@ const programmePostFields = [
     'copyrightEndedAt',
     'copyrightReserved',
     'name',
-    // 'playCountBasic',
     'desc',
     'score',
-    // 'price',
-    // 'quality',
     'produceAreaList',
     'categoryList',
     'announcer',
-    // 'featureVideoCount',
     'description',
     'releaseAt',
     'posterImageList',
     'figureList',
     'tagList',
     'typeList'
-    // 'releaseStatus'
 ];
 
 const defaultProgramme = {
@@ -143,8 +139,8 @@ const defaultVideo = {
     programmeId: '',
     // 名称
     name: '',
-    // 播放链接
-    playUrl: '',
+    // 文件原始名
+    originName: '',
     // 详情
     description: '',
     // 视频封面图
@@ -378,6 +374,7 @@ const mutations = {
     resetProgramme(state) {
         state.programme = _.clone(defaultProgramme);
         state.video = _.clone(defaultProgrammeVideo);
+        state.video.tempList = [];
     },
     setProgrammeList(state, payload) {
         state.list = payload.list;
@@ -720,6 +717,9 @@ function filterProgrammeVideoList(tempList, id) {
 }
 
 const actions = {
+    /**
+     * 获取节目列表
+     */
     async getProgrammeList({commit, state}) {
         try {
             let params = Object.assign({}, state.searchFields, {
@@ -735,6 +735,9 @@ const actions = {
         } catch (err) {
         }
     },
+    /**
+     * 获取节目分类
+     */
     async getProgrammeCategory({commit, state}) {
         try {
             let res = await service.getProgrammeCategory();
@@ -744,6 +747,9 @@ const actions = {
         } catch (err) {
         }
     },
+    /**
+     * 全量更新节目分类
+     */
     async updateProgrammeCategory({commit, state}) {
         try {
             let categoryList = _.cloneDeep(state.global.categoryList);
@@ -761,6 +767,9 @@ const actions = {
         } catch (err) {
         }
     },
+    /**
+     * 判断当前类型下面是不是有节目
+     */
     getProgrammeTypeCount({commit, state}, programmeTypeId) {
         if (/^category_/.test(programmeTypeId)) {
             return Promise.resolve(true);
@@ -777,14 +786,23 @@ const actions = {
                 });
         }
     },
+    /**
+     * 创建节目
+     */
     createProgramme({commit, state}) {
         let programme = formatProgramme(state.programme, state);
         return service.createProgramme(programme);
     },
+    /**
+     * 根据节目的id更新节目信息
+     */
     updateProgrammeById({commit, state}, id) {
         let programme = formatProgramme(state.programme, state);
         return service.updateProgrammeInfo({id, programme});
     },
+    /**
+     *  根据节目的id获取该节目下的视频列表
+     */
     async getProgrammeVideoListById({commit, state}, id) {
         try {
             let {pageSize, pageNum} = state.video.pagination;
