@@ -120,7 +120,7 @@
                 </el-table-column>
                 <el-table-column prop="produceAreaList" min-width="150px" align="center" label="地区">
                     <template slot-scope="scope">
-                        {{areaLabel(scope.row.produceAreaList)}}
+                        {{scope.row.produceAreaList ? scope.row.produceAreaList.join(', ') : ''}}
                     </template>
                 </el-table-column>
                 <el-table-column align="center" width="100px" label="分类">

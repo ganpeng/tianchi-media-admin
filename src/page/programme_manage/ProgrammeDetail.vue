@@ -74,10 +74,10 @@
                                     :disabled="readonly"
                                 >
                                     <el-option
-                                        v-for="item in areaOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
+                                        v-for="(item, index) in areaOptions"
+                                        :key="index"
+                                        :label="item.name"
+                                        :value="item.name">
                                     </el-option>
                                 </el-select>
                             </el-form-item>
@@ -398,7 +398,7 @@
                 </el-col>
             <el-col :span="24">
                 <div class="block-title">节目视频</div>
-                <el-button v-if="!readonly" type="primary" @click="videoUploadDialogVisible = true">添加视频<i class="el-icon-upload el-icon--right"></i></el-button>
+                <el-button v-if="!readonly" type="primary" @click="showUploadDialog">添加视频<i class="el-icon-upload el-icon--right"></i></el-button>
                 <programme-table title="待添加视频列表" :tableStatus="0" :status="status" :data-list="video.tempList"></programme-table>
                 <programme-table title="已添加视频列表" :tableStatus="1" :status="status" :data-list="video.list"></programme-table>
                 <el-pagination
@@ -435,6 +435,7 @@
 <script>
     import { mapMutations, mapGetters, mapActions } from 'vuex';
     import _ from 'lodash';
+    import store from 'store';
     import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
     import CreatePersonDialog from './CreatePersonDialog';
     import ProgrammeTable from './ProgrammeTable';
@@ -480,7 +481,7 @@
                 dialogVisible: false,
                 videoUploadDialogVisible: false,
                 createPersonDialogVisible: false,
-                areaOptions: this.$util.countryList(),
+                areaOptions: store.get('areaList'),
                 gradeOptions: role.GRADE,
                 specOptions: role.SPEC,
                 subjectOptions: role.SUBJECT,
@@ -538,7 +539,6 @@
         },
         methods: {
             ...mapMutations({
-                // 新加
                 addSelectItem: 'programme/addSelectItem',
                 updateGlobal: 'programme/updateGlobal',
                 updateProgramme: 'programme/updateProgramme',
@@ -546,11 +546,12 @@
                 updatePerson: 'programme/updatePerson',
                 updateVideoPagination: 'programme/updateVideoPagination',
                 deleteTempList: 'programme/deleteTempList',
-                // 新加结束
                 resetProgramme: 'programme/resetProgramme',
                 addPosterImage: 'programme/addPosterImage',
                 deletePosterImage: 'programme/deletePosterImage',
-                setCoverImage: 'programme/setCoverImage'
+                setCoverImage: 'programme/setCoverImage',
+                // 视频video
+                updateSearchFields: 'video/updateSearchFields'
             }),
             ...mapActions({
                 // 新加
@@ -661,6 +662,10 @@
             },
             closePersonDialog(status) {
                 this.createPersonDialogVisible = status;
+            },
+            showUploadDialog() {
+                this.videoUploadDialogVisible = status;
+                this.updateSearchFields({key: 'status', value: 'SUCCESS'});
             },
             closeVideoDialog(status) {
                 this.videoUploadDialogVisible = status;

@@ -268,7 +268,7 @@ export default {
                 });
         },
         deleteVideo(id, visible) {
-            this.$confirm(`您确定要${visible ? '上架视频' : '下架视频'}吗, 是否继续?`, '提示', {
+            this.$confirm(`您确定要${visible ? '下架视频' : '上架视频'}吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'error'

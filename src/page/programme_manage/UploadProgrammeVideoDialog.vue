@@ -21,15 +21,16 @@
                         <el-input
                             placeholder="搜索你想要的信息"
                             clearable
+                            @input="searchInputHandler($event, 'name')"
                         >
                             <i slot="prefix" class="el-input__icon el-icon-search"></i>
                         </el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary">搜索</el-button>
+                        <el-button type="primary" @click="searchEnterHandler">搜索</el-button>
                     </el-form-item>
                 </el-form>
-                <video-table :hasRadio="true"></video-table>
+                <video-table :status="'SUCCESS'" :hasRadio="true"></video-table>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
                     <el-button @click="closeSelectVideoDialog">取 消</el-button>
                     <el-button type="primary" @click="selectVideoEnter">确 定</el-button>
@@ -245,16 +246,19 @@
                 addVideoToTempList: 'programme/addVideoToTempList',
                 syncVideoMetaData: 'programme/syncVideoMetaData',
                 updateCurrentVideo: 'programme/updateCurrentVideo',
-                setSelectedVideoId: 'video/setSelectedVideoId'
+                setSelectedVideoId: 'video/setSelectedVideoId',
+                updateSearchFields: 'video/updateSearchFields'
             }),
             ...mapActions({
                 updateProgrammeVideoById: 'programme/updateProgrammeVideoById',
+                getVideoList: 'video/getVideoList',
                 getFeatureVideoList: 'programme/getFeatureVideoList'
             }),
             cancelHandler() {
                 this.$emit('changeVideoDialogStatus', false);
                 // 清楚校验的规则
                 this.resetCurrentVideo();
+                this.updateSearchFields({key: 'status', value: null});
                 this.setSelectedVideoId({id: ''});
             },
             successHandler() {
@@ -283,6 +287,12 @@
             },
             inputHandler(value, key) {
                 this.updateVideo({key, value});
+            },
+            searchInputHandler(value, key) {
+                this.updateSearchFields({value, key});
+            },
+            searchEnterHandler() {
+                this.getVideoList();
             },
             uploadImageHandler() {
                 if (!this.readonly) {

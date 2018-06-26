@@ -2,6 +2,7 @@
 import service from '../../../service';
 import router from '../../../router';
 import Cookies from 'js-cookie';
+import wsCache from '../../../util/webStorage';
 
 const state = {
     name: '',
@@ -43,7 +44,18 @@ const actions = {
                     commit('setName', data.name);
                     commit('setToken', data.token);
                     // 获取图片的根路径
-                    service.getImageBaseUri();
+                    service.getImageBaseUri()
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                window.localStorage.setItem('imageBaseUri', res.data);
+                            }
+                        });
+                    service.fetchAreaList()
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                wsCache.localStorage.set('areaList', res.data);
+                            }
+                        });
                 }
                 resolve(res);
             }).catch(err => {

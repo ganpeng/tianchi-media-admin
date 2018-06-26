@@ -44,10 +44,10 @@
                         @input="inputHandler($event, 'area')"
                     >
                         <el-option
-                            v-for="item in areaOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            v-for="(item, index) in areaOptions"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.name">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -133,6 +133,7 @@
  *
  */
 import {mapGetters, mapMutations} from 'vuex';
+import store from 'store';
 import UploadImage from 'sysComponents/custom_components/global/UploadImage';
 import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
 import dimension from '@/util/config/dimension';
@@ -186,7 +187,7 @@ export default {
                 ]
             },
             imageUploadDialogVisible: false,
-            areaOptions: this.$util.countryList(),
+            areaOptions: store.get('areaList'),
             mainRoleoptions: role.MAIN_ROLE_OPTIONS,
             size: dimension.PERSON_DIMENSION,
             previewImage: {

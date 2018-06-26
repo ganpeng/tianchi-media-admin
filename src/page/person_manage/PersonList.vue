@@ -51,11 +51,7 @@
             </el-table-column>
             <el-table-column prop="name" align="center" width="200px" label="名字"></el-table-column>
             <el-table-column prop="description" align="center" width="300px" label="人物简介"></el-table-column>
-            <el-table-column prop="area" width="120px" align="center" label="地区">
-                <template slot-scope="scope">
-                    {{areaLabel(scope.row.area)}}
-                </template>
-            </el-table-column>
+            <el-table-column prop="area" width="120px" align="center" label="地区"></el-table-column>
             <el-table-column prop="birthday" width="120px" align="center" label="出生日期">
                 <template slot-scope="scope">
                     {{scope.row.birthday | formatDate('yyyy-MM-DD')}}

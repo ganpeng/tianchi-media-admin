@@ -40,7 +40,7 @@
             </el-table-column>
             <el-table-column prop="takeTimeInSec" align="center" label="注入状态">
                 <template slot-scope="scope">
-                    {{getStatus(scope.row.status)}}
+                    {{getStatus(scope.row.id)}}
                 </template>
             </el-table-column>
             <el-table-column align="center" width="220px" label="上传日期">
@@ -55,13 +55,13 @@
             </el-table-column>
         </el-table>
         <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="video.pageNum"
+            @size-change="handlePaginationChange($event, 'pageSize')"
+            @current-change="handlePaginationChange($event, 'pageNum')"
+            :current-page="pagination.pageNum"
             :page-sizes="[5, 10, 20, 30, 50]"
-            :page-size="video.pageSize"
+            :page-size="pagination.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="video.total">
+            :total="pagination.total">
         </el-pagination>
         <display-video-dialog
             :url="url"
@@ -81,6 +81,10 @@ export default {
         hasRadio: {
             type: Boolean,
             default: false
+        },
+        status: {
+            type: String,
+            default: ''
         }
     },
     data() {
@@ -95,6 +99,7 @@ export default {
     computed: {
         ...mapGetters({
             video: 'video/video',
+            pagination: 'video/pagination',
             getStatus: 'video/getStatus'
         }),
         duration() {
@@ -106,18 +111,15 @@ export default {
     methods: {
         ...mapMutations({
             setSelectedVideoId: 'video/setSelectedVideoId',
-            setPagination: 'video/setPagination'
+            setPagination: 'video/setPagination',
+            updatePagination: 'video/updatePagination'
         }),
         ...mapActions({
             getVideoList: 'video/getVideoList',
             deleteVideoById: 'video/deleteVideoById'
         }),
-        handleSizeChange(pageSize) {
-            this.setPagination({pageSize});
-            this.getVideoList();
-        },
-        handleCurrentChange(pageNum) {
-            this.setPagination({pageNum});
+        handlePaginationChange(value, key) {
+            this.updatePagination({value, key});
             this.getVideoList();
         },
         closeDisplayVideoDialog(status) {
