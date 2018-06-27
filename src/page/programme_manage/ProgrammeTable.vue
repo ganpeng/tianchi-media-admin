@@ -8,15 +8,7 @@
                 border
                 style="width: 100%">
                 <el-table-column
-                    prop="id"
-                    v-if="tableStatus === 1"
-                    label="视频ID"
-                    align="center"
-                    width="240px">
-                </el-table-column>
-                <el-table-column
-                    prop="videoId"
-                    v-if="tableStatus === 0"
+                    prop="storageVideoId"
                     label="视频ID"
                     align="center"
                     width="240px">

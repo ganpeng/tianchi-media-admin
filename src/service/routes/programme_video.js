@@ -1,4 +1,3 @@
-import axios from 'axios';
 import service from '../config';
 
 /**
@@ -11,8 +10,8 @@ export const createProgrammeVideo = (video) => {
 /**
  *  新增多条节目视频
  */
-export const createMultProgrammeVideo = (requestList) => {
-    return axios.all(requestList);
+export const createMultProgrammeVideo = (videoList) => {
+    return service.post('/v1/content/programme/video', videoList);
 };
 
 /**

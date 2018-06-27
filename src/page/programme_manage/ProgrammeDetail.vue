@@ -577,14 +577,21 @@
                                         if (res && res.code === 0) {
                                             let id = res.data.id;
                                             this.createMultProgrammeVideo(id)
-                                                .then((...resList) => {
-                                                    this.deleteTempList();
-                                                    this.getProgrammeVideoListById(id);
-                                                    this.$message({
-                                                        type: 'success',
-                                                        message: '保存成功'
-                                                    });
-                                                    this.goBack();
+                                                .then((videoRes) => {
+                                                    if (videoRes && videoRes.code === 0) {
+                                                        this.deleteTempList();
+                                                        this.getProgrammeVideoListById(id);
+                                                        this.$message({
+                                                            type: 'success',
+                                                            message: '保存成功'
+                                                        });
+                                                        this.goBack();
+                                                    } else {
+                                                        this.$message({
+                                                            type: 'error',
+                                                            message: '视频保存失败'
+                                                        });
+                                                    }
                                                 });
                                         } else {
                                             this.$message({
@@ -613,14 +620,21 @@
                                     .then((res) => {
                                         if (res && res.code === 0) {
                                             this.createMultProgrammeVideo(id)
-                                                .then((...resList) => {
-                                                    this.deleteTempList();
-                                                    this.getProgrammeVideoListById(id);
-                                                    this.$message({
-                                                        type: 'success',
-                                                        message: '保存成功'
-                                                    });
-                                                    this.goBack();
+                                                .then((videoRes) => {
+                                                    if (videoRes && videoRes.code === 0) {
+                                                        this.deleteTempList();
+                                                        this.getProgrammeVideoListById(id);
+                                                        this.$message({
+                                                            type: 'success',
+                                                            message: '保存成功'
+                                                        });
+                                                        this.goBack();
+                                                    } else {
+                                                        this.$message({
+                                                            type: 'error',
+                                                            message: '视频保存失败'
+                                                        });
+                                                    }
                                                 });
                                         } else {
                                             this.$message({

@@ -176,8 +176,7 @@ const defaultVideo = {
     m3u8For720P: '',
     m3u8For1080P: '',
     m3u8For4K: '',
-    // 临时的视频id
-    videoId: ''
+    storageVideoId: '' // 视频资源库中的视频的id
 };
 
 const defaultPagination = {
@@ -197,7 +196,8 @@ const defaultProgrammeVideo = {
 const defaultProgrammeSearchFields = {
     keyword: '',
     visible: '',
-    releaseAt: '',
+    releaseAtStart: '', // 开始的发行日期
+    releaseAtEnd: '', //  结束的发行日期
     produceAreaList: [],
     programmeTypeIdList: [],
     programmeCategoryIdList: []
@@ -372,10 +372,7 @@ const getters = {
 const mutations = {
     //  新加代码开始
     resetProgramme(state) {
-        state.programme = _.clone(defaultProgramme);
-        state.video = _.clone(defaultProgrammeVideo);
-        state.video.tempList = [];
-        state.programme.posterImageList = [];
+        state = _.clone(defaultState);
     },
     setProgrammeList(state, payload) {
         state.list = payload.list;
@@ -506,7 +503,7 @@ const mutations = {
         state.video.video.m3u8For720P = payload.video.m3u8For720P;
         state.video.video.m3u8For1080P = payload.video.m3u8For1080P;
         state.video.video.m3u8For4K = payload.video.m3u8For4K;
-        state.video.video.videoId = payload.video.id;
+        state.video.video.storageVideoId = payload.video.id;
     },
     updateVideoVisible(state, payload) {
         state.video.list = state.video.list.map((item) => {
@@ -790,16 +787,24 @@ const actions = {
     /**
      * 创建节目
      */
-    createProgramme({commit, state}) {
-        let programme = formatProgramme(state.programme, state);
-        return service.createProgramme(programme);
+    async createProgramme({commit, state}) {
+        try {
+            let programme = formatProgramme(state.programme, state);
+            let res = await service.createProgramme(programme);
+            return res;
+        } catch (err) {
+        }
     },
     /**
      * 根据节目的id更新节目信息
      */
-    updateProgrammeById({commit, state}, id) {
-        let programme = formatProgramme(state.programme, state);
-        return service.updateProgrammeInfo({id, programme});
+    async updateProgrammeById({commit, state}, id) {
+        try {
+            let programme = formatProgramme(state.programme, state);
+            let res = await service.updateProgrammeInfo({id, programme});
+            return res;
+        } catch (err) {
+        }
     },
     /**
      *  根据节目的id获取该节目下的视频列表
@@ -893,15 +898,14 @@ const actions = {
         }
     },
     // 视频相关的请求
-    createMultProgrammeVideo({commit, state}, id) {
-        let {tempList} = state.video;
-        let tempListServiceList = filterProgrammeVideoList(tempList, id).map((video) => {
-            return service.createProgrammeVideo(video);
-        });
-        return service.createMultProgrammeVideo(tempListServiceList)
-            .then(axios.spread((...res) => {
-                return res;
-            }));
+    async createMultProgrammeVideo({commit, state}, id) {
+        try {
+            let {tempList} = state.video;
+            let videoList = filterProgrammeVideoList(tempList, id);
+            let res = await service.createMultProgrammeVideo(videoList);
+            return res;
+        } catch (err) {
+        }
     },
     async getProgrammeVideoById({commit, state}, id) {
         try {

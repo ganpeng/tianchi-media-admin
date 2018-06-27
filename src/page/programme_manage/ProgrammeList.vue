@@ -31,12 +31,21 @@
                 </el-form-item>
             </el-form>
             <el-form :inline="true" class="demo-form-inline">
-                <el-form-item label="上映时间">
+                <el-form-item label="上映开始年">
                     <el-date-picker
-                        :value="programmeSearchFields.releaseAt"
+                        :value="programmeSearchFields.releaseAtStart"
                         type="year"
                         clearable
-                        @input="inputHandler($event, 'releaseAt')"
+                        @input="inputHandler($event, 'releaseAtStart')"
+                        placeholder="请选择上映时间">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="上映结束年">
+                    <el-date-picker
+                        :value="programmeSearchFields.releaseAtEnd"
+                        type="year"
+                        clearable
+                        @input="inputHandler($event, 'releaseAtEnd')"
                         placeholder="请选择上映时间">
                     </el-date-picker>
                 </el-form-item>
@@ -215,12 +224,10 @@ export default {
     },
     computed: {
         ...mapGetters({
-            // 新加开始
             programmePagination: 'programme/programmePagination',
             programmeSearchFields: 'programme/programmeSearchFields',
             programmeTypeOptions: 'programme/programmeTypeOptions',
             global: 'programme/global',
-            // 新加结束
             list: 'programme/programmeList',
             typeList: 'programme/typeList',
             categoryListString: 'programme/categoryListString',
@@ -231,11 +238,9 @@ export default {
     },
     methods: {
         ...mapMutations({
-            // 新加开始
             updateProgrammePagination: 'programme/updateProgrammePagination',
             updateProgrammeSearchFields: 'programme/updateProgrammeSearchFields',
             resetProgrammeSearchFields: 'programme/resetProgrammeSearchFields'
-            // 新加结束
         }),
         ...mapActions({
             getProgrammeList: 'programme/getProgrammeList',
@@ -265,7 +270,6 @@ export default {
         searchHandler() {
             this.getProgrammeList();
         },
-        // 放大预览图片
         displayImage(image) {
             this.previewImage.title = image.name;
             this.previewImage.display = true;
