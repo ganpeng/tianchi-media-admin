@@ -461,13 +461,8 @@
         },
         created() {
             this.resetProgramme();
-            this.getProgrammeCategory();
             this.getProgrammeTagList();
-            this.getProgrammeAnnouncerList();
-            this.getProgrammeContestList();
-            // this.getProgrammeCopyrightList();
-            this.getProgrammeLicenceList();
-            this.getProgrammePlatformList();
+            this.getProgrammeCategory();
         },
         data() {
             return {

@@ -375,6 +375,7 @@ const mutations = {
         state.programme = _.clone(defaultProgramme);
         state.video = _.clone(defaultProgrammeVideo);
         state.video.tempList = [];
+        state.programme.posterImageList = [];
     },
     setProgrammeList(state, payload) {
         state.list = payload.list;

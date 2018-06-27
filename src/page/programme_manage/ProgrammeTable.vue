@@ -251,7 +251,7 @@ export default {
         }),
         ...mapActions({
             getProgrammeVideoById: 'programme/getProgrammeVideoById',
-            deleteProgrammeVideo: 'programme/deleteProgrammeVideo'
+            deleteProgrammeVideoById: 'programme/deleteProgrammeVideoById'
         }),
         editVideo(id) {
             this.getProgrammeVideoById(id)
@@ -273,7 +273,7 @@ export default {
                     cancelButtonText: '取消',
                     type: 'error'
                 }).then(() => {
-                    this.deleteProgrammeVideo(id);
+                    this.deleteProgrammeVideoById(id);
                 }).catch(() => {
                     this.$message({
                         type: 'info',
