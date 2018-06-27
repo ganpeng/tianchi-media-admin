@@ -18,6 +18,7 @@ const programmePostFields = [
     'grade',
     'subject',
     'announcer',
+    'announceAt',
     'copyrightStartedAt',
     'coverImage',
     'copyrightEndedAt',

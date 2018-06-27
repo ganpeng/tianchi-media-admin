@@ -54,11 +54,11 @@
                                     :value="programme.description">
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="上映时间" prop="releaseAt">
+                            <el-form-item label="上映时间" prop="announceAt">
                                 <el-date-picker
                                     :disabled="readonly"
-                                    :value="programme.releaseAt"
-                                    @input="inputHandler($event, 'releaseAt')"
+                                    :value="programme.announceAt"
+                                    @input="inputHandler($event, 'announceAt')"
                                     type="year"
                                     placeholder="选择年">
                                 </el-date-picker>

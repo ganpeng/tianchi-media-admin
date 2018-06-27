@@ -122,15 +122,14 @@
                 <el-table-column prop="featureVideoCount" min-width="100px" align="center" label="正片数量"></el-table-column>
                 <el-table-column prop="extraVideoCount" align="center" min-width="120px" label="相关视频数量">
                 </el-table-column>
-                <el-table-column prop="releaseAt" align="center" width="100px" label="上映时间">
+                <el-table-column prop="announceAt" align="center" width="100px" label="上映时间">
                     <template slot-scope="scope">
-                        {{ scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
+                        {{ scope.row.announceAt | formatDate('yyyy-MM-DD')}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="produceAreaList" min-width="150px" align="center" label="地区">
                     <template slot-scope="scope">
                         {{areaLabel(scope.row.produceAreaList)}}
-                        <!-- {{scope.row.produceAreaList ? scope.row.produceAreaList.join(', ') : ''}} -->
                     </template>
                 </el-table-column>
                 <el-table-column align="center" width="100px" label="分类">
