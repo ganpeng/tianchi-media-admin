@@ -576,23 +576,31 @@
                                     .then((res) => {
                                         if (res && res.code === 0) {
                                             let id = res.data.id;
-                                            this.createMultProgrammeVideo(id)
-                                                .then((videoRes) => {
-                                                    if (videoRes && videoRes.code === 0) {
-                                                        this.deleteTempList();
-                                                        this.getProgrammeVideoListById(id);
-                                                        this.$message({
-                                                            type: 'success',
-                                                            message: '保存成功'
-                                                        });
-                                                        this.goBack();
-                                                    } else {
-                                                        this.$message({
-                                                            type: 'error',
-                                                            message: '视频保存失败'
-                                                        });
-                                                    }
+                                            if (this.video.tempList.length > 0) {
+                                                this.createMultProgrammeVideo(id)
+                                                    .then((videoRes) => {
+                                                        if (videoRes && videoRes.code === 0) {
+                                                            this.deleteTempList();
+                                                            this.getProgrammeVideoListById(id);
+                                                            this.$message({
+                                                                type: 'success',
+                                                                message: '保存成功'
+                                                            });
+                                                            this.goBack();
+                                                        } else {
+                                                            this.$message({
+                                                                type: 'error',
+                                                                message: '视频保存失败'
+                                                            });
+                                                        }
+                                                    });
+                                            } else {
+                                                this.$message({
+                                                    type: 'success',
+                                                    message: '保存成功'
                                                 });
+                                                this.goBack();
+                                            }
                                         } else {
                                             this.$message({
                                                 type: 'error',
@@ -619,23 +627,31 @@
                                 this.updateProgrammeById(id)
                                     .then((res) => {
                                         if (res && res.code === 0) {
-                                            this.createMultProgrammeVideo(id)
-                                                .then((videoRes) => {
-                                                    if (videoRes && videoRes.code === 0) {
-                                                        this.deleteTempList();
-                                                        this.getProgrammeVideoListById(id);
-                                                        this.$message({
-                                                            type: 'success',
-                                                            message: '保存成功'
-                                                        });
-                                                        this.goBack();
-                                                    } else {
-                                                        this.$message({
-                                                            type: 'error',
-                                                            message: '视频保存失败'
-                                                        });
-                                                    }
+                                            if (this.video.tempList.length > 0) {
+                                                this.createMultProgrammeVideo(id)
+                                                    .then((videoRes) => {
+                                                        if (videoRes && videoRes.code === 0) {
+                                                            this.deleteTempList();
+                                                            this.getProgrammeVideoListById(id);
+                                                            this.$message({
+                                                                type: 'success',
+                                                                message: '保存成功'
+                                                            });
+                                                            this.goBack();
+                                                        } else {
+                                                            this.$message({
+                                                                type: 'error',
+                                                                message: '视频保存失败'
+                                                            });
+                                                        }
+                                                    });
+                                            } else {
+                                                this.$message({
+                                                    type: 'success',
+                                                    message: '保存成功'
                                                 });
+                                                this.goBack();
+                                            }
                                         } else {
                                             this.$message({
                                                 type: 'error',

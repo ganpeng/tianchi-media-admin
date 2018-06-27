@@ -303,6 +303,23 @@ const getters = {
             return video ? video.name : '';
         };
     },
+    checkVideoIsSelected(state) {
+        return (video) => {
+            let tempList = state.video.tempList;
+            let index = tempList.findIndex((item) => {
+                return item.storageVideoId === video.id;
+            });
+            return index > -1;
+        };
+    },
+    checkSortIsExist(state) {
+        let sort = state.video.video.sort;
+        let featureList = state.video.featureList;
+        let tempList = state.video.tempList;
+        let index = featureList.findIndex((video) => video.sort === sort);
+        let otherIndex = tempList.findIndex((video) => video.sort === sort);
+        return index > -1 || otherIndex > -1;
+    },
     // 新方法结束
     isTvPlay(state) {
         let category = state.global.categoryList.find((item) => item.name === '电视剧');

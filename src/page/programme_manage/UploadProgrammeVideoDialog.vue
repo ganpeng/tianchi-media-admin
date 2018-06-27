@@ -215,7 +215,9 @@
                 video: 'programme/currentVideo',
                 isTvPlay: 'programme/isTvPlay',
                 featureList: 'programme/featureList',
-                videoListObj: 'video/video'
+                videoListObj: 'video/video',
+                checkVideoIsSelected: 'programme/checkVideoIsSelected',
+                checkSortIsExist: 'programme/checkSortIsExist'
             }),
             title() {
                 switch (parseInt(this.videoStatus)) {
@@ -264,6 +266,12 @@
             successHandler() {
                 this.$refs.uploadVideoForm.validate(value => {
                     if (value) {
+                        if (this.checkSortIsExist) {
+                            this.$message({
+                                type: 'error',
+                                message: '集数/期号已经存在，请重新输入'
+                            });
+                        } else {
                             if (parseInt(this.videoStatus) !== 1) {
                                 if (this.selectedVideo) {
                                     this.addVideoToTempList();
@@ -282,6 +290,7 @@
                                     });
                             }
                             this.selectedVideo = false;
+                        }
                     }
                 });
             },
@@ -315,11 +324,19 @@
                 return videoObj;
             },
             selectVideoEnter() {
-                let videoObj = this.getSelectedVideo();
-                if (videoObj) {
-                    this.syncVideoMetaData({video: videoObj});
-                    this.closeSelectVideoDialog();
-                    this.selectedVideo = true;
+                let video = this.getSelectedVideo();
+                let isSelected = this.checkVideoIsSelected(video);
+                if (video) {
+                    if (isSelected) {
+                        this.$message({
+                            type: 'error',
+                            message: '视频已添加'
+                        });
+                    } else {
+                        this.syncVideoMetaData({video});
+                        this.closeSelectVideoDialog();
+                        this.selectedVideo = true;
+                    }
                 } else {
                     this.$message({
                         type: 'error',
