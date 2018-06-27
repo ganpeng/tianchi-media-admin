@@ -2,17 +2,7 @@
 <template>
     <div>
         <el-form :inline="true" class="demo-form-inline search-form">
-            <el-form-item label="专题类型">
-                <el-select v-model="listQueryParams.subjectCategory" clearable placeholder="请选择专题类型">
-                    <el-option
-                        v-for="item in categoryOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <template v-if="listQueryParams.subjectCategory === 'PROGRAMME'">
+            <template v-if="listQueryParams.category === 'PROGRAMME'">
                 <el-form-item label="节目类别">
                     <el-select v-model="listQueryParams.subjectType" clearable placeholder="请选择节目类别">
                         <el-option
@@ -38,7 +28,7 @@
                 </el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="success" @click="getSubjectList">查 询</el-button>
+                <el-button type="success" @click="initSubjectList(recommendIdList)">查 询</el-button>
             </el-form-item>
         </el-form>
         <el-table
@@ -47,6 +37,7 @@
             ref="singleSubject"
             highlight-current-row
             @current-change="setSubject"
+            :row-class-name="tableRowClassName"
             style="width: 100%">
             <el-table-column
                 prop="code"
@@ -113,11 +104,17 @@
                     {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
+            <el-table-column
+                label="状态">
+                <template slot-scope="scope">
+                    {{scope.row.visible ? '已上架' : '已下架'}}
+                </template>
+            </el-table-column>
             <el-table-column align="center"
                              label="操作"
                              class="operate">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="checkSubjectDetail(scope.row)">查看</el-button>
+                    <el-button type="text" size="small" @click.stop="checkSubjectDetail(scope.row)">查看</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -136,28 +133,22 @@
 <script>
     export default {
         name: 'SelectSingleSubject',
+        // mode:The category of subject, such as 'PROGRAMME' & 'FIGURE'
+        props: ['mode'],
         data() {
             return {
+                recommendIdList: [],
                 listQueryParams: {
-                    subjectCategory: '',
+                    category: this.mode,
                     subjectType: '',
                     name: '',
                     pageNum: 1,
                     pageSize: 10
                 },
                 createRangeTime: '',
-                categoryOptions: [{
-                    value: 'PROGRAMME',
-                    label: '节目专题'
-                }, {
-                    value: 'FIGURE',
-                    label: '人物专题'
-                }],
                 typeListOptions: [],
                 totalAmount: 0,
-                subjectList: [],
-                // 当前是否处于取消选择操作中
-                cancelStatus: false
+                subjectList: []
             };
         },
         mounted() {
@@ -165,39 +156,71 @@
         },
         methods: {
             init() {
-                this.getSubjectList();
                 this.$service.getProgrammeCategory().then(response => {
                     if (response && response.code === 0) {
                         this.typeListOptions = response.data;
                     }
                 });
             },
-            getSubjectList() {
+            tableRowClassName({row}) {
+                if (row.recommend || !row.visible) {
+                    return 'warning-row';
+                }
+                return '';
+            },
+            initSubjectList(recommendIdList) {
+                this.recommendIdList = recommendIdList;
                 this.$service.getSubjectList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.subjectList = response.data.list;
                         this.totalAmount = response.data.total;
+                        // 设置重复推荐专题的筛选
+                        for (let i = 0; i < recommendIdList.length; i++) {
+                            for (let k = 0; k < this.subjectList.length; k++) {
+                                if (recommendIdList[i] === this.subjectList[k].id) {
+                                    this.subjectList[k].recommend = true;
+                                }
+                            }
+                        }
                     }
                 });
             },
             setSubject(row) {
-                if (!this.cancelStatus) {
-                    this.$emit('setSubject', row);
-                } else {
-                    this.cancelStatus = false;
+                let message = '';
+                switch (true) {
+                    case !row:
+                        return;
+                    case row.recommend:
+                        message = '当前专题已经被推荐，请选择其它专题';
+                        break;
+                    case !row.visible:
+                        message = '当前专题已经被下架，请选择其它专题';
+                        break;
+                    case this.mode === 'PROGRAMME' && row.subjectItemList.length === 0:
+                        message = '该专题中没有节目，不可选择';
+                        break;
+                    case this.mode === 'FIGURE' && row.subjectItemList.length < 7:
+                        message = '该专题中没有人物数量少于7个，不可选择';
+                        break;
                 }
-            },
-            cancelSubject() {
-                this.cancelStatus = true;
-                this.$refs.singleSubject.setCurrentRow();
+                if (message) {
+                    this.$message({
+                        message: message,
+                        type: 'warning'
+                    });
+                    this.$refs.singleSubject.setCurrentRow();
+                    this.$emit('resetSubjectInfo');
+                    return;
+                }
+                this.$emit('setSubject', row);
             },
             handleSizeChange(pageSize) {
                 this.listQueryParams.pageSize = pageSize;
-                this.getSubjectList();
+                this.initSubjectList(this.recommendIdList);
             },
             handleCurrentChange(pageNum) {
                 this.listQueryParams.pageNum = pageNum;
-                this.getSubjectList();
+                this.initSubjectList(this.recommendIdList);
             },
             // 查询专题详情
             checkSubjectDetail(item) {

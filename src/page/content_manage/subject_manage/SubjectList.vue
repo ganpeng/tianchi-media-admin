@@ -10,7 +10,7 @@
         <div class="block-box">
             <el-form :inline="true" class="demo-form-inline search-form">
                 <el-form-item label="专题类型">
-                    <el-select v-model="listQueryParams.subjectCategory" clearable placeholder="请选择专题类型">
+                    <el-select v-model="listQueryParams.category" clearable placeholder="请选择专题类型">
                         <el-option
                             v-for="item in categoryOptions"
                             :key="item.value"
@@ -19,7 +19,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <template v-if="listQueryParams.subjectCategory === 'PROGRAMME'">
+                <template v-if="listQueryParams.category === 'PROGRAMME'">
                     <el-form-item label="节目类别">
                         <el-select v-model="listQueryParams.programmeCategoryIdList" multiple clearable
                                    placeholder="请选择节目类别">
@@ -166,7 +166,7 @@
         data() {
             return {
                 listQueryParams: {
-                    subjectCategory: '',
+                    category: '',
                     programmeCategoryIdList: [],
                     createdAtBegin: '',
                     createdAtEnd: '',

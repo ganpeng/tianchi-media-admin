@@ -23,7 +23,7 @@
     export default {
         name: 'ProgrammeSecondStep',
         components: {PreviewMultipleImages},
-        props: ['programmeId', 'posterImages'],
+        props: ['programmeId', 'posterImages', 'originState'],
         computed: {
             specPosterImages() {
                 return this.posterImages.filter(image => parseInt(image.width) === this.imageSpec.width && parseInt(image.height) === this.imageSpec.height);
@@ -42,8 +42,12 @@
             };
         },
         mounted() {
+            this.init();
         },
         methods: {
+            init() {
+                this.programmeImage = this.originState.coverImage.id;
+            },
             // 放大预览图片
             displayImage(index) {
                 this.previewImage.display = true;

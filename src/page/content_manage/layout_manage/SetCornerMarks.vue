@@ -3,7 +3,9 @@
     <div>
         <h3 class="text-left">请勾选需要展示的角标：</h3>
         <el-checkbox-group v-model="checkedCornerMarks" @change="checkedCornerMarksChange" class="text-left">
-            <el-checkbox v-if="checkVisible(item.markType)" v-for="(item,index) in cornerMarks" :label="item.markType"
+            <el-checkbox v-if="checkVisible(item.markType)"
+                         v-for="(item,index) in cornerMarks"
+                         :label="item.markType"
                          :key="index">
                 <label>{{item.markType | filterPosition}}</label>
                 <label>{{item.markType | filterMarkType}}</label>
@@ -24,6 +26,7 @@
             <el-radio-group v-model="selectImageUri" class="text-center">
                 <el-radio :label="item.imageUri" v-for="(item, index) in customCornerMarkList" :key="index">
                     <img :src="item.imageUri | imageUrl" :alt="item.captain">
+                    <label @click="removeCornerMark(item.id,index)">删除</label>
                 </el-radio>
             </el-radio-group>
             <div class="text-center">
@@ -51,7 +54,7 @@
 
     export default {
         name: 'SetCornerMarks',
-        props: ['programme'],
+        props: ['programme', 'originState'],
         components: {
             UploadImage
         },
@@ -75,7 +78,7 @@
                         return '右下角标';
                     case 'EPISODES_NUMBER':
                         return '左下角标';
-                    case 'COPYRIGHT_RESERVER':
+                    case 'COPYRIGHT_RESERVED':
                         return '左上角标';
                     default:
                         break;
@@ -87,7 +90,7 @@
                         return '评分';
                     case 'EPISODES_NUMBER':
                         return '更新集数';
-                    case 'COPYRIGHT_RESERVER':
+                    case 'COPYRIGHT_RESERVED':
                         return '版权方角标';
                     default:
                         break;
@@ -102,6 +105,12 @@
                 this.$service.getProgrammeInfo({id: this.programme.id}).then(response => {
                     if (response && response.code === 0) {
                         this.cornerMarks = response.data.markList;
+                        // 初始化原先的设置角标
+                        for (let key in this.originState.cornerMark) {
+                            if (this.originState.cornerMark[key]) {
+                                this.checkedCornerMarks.push(this.originState.cornerMark[key].markType);
+                            }
+                        }
                     }
                 });
                 // 获取运营角标列表
@@ -118,7 +127,7 @@
                         return true;
                     case 'EPISODES_NUMBER':
                         return true;
-                    case 'COPYRIGHT_RESERVER':
+                    case 'COPYRIGHT_RESERVED':
                         return true;
                     default:
                         return false;
@@ -140,9 +149,43 @@
                         return;
                     }
                 }
-                this.customCornerMarkList.push({
-                    imageUri: newCustomCornerMarkImage.posterImage.uri,
-                    captain: newCustomCornerMarkImage.posterImage.name
+                // 添加当前角标到运营角标列表中
+                this.$service.appendCornerMark({
+                    markVo: {
+                        caption: newCustomCornerMarkImage.posterImage.name,
+                        imageUri: newCustomCornerMarkImage.posterImage.uri,
+                        markType: 'CUSTOM'
+                    }
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.customCornerMarkList.push({
+                            imageUri: newCustomCornerMarkImage.posterImage.uri,
+                            captain: newCustomCornerMarkImage.posterImage.name
+                        });
+                    }
+                });
+            },
+            // 删除某一个角标
+            removeCornerMark(cornerMarkId, index) {
+                this.$confirm('此操作将永久删除该角标, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$service.deleteCornerMark(cornerMarkId).then(response => {
+                        if (response && response.code === 0) {
+                            this.customCornerMarkList.splice(index, 1);
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
                 });
             },
             // 选择某一个
@@ -173,7 +216,7 @@
                                 case 'EPISODES_NUMBER':
                                     this.currentMarks.leftBottom = cornerMark;
                                     break;
-                                case 'COPYRIGHT_RESERVER':
+                                case 'COPYRIGHT_RESERVED':
                                     this.currentMarks.leftTop = cornerMark;
                                     break;
                                 default:
@@ -190,6 +233,7 @@
                         }
                     });
                 });
+                console.log(this.currentMarks);
                 this.$emit('setCornerMarks', this.currentMarks);
                 return true;
             }
@@ -228,9 +272,16 @@
             display: flex;
             flex-direction: column-reverse;
             img {
+                display: block;
                 margin-bottom: 15px;
                 width: 54px;
                 height: 30px;
+            }
+            label {
+                display: block;
+                margin-bottom: 10px;
+                color: #409EFF;
+                cursor: pointer;
             }
         }
     }

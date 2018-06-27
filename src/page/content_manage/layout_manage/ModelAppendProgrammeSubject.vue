@@ -20,6 +20,8 @@
         <h3 class="text-left">2.请选择要推荐的节目专题：</h3>
         <select-single-subject
             ref="selectSingleSubject"
+            mode="PROGRAMME"
+            v-on:resetSubjectInfo='resetSubjectInfo'
             v-on:setSubject="setSubject">
         </select-single-subject>
         <h3 class="text-left">3.请选择模块板式：</h3>
@@ -119,7 +121,9 @@
                 currentRow: '',
                 // 当前设置节目所在某行的index
                 currentIndex: '',
-                imageSpec: {}
+                imageSpec: {},
+                // 当前本地数据中模块推荐位推荐的专题的id的数组
+                recommendSubjectIdList: []
             };
         },
         filters: {
@@ -133,30 +137,36 @@
                     navBarId: this.navBarId
                 });
             },
+            // 当前选择的板式的最后一行的index
             lastRow() {
                 return this.subjectLayoutItemList.length - 1;
             },
+            // 当前选择的板式的最后一行的最后一个item的index
             lastIndex() {
                 return this.subjectLayoutItemList[this.lastRow].length - 1;
             }
         },
+        mounted() {
+            this.init();
+        },
         methods: {
+            init() {
+                this.recommendSubjectIdList = this.$store.getters['layout/getRecommendModelSubjectIdList']({
+                    navBarSignCode: this.navBarSignCode
+                });
+                this.$refs.selectSingleSubject.initSubjectList(this.recommendSubjectIdList);
+            },
             // 选择某一个专题
             setSubject(item) {
-                if (!item.subjectItemList || item.subjectItemList.length === 0) {
-                    this.$message({
-                        message: '该专题中没有节目，不可选择',
-                        type: 'warning'
-                    });
-                    this.currentSubject = {};
-                    this.programmeList = [];
-                    // 取消选择
-                    this.$refs.selectSingleSubject.cancelSubject();
-                } else {
-                    this.currentSubject = item;
-                    this.programmeList = item.subjectItemList;
-                    this.resetModel();
-                }
+                this.currentSubject = item;
+                this.programmeList = item.subjectItemList;
+                this.resetModel();
+            },
+            // 重置专题信息
+            resetSubjectInfo() {
+                this.resetModel();
+                this.currentSubject = {};
+                this.programmeList = [];
             },
             // 初始化模块板式
             resetModel() {
@@ -263,7 +273,7 @@
                 // 检查是否设置完成模块的每一项
                 this.subjectLayoutItemList.map(rowArray => {
                     rowArray.map(programme => {
-                        if (programme.id) {
+                        if (programme.coverImage.id) {
                             completeItemCount++;
                         }
                     });
@@ -394,6 +404,7 @@
         color: #fff;
         font-size: 14px;
         border-radius: 6px;
+        text-align: center;
         img {
             width: 100%;
             height: auto;

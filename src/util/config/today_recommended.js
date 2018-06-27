@@ -9,6 +9,7 @@
 
 const DATA_3_2 = {
     "navBarId": "5b03d1c2dd10352f7de61c67",
+    "navBarName": '',
     "layoutBlockList": [
         {
             "layoutTemplate": "LT_R_1",
@@ -78,6 +79,7 @@ const DATA_3_2 = {
 
 const DATA_3_C = {
     "navBarId": "5b231d5ac1c275b2d8029ba5",
+    "navBarName": '',
     "layoutBlockList": [
         {
             "layoutTemplate": "LT_R_1",
@@ -166,6 +168,7 @@ const DATA_3_C = {
 
 const DATA_3_C_ALL = {
     "navBarId": "5b231d5ac1c275b2d8029ba5",
+    "navBarName": '',
     "layoutBlockList": [
         {
             "layoutTemplate": "LT_R_1",
@@ -254,6 +257,7 @@ const DATA_3_C_ALL = {
 
 const DATA_3 = {
     "navBarId": "5b237887221290c28d5c6a8b",
+    "navBarName": '',
     "layoutBlockList": [
         {
             "layoutTemplate": "LT_R_1",

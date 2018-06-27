@@ -247,6 +247,9 @@
                 this.modified = this.$store.getters['layout/getCurrentLayoutStatus']({
                     navBarSignCode: this.navBarSignCode
                 });
+                this.navBarName = this.$store.getters['layout/getNavBarInfo']({
+                    navBarId: this.navBarId
+                }).name;
                 this.getNavBarList();
                 // 获取本地数据展示
                 if (this.modified) {
@@ -260,11 +263,6 @@
                 this.$service.getNavBarList().then(response => {
                     if (response && response.code === 0) {
                         this.navBarList = response.data;
-                        this.navBarList.map(item => {
-                            if (item.id === this.navBarId) {
-                                this.navBarName = item.name;
-                            }
-                        });
                     }
                 });
             },
@@ -272,7 +270,8 @@
             displayLocalData() {
                 this.layoutInfo = this.$store.getters['layout/getCurrentLayout']({
                     navBarSignCode: this.navBarSignCode,
-                    navBarId: this.navBarId
+                    navBarId: this.navBarId,
+                    navBarName: this.navBarName
                 });
                 this.liveChannelList = this.layoutInfo.liveChannelList;
                 this.layoutBlockList = this.layoutInfo.layoutBlockList;
@@ -322,6 +321,7 @@
                     singleNavBarLayout: {
                         modified: false,
                         navBarId: this.navBarId,
+                        navBarName: this.navBarName,
                         liveChannelList: this.liveChannelList,
                         layoutBlockList: this.layoutBlockList
                     }
@@ -481,7 +481,8 @@
                         id: this.navBarId,
                         contentLayout: this.$store.getters['layout/getCurrentLayout']({
                             navBarSignCode: this.navBarSignCode,
-                            navBarId: this.navBarId
+                            navBarId: this.navBarId,
+                            navBarName: this.navBarName
                         })
                     }).then(response => {
                         if (response && response.code === 0) {

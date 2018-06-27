@@ -45,17 +45,34 @@ const getters = {
      * @param state
      * @return {JSON}
      */
-    getCurrentLayout: (state) => ({navBarSignCode, navBarId}) => {
+    getCurrentLayout: (state) => ({navBarSignCode, navBarId, navBarName}) => {
         if (state[navBarSignCode]) {
             return state[navBarSignCode];
         } else {
             return {
                 modified: false,
                 navBarId: navBarId,
+                navBarName: navBarName,
                 liveChannelList: [],
                 layoutBlockList: []
             };
         }
+    },
+    /**
+     * get the current id list of recommend model subject
+     * @param state
+     * @return {Array}
+     */
+    getRecommendModelSubjectIdList: (state) => ({navBarSignCode}) => {
+        let subjectIdList = [];
+        if (state[navBarSignCode] && state[navBarSignCode].layoutBlockList) {
+            for (let i = 0; i < state[navBarSignCode].layoutBlockList.length; i++) {
+                if (state[navBarSignCode].layoutBlockList[i].subjectId) {
+                    subjectIdList.push(state[navBarSignCode].layoutBlockList[i].subjectId);
+                }
+            }
+        }
+        return subjectIdList;
     },
     /**
      * get the current layout of a single navBar
@@ -83,6 +100,20 @@ const getters = {
             return state[navBarSignCode].liveChannelList;
         }
         return [];
+    },
+    /**
+     * 获取单个推荐位的节目或者专题数据
+     * @param state
+     * @param navBarSignCode The signCode of a single navBar
+     * @param model The model index of a recommend item
+     * @param row The row index of a recommend item
+     * @param index The index of a recommend item
+     */
+    getRecommendItemInfo: (state) => ({navBarSignCode, model, row, index}) => {
+        if (state[navBarSignCode] && state[navBarSignCode].layoutBlockList && state[navBarSignCode].layoutBlockList[model] && state[navBarSignCode].layoutBlockList[model].layoutItemMultiList[row] && state[navBarSignCode].layoutBlockList[model].layoutItemMultiList[row][index]) {
+            return state[navBarSignCode].layoutBlockList[model].layoutItemMultiList[row][index];
+        }
+        return {};
     }
 };
 
@@ -124,7 +155,7 @@ const mutations = {
      * @param navBarId The id of navBar
      * @param liveChannelList An array of live channels in the single navBar
      */
-    setLiveChannel(state, {navBarSignCode, navBarId, liveChannelList}) {
+    setLiveChannel(state, {navBarSignCode, navBarId, navBarName, liveChannelList}) {
         if (state[navBarSignCode]) {
             state[navBarSignCode].liveChannelList = liveChannelList;
             state[navBarSignCode].modified = true;
@@ -132,6 +163,7 @@ const mutations = {
             state[navBarSignCode] = {
                 modified: false,
                 navBarId: navBarId,
+                navBarName: navBarName,
                 liveChannelList: liveChannelList,
                 layoutBlockList: []
             };
@@ -147,7 +179,7 @@ const mutations = {
      * @param index The index of the row
      * @param item An single subject or programme recommended
      */
-    setSingleRecommendItem(state, {navBarId, navBarSignCode, model, row, index, item}) {
+    setSingleRecommendItem(state, {navBarId, navBarName, navBarSignCode, model, row, index, item}) {
         if (state[navBarSignCode]) {
             state[navBarSignCode].layoutBlockList[model].layoutItemMultiList[row][index] = item;
             state[navBarSignCode].modified = true;
@@ -155,6 +187,7 @@ const mutations = {
             state[navBarSignCode] = {
                 modified: false,
                 navBarId: navBarId,
+                navBarName: navBarName,
                 liveChannelList: [],
                 layoutBlockList: []
             };
@@ -168,7 +201,7 @@ const mutations = {
      * @param model The index of layoutBlockList
      * @param catalogueModel The catalogue model which is two-dimensional array
      */
-    setCatalogue(state, {navBarId, navBarSignCode, model, catalogueModel}) {
+    setCatalogue(state, {navBarId, navBarName, navBarSignCode, model, catalogueModel}) {
         if (state[navBarSignCode]) {
             state[navBarSignCode].layoutBlockList[model] = catalogueModel;
             state[navBarSignCode].modified = true;
@@ -176,6 +209,7 @@ const mutations = {
             state[navBarSignCode] = {
                 modified: false,
                 navBarId: navBarId,
+                navBarName: navBarName,
                 liveChannelList: [],
                 layoutBlockList: []
             };
@@ -190,7 +224,7 @@ const mutations = {
      * @param subjectModel The subject model which is two-dimensional array
      * @param operate The operate for subject model, such as 'edit' or 'add'
      */
-    setSubjectLayoutItem(state, {navBarId, navBarSignCode, model, subjectModel, operate}) {
+    setSubjectLayoutItem(state, {navBarId, navBarName, navBarSignCode, model, subjectModel, operate}) {
         if (state[navBarSignCode]) {
             if (operate === 'edit') {
                 state[navBarSignCode].layoutBlockList[model] = subjectModel;
@@ -202,6 +236,7 @@ const mutations = {
             state[navBarSignCode] = {
                 modified: false,
                 navBarId: navBarId,
+                navBarName: navBarName,
                 liveChannelList: [],
                 layoutBlockList: []
             };
@@ -215,13 +250,14 @@ const mutations = {
      * @param model The index of layoutBlockList
      * @param subjectModel The subject model which is two-dimensional array
      */
-    setLayoutStatus(state, {navBarId, navBarSignCode, modified}) {
+    setLayoutStatus(state, {navBarId, navBarName, navBarSignCode, modified}) {
         if (state[navBarSignCode]) {
             state[navBarSignCode].modified = modified;
         } else {
             state[navBarSignCode] = {
                 modified: modified,
                 navBarId: navBarId,
+                navBarName: navBarName,
                 liveChannelList: [],
                 layoutBlockList: []
             };
@@ -239,7 +275,7 @@ const mutations = {
         mutations.setCache();
     },
     /**
-     * 设置模块推荐位的专题项
+     * 设置模块推荐位的专题项排序
      * @param state
      */
     sortModelList(state, {navBarId, navBarSignCode, modelSubjectIdList}) {

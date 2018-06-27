@@ -20,6 +20,8 @@
         <h3 class="text-left">2.请选择要推荐的人物专题：</h3>
         <select-single-subject
             ref="selectSingleSubject"
+            mode="FIGURE"
+            v-on:resetSubjectInfo='resetSubjectInfo'
             v-on:setSubject="setSubject">
         </select-single-subject>
         <h3 class="text-left">3.请对专题中的人物排序：</h3>
@@ -50,7 +52,8 @@
                 navBarSignCode: this.$route.params.navBarSignCode,
                 title: '',
                 currentSubject: {},
-                personList: []
+                personList: [],
+                recommendSubjectIdList: []
             };
         },
         computed: {
@@ -65,28 +68,26 @@
         },
         methods: {
             init() {
+                this.recommendSubjectIdList = this.$store.getters['layout/getRecommendModelSubjectIdList']({
+                    navBarSignCode: this.navBarSignCode
+                });
+                this.$refs.selectSingleSubject.initSubjectList(this.recommendSubjectIdList);
             },
             // 选择某一个专题
             setSubject(item) {
-                if (!item.subjectItemList || item.subjectItemList.length < 7) {
-                    this.$message({
-                        message: '该专题人物数少于7个，不可选择',
-                        type: 'warning'
+                this.currentSubject = item;
+                this.personList = item.subjectItemList;
+                this.$nextTick(function () {
+                    this.$dragula([document.getElementById('person-list')], {
+                        direction: 'horizontal'
                     });
-                    this.currentSubject = {};
-                    this.personList = [];
-                    // 取消选择
-                    this.$refs.selectSingleSubject.cancelSubject();
-                } else {
-                    this.currentSubject = item;
-                    this.personList = item.subjectItemList;
-                    this.$nextTick(function () {
-                        // 拖拽设置
-                        this.$dragula([document.getElementById('person-list')], {
-                            direction: 'horizontal'
-                        });
-                    });
-                }
+                });
+            },
+            // 重置专题信息
+            resetSubjectInfo() {
+                this.personList = [];
+                this.currentSubject = {};
+                this.personList = [];
             },
             // 保存信息到store中
             saveBlock() {

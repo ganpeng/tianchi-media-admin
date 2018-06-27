@@ -13,6 +13,7 @@
                 :programmeList="programmeList"
                 :programme="programme"
                 :imageSpec="imageSpec"
+                :originState="currentRecommendItem"
                 v-on:setProgramme="setProgramme"
                 v-on:setCoverImage="setCoverImage"
                 v-on:setCornerMarks="setCornerMarks">
@@ -45,7 +46,8 @@
                 activeStep: 0,
                 programme: {},
                 coverImage: {},
-                checkedCornerMarks: {}
+                checkedCornerMarks: {},
+                currentRecommendItem: {cornerMark: {}}
             };
         },
         computed: {

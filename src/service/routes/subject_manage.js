@@ -32,17 +32,17 @@ export const createSubject = ({category, name, programmeCategoryList, descriptio
 /**
  * 获取专题列表
  * @param name The name of subject.
- * @param subjectCategory Including 'FIGURE' and 'PROGRAMME'.
+ * @param category Including 'FIGURE' and 'PROGRAMME'.
  * @param subjectType Including 'TV_DRAMA'、 'MOVIE' and 'VARIETY_SHOW'.
  * @param pageNum The current page number.
  * @param pageSize The size of one page.
  */
-export const getSubjectList = ({name, subjectCategory, programmeCategoryIdList, createdAtBegin, createdAtEnd, pageNum, pageSize}) => {
+export const getSubjectList = ({name, category, programmeCategoryIdList, createdAtBegin, createdAtEnd, pageNum, pageSize}) => {
     const params = {
         pageNum: pageNum - 1,
         pageSize,
         name,
-        subjectCategory,
+        category,
         programmeCategoryIdList,
         createdAtBegin,
         createdAtEnd
