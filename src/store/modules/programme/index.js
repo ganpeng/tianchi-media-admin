@@ -316,8 +316,8 @@ const getters = {
         let sort = state.video.video.sort;
         let featureList = state.video.featureList;
         let tempList = state.video.tempList;
-        let index = featureList.findIndex((video) => video.sort === sort);
-        let otherIndex = tempList.findIndex((video) => video.sort === sort);
+        let index = featureList.findIndex((video) => parseInt(video.sort) === parseInt(sort));
+        let otherIndex = tempList.findIndex((video) => parseInt(video.sort) === parseInt(sort));
         return index > -1 || otherIndex > -1;
     },
     // 新方法结束
