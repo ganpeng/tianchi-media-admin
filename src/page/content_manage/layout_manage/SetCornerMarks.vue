@@ -114,7 +114,7 @@
                             }
                         }
                         // 初始化运营角标
-                        if (this.originState.cornerMark.rightTop) {
+                        if (this.originState.cornerMark && this.originState.cornerMark.rightTop) {
                             this.customImageUri = this.selectImageUri = this.originState.cornerMark.rightTop.imageUri;
                         }
                     }

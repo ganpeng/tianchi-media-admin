@@ -51,8 +51,11 @@
             init() {
             },
             tableRowClassName({row}) {
-                if (row.selected) {
+                if (row.selected && !row.originProgramme) {
                     return 'warning-row';
+                }
+                if (row.originProgramme) {
+                    return 'current-row';
                 }
                 return '';
             },
@@ -61,11 +64,12 @@
                 if (!item) {
                     return;
                 }
-                if (item.selected) {
+                if (item.selected && !item.originProgramme) {
                     this.$message({
                         message: '当前节目已经选过，请选择其它节目',
                         type: 'warning'
                     });
+                    this.$emit('resetProgramme');
                     this.$refs.singleProgrammeTable.setCurrentRow();
                     return;
                 }

@@ -17,18 +17,96 @@
             v-model="title"
             clearable>
         </el-input>
-        <h3 class="text-left">2.请选择要推荐的节目专题：</h3>
+        <h3 class="text-left">2.{{mode === 'EDIT' ? '当前推荐的专题' : '请选择要推荐的节目专题'}}：</h3>
         <select-single-subject
+            v-show="mode === 'NORMAL'"
             ref="selectSingleSubject"
             mode="PROGRAMME"
             v-on:resetSubjectInfo='resetSubjectInfo'
             v-on:setSubject="setSubject">
         </select-single-subject>
+        <template v-if="mode === 'EDIT'">
+            <el-table
+                :data="currentSubjectList"
+                border
+                style="width: 100%">
+                <el-table-column
+                    prop="code"
+                    width="60px"
+                    label="编号">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.code}}</label>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="name"
+                    label="名称">
+                </el-table-column>
+                <el-table-column
+                    label="包含节目/人物数">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.subjectItemList === null ? 0 : scope.row.subjectItemList.length}}</label>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="description"
+                    label="简介">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.description}}</label>
+                        <el-popover
+                            placement="right"
+                            :title="scope.row.name + '简介'"
+                            width="250"
+                            trigger="hover"
+                            :content="scope.row.description">
+                            <el-button slot="reference" type="text" class="more">更多</el-button>
+                        </el-popover>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="tagList"
+                    label="专题标签">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.tagList.join(',')}}</label>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="owner"
+                    label="专题创建者">
+                </el-table-column>
+                <el-table-column
+                    prop="category"
+                    label="专题类型">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.category === 'FIGURE'?'人物' : '节目'}}</label>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="type"
+                    label="节目专题类型">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.type ?scope.row.type : '------' }}</label>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    label="创建时间">
+                    <template slot-scope="scope">
+                        {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    label="状态">
+                    <template slot-scope="scope">
+                        {{scope.row.visible ? '已上架' : '已下架'}}
+                    </template>
+                </el-table-column>
+            </el-table>
+        </template>
         <h3 class="text-left">3.请选择模块板式：</h3>
-        <el-select v-model="model" clearable placeholder="请选择模块板式" @change="setBlockModel"
+        <el-select v-model="templateType" clearable placeholder="请选择模块板式" @change="setBlockModel"
                    :disabled="!currentSubject.id">
             <el-option
-                v-for="item in modelOptions"
+                v-for="item in templateTypeOptions"
                 :key="item.id"
                 :label="item.name"
                 :value="item.name">
@@ -37,7 +115,7 @@
         <div class="model-block">
             <ul :class="'model-' + row.length" v-for="(row,rowIndex) in subjectLayoutItemList" :key="rowIndex">
                 <li v-for="(item,index) in row" :key="index"
-                    @click="setModelItem(rowIndex,index,('model-' + row.length),item.layoutItemType === 'ALL')">
+                    @click="setModelItem(rowIndex,index,('model-' + row.length),item.layoutItemType === 'ALL',item)">
                     <div class="ab-center text-center">
                         <img :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
                              :alt="item.coverImage.name"
@@ -67,13 +145,16 @@
             </ul>
         </div>
         <div class="text-center save-btn">
+            <el-button type="success" @click="switchMode" v-if="mode === 'EDIT'">更换专题</el-button>
             <el-button type="success" @click="saveBlock">保 存</el-button>
         </div>
         <el-dialog title="设置模块推荐位内的节目" center :visible.sync="dialogTableVisible">
             <set-subject-programme
                 v-if="dialogTableVisible"
                 :imageSpec="imageSpec"
+                :originProgramme="originProgramme"
                 :programmeList="programmeList"
+                :subjectLayoutItemList="subjectLayoutItemList"
                 v-on:setCurrentSubjectItem="setCurrentSubjectItem">
             </set-subject-programme>
         </el-dialog>
@@ -90,7 +171,7 @@
 <script>
     import SelectSingleSubject from './SelectSingleSubject';
     import SetSubjectProgramme from './SetSubjectProgramme';
-    import blockModel from '@/util/config/block_model';
+    import templateType from '@/util/config/template_type';
     import {LAYOUT_IMAGE_DIMENSION, PROGRAMME_DIMENSION} from '@/util/config/dimension';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
 
@@ -107,11 +188,13 @@
                 imageUploadDialogVisible: false,
                 navBarId: this.$route.params.navBarId,
                 navBarSignCode: this.$route.params.navBarSignCode,
+                // 当前页面选择人物专题的操作，operate有add && edit
+                operate: this.$route.params.operate,
                 dialogTableVisible: false,
                 title: '',
                 currentSubject: {},
-                modelOptions: blockModel.TYPE,
-                model: '',
+                templateTypeOptions: templateType.TYPE,
+                templateType: '',
                 // 布局一定的节目列表
                 subjectLayoutItemList: [],
                 // 当前专题中的节目列表
@@ -120,9 +203,17 @@
                 currentRow: '',
                 // 当前设置节目所在某行的index
                 currentIndex: '',
+                // 当前编辑的节目
+                originProgramme: {},
                 imageSpec: {},
                 // 当前本地数据中模块推荐位推荐的专题的id的数组
-                recommendSubjectIdList: []
+                recommendSubjectIdList: [],
+                // 编辑状态，本地对应的模块推荐位回填信息
+                recommendModelInfo: {},
+                // 当operate是edit的时候的模式,mode含有'NORMAL'和'EDIT'
+                mode: this.$route.params.operate === 'edit' ? 'EDIT' : 'NORMAL',
+                // 编辑模式下的当前专题
+                currentSubjectList: []
             };
         },
         computed: {
@@ -145,16 +236,53 @@
         },
         methods: {
             init() {
+                // 编辑模式下进行回填
+                if (this.mode === 'EDIT') {
+                    this.recommendModelInfo = this.$store.getters['layout/getRecommendModelInfo']({
+                        navBarSignCode: this.navBarSignCode,
+                        model: this.$route.params.model
+                    });
+                    this.initCurrentRecommendSubject();
+                }
                 this.recommendSubjectIdList = this.$store.getters['layout/getRecommendModelSubjectIdList']({
                     navBarSignCode: this.navBarSignCode
                 });
-                this.$refs.selectSingleSubject.initSubjectList(this.recommendSubjectIdList);
+                if (this.mode !== 'EDIT') {
+                    this.$nextTick(function () {
+                        this.$refs.selectSingleSubject.initSubjectList(this.recommendSubjectIdList);
+                    });
+                }
+            },
+            // 回填选中的专题数据
+            initCurrentRecommendSubject() {
+                this.title = this.recommendModelInfo.title;
+                this.subjectLayoutItemList = this.recommendModelInfo.layoutItemMultiList;
+                // 初始化模板样式
+                this.templateType = '';
+                for (let i = 0; i < this.subjectLayoutItemList.length; i++) {
+                    this.templateType = this.templateType + '+' + this.subjectLayoutItemList[i].length;
+                }
+                this.templateType = this.templateType.slice(1);
+                this.$service.getSubjectDetail(this.recommendModelInfo.subjectId).then(response => {
+                    if (response && response.code === 0) {
+                        this.currentSubjectList.push(response.data);
+                        this.currentSubject = response.data;
+                        this.programmeList = response.data.subjectItemList;
+                    }
+                });
             },
             // 选择某一个专题
             setSubject(item) {
                 this.currentSubject = item;
                 this.programmeList = item.subjectItemList;
                 this.resetModel();
+            },
+            // 由'EDIT'模式更换为'NORMAL'模式
+            switchMode() {
+                this.mode = 'NORMAL';
+                this.title = '';
+                this.resetSubjectInfo();
+                this.$refs.selectSingleSubject.initSubjectList(this.recommendSubjectIdList);
             },
             // 重置专题信息
             resetSubjectInfo() {
@@ -164,12 +292,12 @@
             },
             // 初始化模块板式
             resetModel() {
-                this.model = '';
+                this.templateType = '';
                 this.subjectLayoutItemList = [];
             },
             // 选择模块板式
             setBlockModel() {
-                if (!this.model) {
+                if (!this.templateType) {
                     this.resetModel();
                     return;
                 }
@@ -183,9 +311,9 @@
                 }
                 // 初始化模块列表
                 this.subjectLayoutItemList = [];
-                for (let k = 0; k < this.model.split('+').length; k++) {
+                for (let k = 0; k < this.templateType.split('+').length; k++) {
                     this.subjectLayoutItemList[k] = [];
-                    for (let i = 0; i < this.model.split('+')[k]; i++) {
+                    for (let i = 0; i < this.templateType.split('+')[k]; i++) {
                         this.subjectLayoutItemList[k].push({});
                     }
                 }
@@ -211,14 +339,14 @@
             },
             getModelCount() {
                 let num = 0;
-                let array = this.model.split('+');
-                for (let k = 0; k < this.model.split('+').length; k++) {
+                let array = this.templateType.split('+');
+                for (let k = 0; k < this.templateType.split('+').length; k++) {
                     num = num + parseInt(array[k]);
                 }
                 return num;
             },
             // 设置模板样式中的节目项
-            setModelItem(row, index, imageModel, isAll) {
+            setModelItem(row, index, imageModel, isAll, item) {
                 if (isAll) {
                     this.imageUploadDialogVisible = true;
                     return;
@@ -226,6 +354,7 @@
                 this.imageSpec = LAYOUT_IMAGE_DIMENSION[imageModel];
                 this.currentRow = row;
                 this.currentIndex = index;
+                this.originProgramme = item;
                 this.dialogTableVisible = true;
             },
             // 关闭上传图片对话框
@@ -240,12 +369,6 @@
             setCurrentSubjectItem(programmeItem) {
                 this.subjectLayoutItemList[this.currentRow][this.currentIndex] = programmeItem;
                 this.dialogTableVisible = false;
-                // 设置节目为已选
-                this.programmeList.map(programme => {
-                    if (programme.id === programmeItem.id) {
-                        programme.selected = true;
-                    }
-                });
             },
             // 保存信息到store中
             saveBlock() {
@@ -280,7 +403,7 @@
                     return;
                 }
                 // 定义模块布局模式
-                let layoutTemplate = 'LT_' + this.model.replace(/\+/g, '_');
+                let layoutTemplate = 'LT_' + this.templateType.replace(/\+/g, '_');
                 // 组建模块专题对象
                 let programmeModel = {
                     layoutTemplate: layoutTemplate,

@@ -1,9 +1,9 @@
 /**
- * @fileOverview Define block model of the project
+ * @fileOverview Define template type of the programme subject
  */
 
 /**
- * The Array of block model type.
+ * The Array of block template type.
  * @type {Array.<Object>}
  */
 const TYPE = [
@@ -71,7 +71,7 @@ const TYPE = [
 ];
 
 /**
- * The Object of block model size.
+ * The Object of block template size.
  * @type {Object}
  */
 const SIZE = {

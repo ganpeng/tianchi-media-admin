@@ -10,11 +10,12 @@
             <component
                 ref="SetSubjectProgrammeCornerMarks"
                 :is="currentView"
-                :programmeList="programmeList"
+                :programmeList="currentProgrammeList"
                 :programme="programme"
                 :imageSpec="imageSpec"
-                :originState="currentRecommendItem"
+                :originState="originProgramme"
                 v-on:setProgramme="setProgramme"
+                v-on:resetProgramme="resetProgramme"
                 v-on:setCoverImage="setCoverImage"
                 v-on:setCornerMarks="setCornerMarks">
             </component>
@@ -39,14 +40,21 @@
             SetSubjectProgrammeSecond,
             SetCornerMarks
         },
-        props: ['programmeList', 'imageSpec'],
+        /** programmeList 当前专题中的节目列表
+         *  imageSpec 当前选择的节目中适合当前板式的图片集合
+         *  originProgramme 需要回填的节目的信息
+         *  subjectLayoutItemList 当前已经选择设置的节目的集合
+         * */
+        props: ['programmeList', 'imageSpec', 'originProgramme', 'subjectLayoutItemList'],
         data() {
             return {
                 activeStep: 0,
+                // 当前设置的节目
                 programme: {},
+                // 当前节目选择的封面图片
                 coverImage: {},
-                checkedCornerMarks: {},
-                currentRecommendItem: {cornerMark: {}}
+                // 当前节目选择的角标
+                checkedCornerMarks: {}
             };
         },
         computed: {
@@ -61,6 +69,9 @@
                     default:
                         return 'SetSubjectProgrammeFirst';
                 }
+            },
+            currentProgrammeList() {
+                return JSON.parse(JSON.stringify(this.programmeList));
             }
         },
         mounted() {
@@ -68,6 +79,26 @@
         },
         methods: {
             init() {
+                this.coverImage = this.originProgramme.coverImage;
+                this.checkedCornerMarks = this.originProgramme.cornerMark;
+                // 初始化设置当前节目列表,设置选中以及当前编辑的节目
+                this.subjectLayoutItemList.map(list => {
+                    list.map(layoutItem => {
+                        this.currentProgrammeList.map(item => {
+                            if (item.id === this.originProgramme.id) {
+                                item.originProgramme = true;
+                                this.programme = item;
+                            }
+                            if (item.id === layoutItem.id) {
+                                item.selected = true;
+                            }
+                        });
+                    });
+                });
+            },
+            // 重置选择的节目
+            resetProgramme() {
+                this.programme = {};
             },
             setProgramme(programme) {
                 this.programme = programme;

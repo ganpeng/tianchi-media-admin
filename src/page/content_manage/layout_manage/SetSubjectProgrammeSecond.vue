@@ -7,7 +7,8 @@
                 <div :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
                      class="image-box"
                      @click="displayImage(index)"></div>
-                <el-radio v-model="programmeImageIndex" :label="index" @change="setCoverImage">{{item.name}}</el-radio>
+                <el-radio v-model="programmeImageUri" :label="item.uri" @change="setCoverImage">{{item.name}}
+                </el-radio>
             </li>
         </ul>
         <div class="add-box">
@@ -37,11 +38,11 @@
             UploadImage,
             PreviewMultipleImages
         },
-        props: ['programme', 'imageSpec'],
+        props: ['programme', 'imageSpec', 'originState'],
         data() {
             return {
                 size: subjectDimension,
-                programmeImageIndex: '',
+                programmeImageUri: '',
                 previewImage: {
                     display: false,
                     autoplay: false,
@@ -56,13 +57,26 @@
                 return this.programme.posterImageList.filter(image => parseInt(image.width) === this.imageSpec.width && parseInt(image.height) === this.imageSpec.height);
             }
         },
+        mounted() {
+            this.init();
+        },
         methods: {
+            init() {
+                if (this.originState.coverImage) {
+                    this.programmeImageUri = this.originState.coverImage.uri;
+                }
+            },
             appendImagePrefix(uri) {
                 let baseUri = window.localStorage.getItem('imageBaseUri');
                 return baseUri + uri;
             },
             setCoverImage() {
-                this.$emit('setCoverImage', this.specPosterImages[this.programmeImageIndex]);
+                // 根据图片uri设置当前选择的图片
+                this.specPosterImages.map(image => {
+                    if (image.uri === this.programmeImageUri) {
+                        this.$emit('setCoverImage', image);
+                    }
+                });
             },
             // 添加节目封面图片
             addCover() {
