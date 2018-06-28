@@ -4,6 +4,8 @@
 
 import Vue from 'vue';
 import util from './extend';
+import platformImage from '@/util/config/import_image.js';
+import cornerMarkOptions from '@/util/config/corner_mark';
 
 /**
  * The Object of filters.
@@ -38,6 +40,9 @@ const FILTERS = {
         } else {
             return '------';
         }
+    },
+    setPlatformImage(copyRightCaptain) {
+        return platformImage[cornerMarkOptions.PLATFORM_MARK_SWITCH[copyRightCaptain]];
     }
 };
 

@@ -286,6 +286,7 @@
                     cornerMark: this.checkedCornerMarks,
                     coverImage: this.posterImage,
                     name: this.selectedProgrammeList[0].name,
+                    desc: this.selectedProgrammeList[0].desc,
                     id: this.programmeId,
                     layoutItemType: 'PROGRAMME'
                 };

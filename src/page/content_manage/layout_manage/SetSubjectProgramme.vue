@@ -17,7 +17,6 @@
                 v-on:setProgramme="setProgramme"
                 v-on:setCoverImage="setCoverImage"
                 v-on:setCornerMarks="setCornerMarks">
-                <!-- 非活动组件将被缓存！ -->
             </component>
         </keep-alive>
         <div class="step-button">

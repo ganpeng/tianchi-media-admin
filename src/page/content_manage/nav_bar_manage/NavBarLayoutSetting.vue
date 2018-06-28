@@ -38,7 +38,7 @@
                     <!--左上角标-->
                     <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.leftTop"
                           class="corner-mark left-top">
-                        <img :src="rightTopRecommend.cornerMark.leftTop.caption | setCopyRightImage"
+                        <img :src="rightTopRecommend.cornerMark.leftTop.caption | setPlatformImage"
                              :alt="rightTopRecommend.cornerMark.leftTop.caption">
                     </span>
                     <!--左下角标-->
@@ -105,7 +105,7 @@
                             <!--左上角标-->
                             <span v-if="item.cornerMark && item.cornerMark.leftTop"
                                   class="corner-mark left-top">
-                                 <img :src="item.cornerMark.leftTop.caption | setCopyRightImage"
+                                 <img :src="item.cornerMark.leftTop.caption | setPlatformImage"
                                       :alt="item.cornerMark.leftTop.caption">
                              </span>
                             <!--左下角标-->
@@ -144,13 +144,10 @@
                                 <el-dropdown-item command="PERSON">添加人物专题</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
-                        <el-dropdown @command="editModelSubject($event,blockIndex + 1)" placement="bottom">
-                            <span class="el-dropdown-link"><i class="el-icon-edit"></i></span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="PROGRAMME">编辑节目专题</el-dropdown-item>
-                                <el-dropdown-item command="PERSON">编辑人物专题</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
+                        <el-tooltip class="item" effect="dark" content="编辑" placement="top">
+                            <i class="el-icon-edit"
+                               @click="editModelSubject(layoutBlockItem.renderType,blockIndex + 1)"></i>
+                        </el-tooltip>
                         <el-tooltip class="item" effect="dark" content="删除" placement="top">
                             <i class="el-icon-delete"
                                @click="removeModel(layoutBlockItem.title,blockIndex + 1)"></i>
@@ -159,7 +156,7 @@
                 </div>
             </div>
             <div class="append-model">
-                <el-dropdown @command="editModelSubject($event,layoutBlockList.length)" placement="bottom">
+                <el-dropdown @command="addModelSubject($event,layoutBlockList.length)" placement="bottom">
             <span class="el-dropdown-link">
             <i class="el-icon-circle-plus-outline"></i>
             </span>
@@ -198,7 +195,6 @@
 
 <script>
     import SortCatalogue from '../layout_manage/SortCatalogue';
-    import copyRightImage from '@/util/config/import_image.js';
 
     export default {
         name: 'NavBarLayoutSetting',
@@ -220,11 +216,6 @@
                 rightTopRecommend: {},
                 modified: false
             };
-        },
-        filters: {
-            setCopyRightImage(copyRightCaptain) {
-                return copyRightImage[copyRightCaptain];
-            }
         },
         computed: {
             navBarId() {

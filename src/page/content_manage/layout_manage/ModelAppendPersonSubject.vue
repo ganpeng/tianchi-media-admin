@@ -17,13 +17,91 @@
             v-model="title"
             clearable>
         </el-input>
-        <h3 class="text-left">2.请选择要推荐的人物专题：</h3>
+        <h3 class="text-left">2.{{mode === 'EDIT' ? '当前推荐的专题' : '请选择要推荐的人物专题'}}：</h3>
         <select-single-subject
+            v-show="mode === 'NORMAL'"
             ref="selectSingleSubject"
             mode="FIGURE"
             v-on:resetSubjectInfo='resetSubjectInfo'
             v-on:setSubject="setSubject">
         </select-single-subject>
+        <template v-if="mode === 'EDIT'">
+            <el-table
+                :data="currentSubjectList"
+                border
+                style="width: 100%">
+                <el-table-column
+                    prop="code"
+                    width="60px"
+                    label="编号">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.code}}</label>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="name"
+                    label="名称">
+                </el-table-column>
+                <el-table-column
+                    label="包含节目/人物数">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.subjectItemList === null ? 0 : scope.row.subjectItemList.length}}</label>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="description"
+                    label="简介">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.description}}</label>
+                        <el-popover
+                            placement="right"
+                            :title="scope.row.name + '简介'"
+                            width="250"
+                            trigger="hover"
+                            :content="scope.row.description">
+                            <el-button slot="reference" type="text" class="more">更多</el-button>
+                        </el-popover>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="tagList"
+                    label="专题标签">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.tagList.join(',')}}</label>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="owner"
+                    label="专题创建者">
+                </el-table-column>
+                <el-table-column
+                    prop="category"
+                    label="专题类型">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.category === 'FIGURE'?'人物' : '节目'}}</label>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="type"
+                    label="节目专题类型">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.type ?scope.row.type : '------' }}</label>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    label="创建时间">
+                    <template slot-scope="scope">
+                        {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    label="状态">
+                    <template slot-scope="scope">
+                        {{scope.row.visible ? '已上架' : '已下架'}}
+                    </template>
+                </el-table-column>
+            </el-table>
+        </template>
         <h3 class="text-left">3.请对专题中的人物排序：</h3>
         <label v-if="personList.length === 0">暂无选中的人物</label>
         <ul id="person-list" v-else>
@@ -33,6 +111,7 @@
             </li>
         </ul>
         <div class="text-center save-btn">
+            <el-button type="success" @click="switchMode" v-if="mode === 'EDIT'">更换专题</el-button>
             <el-button type="success" @click="saveBlock">保 存</el-button>
         </div>
     </div>
@@ -50,10 +129,19 @@
             return {
                 navBarId: this.$route.params.navBarId,
                 navBarSignCode: this.$route.params.navBarSignCode,
+                // 当前页面选择人物专题的操作，operate有add && edit
+                operate: this.$route.params.operate,
                 title: '',
+                // 当前选中的专题
                 currentSubject: {},
                 personList: [],
-                recommendSubjectIdList: []
+                recommendSubjectIdList: [],
+                // 编辑状态，本地对应的模块推荐位回填信息
+                recommendModelInfo: {},
+                // 当operate是edit的时候的模式,mode含有'NORMAL'和'EDIT'
+                mode: this.$route.params.operate === 'edit' ? 'EDIT' : 'NORMAL',
+                // 编辑模式下的当前专题
+                currentSubjectList: []
             };
         },
         computed: {
@@ -68,10 +156,33 @@
         },
         methods: {
             init() {
+                // 编辑模式下进行回填
+                if (this.mode === 'EDIT') {
+                    this.recommendModelInfo = this.$store.getters['layout/getRecommendModelInfo']({
+                        navBarSignCode: this.navBarSignCode,
+                        model: this.$route.params.model
+                    });
+                    this.initCurrentRecommendSubject();
+                }
                 this.recommendSubjectIdList = this.$store.getters['layout/getRecommendModelSubjectIdList']({
                     navBarSignCode: this.navBarSignCode
                 });
-                this.$refs.selectSingleSubject.initSubjectList(this.recommendSubjectIdList);
+                if (this.mode !== 'EDIT') {
+                    this.$nextTick(function () {
+                        this.$refs.selectSingleSubject.initSubjectList(this.recommendSubjectIdList);
+                    });
+                }
+            },
+            // 回填选中的专题数据
+            initCurrentRecommendSubject() {
+                this.title = this.recommendModelInfo.title;
+                this.$service.getSubjectDetail(this.recommendModelInfo.subjectId).then(response => {
+                    if (response && response.code === 0) {
+                        this.currentSubjectList.push(response.data);
+                        this.currentSubject = response.data;
+                        this.personList = response.data.subjectItemList;
+                    }
+                });
             },
             // 选择某一个专题
             setSubject(item) {
@@ -87,7 +198,13 @@
             resetSubjectInfo() {
                 this.personList = [];
                 this.currentSubject = {};
-                this.personList = [];
+            },
+            // 由'EDIT'模式更换为'NORMAL'模式
+            switchMode() {
+                this.mode = 'NORMAL';
+                this.title = '';
+                this.resetSubjectInfo();
+                this.$refs.selectSingleSubject.initSubjectList(this.recommendSubjectIdList);
             },
             // 保存信息到store中
             saveBlock() {

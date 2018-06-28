@@ -3,7 +3,7 @@
     <div>
         <h3 class="text-left">请勾选需要展示的角标：</h3>
         <el-checkbox-group v-model="checkedCornerMarks" @change="checkedCornerMarksChange" class="text-left">
-            <el-checkbox v-if="checkVisible(item.markType)"
+            <el-checkbox v-if="checkVisible(item.markType,item.caption)"
                          v-for="(item,index) in cornerMarks"
                          :label="item.markType"
                          :key="index">
@@ -26,7 +26,7 @@
             <el-radio-group v-model="selectImageUri" class="text-center">
                 <el-radio :label="item.imageUri" v-for="(item, index) in customCornerMarkList" :key="index">
                     <img :src="item.imageUri | imageUrl" :alt="item.captain">
-                    <label @click="removeCornerMark(item.id,index)">删除</label>
+                    <label @click="removeCornerMark(item.id,index,item.imageUri)">删除</label>
                 </el-radio>
             </el-radio-group>
             <div class="text-center">
@@ -63,7 +63,9 @@
                 size: OPERATE_CORNER_MARK_DIMENSION,
                 customCornerMarkVisible: false,
                 imageUploadDialogVisible: false,
+                // 当前节目选择的运营角标
                 customImageUri: '',
+                // 运营角标列表中选择的角标
                 selectImageUri: '',
                 checkedCornerMarks: [],
                 currentMarks: {},
@@ -78,7 +80,7 @@
                         return '右下角标';
                     case 'EPISODES_NUMBER':
                         return '左下角标';
-                    case 'COPYRIGHT_RESERVED':
+                    case 'PLATFORM':
                         return '左上角标';
                     default:
                         break;
@@ -90,8 +92,8 @@
                         return '评分';
                     case 'EPISODES_NUMBER':
                         return '更新集数';
-                    case 'COPYRIGHT_RESERVED':
-                        return '版权方角标';
+                    case 'PLATFORM':
+                        return '平台角标';
                     default:
                         break;
                 }
@@ -111,6 +113,10 @@
                                 this.checkedCornerMarks.push(this.originState.cornerMark[key].markType);
                             }
                         }
+                        // 初始化运营角标
+                        if (this.originState.cornerMark.rightTop) {
+                            this.customImageUri = this.selectImageUri = this.originState.cornerMark.rightTop.imageUri;
+                        }
                     }
                 });
                 // 获取运营角标列表
@@ -121,14 +127,15 @@
                 });
             },
             // 设置节目中的角标是否显示在当前页面中
-            checkVisible(markType) {
+            checkVisible(markType, caption) {
                 switch (markType) {
                     case 'SCORE':
                         return true;
                     case 'EPISODES_NUMBER':
                         return true;
-                    case 'COPYRIGHT_RESERVED':
-                        return true;
+                    case 'PLATFORM':
+                        // 检测当前平台角标是否能展示
+                        return cornerMarkOptions.PLATFORM_MARK_SWITCH[caption] !== undefined;
                     default:
                         return false;
                 }
@@ -151,11 +158,9 @@
                 }
                 // 添加当前角标到运营角标列表中
                 this.$service.appendCornerMark({
-                    markVo: {
-                        caption: newCustomCornerMarkImage.posterImage.name,
-                        imageUri: newCustomCornerMarkImage.posterImage.uri,
-                        markType: 'CUSTOM'
-                    }
+                    caption: newCustomCornerMarkImage.posterImage.name,
+                    imageUri: newCustomCornerMarkImage.posterImage.uri,
+                    markType: 'CUSTOM'
                 }).then(response => {
                     if (response && response.code === 0) {
                         this.customCornerMarkList.push({
@@ -166,7 +171,11 @@
                 });
             },
             // 删除某一个角标
-            removeCornerMark(cornerMarkId, index) {
+            removeCornerMark(cornerMarkId, index, imageUri) {
+                if (this.customImageUri === imageUri) {
+                    this.$message('当前运营角标已被该节目使用，不能删除');
+                    return;
+                }
                 this.$confirm('此操作将永久删除该角标, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -216,7 +225,7 @@
                                 case 'EPISODES_NUMBER':
                                     this.currentMarks.leftBottom = cornerMark;
                                     break;
-                                case 'COPYRIGHT_RESERVED':
+                                case 'PLATFORM':
                                     this.currentMarks.leftTop = cornerMark;
                                     break;
                                 default:
@@ -233,7 +242,6 @@
                         }
                     });
                 });
-                console.log(this.currentMarks);
                 this.$emit('setCornerMarks', this.currentMarks);
                 return true;
             }

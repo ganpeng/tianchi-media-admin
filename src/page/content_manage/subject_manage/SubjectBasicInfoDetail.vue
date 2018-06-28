@@ -1,7 +1,7 @@
 <!--专题基本信息详情组件-->
 <template>
     <div>
-        <el-form label-position="right" label-width="100px" :model="subjectInfo">
+        <el-form label-position="right" label-width="120px" :model="subjectInfo">
             <el-form-item label="创建人：" v-if="subjectInfo.authorName">
                 <label>{{subjectInfo.authorName}}</label>
             </el-form-item>
@@ -133,7 +133,6 @@
         background-repeat: no-repeat;
         background-size: contain;
         background-position: center;
-        border: 1px solid red;
     }
 
 </style>

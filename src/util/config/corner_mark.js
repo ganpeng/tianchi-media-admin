@@ -9,7 +9,7 @@
 const CORNER_MARKS = [{
     id: 1,
     position: '左上角标',
-    type: '版权方角标',
+    type: '平台角标',
     value: '爱奇艺'
 }, {
     id: 2,
@@ -28,4 +28,6 @@ const CORNER_MARKS = [{
     value: '8.2分'
 }];
 
-export default CORNER_MARKS;
+const PLATFORM_MARK_SWITCH = {'爱奇艺': 'IQIYI', '芒果': 'MANGO', '腾讯': 'TENCENT', '优酷': 'YOUKU', '搜狐': 'SOHU'};
+
+export default {CORNER_MARKS, PLATFORM_MARK_SWITCH};

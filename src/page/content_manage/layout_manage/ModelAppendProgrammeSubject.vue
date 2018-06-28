@@ -48,7 +48,7 @@
                     <!--左上角标-->
                     <span v-if="item.cornerMark && item.cornerMark.leftTop"
                           class="corner-mark left-top">
-                                 <img :src="item.cornerMark.leftTop.caption | setCopyRightImage"
+                                 <img :src="item.cornerMark.leftTop.caption | setPlatformImage"
                                       :alt="item.cornerMark.leftTop.caption">
                              </span>
                     <!--左下角标-->
@@ -69,7 +69,7 @@
         <div class="text-center save-btn">
             <el-button type="success" @click="saveBlock">保 存</el-button>
         </div>
-        <el-dialog title="设置模块内的节目" center :visible.sync="dialogTableVisible">
+        <el-dialog title="设置模块推荐位内的节目" center :visible.sync="dialogTableVisible">
             <set-subject-programme
                 v-if="dialogTableVisible"
                 :imageSpec="imageSpec"
@@ -92,7 +92,6 @@
     import SetSubjectProgramme from './SetSubjectProgramme';
     import blockModel from '@/util/config/block_model';
     import {LAYOUT_IMAGE_DIMENSION, PROGRAMME_DIMENSION} from '@/util/config/dimension';
-    import copyRightImage from '@/util/config/import_image.js';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
 
     export default {
@@ -125,11 +124,6 @@
                 // 当前本地数据中模块推荐位推荐的专题的id的数组
                 recommendSubjectIdList: []
             };
-        },
-        filters: {
-            setCopyRightImage(copyRightCaptain) {
-                return copyRightImage[copyRightCaptain];
-            }
         },
         computed: {
             currentNavBarInfo() {

@@ -452,7 +452,6 @@
         background-repeat: no-repeat;
         background-size: contain;
         background-position: center;
-        border: 1px solid red;
     }
 
     .image-box {

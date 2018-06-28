@@ -31,8 +31,8 @@ export const getCornerMarkList = ({markType}) => {
 /**
  * 添加角标
  */
-export const appendCornerMark = ({markVo}) => {
-    return service.post('/v1/content/mark', {markVo});
+export const appendCornerMark = ({caption, imageUri, markType}) => {
+    return service.post('/v1/content/mark', {caption, imageUri, markType});
 };
 
 /**

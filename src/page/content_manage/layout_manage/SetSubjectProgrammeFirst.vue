@@ -32,10 +32,6 @@
                     <label>{{scope.row.figureListMap | displayFigures('DIRECTOR')}}</label>
                 </template>
             </el-table-column>
-            <el-table-column
-                prop="area"
-                label="地区">
-            </el-table-column>
         </el-table>
     </div>
 </template>

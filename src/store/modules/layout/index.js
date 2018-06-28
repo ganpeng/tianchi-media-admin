@@ -114,6 +114,18 @@ const getters = {
             return state[navBarSignCode].layoutBlockList[model].layoutItemMultiList[row][index];
         }
         return {};
+    },
+    /**
+     * 获取模块推荐位的信息
+     * @param state
+     * @param navBarSignCode The signCode of a single navBar
+     * @param model The model index of a recommend item
+     */
+    getRecommendModelInfo: (state) => ({navBarSignCode, model}) => {
+        if (state[navBarSignCode] && state[navBarSignCode].layoutBlockList && state[navBarSignCode].layoutBlockList[model]) {
+            return state[navBarSignCode].layoutBlockList[model];
+        }
+        return {};
     }
 };
 
