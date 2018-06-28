@@ -7,7 +7,7 @@ import layout from './layout';
 import programme from './programme';
 import programmeVideo from './programme_video';
 import video from './video';
-import live from './live';
+import channel from './channel';
 
 export default {
     permission,
@@ -17,5 +17,5 @@ export default {
     programme,
     programmeVideo,
     video,
-    live
+    channel
 };

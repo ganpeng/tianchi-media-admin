@@ -58,12 +58,18 @@ const getters = {
         return (mainRoleList) => {
             return mainRoleList.map((item) => {
                 return MAIN_ROLE_OPTIONS.find((mainRoleItem) => mainRoleItem.value === item).label;
-            }).join(' ,');
+            }).join(', ');
         };
     }
 };
 
 const mutations = {
+    resetState(state) {
+        state.searchFields = _.cloneDeep(defaultSearchFields);
+        state.currentPerson = _.cloneDeep(defaultPerson);
+        state.list = [];
+        state.pagination = _.cloneDeep(defaultPagination);
+    },
     setPersonList(state, payload) {
         state.list = payload.list;
     },

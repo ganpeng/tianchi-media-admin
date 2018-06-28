@@ -54,11 +54,11 @@
                                     :value="programme.description">
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="上映时间" prop="announceAt">
+                            <el-form-item label="上映时间" prop="releaseAt">
                                 <el-date-picker
                                     :disabled="readonly"
-                                    :value="programme.announceAt"
-                                    @input="inputHandler($event, 'announceAt')"
+                                    :value="programme.releaseAt"
+                                    @input="inputHandler($event, 'releaseAt')"
                                     type="year"
                                     placeholder="选择年">
                                 </el-date-picker>
@@ -444,6 +444,7 @@
     import role from '@/util/config/role';
     import {checkScore, checkCategory} from '@/util/formValidate';
     import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
+    const platformList = [ '中央电视台', '浙江卫视', '东方卫视', '江苏卫视', '湖南卫视', '安徽卫视', '北京卫视', '腾讯', '爱奇艺', '优酷', '搜狐', '芒果' ];
 
     export default {
         name: 'ProgrammeDetail',
@@ -559,11 +560,6 @@
                 getProgrammeCategory: 'programme/getProgrammeCategory',
                 getProgrammeVideoListById: 'programme/getProgrammeVideoListById',
                 getProgrammeTagList: 'programme/getProgrammeTagList',
-                getProgrammeAnnouncerList: 'programme/getProgrammeAnnouncerList',
-                getProgrammeContestList: 'programme/getProgrammeContestList',
-                getProgrammeCopyrightList: 'programme/getProgrammeCopyrightList',
-                getProgrammeLicenceList: 'programme/getProgrammeLicenceList',
-                getProgrammePlatformList: 'programme/getProgrammePlatformList',
                 deleteProgramme: 'programme/deleteProgramme'
             }),
             _createProgramme() {
@@ -577,7 +573,7 @@
                                         if (res && res.code === 0) {
                                             let id = res.data.id;
                                             if (this.video.tempList.length > 0) {
-                                                this.createMultProgrammeVideo(id)
+                                                this.createMultProgrammeVideo({programme: res.data})
                                                     .then((videoRes) => {
                                                         if (videoRes && videoRes.code === 0) {
                                                             this.deleteTempList();
@@ -628,7 +624,7 @@
                                     .then((res) => {
                                         if (res && res.code === 0) {
                                             if (this.video.tempList.length > 0) {
-                                                this.createMultProgrammeVideo(id)
+                                                this.createMultProgrammeVideo({programme: res.data})
                                                     .then((videoRes) => {
                                                         if (videoRes && videoRes.code === 0) {
                                                             this.deleteTempList();
@@ -766,6 +762,14 @@
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     inputPattern: /\S/,
+                    inputValidator: (value) => {
+                        let existing = platformList.find((item) => item === value);
+                        if (existing) {
+                            return true;
+                        } else {
+                            return `播出平台只能填写[${platformList.join(', ')}]中的`;
+                        }
+                    },
                     inputErrorMessage: `${this.selectItemObj[key]}不能为空`
                 }).then(({ value }) => {
                     this.addSelectItem({key, value});

@@ -178,7 +178,7 @@
                     this.$service.uploadImage({formData})
                         .then((res) => {
                             if (res && (res.code === 0)) {
-                                let data = res.data[0];
+                                let data = res.data[0].image;
                                 let obj = {};
                                 obj.id = data.id;
                                 obj.height = img.height;

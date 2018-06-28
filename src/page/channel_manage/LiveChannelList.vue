@@ -55,8 +55,8 @@
         },
         computed: {
             ...mapGetters({
-                list: 'live/list',
-                pagination: 'live/pagination'
+                list: 'channel/list',
+                pagination: 'channel/pagination'
             })
         },
         methods: {

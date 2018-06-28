@@ -388,9 +388,13 @@ const getters = {
 };
 
 const mutations = {
-    //  新加代码开始
     resetProgramme(state) {
-        state = _.clone(defaultState);
+        state.searchFields = _.cloneDeep(defaultProgrammeSearchFields); // 新加
+        state.pagination = _.cloneDeep(defaultPagination); // 新加
+        state.global = _.cloneDeep(defaultGlobal); // 新加
+        state.list = [];
+        state.programme = _.cloneDeep(defaultProgramme); // 新加
+        state.video = _.cloneDeep(defaultProgrammeVideo); // 新加
     },
     setProgrammeList(state, payload) {
         state.list = payload.list;
@@ -722,10 +726,11 @@ function serializeProgrammData(programme) {
 /**
  * 对等待上传的节目视频列表做处理
  */
-function filterProgrammeVideoList(tempList, id) {
+function filterProgrammeVideoList(tempList, programme) {
     return tempList.map((video) => {
         let result = Object.assign({}, video, {
-            programmeId: id,
+            programmeId: programme.id,
+            programmeName: programme.name,
             uid: uuid()
         });
         return result;
@@ -916,10 +921,10 @@ const actions = {
         }
     },
     // 视频相关的请求
-    async createMultProgrammeVideo({commit, state}, id) {
+    async createMultProgrammeVideo({commit, state}, {programme}) {
         try {
             let {tempList} = state.video;
-            let videoList = filterProgrammeVideoList(tempList, id);
+            let videoList = filterProgrammeVideoList(tempList, programme);
             let res = await service.createMultProgrammeVideo(videoList);
             return res;
         } catch (err) {

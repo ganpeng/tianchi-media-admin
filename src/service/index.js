@@ -14,12 +14,13 @@ import * as subjectRoutes from './routes/subject_manage';
 import * as layoutRoutes from './routes/layout_manage';
 import * as videoRoutes from './routes/video_manage';
 import * as commonRoutes from './routes/common';
+import * as channelRoutes from './routes/channel_manage';
 
 /**
  * The object including all service functions.
  * notice.Each module function should have a unique name. Otherwise，they will override each other.
  * @type {Object}
  */
-let service = Object.assign({}, adminRoutes, authorizeRoutes, personRoutes, naviBarRoutes, programmeRoutes, uploadRoutes, liveChannelLayoutRoutes, programmeVideoRoutes, subjectRoutes, layoutRoutes, videoRoutes, commonRoutes);
+let service = Object.assign({}, adminRoutes, authorizeRoutes, personRoutes, naviBarRoutes, programmeRoutes, uploadRoutes, liveChannelLayoutRoutes, programmeVideoRoutes, subjectRoutes, layoutRoutes, videoRoutes, commonRoutes, channelRoutes);
 
 export default service;

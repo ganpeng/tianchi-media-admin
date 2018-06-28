@@ -10,7 +10,7 @@
         <div class="block type-tree">
             <el-col :span="8">
                 <el-tree
-                    :data="categroyList"
+                    :data="serializeChannelTypeList"
                     node-key="id"
                     :props="defaultProps"
                     default-expand-all
@@ -31,7 +31,7 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
         data() {
         return {
             defaultProps: {
-                children: 'programmeTypeList',
+                children: 'list',
                 label: 'name'
             }
         };
@@ -41,7 +41,7 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
     },
     computed: {
         ...mapGetters({
-            categroyList: 'programme/categroyList'
+            serializeChannelTypeList: 'channel/serializeChannelTypeList'
         })
     },
     methods: {

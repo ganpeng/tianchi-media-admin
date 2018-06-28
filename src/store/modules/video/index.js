@@ -2,6 +2,10 @@ import _ from 'lodash';
 import service from '../../../service';
 import role from '@/util/config/role';
 
+/*
+    1920 三种， 720 两种
+*/
+
 const defaultSearchFields = {
     name: '',
     status: ''
