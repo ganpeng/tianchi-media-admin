@@ -320,6 +320,11 @@ const getters = {
         let otherIndex = tempList.findIndex((video) => parseInt(video.sort) === parseInt(sort));
         return index > -1 || otherIndex > -1;
     },
+    checkSortIsLargeThanTotalSets(state) {
+        let sort = state.video.video.sort;
+        let totalSets = state.programme.totalSets;
+        return sort > totalSets;
+    },
     // 新方法结束
     isTvPlay(state) {
         let category = state.global.categoryList.find((item) => item.name === '电视剧');

@@ -1,3 +1,5 @@
+import qs from 'querystring';
+import _ from 'lodash';
 import service from '../config';
 
 /**
@@ -45,12 +47,17 @@ export const deleteChannelById = (id) => {
 /**
  * 获取频道的列表
  */
-export const getChannelList = ({pageNum, pageSize, releaseStatus}) => {
-    return service.get('/v1/live/channel/page', {
-        params: {
-            pageNum,
-            pageSize,
-            releaseStatus
-        }
-    });
+export const getChannelList = ({pageNum, pageSize, keyword, typeIdList}) => {
+    let params = {
+        pageNum,
+        pageSize,
+        keyword,
+        typeIdList
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/live/channel/page?${paramsStr}`);
 };

@@ -10,14 +10,31 @@
         <el-form :inline="true" class="demo-form-inline search-form">
             <el-form-item class="search">
                 <el-input
+                    :value="searchFields.keyword"
                     placeholder="支持频道名称，编号搜索"
+                    @input="inputHandler($event, 'keyword')"
                     clearable
                 >
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                 </el-input>
             </el-form-item>
+            <el-form-item class="search">
+                <el-select
+                    :value="searchFields.typeIdList"
+                    multiple
+                    placeholder="请选择频道类型"
+                    @input="inputHandler($event, 'typeIdList')"
+                >
+                    <el-option
+                        v-for="(item, index) in liveChannelTypeList"
+                        :key="index"
+                        :label="item.name"
+                        :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item>
-                <el-button type="primary">搜索</el-button>
+                <el-button type="primary" @click="searchHandler">搜索</el-button>
             </el-form-item>
             <el-form-item class="create-account">
                 <el-button type="primary" plain @click="createLiveChannel">新增直播频道</el-button>
@@ -81,13 +98,16 @@
             ...mapGetters({
                 list: 'channel/list',
                 pagination: 'channel/pagination',
-                typeName: 'channel/typeName'
+                typeName: 'channel/typeName',
+                liveChannelTypeList: 'channel/liveChannelTypeList',
+                searchFields: 'channel/searchFields'
             })
         },
         methods: {
             ...mapMutations({
                 setLiveChannel: 'channel/setLiveChannel',
-                updatePagination: 'channel/updatePagination'
+                updatePagination: 'channel/updatePagination',
+                updateSearchFields: 'channel/updateSearchFields'
             }),
             ...mapActions({
                 getChannelType: 'channel/getChannelType',
@@ -109,6 +129,9 @@
                 this.liveChannelDialogVisible = true;
                 this.status = 1;
                 this.setLiveChannel({liveChannel});
+            },
+            inputHandler(value, key) {
+                this.updateSearchFields({key, value});
             },
             _deleteLiveChannel(id) {
                 this.$confirm('此操作将删除该频道, 是否继续?', '提示', {
@@ -134,6 +157,9 @@
             createLiveChannel() {
                 this.liveChannelDialogVisible = true;
                 this.status = 0;
+            },
+            searchHandler() {
+                this.getChannelList();
             }
         }
     };

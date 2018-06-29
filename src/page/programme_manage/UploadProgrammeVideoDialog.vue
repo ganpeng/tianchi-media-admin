@@ -217,7 +217,8 @@
                 featureList: 'programme/featureList',
                 videoListObj: 'video/video',
                 checkVideoIsSelected: 'programme/checkVideoIsSelected',
-                checkSortIsExist: 'programme/checkSortIsExist'
+                checkSortIsExist: 'programme/checkSortIsExist',
+                checkSortIsLargeThanTotalSets: 'programme/checkSortIsLargeThanTotalSets'
             }),
             title() {
                 switch (parseInt(this.videoStatus)) {
@@ -270,6 +271,11 @@
                             this.$message({
                                 type: 'error',
                                 message: '集数/期号已经存在，请重新输入'
+                            });
+                        } else if (this.checkSortIsLargeThanTotalSets) {
+                            this.$message({
+                                type: 'error',
+                                message: '集数/期号不能大于总集数，请重新输入'
                             });
                         } else {
                             if (parseInt(this.videoStatus) !== 1) {
