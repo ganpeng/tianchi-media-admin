@@ -20,7 +20,7 @@
             </el-col>
         </div>
         <el-col :span="24">
-            <el-button type="primary" @click="_updateProgrammeCategory">保存</el-button>
+            <el-button type="primary" @click="_putChannelType">保存</el-button>
         </el-col>
     </div>
 </template>
@@ -37,7 +37,7 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
         };
     },
     created() {
-        this.getProgrammeCategory();
+        this.getChannelType();
     },
     computed: {
         ...mapGetters({
@@ -46,16 +46,16 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
     },
     methods: {
         ...mapMutations({
-            deleteProgrammeCategory: 'programme/deleteProgrammeCategory',
-            addProgrammeCategory: 'programme/addProgrammeCategory'
+            addChannelCategory: 'channel/addChannelCategory',
+            deleteChannelCategory: 'channel/deleteChannelCategory'
         }),
         ...mapActions({
-            getProgrammeCategory: 'programme/getProgrammeCategory',
-            updateProgrammeCategory: 'programme/updateProgrammeCategory',
-            getProgrammeTypeCount: 'programme/getProgrammeTypeCount'
+            getChannelType: 'channel/getChannelType',
+            getChannelCount: 'channel/getChannelCount',
+            putChannelType: 'channel/putChannelType'
         }),
-        _updateProgrammeCategory() {
-            this.updateProgrammeCategory()
+        _putChannelType() {
+            this.putChannelType()
                 .then(() => {
                     this.$message({
                         type: 'success',
@@ -70,7 +70,7 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
                 inputPattern: /\S/,
                 inputErrorMessage: '类型不能为空'
             }).then(({ value }) => {
-                this.addProgrammeCategory({name: value, data});
+                this.addChannelCategory({name: value, data});
                 this.$message({
                     type: 'success',
                     message: `新类型${value}创建成功`
@@ -88,21 +88,29 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
             cancelButtonText: '取消',
             type: 'error'
         }).then(() => {
-            this.getProgrammeTypeCount(data.id)
-                .then((noCount) => {
-                    if (noCount) {
-                        this.deleteProgrammeCategory({node, data});
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                        });
-                    } else {
-                        this.$message({
-                            type: 'error',
-                            message: '该类型下面有节目，不能删除!'
-                        });
-                    }
+            if (/^category_/.test(data.id)) {
+                this.deleteChannelCategory({node, data});
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
                 });
+            } else {
+                this.getChannelCount(data.id)
+                    .then((noCount) => {
+                        if (noCount) {
+                            this.deleteChannelCategory({node, data});
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                        } else {
+                            this.$message({
+                                type: 'error',
+                                message: '该类型下面有频道，不能删除!'
+                            });
+                        }
+                    });
+            }
         }).catch(() => {
             this.$message({
                 type: 'info',
@@ -128,20 +136,3 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
     }
   };
 </script>
-
-<style>
-    .type-tree {
-        margin-top: 32px;
-    }
-    .custom-tree-node {
-        display: flex;
-        padding-right: 8px;
-        flex: 1;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 14px;
-    }
-    .custom-tree-node span {
-        font-size: 18px;
-    }
-</style>

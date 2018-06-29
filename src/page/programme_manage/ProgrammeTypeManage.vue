@@ -128,20 +128,3 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
     }
   };
 </script>
-
-<style>
-    .type-tree {
-        margin-top: 32px;
-    }
-    .custom-tree-node {
-        display: flex;
-        padding-right: 8px;
-        flex: 1;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 14px;
-    }
-    .custom-tree-node span {
-        font-size: 18px;
-    }
-</style>

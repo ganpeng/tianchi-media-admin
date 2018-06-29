@@ -19,50 +19,121 @@
             <el-form-item>
                 <el-button type="primary">搜索</el-button>
             </el-form-item>
+            <el-form-item class="create-account">
+                <el-button type="primary" plain @click="createLiveChannel">新增直播频道</el-button>
+            </el-form-item>
         </el-form>
         <el-table :data="list" border style="width:100%;margin:20px 0;">
-            <el-table-column prop="id" align="center" width="240px" label="直播频道编号"></el-table-column>
-            <el-table-column prop="showId" align="center" width="240px" label="直播频道展示编号"></el-table-column>
+            <el-table-column prop="code" align="center" width="240px" label="直播频道编号"></el-table-column>
+            <el-table-column prop="no" align="center" width="240px" label="直播频道展示编号"></el-table-column>
             <el-table-column prop="name" align="center" width="200px" label="直播频道名称"></el-table-column>
-            <el-table-column prop="showName" align="center" width="200px" label="直播频道展示名"></el-table-column>
-            <el-table-column prop="type" align="center" label="频道类别"></el-table-column>
-            <el-table-column prop="ip" align="center" label="频道IP"></el-table-column>
-            <el-table-column prop="port" align="center" label="频道端口"></el-table-column>
-            <el-table-column align="center" width="120px" fixed="right" label="操作">
+            <el-table-column prop="innerName" align="center" width="200px" label="直播频道展示名"></el-table-column>
+            <el-table-column prop="type" align="center" label="频道类别">
+                <template slot-scope="scope">
+                    {{typeName(scope.row.id)}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="multicastIp" align="center" label="频道IP"></el-table-column>
+            <el-table-column prop="multicastPort" align="center" label="频道端口"></el-table-column>
+            <el-table-column align="center" width="220px" fixed="right" label="操作">
                 <template slot-scope="scope">
                     <el-button type="text" size="small">节目单下载</el-button>
-                    <el-button type="text" size="small">更新节目单</el-button>
+                    <el-button type="text" size="small" @click="_updateLiveChannel(scope.row.id)">编辑</el-button>
+                    <el-button type="text" size="small" @click="_deleteLiveChannel(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
+            @size-change="handlePaginationChange($event, 'pageSize')"
+            @current-change="handlePaginationChange($event, 'pageNum')"
             :current-page="pagination.pageNum"
             :page-sizes="[5, 10, 20, 30, 50]"
             :page-size="pagination.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="pagination.total">
         </el-pagination>
+        <live-channel-dialog
+            :status="status"
+            :liveChannelDialogVisible="liveChannelDialogVisible"
+            v-on:changeLiveChannelDialogStatus="closeLiveChannelDialog">
+        </live-channel-dialog>
     </div>
 </template>
 <script>
-    import {mapGetters} from 'vuex';
+    import {mapGetters, mapActions, mapMutations} from 'vuex';
+    import LiveChannelDialog from './LiveChannelDialog';
     export default {
         name: 'LiveChannelList',
+        components: {
+            LiveChannelDialog
+        },
         data() {
-            return {};
+            return {
+                liveChannelDialogVisible: false,
+                status: 0
+            };
+        },
+        created() {
+            this.getChannelType();
+            this.getChannelList();
         },
         computed: {
             ...mapGetters({
                 list: 'channel/list',
-                pagination: 'channel/pagination'
+                pagination: 'channel/pagination',
+                typeName: 'channel/typeName'
             })
         },
         methods: {
-            handleSizeChange(pageSize) {
+            ...mapMutations({
+                setLiveChannel: 'channel/setLiveChannel',
+                updatePagination: 'channel/updatePagination'
+            }),
+            ...mapActions({
+                getChannelType: 'channel/getChannelType',
+                getChannelList: 'channel/getChannelList',
+                deleteChannelById: 'channel/deleteChannelById'
+            }),
+            showLiveChannelDialog() {
+                this.liveChannelDialogVisible = true;
             },
-            handleCurrentChange(pageNum) {
+            closeLiveChannelDialog() {
+                this.liveChannelDialogVisible = false;
+            },
+            handlePaginationChange(value, key) {
+                this.updatePagination({value, key});
+                this.getChannelList();
+            },
+            _updateLiveChannel(id) {
+                let liveChannel = this.list.find((liveChannel) => liveChannel.id === id);
+                this.liveChannelDialogVisible = true;
+                this.status = 1;
+                this.setLiveChannel({liveChannel});
+            },
+            _deleteLiveChannel(id) {
+                this.$confirm('此操作将删除该频道, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.deleteChannelById(id)
+                        .then(() => {
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功'
+                            });
+                            this.getChannelList();
+                        });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            createLiveChannel() {
+                this.liveChannelDialogVisible = true;
+                this.status = 0;
             }
         }
     };

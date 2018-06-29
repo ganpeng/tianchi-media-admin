@@ -31,8 +31,8 @@ export const createChannels = (channelList) => {
 /**
  * 根据id修改直播频道
  */
-export const updateChannelById = (channel) => {
-    return service.put(`/v1/live/channel`, channel);
+export const updateChannelById = (id, channel) => {
+    return service.put(`/v1/live/channel/${id}`, channel);
 };
 
 /**
