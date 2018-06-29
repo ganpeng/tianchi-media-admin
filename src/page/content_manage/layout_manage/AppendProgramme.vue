@@ -23,7 +23,8 @@
                        ref="currentComponent"
                        model="SINGLE"
                        v-on:setProgramme="setProgramme"
-                       v-on:setPosterImage="setPosterImage"
+                       v-on:setProgrammeCoverImage="setProgrammeCoverImage"
+                       v-on:setProgrammeCoverImageBackground="setProgrammeCoverImageBackground"
                        v-on:setCornerMarks="setCornerMarks"
                        :programmeId="programmeId"
                        :programme="selectedProgrammeList[0]"
@@ -163,7 +164,9 @@
                 // 当前选择的节目的封面图的列表
                 posterImages: [],
                 // 当前选择的节目的封面图
-                posterImage: {},
+                coverImage: {},
+                // 当前选择的节目的出格背景图
+                coverImageBackground: {},
                 checkedCornerMarks: {},
                 // 当前模式，'EDIT'为回填编辑模式, 'NORMAL'为正常的选择模式
                 mode: 'EDIT',
@@ -228,7 +231,8 @@
                         this.selectedProgrammeList[0] = response.data;
                         this.posterImages = response.data.posterImageList;
                         this.programmeId = this.currentRecommendItem.id;
-                        this.posterImage = this.currentRecommendItem.coverImage;
+                        this.coverImage = this.currentRecommendItem.coverImage;
+                        this.coverImageBackground = this.currentRecommendItem.coverImageBackground;
                     } else {
                         this.mode = 'NORMAL';
                         this.$refs.currentComponent.init();
@@ -249,8 +253,13 @@
                 this.programmeId = programme.id;
                 this.getProgrammeDetail();
             },
-            setPosterImage(posterImage) {
-                this.posterImage = posterImage;
+            // 设置正常封面
+            setProgrammeCoverImage(coverImage) {
+                this.coverImage = coverImage;
+            },
+            // 设置出格背景图
+            setProgrammeCoverImageBackground(coverImageBackground) {
+                this.coverImageBackground = coverImageBackground;
             },
             setCornerMarks(cornerMarks) {
                 this.checkedCornerMarks = cornerMarks;
@@ -262,7 +271,7 @@
                         message: '请先选择节目',
                         type: 'warning'
                     });
-                } else if (this.activeStep === 1 && !this.posterImage.id) {
+                } else if (this.activeStep === 1 && !this.coverImage.id) {
                     this.$message({
                         message: '请先选择图片',
                         type: 'warning'
@@ -284,7 +293,8 @@
                 // 组建推荐节目对象，保存到store中
                 let programme = {
                     cornerMark: this.checkedCornerMarks,
-                    coverImage: this.posterImage,
+                    coverImage: this.coverImage,
+                    coverImageBackground: this.coverImageBackground,
                     name: this.selectedProgrammeList[0].name,
                     desc: this.selectedProgrammeList[0].desc,
                     id: this.programmeId,

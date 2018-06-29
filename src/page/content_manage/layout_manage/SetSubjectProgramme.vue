@@ -13,7 +13,7 @@
                 :programmeList="currentProgrammeList"
                 :programme="programme"
                 :imageSpec="imageSpec"
-                :originState="originProgramme"
+                :originState="currentState"
                 v-on:setProgramme="setProgramme"
                 v-on:resetProgramme="resetProgramme"
                 v-on:setCoverImage="setCoverImage"
@@ -54,7 +54,9 @@
                 // 当前节目选择的封面图片
                 coverImage: {},
                 // 当前节目选择的角标
-                checkedCornerMarks: {}
+                checkedCornerMarks: {},
+                // 当前选择的节目的状态信息
+                currentState: {}
             };
         },
         computed: {
@@ -79,6 +81,7 @@
         },
         methods: {
             init() {
+                this.currentState = this.originProgramme;
                 this.coverImage = this.originProgramme.coverImage;
                 this.checkedCornerMarks = this.originProgramme.cornerMark;
                 // 初始化设置当前节目列表,设置选中以及当前编辑的节目
@@ -99,9 +102,12 @@
             // 重置选择的节目
             resetProgramme() {
                 this.programme = {};
+                this.coverImage = {};
+                this.checkedCornerMarks = {};
             },
             setProgramme(programme) {
                 this.programme = programme;
+                this.currentState = {};
             },
             setCoverImage(coverImage) {
                 this.coverImage = coverImage;

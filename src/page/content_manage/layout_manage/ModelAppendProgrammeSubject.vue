@@ -351,7 +351,7 @@
                     this.imageUploadDialogVisible = true;
                     return;
                 }
-                this.imageSpec = LAYOUT_IMAGE_DIMENSION[imageModel];
+                this.imageSpec = LAYOUT_IMAGE_DIMENSION[imageModel].coverImage;
                 this.currentRow = row;
                 this.currentIndex = index;
                 this.originProgramme = item;

@@ -61,7 +61,7 @@ export const PROGRAMME_DIMENSION = [
         value: '532*225',
         label: '推荐位三分位图：532*225'
     },
-    // 推荐位三分位图出格图
+    // 推荐位三分位图出格图（背景图）
     {
         value: '532*245',
         label: '推荐位三分位图出格图：532*245'
@@ -70,6 +70,11 @@ export const PROGRAMME_DIMENSION = [
     {
         value: '824*225',
         label: '推荐位二分位图：824*225'
+    },
+    // 推荐位二分位图出格图（背景图）
+    {
+        value: '824*245',
+        label: '推荐位二分位图出格图：824*245'
     },
     // 推荐位横全图
     {
@@ -96,41 +101,65 @@ export const LAYOUT_IMAGE_DIMENSION = {
      *推荐页轮播图大
      */
     'carousel-1': {
-        width: 824,
-        height: 463
+        // 封面图的大小
+        coverImage: {
+            width: 824,
+            height: 463
+        }
     },
     /**
      *推荐页轮播图小
      */
     'carousel-2': {
-        width: 733,
-        height: 413
+        coverImage: {
+            width: 733,
+            height: 413
+        }
     },
     /**
      *推荐位横全图
      */
     'model-1': {
-        width: 1700,
-        height: 200
+        coverImage: {
+            width: 1700,
+            height: 200
+        }
     },
     /**
      *推荐位二分位图
      */
     'model-2': {
-        width: 824,
-        height: 225
+        coverImage: {
+            width: 824,
+            height: 225
+        },
+        // 背景图的大小，一般比封面图高20
+        coverImageBackground: {
+            width: 824,
+            height: 245
+        }
     },
     'model-3': {
-        width: 532,
-        height: 225
+        coverImage: {
+            width: 532,
+            height: 225
+        },
+        coverImageBackground: {
+            width: 532,
+            height: 245
+        }
     },
     'model-4': {
-        width: 386,
-        height: 225
+        coverImage: {
+            width: 386,
+            height: 225
+        }
     },
     'model-6': {
-        width: 240,
-        height: 350
+        coverImage: {
+            width: 240,
+            height: 350
+        }
     }
 };
 

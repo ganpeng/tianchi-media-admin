@@ -87,6 +87,7 @@
                     <ul
                         v-for="(rowItem, rowIndex) in layoutBlockItem.layoutItemMultiList" :key="rowIndex"
                         :class="'model-line '+ (layoutBlockItem.renderType === 'FIGURE' ? 'model-figure' : 'model-' + rowItem.length)">
+                        <!--每一个节目或者人物或者单个专题-->
                         <li v-for="(item, index) in rowItem" :key="index"
                             :class="!layoutBlockItem.subjectId ? 'settable' : ''">
                             <div class="ab-center">
@@ -94,9 +95,13 @@
                                     <img class="item-image" :src="item.coverImage? item.coverImage.uri : '' | imageUrl"
                                          :alt="item.coverImage ? item.coverImage.name:''"/>
                                 </div>
-                                <img v-else class="item-image"
+                                <img v-if="layoutBlockItem.renderType === 'PROGRAMME'" class="item-image"
                                      :src="item.coverImage? item.coverImage.uri : '' | imageUrl"
                                      :alt="item.coverImage ? item.coverImage.name:''"/>
+                                <img v-if="layoutBlockItem.renderType === 'PROGRAMME' && item.coverImageBackground"
+                                     class="background-image"
+                                     :src="item.coverImageBackground? item.coverImageBackground.uri : '' | imageUrl"
+                                     :alt="item.coverImageBackground ? item.coverImageBackground.name:''"/>
                                 <div class="figure-name"
                                      v-if="layoutBlockItem.renderType === 'FIGURE' || rowItem.length === 6">
                                     {{item.name}}
@@ -671,6 +676,14 @@
                     display: block;
                     height: 100%;
                     width: 100%;
+                }
+                img.background-image {
+                    position: absolute;
+                    width: 100%;
+                    left: 0px;
+                    top: -20px;
+                    bottom: 0px;
+                    right: 0px;
                 }
             }
         }

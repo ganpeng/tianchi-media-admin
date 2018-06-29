@@ -1,17 +1,33 @@
 <!--内容管理-栏目管理-节目选择第二步组件-->
 <template>
     <div>
-        <div class="text-left">符合该位置的图片如下，请选择：</div>
+        <div class="text-left">1.符合该位置的底层图片如下，请选择：</div>
         <ul>
-            <li v-for="(item,index) in specPosterImages" v-bind:key="index">
+            <li v-for="(item,index) in specCoverImages" v-bind:key="index">
                 <img :src="item.uri | imageUrl" :alt="item.name" @click="displayImage(index)">
-                <el-radio v-model="programmeImage" :label="item.id" @change="setPosterImage(index)">{{item.name}}
+                <el-radio v-model="programmeCoverImageId" :label="item.id" @change="setProgrammeCoverImage(index)">
+                    {{item.name}}
                 </el-radio>
             </li>
             <li @click="toEditProgramme">
                 <i class="el-icon-plus"></i>
             </li>
         </ul>
+        <template v-if="coverImageBackgroundSpec">
+            <div class="text-left">2.符合该位置的浮层图片如下，请选择：</div>
+            <ul>
+                <li v-for="(item,index) in specBackgroundImages" v-bind:key="index">
+                    <img :src="item.uri | imageUrl" :alt="item.name" @click="displayImage(index)">
+                    <el-radio v-model="programmeCoverImageBackgroundId" :label="item.id"
+                              @change="setProgrammeCoverImageBackground(index)">
+                        {{item.name}}
+                    </el-radio>
+                </li>
+                <li @click="toEditProgramme">
+                    <i class="el-icon-plus"></i>
+                </li>
+            </ul>
+        </template>
         <preview-multiple-images :previewMultipleImages="previewImage"></preview-multiple-images>
     </div>
 </template>
@@ -25,14 +41,25 @@
         components: {PreviewMultipleImages},
         props: ['programmeId', 'posterImages', 'originState'],
         computed: {
-            specPosterImages() {
-                return this.posterImages.filter(image => parseInt(image.width) === this.imageSpec.width && parseInt(image.height) === this.imageSpec.height);
+            specCoverImages() {
+                return this.posterImages.filter(image => parseInt(image.width) === this.coverImageSpec.width && parseInt(image.height) === this.coverImageSpec.height);
+            },
+            specBackgroundImages() {
+                if (this.coverImageBackgroundSpec) {
+                    return this.posterImages.filter(image => parseInt(image.width) === this.coverImageBackgroundSpec.width && parseInt(image.height) === this.coverImageBackgroundSpec.height);
+                } else {
+                    return [];
+                }
             }
         },
         data() {
             return {
-                imageSpec: LAYOUT_IMAGE_DIMENSION[this.$route.params.imageSpec],
-                programmeImage: '',
+                coverImageSpec: LAYOUT_IMAGE_DIMENSION[this.$route.params.imageSpec].coverImage,
+                // 当前模板封面图片的出格背景图的尺寸
+                coverImageBackgroundSpec: LAYOUT_IMAGE_DIMENSION[this.$route.params.imageSpec].coverImageBackground,
+                // 正常的封面图的id
+                programmeCoverImageId: '',
+                programmeCoverImageBackgroundId: '',
                 previewImage: {
                     display: false,
                     autoplay: false,
@@ -46,17 +73,22 @@
         },
         methods: {
             init() {
-                this.programmeImage = this.originState.coverImage.id;
+                this.programmeCoverImageId = this.originState.coverImage ? this.originState.coverImage.id : '';
+                this.programmeCoverImageBackgroundId = this.originState.coverImageBackground ? this.originState.coverImageBackground.id : '';
             },
             // 放大预览图片
             displayImage(index) {
                 this.previewImage.display = true;
-                this.previewImage.list = this.specPosterImages;
+                this.previewImage.list = this.specCoverImages;
                 this.previewImage.activeIndex = index;
             },
-            // 选择海报图片
-            setPosterImage(index) {
-                this.$emit('setPosterImage', this.specPosterImages[index]);
+            // 选择正常封面图片
+            setProgrammeCoverImage(index) {
+                this.$emit('setProgrammeCoverImage', this.specCoverImages[index]);
+            },
+            // 选择出格背景图
+            setProgrammeCoverImageBackground(index) {
+                this.$emit('setProgrammeCoverImageBackground', this.specBackgroundImages[index]);
             },
             // 跳转到节目编辑页面
             toEditProgramme() {
