@@ -269,7 +269,6 @@
                     navBarId: this.navBarId,
                     navBarName: this.navBarName
                 });
-                this.liveChannelList = this.layoutInfo.liveChannelList;
                 this.layoutBlockList = this.layoutInfo.layoutBlockList;
                 this.layoutBlockFirstLayer = this.layoutBlockList[0];
                 this.massLayoutBlockList = this.layoutBlockList.slice();
@@ -279,23 +278,6 @@
             },
             // 获取线上的布局,并保存在state中
             getOnlionLayoutInfo() {
-                let count = 0;
-                // 直播频道
-                this.$service.getLiveChannelLayoutList({
-                    navBarId: this.navBarId,
-                    releaseStatus: 'RELEASED',
-                    pageNum: 1,
-                    pageSize: 10
-                }).then(response => {
-                    if (response && response.code === 0) {
-                        this.liveChannelList = response.data.list;
-                        if (++count === 2) {
-                            this.setStoreData();
-                            this.modified = false;
-                        }
-                    }
-                });
-                // 线上推荐位布局展示
                 this.$service.getContentLayout({navBarId: this.navBarId}).then(response => {
                     if (response && response.code === 0) {
                         this.layoutBlockList = response.data.layoutBlockList;
@@ -303,10 +285,8 @@
                         this.massLayoutBlockList = this.layoutBlockList.slice();
                         this.massLayoutBlockList.shift();
                         this.rightTopRecommend = this.layoutBlockFirstLayer.layoutItemMultiList[0][0];
-                        if (++count === 2) {
-                            this.setStoreData();
-                            this.modified = false;
-                        }
+                        this.setStoreData();
+                        this.modified = false;
                     }
                 });
             },
@@ -450,28 +430,6 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    let count = 0;
-                    // 设置直播频道
-                    let liveChannelList = this.$store.getters['layout/getLiveChannelList']({
-                        navBarSignCode: this.navBarSignCode
-                    });
-                    if (liveChannelList.length !== 0) {
-                        this.$service.setLiveChannelLayout(liveChannelList).then(response => {
-                            if (response && response.code === 0) {
-                                count++;
-                                this.$message({
-                                    message: '直播频道设置成功',
-                                    type: 'success'
-                                });
-                                if (++count === 2) {
-                                    this.modified = false;
-                                    this.getOnlionLayoutInfo();
-                                }
-                            }
-                        });
-                    } else {
-                        count++;
-                    }
                     // 设置推荐位布局
                     this.$service.modifyContentLayout({
                         id: this.navBarId,
@@ -486,10 +444,8 @@
                                 message: '设置布局成功',
                                 type: 'success'
                             });
-                            if (++count === 2) {
-                                this.modified = false;
-                                this.getOnlionLayoutInfo();
-                            }
+                            this.modified = false;
+                            this.getOnlionLayoutInfo();
                         }
                     });
                 }).catch(() => {

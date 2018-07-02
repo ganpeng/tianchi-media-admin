@@ -11,19 +11,19 @@
         <div class="block-box">
             <el-form :inline="true" class="demo-form-inline search-form">
                 <el-form-item label="频道类别">
-                    <el-select v-model="listQueryParams.channelCategory" clearable placeholder="请选择频道类别">
+                    <el-select v-model="listQueryParams.typeIdList" clearable multiple placeholder="请选择频道类别">
                         <el-option
-                            v-for="item in categoryOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            v-for="item in typeOptions"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="频道状态">
-                    <el-select v-model="listQueryParams.status" clearable placeholder="请选择频道状态">
+                    <el-select v-model="listQueryParams.visible" clearable placeholder="请选择频道状态">
                         <el-option
-                            v-for="item in statusOptions"
+                            v-for="item in visibleOptions"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -31,11 +31,14 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="关键字">
-                    <el-input v-model="listQueryParams.keyWords" placeholder="请填写频道名称或编号">
+                    <el-input v-model="listQueryParams.keyWord" placeholder="请填写频道名称或编号">
                     </el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="success" @click="getChannelList">查 询</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="success" @click="createChannelDialogVisible = true">新增轮播频道</el-button>
                 </el-form-item>
             </el-form>
             <el-table
@@ -60,13 +63,13 @@
                 <el-table-column
                     label="类别">
                     <template slot-scope="scope">
-                        <label>{{scope.row.categoryList.join(',')}}</label>
+                        <label>{{scope.row.typeList | jsonJoin('name')}}</label>
                     </template>
                 </el-table-column>
                 <el-table-column
                     label="状态">
                     <template slot-scope="scope">
-                        <label>{{scope.row.status}}</label>
+                        <label>{{scope.row.visible ? '正常' : '禁播'}}</label>
                     </template>
                 </el-table-column>
                 <el-table-column align="center"
@@ -81,50 +84,44 @@
             <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                :current-page="listQueryParams.currentPage"
+                :current-page="pageNum"
                 :page-sizes="[10, 20, 30, 50]"
                 :page-size="listQueryParams.pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
-                :total="totalAmount">
+                :total="total">
             </el-pagination>
         </div>
+        <create-channel v-if="createChannelDialogVisible"></create-channel>
     </div>
 </template>
 
 <script>
+    import CreateChannel from './CreateChannel';
+
     export default {
         name: 'CarouselChannelList',
+        components: {CreateChannel},
         data() {
             return {
+                createChannelDialogVisible: true,
                 listQueryParams: {
-                    channelCategory: '',
-                    status: '',
-                    keyWords: '',
-                    pageNum: 1,
+                    typeIdList: '',
+                    visible: '',
+                    keyWord: '',
+                    pageNum: 0,
                     pageSize: 10
                 },
-                categoryOptions: [{
-                    value: '1',
-                    label: '电视剧'
-                }, {
-                    value: '2',
-                    label: '电影'
-                }],
-                statusOptions: [{
-                    value: 1,
+                pageNum: 1,
+                typeOptions: [],
+                visibleOptions: [{
+                    value: true,
                     label: '正常'
                 }, {
-                    value: 2,
+                    value: false,
                     label: '禁播'
                 }],
-                totalAmount: 0,
-                channelList: [{
-                    id: '001',
-                    name: '甄嬛传',
-                    code: '001',
-                    status: '正常',
-                    categoryList: ['电视剧', '电影']
-                }]
+                total: 0,
+                channelList: []
             };
         },
         mounted() {
@@ -136,6 +133,17 @@
                 // 初始化频道类别列表
             },
             getChannelList() {
+                this.$service.getChannelType().then(response => {
+                    if (response && response.code === 0) {
+                        this.typeOptions = response.data;
+                    }
+                });
+                this.$service.getChannelList(this.listQueryParams).then(response => {
+                    if (response && response.code === 0) {
+                        this.channelList = response.data.list;
+                        this.total = response.data.total;
+                    }
+                });
             },
             handleSizeChange(pageSize) {
                 this.listQueryParams.pageSize = pageSize;

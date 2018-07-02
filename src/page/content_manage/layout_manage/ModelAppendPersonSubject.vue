@@ -106,7 +106,7 @@
         <label v-if="personList.length === 0">暂无选中的人物</label>
         <ul id="person-list" v-else>
             <li v-for="(item, index) in personList" :key="index" :data-id="item.id">
-                <img :src="item.posterImageList[0] ? item.posterImageList[0].uri : '' | imageUrl" :alt="item.name"/>
+                <img :src="item.avatarImage ? item.avatarImage.uri : '' | imageUrl" :alt="item.name"/>
                 <label>{{item.name}}</label>
             </li>
         </ul>
@@ -230,8 +230,7 @@
                             subjectLayoutItemList.push({
                                 id: this.personList[k].id,
                                 name: this.personList[k].name,
-                                // 筛选其中一张符合尺寸的照片
-                                coverImage: this.personList[k].posterImageList[0]
+                                coverImage: this.personList[k].avatarImage
                             });
                         }
                     }

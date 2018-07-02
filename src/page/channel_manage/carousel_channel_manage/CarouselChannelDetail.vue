@@ -110,7 +110,13 @@
                 }
             };
         },
+        mounted() {
+            this.init();
+        },
         methods: {
+            init() {
+
+            },
             // 预览视频
             previewVideo(videoInfo) {
                 this.previewVideoInfo.url = videoInfo.url;
