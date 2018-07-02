@@ -39,18 +39,32 @@
                 ref="upload"
                 :headers="uploadHeaders"
                 action="/v1/storage/video"
+                :on-success="uploadSuccessHandler"
+                :on-change="uploadChangeHandler"
                 :auto-upload="false"
                 :file-list="fileList"
+                :before-upload="beforeUploadHandler"
                 :with-credentials="true"
                 multiple>
-                    <el-button size="small" type="primary">点击上传</el-button>
+                    <el-button slot="trigger" size="small" type="primary">选择视频</el-button>
+                    <el-button style="margin-left: 10px;" v-if="showUploadBtn" size="small" @click="submitUpload" type="success">点击上传</el-button>
             </el-upload>
+
+            <div v-if="uploadResult.length > 0">
+                <ul class="el-upload-list el-upload-list--text">
+                    <li v-for="(res, index) in uploadResult" :key="index" :tabindex="index" class="el-upload-list__item is-ready">
+                        <a class="el-upload-list__item-name inline-block">
+                            <i class="el-icon-document"></i>
+                            {{res.video.originName}}
+                            <span v-if="res.failCode" class="text-danger">{{res.failReason}}</span>
+                            <span v-if="!res.failCode" class="text-success">上传成功</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
             <div slot="footer" class="dialog-footer">
-                <el-button @click="cancelHandler">取 消</el-button>
-                <el-button
-                    type="primary"
-                    @click="submitUpload"
-                    v-loading.fullscreen.lock="isLoading">确 定</el-button>
+                <el-button @click="cancelHandler">关闭</el-button>
             </div>
         </el-dialog>
 
@@ -69,17 +83,22 @@
                 videoUploadDialogVisible: false,
                 isLoading: false,
                 fileList: [],
-                uploadHeaders: {
-                    'Accept': 'application/json',
-                    'x-tianchi-client': '{"role":"ADVISER","version":"v1.1.1","deviceId":"1234fads"}',
-                    'x-tianchi-token': this.$store.state.user.token
-                }
+                count: 0,
+                successCount: 0,
+                uploadResult: [],
+                uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token)
             };
         },
         computed: {
             ...mapGetters({
                 searchFields: 'video/searchFields'
-            })
+            }),
+            showUploadBtn() {
+                return (this.count === 0 && this.successCount === 0) || this.fileList.length === 0;
+            },
+            showUploadResult() {
+                return this.count === this.successCount;
+            }
         },
         methods: {
             ...mapMutations({
@@ -94,6 +113,7 @@
             cancelHandler() {
                 this.videoUploadDialogVisible = false;
                 this.fileList = [];
+                this.uploadResult = [];
             },
             submitUpload() {
                 this.$refs.upload.submit();
@@ -103,6 +123,31 @@
             },
             searchHandler() {
                 this.getVideoList();
+            },
+            uploadSuccessHandler(res, file, fileList) {
+                this.successCount++;
+                if (res && res.code === 0 && res.data[0]) {
+                    this.uploadResult.push(res.data[0]);
+                    if (res.data[0].failCode === 3300) {
+                        let name = res.data[0].video ? res.data[0].video.originName : '';
+                        this.$message({
+                            type: 'error',
+                            message: `[${name}], 该视频资源已存在`
+                        });
+                    }
+                }
+                if (this.showUploadResult) {
+                    this.$refs.upload.clearFiles();
+                }
+            },
+            uploadChangeHandler() {
+                if (this.count === this.successCount) {
+                    this.count = this.successCount = 0;
+                }
+            },
+            beforeUploadHandler(file) {
+                this.count++;
+                this.uploadResult = [];
             }
         }
     };

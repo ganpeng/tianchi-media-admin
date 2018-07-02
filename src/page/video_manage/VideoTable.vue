@@ -40,7 +40,7 @@
             </el-table-column>
             <el-table-column prop="takeTimeInSec" align="center" label="注入状态">
                 <template slot-scope="scope">
-                    {{getStatus(scope.row.id)}}
+                    {{getStatus(scope.row.status)}}
                 </template>
             </el-table-column>
             <el-table-column align="center" width="220px" label="上传日期">

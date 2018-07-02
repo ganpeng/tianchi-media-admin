@@ -50,6 +50,7 @@ const actions = {
                                 window.localStorage.setItem('imageBaseUri', res.data);
                             }
                         });
+                    // 获取区域列表
                     service.fetchAreaList()
                         .then((res) => {
                             if (res && res.code === 0) {

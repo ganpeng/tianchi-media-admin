@@ -4,8 +4,8 @@
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>节目资源管理</el-breadcrumb-item>
-            <el-breadcrumb-item>节目类别管理</el-breadcrumb-item>
+            <el-breadcrumb-item>频道管理</el-breadcrumb-item>
+            <el-breadcrumb-item>频道类别管理</el-breadcrumb-item>
         </el-breadcrumb>
         <div class="block type-tree">
             <el-col :span="8">

@@ -105,6 +105,13 @@ let util = {
             }
         }
         return time;
+    },
+    getUploadHeaders(token) {
+        return {
+            'Accept': 'application/json',
+            'x-tianchi-client': '{"role":"ADVISER","version":"v1.1.1","deviceId":"1234fads"}',
+            'x-tianchi-token': token
+        };
     }
 };
 

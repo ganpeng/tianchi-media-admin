@@ -28,6 +28,7 @@
                     <el-tag>
                         <router-link to="/programme-manage/create">新增节目</router-link>
                     </el-tag>
+                    <el-button size="small" type="primary" plain @click="showFileUploadDialog">导入节目</el-button>
                 </el-form-item>
             </el-form>
             <el-form :inline="true" class="demo-form-inline">
@@ -185,6 +186,28 @@
             </el-pagination>
         </div>
         <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
+        <el-dialog
+            title="上传视频"
+            :visible.sync="fileUploadDialogVisible"
+            :headers="uploadHeaders"
+            :show-close="false"
+            :close-on-click-modal="false"
+            :close-on-press-escape="false">
+            <el-upload
+                class="upload-demo"
+                ref="upload"
+                :headers="uploadHeaders"
+                action="/v1/storage/file"
+                :auto-upload="false"
+                :file-list="fileList"
+                :with-credentials="true">
+                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
+                    <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
+            </el-upload>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="closeFileUploadDialog">关闭</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -192,7 +215,6 @@ import { mapGetters, mapActions, mapMutations } from 'vuex';
 import store from 'store';
 import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
 
-//  增加批量上传节目单
 export default {
     name: 'ProgrammeList',
     components: {
@@ -201,6 +223,9 @@ export default {
     data() {
         return {
             areaOptions: store.get('areaList'),
+            fileUploadDialogVisible: false,
+            fileList: [],
+            uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
             visibleOptions: [
                 {
                     value: true,
@@ -279,6 +304,16 @@ export default {
         handlePaginationChange(value, key) {
             this.updateProgrammePagination({key, value});
             this.getProgrammeList();
+        },
+        showFileUploadDialog() {
+            this.fileUploadDialogVisible = true;
+        },
+        closeFileUploadDialog() {
+            this.fileUploadDialogVisible = false;
+            this.fileList = [];
+        },
+        submitUpload() {
+            this.$refs.upload.submit();
         }
     }
 };

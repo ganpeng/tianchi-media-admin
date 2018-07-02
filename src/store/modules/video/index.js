@@ -2,10 +2,6 @@ import _ from 'lodash';
 import service from '../../../service';
 import role from '@/util/config/role';
 
-/*
-    1920 三种， 720 两种
-*/
-
 const defaultSearchFields = {
     name: '',
     status: ''
@@ -35,21 +31,8 @@ const getters = {
         return state.searchFields;
     },
     getStatus(state) {
-        // return (status) => {
-        //     return role.VIDEO_UPLOAD_STATUS[status];
-        // };
-
-        return (id) => {
-            let video = state.list.find((video) => video.id === id);
-            let status = video.status;
-            if (status !== 'SUCCESS') {
-                return role.VIDEO_UPLOAD_STATUS[status];
-            } else {
-                let m3u8For480PStatus = !!video.m3u8For480P;
-                let m3u8For720PStatus = !!video.m3u8For720P;
-                let m3u8For1080PStatus = !!video.m3u8For1080P;
-                return m3u8For480PStatus && m3u8For720PStatus && m3u8For1080PStatus ? '成功' : '注入中';
-            }
+        return (status) => {
+            return role.VIDEO_UPLOAD_STATUS[status];
         };
     },
     qualityOptions(state) {
