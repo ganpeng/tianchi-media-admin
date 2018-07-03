@@ -15,6 +15,7 @@ const defaultPagination = {
 
 const state = {
     selectedVideoId: '',
+    videoType: null, //  VOD: 点播 CAROUSEL: 轮播
     searchFields: _.cloneDeep(defaultSearchFields),
     pagination: _.cloneDeep(defaultPagination),
     list: []
@@ -29,6 +30,9 @@ const getters = {
     },
     searchFields(state) {
         return state.searchFields;
+    },
+    getVideoType(state) {
+        return state.videoType;
     },
     getStatus(state) {
         return (status) => {
@@ -75,6 +79,9 @@ const mutations = {
         state.pagination.pageSize = payload.pageSize;
         state.pagination.pageNum = payload.pageNum;
         state.pagination.total = payload.total;
+    },
+    setVideoType(state, payload) {
+        state.videoType = payload.videoType;
     },
     resetPagination(state) {
         state.pagination = _.cloneDeep(defaultPagination);

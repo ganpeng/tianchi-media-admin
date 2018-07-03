@@ -3,39 +3,7 @@ import _ from 'lodash';
 import uuid from 'uuid';
 import service from '../../../service';
 import wsCache from '@/util/webStorage';
-
 import {checkImageExist} from '@/util/formValidate';
-
-//  节目保存时候需要提交到服务端的字段列表
-const programmePostFields = [
-    'contest',
-    'horizontalCoverImage',
-    'platformList',
-    'totalSets',
-    'specList',
-    'innerName',
-    'licence',
-    'grade',
-    'subject',
-    'announcer',
-    'announceAt',
-    'copyrightStartedAt',
-    'coverImage',
-    'copyrightEndedAt',
-    'copyrightReserved',
-    'name',
-    'desc',
-    'score',
-    'produceAreaList',
-    'categoryList',
-    'announcer',
-    'description',
-    'releaseAt',
-    'posterImageList',
-    'figureList',
-    'tagList',
-    'typeList'
-];
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
@@ -211,7 +179,8 @@ const defaultGlobal = {
     announcerList: [],
     copyrightReserverList: [],
     contestList: [],
-    platformList: []
+    platformList: [],
+    personId: ''
 };
 
 const defaultState = {
@@ -266,6 +235,14 @@ const getters = {
     },
     programmeVisible(state) {
         return state.programme.visible;
+    },
+    getPersonDesc(state) {
+        let {leadActorResult, directorResult, scenaristResult} = state.programme;
+        let result = [...leadActorResult, ...directorResult, ...scenaristResult];
+        let person = result.find((person) => {
+            return person.id === state.global.personId;
+        });
+        return person ? person.description : '';
     },
     // 分类，类型
     typeListOptions(state) {
@@ -416,6 +393,10 @@ const mutations = {
     },
     resetProgrammePagination(state) {
         state.pagination = _.cloneDeep(defaultPagination);
+    },
+    // 人物
+    setPersonId(state, payload) {
+        state.global.personId = payload.id;
     },
     // 节目搜索
     updateProgrammeSearchFields(state, payload) {
@@ -691,7 +672,7 @@ function formatProgramme(programme, state) {
             return obj;
         }))
     });
-    return _.pick(result, programmePostFields);
+    return result;
 }
 
 /**

@@ -147,8 +147,12 @@
                                         :key="item.id"
                                         :label="item.name"
                                         :value="item.id">
+                                            <span class="block" @mouseout="hideDescHandler(item.id, 'showLeadActorDesc')" @mouseover="showDescHandler(item.id, 'showLeadActorDesc')">{{ item.name }}</span>
                                     </el-option>
                                 </el-select>
+                                <p v-if="showLeadActorDesc" class="person-prompt">
+                                    {{getPersonDesc}}
+                                </p>
                                 <el-button v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                             </el-form-item>
                             <el-form-item label="节目导演" prop="director">
@@ -167,11 +171,14 @@
                                         :key="item.id"
                                         :label="item.name"
                                         :value="item.id">
+                                            <span class="block" @mouseout="hideDescHandler(item.id, 'showDirectorDesc')" @mouseover="showDescHandler(item.id, 'showDirectorDesc')">{{ item.name }}</span>
                                     </el-option>
                                 </el-select>
+                                <p v-if="showDirectorDesc" class="person-prompt">
+                                    {{getPersonDesc}}
+                                </p>
                                 <el-button v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                             </el-form-item>
-
                             <el-form-item label="节目编剧" prop="scenarist">
                                 <el-select
                                     :value="role('scenarist')"
@@ -188,8 +195,12 @@
                                         :key="item.id"
                                         :label="item.name"
                                         :value="item.id">
+                                            <span class="block" @mouseout="hideDescHandler(item.id, 'showScenaristDesc')" @mouseover="showDescHandler(item.id, 'showScenaristDesc')">{{ item.name }}</span>
                                     </el-option>
                                 </el-select>
+                                <p v-if="showScenaristDesc" class="person-prompt">
+                                    {{getPersonDesc}}
+                                </p>
                                 <el-button v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                             </el-form-item>
 
@@ -482,6 +493,11 @@
                 specOptions: role.SPEC,
                 subjectOptions: role.SUBJECT,
                 size: dimension.PROGRAMME_DIMENSION,
+                // 人物desc弹出框
+                showLeadActorDesc: false,
+                showDirectorDesc: false,
+                showScenaristDesc: false,
+
                 previewImage: {
                     display: false,
                     autoplay: false,
@@ -527,7 +543,8 @@
                 isMovie: 'programme/isMovie',
                 isEducation: 'programme/isEducation',
                 isShow: 'programme/isShow',
-                isSports: 'programme/isSports'
+                isSports: 'programme/isSports',
+                getPersonDesc: 'programme/getPersonDesc'
             }),
             readonly() {
                 return parseInt(this.status) === 1;
@@ -547,7 +564,8 @@
                 deletePosterImage: 'programme/deletePosterImage',
                 setCoverImage: 'programme/setCoverImage',
                 // 视频video
-                updateSearchFields: 'video/updateSearchFields'
+                updateSearchFields: 'video/updateSearchFields',
+                setPersonId: 'programme/setPersonId'
             }),
             ...mapActions({
                 // 新加
@@ -635,9 +653,13 @@
                                                             });
                                                             this.goBack();
                                                         } else {
+                                                            let message = '视频保存失败';
+                                                            if (videoRes && videoRes.code === 3106) {
+                                                                message = `视频【${this.getVideoListName(videoRes.args)}】已经存在`;
+                                                            }
                                                             this.$message({
                                                                 type: 'error',
-                                                                message: '视频保存失败'
+                                                                message
                                                             });
                                                         }
                                                     });
@@ -833,6 +855,21 @@
                 let {id} = this.$route.params;
                 this.updateVideoPagination({key, value});
                 this.getProgrammeVideoListById(id);
+            },
+            showDescHandler(id, type) {
+                this[type] = true;
+                this.setPersonId({id});
+            },
+            hideDescHandler(id, type) {
+                this[type] = false;
+                this.setPersonId({id: ''});
+            },
+            getVideoListName(list) {
+                return list.map((id) => {
+                    return this.video.tempList.find((video) => video.storageVideoId === id);
+                }).map((video) => {
+                    return video && video.originName ? video.originName : '';
+                }).join(', ');
             }
         }
     };
@@ -879,5 +916,20 @@
             }
         }
     }
+}
+.person-prompt {
+    position:absolute;
+    top:0;
+    left:200px;
+    width: 200px;
+    line-height: 1.2em;
+    padding: 5px;
+    z-index: 1001;
+    border: 1px solid #e4e7ed;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+    box-sizing: border-box;
+    margin: 5px 0;
 }
 </style>

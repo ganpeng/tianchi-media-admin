@@ -43,7 +43,7 @@ export const getProgrammeInfo = ({id}) => {
  * 根据节目的id更新节目信息
  */
 export const updateProgrammeInfo = ({id, programme}) => {
-    return service.patch(`/v1/content/programme/${id}`, programme);
+    return service.put(`/v1/content/programme/${id}`, programme);
 };
 
 //   节目类型管理服务

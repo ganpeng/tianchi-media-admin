@@ -38,6 +38,11 @@
                     {{duration(scope.row.takeTimeInSec)}}
                 </template>
             </el-table-column>
+            <el-table-column align="center" label="视频类型">
+                <template slot-scope="scope">
+                    {{scope.row.videoType === 'VOD' ? '点播视频' : '轮播视频'}}
+                </template>
+            </el-table-column>
             <el-table-column prop="takeTimeInSec" align="center" label="注入状态">
                 <template slot-scope="scope">
                     {{getStatus(scope.row.status)}}

@@ -22,8 +22,8 @@
                 <el-button type="primary" @click="searchHandler">搜索</el-button>
             </el-form-item>
             <el-form-item class="create-account">
-                <el-button type="primary" plain @click="showVideoUploadDialog">上传点播视频</el-button>
-                <el-button type="primary" plain @click="showVideoUploadDialog">上传轮播视频</el-button>
+                <el-button type="primary" plain @click="showVideoUploadDialog('VOD')">上传点播视频</el-button>
+                <el-button type="primary" plain @click="showVideoUploadDialog('CAROUSEL')">上传轮播视频</el-button>
             </el-form-item>
         </el-form>
         <video-table></video-table>
@@ -42,6 +42,7 @@
                 :on-success="uploadSuccessHandler"
                 :on-change="uploadChangeHandler"
                 :auto-upload="false"
+                :data="{videoType: this.getVideoType}"
                 :file-list="fileList"
                 :before-upload="beforeUploadHandler"
                 :with-credentials="true"
@@ -91,7 +92,8 @@
         },
         computed: {
             ...mapGetters({
-                searchFields: 'video/searchFields'
+                searchFields: 'video/searchFields',
+                getVideoType: 'video/getVideoType'
             }),
             showUploadBtn() {
                 return (this.count === 0 && this.successCount === 0) || this.fileList.length === 0;
@@ -102,13 +104,15 @@
         },
         methods: {
             ...mapMutations({
-                updateSearchFields: 'video/updateSearchFields'
+                updateSearchFields: 'video/updateSearchFields',
+                setVideoType: 'video/setVideoType'
             }),
             ...mapActions({
                 getVideoList: 'video/getVideoList'
             }),
-            showVideoUploadDialog() {
+            showVideoUploadDialog(videoType) {
                 this.videoUploadDialogVisible = true;
+                this.setVideoType({videoType});
             },
             cancelHandler() {
                 this.videoUploadDialogVisible = false;
