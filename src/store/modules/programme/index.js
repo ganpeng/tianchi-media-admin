@@ -411,6 +411,9 @@ const mutations = {
         let {key, value} = payload;
         state.global[key] = value;
     },
+    addProgrammeTag(state, payload) {
+        state.global.programmeTagList.unshift(payload.value);
+    },
     // 节目详情
     setProgramme(state, payload) {
         let {programme} = payload;

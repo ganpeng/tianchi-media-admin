@@ -124,11 +124,11 @@
                                     <el-option
                                         v-for="(item, index) in global.programmeTagList"
                                         :key="index"
-                                        :label="item.value"
-                                        :value="item.value">
+                                        :label="item"
+                                        :value="item">
                                     </el-option>
                                 </el-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('programmeTagList')">新增关键字</el-button>
+                                <el-button v-if="!readonly" type="primary" plain @click="addprogrammeTagHandler">新增关键字</el-button>
                             </el-form-item>
                             <el-form-item label="节目主演" prop="leadActorValue">
                                 <label for="leadActor"></label>
@@ -553,6 +553,7 @@
         methods: {
             ...mapMutations({
                 addSelectItem: 'programme/addSelectItem',
+                addProgrammeTag: 'programme/addProgrammeTag',
                 updateGlobal: 'programme/updateGlobal',
                 updateProgramme: 'programme/updateProgramme',
                 updatePersonResult: 'programme/updatePersonResult',
@@ -778,6 +779,25 @@
                             message: '已取消删除'
                         });
                     });
+            },
+            addprogrammeTagHandler() {
+                this.$prompt(`请输入新关键字`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /\S/,
+                    inputErrorMessage: `关键字不能为空`
+                }).then(({value}) => {
+                    this.addProgrammeTag({value});
+                    this.$message({
+                        type: 'success',
+                        message: `新关键字${value}添加成功`
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消输入'
+                    });
+                });
             },
             addSelectItemHandler(key) {
                 this.$prompt(`请输入新${this.selectItemObj[key]}`, '提示', {
