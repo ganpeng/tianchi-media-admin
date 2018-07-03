@@ -122,10 +122,10 @@
                                     :disabled="readonly"
                                 >
                                     <el-option
-                                        v-for="item in global.programmeTagList"
-                                        :key="item"
-                                        :label="item"
-                                        :value="item">
+                                        v-for="(item, index) in global.programmeTagList"
+                                        :key="index"
+                                        :label="item.value"
+                                        :value="item.value">
                                     </el-option>
                                 </el-select>
                                 <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('programmeTagList')">新增关键字</el-button>
@@ -600,13 +600,13 @@
                                                                 type: 'success',
                                                                 message: '保存成功'
                                                             });
-                                                            this.goBack();
                                                         } else {
                                                             this.$message({
                                                                 type: 'error',
                                                                 message: '视频保存失败'
                                                             });
                                                         }
+                                                        this.goBack();
                                                     });
                                             } else {
                                                 this.$message({

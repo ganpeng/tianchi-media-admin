@@ -116,7 +116,7 @@
                 </ul>
             </el-form-item>
             <el-form-item
-                v-if="video.type === 'FEATURE'"
+                v-if="video.type === 'FEATURE' && (isTvPlay || isShow)"
                 :rules="video.type === 'FEATURE' ? [{ required: true, message: '请输入集数/期号', trigger: 'change' }] : []"
                 label="集数/期号" prop="sort">
                 <el-input
@@ -214,6 +214,7 @@
                 // 新加
                 video: 'programme/currentVideo',
                 isTvPlay: 'programme/isTvPlay',
+                isShow: 'programme/isShow',
                 featureList: 'programme/featureList',
                 videoListObj: 'video/video',
                 checkVideoIsSelected: 'programme/checkVideoIsSelected',
