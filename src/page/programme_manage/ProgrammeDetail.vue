@@ -785,11 +785,15 @@
                     cancelButtonText: '取消',
                     inputPattern: /\S/,
                     inputValidator: (value) => {
-                        let existing = platformList.find((item) => item === value);
-                        if (existing) {
-                            return true;
+                        if (key === 'platformList') {
+                            let existing = platformList.find((item) => item === value);
+                            if (existing) {
+                                return true;
+                            } else {
+                                return `播出平台只能填写[${platformList.join(', ')}]中的`;
+                            }
                         } else {
-                            return `播出平台只能填写[${platformList.join(', ')}]中的`;
+                            return true;
                         }
                     },
                     inputErrorMessage: `${this.selectItemObj[key]}不能为空`
