@@ -1,16 +1,14 @@
 <!--新建频道的弹出框组件-->
 <template>
-    <el-dialog
-        title="提示"
-        width="50%">
+    <div>
         <el-form :model="channelInfo" :rules="infoRules" status-icon ref="channelInfo"
                  label-width="140px"
                  class="form-block">
             <el-form-item label="频道名称" prop="name" required>
-                <el-input v-model="channelInfo.name" placeholder="请填写30个字以内的名称"></el-input>
+                <el-input v-model="channelInfo.name" placeholder="请填写10个字以内的名称"></el-input>
             </el-form-item>
             <el-form-item label="频道类别" required>
-                <el-select v-model="typeList" multiple placeholder="请选择节目专题类别">
+                <el-select v-model="channelInfo.typeIdList" multiple placeholder="请选择节目专题类别">
                     <el-option
                         v-for="item in typeOptions"
                         :key="item.id"
@@ -27,7 +25,7 @@
                <el-button @click="closeDialog">取 消</el-button>
                <el-button type="primary" @click="createChannel">确 定</el-button>
         </span>
-    </el-dialog>
+    </div>
 </template>
 
 <script>
@@ -43,23 +41,28 @@
                     callback();
                 }
             };
-            let checkTypeList = (rule, value, callback) => {
-                if (!this.typeList) {
+            let checkTypeIdList = (rule, value, callback) => {
+                if (!this.channelInfo.typeIdList) {
                     return callback(new Error('请选择频道类别'));
                 } else {
                     callback();
                 }
             };
             return {
-                channelInfo: '',
-                typeList: [],
+                channelInfo: {
+                    category: 'CAROUSEL',
+                    name: '',
+                    typeList: [],
+                    typeIdList: [],
+                    visible: false
+                },
                 typeOptions: [],
                 infoRules: {
                     name: [
                         {validator: checkName, trigger: 'blur'}
                     ],
-                    typeList: [
-                        {validator: checkTypeList, trigger: 'change'}
+                    typeIdList: [
+                        {validator: checkTypeIdList, trigger: 'change'}
                     ]
                 }
             };
@@ -69,17 +72,37 @@
         },
         methods: {
             init() {
-                this.$service.getChannelType().then(response => {
+                this.$service.getChannelType(this.channelInfo).then(response => {
                     if (response && response.code === 0) {
                         this.typeOptions = response.data;
                     }
                 });
             },
             closeDialog() {
-
+                this.$emit('closeDialog');
             },
+            // 创建频道
             createChannel() {
-
+                this.$refs['channelInfo'].validate((valid) => {
+                    if (valid) {
+                        this.channelInfo.typeList = [];
+                        this.channelInfo.typeIdList.map(id => {
+                            this.typeOptions.map(type => {
+                                if (id === type.id) {
+                                    this.channelInfo.typeList.push(type);
+                                }
+                            });
+                        });
+                        this.$service.createChannels(this.channelInfo).then(response => {
+                            if (response && response.code === 0) {
+                                this.$message('成功创建频道');
+                                this.$emit('closeDialog');
+                            }
+                        });
+                    } else {
+                        return false;
+                    }
+                });
             }
         }
     };

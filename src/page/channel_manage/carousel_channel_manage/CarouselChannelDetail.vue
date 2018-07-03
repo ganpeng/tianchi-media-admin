@@ -18,10 +18,10 @@
                     <label>{{channelInfo.code}}</label>
                 </el-form-item>
                 <el-form-item label="类别：">
-                    <label>{{channelInfo.categoryList.join(',')}}</label>
+                    <label>{{channelInfo.typeList | jsonJoin('name')}}</label>
                 </el-form-item>
                 <el-form-item label="状态：">
-                    <label>{{channelInfo.status}}</label>
+                    <label>{{channelInfo.visible ? '正常' : '禁播'}}</label>
                 </el-form-item>
             </el-form>
             <el-tag class="title">频道节目信息</el-tag>
@@ -34,7 +34,7 @@
                 </el-form-item>
             </el-form>
             <el-table
-                :data="videoList"
+                :data="channelInfo.carouselVideoList"
                 border
                 style="width: 100%">
                 <el-table-column
@@ -88,22 +88,15 @@
         data() {
             return {
                 channelInfo: {
-                    id: '001',
-                    name: '甄嬛传',
-                    code: '001',
-                    status: '正常',
-                    categoryList: ['电视剧', '电影'],
-                    currentProgramme: '甄嬛传第45集',
-                    duration: '2018.6.4 12:00:00 - 2018.6.4 14:30:25'
+                    id: '',
+                    name: '',
+                    code: '',
+                    status: '',
+                    categoryList: [],
+                    currentProgramme: '',
+                    duration: '',
+                    carouselVideoList: []
                 },
-                videoList: [{
-                    id: '001',
-                    sort: 1,
-                    code: '20180621034504',
-                    name: '甄嬛传第1集（甄嬛初入宫）',
-                    duration: '00:46:04',
-                    url: 'http://dev-video.tianchiapi.com/group3/M00/00/1E/CgEBJlsrclGAWI8VAAAQ_Iaf3lM51.m3u8'
-                }],
                 previewVideoInfo: {
                     url: '',
                     visible: false
@@ -115,7 +108,11 @@
         },
         methods: {
             init() {
-
+                this.$service.getChannelDetail(this.$route.params.id).then(response => {
+                    if (response && response.code === 0) {
+                        this.channelInfo = response.data;
+                    }
+                });
             },
             // 预览视频
             previewVideo(videoInfo) {

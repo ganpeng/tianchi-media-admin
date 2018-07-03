@@ -13,25 +13,15 @@
                  label-width="80px"
                  class="form-block">
             <el-form-item label="名称" prop="name" required>
-                <el-input v-model="channelInfo.name" placeholder="请填写9个字以内的名称"></el-input>
+                <el-input v-model="channelInfo.name" placeholder="请填写10个字以内的名称"></el-input>
             </el-form-item>
             <el-form-item label="编号" required>
                 <label>{{channelInfo.code}}</label>
             </el-form-item>
-            <el-form-item label="类别" required>
-                <el-select v-model="channelInfo.categoryList" multiple placeholder="请选择频道类别">
+            <el-form-item label="类别" prop="typeIdList" required>
+                <el-select v-model="channelInfo.typeIdList" multiple placeholder="请选择频道类别">
                     <el-option
-                        v-for="item in channelCategoryOptions"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="状态" required>
-                <el-select v-model="channelInfo.status" placeholder="请选择频道状态">
-                    <el-option
-                        v-for="item in statusOptions"
+                        v-for="item in typeOptions"
                         :key="item.id"
                         :label="item.name"
                         :value="item.id">
@@ -64,16 +54,45 @@
                 label="视频编号">
             </el-table-column>
             <el-table-column
-                prop="name"
+                prop="originName"
                 label="视频文件名">
             </el-table-column>
             <el-table-column
-                prop="duration"
-                label="时长">
+                prop="link"
+                align="center"
+                width="300px"
+                label="预览视频">
+                <template slot-scope="scope">
+                    <el-button
+                        v-if="scope.row.m3u8For1080P"
+                        type="text"
+                        size="small"
+                        @click="displayVideo(scope.row.m3u8For1080P)"
+                    >1080
+                    </el-button>
+                    <el-button
+                        v-if="scope.row.m3u8For720P"
+                        type="text"
+                        size="small"
+                        @click="displayVideo(scope.row.m3u8For720P)"
+                    >720
+                    </el-button>
+                    <el-button
+                        v-if="scope.row.m3u8For480P"
+                        type="text"
+                        size="small"
+                        @click="displayVideo(scope.row.m3u8For480P)"
+                    >480
+                    </el-button>
+                </template>
             </el-table-column>
             <el-table-column
-                prop="url"
-                label="视频地址">
+                prop="takeTimeInSec"
+                align="center"
+                label="视频时长">
+                <template slot-scope="scope">
+                    {{scope.row.takeTimeInSec | fromSecondsToTime}}
+                </template>
             </el-table-column>
             <el-table-column
                 width="100px"
@@ -86,7 +105,6 @@
                              label="操作"
                              class="operate">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="previewVideo(scope.row)">预览</el-button>
                     <el-button v-if="scope.row.status === 'NORMAL'" type="danger" size="mini" plain
                                @click="disabledConfirm(scope.row)">
                         禁播
@@ -108,7 +126,9 @@
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
         <div class="text-center update-box">
-            <el-button type="success" @click="updateInfo">保存</el-button>
+            <el-button type="danger" @click="disableChannel">{{channelInfo.visible ? '禁播' : '恢复'}}频道</el-button>
+            <el-button v-if="!channelInfo.visible" type="danger" @click="removeChannel">删除频道</el-button>
+            <el-button type="success" @click="updateInfo">保 存</el-button>
         </div>
         <el-dialog
             title="选择相应的视频"
@@ -138,101 +158,35 @@
         data() {
             let checkName = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    return callback(new Error('专题名称不能为空'));
-                } else if (this.$util.trim(value).length > 9) {
-                    return callback(new Error('专题名称不能超过9个字'));
+                    return callback(new Error('频道名称不能为空'));
+                } else if (this.$util.trim(value).length > 10) {
+                    return callback(new Error('频道名称不能超过10个字'));
                 } else {
                     callback();
                 }
             };
-            let checkCategoryList = (rule, value, callback) => {
-                if (!this.channelInfo.categoryList) {
+            let checkTypeIdList = (rule, value, callback) => {
+                if (!this.channelInfo.typeIdList) {
                     return callback(new Error('请选择频道类别'));
-                } else {
-                    callback();
-                }
-            };
-            let checkStatus = (rule, value, callback) => {
-                if (!this.channelInfo.status) {
-                    return callback(new Error('请选择频道状态'));
                 } else {
                     callback();
                 }
             };
             return {
                 selectDialogVisible: false,
-                channelInfo: {
-                    id: '001',
-                    name: '甄嬛传',
-                    code: '001',
-                    status: 'NORMAL',
-                    categoryList: [1],
-                    currentProgramme: '甄嬛传第45集',
-                    duration: '2018.6.4 12:00:00 - 2018.6.4 14:30:25'
-                },
-                channelCategoryOptions: [{
-                    id: 1,
-                    name: '电影'
-                }, {
-                    id: 2,
-                    name: '电视剧'
-                }, {
-                    id: 3,
-                    name: '娱乐'
-                }],
-                videoList: [{
-                    id: '001',
-                    sort: 1,
-                    code: '20180621034504',
-                    name: '甄嬛传第1集（甄嬛初入宫）',
-                    duration: '00:46:04',
-                    status: 'NORMAL',
-                    url: 'http://dev-video.tianchiapi.com/group3/M00/00/1E/CgEBJlsrclGAWI8VAAAQ_Iaf3lM51.m3u8'
-                }, {
-                    id: '002',
-                    sort: 2,
-                    code: '20180621034505',
-                    name: '甄嬛传第2集（甄嬛装病）',
-                    duration: '00:46:04',
-                    status: 'NORMAL',
-                    url: 'http://dev-video.tianchiapi.com/group3/M00/00/1E/CgEBJlsrclGAWI8VAAAQ_Iaf3lM51.m3u8'
-                }, {
-                    id: '003',
-                    sort: 3,
-                    code: '20180621056504',
-                    name: '甄嬛传第3集（甄嬛偶遇果郡王）',
-                    duration: '00:46:56',
-                    status: 'DISABLED',
-                    url: 'http://dev-video.tianchiapi.com/group3/M00/00/1E/CgEBJlsrclGAWI8VAAAQ_Iaf3lM51.m3u8'
-                }, {
-                    id: '004',
-                    sort: 4,
-                    code: '20180621035605',
-                    name: '甄嬛传第4集（甄嬛密谋）',
-                    duration: '00:48:04',
-                    status: 'NORMAL',
-                    url: 'http://dev-video.tianchiapi.com/group3/M00/00/1E/CgEBJlsrclGAWI8VAAAQ_Iaf3lM51.m3u8'
-                }],
+                channelInfo: {},
+                typeOptions: [],
+                videoList: [],
                 previewVideoInfo: {
                     url: '',
                     visible: false
                 },
-                statusOptions: [{
-                    id: 'NORMAL',
-                    name: '正常'
-                }, {
-                    id: 'DISABLED',
-                    name: '禁播'
-                }],
                 infoRules: {
                     name: [
                         {validator: checkName, trigger: 'blur'}
                     ],
-                    categoryList: [
-                        {validator: checkCategoryList, trigger: 'change'}
-                    ],
-                    status: [
-                        {validator: checkStatus, trigger: 'change'}
+                    typeIdList: [
+                        {validator: checkTypeIdList, trigger: 'change'}
                     ]
                 }
             };
@@ -241,16 +195,30 @@
             this.init();
         },
         methods: {
-            // 初始化数据
             init() {
+                this.$service.getChannelType().then(response => {
+                    if (response && response.code === 0) {
+                        this.typeOptions = response.data;
+                    }
+                });
+                this.$service.getChannelDetail(this.$route.params.id).then(response => {
+                    if (response && response.code === 0) {
+                        this.channelInfo.name = response.data.name;
+                        this.channelInfo.code = response.data.code;
+                        response.data.typeList.map(type => {
+                            this.channelInfo.typeIdList.push(type.id);
+                        });
+                        this.videoList = response.data.carouselVideoList;
+                    }
+                });
             },
             // 添加相应的视频
             appendChannel(item, index) {
 
             },
             // 预览视频
-            previewVideo(videoInfo) {
-                this.previewVideoInfo.url = videoInfo.url;
+            displayVideo(url) {
+                this.previewVideoInfo.url = `http://dev-video.tianchiapi.com${url}`;
                 this.previewVideoInfo.visible = true;
             },
             // 关闭视频预览
@@ -318,9 +286,59 @@
             appendVideo() {
                 this.selectDialogVisible = true;
             },
+            // 禁播/恢复频道
+            disableChannel() {
+                let operateWords = this.channelInfo.visible ? '禁播' : '恢复';
+                this.$confirm('此操作将' + operateWords + '该频道, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    // 接口调用禁播频道
+                    this.$message({
+                        type: 'success',
+                        message: operateWords + '成功!'
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消' + operateWords
+                    });
+                });
+            },
+            // 删除频道
+            removeChannel() {
+                this.$confirm('此操作将删除该频道, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$service.deleteChannelById(this.$route.params.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message({
+                                type: 'success',
+                                message: '成功删除频道!'
+                            });
+                            this.$router.push({name: 'CarouselChannelList'});
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
             // 更新频道信息
             updateInfo() {
-                this.$message('保存成功');
+                this.$service.updateChannelById({
+                    id: this.$route.params.id,
+                    channel: this.channelInfo
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message('保存频道信息成功');
+                    }
+                });
             }
         }
     };

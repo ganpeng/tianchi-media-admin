@@ -67,19 +67,15 @@
             border
             ref="selectProgramme"
             style="width: 100%"
-            :highlight-current-row="model==='SINGLE'"
-            @current-change="setProgramme"
             @select="selectRow">
             <el-table-column
                 type="selection"
-                width="55"
-                v-if="model==='MULTIPLE'">
+                width="55">
             </el-table-column>
             <el-table-column
                 prop="code"
                 label="编号">
                 <template slot-scope="scope">
-                    <i class="el-icon-success" v-if="model==='SINGLE'"></i>
                     <label>{{scope.row.code}}</label>
                 </template>
             </el-table-column>
@@ -178,16 +174,16 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="totalAmount">
         </el-pagination>
-        <el-button type="success" @click="appendProgramme" size="small" v-if="model==='MULTIPLE'">添加所选节目</el-button>
+        <el-button type="success" @click="appendProgramme" size="small">添加所选节目</el-button>
     </div>
 </template>
 
 <script>
 
     export default {
-        name: 'SelectProgramme',
+        name: 'SelectMultipleProgramme',
         // 当前外部选中的人物列表
-        props: ['selectedProgrammeList', 'model'],
+        props: ['selectedProgrammeList'],
         data() {
             return {
                 listQueryParams: {
@@ -259,24 +255,11 @@
                         this.programmeList = response.data.list;
                         this.totalAmount = response.data.total;
                         // 对于选择的多选项项进行勾选
-                        if (this.model === 'MULTIPLE') {
-                            for (let i = 0; i < this.multipleSelection.length; i++) {
-                                for (let k = 0; k < this.programmeList.length; k++) {
-                                    if (this.multipleSelection[i].id === this.programmeList[k].id) {
-                                        this.$nextTick(function () {
-                                            this.$refs.selectProgramme.toggleRowSelection(this.programmeList[k], true);
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                        // 对于选择的单选项进行勾选
-                        if (this.model === 'SINGLE') {
+                        for (let i = 0; i < this.multipleSelection.length; i++) {
                             for (let k = 0; k < this.programmeList.length; k++) {
-                                if (this.singleProgramme.id === this.programmeList[k].id) {
+                                if (this.multipleSelection[i].id === this.programmeList[k].id) {
                                     this.$nextTick(function () {
-                                        this.$refs.selectProgramme.setCurrentRow(this.programmeList[k]);
-                                        this.$emit('setProgramme', this.programmeList[k]);
+                                        this.$refs.selectProgramme.toggleRowSelection(this.programmeList[k], true);
                                     });
                                 }
                             }
@@ -341,12 +324,6 @@
                     if (row.id === this.programmeList[i].id) {
                         this.$refs.selectProgramme.toggleRowSelection(this.programmeList[i], false);
                     }
-                }
-            },
-            setProgramme(row) {
-                if (row) {
-                    this.singleProgramme = row;
-                    this.$emit('setProgramme', row);
                 }
             }
         }

@@ -39,14 +39,14 @@
     export default {
         name: 'ProgrammeSecondStep',
         components: {PreviewMultipleImages},
-        props: ['programmeId', 'posterImages', 'originState'],
+        props: ['programme', 'originState'],
         computed: {
             specCoverImages() {
-                return this.posterImages.filter(image => parseInt(image.width) === this.coverImageSpec.width && parseInt(image.height) === this.coverImageSpec.height);
+                return this.programme.posterImageList.filter(image => parseInt(image.width) === this.coverImageSpec.width && parseInt(image.height) === this.coverImageSpec.height);
             },
             specBackgroundImages() {
                 if (this.coverImageBackgroundSpec) {
-                    return this.posterImages.filter(image => parseInt(image.width) === this.coverImageBackgroundSpec.width && parseInt(image.height) === this.coverImageBackgroundSpec.height);
+                    return this.programme.posterImageList.filter(image => parseInt(image.width) === this.coverImageBackgroundSpec.width && parseInt(image.height) === this.coverImageBackgroundSpec.height);
                 } else {
                     return [];
                 }
@@ -97,7 +97,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$router.push({name: 'EditProgramme', params: {id: this.programmeId}});
+                    this.$router.push({name: 'EditProgramme', params: {id: this.programme.id}});
                 }).catch(() => {
                     this.$message({
                         type: 'info',

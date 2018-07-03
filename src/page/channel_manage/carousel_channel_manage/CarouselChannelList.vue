@@ -91,7 +91,14 @@
                 :total="total">
             </el-pagination>
         </div>
-        <create-channel v-if="createChannelDialogVisible"></create-channel>
+        <el-dialog
+            title="新增轮播频道"
+            :visible.sync="createChannelDialogVisible"
+            width="50%">
+            <create-channel
+                v-on:closeDialog="closeDialog">
+            </create-channel>
+        </el-dialog>
     </div>
 </template>
 
@@ -103,7 +110,7 @@
         components: {CreateChannel},
         data() {
             return {
-                createChannelDialogVisible: true,
+                createChannelDialogVisible: false,
                 listQueryParams: {
                     typeIdList: '',
                     visible: '',
@@ -129,15 +136,16 @@
         },
         methods: {
             init() {
-                this.getChannelList();
                 // 初始化频道类别列表
-            },
-            getChannelList() {
                 this.$service.getChannelType().then(response => {
                     if (response && response.code === 0) {
                         this.typeOptions = response.data;
                     }
                 });
+                this.getChannelList();
+            },
+            getChannelList() {
+                this.listQueryParams.pageNum = this.pageNum - 1;
                 this.$service.getChannelList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.channelList = response.data.list;
@@ -150,7 +158,7 @@
                 this.getChannelList();
             },
             handleCurrentChange(pageNum) {
-                this.listQueryParams.pageNum = pageNum;
+                this.pageNum = pageNum;
                 this.getChannelList();
             },
             // 查看详情
@@ -166,6 +174,11 @@
                     name: 'EditCarouselChannel',
                     params: {id: item.id}
                 });
+            },
+            // 关闭创建频道对话框
+            closeDialog() {
+                this.createChannelDialogVisible = false;
+                this.getChannelList();
             }
         }
     };

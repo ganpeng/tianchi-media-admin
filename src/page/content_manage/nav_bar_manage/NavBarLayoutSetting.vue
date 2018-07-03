@@ -98,10 +98,11 @@
                                 <img v-if="layoutBlockItem.renderType === 'PROGRAMME'" class="item-image"
                                      :src="item.coverImage? item.coverImage.uri : '' | imageUrl"
                                      :alt="item.coverImage ? item.coverImage.name:''"/>
-                                <img v-if="layoutBlockItem.renderType === 'PROGRAMME' && item.coverImageBackground"
-                                     class="background-image"
-                                     :src="item.coverImageBackground? item.coverImageBackground.uri : '' | imageUrl"
-                                     :alt="item.coverImageBackground ? item.coverImageBackground.name:''"/>
+                                <img
+                                    v-if="layoutBlockItem.renderType === 'PROGRAMME' && item.coverImageBackground && item.coverImageBackground.uri"
+                                    class="background-image"
+                                    :src="item.coverImageBackground? item.coverImageBackground.uri : '' | imageUrl"
+                                    :alt="item.coverImageBackground ? item.coverImageBackground.name:''"/>
                                 <div class="figure-name"
                                      v-if="layoutBlockItem.renderType === 'FIGURE' || rowItem.length === 6">
                                     {{item.name}}

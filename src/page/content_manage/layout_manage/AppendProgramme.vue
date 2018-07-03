@@ -19,17 +19,14 @@
         <keep-alive>
             <component v-show="mode !== 'EDIT' || activeStep !== 0"
                        :is="currentView"
-                       :selectedProgrammeList="selectedProgrammeList"
                        ref="currentComponent"
-                       model="SINGLE"
                        v-on:setProgramme="setProgramme"
+                       v-on:resetProgramme="resetProgramme"
                        v-on:setProgrammeCoverImage="setProgrammeCoverImage"
                        v-on:setProgrammeCoverImageBackground="setProgrammeCoverImageBackground"
                        v-on:setCornerMarks="setCornerMarks"
-                       :programmeId="programmeId"
-                       :programme="selectedProgrammeList[0]"
-                       :originState="currentRecommendItem"
-                       :posterImages="posterImages">
+                       :programme="currentSelectedProgramme"
+                       :originState="currentRecommendItem">
             </component>
         </keep-alive>
         <template v-if="mode === 'EDIT' && activeStep === 0">
@@ -143,7 +140,7 @@
 
 <script>
     import ProgrammeSecondStep from './ProgrammeSecondStep';
-    import SelectProgramme from '../subject_manage/programme_subject/SelectProgramme';
+    import SelectProgramme from './SelectSingleProgramme';
     import SetCornerMarks from './SetCornerMarks';
 
     export default {
@@ -157,12 +154,9 @@
             return {
                 navBarId: this.$route.params.navBarId,
                 navBarSignCode: this.$route.params.navBarSignCode,
-                selectedProgrammeList: [],
+                // 当前选中的节目
+                currentSelectedProgramme: {},
                 activeStep: 0,
-                // 当前选择的节目的id
-                programmeId: '',
-                // 当前选择的节目的封面图的列表
-                posterImages: [],
                 // 当前选择的节目的封面图
                 coverImage: {},
                 // 当前选择的节目的出格背景图
@@ -211,46 +205,44 @@
                 } else {
                     this.mode = 'NORMAL';
                 }
-                if (this.mode !== 'EDIT') {
-                    this.$nextTick(function () {
-                        this.$refs.currentComponent.init();
-                    });
-                } else {
+                if (this.mode === 'EDIT') {
                     this.initCurrentRecommendItem();
                 }
             },
             switchMode() {
                 this.mode = 'RESET';
-                this.$refs.currentComponent.init();
+                this.resetProgramme();
+            },
+            // 重置选择的节目
+            resetProgramme() {
+                this.currentSelectedProgramme = {};
+                this.coverImageBackground = {};
+                this.coverImage = {};
+                this.currentRecommendItem = {};
             },
             // 初始化当前推荐项的数据
             initCurrentRecommendItem() {
                 this.$service.getProgrammeInfo({id: this.currentRecommendItem.id}).then(response => {
                     if (response && response.code === 0) {
                         this.currentProgramme.push(response.data);
-                        this.selectedProgrammeList[0] = response.data;
-                        this.posterImages = response.data.posterImageList;
-                        this.programmeId = this.currentRecommendItem.id;
+                        this.currentSelectedProgramme = response.data;
                         this.coverImage = this.currentRecommendItem.coverImage;
                         this.coverImageBackground = this.currentRecommendItem.coverImageBackground;
                     } else {
                         this.mode = 'NORMAL';
-                        this.$refs.currentComponent.init();
                     }
                 });
             },
             // 获取节目详情
             getProgrammeDetail() {
-                this.$service.getProgrammeInfo({id: this.programmeId}).then(response => {
+                this.$service.getProgrammeInfo({id: this.currentSelectedProgramme.id}).then(response => {
                     if (response && response.code === 0) {
-                        // 根据尺寸筛选图片
-                        this.posterImages = response.data.posterImageList;
+                        this.currentSelectedProgramme = response.data;
                     }
                 });
             },
             setProgramme(programme) {
-                this.selectedProgrammeList[0] = programme;
-                this.programmeId = programme.id;
+                this.currentSelectedProgramme = programme;
                 this.getProgrammeDetail();
             },
             // 设置正常封面
@@ -266,7 +258,7 @@
             },
             // 点击下一步
             next() {
-                if (this.activeStep === 0 && !this.programmeId && this.mode !== 'EDIT') {
+                if (this.activeStep === 0 && !this.currentSelectedProgramme.id && this.mode !== 'EDIT') {
                     this.$message({
                         message: '请先选择节目',
                         type: 'warning'
@@ -295,9 +287,9 @@
                     cornerMark: this.checkedCornerMarks,
                     coverImage: this.coverImage,
                     coverImageBackground: this.coverImageBackground,
-                    name: this.selectedProgrammeList[0].name,
-                    desc: this.selectedProgrammeList[0].desc,
-                    id: this.programmeId,
+                    name: this.currentSelectedProgramme.name,
+                    desc: this.currentSelectedProgramme.desc,
+                    id: this.currentSelectedProgramme.id,
                     layoutItemType: 'PROGRAMME'
                 };
                 this.$store.commit('layout/setSingleRecommendItem', {

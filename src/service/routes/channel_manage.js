@@ -3,6 +3,13 @@ import _ from 'lodash';
 import service from '../config';
 
 /**
+ * 获取频道详情
+ */
+export const getChannelDetail = (id) => {
+    return service.get((`/v1/live/channel/${id}`));
+};
+
+/**
  * 获取频道分类
  */
 export const getChannelType = () => {
@@ -38,7 +45,7 @@ export const updateChannelById = (id, channel) => {
 };
 
 /**
- * 根据id删除直播频道
+ * 根据id删除频道
  */
 export const deleteChannelById = (id) => {
     return service.delete(`/v1/live/channel/${id}`);

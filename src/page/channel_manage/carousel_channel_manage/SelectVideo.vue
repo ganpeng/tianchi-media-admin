@@ -14,9 +14,23 @@
             </el-form-item>
         </el-form>
         <el-table :data="videoList" border style="width:100%;margin:20px 0;">
-            <el-table-column prop="id" align="center" width="240px" label="编号"></el-table-column>
-            <el-table-column prop="originName" align="center" width="200px" label="视频名称"></el-table-column>
-            <el-table-column prop="link" align="center" width="300px" label="预览视频">
+            <el-table-column
+                prop="id"
+                align="center"
+                width="240px"
+                label="编号">
+            </el-table-column>
+            <el-table-column
+                prop="originName"
+                align="center"
+                width="200px"
+                label="视频名称">
+            </el-table-column>
+            <el-table-column
+                prop="link"
+                align="center"
+                width="300px"
+                label="预览视频">
                 <template slot-scope="scope">
                     <el-button
                         v-if="scope.row.m3u8For1080P"
@@ -41,17 +55,26 @@
                     </el-button>
                 </template>
             </el-table-column>
-            <el-table-column prop="takeTimeInSec" align="center" label="视频时长">
+            <el-table-column
+                prop="takeTimeInSec"
+                align="center"
+                label="视频时长">
                 <template slot-scope="scope">
-                    {{scope.row.takeTimeInSec}}
+                    {{scope.row.takeTimeInSec | fromSecondsToTime}}
                 </template>
             </el-table-column>
-            <el-table-column prop="takeTimeInSec" align="center" label="注入状态">
+            <el-table-column
+                prop="status"
+                align="center"
+                label="注入状态">
                 <template slot-scope="scope">
                     {{scope.row.status}}
                 </template>
             </el-table-column>
-            <el-table-column align="center" width="220px" label="上传日期">
+            <el-table-column
+                align="center"
+                width="220px"
+                label="上传日期">
                 <template slot-scope="scope">
                     {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                 </template>

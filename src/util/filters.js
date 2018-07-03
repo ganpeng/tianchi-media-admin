@@ -43,6 +43,10 @@ const FILTERS = {
     },
     setPlatformImage(copyRightCaptain) {
         return platformImage[cornerMarkOptions.PLATFORM_MARK_SWITCH[copyRightCaptain]];
+    },
+    // 转化秒数为正常时间
+    fromSecondsToTime(seconds) {
+        return util.fromSecondsToTime(seconds);
     }
 };
 

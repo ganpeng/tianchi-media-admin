@@ -17,14 +17,17 @@ switch (npmEventName) {
     // test url
     case 'dev:test':
         proxyTarget = 'http://test-gateway.tianchiapi.com';
+        uploadProxyTarget = 'http://test-storage.tianchiapi.com';
         break;
     // test url
     case 'dev:prod':
         proxyTarget = 'http://gateway.tianchiapi.com';
+        uploadProxyTarget = 'http://storage.tianchiapi.com';
         break;
     // xiongbao gateway
     case 'dev:xiongbao':
         proxyTarget = 'http://10.0.3.250:8100';
+        uploadProxyTarget = 'http://10.0.3.250:8230';
         break;
     case 'dev:lian':
         proxyTarget = 'http://10.0.3.237:8100';
@@ -32,7 +35,8 @@ switch (npmEventName) {
         break;
     // default is dev url
     default:
-        proxyTarget = 'http://dev-gateway.backend.tianchimedia.com';
+        proxyTarget = 'http://dev-gateway.tianchiapi.com';
+        uploadProxyTarget = 'http://dev-storage.tianchiapi.com';
         break;
 }
 
