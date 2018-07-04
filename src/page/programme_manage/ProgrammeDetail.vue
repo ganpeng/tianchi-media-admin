@@ -664,6 +664,7 @@
             showUploadDialog() {
                 this.videoUploadDialogVisible = status;
                 this.updateSearchFields({key: 'status', value: 'SUCCESS'});
+                this.updateSearchFields({key: 'videoType', value: 'VOD'});
             },
             closeVideoDialog(status) {
                 this.videoUploadDialogVisible = status;
@@ -869,20 +870,5 @@
             }
         }
     }
-}
-.person-prompt {
-    position:absolute;
-    top:0;
-    left:200px;
-    width: 200px;
-    line-height: 1.2em;
-    padding: 5px;
-    z-index: 1001;
-    border: 1px solid #e4e7ed;
-    border-radius: 4px;
-    background-color: #fff;
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-    box-sizing: border-box;
-    margin: 5px 0;
 }
 </style>

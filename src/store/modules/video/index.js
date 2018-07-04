@@ -4,7 +4,8 @@ import role from '@/util/config/role';
 
 const defaultSearchFields = {
     name: '',
-    status: ''
+    status: '',
+    videoType: null
 };
 
 const defaultPagination = {

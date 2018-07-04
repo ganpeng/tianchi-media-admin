@@ -263,6 +263,7 @@
                 // 清楚校验的规则
                 this.resetCurrentVideo();
                 this.updateSearchFields({key: 'status', value: null});
+                this.updateSearchFields({key: 'videoType', value: null});
                 this.setSelectedVideoId({id: ''});
             },
             successHandler() {
