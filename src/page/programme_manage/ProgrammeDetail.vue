@@ -130,80 +130,39 @@
                                 </el-select>
                                 <el-button v-if="!readonly" type="primary" plain @click="addprogrammeTagHandler">新增关键字</el-button>
                             </el-form-item>
-                            <el-form-item label="节目主演" prop="leadActorValue">
+                            <el-form-item label="节目主演">
                                 <label for="leadActor"></label>
-                                <el-select
-                                    :value="role('leadActor')"
-                                    multiple
-                                    filterable
-                                    remote
+                                <person-select
                                     :disabled="readonly"
-                                    placeholder="请输入人物名称"
-                                    @change="updatePersonHandler($event, 'leadActor')"
-                                    :remote-method="findLeadActor"
-                                    :loading="isLeadActorLoading">
-                                    <el-option
-                                        v-for="item in programme.leadActorResult"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                            <span class="block" @mouseout="hideDescHandler(item.id, 'showLeadActorDesc')" @mouseover="showDescHandler(item.id, 'showLeadActorDesc')">{{ item.name }}</span>
-                                    </el-option>
-                                </el-select>
-                                <p v-if="showLeadActorDesc" class="person-prompt">
-                                    {{getPersonDesc}}
-                                </p>
+                                    :value="programme.leadActor"
+                                    :searchResult="programme.leadActorResult"
+                                    :changeSuccessHandler="leadActorChangeHandler"
+                                    :searchSuccessHandler="leadActorSuccessHandler"
+                                ></person-select>
                                 <el-button v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                             </el-form-item>
-                            <el-form-item label="节目导演" prop="director">
-                                <el-select
-                                    :value="role('director')"
-                                    multiple
-                                    filterable
-                                    remote
+                            <el-form-item label="节目导演">
+                                <label for="director"></label>
+                                <person-select
                                     :disabled="readonly"
-                                    placeholder="请输入人物名称"
-                                    @change="updatePersonHandler($event, 'director')"
-                                    :remote-method="findDirector"
-                                    :loading="isDirectorLoading">
-                                    <el-option
-                                        v-for="item in programme.directorResult"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                            <span class="block" @mouseout="hideDescHandler(item.id, 'showDirectorDesc')" @mouseover="showDescHandler(item.id, 'showDirectorDesc')">{{ item.name }}</span>
-                                    </el-option>
-                                </el-select>
-                                <p v-if="showDirectorDesc" class="person-prompt">
-                                    {{getPersonDesc}}
-                                </p>
+                                    :value="programme.director"
+                                    :searchResult="programme.directorResult"
+                                    :changeSuccessHandler="directorChangeHandler"
+                                    :searchSuccessHandler="directorSuccessHandler"
+                                ></person-select>
                                 <el-button v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                             </el-form-item>
-                            <el-form-item label="节目编剧" prop="scenarist">
-                                <el-select
-                                    :value="role('scenarist')"
-                                    multiple
-                                    filterable
-                                    remote
+                            <el-form-item label="节目编剧">
+                                <label for="scenarist"></label>
+                                <person-select
                                     :disabled="readonly"
-                                    placeholder="请输入人物名称"
-                                    @change="updatePersonHandler($event, 'scenarist')"
-                                    :remote-method="findScenarist"
-                                    :loading="isScenaristLoading">
-                                    <el-option
-                                        v-for="item in programme.scenaristResult"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                            <span class="block" @mouseout="hideDescHandler(item.id, 'showScenaristDesc')" @mouseover="showDescHandler(item.id, 'showScenaristDesc')">{{ item.name }}</span>
-                                    </el-option>
-                                </el-select>
-                                <p v-if="showScenaristDesc" class="person-prompt">
-                                    {{getPersonDesc}}
-                                </p>
+                                    :value="programme.scenarist"
+                                    :searchResult="programme.scenaristResult"
+                                    :changeSuccessHandler="scenaristChangeHandler"
+                                    :searchSuccessHandler="scenaristSuccessHandler"
+                                ></person-select>
                                 <el-button v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                             </el-form-item>
-
                             <el-form-item label="版权起始日期" prop="copyrightRange">
                                 <el-date-picker
                                     :value="programme.copyrightRange"
@@ -453,6 +412,7 @@
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import dimension from '@/util/config/dimension';
     import role from '@/util/config/role';
+    import PersonSelect from './PersonSelect';
     import {checkScore, checkCategory} from '@/util/formValidate';
     import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
     const platformList = [ '中央电视台', '浙江卫视', '东方卫视', '江苏卫视', '湖南卫视', '安徽卫视', '北京卫视', '腾讯', '爱奇艺', '优酷', '搜狐', '芒果' ];
@@ -464,7 +424,8 @@
             CreatePersonDialog,
             ProgrammeTable,
             UploadProgrammeVideoDialog,
-            PreviewMultipleImages
+            PreviewMultipleImages,
+            PersonSelect
         },
         props: {
             status: { // status 有三种状态，0代表创建 "create", 1代表显示 "display", 2代表编辑 "edit"
@@ -493,11 +454,6 @@
                 specOptions: role.SPEC,
                 subjectOptions: role.SUBJECT,
                 size: dimension.PROGRAMME_DIMENSION,
-                // 人物desc弹出框
-                showLeadActorDesc: false,
-                showDirectorDesc: false,
-                showScenaristDesc: false,
-
                 previewImage: {
                     display: false,
                     autoplay: false,
@@ -505,7 +461,6 @@
                     list: []
                 },
                 selectItemObj: {
-                    programmeTagList: '关键字',
                     licenceList: '牌照方',
                     copyrightReserverList: '版权方',
                     announcerList: '发行方',
@@ -543,8 +498,7 @@
                 isMovie: 'programme/isMovie',
                 isEducation: 'programme/isEducation',
                 isShow: 'programme/isShow',
-                isSports: 'programme/isSports',
-                getPersonDesc: 'programme/getPersonDesc'
+                isSports: 'programme/isSports'
             }),
             readonly() {
                 return parseInt(this.status) === 1;
@@ -565,8 +519,7 @@
                 deletePosterImage: 'programme/deletePosterImage',
                 setCoverImage: 'programme/setCoverImage',
                 // 视频video
-                updateSearchFields: 'video/updateSearchFields',
-                setPersonId: 'programme/setPersonId'
+                updateSearchFields: 'video/updateSearchFields'
             }),
             ...mapActions({
                 // 新加
@@ -656,7 +609,7 @@
                                                         } else {
                                                             let message = '视频保存失败';
                                                             if (videoRes && videoRes.code === 3106) {
-                                                                message = `视频【${this.getVideoListName(videoRes.args)}】已经存在`;
+                                                                message = `视频【${this.getVideoListName(videoRes.data)}】已经添加，不能重复添加`;
                                                             }
                                                             this.$message({
                                                                 type: 'error',
@@ -726,39 +679,6 @@
                 if (key === 'categoryList') {
                     this.updateProgramme({key: 'typeList', value: []});
                     this.getDict(value);
-                }
-            },
-            findDirector(name) {
-                if (name) {
-                    this.isDirectorLoading = true;
-                    this.getPersonList({name, isProgramme: true})
-                        .then((res) => {
-                            this.updatePersonResult({key: 'directorResult', value: res.data.list});
-                        }).finally(() => {
-                            this.isDirectorLoading = false;
-                        });
-                }
-            },
-            findLeadActor(name) {
-                if (name) {
-                    this.isLeadActorLoading = true;
-                    this.getPersonList({name, isProgramme: true})
-                        .then((res) => {
-                            this.updatePersonResult({key: 'leadActorResult', value: res.data.list});
-                        }).finally(() => {
-                            this.isLeadActorLoading = false;
-                        });
-                }
-            },
-            findScenarist(name) {
-                if (name) {
-                    this.isScenaristLoading = true;
-                    this.getPersonList({name, isProgramme: true})
-                        .then((res) => {
-                            this.updatePersonResult({key: 'scenaristResult', value: res.data.list});
-                        }).finally(() => {
-                            this.isScenaristLoading = false;
-                        });
                 }
             },
             uploadImageHandler() {
@@ -872,21 +792,10 @@
                 let baseUri = window.localStorage.getItem('imageBaseUri');
                 return baseUri + uri;
             },
-            updatePersonHandler(idList, key) {
-                this.updatePerson({key, idList});
-            },
             handlePaginationChange(value, key) {
                 let {id} = this.$route.params;
                 this.updateVideoPagination({key, value});
                 this.getProgrammeVideoListById(id);
-            },
-            showDescHandler(id, type) {
-                this[type] = true;
-                this.setPersonId({id});
-            },
-            hideDescHandler(id, type) {
-                this[type] = false;
-                this.setPersonId({id: ''});
             },
             getVideoListName(list) {
                 return list.map((id) => {
@@ -894,7 +803,27 @@
                 }).map((video) => {
                     return video && video.originName ? video.originName : '';
                 }).join(', ');
+            },
+            // 人物的即时搜索
+            leadActorSuccessHandler(list) {
+                this.updatePersonResult({key: 'leadActorResult', value: list});
+            },
+            leadActorChangeHandler(value) {
+                this.updatePerson({key: 'leadActor', idList: value});
+            },
+            directorSuccessHandler(list) {
+                this.updatePersonResult({key: 'directorResult', value: list});
+            },
+            directorChangeHandler(value) {
+                this.updatePerson({key: 'director', idList: value});
+            },
+            scenaristSuccessHandler(list) {
+                this.updatePersonResult({key: 'scenaristResult', value: list});
+            },
+            scenaristChangeHandler(value) {
+                this.updatePerson({key: 'scenarist', idList: value});
             }
+            //  人物即时搜索方法结束
         }
     };
 </script>

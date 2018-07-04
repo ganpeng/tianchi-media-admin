@@ -179,6 +179,16 @@ const actions = {
             }
         } catch (err) {
         }
+    },
+    async searchPerson({commit, state}, name) {
+        try {
+            if (name) {
+                let res = await service.getPersonList({ pageNum: 0, pageSize: 50, name });
+                if (res && res.code === 0) {
+                    return res;
+                }
+            }
+        } catch (err) {}
     }
 };
 

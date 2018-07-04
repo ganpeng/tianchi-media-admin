@@ -53,8 +53,8 @@
 
             <div v-if="uploadResult.length > 0">
                 <ul class="el-upload-list el-upload-list--text">
-                    <li v-for="(res, index) in uploadResult" :key="index" :tabindex="index" class="el-upload-list__item is-ready">
-                        <a class="el-upload-list__item-name inline-block">
+                    <li v-for="(res, index) in uploadResult" :key="index" :tabindex="index" style="overflow:hidden;" class="el-upload-list__item is-ready">
+                        <a>
                             <i class="el-icon-document"></i>
                             {{res.video.originName}}
                             <span v-if="res.failCode" class="text-danger">{{res.failReason}}</span>
