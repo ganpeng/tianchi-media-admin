@@ -120,6 +120,7 @@
             return {
                 createChannelDialogVisible: false,
                 listQueryParams: {
+                    category: 'CAROUSEL',
                     typeIdList: '',
                     visible: '',
                     keyWord: '',
@@ -145,7 +146,7 @@
         methods: {
             init() {
                 // 初始化频道类别列表
-                this.$service.getChannelType().then(response => {
+                this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
                     if (response && response.code === 0) {
                         this.typeOptions = response.data;
                     }

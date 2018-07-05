@@ -227,7 +227,7 @@
         },
         methods: {
             init() {
-                this.$service.getChannelType().then(response => {
+                this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
                     if (response && response.code === 0) {
                         this.typeOptions = response.data;
                     }
@@ -251,6 +251,10 @@
             appendVideo(selectedVideoList) {
                 for (let i = 0; i < selectedVideoList.length; i++) {
                     selectedVideoList[i].storageVideoId = selectedVideoList[i].id;
+                    // 添加的视频统一设置 status 为 NORMAL
+                    selectedVideoList[i].status = 'NORMAL';
+                    // 添加的视频设置为默认正常
+                    selectedVideoList[i].visible = true;
                     delete selectedVideoList[i].id;
                     this.currentSelectedVideoList.splice(this.currentVideoIndex + i, 0, selectedVideoList[i]);
                 }

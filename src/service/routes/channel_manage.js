@@ -1,6 +1,7 @@
 import qs from 'querystring';
 import _ from 'lodash';
 import service from '../config';
+import util from '../../util/extend';
 
 /**
  * 获取频道详情
@@ -12,8 +13,8 @@ export const getChannelDetail = (id) => {
 /**
  * 获取频道分类
  */
-export const getChannelType = () => {
-    return service.get('/v1/live/channel-type');
+export const getChannelType = ({category}) => {
+    return service.get(util.format('/v1/live/channel-type?category={0}', category));
 };
 
 /**
@@ -54,13 +55,14 @@ export const deleteChannelById = (id) => {
 /**
  * 获取频道的列表
  */
-export const getChannelList = ({pageNum, pageSize, keyword, typeIdList, visible}) => {
+export const getChannelList = ({pageNum, pageSize, keyword, typeIdList, visible, category}) => {
     let params = {
         pageNum,
         pageSize,
         keyword,
         typeIdList,
-        visible
+        visible,
+        category
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
