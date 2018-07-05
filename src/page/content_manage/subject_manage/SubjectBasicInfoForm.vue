@@ -8,7 +8,7 @@
                 <el-input v-model="subjectInfo.name" placeholder="请填写30个字以内的名称"></el-input>
             </el-form-item>
             <template v-if="status === '0' || status === '2'">
-                <el-form-item label="节目专题类别" required>
+                <el-form-item label="节目专题类别" prop="programmeCategoryList" required>
                     <el-select v-model="programmeCategoryList" multiple placeholder="请选择节目专题类别">
                         <el-option
                             v-for="item in programmeCategoryListOptions"
@@ -27,7 +27,7 @@
                     :rows="4">
                 </el-input>
             </el-form-item>
-            <el-form-item label="专题标签" prop="tagList" required>
+            <el-form-item label="专题标签" prop="tagList">
                 <el-select
                     v-model="subjectInfo.tagList"
                     multiple
@@ -145,11 +145,11 @@
                 }
             };
             let checkProgrammeCategoryList = (rule, value, callback) => {
-                // 对于创建或者编辑节目专题，不存在当前字段，也不校验
+                // 对于创建或者编辑人物专题，不存在当前字段，也不校验
                 if (this.status === '1' || this.status === '3') {
                     return;
                 }
-                if (!this.programmeCategoryList) {
+                if (this.programmeCategoryList.length === 0) {
                     return callback(new Error('请选择节目专题类别'));
                 } else {
                     callback();
@@ -160,13 +160,6 @@
                     return callback(new Error('专题简介不能为空'));
                 } else if (this.$util.trim(value).length > 150) {
                     return callback(new Error('专题简介不能超过150字'));
-                } else {
-                    callback();
-                }
-            };
-            let checkTagList = (rule, value, callback) => {
-                if (this.subjectInfo.tagList.length === 0) {
-                    return callback(new Error('请选择专题标签'));
                 } else {
                     callback();
                 }
@@ -192,9 +185,6 @@
                     ],
                     description: [
                         {validator: checkDescription, trigger: 'blur'}
-                    ],
-                    tagList: [
-                        {validator: checkTagList, trigger: 'change'}
                     ]
                 },
                 dialogVisible: false,

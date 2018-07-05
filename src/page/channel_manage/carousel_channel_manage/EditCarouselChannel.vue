@@ -19,7 +19,7 @@
                 <label>{{channelInfo.code}}</label>
             </el-form-item>
             <el-form-item label="类别" prop="typeIdList" required>
-                <el-select v-model="channelInfo.typeIdList" multiple placeholder="请选择频道类别">
+                <el-select v-model="typeIdList" multiple placeholder="请选择频道类别">
                     <el-option
                         v-for="item in typeOptions"
                         :key="item.id"
@@ -38,8 +38,9 @@
                 <label>{{channelInfo.duration}}</label>
             </el-form-item>
         </el-form>
+        <el-button type="success" class="add-video" @click="popAppendVideoDialogue(0)">点击在列表最上方添加视频</el-button>
         <el-table
-            :data="videoList"
+            :data="currentSelectedVideoList"
             border
             style="width: 100%">
             <el-table-column
@@ -116,7 +117,8 @@
                     <el-button type="danger" size="mini" plain
                                @click="removeConfirm(scope.$index)">删除
                     </el-button>
-                    <el-button type="text" size="small" @click="appendVideo(scope.$index)">下方添加视频</el-button>
+                    <el-button type="text" size="small" @click="popAppendVideoDialogue(scope.$index + 1)">下方添加视频
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -133,27 +135,27 @@
         <el-dialog
             title="选择相应的视频"
             :visible.sync="selectDialogVisible"
+            center
             width="80%">
-            <select-video
-                v-on:appendChannel="appendChannel">
-            </select-video>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="selectDialogVisible = false">取 消</el-button>
-              <el-button type="primary" @click="selectDialogVisible = false">确 定</el-button>
-            </span>
+            <select-multiple-video
+                v-if="selectDialogVisible"
+                :currentSelectedVideoList="currentSelectedVideoList"
+                v-on:appendVideo="appendVideo"
+                v-on:closeSelectVideoDialog="selectDialogVisible = false">
+            </select-multiple-video>
         </el-dialog>
     </div>
 </template>
 
 <script>
     import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
-    import SelectVideo from './SelectVideo';
+    import SelectMultipleVideo from './SelectMultipleVideo';
 
     export default {
         name: 'EditCarouselChannel',
         components: {
             DisplayVideoDialog,
-            SelectVideo
+            SelectMultipleVideo
         },
         data() {
             let checkName = (rule, value, callback) => {
@@ -175,8 +177,11 @@
             return {
                 selectDialogVisible: false,
                 channelInfo: {},
+                typeIdList: [],
                 typeOptions: [],
-                videoList: [],
+                // 当前的频道含有的视频列表
+                currentSelectedVideoList: [],
+                currentVideoIndex: '',
                 previewVideoInfo: {
                     url: '',
                     visible: false
@@ -203,18 +208,24 @@
                 });
                 this.$service.getChannelDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
-                        this.channelInfo.name = response.data.name;
-                        this.channelInfo.code = response.data.code;
+                        this.channelInfo = response.data;
                         response.data.typeList.map(type => {
-                            this.channelInfo.typeIdList.push(type.id);
+                            this.typeIdList.push(type.id);
                         });
-                        this.videoList = response.data.carouselVideoList;
+                        this.currentSelectedVideoList = response.data.carouselVideoList;
                     }
                 });
             },
+            // 打开视频列表，设置当前点击的某一行视频
+            popAppendVideoDialogue(index) {
+                this.currentVideoIndex = index;
+                this.selectDialogVisible = true;
+            },
             // 添加相应的视频
-            appendChannel(item, index) {
-
+            appendVideo(selectedVideoList) {
+                for (let i = 0; i < selectedVideoList.length; i++) {
+                    this.currentSelectedVideoList.splice(this.currentVideoIndex + i, 0, selectedVideoList[i]);
+                }
             },
             // 预览视频
             displayVideo(url) {
@@ -270,7 +281,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.videoList.splice(index, 1);
+                    this.currentSelectedVideoList.splice(index, 1);
                     this.$message({
                         type: 'success',
                         message: '删除成功!'
@@ -281,10 +292,6 @@
                         message: '已取消删除'
                     });
                 });
-            },
-            // 添加视频
-            appendVideo() {
-                this.selectDialogVisible = true;
             },
             // 禁播/恢复频道
             disableChannel() {
@@ -331,10 +338,19 @@
             },
             // 更新频道信息
             updateInfo() {
-                this.$service.updateChannelById({
-                    id: this.$route.params.id,
-                    channel: this.channelInfo
-                }).then(response => {
+                this.channelInfo.carouselVideoList = this.currentSelectedVideoList;
+                this.channelInfo.typeList = [];
+                this.typeIdList.map(typeId => {
+                    this.typeOptions.map(type => {
+                        if (typeId === type.id) {
+                            this.channelInfo.typeList.push(type);
+                        }
+                    });
+                });
+                this.$service.updateChannelById(
+                    this.$route.params.id,
+                    this.channelInfo
+                ).then(response => {
                     if (response && response.code === 0) {
                         this.$message('保存频道信息成功');
                     }
@@ -362,6 +378,11 @@
 
     .title {
         margin: 50px 0 30px 30px;
+    }
+
+    .add-video {
+        margin-top: 30px;
+        margin-left: 20px;
     }
 
     .update-box {

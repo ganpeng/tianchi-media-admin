@@ -110,6 +110,12 @@
     .success-row {
         background: #f0f9eb;
     }
+    .unselectable-row {
+        background: #f0f9eb;
+        .el-checkbox {
+            display: none;
+        }
+    }
 }
 
 // 表格下面分页右对齐
@@ -141,6 +147,7 @@
 .type-tree {
     margin-top: 32px;
 }
+
 .custom-tree-node {
     display: flex;
     padding-right: 8px;
@@ -149,10 +156,10 @@
     justify-content: space-between;
     font-size: 14px;
 }
+
 .custom-tree-node span {
     font-size: 18px;
 }
-
 
 //  图片列表的样式
 // .cover-list {
