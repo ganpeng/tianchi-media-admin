@@ -129,7 +129,8 @@
         data() {
             return {
                 queryParams: {
-                    videoType: '',
+                    status: 'SUCCESS',
+                    videoType: 'CAROUSEL',
                     key: '',
                     pageNum: 0,
                     pageSize: 10

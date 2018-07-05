@@ -8,7 +8,7 @@
                 <el-input v-model="subjectInfo.name" placeholder="请填写30个字以内的名称"></el-input>
             </el-form-item>
             <template v-if="status === '0' || status === '2'">
-                <el-form-item label="节目专题类别" prop="programmeCategoryList" required>
+                <el-form-item label="节目专题类别" required>
                     <el-select v-model="programmeCategoryList" multiple placeholder="请选择节目专题类别">
                         <el-option
                             v-for="item in programmeCategoryListOptions"

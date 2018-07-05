@@ -67,6 +67,14 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                    prop="multicastIp"
+                    label="组播地址">
+                </el-table-column>
+                <el-table-column
+                    prop="multicastPort"
+                    label="端口号">
+                </el-table-column>
+                <el-table-column
                     label="状态">
                     <template slot-scope="scope">
                         <label>{{scope.row.visible ? '正常' : '禁播'}}</label>

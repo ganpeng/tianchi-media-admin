@@ -17,6 +17,12 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="组播地址" prop="multicastIp" required>
+                <el-input v-model="channelInfo.multicastIp" placeholder="请填写组播地址"></el-input>
+            </el-form-item>
+            <el-form-item label="端口号" prop="multicastPort" required>
+                <el-input v-model="channelInfo.multicastPort" placeholder="请填写端口号"></el-input>
+            </el-form-item>
             <el-form-item label="频道状态" required>
                 <label>禁播</label>
             </el-form-item>
@@ -48,6 +54,20 @@
                     callback();
                 }
             };
+            let checkulticastIp = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('组播地址不能为空'));
+                } else {
+                    callback();
+                }
+            };
+            let checkMulticastPort = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('端口号不能为空'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 channelInfo: {
                     category: 'CAROUSEL',
@@ -63,6 +83,12 @@
                     ],
                     typeIdList: [
                         {validator: checkTypeIdList, trigger: 'change'}
+                    ],
+                    multicastIp: [
+                        {validator: checkulticastIp, trigger: 'blur'}
+                    ],
+                    multicastPort: [
+                        {validator: checkMulticastPort, trigger: 'blur'}
                     ]
                 }
             };

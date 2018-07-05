@@ -28,6 +28,12 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="组播地址" prop="multicastIp" required>
+                <el-input v-model="channelInfo.multicastIp" placeholder="请填写组播地址"></el-input>
+            </el-form-item>
+            <el-form-item label="端口号" prop="multicastPort" required>
+                <el-input v-model="channelInfo.multicastPort" placeholder="请填写端口号"></el-input>
+            </el-form-item>
         </el-form>
         <el-tag class="title">频道节目信息</el-tag>
         <el-form label-position="right" label-width="90px">
@@ -99,14 +105,14 @@
                 width="100px"
                 label="视频状态">
                 <template slot-scope="scope">
-                    <label>{{scope.row.status === 'NORMAL' ? '正常':'禁播'}}</label>
+                    <label>{{scope.row.visible ? '正常':'禁播'}}</label>
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              label="操作"
                              class="operate">
                 <template slot-scope="scope">
-                    <el-button v-if="scope.row.status === 'NORMAL'" type="danger" size="mini" plain
+                    <el-button v-if="scope.row.visible" type="danger" size="mini" plain
                                @click="disabledConfirm(scope.row)">
                         禁播
                     </el-button>
@@ -174,6 +180,20 @@
                     callback();
                 }
             };
+            let checkulticastIp = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('组播地址不能为空'));
+                } else {
+                    callback();
+                }
+            };
+            let checkMulticastPort = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('端口号不能为空'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 selectDialogVisible: false,
                 channelInfo: {},
@@ -192,6 +212,12 @@
                     ],
                     typeIdList: [
                         {validator: checkTypeIdList, trigger: 'change'}
+                    ],
+                    multicastIp: [
+                        {validator: checkulticastIp, trigger: 'blur'}
+                    ],
+                    multicastPort: [
+                        {validator: checkMulticastPort, trigger: 'blur'}
                     ]
                 }
             };
@@ -224,6 +250,8 @@
             // 添加相应的视频
             appendVideo(selectedVideoList) {
                 for (let i = 0; i < selectedVideoList.length; i++) {
+                    selectedVideoList[i].storageVideoId = selectedVideoList[i].id;
+                    delete selectedVideoList[i].id;
                     this.currentSelectedVideoList.splice(this.currentVideoIndex + i, 0, selectedVideoList[i]);
                 }
             },
@@ -243,7 +271,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    videoItem.status = 'DISABLED';
+                    videoItem.visible = false;
                     this.$message({
                         type: 'success',
                         message: '禁播成功!'
@@ -262,7 +290,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    videoItem.status = 'NORMAL';
+                    videoItem.visible = true;
                     this.$message({
                         type: 'success',
                         message: '恢复成功!'
@@ -338,6 +366,9 @@
             },
             // 更新频道信息
             updateInfo() {
+                this.currentSelectedVideoList.map(item => {
+                    item.status = 'NORMAL';
+                });
                 this.channelInfo.carouselVideoList = this.currentSelectedVideoList;
                 this.channelInfo.typeList = [];
                 this.typeIdList.map(typeId => {

@@ -10,7 +10,7 @@
         </el-breadcrumb>
         <div class="block-box text-left">
             <el-tag class="title">频道基本信息</el-tag>
-            <el-form label-position="right" label-width="60px">
+            <el-form label-position="right" label-width="100px">
                 <el-form-item label="名称：">
                     <label>{{channelInfo.name}}</label>
                 </el-form-item>
@@ -19,6 +19,12 @@
                 </el-form-item>
                 <el-form-item label="类别：">
                     <label>{{channelInfo.typeList | jsonJoin('name')}}</label>
+                </el-form-item>
+                <el-form-item label="组播地址：">
+                    <label>{{channelInfo.multicastIp}}</label>
+                </el-form-item>
+                <el-form-item label="端口号：">
+                    <label>{{channelInfo.multicastPort}}</label>
                 </el-form-item>
                 <el-form-item label="状态：">
                     <label>{{channelInfo.visible ? '正常' : '禁播'}}</label>
