@@ -829,46 +829,4 @@
     };
 </script>
 <style lang="less" scoped>
-.cover-list {
-    display: flex;
-    margin-top: 30px;
-    justify-content: left;
-    flex-wrap: wrap;
-    li {
-        display: flex;
-        position: relative;
-        margin-right: 30px;
-        flex-direction: column;
-        justify-content: space-around;
-        height: 230px;
-        .image-box {
-            height: 150px;
-            width: 150px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            cursor: zoom-in;
-        }
-        label {
-            text-align: center;
-            font-size: 16px;
-        }
-        i {
-            position: absolute;
-            top: 20px;
-            color: red;
-            cursor: pointer;
-            font-size: 2em;
-        }
-        .delete-btn {
-            right: 20px;
-            display: none;
-        }
-        &:hover {
-            i {
-                display: block;
-            }
-        }
-    }
-}
 </style>

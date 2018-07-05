@@ -205,6 +205,14 @@ export const VIDEO_COVER_DIMENSION = [
     }
 ];
 
+//  直播频道logo图
+export const CHANNEL_LOGO_DIMENSION = [
+    {
+        value: '240*134',
+        label: 'Logo：240*134'
+    }
+];
+
 export default {
     ADVERT_DIMENSION,
     PROGRAMME_DIMENSION,
@@ -213,5 +221,6 @@ export default {
     CATALOGUE_DIMENSION,
     OPERATE_CORNER_MARK_DIMENSION,
     PERSON_DIMENSION,
-    VIDEO_COVER_DIMENSION
+    VIDEO_COVER_DIMENSION,
+    CHANNEL_LOGO_DIMENSION
 };

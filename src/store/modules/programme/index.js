@@ -145,6 +145,10 @@ const defaultVideo = {
     m3u8For720P: '',
     m3u8For1080P: '',
     m3u8For4K: '',
+
+    //  相关人物
+    relevantPerson: [],
+    relevantPersonResult: [],
     storageVideoId: '' // 视频资源库中的视频的id
 };
 
@@ -238,7 +242,8 @@ const getters = {
     },
     getPersonDesc(state) {
         let {leadActorResult, directorResult, scenaristResult} = state.programme;
-        let result = [...leadActorResult, ...directorResult, ...scenaristResult];
+        let {relevantPerson} = state.video.video;
+        let result = [...leadActorResult, ...directorResult, ...scenaristResult, ...relevantPerson];
         let person = result.find((person) => {
             return person.id === state.global.personId;
         });
@@ -528,6 +533,21 @@ const mutations = {
     },
     deleteTempList(state) {
         state.video.tempList = [];
+    },
+    //  更新视频下的人物
+    updateVideoPersonResult(state, payload) {
+        let {key, value} = payload;
+        let result = state.video.video[key].concat(value);
+        state.video.video[key] = _.uniqBy(result, 'id');
+    },
+    updateVideoPerson(state, payload) {
+        let {key, idList} = payload;
+        state.video.video[key] = idList.map((id) => {
+            let resultKey = `${key}Result`;
+            return state.video.video[resultKey].find((item) => {
+                return item.id === id;
+            });
+        });
     },
     resetVideo(state) {
     },

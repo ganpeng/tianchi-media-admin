@@ -41,7 +41,8 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
     },
     computed: {
         ...mapGetters({
-            serializeChannelTypeList: 'channel/serializeChannelTypeList'
+            serializeChannelTypeList: 'channel/serializeChannelTypeList',
+            channelTypeList: 'channel/channelTypeList'
         })
     },
     methods: {
@@ -68,6 +69,13 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 inputPattern: /\S/,
+                inputValidator: (value) => {
+                    if (this.checkExist(data, value)) {
+                        return '类型已经存在';
+                    } else {
+                        return true;
+                    }
+                },
                 inputErrorMessage: '类型不能为空'
             }).then(({ value }) => {
                 this.addChannelCategory({name: value, data});
@@ -82,57 +90,67 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
                 });
             });
         },
-      remove(node, data) {
-        this.$confirm('此操作将永久删除该节目类型, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'error'
-        }).then(() => {
-            if (/^category_/.test(data.id)) {
-                this.deleteChannelCategory({node, data});
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
-            } else {
-                this.getChannelCount(data.id)
-                    .then((noCount) => {
-                        if (noCount) {
-                            this.deleteChannelCategory({node, data});
-                            this.$message({
-                                type: 'success',
-                                message: '删除成功!'
-                            });
-                        } else {
-                            this.$message({
-                                type: 'error',
-                                message: '该类型下面有频道，不能删除!'
-                            });
-                        }
+        remove(node, data) {
+            this.$confirm('此操作将永久删除该节目类型, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'error'
+            }).then(() => {
+                if (/^category_/.test(data.id)) {
+                    this.deleteChannelCategory({node, data});
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
                     });
-            }
-        }).catch(() => {
-            this.$message({
-                type: 'info',
-                message: '已取消删除'
+                } else {
+                    this.getChannelCount(data.id)
+                        .then((noCount) => {
+                            if (noCount) {
+                                this.deleteChannelCategory({node, data});
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除成功!'
+                                });
+                            } else {
+                                this.$message({
+                                    type: 'error',
+                                    message: '该类型下面有频道，不能删除!'
+                                });
+                            }
+                        });
+                }
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
             });
-        });
-      },
-      renderContent(h, { node, data, store }) {
-        return (
-          <span class="custom-tree-node">
-            <span>{node.label}</span>
-            {
-                node.level === 1
-                ? <span>
-                    <el-button size="mini" type="text" icon="el-icon-plus" on-click={ () => this.append(data, node) }></el-button>
-                </span>
-                : <span>
-                    <el-button size="mini" type="text" icon="el-icon-minus" on-click={ () => this.remove(node, data) }></el-button>
-                </span>
+        },
+        checkExist(data, value) {
+            let {category} = data;
+            let isExist = this.channelTypeList.filter((type) => type.category === category)
+                                .find((type) => type.name === value);
+            if (isExist) {
+                return true;
+            } else {
+                return false;
             }
-          </span>);
-      }
+        },
+        renderContent(h, { node, data, store }) {
+            return (
+            <span class="custom-tree-node">
+                <span>{node.label}</span>
+                {
+                    node.level === 1
+                    ? <span>
+                        <el-button size="mini" type="text" icon="el-icon-plus" on-click={ () => this.append(data, node) }></el-button>
+                    </span>
+                    : <span>
+                        <el-button size="mini" type="text" icon="el-icon-minus" on-click={ () => this.remove(node, data) }></el-button>
+                    </span>
+                }
+            </span>);
+        }
     }
   };
 </script>

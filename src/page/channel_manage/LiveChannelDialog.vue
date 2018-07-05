@@ -73,6 +73,19 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="视频封面图">
+                <el-button v-if="!readonly" type="primary" @click="uploadImageHandler">上传封面图<i class="el-icon-upload el-icon--right"></i></el-button>
+                <ul
+                    v-if="liveChannel.logoUri"
+                    class="cover-list">
+                    <li>
+                        <div
+                            class="image-box"
+                            :style="{'background-image': 'url(' + appendImagePrefix(liveChannel.logoUri) + ')'}">
+                        </div>
+                    </li>
+                </ul>
+            </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="cancelHandler">取 消</el-button>
@@ -82,10 +95,20 @@
                 @click="successHandler"
                 v-loading.fullscreen.lock="isLoading">确 定</el-button>
         </div>
+        <upload-image
+            title="上传节目图片"
+            :size="size"
+            :withName="false"
+            :successHandler="setChannelLogo"
+            :imageUploadDialogVisible="imageUploadDialogVisible"
+            v-on:changeImageDialogStatus="closeImageDialog($event)">
+        </upload-image>
     </el-dialog>
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
+    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import dimension from '@/util/config/dimension';
 
     export default {
         props: {
@@ -98,9 +121,12 @@
                 default: 0
             }
         },
+        components: { UploadImage },
         data() {
             return {
-                isLoading: false
+                isLoading: false,
+                imageUploadDialogVisible: false,
+                size: dimension.CHANNEL_LOGO_DIMENSION
             };
         },
         computed: {
@@ -168,6 +194,22 @@
             },
             inputHandler(value, key) {
                 this.updateLiveChannel({key, value});
+            },
+            uploadImageHandler() {
+                if (!this.readonly) {
+                    this.imageUploadDialogVisible = true;
+                }
+            },
+            closeImageDialog() {
+                this.imageUploadDialogVisible = false;
+            },
+            setChannelLogo(data) {
+                let uri = data.posterImage.uri;
+                this.updateLiveChannel({key: 'logoUri', value: uri});
+            },
+            appendImagePrefix(uri) {
+                let baseUri = window.localStorage.getItem('imageBaseUri');
+                return baseUri + uri;
             }
         }
     };

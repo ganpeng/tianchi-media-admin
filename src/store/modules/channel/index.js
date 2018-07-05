@@ -80,6 +80,9 @@ const getters = {
     liveChannelTypeList(state) {
         return state.channelTypeList.filter((type) => type.category === 'LIVE');
     },
+    channelTypeList(state) {
+        return state.channelTypeList;
+    },
     typeIdList(state) {
         return state.liveChannel.typeList.map((type) => type.id);
     },

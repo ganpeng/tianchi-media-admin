@@ -18,7 +18,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="图片名称" prop="name">
+            <el-form-item v-if="withName" label="图片名称" prop="name">
                 <el-input v-model="form.name" auto-complete="off" placeholder="请输入图片名称"></el-input>
             </el-form-item>
             <el-form-item ref="uploadItem" label="上传图片" prop="file">
@@ -63,6 +63,10 @@
             title: {
                 type: String,
                 default: ''
+            },
+            withName: {
+                type: Boolean,
+                default: true
             },
             successHandler: {
                 type: Function,

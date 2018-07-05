@@ -87,6 +87,16 @@
                 >
                 </el-input>
             </el-form-item>
+            <el-form-item label="相关人物">
+                <label for="relevantPerson"></label>
+                <person-select
+                    :disabled="readonly"
+                    :value="video.relevantPerson"
+                    :searchResult="video.relevantPersonResult"
+                    :changeSuccessHandler="relevantPersonChangeHandler"
+                    :searchSuccessHandler="relevantPersonSuccessHandler"
+                ></person-select>
+            </el-form-item>
             <el-form-item label="内容类型" prop="type">
                 <el-select
                     :disabled="readonly"
@@ -180,6 +190,7 @@
     import dimension from '@/util/config/dimension';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import VideoTable from '../video_manage/VideoTable';
+    import PersonSelect from './PersonSelect';
 
     export default {
         props: {
@@ -194,7 +205,8 @@
         },
         components: {
             UploadImage,
-            VideoTable
+            VideoTable,
+            PersonSelect
         },
         data() {
             return {
@@ -251,7 +263,10 @@
                 syncVideoMetaData: 'programme/syncVideoMetaData',
                 updateCurrentVideo: 'programme/updateCurrentVideo',
                 setSelectedVideoId: 'video/setSelectedVideoId',
-                updateSearchFields: 'video/updateSearchFields'
+                updateSearchFields: 'video/updateSearchFields',
+                // 更新人物
+                updateVideoPersonResult: 'programme/updateVideoPersonResult',
+                updateVideoPerson: 'programme/updateVideoPerson'
             }),
             ...mapActions({
                 updateProgrammeVideoById: 'programme/updateProgrammeVideoById',
@@ -261,6 +276,7 @@
             cancelHandler() {
                 this.$emit('changeVideoDialogStatus', false);
                 // 清楚校验的规则
+                this.$refs.uploadVideoForm.clearValidate();
                 this.resetCurrentVideo();
                 this.updateSearchFields({key: 'status', value: null});
                 this.updateSearchFields({key: 'videoType', value: null});
@@ -355,51 +371,15 @@
             appendImagePrefix(uri) {
                 let baseUri = window.localStorage.getItem('imageBaseUri');
                 return baseUri + uri;
+            },
+            relevantPersonChangeHandler(value) {
+                this.updateVideoPerson({key: 'relevantPerson', idList: value});
+            },
+            relevantPersonSuccessHandler(list) {
+                this.updateVideoPersonResult({key: 'relevantPersonResult', value: list});
             }
         }
     };
 </script>
 <style lang="less" scoped>
-.cover-list {
-    display: flex;
-    margin-top: 30px;
-    justify-content: left;
-    flex-wrap: wrap;
-    li {
-        display: flex;
-        position: relative;
-        margin-right: 30px;
-        flex-direction: column;
-        justify-content: space-around;
-        height: 230px;
-        .image-box {
-            height: 150px;
-            width: 150px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            cursor: zoom-in;
-        }
-        label {
-            text-align: center;
-            font-size: 16px;
-        }
-        i {
-            position: absolute;
-            top: 20px;
-            color: red;
-            cursor: pointer;
-            font-size: 2em;
-        }
-        .delete-btn {
-            right: 20px;
-            display: none;
-        }
-        &:hover {
-            i {
-                display: block;
-            }
-        }
-    }
-}
 </style>
