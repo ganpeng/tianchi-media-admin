@@ -53,9 +53,27 @@ export const checkImageExist = (imageList, img) => {
     return index >= 0;
 };
 
+/**
+ * 总集数不能小于0
+ */
+export const checkPositiveInteger = (msg) => {
+    const positiveIntegerReg = /^\+?[1-9][0-9]*$/;
+    return (rule, value, callback) => {
+        if (!_.isEmpty(value)) {
+            if (!positiveIntegerReg.test(value)) {
+                return callback(new Error(msg));
+            }
+            callback();
+        } else {
+            callback();
+        }
+    };
+};
+
 export default {
     checkScore,
     checkCategory,
     requiredValidator,
-    checkImageExist
+    checkImageExist,
+    checkPositiveInteger
 };

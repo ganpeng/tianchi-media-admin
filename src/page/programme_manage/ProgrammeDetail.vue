@@ -314,7 +314,7 @@
                                 <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('platformList')">新增播放平台</el-button>
                             </el-form-item>
                             <el-form-item
-                                :rules="isTvPlay ? [{ required: true, message: '请输入总集数' }] : []"
+                                :rules="isTvPlay ? [{ required: true, message: '请输入总集数' }, {validator: checkPositiveInteger}] : [{validator: checkPositiveInteger}]"
                                 label="总集数" prop="totalSets">
                                 <el-input
                                     type="number"
@@ -413,7 +413,7 @@
     import dimension from '@/util/config/dimension';
     import role from '@/util/config/role';
     import PersonSelect from './PersonSelect';
-    import {checkScore, checkCategory} from '@/util/formValidate';
+    import {checkScore, checkCategory, checkPositiveInteger} from '@/util/formValidate';
     import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
     const platformList = [ '中央电视台', '浙江卫视', '东方卫视', '江苏卫视', '湖南卫视', '安徽卫视', '北京卫视', '腾讯', '爱奇艺', '优酷', '搜狐', '芒果' ];
 
@@ -502,6 +502,9 @@
             }),
             readonly() {
                 return parseInt(this.status) === 1;
+            },
+            checkPositiveInteger() {
+                return checkPositiveInteger('总集数只能是大于1的正整数');
             }
         },
         methods: {

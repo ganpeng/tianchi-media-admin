@@ -1,7 +1,3 @@
-/**
- * @fileOverview Define the dimension of images.
- */
-
 //  广告图片尺寸
 export const ADVERT_DIMENSION = [
     //  暂停广告

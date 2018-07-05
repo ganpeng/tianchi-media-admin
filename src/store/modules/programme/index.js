@@ -305,7 +305,11 @@ const getters = {
     checkSortIsLargeThanTotalSets(state) {
         let sort = state.video.video.sort;
         let totalSets = state.programme.totalSets;
-        return sort > totalSets;
+        if (sort) {
+            return parseInt(sort) > parseInt(totalSets);
+        } else {
+            return false;
+        }
     },
     // 新方法结束
     isTvPlay(state) {
