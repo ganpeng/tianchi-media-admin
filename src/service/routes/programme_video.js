@@ -41,6 +41,13 @@ export const updateProgrammeVideoInfo = ({id, video}) => {
 };
 
 /**
+ *  根据节目视频的id删除视频
+ */
+export const deleteProgrammeVideoById = (id) => {
+    return service.delete(`/v1/content/programme/video/${id}`);
+};
+
+/**
  * 子集下架
  */
 export const toggleVisible = ({id}) => {

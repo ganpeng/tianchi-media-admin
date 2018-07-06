@@ -37,6 +37,7 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
         };
     },
     created() {
+        this.resetProgramme();
         this.getChannelType();
     },
     computed: {
@@ -48,6 +49,7 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
     methods: {
         ...mapMutations({
             addChannelCategory: 'channel/addChannelCategory',
+            resetProgramme: 'programme/resetProgramme',
             deleteChannelCategory: 'channel/deleteChannelCategory'
         }),
         ...mapActions({

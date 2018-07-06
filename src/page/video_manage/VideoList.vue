@@ -18,6 +18,21 @@
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                 </el-input>
             </el-form-item>
+            <el-form-item class="search">
+                <el-select
+                    :value="searchFields.videoType"
+                    clearable
+                    placeholder="请选择频道类型"
+                    @input="inputHandler($event, 'videoType')"
+                >
+                    <el-option
+                        v-for="(item, index) in videoTypeOptions"
+                        :key="index"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="searchHandler">搜索</el-button>
             </el-form-item>
@@ -74,6 +89,7 @@
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import VideoTable from './VideoTable';
+    import role from '@/util/config/role';
     export default {
         name: 'PersonList',
         components: {
@@ -82,7 +98,9 @@
         data() {
             return {
                 videoUploadDialogVisible: false,
+                videoTypeOptions: role.VIDEO_TYPE_OPTIONS,
                 isLoading: false,
+                timer: null,
                 fileList: [],
                 count: 0,
                 successCount: 0,
@@ -102,6 +120,16 @@
                 return this.count === this.successCount;
             }
         },
+        created() {
+            this.timer = setInterval(() => {
+                this.getVideoList();
+            }, 1000 * 10);
+        },
+        beforeRouteLeave(to, from, next) {
+            clearInterval(this.timer);
+            this.timer = null;
+            next();
+        },
         methods: {
             ...mapMutations({
                 updateSearchFields: 'video/updateSearchFields',
@@ -118,6 +146,8 @@
                 this.videoUploadDialogVisible = false;
                 this.fileList = [];
                 this.uploadResult = [];
+                //  关闭按钮之后重新获取数据
+                this.getVideoList();
             },
             submitUpload() {
                 this.$refs.upload.submit();

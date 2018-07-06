@@ -88,13 +88,13 @@
                 </el-input>
             </el-form-item>
             <el-form-item label="相关人物">
-                <label for="relevantPerson"></label>
+                <label for="figureList"></label>
                 <person-select
                     :disabled="readonly"
-                    :value="video.relevantPerson"
-                    :searchResult="video.relevantPersonResult"
-                    :changeSuccessHandler="relevantPersonChangeHandler"
-                    :searchSuccessHandler="relevantPersonSuccessHandler"
+                    :value="video.figureList"
+                    :searchResult="video.figureListResult"
+                    :changeSuccessHandler="figureListChangeHandler"
+                    :searchSuccessHandler="figureListSuccessHandler"
                 ></person-select>
             </el-form-item>
             <el-form-item label="内容类型" prop="type">
@@ -225,6 +225,7 @@
             ...mapGetters({
                 // 新加
                 video: 'programme/currentVideo',
+                cacheSort: 'programme/cacheSort',
                 isTvPlay: 'programme/isTvPlay',
                 isShow: 'programme/isShow',
                 featureList: 'programme/featureList',
@@ -285,36 +286,45 @@
             successHandler() {
                 this.$refs.uploadVideoForm.validate(value => {
                     if (value) {
-                        if (this.checkSortIsExist) {
-                            this.$message({
-                                type: 'error',
-                                message: '集数/期号已经存在，请重新输入'
-                            });
-                        } else if (this.checkSortIsLargeThanTotalSets) {
+                        let flag = !(this.videoStatus === 1 && parseInt(this.cacheSort) === parseInt(this.video.sort));
+                        if (flag) {
+                            if (this.checkSortIsExist) {
+                                this.$message({
+                                    type: 'error',
+                                    message: '集数/期号已经存在，请重新输入'
+                                });
+                                return false;
+                            }
+                        }
+
+                        if (this.checkSortIsLargeThanTotalSets) {
                             this.$message({
                                 type: 'error',
                                 message: '集数/期号不能大于总集数，请重新输入'
                             });
-                        } else {
-                            if (parseInt(this.videoStatus) !== 1) {
-                                if (this.selectedVideo) {
-                                    this.addVideoToTempList();
-                                    this.cancelHandler();
-                                } else {
-                                    this.$message({
-                                        type: 'error',
-                                        message: '请先选择视频'
-                                    });
-                                }
-                            } else {
-                                this.updateProgrammeVideoById()
-                                    .then((res) => {
-                                        this.updateCurrentVideo({video: res.data});
-                                        this.cancelHandler();
-                                    });
-                            }
-                            this.selectedVideo = false;
+                            return false;
                         }
+                        if (parseInt(this.videoStatus) !== 1) {
+                            if (this.selectedVideo) {
+                                this.addVideoToTempList();
+                                this.cancelHandler();
+                            } else {
+                                this.$message({
+                                    type: 'error',
+                                    message: '请先选择视频'
+                                });
+                            }
+                        } else {
+                            this.updateProgrammeVideoById()
+                                .then((res) => {
+                                    this.updateCurrentVideo({video: res.data});
+                                    // 调这个接口的原因是更新完单个视频的时候要更新一下正片的列表
+                                    this.getFeatureVideoList({id: this.$route.params.id, pageSize: 1000});
+                                    this.cancelHandler();
+                                });
+                        }
+
+                        this.selectedVideo = false;
                     }
                 });
             },
@@ -372,11 +382,11 @@
                 let baseUri = window.localStorage.getItem('imageBaseUri');
                 return baseUri + uri;
             },
-            relevantPersonChangeHandler(value) {
-                this.updateVideoPerson({key: 'relevantPerson', idList: value});
+            figureListChangeHandler(value) {
+                this.updateVideoPerson({key: 'figureList', idList: value});
             },
-            relevantPersonSuccessHandler(list) {
-                this.updateVideoPersonResult({key: 'relevantPersonResult', value: list});
+            figureListSuccessHandler(list) {
+                this.updateVideoPersonResult({key: 'figureListResult', value: list});
             }
         }
     };

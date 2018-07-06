@@ -147,8 +147,8 @@ const defaultVideo = {
     m3u8For4K: '',
 
     //  相关人物
-    relevantPerson: [],
-    relevantPersonResult: [],
+    figureList: [],
+    figureListResult: [],
     storageVideoId: '' // 视频资源库中的视频的id
 };
 
@@ -159,6 +159,7 @@ const defaultPagination = {
 };
 
 const defaultProgrammeVideo = {
+    cacheSort: '',
     list: [],
     tempList: [],
     featureList: [],
@@ -242,8 +243,8 @@ const getters = {
     },
     getPersonDesc(state) {
         let {leadActorResult, directorResult, scenaristResult} = state.programme;
-        let {relevantPerson} = state.video.video;
-        let result = [...leadActorResult, ...directorResult, ...scenaristResult, ...relevantPerson];
+        let {figureList} = state.video.video;
+        let result = [...leadActorResult, ...directorResult, ...scenaristResult, ...figureList];
         let person = result.find((person) => {
             return person.id === state.global.personId;
         });
@@ -267,6 +268,9 @@ const getters = {
     // 节目视频
     video(state) {
         return state.video;
+    },
+    cacheSort(state) {
+        return state.video.cacheSort;
     },
     currentVideo(state) {
         return state.video.video;
@@ -462,6 +466,9 @@ const mutations = {
     setVideoList(state, payload) {
         state.video.list = payload.list;
     },
+    setCacheSort(state, payload) {
+        state.video.cacheSort = payload.sort;
+    },
     setFeatureList(state, payload) {
         state.video.featureList = payload.list;
     },
@@ -481,6 +488,7 @@ const mutations = {
                 state.video.video[key] = currentVideo[key];
             }
         });
+        state.video.video.figureListResult = currentVideo.figureList;
     },
     updateVideo(state, payload) {
         let {key, value} = payload;
@@ -548,12 +556,17 @@ const mutations = {
         let {key, idList} = payload;
         state.video.video[key] = idList.map((id) => {
             let resultKey = `${key}Result`;
-            return state.video.video[resultKey].find((item) => {
+            let person = state.video.video[resultKey].find((item) => {
                 return item.id === id;
             });
+            if (person) {
+                return {
+                    id: person.id,
+                    name: person.name,
+                    avatarUri: person.avatarImage && person.avatarImage.uri ? person.avatarImage.uri : ''
+                };
+            }
         });
-    },
-    resetVideo(state) {
     },
     // 节目图片
     setCoverImage(state) {
@@ -723,10 +736,10 @@ function serializeProgrammData(programme) {
         scenaristResult = scenarist;
     }
 
-    return Object.assign({}, defaultProgramme, programme, {
+    let res = Object.assign({}, defaultProgramme, programme, {
         copyrightRange: [programme.copyrightStartedAt, programme.copyrightEndedAt],
         categoryList: programme.categoryList.map((category) => category.id),
-        typeList: programme.typeList.map((type) => type.id),
+        typeList: programme.typeList.filter((type) => type !== null).map((type) => type.id),
         director,
         leadActor,
         scenarist,
@@ -734,6 +747,7 @@ function serializeProgrammData(programme) {
         leadActorResult,
         scenaristResult
     });
+    return res;
 }
 
 /**
@@ -948,6 +962,7 @@ const actions = {
             let res = await service.getProgrammeVideoInfo({id});
             if (res && res.code === 0) {
                 commit('setCurrentVideo', {currentVideo: res.data});
+                commit('setCacheSort', {sort: res.data.sort});
             }
         } catch (err) {
         }
@@ -970,6 +985,15 @@ const actions = {
                 video.parentId = '';
             }
             let res = await service.updateProgrammeVideoInfo({id, video});
+            if (res && res.code === 0) {
+                return res;
+            }
+        } catch (err) {
+        }
+    },
+    async realDeleteProgrammeVideoById({commit, state}, id) {
+        try {
+            let res = await service.deleteProgrammeVideoById(id);
             if (res && res.code === 0) {
                 return res;
             }

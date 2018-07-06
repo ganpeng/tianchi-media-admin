@@ -153,6 +153,7 @@
                         <el-button v-if="status !== 1 && isShow" @click="deleteVideo(scope.row.id, scope.row.visible)" type="text" size="small">
                             {{scope.row.visible ? '下架' : '上架'}}
                         </el-button>
+                        <el-button @click="realDeleteVideo(scope.row.id)" type="text" size="small">删除</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -243,7 +244,9 @@ export default {
         }),
         ...mapActions({
             getProgrammeVideoById: 'programme/getProgrammeVideoById',
-            deleteProgrammeVideoById: 'programme/deleteProgrammeVideoById'
+            deleteProgrammeVideoById: 'programme/deleteProgrammeVideoById',
+            realDeleteProgrammeVideoById: 'programme/realDeleteProgrammeVideoById',
+            getProgrammeVideoListById: 'programme/getProgrammeVideoListById'
         }),
         editVideo(id) {
             this.getProgrammeVideoById(id)
@@ -283,6 +286,23 @@ export default {
                 type: 'error'
             }).then(() => {
                 this.deleteVideoFromTempList({uid});
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
+        },
+        realDeleteVideo(id) {
+            this.$confirm('此操作将永久删除该视频, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'error'
+            }).then(() => {
+                this.realDeleteProgrammeVideoById(id)
+                    .then((res) => {
+                        this.getProgrammeVideoListById(this.$route.params.id);
+                    });
             }).catch(() => {
                 this.$message({
                     type: 'info',

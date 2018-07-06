@@ -317,6 +317,18 @@ export const VIDEO_UPLOAD_STATUS = {
     SUCCESS: '成功'
 };
 
+//  视频类型
+export const VIDEO_TYPE_OPTIONS = [
+    {
+        value: 'VOD',
+        label: '点播视频'
+    },
+    {
+        value: 'CAROUSEL',
+        label: '轮播视频'
+    }
+];
+
 export default {
     MAIN_ROLE_OPTIONS,
     VIDEO_TYPE,
@@ -334,5 +346,6 @@ export default {
     VIDEO_UPLOAD_STATUS,
     CONTEST,
     PLATFORM,
-    ANNOUNCER
+    ANNOUNCER,
+    VIDEO_TYPE_OPTIONS
 };
