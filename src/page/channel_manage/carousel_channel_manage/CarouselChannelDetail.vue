@@ -55,25 +55,57 @@
                     label="视频编号">
                 </el-table-column>
                 <el-table-column
-                    prop="name"
+                    prop="originName"
                     label="视频文件名">
                 </el-table-column>
                 <el-table-column
-                    prop="duration"
-                    label="时长">
+                    prop="link"
+                    align="center"
+                    width="300px"
+                    label="预览视频">
+                    <template slot-scope="scope">
+                        <el-button
+                            v-if="scope.row.m3u8For1080P"
+                            type="text"
+                            size="small"
+                            @click="previewVideo(scope.row.m3u8For1080P)"
+                        >1080
+                        </el-button>
+                        <el-button
+                            v-if="scope.row.m3u8For720P"
+                            type="text"
+                            size="small"
+                            @click="previewVideo(scope.row.m3u8For720P)"
+                        >720
+                        </el-button>
+                        <el-button
+                            v-if="scope.row.m3u8For480P"
+                            type="text"
+                            size="small"
+                            @click="previewVideo(scope.row.m3u8For480P)"
+                        >480
+                        </el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
-                    prop="url"
-                    label="视频地址">
-                </el-table-column>
-                <el-table-column align="center"
-                                 label="操作"
-                                 class="operate">
+                    prop="takeTimeInSec"
+                    align="center"
+                    label="视频时长">
                     <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="previewVideo(scope.row)">预览</el-button>
+                        {{scope.row.takeTimeInSec | fromSecondsToTime}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    width="100px"
+                    label="视频状态">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.visible ? '正常':'禁播'}}</label>
                     </template>
                 </el-table-column>
             </el-table>
+            <div class="text-center edit-box">
+                <el-button type="success" @click="editInfo">编辑频道信息</el-button>
+            </div>
         </div>
         <display-video-dialog
             :url="previewVideoInfo.url"
@@ -121,13 +153,20 @@
                 });
             },
             // 预览视频
-            previewVideo(videoInfo) {
-                this.previewVideoInfo.url = videoInfo.url;
+            previewVideo(url) {
+                this.previewVideoInfo.url = url;
                 this.previewVideoInfo.visible = true;
             },
             // 关闭视频预览
             closeDisplayVideoDialog(status) {
                 this.previewVideoInfo.visible = status;
+            },
+            // 编辑轮播频道
+            editInfo() {
+                this.$router.push({
+                    name: 'EditCarouselChannel',
+                    params: {id: this.$route.params.id}
+                });
             }
         }
     };
@@ -149,4 +188,7 @@
         margin-bottom: 0px;
     }
 
+    .edit-box {
+        margin: 60px 0px 40px 0px;
+    }
 </style>

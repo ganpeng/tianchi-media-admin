@@ -64,6 +64,14 @@ let util = {
         return constants.RegExpConstants.PASSWORD.test(this.trim(str));
     },
     /**
+     *Judge string is or not a right password in h5-admin project
+     * @param {String} str  The base string as a password
+     * @return {Boolean} Is or not a right password
+     */
+    isIPAddress(str) {
+        return constants.RegExpConstants.IpAddress.test(this.trim(str));
+    },
+    /**
      * Format the date with specified format
      * @param {Date} date  The base string
      * @param {String} format  supported format options: yyyy: full year, MM: month, DD: date, HH: hours, mm: minutes, SS: seconds

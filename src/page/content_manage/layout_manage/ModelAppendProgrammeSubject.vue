@@ -213,7 +213,8 @@
                 // 当operate是edit的时候的模式,mode含有'NORMAL'和'EDIT'
                 mode: this.$route.params.operate === 'edit' ? 'EDIT' : 'NORMAL',
                 // 编辑模式下的当前专题
-                currentSubjectList: []
+                currentSubjectList: [],
+                saveDisabled: false
             };
         },
         computed: {
@@ -372,6 +373,9 @@
             },
             // 保存信息到store中
             saveBlock() {
+                if (this.saveDisabled) {
+                    return;
+                }
                 if (!this.title) {
                     this.$message({
                         message: '请填写模块名称',
@@ -420,9 +424,17 @@
                     subjectModel: programmeModel,
                     operate: this.$route.params.operate
                 });
+                this.saveDisabled = true;
                 this.$message({
                     message: '设置模块专题成功',
                     type: 'success'
+                });
+                this.$router.push({
+                    name: 'NavBarLayoutSetting',
+                    params: {
+                        navBarSignCode: this.$route.params.navBarSignCode,
+                        navBarId: this.$route.params.navBarId
+                    }
                 });
             }
         }

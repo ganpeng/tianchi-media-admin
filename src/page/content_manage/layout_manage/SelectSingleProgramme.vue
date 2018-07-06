@@ -20,8 +20,9 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="分类">
-                <el-select v-model="listQueryParams.programmeCategoryId"
+                <el-select v-model="listQueryParams.programmeCategoryIdList"
                            clearable
+                           multiple
                            placeholder="请选择分类"
                            @change="setCategory">
                     <el-option
@@ -32,7 +33,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="类型" v-if="listQueryParams.programmeCategoryId">
+            <el-form-item label="类型" v-if="listQueryParams.programmeCategoryIdList.length > 0">
                 <el-select v-model="listQueryParams.programmeTypeIdList"
                            multiple clearable placeholder="请选择类型">
                     <el-option
@@ -193,8 +194,8 @@
                 listQueryParams: {
                     releaseAt: '',
                     releaseArea: '',
-                    programmeCategoryId: '',
-                    programmeTypeIdList: '',
+                    programmeCategoryIdList: [],
+                    programmeTypeIdList: [],
                     visible: '',
                     keyword: '',
                     pageNum: 0,
@@ -272,14 +273,23 @@
             },
             // 设置节目的分类，例如电视剧
             setCategory() {
-                for (let i = 0; i < this.categoryOptions.length; i++) {
-                    if (this.categoryOptions[i].id === this.listQueryParams.programmeCategoryId) {
-                        this.typeOptions = this.categoryOptions[i].programmeTypeList;
-                        this.listQueryParams.programmeTypeIdList = '';
-                        return;
+                this.typeOptions = [];
+                for (let i = 0; i < this.listQueryParams.programmeCategoryIdList.length; i++) {
+                    for (let k = 0; k < this.categoryOptions.length; k++) {
+                        if (this.categoryOptions[k].id === this.listQueryParams.programmeCategoryIdList[i]) {
+                            this.typeOptions = this.typeOptions.concat(this.categoryOptions[k].programmeTypeList);
+                        }
                     }
                 }
-                this.typeOptions = [];
+                let array = [];
+                this.listQueryParams.programmeTypeIdList.map(typeId => {
+                    this.typeOptions.map(type => {
+                        if (type.id === typeId) {
+                            array.push(typeId);
+                        }
+                    });
+                });
+                this.listQueryParams.programmeTypeIdList = array;
             },
             // 跳转到节目详情
             toProgrammeDetail(programmeId) {

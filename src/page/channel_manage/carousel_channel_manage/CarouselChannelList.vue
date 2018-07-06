@@ -53,7 +53,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="code"
+                    prop="no"
                     label="编号">
                 </el-table-column>
                 <el-table-column

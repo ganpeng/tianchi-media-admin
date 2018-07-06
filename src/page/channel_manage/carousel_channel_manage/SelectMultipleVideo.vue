@@ -131,7 +131,7 @@
                 queryParams: {
                     status: 'SUCCESS',
                     videoType: 'CAROUSEL',
-                    key: '',
+                    name: '',
                     pageNum: 0,
                     pageSize: 10
                 },
