@@ -239,10 +239,9 @@
                 });
                 this.$service.getChannelDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
-                        this.channelInfo.name = response.data.name;
-                        this.channelInfo.no = response.data.no;
-                        this.channelInfo.multicastIp = response.data.multicastIp;
-                        this.channelInfo.multicastPort = response.data.multicastPort;
+                        for (let key in response.data) {
+                            this.channelInfo[key] = response.data[key];
+                        }
                         response.data.typeList.map(type => {
                             this.channelInfo.typeIdList.push(type.id);
                         });
