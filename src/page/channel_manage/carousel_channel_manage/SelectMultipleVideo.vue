@@ -3,7 +3,7 @@
         <el-form :inline="true">
             <el-form-item class="search">
                 <el-input
-                    v-model="queryParams.key"
+                    v-model="queryParams.name"
                     placeholder="搜索你想要的信息"
                     clearable>
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
