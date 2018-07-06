@@ -22,7 +22,7 @@
                 <el-select
                     :value="searchFields.videoType"
                     clearable
-                    placeholder="请选择频道类型"
+                    placeholder="请选择视频类型"
                     @input="inputHandler($event, 'videoType')"
                 >
                     <el-option
