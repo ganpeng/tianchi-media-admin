@@ -182,18 +182,23 @@
                         this.currentSubjectList.push(response.data);
                         this.currentSubject = response.data;
                         this.personList = response.data.subjectItemList;
+                        this.initDragula();
                     }
+                });
+            },
+            // 初始化人物列表拖拽
+            initDragula() {
+                this.$nextTick(function () {
+                    this.$dragula([document.getElementById('person-list')], {
+                        direction: 'horizontal'
+                    });
                 });
             },
             // 选择某一个专题
             setSubject(item) {
                 this.currentSubject = item;
                 this.personList = item.subjectItemList;
-                this.$nextTick(function () {
-                    this.$dragula([document.getElementById('person-list')], {
-                        direction: 'horizontal'
-                    });
-                });
+                this.initDragula();
             },
             // 重置专题信息
             resetSubjectInfo() {

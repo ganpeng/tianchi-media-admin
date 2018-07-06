@@ -16,10 +16,10 @@
                 <el-input v-model="channelInfo.name" placeholder="请填写10个字以内的名称"></el-input>
             </el-form-item>
             <el-form-item label="编号" required>
-                <label>{{channelInfo.code}}</label>
+                <label>{{channelInfo.no}}</label>
             </el-form-item>
             <el-form-item label="类别" prop="typeIdList" required>
-                <el-select v-model="typeIdList" multiple placeholder="请选择频道类别">
+                <el-select v-model="channelInfo.typeIdList" multiple placeholder="请选择频道类别">
                     <el-option
                         v-for="item in typeOptions"
                         :key="item.id"
@@ -38,9 +38,9 @@
         <el-tag class="title">频道节目信息</el-tag>
         <el-form label-position="right" label-width="90px">
             <el-form-item label="当前播放：">
-                <label>{{channelInfo.currentProgramme}}</label>
+                <label>{{channelInfo.currentProgramme ? channelInfo.currentProgramme : '暂无当前播放节目'}}</label>
             </el-form-item>
-            <el-form-item label="播放时段：">
+            <el-form-item label="播放时段：" v-if="channelInfo.currentProgramme">
                 <label>{{channelInfo.duration}}</label>
             </el-form-item>
         </el-form>
@@ -174,15 +174,17 @@
                 }
             };
             let checkTypeIdList = (rule, value, callback) => {
-                if (!this.channelInfo.typeIdList) {
+                if (this.channelInfo.typeIdList.length === 0) {
                     return callback(new Error('请选择频道类别'));
                 } else {
                     callback();
                 }
             };
-            let checkulticastIp = (rule, value, callback) => {
+            let checkMulticastIp = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('组播地址不能为空'));
+                } else if (!this.$util.isMulticastIPAddress(value)) {
+                    return callback(new Error('请填写正确的组播地址'));
                 } else {
                     callback();
                 }
@@ -190,14 +192,17 @@
             let checkMulticastPort = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('端口号不能为空'));
+                } else if (!this.$util.isPort(value)) {
+                    return callback(new Error('请填写正确的端口号'));
                 } else {
                     callback();
                 }
             };
             return {
                 selectDialogVisible: false,
-                channelInfo: {},
-                typeIdList: [],
+                channelInfo: {
+                    typeIdList: []
+                },
                 typeOptions: [],
                 // 当前的频道含有的视频列表
                 currentSelectedVideoList: [],
@@ -214,7 +219,7 @@
                         {validator: checkTypeIdList, trigger: 'change'}
                     ],
                     multicastIp: [
-                        {validator: checkulticastIp, trigger: 'blur'}
+                        {validator: checkMulticastIp, trigger: 'blur'}
                     ],
                     multicastPort: [
                         {validator: checkMulticastPort, trigger: 'blur'}
@@ -234,11 +239,20 @@
                 });
                 this.$service.getChannelDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
-                        this.channelInfo = response.data;
+                        this.channelInfo.name = response.data.name;
+                        this.channelInfo.no = response.data.no;
+                        this.channelInfo.multicastIp = response.data.multicastIp;
+                        this.channelInfo.multicastPort = response.data.multicastPort;
                         response.data.typeList.map(type => {
-                            this.typeIdList.push(type.id);
+                            this.channelInfo.typeIdList.push(type.id);
                         });
                         this.currentSelectedVideoList = response.data.carouselVideoList;
+                        this.currentSelectedVideoList.map(video => {
+                            if (video.onPlay) {
+                                this.channelInfo.currentProgramme = video.originName;
+                                this.channelInfo.duration = this.$util.formatDate(video.lastPlayTime) + '-' + this.$util.formatDate(video.lastPlayTime + video.takeTimeInSec * 1000);
+                            }
+                        });
                     }
                 });
             },
@@ -370,24 +384,32 @@
             },
             // 更新频道信息
             updateInfo() {
-                this.currentSelectedVideoList.map(item => {
-                    item.status = 'NORMAL';
-                });
-                this.channelInfo.carouselVideoList = this.currentSelectedVideoList;
-                this.channelInfo.typeList = [];
-                this.typeIdList.map(typeId => {
-                    this.typeOptions.map(type => {
-                        if (typeId === type.id) {
-                            this.channelInfo.typeList.push(type);
-                        }
-                    });
-                });
-                this.$service.updateChannelById(
-                    this.$route.params.id,
-                    this.channelInfo
-                ).then(response => {
-                    if (response && response.code === 0) {
-                        this.$message('保存频道信息成功');
+                this.$refs['channelInfo'].validate((valid) => {
+                    if (valid) {
+                        let sort = 1;
+                        this.currentSelectedVideoList.map(item => {
+                            item.status = 'NORMAL';
+                            item.sort = sort++;
+                        });
+                        this.channelInfo.carouselVideoList = this.currentSelectedVideoList;
+                        this.channelInfo.typeList = [];
+                        this.channelInfo.typeIdList.map(typeId => {
+                            this.typeOptions.map(type => {
+                                if (typeId === type.id) {
+                                    this.channelInfo.typeList.push(type);
+                                }
+                            });
+                        });
+                        this.$service.updateChannelById(
+                            this.$route.params.id,
+                            this.channelInfo
+                        ).then(response => {
+                            if (response && response.code === 0) {
+                                this.$message('保存频道信息成功');
+                            }
+                        });
+                    } else {
+                        return false;
                     }
                 });
             }

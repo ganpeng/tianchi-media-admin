@@ -64,12 +64,20 @@ let util = {
         return constants.RegExpConstants.PASSWORD.test(this.trim(str));
     },
     /**
-     *Judge string is or not a right password in h5-admin project
-     * @param {String} str  The base string as a password
-     * @return {Boolean} Is or not a right password
+     *Judge string is or not a right IP address
+     * @param {String} str  The base string as a IP address
+     * @return {Boolean} Is or not a right IP address
      */
-    isIPAddress(str) {
-        return constants.RegExpConstants.IpAddress.test(this.trim(str));
+    isMulticastIPAddress(str) {
+        return constants.RegExpConstants.MULTIPLE_IP_ADDRESS.test(this.trim(str));
+    },
+    /**
+     *Judge string is or not a right IP port
+     * @param {String} str  The base string as a Ip port
+     * @return {Boolean} Is or not a right IP port
+     */
+    isPort(str) {
+        return constants.RegExpConstants.IP_PORT.test(this.trim(str));
     },
     /**
      * Format the date with specified format

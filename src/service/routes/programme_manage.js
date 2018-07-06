@@ -40,10 +40,17 @@ export const getProgrammeInfo = ({id}) => {
 };
 
 /**
- * 根据节目的id更新节目信息
+ * 根据节目的id完整更新节目信息
  */
 export const updateProgrammeInfo = ({id, programme}) => {
     return service.put(`/v1/content/programme/${id}`, programme);
+};
+
+/**
+ * 根据节目的id部分更新节目信息
+ */
+export const updatePartProgrammeInfo = ({id, programme}) => {
+    return service.patch(`/v1/content/programme/${id}`, programme);
 };
 
 //   节目类型管理服务

@@ -15,7 +15,7 @@
                     <label>{{channelInfo.name}}</label>
                 </el-form-item>
                 <el-form-item label="编号：">
-                    <label>{{channelInfo.code}}</label>
+                    <label>{{channelInfo.no}}</label>
                 </el-form-item>
                 <el-form-item label="类别：">
                     <label>{{channelInfo.typeList | jsonJoin('name')}}</label>
@@ -33,9 +33,9 @@
             <el-tag class="title">频道节目信息</el-tag>
             <el-form label-position="right" label-width="90px">
                 <el-form-item label="当前播放：">
-                    <label>{{channelInfo.currentProgramme}}</label>
+                    <label>{{channelInfo.currentProgramme ? channelInfo.currentProgramme : '暂无当前播放节目'}}</label>
                 </el-form-item>
-                <el-form-item label="播放时段：">
+                <el-form-item label="播放时段：" v-if="channelInfo.currentProgramme">
                     <label>{{channelInfo.duration}}</label>
                 </el-form-item>
             </el-form>
@@ -125,16 +125,7 @@
         },
         data() {
             return {
-                channelInfo: {
-                    id: '',
-                    name: '',
-                    code: '',
-                    status: '',
-                    categoryList: [],
-                    currentProgramme: '',
-                    duration: '',
-                    carouselVideoList: []
-                },
+                channelInfo: {},
                 previewVideoInfo: {
                     url: '',
                     visible: false
@@ -149,6 +140,12 @@
                 this.$service.getChannelDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         this.channelInfo = response.data;
+                        this.channelInfo.carouselVideoList.map(video => {
+                            if (video.onPlay) {
+                                this.channelInfo.currentProgramme = video.originName;
+                                this.channelInfo.duration = this.$util.formatDate(video.lastPlayTime) + '-' + this.$util.formatDate(video.lastPlayTime + video.takeTimeInSec * 1000);
+                            }
+                        });
                     }
                 });
             },

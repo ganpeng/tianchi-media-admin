@@ -7,7 +7,7 @@
             <el-form-item label="频道名称" prop="name" required>
                 <el-input v-model="channelInfo.name" placeholder="请填写10个字以内的名称"></el-input>
             </el-form-item>
-            <el-form-item label="频道类别" required>
+            <el-form-item label="频道类别" prop="typeIdList" required>
                 <el-select v-model="channelInfo.typeIdList" multiple placeholder="请选择节目专题类别">
                     <el-option
                         v-for="item in typeOptions"
@@ -48,15 +48,17 @@
                 }
             };
             let checkTypeIdList = (rule, value, callback) => {
-                if (!this.channelInfo.typeIdList) {
+                if (this.channelInfo.typeIdList.length === 0) {
                     return callback(new Error('请选择频道类别'));
                 } else {
                     callback();
                 }
             };
-            let checkulticastIp = (rule, value, callback) => {
+            let checkMulticastIp = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('组播地址不能为空'));
+                } else if (!this.$util.isMulticastIPAddress(value)) {
+                    return callback(new Error('请填写正确的组播地址'));
                 } else {
                     callback();
                 }
@@ -64,6 +66,8 @@
             let checkMulticastPort = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('端口号不能为空'));
+                } else if (!this.$util.isPort(value)) {
+                    return callback(new Error('请填写正确的端口号'));
                 } else {
                     callback();
                 }
@@ -85,7 +89,7 @@
                         {validator: checkTypeIdList, trigger: 'change'}
                     ],
                     multicastIp: [
-                        {validator: checkulticastIp, trigger: 'blur'}
+                        {validator: checkMulticastIp, trigger: 'blur'}
                     ],
                     multicastPort: [
                         {validator: checkMulticastPort, trigger: 'blur'}

@@ -28,9 +28,13 @@ let RegExpConstants = {
      */
     PASSWORD: /^[\da-zA-Z]{6,8}$/,
     /**
-     * The RegExp of ip address.
+     * The RegExp of IP address.
      */
-    IpAddress: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+    MULTIPLE_IP_ADDRESS: /^2(?:2[4-9]|3\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d?|0)){3}$/,
+    /**
+     * The RegExp of IP port.
+     */
+    IP_PORT: /^\d+$/
 };
 
 /**

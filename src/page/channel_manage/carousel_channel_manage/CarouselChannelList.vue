@@ -104,6 +104,7 @@
             :visible.sync="createChannelDialogVisible"
             width="50%">
             <create-channel
+                v-if="createChannelDialogVisible"
                 v-on:closeDialog="closeDialog">
             </create-channel>
         </el-dialog>

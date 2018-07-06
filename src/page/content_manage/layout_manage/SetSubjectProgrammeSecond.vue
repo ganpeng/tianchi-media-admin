@@ -103,7 +103,7 @@
                 let imageList = this.programme.posterImageList.slice();
                 imageList.push(newPosterImage.posterImage);
                 // 更新当前节目中的封面图片
-                this.$service.updateProgrammeInfo({
+                this.$service.updatePartProgrammeInfo({
                     id: this.programme.id,
                     programme: {posterImageList: imageList}
                 }).then(response => {
