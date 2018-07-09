@@ -1,5 +1,6 @@
 // 节目表单的校验
 import _ from 'lodash';
+import constants from './constants';
 
 /**
  * 校验评分字段的规则，必须是1-10之间的数字，而且数字最多保留以为小数1.1 - 10
@@ -70,10 +71,42 @@ export const checkPositiveInteger = (msg) => {
     };
 };
 
+/**
+ *  校验ip地址
+ */
+export const checkIP = (rule, value, callback) => {
+    if (!_.isEmpty(value)) {
+        if (constants.RegExpConstants.MULTIPLE_IP_ADDRESS.test(value)) {
+            callback();
+        } else {
+            return callback(new Error('请输入正确的IP地址'));
+        }
+    } else {
+        callback();
+    }
+};
+
+/**
+ *  校验ip地址
+ */
+export const checkPort = (rule, value, callback) => {
+    if (!_.isEmpty(value)) {
+        if (constants.RegExpConstants.IP_PORT.test(value)) {
+            callback();
+        } else {
+            return callback(new Error('请输入正确的端口'));
+        }
+    } else {
+        callback();
+    }
+};
+
 export default {
     checkScore,
     checkCategory,
     requiredValidator,
     checkImageExist,
-    checkPositiveInteger
+    checkPositiveInteger,
+    checkIP,
+    checkPort
 };

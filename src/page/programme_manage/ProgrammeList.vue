@@ -197,9 +197,10 @@
                 class="upload-demo"
                 ref="upload"
                 :headers="uploadHeaders"
-                action="/v1/storage/file"
+                action="/admin/v1/content/programme/import"
                 :auto-upload="false"
                 :file-list="fileList"
+                :on-success="uploadSuccessHandler"
                 :with-credentials="true">
                     <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
                     <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
@@ -314,6 +315,30 @@ export default {
         },
         submitUpload() {
             this.$refs.upload.submit();
+        },
+        uploadSuccessHandler(res, file, fileList) {
+            if (res && res.code === 0) {
+                this.$message({
+                    type: 'error',
+                    message: '节目导入成功'
+                });
+            } else if (res && res.code === 3119) {
+                this.$message({
+                    type: 'error',
+                    message: '节目视频导入失败'
+                });
+            } else if (res && res.code === 3117) {
+                this.$message({
+                    type: 'error',
+                    message: '节目导入部分成功'
+                });
+            } else {
+                this.$message({
+                    type: 'error',
+                    message: '节目导入失败'
+                });
+            }
+            this.closeFileUploadDialog();
         }
     }
 };

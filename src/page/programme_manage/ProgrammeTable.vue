@@ -47,6 +47,13 @@
                     label="视频简介">
                 </el-table-column>
                 <el-table-column
+                    align="center"
+                    label="相关人物">
+                        <template slot-scope="scope">
+                            {{videoPersonName(scope.row.figureList)}}
+                        </template>
+                </el-table-column>
+                <el-table-column
                     v-if="tableStatus === 1"
                     align="center"
                     label="视频封面">
@@ -225,7 +232,8 @@ export default {
     computed: {
         ...mapGetters({
             featureVideoName: 'programme/featureVideoName',
-            isShow: 'programme/isShow'
+            isShow: 'programme/isShow',
+            videoPersonName: 'programme/videoPersonName'
         }),
         duration() {
             return (seconds) => {

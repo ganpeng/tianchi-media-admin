@@ -65,7 +65,17 @@
                     <el-button slot="trigger" size="small" type="primary">选择视频</el-button>
                     <el-button style="margin-left: 10px;" v-if="showUploadBtn" size="small" @click="submitUpload" type="success">点击上传</el-button>
             </el-upload>
-
+            <div v-if="existList.length > 0">
+                <ul class="el-upload-list el-upload-list-text">
+                    <li v-for="(res, index) in existList" :key="index" :tabindex="index" style="overflow:hidden;" class="el-upload-list__item is-ready">
+                        <a>
+                            <i class="el-icon-document"></i>
+                            {{res.originName}}
+                            <span class="text-danger">该视频资源已存在</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
             <div v-if="uploadResult.length > 0">
                 <ul class="el-upload-list el-upload-list--text">
                     <li v-for="(res, index) in uploadResult" :key="index" :tabindex="index" style="overflow:hidden;" class="el-upload-list__item is-ready">
@@ -90,6 +100,7 @@
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import VideoTable from './VideoTable';
     import role from '@/util/config/role';
+    const SparkMD5 = require('../../assets/js/spark-md5.min'); // eslint-disable-line
     export default {
         name: 'PersonList',
         components: {
@@ -105,6 +116,7 @@
                 count: 0,
                 successCount: 0,
                 uploadResult: [],
+                existList: [],
                 uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token)
             };
         },
@@ -136,7 +148,8 @@
                 setVideoType: 'video/setVideoType'
             }),
             ...mapActions({
-                getVideoList: 'video/getVideoList'
+                getVideoList: 'video/getVideoList',
+                checkVideoMd5: 'video/checkVideoMd5'
             }),
             showVideoUploadDialog(videoType) {
                 this.videoUploadDialogVisible = true;
@@ -146,6 +159,7 @@
                 this.videoUploadDialogVisible = false;
                 this.fileList = [];
                 this.uploadResult = [];
+                this.existList = [];
                 //  关闭按钮之后重新获取数据
                 this.getVideoList();
             },
@@ -180,8 +194,55 @@
                 }
             },
             beforeUploadHandler(file) {
-                this.count++;
-                this.uploadResult = [];
+                return new Promise((resolve, reject) => {
+                    this.getMd5(file)
+                        .then((res) => {
+                            this.checkVideoMd5(res)
+                                .then((result) => {
+                                    let flag = result.data.list && result.data.list.length === 0;
+                                    this.count++;
+                                    this.uploadResult = [];
+                                    if (!flag) {
+                                        this.existList.push(result.data.list[0]);
+                                        reject(); // eslint-disable-line
+                                    } else {
+                                        resolve();
+                                    }
+                                });
+                        });
+                });
+            },
+            getMd5(file) {
+                return new Promise((resolve, reject) => {
+                    let blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice;
+                    let chunkSize = 2097152;
+                    let chunks = Math.ceil(file.size / chunkSize);
+                    let currentChunk = 0;
+                    let spark = new SparkMD5.ArrayBuffer();
+                    let frOnload = function(e) {
+                        spark.append(e.target.result);
+                        currentChunk++;
+                        if (currentChunk < chunks) {
+                            loadNext();
+                        } else {
+                            let _md5 = spark.end();
+                            resolve(_md5);
+                        }
+                    };
+                    let frOnerror = function () {
+                        reject(new Error('读取文件失败.'));
+                    };
+
+                    function loadNext() {
+                        let fileReader = new FileReader();
+                        fileReader.onload = frOnload;
+                        fileReader.onerror = frOnerror;
+                        let start = currentChunk * chunkSize;
+                        let end = ((start + chunkSize) >= file.size) ? file.size : start + chunkSize;
+                        fileReader.readAsArrayBuffer(blobSlice.call(file, start, end));
+                    };
+                    loadNext();
+                });
             }
         }
     };

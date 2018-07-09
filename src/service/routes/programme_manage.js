@@ -129,3 +129,10 @@ export const getDict = (categoryList) => {
     }));
     return service.get(`/v1/content/programme-dict/list?${paramsStr}`);
 };
+
+/**
+ * 导入节目
+ */
+export const importProgramme = (formData) => {
+    return service.post('/v1/content/programme/import', formData);
+};

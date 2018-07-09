@@ -125,6 +125,17 @@ const actions = {
             return result;
         } catch (err) {
         }
+    },
+    async checkVideoMd5({commit, state}, key) {
+        try {
+            let result = await service.getVideoList({key});
+            if (result && result.code === 0) {
+                return result;
+                // return result.data.list && result.data.list.length === 0;
+            }
+        } catch (err) {
+            console.log(err);
+        }
     }
 };
 

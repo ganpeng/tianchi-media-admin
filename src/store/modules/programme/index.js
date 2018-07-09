@@ -281,6 +281,11 @@ const getters = {
     featureList(state) {
         return state.video.featureList;
     },
+    videoPersonName(state) {
+        return (figureList) => {
+            return figureList ? figureList.map((figure) => figure.name).join(', ') : '';
+        };
+    },
     featureVideoName(state) {
         return (id) => {
             let video = state.video.featureList.find((item) => {

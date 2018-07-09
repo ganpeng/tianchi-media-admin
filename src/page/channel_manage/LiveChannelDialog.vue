@@ -6,11 +6,11 @@
         :show-close="false"
         :close-on-click-modal="false"
         :close-on-press-escape="false">
-        <el-form :model="liveChannel" ref="liveChannelForm" class="form-block" label-width="150px">
+        <el-form :model="liveChannel" :rules="inputRules" ref="liveChannelForm" class="form-block" label-width="150px">
             <el-form-item label="直播频道编号">
                 <el-input :value="liveChannel.code" disabled></el-input>
             </el-form-item>
-            <el-form-item label="直播频道名称">
+            <el-form-item label="直播频道名称" prop="name">
                 <el-input
                     :value="liveChannel.name"
                     placeholder="请输入直播频道名称"
@@ -19,7 +19,7 @@
                 ></el-input>
             </el-form-item>
             <el-form-item
-                label="直播频道展示编号">
+                label="直播频道展示编号" prop="no">
                 <el-input
                     type="number"
                     :disabled="readonly"
@@ -73,7 +73,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="视频封面图">
+            <el-form-item label="视频封面图" prop="logoUri">
                 <el-button v-if="!readonly" type="primary" @click="uploadImageHandler">上传封面图<i class="el-icon-upload el-icon--right"></i></el-button>
                 <ul
                     v-if="liveChannel.logoUri"
@@ -109,6 +109,7 @@
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import dimension from '@/util/config/dimension';
+    import {checkIP, checkPort} from '@/util/formValidate';
 
     export default {
         props: {
@@ -126,7 +127,32 @@
             return {
                 isLoading: false,
                 imageUploadDialogVisible: false,
-                size: dimension.CHANNEL_LOGO_DIMENSION
+                size: dimension.CHANNEL_LOGO_DIMENSION,
+                inputRules: {
+                    name: [
+                        { required: true, message: '请输直播频道名称' }
+                    ],
+                    no: [
+                        { required: true, message: '请输入直播频道展示编号' }
+                    ],
+                    innerName: [
+                        { required: true, message: '请输入直播频道展示名称' }
+                    ],
+                    multicastIp: [
+                        { required: true, message: '请选择直播频道IP' },
+                        { validator: checkIP }
+                    ],
+                    multicastPort: [
+                        { required: true, message: '请输入直播频道端口' },
+                        { validator: checkPort }
+                    ],
+                    typeList: [
+                        { required: true, message: '请选择直播频道类别' }
+                    ],
+                    logoUri: [
+                        { required: true, message: '请上传直播频道logo' }
+                    ]
+                }
             };
         },
         computed: {
