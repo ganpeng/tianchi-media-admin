@@ -44,7 +44,9 @@
                 <label>{{channelInfo.duration}}</label>
             </el-form-item>
         </el-form>
-        <el-button type="success" class="add-video" @click="popAppendVideoDialogue(0)">点击在列表最上方添加视频</el-button>
+        <el-button v-if="currentSelectedVideoList.length === 0" type="success" class="add-video"
+                   @click="popAppendVideoDialogue(0)">点击添加视频
+        </el-button>
         <el-table
             :data="currentSelectedVideoList"
             border
@@ -53,7 +55,7 @@
                 width="100px"
                 label="播放顺序">
                 <template slot-scope="scope">
-                    <label>{{scope.row.sort}}</label>
+                    {{scope.$index + 1}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -123,11 +125,22 @@
                     <el-button type="danger" size="mini" plain
                                @click="removeConfirm(scope.$index)">删除
                     </el-button>
+                    <el-button type="text" size="small" @click="popAppendVideoDialogue(scope.$index)">上方添加视频
+                    </el-button>
                     <el-button type="text" size="small" @click="popAppendVideoDialogue(scope.$index + 1)">下方添加视频
+                    </el-button>
+                    <el-button type="text" size="small" @click="moveUpVideo(scope.$index)">
+                        上移
+                    </el-button>
+                    <el-button type="text" size="small" @click="moveDownVideo(scope.$index)">
+                        下移
                     </el-button>
                 </template>
             </el-table-column>
         </el-table>
+        <div class="preview-sort">
+            <el-button type="success" @click="sortVideoList">点击视频排序</el-button>
+        </div>
         <display-video-dialog
             :url="previewVideoInfo.url"
             :displayVideoDialogVisible="previewVideoInfo.visible"
@@ -150,18 +163,30 @@
                 v-on:closeSelectVideoDialog="selectDialogVisible = false">
             </select-multiple-video>
         </el-dialog>
+        <sort-dialog
+            v-if="sortDialogVisible"
+            title="视频排序"
+            :sourceList="currentSelectedVideoList"
+            sortKey="sort"
+            uniqueKey="id"
+            displayKey="originName"
+            v-on:closeDialog="sortDialogVisible = false"
+            v-on:setSortedList="setSortedList">
+        </sort-dialog>
     </div>
 </template>
 
 <script>
     import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
     import SelectMultipleVideo from './SelectMultipleVideo';
+    import SortDialog from './SortDialog';
 
     export default {
         name: 'EditCarouselChannel',
         components: {
             DisplayVideoDialog,
-            SelectMultipleVideo
+            SelectMultipleVideo,
+            SortDialog
         },
         data() {
             let checkName = (rule, value, callback) => {
@@ -199,6 +224,7 @@
                 }
             };
             return {
+                sortDialogVisible: false,
                 selectDialogVisible: false,
                 channelInfo: {
                     typeIdList: []
@@ -260,6 +286,24 @@
                 this.currentVideoIndex = index;
                 this.selectDialogVisible = true;
             },
+            // 视频上移
+            moveUpVideo(index) {
+                if (index === 0) {
+                    this.$message('当前视频不能向上移动');
+                    return;
+                }
+                let moveItem = this.currentSelectedVideoList.splice(index, 1)[0];
+                this.currentSelectedVideoList.splice(index - 1, 0, moveItem);
+            },
+            // 视频下移
+            moveDownVideo(index) {
+                if (index === this.currentSelectedVideoList.length - 1) {
+                    this.$message('当前视频不能向下移动');
+                    return;
+                }
+                let moveItem = this.currentSelectedVideoList.splice(index, 1)[0];
+                this.currentSelectedVideoList.splice(index + 1, 0, moveItem);
+            },
             // 添加相应的视频
             appendVideo(selectedVideoList) {
                 for (let i = 0; i < selectedVideoList.length; i++) {
@@ -271,6 +315,16 @@
                     delete selectedVideoList[i].id;
                     this.currentSelectedVideoList.splice(this.currentVideoIndex + i, 0, selectedVideoList[i]);
                 }
+            },
+            // 视频列表排序
+            sortVideoList() {
+                this.sortDialogVisible = true;
+            },
+            // 设置排序完成的列表
+            setSortedList(sortedList) {
+                this.currentSelectedVideoList = sortedList;
+                this.sortDialogVisible = false;
+                this.$message('视频列表排序成功');
             },
             // 预览视频
             displayVideo(url) {
@@ -385,11 +439,6 @@
             updateInfo() {
                 this.$refs['channelInfo'].validate((valid) => {
                     if (valid) {
-                        let sort = 1;
-                        this.currentSelectedVideoList.map(item => {
-                            item.status = 'NORMAL';
-                            item.sort = sort++;
-                        });
                         this.channelInfo.carouselVideoList = this.currentSelectedVideoList;
                         this.channelInfo.typeList = [];
                         this.channelInfo.typeIdList.map(typeId => {
@@ -439,6 +488,10 @@
     .add-video {
         margin-top: 30px;
         margin-left: 20px;
+    }
+
+    .preview-sort {
+        padding-left: 10px;
     }
 
     .update-box {

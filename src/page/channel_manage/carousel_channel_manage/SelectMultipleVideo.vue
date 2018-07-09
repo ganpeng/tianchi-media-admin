@@ -122,6 +122,7 @@
     import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
 
     export default {
+        name: 'SelectMultipleVideo',
         components: {
             DisplayVideoDialog
         },
