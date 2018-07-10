@@ -167,7 +167,6 @@
         </upload-image>
     </div>
 </template>
-
 <script>
     import SelectSingleSubject from './SelectSingleSubject';
     import SetSubjectProgramme from './SetSubjectProgramme';

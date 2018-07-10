@@ -816,7 +816,6 @@
                     this.$message({type: 'error', message: '请选择默认的节目海报'});
                     return false;
                 }
-
                 next();
             },
             appendImagePrefix(uri) {

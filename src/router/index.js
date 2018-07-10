@@ -57,6 +57,7 @@ import CarouselChannelList from 'sysPage/channel_manage/carousel_channel_manage/
 import CarouselChannelDetail from 'sysPage/channel_manage/carousel_channel_manage/CarouselChannelDetail';
 import EditCarouselChannel from 'sysPage/channel_manage/carousel_channel_manage/EditCarouselChannel';
 import ChannelCategory from 'sysPage/channel_manage/ChannelCategory';
+import ModelAppendChannel from 'sysPage/content_manage/layout_manage/ModelAppendChannel';
 
 Vue.use(Router);
 
@@ -187,6 +188,12 @@ let router = new Router({
                     path: '/layout-manage/model-append-person-subject/:navBarId/:navBarSignCode/:model/:operate',
                     name: 'ModelAppendPersonSubject',
                     component: ModelAppendPersonSubject
+                },
+                // 内容管理-栏目管理-频道模块管理
+                {
+                    path: '/layout-manage/model-append-channel/1/LIVE_CHANNEL/4/add',
+                    name: 'ModelAppendChannel',
+                    component: ModelAppendChannel
                 },
                 // 内容管理-专题管理-新增节目专题
                 {

@@ -67,6 +67,12 @@ const TYPE = [
     }, {
         id: 20,
         name: '4+3+2'
+    }, {
+        id: 21,
+        name: 's6+s6'
+    }, {
+        id: 22,
+        name: 's6'
     }
 ];
 
@@ -94,6 +100,10 @@ const SIZE = {
     6: {
         width: 240,
         height: 350
+    },
+    s6: {
+        width: 240,
+        height: 100
     }
 };
 

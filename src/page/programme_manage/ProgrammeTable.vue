@@ -42,12 +42,6 @@
                     width="180">
                 </el-table-column>
                 <el-table-column
-                    v-if="status !== 2 && tableStatus === 1"
-                    prop="sort"
-                    align="center"
-                    label="视频排序">
-                </el-table-column>
-                <el-table-column
                     prop="description"
                     v-if="tableStatus === 1"
                     width="200px"

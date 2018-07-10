@@ -47,6 +47,7 @@
             :visible.sync="videoUploadDialogVisible"
             :headers="uploadHeaders"
             :show-close="false"
+            width="80%"
             :close-on-click-modal="false"
             :close-on-press-escape="false">
             <el-upload
@@ -59,11 +60,10 @@
                 :auto-upload="false"
                 :data="{videoType: this.getVideoType}"
                 :file-list="fileList"
-                :before-upload="beforeUploadHandler"
                 :with-credentials="true"
                 multiple>
                     <el-button slot="trigger" size="small" type="primary">选择视频</el-button>
-                    <el-button style="margin-left: 10px;" v-if="showUploadBtn" size="small" @click="submitUpload" type="success">点击上传</el-button>
+                    <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
             </el-upload>
             <div v-if="existList.length > 0">
                 <ul class="el-upload-list el-upload-list-text">
@@ -72,6 +72,17 @@
                             <i class="el-icon-document"></i>
                             {{res.originName}}
                             <span class="text-danger">该视频资源已存在</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div v-if="checkMd5List.length > 0">
+                <ul class="el-upload-list el-upload-list-text">
+                    <li v-for="(res, index) in checkMd5List" :key="index" :tabindex="index" style="overflow:hidden;" class="el-upload-list__item is-ready">
+                        <a>
+                            <i class="el-icon-document"></i>
+                            {{res.name}}
+                            <span class="text-danger">正在校验该视频是否存在，请稍等片刻</span>
                         </a>
                     </li>
                 </ul>
@@ -113,10 +124,9 @@
                 isLoading: false,
                 timer: null,
                 fileList: [],
-                count: 0,
-                successCount: 0,
                 uploadResult: [],
                 existList: [],
+                checkMd5List: [],
                 uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token)
             };
         },
@@ -124,13 +134,7 @@
             ...mapGetters({
                 searchFields: 'video/searchFields',
                 getVideoType: 'video/getVideoType'
-            }),
-            showUploadBtn() {
-                return (this.count === 0 && this.successCount === 0) || this.fileList.length === 0;
-            },
-            showUploadResult() {
-                return this.count === this.successCount;
-            }
+            })
         },
         created() {
             this.timer = setInterval(() => {
@@ -156,12 +160,24 @@
                 this.setVideoType({videoType});
             },
             cancelHandler() {
-                this.videoUploadDialogVisible = false;
-                this.fileList = [];
-                this.uploadResult = [];
-                this.existList = [];
-                //  关闭按钮之后重新获取数据
-                this.getVideoList();
+                this.$confirm('你确定要取消上传操作吗, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.videoUploadDialogVisible = false;
+                    this.fileList = [];
+                    this.uploadResult = [];
+                    this.existList = [];
+                    this.$refs.upload.abort();
+                    //  关闭按钮之后重新获取数据
+                    this.getVideoList();
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             submitUpload() {
                 this.$refs.upload.submit();
@@ -173,7 +189,6 @@
                 this.getVideoList();
             },
             uploadSuccessHandler(res, file, fileList) {
-                this.successCount++;
                 if (res && res.code === 0 && res.data[0]) {
                     this.uploadResult.push(res.data[0]);
                     if (res.data[0].failCode === 3300) {
@@ -183,26 +198,20 @@
                             message: `[${name}], 该视频资源已存在`
                         });
                     }
-                }
-                if (this.showUploadResult) {
-                    this.$refs.upload.clearFiles();
+                    this.fileList = fileList.filter((item) => item !== file);
                 }
             },
-            uploadChangeHandler() {
-                if (this.count === this.successCount) {
-                    this.count = this.successCount = 0;
-                }
-            },
+            uploadChangeHandler() {},
             beforeUploadHandler(file) {
                 return new Promise((resolve, reject) => {
+                    this.checkMd5List.push(file);
                     this.getMd5(file)
                         .then((res) => {
                             this.checkVideoMd5(res)
                                 .then((result) => {
                                     let flag = result.data.list && result.data.list.length === 0;
-                                    this.count++;
                                     this.uploadResult = [];
-                                    this.existList = [];
+                                    this.checkMd5List = this.checkMd5List.filter((item) => item !== file);
                                     if (!flag) {
                                         this.existList.push(result.data.list[0]);
                                         reject(); // eslint-disable-line
