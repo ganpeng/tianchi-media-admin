@@ -24,14 +24,34 @@
 <script>
     export default {
         name: 'SortDialog',
-        props: ['sourceList', 'displayKey', 'title', 'uniqueKey', 'sortKey'],
+        props: {
+            sourceList: {
+                type: Array,
+                default: () => []
+            },
+            displayKey: {
+                type: String,
+                default: ''
+            },
+            title: {
+                type: String,
+                default: ''
+            },
+            uniqueKey: {
+                type: String,
+                default: ''
+            },
+            sortKey: {
+                type: String,
+                default: ''
+            }
+        },
         data() {
             return {
                 mode: 'NORMAL'
             };
         },
-        mounted() {
-        },
+        mounted() {},
         methods: {
             initDragula() {
                 this.$nextTick(function () {

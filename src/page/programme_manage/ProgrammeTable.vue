@@ -1,12 +1,20 @@
 <!--节目表格组件-->
 <template>
     <div class="tele-play-table-container">
-        <el-row class="block-title">
-            <h2 class="table-title">{{title}}</h2>
+        <el-row>
+            <!-- <h2 class="table-title">{{title}}</h2> -->
             <el-table
                 :data="dataList"
                 border
                 style="width: 100%">
+                <!--
+                <el-table-column
+                    prop="order"
+                    label="视频排序"
+                    align="center"
+                    width="240px">
+                </el-table-column>
+                -->
                 <el-table-column
                     prop="storageVideoId"
                     label="视频ID"
@@ -163,16 +171,6 @@
                         <el-button @click="realDeleteVideo(scope.row.id)" type="text" size="small">删除</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column
-                    v-if="tableStatus === 0"
-                    fixed="right"
-                    label="操作"
-                    align="center"
-                    width="160">
-                    <template slot-scope="scope">
-                        <el-button v-if="tableStatus === 0" @click="deleteUnsavedVideo(scope.row.uid)" type="text" size="small">删除</el-button>
-                    </template>
-                </el-table-column>
             </el-table>
         </el-row>
         <upload-programme-video-dialog :videoStatus="videoStatus" :videoUploadDialogVisible="videoUploadDialogVisible" v-on:changeVideoDialogStatus="closeVideoDialog($event)"></upload-programme-video-dialog>
@@ -232,7 +230,9 @@ export default {
     computed: {
         ...mapGetters({
             featureVideoName: 'programme/featureVideoName',
+            video: 'programme/video',
             isShow: 'programme/isShow',
+            isUnsavedVideo: 'programme/isUnsavedVideo',
             videoPersonName: 'programme/videoPersonName'
         }),
         duration() {
@@ -248,7 +248,10 @@ export default {
     },
     methods: {
         ...mapMutations({
-            deleteVideoFromTempList: 'programme/deleteVideoFromTempList'
+            deleteVideoFromTempList: 'programme/deleteVideoFromTempList',
+            deleteVideoFromList: 'programme/deleteVideoFromList',
+            setCurrentVideo: 'programme/setCurrentVideo',
+            setCacheSort: 'programme/setCacheSort'
         }),
         ...mapActions({
             getProgrammeVideoById: 'programme/getProgrammeVideoById',
@@ -257,18 +260,34 @@ export default {
             getProgrammeVideoListById: 'programme/getProgrammeVideoListById'
         }),
         editVideo(id) {
-            this.getProgrammeVideoById(id)
-                .then((res) => {
-                    this.videoUploadDialogVisible = true;
-                    this.videoStatus = 1;
-                });
+            if (this.isUnsavedVideo(id)) {
+                let video = this.video.list.find((video) => video.id === id);
+                this.setCurrentVideo({currentVideo: video});
+                this.setCacheSort({sort: video.sort});
+                this.videoUploadDialogVisible = true;
+                this.videoStatus = 1;
+            } else {
+                this.getProgrammeVideoById(id)
+                    .then((res) => {
+                        this.videoUploadDialogVisible = true;
+                        this.videoStatus = 1;
+                    });
+            }
         },
         displayVideo(id) {
-            this.getProgrammeVideoById(id)
-                .then((res) => {
-                    this.videoUploadDialogVisible = true;
-                    this.videoStatus = 2;
-                });
+            if (this.isUnsavedVideo(id)) {
+                let video = this.video.list.find((video) => video.id === id);
+                this.setCurrentVideo({currentVideo: video});
+                this.setCacheSort({sort: video.sort});
+                this.videoUploadDialogVisible = true;
+                this.videoStatus = 2;
+            } else {
+                this.getProgrammeVideoById(id)
+                    .then((res) => {
+                        this.videoUploadDialogVisible = true;
+                        this.videoStatus = 2;
+                    });
+            }
         },
         deleteVideo(id, visible) {
             this.$confirm(`您确定要${visible ? '下架视频' : '上架视频'}吗, 是否继续?`, '提示', {
@@ -307,10 +326,14 @@ export default {
                 cancelButtonText: '取消',
                 type: 'error'
             }).then(() => {
-                this.realDeleteProgrammeVideoById(id)
-                    .then((res) => {
-                        this.getProgrammeVideoListById(this.$route.params.id);
-                    });
+                if (this.isUnsavedVideo(id)) {
+                    this.deleteVideoFromList({id});
+                } else {
+                    this.realDeleteProgrammeVideoById(id)
+                        .then((res) => {
+                            this.deleteVideoFromList({id});
+                        });
+                }
             }).catch(() => {
                 this.$message({
                     type: 'info',

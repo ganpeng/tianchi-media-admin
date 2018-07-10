@@ -158,12 +158,19 @@ const defaultPagination = {
     total: 0
 };
 
+const defaultVideoPagination = {
+    pageNum: 1,
+    pageSize: 99999,
+    total: 0
+};
+
 const defaultProgrammeVideo = {
     cacheSort: '',
     list: [],
     tempList: [],
     featureList: [],
-    pagination: _.cloneDeep(defaultPagination),
+    // pagination: _.cloneDeep(defaultPagination),
+    pagination: _.cloneDeep(defaultVideoPagination),
     video: _.cloneDeep(defaultVideo)
 };
 
@@ -286,6 +293,13 @@ const getters = {
             return figureList ? figureList.map((figure) => figure.name).join(', ') : '';
         };
     },
+    isUnsavedVideo(state) {
+        return (id) => {
+            let {list} = state.video;
+            let video = list.find((video) => video.id === id);
+            return video && video.new;
+        };
+    },
     featureVideoName(state) {
         return (id) => {
             let video = state.video.featureList.find((item) => {
@@ -296,8 +310,8 @@ const getters = {
     },
     checkVideoIsSelected(state) {
         return (video) => {
-            let tempList = state.video.tempList;
-            let index = tempList.findIndex((item) => {
+            let {list} = state.video;
+            let index = list.findIndex((item) => {
                 return item.storageVideoId === video.id;
             });
             return index > -1;
@@ -306,9 +320,9 @@ const getters = {
     checkSortIsExist(state) {
         let sort = state.video.video.sort;
         let featureList = state.video.featureList;
-        let tempList = state.video.tempList;
+        let list = state.video.list;
         let index = featureList.findIndex((video) => parseInt(video.sort) === parseInt(sort));
-        let otherIndex = tempList.findIndex((video) => parseInt(video.sort) === parseInt(sort));
+        let otherIndex = list.findIndex((video) => parseInt(video.sort) === parseInt(sort));
         return index > -1 || otherIndex > -1;
     },
     checkSortIsLargeThanTotalSets(state) {
@@ -503,7 +517,8 @@ const mutations = {
         state.video.video.coverImage = payload.posterImage;
     },
     resetVideoPagination(state) {
-        state.video.pagination = _.cloneDeep(defaultPagination);
+        // state.video.pagination = _.cloneDeep(defaultPagination);
+        state.video.pagination = _.cloneDeep(defaultVideoPagination);
     },
     resetCurrentVideo(state) {
         state.video.video = _.cloneDeep(defaultVideo);
@@ -524,6 +539,19 @@ const mutations = {
         let {video} = state.video;
         state.video.video.uid = uuid();
         state.video.tempList.push(video);
+    },
+    addVideoToList(state) {
+        let {video, list} = state.video;
+        video.id = uuid();
+        video.new = true;
+        list.unshift(video);
+        state.video.list = list;
+    },
+    //  删除临时的视频
+    deleteVideoFromList(state, payload) {
+        let {id} = payload;
+        let {list} = state.video;
+        state.video.list = list.filter((video) => video.id !== id);
     },
     deleteVideoFromTempList(state, payload) {
         let {tempList} = state.video;
@@ -758,15 +786,19 @@ function serializeProgrammData(programme) {
 /**
  * 对等待上传的节目视频列表做处理
  */
-function filterProgrammeVideoList(tempList, programme) {
-    return tempList.map((video) => {
+function filterProgrammeVideoList(list, programme) {
+    let resultList = list.map((video, index) => {
         let result = Object.assign({}, video, {
             programmeId: programme.id,
             programmeName: programme.name,
-            uid: uuid()
+            order: index
         });
+        if (result.new) {
+            delete result.id;
+        }
         return result;
     });
+    return resultList;
 }
 
 const actions = {
@@ -955,12 +987,11 @@ const actions = {
     // 视频相关的请求
     async createMultProgrammeVideo({commit, state}, {programme}) {
         try {
-            let {tempList} = state.video;
-            let videoList = filterProgrammeVideoList(tempList, programme);
+            let {list} = state.video;
+            let videoList = filterProgrammeVideoList(list, programme);
             let res = await service.createMultProgrammeVideo(videoList);
             return res;
-        } catch (err) {
-        }
+        } catch (err) {}
     },
     async getProgrammeVideoById({commit, state}, id) {
         try {

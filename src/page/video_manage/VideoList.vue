@@ -202,6 +202,7 @@
                                     let flag = result.data.list && result.data.list.length === 0;
                                     this.count++;
                                     this.uploadResult = [];
+                                    this.existList = [];
                                     if (!flag) {
                                         this.existList.push(result.data.list[0]);
                                         reject(); // eslint-disable-line
@@ -215,7 +216,7 @@
             getMd5(file) {
                 return new Promise((resolve, reject) => {
                     let blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice;
-                    let chunkSize = 2097152;
+                    let chunkSize = 2097152 * 10;
                     let chunks = Math.ceil(file.size / chunkSize);
                     let currentChunk = 0;
                     let spark = new SparkMD5.ArrayBuffer();

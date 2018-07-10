@@ -228,6 +228,7 @@
                 cacheSort: 'programme/cacheSort',
                 isTvPlay: 'programme/isTvPlay',
                 isShow: 'programme/isShow',
+                isUnsavedVideo: 'programme/isUnsavedVideo',
                 featureList: 'programme/featureList',
                 videoListObj: 'video/video',
                 checkVideoIsSelected: 'programme/checkVideoIsSelected',
@@ -261,6 +262,7 @@
                 setVideoCoverImage: 'programme/setVideoCoverImage',
                 resetCurrentVideo: 'programme/resetCurrentVideo',
                 addVideoToTempList: 'programme/addVideoToTempList',
+                addVideoToList: 'programme/addVideoToList',
                 syncVideoMetaData: 'programme/syncVideoMetaData',
                 updateCurrentVideo: 'programme/updateCurrentVideo',
                 setSelectedVideoId: 'video/setSelectedVideoId',
@@ -306,7 +308,7 @@
                         }
                         if (parseInt(this.videoStatus) !== 1) {
                             if (this.selectedVideo) {
-                                this.addVideoToTempList();
+                                this.addVideoToList();
                                 this.cancelHandler();
                             } else {
                                 this.$message({
@@ -315,13 +317,18 @@
                                 });
                             }
                         } else {
-                            this.updateProgrammeVideoById()
-                                .then((res) => {
-                                    this.updateCurrentVideo({video: res.data});
-                                    // 调这个接口的原因是更新完单个视频的时候要更新一下正片的列表
-                                    this.getFeatureVideoList({id: this.$route.params.id, pageSize: 1000});
-                                    this.cancelHandler();
-                                });
+                            if (this.isUnsavedVideo(this.video.id)) {
+                                this.updateCurrentVideo({video: this.video});
+                                this.cancelHandler();
+                            } else {
+                                this.updateProgrammeVideoById()
+                                    .then((res) => {
+                                        this.updateCurrentVideo({video: res.data});
+                                        // 调这个接口的原因是更新完单个视频的时候要更新一下正片的列表
+                                        this.getFeatureVideoList({id: this.$route.params.id, pageSize: 1000});
+                                        this.cancelHandler();
+                                    });
+                            }
                         }
 
                         this.selectedVideo = false;

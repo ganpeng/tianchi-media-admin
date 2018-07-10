@@ -187,7 +187,7 @@
         </div>
         <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
         <el-dialog
-            title="上传视频"
+            title="上传节目表格"
             :visible.sync="fileUploadDialogVisible"
             :headers="uploadHeaders"
             :show-close="false"

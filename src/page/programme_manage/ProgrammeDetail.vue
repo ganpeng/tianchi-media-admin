@@ -368,9 +368,12 @@
                 </el-col>
             <el-col :span="24">
                 <div class="block-title">节目视频</div>
-                <el-button v-if="!readonly" type="primary" @click="showUploadDialog">添加视频<i class="el-icon-upload el-icon--right"></i></el-button>
-                <programme-table title="待添加视频列表" :tableStatus="0" :status="status" :data-list="video.tempList"></programme-table>
+                <div class="preview-sort clearfix">
+                    <el-button class="float-right" v-if="!readonly" type="primary" @click="showUploadDialog">添加视频<i class="el-icon-upload el-icon--right"></i></el-button>
+                    <el-button class="float-left sort-btn" type="success" @click="showSortDialog">点击视频排序</el-button>
+                </div>
                 <programme-table title="已添加视频列表" :tableStatus="1" :status="status" :data-list="video.list"></programme-table>
+                <!--
                 <el-pagination
                     @size-change="handlePaginationChange($event, 'pageSize')"
                     @current-change="handlePaginationChange($event, 'pageNum')"
@@ -380,6 +383,7 @@
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="video.pagination.total">
                 </el-pagination>
+                -->
             </el-col>
         </el-row>
         <div class="group">
@@ -400,6 +404,16 @@
         <create-person-dialog :createPersonDialogVisible="createPersonDialogVisible" v-on:changePersonDialogStatus="closePersonDialog($event)"></create-person-dialog>
         <upload-programme-video-dialog :videoStatus="0" :videoUploadDialogVisible="videoUploadDialogVisible" v-on:changeVideoDialogStatus="closeVideoDialog($event)"></upload-programme-video-dialog>
         <preview-multiple-images :previewMultipleImages="previewImage"></preview-multiple-images>
+        <sort-dialog
+            v-if="sortDialogVisible"
+            title="视频排序"
+            :sourceList="copyVideoList"
+            sortKey="order"
+            uniqueKey="id"
+            displayKey="originName"
+            v-on:closeDialog="sortDialogVisible = false"
+            v-on:setSortedList="setSortedList">
+        </sort-dialog>
     </div>
 </template>
 <script>
@@ -410,6 +424,7 @@
     import CreatePersonDialog from './CreatePersonDialog';
     import ProgrammeTable from './ProgrammeTable';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import SortDialog from 'sysComponents/custom_components/global/SortDialog';
     import dimension from '@/util/config/dimension';
     import role from '@/util/config/role';
     import PersonSelect from './PersonSelect';
@@ -425,7 +440,8 @@
             ProgrammeTable,
             UploadProgrammeVideoDialog,
             PreviewMultipleImages,
-            PersonSelect
+            PersonSelect,
+            SortDialog
         },
         props: {
             status: { // status 有三种状态，0代表创建 "create", 1代表显示 "display", 2代表编辑 "edit"
@@ -449,6 +465,7 @@
                 dialogVisible: false,
                 videoUploadDialogVisible: false,
                 createPersonDialogVisible: false,
+                sortDialogVisible: false,
                 areaOptions: store.get('areaList'),
                 gradeOptions: role.GRADE,
                 specOptions: role.SPEC,
@@ -505,6 +522,9 @@
             },
             checkPositiveInteger() {
                 return checkPositiveInteger('总集数只能是大于1的正整数');
+            },
+            copyVideoList() {
+                return _.cloneDeep(this.video.list);
             }
         },
         methods: {
@@ -521,6 +541,7 @@
                 addPosterImage: 'programme/addPosterImage',
                 deletePosterImage: 'programme/deletePosterImage',
                 setCoverImage: 'programme/setCoverImage',
+                setVideoList: 'programme/setVideoList',
                 // 视频video
                 updateSearchFields: 'video/updateSearchFields'
             }),
@@ -547,7 +568,7 @@
                                     .then((res) => {
                                         if (res && res.code === 0) {
                                             let id = res.data.id;
-                                            if (this.video.tempList.length > 0) {
+                                            if (this.video.list.length > 0) {
                                                 this.createMultProgrammeVideo({programme: res.data})
                                                     .then((videoRes) => {
                                                         if (videoRes && videoRes.code === 0) {
@@ -598,7 +619,7 @@
                                 this.updateProgrammeById(id)
                                     .then((res) => {
                                         if (res && res.code === 0) {
-                                            if (this.video.tempList.length > 0) {
+                                            if (this.video.list.length > 0) {
                                                 this.createMultProgrammeVideo({programme: res.data})
                                                     .then((videoRes) => {
                                                         if (videoRes && videoRes.code === 0) {
@@ -657,6 +678,12 @@
                             message: '已取消删除'
                         });
                     });
+            },
+            showSortDialog() {
+                this.sortDialogVisible = true;
+            },
+            closeSortDialog() {
+                this.sortDialogVisible = false;
             },
             closeImageDialog(status) {
                 this.imageUploadDialogVisible = status;
@@ -826,10 +853,17 @@
             },
             scenaristChangeHandler(value) {
                 this.updatePerson({key: 'scenarist', idList: value});
-            }
+            },
             //  人物即时搜索方法结束
+            setSortedList(list) {
+                this.setVideoList({list});
+                this.closeSortDialog();
+            }
         }
     };
 </script>
 <style lang="less" scoped>
+.sort-btn {
+    padding-left: 20px;
+}
 </style>
