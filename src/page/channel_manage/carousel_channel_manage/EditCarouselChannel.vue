@@ -179,7 +179,7 @@
 <script>
     import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
     import SelectMultipleVideo from './SelectMultipleVideo';
-    import SortDialog from './SortDialog';
+    import SortDialog from 'sysComponents/custom_components/global/SortDialog';
 
     export default {
         name: 'EditCarouselChannel',

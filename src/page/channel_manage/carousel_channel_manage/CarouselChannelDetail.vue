@@ -47,7 +47,7 @@
                     width="100px"
                     label="播放顺序">
                     <template slot-scope="scope">
-                        <label>{{scope.row.sort}}</label>
+                        <label>{{scope.$index + 1}}</label>
                     </template>
                 </el-table-column>
                 <el-table-column

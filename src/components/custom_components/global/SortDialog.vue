@@ -8,11 +8,14 @@
             <li v-for="(item, index) in sourceList"
                 :key="index"
                 :data-id="item[uniqueKey]"
-                :title="item[displayKey]">
-                {{index + 1}}.{{item[displayKey].slice(0,8)}}
+                :class="{'edit-mode': mode==='EDIT'}">
+                <el-tooltip :content="item[displayKey]" placement="bottom" effect="light">
+                    <el-button>{{index + 1}}.{{item[displayKey].slice(0,8)}}</el-button>
+                </el-tooltip>
             </li>
         </ul>
         <div slot="footer" class="dialog-footer">
+            <el-button @click="editItem">编 辑</el-button>
             <el-button @click="closeDialog">取 消</el-button>
             <el-button type="primary" @click="confirmSort">确 定</el-button>
         </div>
@@ -23,10 +26,11 @@
         name: 'SortDialog',
         props: ['sourceList', 'displayKey', 'title', 'uniqueKey', 'sortKey'],
         data() {
-            return {};
+            return {
+                mode: 'NORMAL'
+            };
         },
         mounted() {
-            this.initDragula();
         },
         methods: {
             initDragula() {
@@ -43,6 +47,10 @@
             // 确定排序
             confirmSort() {
                 this.$emit('setSortedList', this.sortList());
+            },
+            editItem() {
+                this.mode = 'EDIT';
+                this.initDragula();
             },
             sortList() {
                 let sortedList = [];
@@ -73,13 +81,14 @@
         li {
             margin-right: 20px;
             margin-top: 20px;
-            padding: 10px 20px;
-            background: #008178;
             border-radius: 5px;
             text-align: center;
             color: #fff;
             font-size: 16px;
             cursor: grab;
+            &.edit-mode {
+                border: 2px dotted chartreuse;
+            }
         }
     }
 
@@ -95,7 +104,6 @@
         transition: opacity 0.4s ease-in-out;
         margin-right: 20px;
         margin-top: 20px;
-        padding: 10px 20px;
         border-radius: 5px;
         text-align: center;
         color: #fff;
