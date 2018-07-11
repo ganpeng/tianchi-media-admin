@@ -140,14 +140,14 @@
 
 <script>
     import ProgrammeSecondStep from './ProgrammeSecondStep';
-    import SelectProgramme from './SelectSingleProgramme';
+    import SelectSingleProgramme from './SelectSingleProgramme';
     import SetCornerMarks from './SetCornerMarks';
 
     export default {
         name: 'AppendProgramme',
         components: {
             ProgrammeSecondStep,
-            SelectProgramme,
+            SelectSingleProgramme,
             SetCornerMarks
         },
         data() {
@@ -174,13 +174,13 @@
             currentView() {
                 switch (this.activeStep) {
                     case 0:
-                        return 'SelectProgramme';
+                        return 'SelectSingleProgramme';
                     case 1:
                         return 'ProgrammeSecondStep';
                     case 2:
                         return 'SetCornerMarks';
                     default:
-                        return 'SelectProgramme';
+                        return 'SelectSingleProgramme';
                 }
             },
             currentNavBarInfo() {

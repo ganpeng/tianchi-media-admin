@@ -1,4 +1,4 @@
-<!--今日推荐组件-->
+<!--导航栏布局组件-->
 <template>
     <div>
         <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -62,7 +62,7 @@
                     </span>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
-                                <el-dropdown-item command="PERSON">设置为专题</el-dropdown-item>
+                                <el-dropdown-item command="FIGURE">设置为专题</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -135,7 +135,7 @@
                                   </span>
                                     <el-dropdown-menu slot="dropdown">
                                         <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
-                                        <el-dropdown-item command="PERSON">设置为专题</el-dropdown-item>
+                                        <el-dropdown-item command="FIGURE">设置为专题</el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
                             </div>
@@ -143,11 +143,12 @@
                     </ul>
                     <!--模块推荐操作-->
                     <div class="model-operate" v-if="layoutBlockItem.subjectId">
-                        <el-dropdown @command="addModelSubject($event,blockIndex + 1)" placement="bottom">
+                        <el-dropdown @command="addModel($event,blockIndex + 1)" placement="bottom">
                             <span class="el-dropdown-link"><i class="el-icon-circle-plus-outline"></i></span>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="PROGRAMME">添加节目专题</el-dropdown-item>
-                                <el-dropdown-item command="PERSON">添加人物专题</el-dropdown-item>
+                                <el-dropdown-item command="SHUFFLE">新增混排模块</el-dropdown-item>
+                                <el-dropdown-item command="PROGRAMME">新增节目专题</el-dropdown-item>
+                                <el-dropdown-item command="FIGURE">新增人物专题</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                         <el-tooltip class="item" effect="dark" content="编辑" placement="top">
@@ -162,13 +163,14 @@
                 </div>
             </div>
             <div class="append-model">
-                <el-dropdown @command="addModelSubject($event,layoutBlockList.length)" placement="bottom">
+                <el-dropdown @command="addModel($event,layoutBlockList.length)" placement="bottom">
             <span class="el-dropdown-link">
             <i class="el-icon-circle-plus-outline"></i>
             </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="PROGRAMME">添加节目模块</el-dropdown-item>
-                        <el-dropdown-item command="PERSON">添加人物模块</el-dropdown-item>
+                        <el-dropdown-item command="SHUFFLE">新增混排模块</el-dropdown-item>
+                        <el-dropdown-item command="PROGRAMME">新增节目专题</el-dropdown-item>
+                        <el-dropdown-item command="FIGURE">新增人物专题</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <el-tooltip v-if="massLayoutBlockList.length > 1"
@@ -377,10 +379,24 @@
                     }
                 });
             },
-            // 添加模块，设置模块内的专题
-            addModelSubject(val, model) {
+            // 添加模块，设置模块内的专题或者混排
+            addModel(val, model) {
+                let routeName = '';
+                switch (val) {
+                    case 'PROGRAMME':
+                        routeName = 'ModelAppendProgrammeSubject';
+                        break;
+                    case 'FIGURE':
+                        routeName = 'ModelAppendPersonSubject';
+                        break;
+                    case 'SHUFFLE':
+                        routeName = 'ModelAppendShuffle';
+                        break;
+                    default:
+                        break;
+                }
                 this.$router.push({
-                    name: val === 'PROGRAMME' ? 'ModelAppendProgrammeSubject' : 'ModelAppendPersonSubject',
+                    name: routeName,
                     params: {
                         navBarId: this.navBarId,
                         navBarSignCode: this.navBarSignCode,

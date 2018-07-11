@@ -156,6 +156,15 @@ export const LAYOUT_IMAGE_DIMENSION = {
             width: 240,
             height: 350
         }
+    },
+    /**
+     * 推荐位六分位图小
+     */
+    'model-s6': {
+        coverImage: {
+            width: 240,
+            height: 134
+        }
     }
 };
 

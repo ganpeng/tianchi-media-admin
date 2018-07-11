@@ -313,8 +313,8 @@
                 this.subjectLayoutItemList = [];
                 for (let k = 0; k < this.templateType.split('+').length; k++) {
                     this.subjectLayoutItemList[k] = [];
-                    for (let i = 0; i < this.templateType.split('+')[k]; i++) {
-                        this.subjectLayoutItemList[k].push({});
+                    for (let i = 0; i < templateType.SIZE[this.templateType.split('+')[k]].count; i++) {
+                        this.subjectLayoutItemList[k].push({itemClass: this.templateType.split('+')[k]});
                     }
                 }
                 // 模块板式有最后一个'更多'的位置
@@ -339,9 +339,8 @@
             },
             getModelCount() {
                 let num = 0;
-                let array = this.templateType.split('+');
                 for (let k = 0; k < this.templateType.split('+').length; k++) {
-                    num = num + parseInt(array[k]);
+                    num = num + templateType.SIZE[this.templateType.split('+')[k]].count;
                 }
                 return num;
             },

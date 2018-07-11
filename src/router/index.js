@@ -27,10 +27,9 @@ import EditProgramme from 'sysPage/programme_manage/EditProgramme';
 import DisplayProgramme from 'sysPage/programme_manage/DisplayProgramme';
 import ProgrammeList from 'sysPage/programme_manage/ProgrammeList';
 import SetChannel from 'sysPage/content_manage/layout_manage/SetChannel';
-import AdGroup from 'sysPage/content_manage/layout_manage/AdGroup';
-import AppendAd from 'sysPage/content_manage/layout_manage/AppendAd';
 import AppendProgramme from 'sysPage/content_manage/layout_manage/AppendProgramme';
 import SingleAppendSubject from 'sysPage/content_manage/layout_manage/SingleAppendSubject';
+import ModelAppendShuffle from 'sysPage/content_manage/layout_manage/ModelAppendShuffle';
 import ModelAppendProgrammeSubject from 'sysPage/content_manage/layout_manage/ModelAppendProgrammeSubject';
 import ModelAppendPersonSubject from 'sysPage/content_manage/layout_manage/ModelAppendPersonSubject';
 import CreateProgrammeSubject from 'sysPage/content_manage/subject_manage/programme_subject/CreateProgrammeSubject';
@@ -153,18 +152,6 @@ let router = new Router({
                     name: 'SetChannel',
                     component: SetChannel
                 },
-                // 内容管理-栏目管理-广告组设置
-                {
-                    path: '/layout-manage/ad-group',
-                    name: 'AdGroup',
-                    component: AdGroup
-                },
-                // 内容管理-栏目管理-单个广告设置
-                {
-                    path: '/layout-manage/ad',
-                    name: 'AppendAd',
-                    component: AppendAd
-                },
                 // 内容管理-栏目管理-节目选择设置
                 {
                     path: '/layout-manage/programme/:navBarId/:navBarSignCode/:model/:row/:index/:imageSpec',
@@ -176,6 +163,12 @@ let router = new Router({
                     path: '/layout-manage/single-append-subject/:navBarId/:navBarSignCode/:model/:row/:index/:imageSpec',
                     name: 'SingleAppendSubject',
                     component: SingleAppendSubject
+                },
+                // 内容管理-栏目管理-混排模块
+                {
+                    path: '/layout-manage/model-append-shuffle/:navBarId/:navBarSignCode/:model/:operate',
+                    name: 'ModelAppendShuffle',
+                    component: ModelAppendShuffle
                 },
                 // 内容管理-栏目管理-模块推荐位选择节目专题
                 {

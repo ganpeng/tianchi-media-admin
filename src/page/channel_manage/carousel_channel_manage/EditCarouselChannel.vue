@@ -400,10 +400,14 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    // 接口调用禁播频道
-                    this.$message({
-                        type: 'success',
-                        message: operateWords + '成功!'
+                    this.$service.setChannelVisible(this.route.params.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message({
+                                type: 'success',
+                                message: operateWords + '成功!'
+                            });
+                            this.channelInfo.visible = !this.channelInfo.visible;
+                        }
                     });
                 }).catch(() => {
                     this.$message({
@@ -439,6 +443,9 @@
             updateInfo() {
                 this.$refs['channelInfo'].validate((valid) => {
                     if (valid) {
+                        for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                            this.currentSelectedVideoList[i].sort = i;
+                        }
                         this.channelInfo.carouselVideoList = this.currentSelectedVideoList;
                         this.channelInfo.typeList = [];
                         this.channelInfo.typeIdList.map(typeId => {

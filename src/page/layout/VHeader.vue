@@ -2,7 +2,6 @@
 <template>
     <div>
         <img src="~assets/img/logo.png">
-        <label>天驰传媒后台管理系统</label>
         <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">{{name}}<i class="el-icon-arrow-down el-icon--right"></i></span>
             <el-dropdown-menu slot="dropdown">
@@ -49,8 +48,8 @@
 <style scoped lang="less">
     img {
         float: left;
+        margin-left: 30px;
         margin-top: 20px;
-        width: 25px;
         height: 25px;
     }
 

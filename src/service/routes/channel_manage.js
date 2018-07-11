@@ -46,6 +46,13 @@ export const updateChannelById = (id, channel) => {
 };
 
 /**
+ * 根据id禁播或者恢复节目
+ */
+export const setChannelVisible = (id) => {
+    return service.patch(`/v1/live/channel/${id}/visible`);
+};
+
+/**
  * 根据id删除频道
  */
 export const deleteChannelById = (id) => {

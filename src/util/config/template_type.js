@@ -69,10 +69,10 @@ const TYPE = [
         name: '4+3+2'
     }, {
         id: 21,
-        name: 's6+s6'
+        name: 's6'
     }, {
         id: 22,
-        name: 's6'
+        name: 's6+s6'
     }
 ];
 
@@ -82,28 +82,46 @@ const TYPE = [
  */
 const SIZE = {
     1: {
-        width: 1700,
-        height: 200
+        count: 1,
+        size: {
+            width: 1700,
+            height: 200
+        }
     },
     2: {
-        width: 824,
-        height: 225
+        count: 2,
+        size: {
+            width: 824,
+            height: 225
+        }
     },
     3: {
-        width: 532,
-        height: 225
+        count: 3,
+        size: {
+            width: 532,
+            height: 225
+        }
     },
     4: {
-        width: 386,
-        height: 225
+        count: 4,
+        size: {
+            width: 386,
+            height: 225
+        }
     },
     6: {
-        width: 240,
-        height: 350
+        count: 6,
+        size: {
+            width: 240,
+            height: 350
+        }
     },
     s6: {
-        width: 240,
-        height: 100
+        count: 6,
+        size: {
+            width: 240,
+            height: 350
+        }
     }
 };
 
