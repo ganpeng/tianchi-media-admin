@@ -199,6 +199,7 @@
                     this.$message.error('选择的图片与选择的图片尺寸不一致，请重新选择图片');
                     this.$refs.upload.clearFiles();
                     this.$refs.uploadImageForm.resetFields();
+                    this.form.size = '';
                 }
             },
             submitUpload() {

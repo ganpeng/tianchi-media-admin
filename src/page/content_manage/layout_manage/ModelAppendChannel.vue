@@ -56,7 +56,7 @@
                 </div>
             </el-col>
             <el-col :span="24" class="text-center">
-                <el-button class="model-btn" type="primary">确定</el-button>
+                <el-button class="model-btn" type="primary" @click="saveChannelModel">确定</el-button>
             </el-col>
         </el-form>
         <el-dialog
@@ -65,6 +65,7 @@
             <select-channel
                 :size="size"
                 ref="selectChannel"
+                :existList="layoutItemList"
                 v-on:closeSetChannelDialog="closeSetChannelDialog"
                 :successHandler="setChannelBlock"
                 ></select-channel>
@@ -72,6 +73,7 @@
     </div>
 </template>
 <script>
+import {mapMutations} from 'vuex';
 import {LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
 import templateType from '@/util/config/template_type';
 import SelectChannel from './SelectChannel';
@@ -104,6 +106,9 @@ export default {
         };
     },
     methods: {
+        ...mapMutations({
+            setSubjectLayoutItem: 'layout/setSubjectLayoutItem'
+        }),
         setBlockModel() {
             this.layoutItemList = [];
             if (this.modelForm.templateType) {
@@ -133,7 +138,29 @@ export default {
             this.setChannelDialogVisible = false;
         },
         setChannelBlock(data) {
-            console.log(data);
+            let {itemClass} = this.layoutItemList[this.currentRow][this.currentIndex];
+            data.itemClass = itemClass;
+            this.layoutItemList[this.currentRow][this.currentIndex] = data;
+        },
+        checkBlockSeted() {
+            let resultList = [];
+            this.layoutItemList.forEach((item) => {
+                resultList = resultList.concat(item);
+            });
+            let flag = resultList.findIndex((item) => !item.coverImage || !item.coverImage.id);
+            return flag > -1;
+        },
+        saveChannelModel() {
+            this.$refs.modelForm.validate(valid => {
+                if (valid) {
+                    if (this.checkBlockSeted()) {
+                        this.$message.error('请选择色块频道');
+                        return false;
+                    } else {
+                        console.log(this.layoutItemList);
+                    }
+                }
+            });
         }
     }
 };

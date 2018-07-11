@@ -82,6 +82,10 @@ export default {
         showBtn: {
             type: Boolean,
             default: true
+        },
+        existList: {
+            type: Array,
+            default: () => []
         }
     },
     data() {
@@ -111,6 +115,14 @@ export default {
             imageUri: ''
         };
     },
+    computed: {
+        getChannelName() {
+            return (id) => {
+                let channel = this.channelList.find((channel) => channel.id === id);
+                return channel ? channel.name : '';
+            };
+        }
+    },
     methods: {
         searchChannel: _.debounce(function(value) {
             this.$service.getChannelList({keyword: value})
@@ -121,6 +133,12 @@ export default {
                     }
                 });
         }, 300),
+        filterChannelList(channelList) {
+            let existList = [];
+            this.existList.forEach((item) => {
+                existList = existList.concat(item);
+            });
+        },
         channelChangeHandler(id) {
             let channel = this.channelList.find((channel) => channel.id === id);
             if (channel && channel.coverImage) {
@@ -130,11 +148,18 @@ export default {
         setChannel() {
             this.$refs.channelForm.validate(valid => {
                 if (valid) {
+                    let {channelId, coverImage} = this.channelForm;
+                    let res = {
+                        id: channelId,
+                        name: this.getChannelName(channelId),
+                        coverImage,
+                        cornerMark: {}
+                    };
                     if (this.showBtn) {
-                        this.successHandler('hahah');
+                        this.successHandler(res);
                         this.closeSetChannelDialog();
                     } else {
-                        this.successHandler('hahah');
+                        this.successHandler(res);
                     }
                 }
             });
@@ -151,6 +176,7 @@ export default {
             // 清除表单数据
             this.$refs.channelForm.resetFields();
             this.channelImageList = [];
+            this.imageUri = '';
         },
         appendImagePrefix(uri) {
             let baseUri = window.localStorage.getItem('imageBaseUri');
