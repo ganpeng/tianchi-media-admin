@@ -95,23 +95,32 @@
         },
         methods: {
             getTypeList() {
-                this.$service.getProgrammeCategory().then(response => {
-                    if (response && response.code === 0) {
-                        response.data.map(item => {
-                            if (this.catalogueConfig.level === 'SECOND' && item.signCode === this.catalogueConfig.categorySignCode) {
-                                this.typeList = item.programmeTypeList;
-                                // 色块展示一级类别，例如'娱乐'
-                            } else if (this.catalogueConfig.level === 'FIRST') {
-                                for (let i = 0; i < this.catalogueConfig.categorySignCode.length; i++) {
-                                    if (item.signCode === this.catalogueConfig.categorySignCode[i]) {
-                                        this.typeList.push(item);
+                if (this.navBarSignCode === 'LIVE_CHANNEL') {
+                    this.$service.getChannelType({})
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                this.typeList = res.data;
+                            }
+                        });
+                } else {
+                    this.$service.getProgrammeCategory().then(response => {
+                        if (response && response.code === 0) {
+                            response.data.map(item => {
+                                if (this.catalogueConfig.level === 'SECOND' && item.signCode === this.catalogueConfig.categorySignCode) {
+                                    this.typeList = item.programmeTypeList;
+                                    // 色块展示一级类别，例如'娱乐'
+                                } else if (this.catalogueConfig.level === 'FIRST') {
+                                    for (let i = 0; i < this.catalogueConfig.categorySignCode.length; i++) {
+                                        if (item.signCode === this.catalogueConfig.categorySignCode[i]) {
+                                            this.typeList.push(item);
+                                        }
                                     }
                                 }
-                            }
-                            this.setOptionsStatus();
-                        });
-                    }
-                });
+                                this.setOptionsStatus();
+                            });
+                        }
+                    });
+                }
             },
             initDragula() {
                 let that = this;

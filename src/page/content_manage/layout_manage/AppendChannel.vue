@@ -1,43 +1,52 @@
+<!-- 频道单独设置页面 -->
 <template>
-    <div>
-        <h3 class="text-left">找到以下符合该位置尺寸要求的图片：</h3>
-        <ul class="cover-list">
-            <li v-for="(item,index) in specPosterImages" :key="index">
-                <div
-                    :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
-                    class="image-box"
-                    @click="displayImage(index)">
-                </div>
-                <el-radio
-                    v-model="programmeImageUri"
-                    :label="item.uri"
-                    @change="setCoverImage">
-                        {{item.name}}
-                </el-radio>
-            </li>
-        </ul>
-        <div class="add-box">
-            <el-button type="success" @click="addCover">添加图片</el-button>
-        </div>
-        <preview-multiple-images
-            :previewMultipleImages="previewImage">
-        </preview-multiple-images>
-        <upload-image
-            :size='size'
-            title="上传节目封面图片"
-            :successHandler="addPosterImage"
-            :imageUploadDialogVisible="imageUploadDialogVisible"
-            v-on:changeImageDialogStatus="closeImageDialog($event)">
-        </upload-image>
-        <div slot="footer" class="dialog-footer">
-            <el-button @click="closeSetChannelDialog">取 消</el-button>
-            <el-button type="primary" @click="setChannel">确定</el-button>
+    <div class="container">
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
+            <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
+            <el-breadcrumb-item>频道页面设置</el-breadcrumb-item>
+            <el-breadcrumb-item>频道模块设置</el-breadcrumb-item>
+        </el-breadcrumb>
+        <div class="form">
+            <select-channel
+                :size="size"
+                ref="selectChannel"
+                :showBtn="false"
+                :successHandler="setChannelBlock"
+                ></select-channel>
         </div>
     </div>
 </template>
 <script>
-export default {};
+import SelectChannel from './SelectChannel';
+import {LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
+export default {
+    name: 'AppendChannel',
+    components: {
+        SelectChannel
+    },
+    data() {
+        return {};
+    },
+    computed: {
+        size() {
+            let {imageSpec} = this.$route.params;
+            let {width, height} = LAYOUT_IMAGE_DIMENSION[imageSpec].coverImage;
+            return [{
+                value: `${width}*${height}`,
+                label: `当前块尺寸: ${width}*${height}`
+            }];
+        }
+    },
+    methods: {
+        setChannelBlock(data) {}
+    }
+};
 </script>
-<style lang="less" scoped>
 
+<style lang="less" scoped>
+    .form {
+        margin-top: 20px;
+    }
 </style>

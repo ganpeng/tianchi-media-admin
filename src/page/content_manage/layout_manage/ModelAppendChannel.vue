@@ -1,6 +1,5 @@
-<!--内容管理-栏目管理-频道模块设置-->
 <template>
-    <div class="text-left">
+    <div class="set-channel-container">
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
@@ -8,209 +7,144 @@
             <el-breadcrumb-item>频道页面设置</el-breadcrumb-item>
             <el-breadcrumb-item>频道模块设置</el-breadcrumb-item>
         </el-breadcrumb>
-        <h3 class="text-left">1.请输入模块名称：</h3>
-        <el-input
-            placeholder="请输入模块名称，30个字符以内"
-            v-model="title"
-            clearable>
-        </el-input>
-        <h3 class="text-left">3.请选择模块板式：</h3>
-        <el-select
-            v-model="templateType"
-            clearable
-            placeholder="请选择模块板式"
-            @change="setBlockModel">
-            <el-option
-                v-for="item in templateTypeOptions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.name">
-            </el-option>
-        </el-select>
-        <div class="model-block">
-            <ul :class="'model-' + row.length" v-for="(row,rowIndex) in layoutItemList" :key="rowIndex">
-                <li v-for="(item,index) in row" :key="index"
-                    @click="setModelItem(rowIndex,index,('model-' + row.length),item.layoutItemType === 'ALL',item)">
-                    <div class="ab-center text-center">
-                        <img :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
-                             :alt="item.coverImage.name"
-                             v-if="item.coverImage && item.coverImage.id">
-                    </div>
-                </li>
-            </ul>
-        </div>
+        <el-form
+            label-width="100px"
+            :model="modelForm"
+            status-icon
+            class="form"
+            :rules="modelFormRules"
+            ref="modelForm"
+            >
+            <el-col :span="8">
+                <el-form-item label="模块名称" prop="title">
+                    <el-input
+                        v-model="modelForm.title"
+                        clearable
+                        placeholder="请输入模块名称">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="模块板式" prop="templateType">
+                        <el-select
+                            v-model="modelForm.templateType"
+                            clearable
+                            placeholder="请选择模块板式"
+                            @change="setBlockModel"
+                            prop="templateType">
+                            <el-option
+                                v-for="item in templateTypeOptions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.name">
+                            </el-option>
+                        </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="24">
+                <div class="model-block">
+                    <ul v-for="(row,rowIndex) in layoutItemList" :key="rowIndex">
+                        <li v-for="(item,index) in row"
+                            :key="index"
+                            :class="'item-' + item.itemClass"
+                            @click="setModelItem(rowIndex,index,('model-' + item.itemClass),item.layoutItemType === 'ALL',item)">
+                            <div class="ab-center text-center">
+                                <img :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
+                                    :alt="item.coverImage.name"
+                                    v-if="item.coverImage && item.coverImage.id">
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </el-col>
+            <el-col :span="24" class="text-center">
+                <el-button class="model-btn" type="primary">确定</el-button>
+            </el-col>
+        </el-form>
         <el-dialog
             title=""
             :visible.sync="setChannelDialogVisible">
-            <h3 class="text-left">找到以下符合该位置尺寸要求的图片：</h3>
-            <ul class="cover-list">
-                <li v-for="(item,index) in specPosterImages" :key="index">
-                    <div
-                        :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
-                        class="image-box"
-                        @click="displayImage(index)">
-                    </div>
-                    <el-radio
-                        v-model="programmeImageUri"
-                        :label="item.uri"
-                        @change="setCoverImage">{{item.name}}
-                    </el-radio>
-                </li>
-            </ul>
-            <div class="add-box">
-                <el-button type="success" @click="addCover">添加图片</el-button>
-            </div>
-            <preview-multiple-images
-                :previewMultipleImages="previewImage">
-            </preview-multiple-images>
-            <upload-image
-                :size='size'
-                title="上传节目封面图片"
-                :successHandler="addPosterImage"
-                :imageUploadDialogVisible="imageUploadDialogVisible"
-                v-on:changeImageDialogStatus="closeImageDialog($event)">
-            </upload-image>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="closeSetChannelDialog">取 消</el-button>
-                <el-button type="primary" @click="setChannel">确定</el-button>
-            </div>
+            <select-channel
+                :size="size"
+                ref="selectChannel"
+                v-on:closeSetChannelDialog="closeSetChannelDialog"
+                :successHandler="setChannelBlock"
+                ></select-channel>
         </el-dialog>
-        <el-button type="primary" @click="innerVisible = true">确定</el-button>
     </div>
 </template>
-
 <script>
-    import templateType from '@/util/config/template_type';
-    import {PROGRAMME_DIMENSION as subjectDimension} from '@/util/config/dimension';
-    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
-    import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
-
-    export default {
-        name: 'ModelAppendChannel',
-        components: {
-            UploadImage,
-            PreviewMultipleImages
-        },
-        data() {
-            return {
-                //  表格数据
+import {LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
+import templateType from '@/util/config/template_type';
+import SelectChannel from './SelectChannel';
+export default {
+    name: 'ModelAppendChannel',
+    components: {
+        SelectChannel
+    },
+    data() {
+        return {
+            templateTypeOptions: templateType.TYPE,
+            layoutItemList: [],
+            setChannelDialogVisible: false,
+            modelForm: {
                 title: '',
-                templateType: '',
-                programme: {
-                    posterImageList: []
-                },
-                originState: {
-                    coverImage: {
-                        uri: ''
-                    }
-                },
-                // 表格数据结束
-
-                templateTypeOptions: templateType.TYPE,
-                layoutItemList: [],
-                size: subjectDimension,
-                programmeImageUri: '',
-                previewImage: {
-                    display: false,
-                    autoplay: false,
-                    activeIndex: 0,
-                    list: []
-                },
-                imageUploadDialogVisible: false,
-                setChannelDialogVisible: false
-            };
-        },
-        computed: {
-            specPosterImages() {
-                return this.programme.posterImageList.filter(image => parseInt(image.width) === this.imageSpec.width && parseInt(image.height) === this.imageSpec.height);
-            }
-        },
-        mounted() {
-            this.init();
-        },
-        methods: {
-            init() {
-                if (this.originState.coverImage) {
-                    this.programmeImageUri = this.originState.coverImage.uri;
-                }
+                templateType: ''
             },
-            setBlockModel() {},
-            setModelItem(...args) {
-                this.showSetChannelDialog();
+            modelFormRules: {
+                title: [
+                    { required: true, message: '请输入模块名称' }
+                ],
+                templateType: [
+                    { required: true, message: '请输入模块板式' }
+                ]
             },
-            addChannelImage() {},
-            setChannel() {
-                this.closeSetChannelDialog();
-            },
-            showSetChannelDialog() {
-                this.setChannelDialogVisible = true;
-            },
-            closeSetChannelDialog() {
-                this.setChannelDialogVisible = false;
-            },
-            appendImagePrefix(uri) {
-                let baseUri = window.localStorage.getItem('imageBaseUri');
-                return baseUri + uri;
-            },
-            setCoverImage() {
-                // 根据图片uri设置当前选择的图片
-                this.specPosterImages.map(image => {
-                    if (image.uri === this.programmeImageUri) {
-                        this.$emit('setCoverImage', image);
-                    }
-                });
-            },
-            // 添加节目封面图片
-            addCover() {
-                this.imageUploadDialogVisible = true;
-            },
-            // 放大预览图片
-            displayImage(index) {
-                this.previewImage.display = true;
-                this.previewImage.list = this.specPosterImages;
-                this.previewImage.activeIndex = index;
-            },
-            // 关闭上传图片对话框
-            closeImageDialog(status) {
-                this.imageUploadDialogVisible = status;
-            },
-            // 添加封面图片
-            addPosterImage(newPosterImage) {
-                for (let i = 0; i < this.specPosterImages.length; i++) {
-                    if (newPosterImage.posterImage.id === this.specPosterImages[i].id) {
-                        this.$message('该图片已经添加到当前节目封面中');
-                        return;
+            size: [],
+            //  一些临时的变量
+            currentRow: 0,
+            currentIndex: 0
+        };
+    },
+    methods: {
+        setBlockModel() {
+            this.layoutItemList = [];
+            if (this.modelForm.templateType) {
+                for (let k = 0; k < this.modelForm.templateType.split('+').length; k++) {
+                    this.layoutItemList[k] = [];
+                    for (let i = 0; i < templateType.SIZE[this.modelForm.templateType.split('+')[k]].count; i++) {
+                        this.layoutItemList[k].push({itemClass: this.modelForm.templateType.split('+')[k]});
                     }
                 }
-                let imageList = this.programme.posterImageList.slice();
-                imageList.push(newPosterImage.posterImage);
-                // 更新当前节目中的封面图片
-                this.$service.updatePartProgrammeInfo({
-                    id: this.programme.id,
-                    programme: {posterImageList: imageList}
-                }).then(response => {
-                    if (response && response.code === 0) {
-                        this.programme.posterImageList.push(newPosterImage.posterImage);
-                    }
-                });
             }
+        },
+        // 设置模板样式中的节目项
+        setModelItem(row, index, imageModel, isAll, item) {
+            let {width, height} = LAYOUT_IMAGE_DIMENSION[imageModel].coverImage;
+            this.size = [{
+                value: `${width}*${height}`,
+                label: `当前块尺寸: ${width}*${height}`
+            }];
+            this.currentRow = row;
+            this.currentIndex = index;
+            this.showSetChannelDialog();
+        },
+        showSetChannelDialog() {
+            this.setChannelDialogVisible = true;
+        },
+        closeSetChannelDialog() {
+            this.setChannelDialogVisible = false;
+        },
+        setChannelBlock(data) {
+            console.log(data);
         }
-    };
+    }
+};
 </script>
 <style lang="less" scoped>
 
-    h3 {
-        margin-top: 30px;
-        margin-bottom: 30px;
-        font-size: 18px;
+    .form {
+        margin-top: 20px;
     }
-
-    .el-input {
-        width: 500px;
-    }
-
-    .el-select {
-        width: 500px;
+    .model-btn {
+        margin-top: 40px;
     }
 
     // 根据一行节目数量，确定模块样式
@@ -244,82 +178,50 @@
                 }
             }
         }
-        .model-1 {
-            li {
-                width: 100%;
-                padding-bottom: 12%;
-            }
-        }
-
-        .model-2 {
-            li {
-                width: 48%;
-                padding-top: 13%;
-            }
-        }
-
-        .model-3 {
-            li {
-                width: 31%;
-                padding-top: 13%;
-            }
-        }
-
-        .model-4 {
-            li {
-                width: 23%;
-                padding-top: 13%;
-            }
-        }
-
-        .model-6 {
-            li {
-                width: 14%;
-                padding-top: 20%;
-            }
-        }
-    }
-
-    // 角标样式
-    span.corner-mark {
-        position: absolute;
-        line-height: 30px;
-        background: #5daf34;
-        color: #fff;
-        font-size: 14px;
-        border-radius: 6px;
-        text-align: center;
-        img {
+        li.item-1 {
             width: 100%;
-            height: auto;
+            padding-bottom: 12%;
+        }
+
+        li.item-2 {
+            width: 48%;
+            padding-top: 13%;
+        }
+
+        li.item-3 {
+            width: 31%;
+            padding-top: 13%;
+        }
+
+        li.item-4 {
+            width: 23%;
+            padding-top: 13%;
+        }
+
+        li.item-6 {
+            width: 14%;
+            padding-top: 20%;
+        }
+
+        li.item-s6 {
+            width: 14%;
+            padding-top: 8%;
         }
     }
 
-    span.left-bottom {
-        left: 10px;
-        bottom: 10px;
-        height: 30px;
-        width: 100px;
-    }
-
-    span.left-top {
-        left: 10px;
-        top: 10px;
-        background: transparent;
-    }
-
-    span.right-top {
-        right: 10px;
-        top: 10px;
-        height: 30px;
-        width: 60px;
-    }
-
-    span.right-bottom {
-        right: 10px;
-        bottom: 10px;
-        height: 30px;
-        width: 60px;
+    .item-operate {
+        position: absolute;
+        right: 40px;
+        top: 14px;
+        .el-tooltip {
+            margin-right: 26px;
+        }
+        i {
+            margin-right: 16px;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+        }
     }
 
     .save-btn {

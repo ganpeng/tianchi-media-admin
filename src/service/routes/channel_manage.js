@@ -1,7 +1,6 @@
 import qs from 'querystring';
 import _ from 'lodash';
 import service from '../config';
-import util from '../../util/extend';
 
 /**
  * 获取频道详情
@@ -14,7 +13,11 @@ export const getChannelDetail = (id) => {
  * 获取频道分类
  */
 export const getChannelType = ({category}) => {
-    return service.get(util.format('/v1/live/channel-type?category={0}', category));
+    if (category) {
+        return service.get(`/v1/live/channel-type?category=${category}`);
+    } else {
+        return service.get(`/v1/live/channel-type`);
+    }
 };
 
 /**

@@ -166,7 +166,7 @@ const actions = {
      */
     async getChannelType({commit}) {
         try {
-            let res = await service.getChannelType();
+            let res = await service.getChannelType({});
             if (res && res.code === 0) {
                 commit('setChannelTypeList', {list: res.data});
             }
