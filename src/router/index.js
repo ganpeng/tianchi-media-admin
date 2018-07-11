@@ -28,7 +28,7 @@ import DisplayProgramme from 'sysPage/programme_manage/DisplayProgramme';
 import ProgrammeList from 'sysPage/programme_manage/ProgrammeList';
 import SetChannel from 'sysPage/content_manage/layout_manage/SetChannel';
 import AppendProgramme from 'sysPage/content_manage/layout_manage/AppendProgramme';
-import SingleAppendSubject from 'sysPage/content_manage/layout_manage/SingleAppendSubject';
+import AppendSingleSubject from 'sysPage/content_manage/layout_manage/AppendSingleSubject';
 import ModelAppendShuffle from 'sysPage/content_manage/layout_manage/ModelAppendShuffle';
 import ModelAppendProgrammeSubject from 'sysPage/content_manage/layout_manage/ModelAppendProgrammeSubject';
 import ModelAppendPersonSubject from 'sysPage/content_manage/layout_manage/ModelAppendPersonSubject';
@@ -162,8 +162,8 @@ let router = new Router({
                 // 内容管理-栏目管理-单个推荐位选择专题
                 {
                     path: '/layout-manage/single-append-subject/:navBarId/:navBarSignCode/:model/:row/:index/:imageSpec',
-                    name: 'SingleAppendSubject',
-                    component: SingleAppendSubject
+                    name: 'AppendSingleSubject',
+                    component: AppendSingleSubject
                 },
                 // 内容管理-栏目管理-混排模块
                 {

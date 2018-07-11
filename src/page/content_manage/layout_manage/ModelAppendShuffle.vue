@@ -57,7 +57,7 @@
                     <!--编辑或者设置-->
                     <div class="item-operate">
                         <el-dropdown
-                            @command="setModelItem($event,'model-' + item.itemClass, rowIndex, index)"
+                            @command="setModelItem($event,'model-' + item.itemClass, rowIndex, index, item)"
                             placement="bottom">
                          <span class="el-dropdown-link">
                          <i class="el-icon-edit"></i>
@@ -79,40 +79,60 @@
         <div class="text-center save-btn">
             <el-button type="success" @click="saveBlock">保 存</el-button>
         </div>
+        <!--设置混排的节目-->
         <el-dialog
             title="设置混排模块的节目"
             width="80%"
             center
-            :visible.sync="programmeDialogVisible">
+            :visible.sync="dialogVisible.programmeDialogVisible">
             <set-item-programme
-                v-if="programmeDialogVisible"
+                v-if="dialogVisible.programmeDialogVisible"
                 :imageSpec="imageSpec"
-                :originProgramme="originProgramme"
+                :originFigure="originItemState"
                 :programmeLayoutItemList="shuffleLayoutItemList"
                 v-on:setShuffleItem="setShuffleItem">
             </set-item-programme>
+        </el-dialog>
+        <!--设置混排的人物-->
+        <el-dialog
+            title="设置混排模块的人物"
+            width="80%"
+            center
+            :visible.sync="dialogVisible.figureDialogVisible">
+            <set-item-figure
+                v-if="dialogVisible.figureDialogVisible"
+                :imageSpec="imageSpec"
+                :originFigure="originItemState"
+                :programmeLayoutItemList="shuffleLayoutItemList"
+                v-on:setShuffleItem="setShuffleItem">
+            </set-item-figure>
         </el-dialog>
     </div>
 </template>
 
 <script>
     import SetItemProgramme from './shuffle_setting/SetItemProgramme';
+    import SetItemFigure from './shuffle_setting/SetItemFigure';
     import templateType from '@/util/config/template_type';
     import {LAYOUT_IMAGE_DIMENSION, PROGRAMME_DIMENSION} from '@/util/config/dimension';
 
     export default {
         name: 'ModelAppendShuffle',
         components: {
-            SetItemProgramme
+            SetItemProgramme,
+            SetItemFigure
         },
         data() {
             return {
+                dialogVisible: {
+                    programmeDialogVisible: false,
+                    figureDialogVisible: false
+                },
                 size: PROGRAMME_DIMENSION,
                 navBarId: this.$route.params.navBarId,
                 navBarSignCode: this.$route.params.navBarSignCode,
                 // 当前页面选择人物专题的操作，operate有add && edit
                 operate: this.$route.params.operate,
-                programmeDialogVisible: false,
                 title: '',
                 templateTypeOptions: templateType.TYPE,
                 templateType: '',
@@ -124,8 +144,8 @@
                 currentRow: '',
                 // 当前设置节目所在某行的index
                 currentIndex: '',
-                // 当前编辑的节目
-                originProgramme: {},
+                // 当前编辑的item的状态
+                originItemState: {},
                 // 当前设置的图片的规格大小
                 imageSpec: {},
                 // 编辑状态，本地对应的模块推荐位回填信息
@@ -199,15 +219,17 @@
              * @param {String} imageModel  The image mode of the item
              * @param {String} row  The row of shuffle
              * @param {String} index  The index of the row
+             * @param {Object} item  The Object of current item
              */
-            setModelItem(mode, imageModel, row, index) {
+            setModelItem(mode, imageModel, row, index, item) {
                 switch (mode) {
                     // 设置为节目
                     case 'PROGRAMME':
-                        this.programmeDialogVisible = true;
+                        this.dialogVisible.programmeDialogVisible = true;
                         break;
                     // 设置为人物
                     case 'FIGURE':
+                        this.dialogVisible.figureDialogVisible = true;
                         break;
                     // 设置为节目专题
                     case 'PROGRAMME_SUBJECT':
@@ -230,14 +252,15 @@
                 this.imageSpec = LAYOUT_IMAGE_DIMENSION[imageModel].coverImage;
                 this.currentRow = row;
                 this.currentIndex = index;
-                // this.originProgramme = item;
+                // 初始化本项的数据，用于回填
             },
-            // 设置专题某一项内容
-            setShuffleItem(programmeItem) {
-                for (let key in programmeItem) {
-                    this.shuffleLayoutItemList[this.currentRow][this.currentIndex][key] = programmeItem[key];
+            // 设置混排中某一项内容，关闭弹窗
+            setShuffleItem(item) {
+                for (let key in item) {
+                    this.shuffleLayoutItemList[this.currentRow][this.currentIndex][key] = item[key];
                 }
-                this.programmeDialogVisible = false;
+                this.dialogVisible.programmeDialogVisible = false;
+                this.dialogVisible.figureDialogVisible = false;
             },
             getModelCount() {
                 let num = 0;

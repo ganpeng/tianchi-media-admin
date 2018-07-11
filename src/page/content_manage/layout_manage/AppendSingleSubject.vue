@@ -120,7 +120,7 @@
     import {LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
 
     export default {
-        name: 'SingleAppendSubject',
+        name: 'AppendSingleSubject',
         components: {
             SelectSingleSubject,
             PreviewMultipleImages

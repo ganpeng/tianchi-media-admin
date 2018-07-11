@@ -12,7 +12,7 @@ export const createPerson = (person) => {
  */
 export const getPersonList = ({pageNum, pageSize, name, area}) => {
     return service.get('/v1/content/figure/page', {
-        params: { pageNum, pageSize, name, area }
+        params: {pageNum, pageSize, name, area}
     });
 };
 
@@ -24,14 +24,21 @@ export const getPersonById = (id) => {
 };
 
 /**
- * 根据人物的id更新人物的信息
+ * 根据人物的id全量更新人物的信息
  */
 export const updatePersonById = (id, person) => {
     return service.put(`/v1/content/figure/${id}`, person);
 };
 
+/**
+ * 根据人物的id部分更新人物的信息
+ */
+export const updatePartPersonById = ({id, person}) => {
+    return service.patch(`/v1/content/figure/${id}`, person);
+};
+
 export const findPerson = ({name}) => {
     return service.get('/v1/content/figure/page', {
-        params: { name }
+        params: {name}
     });
 };

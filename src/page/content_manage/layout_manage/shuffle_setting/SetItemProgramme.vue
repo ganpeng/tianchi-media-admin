@@ -36,7 +36,7 @@
     import SetProgrammeDisplayMode from './SetProgrammeDisplayMode';
 
     export default {
-        name: 'SetSubjectProgramme',
+        name: 'SetItemProgramme',
         components: {
             SelectSingleProgramme,
             SetSubjectProgrammeSecond,
@@ -84,10 +84,12 @@
         },
         methods: {
             init() {
-                this.currentState = this.originProgramme;
-                this.coverImage = this.originProgramme.coverImage;
-                this.checkedCornerMarks = this.originProgramme.cornerMark;
-                this.displayMode = this.originProgramme.displayMode;
+                if (this.originProgramme && this.originProgramme.coverImage) {
+                    this.currentState = this.originProgramme;
+                    this.coverImage = this.originProgramme.coverImage;
+                    this.checkedCornerMarks = this.originProgramme.cornerMark;
+                    this.displayMode = this.originProgramme.displayMode;
+                }
             },
             // 重置选择的节目
             resetProgramme() {
@@ -107,7 +109,6 @@
                 this.checkedCornerMarks = cornerMarks;
             },
             setDisplayMode(displayMode) {
-                console.log('表现形式');
                 this.displayMode = displayMode;
             },
             // 点击下一步
@@ -147,7 +148,6 @@
                     });
                     return;
                 }
-                console.log('设置');
                 // 组成节目
                 let programmeItem = {
                     id: this.programme.id,
