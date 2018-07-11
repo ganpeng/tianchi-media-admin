@@ -21,7 +21,7 @@
                      v-if="navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL'"></div>
                 <div
                     :class="'live-channel settable ' + (navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'small' : 'big')"
-                    @click="setChannel">
+                    @click="setChannel(0,0,0,(navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'carousel-2' : 'carousel-1'))">
                     <div class="ab-center">点击设置 / 查看
                         <label>直播频道
                             {{liveChannelList[0] && liveChannelList[0].liveChannel ?
@@ -53,19 +53,29 @@
                     <!--右下角标-->
                     <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.rightBottom"
                           class="corner-mark right-bottom">{{rightTopRecommend.cornerMark.rightBottom.caption}}</span>
-                    <div class="recommend-operate">
-                        <el-dropdown
-                            @command="setRecommend($event,0,0,0,(navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'carousel-2' : 'carousel-1'))"
-                            placement="bottom">
-                    <span class="el-dropdown-link">
-                    <i class="el-icon-edit"></i>
-                    </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
-                                <el-dropdown-item command="FIGURE">设置为专题</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                    </div>
+                    <!--设置除了频道栏目外的单个推荐位-->
+                    <template v-if="navBarSignCode !== 'LIVE_CHANNEL'">
+                        <div class="recommend-operate">
+                            <el-dropdown
+                                @command="setRecommend($event,0,0,0,(navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'carousel-2' : 'carousel-1'))"
+                                placement="bottom">
+                            <span class="el-dropdown-link">
+                            <i class="el-icon-edit"></i>
+                            </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
+                                    <el-dropdown-item command="FIGURE">设置为专题</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </div>
+                    </template>
+                    <!--设置频道的单个推荐位-->
+                    <template v-else>
+                        <div class="recommend-operate"
+                             @click="appendSingleChannel(0,0,0,(navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'carousel-2' : 'carousel-1'))">
+                            <i class="el-icon-edit"></i>
+                        </div>
+                    </template>
                 </div>
             </div>
             <!--整个List布局-->
@@ -125,36 +135,60 @@
                             <!--右下角标-->
                             <span v-if="item.cornerMark && item.cornerMark.rightBottom"
                                   class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
-                            <!--单个位置的设置操作-->
-                            <div class="recommend-operate" v-if="!layoutBlockItem.subjectId">
-                                <el-dropdown
-                                    @command="setRecommend($event,blockIndex + 1,rowIndex,index,('model-' + rowItem.length))"
-                                    placement="bottom">
+                            <!--除了频道栏目，单个位置的设置操作-->
+                            <template v-if="navBarSignCode !== 'LIVE_CHANNEL'">
+                                <div class="recommend-operate" v-if="!layoutBlockItem.subjectId">
+                                    <el-dropdown
+                                        @command="setRecommend($event,blockIndex + 1,rowIndex,index,('model-' + rowItem.length))"
+                                        placement="bottom">
                                 <span class="el-dropdown-link">
                                 <i class="el-icon-edit"></i>
                                   </span>
-                                    <el-dropdown-menu slot="dropdown">
-                                        <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
-                                        <el-dropdown-item command="FIGURE">设置为专题</el-dropdown-item>
-                                    </el-dropdown-menu>
-                                </el-dropdown>
-                            </div>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
+                                            <el-dropdown-item command="FIGURE">设置为专题</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                </div>
+                            </template>
+                            <!--频道栏目设置单个推荐位-->
+                            <template v-else>
+                                <div v-if="!layoutBlockItem.subjectId"
+                                     class="recommend-operate"
+                                     @click="appendSingleChannel(blockIndex + 1,rowIndex,index,('model-' + rowItem.length))">
+                                    <i class="el-icon-edit"></i>
+                                </div>
+                            </template>
                         </li>
                     </ul>
                     <!--模块推荐操作-->
                     <div class="model-operate" v-if="layoutBlockItem.subjectId">
-                        <el-dropdown @command="addModel($event,blockIndex + 1)" placement="bottom">
-                            <span class="el-dropdown-link"><i class="el-icon-circle-plus-outline"></i></span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="SHUFFLE">新增混排模块</el-dropdown-item>
-                                <el-dropdown-item command="PROGRAMME">新增节目专题</el-dropdown-item>
-                                <el-dropdown-item command="FIGURE">新增人物专题</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                        <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-                            <i class="el-icon-edit"
-                               @click="editModelSubject(layoutBlockItem.renderType,blockIndex + 1)"></i>
-                        </el-tooltip>
+                        <!--除了频道栏目外的设置-->
+                        <template v-if="navBarSignCode !== 'LIVE_CHANNEL'">
+                            <el-dropdown @command="addModel($event,blockIndex + 1)" placement="bottom">
+                                <span class="el-dropdown-link"><i class="el-icon-circle-plus-outline"></i></span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item command="SHUFFLE">新增混排模块</el-dropdown-item>
+                                    <el-dropdown-item command="PROGRAMME">新增节目专题</el-dropdown-item>
+                                    <el-dropdown-item command="FIGURE">新增人物专题</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                            <el-tooltip class="item" effect="dark" content="编辑" placement="top">
+                                <i class="el-icon-edit"
+                                   @click="editModelSubject(layoutBlockItem.renderType,blockIndex + 1)"></i>
+                            </el-tooltip>
+                        </template>
+                        <!--频道栏目设置-->
+                        <template v-else>
+                            <el-tooltip class="item" effect="dark" content="添加" placement="top">
+                                <i class="el-icon-circle-plus-outline"
+                                   @click="setModelChannel(blockIndex + 1, 'add')"></i>
+                            </el-tooltip>
+                            <el-tooltip class="item" effect="dark" content="编辑" placement="top">
+                                <i class="el-icon-edit"
+                                   @click="setModelChannel(blockIndex + 1, 'edit')"></i>
+                            </el-tooltip>
+                        </template>
                         <el-tooltip class="item" effect="dark" content="删除" placement="top">
                             <i class="el-icon-delete"
                                @click="removeModel(layoutBlockItem.title,blockIndex + 1)"></i>
@@ -162,17 +196,32 @@
                     </div>
                 </div>
             </div>
+            <!--底部模块操作-->
             <div class="append-model">
-                <el-dropdown @command="addModel($event,layoutBlockList.length)" placement="bottom">
-            <span class="el-dropdown-link">
-            <i class="el-icon-circle-plus-outline"></i>
-            </span>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="SHUFFLE">新增混排模块</el-dropdown-item>
-                        <el-dropdown-item command="PROGRAMME">新增节目专题</el-dropdown-item>
-                        <el-dropdown-item command="FIGURE">新增人物专题</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
+                <!--除了频道栏目外，添加模块-->
+                <template v-if="navBarSignCode !== 'LIVE_CHANNEL'">
+                    <el-dropdown @command="addModel($event,layoutBlockList.length)" placement="bottom">
+                   <span class="el-dropdown-link">
+                   <i class="el-icon-circle-plus-outline"></i>
+                   </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="SHUFFLE">新增混排模块</el-dropdown-item>
+                            <el-dropdown-item command="PROGRAMME">新增节目专题</el-dropdown-item>
+                            <el-dropdown-item command="FIGURE">新增人物专题</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </template>
+                <!--频道栏目添加模块-->
+                <template v-else>
+                    <el-tooltip class="item"
+                                effect="dark"
+                                content="添加模块频道"
+                                placement="top">
+                        <i class="el-icon-circle-plus-outline"
+                           @click="setModelChannel(layoutBlockList.length, 'add')">
+                        </i>
+                    </el-tooltip>
+                </template>
                 <el-tooltip v-if="massLayoutBlockList.length > 1"
                             class="item"
                             effect="dark"
@@ -319,10 +368,43 @@
                 }
             },
             // 设置直播频道
-            setChannel() {
+            setChannel(model, row, index, imageSpec) {
                 this.$router.push({
-                    name: 'SetChannel',
-                    params: {navBarSignCode: this.navBarSignCode, navBarId: this.navBarId}
+                    name: 'AppendChannel',
+                    params: {
+                        navBarId: this.navBarId,
+                        navBarSignCode: this.navBarSignCode,
+                        model: model,
+                        row: row,
+                        index: index,
+                        imageSpec: imageSpec
+                    }
+                });
+            },
+            // 设置单个推荐频道
+            appendSingleChannel(model, row, index, imageSpec) {
+                this.$router.push({
+                    name: 'AppendChannel',
+                    params: {
+                        navBarId: this.navBarId,
+                        navBarSignCode: this.navBarSignCode,
+                        model: model,
+                        row: row,
+                        index: index,
+                        imageSpec: imageSpec
+                    }
+                });
+            },
+            // 添加模块推荐频道
+            setModelChannel(model, operate) {
+                this.$router.push({
+                    name: 'ModelAppendChannel',
+                    params: {
+                        navBarId: this.navBarId,
+                        navBarSignCode: this.navBarSignCode,
+                        model: model,
+                        operate: operate
+                    }
                 });
             },
             // 设置节目类型推荐
