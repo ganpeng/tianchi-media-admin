@@ -108,7 +108,7 @@
         <!--设置混排的频道-->
         <el-dialog
             title="设置混排模块的频道"
-            width="80%"
+            width="50%"
             center
             :visible.sync="dialogVisible.channelDialogVisible">
             <select-channel
@@ -157,6 +157,19 @@
                 v-on:setShuffleItem="setShuffleItem">
             </set-item-programme-video>
         </el-dialog>
+        <!--设置混排的筛选推荐项-->
+        <el-dialog
+            title="设置混排模块的筛选推荐项"
+            width="80%"
+            center
+            :visible.sync="dialogVisible.filterDialogVisible">
+            <set-item-filter
+                v-if="dialogVisible.filterDialogVisible"
+                :imageSpec="imageSpec"
+                :originState="originItemState"
+                v-on:setShuffleItem="setShuffleItem">
+            </set-item-filter>
+        </el-dialog>
     </div>
 </template>
 
@@ -166,6 +179,7 @@
     import SetItemSubject from './shuffle_setting/SetItemSubject';
     import SetItemWebPage from './shuffle_setting/SetItemWebPage';
     import SetItemProgrammeVideo from './shuffle_setting/SetItemProgrammeVideo';
+    import SetItemFilter from './shuffle_setting/SetItemFilter';
     import SelectChannel from './SelectChannel';
     import templateType from '@/util/config/template_type';
     import {LAYOUT_IMAGE_DIMENSION, PROGRAMME_DIMENSION} from '@/util/config/dimension';
@@ -178,7 +192,8 @@
             SetItemSubject,
             SelectChannel,
             SetItemWebPage,
-            SetItemProgrammeVideo
+            SetItemProgrammeVideo,
+            SetItemFilter
         },
         data() {
             return {
@@ -188,7 +203,8 @@
                     channelDialogVisible: false,
                     subjectDialogVisible: false,
                     webPageDialogVisible: false,
-                    programmeVideoDialogVisible: false
+                    programmeVideoDialogVisible: false,
+                    filterDialogVisible: false
                 },
                 size: PROGRAMME_DIMENSION,
                 navBarId: this.$route.params.navBarId,
@@ -303,6 +319,7 @@
                         break;
                     // 设置为筛选页面
                     case 'FILTER':
+                        this.dialogVisible.filterDialogVisible = true;
                         break;
                     default:
                         break;
