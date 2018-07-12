@@ -67,7 +67,7 @@
                                 <el-dropdown-item command="FIGURE">设置为人物</el-dropdown-item>
                                 <el-dropdown-item command="PROGRAMME_SUBJECT">设置为专题</el-dropdown-item>
                                 <el-dropdown-item command="CHANNEL">设置为频道</el-dropdown-item>
-                                <el-dropdown-item command="WEB">设置为网页</el-dropdown-item>
+                                <el-dropdown-item command="WEB_PAGE">设置为网页</el-dropdown-item>
                                 <el-dropdown-item command="VIDEO">设置为节目内视频</el-dropdown-item>
                                 <el-dropdown-item command="FILTER">设置为筛选页面</el-dropdown-item>
                             </el-dropdown-menu>
@@ -89,7 +89,6 @@
                 v-if="dialogVisible.programmeDialogVisible"
                 :imageSpec="imageSpec"
                 :originFigure="originItemState"
-                :programmeLayoutItemList="shuffleLayoutItemList"
                 v-on:setShuffleItem="setShuffleItem">
             </set-item-programme>
         </el-dialog>
@@ -103,9 +102,47 @@
                 v-if="dialogVisible.figureDialogVisible"
                 :imageSpec="imageSpec"
                 :originFigure="originItemState"
-                :programmeLayoutItemList="shuffleLayoutItemList"
                 v-on:setShuffleItem="setShuffleItem">
             </set-item-figure>
+        </el-dialog>
+        <!--设置混排的频道-->
+        <el-dialog
+            title="设置混排模块的频道"
+            width="80%"
+            center
+            :visible.sync="dialogVisible.channelDialogVisible">
+            <select-channel
+                v-if="dialogVisible.channelDialogVisible"
+                :size="size"
+                v-on:closeSetChannelDialog="closeDialog"
+                :successHandler="setShuffleItem">
+            </select-channel>
+        </el-dialog>
+        <!--设置混排的专题-->
+        <el-dialog
+            title="设置混排模块的专题"
+            width="80%"
+            center
+            :visible.sync="dialogVisible.subjectDialogVisible">
+            <set-item-subject
+                v-if="dialogVisible.subjectDialogVisible"
+                :imageSpec="imageSpec"
+                :originState="originItemState"
+                v-on:setShuffleItem="setShuffleItem">
+            </set-item-subject>
+        </el-dialog>
+        <!--设置混排的网页-->
+        <el-dialog
+            title="设置混排模块的网页"
+            width="50%"
+            center
+            :visible.sync="dialogVisible.webPageDialogVisible">
+            <set-item-web-page
+                v-if="dialogVisible.webPageDialogVisible"
+                :imageSpec="imageSpec"
+                :originState="originItemState"
+                v-on:setShuffleItem="setShuffleItem">
+            </set-item-web-page>
         </el-dialog>
     </div>
 </template>
@@ -113,6 +150,9 @@
 <script>
     import SetItemProgramme from './shuffle_setting/SetItemProgramme';
     import SetItemFigure from './shuffle_setting/SetItemFigure';
+    import SetItemSubject from './shuffle_setting/SetItemSubject';
+    import SetItemWebPage from './shuffle_setting/SetItemWebPage';
+    import SelectChannel from './SelectChannel';
     import templateType from '@/util/config/template_type';
     import {LAYOUT_IMAGE_DIMENSION, PROGRAMME_DIMENSION} from '@/util/config/dimension';
 
@@ -120,13 +160,19 @@
         name: 'ModelAppendShuffle',
         components: {
             SetItemProgramme,
-            SetItemFigure
+            SetItemFigure,
+            SetItemSubject,
+            SelectChannel,
+            SetItemWebPage
         },
         data() {
             return {
                 dialogVisible: {
                     programmeDialogVisible: false,
-                    figureDialogVisible: false
+                    figureDialogVisible: false,
+                    channelDialogVisible: false,
+                    subjectDialogVisible: false,
+                    webPageDialogVisible: false
                 },
                 size: PROGRAMME_DIMENSION,
                 navBarId: this.$route.params.navBarId,
@@ -158,14 +204,6 @@
                 return this.$store.getters['layout/getNavBarInfo']({
                     navBarId: this.navBarId
                 });
-            },
-            // 当前选择的板式的最后一行的index
-            lastRow() {
-                return this.shuffleLayoutItemList.length - 1;
-            },
-            // 当前选择的板式的最后一行的最后一个item的index
-            lastIndex() {
-                return this.shuffleLayoutItemList[this.lastRow].length - 1;
             }
         },
         mounted() {
@@ -233,12 +271,15 @@
                         break;
                     // 设置为节目专题
                     case 'PROGRAMME_SUBJECT':
+                        this.dialogVisible.subjectDialogVisible = true;
                         break;
                     // 设置为频道
                     case 'CHANNEL':
+                        this.dialogVisible.channelDialogVisible = true;
                         break;
                     // 设置为网页
-                    case 'WEB':
+                    case 'WEB_PAGE':
+                        this.dialogVisible.webPageDialogVisible = true;
                         break;
                     // 设置为节目中的视频
                     case 'VIDEO':
@@ -254,13 +295,20 @@
                 this.currentIndex = index;
                 // 初始化本项的数据，用于回填
             },
-            // 设置混排中某一项内容，关闭弹窗
+            // 设置混排中某一项内容
             setShuffleItem(item) {
                 for (let key in item) {
                     this.shuffleLayoutItemList[this.currentRow][this.currentIndex][key] = item[key];
                 }
+                this.closeDialog();
+            },
+            // 关闭弹窗
+            closeDialog() {
                 this.dialogVisible.programmeDialogVisible = false;
                 this.dialogVisible.figureDialogVisible = false;
+                this.dialogVisible.subjectDialogVisible = false;
+                this.dialogVisible.channelDialogVisible = false;
+                this.dialogVisible.webPageDialogVisible = false;
             },
             getModelCount() {
                 let num = 0;

@@ -227,7 +227,8 @@
                 sortDialogVisible: false,
                 selectDialogVisible: false,
                 channelInfo: {
-                    typeIdList: []
+                    typeIdList: [],
+                    visible: ''
                 },
                 typeOptions: [],
                 // 当前的频道含有的视频列表
@@ -400,7 +401,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$service.setChannelVisible(this.route.params.id).then(response => {
+                    this.$service.setChannelVisible(this.$route.params.id).then(response => {
                         if (response && response.code === 0) {
                             this.$message({
                                 type: 'success',

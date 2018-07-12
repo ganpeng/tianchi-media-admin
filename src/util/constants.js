@@ -34,7 +34,11 @@ let RegExpConstants = {
     /**
      * The RegExp of IP port.
      */
-    IP_PORT: /^\d+$/
+    IP_PORT: /^\d+$/,
+    /**
+     * The RegExp of website address.
+     */
+    WEB_SITE_ADDRESS: /^((ftp|https?):\/\/|www\.).*/
 };
 
 /**

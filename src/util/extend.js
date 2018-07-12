@@ -1,4 +1,5 @@
 import constants from './constants';
+
 /**
  * 扩展公共方法的工具类模块，使用ES6 module
  * @type {{trim: ((value))}}
@@ -78,6 +79,14 @@ let util = {
      */
     isPort(str) {
         return constants.RegExpConstants.IP_PORT.test(this.trim(str));
+    },
+    /**
+     *Judge string is or not a web site address
+     * @param {String} str  The base string as a Ip port
+     * @return {Boolean} Is or not a right web site address
+     */
+    isWebSiteAddress(str) {
+        return constants.RegExpConstants.WEB_SITE_ADDRESS.test(this.trim(str));
     },
     /**
      * Format the date with specified format
