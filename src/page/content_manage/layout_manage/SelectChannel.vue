@@ -141,8 +141,10 @@ export default {
         },
         channelChangeHandler(id) {
             let channel = this.channelList.find((channel) => channel.id === id);
-            if (channel && channel.coverImage) {
-                this.channelImageList = channel.coverImage;
+            if (channel && channel.imageList) {
+                this.channelImageList = channel.imageList;
+            } else {
+                this.channelImageList = [];
             }
         },
         setChannel() {
@@ -193,8 +195,15 @@ export default {
             this.$refs.coverImage.clearValidate();
         },
         addCoverImage(data) {
+            let {channelId} = this.channelForm;
             this.channelImageList.push(data.posterImage);
             this.channelImageList = _.uniqBy(this.channelImageList, 'id');
+            let channel = this.channelList.find((channel) => channel.id === channelId);
+            channel.imageList = this.channelImageList;
+            this.$service.updateChannelById(channelId, channel)
+                .then((res) => {
+                    if (res && res.code === 0) {}
+                });
         }
         // 图片相关结束
     }

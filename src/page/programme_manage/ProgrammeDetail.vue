@@ -694,7 +694,7 @@
             showUploadDialog() {
                 this.videoUploadDialogVisible = status;
                 this.updateSearchFields({key: 'status', value: 'SUCCESS'});
-                this.updateSearchFields({key: 'videoType', value: 'VOD'});
+                this.updateSearchFields({key: 'videoType', value: null}); // 临时修改，获取所有类型视频
             },
             closeVideoDialog(status) {
                 this.videoUploadDialogVisible = status;

@@ -356,6 +356,7 @@
                 this.selectVideoDialogVisible = false;
             },
             selectVideo() {
+                this.getVideoList();
                 this.selectVideoDialogVisible = true;
             },
             getSelectedVideo() {
