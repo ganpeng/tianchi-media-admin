@@ -251,7 +251,8 @@ export default {
             getProgrammeVideoById: 'programme/getProgrammeVideoById',
             deleteProgrammeVideoById: 'programme/deleteProgrammeVideoById',
             realDeleteProgrammeVideoById: 'programme/realDeleteProgrammeVideoById',
-            getProgrammeVideoListById: 'programme/getProgrammeVideoListById'
+            getProgrammeVideoListById: 'programme/getProgrammeVideoListById',
+            getFeatureVideoList: 'programme/getFeatureVideoList'
         }),
         editVideo(id) {
             if (this.isUnsavedVideo(id)) {
@@ -326,6 +327,7 @@ export default {
                     this.realDeleteProgrammeVideoById(id)
                         .then((res) => {
                             this.deleteVideoFromList({id});
+                            this.getFeatureVideoList({id: this.$route.params.id, pageSize: 99999});
                         });
                 }
             }).catch(() => {

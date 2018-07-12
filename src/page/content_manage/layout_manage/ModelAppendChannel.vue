@@ -66,6 +66,8 @@
                 :size="size"
                 ref="selectChannel"
                 :existList="layoutItemList"
+                :currentRow="currentRow"
+                :currentIndex="currentIndex"
                 v-on:closeSetChannelDialog="closeSetChannelDialog"
                 :successHandler="setChannelBlock"
                 ></select-channel>
@@ -130,6 +132,9 @@ export default {
             this.currentRow = row;
             this.currentIndex = index;
             this.showSetChannelDialog();
+            this.$nextTick(() => {
+                this.$refs.selectChannel.getExistChannel();
+            });
         },
         showSetChannelDialog() {
             this.setChannelDialogVisible = true;

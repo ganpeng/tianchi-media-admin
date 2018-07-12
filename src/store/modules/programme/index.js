@@ -1005,7 +1005,7 @@ const actions = {
     },
     async getFeatureVideoList({commit, state}, {id, pageSize}) {
         try {
-            let res = await service.getProgrammeVideoListById({programmeId: id, pageSize: pageSize <= 0 ? 1 : pageSize, pageNum: 0, type: 'FEATURE'});
+            let res = await service.getProgrammeVideoListById({programmeId: id, pageSize: pageSize <= 0 ? 1 : pageSize, pageNum: 0, typeList: ['FEATURE']});
             if (res && res.code === 0) {
                 let {list} = res.data;
                 commit('setFeatureList', {list});

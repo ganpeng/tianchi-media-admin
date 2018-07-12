@@ -1,3 +1,5 @@
+import qs from 'querystring';
+import _ from 'lodash';
 import service from '../config';
 
 /**
@@ -57,8 +59,13 @@ export const toggleVisible = ({id}) => {
 /**
  * 获取节目视频子集列表
  */
-export const getProgrammeVideoListById = ({pageNum, pageSize, programmeId, parentId, type}) => {
-    return service.get('/v1/content/programme/video/page', {params: {
-        pageNum, pageSize, programmeId, parentId, type
-    }});
+export const getProgrammeVideoListById = ({pageNum, pageSize, programmeId, parentId, typeList}) => {
+    let params = {
+        pageNum, pageSize, programmeId, parentId, typeList
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+    return service.get(`/v1/content/programme/video/page?${paramsStr}`);
 };

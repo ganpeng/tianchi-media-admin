@@ -86,6 +86,14 @@ export default {
         existList: {
             type: Array,
             default: () => []
+        },
+        currentRow: {
+            type: Number,
+            default: 0
+        },
+        currentIndex: {
+            type: Number,
+            default: 0
         }
     },
     data() {
@@ -133,6 +141,25 @@ export default {
                     }
                 });
         }, 300),
+        getExistChannel() {
+            let obj = this.existList[this.currentRow][this.currentIndex];
+            if (obj.id) {
+                    let id = obj.id;
+                    let imageUri = obj.coverImage && obj.coverImage.uri ? obj.coverImage.uri : '';
+                    this.$service.getChannelDetail(id)
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                this.channelList.push(res.data);
+                                let channelList = _.uniqBy(this.channelList, 'id');
+                                this.channelList = channelList;
+                                this.channelForm.channelId = res.data.id;
+                                this.channelForm.coverImage = obj.coverImage;
+                                this.channelImageList = res.data.imageList;
+                                this.imageUri = imageUri;
+                            }
+                        });
+                }
+        },
         filterChannelList(channelList) {
             let existList = [];
             this.existList.forEach((item) => {
