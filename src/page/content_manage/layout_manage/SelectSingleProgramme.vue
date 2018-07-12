@@ -72,10 +72,16 @@
             :row-class-name="tableRowClassName"
             @current-change="setProgramme">
             <el-table-column
+                width="50px"
+                label="选择">
+                <template slot-scope="scope">
+                    <i class="el-icon-success"></i>
+                </template>
+            </el-table-column>
+            <el-table-column
                 prop="code"
                 label="编号">
                 <template slot-scope="scope">
-                    <i class="el-icon-success"></i>
                     <label>{{scope.row.code}}</label>
                 </template>
             </el-table-column>

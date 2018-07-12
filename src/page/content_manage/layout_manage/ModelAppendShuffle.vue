@@ -144,6 +144,19 @@
                 v-on:setShuffleItem="setShuffleItem">
             </set-item-web-page>
         </el-dialog>
+        <!--设置混排的节目中的视频-->
+        <el-dialog
+            title="设置混排模块的节目中的视频"
+            width="80%"
+            center
+            :visible.sync="dialogVisible.programmeVideoDialogVisible">
+            <set-item-programme-video
+                v-if="dialogVisible.programmeVideoDialogVisible"
+                :imageSpec="imageSpec"
+                :originState="originItemState"
+                v-on:setShuffleItem="setShuffleItem">
+            </set-item-programme-video>
+        </el-dialog>
     </div>
 </template>
 
@@ -152,6 +165,7 @@
     import SetItemFigure from './shuffle_setting/SetItemFigure';
     import SetItemSubject from './shuffle_setting/SetItemSubject';
     import SetItemWebPage from './shuffle_setting/SetItemWebPage';
+    import SetItemProgrammeVideo from './shuffle_setting/SetItemProgrammeVideo';
     import SelectChannel from './SelectChannel';
     import templateType from '@/util/config/template_type';
     import {LAYOUT_IMAGE_DIMENSION, PROGRAMME_DIMENSION} from '@/util/config/dimension';
@@ -163,7 +177,8 @@
             SetItemFigure,
             SetItemSubject,
             SelectChannel,
-            SetItemWebPage
+            SetItemWebPage,
+            SetItemProgrammeVideo
         },
         data() {
             return {
@@ -172,7 +187,8 @@
                     figureDialogVisible: false,
                     channelDialogVisible: false,
                     subjectDialogVisible: false,
-                    webPageDialogVisible: false
+                    webPageDialogVisible: false,
+                    programmeVideoDialogVisible: false
                 },
                 size: PROGRAMME_DIMENSION,
                 navBarId: this.$route.params.navBarId,
@@ -283,6 +299,7 @@
                         break;
                     // 设置为节目中的视频
                     case 'VIDEO':
+                        this.dialogVisible.programmeVideoDialogVisible = true;
                         break;
                     // 设置为筛选页面
                     case 'FILTER':
@@ -304,11 +321,9 @@
             },
             // 关闭弹窗
             closeDialog() {
-                this.dialogVisible.programmeDialogVisible = false;
-                this.dialogVisible.figureDialogVisible = false;
-                this.dialogVisible.subjectDialogVisible = false;
-                this.dialogVisible.channelDialogVisible = false;
-                this.dialogVisible.webPageDialogVisible = false;
+                for (let key in this.dialogVisible) {
+                    this.dialogVisible[key] = false;
+                }
             },
             getModelCount() {
                 let num = 0;

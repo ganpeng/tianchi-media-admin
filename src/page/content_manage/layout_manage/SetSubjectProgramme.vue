@@ -30,14 +30,14 @@
 
 <script>
     import SetSubjectProgrammeFirst from './SetSubjectProgrammeFirst';
-    import SetSubjectProgrammeSecond from './SetSubjectProgrammeSecond';
+    import SetItemProgrammeCoverImage from './shuffle_setting/SetItemProgrammeCoverImage';
     import SetCornerMarks from './SetCornerMarks';
 
     export default {
         name: 'SetSubjectProgramme',
         components: {
             SetSubjectProgrammeFirst,
-            SetSubjectProgrammeSecond,
+            SetItemProgrammeCoverImage,
             SetCornerMarks
         },
         /** programmeList 当前专题中的节目列表
@@ -65,7 +65,7 @@
                     case 0:
                         return 'SetSubjectProgrammeFirst';
                     case 1:
-                        return 'SetSubjectProgrammeSecond';
+                        return 'SetItemProgrammeCoverImage';
                     case 2:
                         return 'SetCornerMarks';
                     default:

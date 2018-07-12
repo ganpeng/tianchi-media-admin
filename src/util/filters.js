@@ -6,6 +6,7 @@ import Vue from 'vue';
 import util from './extend';
 import platformImage from '@/util/config/import_image.js';
 import cornerMarkOptions from '@/util/config/corner_mark';
+import role from '@/util/config/role';
 
 /**
  * The Object of filters.
@@ -47,6 +48,14 @@ const FILTERS = {
     // 转化秒数为正常时间
     fromSecondsToTime(seconds) {
         return util.fromSecondsToTime(seconds);
+    },
+    // 设置视频的类型中文展示
+    setVideoType(videoType) {
+        for (let i = 0; i < role.VIDEO_TYPE.length; i++) {
+            if (role.VIDEO_TYPE[i].value === videoType) {
+                return role.VIDEO_TYPE[i].label;
+            }
+        }
     }
 };
 

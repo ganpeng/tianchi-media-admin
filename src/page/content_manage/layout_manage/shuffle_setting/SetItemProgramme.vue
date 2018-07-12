@@ -31,7 +31,7 @@
 
 <script>
     import SelectSingleProgramme from '../SelectSingleProgramme';
-    import SetSubjectProgrammeSecond from '../SetSubjectProgrammeSecond';
+    import SetItemProgrammeCoverImage from './SetItemProgrammeCoverImage';
     import SetCornerMarks from '../SetCornerMarks';
     import SetProgrammeDisplayMode from './SetProgrammeDisplayMode';
 
@@ -39,7 +39,7 @@
         name: 'SetItemProgramme',
         components: {
             SelectSingleProgramme,
-            SetSubjectProgrammeSecond,
+            SetItemProgrammeCoverImage,
             SetCornerMarks,
             SetProgrammeDisplayMode
         },
@@ -69,7 +69,7 @@
                     case 0:
                         return 'SelectSingleProgramme';
                     case 1:
-                        return 'SetSubjectProgrammeSecond';
+                        return 'SetItemProgrammeCoverImage';
                     case 2:
                         return 'SetCornerMarks';
                     case 3:
