@@ -72,6 +72,7 @@
         </el-pagination>
         <live-channel-dialog
             :status="status"
+            ref="liveChannelDialog"
             :liveChannelDialogVisible="liveChannelDialogVisible"
             v-on:changeLiveChannelDialogStatus="closeLiveChannelDialog">
         </live-channel-dialog>

@@ -189,6 +189,8 @@
             }),
             cancelHandler() {
                 this.resetLiveChannel();
+                // this.$refs.liveChannelForm.resetFields();
+                this.$refs.liveChannelForm.clearValidate();
                 this.$emit('changeLiveChannelDialogStatus');
             },
             successHandler() {

@@ -195,6 +195,7 @@ const actions = {
     async createChannels() {
         try {
             let liveChannel = _.cloneDeep(state.liveChannel);
+            delete liveChannel.releaseStatus;
             let res = await service.createChannels(liveChannel);
             if (res && res.code === 0) {
                 return res;
