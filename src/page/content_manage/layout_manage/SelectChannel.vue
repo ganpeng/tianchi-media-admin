@@ -147,7 +147,7 @@ export default {
         searchChannel: _.debounce(function(value) {
             let {imageSpec} = this.$route.params;
             let params = { keyword: value };
-            if (imageSpec !== 'live-carousel') {
+            if (imageSpec === 'live-carousel') {
                 params.category = 'LIVE';
             }
             this.$service.getChannelList(params)

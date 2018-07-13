@@ -180,6 +180,9 @@ export default {
             this.currentRow = row;
             this.currentIndex = index;
             this.showSetChannelDialog();
+            this.$nextTick(() => {
+                this.$refs.selectChannel.getExistChannel();
+            });
         },
         fixedModel(imageModel) {
             let arr = imageModel.split('-');
