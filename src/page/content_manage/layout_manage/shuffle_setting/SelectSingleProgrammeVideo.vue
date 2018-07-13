@@ -131,6 +131,7 @@
         data() {
             return {
                 listQueryParams: {
+                    programmeId: '',
                     pageNum: 0,
                     pageSize: 10
                 },
@@ -164,6 +165,7 @@
             },
             // 获取节目中的视频列表
             getProgrammeVideoList() {
+                this.listQueryParams.programmeId = this.programme.id;
                 this.$service.getProgrammeVideoListById(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.programmeVideoList = response.data.list;

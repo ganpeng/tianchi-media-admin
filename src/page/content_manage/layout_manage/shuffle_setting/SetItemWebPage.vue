@@ -91,9 +91,9 @@
                 let webPageItem = {
                     id: this.webPage.id,
                     name: this.webPage.name,
-                    params: {
+                    params: JSON.stringify({
                         href: this.webPage.address
-                    },
+                    }),
                     layoutItemType: 'LINK',
                     coverImage: this.webPage.coverImage
                 };

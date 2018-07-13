@@ -6,7 +6,7 @@
             v-model="displayMode"
             class="text-left"
             @change="selectDisplayMode">
-            <el-radio label="PROGRAMME_DETAIL">点击进入节目详情页面</el-radio>
+            <el-radio label="PROGRAMME">点击进入节目详情页面</el-radio>
             <el-radio label="PROGRAMME_LIST">点击进入节目播放列表页面</el-radio>
         </el-radio-group>
     </div>
