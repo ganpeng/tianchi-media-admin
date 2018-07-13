@@ -57,6 +57,18 @@ export default {
             }
         };
     },
+    created() {
+        let {navBarId} = this.$route.params;
+        this.$service.getChannelLayout({navBarId})
+            .then((res) => {
+                if (res && res.code === 0) {
+                    let obj = res.data.list[0];
+                    this.channel = obj.channel;
+                    this.channelList = [obj.channel];
+                    this.channelForm.channelId = obj.channel.id;
+                }
+            });
+    },
     methods: {
         saveViewChannel() {
             this.$refs.channelForm.validate(valid => {
@@ -65,14 +77,18 @@ export default {
                     let reqBody = [{
                         navBarId,
                         channel: this.channel,
-                        channelCategory: 'LIVE'
+                        channelCategory: this.channel.category
                     }];
 
                     this.$service.postChannelLayout(reqBody)
                         .then((res) => {
                             if (res && res.code === 0) {
+                                this.$message({
+                                    message: '设置直播频道成功',
+                                    type: 'success'
+                                });
                             }
-                            console.log(res);
+                            this.$router.back();
                         });
                 }
             });
@@ -86,7 +102,7 @@ export default {
             }
         },
         searchChannel: _.debounce(function(value) {
-            let params = { keyword: value, category: 'LIVE' };
+            let params = { keyword: value };
             this.$service.getChannelList(params)
                 .then((res) => {
                     if (res && res.code === 0) {

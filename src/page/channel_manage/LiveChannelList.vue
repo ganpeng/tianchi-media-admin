@@ -43,15 +43,15 @@
         </el-form>
         <el-table :data="list" border style="width:100%;margin:20px 0;">
             <el-table-column prop="code" align="center" width="240px" label="直播频道编号"></el-table-column>
-            <el-table-column prop="no" align="center" width="240px" label="直播频道展示编号"></el-table-column>
+            <el-table-column prop="no" align="center" width="200px" label="直播频道展示编号"></el-table-column>
             <el-table-column prop="name" align="center" width="200px" label="直播频道名称"></el-table-column>
             <el-table-column prop="innerName" align="center" width="200px" label="直播频道展示名"></el-table-column>
-            <el-table-column prop="type" align="center" label="频道类别">
+            <el-table-column prop="type" width="200px" align="center" label="频道类别">
                 <template slot-scope="scope">
                     {{typeName(scope.row.id)}}
                 </template>
             </el-table-column>
-            <el-table-column prop="multicastIp" align="center" label="频道IP"></el-table-column>
+            <el-table-column prop="multicastIp" width="150px" align="center" label="频道IP"></el-table-column>
             <el-table-column prop="multicastPort" align="center" label="频道端口"></el-table-column>
             <el-table-column align="center" width="220px" fixed="right" label="操作">
                 <template slot-scope="scope">
@@ -87,13 +87,16 @@
                 ref="upload"
                 :headers="uploadHeaders"
                 action="/admin/v1/live/channel-programme/list"
+                accept=".xml"
+                :on-success="uploadSuccessHandler"
                 :auto-upload="false"
                 :file-list="fileList"
-                :on-success="uploadSuccessHandler"
-                :with-credentials="true">
+                :with-credentials="true"
+                multiple>
                     <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
                     <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
             </el-upload>
+
             <div slot="footer" class="dialog-footer">
                 <el-button @click="closeFileUploadDialog">关闭</el-button>
             </div>

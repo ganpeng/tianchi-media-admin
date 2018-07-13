@@ -4,6 +4,8 @@
 
 import service from '../config';
 import util from '../../util/extend';
+import qs from 'querystring';
+import _ from 'lodash';
 
 /**
  * 修改栏目布局
@@ -47,5 +49,21 @@ export const deleteCornerMark = (id) => {
  * 设置直播频道
  */
 export const postChannelLayout = (reqBody) => {
-    return service.post('/v1/ad/channel-layout', reqBody);
+    return service.put('/v1/ad/channel-layout', reqBody);
+};
+
+/**
+ * 获取直播频道
+ */
+export const getChannelLayout = ({navBarId, releaseStatus, pageNum, pageSize}) => {
+    const params = {
+        navBarId,
+        releaseStatus,
+        pageNum,
+        pageSize
+    };
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+    return service.get(`/v1/ad/channel-layout/page?${paramsStr}`);
 };
