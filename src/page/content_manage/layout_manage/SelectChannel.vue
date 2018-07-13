@@ -26,10 +26,10 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="频道展示图" ref="coverImage" prop="coverImage">
-                <el-button type="primary"  @click="uploadImageHandler">上传图片</el-button>
+            <el-form-item v-if="hasImage" label="频道展示图" ref="coverImage" prop="coverImage">
+                <el-button type="primary" @click="uploadImageHandler">上传图片</el-button>
                 <ul class="cover-list">
-                    <li v-for="(item,index) in channelImageList" :key="index">
+                    <li v-for="(item,index) in filterImageList" :key="index">
                         <div
                             :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
                             class="image-box"
@@ -38,7 +38,7 @@
                         <el-radio
                             v-model="imageUri"
                             :label="item.uri"
-                            @change="setCoverImage(index)">{{item.name}}
+                            @change="setCoverImage">{{item.name}}
                         </el-radio>
                     </li>
                 </ul>
@@ -53,7 +53,7 @@
         </preview-multiple-images>
         <upload-image
             :size='size'
-            title="上传节目封面图片"
+            title="上传频道封面图片"
             :successHandler="addCoverImage"
             :imageUploadDialogVisible="imageUploadDialogVisible"
             v-on:changeImageDialogStatus="closeImageDialog($event)">
@@ -94,6 +94,10 @@ export default {
         currentIndex: {
             type: Number,
             default: 0
+        },
+        hasImage: {
+            type: Boolean,
+            default: true
         }
     },
     data() {
@@ -129,11 +133,24 @@ export default {
                 let channel = this.channelList.find((channel) => channel.id === id);
                 return channel ? channel.name : '';
             };
+        },
+        filterImageList() {
+            let {value} = this.size[0];
+            let [width, height] = value.split('*');
+            return this.channelImageList.filter((img) => {
+                return parseInt(img.width) === parseInt(width) &&
+                       parseInt(img.height) === parseInt(height);
+            });
         }
     },
     methods: {
         searchChannel: _.debounce(function(value) {
-            this.$service.getChannelList({keyword: value})
+            let {imageSpec} = this.$route.params;
+            let params = { keyword: value };
+            if (imageSpec !== 'live-carousel') {
+                params.category = 'LIVE';
+            }
+            this.$service.getChannelList(params)
                 .then((res) => {
                     if (res && res.code === 0) {
                         let channelList = _.uniqBy(this.channelList.concat(res.data.list), 'id');
@@ -180,6 +197,7 @@ export default {
                     let {channelId, coverImage} = this.channelForm;
                     let res = {
                         id: channelId,
+                        layoutItemType: 'CHANNEL',
                         name: this.getChannelName(channelId),
                         coverImage,
                         cornerMark: {}
@@ -195,7 +213,11 @@ export default {
         },
         //  图片相关
         uploadImageHandler() {
-            this.imageUploadDialogVisible = true;
+            if (this.channelForm.channelId) {
+                this.imageUploadDialogVisible = true;
+            } else {
+                this.$message.error('请先选择频道');
+            }
         },
         closeImageDialog() {
             this.imageUploadDialogVisible = false;
@@ -217,8 +239,11 @@ export default {
             this.previewImage.list = this.channelImageList;
             this.previewImage.activeIndex = index;
         },
-        setCoverImage(index) {
-            this.channelForm.coverImage = this.channelImageList[index];
+        setCoverImage(uri) {
+            let coverImage = this.channelImageList.find((img) => {
+                return img.uri === uri;
+            });
+            this.channelForm.coverImage = coverImage;
             this.$refs.coverImage.clearValidate();
         },
         addCoverImage(data) {

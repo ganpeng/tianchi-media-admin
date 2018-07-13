@@ -21,7 +21,7 @@
                      v-if="navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL'"></div>
                 <div
                     :class="'live-channel settable ' + (navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'small' : 'big')"
-                    @click="setChannel(0,0,0,(navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'carousel-2' : 'carousel-1'))">
+                    @click="setChannel(0,0,0,(navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'live-carousel' : 'carousel-1'))">
                     <div class="ab-center">点击设置 / 查看
                         <label>直播频道
                             {{liveChannelList[0] && liveChannelList[0].liveChannel ?
@@ -91,7 +91,7 @@
                     v-on:setCatalogue="setCatalogue">
                 </sort-catalogue>
                 <!--节目或者人物-->
-                <div v-if="layoutBlockItem.renderType === 'PROGRAMME' || layoutBlockItem.renderType === 'FIGURE'"
+                <div v-if="layoutBlockItem.renderType === 'PROGRAMME' || layoutBlockItem.renderType === 'FIGURE' || layoutBlockItem.renderType === 'CHANNEL'"
                      :class="'feature ' + (layoutBlockItem.subjectId ? 'settable' : '')">
                     <h3>{{layoutBlockItem.title}}</h3>
                     <ul
@@ -105,9 +105,11 @@
                                     <img class="item-image" :src="item.coverImage? item.coverImage.uri : '' | imageUrl"
                                          :alt="item.coverImage ? item.coverImage.name:''"/>
                                 </div>
-                                <img v-if="layoutBlockItem.renderType === 'PROGRAMME'" class="item-image"
-                                     :src="item.coverImage? item.coverImage.uri : '' | imageUrl"
-                                     :alt="item.coverImage ? item.coverImage.name:''"/>
+                                <!-- 当前是Programme或者channel时候显示的图片 -->
+                                <img v-if="layoutBlockItem.renderType === 'PROGRAMME' || layoutBlockItem.renderType === 'CHANNEL'"
+                                    class="item-image"
+                                    :src="item.coverImage? item.coverImage.uri : '' | imageUrl"
+                                    :alt="item.coverImage ? item.coverImage.name:''"/>
                                 <img
                                     v-if="layoutBlockItem.renderType === 'PROGRAMME' && item.coverImageBackground && item.coverImageBackground.uri"
                                     class="background-image"

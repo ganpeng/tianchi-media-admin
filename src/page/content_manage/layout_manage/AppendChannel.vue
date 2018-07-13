@@ -13,12 +13,17 @@
                 :size="size"
                 ref="selectChannel"
                 :showBtn="false"
+                :existList="layoutItemList"
+                :hasImage="hasImage"
+                :currentRow="currentRow"
+                :currentIndex="currentIndex"
                 :successHandler="setChannelBlock"
                 ></select-channel>
         </div>
     </div>
 </template>
 <script>
+import {mapMutations, mapGetters} from 'vuex';
 import SelectChannel from './SelectChannel';
 import {LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
 export default {
@@ -27,20 +32,66 @@ export default {
         SelectChannel
     },
     data() {
-        return {};
+        return {
+            layoutItemList: [],
+            //  一些临时的变量
+            currentRow: 0,
+            currentIndex: 0
+        };
+    },
+    created() {
+        let {navBarId, navBarSignCode, model, row, index} = this.$route.params;
+        let liveChannelObj = this.getCurrentLayout({navBarSignCode, navBarId});
+        let {layoutBlockList} = liveChannelObj;
+        let currentModel = layoutBlockList[model];
+        if (currentModel) {
+            this.layoutItemList = currentModel.layoutItemMultiList;
+            this.currentRow = row;
+            this.currentIndex = index;
+            this.$nextTick(() => {
+                this.$refs.selectChannel.getExistChannel();
+            });
+        }
     },
     computed: {
+        ...mapGetters({
+            getCurrentLayout: 'layout/getCurrentLayout'
+        }),
         size() {
+            if (this.hasImage) {
+                let {imageSpec} = this.$route.params;
+                let {width, height} = LAYOUT_IMAGE_DIMENSION[imageSpec].coverImage;
+                return [{
+                    value: `${width}*${height}`,
+                    label: `当前块尺寸: ${width}*${height}`
+                }];
+            } else {
+                return [];
+            }
+        },
+        hasImage() {
             let {imageSpec} = this.$route.params;
-            let {width, height} = LAYOUT_IMAGE_DIMENSION[imageSpec].coverImage;
-            return [{
-                value: `${width}*${height}`,
-                label: `当前块尺寸: ${width}*${height}`
-            }];
+            return imageSpec !== 'live-carousel';
         }
     },
     methods: {
-        setChannelBlock(data) {}
+        ...mapMutations({
+            setSingleRecommendItem: 'layout/setSingleRecommendItem'
+        }),
+        setChannelBlock(data) {
+            //  {navBarId, navBarName, navBarSignCode, model, row, index, item}
+            let {navBarId, navBarSignCode, model, row, index} = this.$route.params;
+            let channelModel = {
+                navBarId,
+                navBarSignCode,
+                model,
+                row,
+                index,
+                item: data
+            };
+            this.setSingleRecommendItem(channelModel);
+            this.$router.push(`/nav-bar-manage/layout-setting/LIVE_CHANNEL/${navBarId}`);
+        }
     }
 };
 </script>
