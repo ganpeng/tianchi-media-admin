@@ -277,9 +277,6 @@
                     this.resetModel();
                     return;
                 }
-                // 初始化templateHeight
-                // 两层，2-3
-                this.templateHeight = '225_225';
                 // 初始化模块列表
                 this.shuffleLayoutItemList = [];
                 for (let k = 0; k < this.templateType.split('+').length; k++) {

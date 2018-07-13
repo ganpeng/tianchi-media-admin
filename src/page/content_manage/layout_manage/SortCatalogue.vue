@@ -228,6 +228,8 @@
                 let catalogueItem = {
                     layoutTemplate: 'LT_6',
                     renderType: 'CATALOGUE',
+                    // 色块高度为 s6 的134px
+                    height: 134,
                     title: '',
                     subjectId: '',
                     layoutItemMultiList: list

@@ -239,7 +239,8 @@
                             subjectLayoutItemList.push({
                                 id: this.personList[k].id,
                                 name: this.personList[k].name,
-                                coverImage: this.personList[k].avatarImage
+                                coverImage: this.personList[k].avatarImage,
+                                layoutItemType: 'FIGURE'
                             });
                         }
                     }

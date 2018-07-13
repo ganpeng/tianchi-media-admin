@@ -42,6 +42,11 @@ export const PROGRAMME_DIMENSION = [
         value: '240*350',
         label: '推荐位六分位图：240*350'
     },
+    // 推荐位六分位图小（s6）
+    {
+        value: '240*134',
+        label: '推荐位六分位图小：240*134'
+    },
     // 横版海报图  节目必须海报图
     {
         value: '807*455',

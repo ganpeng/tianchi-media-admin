@@ -120,7 +120,7 @@ const SIZE = {
         count: 6,
         size: {
             width: 240,
-            height: 350
+            height: 134
         }
     }
 };

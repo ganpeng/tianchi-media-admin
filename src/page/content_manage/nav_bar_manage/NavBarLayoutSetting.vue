@@ -90,33 +90,38 @@
                     :setCatalogueTitle="'设置' + navBarName + '推荐'"
                     v-on:setCatalogue="setCatalogue">
                 </sort-catalogue>
-                <!--节目或者人物-->
-                <div v-if="layoutBlockItem.renderType === 'PROGRAMME' || layoutBlockItem.renderType === 'FIGURE' || layoutBlockItem.renderType === 'CHANNEL'"
-                     :class="'feature ' + (layoutBlockItem.subjectId ? 'settable' : '')">
+                <!--节目、人物、频道、混排-->
+                <div
+                    v-if="judgeModelRenderType(layoutBlockItem.renderType, ['PROGRAMME', 'FIGURE', 'CHANNEL', 'SHUFFLE'])"
+                    :class="'feature ' + (layoutBlockItem.subjectId ? 'settable' : '')">
                     <h3>{{layoutBlockItem.title}}</h3>
                     <ul
                         v-for="(rowItem, rowIndex) in layoutBlockItem.layoutItemMultiList" :key="rowIndex"
-                        :class="'model-line '+ (layoutBlockItem.renderType === 'FIGURE' ? 'model-figure' : 'model-' + rowItem.length)">
-                        <!--每一个节目或者人物或者单个专题-->
+                        :class="'model-line '+ (rowItem.listClass ? rowItem.listClass : (judgeModelRenderType(layoutBlockItem.renderType, ['FIGURE']) ? 'model-figure' : 'model-' + rowItem.length))">
+                        <!--单个节目、人物、专题、频道、网页、节目视频、筛选项-->
                         <li v-for="(item, index) in rowItem" :key="index"
                             :class="!layoutBlockItem.subjectId ? 'settable' : ''">
                             <div class="ab-center">
-                                <div class="figure-image" v-if="layoutBlockItem.renderType === 'FIGURE'">
+                                <!--人物专题中的人物的图片-->
+                                <div class="figure-image"
+                                     v-if="judgeModelRenderType(layoutBlockItem.renderType, ['FIGURE'])">
                                     <img class="item-image" :src="item.coverImage? item.coverImage.uri : '' | imageUrl"
                                          :alt="item.coverImage ? item.coverImage.name:''"/>
                                 </div>
-                                <!-- 当前是Programme或者channel时候显示的图片 -->
-                                <img v-if="layoutBlockItem.renderType === 'PROGRAMME' || layoutBlockItem.renderType === 'CHANNEL'"
+                                <!-- 节目、混排中的人物、专题、频道、网页、节目视频、筛选项的封面图片-->
+                                <img
+                                    v-if="judgeModelRenderType(layoutBlockItem.renderType, ['PROGRAMME', 'CHANNEL', 'SHUFFLE'])"
                                     class="item-image"
                                     :src="item.coverImage? item.coverImage.uri : '' | imageUrl"
                                     :alt="item.coverImage ? item.coverImage.name:''"/>
+                                <!-- 节目出格背景图片图片-->
                                 <img
-                                    v-if="layoutBlockItem.renderType === 'PROGRAMME' && item.coverImageBackground && item.coverImageBackground.uri"
+                                    v-if="judgeModelRenderType(layoutBlockItem.renderType, ['PROGRAMME']) && item.coverImageBackground && item.coverImageBackground.uri"
                                     class="background-image"
                                     :src="item.coverImageBackground? item.coverImageBackground.uri : '' | imageUrl"
                                     :alt="item.coverImageBackground ? item.coverImageBackground.name:''"/>
                                 <div class="figure-name"
-                                     v-if="layoutBlockItem.renderType === 'FIGURE' || rowItem.length === 6">
+                                     v-if="judgeModelRenderType(layoutBlockItem.renderType, ['FIGURE']) || rowItem.length === 6">
                                     {{item.name}}
                                 </div>
                             </div>
@@ -139,7 +144,8 @@
                                   class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
                             <!--除了频道栏目，单个位置的设置操作-->
                             <template v-if="navBarSignCode !== 'LIVE_CHANNEL'">
-                                <div class="recommend-operate" v-if="!layoutBlockItem.subjectId">
+                                <div class="recommend-operate"
+                                     v-if="!judgeIsModel(layoutBlockItem)">
                                     <el-dropdown
                                         @command="setRecommend($event,blockIndex + 1,rowIndex,index,('model-' + rowItem.length))"
                                         placement="bottom">
@@ -154,7 +160,7 @@
                                 </div>
                             </template>
                             <!--频道栏目设置单个推荐位-->
-                            <template v-else>
+                            <template v-if="navBarSignCode === 'LIVE_CHANNEL'">
                                 <div v-if="!layoutBlockItem.subjectId"
                                      class="recommend-operate"
                                      @click="appendSingleChannel(blockIndex + 1,rowIndex,index,('model-' + rowItem.length))">
@@ -164,7 +170,7 @@
                         </li>
                     </ul>
                     <!--模块推荐操作-->
-                    <div class="model-operate" v-if="layoutBlockItem.subjectId">
+                    <div class="model-operate" v-if="judgeIsModel(layoutBlockItem)">
                         <!--除了频道栏目外的设置-->
                         <template v-if="navBarSignCode !== 'LIVE_CHANNEL'">
                             <el-dropdown @command="addModel($event,blockIndex + 1)" placement="bottom">
@@ -177,7 +183,7 @@
                             </el-dropdown>
                             <el-tooltip class="item" effect="dark" content="编辑" placement="top">
                                 <i class="el-icon-edit"
-                                   @click="editModelSubject(layoutBlockItem.renderType,blockIndex + 1)"></i>
+                                   @click="editModel(layoutBlockItem.renderType,blockIndex + 1)"></i>
                             </el-tooltip>
                         </template>
                         <!--频道栏目设置-->
@@ -327,6 +333,8 @@
                 this.layoutBlockFirstLayer = this.layoutBlockList[0];
                 this.massLayoutBlockList = this.layoutBlockList.slice();
                 this.massLayoutBlockList.shift();
+                // 设置massLayoutBlockList每一项的二维数组中的某个数组的listClass属性
+                this.setLayoutListClass(this.massLayoutBlockList);
                 this.rightTopRecommend = this.layoutBlockFirstLayer ? this.layoutBlockFirstLayer.layoutItemMultiList[0][0] : {};
                 this.modified = true;
             },
@@ -338,14 +346,27 @@
                         this.layoutBlockFirstLayer = this.layoutBlockList[0];
                         this.massLayoutBlockList = this.layoutBlockList.slice();
                         this.massLayoutBlockList.shift();
+                        // 设置massLayoutBlockList每一项的二维数组中的某个数组的listClass属性
+                        this.setLayoutListClass(this.massLayoutBlockList);
                         this.rightTopRecommend = this.layoutBlockFirstLayer.layoutItemMultiList[0][0];
                         this.setStoreData();
                         this.modified = false;
                     }
                 });
             },
+            // 设置massLayoutBlockList每一项的二维数组中的某个数组的listClass属性
+            setLayoutListClass(layoutBlockList) {
+                // 对于每一个model，根据layoutTemplate和height设置相应的每层的listClass样式
+                for (let i = 0; i < layoutBlockList.length; i++) {
+                    if (layoutBlockList[i].height) {
+                        for (let m = 0; m < layoutBlockList[i].layoutItemMultiList.length; m++) {
+                            layoutBlockList[i].layoutItemMultiList[m].listClass = 'model-' + layoutBlockList[i].layoutTemplate.split('_')[m + 1] + '-' + layoutBlockList[i].height.split('_')[m];
+                        }
+                    }
+                }
+            },
+            // 本地没有更改数据的情况下，将线上数据同步到本地store中
             setStoreData() {
-                // 本地没有更改数据的情况下，将线上数据同步到本地store中
                 this.$store.commit('layout/setSingleNavBarLayout', {
                     navBarSignCode: this.navBarSignCode,
                     singleNavBarLayout: {
@@ -356,6 +377,30 @@
                         layoutBlockList: this.layoutBlockList
                     }
                 });
+            },
+            /**
+             * Judge render type
+             * @param {String} renderType  The base render type judged
+             * @param {Array} renderTypeArray The render type list
+             * @return {Boolean} Is renderType fit to the renderTypeArray
+             **/
+            judgeModelRenderType(renderType, renderTypeArray) {
+                for (let i = 0; i < renderTypeArray.length; i++) {
+                    if (renderType === renderTypeArray[i]) {
+                        return true;
+                    }
+                }
+                return false;
+            },
+            /**
+             * Judge model is a block or just a single recommend item
+             * @param {Object} model  The mode of layout
+             **/
+            judgeIsModel(model) {
+                if (model.subjectId || model.renderType === 'SHUFFLE') {
+                    return true;
+                }
+                return false;
             },
             // 跳转到响应的导航栏布局页面
             switchNavBar(navBarId, navBarSignCode) {
@@ -460,10 +505,24 @@
                     });
                 });
             },
-            // 编辑模块，设置模块内的专题
-            editModelSubject(val, model) {
+            // 编辑模块，设置模块内的专题或者混排
+            editModel(val, model) {
+                let routeName = '';
+                switch (val) {
+                    case 'PROGRAMME':
+                        routeName = 'ModelAppendProgrammeSubject';
+                        break;
+                    case 'FIGURE':
+                        routeName = 'ModelAppendPersonSubject';
+                        break;
+                    case 'SHUFFLE':
+                        routeName = 'ModelAppendShuffle';
+                        break;
+                    default:
+                        break;
+                }
                 this.$router.push({
-                    name: val === 'PROGRAMME' ? 'ModelAppendProgrammeSubject' : 'ModelAppendPersonSubject',
+                    name: routeName,
                     params: {
                         navBarId: this.navBarId,
                         navBarSignCode: this.navBarSignCode,
@@ -788,6 +847,48 @@
         li {
             width: 14%;
             padding-top: 20%;
+        }
+    }
+
+    ul.model-1-200 {
+        li {
+            width: 100%;
+            padding-bottom: 12%;
+        }
+    }
+
+    ul.model-2-225 {
+        li {
+            width: 48%;
+            padding-top: 13%;
+        }
+    }
+
+    ul.model-3-225 {
+        li {
+            width: 31%;
+            padding-top: 13%;
+        }
+    }
+
+    ul.model-4-225 {
+        li {
+            width: 23%;
+            padding-top: 13%;
+        }
+    }
+
+    ul.model-6-350 {
+        li {
+            width: 14%;
+            padding-top: 20%;
+        }
+    }
+
+    ul.model-6-134 {
+        li {
+            width: 14%;
+            padding-top: 8%;
         }
     }
 

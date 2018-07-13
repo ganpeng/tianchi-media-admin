@@ -141,7 +141,11 @@
                     name: this.programme.name,
                     params: {
                         videoId: this.programmeVideo.id,
-                        videoName: this.programmeVideo.name
+                        videoName: this.programmeVideo.name,
+                        m3u8For4K: this.programmeVideo.m3u8For4K,
+                        m3u8For480P: this.programmeVideo.m3u8For480P,
+                        m3u8For720P: this.programmeVideo.m3u8For720P,
+                        m3u8For1080P: this.programmeVideo.m3u8For1080P
                     },
                     layoutItemType: 'PROGRAMME_VIDEO',
                     coverImage: this.coverImage
