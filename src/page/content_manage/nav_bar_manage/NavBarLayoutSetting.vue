@@ -471,7 +471,7 @@
             // 设置推荐位为节目或者专题
             setRecommend(val, model, row, index, imageSpec) {
                 this.$router.push({
-                    name: val === 'PROGRAMME' ? 'AppendProgramme' : 'SingleAppendSubject',
+                    name: val === 'PROGRAMME' ? 'AppendProgramme' : 'AppendSingleSubject',
                     params: {
                         navBarId: this.navBarId,
                         navBarSignCode: this.navBarSignCode,

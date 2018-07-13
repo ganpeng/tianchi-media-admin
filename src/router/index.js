@@ -162,7 +162,7 @@ let router = new Router({
                 },
                 // 内容管理-栏目管理-单个推荐位选择专题
                 {
-                    path: '/layout-manage/single-append-subject/:navBarId/:navBarSignCode/:model/:row/:index/:imageSpec',
+                    path: '/layout-manage/append-single-subject/:navBarId/:navBarSignCode/:model/:row/:index/:imageSpec',
                     name: 'AppendSingleSubject',
                     component: AppendSingleSubject
                 },
