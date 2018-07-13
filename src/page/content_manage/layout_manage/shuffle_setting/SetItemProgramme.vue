@@ -152,10 +152,10 @@
                 let programmeItem = {
                     id: this.programme.id,
                     name: this.programme.name,
-                    layoutItemType: 'PROGRAMME',
+                    // 详情的layoutItemType对应：'PROGRAMME_DETAIL',列表对应'PROGRAMME_LIST'
+                    layoutItemType: this.displayMode,
                     coverImage: this.coverImage,
-                    cornerMark: this.checkedCornerMarks,
-                    displayMode: this.displayMode
+                    cornerMark: this.checkedCornerMarks
                 };
                 this.$emit('setShuffleItem', programmeItem);
                 this.$message({

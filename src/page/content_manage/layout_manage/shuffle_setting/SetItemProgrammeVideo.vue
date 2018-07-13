@@ -137,10 +137,12 @@
                 }
                 // 组成节目的视频
                 let programmeVideoItem = {
-                    programmeId: this.programme.id,
-                    programmeVideoId: this.programmeVideo.id,
-                    programmeName: this.programme.name,
-                    programmeVideoName: this.programmeVideo.name,
+                    id: this.programme.id,
+                    name: this.programme.name,
+                    params: {
+                        videoId: this.programmeVideo.id,
+                        videoName: this.programmeVideo.name
+                    },
                     layoutItemType: 'PROGRAMME_VIDEO',
                     coverImage: this.coverImage
                 };

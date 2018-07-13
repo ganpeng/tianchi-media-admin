@@ -91,8 +91,9 @@
                 let webPageItem = {
                     id: this.webPage.id,
                     name: this.webPage.name,
-                    address: this.webPage.address,
-                    layoutItemType: 'WEBPAGE',
+                    // 参数params设置为字符串，值是网页地址
+                    params: this.webPage.address,
+                    layoutItemType: 'LINK',
                     coverImage: this.webPage.coverImage
                 };
                 this.$emit('setShuffleItem', webPageItem);

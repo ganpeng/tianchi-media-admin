@@ -56,7 +56,7 @@
                     <!--编辑或者设置-->
                     <div class="item-operate">
                         <el-dropdown
-                            @command="setModelItem($event,'model-' + row.listClass, rowIndex, index, item)"
+                            @command="setModelItem($event,row.listClass, rowIndex, index, item)"
                             placement="bottom">
                          <span class="el-dropdown-link">
                          <i class="el-icon-edit"></i>
@@ -112,7 +112,10 @@
             :visible.sync="dialogVisible.channelDialogVisible">
             <select-channel
                 v-if="dialogVisible.channelDialogVisible"
-                :size="size"
+                :size="imageSpec"
+                :currentRow="currentRow"
+                :currentIndex="currentIndex"
+                :existList="shuffleLayoutItemList"
                 v-on:closeSetChannelDialog="closeDialog"
                 :successHandler="setShuffleItem">
             </select-channel>
@@ -348,6 +351,12 @@
                 }
                 imageModel = imageModel.split('-')[0] + '-' + imageModel.split('-')[1];
                 this.imageSpec = LAYOUT_IMAGE_DIMENSION[imageModel].coverImage;
+                if (mode === 'CHANNEL') {
+                    this.imageSpec = [{
+                        value: this.imageSpec.width + '*' + this.imageSpec.height,
+                        label: '当前块尺寸：' + this.imageSpec.width + '*' + this.imageSpec.height
+                    }];
+                }
                 this.currentRow = row;
                 this.currentIndex = index;
                 // 初始化本项的数据，用于回填
