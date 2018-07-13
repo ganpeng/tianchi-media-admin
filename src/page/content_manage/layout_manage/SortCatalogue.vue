@@ -226,7 +226,7 @@
                     });
                 }
                 let catalogueItem = {
-                    layoutTemplate: 'LT_L',
+                    layoutTemplate: 'LT_6',
                     renderType: 'CATALOGUE',
                     title: '',
                     subjectId: '',

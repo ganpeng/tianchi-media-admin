@@ -27,10 +27,9 @@
             </el-option>
         </el-select>
         <div class="model-block">
-            <ul v-for="(row,rowIndex) in shuffleLayoutItemList" :key="rowIndex">
+            <ul v-for="(row,rowIndex) in shuffleLayoutItemList" :key="rowIndex" :class="row.listClass">
                 <li v-for="(item,index) in row"
-                    :key="index"
-                    :class="'item-' + item.itemClass">
+                    :key="index">
                     <div class="ab-center text-center">
                         <img :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
                              :alt="item.coverImage.name"
@@ -57,7 +56,7 @@
                     <!--编辑或者设置-->
                     <div class="item-operate">
                         <el-dropdown
-                            @command="setModelItem($event,'model-' + item.itemClass, rowIndex, index, item)"
+                            @command="setModelItem($event,'model-' + row.listClass, rowIndex, index, item)"
                             placement="bottom">
                          <span class="el-dropdown-link">
                          <i class="el-icon-edit"></i>
@@ -197,6 +196,7 @@
         },
         data() {
             return {
+                templateHeight: '',
                 dialogVisible: {
                     programmeDialogVisible: false,
                     figureDialogVisible: false,
@@ -268,20 +268,42 @@
                 this.templateType = '';
                 this.shuffleLayoutItemList = [];
             },
-            // 选择模块板式
+            // 选择模块板式，并定义每一层的样式
             setBlockModel() {
                 if (!this.templateType) {
                     this.resetModel();
                     return;
                 }
+                // 初始化templateHeight
+                // 两层，2-3
+                this.templateHeight = '225_225';
                 // 初始化模块列表
                 this.shuffleLayoutItemList = [];
                 for (let k = 0; k < this.templateType.split('+').length; k++) {
                     this.shuffleLayoutItemList[k] = [];
                     for (let i = 0; i < templateType.SIZE[this.templateType.split('+')[k]].count; i++) {
-                        this.shuffleLayoutItemList[k].push({itemClass: this.templateType.split('+')[k]});
+                        this.shuffleLayoutItemList[k].push({});
                     }
                 }
+                this.setModelClass();
+            },
+            // 根据每一行的item数量和高度设定每一项的样式
+            setModelClass() {
+                this.initTemplateHeight();
+                let templateHeightArray = this.templateHeight.split('_');
+                let templateTypeArray = this.templateType.split('+');
+                for (let k = 0; k < this.templateType.split('+').length; k++) {
+                    this.shuffleLayoutItemList[k].listClass = 'model-' + templateTypeArray[k] + '-' + templateHeightArray[k];
+                }
+            },
+            // 根据选择的模板设置模板的高度
+            initTemplateHeight() {
+                this.templateHeight = '';
+                let array = this.templateType.split('+');
+                for (let i = 0; i < array.length; i++) {
+                    this.templateHeight = this.templateHeight + '_' + LAYOUT_IMAGE_DIMENSION['model-' + array[i]].coverImage.height;
+                }
+                this.templateHeight = this.templateHeight.slice(1);
             },
             /**
              * Set the item of shuffle array
@@ -324,6 +346,7 @@
                     default:
                         break;
                 }
+                imageModel = imageModel.split('-')[0] + '-' + imageModel.split('-')[1];
                 this.imageSpec = LAYOUT_IMAGE_DIMENSION[imageModel].coverImage;
                 this.currentRow = row;
                 this.currentIndex = index;
@@ -342,13 +365,6 @@
                     this.dialogVisible[key] = false;
                 }
             },
-            getModelCount() {
-                let num = 0;
-                for (let k = 0; k < this.templateType.split('+').length; k++) {
-                    num = num + templateType.SIZE[this.templateType.split('+')[k]].count;
-                }
-                return num;
-            },
             // 保存信息到store中
             saveBlock() {
                 if (this.saveDisabled) {
@@ -361,16 +377,16 @@
                     });
                     return;
                 }
-                let completeItemCount = 0;
+                let allSetting = true;
                 // 检查是否设置完成模块的每一项
                 this.shuffleLayoutItemList.map(rowArray => {
                     rowArray.map(programme => {
-                        if (programme.coverImage.id) {
-                            completeItemCount++;
+                        if (!programme.coverImage || !programme.coverImage.id) {
+                            allSetting = false;
                         }
                     });
                 });
-                if (completeItemCount < this.getModelCount()) {
+                if (!allSetting) {
                     this.$message({
                         message: '请完整设置模块',
                         type: 'warning'
@@ -378,11 +394,12 @@
                     return;
                 }
                 // 定义模块布局模式
-                let layoutTemplate = 'LT_' + this.templateType.replace(/\+/g, '_');
-                // 组建模块专题对象
+                let layoutTemplate = 'LT_' + this.templateType.replace(/\+/g, '_').replace(/s/g, '');
+                // 组建混排对象
                 let programmeModel = {
                     layoutTemplate: layoutTemplate,
-                    renderType: 'PROGRAMME',
+                    height: this.templateHeight,
+                    renderType: 'SHUFFLE',
                     title: this.title,
                     layoutItemMultiList: this.shuffleLayoutItemList
                 };
@@ -396,7 +413,7 @@
                 });
                 this.saveDisabled = true;
                 this.$message({
-                    message: '设置模块专题成功',
+                    message: '设置混排模块成功',
                     type: 'success'
                 });
                 this.$router.push({
@@ -459,34 +476,42 @@
                 }
             }
         }
-        li.item-1 {
-            width: 100%;
-            padding-bottom: 12%;
+        ul.model-1-200 {
+            li {
+                width: 100%;
+                padding-bottom: 12%;
+            }
+        }
+        ul.model-2-225 {
+            li {
+                width: 48%;
+                padding-top: 13%;
+            }
         }
 
-        li.item-2 {
-            width: 48%;
-            padding-top: 13%;
+        ul.model-3-225 {
+            li {
+                width: 31%;
+                padding-top: 13%;
+            }
         }
-
-        li.item-3 {
-            width: 31%;
-            padding-top: 13%;
+        ul.model-4-225 {
+            li {
+                width: 23%;
+                padding-top: 13%;
+            }
         }
-
-        li.item-4 {
-            width: 23%;
-            padding-top: 13%;
+        ul.model-6-350 {
+            li {
+                width: 14%;
+                padding-top: 20%;
+            }
         }
-
-        li.item-6 {
-            width: 14%;
-            padding-top: 20%;
-        }
-
-        li.item-s6 {
-            width: 14%;
-            padding-top: 8%;
+        ul.model-s6-134 {
+            li {
+                width: 14%;
+                padding-top: 8%;
+            }
         }
     }
 
