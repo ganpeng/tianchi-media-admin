@@ -1,17 +1,6 @@
 import _ from 'lodash';
 import service from '../../../service';
 
-const postFields = [
-    'name',
-    'no',
-    'category',
-    'innerName',
-    'logoUri',
-    'multicastIp',
-    'multicastPort',
-    'typeList'
-];
-
 let defaultChannelTypeList = [
     {
         name: '直播频道',
@@ -205,7 +194,7 @@ const actions = {
      */
     async createChannels() {
         try {
-            let liveChannel = _.pick(state.liveChannel, postFields);
+            let liveChannel = _.cloneDeep(state.liveChannel);
             let res = await service.createChannels(liveChannel);
             if (res && res.code === 0) {
                 return res;
@@ -218,7 +207,7 @@ const actions = {
     async updateChannelById() {
         try {
             let {id} = state.liveChannel;
-            let liveChannel = _.pick(state.liveChannel, postFields);
+            let liveChannel = _.cloneDeep(state.liveChannel);
             let res = await service.updateChannelById(id, liveChannel);
             if (res && res.code === 0) {
                 return res;

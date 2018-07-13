@@ -108,15 +108,17 @@ export default {
         };
     },
     created() {
-        let {navBarId, navBarSignCode, model} = this.$route.params;
-        let liveChannelObj = this.getCurrentLayout({navBarSignCode, navBarId});
-        let {layoutBlockList} = liveChannelObj;
-        let currentModel = layoutBlockList[model];
-        if (currentModel) {
-            this.modelForm.title = currentModel.title;
-            this.layoutItemList = currentModel.layoutItemMultiList;
-            this.modelForm.templateType = this.generatorTemplate(currentModel.layoutTemplate, currentModel.height);
-            this.setModelClass();
+        let {navBarId, navBarSignCode, model, operate} = this.$route.params;
+        if (operate === 'edit') {
+            let liveChannelObj = this.getCurrentLayout({navBarSignCode, navBarId});
+            let {layoutBlockList} = liveChannelObj;
+            let currentModel = layoutBlockList[model];
+            if (currentModel) {
+                this.modelForm.title = currentModel.title;
+                this.layoutItemList = currentModel.layoutItemMultiList;
+                this.modelForm.templateType = this.generatorTemplate(currentModel.layoutTemplate, currentModel.height);
+                this.setModelClass();
+            }
         }
     },
     computed: {
@@ -178,9 +180,6 @@ export default {
             this.currentRow = row;
             this.currentIndex = index;
             this.showSetChannelDialog();
-            this.$nextTick(() => {
-                this.$refs.selectChannel.getExistChannel();
-            });
         },
         fixedModel(imageModel) {
             let arr = imageModel.split('-');
@@ -232,15 +231,6 @@ export default {
                     }
                 }
             });
-        },
-        getHigh(templateType) {
-            let templateTypeArr = templateType.split('+');
-            let height = templateTypeArr.map((item) => {
-                let model = 'model-' + item;
-                let {height} = LAYOUT_IMAGE_DIMENSION[model].coverImage;
-                return height;
-            }).join('_');
-            return height;
         }
     }
 };

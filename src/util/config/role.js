@@ -311,11 +311,26 @@ export const CATEGORY = ['电影', '电视剧', '新闻', '网视', '体育', '�
 // 视频注入的状态
 export const VIDEO_UPLOAD_STATUS = {
     // 成功(COMPLETED) | 注入中(INJECTING) | 失败(FAILED)
-    COMPLETED: '成功',
     INJECTING: '注入中',
     FAILED: '失败',
     SUCCESS: '成功'
 };
+
+// 视频注入的状态
+export const VIDEO_UPLOAD_STATUS_OPTIONS = [
+    {
+        value: 'INJECTING',
+        label: '注入中'
+    },
+    {
+        value: 'FAILED',
+        label: '失败'
+    },
+    {
+        value: 'SUCCESS',
+        label: '成功'
+    }
+];
 
 //  视频类型
 export const VIDEO_TYPE_OPTIONS = [
@@ -347,5 +362,6 @@ export default {
     CONTEST,
     PLATFORM,
     ANNOUNCER,
-    VIDEO_TYPE_OPTIONS
+    VIDEO_TYPE_OPTIONS,
+    VIDEO_UPLOAD_STATUS_OPTIONS
 };

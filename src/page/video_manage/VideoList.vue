@@ -33,6 +33,21 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item class="search">
+                <el-select
+                    :value="searchFields.status"
+                    clearable
+                    placeholder="请选择视频注入状态"
+                    @input="inputHandler($event, 'status')"
+                >
+                    <el-option
+                        v-for="(item, index) in statusOptions"
+                        :key="index"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="searchHandler">搜索</el-button>
             </el-form-item>
@@ -121,6 +136,7 @@
             return {
                 videoUploadDialogVisible: false,
                 videoTypeOptions: role.VIDEO_TYPE_OPTIONS,
+                statusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
                 isLoading: false,
                 timer: null,
                 fileList: [],

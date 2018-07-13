@@ -272,6 +272,13 @@ const getters = {
     global(state) {
         return state.global;
     },
+    programmeCategoryExist() {
+        return ({value, data}) => {
+            let {programmeTypeList} = data;
+            let index = programmeTypeList.findIndex((type) => type.name === value);
+            return index > -1;
+        };
+    },
     // 节目视频
     video(state) {
         return state.video;

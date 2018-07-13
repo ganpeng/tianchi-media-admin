@@ -21,7 +21,7 @@
                      v-if="navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL'"></div>
                 <div
                     :class="'live-channel settable ' + (navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'small' : 'big')"
-                    @click="setChannel(0,0,0,(navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'live-carousel' : 'carousel-1'))">
+                    @click="setViewChannel">
                     <div class="ab-center">点击设置 / 查看
                         <label>直播频道
                             {{liveChannelList[0] && liveChannelList[0].liveChannel ?
@@ -368,6 +368,15 @@
                         params: {navBarSignCode: navBarSignCode, navBarId: navBarId}
                     });
                 }
+            },
+            setViewChannel() {
+                this.$router.push({
+                    name: 'AppendViewChannel',
+                    params: {
+                        navBarId: this.navBarId,
+                        navBarSignCode: this.navBarSignCode
+                    }
+                });
             },
             // 设置直播频道
             setChannel(model, row, index, imageSpec) {

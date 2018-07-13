@@ -38,6 +38,7 @@
             </el-form-item>
             <el-form-item class="create-account">
                 <el-button type="primary" plain @click="createLiveChannel">新增直播频道</el-button>
+                <el-button type="primary" plain @click="showFileUploadDialog">导入节目单</el-button>
             </el-form-item>
         </el-form>
         <el-table :data="list" border style="width:100%;margin:20px 0;">
@@ -74,6 +75,28 @@
             :liveChannelDialogVisible="liveChannelDialogVisible"
             v-on:changeLiveChannelDialogStatus="closeLiveChannelDialog">
         </live-channel-dialog>
+        <el-dialog
+            title="上传节目表格"
+            :visible.sync="fileUploadDialogVisible"
+            :show-close="false"
+            :close-on-click-modal="false"
+            :close-on-press-escape="false">
+            <el-upload
+                class="upload-demo"
+                ref="upload"
+                :headers="uploadHeaders"
+                action="/admin/v1/live/channel-programme/list"
+                :auto-upload="false"
+                :file-list="fileList"
+                :on-success="uploadSuccessHandler"
+                :with-credentials="true">
+                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
+                    <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
+            </el-upload>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="closeFileUploadDialog">关闭</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -87,6 +110,9 @@
         data() {
             return {
                 liveChannelDialogVisible: false,
+                fileUploadDialogVisible: false,
+                fileList: [],
+                uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
                 status: 0
             };
         },
@@ -160,6 +186,42 @@
             },
             searchHandler() {
                 this.getChannelList();
+            },
+            //  上传节目单
+            showFileUploadDialog() {
+                this.fileUploadDialogVisible = true;
+                this.fileList = [];
+            },
+            closeFileUploadDialog() {
+                this.fileUploadDialogVisible = false;
+                this.fileList = [];
+            },
+            submitUpload() {
+                this.$refs.upload.submit();
+            },
+            uploadSuccessHandler(res, file, fileList) {
+                if (res && res.code === 0) {
+                    this.$message({
+                        type: 'success',
+                        message: '节目导入成功'
+                    });
+                } else if (res && res.code === 3119) {
+                    this.$message({
+                        type: 'error',
+                        message: '节目视频导入失败'
+                    });
+                } else if (res && res.code === 3117) {
+                    this.$message({
+                        type: 'error',
+                        message: '节目导入部分成功'
+                    });
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: '节目导入失败'
+                    });
+                }
+                this.closeFileUploadDialog();
             }
         }
     };

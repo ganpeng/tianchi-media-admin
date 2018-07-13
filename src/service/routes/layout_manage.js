@@ -42,3 +42,10 @@ export const appendCornerMark = ({caption, imageUri, markType}) => {
 export const deleteCornerMark = (id) => {
     return service.delete(util.format('/v1/content/mark/{0}', id));
 };
+
+/**
+ * 设置直播频道
+ */
+export const postChannelLayout = (reqBody) => {
+    return service.post('/v1/ad/channel-layout', reqBody);
+};

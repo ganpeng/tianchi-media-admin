@@ -41,7 +41,8 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
     },
     computed: {
         ...mapGetters({
-            global: 'programme/global'
+            global: 'programme/global',
+            programmeCategoryExist: 'programme/programmeCategoryExist'
         })
     },
     methods: {
@@ -68,6 +69,13 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 inputPattern: /\S/,
+                inputValidator: (value) => {
+                    if (this.programmeCategoryExist({data, value})) {
+                        return `新类型${value}已经存在`;
+                    } else {
+                        return true;
+                    }
+                },
                 inputErrorMessage: '类型不能为空'
             }).then(({ value }) => {
                 this.addProgrammeCategory({name: value, data});
