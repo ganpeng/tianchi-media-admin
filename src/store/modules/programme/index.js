@@ -1055,7 +1055,7 @@ const actions = {
     //  字典
     async getDict({commit, state}, categoryList) {
         try {
-            let res = await service.getDict(categoryList);
+            let res = await service.getDict({categoryList});
             if (res && res.code === 0) {
                 let licenceList = _.uniqBy(res.data.reduce((res, item) => {
                     return item.name === 'LICENCE' ? res.concat(item.optionList) : res;

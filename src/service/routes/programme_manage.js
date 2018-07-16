@@ -120,9 +120,10 @@ export const deleteProgramme = ({id}) => {
 /**
  * 获取字典数据
  */
-export const getDict = (categoryList) => {
+export const getDict = ({categoryList, nameList}) => {
     const params = {
-        categoryList
+        categoryList,
+        nameList
     };
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
         return item !== '' && item !== undefined;
