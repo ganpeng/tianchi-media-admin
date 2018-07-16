@@ -235,16 +235,16 @@
                             effect="dark"
                             content="模块排序"
                             placement="top">
-                    <i class="el-icon-sort" @click="sortDialogVisible = true"></i>
+                    <i class="el-icon-sort" @click="initSortModel"></i>
                 </el-tooltip>
             </div>
         </div>
         <el-button v-if="modified" type="primary" @click="clearModify" class="column-publish">清除修改</el-button>
         <el-button type="primary" @click="publish" class="column-publish">发 布</el-button>
         <el-dialog title="模块专题排序" :visible.sync="sortDialogVisible">
-            <ul v-dragula="{direction:'horizontal'}" id="model-sort-list">
-                <li v-if="item.subjectId"
-                    :data-id="item.subjectId"
+            <ul v-dragula="{direction:'horizontal'}" id="model-sort-list" v-if="sortDialogVisible">
+                <li v-if="item.subjectId || item.renderType === 'SHUFFLE'"
+                    :data-sign="item.sign"
                     v-for="(item,index) in massLayoutBlockList"
                     :key="index">
                     {{item.title}}
@@ -557,17 +557,25 @@
                     }
                 });
             },
+            initSortModel() {
+                // 设置标记
+                for (let k = 0; k < this.massLayoutBlockList.length; k++) {
+                    this.massLayoutBlockList[k].sign = 'sign_' + k;
+                }
+                this.sortDialogVisible = true;
+            },
             // 更新模块排序
             sortModelList() {
                 let nodes = this.$el.querySelectorAll('#model-sort-list li');
-                let modelSubjectIdList = [];
+                let modelSubjectSignList = [];
                 for (let i = 0; i < nodes.length; i++) {
-                    modelSubjectIdList.push(nodes[i].getAttribute('data-id'));
+                    modelSubjectSignList.push(nodes[i].getAttribute('data-sign'));
                 }
                 this.$store.commit('layout/sortModelList', {
                     navBarId: this.$route.params.navBarId,
                     navBarSignCode: this.$route.params.navBarSignCode,
-                    modelSubjectIdList: modelSubjectIdList
+                    modelSubjectSignList: modelSubjectSignList,
+                    sortList: this.massLayoutBlockList
                 });
                 this.$message({
                     message: '模块成功排序',

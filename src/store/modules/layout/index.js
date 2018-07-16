@@ -290,10 +290,10 @@ const mutations = {
      * 设置模块推荐位的专题项排序
      * @param state
      */
-    sortModelList(state, {navBarId, navBarSignCode, modelSubjectIdList}) {
+    sortModelList(state, {navBarId, navBarSignCode, modelSubjectSignList, sortList}) {
         let minModelIndex = 0;
         for (let i = 0; i < state[navBarSignCode].layoutBlockList.length; i++) {
-            if (!state[navBarSignCode].layoutBlockList[i].subjectId) {
+            if (!state[navBarSignCode].layoutBlockList[i].subjectId && state[navBarSignCode].layoutBlockList[i].renderType !== 'SHUFFLE') {
                 minModelIndex = i;
             }
         }
@@ -303,10 +303,10 @@ const mutations = {
             sortedLayoutBlockList.push(JSON.parse(JSON.stringify(state[navBarSignCode].layoutBlockList[i])));
         }
         // 添加模块推荐位
-        for (let m = 0; m < modelSubjectIdList.length; m++) {
-            for (let k = 0; k < state[navBarSignCode].layoutBlockList.length; k++) {
-                if (modelSubjectIdList[m] === state[navBarSignCode].layoutBlockList[k].subjectId) {
-                    sortedLayoutBlockList.push(JSON.parse(JSON.stringify(state[navBarSignCode].layoutBlockList[k])));
+        for (let m = 0; m < modelSubjectSignList.length; m++) {
+            for (let k = 0; k < sortList.length; k++) {
+                if (modelSubjectSignList[m] === sortList[k].sign) {
+                    sortedLayoutBlockList.push(JSON.parse(JSON.stringify(sortList[k])));
                 }
             }
         }

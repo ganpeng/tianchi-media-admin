@@ -363,7 +363,9 @@
                 }
                 // 选中的二级分类的typeId所对应的typeName
                 this.typeOptions.map(type => {
-                    params.typeName = type.name;
+                    if (type.id === this.selectValue.typeId) {
+                        params.typeName = type.name;
+                    }
                 });
                 // 设置娱乐下的一级分类的list
                 params.entertainmentList = this.entertainmentList;
