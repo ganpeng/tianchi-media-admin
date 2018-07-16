@@ -32,3 +32,10 @@ export const getImageBaseUri = () => {
 export const fetchAreaList = () => {
     return service.get(`/v1/sys/area/list`);
 };
+
+/**
+ * 获取区域分组数据
+ */
+export const fetchAreaGroupNameList = () => {
+    return service.get(`/v1/sys/area/group-name/list`);
+};

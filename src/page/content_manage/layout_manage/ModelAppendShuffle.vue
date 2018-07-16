@@ -72,6 +72,7 @@
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
+                    <label class="item-type">{{item | setItemDescription}}</label>
                 </li>
             </ul>
         </div>
@@ -233,6 +234,31 @@
                 recommendModelInfo: {},
                 saveDisabled: false
             };
+        },
+        filters: {
+            setItemDescription(item) {
+                if (!item.layoutItemType) {
+                    return '';
+                }
+                switch (item.layoutItemType) {
+                    case 'PROGRAMME':
+                        return '节目详情';
+                    case 'PROGRAMME_LIST':
+                        return '节目列表';
+                    case 'FIGURE':
+                        return '人物';
+                    case 'PROGRAMME_VIDEO':
+                        return '节目中的视频';
+                    case 'LINK':
+                        return '网页';
+                    case 'CHANNEL':
+                        return '频道';
+                    case 'SUBJECT':
+                        return '专题';
+                    default:
+                        return '筛选项';
+                }
+            }
         },
         computed: {
             currentNavBarInfo() {
@@ -576,6 +602,16 @@
             color: white;
             cursor: pointer;
         }
+    }
+
+    .item-type {
+        position: absolute;
+        width: 100%;
+        left: 0px;
+        bottom: -30px;
+        line-height: 30px;
+        text-align: center;
+        font-size: 14px;
     }
 
     .save-btn {

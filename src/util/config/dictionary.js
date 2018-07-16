@@ -3,11 +3,11 @@
  */
 
 /**
- * The JSON of first level class's dictionary.
+ * The JSON of first level class's filter dictionary.
  * @type {Object}
  */
 
-const CLASS_DICTIONARY = {
+const CLASS_FILTER_DICTIONARY = {
     // 电影
     MOVIE: [
         {
@@ -165,4 +165,4 @@ const CLASS_DICTIONARY = {
     COMMUNIST_PARTY_BUILD: null
 };
 
-export default {CLASS_DICTIONARY};
+export default {CLASS_FILTER_DICTIONARY};

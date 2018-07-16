@@ -118,7 +118,16 @@ export const deleteProgramme = ({id}) => {
 };
 
 /**
+ * 导入节目
+ */
+export const importProgramme = (formData) => {
+    return service.post('/v1/content/programme/import', formData);
+};
+
+/**
  * 获取字典数据
+ * @param categoryList
+ * @param nameList such as 出品方'ANNOUNCER', 网站'PLATFORM', 赛事'CONTEST', 人物'FIGURE'
  */
 export const getDict = ({categoryList, nameList}) => {
     const params = {
@@ -132,8 +141,22 @@ export const getDict = ({categoryList, nameList}) => {
 };
 
 /**
- * 导入节目
+ * 获取节目规格
  */
-export const importProgramme = (formData) => {
-    return service.post('/v1/content/programme/import', formData);
+export const getProgrammeSpec = () => {
+    return service.get('/v1/content/programme-dict/spec/list');
+};
+
+/**
+ * 获取节目年级
+ */
+export const getProgrammeGrade = () => {
+    return service.get('/v1/content/programme-dict/grade/list');
+};
+
+/**
+ * 获取节目科目
+ */
+export const getProgrammeSubject = () => {
+    return service.get('/v1/content/programme-dict/subject/list');
 };
