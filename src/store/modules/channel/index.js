@@ -16,7 +16,8 @@ let defaultChannelTypeList = [
 
 let defaultSearchFields = {
     keyword: '',
-    typeIdList: ''
+    typeIdList: '',
+    category: 'LIVE'
 };
 
 let defaultPagination = {
