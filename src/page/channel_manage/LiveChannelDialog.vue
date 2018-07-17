@@ -166,13 +166,13 @@
             title() {
                 switch (parseInt(this.status)) {
                     case 0:
-                        return '创建视频';
+                        return '新增直播频道';
                     case 1:
-                        return '编辑视频';
+                        return '编辑直播频道';
                     case 2:
-                        return '显示视频';
+                        return '显示直播频道';
                     default:
-                        return '创建视频';
+                        return '新增直播频道';
                 }
             },
             readonly() {
@@ -192,9 +192,7 @@
             cancelHandler() {
                 this.resetLiveChannel();
                 this.$emit('changeLiveChannelDialogStatus');
-                if (this.status === 0) {
-                    this.$refs.liveChannelForm.resetFields();
-                }
+                this.$refs.liveChannelForm.resetFields();
             },
             successHandler() {
                 this.$refs.liveChannelForm.validate(value => {

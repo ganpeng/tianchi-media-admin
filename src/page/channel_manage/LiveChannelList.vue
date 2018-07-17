@@ -55,7 +55,7 @@
             <el-table-column prop="multicastPort" align="center" label="频道端口"></el-table-column>
             <el-table-column align="center" width="320px" fixed="right" label="操作">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="previewChannelPage(scope.row.id, true)">节目单下载</el-button>
+                    <el-button type="text" size="small" @click="previewChannelPage(scope.row.id, scope.row.name, true)">节目单下载</el-button>
                     <el-button type="text" size="small" @click="previewChannelPage(scope.row.id)">节目单预览</el-button>
                     <el-button type="text" size="small" @click="_updateLiveChannel(scope.row.id)">编辑</el-button>
                     <el-button type="text" size="small" @click="_deleteLiveChannel(scope.row.id)">删除</el-button>
@@ -86,6 +86,7 @@
             <el-upload
                 class="upload-demo"
                 ref="upload"
+                name="files"
                 :headers="uploadHeaders"
                 action="/admin/v1/live/channel-programme/list"
                 accept=".xml"
@@ -166,14 +167,14 @@
                         this.status = 1;
                     });
             },
-            previewChannelPage(id, flag) {
+            previewChannelPage(id, name, flag) {
                 this.getChannelPageById(id)
                     .then((res) => {
                         if (res && res.code === 0) {
                             let xml = x2js.json2xml_str({'频道': {'节目': res.data}});
                             let blob = new Blob(['<?xml version="1.0" encoding="UTF-8"?>', xml], {type: 'application/xml'});
                             if (flag) {
-                                this.openDownloadDialog(blob, '节目单.xml');
+                                this.openDownloadDialog(blob, `${name}.xml`);
                             } else {
                                 this.openNewTab(blob);
                             }
