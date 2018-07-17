@@ -72,6 +72,8 @@
                 action="/v1/storage/video"
                 :on-success="uploadSuccessHandler"
                 :on-change="uploadChangeHandler"
+                :on-remove="removeFileHandler"
+                :before-upload="beforeUploadHandler"
                 :auto-upload="false"
                 :data="{videoType: this.getVideoType}"
                 :file-list="fileList"
@@ -143,6 +145,7 @@
                 uploadResult: [],
                 existList: [],
                 checkMd5List: [],
+                tempFileList: [],
                 uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token)
             };
         },
@@ -176,24 +179,32 @@
                 this.setVideoType({videoType});
             },
             cancelHandler() {
-                this.$confirm('你确定要取消上传操作吗, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'error'
-                }).then(() => {
+                if (this.tempFileList.length > 0) {
+                    this.$confirm('你确定要取消上传操作吗, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    }).then(() => {
+                        this.videoUploadDialogVisible = false;
+                        this.fileList = [];
+                        this.uploadResult = [];
+                        this.existList = [];
+                        this.$refs.upload.abort();
+                        //  关闭按钮之后重新获取数据
+                        this.getVideoList();
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+               } else {
                     this.videoUploadDialogVisible = false;
                     this.fileList = [];
                     this.uploadResult = [];
                     this.existList = [];
                     this.$refs.upload.abort();
-                    //  关闭按钮之后重新获取数据
-                    this.getVideoList();
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+               }
             },
             submitUpload() {
                 this.$refs.upload.submit();
@@ -215,28 +226,33 @@
                         });
                     }
                     this.fileList = fileList.filter((item) => item !== file);
+                    this.tempFileList = this.tempFileList.filter((item) => item !== file.raw);
                 }
             },
             uploadChangeHandler() {},
+            removeFileHandler(file, fileList) {
+                this.tempFileList = this.tempFileList.filter((item) => item !== file.raw);
+            },
             beforeUploadHandler(file) {
-                return new Promise((resolve, reject) => {
-                    this.checkMd5List.push(file);
-                    this.getMd5(file)
-                        .then((res) => {
-                            this.checkVideoMd5(res)
-                                .then((result) => {
-                                    let flag = result.data.list && result.data.list.length === 0;
-                                    this.uploadResult = [];
-                                    this.checkMd5List = this.checkMd5List.filter((item) => item !== file);
-                                    if (!flag) {
-                                        this.existList.push(result.data.list[0]);
-                                        reject(); // eslint-disable-line
-                                    } else {
-                                        resolve();
-                                    }
-                                });
-                        });
-                });
+                this.tempFileList.push(file);
+                // return new Promise((resolve, reject) => {
+                //     this.checkMd5List.push(file);
+                //     this.getMd5(file)
+                //         .then((res) => {
+                //             this.checkVideoMd5(res)
+                //                 .then((result) => {
+                //                     let flag = result.data.list && result.data.list.length === 0;
+                //                     this.uploadResult = [];
+                //                     this.checkMd5List = this.checkMd5List.filter((item) => item !== file);
+                //                     if (!flag) {
+                //                         this.existList.push(result.data.list[0]);
+                //                         reject(); // eslint-disable-line
+                //                     } else {
+                //                         resolve();
+                //                     }
+                //                 });
+                //         });
+                // });
             },
             getMd5(file) {
                 return new Promise((resolve, reject) => {
