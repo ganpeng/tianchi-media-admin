@@ -113,6 +113,7 @@
             :visible.sync="dialogVisible.channelDialogVisible">
             <select-channel
                 v-if="dialogVisible.channelDialogVisible"
+                ref="selectChannel"
                 :size="imageSpec"
                 :currentRow="currentRow"
                 :currentIndex="currentIndex"
@@ -376,7 +377,7 @@
                     // 设置为筛选页面
                     case 'FILTER':
                         this.dialogVisible.filterDialogVisible = true;
-                        if (item.layoutItemType.indexOf('PROGRAMME_CATEGORY') !== -1) {
+                        if (item.layoutItemType && item.layoutItemType.indexOf('PROGRAMME_CATEGORY') !== -1) {
                             this.originItemState = item;
                         }
                         break;
@@ -390,9 +391,12 @@
                         value: this.imageSpec.width + '*' + this.imageSpec.height,
                         label: '当前块尺寸：' + this.imageSpec.width + '*' + this.imageSpec.height
                     }];
+                    this.$nextTick(function () {
+                        this.$refs.selectChannel.getExistChannel();
+                    });
                 }
-                this.currentRow = row;
-                this.currentIndex = index;
+                this.currentRow = parseInt(row);
+                this.currentIndex = parseInt(index);
             },
             // 设置混排中某一项内容
             setShuffleItem(item) {

@@ -10,7 +10,14 @@ const CATALOGUE_CONFIG_MAP = {
     // 推荐
     RECOMMEND: null,
     // 频道
-    LIVE_CHANNEL: '直播频道列表',
+    LIVE_CHANNEL: {
+        level: 'CHANNEL',
+        categorySignCode: 'LIVE_CHANNEL',
+        layoutItemType: {
+            category: 'CHANNEL_GROUP'
+        },
+        allExist: false
+    },
     // 电视剧
     TV_DRAMA: {
         level: 'SECOND',

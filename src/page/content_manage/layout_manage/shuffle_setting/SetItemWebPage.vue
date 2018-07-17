@@ -4,7 +4,7 @@
         <h3 class="text-left">1.请输入网页地址：</h3>
         <el-input
             placeholder="请输入网页地址"
-            v-model="webPage.address"
+            v-model="webPage.href"
             clearable>
         </el-input>
         <h3 class="text-left">2.请设置网页推荐图片：</h3>
@@ -44,7 +44,7 @@
                 size: webPageDimension,
                 imageUploadDialogVisible: false,
                 webPage: {
-                    address: '',
+                    href: '',
                     coverImage: {}
                 }
             };
@@ -55,7 +55,8 @@
         methods: {
             init() {
                 if (this.originState && this.originState.coverImage) {
-                    this.webPage = this.originState;
+                    this.webPage.coverImage = this.originState.coverImage;
+                    this.webPage.href = JSON.parse(this.originState.params).href;
                 }
             },
             appendImagePrefix(uri) {
@@ -72,7 +73,7 @@
             },
             complete() {
                 // 检测当前网页的地址
-                if (!this.webPage.address || !this.$util.isWebSiteAddress(this.webPage.address)) {
+                if (!this.webPage.href || !this.$util.isWebSiteAddress(this.webPage.href)) {
                     this.$message({
                         message: '请设置正确的推荐网页地址',
                         type: 'warning'
@@ -92,7 +93,7 @@
                     id: this.webPage.id,
                     name: this.webPage.name,
                     params: JSON.stringify({
-                        href: this.webPage.address
+                        href: this.webPage.href
                     }),
                     layoutItemType: 'LINK',
                     coverImage: this.webPage.coverImage

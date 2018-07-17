@@ -8,6 +8,7 @@
         </el-steps>
         <keep-alive>
             <component
+                v-show="!((programmeMode === 'EDIT' && activeStep === 0) || (videoMode === 'EDIT' && activeStep === 1))"
                 ref="currentComponent"
                 :is="currentView"
                 :originState="currentState"
@@ -20,6 +21,24 @@
                 v-on:setCoverImage="setCoverImage">
             </component>
         </keep-alive>
+        <!--展示当前选择的节目的table表格-->
+        <template v-if="programmeMode === 'EDIT' && activeStep === 0">
+            <single-programme-table
+                :singleProgrammeList="[programme]">
+            </single-programme-table>
+            <div>
+                <el-button type="primary" plain @click="switchProgramme">更换节目</el-button>
+            </div>
+        </template>
+        <!--展示当前选择的视频的table表格-->
+        <template v-if="videoMode === 'EDIT' && activeStep === 1">
+            <single-video-table
+                :singleVideoList="[programmeVideo]">
+            </single-video-table>
+            <div>
+                <el-button type="primary" plain @click="switchVideo">更换视频</el-button>
+            </div>
+        </template>
         <div class="step-button">
             <el-button @click="previous" v-if="activeStep > 0">上一步</el-button>
             <el-button @click="next" v-if="activeStep < 2">下一步</el-button>
@@ -30,20 +49,24 @@
 
 <script>
     import SelectSingleProgramme from '../SelectSingleProgramme';
+    import SingleProgrammeTable from '../SingleProgrammeTable';
     import SelectSingleProgrammeVideo from './SelectSingleProgrammeVideo';
+    import SingleVideoTable from '../SingleVideoTable';
     import SetItemProgrammeCoverImage from './SetItemProgrammeCoverImage';
 
     export default {
         name: 'SetItemProgrammeVideo',
         components: {
             SelectSingleProgramme,
+            SingleProgrammeTable,
             SelectSingleProgrammeVideo,
+            SingleVideoTable,
             SetItemProgrammeCoverImage
         },
         /** imageSpec 当前选择的节目中适合当前板式的图片集合
          *  originProgrammeVideo 需要回填的节目的信息
          * */
-        props: ['imageSpec', 'originProgrammeVideo'],
+        props: ['imageSpec', 'originState'],
         data() {
             return {
                 activeStep: 0,
@@ -54,7 +77,11 @@
                 // 当前节目的视频选择的封面图片（节目的）
                 coverImage: {},
                 // 当前选择的节目的视频的状态信息
-                currentState: {}
+                currentState: {},
+                // 当前是否为item节目编辑状态
+                programmeMode: 'NORMAL',
+                // 当前是否为item视频编辑状态
+                videoMode: 'NORMAL'
             };
         },
         computed: {
@@ -76,12 +103,56 @@
         },
         methods: {
             init() {
-                if (this.originProgrammeVideo && this.originProgrammeVideo.coverImage) {
-                    this.currentState = this.originProgrammeVideo;
-                    this.programme = this.originProgrammeVideo.programme;
-                    this.programmeVideo = this.originProgrammeVideo.programmeVideo;
-                    this.coverImage = this.originProgrammeVideo.coverImage;
+                if (this.originState && this.originState.coverImage) {
+                    this.currentState = this.originState;
+                    // 节目
+                    this.programme.id = this.originState.id;
+                    this.programme.name = this.originState.name;
+                    let video = JSON.parse(this.originState.params);
+                    for (let key in video) {
+                        this.programmeVideo[key] = video[key];
+                    }
+                    this.programmeVideo.id = video.videoId;
+                    this.programmeVideo.name = video.videoName;
+                    this.coverImage = this.originState.coverImage;
+                    this.programmeMode = 'EDIT';
+                    this.videoMode = 'EDIT';
+                    this.getProgrammeDetail();
+                    this.getVideoDetail();
+                } else {
+                    this.programmeMode = 'NORMAL';
+                    this.videoMode = 'NORMAL';
                 }
+            },
+            // 获取节目详情
+            getProgrammeDetail() {
+                this.$service.getProgrammeInfo({id: this.programme.id}).then(response => {
+                    if (response && response.code === 0) {
+                        this.programme = response.data;
+                    }
+                });
+            },
+            // 获取视频详情
+            getVideoDetail() {
+                this.$service.getProgrammeVideoInfo({id: this.programmeVideo.id}).then(response => {
+                    if (response && response.code === 0) {
+                        this.programmeVideo = response.data;
+                    }
+                });
+            },
+            // 转换模式，选择节目
+            switchProgramme() {
+                this.programmeMode = 'NORMAL';
+                this.videoMode = 'NORMAL';
+                this.programme = {};
+                this.programmeVideo = {};
+                this.coverImage = {};
+                this.currentState = {};
+            },
+            // 转换模式，选择视频
+            switchVideo() {
+                this.videoMode = 'NORMAL';
+                this.programmeVideo = {};
             },
             // 设置选择的节目
             setProgramme(programme) {

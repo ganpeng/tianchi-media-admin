@@ -115,8 +115,8 @@
             </el-form-item>
         </el-form>
         <h3 class="text-left">2.请设置筛选项推荐图片：</h3>
-        <div v-if="filter.coverImage && filter.coverImage.uri"
-             :style="{ 'background-image': 'url(' + appendImagePrefix(filter.coverImage.uri) + ')'}"
+        <div v-if="coverImage && coverImage.uri"
+             :style="{ 'background-image': 'url(' + appendImagePrefix(coverImage.uri) + ')'}"
              class="image-box">
         </div>
         <div class="add-box">
@@ -192,9 +192,7 @@
                 classDictionary: dict.CLASS_FILTER_DICTIONARY,
                 size: filterDimension,
                 imageUploadDialogVisible: false,
-                filter: {
-                    coverImage: {}
-                },
+                coverImage: {},
                 entertainmentList: []
             };
         },
@@ -210,7 +208,12 @@
                 this.initGrade();
                 this.initSubject();
                 if (this.originState && this.originState.coverImage) {
-                    this.filter = this.originState;
+                    this.coverImage = this.originState.coverImage;
+                    this.categorySignCode = this.originState.layoutItemType.replace('_PROGRAMME_CATEGORY', '');
+                    let params = JSON.parse(this.originState.params);
+                    for (let key in params) {
+                        this.selectValue[key] = params[key];
+                    }
                 }
                 this.$service.getProgrammeCategory().then(response => {
                     if (response && response.code === 0) {
@@ -231,6 +234,14 @@
                             if (this.categoryOptions[i].name === '幽默') {
                                 this.categoryOptions.splice(i, 1);
                             }
+                        }
+                        // 设置二级分类的选项
+                        if (this.categorySignCode) {
+                            this.categoryOptions.map(category => {
+                                if (category.signCode === this.categorySignCode) {
+                                    this.typeOptions = category.programmeTypeList;
+                                }
+                            });
                         }
                     }
                 });
@@ -275,12 +286,18 @@
                 this.$service.getDict({categoryList: ['TV_SHOW_NETWORK'], nameList: ['PLATFORM']}).then(response => {
                     if (response && response.code === 0 && response.data[0]) {
                         this.platformObject.TV_SHOW_NETWORK = response.data[0].optionList;
+                        if (this.categorySignCode === 'TV_SHOW_NETWORK') {
+                            this.platformOptions = this.platformObject.TV_SHOW_NETWORK;
+                        }
                     }
                 });
                 // 卫视综艺的网站
                 this.$service.getDict({categoryList: ['TV_SHOW_SATELLITE'], nameList: ['PLATFORM']}).then(response => {
                     if (response && response.code === 0 && response.data[0]) {
                         this.platformObject.TV_SHOW_SATELLITE = response.data[0].optionList;
+                        if (this.categorySignCode === 'TV_SHOW_SATELLITE') {
+                            this.platformOptions = this.platformObject.TV_SHOW_SATELLITE;
+                        }
                     }
                 });
                 // 体育的赛事
@@ -335,11 +352,11 @@
             },
             // 添加封面图片
             addPosterImage(coverImage) {
-                this.filter.coverImage = coverImage.posterImage;
+                this.coverImage = coverImage.posterImage;
             },
             complete() {
                 // 检测推荐筛选项的封面
-                if (!this.filter.coverImage.id) {
+                if (!this.coverImage.id) {
                     this.$message({
                         message: '请设置推荐筛选项的封面',
                         type: 'warning'
@@ -375,7 +392,7 @@
                     name: '',
                     params: JSON.stringify(params),
                     layoutItemType: this.categorySignCode + '_PROGRAMME_CATEGORY',
-                    coverImage: this.filter.coverImage
+                    coverImage: this.coverImage
                 };
                 this.$emit('setShuffleItem', filterItem);
                 this.$message({

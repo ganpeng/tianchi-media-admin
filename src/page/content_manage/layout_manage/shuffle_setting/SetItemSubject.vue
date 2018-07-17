@@ -7,6 +7,7 @@
         </el-steps>
         <keep-alive>
             <component
+                v-show="!(mode === 'EDIT' && activeStep === 0)"
                 ref="currentComponent"
                 :is="currentView"
                 :subject="subject"
@@ -17,6 +18,15 @@
                 v-on:setCoverImage="setCoverImage">
             </component>
         </keep-alive>
+        <!--展示当前选择的专题的table表格-->
+        <template v-if="mode === 'EDIT' && activeStep === 0">
+            <single-subject-table
+                :singleSubjectList="[subject]">
+            </single-subject-table>
+            <div>
+                <el-button type="primary" plain @click="switchMode">更换专题</el-button>
+            </div>
+        </template>
         <div class="step-button">
             <el-button @click="previous" v-if="activeStep > 0">上一步</el-button>
             <el-button @click="next" v-if="activeStep < 1">下一步</el-button>
@@ -27,12 +37,14 @@
 
 <script>
     import SelectSingleSubject from '../SelectSingleSubject';
+    import SingleSubjectTable from '../SingleSubjectTable';
     import SetItemSubjectCoverImage from './SetItemSubjectCoverImage';
 
     export default {
         name: 'SetItemSubject',
         components: {
             SelectSingleSubject,
+            SingleSubjectTable,
             SetItemSubjectCoverImage
         },
         /** imageSpec 当前选择的节目中适合当前板式的图片集合
@@ -47,7 +59,8 @@
                 // 当前专题选择的封面图片
                 coverImage: {},
                 // 当前选择的专题的状态信息
-                currentState: {}
+                currentState: {},
+                mode: 'NORMAL'
             };
         },
         computed: {
@@ -69,9 +82,27 @@
             init() {
                 if (this.originState && this.originState.coverImage) {
                     this.currentState = this.originState;
+                    this.subject.id = this.originState.id;
                     this.coverImage = this.originState.coverImage;
+                    this.initSubjectDetail();
+                    this.mode = 'EDIT';
+                } else {
+                    this.mode = 'NORMAL';
                 }
                 this.$refs.currentComponent.initSubjectList([]);
+            },
+            initSubjectDetail() {
+                this.$service.getSubjectDetail(this.subject.id).then(response => {
+                    if (response && response.code === 0) {
+                        this.subject = response.data;
+                    }
+                });
+            },
+            switchMode() {
+                this.mode = 'NORMAL';
+                this.subject = {};
+                this.coverImage = {};
+                this.currentState = {};
             },
             // 设置选择专题
             setSubject(subject) {

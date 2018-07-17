@@ -212,13 +212,22 @@
                                 item.layoutItemType = 'ALL';
                             } else {
                                 item.name = this.getTypeInfo(item.id).name;
-                                // 推荐二级分类
-                                if (this.catalogueConfig.level === 'SECOND') {
-                                    item.layoutItemType = this.catalogueConfig.layoutItemType.type;
+                                switch (this.catalogueConfig.level) {
+                                    // 推荐二级分类
+                                    case 'SECOND':
+                                        item.layoutItemType = this.catalogueConfig.layoutItemType.type;
+                                        break;
                                     // 推荐一级分类
-                                } else if (this.catalogueConfig.level === 'FIRST') {
-                                    let signCode = this.getTypeInfo(item.id).signCode;
-                                    item.layoutItemType = this.catalogueConfig.layoutItemType[signCode].category;
+                                    case 'FIRST':
+                                        let signCode = this.getTypeInfo(item.id).signCode;
+                                        item.layoutItemType = this.catalogueConfig.layoutItemType[signCode].category;
+                                        break;
+                                    // 频道列表
+                                    case 'CHANNEL':
+                                        item.layoutItemType = this.catalogueConfig.layoutItemType.category;
+                                        break;
+                                    default:
+                                        break;
                                 }
                             }
                             list[0].push(item);
