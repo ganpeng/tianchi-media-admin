@@ -125,4 +125,102 @@ const SIZE = {
     }
 };
 
-export default {TYPE, SIZE};
+/**
+ * According the template name resolve template info.
+ * @type {Object}
+ */
+const NAME_TO_INFO = {
+    '1': {
+        name: '1',
+        count: 1,
+        height: 200,
+        width: 1700,
+        style: 'model-1-200'
+    },
+    '2': {
+        name: '2',
+        count: 2,
+        height: 225,
+        width: 824,
+        style: 'model-2-225'
+    },
+    '3': {
+        name: '3',
+        count: 3,
+        height: 225,
+        width: 532,
+        style: 'model-3-225'
+    },
+    '4': {
+        name: '4',
+        count: 4,
+        height: 225,
+        width: 386,
+        style: 'model-4-225'
+    },
+    '6': {
+        name: '6',
+        count: 6,
+        height: 350,
+        width: 240,
+        style: 'model-6-350'
+    },
+    's6': {
+        name: 's6',
+        count: 6,
+        height: 134,
+        width: 240,
+        style: 'model-6-134'
+    }
+};
+
+/**
+ * According the template count and height resolve template info.
+ * @type {Object}
+ */
+const SIZE_TO_INFO = {
+    '1-200': {
+        name: '1',
+        count: 1,
+        height: 200,
+        width: 1700,
+        style: 'model-1-200'
+    },
+    '2-225': {
+        name: '2',
+        count: 2,
+        height: 225,
+        width: 824,
+        style: 'model-2-225'
+    },
+    '3-225': {
+        name: '3',
+        count: 3,
+        height: 225,
+        width: 532,
+        style: 'model-3-225'
+    },
+    '4-225': {
+        name: '4',
+        count: 4,
+        height: 225,
+        width: 386,
+        style: 'model-4-225'
+    },
+    '6-350': {
+        name: '6',
+        count: 6,
+        height: 350,
+        width: 240,
+        style: 'model-6-350'
+    },
+    '6-134': {
+        name: 's6',
+        count: 6,
+        height: 134,
+        width: 240,
+        style: 'model-6-134'
+    }
+};
+
+export default {TYPE, SIZE, NAME_TO_INFO, SIZE_TO_INFO};

@@ -184,7 +184,7 @@
     import SetItemProgrammeVideo from './shuffle_setting/SetItemProgrammeVideo';
     import SetItemFilter from './shuffle_setting/SetItemFilter';
     import SelectChannel from './SelectChannel';
-    import templateType from '@/util/config/template_type';
+    import templateTypeInfo from '@/util/config/template_type';
     import {LAYOUT_IMAGE_DIMENSION, PROGRAMME_DIMENSION} from '@/util/config/dimension';
 
     export default {
@@ -200,6 +200,7 @@
         },
         data() {
             return {
+                // 以'_'分割，设置每层的样式高度
                 templateHeight: '',
                 dialogVisible: {
                     programmeDialogVisible: false,
@@ -216,7 +217,7 @@
                 // 当前页面选择人物专题的操作，operate有add && edit
                 operate: this.$route.params.operate,
                 title: '',
-                templateTypeOptions: templateType.TYPE,
+                templateTypeOptions: templateTypeInfo.TYPE,
                 templateType: '',
                 // 布局列表
                 shuffleLayoutItemList: [],
@@ -285,10 +286,12 @@
             initCurrentRecommendSubject() {
                 this.title = this.recommendModelInfo.title;
                 this.shuffleLayoutItemList = this.recommendModelInfo.layoutItemMultiList;
+                this.templateHeight = this.recommendModelInfo.height;
                 // 初始化模板样式
                 this.templateType = '';
                 for (let i = 0; i < this.shuffleLayoutItemList.length; i++) {
-                    this.templateType = this.templateType + '+' + this.shuffleLayoutItemList[i].length;
+                    this.templateType = this.templateType + '+' + templateTypeInfo.SIZE_TO_INFO[this.shuffleLayoutItemList[i].length + '-' + this.templateHeight.split('_')[i]].name;
+                    this.shuffleLayoutItemList[i].listClass = templateTypeInfo.SIZE_TO_INFO[this.shuffleLayoutItemList[i].length + '-' + this.templateHeight.split('_')[i]].style;
                 }
                 this.templateType = this.templateType.slice(1);
             },
@@ -305,29 +308,14 @@
                 }
                 // 初始化模块列表
                 this.shuffleLayoutItemList = [];
+                this.templateHeight = '';
                 for (let k = 0; k < this.templateType.split('+').length; k++) {
                     this.shuffleLayoutItemList[k] = [];
-                    for (let i = 0; i < templateType.SIZE[this.templateType.split('+')[k]].count; i++) {
+                    this.shuffleLayoutItemList[k].listClass = templateTypeInfo.NAME_TO_INFO[this.templateType.split('+')[k]].style;
+                    for (let i = 0; i < templateTypeInfo.NAME_TO_INFO[this.templateType.split('+')[k]].count; i++) {
                         this.shuffleLayoutItemList[k].push({});
                     }
-                }
-                this.setModelClass();
-            },
-            // 根据每一行的item数量和高度设定每一项的样式
-            setModelClass() {
-                this.initTemplateHeight();
-                let templateHeightArray = this.templateHeight.split('_');
-                let templateTypeArray = this.templateType.split('+');
-                for (let k = 0; k < this.templateType.split('+').length; k++) {
-                    this.shuffleLayoutItemList[k].listClass = 'model-' + templateTypeArray[k] + '-' + templateHeightArray[k];
-                }
-            },
-            // 根据选择的模板设置模板的高度
-            initTemplateHeight() {
-                this.templateHeight = '';
-                let array = this.templateType.split('+');
-                for (let i = 0; i < array.length; i++) {
-                    this.templateHeight = this.templateHeight + '_' + LAYOUT_IMAGE_DIMENSION['model-' + array[i]].coverImage.height;
+                    this.templateHeight = this.templateHeight + '_' + templateTypeInfo.NAME_TO_INFO[this.templateType.split('+')[k]].height;
                 }
                 this.templateHeight = this.templateHeight.slice(1);
             },
@@ -426,7 +414,10 @@
                     return;
                 }
                 // 定义模块布局模式
-                let layoutTemplate = 'LT_' + this.templateType.replace(/\+/g, '_').replace(/s/g, '');
+                let layoutTemplate = 'LT';
+                for (let i = 0; i < this.shuffleLayoutItemList.length; i++) {
+                    layoutTemplate = layoutTemplate + '_' + this.shuffleLayoutItemList[i].length;
+                }
                 // 组建混排对象
                 let programmeModel = {
                     layoutTemplate: layoutTemplate,
@@ -539,7 +530,7 @@
                 padding-top: 20%;
             }
         }
-        ul.model-s6-134 {
+        ul.model-6-134 {
             li {
                 width: 14%;
                 padding-top: 8%;

@@ -123,7 +123,7 @@
                         恢复
                     </el-button>
                     <el-button type="danger" size="mini" plain
-                               @click="removeConfirm(scope.$index)">删除
+                               @click="removeConfirm(scope.$index,scope.row)">删除
                     </el-button>
                     <el-button type="text" size="small" @click="popAppendVideoDialogue(scope.$index)">上方添加视频
                     </el-button>
@@ -148,7 +148,7 @@
         </display-video-dialog>
         <div class="text-center update-box">
             <el-button type="danger" @click="disableChannel">{{channelInfo.visible ? '禁播' : '恢复'}}频道</el-button>
-            <el-button v-if="!channelInfo.visible" type="danger" @click="removeChannel">删除频道</el-button>
+            <el-button :disabled="channelInfo.visible" type="danger" @click="removeChannel">删除频道</el-button>
             <el-button type="success" @click="updateInfo">保 存</el-button>
         </div>
         <el-dialog
@@ -338,6 +338,14 @@
             },
             // 禁播视频
             disabledConfirm(videoItem) {
+                // 当前正在播放视频不能禁播
+                if (this.channelInfo.currentProgramme === videoItem.originName) {
+                    this.$message({
+                        message: '当前视频正在播放，不能禁播',
+                        type: 'warning'
+                    });
+                    return;
+                }
                 this.$confirm('此操作将禁播该视频, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -375,7 +383,15 @@
                 });
             },
             // 删除视频
-            removeConfirm(index) {
+            removeConfirm(index, videoItem) {
+                // 当前正在播放视频不能删除
+                if (this.channelInfo.currentProgramme === videoItem.originName) {
+                    this.$message({
+                        message: '当前视频正在播放，不能删除',
+                        type: 'warning'
+                    });
+                    return;
+                }
                 this.$confirm('此操作将删除该视频, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

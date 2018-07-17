@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div
-                    :class="'ad-group settable ' + (navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'small' : 'big')">
+                    :class="'first-win settable ' + (navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'small' : 'big')">
                     <div class="ab-center">
                         <img v-if="rightTopRecommend.coverImage"
                              :src="rightTopRecommend.coverImage ? rightTopRecommend.coverImage.uri : '' | imageUrl"
@@ -744,7 +744,7 @@
                 }
             }
         }
-        .ad-group {
+        .first-win {
             position: relative;
             width: 43%;
             padding-top: 24%;
@@ -902,6 +902,7 @@
 
     ul.model-figure {
         padding-bottom: 50px;
+        overflow-x: scroll;
         li {
             flex-shrink: 0;
             width: 12%;

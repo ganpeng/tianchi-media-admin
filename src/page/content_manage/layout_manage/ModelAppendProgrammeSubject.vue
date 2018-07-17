@@ -113,7 +113,7 @@
             </el-option>
         </el-select>
         <div class="model-block">
-            <ul :class="'model-' + row.length" v-for="(row,rowIndex) in subjectLayoutItemList" :key="rowIndex">
+            <ul :class="row.listClass" v-for="(row,rowIndex) in subjectLayoutItemList" :key="rowIndex">
                 <li v-for="(item,index) in row" :key="index"
                     @click="setModelItem(rowIndex,index,('model-' + row.length),item.layoutItemType === 'ALL',item)">
                     <div class="ab-center text-center">
@@ -170,7 +170,7 @@
 <script>
     import SelectSingleSubject from './SelectSingleSubject';
     import SetSubjectProgramme from './SetSubjectProgramme';
-    import templateType from '@/util/config/template_type';
+    import templateTypeInfo from '@/util/config/template_type';
     import {LAYOUT_IMAGE_DIMENSION, PROGRAMME_DIMENSION} from '@/util/config/dimension';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
 
@@ -183,6 +183,8 @@
         },
         data() {
             return {
+                // 以'_'分割，设置每层的样式高度
+                templateHeight: '',
                 size: PROGRAMME_DIMENSION,
                 imageUploadDialogVisible: false,
                 navBarId: this.$route.params.navBarId,
@@ -192,7 +194,7 @@
                 dialogTableVisible: false,
                 title: '',
                 currentSubject: {},
-                templateTypeOptions: templateType.TYPE,
+                templateTypeOptions: templateTypeInfo.TYPE,
                 templateType: '',
                 // 布局一定的节目列表
                 subjectLayoutItemList: [],
@@ -257,10 +259,12 @@
             initCurrentRecommendSubject() {
                 this.title = this.recommendModelInfo.title;
                 this.subjectLayoutItemList = this.recommendModelInfo.layoutItemMultiList;
+                this.templateHeight = this.recommendModelInfo.height;
                 // 初始化模板样式
                 this.templateType = '';
                 for (let i = 0; i < this.subjectLayoutItemList.length; i++) {
-                    this.templateType = this.templateType + '+' + this.subjectLayoutItemList[i].length;
+                    this.templateType = this.templateType + '+' + templateTypeInfo.SIZE_TO_INFO[this.subjectLayoutItemList[i].length + '-' + this.templateHeight.split('_')[i]].name;
+                    this.subjectLayoutItemList[i].listClass = templateTypeInfo.SIZE_TO_INFO[this.subjectLayoutItemList[i].length + '-' + this.templateHeight.split('_')[i]].style;
                 }
                 this.templateType = this.templateType.slice(1);
                 this.$service.getSubjectDetail(this.recommendModelInfo.subjectId).then(response => {
@@ -311,12 +315,16 @@
                 }
                 // 初始化模块列表
                 this.subjectLayoutItemList = [];
+                this.templateHeight = '';
                 for (let k = 0; k < this.templateType.split('+').length; k++) {
                     this.subjectLayoutItemList[k] = [];
-                    for (let i = 0; i < templateType.SIZE[this.templateType.split('+')[k]].count; i++) {
-                        this.subjectLayoutItemList[k].push({itemClass: this.templateType.split('+')[k]});
+                    this.subjectLayoutItemList[k].listClass = templateTypeInfo.NAME_TO_INFO[this.templateType.split('+')[k]].style;
+                    for (let i = 0; i < templateTypeInfo.NAME_TO_INFO[this.templateType.split('+')[k]].count; i++) {
+                        this.subjectLayoutItemList[k].push({});
                     }
+                    this.templateHeight = this.templateHeight + '_' + templateTypeInfo.NAME_TO_INFO[this.templateType.split('+')[k]].height;
                 }
+                this.templateHeight = this.templateHeight.slice(1);
                 // 模块板式有最后一个'更多'的位置
                 if (this.getModelCount() < this.programmeList.length) {
                     this.subjectLayoutItemList[this.lastRow][this.lastIndex] = {
@@ -340,7 +348,7 @@
             getModelCount() {
                 let num = 0;
                 for (let k = 0; k < this.templateType.split('+').length; k++) {
-                    num = num + templateType.SIZE[this.templateType.split('+')[k]].count;
+                    num = num + templateTypeInfo.NAME_TO_INFO[this.templateType.split('+')[k]].count;
                 }
                 return num;
             },
@@ -388,16 +396,16 @@
                     });
                     return;
                 }
-                let completeItemCount = 0;
+                let allSetting = true;
                 // 检查是否设置完成模块的每一项
                 this.subjectLayoutItemList.map(rowArray => {
                     rowArray.map(programme => {
-                        if (programme.coverImage.id) {
-                            completeItemCount++;
+                        if (!programme.coverImage || !programme.coverImage.id) {
+                            allSetting = false;
                         }
                     });
                 });
-                if (completeItemCount < this.getModelCount()) {
+                if (!allSetting) {
                     this.$message({
                         message: '请完整设置模块中的节目',
                         type: 'warning'
@@ -405,11 +413,15 @@
                     return;
                 }
                 // 定义模块布局模式
-                let layoutTemplate = 'LT_' + this.templateType.replace(/\+/g, '_');
+                let layoutTemplate = 'LT';
+                for (let i = 0; i < this.subjectLayoutItemList.length; i++) {
+                    layoutTemplate = layoutTemplate + '_' + this.subjectLayoutItemList[i].length;
+                }
                 // 组建模块专题对象
                 let programmeModel = {
                     layoutTemplate: layoutTemplate,
                     renderType: 'PROGRAMME',
+                    height: this.templateHeight,
                     subjectId: this.currentSubject.id,
                     title: this.title,
                     layoutItemMultiList: this.subjectLayoutItemList
@@ -487,38 +499,42 @@
                 }
             }
         }
-        .model-1 {
+
+        ul.model-1-200 {
             li {
                 width: 100%;
                 padding-bottom: 12%;
             }
         }
-
-        .model-2 {
+        ul.model-2-225 {
             li {
                 width: 48%;
                 padding-top: 13%;
             }
         }
 
-        .model-3 {
+        ul.model-3-225 {
             li {
                 width: 31%;
                 padding-top: 13%;
             }
         }
-
-        .model-4 {
+        ul.model-4-225 {
             li {
                 width: 23%;
                 padding-top: 13%;
             }
         }
-
-        .model-6 {
+        ul.model-6-350 {
             li {
                 width: 14%;
                 padding-top: 20%;
+            }
+        }
+        ul.model-6-134 {
+            li {
+                width: 14%;
+                padding-top: 8%;
             }
         }
     }
