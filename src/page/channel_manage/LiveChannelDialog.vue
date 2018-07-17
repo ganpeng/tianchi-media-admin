@@ -21,23 +21,23 @@
                     :value="liveChannel.no"
                 ></el-input>
             </el-form-item>
-            <el-form-item label="直播频道名称" prop="name">
-                <el-input
-                    :value="liveChannel.name"
-                    placeholder="请输入直播频道名称"
-                    @input="inputHandler($event, 'name')"
-                    :disabled="readonly"
-                ></el-input>
-            </el-form-item>
             <el-form-item
-                label="直播频道展示名"
+                label="直播频道名称"
                 prop="innerName">
                 <el-input
                     :disabled="readonly"
                     :value="liveChannel.innerName"
                     :maxlength="30"
-                    placeholder="请输入直播频道展示名"
+                    placeholder="请输入直播频道名称"
                     @input="inputHandler($event, 'innerName')"
+                ></el-input>
+            </el-form-item>
+            <el-form-item label="直播频道展示名" prop="name">
+                <el-input
+                    :value="liveChannel.name"
+                    placeholder="请输入直播频道展示名"
+                    @input="inputHandler($event, 'name')"
+                    :disabled="readonly"
                 ></el-input>
             </el-form-item>
             <el-form-item label="频道IP" prop="multicastIp">

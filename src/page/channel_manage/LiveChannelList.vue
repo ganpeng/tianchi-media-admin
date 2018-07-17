@@ -44,8 +44,8 @@
         <el-table :data="list" border style="width:100%;margin:20px 0;">
             <el-table-column prop="code" align="center" width="240px" label="直播频道编号"></el-table-column>
             <el-table-column prop="no" align="center" width="200px" label="直播频道展示编号"></el-table-column>
-            <el-table-column prop="name" align="center" width="200px" label="直播频道名称"></el-table-column>
-            <el-table-column prop="innerName" align="center" width="200px" label="直播频道展示名"></el-table-column>
+            <el-table-column prop="innerName" align="center" width="200px" label="直播频道名称"></el-table-column>
+            <el-table-column prop="name" align="center" width="200px" label="直播频道展示名"></el-table-column>
             <el-table-column prop="type" width="200px" align="center" label="频道类别">
                 <template slot-scope="scope">
                     {{typeName(scope.row.id)}}
