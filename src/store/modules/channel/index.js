@@ -207,6 +207,18 @@ const actions = {
         } catch (err) { }
     },
     /**
+     *  根据频道的id获取频道信息
+     */
+    async getLiveChannelById({commit, state}, id) {
+        try {
+            let res = await service.getChannelDetail(id);
+            if (res && res.code === 0) {
+                commit('setLiveChannel', {liveChannel: res.data});
+                return res;
+            }
+        } catch (err) {}
+    },
+    /**
      * 根据id修改直播频道
      */
     async updateChannelById() {
@@ -242,6 +254,15 @@ const actions = {
                 commit('setList', {list});
                 commit('setPagination', {pageNum: pageNum + 1, pageSize, total});
             }
+        } catch (err) { }
+    },
+    /**
+     * 获取节目单
+     */
+    async getChannelPageById({commit, state}, id) {
+        try {
+            let res = await service.getChannelPageById(id);
+            return res;
         } catch (err) { }
     }
 };

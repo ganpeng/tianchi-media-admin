@@ -81,3 +81,14 @@ export const getChannelList = ({pageNum, pageSize, keyword, typeIdList, visible,
 
     return service.get(`/v1/live/channel/page?${paramsStr}`);
 };
+
+/**
+ * 根据频道的id获取节目单
+ */
+export const getChannelPageById = (id) => {
+    return service.get(`/v1/live/channel-programme/list`, {
+        params: {
+            channelId: id
+        }
+    });
+};

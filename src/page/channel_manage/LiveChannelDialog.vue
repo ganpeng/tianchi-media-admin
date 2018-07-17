@@ -7,8 +7,19 @@
         :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form :model="liveChannel" :rules="inputRules" ref="liveChannelForm" class="form-block" label-width="150px">
-            <el-form-item label="直播频道编号">
+            <el-form-item
+                v-if="status !== 0"
+                label="直播频道编号">
                 <el-input :value="liveChannel.code" disabled></el-input>
+            </el-form-item>
+            <el-form-item
+                v-if="status !== 0"
+                label="直播频道展示编号" prop="no">
+                <el-input
+                    type="number"
+                    disabled
+                    :value="liveChannel.no"
+                ></el-input>
             </el-form-item>
             <el-form-item label="直播频道名称" prop="name">
                 <el-input
@@ -16,15 +27,6 @@
                     placeholder="请输入直播频道名称"
                     @input="inputHandler($event, 'name')"
                     :disabled="readonly"
-                ></el-input>
-            </el-form-item>
-            <el-form-item
-                label="直播频道展示编号" prop="no">
-                <el-input
-                    type="number"
-                    :disabled="readonly"
-                    :value="liveChannel.no"
-                    @input="inputHandler($event, 'no')"
                 ></el-input>
             </el-form-item>
             <el-form-item
@@ -189,8 +191,10 @@
             }),
             cancelHandler() {
                 this.resetLiveChannel();
-                this.$refs.liveChannelForm.resetFields();
                 this.$emit('changeLiveChannelDialogStatus');
+                if (this.status === 0) {
+                    this.$refs.liveChannelForm.resetFields();
+                }
             },
             successHandler() {
                 this.$refs.liveChannelForm.validate(value => {

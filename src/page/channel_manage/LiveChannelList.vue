@@ -53,9 +53,10 @@
             </el-table-column>
             <el-table-column prop="multicastIp" width="150px" align="center" label="频道IP"></el-table-column>
             <el-table-column prop="multicastPort" align="center" label="频道端口"></el-table-column>
-            <el-table-column align="center" width="220px" fixed="right" label="操作">
+            <el-table-column align="center" width="320px" fixed="right" label="操作">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small">节目单下载</el-button>
+                    <el-button type="text" size="small" @click="previewChannelPage(scope.row.id, true)">节目单下载</el-button>
+                    <el-button type="text" size="small" @click="previewChannelPage(scope.row.id)">节目单预览</el-button>
                     <el-button type="text" size="small" @click="_updateLiveChannel(scope.row.id)">编辑</el-button>
                     <el-button type="text" size="small" @click="_deleteLiveChannel(scope.row.id)">删除</el-button>
                 </template>
@@ -106,6 +107,8 @@
 <script>
     import {mapGetters, mapActions, mapMutations} from 'vuex';
     import LiveChannelDialog from './LiveChannelDialog';
+    const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
+    const x2js = new X2JS();
     export default {
         name: 'LiveChannelList',
         components: {
@@ -142,7 +145,9 @@
             ...mapActions({
                 getChannelType: 'channel/getChannelType',
                 getChannelList: 'channel/getChannelList',
-                deleteChannelById: 'channel/deleteChannelById'
+                deleteChannelById: 'channel/deleteChannelById',
+                getLiveChannelById: 'channel/getLiveChannelById',
+                getChannelPageById: 'channel/getChannelPageById'
             }),
             showLiveChannelDialog() {
                 this.liveChannelDialogVisible = true;
@@ -155,10 +160,57 @@
                 this.getChannelList();
             },
             _updateLiveChannel(id) {
-                let liveChannel = this.list.find((liveChannel) => liveChannel.id === id);
-                this.liveChannelDialogVisible = true;
-                this.status = 1;
-                this.setLiveChannel({liveChannel});
+                this.getLiveChannelById(id)
+                    .then((res) => {
+                        this.liveChannelDialogVisible = true;
+                        this.status = 1;
+                    });
+            },
+            previewChannelPage(id, flag) {
+                this.getChannelPageById(id)
+                    .then((res) => {
+                        if (res && res.code === 0) {
+                            let xml = x2js.json2xml_str({'频道': {'节目': res.data}});
+                            let blob = new Blob(['<?xml version="1.0" encoding="UTF-8"?>', xml], {type: 'application/xml'});
+                            if (flag) {
+                                this.openDownloadDialog(blob, '节目单.xml');
+                            } else {
+                                this.openNewTab(blob);
+                            }
+                        }
+                    });
+            },
+            openNewTab(url) {
+                if (typeof url === 'object' && url instanceof Blob) {
+                    url = URL.createObjectURL(url); // 创建blob地址
+                }
+                let aLink = document.createElement('a');
+                aLink.href = url;
+                aLink.target = '_blank';
+                let event;
+                if (window.MouseEvent) {
+                    event = new MouseEvent('click');
+                } else {
+                    event = document.createEvent('MouseEvents');
+                    event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                }
+                aLink.dispatchEvent(event);
+            },
+            openDownloadDialog(url, saveName) {
+                if (typeof url === 'object' && url instanceof Blob) {
+                    url = URL.createObjectURL(url); // 创建blob地址
+                }
+                let aLink = document.createElement('a');
+                aLink.href = url;
+                aLink.download = saveName || ''; // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
+                let event;
+                if (window.MouseEvent) {
+                    event = new MouseEvent('click');
+                } else {
+                    event = document.createEvent('MouseEvents');
+                    event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                }
+                aLink.dispatchEvent(event);
             },
             inputHandler(value, key) {
                 this.updateSearchFields({key, value});
