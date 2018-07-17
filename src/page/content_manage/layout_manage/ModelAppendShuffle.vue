@@ -67,7 +67,7 @@
                                 <el-dropdown-item command="PROGRAMME_SUBJECT">设置为专题</el-dropdown-item>
                                 <el-dropdown-item command="CHANNEL">设置为频道</el-dropdown-item>
                                 <el-dropdown-item command="WEB_PAGE">设置为网页</el-dropdown-item>
-                                <el-dropdown-item command="VIDEO">设置为节目内视频</el-dropdown-item>
+                                <el-dropdown-item command="PROGRAMME_VIDEO">设置为节目内视频</el-dropdown-item>
                                 <el-dropdown-item command="FILTER">设置为筛选页面</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
@@ -88,7 +88,7 @@
             <set-item-programme
                 v-if="dialogVisible.programmeDialogVisible"
                 :imageSpec="imageSpec"
-                :originFigure="originItemState"
+                :originState="originItemState"
                 v-on:setShuffleItem="setShuffleItem">
             </set-item-programme>
         </el-dialog>
@@ -101,7 +101,7 @@
             <set-item-figure
                 v-if="dialogVisible.figureDialogVisible"
                 :imageSpec="imageSpec"
-                :originFigure="originItemState"
+                :originState="originItemState"
                 v-on:setShuffleItem="setShuffleItem">
             </set-item-figure>
         </el-dialog>
@@ -186,6 +186,7 @@
     import SelectChannel from './SelectChannel';
     import templateTypeInfo from '@/util/config/template_type';
     import {LAYOUT_IMAGE_DIMENSION, PROGRAMME_DIMENSION} from '@/util/config/dimension';
+    import _ from 'lodash';
 
     export default {
         name: 'ModelAppendShuffle',
@@ -285,7 +286,7 @@
             // 回填选中的专题数据
             initCurrentRecommendSubject() {
                 this.title = this.recommendModelInfo.title;
-                this.shuffleLayoutItemList = this.recommendModelInfo.layoutItemMultiList;
+                this.shuffleLayoutItemList = _.cloneDeep(this.recommendModelInfo.layoutItemMultiList);
                 this.templateHeight = this.recommendModelInfo.height;
                 // 初始化模板样式
                 this.templateType = '';
@@ -328,34 +329,56 @@
              * @param {Object} item  The Object of current item
              */
             setModelItem(mode, imageModel, row, index, item) {
+                this.originItemState = {};
                 switch (mode) {
                     // 设置为节目
                     case 'PROGRAMME':
                         this.dialogVisible.programmeDialogVisible = true;
+                        if (item.layoutItemType === 'PROGRAMME' || item.layoutItemType === 'PROGRAMME_LIST') {
+                            this.originItemState = item;
+                        }
                         break;
                     // 设置为人物
                     case 'FIGURE':
                         this.dialogVisible.figureDialogVisible = true;
+                        if (item.layoutItemType === 'FIGURE') {
+                            this.originItemState = item;
+                        }
                         break;
                     // 设置为节目专题
                     case 'PROGRAMME_SUBJECT':
                         this.dialogVisible.subjectDialogVisible = true;
+                        if (item.layoutItemType === 'SUBJECT') {
+                            this.originItemState = item;
+                        }
                         break;
                     // 设置为频道
                     case 'CHANNEL':
                         this.dialogVisible.channelDialogVisible = true;
+                        if (item.layoutItemType === 'CHANNEL') {
+                            this.originItemState = item;
+                        }
                         break;
                     // 设置为网页
                     case 'WEB_PAGE':
                         this.dialogVisible.webPageDialogVisible = true;
+                        if (item.layoutItemType === 'LINK') {
+                            this.originItemState = item;
+                        }
                         break;
                     // 设置为节目中的视频
-                    case 'VIDEO':
+                    case 'PROGRAMME_VIDEO':
                         this.dialogVisible.programmeVideoDialogVisible = true;
+                        if (item.layoutItemType === 'PROGRAMME_VIDEO') {
+                            this.originItemState = item;
+                        }
                         break;
                     // 设置为筛选页面
                     case 'FILTER':
                         this.dialogVisible.filterDialogVisible = true;
+                        if (item.layoutItemType.indexOf('PROGRAMME_CATEGORY') !== -1) {
+                            this.originItemState = item;
+                        }
                         break;
                     default:
                         break;
@@ -370,7 +393,6 @@
                 }
                 this.currentRow = row;
                 this.currentIndex = index;
-                // 初始化本项的数据，用于回填
             },
             // 设置混排中某一项内容
             setShuffleItem(item) {

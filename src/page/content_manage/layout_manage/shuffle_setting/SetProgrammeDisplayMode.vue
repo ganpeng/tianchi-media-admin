@@ -27,6 +27,9 @@
         },
         methods: {
             init() {
+                if (this.originState && this.originState.layoutItemType) {
+                    this.displayMode = this.originState.layoutItemType;
+                }
             },
             selectDisplayMode() {
                 this.$emit('setDisplayMode', this.displayMode);

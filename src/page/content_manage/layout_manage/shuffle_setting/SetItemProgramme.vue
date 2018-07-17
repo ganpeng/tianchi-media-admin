@@ -9,6 +9,7 @@
         </el-steps>
         <keep-alive>
             <component
+                v-show="!(mode === 'EDIT' && activeStep === 0)"
                 ref="currentComponent"
                 :is="currentView"
                 :programme="programme"
@@ -21,6 +22,15 @@
                 v-on:setDisplayMode="setDisplayMode">
             </component>
         </keep-alive>
+        <!--展示当前选择的节目的table表格-->
+        <template v-if="mode === 'EDIT' && activeStep === 0">
+            <single-programme-table
+                :singleProgrammeList="[programme]">
+            </single-programme-table>
+            <div>
+                <el-button type="primary" plain @click="switchMode">更换节目</el-button>
+            </div>
+        </template>
         <div class="step-button">
             <el-button @click="previous" v-if="activeStep > 0">上一步</el-button>
             <el-button @click="next" v-if="activeStep < 3">下一步</el-button>
@@ -31,6 +41,7 @@
 
 <script>
     import SelectSingleProgramme from '../SelectSingleProgramme';
+    import SingleProgrammeTable from '../SingleProgrammeTable';
     import SetItemProgrammeCoverImage from './SetItemProgrammeCoverImage';
     import SetCornerMarks from '../SetCornerMarks';
     import SetProgrammeDisplayMode from './SetProgrammeDisplayMode';
@@ -39,15 +50,15 @@
         name: 'SetItemProgramme',
         components: {
             SelectSingleProgramme,
+            SingleProgrammeTable,
             SetItemProgrammeCoverImage,
             SetCornerMarks,
             SetProgrammeDisplayMode
         },
         /** imageSpec 当前选择的节目中适合当前板式的图片集合
          *  originProgramme 需要回填的节目的信息
-         *  subjectLayoutItemList 当前已经选择设置的节目的集合
          * */
-        props: ['imageSpec', 'originProgramme', 'subjectLayoutItemList'],
+        props: ['imageSpec', 'originState'],
         data() {
             return {
                 activeStep: 0,
@@ -60,7 +71,9 @@
                 // 当前节目的展现方式
                 displayMode: '',
                 // 当前选择的节目的状态信息
-                currentState: {}
+                currentState: {},
+                // 当前是否为item编辑状态
+                mode: 'NORMAL'
             };
         },
         computed: {
@@ -84,12 +97,31 @@
         },
         methods: {
             init() {
-                if (this.originProgramme && this.originProgramme.coverImage) {
-                    this.currentState = this.originProgramme;
-                    this.coverImage = this.originProgramme.coverImage;
-                    this.checkedCornerMarks = this.originProgramme.cornerMark;
-                    this.displayMode = this.originProgramme.displayMode;
+                if (this.originState && this.originState.coverImage) {
+                    this.mode = 'EDIT';
+                    this.currentState = this.originState;
+                    this.programme.id = this.originState.id;
+                    this.programme.name = this.originState.name;
+                    this.coverImage = this.originState.coverImage;
+                    this.checkedCornerMarks = this.originState.cornerMark;
+                    this.displayMode = this.originState.layoutItemType;
+                    this.getProgrammeDetail();
+                } else {
+                    this.mode = 'NORMAL';
                 }
+            },
+            // 获取节目详情
+            getProgrammeDetail() {
+                this.$service.getProgrammeInfo({id: this.programme.id}).then(response => {
+                    if (response && response.code === 0) {
+                        this.programme = response.data;
+                    }
+                });
+            },
+            switchMode() {
+                this.mode = 'NORMAL';
+                this.resetProgramme();
+                this.currentState = {};
             },
             // 重置选择的节目
             resetProgramme() {

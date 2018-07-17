@@ -173,6 +173,7 @@
     import templateTypeInfo from '@/util/config/template_type';
     import {LAYOUT_IMAGE_DIMENSION, PROGRAMME_DIMENSION} from '@/util/config/dimension';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import _ from 'lodash';
 
     export default {
         name: 'ModelAppendProgrammeSubject',
@@ -258,7 +259,7 @@
             // 回填选中的专题数据
             initCurrentRecommendSubject() {
                 this.title = this.recommendModelInfo.title;
-                this.subjectLayoutItemList = this.recommendModelInfo.layoutItemMultiList;
+                this.subjectLayoutItemList = _.cloneDeep(this.recommendModelInfo.layoutItemMultiList);
                 this.templateHeight = this.recommendModelInfo.height;
                 // 初始化模板样式
                 this.templateType = '';
