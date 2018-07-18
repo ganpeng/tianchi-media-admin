@@ -39,8 +39,10 @@ let RegExpConstants = {
      * The RegExp of website address.
      */
     WEB_SITE_ADDRESS: /^((ftp|https?):\/\/|www\.).*/,
-    //  三位正整数
-    THREE_POSITIVE: /^[0-9]{3}$/
+    /**
+     * The RegExp of channel no.
+     */
+    CHANNEL_NO: /^[0-9]{3}$/
 };
 
 /**

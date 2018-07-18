@@ -15,8 +15,8 @@
             <el-form-item label="名称" prop="innerName" required>
                 <el-input v-model="channelInfo.innerName" placeholder="请填写10个字以内的名称"></el-input>
             </el-form-item>
-            <el-form-item label="编号" required>
-                <label>{{channelInfo.no}}</label>
+            <el-form-item label="编号" prop="no" required>
+                <el-input v-model="channelInfo.no" placeholder="请填写三位频道编号数字，例如'001'"></el-input>
             </el-form-item>
             <el-form-item label="类别" prop="typeIdList" required>
                 <el-select v-model="channelInfo.typeIdList" multiple placeholder="请选择频道类别">
@@ -198,6 +198,15 @@
                     callback();
                 }
             };
+            let checkNo = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('频道编号不能为空'));
+                } else if (!this.$util.isChannelNo(value)) {
+                    return callback(new Error('请填写三位频道编号数字，例如"001"'));
+                } else {
+                    callback();
+                }
+            };
             let checkTypeIdList = (rule, value, callback) => {
                 if (this.channelInfo.typeIdList.length === 0) {
                     return callback(new Error('请选择频道类别'));
@@ -241,6 +250,9 @@
                 infoRules: {
                     innerName: [
                         {validator: checkInnerName, trigger: 'blur'}
+                    ],
+                    no: [
+                        {validator: checkNo, trigger: 'blur'}
                     ],
                     typeIdList: [
                         {validator: checkTypeIdList, trigger: 'change'}

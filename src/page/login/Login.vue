@@ -7,7 +7,7 @@
         </el-header>
         <!--内容部分-->
         <el-main>
-            <div class="form-box">
+            <div class="form-box" @keyup.enter="submitForm">
                 <el-form :model="formData" status-icon :rules="rules" ref="login" label-width="50px"
                          class="demo-ruleForm">
                     <el-form-item label="账号" prop="name" class="input-box">
@@ -112,7 +112,6 @@
         img {
             float: left;
             margin-top: 20px;
-            width: 25px;
             height: 25px;
         }
         label {

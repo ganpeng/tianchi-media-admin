@@ -89,6 +89,14 @@ let util = {
         return constants.RegExpConstants.WEB_SITE_ADDRESS.test(this.trim(str));
     },
     /**
+     *Judge string is or not a channel no
+     * @param {String} str  The base string as a channel no
+     * @return {Boolean} Is or not a right channel no
+     */
+    isChannelNo(str) {
+        return constants.RegExpConstants.CHANNEL_NO.test(this.trim(str)) && parseInt(this.trim(str)) !== 0;
+    },
+    /**
      * Format the date with specified format
      * @param {Date} date  The base string
      * @param {String} format  supported format options: yyyy: full year, MM: month, DD: date, HH: hours, mm: minutes, SS: seconds
