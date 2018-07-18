@@ -13,15 +13,6 @@
                 <el-input :value="liveChannel.code" disabled></el-input>
             </el-form-item>
             <el-form-item
-                v-if="status !== 0"
-                label="直播频道展示编号" prop="no">
-                <el-input
-                    type="number"
-                    disabled
-                    :value="liveChannel.no"
-                ></el-input>
-            </el-form-item>
-            <el-form-item
                 label="直播频道名称"
                 prop="innerName">
                 <el-input
@@ -38,6 +29,16 @@
                     placeholder="请输入直播频道展示名"
                     @input="inputHandler($event, 'name')"
                     :disabled="readonly"
+                ></el-input>
+            </el-form-item>
+            <el-form-item
+                label="直播频道展示编号" prop="no">
+                <el-input
+                    type="number"
+                    :value="liveChannel.no"
+                    placeholder="请输入直播频道展示编号"
+                    :disabled="readonly"
+                    @input="inputHandler($event, 'no')"
                 ></el-input>
             </el-form-item>
             <el-form-item label="频道IP" prop="multicastIp">
@@ -111,7 +112,7 @@
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import UploadImage from 'sysComponents/custom_components/global/UploadImage';
     import dimension from '@/util/config/dimension';
-    import {checkIP, checkPort} from '@/util/formValidate';
+    import {checkIP, checkPort, checkChannelNo} from '@/util/formValidate';
 
     export default {
         props: {
@@ -135,7 +136,8 @@
                         { required: true, message: '请输直播频道名称' }
                     ],
                     no: [
-                        { required: true, message: '请输入直播频道展示编号' }
+                        { required: true, message: '请输入直播频道展示编号' },
+                        { validator: checkChannelNo }
                     ],
                     innerName: [
                         { required: true, message: '请输入直播频道展示名称' }

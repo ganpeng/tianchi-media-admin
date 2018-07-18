@@ -89,6 +89,21 @@ export const checkIP = (rule, value, callback) => {
 /**
  *  校验ip地址
  */
+export const checkChannelNo = (rule, value, callback) => {
+    if (!_.isEmpty(value)) {
+        if (constants.RegExpConstants.THREE_POSITIVE.test(value) && value !== '000') {
+            callback();
+        } else {
+            return callback(new Error('请输入正确的三位频道编号, 例如"007"'));
+        }
+    } else {
+        callback();
+    }
+};
+
+/**
+ *  校验ip地址
+ */
 export const checkPort = (rule, value, callback) => {
     if (!_.isEmpty(value)) {
         if (constants.RegExpConstants.IP_PORT.test(value)) {

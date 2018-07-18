@@ -135,6 +135,8 @@ export default {
             let template = layoutTemplate.split('LT_')[1].split('_').join('+');
             if (template === '6+6' && parseInt(height.split('_')[0]) === 134) {
                 return 's6+s6';
+            } else if (template === '6' && parseInt(height.split('_')[0]) === 134) {
+                return 's6';
             } else {
                 return template;
             }
