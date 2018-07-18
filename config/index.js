@@ -14,11 +14,17 @@ module.exports = {
         proxyTable: {
             '/admin/v': {
                 target: env.proxyTarget,
-                changeOrigin: true
+                changeOrigin: true,
+                bypass: function (req, res, proxyOptions) {
+                    console.log('URL:' + proxyOptions.target + req.originalUrl);
+                }
             },
             '/v': {
                 target: env.uploadProxyTarget,
-                changeOrigin: true
+                changeOrigin: true,
+                bypass: function (req, res, proxyOptions) {
+                    console.log('URL:' + proxyOptions.target + req.originalUrl);
+                }
             }
         },
 

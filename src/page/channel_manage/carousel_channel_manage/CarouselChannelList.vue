@@ -57,7 +57,7 @@
                     label="编号">
                 </el-table-column>
                 <el-table-column
-                    prop="name"
+                    prop="innerName"
                     label="名称">
                 </el-table-column>
                 <el-table-column

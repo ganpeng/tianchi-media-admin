@@ -12,7 +12,7 @@
             <el-tag class="title">频道基本信息</el-tag>
             <el-form label-position="right" label-width="100px">
                 <el-form-item label="名称：">
-                    <label>{{channelInfo.name}}</label>
+                    <label>{{channelInfo.innerName}}</label>
                 </el-form-item>
                 <el-form-item label="编号：">
                     <label>{{channelInfo.no}}</label>
