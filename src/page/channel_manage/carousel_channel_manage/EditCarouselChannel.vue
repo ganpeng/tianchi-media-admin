@@ -6,14 +6,14 @@
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>频道管理</el-breadcrumb-item>
             <el-breadcrumb-item>轮播频道管理</el-breadcrumb-item>
-            <el-breadcrumb-item>编辑<label class="channel-name">{{channelInfo.name}}</label>轮播频道</el-breadcrumb-item>
+            <el-breadcrumb-item>编辑<label class="channel-name">{{channelInfo.innerName}}</label>轮播频道</el-breadcrumb-item>
         </el-breadcrumb>
         <el-tag class="title">频道基本信息</el-tag>
         <el-form :model="channelInfo" :rules="infoRules" status-icon ref="channelInfo"
                  label-width="80px"
                  class="form-block">
-            <el-form-item label="名称" prop="name" required>
-                <el-input v-model="channelInfo.name" placeholder="请填写10个字以内的名称"></el-input>
+            <el-form-item label="名称" prop="innerName" required>
+                <el-input v-model="channelInfo.innerName" placeholder="请填写10个字以内的名称"></el-input>
             </el-form-item>
             <el-form-item label="编号" required>
                 <label>{{channelInfo.no}}</label>
@@ -189,7 +189,7 @@
             SortDialog
         },
         data() {
-            let checkName = (rule, value, callback) => {
+            let checkInnerName = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('频道名称不能为空'));
                 } else if (this.$util.trim(value).length > 10) {
@@ -239,8 +239,8 @@
                     visible: false
                 },
                 infoRules: {
-                    name: [
-                        {validator: checkName, trigger: 'blur'}
+                    innerName: [
+                        {validator: checkInnerName, trigger: 'blur'}
                     ],
                     typeIdList: [
                         {validator: checkTypeIdList, trigger: 'change'}

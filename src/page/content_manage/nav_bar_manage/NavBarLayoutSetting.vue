@@ -646,7 +646,7 @@
     }
 
     #setting {
-        margin: 50px 0px;
+        margin: 30px 0px;
         padding: 30px 0px;
         background-image: linear-gradient(0deg, #283974 3%, #022c68 35%, #011530 100%);
         width: 100%;

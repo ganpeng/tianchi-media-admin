@@ -6,6 +6,7 @@ const path = require('path');
 const env = require('./env');
 
 module.exports = {
+    stats: 'verbose',
     dev: {
         // Paths
         assetsSubDirectory: 'static',
@@ -26,6 +27,7 @@ module.exports = {
         host: '0.0.0.0', // can be overwritten by process.env.HOST
         port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
         autoOpenBrowser: false,
+        noInfo: false,
         errorOverlay: true,
         notifyOnErrors: true,
         poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
