@@ -199,23 +199,37 @@
                     if (value) {
                         if (this.status === 0) {
                             this.createChannels()
-                                .then(() => {
-                                    this.cancelHandler();
-                                    this.getChannelList();
-                                    this.$message({
-                                        type: 'success',
-                                        message: '频道创建成功'
-                                    });
+                                .then((res) => {
+                                    if (res && res.code === 0) {
+                                        this.cancelHandler();
+                                        this.getChannelList();
+                                        this.$message({
+                                            type: 'success',
+                                            message: '频道创建成功'
+                                        });
+                                    } else {
+                                        this.$message({
+                                            type: 'error',
+                                            message: `频道创建失败, ${res.message}`
+                                        });
+                                    }
                                 });
                         } else {
                             this.updateChannelById()
-                                .then(() => {
-                                    this.cancelHandler();
-                                    this.getChannelList();
-                                    this.$message({
-                                        type: 'success',
-                                        message: '频道更新成功'
-                                    });
+                                .then((res) => {
+                                    if (res && res.code === 0) {
+                                        this.cancelHandler();
+                                        this.getChannelList();
+                                        this.$message({
+                                            type: 'success',
+                                            message: '频道更新成功'
+                                        });
+                                    } else {
+                                        this.$message({
+                                            type: 'error',
+                                            message: `频道更新失败, ${res.message}`
+                                        });
+                                    }
                                 });
                         }
                     }

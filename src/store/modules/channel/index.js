@@ -201,9 +201,7 @@ const actions = {
             delete liveChannel.id;
             delete liveChannel.visible;
             let res = await service.createChannels(liveChannel);
-            if (res && res.code === 0) {
-                return res;
-            }
+            return res;
         } catch (err) { }
     },
     /**
@@ -226,9 +224,7 @@ const actions = {
             let {id} = state.liveChannel;
             let liveChannel = _.cloneDeep(state.liveChannel);
             let res = await service.updateChannelById(id, liveChannel);
-            if (res && res.code === 0) {
-                return res;
-            }
+            return res;
         } catch (err) { }
     },
     /**
