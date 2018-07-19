@@ -34,6 +34,12 @@
             <el-form-item label="端口号" prop="multicastPort" required>
                 <el-input v-model="channelInfo.multicastPort" placeholder="请填写端口号"></el-input>
             </el-form-item>
+            <el-form-item label="频道封面" prop="logoUri" required>
+                <el-button type="success" @click="imageUploadDialogVisible = true">设置封面</el-button>
+                <div v-if="channelInfo.logoUri" class="image-box">
+                    <img :src="channelInfo.logoUri | imageUrl">
+                </div>
+            </el-form-item>
         </el-form>
         <el-tag class="title">频道节目信息</el-tag>
         <el-form label-position="right" label-width="90px">
@@ -173,6 +179,13 @@
             v-on:closeDialog="sortDialogVisible = false"
             v-on:setSortedList="setSortedList">
         </sort-dialog>
+        <upload-image
+            :size='size'
+            title="上传频道封面图片"
+            :successHandler="setChannelLogo"
+            :imageUploadDialogVisible="imageUploadDialogVisible"
+            v-on:changeImageDialogStatus="closeImageDialog($event)">
+        </upload-image>
     </div>
 </template>
 
@@ -180,13 +193,16 @@
     import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
     import SelectMultipleVideo from './SelectMultipleVideo';
     import SortDialog from 'sysComponents/custom_components/global/SortDialog';
+    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import {CHANNEL_LOGO_DIMENSION} from '@/util/config/dimension';
 
     export default {
         name: 'EditCarouselChannel',
         components: {
             DisplayVideoDialog,
             SelectMultipleVideo,
-            SortDialog
+            SortDialog,
+            UploadImage
         },
         data() {
             let checkInnerName = (rule, value, callback) => {
@@ -232,7 +248,16 @@
                     callback();
                 }
             };
+            let checkLogoUri = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('请设置频道的封面图片'));
+                } else {
+                    callback();
+                }
+            };
             return {
+                size: CHANNEL_LOGO_DIMENSION,
+                imageUploadDialogVisible: false,
                 sortDialogVisible: false,
                 selectDialogVisible: false,
                 channelInfo: {
@@ -262,6 +287,9 @@
                     ],
                     multicastPort: [
                         {validator: checkMulticastPort, trigger: 'blur'}
+                    ],
+                    logoUri: [
+                        {validator: checkLogoUri, trigger: 'blur'}
                     ]
                 }
             };
@@ -293,6 +321,14 @@
                         });
                     }
                 });
+            },
+            // 设置频道封面的uri
+            setChannelLogo(newPosterImage) {
+                this.channelInfo.logoUri = newPosterImage.posterImage.uri;
+            },
+            // 关闭上传图片对话框
+            closeImageDialog(status) {
+                this.imageUploadDialogVisible = status;
             },
             // 打开视频列表，设置当前点击的某一行视频
             popAppendVideoDialogue(index) {
@@ -490,6 +526,11 @@
                         ).then(response => {
                             if (response && response.code === 0) {
                                 this.$message('保存频道信息成功');
+                            } else {
+                                this.$message({
+                                    message: response.message,
+                                    type: 'warning'
+                                });
                             }
                         });
                     } else {
@@ -532,5 +573,9 @@
 
     .update-box {
         margin: 60px 0px 40px 0px;
+    }
+
+    .image-box {
+        margin-top: 20px;
     }
 </style>

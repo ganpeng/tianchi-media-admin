@@ -29,6 +29,9 @@
                 <el-form-item label="状态：">
                     <label>{{channelInfo.visible ? '正常' : '禁播'}}</label>
                 </el-form-item>
+                <el-form-item label="封面：">
+                    <img :src="channelInfo.logoUri | imageUrl">
+                </el-form-item>
             </el-form>
             <el-tag class="title">频道节目信息</el-tag>
             <el-form label-position="right" label-width="90px">

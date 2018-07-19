@@ -29,17 +29,36 @@
             <el-form-item label="频道状态" required>
                 <label>禁播</label>
             </el-form-item>
+            <el-form-item label="频道封面" prop="logoUri" required>
+                <el-button type="success" @click="imageUploadDialogVisible = true">上传图片</el-button>
+                <div v-if="channelInfo.logoUri" class="image-box">
+                    <img :src="channelInfo.logoUri | imageUrl">
+                </div>
+            </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
                <el-button @click="closeDialog">取 消</el-button>
                <el-button type="primary" @click="createChannel">确 定</el-button>
         </span>
+        <upload-image
+            :size='size'
+            title="上传频道封面图片"
+            :successHandler="setChannelLogo"
+            :imageUploadDialogVisible="imageUploadDialogVisible"
+            v-on:changeImageDialogStatus="closeImageDialog($event)">
+        </upload-image>
     </div>
 </template>
 
 <script>
+    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import {CHANNEL_LOGO_DIMENSION} from '@/util/config/dimension';
+
     export default {
         name: 'CreateChannel',
+        components: {
+            UploadImage
+        },
         data() {
             let checkInnerName = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
@@ -84,14 +103,24 @@
                     callback();
                 }
             };
+            let checkLogoUri = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('请设置频道的封面图片'));
+                } else {
+                    callback();
+                }
+            };
             return {
+                size: CHANNEL_LOGO_DIMENSION,
+                imageUploadDialogVisible: false,
                 channelInfo: {
                     category: 'CAROUSEL',
                     innerName: '',
                     no: '',
                     typeList: [],
                     typeIdList: [],
-                    visible: false
+                    visible: false,
+                    logoUri: ''
                 },
                 typeOptions: [],
                 infoRules: {
@@ -109,6 +138,9 @@
                     ],
                     multicastPort: [
                         {validator: checkMulticastPort, trigger: 'blur'}
+                    ],
+                    logoUri: [
+                        {validator: checkLogoUri, trigger: 'blur'}
                     ]
                 }
             };
@@ -123,6 +155,14 @@
                         this.typeOptions = response.data;
                     }
                 });
+            },
+            // 设置频道封面的uri
+            setChannelLogo(newPosterImage) {
+                this.channelInfo.logoUri = newPosterImage.posterImage.uri;
+            },
+            // 关闭上传图片对话框
+            closeImageDialog(status) {
+                this.imageUploadDialogVisible = status;
             },
             closeDialog() {
                 this.$emit('closeDialog');
@@ -143,6 +183,11 @@
                             if (response && response.code === 0) {
                                 this.$message('成功创建频道');
                                 this.$emit('closeDialog');
+                            } else {
+                                this.$message({
+                                    message: response.message,
+                                    type: 'warning'
+                                });
                             }
                         });
                     } else {
@@ -162,6 +207,10 @@
 
     .el-input, .el-select {
         width: 600px;
+    }
+
+    .image-box {
+        margin-top: 20px;
     }
 
 </style>
