@@ -142,7 +142,7 @@
                 return (index) => {
                     let status = this.progress[index].status;
                     let percent = this.progress[index].percent;
-                    return status === 'canceled' || status === 'uploaded' || percent === 100;
+                    return status === 'canceled' || status === 'uploaded' || status === 'error' || status === 'fail' || percent === 100;
                 };
             },
             uploadStatus() {
