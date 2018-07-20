@@ -64,7 +64,7 @@
             width="80%"
             :close-on-click-modal="false"
             :close-on-press-escape="false">
-            <div class="upload-file">
+            <div v-show="!isUploading" class="upload-file">
                 <div class="wrapper">
                     <label for="upload-input">
                         <el-button size="small" type="primary">选取文件</el-button>
@@ -118,6 +118,7 @@
                 progress: [],
                 cancel: null,
                 count: 0,
+                isUploading: false,
                 videoUploadDialogVisible: false,
                 videoTypeOptions: role.VIDEO_TYPE_OPTIONS,
                 statusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
@@ -204,6 +205,7 @@
                         this.cancel = null;
                         this.files = [];
                         this.progress = [];
+                        this.isUploading = false;
                         this.videoUploadDialogVisible = false;
                     }).catch(() => {
                         this.$message({
@@ -216,6 +218,7 @@
                     this.cancel = null;
                     this.files = [];
                     this.progress = [];
+                    this.isUploading = false;
                     this.videoUploadDialogVisible = false;
                 }
             },
@@ -237,11 +240,16 @@
             },
             uploadHandler(obj) {
                 let that = this;
+                if (!this.isUploading) {
+                    this.isUploading = true;
+                    upload();
+                }
                 function upload() {
                     if (typeof that.files[that.count] === 'undefined') {
                         that.$refs.uploadInput.value = '';
                         that.count = 0;
                         that.cancel = null;
+                        that.isUploading = false;
                         return false;
                     }
                     let formData = new FormData();
@@ -323,7 +331,6 @@
                         upload();
                     });
                 }
-                upload();
             },
             cancelUpload(count) {
                 if (count === this.count && this.cancel !== null) {
