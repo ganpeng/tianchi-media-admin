@@ -88,7 +88,7 @@
                             @click="cancelUpload(index)"
                             class="delete-btn el-icon-close"></i>
                         <span class="percent">
-                            {{ getProgress(index).percent + '% ' + uploadStatus(index) }}
+                            {{ getProgress(index).percent + '% ' + (isChecking(index) ? '视频校验中, 请等待片刻' : uploadStatus(index)) }}
                             <i v-if="getProgress(index).status === 'uploading'" class="el-icon-loading"></i>
                         </span>
                     </div>
@@ -145,6 +145,13 @@
                     let status = this.progress[index].status;
                     let percent = this.progress[index].percent;
                     return status === 'canceled' || status === 'uploaded' || status === 'error' || status === 'fail' || percent === 100;
+                };
+            },
+            isChecking() {
+                return (index) => {
+                    let status = this.progress[index].status;
+                    let percent = this.progress[index].percent;
+                    return status === 'uploading' && percent === 100;
                 };
             },
             uploadStatus() {
@@ -379,9 +386,10 @@
     }
     .percent {
         display: inline-block;
-        width: 150px;
+        width: 220px;
         height: 14px;
         line-height: 14px;
+        text-align: left;
     }
     .delete-btn {
         margin-right: 10px;
