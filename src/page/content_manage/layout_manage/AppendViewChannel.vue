@@ -28,7 +28,7 @@
                     <el-option
                         v-for="(item, index) in channelList"
                         :key="index"
-                        :label="item.name"
+                        :label="item.innerName"
                         :value="item.id">
                     </el-option>
                 </el-select>
