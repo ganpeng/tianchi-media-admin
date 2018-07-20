@@ -50,6 +50,13 @@ const actions = {
                                 window.localStorage.setItem('imageBaseUri', res.data);
                             }
                         });
+                    // 获取视频的根路径
+                    service.getVideoBaseUri()
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                window.localStorage.setItem('videoBaseUri', res.data);
+                            }
+                        });
                     // 获取区域列表
                     service.fetchAreaList()
                         .then((res) => {

@@ -132,7 +132,8 @@ export default {
         },
         displayVideo(url) {
             this.displayVideoDialogVisible = true;
-            this.url = `http://dev-video.tianchiapi.com${url}`;
+            let baseUri = window.localStorage.getItem('videoBaseUri');
+            this.url = `${baseUri}${url}`;
         },
         _deleteVideoById(id) {
             this.$confirm('此操作将删除该文件, 是否继续?', '提示', {

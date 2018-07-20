@@ -89,6 +89,7 @@
                             class="delete-btn el-icon-close"></i>
                         <span class="percent">
                             {{ getProgress(index).percent + '% ' + uploadStatus(index) }}
+                            <i v-if="getProgress(index).status === 'uploading'" class="el-icon-loading"></i>
                         </span>
                     </div>
                 </li>
