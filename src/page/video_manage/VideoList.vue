@@ -201,11 +201,7 @@
                         type: 'error'
                     }).then(() => {
                         this.$refs.uploadInput.value = '';
-                        this.count = 0;
-                        this.cancel = null;
-                        this.files = [];
-                        this.progress = [];
-                        this.isUploading = false;
+                        this.resetUpload();
                         this.videoUploadDialogVisible = false;
                     }).catch(() => {
                         this.$message({
@@ -214,11 +210,7 @@
                         });
                     });
                 } else {
-                    this.count = 0;
-                    this.cancel = null;
-                    this.files = [];
-                    this.progress = [];
-                    this.isUploading = false;
+                    this.resetUpload();
                     this.videoUploadDialogVisible = false;
                 }
             },
@@ -228,8 +220,17 @@
             searchHandler() {
                 this.getVideoList();
             },
+            resetUpload() {
+                this.count = 0;
+                this.cancel && this.cancel();
+                this.cancel = null;
+                this.files = [];
+                this.progress = [];
+                this.isUploading = false;
+            },
             uploadChangeHandler(e) {
-                this.files = Array.from(e.target.files);
+                this.resetUpload();
+                this.files = Array.from(e.target.files).map((item) => item);
                 this.progress = Array.from(this.files).map((item) => {
                     return {
                         percent: 0,
@@ -249,7 +250,7 @@
                         that.$refs.uploadInput.value = '';
                         that.count = 0;
                         that.cancel = null;
-                        that.isUploading = false;
+                        // that.isUploading = false;
                         return false;
                     }
                     let formData = new FormData();
