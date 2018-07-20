@@ -1,0 +1,293 @@
+<!--视频列表组件-->
+<template>
+    <div>
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
+            <el-breadcrumb-item>视频资源管理</el-breadcrumb-item>
+            <el-breadcrumb-item>视频列表</el-breadcrumb-item>
+        </el-breadcrumb>
+        <el-form :inline="true" class="demo-form-inline search-form">
+            <el-form-item class="search">
+                <el-input
+                    :value="searchFields.name"
+                    placeholder="搜索你想要的信息"
+                    clearable
+                    @input="inputHandler($event, 'name')"
+                >
+                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                </el-input>
+            </el-form-item>
+            <el-form-item class="search">
+                <el-select
+                    :value="searchFields.videoType"
+                    clearable
+                    placeholder="请选择视频类型"
+                    @input="inputHandler($event, 'videoType')"
+                >
+                    <el-option
+                        v-for="(item, index) in videoTypeOptions"
+                        :key="index"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item class="search">
+                <el-select
+                    :value="searchFields.status"
+                    clearable
+                    placeholder="请选择视频注入状态"
+                    @input="inputHandler($event, 'status')"
+                >
+                    <el-option
+                        v-for="(item, index) in statusOptions"
+                        :key="index"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="searchHandler">搜索</el-button>
+            </el-form-item>
+            <el-form-item class="create-account">
+                <el-button type="primary" plain @click="showVideoUploadDialog('VOD')">上传点播视频</el-button>
+                <el-button type="primary" plain @click="showVideoUploadDialog('CAROUSEL')">上传轮播视频</el-button>
+            </el-form-item>
+        </el-form>
+        <video-table></video-table>
+        <el-dialog
+            title="上传视频"
+            :visible.sync="videoUploadDialogVisible"
+            :headers="uploadHeaders"
+            :show-close="false"
+            width="80%"
+            :close-on-click-modal="false"
+            :close-on-press-escape="false">
+            <el-upload
+                class="upload-demo"
+                ref="upload"
+                :headers="uploadHeaders"
+                action="/v1/storage/video"
+                :on-success="uploadSuccessHandler"
+                :on-change="uploadChangeHandler"
+                :on-remove="removeFileHandler"
+                :before-upload="beforeUploadHandler"
+                :auto-upload="false"
+                :data="{videoType: this.getVideoType}"
+                :file-list="fileList"
+                :with-credentials="true"
+                multiple>
+                    <el-button slot="trigger" size="small" type="primary">选择视频</el-button>
+                    <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
+            </el-upload>
+            <div v-if="existList.length > 0">
+                <ul class="el-upload-list el-upload-list-text">
+                    <li v-for="(res, index) in existList" :key="index" :tabindex="index" style="overflow:hidden;" class="el-upload-list__item is-ready">
+                        <a>
+                            <i class="el-icon-document"></i>
+                            {{res.originName}}
+                            <span class="text-danger">该视频资源已存在</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div v-if="checkMd5List.length > 0">
+                <ul class="el-upload-list el-upload-list-text">
+                    <li v-for="(res, index) in checkMd5List" :key="index" :tabindex="index" style="overflow:hidden;" class="el-upload-list__item is-ready">
+                        <a>
+                            <i class="el-icon-document"></i>
+                            {{res.name}}
+                            <span class="text-danger">正在校验该视频是否存在，请稍等片刻</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div v-if="uploadResult.length > 0">
+                <ul class="el-upload-list el-upload-list--text">
+                    <li v-for="(res, index) in uploadResult" :key="index" :tabindex="index" style="overflow:hidden;" class="el-upload-list__item is-ready">
+                        <a>
+                            <i class="el-icon-document"></i>
+                            {{res.video.originName}}
+                            <span v-if="res.failCode" class="text-danger">{{res.failReason}}</span>
+                            <span v-if="!res.failCode" class="text-success">上传成功</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="cancelHandler">关闭</el-button>
+            </div>
+        </el-dialog>
+
+    </div>
+</template>
+<script>
+    import {mapGetters, mapMutations, mapActions} from 'vuex';
+    import VideoTable from './VideoTable';
+    import role from '@/util/config/role';
+    const SparkMD5 = require('../../assets/js/spark-md5.min'); // eslint-disable-line
+    export default {
+        name: 'PersonList',
+        components: {
+            VideoTable
+        },
+        data() {
+            return {
+                videoUploadDialogVisible: false,
+                videoTypeOptions: role.VIDEO_TYPE_OPTIONS,
+                statusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
+                isLoading: false,
+                timer: null,
+                fileList: [],
+                uploadResult: [],
+                existList: [],
+                checkMd5List: [],
+                tempFileList: [],
+                uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token)
+            };
+        },
+        computed: {
+            ...mapGetters({
+                searchFields: 'video/searchFields',
+                getVideoType: 'video/getVideoType'
+            })
+        },
+        created() {
+            this.timer = setInterval(() => {
+                this.getVideoList();
+            }, 1000 * 10);
+        },
+        beforeRouteLeave(to, from, next) {
+            clearInterval(this.timer);
+            this.timer = null;
+            next();
+        },
+        methods: {
+            ...mapMutations({
+                updateSearchFields: 'video/updateSearchFields',
+                setVideoType: 'video/setVideoType'
+            }),
+            ...mapActions({
+                getVideoList: 'video/getVideoList',
+                checkVideoMd5: 'video/checkVideoMd5'
+            }),
+            showVideoUploadDialog(videoType) {
+                this.videoUploadDialogVisible = true;
+                this.setVideoType({videoType});
+            },
+            cancelHandler() {
+                if (this.tempFileList.length > 0) {
+                    this.$confirm('你确定要取消上传操作吗, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    }).then(() => {
+                        this.videoUploadDialogVisible = false;
+                        this.fileList = [];
+                        this.uploadResult = [];
+                        this.existList = [];
+                        this.$refs.upload.abort();
+                        //  关闭按钮之后重新获取数据
+                        this.getVideoList();
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+               } else {
+                    this.videoUploadDialogVisible = false;
+                    this.fileList = [];
+                    this.uploadResult = [];
+                    this.existList = [];
+                    this.$refs.upload.abort();
+               }
+            },
+            submitUpload() {
+                this.$refs.upload.submit();
+            },
+            inputHandler(value, key) {
+                this.updateSearchFields({key, value});
+            },
+            searchHandler() {
+                this.getVideoList();
+            },
+            uploadSuccessHandler(res, file, fileList) {
+                if (res && res.code === 0 && res.data[0]) {
+                    this.uploadResult.push(res.data[0]);
+                    if (res.data[0].failCode === 3300) {
+                        let name = res.data[0].video ? res.data[0].video.originName : '';
+                        this.$message({
+                            type: 'error',
+                            message: `[${name}], 该视频资源已存在`
+                        });
+                    }
+                    this.fileList = fileList.filter((item) => item !== file);
+                    this.tempFileList = this.tempFileList.filter((item) => item !== file.raw);
+                }
+            },
+            uploadChangeHandler() {},
+            removeFileHandler(file, fileList) {
+                this.tempFileList = this.tempFileList.filter((item) => item !== file.raw);
+            },
+            beforeUploadHandler(file) {
+                this.tempFileList.push(file);
+                // return new Promise((resolve, reject) => {
+                //     this.checkMd5List.push(file);
+                //     this.getMd5(file)
+                //         .then((res) => {
+                //             this.checkVideoMd5(res)
+                //                 .then((result) => {
+                //                     let flag = result.data.list && result.data.list.length === 0;
+                //                     this.uploadResult = [];
+                //                     this.checkMd5List = this.checkMd5List.filter((item) => item !== file);
+                //                     if (!flag) {
+                //                         this.existList.push(result.data.list[0]);
+                //                         reject(); // eslint-disable-line
+                //                     } else {
+                //                         resolve();
+                //                     }
+                //                 });
+                //         });
+                // });
+            },
+            getMd5(file) {
+                return new Promise((resolve, reject) => {
+                    let blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice;
+                    let chunkSize = 2097152 * 10;
+                    let chunks = Math.ceil(file.size / chunkSize);
+                    let currentChunk = 0;
+                    let spark = new SparkMD5.ArrayBuffer();
+                    let frOnload = function(e) {
+                        spark.append(e.target.result);
+                        currentChunk++;
+                        if (currentChunk < chunks) {
+                            loadNext();
+                        } else {
+                            let _md5 = spark.end();
+                            resolve(_md5);
+                        }
+                    };
+                    let frOnerror = function () {
+                        reject(new Error('读取文件失败.'));
+                    };
+
+                    function loadNext() {
+                        let fileReader = new FileReader();
+                        fileReader.onload = frOnload;
+                        fileReader.onerror = frOnerror;
+                        let start = currentChunk * chunkSize;
+                        let end = ((start + chunkSize) >= file.size) ? file.size : start + chunkSize;
+                        fileReader.readAsArrayBuffer(blobSlice.call(file, start, end));
+                    };
+                    loadNext();
+                });
+            }
+        }
+    };
+</script>
+<style scoped lang="less">
+</style>

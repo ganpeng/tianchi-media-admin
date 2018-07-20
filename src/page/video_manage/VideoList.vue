@@ -60,63 +60,39 @@
         <el-dialog
             title="上传视频"
             :visible.sync="videoUploadDialogVisible"
-            :headers="uploadHeaders"
             :show-close="false"
             width="80%"
             :close-on-click-modal="false"
             :close-on-press-escape="false">
-            <el-upload
-                class="upload-demo"
-                ref="upload"
-                :headers="uploadHeaders"
-                action="/v1/storage/video"
-                :on-success="uploadSuccessHandler"
-                :on-change="uploadChangeHandler"
-                :on-remove="removeFileHandler"
-                :before-upload="beforeUploadHandler"
-                :auto-upload="false"
-                :data="{videoType: this.getVideoType}"
-                :file-list="fileList"
-                :with-credentials="true"
-                multiple>
-                    <el-button slot="trigger" size="small" type="primary">选择视频</el-button>
-                    <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
-            </el-upload>
-            <div v-if="existList.length > 0">
-                <ul class="el-upload-list el-upload-list-text">
-                    <li v-for="(res, index) in existList" :key="index" :tabindex="index" style="overflow:hidden;" class="el-upload-list__item is-ready">
-                        <a>
-                            <i class="el-icon-document"></i>
-                            {{res.originName}}
-                            <span class="text-danger">该视频资源已存在</span>
-                        </a>
-                    </li>
-                </ul>
+            <div class="upload-file">
+                <div class="wrapper">
+                    <label for="upload-input">
+                        <el-button size="small" type="primary">选取文件</el-button>
+                    </label>
+                    <input id="upload-input" class="upload-input" type="file" ref="uploadInput" @change="uploadChangeHandler" multiple>
+                </div>
+                <el-button style="margin-left: 10px;" size="small" @click="uploadHandler" type="success">点击上传</el-button>
             </div>
-            <div v-if="checkMd5List.length > 0">
-                <ul class="el-upload-list el-upload-list-text">
-                    <li v-for="(res, index) in checkMd5List" :key="index" :tabindex="index" style="overflow:hidden;" class="el-upload-list__item is-ready">
-                        <a>
-                            <i class="el-icon-document"></i>
-                            {{res.name}}
-                            <span class="text-danger">正在校验该视频是否存在，请稍等片刻</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div v-if="uploadResult.length > 0">
-                <ul class="el-upload-list el-upload-list--text">
-                    <li v-for="(res, index) in uploadResult" :key="index" :tabindex="index" style="overflow:hidden;" class="el-upload-list__item is-ready">
-                        <a>
-                            <i class="el-icon-document"></i>
-                            {{res.video.originName}}
-                            <span v-if="res.failCode" class="text-danger">{{res.failReason}}</span>
-                            <span v-if="!res.failCode" class="text-success">上传成功</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
+            <ul class="progress-bar-list">
+                <li class="progress-bar-item" v-for="(item, index) in files" :key="index">
+                    <p class="file-name">{{item.name}}</p>
+                    <div class="progress-bar">
+                        <el-progress
+                            class="bar"
+                            :stroke-width="3"
+                            :percentage="getProgress(index).percent"
+                            :status="getProgress(index).percent !== 100 ? 'exception' : 'success'">
+                        </el-progress>
+                        <i
+                            v-if="!showDelete(index)"
+                            @click="cancelUpload(index)"
+                            class="delete-btn el-icon-close"></i>
+                        <span class="percent">
+                            {{ getProgress(index).percent + '% ' + uploadStatus(index) }}
+                        </span>
+                    </div>
+                </li>
+            </ul>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelHandler">关闭</el-button>
             </div>
@@ -126,9 +102,11 @@
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
+    import axios from 'axios';
     import VideoTable from './VideoTable';
     import role from '@/util/config/role';
-    const SparkMD5 = require('../../assets/js/spark-md5.min'); // eslint-disable-line
+    const CancelToken = axios.CancelToken;
+
     export default {
         name: 'PersonList',
         components: {
@@ -136,24 +114,57 @@
         },
         data() {
             return {
+                files: [],
+                progress: [],
+                cancel: null,
+                count: 0,
                 videoUploadDialogVisible: false,
                 videoTypeOptions: role.VIDEO_TYPE_OPTIONS,
                 statusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
                 isLoading: false,
-                timer: null,
-                fileList: [],
-                uploadResult: [],
-                existList: [],
-                checkMd5List: [],
-                tempFileList: [],
-                uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token)
+                timer: null
             };
         },
         computed: {
             ...mapGetters({
                 searchFields: 'video/searchFields',
                 getVideoType: 'video/getVideoType'
-            })
+            }),
+            getProgress() {
+                return (index) => {
+                    return {
+                        percent: this.progress[index].percent,
+                        status: this.progress[index].status
+                    };
+                };
+            },
+            showDelete() {
+                return (index) => {
+                    let status = this.progress[index].status;
+                    let percent = this.progress[index].percent;
+                    return status === 'canceled' || status === 'uploaded' || percent === 100;
+                };
+            },
+            uploadStatus() {
+                return (index) => {
+                    let status = this.progress[index].status;
+                    switch (status) {
+                        // uploading canceld waiting uploaded error
+                        case 'uploading':
+                            return '上传中';
+                        case 'canceled':
+                            return '已取消上传';
+                        case 'waiting':
+                            return '等待上传';
+                        case 'uploaded':
+                            return '上传成功';
+                        case 'error':
+                            return '上传失败';
+                        default:
+                            return '';
+                    }
+                };
+            }
         },
         created() {
             this.timer = setInterval(() => {
@@ -179,35 +190,31 @@
                 this.setVideoType({videoType});
             },
             cancelHandler() {
-                if (this.tempFileList.length > 0) {
+                if (this.$refs.uploadInput.value) {
                     this.$confirm('你确定要取消上传操作吗, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'error'
                     }).then(() => {
+                        this.$refs.uploadInput.value = '';
+                        this.count = 0;
+                        this.cancel = null;
+                        this.files = [];
+                        this.progress = [];
                         this.videoUploadDialogVisible = false;
-                        this.fileList = [];
-                        this.uploadResult = [];
-                        this.existList = [];
-                        this.$refs.upload.abort();
-                        //  关闭按钮之后重新获取数据
-                        this.getVideoList();
                     }).catch(() => {
                         this.$message({
                             type: 'info',
                             message: '已取消删除'
                         });
                     });
-               } else {
+                } else {
+                    this.count = 0;
+                    this.cancel = null;
+                    this.files = [];
+                    this.progress = [];
                     this.videoUploadDialogVisible = false;
-                    this.fileList = [];
-                    this.uploadResult = [];
-                    this.existList = [];
-                    this.$refs.upload.abort();
-               }
-            },
-            submitUpload() {
-                this.$refs.upload.submit();
+                }
             },
             inputHandler(value, key) {
                 this.updateSearchFields({key, value});
@@ -215,79 +222,142 @@
             searchHandler() {
                 this.getVideoList();
             },
-            uploadSuccessHandler(res, file, fileList) {
-                if (res && res.code === 0 && res.data[0]) {
-                    this.uploadResult.push(res.data[0]);
-                    if (res.data[0].failCode === 3300) {
-                        let name = res.data[0].video ? res.data[0].video.originName : '';
-                        this.$message({
-                            type: 'error',
-                            message: `[${name}], 该视频资源已存在`
-                        });
-                    }
-                    this.fileList = fileList.filter((item) => item !== file);
-                    this.tempFileList = this.tempFileList.filter((item) => item !== file.raw);
-                }
-            },
-            uploadChangeHandler() {},
-            removeFileHandler(file, fileList) {
-                this.tempFileList = this.tempFileList.filter((item) => item !== file.raw);
-            },
-            beforeUploadHandler(file) {
-                this.tempFileList.push(file);
-                // return new Promise((resolve, reject) => {
-                //     this.checkMd5List.push(file);
-                //     this.getMd5(file)
-                //         .then((res) => {
-                //             this.checkVideoMd5(res)
-                //                 .then((result) => {
-                //                     let flag = result.data.list && result.data.list.length === 0;
-                //                     this.uploadResult = [];
-                //                     this.checkMd5List = this.checkMd5List.filter((item) => item !== file);
-                //                     if (!flag) {
-                //                         this.existList.push(result.data.list[0]);
-                //                         reject(); // eslint-disable-line
-                //                     } else {
-                //                         resolve();
-                //                     }
-                //                 });
-                //         });
-                // });
-            },
-            getMd5(file) {
-                return new Promise((resolve, reject) => {
-                    let blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice;
-                    let chunkSize = 2097152 * 10;
-                    let chunks = Math.ceil(file.size / chunkSize);
-                    let currentChunk = 0;
-                    let spark = new SparkMD5.ArrayBuffer();
-                    let frOnload = function(e) {
-                        spark.append(e.target.result);
-                        currentChunk++;
-                        if (currentChunk < chunks) {
-                            loadNext();
-                        } else {
-                            let _md5 = spark.end();
-                            resolve(_md5);
-                        }
+            uploadChangeHandler(e) {
+                this.files = Array.from(e.target.files);
+                this.progress = Array.from(this.files).map((item) => {
+                    return {
+                        percent: 0,
+                        status: 'waiting'
                     };
-                    let frOnerror = function () {
-                        reject(new Error('读取文件失败.'));
-                    };
-
-                    function loadNext() {
-                        let fileReader = new FileReader();
-                        fileReader.onload = frOnload;
-                        fileReader.onerror = frOnerror;
-                        let start = currentChunk * chunkSize;
-                        let end = ((start + chunkSize) >= file.size) ? file.size : start + chunkSize;
-                        fileReader.readAsArrayBuffer(blobSlice.call(file, start, end));
-                    };
-                    loadNext();
                 });
+            },
+            uploadHandler(obj) {
+                let that = this;
+                function upload() {
+                    if (typeof that.files[that.count] === 'undefined') {
+                        that.$refs.uploadInput.value = '';
+                        that.count = 0;
+                        that.cancel = null;
+                        return false;
+                    }
+                    let formData = new FormData();
+                    formData.append('file', that.files[that.count]);
+                    formData.append('videoType', that.getVideoType);
+
+                    axios.post('/v1/storage/video', formData, {
+                        baseURL: '/',
+                        headers: that.$util.getUploadHeaders(that.$store.state.user.token),
+                        onUploadProgress: (progressEvent) => {
+                            if (progressEvent.lengthComputable) {
+                                that.progress = that.progress.map((progress, index) => {
+                                    if (index === that.count) {
+                                        return {
+                                            percent: parseInt((progressEvent.loaded / progressEvent.total) * 100),
+                                            status: 'uploading'
+                                        };
+                                    } else {
+                                        return progress;
+                                    }
+                                });
+                            }
+                        },
+                        cancelToken: new CancelToken(function executor(c) {
+                            that.cancel = c;
+                        })
+                    }).then((res) => {
+                        that.progress = that.progress.map((progress, index) => {
+                            if (index === that.count) {
+                                return {
+                                    percent: progress.percent,
+                                    status: 'uploaded'
+                                };
+                            } else {
+                                return progress;
+                            }
+                        });
+                    }).catch((err) => {
+                        if (axios.isCancel(err)) {
+                            that.progress = that.progress.map((progress, index) => {
+                                if (index === that.count) {
+                                    return {
+                                        percent: progress.percent,
+                                        status: 'canceled'
+                                    };
+                                } else {
+                                    return progress;
+                                }
+                            });
+                        } else {
+                            that.progress = that.progress.map((progress, index) => {
+                                if (index === that.count) {
+                                    return {
+                                        percent: progress.percent,
+                                        status: 'error'
+                                    };
+                                } else {
+                                    return progress;
+                                }
+                            });
+                        }
+                    }).finally(() => {
+                        that.count++;
+                        upload();
+                    });
+                }
+                upload();
+            },
+            cancelUpload(count) {
+                if (count === this.count && this.cancel !== null) {
+                    this.cancel();
+                } else {
+                    this.files = this.files.filter((file, index) => index !== count);
+                    this.progress = this.progress.filter((progress, index) => index !== count);
+                }
             }
         }
     };
 </script>
 <style scoped lang="less">
+.upload-file {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    .upload-input {
+        width: 60px;
+        height: 0px;
+    }
+    .wrapper {
+        position: relative;
+        width: 80px;
+        height: 32px;
+        label, .upload-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 32px;
+        }
+        .upload-input {
+            opacity: 0;
+            cursor: pointer;
+        }
+    }
+}
+
+.progress-bar {
+    display: flex;
+    .bar {
+        flex: 1;
+    }
+    .percent {
+        display: inline-block;
+        width: 150px;
+        height: 14px;
+        line-height: 14px;
+    }
+    .delete-btn {
+        margin-right: 10px;
+        cursor: pointer;
+    }
+}
 </style>
