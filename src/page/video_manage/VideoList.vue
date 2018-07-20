@@ -148,8 +148,9 @@
             uploadStatus() {
                 return (index) => {
                     let status = this.progress[index].status;
+                    let message = this.progress[index].message;
                     switch (status) {
-                        // uploading canceld waiting uploaded error
+                        // uploading canceld waiting uploaded error fail
                         case 'uploading':
                             return '上传中';
                         case 'canceled':
@@ -160,6 +161,8 @@
                             return '上传成功';
                         case 'error':
                             return '上传失败';
+                        case 'fail':
+                            return message;
                         default:
                             return '';
                     }
@@ -227,7 +230,8 @@
                 this.progress = Array.from(this.files).map((item) => {
                     return {
                         percent: 0,
-                        status: 'waiting'
+                        status: 'waiting',
+                        message: ''
                     };
                 });
             },
@@ -265,16 +269,31 @@
                             that.cancel = c;
                         })
                     }).then((res) => {
-                        that.progress = that.progress.map((progress, index) => {
-                            if (index === that.count) {
-                                return {
-                                    percent: progress.percent,
-                                    status: 'uploaded'
-                                };
-                            } else {
-                                return progress;
-                            }
-                        });
+                        let result = res.data.data[0];
+                        if (result.failCode === 0) {
+                            that.progress = that.progress.map((progress, index) => {
+                                if (index === that.count) {
+                                    return {
+                                        percent: progress.percent,
+                                        status: 'uploaded'
+                                    };
+                                } else {
+                                    return progress;
+                                }
+                            });
+                        } else {
+                            that.progress = that.progress.map((progress, index) => {
+                                if (index === that.count) {
+                                    return {
+                                        percent: progress.percent,
+                                        status: 'fail',
+                                        message: result.failReason
+                                    };
+                                } else {
+                                    return progress;
+                                }
+                            });
+                        }
                     }).catch((err) => {
                         if (axios.isCancel(err)) {
                             that.progress = that.progress.map((progress, index) => {
