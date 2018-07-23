@@ -4,112 +4,118 @@
         <el-switch v-model="isCollapse"></el-switch>
         <el-menu
             unique-opened
-            default-active="2"
-            class="el-menu-vertical-demo"
             background-color="#545c64"
             text-color="#fff"
             router
+            :default-openeds=defaultOpenedArray
+            :class="{broad:isCollapse}"
             :collapse="!isCollapse"
             active-text-color="#ffd04b">
+            <!--内容管理-->
             <el-submenu index="1">
                 <template slot="title">
                     <i class="el-icon-location"></i>
                     <span>内容管理</span>
                 </template>
-                <el-menu-item-group>
-                    <el-submenu index="1-1">
-                        <template slot="title">栏目管理</template>
-                        <el-menu-item index="/nav-bar-manage/setting">栏目项设置</el-menu-item>
-                        <el-menu-item v-if="item.signCode !== 'SEARCH'"
-                                      v-for="(item, index) in navBarList"
-                                      :key='index'
-                                      :index="'/nav-bar-manage/layout-setting/' + item.signCode + '/' + item.id">
-                            {{item.name}}
-                        </el-menu-item>
+                <!--栏目管理-->
+                <el-submenu index="1-1" :style="secondLeftIndent">
+                    <template slot="title">栏目管理</template>
+                    <el-menu-item index="/nav-bar-manage/setting">栏目项设置</el-menu-item>
+                    <el-menu-item v-if="item.signCode !== 'SEARCH'"
+                                  v-for="(item, index) in navBarList"
+                                  :key='index'
+                                  :index="'/nav-bar-manage/layout-setting/' + item.signCode + '/' + item.id">
+                        {{item.name}}
+                    </el-menu-item>
+                </el-submenu>
+                <!--节目资源管理-->
+                <el-submenu index="1-2" :style="secondLeftIndent">
+                    <template slot="title">节目资源管理</template>
+                    <el-menu-item index="/programme-manage/create">新增节目</el-menu-item>
+                    <el-menu-item index="/programme-manage/list">节目列表</el-menu-item>
+                    <el-menu-item index="/programme-manage/type">节目类别管理</el-menu-item>
+                </el-submenu>
+                <!--人物资源管理-->
+                <el-submenu index="1-3" :style="secondLeftIndent">
+                    <template slot="title">人物资源管理</template>
+                    <el-menu-item index="/person-manage/create">新增人物</el-menu-item>
+                    <el-menu-item index="/person-manage/list">人物列表</el-menu-item>
+                </el-submenu>
+                <!--视频资源管理-->
+                <el-submenu index="1-4" :style="secondLeftIndent">
+                    <template slot="title">视频资源管理</template>
+                    <el-menu-item index="/video-manage/list">视频列表</el-menu-item>
+                </el-submenu>
+                <!--频道管理-->
+                <el-submenu index="1-5" :style="secondLeftIndent">
+                    <template slot="title">频道管理</template>
+                    <el-submenu index="1-5-1">
+                        <template slot="title">直播频道管理</template>
+                        <el-menu-item index="/channel-manage/live/list">直播频道列表</el-menu-item>
                     </el-submenu>
-                    <el-submenu index="1-2">
-                        <template slot="title">节目资源管理</template>
-                        <el-menu-item index="/programme-manage/create">新增节目</el-menu-item>
-                        <el-menu-item index="/programme-manage/list">节目列表</el-menu-item>
-                        <el-menu-item index="/programme-manage/type">节目类别管理</el-menu-item>
+                    <el-submenu index="1-5-2">
+                        <template slot="title">轮播频道管理</template>
+                        <el-menu-item index="/channel-manage/carousel/list">轮播频道列表</el-menu-item>
                     </el-submenu>
-                    <el-submenu index="1-3">
-                        <template slot="title">人物资源管理</template>
-                        <el-menu-item index="/person-manage/create">新增人物</el-menu-item>
-                        <el-menu-item index="/person-manage/list">人物列表</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="1-4">
-                        <template slot="title">视频资源管理</template>
-                        <el-menu-item index="/video-manage/list">视频列表</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="1-5">
-                        <template slot="title">频道管理</template>
-                        <el-submenu index="1-5-1">
-                            <template slot="title">直播频道管理</template>
-                            <el-menu-item index="/channel-manage/live/list">直播频道列表</el-menu-item>
-                        </el-submenu>
-                        <el-submenu index="1-5-2">
-                            <template slot="title">轮播频道管理</template>
-                            <el-menu-item index="/channel-manage/carousel/list">轮播频道列表</el-menu-item>
-                        </el-submenu>
-                        <el-menu-item index="/channel-manage/category">频道类别管理</el-menu-item>
-                    </el-submenu>
-                </el-menu-item-group>
-                <el-menu-item-group>
-                    <el-submenu index="1-6">
-                        <template slot="title">专题管理</template>
-                        <el-menu-item index="/subject-manage/programme/create">新增节目专题</el-menu-item>
-                        <el-menu-item index="/subject-manage/person/create">新增人物专题</el-menu-item>
-                        <el-menu-item index="/subject-manage/list">专题列表</el-menu-item>
-                    </el-submenu>
-                </el-menu-item-group>
+                    <el-menu-item index="/channel-manage/category">频道类别管理</el-menu-item>
+                </el-submenu>
+                <!--专题管理-->
+                <el-submenu index="1-6" :style="secondLeftIndent">
+                    <template slot="title">专题管理</template>
+                    <el-menu-item index="/subject-manage/programme/create">新增节目专题</el-menu-item>
+                    <el-menu-item index="/subject-manage/person/create">新增人物专题</el-menu-item>
+                    <el-menu-item index="/subject-manage/list">专题列表</el-menu-item>
+                </el-submenu>
             </el-submenu>
+            <!--管理员管理-->
             <el-submenu index="2">
                 <template slot="title">
                     <i class="el-icon-setting"></i>
                     <span>管理员管理</span>
                 </template>
-                <el-menu-item index="/admin-manage/list">管理员列表</el-menu-item>
-                <el-menu-item index="/admin-manage/create">创建管理员</el-menu-item>
+                <el-menu-item index="/admin-manage/list" :style="directSecondLeftIndent">管理员列表</el-menu-item>
+                <el-menu-item index="/admin-manage/create" :style="directSecondLeftIndent">创建管理员</el-menu-item>
             </el-submenu>
+            <!--用户管理-->
             <el-submenu index="3">
                 <template slot="title">
                     <i class="el-icon-tickets"></i>
                     <span>用户管理</span>
                 </template>
-                <el-menu-item index="/user-center/list">用户列表</el-menu-item>
+                <el-menu-item index="/user-center/list" :style="directSecondLeftIndent">用户列表</el-menu-item>
             </el-submenu>
-            <el-submenu index="5">
+            <!--广告管理-->
+            <el-submenu index="4">
                 <template slot="title">
                     <i class="el-icon-goods"></i>
                     <span>广告管理</span>
                 </template>
-                <el-menu-item-group>
-                    <el-submenu index="5-1">
-                        <template slot="title">广告资源管理</template>
-                        <el-menu-item index="/advert-resource/list">广告资源列表</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="5-2">
-                        <template slot="title">广告投放管理</template>
-                        <el-menu-item index="/advert-launch/starting/list">开机广告列表</el-menu-item>
-                        <el-menu-item index="/advert-launch/preprogramme/list">节目前置广告列表</el-menu-item>
-                        <el-menu-item index="/advert-launch/screensaver/list">屏保广告列表</el-menu-item>
-                        <el-menu-item index="/advert-launch/pause/list">暂停广告列表</el-menu-item>
-                        <el-menu-item index="/advert-launch/live/list">直播换台广告列表</el-menu-item>
-                        <el-menu-item index="/advert-launch/volumebar/list">音量条广告列表</el-menu-item>
-                        <el-menu-item index="/advert-launch/dialog/list">弹窗广告列表</el-menu-item>
-                        <el-menu-item index="/advert-launch/detailpage/list">详情页广告列表</el-menu-item>
-                    </el-submenu>
-                </el-menu-item-group>
+                <el-submenu index="5-1" :style="secondLeftIndent">
+                    <template slot="title">广告资源管理</template>
+                    <el-menu-item index="/advert-resource/list">广告资源列表</el-menu-item>
+                </el-submenu>
+                <el-submenu index="5-2" :style="secondLeftIndent">
+                    <template slot="title">广告投放管理</template>
+                    <el-menu-item index="/advert-launch/starting/list">开机广告列表</el-menu-item>
+                    <el-menu-item index="/advert-launch/preprogramme/list">节目前置广告列表</el-menu-item>
+                    <el-menu-item index="/advert-launch/screensaver/list">屏保广告列表</el-menu-item>
+                    <el-menu-item index="/advert-launch/pause/list">暂停广告列表</el-menu-item>
+                    <el-menu-item index="/advert-launch/live/list">直播换台广告列表</el-menu-item>
+                    <el-menu-item index="/advert-launch/volumebar/list">音量条广告列表</el-menu-item>
+                    <el-menu-item index="/advert-launch/dialog/list">弹窗广告列表</el-menu-item>
+                    <el-menu-item index="/advert-launch/detailpage/list">详情页广告列表</el-menu-item>
+                </el-submenu>
             </el-submenu>
-            <el-submenu index="4">
+            <!--个人中心-->
+            <el-submenu index="5">
                 <template slot="title">
                     <i class="el-icon-setting"></i>
                     <span>个人中心</span>
                 </template>
-                <el-menu-item index="/personal-center/info-setting">信息设置</el-menu-item>
-                <el-menu-item index="/personal-center/modify-password">修改密码</el-menu-item>
-                <el-menu-item index @click="logout">退出登录</el-menu-item>
+                <el-menu-item index="/personal-center/info-setting" :style="directSecondLeftIndent">信息设置</el-menu-item>
+                <el-menu-item index="/personal-center/modify-password" :style="directSecondLeftIndent">修改密码
+                </el-menu-item>
+                <el-menu-item index="/" @click="logout" :style="directSecondLeftIndent">退出登录</el-menu-item>
             </el-submenu>
         </el-menu>
     </div>
@@ -122,6 +128,9 @@
         data() {
             return {
                 isCollapse: true,
+                defaultOpenedArray: ['1'],
+                secondLeftIndent: {paddingLeft: '30px'},
+                directSecondLeftIndent: {paddingLeft: '70px'},
                 navBarList: []
             };
         },
@@ -154,11 +163,16 @@
         background-color: #545c64;
         color: #333;
         text-align: center;
+        overflow-y: scroll;
         .el-switch {
             margin-top: 12px;
         }
         .el-menu {
+            text-align: left;
             border: none;
+            &.broad {
+                width: 250px;
+            }
         }
     }
 </style>
