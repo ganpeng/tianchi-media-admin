@@ -197,7 +197,7 @@
                 class="upload-demo"
                 ref="upload"
                 :headers="uploadHeaders"
-                accept=".xlsx"
+                accept=".xlsx, .xls"
                 action="/admin/v1/content/programme/import"
                 :auto-upload="false"
                 :file-list="fileList"

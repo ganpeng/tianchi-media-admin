@@ -102,7 +102,7 @@
                 class="upload-demo"
                 ref="upload"
                 :headers="uploadHeaders"
-                accept=".xlsx"
+                accept=".xlsx, .xls"
                 action="/admin/v1/content/figure/import"
                 :auto-upload="false"
                 :file-list="fileList"
