@@ -377,7 +377,8 @@
             },
             // 预览视频
             displayVideo(url) {
-                this.previewVideoInfo.url = `http://dev-video.tianchiapi.com${url}`;
+                let baseUri = window.localStorage.getItem('videoBaseUri');
+                this.previewVideoInfo.url = `${baseUri}${url}`;
                 this.previewVideoInfo.visible = true;
             },
             // 关闭视频预览

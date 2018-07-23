@@ -154,7 +154,8 @@
             },
             // 预览视频
             previewVideo(url) {
-                this.previewVideoInfo.url = url;
+                let baseUri = window.localStorage.getItem('videoBaseUri');
+                this.previewVideoInfo.url = `${baseUri}${url}`;
                 this.previewVideoInfo.visible = true;
             },
             // 关闭视频预览

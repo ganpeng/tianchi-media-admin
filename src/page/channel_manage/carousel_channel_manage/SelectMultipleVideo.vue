@@ -247,8 +247,9 @@
                 this.displayVideoDialogVisible = status;
             },
             displayVideo(url) {
+                let baseUri = window.localStorage.getItem('videoBaseUri');
                 this.displayVideoDialogVisible = true;
-                this.url = `http://dev-video.tianchiapi.com${url}`;
+                this.url = `${baseUri}${url}`;
             },
             closeSelectVideoDialog() {
                 this.$emit('closeSelectVideoDialog');
