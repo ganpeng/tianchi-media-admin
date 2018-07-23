@@ -915,6 +915,15 @@ const actions = {
         } catch (err) {
         }
     },
+    /**
+     * 根据id删除节目
+     */
+    async realDeleteProgramme({commit, state}, id) {
+        try {
+            let res = await service.realDeleteProgramme(id);
+            return res;
+        } catch (err) {}
+    },
     async getProgrammeAndGetProgrammeCategory({commit, state}, id) {
         try {
             let res = await axios.all([service.getProgrammeInfo({id}), service.getProgrammeCategory()]);

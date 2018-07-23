@@ -160,3 +160,10 @@ export const getProgrammeGrade = () => {
 export const getProgrammeSubject = () => {
     return service.get('/v1/content/programme-dict/subject/list');
 };
+
+/**
+ * 根据节目id删除节目
+ */
+export const realDeleteProgramme = (id) => {
+    return service.delete(`/v1/content/programme/${id}`);
+};

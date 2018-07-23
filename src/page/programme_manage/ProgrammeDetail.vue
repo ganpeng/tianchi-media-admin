@@ -392,6 +392,7 @@
             <el-button v-if="status === 2" type="primary" @click="_deleteProgramme">
                 {{programme.visible ? '节目下架' : '节目上架'}}
             </el-button>
+            <el-button v-if="status === 2 && !programme.visible" type="primary" @click="_realDeleteProgramme">节目删除</el-button>
             <el-button type="primary" @click="goBack">返回列表页</el-button>
         </div>
         <upload-image
@@ -550,6 +551,7 @@
                 updateProgrammeById: 'programme/updateProgrammeById',
                 createMultProgrammeVideo: 'programme/createMultProgrammeVideo',
                 getDict: 'programme/getDict',
+                realDeleteProgramme: 'programme/realDeleteProgramme',
                 // 新加结束
                 createProgramme: 'programme/createProgramme',
                 getPersonList: 'person/getPersonList',
@@ -677,6 +679,18 @@
                             type: 'info',
                             message: '已取消删除'
                         });
+                    });
+            },
+            _realDeleteProgramme() {
+                let {id} = this.$route.params;
+                this.realDeleteProgramme(id)
+                    .then((res) => {
+                        if (res && res.code === 0) {
+                            this.$message.success({ message: '节目删除成功' });
+                            this.$router.push({ name: 'ProgrammeList' });
+                        } else {
+                            this.$message.error({ message: '节目删除失败' });
+                        }
                     });
             },
             showSortDialog() {

@@ -40,6 +40,7 @@
                 <el-tag>
                     <router-link to="/person-manage/create">新增人物</router-link>
                 </el-tag>
+                <el-button size="small" type="primary" plain @click="showFileUploadDialog">导入人物</el-button>
             </el-form-item>
         </el-form>
         <el-table :data="list" border style="width:100%">
@@ -90,6 +91,30 @@
             :total="pagination.total">
         </el-pagination>
         <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
+        <el-dialog
+            title="上传人物表格"
+            :visible.sync="fileUploadDialogVisible"
+            :headers="uploadHeaders"
+            :show-close="false"
+            :close-on-click-modal="false"
+            :close-on-press-escape="false">
+            <el-upload
+                class="upload-demo"
+                ref="upload"
+                :headers="uploadHeaders"
+                accept=".xlsx"
+                action="/admin/v1/content/figure/import"
+                :auto-upload="false"
+                :file-list="fileList"
+                :on-success="uploadSuccessHandler"
+                :with-credentials="true">
+                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
+                    <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
+            </el-upload>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="closeFileUploadDialog">关闭</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -108,7 +133,11 @@
                     title: '',
                     display: false,
                     uri: ''
-                }
+                },
+                //  人物导入
+                fileUploadDialogVisible: false,
+                fileList: [],
+                uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token)
             };
         },
         created() {
@@ -155,6 +184,41 @@
                 this.previewImage.title = image.name;
                 this.previewImage.display = true;
                 this.previewImage.uri = image.uri;
+            },
+            //  人物导入
+            submitUpload() {
+                this.$refs.upload.submit();
+            },
+            closeFileUploadDialog() {
+                this.fileUploadDialogVisible = false;
+                this.fileList = [];
+            },
+            showFileUploadDialog() {
+                this.fileUploadDialogVisible = true;
+            },
+            uploadSuccessHandler(res, file, fileList) {
+                if (res && res.code === 0) {
+                    this.$message({
+                        type: 'error',
+                        message: '节目导入成功'
+                    });
+                } else if (res && res.code === 3119) {
+                    this.$message({
+                        type: 'error',
+                        message: '节目视频导入失败'
+                    });
+                } else if (res && res.code === 3117) {
+                    this.$message({
+                        type: 'error',
+                        message: '节目导入部分成功'
+                    });
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: '节目导入失败'
+                    });
+                }
+                this.closeFileUploadDialog();
             }
         }
     };
