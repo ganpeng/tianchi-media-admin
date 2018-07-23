@@ -199,23 +199,13 @@
             uploadSuccessHandler(res, file, fileList) {
                 if (res && res.code === 0) {
                     this.$message({
-                        type: 'error',
-                        message: '节目导入成功'
-                    });
-                } else if (res && res.code === 3119) {
-                    this.$message({
-                        type: 'error',
-                        message: '节目视频导入失败'
-                    });
-                } else if (res && res.code === 3117) {
-                    this.$message({
-                        type: 'error',
-                        message: '节目导入部分成功'
+                        type: 'success',
+                        message: '人物导入成功'
                     });
                 } else {
                     this.$message({
                         type: 'error',
-                        message: '节目导入失败'
+                        message: '人物导入失败'
                     });
                 }
                 this.closeFileUploadDialog();

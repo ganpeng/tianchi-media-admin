@@ -320,7 +320,7 @@ export default {
         uploadSuccessHandler(res, file, fileList) {
             if (res && res.code === 0) {
                 this.$message({
-                    type: 'error',
+                    type: 'success',
                     message: '节目导入成功'
                 });
             } else if (res && res.code === 3119) {

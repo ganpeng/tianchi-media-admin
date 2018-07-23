@@ -683,14 +683,25 @@
             },
             _realDeleteProgramme() {
                 let {id} = this.$route.params;
-                this.realDeleteProgramme(id)
-                    .then((res) => {
-                        if (res && res.code === 0) {
-                            this.$message.success({ message: '节目删除成功' });
-                            this.$router.push({ name: 'ProgrammeList' });
-                        } else {
-                            this.$message.error({ message: '节目删除失败' });
-                        }
+                this.$confirm(`您确定要删除该吗, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    }).then(() => {
+                        this.realDeleteProgramme(id)
+                            .then((res) => {
+                                if (res && res.code === 0) {
+                                    this.$message.success({ message: '节目删除成功' });
+                                    this.$router.push({ name: 'ProgrammeList' });
+                                } else {
+                                    this.$message.error({ message: '节目删除失败' });
+                                }
+                            });
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
                     });
             },
             showSortDialog() {
