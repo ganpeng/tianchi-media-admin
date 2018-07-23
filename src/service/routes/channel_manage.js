@@ -2,6 +2,8 @@ import qs from 'querystring';
 import _ from 'lodash';
 import service from '../config';
 
+const sevenDayTimeStamp = 60 * 60 * 24 * 7 * 1000;
+
 /**
  * 获取频道详情
  */
@@ -88,7 +90,9 @@ export const getChannelList = ({pageNum, pageSize, keyword, typeIdList, visible,
 export const getChannelPageById = (id) => {
     return service.get(`/v1/live/channel-programme/list`, {
         params: {
-            channelId: id
+            channelId: id,
+            startDate: new Date().getTime() - sevenDayTimeStamp,
+            endDate: new Date().getTime() + sevenDayTimeStamp
         }
     });
 };
