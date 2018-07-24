@@ -392,7 +392,7 @@
             <el-button v-if="status === 2" type="primary" @click="_deleteProgramme">
                 {{programme.visible ? '节目下架' : '节目上架'}}
             </el-button>
-            <el-button v-if="status === 2 && !programme.visible" type="primary" @click="_realDeleteProgramme">节目删除</el-button>
+            <el-button v-if="status === 2 && !programme.visible" type="danger" @click="_realDeleteProgramme">节目删除</el-button>
             <el-button type="primary" @click="goBack">返回列表页</el-button>
         </div>
         <upload-image

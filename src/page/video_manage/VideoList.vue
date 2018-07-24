@@ -103,11 +103,8 @@
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
-    import axios from 'axios';
     import VideoTable from './VideoTable';
     import role from '@/util/config/role';
-    const CancelToken = axios.CancelToken;
-
     export default {
         name: 'PersonList',
         components: {
@@ -115,9 +112,9 @@
         },
         data() {
             return {
+                xhr: null,
                 files: [],
                 progress: [],
-                cancel: null,
                 count: 0,
                 isUploading: false,
                 videoUploadDialogVisible: false,
@@ -180,7 +177,7 @@
         },
         created() {
             this.timer = setInterval(() => {
-                this.getVideoList();
+                // this.getVideoList();
             }, 1000 * 10);
         },
         beforeRouteLeave(to, from, next) {
@@ -230,8 +227,8 @@
             },
             resetUpload() {
                 this.count = 0;
-                this.cancel && this.cancel();
-                this.cancel = null;
+                this.xhr && this.xhr.abort();
+                this.xhr = null;
                 this.files = [];
                 this.progress = [];
                 this.isUploading = false;
@@ -257,97 +254,117 @@
                     if (typeof that.files[that.count] === 'undefined') {
                         that.$refs.uploadInput.value = '';
                         that.count = 0;
-                        that.cancel = null;
-                        // that.isUploading = false;
+                        that.xhr = null;
                         return false;
                     }
-                    let formData = new FormData();
-                    formData.append('file', that.files[that.count]);
-                    formData.append('videoType', that.getVideoType);
 
-                    axios.post('/v1/storage/video', formData, {
-                        baseURL: '/',
-                        headers: that.$util.getUploadHeaders(that.$store.state.user.token),
-                        onUploadProgress: (progressEvent) => {
-                            if (progressEvent.lengthComputable) {
+                    let formData = new FormData();
+                    let file = that.files[that.count];
+                    let videoType = that.getVideoType;
+                    formData.append('file', file);
+                    formData.append('videoType', videoType);
+
+                    that.uploadRequest(formData)
+                        .then((res) => {
+                            let result = JSON.parse(res).data[0];
+                            if (result.failCode === 0) {
                                 that.progress = that.progress.map((progress, index) => {
                                     if (index === that.count) {
                                         return {
-                                            percent: parseInt((progressEvent.loaded / progressEvent.total) * 100),
-                                            status: 'uploading'
+                                            percent: progress.percent,
+                                            status: 'uploaded'
+                                        };
+                                    } else {
+                                        return progress;
+                                    }
+                                });
+                            } else {
+                                that.progress = that.progress.map((progress, index) => {
+                                    if (index === that.count) {
+                                        return {
+                                            percent: progress.percent,
+                                            status: 'fail',
+                                            message: result.failReason
                                         };
                                     } else {
                                         return progress;
                                     }
                                 });
                             }
-                        },
-                        cancelToken: new CancelToken(function executor(c) {
-                            that.cancel = c;
-                        })
-                    }).then((res) => {
-                        let result = res.data.data[0];
-                        if (result.failCode === 0) {
-                            that.progress = that.progress.map((progress, index) => {
-                                if (index === that.count) {
-                                    return {
-                                        percent: progress.percent,
-                                        status: 'uploaded'
-                                    };
-                                } else {
-                                    return progress;
-                                }
-                            });
-                        } else {
-                            that.progress = that.progress.map((progress, index) => {
-                                if (index === that.count) {
-                                    return {
-                                        percent: progress.percent,
-                                        status: 'fail',
-                                        message: result.failReason
-                                    };
-                                } else {
-                                    return progress;
-                                }
-                            });
-                        }
-                    }).catch((err) => {
-                        if (axios.isCancel(err)) {
-                            that.progress = that.progress.map((progress, index) => {
-                                if (index === that.count) {
-                                    return {
-                                        percent: progress.percent,
-                                        status: 'canceled'
-                                    };
-                                } else {
-                                    return progress;
-                                }
-                            });
-                        } else {
-                            that.progress = that.progress.map((progress, index) => {
-                                if (index === that.count) {
-                                    return {
-                                        percent: progress.percent,
-                                        status: 'error'
-                                    };
-                                } else {
-                                    return progress;
-                                }
-                            });
-                        }
-                    }).finally(() => {
-                        that.count++;
-                        upload();
-                    });
+                            that.count++;
+                            upload();
+                        }).catch((err) => {
+                            if (err && err === 'canceled_flag') {
+                                that.progress = that.progress.map((progress, index) => {
+                                    if (index === that.count) {
+                                        return {
+                                            percent: progress.percent,
+                                            status: 'canceled'
+                                        };
+                                    } else {
+                                        return progress;
+                                    }
+                                });
+                            } else {
+                                that.progress = that.progress.map((progress, index) => {
+                                    if (index === that.count) {
+                                        return {
+                                            percent: progress.percent,
+                                            status: 'error'
+                                        };
+                                    } else {
+                                        return progress;
+                                    }
+                                });
+                            }
+                            that.count++;
+                            upload();
+                        });
                 }
             },
             cancelUpload(count) {
-                if (count === this.count && this.cancel !== null) {
-                    this.cancel();
+                if (count === this.count && this.xhr !== null) {
+                    this.xhr.abort();
                 } else {
                     this.files = this.files.filter((file, index) => index !== count);
                     this.progress = this.progress.filter((progress, index) => index !== count);
                 }
+            },
+            uploadRequest(data) {
+                let that = this;
+                return new Promise((resolve, reject) => {
+                    let url = '/v1/storage/video';
+                    let xhr = new XMLHttpRequest();
+                    that.xhr = xhr;
+                    xhr.open('post', url);
+                    let headers = that.$util.getUploadHeaders(that.$store.state.user.token);
+                    for (let key in headers) {
+                        xhr.setRequestHeader(key, headers[key]);
+                    }
+                    xhr.onload = (evt) => {
+                        resolve(evt.target.responseText);
+                    };
+                    xhr.onerror = (err) => {
+                        reject(err);
+                    };
+                    xhr.onabort = () => {
+                        reject('canceled_flag'); // eslint-disable-line
+                    };
+                    xhr.upload.onprogress = (evt) => {
+                        let percent = evt.loaded / evt.total * 100;
+                        that.progress = that.progress.map((progress, index) => {
+                            if (index === that.count) {
+                                return {
+                                    percent: parseInt(percent),
+                                    status: 'uploading'
+                                };
+                            } else {
+                                return progress;
+                            }
+                        });
+                    };
+                    xhr.send(data);
+                });
             }
         }
     };

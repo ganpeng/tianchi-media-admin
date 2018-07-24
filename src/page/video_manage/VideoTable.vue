@@ -50,7 +50,7 @@
             </el-table-column>
             <el-table-column align="center" width="220px" label="上传日期">
                 <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
+                    {{timeStampFormat(scope.row.createdAt)}}
                 </template>
             </el-table-column>
             <el-table-column v-if="!hasRadio" align="center" width="120px" fixed="right" label="操作">
@@ -110,6 +110,18 @@ export default {
         duration() {
             return (seconds) => {
                 return this.$util.fromSecondsToTime(seconds);
+            };
+        },
+        timeStampFormat() {
+            return (seconds) => {
+                let date = new Date(seconds);
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1;
+                let day = date.getDate();
+                let hour = date.getHours();
+                let minute = date.getMinutes();
+                let second = date.getSeconds();
+                return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
             };
         }
     },
