@@ -1,24 +1,9 @@
 <!--选择单个人物组件-->
 <template>
     <div>
-        <el-form :inline="true" class="demo-form-inline search-form">
-            <el-form-item label="地区">
-                <el-select v-model="area" placeholder="请选择地区">
-                    <el-option
-                        v-for="item in areaOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item class="search" label="姓名">
-                <el-input v-model="name" placeholder="请输入人物姓名"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="success" @click="getFigureList">查 询</el-button>
-            </el-form-item>
-        </el-form>
+        <person-filter-params
+            v-on:getPersonList="getFigureList">
+        </person-filter-params>
         <el-table
             :data="figureList"
             border
@@ -71,6 +56,9 @@
             <el-table-column
                 prop="area"
                 label="地区">
+                <template slot-scope="scope">
+                    {{areaLabel(scope.row.area)}}
+                </template>
             </el-table-column>
         </el-table>
         <el-pagination
@@ -78,7 +66,7 @@
             @current-change="handleCurrentChange"
             :current-page="pageNum"
             :page-sizes="[5, 10, 20, 50]"
-            :page-size="pageSize"
+            :page-size="listQueryParams.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="totalAmount">
         </el-pagination>
@@ -86,28 +74,21 @@
 </template>
 
 <script>
+    import store from 'store';
+    import PersonFilterParams from '../searchFilterParams/PersonFilterParams';
 
     export default {
         name: 'SelectSingleFigure',
+        components: {
+            PersonFilterParams
+        },
         data() {
             return {
-                areaOptions: [{
-                    value: '1',
-                    label: '大陆'
-                }, {
-                    value: '2',
-                    label: '台湾'
-                }, {
-                    value: '3',
-                    label: '香港'
-                }, {
-                    value: '4',
-                    label: '海外'
-                }],
-                area: '',
-                name: '',
+                listQueryParams: {
+                    pageNum: 0,
+                    pageSize: 10
+                },
                 pageNum: 1,
-                pageSize: 10,
                 totalAmount: 0,
                 singleFigure: {},
                 // 人物列表
@@ -121,13 +102,13 @@
             init() {
                 this.getFigureList();
             },
-            getFigureList() {
-                this.$service.getPersonList({
-                    name: this.name,
-                    area: this.area,
-                    pageNum: this.pageNum - 1,
-                    pageSize: this.pageSize
-                }).then(response => {
+            getFigureList(searchParams) {
+                if (searchParams) {
+                    for (let key in searchParams) {
+                        this.listQueryParams[key] = searchParams[key];
+                    }
+                }
+                this.$service.getPersonList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.figureList = response.data.list;
                         this.totalAmount = response.data.total;
@@ -141,12 +122,16 @@
                     }
                 });
             },
+            areaLabel(code) {
+                let area = store.get('areaList').find((area) => area.code === code);
+                return area ? area.name : '';
+            },
             handleSizeChange(pageSize) {
                 this.pageSize = pageSize;
                 this.getFigureList();
             },
             handleCurrentChange(pageNum) {
-                this.pageNum = pageNum;
+                this.listQueryParams.pageNum = pageNum - 1;
                 this.getFigureList();
             },
             setFigure(row) {
@@ -161,18 +146,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-
-    .el-form {
-        margin-left: 20px;
-        text-align: left;
-        &.search-form {
-            margin-top: 60px;
-            .search {
-                margin-left: 50px;
-                margin-right: 30px;
-            }
-        }
-    }
 
     .el-table {
         img {

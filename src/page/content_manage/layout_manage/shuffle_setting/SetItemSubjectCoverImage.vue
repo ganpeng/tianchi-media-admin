@@ -94,8 +94,8 @@
             },
             // 添加封面图片
             addPosterImage(newPosterImage) {
-                for (let i = 0; i < this.specPosterImages.length; i++) {
-                    if (newPosterImage.posterImage.id === this.specPosterImages[i].id) {
+                for (let i = 0; i < this.subject.posterImageList.length; i++) {
+                    if (newPosterImage.posterImage.id === this.subject.posterImageList[i].id) {
                         this.$message('该图片已经添加到当前节目封面中');
                         return;
                     }

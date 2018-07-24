@@ -102,31 +102,42 @@
                 <el-radio v-model="subjectImageId" :label="item.id" @change="setPosterImage(index)">{{item.name}}
                 </el-radio>
             </li>
-            <li @click="toAddPosterImage">
-                <i class="el-icon-plus"></i>
-            </li>
         </ul>
+        <div class="add-box">
+            <el-button type="success" @click="addCover">添加图片</el-button>
+        </div>
         <el-button v-if="mode === 'EDIT'" type="success" @click="switchMode">更换专题</el-button>
-        <el-button type="success" @click="saveSubject">保 存</el-button>
+        <el-button type="primary" @click="saveSubject">保 存</el-button>
         <preview-multiple-images
             :previewMultipleImages="previewImage">
         </preview-multiple-images>
+        <upload-image
+            :size='size'
+            title="上传专题封面图片"
+            :successHandler="addPosterImage"
+            :imageUploadDialogVisible="imageUploadDialogVisible"
+            v-on:changeImageDialogStatus="closeImageDialog($event)">
+        </upload-image>
     </div>
 </template>
 
 <script>
     import SelectSingleSubject from './SelectSingleSubject';
+    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import {PROGRAMME_DIMENSION as subjectDimension, LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
     import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
-    import {LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
 
     export default {
         name: 'AppendSingleSubject',
         components: {
             SelectSingleSubject,
+            UploadImage,
             PreviewMultipleImages
         },
         data() {
             return {
+                size: subjectDimension,
+                imageUploadDialogVisible: false,
                 imageSpec: LAYOUT_IMAGE_DIMENSION[this.$route.params.imageSpec],
                 navBarId: this.$route.params.navBarId,
                 navBarSignCode: this.$route.params.navBarSignCode,
@@ -155,7 +166,7 @@
                 });
             },
             specPosterImages() {
-                return this.posterImageList.filter(image => parseInt(image.width) === this.imageSpec.width && parseInt(image.height) === this.imageSpec.height);
+                return this.posterImageList.filter(image => parseInt(image.width) === this.imageSpec.coverImage.width && parseInt(image.height) === this.imageSpec.coverImage.height);
             }
         },
         mounted() {
@@ -226,33 +237,36 @@
                 this.previewImage.list = this.specPosterImages;
                 this.previewImage.activeIndex = index;
             },
-            // 到本专题的编辑基本信息页面，添加专题封面
-            toAddPosterImage() {
-                if (!this.currentSubject.id) {
-                    this.$message({
-                        message: '请选择专题',
-                        type: 'warning'
-                    });
-                } else {
-                    this.$confirm('此操作将跳转页面,不会保存当前数据 是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        this.$router.push({
-                            name: this.currentSubject.category === 'PROGRAMME' ? 'EditProgrammeSubject' : 'EditPersonSubject',
-                            params: {id: this.currentSubject.id}
-                        });
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消跳转'
-                        });
-                    });
-                }
+            // 添加节目封面图片
+            addCover() {
+                this.imageUploadDialogVisible = true;
             },
             setPosterImage(index) {
                 this.coverImage = this.specPosterImages[index];
+            },
+            // 关闭上传图片对话框
+            closeImageDialog(status) {
+                this.imageUploadDialogVisible = status;
+            },
+            // 添加封面图片
+            addPosterImage(newPosterImage) {
+                for (let i = 0; i < this.posterImageList.length; i++) {
+                    if (newPosterImage.posterImage.id === this.posterImageList[i].id) {
+                        this.$message('该图片已经添加到当前节目封面中');
+                        return;
+                    }
+                }
+                let imageList = this.posterImageList.slice();
+                imageList.push(newPosterImage.posterImage);
+                // 更新当前专题中的封面图片
+                this.$service.updateSubjectBasicInfo({
+                    id: this.currentSubject.id,
+                    posterImageList: imageList
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.posterImageList.push(newPosterImage.posterImage);
+                    }
+                });
             },
             // 保存信息
             saveSubject() {
@@ -313,27 +327,6 @@
             flex-direction: column;
             justify-content: space-around;
             height: 230px;
-            &:last-child {
-                display: flex;
-                justify-content: center;
-                flex-direction: column;
-                width: 180px;
-                height: 180px;
-                border: 1px dotted gray;
-                text-align: center;
-                cursor: pointer;
-                i {
-                    display: inline;
-                    position: static;
-                    color: gray;
-                }
-                &:hover {
-                    border: 1px dotted #409EFF;
-                    i {
-                        color: #409EFF;
-                    }
-                }
-            }
             img {
                 display: block;
                 max-height: 180px;
@@ -344,6 +337,10 @@
                 font-size: 16px;
             }
         }
+    }
+
+    .add-box {
+        margin-bottom: 50px;
     }
 
 </style>
