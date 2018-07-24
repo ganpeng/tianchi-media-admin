@@ -177,7 +177,7 @@
         },
         created() {
             this.timer = setInterval(() => {
-                // this.getVideoList();
+                this.getVideoList();
             }, 1000 * 10);
         },
         beforeRouteLeave(to, from, next) {
