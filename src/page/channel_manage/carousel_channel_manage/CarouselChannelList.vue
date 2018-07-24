@@ -31,7 +31,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="关键字">
-                    <el-input v-model="listQueryParams.keyWord" placeholder="请填写频道名称或编号">
+                    <el-input v-model="listQueryParams.keyword" placeholder="请填写频道名称或编号">
                     </el-input>
                 </el-form-item>
                 <el-form-item>
@@ -124,7 +124,7 @@
                     category: 'CAROUSEL',
                     typeIdList: '',
                     visible: '',
-                    keyWord: '',
+                    keyword: '',
                     pageNum: 0,
                     pageSize: 10
                 },
