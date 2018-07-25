@@ -95,7 +95,7 @@
                                         :value="item.id">
                                     </el-option>
                                 </el-select>
-                                <el-button v-if="!readonly" type="primary" @click="gotoProgramTypePage" plain>管理分类和类型</el-button>
+                                <el-button v-if="!readonly" type="primary" icon="el-icon-setting" @click="gotoProgramTypePage" plain>管理分类和类型</el-button>
                             </el-form-item>
                             <el-form-item label="节目类型" prop="typeList">
                                 <el-select
@@ -128,7 +128,7 @@
                                         :value="item">
                                     </el-option>
                                 </el-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="addprogrammeTagHandler">新增关键字</el-button>
+                                <el-button v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addprogrammeTagHandler">新增关键字</el-button>
                             </el-form-item>
                             <el-form-item label="节目主演">
                                 <label for="leadActor"></label>
@@ -139,7 +139,7 @@
                                     :changeSuccessHandler="leadActorChangeHandler"
                                     :searchSuccessHandler="leadActorSuccessHandler"
                                 ></person-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
+                                <el-button v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                             </el-form-item>
                             <el-form-item label="节目导演">
                                 <label for="director"></label>
@@ -150,7 +150,7 @@
                                     :changeSuccessHandler="directorChangeHandler"
                                     :searchSuccessHandler="directorSuccessHandler"
                                 ></person-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
+                                <el-button v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                             </el-form-item>
                             <el-form-item label="节目编剧">
                                 <label for="scenarist"></label>
@@ -161,7 +161,7 @@
                                     :changeSuccessHandler="scenaristChangeHandler"
                                     :searchSuccessHandler="scenaristSuccessHandler"
                                 ></person-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增人物</el-button>
+                                <el-button v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                             </el-form-item>
                             <el-form-item label="版权起始日期" prop="copyrightRange">
                                 <el-date-picker
@@ -189,7 +189,7 @@
                                         :value="item.value">
                                     </el-option>
                                 </el-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('licenceList')">新增牌照方</el-button>
+                                <el-button v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('licenceList')">新增牌照方</el-button>
                             </el-form-item>
                             <el-form-item label="版权方" prop="copyrightReserved">
                                 <el-select
@@ -206,7 +206,7 @@
                                         :value="item.value">
                                     </el-option>
                                 </el-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('copyrightReserverList')">新增版权方</el-button>
+                                <el-button v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('copyrightReserverList')">新增版权方</el-button>
                             </el-form-item>
                             <el-form-item label="发行方" prop="announcer">
                                 <el-select
@@ -223,7 +223,7 @@
                                         :value="item.value">
                                     </el-option>
                                 </el-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('announcerList')">新增发行方</el-button>
+                                <el-button v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('announcerList')">新增发行方</el-button>
                             </el-form-item>
                             <el-form-item
                                 v-if="isMovie"
@@ -293,7 +293,7 @@
                                         :value="item.value">
                                     </el-option>
                                 </el-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('contestList')">新增赛事</el-button>
+                                <el-button v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('contestList')">新增赛事</el-button>
                             </el-form-item>
                             <el-form-item
                                 label="播放平台">
@@ -311,7 +311,7 @@
                                         :value="item.value">
                                     </el-option>
                                 </el-select>
-                                <el-button v-if="!readonly" type="primary" plain @click="addSelectItemHandler('platformList')">新增播放平台</el-button>
+                                <el-button v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('platformList')">新增播放平台</el-button>
                             </el-form-item>
                             <el-form-item
                                 :rules="isTvPlay ? [{ required: true, message: '请输入总集数' }, {validator: checkPositiveInteger}] : [{validator: checkPositiveInteger}]"
@@ -347,7 +347,7 @@
                         </el-col>
                         <el-col :span="24">
                             <el-form-item label="节目图片">
-                                <el-button v-if="!readonly" type="primary" @click="uploadImageHandler">添加节目图片<i class="el-icon-upload el-icon--right"></i></el-button>
+                                <el-button v-if="!readonly" type="primary" icon="el-icon-picture" @click="uploadImageHandler" plain>添加节目图片</el-button>
                                 <ul class="cover-list">
                                     <li v-for="(img, index) in programme.posterImageList" :key="index">
                                         <div
@@ -370,20 +370,9 @@
                 <div class="block-title">节目视频</div>
                 <div class="preview-sort clearfix">
                     <el-button class="float-right" v-if="!readonly" type="primary" @click="showUploadDialog">添加视频<i class="el-icon-upload el-icon--right"></i></el-button>
-                    <el-button class="float-left sort-btn" type="success" @click="showSortDialog">点击视频排序</el-button>
+                    <el-button class="float-left sort-btn" v-if="!readonly" type="success" @click="showSortDialog">点击视频排序</el-button>
                 </div>
                 <programme-table title="已添加视频列表" :tableStatus="1" :status="status" :data-list="video.list"></programme-table>
-                <!--
-                <el-pagination
-                    @size-change="handlePaginationChange($event, 'pageSize')"
-                    @current-change="handlePaginationChange($event, 'pageNum')"
-                    :current-page="video.pagination.pageNum"
-                    :page-sizes="[5, 10, 20, 30, 50]"
-                    :page-size="video.pagination.pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="video.pagination.total">
-                </el-pagination>
-                -->
             </el-col>
         </el-row>
         <div class="group">

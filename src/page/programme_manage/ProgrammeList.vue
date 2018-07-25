@@ -1,36 +1,13 @@
 <!-- 节目列表页组件 -->
 <template>
     <div class="program-list-container">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb class="gp-breadcrumb" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>节目资源管理</el-breadcrumb-item>
             <el-breadcrumb-item>节目列表</el-breadcrumb-item>
         </el-breadcrumb>
         <div class="table-container">
-            <el-form :inline="true" class="demo-form-inline search-form">
-                <el-form-item class="search">
-                    <el-input
-                        :value="programmeSearchFields.keyword"
-                        clearable
-                        @input="inputHandler($event, 'keyword')"
-                        placeholder="搜索你想要的信息">
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button @click="searchHandler" type="primary">搜索</el-button>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="warning" @click="clearSearchFields">清空筛选条件</el-button>
-                </el-form-item>
-                <el-form-item class="create-account">
-                    <el-tag>
-                        <router-link to="/programme-manage/create">新增节目</router-link>
-                    </el-tag>
-                    <el-button size="small" type="primary" plain @click="showFileUploadDialog">导入节目</el-button>
-                </el-form-item>
-            </el-form>
             <el-form :inline="true" class="demo-form-inline">
                 <el-form-item label="上映开始年">
                     <el-date-picker
@@ -110,6 +87,30 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item class="search">
+                    <el-input
+                        :value="programmeSearchFields.keyword"
+                        clearable
+                        @input="inputHandler($event, 'keyword')"
+                        placeholder="搜索你想要的信息">
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="clearSearchFields">清空筛选条件</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button @click="searchHandler" icon="el-icon-search" type="primary">搜索</el-button>
+                </el-form-item>
+                <el-form-item class="create-account">
+                    <el-tag>
+                        <router-link to="/programme-manage/create">
+                            <i class="el-icon-circle-plus-outline"></i>
+                            新增节目
+                        </router-link>
+                    </el-tag>
+                    <el-button size="small" type="primary" plain @click="showFileUploadDialog">导入节目</el-button>
+                </el-form-item>
             </el-form>
             <el-table :data="list" border style="width: 100%">
                 <el-table-column prop="code" align="center" width="240px" label="节目编号"></el-table-column>
@@ -170,7 +171,7 @@
                 </el-table-column>
                 <el-table-column fixed="right" align="center" width="120px" label="操作">
                     <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="displayProgramme(scope.row.id)">查看</el-button>
+                        <el-button class="text-success" type="text" size="small" @click="displayProgramme(scope.row.id)">详情</el-button>
                         <el-button type="text" size="small" @click="editProgramme(scope.row.id)">编辑</el-button>
                     </template>
                 </el-table-column>

@@ -294,7 +294,7 @@
                             that.count++;
                             upload();
                         }).catch((err) => {
-                            if (err && err === 'canceled_flag') {
+                            if (err && err.message === 'canceled_flag') {
                                 that.progress = that.progress.map((progress, index) => {
                                     if (index === that.count) {
                                         return {
@@ -348,7 +348,7 @@
                         reject(err);
                     };
                     xhr.onabort = () => {
-                        reject('canceled_flag'); // eslint-disable-line
+                        reject(new Error('canceled_flag')); // eslint-disable-line
                     };
                     xhr.upload.onprogress = (evt) => {
                         let percent = evt.loaded / evt.total * 100;

@@ -8,19 +8,6 @@
             <el-breadcrumb-item>人物列表</el-breadcrumb-item>
         </el-breadcrumb>
         <el-form :inline="true" class="demo-form-inline search-form">
-            <el-form-item class="search">
-                <el-input
-                    :value="searchFields.name"
-                    @input="inputHandler($event, 'name')"
-                    placeholder="搜索你想要的信息"
-                    clearable
-                >
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="getPersonList">搜索</el-button>
-            </el-form-item>
             <el-form-item label="地区">
                 <el-select
                     :value="searchFields.area"
@@ -36,9 +23,25 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item class="search">
+                <el-input
+                    :value="searchFields.name"
+                    @input="inputHandler($event, 'name')"
+                    placeholder="搜索你想要的信息"
+                    clearable
+                >
+                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                </el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="getPersonList">搜索</el-button>
+            </el-form-item>
             <el-form-item class="create-account">
                 <el-tag>
-                    <router-link to="/person-manage/create">新增人物</router-link>
+                    <router-link to="/person-manage/create">
+                        <i class="el-icon-circle-plus-outline"></i>
+                        新增人物
+                    </router-link>
                 </el-tag>
                 <el-button size="small" type="primary" plain @click="showFileUploadDialog">导入人物</el-button>
             </el-form-item>
@@ -76,7 +79,7 @@
             </el-table-column>
             <el-table-column align="center" width="120px" fixed="right" label="操作">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="displayPerson(scope.row.id)">查看</el-button>
+                    <el-button class="text-success" type="text" size="small" @click="displayPerson(scope.row.id)">详情</el-button>
                     <el-button type="text" size="small" @click="editPerson(scope.row.id)">编辑</el-button>
                 </template>
             </el-table-column>
