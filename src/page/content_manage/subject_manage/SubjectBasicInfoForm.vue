@@ -8,8 +8,9 @@
                 <el-input v-model="subjectInfo.name" placeholder="请填写30个字以内的名称"></el-input>
             </el-form-item>
             <template v-if="status === '0' || status === '2'">
-                <el-form-item label="节目专题类别" required>
-                    <el-select v-model="programmeCategoryList" multiple placeholder="请选择节目专题类别">
+                <el-form-item label="节目专题类别" prop="programmeCategoryList" required>
+                    <el-select v-model="programmeCategoryList" @change="setProgrammeCategoryList" multiple
+                               placeholder="请选择节目专题类别">
                         <el-option
                             v-for="item in programmeCategoryListOptions"
                             :key="item.id"
@@ -19,7 +20,7 @@
                     </el-select>
                 </el-form-item>
             </template>
-            <el-form-item label="简介" prop="description" required>
+            <el-form-item label="简介" prop="description">
                 <el-input
                     v-model="subjectInfo.description"
                     placeholder="请填写150个字以内的简介"
@@ -155,15 +156,6 @@
                     callback();
                 }
             };
-            let checkDescription = (rule, value, callback) => {
-                if (this.$util.isEmpty(value)) {
-                    return callback(new Error('专题简介不能为空'));
-                } else if (this.$util.trim(value).length > 150) {
-                    return callback(new Error('专题简介不能超过150字'));
-                } else {
-                    callback();
-                }
-            };
             return {
                 uploadImageMode: 'COVERIMAGE',
                 programmeCategoryList: [],
@@ -182,9 +174,6 @@
                     ],
                     programmeCategoryList: [
                         {validator: checkProgrammeCategoryList, trigger: 'change'}
-                    ],
-                    description: [
-                        {validator: checkDescription, trigger: 'blur'}
                     ]
                 },
                 dialogVisible: false,
@@ -230,6 +219,19 @@
                     if (response && response.code === 0) {
                         this.programmeCategoryListOptions = response.data;
                     }
+                });
+            },
+            setProgrammeCategoryList() {
+                this.subjectInfo.programmeCategoryList = [];
+                this.programmeCategoryList.map(categoryId => {
+                    this.programmeCategoryListOptions.map(categoryOption => {
+                        if (categoryId === categoryOption.id) {
+                            this.subjectInfo.programmeCategoryList.push({
+                                id: categoryId,
+                                name: categoryOption.name
+                            });
+                        }
+                    });
                 });
             },
             // 初始化节目专题类别
@@ -302,20 +304,6 @@
             operateSubject() {
                 this.$refs['subjectInfo'].validate((valid) => {
                     if (valid) {
-                        if (this.status === '0' || this.status === '2') {
-                            // 组装节目类别对象
-                            this.subjectInfo.programmeCategoryList = [];
-                            this.programmeCategoryList.map(categoryId => {
-                                this.programmeCategoryListOptions.map(categoryOption => {
-                                    if (categoryId === categoryOption.id) {
-                                        this.subjectInfo.programmeCategoryList.push({
-                                            id: categoryId,
-                                            name: categoryOption.name
-                                        });
-                                    }
-                                });
-                            });
-                        }
                         // 创建专题
                         if (this.status === '0' || this.status === '1') {
                             this.subjectInfo.category = this.status === '0' ? 'PROGRAMME' : 'FIGURE';

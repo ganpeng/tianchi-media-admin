@@ -177,17 +177,6 @@
             width: 120px;
             cursor: zoom-in;
         }
-        label {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            -ms-text-overflow: ellipsis;
-            text-overflow: ellipsis;
-        }
-        .more {
-            float: right;
-        }
     }
 
     .operate-list {

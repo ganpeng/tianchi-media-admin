@@ -26,7 +26,7 @@
             prop="description"
             label="简介">
             <template slot-scope="scope">
-                <label>{{scope.row.description}}</label>
+                <label class="ellipsis-three">{{scope.row.description}}</label>
                 <el-popover
                     placement="right"
                     :title="scope.row.name + '简介'"
@@ -87,14 +87,6 @@
 <style lang="less" scoped>
 
     .el-table {
-        label {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            -ms-text-overflow: ellipsis;
-            text-overflow: ellipsis;
-        }
         .more {
             float: right;
         }

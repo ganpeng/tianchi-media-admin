@@ -149,21 +149,4 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
 
-    .el-table {
-        img {
-            width: 120px;
-        }
-        label {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            -ms-text-overflow: ellipsis;
-            text-overflow: ellipsis;
-        }
-        .more {
-            float: right;
-        }
-    }
-
 </style>

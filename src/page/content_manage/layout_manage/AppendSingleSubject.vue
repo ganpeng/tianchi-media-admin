@@ -45,7 +45,7 @@
                     prop="description"
                     label="简介">
                     <template slot-scope="scope">
-                        <label>{{scope.row.description}}</label>
+                        <label class="ellipsis-three">{{scope.row.description}}</label>
                         <el-popover
                             placement="right"
                             :title="scope.row.name + '简介'"

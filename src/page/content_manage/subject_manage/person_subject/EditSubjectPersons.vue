@@ -122,20 +122,6 @@
         }
     }
 
-    .el-table {
-        label {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            -ms-text-overflow: ellipsis;
-            text-overflow: ellipsis;
-        }
-        .more {
-            float: right;
-        }
-    }
-
     .no-person {
         margin-top: 40px;
         margin-bottom: 50px;
