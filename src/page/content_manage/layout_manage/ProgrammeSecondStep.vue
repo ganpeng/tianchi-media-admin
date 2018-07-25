@@ -1,4 +1,4 @@
-<!--内容管理-栏目管理-节目选择第二步组件-->
+<!--内容管理-栏目管理-节目选择设置封面组件(含有出个图)-->
 <template>
     <div>
         <div class="text-left">1.符合该位置的底层图片如下，请选择：</div>
@@ -8,9 +8,6 @@
                 <el-radio v-model="programmeCoverImageId" :label="item.id" @change="setProgrammeCoverImage(index)">
                     {{item.name}}
                 </el-radio>
-            </li>
-            <li @click="toEditProgramme">
-                <i class="el-icon-plus"></i>
             </li>
         </ul>
         <template v-if="coverImageBackgroundSpec">
@@ -23,22 +20,33 @@
                         {{item.name}}
                     </el-radio>
                 </li>
-                <li @click="toEditProgramme">
-                    <i class="el-icon-plus"></i>
-                </li>
             </ul>
         </template>
+        <div class="add-box">
+            <el-button type="success" @click="addCover">添加图片</el-button>
+        </div>
         <preview-multiple-images :previewMultipleImages="previewImage"></preview-multiple-images>
+        <upload-image
+            :size='size'
+            title="上传节目封面图片"
+            :successHandler="addPosterImage"
+            :imageUploadDialogVisible="imageUploadDialogVisible"
+            v-on:changeImageDialogStatus="closeImageDialog($event)">
+        </upload-image>
     </div>
 </template>
 
 <script>
+    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import {PROGRAMME_DIMENSION, LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
     import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
-    import {LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
 
     export default {
         name: 'ProgrammeSecondStep',
-        components: {PreviewMultipleImages},
+        components: {
+            PreviewMultipleImages,
+            UploadImage
+        },
         props: ['programme', 'originState'],
         computed: {
             specCoverImages() {
@@ -54,6 +62,8 @@
         },
         data() {
             return {
+                size: PROGRAMME_DIMENSION,
+                imageUploadDialogVisible: false,
                 coverImageSpec: LAYOUT_IMAGE_DIMENSION[this.$route.params.imageSpec].coverImage,
                 // 当前模板封面图片的出格背景图的尺寸
                 coverImageBackgroundSpec: LAYOUT_IMAGE_DIMENSION[this.$route.params.imageSpec].coverImageBackground,
@@ -90,19 +100,31 @@
             setProgrammeCoverImageBackground(index) {
                 this.$emit('setProgrammeCoverImageBackground', this.specBackgroundImages[index]);
             },
-            // 跳转到节目编辑页面
-            toEditProgramme() {
-                this.$confirm('此操作将前往节目编辑页面,不会保存当前数据 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.$router.push({name: 'EditProgramme', params: {id: this.programme.id}});
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消'
-                    });
+            // 添加节目封面图片
+            addCover() {
+                this.imageUploadDialogVisible = true;
+            },
+            // 关闭上传图片对话框
+            closeImageDialog(status) {
+                this.imageUploadDialogVisible = status;
+            },
+            addPosterImage(newPosterImage) {
+                for (let i = 0; i < this.programme.posterImageList.length; i++) {
+                    if (newPosterImage.posterImage.id === this.programme.posterImageList[i].id) {
+                        this.$message('该图片已经添加到当前节目封面中');
+                        return;
+                    }
+                }
+                let imageList = this.programme.posterImageList.slice();
+                imageList.push(newPosterImage.posterImage);
+                // 更新当前节目中的封面图片
+                this.$service.updatePartProgrammeInfo({
+                    id: this.programme.id,
+                    programme: {posterImageList: imageList}
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.programme.posterImageList.push(newPosterImage.posterImage);
+                    }
                 });
             }
         }
@@ -127,20 +149,6 @@
             flex-direction: column;
             justify-content: space-around;
             height: 230px;
-            &:last-child {
-                justify-content: center;
-                width: 180px;
-                height: 180px;
-                border: 1px dotted gray;
-                text-align: center;
-                cursor: pointer;
-                &:hover {
-                    border: 1px dotted #409EFF;
-                    i {
-                        color: #409EFF;
-                    }
-                }
-            }
             img {
                 display: block;
                 max-height: 180px;

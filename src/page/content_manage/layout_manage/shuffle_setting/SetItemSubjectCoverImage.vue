@@ -78,7 +78,6 @@
                     }
                 });
             },
-            // 添加节目封面图片
             addCover() {
                 this.imageUploadDialogVisible = true;
             },
@@ -96,7 +95,7 @@
             addPosterImage(newPosterImage) {
                 for (let i = 0; i < this.subject.posterImageList.length; i++) {
                     if (newPosterImage.posterImage.id === this.subject.posterImageList[i].id) {
-                        this.$message('该图片已经添加到当前节目封面中');
+                        this.$message('该图片已经添加到当前专题封面中');
                         return;
                     }
                 }
