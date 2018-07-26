@@ -1,24 +1,30 @@
 <!--页脚组件-->
 <template>
-    <div>
-        <small>天驰传媒股份有限公司 版权所有</small>
-        <small>地址：北京市朝阳区东三环中路9号33层3302</small>
+    <div class="container">
+        <small>2018 ©北京天驰传媒股份有限公司</small>
+        <small>地址：北京市东三环中路9号富尔大厦3302/3304</small>
     </div>
 </template>
 
 <script>
     export default {
-        name: 'VFooter',
-        data() {
-            return {};
-        },
-        methods: {}
+        name: 'VFooter'
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="less">
-    small:first-child {
-        margin-right: 30px;
+<style scoped lang="scss">
+    .container {
+        height: 64px;
+        line-height: 64px;
+        width: 100%;
     }
+
+    small {
+        font-size: $normalFontSize;
+    }
+
+    small:first-child {
+        margin-right: 148px;
+    }
+
 </style>

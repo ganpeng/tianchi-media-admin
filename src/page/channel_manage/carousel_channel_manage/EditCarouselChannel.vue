@@ -34,6 +34,9 @@
             <el-form-item label="端口号" prop="multicastPort" required>
                 <el-input v-model="channelInfo.multicastPort" placeholder="请填写端口号"></el-input>
             </el-form-item>
+            <el-form-item label="状态：" prop="visible">
+                <label>{{channelInfo.visible ? '正常' : '禁播'}}</label>
+            </el-form-item>
             <el-form-item label="频道封面" prop="logoUri" required>
                 <el-button type="success" @click="imageUploadDialogVisible = true">设置封面</el-button>
                 <div v-if="channelInfo.logoUri" class="image-box">
@@ -153,7 +156,6 @@
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
         <div class="text-center update-box">
-            <el-button type="danger" @click="disableChannel">{{channelInfo.visible ? '禁播' : '恢复'}}频道</el-button>
             <el-button :disabled="channelInfo.visible" type="danger" @click="removeChannel">删除频道</el-button>
             <el-button type="success" @click="updateInfo">保 存</el-button>
         </div>
@@ -458,30 +460,6 @@
                     });
                 });
             },
-            // 禁播/恢复频道
-            disableChannel() {
-                let operateWords = this.channelInfo.visible ? '禁播' : '恢复';
-                this.$confirm('此操作将' + operateWords + '该频道, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.$service.setChannelVisible(this.$route.params.id).then(response => {
-                        if (response && response.code === 0) {
-                            this.$message({
-                                type: 'success',
-                                message: operateWords + '成功!'
-                            });
-                            this.channelInfo.visible = !this.channelInfo.visible;
-                        }
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消' + operateWords
-                    });
-                });
-            },
             // 删除频道
             removeChannel() {
                 this.$confirm('此操作将删除该频道, 是否继续?', '提示', {
@@ -507,6 +485,14 @@
             },
             // 更新频道信息
             updateInfo() {
+                /** 在正常频道保存时，必须含有视频  */
+                if (this.channelInfo.visible && this.currentSelectedVideoList.length === 0) {
+                    this.$message({
+                        message: '当前正常频道中不含有视频，不能更新保存',
+                        type: 'warning'
+                    });
+                    return;
+                }
                 this.$refs['channelInfo'].validate((valid) => {
                     if (valid) {
                         for (let i = 0; i < this.currentSelectedVideoList.length; i++) {

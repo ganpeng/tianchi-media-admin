@@ -84,6 +84,9 @@
                                  label="操作"
                                  class="operate">
                     <template slot-scope="scope">
+                        <el-button type="danger" size="mini" @click="disableChannel(scope.row)">
+                            {{scope.row.visible ? '禁播' : '恢复'}}
+                        </el-button>
                         <el-button type="text" size="small" @click="checkChannelDetail(scope.row)">查看</el-button>
                         <el-button type="text" size="small" @click="editChannelInfo(scope.row)">编辑</el-button>
                     </template>
@@ -189,6 +192,30 @@
             closeDialog() {
                 this.createChannelDialogVisible = false;
                 this.getChannelList();
+            },
+            // 禁播/恢复频道
+            disableChannel(channelInfo) {
+                let operateWords = channelInfo.visible ? '禁播' : '恢复';
+                this.$confirm('此操作将' + operateWords + '该频道, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$service.setChannelVisible(channelInfo.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message({
+                                type: 'success',
+                                message: operateWords + '成功!'
+                            });
+                            channelInfo.visible = !channelInfo.visible;
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消' + operateWords
+                    });
+                });
             }
         }
     };

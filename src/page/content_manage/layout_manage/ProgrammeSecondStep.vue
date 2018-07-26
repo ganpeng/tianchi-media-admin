@@ -14,7 +14,7 @@
             <div class="text-left">2.符合该位置的浮层图片如下，请选择：</div>
             <ul>
                 <li v-for="(item,index) in specBackgroundImages" v-bind:key="index">
-                    <img :src="item.uri | imageUrl" :alt="item.name" @click="displayImage(index)">
+                    <img :src="item.uri | imageUrl" :alt="item.name" @click="displayBackgroundImage(index)">
                     <el-radio v-model="programmeCoverImageBackgroundId" :label="item.id"
                               @change="setProgrammeCoverImageBackground(index)">
                         {{item.name}}
@@ -88,6 +88,12 @@
             },
             // 放大预览图片
             displayImage(index) {
+                this.previewImage.display = true;
+                this.previewImage.list = this.specBackgroundImages;
+                this.previewImage.activeIndex = index;
+            },
+            // 放大背景预览图片
+            displayBackgroundImage(index) {
                 this.previewImage.display = true;
                 this.previewImage.list = this.specCoverImages;
                 this.previewImage.activeIndex = index;

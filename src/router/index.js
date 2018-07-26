@@ -3,7 +3,6 @@ import Router from 'vue-router';
 import store from '../store';
 import './reload';
 import Login from 'sysPage/login/Login';
-import RetrievePassword from 'sysPage/retrieve_password/RetrievePassword';
 import Layout from 'sysPage/layout/Layout';
 import Home from 'sysPage/home/Home';
 import InfoSetting from 'sysPage/personal_center/InfoSetting';
@@ -63,7 +62,7 @@ import AppendViewChannel from 'sysPage/content_manage/layout_manage/AppendViewCh
 Vue.use(Router);
 
 // 定义不需要token与权限的页面名称集合
-const whitePagesList = ['Login', 'RetrievePassword'];
+const whitePagesList = ['Login'];
 
 // 定义路由
 let router = new Router({
@@ -75,12 +74,6 @@ let router = new Router({
             alias: '/login',
             name: 'Login',
             component: Login
-        },
-        // 找回密码页面
-        {
-            path: '/retrieve-password',
-            name: 'RetrievePassword',
-            component: RetrievePassword
         },
         // 网站内容结构
         {

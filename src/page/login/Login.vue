@@ -1,45 +1,46 @@
 <template>
-    <el-container>
-        <!--头部-->
-        <el-header>
-            <img src="~assets/img/logo.png">
-            <label>天驰传媒后台管理系统</label>
-        </el-header>
-        <!--内容部分-->
+    <el-container id="container">
         <el-main>
             <div class="form-box" @keyup.enter="submitForm">
-                <el-form :model="formData" status-icon :rules="rules" ref="login" label-width="50px"
-                         class="demo-ruleForm">
-                    <el-form-item label="账号" prop="name" class="input-box">
-                        <el-input v-model="formData.name" auto-complete="off"
-                                  placeholder="请输入工作邮箱或者手机号码"></el-input>
+                <h3>用户登录</h3>
+                <el-form :model="formData" status-icon :rules="rules" ref="login">
+                    <el-form-item prop="name" class="name">
+                        <md-input icon="tickets"
+                                  v-model="formData.name">用户名
+                        </md-input>
                     </el-form-item>
-                    <el-form-item label="密码" prop="password" class="input-box">
-                        <el-input type="password" v-model="formData.password" auto-complete="off"
-                                  placeholder="请输入密码"></el-input>
+                    <el-form-item prop="password" class="password">
+                        <md-input icon="goods"
+                                  type="password"
+                                  v-model="formData.password">密码
+                        </md-input>
+                    </el-form-item>
+                    <el-form-item class="password-relate">
+                        <el-checkbox label="记住密码" name="type" v-model="memory"></el-checkbox>
+                        <label @click="retrievePass">忘记密码</label>
                     </el-form-item>
                     <el-form-item class="login-box">
                         <el-button type="primary" @click="submitForm">登录</el-button>
                     </el-form-item>
-                    <el-form-item>
-                        <el-checkbox label="记住密码" name="type" v-model="memory"></el-checkbox>
-                        <label @click="retrievePass">忘记密码</label>
-                    </el-form-item>
                 </el-form>
             </div>
+            <img src="~assets/img/login_logo.png" class="login-logo">
         </el-main>
-        <!--底部-->
-        <el-footer>
-            <small>天驰传媒股份有限公司 版权所有</small>
-            <small>地址：北京市朝阳区东三环中路9号33层3302</small>
-        </el-footer>
+        <v-footer></v-footer>
     </el-container>
 </template>
 
 <script>
 
+    import MdInput from 'sysComponents/custom_components/widget/MdInput';
+    import VFooter from '../layout/VFooter';
+
     export default {
         name: 'Login',
+        components: {
+            MdInput,
+            VFooter
+        },
         data() {
             let validateAccount = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
@@ -90,63 +91,62 @@
                     }
                 });
             },
-            // 跳转找回密码
             retrievePass() {
-                this.$router.push({name: 'RetrievePassword'});
+                this.$message({
+                    message: '请联系超级管理员咨询账号问题',
+                    type: 'success'
+                });
             }
         }
     };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="less">
+<style scoped lang="scss">
     .el-container {
+        display: flex;
+        flex-direction: column;
         height: 100%;
     }
 
-    .el-header, .el-footer {
-        background-color: #B3C0D1;
-        color: #333;
+    h3 {
+        margin: 20px 0px;
+        color: $loginFontColor;
         text-align: center;
-        line-height: 60px;
-        img {
-            float: left;
-            margin-top: 20px;
-            height: 25px;
-        }
-        label {
-            float: right;
-        }
-        small:first-child {
-            margin-right: 30px;
-        }
     }
 
     .el-main {
+        position: relative;
         min-width: 800px;
-        background-color: #E9EEF3;
-        color: #333;
-        text-align: center;
-        line-height: 160px;
+        background: url("../../assets/img/login_bg.png") no-repeat $generalBgColor;
+        background-size: cover;
+        .login-logo {
+            position: absolute;
+            left: 60px;
+            bottom: 100px;
+            height: 80px;
+            width: 457px;
+        }
         div.form-box {
-            float: right;
-            margin-top: 120px;
-            margin-right: 250px;
-            width: 400px;
-            border: 1px solid #fff;
-            background: #fff;
-            border-radius: 8px;
+            position: absolute;
+            right: 8%;
+            top: 20%;
+            width: 420px;
+            height: 420px;
+            background: rgba(255, 255, 255, 0.80);
+            box-shadow: 1px 2px 10px 0 rgba(185, 185, 185, 0.50);
+            border-radius: 4px;
         }
         .el-form {
-            padding: 40px 40px 15px 30px;
-            .input-box {
-                margin-bottom: 45px;
+            margin: 0px 50px;
+            input {
+                background-color: transparent;
             }
             .login-box {
-                margin-bottom: 0;
+                margin-top: 40px;
                 .el-button {
                     width: 100%;
-                    text-align: center;
+                    font-size: $normalFontSize;
                 }
             }
             .el-checkbox {
