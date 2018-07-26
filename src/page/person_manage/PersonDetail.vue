@@ -128,10 +128,10 @@
                     return false;
                 }
 
-                if (posterImageList.length > 2) {
-                    this.$message.error('只能上传两张图片');
-                    return false;
-                }
+                // if (posterImageList.length > 2) {
+                //     this.$message.error('只能上传两张图片');
+                //     return false;
+                // }
 
                 let sizeOne = posterImageList.findIndex((img) => parseInt(img.width) === 200 && parseInt(img.height) === 200);
                 let sizeTwo = posterImageList.findIndex((img) => parseInt(img.width) === 1920 && parseInt(img.height) === 1080);
