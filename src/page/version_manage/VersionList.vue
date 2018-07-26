@@ -6,7 +6,7 @@
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>版本列表</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-form :inline="true" class="demo-form-inline search-form">
+        <el-form :inline="true" class="demo-form-inline search-form text-left">
             <el-col :span="20">
                 <el-form-item label="升级类型">
                     <el-select
@@ -70,7 +70,7 @@
                 </el-form-item>
             </el-col>
         </el-form>
-        <el-table :data="list" border style="width:100%">
+        <el-table class="my-table-style" :data="list" border>
             <el-table-column prop="id" align="center" width="240px" label="编号"></el-table-column>
             <el-table-column label="版本号" align="center" prop="version"></el-table-column>
             <el-table-column label="版本序号" align="center" prop="versionCode"></el-table-column>

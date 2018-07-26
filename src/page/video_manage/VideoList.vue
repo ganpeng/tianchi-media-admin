@@ -1,13 +1,13 @@
 <!--视频列表组件-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb class="gp-breadcrumb" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>视频资源管理</el-breadcrumb-item>
             <el-breadcrumb-item>视频列表</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-form :inline="true" class="demo-form-inline search-form">
+        <el-form :inline="true" class="demo-form-inline search-form text-left">
             <el-form-item class="search">
                 <el-input
                     :value="searchFields.name"

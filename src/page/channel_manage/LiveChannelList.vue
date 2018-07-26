@@ -1,13 +1,13 @@
 <!--视频列表组件-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb class="gp-breadcrumb" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>直播频道管理</el-breadcrumb-item>
             <el-breadcrumb-item>直播频道列表</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-form :inline="true" class="demo-form-inline search-form">
+        <el-form :inline="true" class="demo-form-inline search-form text-left">
             <el-form-item class="search">
                 <el-input
                     :value="searchFields.keyword"
@@ -41,7 +41,7 @@
                 <el-button type="primary" plain @click="showFileUploadDialog">导入节目单</el-button>
             </el-form-item>
         </el-form>
-        <el-table :data="list" border style="width:100%;margin:20px 0;">
+        <el-table class="my-table-style" :data="list" border>
             <el-table-column prop="code" align="center" width="240px" label="直播频道编号"></el-table-column>
             <el-table-column prop="no" align="center" width="200px" label="直播频道展示编号"></el-table-column>
             <el-table-column prop="innerName" align="center" width="200px" label="直播频道名称"></el-table-column>
@@ -171,7 +171,12 @@
                 this.getChannelPageById(id)
                     .then((res) => {
                         if (res && res.code === 0) {
-                            let xml = x2js.json2xml_str({'频道': {'节目': res.data}});
+                            let data = res.data.map((item) => {
+                                item.startTime = this.timeStampFormat(item.startTime);
+                                item.endTime = this.timeStampFormat(item.endTime);
+                                return item;
+                            });
+                            let xml = x2js.json2xml_str({'频道': {'节目': data}});
                             let blob = new Blob(['<?xml version="1.0" encoding="UTF-8"?>', xml], {type: 'application/xml'});
                             if (flag) {
                                 this.openDownloadDialog(blob, `${name}.xml`);
@@ -255,6 +260,16 @@
             },
             submitUpload() {
                 this.$refs.upload.submit();
+            },
+            timeStampFormat(seconds) {
+                    let date = new Date(seconds);
+                    let year = date.getFullYear();
+                    let month = date.getMonth() + 1;
+                    let day = date.getDate();
+                    let hour = date.getHours();
+                    let minute = date.getMinutes();
+                    let second = date.getSeconds();
+                    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
             },
             uploadSuccessHandler(res, file, fileList) {
                 if (res && res.code === 0) {

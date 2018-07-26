@@ -8,7 +8,7 @@
             <el-breadcrumb-item>节目列表</el-breadcrumb-item>
         </el-breadcrumb>
         <div class="table-container">
-            <el-form :inline="true" class="demo-form-inline">
+            <el-form :inline="true" class="demo-form-inline text-left">
                 <el-form-item label="上映开始年">
                     <el-date-picker
                         :value="programmeSearchFields.releaseAtStart"
@@ -112,7 +112,7 @@
                     <el-button size="small" type="primary" plain @click="showFileUploadDialog">导入节目</el-button>
                 </el-form-item>
             </el-form>
-            <el-table :data="list" border style="width: 100%">
+            <el-table class="my-table-style" :data="list" border>
                 <el-table-column prop="code" align="center" width="240px" label="节目编号"></el-table-column>
                 <el-table-column label="节目图片" align="center" >
                     <template slot-scope="scope">

@@ -71,6 +71,7 @@
                     :file-list="fileList"
                     :on-change="uploadChangeHandler"
                     :on-success="uploadSuccessHandler"
+                    :on-error="uploadErrorHandler"
                     :with-credentials="true">
                         <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
                         <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
@@ -143,6 +144,9 @@ export default {
                     message: res.data[0].failReason
                 });
             }
+        },
+        uploadErrorHandler() {
+            this.$message.error('网络异常');
         }
     }
 };

@@ -1,6 +1,6 @@
 <template>
     <div class="video-table-container">
-       <el-table :data="video.list" border style="width:100%;margin:20px 0;">
+       <el-table class="my-table-style" :data="video.list" border>
             <el-table-column v-if="hasRadio" align="center" label="选择">
                 <template slot-scope="scope">
                     <el-radio :value="video.selectedVideoId" :label="scope.row.id" @input="setSelectedVideoId({id: scope.row.id})">&nbsp;</el-radio>

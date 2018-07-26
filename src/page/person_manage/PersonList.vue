@@ -7,7 +7,7 @@
             <el-breadcrumb-item>人物资源管理</el-breadcrumb-item>
             <el-breadcrumb-item>人物列表</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-form :inline="true" class="demo-form-inline search-form">
+        <el-form :inline="true" class="demo-form-inline search-form text-left">
             <el-form-item label="地区">
                 <el-select
                     :value="searchFields.area"
@@ -46,7 +46,7 @@
                 <el-button size="small" type="primary" plain @click="showFileUploadDialog">导入人物</el-button>
             </el-form-item>
         </el-form>
-        <el-table :data="list" border style="width:100%">
+        <el-table class="my-table-style" :data="list" border>
             <el-table-column prop="id" align="center" width="240px" label="编号"></el-table-column>
             <el-table-column label="照片" align="center" >
                 <template slot-scope="scope">
