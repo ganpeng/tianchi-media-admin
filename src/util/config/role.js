@@ -344,6 +344,29 @@ export const VIDEO_TYPE_OPTIONS = [
     }
 ];
 
+//  升级类型
+const PRODUCT_TYPE_OPTIONS = [
+    {
+        value: 'TV_LAUNCHER',
+        name: '应用升级'
+    },
+    {
+        value: 'TV_ROM_3798',
+        name: '系统升级'
+    }
+];
+
+//  升级方式
+const FORCED_OPTIONS = [
+    {
+        value: 1,
+        name: '强制升级'
+    },
+    {
+        value: 0,
+        name: '选择升级'
+    }
+];
 export default {
     MAIN_ROLE_OPTIONS,
     VIDEO_TYPE,
@@ -363,5 +386,7 @@ export default {
     PLATFORM,
     ANNOUNCER,
     VIDEO_TYPE_OPTIONS,
-    VIDEO_UPLOAD_STATUS_OPTIONS
+    VIDEO_UPLOAD_STATUS_OPTIONS,
+    PRODUCT_TYPE_OPTIONS,
+    FORCED_OPTIONS
 };

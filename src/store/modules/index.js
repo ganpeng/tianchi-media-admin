@@ -8,6 +8,7 @@ import programme from './programme';
 import programmeVideo from './programme_video';
 import video from './video';
 import channel from './channel';
+import version from './version';
 
 export default {
     permission,
@@ -17,5 +18,6 @@ export default {
     programme,
     programmeVideo,
     video,
-    channel
+    channel,
+    version
 };

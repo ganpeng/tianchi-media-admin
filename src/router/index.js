@@ -58,6 +58,7 @@ import ChannelCategory from 'sysPage/channel_manage/ChannelCategory';
 import ModelAppendChannel from 'sysPage/content_manage/layout_manage/ModelAppendChannel';
 import AppendChannel from 'sysPage/content_manage/layout_manage/AppendChannel';
 import AppendViewChannel from 'sysPage/content_manage/layout_manage/AppendViewChannel';
+import VersionList from 'sysPage/version_manage/VersionList';
 
 Vue.use(Router);
 
@@ -394,8 +395,13 @@ let router = new Router({
                     path: '/channel-manage/category',
                     name: 'ChannelCategory',
                     component: ChannelCategory
+                },
+                //  版本管理
+                {
+                    path: '/version-manage/list',
+                    name: 'VersionList',
+                    component: VersionList
                 }
-
             ]
         },
         // 错误页面布局

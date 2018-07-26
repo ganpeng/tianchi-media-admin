@@ -66,6 +66,11 @@
                     <el-menu-item index="/subject-manage/person/create">新增人物专题</el-menu-item>
                     <el-menu-item index="/subject-manage/list">专题列表</el-menu-item>
                 </el-submenu>
+                <!-- 版本管理 -->
+                <el-submenu index="1-7" :style="secondLeftIndent">
+                    <template slot="title">版本管理</template>
+                    <el-menu-item index="/version-manage/list">版本列表</el-menu-item>
+                </el-submenu>
             </el-submenu>
             <!--管理员管理-->
             <el-submenu index="2">

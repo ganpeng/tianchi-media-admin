@@ -689,7 +689,7 @@ const mutations = {
  * 对节目数据做处理
  */
 function formatProgramme(programme, state) {
-    let {global: {categoryList}} = state;
+    let {global: {categoryList}, video: {list}} = state;
     let programmeTypeList = categoryList.reduce((res, curr) => {
         return res.concat(curr.programmeTypeList);
     }, []);
@@ -698,6 +698,7 @@ function formatProgramme(programme, state) {
         copyrightStartedAt: programme.copyrightRange[0],
         // 版权结束日期
         copyrightEndedAt: programme.copyrightRange[1],
+        featureVideoCount: list.filter((video) => video.type === 'FEATURE').length,
         categoryList: programme.categoryList.map((id) => {
             let category = categoryList.find((category) => category.id === id);
             return category;
