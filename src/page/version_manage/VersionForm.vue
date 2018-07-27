@@ -64,7 +64,7 @@
             <el-form-item ref="uploadItem" label="升级包">
                 <el-upload
                     class="upload-demo"
-                    ref="upload"
+                    ref="versionUpload"
                     :headers="uploadHeaders"
                     :accept="accept"
                     action="/v1/storage/file"
@@ -137,18 +137,20 @@ export default {
             }
         },
         uploadChangeHandler() {
-            this.$refs.uploadItem.resetField();
+            // this.$refs.uploadItem.resetField();
         },
         submitUpload() {
-            this.$refs.upload.submit();
+            this.$refs.versionUpload.submit();
         },
         uploadSuccessHandler(res) {
-            if (res && res.code === 0 && res.data[0] && res.data[0].failCode === 0) {
-                this.updateVersion({key: 'fullPackageUri', value: res.data[0].file.uri});
-                this.$message({
-                    type: 'success',
-                    message: '文件上传成功'
-                });
+            if (res && res.code === 0 && res.data[0]) {
+                if (res.data[0].failCode === 0 || res.data[0].failCode === 3300) {
+                    this.updateVersion({key: 'fullPackageUri', value: res.data[0].file.uri});
+                    this.$message({
+                        type: 'success',
+                        message: '文件上传成功'
+                    });
+                }
             } else {
                 this.$message({
                     type: 'error',

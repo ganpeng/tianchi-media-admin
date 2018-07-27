@@ -64,32 +64,31 @@
             width="80%"
             :close-on-click-modal="false"
             :close-on-press-escape="false">
-            <div v-show="!isUploading" class="upload-file">
+            <div class="upload-file">
                 <div class="wrapper">
                     <label for="upload-input">
                         <el-button size="small" type="primary">选取文件</el-button>
                     </label>
                     <input id="upload-input" class="upload-input" type="file" ref="uploadInput" @change="uploadChangeHandler" multiple>
                 </div>
-                <el-button style="margin-left: 10px;" size="small" @click="uploadHandler" type="success">点击上传</el-button>
             </div>
             <ul class="progress-bar-list">
                 <li class="progress-bar-item" v-for="(item, index) in files" :key="index">
-                    <p class="file-name">{{item.name}}</p>
+                    <p class="file-name">{{item.file.name}}</p>
                     <div class="progress-bar">
                         <el-progress
                             class="bar"
                             :stroke-width="3"
-                            :percentage="getProgress(index).percent"
-                            :status="getProgress(index).percent !== 100 ? 'exception' : 'success'">
+                            :percentage="item.progress.percent"
+                            :status="item.progress.percent !== 100 ? 'exception' : 'success'">
                         </el-progress>
                         <i
                             v-if="!showDelete(index)"
                             @click="cancelUpload(index)"
                             class="delete-btn el-icon-close"></i>
                         <span class="percent">
-                            {{ getProgress(index).percent + '% ' + (isChecking(index) ? '视频校验中, 请等待片刻' : uploadStatus(index)) }}
-                            <i v-if="getProgress(index).status === 'uploading'" class="el-icon-loading"></i>
+                            {{ item.progress.percent + '% ' + (isChecking(index) ? '视频校验中, 请等待片刻' : uploadStatus(index)) }}
+                            <i v-if="item.progress.status === 'uploading'" class="el-icon-loading"></i>
                         </span>
                     </div>
                 </li>
@@ -103,7 +102,6 @@
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
-    import _ from 'lodash';
     import VideoTable from './VideoTable';
     import role from '@/util/config/role';
     export default {
@@ -115,13 +113,11 @@
             return {
                 xhr: null,
                 files: [],
-                progress: [],
                 count: 0,
                 isUploading: false,
                 videoUploadDialogVisible: false,
                 videoTypeOptions: role.VIDEO_TYPE_OPTIONS,
                 statusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
-                isLoading: false,
                 timer: null
             };
         },
@@ -133,31 +129,31 @@
             getProgress() {
                 return (index) => {
                     return {
-                        percent: this.progress[index].percent,
-                        status: this.progress[index].status
+                        percent: this.files[index].progress.percent,
+                        status: this.files[index].progress.status
                     };
                 };
             },
             showDelete() {
                 return (index) => {
-                    let status = this.progress[index].status;
-                    let percent = this.progress[index].percent;
+                    let status = this.files[index].progress.status;
+                    let percent = this.files[index].progress.percent;
                     return status === 'canceled' || status === 'uploaded' || status === 'error' || status === 'fail' || percent === 100;
                 };
             },
             isChecking() {
                 return (index) => {
-                    let status = this.progress[index].status;
-                    let percent = this.progress[index].percent;
+                    let status = this.files[index].progress.status;
+                    let percent = this.files[index].progress.percent;
                     return status === 'uploading' && percent === 100;
                 };
             },
             uploadStatus() {
                 return (index) => {
-                    let status = this.progress[index].status;
-                    let message = this.progress[index].message;
+                    let status = this.files[index].progress.status;
+                    let message = this.files[index].progress.message;
                     switch (status) {
-                        // uploading canceld waiting uploaded error fail
+                        // uploading checking canceld waiting uploaded error fail
                         case 'uploading':
                             return '上传中';
                         case 'canceled':
@@ -168,6 +164,8 @@
                             return '上传成功';
                         case 'error':
                             return '上传失败';
+                        case 'checking':
+                            return '视频校验中，请稍候片刻';
                         case 'fail':
                             return message;
                         default:
@@ -197,18 +195,18 @@
             }),
             showVideoUploadDialog(videoType) {
                 this.videoUploadDialogVisible = true;
+                this.count = 0;
                 this.setVideoType({videoType});
             },
             cancelHandler() {
-                if (this.$refs.uploadInput.value) {
+                if (this.isUploading) {
                     this.$confirm('你确定要取消上传操作吗, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'error'
                     }).then(() => {
-                        this.$refs.uploadInput.value = '';
-                        this.resetUpload();
                         this.videoUploadDialogVisible = false;
+                        this.resetField();
                     }).catch(() => {
                         this.$message({
                             type: 'info',
@@ -216,9 +214,17 @@
                         });
                     });
                 } else {
-                    this.resetUpload();
                     this.videoUploadDialogVisible = false;
+                    this.resetField();
                 }
+            },
+            resetField() {
+                this.count = 0;
+                this.xhr && this.xhr.abort();
+                this.xhr = null;
+                this.files = [];
+                this.isUploading = false;
+                this.$refs.uploadInput.value = '';
             },
             inputHandler(value, key) {
                 this.updateSearchFields({key, value});
@@ -226,46 +232,42 @@
             searchHandler() {
                 this.getVideoList();
             },
-            resetUpload() {
-                this.count = 0;
-                this.xhr && this.xhr.abort();
-                this.xhr = null;
-                this.files = [];
-                this.progress = [];
-                this.isUploading = false;
-            },
             uploadChangeHandler(e) {
-                this.count = 0;
-                this.xhr && this.xhr.abort();
-                this.xhr = null;
-                this.isUploading = false;
-
                 let files = Array.from(e.target.files);
-                this.files = _.uniqBy(this.files.concat(files), 'name');
-                this.progress = this.files.map((item) => {
-                    return {
-                        percent: 0,
-                        status: 'waiting',
-                        message: ''
-                    };
+                let newFileList = [];
+                files.forEach((file) => {
+                    let index = this.files.findIndex((item) => {
+                        return item.file.name === file.name;
+                    });
+                    if (index === -1) {
+                        let obj = {
+                            file,
+                            progress: {
+                                percent: 0,
+                                status: 'waiting',
+                                message: ''
+                            }
+                        };
+                        newFileList.push(obj);
+                    }
                 });
+                this.files = this.files.concat(newFileList);
+                this.uploadHandler();
             },
-            uploadHandler(obj) {
+            uploadHandler() {
                 let that = this;
-                if (!this.isUploading) {
-                    this.isUploading = true;
+                if (!that.isUploading) {
+                    that.isUploading = true;
                     upload();
                 }
+
                 function upload() {
                     if (typeof that.files[that.count] === 'undefined') {
-                        that.$refs.uploadInput.value = '';
-                        that.count = 0;
-                        that.xhr = null;
+                        that.isUploading = false;
                         return false;
                     }
-
                     let formData = new FormData();
-                    let file = that.files[that.count];
+                    let file = that.files[that.count].file;
                     let videoType = that.getVideoType;
                     formData.append('file', file);
                     formData.append('videoType', videoType);
@@ -274,26 +276,32 @@
                         .then((res) => {
                             let result = JSON.parse(res).data[0];
                             if (result.failCode === 0) {
-                                that.progress = that.progress.map((progress, index) => {
+                                that.files = that.files.map((obj, index) => {
                                     if (index === that.count) {
                                         return {
-                                            percent: progress.percent,
-                                            status: 'uploaded'
+                                            file: obj.file,
+                                            progress: {
+                                                percent: obj.progress.percent,
+                                                status: 'uploaded'
+                                            }
                                         };
                                     } else {
-                                        return progress;
+                                        return obj;
                                     }
                                 });
                             } else {
-                                that.progress = that.progress.map((progress, index) => {
+                                that.files = that.files.map((obj, index) => {
                                     if (index === that.count) {
                                         return {
-                                            percent: progress.percent,
-                                            status: 'fail',
-                                            message: result.failReason
+                                            file: obj.file,
+                                            progress: {
+                                                percent: obj.progress.percent,
+                                                status: 'fail',
+                                                message: result.failReason
+                                            }
                                         };
                                     } else {
-                                        return progress;
+                                        return obj;
                                     }
                                 });
                             }
@@ -301,25 +309,33 @@
                             upload();
                         }).catch((err) => {
                             if (err && err.message === 'canceled_flag') {
-                                that.progress = that.progress.map((progress, index) => {
+                                that.files = that.files.map((obj, index) => {
                                     if (index === that.count) {
                                         return {
-                                            percent: progress.percent,
-                                            status: 'canceled'
+                                            file: obj.file,
+                                            progress: {
+                                                percent: obj.progress.percent,
+                                                status: 'canceled',
+                                                message: ''
+                                            }
                                         };
                                     } else {
-                                        return progress;
+                                        return obj;
                                     }
                                 });
                             } else {
-                                that.progress = that.progress.map((progress, index) => {
+                                that.files = that.files.map((obj, index) => {
                                     if (index === that.count) {
                                         return {
-                                            percent: progress.percent,
-                                            status: 'error'
+                                            file: obj.file,
+                                            progress: {
+                                                percent: obj.progress.percent,
+                                                status: 'error',
+                                                message: ''
+                                            }
                                         };
                                     } else {
-                                        return progress;
+                                        return obj;
                                     }
                                 });
                             }
@@ -333,7 +349,6 @@
                     this.xhr.abort();
                 } else {
                     this.files = this.files.filter((file, index) => index !== count);
-                    this.progress = this.progress.filter((progress, index) => index !== count);
                 }
             },
             uploadRequest(data) {
@@ -358,14 +373,19 @@
                     };
                     xhr.upload.onprogress = (evt) => {
                         let percent = evt.loaded / evt.total * 100;
-                        that.progress = that.progress.map((progress, index) => {
+                        that.files = that.files.map((obj, index) => {
+                            let progress = {
+                                percent: parseInt(percent),
+                                status: 'uploading',
+                                message: ''
+                            };
                             if (index === that.count) {
                                 return {
-                                    percent: parseInt(percent),
-                                    status: 'uploading'
+                                    file: obj.file,
+                                    progress
                                 };
                             } else {
-                                return progress;
+                                return obj;
                             }
                         });
                     };
