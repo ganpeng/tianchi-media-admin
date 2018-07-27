@@ -76,6 +76,13 @@
                 label="视频文件名">
             </el-table-column>
             <el-table-column
+                prop="name"
+                label="视频展示名">
+                <template slot-scope="scope">
+                    <el-input v-model="scope.row.name"></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column
                 prop="link"
                 align="center"
                 width="300px"
@@ -493,6 +500,16 @@
                     });
                     return;
                 }
+                /** 在频道保存时，含有的视频必须有展示名称  */
+                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                    if (!this.currentSelectedVideoList[i].name) {
+                        this.$message({
+                            message: '请完整填写当前频道中的视频展示名称',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+                }
                 this.$refs['channelInfo'].validate((valid) => {
                     if (valid) {
                         for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
@@ -564,5 +581,11 @@
 
     .image-box {
         margin-top: 20px;
+    }
+
+    .el-table {
+        .el-input {
+            width: 100%;
+        }
     }
 </style>

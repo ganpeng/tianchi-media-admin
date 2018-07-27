@@ -157,6 +157,7 @@
                 float: right;
                 padding-right: 5px;
                 cursor: pointer;
+                font-size: $normalFontSize;
                 &:hover {
                     color: #409EFF;
                 }

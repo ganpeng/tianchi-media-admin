@@ -62,6 +62,10 @@
                     label="视频文件名">
                 </el-table-column>
                 <el-table-column
+                    prop="name"
+                    label="视频展示名">
+                </el-table-column>
+                <el-table-column
                     prop="link"
                     align="center"
                     width="300px"

@@ -1,24 +1,33 @@
 <!--页头组件-->
 <template>
-    <div>
-        <img src="~assets/img/logo.png">
-        <el-dropdown @command="handleCommand">
-            <span class="el-dropdown-link">{{name}}<i class="el-icon-arrow-down el-icon--right"></i></span>
-            <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="set">设置</el-dropdown-item>
-                <el-dropdown-item command="logout">退出</el-dropdown-item>
-            </el-dropdown-menu>
-        </el-dropdown>
+    <div class="container">
+        <hamburger
+            :isActive="isActive"
+            :toggleClick="toggleAside">
+        </hamburger>
+        <div class="info">
+            <div class="avatar-box">
+                <img src="~assets/img/avatar_default.png"/>
+            </div>
+            <label>您好，{{name}}</label>
+            <span @click="logout">退出</span>
+        </div>
     </div>
 </template>
 
 <script>
+
+    import Hamburger from 'sysComponents/custom_components/widget/Hamburger';
     import Cookies from 'js-cookie';
 
     export default {
         name: 'VHeader',
+        components: {
+            Hamburger
+        },
         data() {
             return {
+                isActive: true,
                 name: ''
             };
         },
@@ -26,45 +35,45 @@
             this.name = Cookies.get('name');
         },
         methods: {
-            handleCommand(command) {
-                switch (command) {
-                    // 跳转到设置页面
-                    case 'set':
-                        this.$router.push({name: 'InfoSetting'});
-                        break;
-                    // 退出登录
-                    case 'logout':
-                        this.$store.dispatch('user/logout');
-                        break;
-                    default:
-                        break;
-                }
+            // 切换侧边栏
+            toggleAside() {
+                this.isActive = !this.isActive;
+                this.$emit('toggleAside', this.isActive);
+            },
+            logout() {
+                this.$store.dispatch('user/logout');
             }
         }
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="less">
-    img {
-        float: left;
-        margin-left: 30px;
-        margin-top: 20px;
-        height: 25px;
+<style scoped lang="scss">
+
+    .container {
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
     }
 
-    label {
-        float: left;
-    }
-
-    .el-dropdown {
-        float: right;
-        height: 60%;
-        .el-dropdown-link {
+    .info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .avatar-box {
+            margin-right: 14px;
+            height: 45px;
+            width: 45px;
+            border-radius: 45px;
+        }
+        label {
+            margin-right: 32px;
+        }
+        span {
+            color: $baseBlue;
             cursor: pointer;
         }
-        .el-icon-arrow-down {
-            font-size: 12px;
-        }
     }
+
 </style>

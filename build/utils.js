@@ -40,7 +40,7 @@ exports.cssLoaders = function (options) {
                     sourceMap: options.sourceMap
                 }, {
                     data: '$smallestFontSize:12px;$normalFontSize: 14px;' +
-                    '$generalBgColor: #F0F2F5;$loginFontColor: #8AA4AF;'
+                    '$generalBgColor: #F0F2F5;$loginFontColor: #8AA4AF;$baseBlue: #1989FA;'
                 })
             });
         }

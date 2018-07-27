@@ -1,20 +1,22 @@
 <!--左侧导航栏-->
 <template>
     <div class="wrap-box">
-        <el-switch v-model="isCollapse"></el-switch>
+        <img v-if="isActive" src="~assets/img/logo.png">
+        <img v-else src="~assets/img/single_logo.png">
         <el-menu
             unique-opened
-            background-color="#545c64"
-            text-color="#fff"
+            background-color="#283841"
+            text-color="#8AA4AF"
             router
-            :default-openeds=defaultOpenedArray
-            :class="{broad:isCollapse}"
-            :collapse="!isCollapse"
-            active-text-color="#ffd04b">
+            :show-timeout="200"
+            :default-active="$route.path"
+            :class="{broad:isActive}"
+            :collapse="!isActive"
+            active-text-color="#fff">
             <!--内容管理-->
             <el-submenu index="1">
                 <template slot="title">
-                    <i class="el-icon-location"></i>
+                    <i class="el-icon-menu"></i>
                     <span>内容管理</span>
                 </template>
                 <!--栏目管理-->
@@ -132,8 +134,7 @@
         name: 'VAside',
         data() {
             return {
-                isCollapse: true,
-                defaultOpenedArray: ['1'],
+                isActive: true,
                 secondLeftIndent: {paddingLeft: '30px'},
                 directSecondLeftIndent: {paddingLeft: '70px'},
                 navBarList: []
@@ -154,6 +155,9 @@
                     }
                 });
             },
+            setIsActive(isActive) {
+                this.isActive = isActive;
+            },
             // 退出登录
             logout() {
                 this.$store.dispatch('user/logout');
@@ -165,18 +169,16 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
     .wrap-box {
-        background-color: #545c64;
-        color: #333;
-        text-align: center;
+        background-color: #283841;
         overflow-y: scroll;
-        .el-switch {
-            margin-top: 12px;
-        }
         .el-menu {
             text-align: left;
             border: none;
             &.broad {
-                width: 250px;
+                width: 240px;
+            }
+            i {
+                margin-right: 16px;
             }
         }
     }

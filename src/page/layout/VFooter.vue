@@ -14,7 +14,6 @@
 
 <style scoped lang="scss">
     .container {
-        height: 64px;
         line-height: 64px;
         width: 100%;
     }
