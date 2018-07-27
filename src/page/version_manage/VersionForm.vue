@@ -6,6 +6,7 @@
             <el-form-item label="版本号" prop="version">
                 <el-input
                     :value="version.version"
+                    :maxlength="11"
                     @input="inputHandler($event, 'version')"
                     placeholder="请输入版本号，最长10个字符"
                 ></el-input>
@@ -87,10 +88,21 @@ import role from '@/util/config/role';
 export default {
     name: 'VersionForm',
     data() {
+        let checkVersionCode = (rule, value, callback) => {
+            let reg = /^\+?[1-9][0-9]*$/;
+            if (!reg.test(value)) {
+                callback(new Error('只能输入大于0的整数'));
+            }
+            callback();
+        };
+
         return {
             infoRules: {
                 version: [{required: true, message: '请输入版本号'}],
-                versionCode: [{required: true, message: '请输入版本序列号'}],
+                versionCode: [
+                    {required: true, message: '请输入版本序列号'},
+                    {validator: checkVersionCode}
+                ],
                 updateLog: [{required: true, message: '请输入版本序列号'}],
                 productType: [{required: true, message: '请选择升级类型'}],
                 forced: [{required: true, message: '请选择升级方式'}],

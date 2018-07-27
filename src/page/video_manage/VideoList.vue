@@ -103,6 +103,7 @@
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
+    import _ from 'lodash';
     import VideoTable from './VideoTable';
     import role from '@/util/config/role';
     export default {
@@ -234,9 +235,14 @@
                 this.isUploading = false;
             },
             uploadChangeHandler(e) {
-                this.resetUpload();
-                this.files = Array.from(e.target.files).map((item) => item);
-                this.progress = Array.from(this.files).map((item) => {
+                this.count = 0;
+                this.xhr && this.xhr.abort();
+                this.xhr = null;
+                this.isUploading = false;
+
+                let files = Array.from(e.target.files);
+                this.files = _.uniqBy(this.files.concat(files), 'name');
+                this.progress = this.files.map((item) => {
                     return {
                         percent: 0,
                         status: 'waiting',
