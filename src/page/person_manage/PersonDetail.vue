@@ -82,7 +82,8 @@
             ...mapActions({
                 createPerson: 'person/createPerson',
                 updatePersonById: 'person/updatePersonById',
-                getPersonById: 'person/getPersonById'
+                getPersonById: 'person/getPersonById',
+                putHotPerson: 'person/putHotPerson'
             }),
             // 新增人物
             _createPerson() {
@@ -93,6 +94,7 @@
                             this.createPerson()
                                 .then(() => {
                                     this.$message.success('创建人物成功');
+                                    // this.putHotPerson();
                                     this.$router.push({ name: 'PersonList' });
                                 }).finally(() => {
                                     this.isLoading = false;
@@ -112,6 +114,7 @@
                             this.updatePersonById()
                                 .then(() => {
                                     this.$message.success('编辑人物成功');
+                                    // this.putHotPerson();
                                 }).finally(() => {
                                     this.isLoading = false;
                                 });

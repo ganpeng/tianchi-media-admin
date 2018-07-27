@@ -711,7 +711,7 @@ function formatProgramme(programme, state) {
         licence: programme.licence === '' ? null : programme.licence,
         figureList: [].concat(programme.leadActor.map((item) => {
             let obj = {};
-            obj.role = 'DIRECTOR';
+            obj.role = 'CHIEF_ACTOR';
             obj.id = item.id;
             obj.name = item.name;
             obj.avatarUri = item.avatarUri;
@@ -725,7 +725,7 @@ function formatProgramme(programme, state) {
             return obj;
         })).concat(programme.director.map((item) => {
             let obj = {};
-            obj.role = 'CHIEF_ACTOR';
+            obj.role = 'DIRECTOR';
             obj.id = item.id;
             obj.name = item.name;
             obj.avatarUri = item.avatarUri;

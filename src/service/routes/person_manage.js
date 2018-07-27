@@ -42,3 +42,10 @@ export const findPerson = ({name}) => {
         params: {name}
     });
 };
+
+/**
+ * 热门人物修改
+ */
+export const putHotPerson = (figureId, hotFigureList) => {
+    return service.put(`/v1/content/hot-figure/list/${figureId}`, hotFigureList);
+};

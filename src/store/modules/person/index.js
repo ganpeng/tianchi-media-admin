@@ -2,8 +2,7 @@ import { checkImageExist } from '@/util/formValidate';
 import _ from 'lodash';
 import router from '../../../router';
 import service from '../../../service';
-import {MAIN_ROLE_OPTIONS} from '@/util/config/role';
-
+import role from '@/util/config/role';
 const defaultPerson = {
     area: '',
     birthday: '',
@@ -66,7 +65,7 @@ const getters = {
     mainRoleLabel(state) {
         return (mainRoleList) => {
             return mainRoleList.map((item) => {
-                return MAIN_ROLE_OPTIONS.find((mainRoleItem) => mainRoleItem.value === item).label;
+                return role.MAIN_ROLE_OPTIONS.find((mainRoleItem) => mainRoleItem.value === item).label;
             }).join(', ');
         };
     }
@@ -205,6 +204,21 @@ const actions = {
                 }
             }
         } catch (err) {}
+    },
+    async putHotPerson({commit, state}) {
+        try {
+            let figureId = state.currentPerson.id;
+            let hotFigureList = state.recommend.recommendList.map((item) => {
+                let hotObj = role.RECOMMEND_OPTIONS.find((obj) => obj.value === item);
+                let obj = Object.assign({}, {
+                    hotCode: item,
+                    hotName: hotObj ? hotObj.name : ''
+                });
+                return obj;
+            });
+            let res = await service.putHotPerson(figureId, hotFigureList);
+            return res;
+        } catch (err) { }
     }
 };
 

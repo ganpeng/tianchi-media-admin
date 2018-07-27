@@ -42,7 +42,7 @@
                 <el-button v-if="!readonly" type="primary" @click="selectVideo">选择</el-button>
             </el-form-item>
             <el-form-item label="视频ID">
-                <el-input :value="video.commonId" disabled></el-input>
+                <el-input :value="video.storageVideoId" disabled></el-input>
             </el-form-item>
             <el-form-item
                 label="视频文件名">
