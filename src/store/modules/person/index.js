@@ -31,7 +31,13 @@ const defaultPagination = {
     total: 0
 };
 
+const defaultRecommend = {
+    isRecommend: 0,
+    recommendList: []
+};
+
 const state = {
+    recommend: _.cloneDeep(defaultRecommend),
     searchFields: _.cloneDeep(defaultSearchFields),
     currentPerson: _.cloneDeep(defaultPerson),
     list: [],
@@ -50,6 +56,9 @@ const getters = {
     },
     currentPerson(state) {
         return state.currentPerson;
+    },
+    recommend(state) {
+        return state.recommend;
     },
     posterImageList(state) {
         return state.currentPerson && state.currentPerson.posterImageList;
@@ -91,6 +100,13 @@ const mutations = {
     },
     updateCurrentPerson(state, payload) {
         state.currentPerson[payload.key] = payload.value;
+    },
+    setRecommend(state, payload) {
+        state.recommend = payload.recommend;
+    },
+    updateRecommend(state, payload) {
+        let {key, value} = payload;
+        state.recommend[key] = value;
     },
     updateSearchFields(state, payload) {
         let {key, value} = payload;

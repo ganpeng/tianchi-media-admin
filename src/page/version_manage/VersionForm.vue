@@ -3,7 +3,7 @@
         <el-form :model="version" :rules="infoRules" status-icon ref="createVersion"
                 label-width="100px"
                 class="form-block">
-            <el-form-item label="版本号" prop="version">
+            <el-form-item label="版本名称" prop="version">
                 <el-input
                     :value="version.version"
                     :maxlength="11"
@@ -11,7 +11,7 @@
                     placeholder="请输入版本号，最长10个字符"
                 ></el-input>
             </el-form-item>
-            <el-form-item label="版本序列号" prop="versionCode">
+            <el-form-item label="版本号" prop="versionCode">
                 <el-input
                     :value="version.versionCode"
                     @input="inputHandler($event, 'versionCode')"
@@ -95,15 +95,14 @@ export default {
             }
             callback();
         };
-
         return {
             infoRules: {
-                version: [{required: true, message: '请输入版本号'}],
+                version: [{required: true, message: '请输入版本名称'}],
                 versionCode: [
-                    {required: true, message: '请输入版本序列号'},
+                    {required: true, message: '请输入版本号'},
                     {validator: checkVersionCode}
                 ],
-                updateLog: [{required: true, message: '请输入版本序列号'}],
+                updateLog: [{required: true, message: '请输入版本说明'}],
                 productType: [{required: true, message: '请选择升级类型'}],
                 forced: [{required: true, message: '请选择升级方式'}],
                 fullPackageUri: [{required: true, message: '请上传升级包'}]

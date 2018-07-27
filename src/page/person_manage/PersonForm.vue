@@ -89,6 +89,27 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="是否推荐">
+                    <el-radio-group :value="recommend.isRecommend">
+                        <el-radio :label="0" @change="changeIsRecommendHandler(0)">是</el-radio>
+                        <el-radio :label="1" @change="changeIsRecommendHandler(1)">否</el-radio>
+                    </el-radio-group>
+                    <el-select
+                        style="margin-left:20px;"
+                        v-if="recommend.isRecommend === 0"
+                        multiple
+                        :value="recommend.recommendList"
+                        placeholder="请选择推荐位"
+                        @input="inputRecommendHandler($event, 'recommendList')"
+                    >
+                        <el-option
+                            v-for="(item, index) in recommendOptions"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
             </el-col>
             <el-col :span="24">
                 <el-form-item label="人物图片" required>
@@ -162,7 +183,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            person: 'person/currentPerson'
+            person: 'person/currentPerson',
+            recommend: 'person/recommend'
         })
     },
     data() {
@@ -189,20 +211,23 @@ export default {
             imageUploadDialogVisible: false,
             areaOptions: store.get('areaList'),
             mainRoleoptions: role.MAIN_ROLE_OPTIONS,
+            recommendOptions: role.RECOMMEND_OPTIONS,
             size: dimension.PERSON_DIMENSION,
             previewImage: {
                 display: false,
                 autoplay: false,
                 activeIndex: 0,
                 list: []
-            }
+            },
+            isRecomend: 1
         };
     },
     methods: {
         ...mapMutations({
             updateCurrentPerson: 'person/updateCurrentPerson',
             addPosterImage: 'person/addPosterImage',
-            deletePosterImage: 'person/deletePosterImage'
+            deletePosterImage: 'person/deletePosterImage',
+            updateRecommend: 'person/updateRecommend'
         }),
         uploadImageHandler() {
             if (!this.readonly) {
@@ -214,6 +239,15 @@ export default {
         },
         inputHandler(value, key) {
             this.updateCurrentPerson({key, value});
+        },
+        inputRecommendHandler(value, key) {
+            this.updateRecommend({key, value});
+        },
+        changeIsRecommendHandler(value) {
+            this.updateRecommend({key: 'isRecommend', value});
+            if (value === 1) {
+                this.updateRecommend({key: 'recommendList', value: []});
+            }
         },
         _deletePosterImage(id) {
             this.$confirm('此操作将删除该文件, 是否继续?', '提示', {

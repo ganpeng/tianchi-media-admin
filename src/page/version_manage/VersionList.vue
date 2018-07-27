@@ -71,11 +71,11 @@
             </el-col>
         </el-form>
         <el-table class="my-table-style" :data="list" border>
-            <el-table-column prop="id" align="center" width="240px" label="编号"></el-table-column>
-            <el-table-column label="版本号" align="center" prop="version"></el-table-column>
-            <el-table-column label="版本序号" align="center" prop="versionCode"></el-table-column>
+            <el-table-column align="center" width="240px" label="编号" prop="id"></el-table-column>
+            <el-table-column label="版本名称" align="center" prop="version"></el-table-column>
+            <el-table-column label="版本号" align="center" prop="versionCode"></el-table-column>
             <el-table-column label="版本说明" align="center" width="200px" prop="updateLog"></el-table-column>
-            <el-table-column align="center" width="300px" label="升级类型">
+            <el-table-column align="center" width="120px" label="升级类型">
                 <template slot-scope="scope">
                     {{scope.row.productType === 'TV_LAUNCHER' ? '应用升级' : '系统升级'}}
                 </template>
@@ -87,11 +87,11 @@
             </el-table-column>
             <el-table-column width="120px" align="center" label="版本发布时间" prop="releaseAt">
                 <template slot-scope="scope">
-                    {{scope.row.birthday | formatDate('yyyy-MM-DD')}}
+                    {{scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
             <el-table-column align="center" label="设备统计"></el-table-column>
-            <el-table-column align="center" label="升级包下载">
+            <el-table-column align="center" width="120px" label="升级包下载">
                 <template slot-scope="scope">
                     <a class="text-primary" :href="(scope.row.uriPrefix + scope.row.fullPackageUri)">{{scope.row.version}}</a>
                 </template>

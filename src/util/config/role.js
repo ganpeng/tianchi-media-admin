@@ -367,6 +367,74 @@ const FORCED_OPTIONS = [
         name: '选择升级'
     }
 ];
+
+const RECOMMEND_OPTIONS = [
+    {
+        value: 'MOVIE',
+        name: '电影'
+    },
+    {
+        value: 'TV_DRAMA',
+        name: '电视剧'
+    },
+    {
+        value: 'NEWS',
+        name: '新闻'
+    },
+    {
+        value: 'NETWORK',
+        name: '网视'
+    },
+    {
+        value: 'SPORTS',
+        name: '体育'
+    },
+    {
+        value: 'CHILD',
+        name: '儿童'
+    },
+    {
+        value: 'RECORD',
+        name: '纪实'
+    },
+    {
+        value: 'EDU',
+        name: '教育'
+    },
+    {
+        value: 'TV_SHOW_SATELLITE',
+        name: '卫视综艺'
+    },
+    {
+        value: 'TV_SHOW_NETWORK',
+        name: '网络综艺'
+    },
+    {
+        value: 'MUSIC',
+        name: '音乐'
+    },
+    {
+        value: 'TUNE_ART',
+        name: '曲艺'
+    },
+    {
+        value: 'HUMOROUS',
+        name: '幽默'
+    },
+    {
+        value: 'CHINA_SCIENCE',
+        name: '科普中国'
+    },
+    {
+        value: 'COMMUNIST_PARTY_BUILD',
+        name: '新时代党建'
+    },
+    {
+        value: 'SEARCH',
+        name: '搜索页面'
+    }
+];
+
 export default {
     MAIN_ROLE_OPTIONS,
     VIDEO_TYPE,
@@ -388,5 +456,6 @@ export default {
     VIDEO_TYPE_OPTIONS,
     VIDEO_UPLOAD_STATUS_OPTIONS,
     PRODUCT_TYPE_OPTIONS,
-    FORCED_OPTIONS
+    FORCED_OPTIONS,
+    RECOMMEND_OPTIONS
 };
