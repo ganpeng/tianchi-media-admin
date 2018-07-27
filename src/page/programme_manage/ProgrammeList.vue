@@ -341,6 +341,7 @@ export default {
                 });
             }
             this.closeFileUploadDialog();
+            this.getProgrammeList();
         }
     }
 };
