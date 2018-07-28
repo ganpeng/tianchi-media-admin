@@ -215,3 +215,30 @@
     -ms-text-overflow: ellipsis;
     text-overflow: ellipsis;
 }
+
+// 侧边栏二级标题样式
+li {
+    div.el-submenu__title {
+        font-size: 18px;
+        i, label {
+            font-size: 18px;
+        }
+    }
+}
+
+// 面包线文字颜色
+.el-breadcrumb {
+    .el-breadcrumb__item {
+        &:last-child {
+            span.el-breadcrumb__inner {
+                font-size: 16px;
+                color: #606060;
+            }
+        }
+        span.el-breadcrumb__inner {
+            color: #8C8C8C;
+            font-size: 16px;
+            cursor: auto;
+        }
+    }
+}

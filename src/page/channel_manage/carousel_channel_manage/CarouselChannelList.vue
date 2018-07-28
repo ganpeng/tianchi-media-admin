@@ -74,6 +74,16 @@
                     prop="multicastPort"
                     label="端口号">
                 </el-table-column>
+                <!--tsId-->
+                <el-table-column
+                    prop="tsId"
+                    label="tsId">
+                </el-table-column>
+                <!--serviceId-->
+                <el-table-column
+                    prop="serviceId"
+                    label="serviceId">
+                </el-table-column>
                 <el-table-column
                     label="状态">
                     <template slot-scope="scope">

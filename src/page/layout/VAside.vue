@@ -8,7 +8,6 @@
             background-color="#283841"
             text-color="#8AA4AF"
             router
-            :show-timeout="200"
             :default-active="$route.path"
             :class="{broad:isActive}"
             :collapse="!isActive"
@@ -135,8 +134,8 @@
         data() {
             return {
                 isActive: true,
-                secondLeftIndent: {paddingLeft: '30px'},
-                directSecondLeftIndent: {paddingLeft: '70px'},
+                secondLeftIndent: {paddingLeft: '0px'},
+                directSecondLeftIndent: {},
                 navBarList: []
             };
         },
@@ -182,4 +181,23 @@
             }
         }
     }
+
+    // 一级菜单
+    .el-submenu {
+        .el-submenu__title {
+            * {
+                font-size: 20px;
+            }
+        }
+    }
+
+    // active的一级菜单
+    .is-active {
+        div {
+            * {
+                color: white;
+            }
+        }
+    }
+
 </style>

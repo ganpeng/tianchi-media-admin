@@ -26,6 +26,12 @@
                 <el-form-item label="端口号：">
                     <label>{{channelInfo.multicastPort}}</label>
                 </el-form-item>
+                <el-form-item label="tsId：">
+                    <label>{{channelInfo.tsId}}</label>
+                </el-form-item>
+                <el-form-item label="serviceId：">
+                    <label>{{channelInfo.serviceId}}</label>
+                </el-form-item>
                 <el-form-item label="状态：">
                     <label>{{channelInfo.visible ? '正常' : '禁播'}}</label>
                 </el-form-item>

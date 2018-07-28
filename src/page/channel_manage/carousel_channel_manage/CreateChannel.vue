@@ -26,6 +26,12 @@
             <el-form-item label="端口号" prop="multicastPort" required>
                 <el-input v-model="channelInfo.multicastPort" placeholder="请填写端口号"></el-input>
             </el-form-item>
+            <el-form-item label="tsId" prop="tsId" required>
+                <el-input v-model="channelInfo.tsId" placeholder="请填写tsId"></el-input>
+            </el-form-item>
+            <el-form-item label="serviceId" prop="serviceId" required>
+                <el-input v-model="channelInfo.serviceId" placeholder="请填写serviceId"></el-input>
+            </el-form-item>
             <el-form-item label="频道状态" required>
                 <label>禁播</label>
             </el-form-item>
@@ -119,6 +125,8 @@
                     no: '',
                     typeList: [],
                     typeIdList: [],
+                    tsId: '',
+                    serviceId: '',
                     visible: false,
                     logoUri: ''
                 },

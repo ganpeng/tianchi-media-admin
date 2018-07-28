@@ -1,11 +1,10 @@
 <!--导航栏布局组件-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+        <el-breadcrumb separator="/">
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
-            <el-breadcrumb-item><label class="nav-bar-name">{{navBarName}}</label> 布局设置</el-breadcrumb-item>
+            <el-breadcrumb-item>{{navBarName}}</el-breadcrumb-item>
         </el-breadcrumb>
         <div id="setting">
             <ul id="nav-bar-list">
@@ -640,9 +639,8 @@
 <style lang="less" scoped>
 
     .nav-bar-name {
-        font-style: italic;
-        font-weight: bold;
         font-size: 16px;
+        color: #606060;
     }
 
     #setting {
