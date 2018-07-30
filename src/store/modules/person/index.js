@@ -1,6 +1,5 @@
 import { checkImageExist } from '@/util/formValidate';
 import _ from 'lodash';
-import router from '../../../router';
 import service from '../../../service';
 import role from '@/util/config/role';
 const defaultPerson = {
@@ -31,7 +30,7 @@ const defaultPagination = {
 };
 
 const defaultRecommend = {
-    isRecommend: 0,
+    isRecommend: 1,
     recommendList: []
 };
 
@@ -190,7 +189,7 @@ const actions = {
             delete person.createdAt;
             let res = service.updatePersonById(person.id, person);
             if (res && res.code === 0) {
-                router.push({ name: 'PersonList' });
+                return res;
             }
         } catch (err) {
         }
@@ -205,9 +204,8 @@ const actions = {
             }
         } catch (err) {}
     },
-    async putHotPerson({commit, state}) {
+    async putHotPerson({commit, state}, figureId) {
         try {
-            let figureId = state.currentPerson.id;
             let hotFigureList = state.recommend.recommendList.map((item) => {
                 let hotObj = role.RECOMMEND_OPTIONS.find((obj) => obj.value === item);
                 let obj = Object.assign({}, {
@@ -219,6 +217,19 @@ const actions = {
             let res = await service.putHotPerson(figureId, hotFigureList);
             return res;
         } catch (err) { }
+    },
+    async getHotPerson({commit, state}, figureId) {
+        try {
+            let res = await service.getHotPerson(figureId);
+            if (res && res.code === 0) {
+                commit('setRecommend', {
+                    recommend: {
+                        isRecommend: res.data.length > 0 ? 0 : 1,
+                        recommendList: res.data.map((item) => item.hotCode)
+                    }
+                });
+            }
+        } catch (err) {}
     }
 };
 

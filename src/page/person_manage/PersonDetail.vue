@@ -24,7 +24,6 @@
                             type="primary"
                             @click="_createPerson"
                             v-loading.fullscreen.lock="isLoading">创 建</el-button>
-                        <!-- <el-button @click="reset">重 置</el-button> -->
                     </span>
                     <el-button type="primary" @click="goBack">返回人物列表</el-button>
                 </div>
@@ -58,6 +57,7 @@
                 let {id} = this.$route.params;
                 if (id) {
                     this.getPersonById(id);
+                    this.getHotPerson(id);
                 }
             }
         },
@@ -83,7 +83,8 @@
                 createPerson: 'person/createPerson',
                 updatePersonById: 'person/updatePersonById',
                 getPersonById: 'person/getPersonById',
-                putHotPerson: 'person/putHotPerson'
+                putHotPerson: 'person/putHotPerson',
+                getHotPerson: 'person/getHotPerson'
             }),
             // 新增人物
             _createPerson() {
@@ -92,9 +93,10 @@
                         this.checkImageLength(() => {
                             this.isLoading = true;
                             this.createPerson()
-                                .then(() => {
+                                .then((res) => {
+                                    let id = res.data.id;
                                     this.$message.success('创建人物成功');
-                                    // this.putHotPerson();
+                                    this.putHotPerson(id);
                                     this.$router.push({ name: 'PersonList' });
                                 }).finally(() => {
                                     this.isLoading = false;
@@ -113,8 +115,10 @@
                             this.isLoading = true;
                             this.updatePersonById()
                                 .then(() => {
+                                    let {id} = this.$route.params;
                                     this.$message.success('编辑人物成功');
-                                    // this.putHotPerson();
+                                    this.putHotPerson(id);
+                                    this.$router.push({ name: 'PersonList' });
                                 }).finally(() => {
                                     this.isLoading = false;
                                 });

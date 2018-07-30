@@ -47,5 +47,14 @@ export const findPerson = ({name}) => {
  * 热门人物修改
  */
 export const putHotPerson = (figureId, hotFigureList) => {
-    return service.put(`/v1/content/hot-figure/list/${figureId}`, hotFigureList);
+    return service.put(`/v1/content/hot-figure/${figureId}/list`, hotFigureList);
+};
+
+/**
+ * 获取热门人物的修改
+ */
+export const getHotPerson = (figureId) => {
+    return service.get(`/v1/content/hot-figure/list`, {
+        params: { figureId }
+    });
 };
