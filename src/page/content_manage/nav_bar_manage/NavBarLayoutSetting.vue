@@ -15,66 +15,32 @@
                     {{item.name}}
                 </li>
             </ul>
-            <div id="live">
-                <div class="record no-settable"
-                     v-if="navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL'"></div>
+            <!--布局第一行-->
+            <div id="first-view">
+                <!--播放历史记录，不可设置-->
+                <div class="record"
+                     v-if="navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL'">
+                </div>
+                <!--直播窗口-->
                 <div
                     :class="'live-channel settable ' + (navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'small' : 'big')"
                     @click="setViewChannel">
-                    <div class="ab-center">点击设置 / 查看
-                        <label>直播频道
-                            {{liveChannelList[0] && liveChannelList[0].liveChannel ?
-                            liveChannelList[0].liveChannel.name : ''}}</label>
-                    </div>
+                    <win-live-channel
+                        :navBarSignCode="navBarSignCode"
+                        :liveChannelList="liveChannelList">
+                    </win-live-channel>
                 </div>
+                <!--首屏右上侧位置-->
                 <div
                     :class="'first-win settable ' + (navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'small' : 'big')">
-                    <div class="ab-center">
-                        <img v-if="rightTopRecommend.coverImage"
-                             :src="rightTopRecommend.coverImage ? rightTopRecommend.coverImage.uri : '' | imageUrl"
-                             :alt="rightTopRecommend.coverImage ? rightTopRecommend.coverImage.name : ''"/>
-                    </div>
-                    <!--左上角标-->
-                    <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.leftTop"
-                          class="corner-mark left-top">
-                        <img :src="rightTopRecommend.cornerMark.leftTop.caption | setPlatformImage"
-                             :alt="rightTopRecommend.cornerMark.leftTop.caption">
-                    </span>
-                    <!--左下角标-->
-                    <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.leftBottom"
-                          class="corner-mark left-bottom">{{rightTopRecommend.cornerMark.leftBottom.caption}}</span>
-                    <!--右上角标-->
-                    <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.rightTop"
-                          class="corner-mark right-top">
-                    <img :src="rightTopRecommend.cornerMark.rightTop.imageUri | imageUrl"
-                         :alt="rightTopRecommend.cornerMark.rightTop.caption">
-                    </span>
-                    <!--右下角标-->
-                    <span v-if="rightTopRecommend.cornerMark && rightTopRecommend.cornerMark.rightBottom"
-                          class="corner-mark right-bottom">{{rightTopRecommend.cornerMark.rightBottom.caption}}</span>
-                    <!--设置除了频道栏目外的单个推荐位-->
-                    <template v-if="navBarSignCode !== 'LIVE_CHANNEL'">
-                        <div class="recommend-operate">
-                            <el-dropdown
-                                @command="setRecommend($event,0,0,0,(navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'carousel-2' : 'carousel-1'))"
-                                placement="bottom">
-                            <span class="el-dropdown-link">
-                            <i class="el-icon-edit"></i>
-                            </span>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
-                                    <el-dropdown-item command="FIGURE">设置为专题</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                        </div>
-                    </template>
-                    <!--设置频道的单个推荐位-->
-                    <template v-else>
-                        <div class="recommend-operate"
-                             @click="appendSingleChannel(0,0,0,(navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'carousel-2' : 'carousel-1'))">
-                            <i class="el-icon-edit"></i>
-                        </div>
-                    </template>
+                    <layout-single-item
+                        :navBarId="navBarId"
+                        :navBarSignCode="navBarSignCode"
+                        :model="0"
+                        :row="0"
+                        :index="0"
+                        :itemInfo="rightTopRecommend">
+                    </layout-single-item>
                 </div>
             </div>
             <!--整个List布局-->
@@ -258,11 +224,17 @@
 </template>
 
 <script>
+    import WinLiveChannel from './WinLiveChannel';
+    import LayoutSingleItem from './LayoutSingleItem';
     import SortCatalogue from '../layout_manage/SortCatalogue';
 
     export default {
         name: 'NavBarLayoutSetting',
-        components: {SortCatalogue},
+        components: {
+            WinLiveChannel,
+            LayoutSingleItem,
+            SortCatalogue
+        },
         data() {
             return {
                 navBarList: [],
@@ -636,7 +608,7 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
     .nav-bar-name {
         font-size: 16px;
@@ -645,9 +617,9 @@
 
     #setting {
         margin: 30px 0px;
-        padding: 30px 0px;
-        background-image: linear-gradient(0deg, #283974 3%, #022c68 35%, #011530 100%);
+        padding: 30px;
         width: 100%;
+        background-color: white;
     }
 
     #nav-bar-list {
@@ -657,14 +629,13 @@
         li {
             padding: 8px 16px;
             flex-shrink: 1;
-            opacity: 0.5;
             font-size: 0.5rem;
-            color: #ffffff;
+            color: #1989FA;
             text-align: center;
             cursor: pointer;
             &.current-nav-bar, &:hover {
-                background: orange;
                 border-radius: 16px;
+                background: $stillGray;
             }
         }
     }
@@ -711,10 +682,12 @@
     }
 
     // 第一行主推荐
-    #live {
+    #first-view {
         display: flex;
         justify-content: space-between;
         .record {
+            background: $stillGray;
+            cursor: not-allowed;
             width: 11%;
             padding-top: 24%;
         }
@@ -786,7 +759,7 @@
         overflow: hidden;
         h3 {
             font-size: 1.4rem;
-            color: #ffffff;
+            color: #283841;
             text-align: left;
         }
         ul.model-line {

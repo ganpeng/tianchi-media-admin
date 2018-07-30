@@ -42,7 +42,15 @@ let RegExpConstants = {
     /**
      * The RegExp of channel no.
      */
-    CHANNEL_NO: /^[0-9]{3}$/
+    CHANNEL_NO: /^[0-9]{3}$/,
+    /**
+     * The RegExp of channel ts id.
+     */
+    CHANNEL_TS_ID: /^\d+$/,
+    /**
+     * The RegExp of channel service id.
+     */
+    CHANNEL_SERVICE_ID: /^\d+$/
 };
 
 /**

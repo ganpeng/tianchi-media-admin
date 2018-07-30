@@ -166,9 +166,9 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="less">
+<style scoped lang="scss">
     .wrap-box {
-        background-color: #283841;
+        background-color: $baseAsideColor;
         overflow-y: scroll;
         .el-menu {
             text-align: left;

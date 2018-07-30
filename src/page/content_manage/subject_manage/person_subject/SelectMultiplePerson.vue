@@ -8,6 +8,7 @@
             :data="personList"
             border
             style="width: 100%"
+            header-row-class-name="table-header-row"
             ref="multiplePerson"
             @select="selectRow">
             <el-table-column

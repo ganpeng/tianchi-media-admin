@@ -34,10 +34,10 @@
             <el-form-item label="端口号" prop="multicastPort" required>
                 <el-input v-model="channelInfo.multicastPort" placeholder="请填写端口号"></el-input>
             </el-form-item>
-            <el-form-item label="tsId" prop="tsId" required>
+            <el-form-item label="tsId" prop="tsId">
                 <el-input v-model="channelInfo.tsId" placeholder="请填写tsId"></el-input>
             </el-form-item>
-            <el-form-item label="serviceId" prop="serviceId" required>
+            <el-form-item label="serviceId" prop="serviceId">
                 <el-input v-model="channelInfo.serviceId" placeholder="请填写serviceId"></el-input>
             </el-form-item>
             <el-form-item label="状态：" prop="visible">
@@ -263,6 +263,20 @@
                     callback();
                 }
             };
+            let checkServiceId = (rule, value, callback) => {
+                if (!this.$util.isEmpty(value) && !this.$util.isChannelServiceId(value)) {
+                    return callback(new Error('请填写正确的serviceId'));
+                } else {
+                    callback();
+                }
+            };
+            let checkTsId = (rule, value, callback) => {
+                if (!this.$util.isEmpty(value) && !this.$util.isChannelTsId(value)) {
+                    return callback(new Error('请填写正确的tsId'));
+                } else {
+                    callback();
+                }
+            };
             let checkLogoUri = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('请设置频道的封面图片'));
@@ -302,6 +316,12 @@
                     ],
                     multicastPort: [
                         {validator: checkMulticastPort, trigger: 'blur'}
+                    ],
+                    tsId: [
+                        {validator: checkTsId, trigger: 'blur'}
+                    ],
+                    serviceId: [
+                        {validator: checkServiceId, trigger: 'blur'}
                     ],
                     logoUri: [
                         {validator: checkLogoUri, trigger: 'blur'}

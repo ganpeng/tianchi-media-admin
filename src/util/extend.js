@@ -97,6 +97,22 @@ let util = {
         return constants.RegExpConstants.CHANNEL_NO.test(this.trim(str)) && parseInt(this.trim(str)) !== 0;
     },
     /**
+     *Judge string is or not a channel ts id
+     * @param {String} str  The base string as a channel ts id
+     * @return {Boolean} Is or not a right channel ts id
+     */
+    isChannelTsId(str) {
+        return constants.RegExpConstants.CHANNEL_TS_ID.test(this.trim(str)) && parseInt(this.trim(str)) !== 0;
+    },
+    /**
+     *Judge string is or not a channel service id
+     * @param {String} str  The base string as a channel service id
+     * @return {Boolean} Is or not a right channel service id
+     */
+    isChannelServiceId(str) {
+        return constants.RegExpConstants.CHANNEL_SERVICE_ID.test(this.trim(str)) && parseInt(this.trim(str)) !== 0;
+    },
+    /**
      * Format the date with specified format
      * @param {Date} date  The base string
      * @param {String} format  supported format options: yyyy: full year, MM: month, DD: date, HH: hours, mm: minutes, SS: seconds

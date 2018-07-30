@@ -53,9 +53,8 @@
 
 // 对表格的margin做处理
 .my-table-style {
-    margin-left: 0!important;
+    margin-left: 0 !important;
 }
-
 
 // 使form表单中的每个item左对齐
 .form-block {
@@ -131,12 +130,6 @@
     height: 60px;
 }
 
-// 不可设置模块
-.no-settable {
-    background: #8D949C;
-    cursor: not-allowed;
-}
-
 // 可设置的模块
 .settable {
     position: relative;
@@ -206,16 +199,6 @@
     }
 }
 
-/*! autoprefixer: off */
-.ellipsis-three {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    -ms-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-}
-
 // 侧边栏二级标题样式
 li {
     div.el-submenu__title {
@@ -242,3 +225,21 @@ li {
         }
     }
 }
+
+/** 去除table组件中表头行中的全选多选框 */
+.table-header-row {
+    .el-checkbox {
+        display: none;
+    }
+}
+
+/*! autoprefixer: off */
+.ellipsis-three {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+

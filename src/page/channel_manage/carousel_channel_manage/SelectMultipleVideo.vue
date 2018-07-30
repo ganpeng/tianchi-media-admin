@@ -18,6 +18,7 @@
             :data="videoList"
             border
             @select="selectVideo"
+            header-row-class-name="table-header-row"
             :row-class-name="tableRowClassName"
             style="width:100%;margin:20px 0;">
             <el-table-column
@@ -25,7 +26,7 @@
                 width="55">
             </el-table-column>
             <el-table-column
-                prop="id"
+                prop="code"
                 align="center"
                 width="240px"
                 label="编号">
@@ -33,13 +34,13 @@
             <el-table-column
                 prop="originName"
                 align="center"
-                width="200px"
+                width="120px"
                 label="视频名称">
             </el-table-column>
             <el-table-column
                 prop="link"
                 align="center"
-                width="300px"
+                width="180px"
                 label="预览视频">
                 <template slot-scope="scope">
                     <el-button
@@ -257,6 +258,6 @@
         }
     };
 </script>
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
 </style>
