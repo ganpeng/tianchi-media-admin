@@ -476,17 +476,25 @@ const mutations = {
     },
     updatePersonResult(state, payload) {
         let {key, value} = payload;
-        let result = state.programme[key].concat(value);
+        let personKey = key.split('Result')[0];
+        let prevPersonList = state.programme[key].filter((person) => {
+            let index = state.programme[personKey].findIndex((item) => item.id === person.id);
+            if (index >= 0) {
+                return person;
+            }
+        });
+        let result = value.concat(prevPersonList);
         state.programme[key] = _.uniqBy(result, 'id');
     },
     updatePerson(state, payload) {
         let {key, idList} = payload;
-        state.programme[key] = idList.map((id) => {
+        let personList = idList.map((id) => {
             let resultKey = `${key}Result`;
             return state.programme[resultKey].find((item) => {
                 return item.id === id;
             });
         });
+        state.programme[key] = personList;
     },
     //  节目视频
     setVideoList(state, payload) {
@@ -633,9 +641,7 @@ const mutations = {
         state.programme.posterImageList = posterImageList.filter((img) => img.id !== payload.id);
     },
     deleteProgrammeCategory(state, payload) {
-        let {node, data} = payload;
-        let parentId = node.parent.data.id;
-        let childrenId = data.id;
+        let {parentId, childrenId} = payload;
         state.global.categoryList = state.global.categoryList.map((category) => {
             if (category.id === parentId) {
                 category.programmeTypeList = category.programmeTypeList.filter((item) => item.id !== childrenId);

@@ -12,8 +12,8 @@
             :remote-method="searchHandler"
             :loading="isLoading">
             <el-option
-                v-for="(item, index) in searchResult"
-                :key="index"
+                v-for="item in searchResult"
+                :key="item.id"
                 :label="item.name"
                 :value="item.id">
                     <span class="block" @mouseout="hideDescHandler" @mouseover="showDescHandler(item.id)">{{ item.name }}</span>
