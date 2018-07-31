@@ -9,65 +9,55 @@
             <el-breadcrumb-item>人物详情</el-breadcrumb-item>
         </el-breadcrumb>
         <el-row>
-            <el-col :span="12">
-                <div class="grid-content text-left">
-                    <h3 class="gp-title text-left">人物基本信息</h3>
-                    <div class="info-container">
-                        <div class="info-item">
-                            <span class="gp-label">人物姓名</span>
-                            <span class="gp-text">{{person.name}}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="gp-label">出生日期</span>
-                            <span class="gp-text">{{person.birthday}}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="gp-label">所属地区</span>
-                            <span class="gp-text">{{areaLabel(person.area)}}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="gp-label">身高</span>
-                            <span class="gp-text">{{person.height}}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="gp-label">体重</span>
-                            <span class="gp-text">{{person.weight}}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="gp-label">职业</span>
-                            <span class="gp-text">{{mainRoleLabel(person.mainRoleList)}}</span>
-                        </div>
-                    </div>
+            <el-col :span="10">
+                <div class="block-title">节目基本信息</div>
+                <div class="base-info-container">
+                    <el-form status-icon :model="person" label-width="120px" class="form-block">
+                        <el-form-item label="全平台通用ID">
+                            <span>{{person.name}}</span>
+                        </el-form-item>
+                        <el-form-item label="出生日期">
+                            <span>{{person.birthday | formatDate('yyyy-MM-DD')}}</span>
+                        </el-form-item>
+                        <el-form-item label="所属地区">
+                            <span>{{areaLabel(person.area)}}</span>
+                        </el-form-item>
+                        <el-form-item label="身高">
+                            <span>{{person.height}}</span>
+                        </el-form-item>
+                        <el-form-item label="体重">
+                            <span>{{person.weight}}</span>
+                        </el-form-item>
+                        <el-form-item label="职业">
+                            <el-tag class="margin-right-s" v-for="(name, index) in mainRoleLabel(person.mainRoleList)" :key="index" type="info">{{name}}</el-tag>
+                        </el-form-item>
+                    </el-form>
                 </div>
             </el-col>
             <el-col :span="12">
-                <div class="grid-content text-left">
-                    <h3 class="gp-title">人物简介</h3>
-                    <div class="info-container">
-                        <p class="gp-text">
-                            {{person.description}}
-                        </p>
+                <el-row>
+                    <div class="block-title">人物简介</div>
+                    <div class="programme-desc-container">
+                        <p class="text-left">{{person.description}}</p>
                     </div>
-                </div>
+                </el-row>
             </el-col>
         </el-row>
         <el-row>
             <el-col :span="24">
-                <div class="grid-content">
-                    <h3 class="gp-title text-left">人物图片</h3>
-                    <ul class="cover-list">
-                        <li v-for="(img, index) in person.posterImageList" :key="index">
-                            <div
-                                class="image-box"
-                                :style="{'background-image': 'url(' + appendImagePrefix(img.uri) + ')'}"
-                                @click="displayImage(index)">
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                <div class="block-title">人物图片</div>
+                <ul class="cover-list">
+                    <li v-for="(img, index) in person.posterImageList" :key="index">
+                        <div
+                            class="image-box"
+                            :style="{'background-image': 'url(' + appendImagePrefix(img.uri) + ')'}"
+                            @click="displayImage(index)">
+                        </div>
+                    </li>
+                </ul>
             </el-col>
         </el-row>
-        <el-button type="primary" @click="goBack">返回人物列表</el-button>
+        <el-button @click="goBack" plain>返回人物列表</el-button>
         <preview-multiple-images :previewMultipleImages="previewImage"></preview-multiple-images>
     </div>
 </template>
@@ -130,22 +120,11 @@
     };
 </script>
 <style lang="less" scoped>
-.info-container {
+.base-info-container, .programme-desc-container {
+    background-color: #fff;
     padding: 20px;
-    .info-item {
-        .gp-label,
-        .gp-text {
-            display: inline-block;
-            line-height: 30px;
-        }
-        .gp-label {
-            width: 100px;
-            text-align: right;
-        }
-        .gp-text {
-            margin-left: 50px;
-        }
-    }
-
+}
+.base-info-container {
+    margin-right: 20px;
 }
 </style>

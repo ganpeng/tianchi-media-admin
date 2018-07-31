@@ -65,7 +65,7 @@ const getters = {
         return (mainRoleList) => {
             return mainRoleList.map((item) => {
                 return role.MAIN_ROLE_OPTIONS.find((mainRoleItem) => mainRoleItem.value === item).label;
-            }).join(', ');
+            });
         };
     }
 };

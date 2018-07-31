@@ -25,7 +25,7 @@
                             @click="_createPerson"
                             v-loading.fullscreen.lock="isLoading">创 建</el-button>
                     </span>
-                    <el-button type="primary" @click="goBack">返回人物列表</el-button>
+                    <el-button @click="goBack" plain>返回人物列表</el-button>
                 </div>
             </el-col>
         </el-row>

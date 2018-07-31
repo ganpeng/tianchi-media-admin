@@ -81,7 +81,7 @@
             <el-table-column prop="weight" align="center" label="体重"></el-table-column>
             <el-table-column prop="mainRole" align="center" min-width="150" label="职业">
                 <template slot-scope="scope">
-                    {{mainRoleLabel(scope.row.mainRoleList)}}
+                    {{mainRoleLabel(scope.row.mainRoleList).join(', ')}}
                 </template>
             </el-table-column>
             <el-table-column align="center" width="120px" label="更新时间">
