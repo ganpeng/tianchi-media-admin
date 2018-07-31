@@ -1,10 +1,12 @@
 <!--页头组件-->
 <template>
     <div class="container">
-        <hamburger
-            :isActive="isActive"
-            :toggleClick="toggleAside">
-        </hamburger>
+        <div class="hamburger-box">
+            <hamburger
+                :isActive="isActive"
+                :toggleClick="toggleAside">
+            </hamburger>
+        </div>
         <div class="info">
             <div class="avatar-box">
                 <img src="~assets/img/avatar_default.png"/>
@@ -41,7 +43,7 @@
                 this.$emit('toggleAside', this.isActive);
             },
             logout() {
-                this.$store.dispatch('user/logout');
+                this.$store.dispatch('user/logout', true);
             }
         }
     };
@@ -50,7 +52,7 @@
 <style scoped lang="scss">
 
     .container {
-        padding: 0 20px;
+        padding-right: 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -73,6 +75,22 @@
         span {
             color: $baseBlue;
             cursor: pointer;
+        }
+    }
+
+</style>
+
+<style lang="scss">
+
+    .hamburger-box {
+        padding: 0 20px;
+        height: 100%;
+        line-height: 64px;
+        &:hover {
+            background-color: $baseBlue;
+            svg {
+                fill: white;
+            }
         }
     }
 

@@ -1,9 +1,10 @@
 <!--内容管理-栏目管理-布局普通模块（单个推荐的模块、节目专题、混排）推荐组件-->
 <template>
     <div class="model-container">
-        <h3>{{layoutModelItemInfo.title}}</h3>
+        <h3 v-if="layoutModelItemInfo.title">{{layoutModelItemInfo.title}}</h3>
         <ul
             v-for="(rowItem, rowIndex) in layoutModelItemInfo.layoutItemMultiList" :key="rowIndex"
+            :style="{paddingTop:(rowIndex === 0  && layoutModelItemInfo.title && !judgeModelRenderType(layoutModelItemInfo.renderType, ['FIGURE'])? '0px': '')}"
             :class="'model-line '+ (rowItem.listClass ? rowItem.listClass : (judgeModelRenderType(layoutModelItemInfo.renderType, ['FIGURE']) ? 'model-figure' : 'model-' + rowItem.length))">
             <li v-for="(item, index) in rowItem" :key="index">
                 <!--人物专题中的人物项-->
@@ -37,7 +38,7 @@
                     </el-dropdown-menu>
                 </el-dropdown>
                 <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-                    <i class="el-icon-edit"
+                    <i class="el-icon-edit-outline"
                        @click="editModel(layoutModelItemInfo.renderType,modelIndex)"></i>
                 </el-tooltip>
             </template>
@@ -48,7 +49,7 @@
                        @click="setModelChannel(modelIndex, 'add')"></i>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-                    <i class="el-icon-edit"
+                    <i class="el-icon-edit-outline"
                        @click="setModelChannel(modelIndex, 'edit')"></i>
                 </el-tooltip>
             </template>
@@ -216,37 +217,29 @@
 
     // 模块通用样式
     h3 {
-        font-size: 1.4rem;
-        color: #283841;
+        padding-top: 30px;
+        padding-bottom: 16px;
+        color: $baseAsideColor;
         text-align: left;
     }
 
     ul.model-line {
         display: flex;
-        margin-top: 30px;
+        padding-top: 30px;
+        flex-grow: 1;
+        flex-shrink: 0;
+        justify-content: space-between;
+        overflow: hidden;
         &.model-0 {
             margin-top: 0px;
         }
         li {
             position: relative;
-            margin-right: 30px;
+            margin-right: 24px;
             flex-grow: 1;
             background: #8D949C;
             &:last-child {
                 margin-right: 0px;
-            }
-            img.item-image {
-                display: block;
-                height: 100%;
-                width: 100%;
-            }
-            img.background-image {
-                position: absolute;
-                width: 100%;
-                left: 0px;
-                top: -20px;
-                bottom: 0px;
-                right: 0px;
             }
         }
     }
@@ -329,40 +322,33 @@
         }
     }
 
+    /* 人物专题 */
     ul.model-figure {
-        padding-bottom: 50px;
+        padding-bottom: 30px;
+        padding-top: 10px;
         overflow-x: scroll;
         li {
             flex-shrink: 0;
             width: 12%;
             padding-top: 12%;
+            margin-right: 2.66%;
             border-radius: 50%;
-            div.figure-image {
-                border-radius: 50%;
-                overflow: hidden;
-                img {
-                    width: 100%;
-                    height: 100%;
-                }
-            }
-            .figure-name {
-                margin-top: 8px;
-                font-size: 20px;
-                color: #fff;
-            }
         }
     }
 
     .model-operate {
         position: absolute;
-        right: 20px;
-        top: 0px;
-        .el-tooltip {
-            margin-right: 30px;
-        }
+        right: 0px;
+        top: 24px;
+        width: 150px;
+        height: 40px;
+        border: 1px solid #DCDFE6;
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
         i {
-            margin-right: 20px;
-            font-size: 36px;
+            font-size: 26px;
             color: $baseBlue;
             cursor: pointer;
         }

@@ -3,6 +3,7 @@ import service from '../../../service';
 import router from '../../../router';
 import Cookies from 'js-cookie';
 import wsCache from '../../../util/webStorage';
+import store from '../../index';
 
 const state = {
     name: '',
@@ -72,15 +73,19 @@ const actions = {
         });
     },
     // 退出
-    logout({commit}) {
+    logout({commit}, hasToken) {
         // 清除cookie,跳转到登录页面
         commit('setName', '');
         commit('setToken', '');
+        wsCache.localStorage.clearAll();
+        store.commit('layout/setState', {navBarList: []});
         router.push({name: 'Login'});
-        // 请求登出接口
-        return new Promise(() => {
-            service.logout();
-        });
+        if (hasToken) {
+            // 请求登出接口
+            return new Promise(() => {
+                service.logout();
+            });
+        }
     },
     // 刷新页面，重新设置 user 模块
     reLogin({commit}, userInfo) {

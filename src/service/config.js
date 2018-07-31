@@ -7,7 +7,6 @@ import store from '../store';
 import {Message} from 'element-ui';
 
 let service = axios.create({
-    // timeout: 5000,
     headers: {
         'Accept': 'application/json',
         'x-tianchi-client': '{"role":"ADVISER","version":"v1.1.1","deviceId":"1234fads"}'
@@ -33,13 +32,15 @@ service.interceptors.request.use(
 service.interceptors.response.use((response) => {
     if (response.data.code === 0) {
         return response.data;
-    } else {
-        Message({
-            message: response.data.message,
-            type: 'warning'
-        });
-        return response.data;
+        // 用户未登录，删除本地cookie、storage、store中数据，转到登录页面
+    } else if (response.data.code === 1001) {
+        store.dispatch('user/logout', false);
     }
+    Message({
+        message: response.data.message,
+        type: 'warning'
+    });
+    return response.data;
 }, () => {
     Message({
         message: '网络异常',

@@ -38,6 +38,7 @@ module.exports = {
             '@': resolve('src'),
             'sysComponents': '@/components',
             'util': '@/util',
+            'router': '@/router',
             'assets': resolve('src/assets'),
             'sysPage': resolve('src/page'),
             'sysStyle': '@/assets/css'

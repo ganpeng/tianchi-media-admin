@@ -5,9 +5,17 @@
             <img v-if="itemInfo.coverImage"
                  :src="itemInfo.coverImage ? itemInfo.coverImage.uri : '' | imageUrl"
                  :alt="itemInfo.coverImage ? itemInfo.coverImage.name : ''"/>
+            <img
+                v-if="itemInfo.coverImageBackground && itemInfo.coverImageBackground.uri"
+                class="background-image"
+                :src="itemInfo.coverImageBackground? itemInfo.coverImageBackground.uri : '' | imageUrl"
+                :alt="itemInfo.coverImageBackground ? itemInfo.coverImageBackground.name:''"/>
         </div>
         <!--蒙层-->
         <div class="ab-center mask" v-bind:class="{ visible: maskVisible}" v-if="!isModelItem"></div>
+        <!--出格图蒙层-->
+        <div class="background-mask" v-bind:class="{ visible: maskVisible}"
+             v-if="!isModelItem && itemInfo.coverImageBackground && itemInfo.coverImageBackground.uri"></div>
         <!--左上角标-->
         <span v-if="itemInfo.cornerMark && itemInfo.cornerMark.leftTop"
               class="corner-mark left-top">
@@ -141,8 +149,21 @@
                 display: block;
             }
         }
+        .background-mask {
+            position: absolute;
+            display: none;
+            width: 100%;
+            left: 0px;
+            top: -20px;
+            height: 20px;
+            background-color: rgba(25, 137, 250, 0.7);
+            z-index: 200;
+            &.visible {
+                display: block;
+            }
+        }
         &:hover {
-            .mask {
+            .mask, .background-mask {
                 display: block;
             }
         }
@@ -150,9 +171,18 @@
 
     .ab-center {
         background-color: $dynamicGray;
-        overflow: hidden;
         img {
             width: 100%;
+            height: 100%;
+            &.background-image {
+                position: absolute;
+                width: 100%;
+                height: auto;
+                left: 0px;
+                top: -20px;
+                bottom: 0px;
+                right: 0px;
+            }
         }
     }
 
@@ -181,6 +211,12 @@
     span.left-top {
         left: 10px;
         top: 10px;
+        img {
+            display: block;
+            padding: 5px 8px;
+            background: rgba(0, 0, 0, 0.80);
+            border-radius: 4px;
+        }
     }
 
     // 更新集数

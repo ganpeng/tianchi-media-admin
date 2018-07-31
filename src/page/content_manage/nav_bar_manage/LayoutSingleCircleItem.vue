@@ -25,13 +25,7 @@
                     return {};
                 }
             }
-        },
-        data() {
-            return {};
-        },
-        mounted() {
-        },
-        methods: {}
+        }
     };
 </script>
 
@@ -49,7 +43,7 @@
     .figure-name {
         margin-top: 8px;
         font-size: 20px;
-        color: #fff;
+        color: $baseAsideColor;
     }
 
 </style>

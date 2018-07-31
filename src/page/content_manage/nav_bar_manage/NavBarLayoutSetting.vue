@@ -8,7 +8,8 @@
         </el-breadcrumb>
         <div id="setting">
             <ul id="nav-bar-list">
-                <li v-for="(item, index) in navBarList"
+                <li v-if="item.signCode !== 'SEARCH'"
+                    v-for="(item, index) in navBarList"
                     :key="index"
                     @click="switchNavBar(item.id,item.signCode)"
                     :class="item.id === navBarId ? 'current-nav-bar' : ''">
@@ -56,7 +57,7 @@
                     v-on:setCatalogue="setCatalogue">
                 </sort-catalogue>
                 <!--节目、人物、频道、混排-->
-                <div v-else :class="'feature ' + (layoutBlockItem.subjectId ? 'settable' : '')">
+                <div v-else class="feature">
                     <layout-common-model
                         :navBarId="navBarId"
                         :navBarSignCode="navBarSignCode"
@@ -69,10 +70,12 @@
             <div class="model-operate">
                 <!--除了频道栏目外，添加模块-->
                 <template v-if="navBarSignCode !== 'LIVE_CHANNEL'">
-                    <el-dropdown @command="addModel($event,layoutBlockList.length)" placement="bottom">
-                   <span class="el-dropdown-link">
-                   <i class="el-icon-circle-plus-outline"></i>
-                   </span>
+                    <el-dropdown
+                        @command="addModel($event,layoutBlockList.length)" placement="bottom">
+                       <span class="el-dropdown-link">
+                           <i class="el-icon-circle-plus-outline"></i>
+                           <label>添加</label>
+                       </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item command="SHUFFLE">新增混排模块</el-dropdown-item>
                             <el-dropdown-item command="PROGRAMME">新增节目专题</el-dropdown-item>
@@ -82,26 +85,21 @@
                 </template>
                 <!--频道栏目添加模块-->
                 <template v-else>
-                    <el-tooltip class="item"
-                                effect="dark"
-                                content="添加模块频道"
-                                placement="top">
-                        <i class="el-icon-circle-plus-outline"
-                           @click="setModelChannel(layoutBlockList.length, 'add')">
-                        </i>
-                    </el-tooltip>
+                    <div v-if="massLayoutBlockList.length > 1" @click="setModelChannel(layoutBlockList.length, 'add')"
+                         class="box">
+                        <i class="el-icon-circle-plus-outline"></i>
+                        <label>添加</label>
+                    </div>
                 </template>
-                <el-tooltip v-if="massLayoutBlockList.length > 1"
-                            class="item"
-                            effect="dark"
-                            content="模块排序"
-                            placement="top">
+                <!--模块排序-->
+                <div v-if="massLayoutBlockList.length > 1" @click="initSortModel" class="box">
                     <i class="el-icon-sort" @click="initSortModel"></i>
-                </el-tooltip>
+                    <label>模块排序</label>
+                </div>
             </div>
         </div>
         <el-button v-if="modified" type="primary" @click="clearModify" class="column-operate">清除修改</el-button>
-        <el-button type="primary" @click="publish" class="column-operate">发 布</el-button>
+        <el-button type="primary" @click="publish" class="column-operate">保 存</el-button>
         <el-dialog title="模块专题排序" :visible.sync="sortDialogVisible">
             <ul v-dragula="{direction:'horizontal'}" id="model-sort-list" v-if="sortDialogVisible">
                 <li v-if="item.subjectId || item.renderType === 'SHUFFLE'"
@@ -399,7 +397,7 @@
     }
 
     #setting {
-        margin: 30px 0px;
+        margin-top: 30px;
         padding: 30px;
         width: 100%;
         background-color: white;
@@ -457,6 +455,7 @@
             padding-top: 24%;
             font-size: 30px;
             background-color: #154F8B;
+            overflow: hidden;
             &.small {
                 width: 43%;
                 padding-top: 24%;
@@ -471,32 +470,73 @@
     // 模块通用样式
     .feature {
         position: relative;
-        margin-top: 30px;
         overflow: hidden;
     }
 
     // 模块操作
     .model-operate {
-        margin-top: 40px;
-        padding-left: 40px;
-        text-align: left;
+        display: flex;
+        justify-content: left;
+        margin-top: 30px;
         .el-dropdown {
-            margin-right: 40px;
+            margin-right: 30px;
+            width: 95px;
+            height: 40px;
+            border: 1px solid #DCDFE6;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #606060;
+            letter-spacing: 0;
+            cursor: pointer;
+            &:hover {
+                border: 1px solid $baseBlue;
+                * {
+                    color: $baseBlue;
+                }
+            }
+            .el-dropdown-link {
+                display: flex;
+                height: 100%;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+        .box {
+            display: flex;
+            margin-right: 30px;
+            justify-content: center;
+            align-items: center;
+            width: 110px;
+            height: 40px;
+            border: 1px solid #DCDFE6;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #606060;
+            letter-spacing: 0;
+            cursor: pointer;
+            &:hover {
+                border: 1px solid $baseBlue;
+                * {
+                    color: $baseBlue;
+                }
+            }
         }
         i {
-            font-size: 80px;
-            color: $baseBlue;
+            margin-right: 8px;
+            font-size: 28px;
+            color: #606060;
+        }
+        label {
             cursor: pointer;
         }
     }
 
     // 栏目操作按钮
     .column-operate {
-        margin-right: 60px;
-        margin-bottom: 50px;
-        width: 180px;
-        height: 60px;
-        font-size: 24px;
+        margin: 60px 50px 20px 50px;
+        width: 120px;
+        height: 40px;
+        font-size: 14px;
     }
 
     // 模块排序列表

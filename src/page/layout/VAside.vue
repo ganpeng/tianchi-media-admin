@@ -159,7 +159,7 @@
             },
             // 退出登录
             logout() {
-                this.$store.dispatch('user/logout');
+                this.$store.dispatch('user/logout', false);
             }
         }
     };
