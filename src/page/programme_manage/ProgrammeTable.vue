@@ -47,6 +47,17 @@
                     width="200px"
                     align="center"
                     label="视频简介">
+                        <template slot-scope="scope">
+                            <label class="ellipsis-three">{{scope.row.description}}</label>
+                            <el-popover
+                                placement="right"
+                                :title="scope.row.name + '简介'"
+                                width="250"
+                                trigger="hover"
+                                :content="scope.row.description">
+                                <el-button slot="reference" type="text" class="float-right">更多</el-button>
+                            </el-popover>
+                        </template>
                 </el-table-column>
                 <el-table-column
                     align="center"
@@ -157,12 +168,12 @@
                     align="center"
                     width="160">
                     <template slot-scope="scope">
-                        <el-button v-if="tableStatus !== 0" @click="displayVideo(scope.row.id)" type="text" size="small">查看</el-button>
+                        <el-button v-if="tableStatus !== 0" @click="displayVideo(scope.row.id)" type="text" class="text-success" size="small">查看</el-button>
                         <el-button v-if="status !== 1" @click="editVideo(scope.row.id)" type="text" size="small">编辑</el-button>
                         <el-button v-if="status !== 1 && isShow" @click="deleteVideo(scope.row.id, scope.row.visible)" type="text" size="small">
                             {{scope.row.visible ? '下架' : '上架'}}
                         </el-button>
-                        <el-button @click="realDeleteVideo(scope.row.id)" type="text" size="small">删除</el-button>
+                        <el-button v-if="status !== 1" @click="realDeleteVideo(scope.row.id)" type="text" class="text-danger" size="small">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>

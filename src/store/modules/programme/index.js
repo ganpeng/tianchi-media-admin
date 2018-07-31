@@ -76,6 +76,8 @@ const defaultProgramme = {
     posterImageList: [],
     // 相关人物
     figureList: [],
+    //  figureListMap
+    figureListMap: {},
     // 关键字
     tagList: [],
     // 节目类型，关联节目类型id的引用
