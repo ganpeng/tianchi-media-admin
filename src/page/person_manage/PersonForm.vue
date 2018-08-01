@@ -89,6 +89,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <!--
                 <el-form-item label="是否推荐">
                     <el-radio-group :value="recommend.isRecommend">
                         <el-radio :label="0" @change="changeIsRecommendHandler(0)">是</el-radio>
@@ -110,6 +111,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                -->
             </el-col>
             <el-col :span="24">
                 <el-form-item label="人物图片" required>

@@ -41,6 +41,7 @@
                     <template slot="title">人物资源管理</template>
                     <el-menu-item index="/person-manage/create">新增人物</el-menu-item>
                     <el-menu-item index="/person-manage/list">人物列表</el-menu-item>
+                    <el-menu-item index="/person-manage/hot">热门人物管理</el-menu-item>
                 </el-submenu>
                 <!--视频资源管理-->
                 <el-submenu index="1-4" :style="secondLeftIndent">

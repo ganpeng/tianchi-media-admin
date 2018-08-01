@@ -16,10 +16,11 @@
                 :key="item.id"
                 :label="item.name"
                 :value="item.id">
-                    <span class="block" @mouseout="hideDescHandler" @mouseover="showDescHandler(item.id)">{{ item.name }}</span>
+                    <span v-if="hasDesc" class="block" @mouseout="hideDescHandler" @mouseover="showDescHandler(item.id)">{{ item.name }}</span>
+                    <span v-else class="block">{{ item.name }}</span>
             </el-option>
         </el-select>
-        <p v-if="showDesc" class="person-prompt">
+        <p v-show="showDesc" class="person-prompt">
             {{getPersonDesc}}
         </p>
     </span>
@@ -33,6 +34,10 @@ export default {
         value: {
             type: Array,
             default: () => []
+        },
+        hasDesc: {
+            type: Boolean,
+            default: true
         },
         searchResult: {
             type: Array,

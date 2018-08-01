@@ -528,7 +528,7 @@ const mutations = {
     },
     updateVideo(state, payload) {
         let {key, value} = payload;
-        state.video.video[key] = value;
+        state.video.video[key] = value || null;
     },
     setVideoCoverImage(state, payload) {
         state.video.video.coverImage = payload.posterImage;

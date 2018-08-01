@@ -54,6 +54,7 @@
                 </template>
             </el-table-column>
             <el-table-column prop="name" align="center" width="200px" label="名字"></el-table-column>
+            <!--
             <el-table-column prop="description" align="center" width="300px" label="人物简介">
                 <template slot-scope="scope">
                     <label class="ellipsis-three">{{scope.row.description}}</label>
@@ -67,6 +68,7 @@
                     </el-popover>
                 </template>
             </el-table-column>
+            -->
             <el-table-column prop="area" width="120px" align="center" label="地区">
                 <template slot-scope="scope">
                     {{areaLabel(scope.row.area)}}

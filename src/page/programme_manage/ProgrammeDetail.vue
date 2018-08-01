@@ -609,27 +609,31 @@
                                     .then((res) => {
                                         if (res && res.code === 0) {
                                             if (this.video.list.length > 0) {
-                                                this.createMultProgrammeVideo({programme: res.data})
-                                                    .then((videoRes) => {
-                                                        if (videoRes && videoRes.code === 0) {
-                                                            this.deleteTempList();
-                                                            this.getProgrammeVideoListById(id);
-                                                            this.$message({
-                                                                type: 'success',
-                                                                message: '保存成功'
-                                                            });
-                                                            this.goBack();
-                                                        } else {
-                                                            let message = '视频保存失败';
-                                                            if (videoRes && videoRes.code === 3106) {
-                                                                message = `视频【${this.getVideoListName(videoRes.data)}】已经添加，不能重复添加`;
+                                                if (this.checkVideoList(this.video.list)) {
+                                                    this.createMultProgrammeVideo({programme: res.data})
+                                                        .then((videoRes) => {
+                                                            if (videoRes && videoRes.code === 0) {
+                                                                this.deleteTempList();
+                                                                this.getProgrammeVideoListById(id);
+                                                                this.$message({
+                                                                    type: 'success',
+                                                                    message: '保存成功'
+                                                                });
+                                                                this.goBack();
+                                                            } else {
+                                                                let message = '视频保存失败';
+                                                                if (videoRes && videoRes.code === 3106) {
+                                                                    message = `视频【${this.getVideoListName(videoRes.data)}】已经添加，不能重复添加`;
+                                                                }
+                                                                this.$message({
+                                                                    type: 'error',
+                                                                    message
+                                                                });
                                                             }
-                                                            this.$message({
-                                                                type: 'error',
-                                                                message
-                                                            });
-                                                        }
-                                                    });
+                                                        });
+                                                } else {
+                                                    this.$message.error('集数/期号填写错误');
+                                                }
                                             } else {
                                                 this.$message({
                                                     type: 'success',
@@ -652,6 +656,42 @@
                         return false;
                     }
                 });
+            },
+            checkVideoList(list) {
+                let featureList = list.filter((video) => {
+                    return video.type === 'FEATURE';
+                });
+                let hasSortList = featureList.filter((video) => {
+                    if (video.sort) {
+                        return video;
+                    }
+                });
+                let noSortList = featureList.filter((video) => {
+                    if (!video.sort) {
+                        return video;
+                    }
+                });
+
+                if (hasSortList.length > 0 && noSortList.length > 0) {
+                    return false;
+                }
+
+                let sortedHasSortList = hasSortList.sort((prev, curr) => {
+                    return curr.sort - prev.sort;
+                });
+
+                if (sortedHasSortList.length > 1) {
+                    let flag = true;
+                    for (let i = 0; i < sortedHasSortList.length - 1; i++) {
+                        flag = sortedHasSortList[i].sort - sortedHasSortList[i + 1].sort === 1;
+                        if (!flag) {
+                            break;
+                        }
+                    }
+                    return flag && sortedHasSortList[sortedHasSortList.length - 1].sort === 1;
+                } else {
+                    return sortedHasSortList[0].sort === 1;
+                }
             },
             _deleteProgramme() {
                 let {id} = this.$route.params;

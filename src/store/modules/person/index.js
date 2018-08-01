@@ -34,8 +34,19 @@ const defaultRecommend = {
     recommendList: []
 };
 
+const defaultHotPerson = {
+    persons: [],
+    personsResult: [],
+    hotCode: '',
+    hotPerson: role.RECOMMEND_OPTIONS.reduce((prev, curr) => {
+        prev[curr.value] = [];
+        return prev;
+    }, {})
+};
+
 const state = {
     recommend: _.cloneDeep(defaultRecommend),
+    hotPerson: _.cloneDeep(defaultHotPerson),
     searchFields: _.cloneDeep(defaultSearchFields),
     currentPerson: _.cloneDeep(defaultPerson),
     list: [],
@@ -57,6 +68,21 @@ const getters = {
     },
     recommend(state) {
         return state.recommend;
+    },
+    hotPerson(state) {
+        return state.hotPerson;
+    },
+    getHotName(state) {
+        return (hotCode) => {
+            let type = role.RECOMMEND_OPTIONS.find((item) => item.value === hotCode);
+            return type ? type.name : '';
+        };
+    },
+    getHotPersonList(state) {
+        return (hotCode) => {
+            let list = state.hotPerson.hotPerson[hotCode];
+            return list || [];
+        };
     },
     posterImageList(state) {
         return state.currentPerson && state.currentPerson.posterImageList;
@@ -102,6 +128,38 @@ const mutations = {
     setRecommend(state, payload) {
         state.recommend = payload.recommend;
     },
+    // 热门人物管理
+    updatePersonResult(state, payload) {
+        let {key, value} = payload;
+        let personKey = key.split('Result')[0];
+        let prevPersonList = state.hotPerson[key].filter((person) => {
+            let index = state.hotPerson[personKey].findIndex((item) => item.id === person.id);
+            if (index >= 0) {
+                return person;
+            }
+        });
+        let result = value.concat(prevPersonList);
+        state.hotPerson[key] = _.uniqBy(result, 'id');
+    },
+    updatePerson(state, payload) {
+        let {key, idList} = payload;
+        let personList = idList.map((id) => {
+            let resultKey = `${key}Result`;
+            return state.hotPerson[resultKey].find((item) => {
+                return item.id === id;
+            });
+        });
+        state.hotPerson[key] = personList;
+    },
+    updateHotPerson(state, payload) {
+        let {key, value} = payload;
+        state.hotPerson[key] = value;
+    },
+    setHotCode(state, payload) {
+        state.hotPerson.hotCode = payload.hotCode;
+    },
+    // 热门人物结束
+
     updateRecommend(state, payload) {
         let {key, value} = payload;
         state.recommend[key] = value;
@@ -204,34 +262,31 @@ const actions = {
             }
         } catch (err) {}
     },
-    async putHotPerson({commit, state}, figureId) {
+    async putHotPerson({commit, state}, {hotCategory, hotFigureList}) {
         try {
-            let hotFigureList = state.recommend.recommendList.map((item) => {
-                let hotObj = role.RECOMMEND_OPTIONS.find((obj) => obj.value === item);
-                let obj = Object.assign({}, {
-                    hotCode: item,
-                    hotName: hotObj ? hotObj.name : ''
-                });
-                return obj;
-            });
-            let res = await service.putHotPerson(figureId, hotFigureList);
+            let res = await service.putHotPerson(hotCategory, hotFigureList);
             return res;
         } catch (err) { }
     },
-    async getHotPerson({commit, state}, figureId) {
+    async getHotPerson({commit, state}) {
         try {
-            let res = await service.getHotPerson(figureId);
+            let res = await service.getHotPerson();
             if (res && res.code === 0) {
-                commit('setRecommend', {
-                    recommend: {
-                        isRecommend: res.data.length > 0 ? 0 : 1,
-                        recommendList: res.data.map((item) => item.hotCode)
-                    }
-                });
+                commit('updateHotPerson', {key: 'hotPerson', value: groupHotPerson(res.data)});
             }
         } catch (err) {}
     }
 };
+
+function groupHotPerson(list) {
+    return role.RECOMMEND_OPTIONS.reduce((prev, curr) => {
+        let key = curr.value;
+        let hotPersonList = list.filter((ele) => ele.hotCategory === curr.value);
+        hotPersonList.sort((a, b) => a.sort - b.sort);
+        prev[key] = hotPersonList;
+        return prev;
+    }, {});
+}
 
 export default {
     namespaced: true,

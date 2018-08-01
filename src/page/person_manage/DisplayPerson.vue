@@ -13,7 +13,7 @@
                 <div class="block-title">节目基本信息</div>
                 <div class="base-info-container">
                     <el-form status-icon :model="person" label-width="120px" class="form-block">
-                        <el-form-item label="全平台通用ID">
+                        <el-form-item label="姓名">
                             <span>{{person.name}}</span>
                         </el-form-item>
                         <el-form-item label="出生日期">

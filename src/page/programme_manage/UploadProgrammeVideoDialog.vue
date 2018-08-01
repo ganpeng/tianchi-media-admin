@@ -127,7 +127,7 @@
             </el-form-item>
             <el-form-item
                 v-if="video.type === 'FEATURE'"
-                :rules="(isTvPlay || isShow) ? [{ required: true, message: '请输入集数/期号', trigger: 'change' }] : []"
+                :rules="(isTvPlay || isShow) ? [{ required: true, message: '请输入集数/期号' }, {pattern: /^\+?[1-9]\d*$/, message: '只能输入大于0的整数'}] : [{pattern: /^\+?[1-9]\d*$/, message: '只能输入大于0的整数'}]"
                 label="集数/期号" prop="sort">
                 <el-input
                     :disabled="readonly"

@@ -63,6 +63,7 @@ import ModelAppendChannel from 'sysPage/content_manage/layout_manage/ModelAppend
 import AppendChannel from 'sysPage/content_manage/layout_manage/AppendChannel';
 import AppendViewChannel from 'sysPage/content_manage/layout_manage/AppendViewChannel';
 import VersionList from 'sysPage/version_manage/VersionList';
+import HotPerson from 'sysPage/person_manage/HotPerson';
 
 Vue.use(Router);
 
@@ -301,6 +302,11 @@ let router = new Router({
                     path: '/person-manage/list',
                     name: 'PersonList',
                     component: PersonList
+                },
+                {
+                    path: '/person-manage/hot',
+                    name: 'HotPerson',
+                    component: HotPerson
                 },
                 // 节目管理
                 // 新增节目

@@ -57,7 +57,7 @@
                 let {id} = this.$route.params;
                 if (id) {
                     this.getPersonById(id);
-                    this.getHotPerson(id);
+                    // this.getHotPerson(id);
                 }
             }
         },
@@ -94,9 +94,9 @@
                             this.isLoading = true;
                             this.createPerson()
                                 .then((res) => {
-                                    let id = res.data.id;
+                                    // let id = res.data.id;
+                                    // this.putHotPerson(id);
                                     this.$message.success('创建人物成功');
-                                    this.putHotPerson(id);
                                     this.$router.push({ name: 'PersonList' });
                                 }).finally(() => {
                                     this.isLoading = false;
@@ -115,9 +115,9 @@
                             this.isLoading = true;
                             this.updatePersonById()
                                 .then(() => {
-                                    let {id} = this.$route.params;
+                                    // let {id} = this.$route.params;
+                                    // this.putHotPerson(id);
                                     this.$message.success('编辑人物成功');
-                                    this.putHotPerson(id);
                                     this.$router.push({ name: 'PersonList' });
                                 }).finally(() => {
                                     this.isLoading = false;
