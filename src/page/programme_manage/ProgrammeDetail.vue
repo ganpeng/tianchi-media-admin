@@ -688,9 +688,9 @@
                             break;
                         }
                     }
-                    return flag && sortedHasSortList[sortedHasSortList.length - 1].sort === 1;
+                    return flag && parseInt(sortedHasSortList[sortedHasSortList.length - 1].sort) === 1;
                 } else {
-                    return sortedHasSortList[0].sort === 1;
+                    return parseInt(sortedHasSortList[0].sort) === 1;
                 }
             },
             _deleteProgramme() {
