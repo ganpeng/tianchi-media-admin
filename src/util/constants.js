@@ -22,7 +22,7 @@ let RegExpConstants = {
     /**
      * The RegExp of telephone number.
      */
-    TELEPHONE: /^((0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/,
+    TELEPHONE: /^[0-9|-]+$/,
     /**
      * The RegExp of password in project of h5-admin.
      */
@@ -50,7 +50,11 @@ let RegExpConstants = {
     /**
      * The RegExp of channel service id.
      */
-    CHANNEL_SERVICE_ID: /^\d+$/
+    CHANNEL_SERVICE_ID: /^\d+$/,
+    /**
+     * The RegExp of national id.
+     */
+    NATIONAL_ID: /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
 };
 
 /**

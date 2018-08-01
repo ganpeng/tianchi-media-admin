@@ -8,6 +8,10 @@ import Home from 'sysPage/home/Home';
 import InfoSetting from 'sysPage/personal_center/InfoSetting';
 import ModifyPassword from 'sysPage/personal_center/ModifyPassword';
 import UserList from 'sysPage/user_center/UserList';
+import CreateUser from 'sysPage/user_center/CreateUser';
+import EditUserInfo from 'sysPage/user_center/EditUserInfo';
+import UserDetailInfo from 'sysPage/user_center/UserDetailInfo';
+import Kits from 'sysPage/user_center/Kits';
 import AdminList from 'sysPage/admin_manage/AdminList';
 import CreateAdmin from 'sysPage/admin_manage/CreateAdmin';
 import AdminDetail from 'sysPage/admin_manage/AdminDetail';
@@ -88,6 +92,12 @@ let router = new Router({
                     name: 'Home',
                     component: Home
                 },
+                // 项目小工具，上线时会删除
+                {
+                    path: '/kits',
+                    name: 'Kits',
+                    component: Kits
+                },
                 // 个人中心-信息设置页面
                 {
                     path: '/personal-center/info-setting',
@@ -129,6 +139,24 @@ let router = new Router({
                     path: '/user-center/list',
                     name: 'UserList',
                     component: UserList
+                },
+                // 用户中心-用户创建页面
+                {
+                    path: '/user-center/create',
+                    name: 'CreateUser',
+                    component: CreateUser
+                },
+                // 用户中心-用户编辑页面
+                {
+                    path: '/user-center/edit/:id',
+                    name: 'EditUserInfo',
+                    component: EditUserInfo
+                },
+                // 用户中心-用户详情页面
+                {
+                    path: '/user-center/detail/:id',
+                    name: 'UserDetailInfo',
+                    component: UserDetailInfo
                 },
                 // 内容管理-栏目管理-栏目项设置
                 {

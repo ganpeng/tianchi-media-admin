@@ -2,63 +2,143 @@
 <template>
     <div class="text-left">
         <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>用户中心</el-breadcrumb-item>
             <el-breadcrumb-item>用户列表</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-upload
-            ref="upload"
-            :headers="uploadHeaders"
-            action="/v1/media/video"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :http-request="uploadVideo"
-            :file-list="fileList"
-            :auto-upload="false">
-            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-        </el-upload>
-        <generate-programme-xml>
-        </generate-programme-xml>
+        <user-filter-params
+            v-on:getUserList="getUserList">
+        </user-filter-params>
+        <el-table
+            :data="userList"
+            border
+            style="width: 100%">
+            <el-table-column
+                width="60px"
+                label="序号">
+                <template slot-scope="scope">
+                    <label>{{scope.$index + 1}}</label>
+                </template>
+            </el-table-column>
+            <el-table-column
+                prop="name"
+                label="姓名">
+            </el-table-column>
+            <el-table-column
+                prop="address"
+                label="地址">
+            </el-table-column>
+            <el-table-column
+                prop="nationalId"
+                label="身份证号">
+            </el-table-column>
+            <el-table-column
+                prop="deviceIdList"
+                label="设备ID">
+                <template slot-scope="scope">
+                    <label>{{scope.row.deviceIdList | jsonJoin('id')}}</label>
+                </template>
+            </el-table-column>
+            <el-table-column
+                prop="telephone"
+                label="电话">
+            </el-table-column>
+            <el-table-column
+                prop="mobile"
+                label="手机">
+            </el-table-column>
+            <el-table-column
+                label="账号创建时间">
+                <template slot-scope="scope">
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="操作"
+                             class="operate">
+                <template slot-scope="scope">
+                    <el-button type="text" size="small" @click="checkUserDetailInfo(scope.row)">查看</el-button>
+                    <el-button type="text" size="small" @click="editUserInfo(scope.row)">编辑</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="listQueryParams.pageNum"
+            :page-sizes="[10, 20, 30, 50]"
+            :page-size="listQueryParams.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="totalAmount">
+        </el-pagination>
     </div>
 </template>
 
 <script>
-    import GenerateProgrammeXml from './GenerateProgrammeXml';
+    import UserFilterParams from './UserFilterParams';
 
     export default {
         name: 'UserList',
         components: {
-            GenerateProgrammeXml
+            UserFilterParams
         },
         data() {
             return {
-                fileList: [],
-                uploadHeaders: {
-                    'Accept': 'application/json',
-                    'x-tianchi-client': '{"role":"ADVISER","version":"v1.1.1","deviceId":"1234fads"}',
-                    'x-tianchi-token': this.$store.state.user.token
-                }
+                listQueryParams: {
+                    pageNum: 1,
+                    pageSize: 10
+                },
+                totalAmount: 0,
+                userList: [
+                    {
+                        id: '334',
+                        name: '欧阳锋',
+                        address: '河北省石家庄市栾城区7号',
+                        nationalId: '1302338347408484X',
+                        deviceIdList: [{id: '2323232323'}, {id: '5555567777'}],
+                        telephone: '0311-45878743',
+                        mobile: '15022547876',
+                        createdAt: 2342342344343
+                    }
+                ]
             };
         },
+        mounted() {
+            this.getUserList();
+        },
         methods: {
-            submitUpload() {
-                this.$refs.upload.submit();
+            getUserList(searchParams) {
+                if (searchParams) {
+                    for (let key in searchParams) {
+                        this.listQueryParams[key] = searchParams[key];
+                    }
+                }
             },
-            handleRemove(file, fileList) {
+            handleSizeChange() {
+                this.getSubjectList();
             },
-            handlePreview(file) {
+            handleCurrentChange() {
+                this.getSubjectList();
             },
-            uploadVideo(arg) {
+            checkUserDetailInfo(row) {
+                this.$router.push({
+                    name: 'UserDetailInfo',
+                    params: {id: row.id}
+                });
+            },
+            editUserInfo(row) {
+                this.$router.push({
+                    name: 'EditUserInfo',
+                    params: {id: row.id}
+                });
             }
         }
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
+<style lang="scss" scoped>
+
     .el-breadcrumb {
         margin-bottom: 50px;
     }
+
 </style>

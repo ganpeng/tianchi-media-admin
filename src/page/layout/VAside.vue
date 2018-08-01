@@ -88,7 +88,9 @@
                     <i class="el-icon-tickets"></i>
                     <span>用户管理</span>
                 </template>
+                <el-menu-item index="/user-center/create" :style="directSecondLeftIndent">创建用户</el-menu-item>
                 <el-menu-item index="/user-center/list" :style="directSecondLeftIndent">用户列表</el-menu-item>
+                <el-menu-item index="/kits" :style="directSecondLeftIndent">小功能</el-menu-item>
             </el-submenu>
             <!--广告管理-->
             <el-submenu index="4">
