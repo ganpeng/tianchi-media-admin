@@ -370,6 +370,10 @@ const FORCED_OPTIONS = [
 
 const RECOMMEND_OPTIONS = [
     {
+        value: 'SEARCH',
+        name: '搜索页面'
+    },
+    {
         value: 'MOVIE',
         name: '电影'
     },
@@ -428,10 +432,6 @@ const RECOMMEND_OPTIONS = [
     {
         value: 'COMMUNIST_PARTY_BUILD',
         name: '新时代党建'
-    },
-    {
-        value: 'SEARCH',
-        name: '搜索页面'
     }
 ];
 

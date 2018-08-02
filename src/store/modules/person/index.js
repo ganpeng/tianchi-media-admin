@@ -38,6 +38,7 @@ const defaultHotPerson = {
     persons: [],
     personsResult: [],
     hotCode: '',
+    personId: '',
     hotPerson: role.RECOMMEND_OPTIONS.reduce((prev, curr) => {
         prev[curr.value] = [];
         return prev;
@@ -69,6 +70,7 @@ const getters = {
     recommend(state) {
         return state.recommend;
     },
+    // 热门人物部分
     hotPerson(state) {
         return state.hotPerson;
     },
@@ -83,6 +85,13 @@ const getters = {
             let list = state.hotPerson.hotPerson[hotCode];
             return list || [];
         };
+    },
+    getPersonDesc(state) {
+        let {personsResult} = state.hotPerson;
+        let person = personsResult.find((person) => {
+            return person.id === state.hotPerson.personId;
+        });
+        return person ? person.description : '';
     },
     posterImageList(state) {
         return state.currentPerson && state.currentPerson.posterImageList;

@@ -69,7 +69,7 @@
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
-import PersonSelect from '../programme_manage/PersonSelect';
+import PersonSelect from './PersonSelect';
 export default {
     name: 'HotPerson',
     components: {

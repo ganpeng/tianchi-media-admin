@@ -180,6 +180,7 @@
                                 :disabled="readonly"
                                 :value="programme.licence"
                                 filterable
+                                clearable
                                 placeholder="请选择"
                                 @input="inputHandler($event, 'licence')"
                             >
@@ -196,6 +197,7 @@
                             <el-select
                                 :disabled="readonly"
                                 filterable
+                                clearable
                                 :value="programme.copyrightReserved"
                                 placeholder="请选择"
                                 @input="inputHandler($event, 'copyrightReserved')"
@@ -213,6 +215,7 @@
                             <el-select
                                 :disabled="readonly"
                                 filterable
+                                clearable
                                 :value="programme.announcer"
                                 placeholder="请选择"
                                 @input="inputHandler($event, 'announcer')"
@@ -250,6 +253,7 @@
                             <el-select
                                 :disabled="readonly"
                                 :value="programme.grade"
+                                clearable
                                 placeholder="请选择"
                                 @input="inputHandler($event, 'grade')"
                             >
@@ -267,6 +271,7 @@
                             <el-select
                                 :disabled="readonly"
                                 :value="programme.subject"
+                                clearable
                                 placeholder="请选择"
                                 @input="inputHandler($event, 'subject')"
                             >
@@ -284,6 +289,7 @@
                             <el-select
                                 :disabled="readonly"
                                 :value="programme.contest"
+                                clearable
                                 placeholder="请选择"
                                 @input="inputHandler($event, 'contest')"
                             >
@@ -443,6 +449,7 @@
         },
         data() {
             return {
+                sortMessage: '',
                 isLoading: false,
                 selectedCountries: [],
                 countries: [],
@@ -558,28 +565,21 @@
                                         if (res && res.code === 0) {
                                             let id = res.data.id;
                                             if (this.video.list.length > 0) {
-                                                this.createMultProgrammeVideo({programme: res.data})
-                                                    .then((videoRes) => {
-                                                        if (videoRes && videoRes.code === 0) {
-                                                            this.deleteTempList();
-                                                            this.getProgrammeVideoListById(id);
-                                                            this.$message({
-                                                                type: 'success',
-                                                                message: '保存成功'
-                                                            });
-                                                        } else {
-                                                            this.$message({
-                                                                type: 'error',
-                                                                message: '视频保存失败'
-                                                            });
-                                                        }
-                                                        this.goBack();
-                                                    });
+                                                if (this.checkVideoList(this.video.list)) {
+                                                    this.createMultProgrammeVideo({programme: res.data})
+                                                        .then((videoRes) => {
+                                                            if (videoRes && videoRes.code === 0) {
+                                                                this.deleteTempList();
+                                                                this.getProgrammeVideoListById(id);
+                                                                this.$message.success('保存成功');
+                                                            } else {
+                                                                this.$message.error('视频保存失败');
+                                                            }
+                                                            this.goBack();
+                                                        });
+                                                }
                                             } else {
-                                                this.$message({
-                                                    type: 'success',
-                                                    message: '保存成功'
-                                                });
+                                                this.$message.success('保存成功');
                                                 this.goBack();
                                             }
                                         } else {
@@ -632,7 +632,8 @@
                                                             }
                                                         });
                                                 } else {
-                                                    this.$message.error('请检查正片的集数/期号，必须按顺序填写，不能有部分填，部分没填的情况');
+                                                    let message = this.sortMessage ? this.sortMessage : '请检查正片的集数/期号，必须按顺序填写，不能有部分填，部分没填的情况';
+                                                    this.$message.error(message);
                                                 }
                                             } else {
                                                 this.$message({
@@ -677,23 +678,46 @@
                         return false;
                     }
 
-                    let sortedHasSortList = hasSortList.sort((prev, curr) => {
-                        return curr.sort - prev.sort;
+                    let hasShowSortList = hasSortList.filter((item) => {
+                        if (/^20/.test(item.sort) && (item.sort + '').length === 8) {
+                            return item;
+                        }
                     });
 
-                    if (sortedHasSortList.length > 1) {
-                        let flag = true;
-                        for (let i = 0; i < sortedHasSortList.length - 1; i++) {
-                            flag = sortedHasSortList[i].sort - sortedHasSortList[i + 1].sort === 1;
-                            if (!flag) {
-                                break;
-                            }
+                    let noShowSortList = hasSortList.filter((item) => {
+                        if (!(/^20/.test(item.sort) && (item.sort + '').length === 8)) {
+                            return item;
                         }
-                        return flag && parseInt(sortedHasSortList[sortedHasSortList.length - 1].sort) === 1;
-                    } else if (sortedHasSortList.length === 1) {
-                        return parseInt(sortedHasSortList[0].sort) === 1;
+                    });
+
+                    if (hasShowSortList.length > 0 && noShowSortList.length > 0) {
+                        this.sortMessage = '正片的集数/期号格式必须统一，不能有多种类型';
+                        return false;
                     } else {
+                        this.sortMessage = '';
+                    }
+
+                    if (hasShowSortList.length > 0) {
                         return true;
+                    } else {
+                        let sortedHasSortList = hasSortList.sort((prev, curr) => {
+                            return curr.sort - prev.sort;
+                        });
+
+                        if (sortedHasSortList.length > 1) {
+                            let flag = true;
+                            for (let i = 0; i < sortedHasSortList.length - 1; i++) {
+                                flag = sortedHasSortList[i].sort - sortedHasSortList[i + 1].sort === 1;
+                                if (!flag) {
+                                    break;
+                                }
+                            }
+                            return flag && parseInt(sortedHasSortList[sortedHasSortList.length - 1].sort) === 1;
+                        } else if (sortedHasSortList.length === 1) {
+                            return parseInt(sortedHasSortList[0].sort) === 1;
+                        } else {
+                            return true;
+                        }
                     }
                 } else {
                     return true;
