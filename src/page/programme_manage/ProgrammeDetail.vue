@@ -632,7 +632,7 @@
                                                             }
                                                         });
                                                 } else {
-                                                    this.$message.error('集数/期号填写错误');
+                                                    this.$message.error('请检查正片的集数/期号，必须按顺序填写，不能有部分填，部分没填的情况');
                                                 }
                                             } else {
                                                 this.$message({
@@ -661,36 +661,42 @@
                 let featureList = list.filter((video) => {
                     return video.type === 'FEATURE';
                 });
-                let hasSortList = featureList.filter((video) => {
-                    if (video.sort) {
-                        return video;
-                    }
-                });
-                let noSortList = featureList.filter((video) => {
-                    if (!video.sort) {
-                        return video;
-                    }
-                });
-
-                if (hasSortList.length > 0 && noSortList.length > 0) {
-                    return false;
-                }
-
-                let sortedHasSortList = hasSortList.sort((prev, curr) => {
-                    return curr.sort - prev.sort;
-                });
-
-                if (sortedHasSortList.length > 1) {
-                    let flag = true;
-                    for (let i = 0; i < sortedHasSortList.length - 1; i++) {
-                        flag = sortedHasSortList[i].sort - sortedHasSortList[i + 1].sort === 1;
-                        if (!flag) {
-                            break;
+                if (featureList.length > 0) {
+                    let hasSortList = featureList.filter((video) => {
+                        if (video.sort) {
+                            return video;
                         }
+                    });
+                    let noSortList = featureList.filter((video) => {
+                        if (!video.sort) {
+                            return video;
+                        }
+                    });
+
+                    if (hasSortList.length > 0 && noSortList.length > 0) {
+                        return false;
                     }
-                    return flag && parseInt(sortedHasSortList[sortedHasSortList.length - 1].sort) === 1;
+
+                    let sortedHasSortList = hasSortList.sort((prev, curr) => {
+                        return curr.sort - prev.sort;
+                    });
+
+                    if (sortedHasSortList.length > 1) {
+                        let flag = true;
+                        for (let i = 0; i < sortedHasSortList.length - 1; i++) {
+                            flag = sortedHasSortList[i].sort - sortedHasSortList[i + 1].sort === 1;
+                            if (!flag) {
+                                break;
+                            }
+                        }
+                        return flag && parseInt(sortedHasSortList[sortedHasSortList.length - 1].sort) === 1;
+                    } else if (sortedHasSortList.length === 1) {
+                        return parseInt(sortedHasSortList[0].sort) === 1;
+                    } else {
+                        return true;
+                    }
                 } else {
-                    return parseInt(sortedHasSortList[0].sort) === 1;
+                    return true;
                 }
             },
             _deleteProgramme() {
