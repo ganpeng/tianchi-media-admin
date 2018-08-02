@@ -24,23 +24,26 @@
                 label="姓名">
             </el-table-column>
             <el-table-column
-                prop="address"
+                prop="fullAddress"
                 label="地址">
             </el-table-column>
             <el-table-column
-                prop="nationalId"
+                prop="identityId"
                 label="身份证号">
             </el-table-column>
             <el-table-column
-                prop="deviceIdList"
+                prop="stbList"
                 label="设备ID">
                 <template slot-scope="scope">
-                    <label>{{scope.row.deviceIdList | jsonJoin('id')}}</label>
+                    <label>{{scope.row.stbList | jsonJoin('no')}}</label>
                 </template>
             </el-table-column>
             <el-table-column
                 prop="telephone"
                 label="电话">
+                <template slot-scope="scope">
+                    <label>{{scope.row.telephone ? scope.row.telephone : '-------'}}</label>
+                </template>
             </el-table-column>
             <el-table-column
                 prop="mobile"
@@ -49,7 +52,7 @@
             <el-table-column
                 label="账号创建时间">
                 <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                    {{scope.row.registeredAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
@@ -68,7 +71,7 @@
             :page-sizes="[10, 20, 30, 50]"
             :page-size="listQueryParams.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="totalAmount">
+            :total="total">
         </el-pagination>
     </div>
 </template>
@@ -87,19 +90,8 @@
                     pageNum: 1,
                     pageSize: 10
                 },
-                totalAmount: 0,
-                userList: [
-                    {
-                        id: '334',
-                        name: '欧阳锋',
-                        address: '河北省石家庄市栾城区7号',
-                        nationalId: '1302338347408484X',
-                        deviceIdList: [{id: '2323232323'}, {id: '5555567777'}],
-                        telephone: '0311-45878743',
-                        mobile: '15022547876',
-                        createdAt: 2342342344343
-                    }
-                ]
+                total: 0,
+                userList: []
             };
         },
         mounted() {
@@ -112,6 +104,12 @@
                         this.listQueryParams[key] = searchParams[key];
                     }
                 }
+                this.$service.getUserList(this.listQueryParams).then(response => {
+                    if (response && response.code === 0) {
+                        this.userList = response.data.list;
+                        this.total = response.data.total;
+                    }
+                });
             },
             handleSizeChange() {
                 this.getSubjectList();

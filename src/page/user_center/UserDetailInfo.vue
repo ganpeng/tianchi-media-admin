@@ -10,28 +10,16 @@
             <el-form-item label="姓名:" prop="name">
                 <label>{{userInfo.name}}</label>
             </el-form-item>
-            <el-form-item label="身份证号:" prop="nationalId">
-                <label>{{userInfo.nationalId}}</label>
+            <el-form-item label="身份证号:" prop="identityId">
+                <label>{{userInfo.identityId}}</label>
             </el-form-item>
-            <el-form-item :label="'设备ID' + (index + 1)"
-                          v-for="(item, index) in userInfo.deviceIdList"
+            <el-form-item :label="'设备ID' + (index + 1) + ':'"
+                          v-for="(item, index) in userInfo.stbList"
                           :key="index">
-                <label>{{item.id}}</label>
+                <label>{{item.no}}</label>
             </el-form-item>
-            <el-form-item label="省份:" prop="province">
-                <label>{{userInfo.province}}</label>
-            </el-form-item>
-            <el-form-item label="城市:" prop="city">
-                <label>{{userInfo.city}}</label>
-            </el-form-item>
-            <el-form-item label="县区:" prop="county">
-                <label>{{userInfo.county}}</label>
-            </el-form-item>
-            <el-form-item label="乡镇/街道:" prop="town">
-                <label>{{userInfo.town}}</label>
-            </el-form-item>
-            <el-form-item label="详细地址:" prop="address">
-                <label>{{userInfo.address}}</label>
+            <el-form-item label="详细地址:" prop="fullAddress">
+                <label>{{userInfo.fullAddress}}</label>
             </el-form-item>
             <el-form-item label="电话:" prop="telephone">
                 <label>{{userInfo.telephone}}</label>
@@ -54,15 +42,16 @@
             return {
                 userInfo: {
                     name: '',
-                    nationalId: '',
-                    deviceIdList: [{id: ''}],
+                    identityId: '',
+                    stbList: [{no: ''}],
                     province: '',
                     city: '',
                     county: '',
-                    town: '',
+                    street: '',
                     address: '',
                     telephone: '',
-                    mobile: ''
+                    mobile: '',
+                    fullAddress: ''
                 }
             };
         },
@@ -71,6 +60,11 @@
         },
         methods: {
             init() {
+                this.$service.getUserInfoById({id: this.$route.params.id}).then(response => {
+                    if (response && response.code === 0) {
+                        this.userInfo = response.data;
+                    }
+                });
             },
             toUserList() {
                 this.$router.push({name: 'UserList'});

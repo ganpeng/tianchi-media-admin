@@ -3,7 +3,8 @@
  */
 
 import service from '../config';
-// import wsCache from '../../util/webStorage';
+import qs from 'querystring';
+import _ from 'lodash';
 
 /**
  * 管理平台登录
@@ -45,4 +46,16 @@ export const fetchAreaList = () => {
  */
 export const fetchAreaGroupNameList = () => {
     return service.get(`/v1/sys/area/group-name/list`);
+};
+
+/**
+ * 获取中国行政区域
+ * @param level such as 'PROVINCE'、'CITY'、'COUNTY'、'STREET'
+ */
+export const getDistrictList = ({level, code}) => {
+    let params = {level, code, pageNum: 0, pageSize: 1000};
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+    return service.get(`/v1/sys/district/page?${paramsStr}`);
 };

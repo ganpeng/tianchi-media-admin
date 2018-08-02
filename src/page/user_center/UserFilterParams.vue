@@ -23,7 +23,7 @@
         <el-form :inline="true">
             <el-form-item label="创建起始时间">
                 <el-date-picker
-                    v-model="listQueryParams.createStart"
+                    v-model="listQueryParams.registeredAtStart"
                     type="date"
                     clearable
                     placeholder="请选择创建起始时间">
@@ -31,49 +31,63 @@
             </el-form-item>
             <el-form-item label="创建结束时间">
                 <el-date-picker
-                    v-model="listQueryParams.createEnd"
+                    v-model="listQueryParams.registeredAtEnd"
                     type="date"
                     clearable
                     placeholder="请选择创建结束时间">
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="省份" prop="province">
-                <el-select v-model="listQueryParams.province" placeholder="请选择省份" clearable>
+                <el-select v-model="listQueryParams.province"
+                           @change="selectDistrict('PROVINCE')"
+                           placeholder="请选择省份">
                     <el-option
                         v-for="item in provinceOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        :key="item.code"
+                        :label="item.name"
+                        :value="item.code">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="城市" prop="city">
-                <el-select v-model="listQueryParams.city" placeholder="请选择城市" clearable>
+                <el-select
+                    v-model="listQueryParams.city"
+                    @change="selectDistrict('CITY')"
+                    placeholder="请选择城市"
+                    :disabled="cityDisabled">
                     <el-option
                         v-for="item in cityOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        :key="item.code"
+                        :label="item.name"
+                        :value="item.code">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="县区" prop="county">
-                <el-select v-model="listQueryParams.county" placeholder="请选择县区" clearable>
+                <el-select
+                    v-model="listQueryParams.county"
+                    @change="selectDistrict('COUNTY')"
+                    placeholder="请选择县区"
+                    :disabled="countyDisabled">
                     <el-option
                         v-for="item in countyOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        :key="item.code"
+                        :label="item.name"
+                        :value="item.code">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="乡镇/街道" prop="town">
-                <el-select v-model="listQueryParams.town" placeholder="请选择乡镇/街道" clearable>
+            <el-form-item label="乡镇/街道" prop="street">
+                <el-select
+                    v-model="listQueryParams.street"
+                    @change="selectDistrict('STREET')"
+                    placeholder="请选择乡镇/街道"
+                    :disabled="streetDisabled">
                     <el-option
-                        v-for="item in townOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        v-for="item in streetOptions"
+                        :key="item.code"
+                        :label="item.name"
+                        :value="item.code">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -89,30 +103,21 @@
         data() {
             return {
                 listQueryParams: {
-                    createStart: '',
-                    createEnd: '',
+                    registeredAtStart: '',
+                    registeredAtEnd: '',
                     keyword: '',
                     province: '',
                     city: '',
                     county: '',
-                    town: ''
+                    street: ''
                 },
-                provinceOptions: [
-                    {value: '001', label: '北京'},
-                    {value: '002', label: '河北省'}
-                ],
-                cityOptions: [
-                    {value: '001', label: '北京市'},
-                    {value: '002', label: '石家庄市'}
-                ],
-                countyOptions: [
-                    {value: '001', label: '裕华区'},
-                    {value: '002', label: '桥西区'}
-                ],
-                townOptions: [
-                    {value: '001', label: '雨花路'},
-                    {value: '002', label: '绵阳路'}
-                ]
+                provinceOptions: [],
+                cityOptions: [],
+                countyOptions: [],
+                streetOptions: [],
+                cityDisabled: true,
+                countyDisabled: true,
+                streetDisabled: true
             };
         },
         mounted() {
@@ -120,9 +125,87 @@
         },
         methods: {
             init() {
+                this.getDistrictList({level: 'PROVINCE'});
+            },
+            // 获取地区列表
+            getDistrictList({level, code}) {
+                this.$service.getDistrictList({level, code}).then(response => {
+                    if (response && response.code === 0) {
+                        switch (level) {
+                            case 'PROVINCE':
+                                this.provinceOptions = response.data.list;
+                                break;
+                            case 'CITY':
+                                this.cityOptions = response.data.list;
+                                break;
+                            case 'COUNTY':
+                                this.countyOptions = response.data.list;
+                                break;
+                            case 'STREET':
+                                this.streetOptions = response.data.list;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+            },
+            // 选择某个地区
+            selectDistrict(level) {
+                switch (level) {
+                    // 选择省份
+                    case 'PROVINCE':
+                        this.getDistrictList({level: 'CITY', code: this.userInfo.province});
+                        this.cityDisabled = false;
+                        this.userInfo.city = '';
+                        this.countyDisabled = true;
+                        this.userInfo.county = '';
+                        this.countyOptions = [];
+                        this.streetDisabled = true;
+                        this.userInfo.street = '';
+                        this.streetOptions = [];
+                        break;
+                    // 选择城市
+                    case 'CITY':
+                        this.getDistrictList({level: 'COUNTY', code: this.userInfo.city});
+                        this.countyDisabled = false;
+                        this.userInfo.county = '';
+                        this.streetDisabled = true;
+                        this.userInfo.street = '';
+                        this.streetOptions = [];
+                        break;
+                    // 选择县区
+                    case 'COUNTY':
+                        this.getDistrictList({level: 'STREET', code: this.userInfo.county});
+                        this.streetDisabled = false;
+                        this.userInfo.street = '';
+                        this.streetOptions = [];
+                        break;
+                    // 选择街道乡镇
+                    case 'STREET':
+                        break;
+                    default:
+                        break;
+                }
             },
             getUserList() {
-                this.$emit('getUserList', this.listQueryParams);
+                let districtCode = '';
+                if (this.listQueryParams.street) {
+                    districtCode = this.listQueryParams.street;
+                } else if (this.listQueryParams.county) {
+                    districtCode = this.listQueryParams.county;
+                } else if (this.listQueryParams.city) {
+                    districtCode = this.listQueryParams.city;
+                } else if (this.listQueryParams.province) {
+                    districtCode = this.listQueryParams.province;
+                }
+                // 设置过滤条件
+                this.$emit('getUserList', {
+                    keyword: this.listQueryParams.keyword,
+                    registeredAtStart: this.listQueryParams.registeredAtStart,
+                    registeredAtEnd: this.listQueryParams.registeredAtEnd,
+                    districtCode: districtCode
+                });
             },
             toCreateUser() {
                 this.$router.push({name: 'CreateUser'});

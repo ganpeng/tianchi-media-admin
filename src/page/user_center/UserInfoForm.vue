@@ -15,61 +15,75 @@
             <el-form-item label="姓名" prop="name" required>
                 <el-input v-model="userInfo.name" placeholder="请输入姓名"></el-input>
             </el-form-item>
-            <el-form-item label="身份证号" prop="nationalId" required>
-                <el-input v-model="userInfo.nationalId" placeholder="请输入身份证号"></el-input>
+            <el-form-item label="身份证号" prop="identityId" required>
+                <el-input v-model="userInfo.identityId" @change="changeIdentityId" placeholder="请输入身份证号"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button @click="checkNationalId" type="primary" plain>验证身份证号</el-button>
-                <el-button @click="toEditUserInfo" type="primary" plain>当前身份证号用户信息编辑页面</el-button>
+                <el-button @click="verifyIdentityId" type="primary" plain>验证身份证号</el-button>
+                <el-button @click="toEditUserInfo" type="primary" plain v-if="identityIdExist">该用户已存在，点此编辑信息</el-button>
             </el-form-item>
             <el-form-item :label="'设备ID' + (index + 1)"
-                          props="deviceIdList"
-                          v-for="(item, index) in userInfo.deviceIdList"
+                          props="stbList"
+                          v-for="(item, index) in userInfo.stbList"
                           :key="index"
                           required>
-                <el-input v-model="item.id" placeholder="请输入设备ID"></el-input>
-                <el-button v-if="userInfo.deviceIdList.length > 1" plain @click="removeDevice(index)">删除设备</el-button>
+                <el-input v-model="item.no" placeholder="请输入设备ID"></el-input>
+                <el-button v-if="userInfo.stbList.length > 1" plain @click="removeDevice(index)">删除设备</el-button>
             </el-form-item>
             <el-form-item>
                 <el-button @click="addDevice" type="primary" plain>添加设备</el-button>
             </el-form-item>
             <el-form-item label="省份" prop="province" required>
-                <el-select v-model="userInfo.province" placeholder="请选择省份" clearable>
+                <el-select v-model="userInfo.province"
+                           @change="selectDistrict('PROVINCE')"
+                           placeholder="请选择省份">
                     <el-option
                         v-for="item in provinceOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        :key="item.code"
+                        :label="item.name"
+                        :value="item.code">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="城市" prop="city" required>
-                <el-select v-model="userInfo.city" placeholder="请选择城市" clearable>
+                <el-select
+                    v-model="userInfo.city"
+                    @change="selectDistrict('CITY')"
+                    placeholder="请选择城市"
+                    :disabled="cityDisabled">
                     <el-option
                         v-for="item in cityOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        :key="item.code"
+                        :label="item.name"
+                        :value="item.code">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="县区" prop="county" required>
-                <el-select v-model="userInfo.county" placeholder="请选择县区" clearable>
+                <el-select
+                    v-model="userInfo.county"
+                    @change="selectDistrict('COUNTY')"
+                    placeholder="请选择县区"
+                    :disabled="countyDisabled">
                     <el-option
                         v-for="item in countyOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        :key="item.code"
+                        :label="item.name"
+                        :value="item.code">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="乡镇/街道" prop="town" required>
-                <el-select v-model="userInfo.town" placeholder="请选择乡镇/街道" clearable>
+            <el-form-item label="乡镇/街道" prop="street" required>
+                <el-select
+                    v-model="userInfo.street"
+                    @change="selectDistrict('STREET')"
+                    placeholder="请选择乡镇/街道"
+                    :disabled="streetDisabled">
                     <el-option
-                        v-for="item in townOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        v-for="item in streetOptions"
+                        :key="item.code"
+                        :label="item.name"
+                        :value="item.code">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -98,6 +112,7 @@
     export default {
         name: 'CreateUser',
         props: {
+            // status为0：创建用户；status为1：编辑用户
             status: {
                 type: String,
                 default: '0'
@@ -111,7 +126,7 @@
                     callback();
                 }
             };
-            let checkNationalId = (rule, value, callback) => {
+            let checkIdentityId = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('身份证号不能为空'));
                 } else if (!this.$util.isNationalId(value)) {
@@ -120,10 +135,10 @@
                     callback();
                 }
             };
-            let checkDeviceIdList = (rule, value, callback) => {
+            let checkStbList = (rule, value, callback) => {
                 let sign = true;
                 for (let i = 0; i < value.length; i++) {
-                    if (!value[i].id) {
+                    if (!value[i].no) {
                         sign = false;
                     }
                 }
@@ -154,7 +169,7 @@
                     callback();
                 }
             };
-            let checkTown = (rule, value, callback) => {
+            let checkStreet = (rule, value, callback) => {
                 if (!value) {
                     return callback(new Error('请选择乡镇/街道'));
                 } else {
@@ -187,41 +202,35 @@
             return {
                 userInfo: {
                     name: '',
-                    nationalId: '',
-                    deviceIdList: [{id: ''}],
+                    identityId: '',
+                    stbList: [{no: ''}],
                     province: '',
                     city: '',
                     county: '',
-                    town: '',
+                    street: '',
                     address: '',
                     telephone: '',
-                    mobile: ''
+                    mobile: '',
+                    fullAddress: ''
                 },
-                provinceOptions: [
-                    {value: '001', label: '北京'},
-                    {value: '002', label: '河北省'}
-                ],
-                cityOptions: [
-                    {value: '001', label: '北京市'},
-                    {value: '002', label: '石家庄市'}
-                ],
-                countyOptions: [
-                    {value: '001', label: '裕华区'},
-                    {value: '002', label: '桥西区'}
-                ],
-                townOptions: [
-                    {value: '001', label: '雨花路'},
-                    {value: '002', label: '绵阳路'}
-                ],
+                identityIdExist: false,
+                existId: '',
+                provinceOptions: [],
+                cityOptions: [],
+                countyOptions: [],
+                streetOptions: [],
+                cityDisabled: true,
+                countyDisabled: true,
+                streetDisabled: true,
                 infoRules: {
                     name: [
                         {validator: checkName, trigger: 'blur'}
                     ],
-                    nationalId: [
-                        {validator: checkNationalId, trigger: 'blur'}
+                    identityId: [
+                        {validator: checkIdentityId, trigger: 'blur'}
                     ],
-                    deviceIdList: [
-                        {validator: checkDeviceIdList, trigger: 'blur'}
+                    stbList: [
+                        {validator: checkStbList, trigger: 'blur'}
                     ],
                     province: [
                         {validator: checkProvince, trigger: 'change'}
@@ -232,8 +241,8 @@
                     county: [
                         {validator: checkCounty, trigger: 'change'}
                     ],
-                    town: [
-                        {validator: checkTown, trigger: 'change'}
+                    street: [
+                        {validator: checkStreet, trigger: 'change'}
                     ],
                     address: [
                         {validator: checkAddress, trigger: 'blur'}
@@ -252,37 +261,170 @@
         },
         methods: {
             init() {
+                this.getDistrictList({level: 'PROVINCE'});
+                if (this.status === '1') {
+                    this.$service.getUserInfoById({id: this.$route.params.id}).then(response => {
+                        if (response && response.code === 0) {
+                            this.userInfo = response.data;
+                            // 获取地址列表
+                            this.getDistrictList({level: 'CITY', code: this.userInfo.province});
+                            this.getDistrictList({level: 'COUNTY', code: this.userInfo.city});
+                            this.getDistrictList({level: 'STREET', code: this.userInfo.county});
+                            this.cityDisabled = false;
+                            this.countyDisabled = false;
+                            this.streetDisabled = false;
+                        }
+                    });
+                }
+            },
+            // 获取地区列表
+            getDistrictList({level, code}) {
+                this.$service.getDistrictList({level, code}).then(response => {
+                    if (response && response.code === 0) {
+                        switch (level) {
+                            case 'PROVINCE':
+                                this.provinceOptions = response.data.list;
+                                break;
+                            case 'CITY':
+                                this.cityOptions = response.data.list;
+                                break;
+                            case 'COUNTY':
+                                this.countyOptions = response.data.list;
+                                break;
+                            case 'STREET':
+                                this.streetOptions = response.data.list;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+            },
+            // 选择某个地区
+            selectDistrict(level) {
+                switch (level) {
+                    // 选择省份
+                    case 'PROVINCE':
+                        this.getDistrictList({level: 'CITY', code: this.userInfo.province});
+                        this.cityDisabled = false;
+                        this.userInfo.city = '';
+                        this.countyDisabled = true;
+                        this.userInfo.county = '';
+                        this.countyOptions = [];
+                        this.streetDisabled = true;
+                        this.userInfo.street = '';
+                        this.streetOptions = [];
+                        break;
+                    // 选择城市
+                    case 'CITY':
+                        this.getDistrictList({level: 'COUNTY', code: this.userInfo.city});
+                        this.countyDisabled = false;
+                        this.userInfo.county = '';
+                        this.streetDisabled = true;
+                        this.userInfo.street = '';
+                        this.streetOptions = [];
+                        break;
+                    // 选择县区
+                    case 'COUNTY':
+                        this.getDistrictList({level: 'STREET', code: this.userInfo.county});
+                        this.streetDisabled = false;
+                        this.userInfo.street = '';
+                        this.streetOptions = [];
+                        break;
+                    // 选择街道乡镇
+                    case 'STREET':
+                        break;
+                    default:
+                        break;
+                }
             },
             // 检测身份证号是否已存在
-            checkNationalId() {
-                this.$refs['userInfo'].validateField('nationalId', (valid) => {
-                    if (valid) {
+            verifyIdentityId() {
+                this.$refs['userInfo'].validateField('identityId', (valid) => {
+                    if (!valid) {
+                        this.$service.getUserInfoByIdentityId({identityId: this.userInfo.identityId}).then(response => {
+                            if (response && response.code === 0) {
+                                if (response.data.list.length === 1) {
+                                    this.identityIdExist = true;
+                                    this.existId = response.data.list[0].id;
+                                } else {
+                                    this.identityIdExist = false;
+                                    this.existId = '';
+                                    this.$message('当前身份证号没有在系统中');
+                                }
+                            }
+                        });
                     } else {
                         return false;
                     }
                 });
             },
+            changeIdentityId() {
+                this.identityIdExist = false;
+                this.existId = '';
+            },
             // 跳转到身份证存在编辑信息页面
             toEditUserInfo() {
-                this.$router.push({name: 'EditUserInfo', params: {id: '345'}});
+                this.$router.push({name: 'EditUserInfo', params: {id: this.existId}});
             },
             // 删除设备
             removeDevice(index) {
-                this.userInfo.deviceIdList.splice(index, 1);
+                this.userInfo.stbList.splice(index, 1);
             },
             // 添加设备
             addDevice() {
-                this.userInfo.deviceIdList.push({id: ''});
+                this.userInfo.stbList.push({no: ''});
+            },
+            checkStbList() {
+                let sign = true;
+                for (let i = 0; i < this.userInfo.stbList.length; i++) {
+                    if (!this.userInfo.stbList[i].no) {
+                        sign = false;
+                    }
+                }
+                return sign;
             },
             operateUser() {
                 this.$refs['userInfo'].validate((valid) => {
                     if (valid) {
+                        if (!this.checkStbList()) {
+                            this.$message({message: '请完整填写设备ID', type: 'warning'});
+                        }
+                        this.userInfo.fullAddress = '';
+                        this.provinceOptions.map(province => {
+                            if (province.code === this.userInfo.province) {
+                                this.userInfo.fullAddress = this.userInfo.fullAddress + province.name;
+                            }
+                        });
+                        this.cityOptions.map(city => {
+                            if (city.code === this.userInfo.city) {
+                                this.userInfo.fullAddress = this.userInfo.fullAddress + city.name;
+                            }
+                        });
+                        this.countyOptions.map(county => {
+                            if (county.code === this.userInfo.county) {
+                                this.userInfo.fullAddress = this.userInfo.fullAddress + county.name;
+                            }
+                        });
+                        this.streetOptions.map(street => {
+                            if (street.code === this.userInfo.street) {
+                                this.userInfo.fullAddress = this.userInfo.fullAddress + street.name + this.userInfo.address;
+                            }
+                        });
                         // 创建
                         if (status === '0') {
-
+                            this.$service.updateUser(this.userInfo).then(response => {
+                                if (response && response.code === 0) {
+                                    this.$message('创建成功');
+                                }
+                            });
                             // 更新
                         } else {
-
+                            this.$service.updateUser(this.userInfo).then(response => {
+                                if (response && response.code === 0) {
+                                    this.$message('创建成功');
+                                }
+                            });
                         }
                     } else {
                         return false;

@@ -56,7 +56,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        height: 100%;
+        height: 62px;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.20);
     }
 
     .info {
@@ -86,12 +87,7 @@
         padding: 0 20px;
         height: 100%;
         line-height: 64px;
-        &:hover {
-            background-color: $baseBlue;
-            svg {
-                fill: white;
-            }
-        }
+        fill: $grayLineColor;
     }
 
 </style>

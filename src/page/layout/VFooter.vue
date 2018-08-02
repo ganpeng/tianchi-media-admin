@@ -16,10 +16,11 @@
     .container {
         line-height: 64px;
         width: 100%;
+        background: url("../../assets/img/footer_bg.png");
     }
 
     small {
-        font-size: $normalFontSize;
+        font-size: $loginFontColor;
     }
 
     small:first-child {

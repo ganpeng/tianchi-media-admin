@@ -124,7 +124,7 @@
             position: absolute;
             left: 60px;
             bottom: 100px;
-            height: 80px;
+            height: 72px;
             width: 457px;
         }
         div.form-box {
