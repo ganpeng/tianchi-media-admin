@@ -52,8 +52,8 @@
                 <el-button type="primary" @click="searchHandler">搜索</el-button>
             </el-form-item>
             <el-form-item class="create-account">
-                <el-button type="primary" plain @click="showVideoUploadDialog('VOD')">上传点播视频</el-button>
-                <el-button type="primary" plain @click="showVideoUploadDialog('CAROUSEL')">上传轮播视频</el-button>
+                <el-button type="primary" plain @click="showVideoUploadDialog('VOD')"><i class="el-icon-circle-plus-outline"></i> 上传点播视频</el-button>
+                <el-button type="primary" plain @click="showVideoUploadDialog('CAROUSEL')"><i class="el-icon-circle-plus-outline"></i> 上传轮播视频</el-button>
             </el-form-item>
         </el-form>
         <video-table></video-table>

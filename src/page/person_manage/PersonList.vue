@@ -37,13 +37,8 @@
                 <el-button type="primary" @click="getPersonList">搜索</el-button>
             </el-form-item>
             <el-form-item class="create-account">
-                <el-tag>
-                    <router-link to="/person-manage/create">
-                        <i class="el-icon-circle-plus-outline"></i>
-                        新增人物
-                    </router-link>
-                </el-tag>
-                <el-button size="small" type="primary" plain @click="showFileUploadDialog">导入人物</el-button>
+                <el-button type="primary" plain @click="createPerson"><i class="el-icon-circle-plus-outline"></i> 新增人物</el-button>
+                <el-button type="primary" plain @click="showFileUploadDialog"> 导入人物</el-button>
             </el-form-item>
         </el-form>
         <el-table class="my-table-style" :data="list" border>
@@ -178,6 +173,9 @@
             ...mapActions({
                 getPersonList: 'person/getPersonList'
             }),
+            createPerson() {
+                this.$router.push({ name: 'CreatePerson' });
+            },
             areaLabel(code) {
                 let area = this.areaOptions.find((area) => area.code === code);
                 return area ? area.name : '';

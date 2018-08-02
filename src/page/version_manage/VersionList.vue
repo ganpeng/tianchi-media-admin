@@ -66,7 +66,7 @@
             </el-col>
             <el-col :span="4">
                 <el-form-item class="create-account">
-                    <el-button type="primary" icon="el-icon-plus" plain @click="showFileUploadDialog">新增版本</el-button>
+                    <el-button type="primary" plain @click="showFileUploadDialog"><i class="el-icon-circle-plus-outline"></i> 新增版本</el-button>
                 </el-form-item>
             </el-col>
         </el-form>

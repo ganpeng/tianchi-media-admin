@@ -80,16 +80,17 @@ export default {
                         channelCategory: this.channel.category
                     }];
 
-                    this.$service.postChannelLayout(reqBody)
-                        .then((res) => {
-                            if (res && res.code === 0) {
-                                this.$message({
-                                    message: '设置直播频道成功',
-                                    type: 'success'
-                                });
-                            }
-                            this.$router.back();
-                        });
+                    if (this.channel.visible) {
+                        this.$service.postChannelLayout(reqBody)
+                            .then((res) => {
+                                if (res && res.code === 0) {
+                                    this.$message.success('设置直播频道成功');
+                                }
+                                this.$router.back();
+                            });
+                    } else {
+                        this.$message.error('该频道处于禁播状态, 请重新选择频道');
+                    }
                 }
             });
         },

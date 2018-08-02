@@ -34,15 +34,15 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="searchHandler">搜索</el-button>
+                <el-button type="primary" @click="searchHandler"><i class="el-icon-search"></i> 搜索</el-button>
             </el-form-item>
             <el-form-item class="create-account">
-                <el-button type="primary" plain @click="createLiveChannel">新增直播频道</el-button>
+                <el-button type="primary" plain @click="createLiveChannel"><i class="el-icon-circle-plus-outline"></i> 新增直播频道</el-button>
                 <el-button type="primary" plain @click="showFileUploadDialog">导入节目单</el-button>
             </el-form-item>
         </el-form>
         <el-table class="my-table-style" :data="list" border>
-            <el-table-column prop="code" align="center" width="240px" label="直播频道编号"></el-table-column>
+            <el-table-column prop="code" align="center" width="120px" label="直播频道编号"></el-table-column>
             <el-table-column prop="no" align="center" width="200px" label="直播频道展示编号"></el-table-column>
             <el-table-column prop="innerName" align="center" width="200px" label="直播频道名称"></el-table-column>
             <el-table-column prop="name" align="center" width="200px" label="直播频道展示名"></el-table-column>

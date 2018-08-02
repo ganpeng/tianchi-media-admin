@@ -9,108 +9,107 @@
         </el-breadcrumb>
         <div class="table-container">
             <el-form :inline="true" class="demo-form-inline text-left">
-                <el-form-item label="上映开始年">
-                    <el-date-picker
-                        :value="programmeSearchFields.releaseAtStart"
-                        type="year"
-                        clearable
-                        @input="inputHandler($event, 'releaseAtStart')"
-                        placeholder="请选择上映时间">
-                    </el-date-picker>
-                </el-form-item>
-                <el-form-item label="上映结束年">
-                    <el-date-picker
-                        :value="programmeSearchFields.releaseAtEnd"
-                        type="year"
-                        clearable
-                        @input="inputHandler($event, 'releaseAtEnd')"
-                        placeholder="请选择上映时间">
-                    </el-date-picker>
-                </el-form-item>
-                <el-form-item label="地区">
-                    <el-select
-                        :value="programmeSearchFields.produceAreaList"
-                        clearable
-                        filterable
-                        multiple
-                        @change="inputHandler($event, 'produceAreaList')"
-                        placeholder="请选择制片地区"
-                    >
-                        <el-option
-                            v-for="(item, index) in areaOptions"
-                            :key="index"
-                            :label="item.name"
-                            :value="item.code">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="分类">
-                    <el-select
-                        :value="programmeSearchFields.programmeCategoryIdList"
-                        multiple
-                        @change="inputHandler($event, 'programmeCategoryIdList')"
-                        placeholder="请选择">
-                        <el-option
-                            v-for="item in global.categoryList"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="类型">
-                    <el-select
-                        :value="programmeSearchFields.programmeTypeIdList"
-                        @change="inputHandler($event, 'programmeTypeIdList')"
-                        clearable
-                        multiple
-                        placeholder="请选择">
-                        <el-option
-                            v-for="item in programmeTypeOptions"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="节目状态">
-                    <el-select
-                        :value="programmeSearchFields.visible"
-                        @change="inputHandler($event, 'visible')"
-                        clearable
-                        placeholder="请选择">
-                        <el-option
-                            v-for="item in visibleOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item class="search">
-                    <el-input
-                        :value="programmeSearchFields.keyword"
-                        clearable
-                        @input="inputHandler($event, 'keyword')"
-                        placeholder="搜索你想要的信息">
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="clearSearchFields">清空筛选条件</el-button>
-                </el-form-item>
-                <el-form-item>
-                    <el-button @click="searchHandler" icon="el-icon-search" type="primary">搜索</el-button>
-                </el-form-item>
-                <el-form-item class="create-account">
-                    <el-tag>
-                        <router-link to="/programme-manage/create">
-                            <i class="el-icon-circle-plus-outline"></i>
-                            新增节目
-                        </router-link>
-                    </el-tag>
-                    <el-button size="small" type="primary" plain @click="showFileUploadDialog">导入节目</el-button>
-                </el-form-item>
+                <el-col :span="19">
+                    <el-form-item label="上映开始年">
+                        <el-date-picker
+                            :value="programmeSearchFields.releaseAtStart"
+                            type="year"
+                            clearable
+                            @input="inputHandler($event, 'releaseAtStart')"
+                            placeholder="请选择上映时间">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="上映结束年">
+                        <el-date-picker
+                            :value="programmeSearchFields.releaseAtEnd"
+                            type="year"
+                            clearable
+                            @input="inputHandler($event, 'releaseAtEnd')"
+                            placeholder="请选择上映时间">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="地区">
+                        <el-select
+                            :value="programmeSearchFields.produceAreaList"
+                            clearable
+                            filterable
+                            multiple
+                            @change="inputHandler($event, 'produceAreaList')"
+                            placeholder="请选择制片地区"
+                        >
+                            <el-option
+                                v-for="(item, index) in areaOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.code">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="分类">
+                        <el-select
+                            :value="programmeSearchFields.programmeCategoryIdList"
+                            multiple
+                            @change="inputHandler($event, 'programmeCategoryIdList')"
+                            placeholder="请选择">
+                            <el-option
+                                v-for="item in global.categoryList"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="类型">
+                        <el-select
+                            :value="programmeSearchFields.programmeTypeIdList"
+                            @change="inputHandler($event, 'programmeTypeIdList')"
+                            clearable
+                            multiple
+                            placeholder="请选择">
+                            <el-option
+                                v-for="item in programmeTypeOptions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="节目状态">
+                        <el-select
+                            :value="programmeSearchFields.visible"
+                            @change="inputHandler($event, 'visible')"
+                            clearable
+                            placeholder="请选择">
+                            <el-option
+                                v-for="item in visibleOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item class="search">
+                        <el-input
+                            :value="programmeSearchFields.keyword"
+                            clearable
+                            @input="inputHandler($event, 'keyword')"
+                            placeholder="搜索你想要的信息">
+                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button @click="searchHandler" icon="el-icon-search" type="primary">搜索</el-button>
+                        <el-button type="warning" @click="clearSearchFields">清空筛选条件</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                    <el-form-item class="create-account">
+                        <el-button type="primary" plain @click="createProgramme"><i class="el-icon-circle-plus-outline"></i> 新增人物</el-button>
+                        <el-button type="primary" plain @click="showFileUploadDialog">导入节目</el-button>
+                    </el-form-item>
+                </el-col>
             </el-form>
             <el-table class="my-table-style" :data="list" border>
                 <el-table-column prop="code" align="center" width="120px" label="节目编号"></el-table-column>
@@ -289,6 +288,9 @@ export default {
             getProgrammeList: 'programme/getProgrammeList',
             getProgrammeCategory: 'programme/getProgrammeCategory'
         }),
+        createProgramme() {
+            this.$router.push({ name: 'CreateProgramme' });
+        },
         clearSearchFields() {
             this.resetProgrammeSearchFields();
         },
