@@ -47,7 +47,7 @@
             </el-form-item>
         </el-form>
         <el-table class="my-table-style" :data="list" border>
-            <el-table-column prop="id" align="center" width="240px" label="编号"></el-table-column>
+            <el-table-column prop="id" align="center" width="120px" label="编号"></el-table-column>
             <el-table-column label="照片" align="center" >
                 <template slot-scope="scope">
                     <img @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="80px" height="80px" class="person-image pointer" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">

@@ -16,7 +16,7 @@
                         v-for="(category, index) in global.categoryList" :key="index" class="el-collapse-item">
                         <div role="tab" aria-controls="el-collapse-content-3171" style="position:relative;" aria-describedby="el-collapse-content-3171">
                             <div role="button" class="el-collapse-item__header">
-                                <span>{{category.name}}</span>
+                                <span :class="{'category-name': true, 'text-primary': index === currentIndex}">{{category.name}}</span>
                                 <i class="el-collapse-item__arrow el-icon-arrow-right"></i>
                             </div>
                         </div>
@@ -171,6 +171,12 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
     position: relative;
     width: 240px;
     .el-collapse-item {
+        span.category-name {
+            font-size: 18px;
+            &:hover {
+                color: #409EFF;
+            }
+        }
         .edit-btn {
             position: absolute;
             top: 50%;

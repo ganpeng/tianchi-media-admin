@@ -6,18 +6,6 @@ export const MAIN_ROLE_OPTIONS = [
         label: '导演'
     },
     {
-        value: 'VICE_DIRECTOR',
-        label: '副导演'
-    },
-    {
-        value: 'SCENARIST',
-        label: '编剧'
-    },
-    {
-        value: 'SINGER',
-        label: '歌手'
-    },
-    {
         value: 'CHIEF_ACTOR',
         label: '主演'
     },
@@ -26,8 +14,36 @@ export const MAIN_ROLE_OPTIONS = [
         label: '演员'
     },
     {
+        value: 'VICE_DIRECTOR',
+        label: '副导演'
+    },
+    {
+        value: 'SCENARIST',
+        label: '编剧'
+    },
+    {
         value: 'PRODUCER',
         label: '制片人'
+    },
+    {
+        value: 'SINGER',
+        label: '歌手'
+    },
+    {
+        value: 'AUTHOR',
+        label: '作家'
+    },
+    {
+        value: 'ANCHOR',
+        label: '主持人'
+    },
+    {
+        value: 'ATHLETE',
+        label: '运动员'
+    },
+    {
+        value: 'CARTOON_CHARACTER',
+        label: '卡通人物'
     }
 ];
 

@@ -198,9 +198,6 @@ export default {
                 description: [
                     { required: true, message: '请输入人物简介' }
                 ],
-                birthday: [
-                    { required: true, message: '请输入出生日期' }
-                ],
                 area: [
                     { required: true, message: '请选择区域' },
                     { validator: requiredValidator('请选择区域') }

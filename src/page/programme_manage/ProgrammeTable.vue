@@ -19,7 +19,7 @@
                     prop="storageVideoId"
                     label="视频ID"
                     align="center"
-                    width="240px">
+                    width="120px">
                 </el-table-column>
                 <el-table-column
                     prop="originName"

@@ -113,7 +113,7 @@
                 </el-form-item>
             </el-form>
             <el-table class="my-table-style" :data="list" border>
-                <el-table-column prop="code" align="center" width="240px" label="节目编号"></el-table-column>
+                <el-table-column prop="code" align="center" width="120px" label="节目编号"></el-table-column>
                 <el-table-column label="节目图片" align="center" >
                     <template slot-scope="scope">
                         <img @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="person-image pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">

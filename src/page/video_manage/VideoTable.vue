@@ -6,7 +6,7 @@
                     <el-radio :value="video.selectedVideoId" :label="scope.row.id" @input="setSelectedVideoId({id: scope.row.id})">&nbsp;</el-radio>
                 </template>
             </el-table-column>
-            <el-table-column prop="id" align="center" width="240px" label="编号"></el-table-column>
+            <el-table-column prop="id" align="center" width="120px" label="编号"></el-table-column>
             <el-table-column prop="originName" align="center" width="200px" label="视频名称"></el-table-column>
             <el-table-column prop="link" align="center" width="300px" label="预览视频">
                 <template slot-scope="scope">
