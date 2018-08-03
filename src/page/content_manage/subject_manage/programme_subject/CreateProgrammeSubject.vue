@@ -1,12 +1,12 @@
 <!--创建节目专题组件-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>专题管理</el-breadcrumb-item>
-            <el-breadcrumb-item>创建节目专题</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'专题管理'},
+            {name:'专题列表-专题详情-创建节目专题'}]">
+        </custom-breadcrumb>
         <div class="block-box">
             <subject-basic-info-form
                 :subjectInfo="subjectInfo"
@@ -36,6 +36,6 @@
 <style lang="less" scoped>
 
     .block-box {
-        margin-top: 50px;
+        margin-top: 60px;
     }
 </style>

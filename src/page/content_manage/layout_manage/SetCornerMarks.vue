@@ -49,7 +49,7 @@
 
 <script>
     import cornerMarkOptions from '@/util/config/corner_mark';
-    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import {OPERATE_CORNER_MARK_DIMENSION} from '@/util/config/dimension';
 
     export default {

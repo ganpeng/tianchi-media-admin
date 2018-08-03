@@ -64,7 +64,7 @@
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import store from 'store';
-    import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
+    import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import PersonDetail from './PersonDetail';
     export default {
         name: 'DisplayPerson',

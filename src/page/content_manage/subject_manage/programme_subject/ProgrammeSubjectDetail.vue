@@ -68,7 +68,7 @@
 
 <script>
     import SubjectBasicInfoDetail from '../SubjectBasicInfoDetail';
-    import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
+    import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 
     export default {
         name: 'PersonSubjectDetail',

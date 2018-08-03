@@ -51,7 +51,7 @@
 </template>
 
 <script>
-    import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
+    import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
 
     export default {
         name: 'SubjectBasicInfoDetail',

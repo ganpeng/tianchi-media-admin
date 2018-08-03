@@ -57,7 +57,7 @@
 </template>
 
 <script>
-    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import {CHANNEL_LOGO_DIMENSION} from '@/util/config/dimension';
 
     export default {

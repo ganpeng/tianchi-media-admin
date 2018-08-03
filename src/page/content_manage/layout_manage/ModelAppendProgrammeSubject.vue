@@ -172,7 +172,7 @@
     import SetSubjectProgramme from './SetSubjectProgramme';
     import templateTypeInfo from '@/util/config/template_type';
     import {LAYOUT_IMAGE_DIMENSION, PROGRAMME_DIMENSION} from '@/util/config/dimension';
-    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import _ from 'lodash';
 
     export default {

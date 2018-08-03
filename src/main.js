@@ -13,6 +13,7 @@ import 'babel-polyfill';
 import util from '@/util/extend';
 import '@/util/filters';
 import '@/util/directives';
+import 'sysComponents/custom_components/global/install';
 import dragula from 'dragula';
 import wsCache from '@/util/webStorage';
 

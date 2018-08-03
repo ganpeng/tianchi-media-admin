@@ -62,8 +62,8 @@
 </template>
 <script>
 import _ from 'lodash';
-import UploadImage from 'sysComponents/custom_components/global/UploadImage';
-import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
+import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
+import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
 export default {
     name: 'SelectChannel',
     components: {

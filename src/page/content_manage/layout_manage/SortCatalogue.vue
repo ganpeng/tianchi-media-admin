@@ -72,7 +72,7 @@
 
 <script>
 
-    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import {CATALOGUE_DIMENSION} from '@/util/config/dimension';
     import CATALOGUE_CONFIG_MAP from '@/util/config/catalogue';
 

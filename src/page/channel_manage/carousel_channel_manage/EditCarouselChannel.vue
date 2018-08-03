@@ -207,8 +207,8 @@
 <script>
     import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
     import SelectMultipleVideo from './SelectMultipleVideo';
-    import SortDialog from 'sysComponents/custom_components/global/SortDialog';
-    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import SortDialog from 'sysComponents/custom_components/custom/SortDialog';
+    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import {CHANNEL_LOGO_DIMENSION} from '@/util/config/dimension';
 
     export default {

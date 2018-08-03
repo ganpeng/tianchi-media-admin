@@ -123,9 +123,9 @@
 
 <script>
     import SelectSingleSubject from './SelectSingleSubject';
-    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import {PROGRAMME_DIMENSION as subjectDimension, LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
-    import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
+    import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
 
     export default {
         name: 'AppendSingleSubject',

@@ -157,8 +157,8 @@
  */
 import {mapGetters, mapMutations} from 'vuex';
 import store from 'store';
-import UploadImage from 'sysComponents/custom_components/global/UploadImage';
-import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
+import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
+import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
 import dimension from '@/util/config/dimension';
 import role from '@/util/config/role';
 import {requiredValidator} from '@/util/formValidate';

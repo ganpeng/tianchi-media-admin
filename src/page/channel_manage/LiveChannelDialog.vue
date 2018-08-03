@@ -110,7 +110,7 @@
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
-    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import dimension from '@/util/config/dimension';
     import {checkIP, checkPort, checkChannelNo} from '@/util/formValidate';
 

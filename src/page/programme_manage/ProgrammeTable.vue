@@ -191,7 +191,7 @@
 import {mapGetters, mapActions, mapMutations} from 'vuex';
 import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 import DisplayVideoDialog from '../video_manage/DisplayVideoDialog';
-import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
+import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 import role from '@/util/config/role';
 export default {
     name: 'ProgrammeTable',

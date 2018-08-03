@@ -32,7 +32,7 @@
 
 <script>
 
-    import MdInput from 'sysComponents/custom_components/widget/MdInput';
+    import MdInput from 'sysComponents/custom_components/custom/MdInput';
     import VFooter from '../layout/VFooter';
 
     export default {

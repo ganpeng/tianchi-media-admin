@@ -27,7 +27,7 @@
 </template>
 
 <script>
-    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import {PROGRAMME_DIMENSION as webPageDimension} from '@/util/config/dimension';
 
     export default {

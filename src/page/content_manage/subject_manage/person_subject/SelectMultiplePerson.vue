@@ -73,7 +73,7 @@
 <script>
     import store from 'store';
     import PersonFilterParams from '../../searchFilterParams/PersonFilterParams';
-    import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
+    import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 
     export default {
         name: 'SelectMultiplePerson',

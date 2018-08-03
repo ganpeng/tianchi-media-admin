@@ -1,11 +1,12 @@
 <!--导航栏布局组件-->
 <template>
     <div>
-        <el-breadcrumb separator="/">
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
-            <el-breadcrumb-item>{{navBarName}}</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'栏目管理'},
+            {name:navBarName}]">
+        </custom-breadcrumb>
         <div id="setting">
             <ul id="nav-bar-list">
                 <li v-if="item.signCode !== 'SEARCH'"

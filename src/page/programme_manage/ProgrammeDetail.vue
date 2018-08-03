@@ -412,11 +412,11 @@
     import { mapMutations, mapGetters, mapActions } from 'vuex';
     import _ from 'lodash';
     import store from 'store';
-    import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
+    import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import CreatePersonDialog from './CreatePersonDialog';
     import ProgrammeTable from './ProgrammeTable';
-    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
-    import SortDialog from 'sysComponents/custom_components/global/SortDialog';
+    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
+    import SortDialog from 'sysComponents/custom_components/custom/SortDialog';
     import dimension from '@/util/config/dimension';
     import role from '@/util/config/role';
     import PersonSelect from './PersonSelect';

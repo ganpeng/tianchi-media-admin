@@ -188,7 +188,7 @@
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import role from '@/util/config/role';
     import dimension from '@/util/config/dimension';
-    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import VideoTable from '../video_manage/VideoTable';
     import PersonSelect from './PersonSelect';
 

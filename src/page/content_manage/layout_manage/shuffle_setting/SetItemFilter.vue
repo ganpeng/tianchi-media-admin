@@ -134,7 +134,7 @@
 </template>
 
 <script>
-    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import {PROGRAMME_DIMENSION as filterDimension} from '@/util/config/dimension';
     import dict from '@/util/config/dictionary';
     import CATALOGUE_CONFIG_MAP from '@/util/config/catalogue';

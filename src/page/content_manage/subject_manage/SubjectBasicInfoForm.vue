@@ -1,7 +1,10 @@
 <!--专题基本信息表单组件-->
 <template>
     <div class="text-left">
-        <el-form :model="subjectInfo" :rules="infoRules" status-icon ref="subjectInfo"
+        <el-form :model="subjectInfo"
+                 :rules="infoRules"
+                 status-icon
+                 ref="subjectInfo"
                  label-width="140px"
                  class="form-block">
             <el-form-item label="名称" prop="name" required>
@@ -120,8 +123,8 @@
 </template>
 
 <script>
-    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
-    import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
+    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
+    import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import {
         PROGRAMME_DIMENSION as SUBJECT_DIMENSION,
         SUBJECT_BACKGROUND_IMAGE_DIMENSION
@@ -365,10 +368,6 @@
 </script>
 
 <style lang="less" scoped>
-
-    .block-box {
-        margin-top: 50px;
-    }
 
     .el-input, .el-textarea, .el-select {
         width: 600px;

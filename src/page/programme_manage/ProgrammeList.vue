@@ -229,7 +229,7 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import store from 'store';
-import PreviewSingleImage from 'sysComponents/custom_components/global/PreviewSingleImage';
+import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 
 export default {
     name: 'ProgrammeList',

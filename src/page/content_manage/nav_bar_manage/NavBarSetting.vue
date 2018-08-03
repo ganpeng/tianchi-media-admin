@@ -1,12 +1,12 @@
 <!--栏目管理-栏目项设置-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
-            <el-breadcrumb-item>栏目项设置</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'栏目管理'},
+            {name:'栏目项管理'}]">
+        </custom-breadcrumb>
         <div class="text-left page-box">
             <div class="page-title">现有栏目及排序</div>
             <div class="page-content">
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+
     export default {
         name: 'NavBarSetting',
         data() {

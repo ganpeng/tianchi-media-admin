@@ -28,9 +28,9 @@
 </template>
 
 <script>
-    import UploadImage from 'sysComponents/custom_components/global/UploadImage';
+    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import {PROGRAMME_DIMENSION as figureDimension} from '@/util/config/dimension';
-    import PreviewMultipleImages from 'sysComponents/custom_components/global/PreviewMultipleImages';
+    import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
 
     export default {
         name: 'SetItemFigureCoverImage',

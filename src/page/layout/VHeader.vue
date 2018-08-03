@@ -19,7 +19,7 @@
 
 <script>
 
-    import Hamburger from 'sysComponents/custom_components/widget/Hamburger';
+    import Hamburger from 'sysComponents/custom_components/custom/Hamburger';
     import Cookies from 'js-cookie';
 
     export default {
