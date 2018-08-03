@@ -11,6 +11,7 @@ import _ from 'lodash';
  * 添加用户
  */
 export const updateUser = ({
+                               id,
                                name,
                                identityId,
                                stbList,
@@ -20,9 +21,12 @@ export const updateUser = ({
                                address,
                                street,
                                mobile,
-                               telephone
+                               telephone,
+                               fullAddress,
+                               districtCode
                            }) => {
     return service.put('/v1/user', {
+        id,
         name,
         identityId,
         identityType: 'ID_CARD',
@@ -34,6 +38,8 @@ export const updateUser = ({
         street,
         mobile,
         telephone,
+        fullAddress,
+        districtCode,
         status: 'NORMAL'
     });
 };

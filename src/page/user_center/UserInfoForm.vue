@@ -211,7 +211,8 @@
                     address: '',
                     telephone: '',
                     mobile: '',
-                    fullAddress: ''
+                    fullAddress: '',
+                    districtCode: ''
                 },
                 identityIdExist: false,
                 existId: '',
@@ -347,6 +348,10 @@
                                 if (response.data.list.length === 1) {
                                     this.identityIdExist = true;
                                     this.existId = response.data.list[0].id;
+                                } else if (response.data.list.length > 1) {
+                                    this.identityIdExist = false;
+                                    this.existId = '';
+                                    this.$message('当前身份证号在系统中有' + response.data.list.length + '个重复账号');
                                 } else {
                                     this.identityIdExist = false;
                                     this.existId = '';
@@ -390,6 +395,7 @@
                         if (!this.checkStbList()) {
                             this.$message({message: '请完整填写设备ID', type: 'warning'});
                         }
+                        // 设置全量地址
                         this.userInfo.fullAddress = '';
                         this.provinceOptions.map(province => {
                             if (province.code === this.userInfo.province) {
@@ -411,18 +417,22 @@
                                 this.userInfo.fullAddress = this.userInfo.fullAddress + street.name + this.userInfo.address;
                             }
                         });
+                        // 设置全量地址code
+                        this.userInfo.districtCode = this.userInfo.street;
                         // 创建
-                        if (status === '0') {
+                        if (this.status === '0') {
                             this.$service.updateUser(this.userInfo).then(response => {
                                 if (response && response.code === 0) {
+                                    console.log('创建成功');
                                     this.$message('创建成功');
                                 }
                             });
                             // 更新
                         } else {
+                            this.userInfo.id = this.$route.params.id;
                             this.$service.updateUser(this.userInfo).then(response => {
                                 if (response && response.code === 0) {
-                                    this.$message('创建成功');
+                                    this.$message('更新成功');
                                 }
                             });
                         }
@@ -439,10 +449,6 @@
 </script>
 
 <style lang="scss" scoped>
-
-    .el-breadcrumb {
-        margin-bottom: 50px;
-    }
 
     .el-input, .el-select {
         width: 600px;

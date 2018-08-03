@@ -308,11 +308,13 @@
                 });
             },
             initSortModel() {
-                // 设置标记
-                for (let k = 0; k < this.massLayoutBlockList.length; k++) {
-                    this.massLayoutBlockList[k].sign = 'sign_' + k;
+                this.sortSlideVisible = !this.sortSlideVisible;
+                if (this.sortSlideVisible) {
+                    // 设置标记
+                    for (let k = 0; k < this.massLayoutBlockList.length; k++) {
+                        this.massLayoutBlockList[k].sign = 'sign_' + k;
+                    }
                 }
-                this.sortSlideVisible = true;
             },
             // 关闭模块排序
             closeSortSlide(isSorted) {

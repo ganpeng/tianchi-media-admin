@@ -7,21 +7,19 @@
             <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
             <el-breadcrumb-item>栏目项设置</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-row>
-            <div class="block-title">现有栏目及排序</div>
-            <el-tag type="success">固定栏目</el-tag>
-            <ul class="system">
-                <li v-for="(item,index) in systemNavBarList" v-bind:key="index">
-                    <el-card class="box-card" :body-style="elCardBodyStyle">
-                        <label>{{item.name}}</label>
-                    </el-card>
-                </li>
-            </ul>
-            <el-tag type="success">可调整栏目</el-tag>
-            <ul class="custom" id="custom">
-                <li v-for="(item,index) in customNavBarList" v-bind:key="index"
-                    :class="{'disabled-column':!item.visible}">
-                    <el-card class="box-card" :body-style="elCardBodyStyle">
+        <div class="text-left page-box">
+            <div class="page-title">现有栏目及排序</div>
+            <div class="page-content">
+                <div class="item-little-title">固定栏目</div>
+                <ul class="system">
+                    <li v-for="(item,index) in systemNavBarList" v-bind:key="index">
+                        {{item.name}}
+                    </li>
+                </ul>
+                <div class="item-little-title">可调整栏目</div>
+                <ul class="custom" id="custom">
+                    <li v-for="(item,index) in customNavBarList" v-bind:key="index"
+                        :class="{'disabled-column':!item.visible}">
                         <label>{{item.name}}</label>
                         <el-switch
                             active-text="显示"
@@ -30,17 +28,17 @@
                             active-color="#13ce66"
                             @change="switchDisplay">
                         </el-switch>
-                    </el-card>
-                </li>
-            </ul>
-            <el-tag type="success">栏目项预览</el-tag>
-            <ul class="preview" id="preview">
-                <li v-for="(item,index) in previewNavBarList" :class="{ active: item.visible }" :key="index">
-                    <el-tag>{{item.name}}</el-tag>
-                </li>
-            </ul>
+                    </li>
+                </ul>
+                <div class="item-little-title">栏目项预览</div>
+                <ul class="preview" id="preview">
+                    <li v-for="(item,index) in previewNavBarList" :class="{ active: item.visible }" :key="index">
+                        <el-tag>{{item.name}}</el-tag>
+                    </li>
+                </ul>
+            </div>
             <el-button type="primary" @click="publish">发布</el-button>
-        </el-row>
+        </div>
     </div>
 </template>
 
@@ -49,14 +47,6 @@
         name: 'NavBarSetting',
         data() {
             return {
-                elCardBodyStyle: {
-                    'display': 'flex',
-                    'justify-content': 'space-around',
-                    'flex-direction': 'column',
-                    'padding': '0px',
-                    'height': '100%',
-                    'width': '100%'
-                },
                 systemNavBarList: [],
                 customNavBarList: [],
                 previewNavBarList: []
@@ -121,81 +111,101 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
-    .el-row {
-        text-align: left;
-        /*固定栏目*/
-        ul.system {
-            display: flex;
-            justify-content: space-around;
-            li {
-                height: 120px;
-                width: 120px;
-                border: 1px solid #13ce66;
-                label {
-                    font-size: 16px;
-                    color: #13ce66;
-                }
-            }
+    .page-box {
+        background: #FFFFFF;
+        border-radius: 4px;
+        .page-content {
+            padding: 30px 30px 100px 30px;
         }
-        /*可调整栏目*/
-        .custom {
+    }
+
+    /*固定栏目*/
+    ul.system {
+        display: flex;
+        justify-content: left;
+        li {
+            margin-right: 75px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            height: 160px;
-            li {
-                height: 120px;
-                width: 120px;
-                border: 1px solid #13ce66;
-                cursor: grab;
-                label {
-                    color: #13ce66;
-                    cursor: grab;
-                }
-                &.disabled-nav-bar {
-                    border: 1px dotted gray;
-                    label {
-                        color: gray;
-                    }
-                }
-            }
+            justify-content: center;
+            height: 50px;
+            width: 160px;
+            background: #F5F7FA;
+            border-radius: 4px;
         }
-        /*预览*/
-        .preview {
-            display: flex;
-            justify-content: flex-start;
-            li {
-                display: none;
-                margin-right: 20px;
-                &.active {
-                    display: inline-block;
-                }
-            }
-        }
-        .el-tag {
-            margin-top: 30px;
-            margin-bottom: 15px;
-            &:first-child {
-                margin-top: 0px;
-            }
+    }
 
+    /*可调整栏目*/
+    .custom {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        li {
+            display: flex;
+            margin-right: 75px;
+            margin-bottom: 20px;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            flex-shrink: 0;
+            flex-grow: 0;
+            height: 90px;
+            width: 160px;
+            background: #F5F7FA;
+            border: 1px solid #DCDFE6;
+            border-radius: 4px;
+            cursor: grab;
+            label {
+                font-size: $normalFontSize;
+                color: $baseAsideColor;
+                cursor: grab;
+            }
+            &.disabled-nav-bar {
+                border: 1px dotted gray;
+                label {
+                    color: gray;
+                }
+            }
         }
-        .el-card {
-            height: 100%;
-            width: 100%;
-            text-align: center;
+    }
+
+    /*预览*/
+    .preview {
+        display: flex;
+        justify-content: flex-start;
+        li {
+            display: none;
+            margin-right: 20px;
+            &.active {
+                display: inline-block;
+            }
         }
-        .el-switch {
-            display: inline-block;
-            text-align: center;
+    }
+
+    .el-tag {
+        margin-top: 30px;
+        margin-bottom: 15px;
+        &:first-child {
+            margin-top: 0px;
         }
-        .el-button {
-            display: block;
-            margin: 30px auto;
-        }
+    }
+
+    .el-card {
+        height: 100%;
+        width: 100%;
+        text-align: center;
+    }
+
+    .el-switch {
+        display: inline-block;
+        text-align: center;
+    }
+
+    .el-button {
+        display: block;
+        margin: 30px auto;
     }
 
     /*

@@ -15,8 +15,8 @@ export const createAdmin = ({email, mobile, name}) => {
 /**
  * 获取平台管理员信息列表
  */
-export const getAdminList = ({pageNum, pageSize}) => {
-    return service.get(util.format('/v1/admin/list?pageNum={0}&pageSize={1}', pageNum, pageSize));
+export const getAdminList = ({pageNum, pageSize, keyword}) => {
+    return service.get(util.format('/v1/admin/page?pageNum={0}&pageSize={1}&keyword={2}', pageNum - 1, pageSize, keyword));
 };
 
 /**

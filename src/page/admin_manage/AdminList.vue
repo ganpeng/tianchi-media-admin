@@ -6,11 +6,13 @@
             <el-breadcrumb-item>管理员管理</el-breadcrumb-item>
             <el-breadcrumb-item>管理员列表</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-form :inline="true" class="demo-form-inline search-form">
-            <el-form-item class="search">
-                <el-input v-model="searchContent" placeholder="搜索你想要的信息">
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
+        <el-form :inline="true" class="search-form">
+            <el-form-item>
+                <el-input v-model="keyword" placeholder="搜索你想要的信息"></el-input>
+                <el-input v-show="false"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" plain @click="getAdminList">搜索</el-button>
             </el-form-item>
             <el-form-item class="create-account">
                 <el-tag>
@@ -84,7 +86,7 @@
         name: 'AdminList',
         data() {
             return {
-                searchContent: '',
+                keyword: '',
                 adminList: [],
                 currentPage: 1,
                 pageSize: 10,
@@ -99,7 +101,8 @@
             getAdminList() {
                 this.$service.getAdminList({
                     pageNum: this.currentPage,
-                    pageSize: this.pageSize
+                    pageSize: this.pageSize,
+                    keyword: this.keyword
                 }).then(response => {
                     if (response) {
                         this.adminList = response.data.list;

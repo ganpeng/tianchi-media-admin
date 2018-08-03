@@ -84,9 +84,10 @@
 <style lang="scss">
 
     .hamburger-box {
+        display: flex;
+        align-items: center;
         padding: 0 20px;
         height: 100%;
-        line-height: 64px;
         fill: $grayLineColor;
     }
 

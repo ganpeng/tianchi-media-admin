@@ -155,30 +155,30 @@
                 switch (level) {
                     // 选择省份
                     case 'PROVINCE':
-                        this.getDistrictList({level: 'CITY', code: this.userInfo.province});
+                        this.getDistrictList({level: 'CITY', code: this.listQueryParams.province});
                         this.cityDisabled = false;
-                        this.userInfo.city = '';
+                        this.listQueryParams.city = '';
                         this.countyDisabled = true;
-                        this.userInfo.county = '';
+                        this.listQueryParams.county = '';
                         this.countyOptions = [];
                         this.streetDisabled = true;
-                        this.userInfo.street = '';
+                        this.listQueryParams.street = '';
                         this.streetOptions = [];
                         break;
                     // 选择城市
                     case 'CITY':
-                        this.getDistrictList({level: 'COUNTY', code: this.userInfo.city});
+                        this.getDistrictList({level: 'COUNTY', code: this.listQueryParams.city});
                         this.countyDisabled = false;
-                        this.userInfo.county = '';
+                        this.listQueryParams.county = '';
                         this.streetDisabled = true;
-                        this.userInfo.street = '';
+                        this.listQueryParams.street = '';
                         this.streetOptions = [];
                         break;
                     // 选择县区
                     case 'COUNTY':
-                        this.getDistrictList({level: 'STREET', code: this.userInfo.county});
+                        this.getDistrictList({level: 'STREET', code: this.listQueryParams.county});
                         this.streetDisabled = false;
-                        this.userInfo.street = '';
+                        this.listQueryParams.street = '';
                         this.streetOptions = [];
                         break;
                     // 选择街道乡镇
