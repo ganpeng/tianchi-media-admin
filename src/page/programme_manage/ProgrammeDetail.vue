@@ -388,8 +388,8 @@
         </div>
         <upload-image
             title="上传节目图片"
-            :size="size"
-            :successHandler="addPosterImage"
+            :size="filterSize"
+            :successHandler="_addPosterImage"
             :imageUploadDialogVisible="imageUploadDialogVisible"
             v-on:changeImageDialogStatus="closeImageDialog($event)">
         </upload-image>
@@ -520,6 +520,31 @@
             },
             copyVideoList() {
                 return _.cloneDeep(this.video.list);
+            },
+            filterSize() {
+                const {posterImageList} = this.programme;
+                let sizeOneIndex = posterImageList.findIndex((img) => {
+                    return parseInt(img.width) === 240 && parseInt(img.height) === 350;
+                });
+                let sizeTwoIndex = posterImageList.findIndex((img) => {
+                    return parseInt(img.width) === 807 && parseInt(img.height) === 455;
+                });
+                let size = [];
+
+                for (let i = 0; i < this.size.length; i++) {
+                    let value = this.size[i].value;
+                    let [width, height] = value.split('*');
+                    if (
+                        (parseInt(width) === 240 && parseInt(height) === 350 && sizeOneIndex >= 0) ||
+                        (parseInt(width) === 807 && parseInt(height) === 455 && sizeTwoIndex >= 0)
+                    ) {
+                        continue;
+                    } else {
+                        size.push(this.size[i]);
+                    }
+                }
+
+                return size;
             }
         },
         methods: {
@@ -554,6 +579,33 @@
                 getProgrammeTagList: 'programme/getProgrammeTagList',
                 deleteProgramme: 'programme/deleteProgramme'
             }),
+            _addPosterImage({posterImage}) {
+                const {posterImageList} = this.programme;
+                let sizeOneImages = posterImageList.filter((img) => {
+                    return parseInt(img.width) === 240 && parseInt(img.height) === 350;
+                });
+
+                let sizeTwoImages = posterImageList.filter((img) => {
+                    return parseInt(img.width) === 807 && parseInt(img.height) === 455;
+                });
+                if (parseInt(posterImage.width) === 240) {
+                    if (sizeOneImages.length > 0) {
+                        let errorMessage = '推荐位六分位图只能上传一张';
+                        this.$message.error(errorMessage);
+                        throw new Error(errorMessage);
+                    }
+                }
+
+                if (parseInt(posterImage.width) === 807) {
+                    if (sizeTwoImages.length > 0) {
+                        let errorMessage = '横版海报图必须上传且只能上传一张';
+                        this.$message.error(errorMessage);
+                        throw new Error(errorMessage);
+                    }
+                }
+
+                this.addPosterImage({posterImage});
+            },
             _createProgramme() {
                 this.$refs.createProgramForm.validate(value => {
                     if (value) {

@@ -39,7 +39,8 @@ export const getProgrammeVideoInfo = ({id}) => {
  * 根据节目视频的id更新节目视频信息
  */
 export const updateProgrammeVideoInfo = ({id, video}) => {
-    return service.patch(`/v1/content/programme/video/${id}`, video);
+    // return service.patch(`/v1/content/programme/video/${id}`, video);
+    return service.put(`/v1/content/programme/video/${id}`, video);
 };
 
 /**

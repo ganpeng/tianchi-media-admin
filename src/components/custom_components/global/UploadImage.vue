@@ -86,7 +86,7 @@
                 fileList: [],
                 posterImageList: [],
                 imageUploadRules: {
-                    name: [ { required: true, message: '请输入图片名称', trigger: 'change' } ],
+                    // name: [ { required: true, message: '请输入图片名称', trigger: 'change' } ],
                     spec: [ { required: true, message: '请选择图片规格尺寸', trigger: 'change' } ],
                     file: [ { required: true, message: '请选择图片', trigger: 'change' } ]
                 }

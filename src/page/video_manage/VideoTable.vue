@@ -157,6 +157,8 @@ export default {
                     .then((res) => {
                         if (res && res.code === 0) {
                             this.getVideoList();
+                        } else if (res && res.code === 3306) {
+                            this.$message.error(`该视频在如下节目${res.data.join(', ')}中有引用`);
                         }
                     });
             }).catch(() => {
