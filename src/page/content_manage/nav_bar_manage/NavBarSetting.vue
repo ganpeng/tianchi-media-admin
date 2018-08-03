@@ -19,7 +19,7 @@
                 <div class="item-little-title">可调整栏目</div>
                 <ul class="custom" id="custom">
                     <li v-for="(item,index) in customNavBarList" v-bind:key="index"
-                        :class="{'disabled-column':!item.visible}">
+                        :class="{'disabled-nav-bar':!item.visible}">
                         <label>{{item.name}}</label>
                         <el-switch
                             active-text="显示"
@@ -32,13 +32,15 @@
                 </ul>
                 <div class="item-little-title">栏目项预览</div>
                 <ul class="preview" id="preview">
-                    <li v-for="(item,index) in previewNavBarList" :class="{ active: item.visible }" :key="index">
-                        <el-tag>{{item.name}}</el-tag>
+                    <li v-for="(item,index) in previewNavBarList"
+                        :class="{ active: item.visible,still: index === 0 || index === 1 || index === 2 }"
+                        :key="index">
+                        {{item.name}}
                     </li>
                 </ul>
             </div>
-            <el-button type="primary" @click="publish">发布</el-button>
         </div>
+        <el-button type="primary" @click="publish">保存</el-button>
     </div>
 </template>
 
@@ -157,17 +159,29 @@
             border: 1px solid #DCDFE6;
             border-radius: 4px;
             cursor: grab;
+            &:hover {
+                border: 1px solid $baseBlue;
+            }
             label {
                 font-size: $normalFontSize;
                 color: $baseAsideColor;
                 cursor: grab;
             }
             &.disabled-nav-bar {
-                border: 1px dotted gray;
+                cursor: default;
                 label {
                     color: gray;
+                    cursor: default;
                 }
             }
+        }
+    }
+
+    .el-switch {
+        display: inline-block;
+        text-align: center;
+        span {
+            color: red;
         }
     }
 
@@ -178,34 +192,30 @@
         li {
             display: none;
             margin-right: 20px;
+            height: 28px;
+            width: 76px;
+            background: #FFFFFF;
+            border: 1px solid $baseGray;
+            border-radius: 100px;
+            font-size: $smallestFontSize;
+            color: $baseGray;
+            text-align: center;
+            line-height: 28px;
             &.active {
                 display: inline-block;
+            }
+            &.still {
+                border: 1px solid $dynamicGray;
+                color: $baseLightGray;
             }
         }
     }
 
-    .el-tag {
-        margin-top: 30px;
-        margin-bottom: 15px;
-        &:first-child {
-            margin-top: 0px;
-        }
-    }
-
-    .el-card {
-        height: 100%;
-        width: 100%;
-        text-align: center;
-    }
-
-    .el-switch {
-        display: inline-block;
-        text-align: center;
-    }
-
     .el-button {
         display: block;
-        margin: 30px auto;
+        width: 120px;
+        height: 40px;
+        margin: 50px auto 96px auto;
     }
 
     /*
@@ -218,15 +228,19 @@
         cursor: -webkit-grabbing;
         background-color: rgba(0, 0, 0, 0.2);
         transition: opacity 0.4s ease-in-out;
-        .el-card {
-            height: 100%;
-            width: 100%;
-            text-align: center;
-        }
-        .el-switch {
-            display: inline-block;
-            text-align: center;
-        }
+        display: flex;
+        margin-right: 75px;
+        margin-bottom: 20px;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        flex-shrink: 0;
+        flex-grow: 0;
+        height: 90px;
+        width: 160px;
+        border: 1px solid $baseBlue;
+        border-radius: 4px;
+        cursor: grab;
     }
 
     .container > div {
@@ -234,6 +248,18 @@
         cursor: grab;
         cursor: -moz-grab;
         cursor: -webkit-grab;
+    }
+
+</style>
+
+<style lang="scss">
+
+    .el-switch {
+        display: inline-block;
+        text-align: center;
+        .el-switch__label:not(.is-active) {
+            color: #8C8C8C;
+        }
     }
 
 </style>

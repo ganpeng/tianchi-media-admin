@@ -1,6 +1,6 @@
 <template>
     <div class="video-table-container text-center">
-        <el-form :inline="true">
+        <el-form :inline="true" class="text-left">
             <el-form-item class="search">
                 <el-input
                     v-model="queryParams.name"
@@ -132,7 +132,7 @@
             return {
                 queryParams: {
                     status: 'SUCCESS',
-                    videoType: 'CAROUSEL',
+                    videoType: '',
                     name: '',
                     pageNum: 0,
                     pageSize: 10

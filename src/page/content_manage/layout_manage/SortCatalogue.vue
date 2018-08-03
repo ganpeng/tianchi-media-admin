@@ -1,9 +1,12 @@
 <!--内容管理-栏目管理-为频道或者类型等目录排序-->
 <template>
     <div>
-        <ul class="recommend-type">
+        <ul class="display-catalogue">
             <li class="operator" @click="setPickCatalogueVisible(true)">
-                <div class="ab-center">设置<br/>分类</div>
+                <div class="ab-center">
+                    <i class="el-icon-edit-outline"></i>
+                    <label>设置分类</label>
+                </div>
             </li>
             <li v-for="(item,index) in pickedCatalogueList" :key="index">
                 <div class="ab-center">
@@ -12,17 +15,21 @@
                 </div>
             </li>
         </ul>
-        <el-dialog :title="setCatalogueTitle" :visible.sync="pickCatalogueVisible">
+        <el-dialog
+            :title="setCatalogueTitle"
+            :visible.sync="pickCatalogueVisible"
+            custom-class="catalogue-dialog"
+            width="70%">
             <template v-if="pickCatalogueVisible">
                 <ul class="pick-list" id="pick-list">
                     <li v-for="(item, index) in pickedCatalogueSettingList" :key="index"
                         :data-id="item.id"
                         :class="item.layoutItemType === 'ALL' ? 'all' : ''">
-                        <div class="image-box">
+                        <div class="image-box" @click="setItemCoverImage(index)">
                             <div class="ab-center">
                                 <img v-if="item.coverImage" :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
                                      :alt="item.coverImage ? item.coverImage.name : ''"/>
-                                <label v-else>预览图片</label>
+                                <label v-else>添加图片</label>
                             </div>
                         </div>
                         <el-select v-if="item.layoutItemType !== 'ALL'" v-model="item.id" placeholder="请选择"
@@ -45,12 +52,11 @@
                                 :disabled="item.disabled">
                             </el-option>
                         </el-select>
-                        <el-button type="success" size="mini" plain @click="setItemCoverImage(index)">设置图片</el-button>
                     </li>
                 </ul>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="setPickCatalogueVisible(false)">取 消</el-button>
-                    <el-button type="primary" @click="setCatalogue">确 定</el-button>
+                    <el-button @click="setPickCatalogueVisible(false)" size="medium">取 消</el-button>
+                    <el-button type="primary" @click="setCatalogue" size="medium">确 定</el-button>
                 </div>
             </template>
         </el-dialog>
@@ -262,10 +268,10 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
     // 推荐节目类型或者直播频道
-    .recommend-type {
+    .display-catalogue {
         display: flex;
         margin-top: 20px;
         justify-content: space-between;
@@ -273,36 +279,47 @@
             position: relative;
             width: 14%;
             padding-top: 8%;
-            background: #008178;
-            color: #fff;
+            background: $dynamicGray;
             &.operator {
-                width: 80px;
-                border-radius: 10px;
+                margin-right: 20px;
+                width: 112px;
                 cursor: pointer;
-            }
-            div {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                font-size: 20px;
-                img {
-                    width: 100%;
-                    height: 100%;
+                background: #F5F7FA;
+                border: 1px solid #DCDFE6;
+                border-radius: 4px;
+                div {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    &:hover {
+                        border: 1px solid $baseBlue;
+                    }
+                    i {
+                        margin-bottom: 10px;
+                        font-size: 30px;
+                        color: $baseBlue;
+                    }
+                    label {
+                        color: #8C8C8C;
+                        font-size: $largerFontSize;
+                        cursor: pointer;
+                    }
                 }
+            }
+            img {
+                width: 100%;
+                height: 100%;
             }
         }
     }
 
     .pick-list {
         display: flex;
+        padding: 30px 14px 50px 14px;
         justify-content: space-around;
         align-items: center;
-        height: 200px;
-        margin-bottom: 30px;
-        border: 1px solid gray;
+        border: 1px solid $dynamicGray;
         li {
-            margin-bottom: 16px;
-            margin-right: 12px;
             width: 14%;
             cursor: grab;
             &.all {
@@ -310,12 +327,17 @@
             }
             .image-box {
                 position: relative;
-                flex-shrink: 0;
-                width: 100%;
+                margin-bottom: 34px;
                 padding-top: 57%;
-                background: #008178;
-                color: #fff;
-                font-size: 14px;
+                width: 100%;
+                flex-shrink: 0;
+                border: 1px solid white;
+                &:hover {
+                    border: 1px solid $baseBlue;
+                    label {
+                        color: $baseBlue;
+                    }
+                }
                 .ab-center {
                     display: flex;
                     flex-direction: column;
@@ -325,16 +347,13 @@
                     width: 100%;
                     height: 100%;
                 }
-            }
-            .el-button {
-                margin-top: 20px;
+                label {
+                    font-size: $normalFontSize;
+                    color: $baseGray;
+                }
             }
         }
     }
-
-    /*
-     * 设置拖拽效果样式
-     */
 
     .gu-mirror {
         cursor: grabbing;
@@ -345,12 +364,10 @@
         text-align: center;
         .image-box {
             position: relative;
-            flex-shrink: 0;
-            width: 100%;
+            margin-bottom: 36px;
             padding-top: 57%;
-            background: #008178;
-            color: #fff;
-            font-size: 14px;
+            width: 100%;
+            flex-shrink: 0;
             .ab-center {
                 display: flex;
                 flex-direction: column;
@@ -360,9 +377,10 @@
                 width: 100%;
                 height: 100%;
             }
-        }
-        .el-button {
-            margin-top: 20px;
+            label {
+                font-size: $normalFontSize;
+                color: $baseGray;
+            }
         }
     }
 
@@ -372,4 +390,21 @@
         cursor: -moz-grab;
         cursor: -webkit-grab;
     }
+
+    .el-button {
+        margin-left: 26px;
+        width: 96px;
+    }
+
+</style>
+
+<style lang="scss">
+
+    .catalogue-dialog {
+        .el-dialog__title {
+            color: #283841;
+            font-size: 20px;
+        }
+    }
+
 </style>

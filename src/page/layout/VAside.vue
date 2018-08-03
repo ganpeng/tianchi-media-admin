@@ -21,7 +21,7 @@
                 <!--栏目管理-->
                 <el-submenu index="1-1" :style="secondLeftIndent">
                     <template slot="title">栏目管理</template>
-                    <el-menu-item index="/nav-bar-manage/setting">栏目项设置</el-menu-item>
+                    <el-menu-item index="/nav-bar-manage/setting">栏目项管理</el-menu-item>
                     <el-menu-item v-if="item.signCode !== 'SEARCH'"
                                   v-for="(item, index) in navBarList"
                                   :key='index'

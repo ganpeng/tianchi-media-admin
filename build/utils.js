@@ -39,8 +39,9 @@ exports.cssLoaders = function (options) {
                 options: Object.assign({}, loaderOptions, {
                     sourceMap: options.sourceMap
                 }, {
-                    data: '$smallestFontSize:12px;$normalFontSize: 14px;$baseAsideColor: #283841;$largerFontSize: 16px;$grayLineColor: #D8D8D8;' +
-                    '$generalBgColor: #F0F2F5;$loginFontColor: #8AA4AF;$baseBlue: #1989FA;$stillGray: #F0F2F5;$dynamicGray: #DCDFE6;$orangeFontColor: #ED6819;'
+                    data: '$smallestFontSize:12px;$normalFontSize: 14px;$baseAsideColor: #283841;$largerFontSize: 16px;$grayLineColor: #D8D8D8;$baseGray: #606060;' +
+                    '$generalBgColor: #F0F2F5;$loginFontColor: #8AA4AF;$baseBlue: #1989FA;$stillGray: #F0F2F5;$dynamicGray: #DCDFE6;$orangeFontColor: #ED6819;' +
+                    '$baseLightGray: #606060;'
                 })
             });
         }

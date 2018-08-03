@@ -8,7 +8,7 @@
         </el-breadcrumb>
         <el-form :inline="true" class="search-form">
             <el-form-item>
-                <el-input v-model="keyword" placeholder="搜索你想要的信息"></el-input>
+                <el-input v-model="keyword" placeholder="搜索你想要的信息" clearable></el-input>
                 <el-input v-show="false"></el-input>
             </el-form-item>
             <el-form-item>
