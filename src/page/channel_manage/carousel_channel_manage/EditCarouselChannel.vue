@@ -189,7 +189,7 @@
             title="视频排序"
             :sourceList="currentSelectedVideoList"
             sortKey="sort"
-            uniqueKey="id"
+            uniqueKey="storageVideoId"
             displayKey="originName"
             v-on:closeDialog="sortDialogVisible = false"
             v-on:setSortedList="setSortedList">

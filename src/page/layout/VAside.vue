@@ -80,8 +80,8 @@
                     <i class="el-icon-setting"></i>
                     <span>管理员管理</span>
                 </template>
-                <el-menu-item index="/admin-manage/list" :style="directSecondLeftIndent">管理员列表</el-menu-item>
                 <el-menu-item index="/admin-manage/create" :style="directSecondLeftIndent">创建管理员</el-menu-item>
+                <el-menu-item index="/admin-manage/list" :style="directSecondLeftIndent">管理员列表</el-menu-item>
             </el-submenu>
             <!--用户管理-->
             <el-submenu index="3">
