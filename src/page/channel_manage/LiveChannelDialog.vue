@@ -6,7 +6,7 @@
         :show-close="false"
         :close-on-click-modal="false"
         :close-on-press-escape="false">
-        <el-form :model="liveChannel" :rules="inputRules" ref="liveChannelForm" class="form-block" label-width="150px">
+        <el-form :model="liveChannel" :rules="inputRules" ref="liveChannelForm" @submit.native.prevent class="form-block" label-width="150px">
             <el-form-item
                 v-if="status !== 0"
                 label="直播频道编号">

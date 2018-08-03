@@ -7,7 +7,7 @@
             <el-breadcrumb-item>视频资源管理</el-breadcrumb-item>
             <el-breadcrumb-item>视频列表</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-form :inline="true" class="demo-form-inline search-form text-left">
+        <el-form :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
             <el-form-item class="search">
                 <el-input
                     :value="searchFields.name"

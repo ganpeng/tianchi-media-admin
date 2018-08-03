@@ -16,11 +16,12 @@
             :close-on-press-escape="false"
             :append-to-body="true">
             <div class="video-list">
-                <el-form :inline="true">
+                <el-form :inline="true" @submit.native.prevent>
                     <el-form-item class="search">
                         <el-input
                             placeholder="搜索你想要的信息"
                             clearable
+                            :value="videoListObj.searchFields.name"
                             @input="searchInputHandler($event, 'name')"
                         >
                             <i slot="prefix" class="el-input__icon el-icon-search"></i>
@@ -354,6 +355,7 @@
             },
             closeSelectVideoDialog() {
                 this.selectVideoDialogVisible = false;
+                this.updateSearchFields({key: 'name', value: ''});
             },
             selectVideo() {
                 this.getVideoList();
@@ -367,8 +369,8 @@
             },
             selectVideoEnter() {
                 let video = this.getSelectedVideo();
-                let isSelected = this.checkVideoIsSelected(video);
                 if (video) {
+                    let isSelected = this.checkVideoIsSelected(video);
                     if (isSelected) {
                         this.$message({
                             type: 'error',
@@ -378,11 +380,12 @@
                         this.syncVideoMetaData({video});
                         this.closeSelectVideoDialog();
                         this.selectedVideo = true;
+                        this.updateSearchFields({key: 'name', value: ''});
                     }
                 } else {
                     this.$message({
                         type: 'error',
-                        message: '视频选择失败'
+                        message: '请选择视频'
                     });
                 }
             },

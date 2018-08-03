@@ -11,7 +11,7 @@
             <programme-basic-info v-if="status === 1"></programme-basic-info>
             <el-col :span="24" v-if="status !== 1">
                 <div class="block-title">节目基本信息</div>
-                <el-form :rules="rules" ref="createProgramForm" status-icon :model="programme" label-width="120px" class="form-block">
+                <el-form :rules="rules" ref="createProgramForm" status-icon :model="programme" label-width="120px" class="form-block" @submit.native.prevent>
                     <el-col :span="9">
                         <el-form-item
                             v-if="status !== 0"

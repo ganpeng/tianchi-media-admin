@@ -123,6 +123,7 @@
 .base-info-container, .programme-desc-container {
     background-color: #fff;
     padding: 20px;
+    border-radius: 4px;
 }
 .base-info-container {
     margin-right: 20px;

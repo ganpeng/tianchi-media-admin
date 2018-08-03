@@ -6,7 +6,7 @@
             <el-breadcrumb-item>人物资源管理</el-breadcrumb-item>
             <el-breadcrumb-item>推荐人物管理</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-form :inline="true" class="demo-form-inline search-form text-left">
+        <el-form :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
             <el-form-item class="search">
                 <el-input
                     :value="keyword"

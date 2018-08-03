@@ -7,7 +7,7 @@
             <el-breadcrumb-item>视频资源管理</el-breadcrumb-item>
             <el-breadcrumb-item>视频列表</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-form :inline="true" class="demo-form-inline search-form text-left">
+        <el-form :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
             <el-form-item class="search">
                 <el-input
                     :value="searchFields.name"
@@ -52,7 +52,7 @@
                 <el-button type="primary" @click="searchHandler"><i class="el-icon-search"></i> 搜索</el-button>
             </el-form-item>
             <el-form-item class="create-account">
-                <el-button type="primary" plain @click="showVideoUploadDialog()"><i class="el-icon-circle-plus-outline"></i> 上传视频</el-button>
+                <el-button type="primary" plain @click="showVideoUploadDialog('VOD')"><i class="el-icon-circle-plus-outline"></i> 上传视频</el-button>
                 <!-- <el-button type="primary" plain @click="showVideoUploadDialog('VOD')"><i class="el-icon-circle-plus-outline"></i> 上传点播视频</el-button>
                 <el-button type="primary" plain @click="showVideoUploadDialog('CAROUSEL')"><i class="el-icon-circle-plus-outline"></i> 上传轮播视频</el-button> -->
             </el-form-item>
@@ -269,8 +269,8 @@
                     }
                     let formData = new FormData();
                     let file = that.files[that.count].file;
-                    // let videoType = that.getVideoType;
-                    // formData.append('videoType', videoType);
+                    let videoType = that.getVideoType;
+                    formData.append('videoType', videoType);
                     formData.append('file', file);
 
                     that.uploadRequest(formData)

@@ -14,28 +14,31 @@
             status-icon
             class="form"
             :rules="channelFormRules"
+            @submit.native.prevent
             ref="channelForm"
             >
-            <el-form-item label="频道" prop="channelId">
-                <el-select
-                    v-model="channelForm.channelId"
-                    clearable
-                    filterable
-                    remote
-                    @change="channelChangeHandler"
-                    :remote-method="searchChannel"
-                    placeholder="请搜索频道">
-                    <el-option
-                        v-for="(item, index) in channelList"
-                        :key="index"
-                        :label="item.innerName"
-                        :value="item.id">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <div class="text-center">
-                <el-button type="primary" @click="saveViewChannel">确定</el-button>
-            </div>
+            <el-col :span="6">
+                <el-form-item label="频道" prop="channelId">
+                    <el-select
+                        v-model="channelForm.channelId"
+                        clearable
+                        filterable
+                        remote
+                        @change="channelChangeHandler"
+                        :remote-method="searchChannel"
+                        placeholder="请搜索频道">
+                        <el-option
+                            v-for="(item, index) in channelList"
+                            :key="index"
+                            :label="item.innerName"
+                            :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <div class="text-center">
+                    <el-button type="primary" @click="saveViewChannel">确定</el-button>
+                </div>
+            </el-col>
         </el-form>
     </div>
 </template>

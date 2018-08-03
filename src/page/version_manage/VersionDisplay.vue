@@ -2,6 +2,7 @@
     <div class="container">
         <el-form :model="version" status-icon ref="createVersion"
                 label-width="100px"
+                @submit.native.prevent
                 class="form-block">
             <el-form-item label="版本号:" prop="version">
                 <p>{{version.version}}</p>

@@ -13,6 +13,7 @@
             status-icon
             class="form"
             :rules="modelFormRules"
+            @submit.native.prevent
             ref="modelForm"
             >
             <el-col :span="8">

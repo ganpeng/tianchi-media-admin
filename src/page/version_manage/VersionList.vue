@@ -6,7 +6,7 @@
             <el-breadcrumb-item>内容管理</el-breadcrumb-item>
             <el-breadcrumb-item>版本列表</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-form :inline="true" class="demo-form-inline search-form text-left">
+        <el-form :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
             <el-col :span="20">
                 <el-form-item label="升级类型">
                     <el-select

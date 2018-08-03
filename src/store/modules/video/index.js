@@ -17,7 +17,7 @@ const defaultPagination = {
 
 const state = {
     selectedVideoId: '',
-    videoType: null, //  VOD: 点播 CAROUSEL: 轮播 这是上传视频是的字段
+    videoType: 'VOD', //  VOD: 点播 CAROUSEL: 轮播 这是上传视频是的字段
     searchFields: _.cloneDeep(defaultSearchFields),
     pagination: _.cloneDeep(defaultPagination),
     list: []

@@ -170,6 +170,7 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
 .el-collapse {
     position: relative;
     width: 240px;
+    border-radius: 4px;
     .el-collapse-item {
         span.category-name {
             font-size: 18px;
@@ -189,6 +190,7 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
             left: 260px;
             width: 600px;
             background-color: #fff;
+            border-radius: 4px;
             z-index: 20;
             padding: 0 20px;
             .add-header {
