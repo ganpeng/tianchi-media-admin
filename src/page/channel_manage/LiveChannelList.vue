@@ -158,6 +158,9 @@
             },
             handlePaginationChange(value, key) {
                 this.updatePagination({value, key});
+                if (key === 'pageSize') {
+                    window.localStorage.setItem('channelPageSize', value);
+                }
                 this.getChannelList();
             },
             _updateLiveChannel(id) {

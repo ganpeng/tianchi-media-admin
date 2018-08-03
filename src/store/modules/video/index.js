@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import service from '../../../service';
 import role from '@/util/config/role';
+import {getPageSize} from '@/util/formValidate';
 
 const defaultSearchFields = {
     name: '',
@@ -9,9 +10,9 @@ const defaultSearchFields = {
 };
 
 const defaultPagination = {
-    pageSize: 5,
     pageNum: 1,
-    total: 8
+    pageSize: getPageSize('videoPageSize'),
+    total: 0
 };
 
 const state = {

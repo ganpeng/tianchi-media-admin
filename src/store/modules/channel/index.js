@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import service from '../../../service';
+import {getPageSize} from '@/util/formValidate';
 
 let defaultChannelTypeList = [
     {
@@ -22,7 +23,7 @@ let defaultSearchFields = {
 
 let defaultPagination = {
     pageNum: 1,
-    pageSize: 5,
+    pageSize: getPageSize('channelPageSize'),
     total: 0
 };
 

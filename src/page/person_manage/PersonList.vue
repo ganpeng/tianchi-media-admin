@@ -189,6 +189,9 @@
             },
             handlePaginationChange(value, key) {
                 this.updatePagination({value, key});
+                if (key === 'pageSize') {
+                    window.localStorage.setItem('personPageSize', value);
+                }
                 this.getPersonList({isProgramme: false});
             },
             inputHandler(value, key) {

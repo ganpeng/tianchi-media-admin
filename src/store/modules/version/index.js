@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import service from '../../../service';
+import {getPageSize} from '@/util/formValidate';
 
 const defaultVersion = {
     productType: '', // 客户端类型
@@ -23,7 +24,7 @@ const defaultSearchFields = {
 
 const defaultPagination = {
     pageNum: 0,
-    pageSize: 5,
+    pageSize: getPageSize('versionPageSize'),
     total: 0
 };
 

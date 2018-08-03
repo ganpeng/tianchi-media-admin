@@ -52,8 +52,9 @@
                 <el-button type="primary" @click="searchHandler"><i class="el-icon-search"></i> 搜索</el-button>
             </el-form-item>
             <el-form-item class="create-account">
-                <el-button type="primary" plain @click="showVideoUploadDialog('VOD')"><i class="el-icon-circle-plus-outline"></i> 上传点播视频</el-button>
-                <el-button type="primary" plain @click="showVideoUploadDialog('CAROUSEL')"><i class="el-icon-circle-plus-outline"></i> 上传轮播视频</el-button>
+                <el-button type="primary" plain @click="showVideoUploadDialog()"><i class="el-icon-circle-plus-outline"></i> 上传视频</el-button>
+                <!-- <el-button type="primary" plain @click="showVideoUploadDialog('VOD')"><i class="el-icon-circle-plus-outline"></i> 上传点播视频</el-button>
+                <el-button type="primary" plain @click="showVideoUploadDialog('CAROUSEL')"><i class="el-icon-circle-plus-outline"></i> 上传轮播视频</el-button> -->
             </el-form-item>
         </el-form>
         <video-table></video-table>
@@ -268,9 +269,9 @@
                     }
                     let formData = new FormData();
                     let file = that.files[that.count].file;
-                    let videoType = that.getVideoType;
+                    // let videoType = that.getVideoType;
+                    // formData.append('videoType', videoType);
                     formData.append('file', file);
-                    formData.append('videoType', videoType);
 
                     that.uploadRequest(formData)
                         .then((res) => {

@@ -3,7 +3,7 @@ import _ from 'lodash';
 import uuid from 'uuid';
 import service from '../../../service';
 import wsCache from '@/util/webStorage';
-import {checkImageExist} from '@/util/formValidate';
+import {checkImageExist, getPageSize} from '@/util/formValidate';
 
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
@@ -156,7 +156,7 @@ const defaultVideo = {
 
 const defaultPagination = {
     pageNum: 1,
-    pageSize: 5,
+    pageSize: getPageSize('programmePageSize'),
     total: 0
 };
 

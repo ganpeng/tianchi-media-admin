@@ -322,6 +322,9 @@ export default {
         },
         handlePaginationChange(value, key) {
             this.updateProgrammePagination({key, value});
+            if (key === 'pageSize') {
+                window.localStorage.setItem('programmePageSize', value);
+            }
             this.getProgrammeList();
         },
         showFileUploadDialog() {

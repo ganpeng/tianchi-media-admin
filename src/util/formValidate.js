@@ -116,6 +116,11 @@ export const checkPort = (rule, value, callback) => {
     }
 };
 
+export const getPageSize = (key) => {
+    let pageSize = window.localStorage.getItem(key);
+    return pageSize ? parseInt(pageSize) : 10;
+};
+
 export default {
     checkScore,
     checkCategory,
@@ -123,5 +128,6 @@ export default {
     checkImageExist,
     checkPositiveInteger,
     checkIP,
-    checkPort
+    checkPort,
+    getPageSize
 };

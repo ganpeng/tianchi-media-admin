@@ -1,7 +1,8 @@
-import { checkImageExist } from '@/util/formValidate';
+import {checkImageExist, getPageSize} from '@/util/formValidate';
 import _ from 'lodash';
 import service from '../../../service';
 import role from '@/util/config/role';
+
 const defaultPerson = {
     area: '',
     birthday: '',
@@ -25,7 +26,7 @@ const defaultSearchFields = {
 
 const defaultPagination = {
     pageNum: 1,
-    pageSize: 5,
+    pageSize: getPageSize('personPageSize'),
     total: 0
 };
 
