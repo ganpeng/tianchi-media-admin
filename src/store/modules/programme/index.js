@@ -394,7 +394,19 @@ const getters = {
     typeList(state) {
         return (id) => {
             let programme = getProgrammeById(id);
-            return programme.typeList.map((item) => item.name).join(', ');
+            let allTypeList = programme.categoryList.reduce((prev, curr) => {
+                let obj = state.global.categoryList.find((item) => item.id === curr.id);
+                if (obj) {
+                    return prev.concat(obj.programmeTypeList);
+                } else {
+                    return prev.concat([]);
+                }
+            }, []);
+            let typeList = programme.typeList.filter((item) => {
+                let findIndex = allTypeList.findIndex((ele) => ele.id === item.id);
+                return findIndex > -1;
+            });
+            return typeList.map((item) => item.name).join(', ');
         };
     },
     getDirector(state) {
