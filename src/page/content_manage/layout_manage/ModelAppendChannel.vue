@@ -28,6 +28,7 @@
                         <el-select
                             v-model="modelForm.templateType"
                             clearable
+                            class="float-left"
                             placeholder="请选择模块板式"
                             @change="setBlockModel"
                             prop="templateType">
@@ -180,8 +181,8 @@ export default {
                 value: `${width}*${height}`,
                 label: `当前块尺寸: ${width}*${height}`
             }];
-            this.currentRow = row;
-            this.currentIndex = index;
+            this.currentRow = parseInt(row);
+            this.currentIndex = parseInt(index);
             this.showSetChannelDialog();
             this.$nextTick(() => {
                 this.$refs.selectChannel.getExistChannel();

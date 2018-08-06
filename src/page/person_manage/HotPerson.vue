@@ -151,7 +151,7 @@ export default {
             });
             this.putHotPerson({hotCategory: hotCode, hotFigureList})
                 .then((res) => {
-                    this.$message.success('热们人物保存成功');
+                    this.$message.success('热门人物保存成功');
                 });
         }
     }

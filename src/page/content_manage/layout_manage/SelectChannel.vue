@@ -5,48 +5,55 @@
             label-width="100px"
             :model="channelForm"
             status-icon
-            class="form"
+            class="form clearfix"
             :rules="channelFormRules"
             ref="channelForm"
             >
-            <el-form-item label="频道" prop="channelId">
-                <el-select
-                    v-model="channelForm.channelId"
-                    clearable
-                    filterable
-                    remote
-                    @change="channelChangeHandler"
-                    :remote-method="searchChannel"
-                    placeholder="请搜索频道">
-                    <el-option
-                        v-for="(item, index) in channelList"
-                        :key="index"
-                        :label="item.name"
-                        :value="item.id">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item v-if="hasImage" label="频道展示图" ref="coverImage" prop="coverImage">
-                <el-button type="primary" @click="uploadImageHandler">上传图片</el-button>
-                <ul class="cover-list">
-                    <li v-for="(item,index) in filterImageList" :key="index">
-                        <div
-                            :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
-                            class="image-box"
-                            @click="displayImage(index)">
-                        </div>
-                        <el-radio
-                            v-model="imageUri"
-                            :label="item.uri"
-                            @change="setCoverImage">{{item.name}}
-                        </el-radio>
-                    </li>
-                </ul>
-            </el-form-item>
-            <div :class="showBtn ? 'text-right' : 'text-center'">
-                <el-button v-if="showBtn"  @click="closeSetChannelDialog">取 消</el-button>
-                <el-button type="primary" @click="setChannel">确定</el-button>
-            </div>
+            <el-col :span="8">
+                <el-form-item label="频道" prop="channelId">
+                    <el-select
+                        class="float-left"
+                        v-model="channelForm.channelId"
+                        clearable
+                        filterable
+                        remote
+                        @change="channelChangeHandler"
+                        :remote-method="searchChannel"
+                        placeholder="请搜索频道">
+                        <el-option
+                            v-for="(item, index) in channelList"
+                            :key="index"
+                            :label="item.name ? item.name : item.innerName"
+                            :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="24">
+                <el-form-item v-if="hasImage" label="频道展示图" ref="coverImage" prop="coverImage">
+                    <div class="clearfix">
+                        <el-button class="float-left" type="primary" @click="uploadImageHandler">上传图片</el-button>
+                    </div>
+                    <ul class="cover-list">
+                        <li v-for="(item,index) in filterImageList" :key="index">
+                            <div
+                                :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
+                                class="image-box"
+                                @click="displayImage(index)">
+                            </div>
+                            <el-radio
+                                v-model="imageUri"
+                                :label="item.uri"
+                                @change="setCoverImage">{{item.name}}
+                            </el-radio>
+                        </li>
+                    </ul>
+                </el-form-item>
+                <div :class="showBtn ? 'text-right' : 'text-center'">
+                    <el-button v-if="showBtn"  @click="closeSetChannelDialog">取 消</el-button>
+                    <el-button type="primary" @click="setChannel">确定</el-button>
+                </div>
+            </el-col>
         </el-form>
         <preview-multiple-images
             :previewMultipleImages="previewImage">
@@ -195,19 +202,29 @@ export default {
             this.$refs.channelForm.validate(valid => {
                 if (valid) {
                     let {channelId, coverImage} = this.channelForm;
-                    let res = {
-                        id: channelId,
-                        layoutItemType: 'CHANNEL',
-                        name: this.getChannelName(channelId),
-                        coverImage,
-                        cornerMark: {}
-                    };
-                    if (this.showBtn) {
-                        this.successHandler(res);
-                        this.closeSetChannelDialog();
-                    } else {
-                        this.successHandler(res);
-                    }
+                        this.$service.getChannelDetail(channelId)
+                            .then((res) => {
+                                if (res && res.code === 0) {
+                                    let channel = res.data;
+                                    if (channel.visible) {
+                                        let res = {
+                                            id: channelId,
+                                            layoutItemType: 'CHANNEL',
+                                            name: this.getChannelName(channelId),
+                                            coverImage,
+                                            cornerMark: {}
+                                        };
+                                        if (this.showBtn) {
+                                            this.successHandler(res);
+                                            this.closeSetChannelDialog();
+                                        } else {
+                                            this.successHandler(res);
+                                        }
+                                    } else {
+                                        this.$message.error('该频道处于禁播状态, 请重新选择频道');
+                                    }
+                                }
+                            });
                 }
             });
         },
@@ -236,7 +253,8 @@ export default {
         // 放大预览图片
         displayImage(index) {
             this.previewImage.display = true;
-            this.previewImage.list = this.channelImageList;
+            // this.previewImage.list = this.channelImageList;
+            this.previewImage.list = this.filterImageList;
             this.previewImage.activeIndex = index;
         },
         setCoverImage(uri) {
