@@ -42,7 +42,7 @@
         <template v-if="!isModelItem && navBarSignCode !== 'LIVE_CHANNEL'">
             <el-dropdown
                 @visible-change="dropdownMenuChange"
-                @command="setRecommend($event,modelIndex,rowIndex,index,(navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'carousel-2' : 'carousel-1'))"
+                @command="setRecommend($event,modelIndex,rowIndex,index,rowLength)"
                 placement="bottom">
                 <i class="el-icon-edit-outline"></i>
                 <el-dropdown-menu slot="dropdown">
@@ -54,7 +54,7 @@
         <!--设置频道的单个推荐位-->
         <template v-if="!isModelItem && navBarSignCode === 'LIVE_CHANNEL'">
             <div class="recommend-operate"
-                 @click="appendSingleChannel(modelIndex,rowIndex,index,(navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'carousel-2' : 'carousel-1'))">
+                 @click="appendSingleChannel(modelIndex,rowIndex,index,rowLength)">
                 <i class="el-icon-edit"></i>
             </div>
         </template>
@@ -78,6 +78,7 @@
                 type: Boolean,
                 default: false
             },
+            rowLength: Number,
             modelIndex: Number,
             rowIndex: Number,
             index: Number,
@@ -105,7 +106,15 @@
                 this.maskVisible = isVisible;
             },
             // 设置推荐位为节目或者专题
-            setRecommend(val, model, row, index, imageSpec) {
+            setRecommend(val, model, row, index, rowLength) {
+                let imageSpec = '';
+                if (model === 0 && (this.navBarSignCode === 'RECOMMEND' || this.navBarSignCode === 'LIVE_CHANNEL')) {
+                    imageSpec = 'carousel-2';
+                } else if (model === 0) {
+                    imageSpec = 'carousel-1';
+                } else {
+                    imageSpec = 'model-' + rowLength;
+                }
                 this.$router.push({
                     name: val === 'PROGRAMME' ? 'AppendProgramme' : 'AppendSingleSubject',
                     params: {
@@ -119,7 +128,15 @@
                 });
             },
             // 设置单个推荐频道
-            appendSingleChannel(model, row, index, imageSpec) {
+            appendSingleChannel(model, row, index, rowLength) {
+                let imageSpec = '';
+                if (model === 0 && (this.navBarSignCode === 'RECOMMEND' || this.navBarSignCode === 'LIVE_CHANNEL')) {
+                    imageSpec = 'carousel-2';
+                } else if (model === 0) {
+                    imageSpec = 'carousel-1';
+                } else {
+                    imageSpec = 'model-' + rowLength;
+                }
                 this.$router.push({
                     name: 'AppendChannel',
                     params: {

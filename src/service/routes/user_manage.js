@@ -52,7 +52,7 @@ export const getUserList = ({keyword, districtCode, registeredAtStart, registere
         keyword,
         districtCode,
         registeredAtStart: registeredAtStart ? Date.parse(registeredAtStart) : '',
-        registeredAtEnd: registeredAtStart ? Date.parse(registeredAtEnd) : '',
+        registeredAtEnd: registeredAtEnd ? Date.parse(registeredAtEnd) : '',
         pageNum: pageNum - 1,
         pageSize
     };

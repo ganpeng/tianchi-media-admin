@@ -114,13 +114,6 @@
                     {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
-            <el-table-column align="center"
-                             label="操作"
-                             class="operate">
-                <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="toProgrammeDetail(scope.row.id)">查看</el-button>
-                </template>
-            </el-table-column>
         </el-table>
         <el-pagination
             @size-change="handleSizeChange"
@@ -198,10 +191,6 @@
                     return 'warning-row';
                 }
                 return '';
-            },
-            // 跳转到节目详情
-            toProgrammeDetail(programmeId) {
-                this.$router.push({name: 'DisplayProgramme', params: {id: programmeId}});
             },
             handleSizeChange(pageSize) {
                 this.listQueryParams.pageSize = pageSize;

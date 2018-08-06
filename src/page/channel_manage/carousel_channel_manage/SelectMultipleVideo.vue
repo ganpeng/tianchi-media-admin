@@ -18,6 +18,8 @@
             :data="videoList"
             border
             @select="selectVideo"
+            @select-all="selectAll"
+            @select-change="selectChange"
             header-row-class-name="table-header-row"
             :row-class-name="tableRowClassName"
             style="width:100%;margin:20px 0;">
@@ -206,6 +208,10 @@
                     return 'unselectable-row';
                 }
                 return '';
+            },
+            selectAll() {
+            },
+            selectChange() {
             },
             // 选择或者取消选择视频
             selectVideo(selection, video) {

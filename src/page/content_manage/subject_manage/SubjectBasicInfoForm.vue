@@ -5,7 +5,7 @@
                  :rules="infoRules"
                  status-icon
                  ref="subjectInfo"
-                 label-width="140px"
+                 label-width="120px"
                  class="form-block">
             <el-form-item label="名称" prop="name" required>
                 <el-input v-model="subjectInfo.name" placeholder="请填写30个字以内的名称"></el-input>
@@ -49,7 +49,7 @@
             </el-form-item>
             <!--只有节目专题有封面图片-->
             <template v-if="status === '0' || status === '2'">
-                <el-form-item label="上传专题封面：" class="cover-image-block">
+                <el-form-item label="专题封面：" class="cover-image-block">
                     <el-button type="primary" @click="popUploadImage('COVERIMAGE')">上传封面<i
                         class="el-icon-upload el-icon--right"></i></el-button>
                     <ul class="cover-list">
@@ -69,7 +69,7 @@
                     </ul>
                 </el-form-item>
                 <!--只有节目专题有背景图片-->
-                <el-form-item label="上传专题背景图片：">
+                <el-form-item label="专题背景图片：">
                     <el-button type="primary" @click="popUploadImage('BACKGROUNDIMAGE')">上传背景
                         <i class="el-icon-upload el-icon--right"></i>
                     </el-button>
@@ -86,9 +86,6 @@
                     </div>
                 </el-form-item>
             </template>
-            <el-form-item class="tips">
-                <label class="tips">带 <i>*</i> 号的为必填项</label>
-            </el-form-item>
             <el-form-item class="operate">
                 <el-button type="primary" @click="operateSubject">
                     {{this.status === '0' || this.status === '1' ? '创建' : '更新'}}
@@ -419,6 +416,11 @@
                 cursor: pointer;
             }
         }
+    }
+
+    .operate {
+        margin-top: 200px;
+        margin-bottom: 80px;
     }
 
     .background-image {

@@ -18,6 +18,7 @@
                     :isModelItem="judgeIsModel(layoutModelItemInfo)"
                     :navBarId="navBarId"
                     :navBarSignCode="navBarSignCode"
+                    :rowLength="rowItem.length"
                     :modelIndex="modelIndex"
                     :rowIndex="rowIndex"
                     :index="index"

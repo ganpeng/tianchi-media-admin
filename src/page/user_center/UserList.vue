@@ -112,10 +112,10 @@
                 });
             },
             handleSizeChange() {
-                this.getSubjectList();
+                this.getUserList();
             },
             handleCurrentChange() {
-                this.getSubjectList();
+                this.getUserList();
             },
             checkUserDetailInfo(row) {
                 this.$router.push({

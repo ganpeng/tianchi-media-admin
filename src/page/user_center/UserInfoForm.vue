@@ -96,11 +96,10 @@
             <el-form-item label="手机" prop="mobile" required>
                 <el-input v-model="userInfo.mobile" placeholder="请输入手机号码"></el-input>
             </el-form-item>
-            <el-form-item class="tips">
-                <label class="tips">带 <i>*</i> 号的为必填项</label>
-            </el-form-item>
             <el-form-item class="operate">
-                <el-button type="primary" @click="operateUser">{{status === '0' ? '创建' : '更新'}}</el-button>
+                <el-button :disabled="btnDisabled" type="primary" @click="operateUser">{{status === '0' ? '创建' :
+                    '更新'}}
+                </el-button>
                 <el-button @click="reset">重 置</el-button>
             </el-form-item>
         </el-form>
@@ -214,6 +213,8 @@
                     fullAddress: '',
                     districtCode: ''
                 },
+                btnDisabled: false,
+                originalIdentityId: '',
                 identityIdExist: false,
                 existId: '',
                 provinceOptions: [],
@@ -267,6 +268,7 @@
                     this.$service.getUserInfoById({id: this.$route.params.id}).then(response => {
                         if (response && response.code === 0) {
                             this.userInfo = response.data;
+                            this.originalIdentityId = this.userInfo.identityId;
                             // 获取地址列表
                             this.getDistrictList({level: 'CITY', code: this.userInfo.province});
                             this.getDistrictList({level: 'COUNTY', code: this.userInfo.city});
@@ -343,6 +345,10 @@
             verifyIdentityId() {
                 this.$refs['userInfo'].validateField('identityId', (valid) => {
                     if (!valid) {
+                        if (this.originalIdentityId === this.userInfo.identityId) {
+                            this.$message('当前身份证号与当前用户的原身份证号相同');
+                            return;
+                        }
                         this.$service.getUserInfoByIdentityId({identityId: this.userInfo.identityId}).then(response => {
                             if (response && response.code === 0) {
                                 if (response.data.list.length === 1) {
@@ -395,6 +401,7 @@
                         if (!this.checkStbList()) {
                             this.$message({message: '请完整填写设备ID', type: 'warning'});
                         }
+                        this.btnDisabled = true;
                         // 设置全量地址
                         this.userInfo.fullAddress = '';
                         this.provinceOptions.map(province => {
@@ -423,8 +430,10 @@
                         if (this.status === '0') {
                             this.$service.updateUser(this.userInfo).then(response => {
                                 if (response && response.code === 0) {
-                                    console.log('创建成功');
                                     this.$message('创建成功');
+                                    this.$router.push({name: 'UserList'});
+                                } else {
+                                    this.btnDisabled = false;
                                 }
                             });
                             // 更新
@@ -433,6 +442,9 @@
                             this.$service.updateUser(this.userInfo).then(response => {
                                 if (response && response.code === 0) {
                                     this.$message('更新成功');
+                                    this.$router.push({name: 'UserList'});
+                                } else {
+                                    this.btnDisabled = false;
                                 }
                             });
                         }
@@ -443,6 +455,12 @@
             },
             reset() {
                 this.$refs['userInfo'].resetFields();
+                this.cityDisabled = true;
+                this.cityOptions = [];
+                this.countyDisabled = true;
+                this.countyOptions = [];
+                this.streetDisabled = true;
+                this.streetOptions = [];
             }
         }
     };

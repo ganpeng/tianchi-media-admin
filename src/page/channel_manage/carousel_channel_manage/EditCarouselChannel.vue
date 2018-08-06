@@ -176,7 +176,7 @@
             title="选择相应的视频"
             :visible.sync="selectDialogVisible"
             center
-            width="80%">
+            width="60%">
             <select-multiple-video
                 v-if="selectDialogVisible"
                 :currentSelectedVideoList="currentSelectedVideoList"

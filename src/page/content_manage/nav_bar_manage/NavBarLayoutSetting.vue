@@ -40,7 +40,7 @@
                         :navBarSignCode="navBarSignCode"
                         :modelIndex="0"
                         :rowIndex="0"
-                        :indexIndex="0"
+                        :index="0"
                         :itemInfo="rightTopRecommend">
                     </layout-single-square-item>
                 </div>
