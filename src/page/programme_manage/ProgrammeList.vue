@@ -106,7 +106,7 @@
                 </el-col>
                 <el-col :span="5">
                     <el-form-item class="create-account">
-                        <el-button type="primary" plain @click="createProgramme"><i class="el-icon-circle-plus-outline"></i> 新增人物</el-button>
+                        <el-button type="primary" plain @click="createProgramme"><i class="el-icon-circle-plus-outline"></i> 新增节目</el-button>
                         <el-button type="primary" plain @click="showFileUploadDialog">导入节目</el-button>
                     </el-form-item>
                 </el-col>
@@ -260,9 +260,12 @@ export default {
         };
     },
     created() {
-        this.resetProgrammeSearchFields();
         this.getProgrammeList();
         this.getProgrammeCategory();
+        window.addEventListener('keyup', this.keyupHandler);
+    },
+    beforeDestroy() {
+        window.removeEventListener('keyup', this.keyupHandler);
     },
     computed: {
         ...mapGetters({
@@ -278,6 +281,18 @@ export default {
             getScenarist: 'programme/getScenarist'
         })
     },
+    beforeRouteLeave(to, from, next) {
+        window.localStorage.setItem('programmeSearchFields', JSON.stringify(this.programmeSearchFields));
+        this.resetProgrammeSearchFields();
+        next();
+    },
+    beforeRouteEnter(to, from, next) {
+        let {name} = from;
+        if (name !== 'DisplayProgramme' && name !== 'EditProgramme') {
+            window.localStorage.removeItem('programmeSearchFields');
+        }
+        next();
+    },
     methods: {
         ...mapMutations({
             updateProgrammePagination: 'programme/updateProgrammePagination',
@@ -288,6 +303,11 @@ export default {
             getProgrammeList: 'programme/getProgrammeList',
             getProgrammeCategory: 'programme/getProgrammeCategory'
         }),
+        keyupHandler(e) {
+            if (e.keyCode === 13) {
+                this.getProgrammeList();
+            }
+        },
         createProgramme() {
             this.$router.push({ name: 'CreateProgramme' });
         },

@@ -146,6 +146,10 @@
         created() {
             this.resetState();
             this.getVersionList();
+            window.addEventListener('keyup', this.keyupHandler);
+        },
+        beforeDestroy() {
+            window.removeEventListener('keyup', this.keyupHandler);
         },
         computed: {
             ...mapGetters({
@@ -168,6 +172,11 @@
                 postVersion: 'version/postVersion',
                 getVersionList: 'version/getVersionList'
             }),
+            keyupHandler(e) {
+                if (e.keyCode === 13) {
+                    this.getVersionList();
+                }
+            },
             getLink(version) {
                 return `${version.uriPrefix}${version.fullPackageUri}`;
             },

@@ -66,9 +66,9 @@ export default {
             .then((res) => {
                 if (res && res.code === 0) {
                     let obj = res.data.list[0];
-                    this.channel = obj.channel;
-                    this.channelList = [obj.channel];
-                    this.channelForm.channelId = obj.channel.id;
+                    this.channel = obj && obj.channel ? obj.channel : null;
+                    this.channelList = obj && obj.channel ? [obj.channel] : [];
+                    this.channelForm.channelId = obj && obj.channel ? obj.channel.id : '';
                 }
             });
     },
@@ -83,17 +83,23 @@ export default {
                         channelCategory: this.channel.category
                     }];
 
-                    if (this.channel.visible) {
-                        this.$service.postChannelLayout(reqBody)
-                            .then((res) => {
-                                if (res && res.code === 0) {
-                                    this.$message.success('设置直播频道成功');
+                    this.$service.getChannelDetail(this.channel.id)
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                let channel = res.data;
+                                if (channel.visible) {
+                                    this.$service.postChannelLayout(reqBody)
+                                        .then((res) => {
+                                            if (res && res.code === 0) {
+                                                this.$message.success('设置直播频道成功');
+                                            }
+                                            this.$router.back();
+                                        });
+                                } else {
+                                    this.$message.error('该频道处于禁播状态, 请重新选择频道');
                                 }
-                                this.$router.back();
-                            });
-                    } else {
-                        this.$message.error('该频道处于禁播状态, 请重新选择频道');
-                    }
+                            }
+                        });
                 }
             });
         },

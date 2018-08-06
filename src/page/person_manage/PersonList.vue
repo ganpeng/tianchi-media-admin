@@ -155,6 +155,10 @@
         created() {
             this.resetPerson();
             this.getPersonList({isProgramme: false});
+            window.addEventListener('keyup', this.keyupHandler);
+        },
+        beforeDestroy() {
+            window.removeEventListener('keyup', this.keyupHandler);
         },
         computed: {
             ...mapGetters({
@@ -173,6 +177,11 @@
             ...mapActions({
                 getPersonList: 'person/getPersonList'
             }),
+            keyupHandler(e) {
+                if (e.keyCode === 13) {
+                    this.getPersonList({isProgramme: false});
+                }
+            },
             createPerson() {
                 this.$router.push({ name: 'CreatePerson' });
             },

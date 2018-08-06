@@ -127,6 +127,10 @@
         created() {
             this.getChannelType();
             this.getChannelList();
+            window.addEventListener('keyup', this.keyupHandler);
+        },
+        beforeDestroy() {
+            window.removeEventListener('keyup', this.keyupHandler);
         },
         computed: {
             ...mapGetters({
@@ -150,6 +154,11 @@
                 getLiveChannelById: 'channel/getLiveChannelById',
                 getChannelPageById: 'channel/getChannelPageById'
             }),
+            keyupHandler(e) {
+                if (e.keyCode === 13) {
+                    this.searchHandler();
+                }
+            },
             showLiveChannelDialog() {
                 this.liveChannelDialogVisible = true;
             },

@@ -6,20 +6,6 @@
             <el-breadcrumb-item>人物资源管理</el-breadcrumb-item>
             <el-breadcrumb-item>推荐人物管理</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-form :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
-            <el-form-item class="search">
-                <el-input
-                    :value="keyword"
-                    placeholder="搜索你想要的信息"
-                    clearable
-                >
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary">搜索</el-button>
-            </el-form-item>
-        </el-form>
         <el-table class="my-table-style" :data="Object.keys(hotPerson.hotPerson)" border>
             <el-table-column align="center" width="240px" label="栏目/模块">
                 <template slot-scope="scope">
@@ -165,7 +151,7 @@ export default {
             });
             this.putHotPerson({hotCategory: hotCode, hotFigureList})
                 .then((res) => {
-                    this.$message.success('人们人物保存成功');
+                    this.$message.success('热们人物保存成功');
                 });
         }
     }

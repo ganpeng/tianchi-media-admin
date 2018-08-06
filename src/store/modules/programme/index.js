@@ -197,8 +197,17 @@ const defaultGlobal = {
     personId: ''
 };
 
+function getSearchFields() {
+    let localSearchFields = window.localStorage.getItem('programmeSearchFields');
+    if (localSearchFields) {
+        return _.cloneDeep(JSON.parse(localSearchFields));
+    } else {
+        return _.cloneDeep(defaultProgrammeSearchFields);
+    }
+}
+
 const defaultState = {
-    searchFields: _.cloneDeep(defaultProgrammeSearchFields), // 新加
+    searchFields: getSearchFields(), // 新加
     pagination: _.cloneDeep(defaultPagination), // 新加
     global: _.cloneDeep(defaultGlobal), // 新加
     list: [],
@@ -228,9 +237,10 @@ const getters = {
     },
     programmeTypeOptions(state) {
         return state.searchFields.programmeCategoryIdList.reduce((res, id) => {
-            let programmeTypeList = state.global.categoryList.find((category) => {
+            let programmeType = state.global.categoryList.find((category) => {
                 return category.id === id;
-            }).programmeTypeList;
+            });
+            let programmeTypeList = programmeType && programmeType.programmeTypeList ? programmeType.programmeTypeList : [];
             res = res.concat(programmeTypeList);
             return res;
         }, []);
@@ -412,7 +422,8 @@ const getters = {
 
 const mutations = {
     resetProgramme(state) {
-        state.searchFields = _.cloneDeep(defaultProgrammeSearchFields); // 新加
+        // state.searchFields = _.cloneDeep(defaultProgrammeSearchFields); // 新加
+        state.searchFields = getSearchFields(); // 新加
         state.pagination = _.cloneDeep(defaultPagination); // 新加
         state.global = _.cloneDeep(defaultGlobal); // 新加
         state.list = [];
@@ -767,7 +778,7 @@ function formatProgramme(programme, state) {
 /**
  *  序列化服务端返回的数据
  */
-function serializeProgrammData(programme) {
+function serializeProgrammData(programme, state) {
     let director = programme.figureListMap['DIRECTOR'] ? programme.figureListMap['DIRECTOR'] : [];
     let leadActor = programme.figureListMap['CHIEF_ACTOR'] ? programme.figureListMap['CHIEF_ACTOR'] : [];
     let scenarist = programme.figureListMap['SCENARIST'] ? programme.figureListMap['SCENARIST'] : [];
@@ -785,10 +796,23 @@ function serializeProgrammData(programme) {
         scenaristResult = scenarist;
     }
 
+    let allTypeList = programme.categoryList.reduce((prev, curr) => {
+        let obj = state.global.categoryList.find((item) => item.id === curr.id);
+        if (obj) {
+            return prev.concat(obj.programmeTypeList);
+        } else {
+            return prev.concat([]);
+        }
+    }, []);
+    let typeList = programme.typeList.filter((item) => {
+        let findIndex = allTypeList.findIndex((ele) => ele.id === item.id);
+        return findIndex > -1;
+    });
+
     let res = Object.assign({}, defaultProgramme, programme, {
         copyrightRange: [programme.copyrightStartedAt, programme.copyrightEndedAt],
         categoryList: programme.categoryList.map((category) => category.id),
-        typeList: programme.typeList.filter((type) => type !== null).map((type) => type.id),
+        typeList: typeList.filter((type) => type !== null).map((type) => type.id),
         director,
         leadActor,
         scenarist,
@@ -936,11 +960,11 @@ const actions = {
     async getProgrammeAndGetProgrammeCategory({commit, state}, id) {
         try {
             let res = await axios.all([service.getProgrammeInfo({id}), service.getProgrammeCategory()]);
-            if (res[0] && res[0].code === 0) {
-                commit('setProgramme', {programme: serializeProgrammData(res[0].data)});
-            }
             if (res[1] && res[1].code === 0) {
                 commit('updateGlobal', {key: 'categoryList', value: res[1].data});
+            }
+            if (res[0] && res[0].code === 0) {
+                commit('setProgramme', {programme: serializeProgrammData(res[0].data, state)});
             }
             return res;
         } catch (err) {

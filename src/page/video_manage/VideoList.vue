@@ -7,7 +7,7 @@
             <el-breadcrumb-item>视频资源管理</el-breadcrumb-item>
             <el-breadcrumb-item>视频列表</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-form :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
+        <el-form :inline="true" class="demo-form-inline search-form text-left" @keyup.enter.native="searchHandler" @submit.native.prevent>
             <el-form-item class="search">
                 <el-input
                     :value="searchFields.name"
@@ -176,6 +176,7 @@
             }
         },
         created() {
+            window.addEventListener('keyup', this.keyupHandler);
             this.timer = setInterval(() => {
                 this.getVideoList();
             }, 1000 * 10);
@@ -184,6 +185,9 @@
             clearInterval(this.timer);
             this.timer = null;
             next();
+        },
+        beforeDestroy() {
+            window.removeEventListener('keyup', this.keyupHandler);
         },
         methods: {
             ...mapMutations({
@@ -194,6 +198,11 @@
                 getVideoList: 'video/getVideoList',
                 checkVideoMd5: 'video/checkVideoMd5'
             }),
+            keyupHandler(e) {
+                if (e.keyCode === 13) {
+                    this.searchHandler();
+                }
+            },
             showVideoUploadDialog(videoType) {
                 this.videoUploadDialogVisible = true;
                 this.count = 0;
