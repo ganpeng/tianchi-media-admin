@@ -63,7 +63,8 @@
                         :navBarId="navBarId"
                         :navBarSignCode="navBarSignCode"
                         :modelIndex="blockIndex + 1"
-                        :layoutModelItemInfo="layoutBlockItem">
+                        :layoutModelItemInfo="layoutBlockItem"
+                        v-on:displayLocalData="displayLocalData">
                     </layout-common-model>
                 </div>
             </div>

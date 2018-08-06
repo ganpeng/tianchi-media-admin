@@ -19,7 +19,6 @@
             border
             @select="selectVideo"
             @select-all="selectAll"
-            @select-change="selectChange"
             header-row-class-name="table-header-row"
             :row-class-name="tableRowClassName"
             style="width:100%;margin:20px 0;">
@@ -209,9 +208,31 @@
                 }
                 return '';
             },
-            selectAll() {
-            },
-            selectChange() {
+            selectAll(selections) {
+                // 判断是添加还是删除所有当前videoList
+                // 取消全选
+                if (selections.length === 0) {
+                    for (let i = 0; i < this.videoList.length; i++) {
+                        for (let k = 0; k < this.selectedMultipleVideo.length; k++) {
+                            if (this.videoList[i].code === this.selectedMultipleVideo[k].code) {
+                                this.selectedMultipleVideo.splice(k, 1);
+                            }
+                        }
+                    }
+                    // 全选添加
+                } else {
+                    for (let i = 0; i < this.videoList.length; i++) {
+                        let tag = false;
+                        for (let k = 0; k < this.selectedMultipleVideo.length; k++) {
+                            if (this.videoList[i].code === this.selectedMultipleVideo[k].code) {
+                                tag = true;
+                            }
+                        }
+                        if (tag === false) {
+                            this.selectedMultipleVideo.push(this.videoList[i]);
+                        }
+                    }
+                }
             },
             // 选择或者取消选择视频
             selectVideo(selection, video) {
@@ -243,7 +264,8 @@
                 this.$emit('appendVideo', this.selectedMultipleVideo);
                 this.$emit('closeSelectVideoDialog');
             },
-            handleSizeChange() {
+            handleSizeChange(pageSize) {
+                this.queryParams.pageSize = pageSize;
                 this.getVideoList();
             },
             handleCurrentChange(pageNum) {

@@ -193,7 +193,7 @@
                         navBarSignCode: this.navBarSignCode,
                         model: model
                     });
-                    this.displayLocalData();
+                    this.$emit('displayLocalData');
                     this.$message({
                         type: 'success',
                         message: '删除成功!'
