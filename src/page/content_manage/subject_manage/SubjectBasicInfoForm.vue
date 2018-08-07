@@ -50,8 +50,10 @@
             <!--只有节目专题有封面图片-->
             <template v-if="status === '0' || status === '2'">
                 <el-form-item label="专题封面：" class="cover-image-block">
-                    <el-button type="primary" @click="popUploadImage('COVERIMAGE')">上传封面<i
-                        class="el-icon-upload el-icon--right"></i></el-button>
+                    <el-button type="primary" plain @click="popUploadImage('COVERIMAGE')">
+                        <i class="el-icon-picture el-icon--left"></i>
+                        添加专题封面
+                    </el-button>
                     <ul class="cover-list">
                         <li v-for="(item,index) in subjectInfo.posterImageList" :key="index">
                             <div :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
@@ -70,8 +72,9 @@
                 </el-form-item>
                 <!--只有节目专题有背景图片-->
                 <el-form-item label="专题背景图片：">
-                    <el-button type="primary" @click="popUploadImage('BACKGROUNDIMAGE')">上传背景
-                        <i class="el-icon-upload el-icon--right"></i>
+                    <el-button type="primary" plain @click="popUploadImage('BACKGROUNDIMAGE')">
+                        <i class="el-icon-picture el-icon--left"></i>
+                        添加专题背景图
                     </el-button>
                     <div v-if="subjectInfo.backgroundImage && subjectInfo.backgroundImage.uri"
                          :style="{ 'background-image': 'url(' + appendImagePrefix(subjectInfo.backgroundImage.uri) + ')'}"
@@ -372,6 +375,12 @@
 
     .cover-image-block {
         margin-bottom: 0px;
+    }
+
+    .el-button {
+        i {
+            font-size: 16px;
+        }
     }
 
     .cover-list {

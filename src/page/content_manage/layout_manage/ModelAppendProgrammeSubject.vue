@@ -115,7 +115,7 @@
         <div class="model-block">
             <ul :class="row.listClass" v-for="(row,rowIndex) in subjectLayoutItemList" :key="rowIndex">
                 <li v-for="(item,index) in row" :key="index"
-                    @click="setModelItem(rowIndex,index,('model-' + row.length),item.layoutItemType === 'ALL',item)">
+                    @click="setModelItem(rowIndex,index,row.listClass,item.layoutItemType === 'ALL',item)">
                     <div class="ab-center text-center">
                         <img :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
                              :alt="item.coverImage.name"
@@ -171,7 +171,7 @@
     import SelectSingleSubject from './SelectSingleSubject';
     import SetSubjectProgramme from './SetSubjectProgramme';
     import templateTypeInfo from '@/util/config/template_type';
-    import {LAYOUT_IMAGE_DIMENSION, PROGRAMME_DIMENSION} from '@/util/config/dimension';
+    import {PROGRAMME_DIMENSION} from '@/util/config/dimension';
     import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import _ from 'lodash';
 
@@ -359,7 +359,8 @@
                     this.imageUploadDialogVisible = true;
                     return;
                 }
-                this.imageSpec = LAYOUT_IMAGE_DIMENSION[imageModel].coverImage;
+                imageModel = imageModel.split('-')[1] + '-' + imageModel.split('-')[2];
+                this.imageSpec = templateTypeInfo.SIZE_TO_INFO[imageModel];
                 this.currentRow = row;
                 this.currentIndex = index;
                 this.originProgramme = item;

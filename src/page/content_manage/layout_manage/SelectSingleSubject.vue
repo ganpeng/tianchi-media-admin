@@ -115,13 +115,6 @@
                     {{scope.row.visible ? '已上架' : '已下架'}}
                 </template>
             </el-table-column>
-            <el-table-column align="center"
-                             label="操作"
-                             class="operate">
-                <template slot-scope="scope">
-                    <el-button type="text" size="small" @click.stop="checkSubjectDetail(scope.row)">查看</el-button>
-                </template>
-            </el-table-column>
         </el-table>
         <el-pagination
             @size-change="handleSizeChange"
@@ -226,13 +219,6 @@
             handleCurrentChange(pageNum) {
                 this.listQueryParams.pageNum = pageNum;
                 this.initSubjectList(this.recommendIdList);
-            },
-            // 查询专题详情
-            checkSubjectDetail(item) {
-                this.$router.push({
-                    name: item.category === 'FIGURE' ? 'PersonSubjectDetail' : 'ProgrammeSubjectDetail',
-                    params: {id: item.id}
-                });
             }
         }
     };

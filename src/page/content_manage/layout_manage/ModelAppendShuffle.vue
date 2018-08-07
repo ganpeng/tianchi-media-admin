@@ -186,7 +186,7 @@
     import SetItemFilter from './shuffle_setting/SetItemFilter';
     import SelectChannel from './SelectChannel';
     import templateTypeInfo from '@/util/config/template_type';
-    import {LAYOUT_IMAGE_DIMENSION, PROGRAMME_DIMENSION} from '@/util/config/dimension';
+    import {PROGRAMME_DIMENSION} from '@/util/config/dimension';
     import _ from 'lodash';
 
     export default {
@@ -384,8 +384,8 @@
                     default:
                         break;
                 }
-                imageModel = imageModel.split('-')[0] + '-' + imageModel.split('-')[1];
-                this.imageSpec = LAYOUT_IMAGE_DIMENSION[imageModel].coverImage;
+                imageModel = imageModel.split('-')[1] + '-' + imageModel.split('-')[2];
+                this.imageSpec = templateTypeInfo.SIZE_TO_INFO[imageModel];
                 if (mode === 'CHANNEL') {
                     this.imageSpec = [{
                         value: this.imageSpec.width + '*' + this.imageSpec.height,
