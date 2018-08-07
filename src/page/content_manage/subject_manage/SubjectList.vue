@@ -1,14 +1,14 @@
 <!--内容管理-专题管理-专题列表（包含人物和节目）组件-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>专题管理</el-breadcrumb-item>
-            <el-breadcrumb-item>专题列表</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'专题管理'},
+            {name:'专题列表'}]">
+        </custom-breadcrumb>
         <div class="block-box" @keyup.enter="getSubjectList">
-            <el-form :inline="true" class="demo-form-inline search-form">
+            <el-form :inline="true" class="filter-form">
                 <el-form-item label="专题类型">
                     <el-select v-model="listQueryParams.category" clearable placeholder="请选择专题类型">
                         <el-option
@@ -46,11 +46,11 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="success" @click="getSubjectList">查 询</el-button>
+                    <el-button type="primary" plain icon="el-icon-search" @click="getSubjectList">查 询</el-button>
                 </el-form-item>
-                <el-form-item>
+                <el-form-item class="create-item">
                     <el-dropdown @command="createSubject">
-                        <el-button type="primary">
+                        <el-button type="primary" icon="el-icon-circle-plus-outline">
                             创建专题<i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
@@ -91,7 +91,7 @@
                             width="250"
                             trigger="hover"
                             :content="scope.row.description">
-                            <el-button slot="reference" type="text" class="more">更多</el-button>
+                            <el-button slot="reference" type="text" class="float-right">更多</el-button>
                         </el-popover>
                     </template>
                 </el-table-column>
@@ -271,24 +271,12 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
-    .block-box {
-        margin-top: 50px;
-    }
-
-    .el-form {
-        margin-left: 20px;
-        text-align: left;
-        &.search-form {
-            margin-top: 60px;
-        }
-    }
-
-    .el-table {
-        .more {
-            float: right;
-        }
+    .create-item {
+        position: absolute;
+        right: 0px;
+        top: 10px;
     }
 
 </style>

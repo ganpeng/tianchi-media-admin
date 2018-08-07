@@ -162,6 +162,7 @@
         </el-table>
         <div class="preview-sort">
             <el-button type="success" @click="sortVideoList">点击视频排序</el-button>
+            <el-button type="success" @click="revertVideoList">反转当前视频列表</el-button>
         </div>
         <display-video-dialog
             :url="previewVideoInfo.url"
@@ -413,6 +414,13 @@
                     }
                 }
                 this.sortDialogVisible = true;
+            },
+            revertVideoList() {
+                let array = [];
+                for (let i = this.currentSelectedVideoList.length - 1; i > -1; i--) {
+                    array.push(this.currentSelectedVideoList[i]);
+                }
+                this.currentSelectedVideoList = array;
             },
             // 设置排序完成的列表
             setSortedList(sortedList) {

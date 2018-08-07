@@ -5,7 +5,7 @@
             v-bind:breadcrumbList="[
             {name:'内容管理'},
             {name:'专题管理'},
-            {name:'专题列表-专题详情-创建节目专题'}]">
+            {name:'创建节目专题'}]">
         </custom-breadcrumb>
         <div class="block-box">
             <subject-basic-info-form

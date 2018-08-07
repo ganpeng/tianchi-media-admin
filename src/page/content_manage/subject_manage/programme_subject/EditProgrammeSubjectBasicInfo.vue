@@ -1,12 +1,12 @@
 <!--编辑节目专题基本信息组件-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>专题管理</el-breadcrumb-item>
-            <el-breadcrumb-item>编辑<label class="subject-name">{{subjectInfo.name}}</label>节目专题基本信息</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'专题管理'},
+            {name:'编辑基本信息'}]">
+        </custom-breadcrumb>
         <div class="block-box">
             <subject-basic-info-form
                 ref="subjectbasicInfoForm"

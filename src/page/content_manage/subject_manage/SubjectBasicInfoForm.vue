@@ -6,7 +6,7 @@
                  status-icon
                  ref="subjectInfo"
                  label-width="120px"
-                 class="form-block">
+                 class="form-block fill-form">
             <el-form-item label="名称" prop="name" required>
                 <el-input v-model="subjectInfo.name" placeholder="请填写30个字以内的名称"></el-input>
             </el-form-item>
@@ -50,7 +50,7 @@
             <!--只有节目专题有封面图片-->
             <template v-if="status === '0' || status === '2'">
                 <el-form-item label="专题封面：" class="cover-image-block">
-                    <el-button type="primary" plain @click="popUploadImage('COVERIMAGE')">
+                    <el-button class="btn-icon-normal" type="primary" plain @click="popUploadImage('COVERIMAGE')">
                         <i class="el-icon-picture el-icon--left"></i>
                         添加专题封面
                     </el-button>
@@ -72,7 +72,7 @@
                 </el-form-item>
                 <!--只有节目专题有背景图片-->
                 <el-form-item label="专题背景图片：">
-                    <el-button type="primary" plain @click="popUploadImage('BACKGROUNDIMAGE')">
+                    <el-button class="btn-icon-normal" type="primary" plain @click="popUploadImage('BACKGROUNDIMAGE')">
                         <i class="el-icon-picture el-icon--left"></i>
                         添加专题背景图
                     </el-button>
@@ -90,10 +90,10 @@
                 </el-form-item>
             </template>
             <el-form-item class="operate">
-                <el-button type="primary" @click="operateSubject">
+                <el-button type="primary" @click="operateSubject" class="page-main-btn">
                     {{this.status === '0' || this.status === '1' ? '创建' : '更新'}}
                 </el-button>
-                <el-button @click="reset">重 置</el-button>
+                <el-button @click="reset" class="page-vice-btn" type="primary" plain>重 置</el-button>
             </el-form-item>
         </el-form>
         <preview-multiple-images
@@ -369,20 +369,11 @@
 
 <style lang="less" scoped>
 
-    .el-input, .el-textarea, .el-select {
-        width: 600px;
-    }
-
     .cover-image-block {
         margin-bottom: 0px;
     }
 
-    .el-button {
-        i {
-            font-size: 16px;
-        }
-    }
-
+    /*缩略图样式*/
     .cover-list {
         display: flex;
         margin-top: 30px;
@@ -427,11 +418,6 @@
         }
     }
 
-    .operate {
-        margin-top: 200px;
-        margin-bottom: 80px;
-    }
-
     .background-image {
         width: 40%;
         padding-top: 23%;
@@ -450,4 +436,10 @@
         background-position: center;
         cursor: zoom-in;
     }
+
+    .operate {
+        margin-top: 200px;
+        margin-bottom: 80px;
+    }
+
 </style>
