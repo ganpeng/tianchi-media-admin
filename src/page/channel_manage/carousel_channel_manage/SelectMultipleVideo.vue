@@ -224,8 +224,15 @@
                 } else {
                     for (let i = 0; i < this.videoList.length; i++) {
                         let tag = false;
+                        // 去掉当前已选择的
                         for (let k = 0; k < this.selectedMultipleVideo.length; k++) {
                             if (this.videoList[i].code === this.selectedMultipleVideo[k].code) {
+                                tag = true;
+                            }
+                        }
+                        // 去掉原先已选择的
+                        for (let m = 0; m < this.currentSelectedVideoList.length; m++) {
+                            if (this.videoList[i].code === this.currentSelectedVideoList[m].code) {
                                 tag = true;
                             }
                         }
