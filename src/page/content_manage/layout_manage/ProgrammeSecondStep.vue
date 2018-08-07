@@ -1,4 +1,4 @@
-<!--内容管理-栏目管理-节目选择设置封面组件(含有出个图)-->
+<!--内容管理-栏目管理-节目选择设置封面组件(含有出格图)，目前只使用在推荐单个节目中-->
 <template>
     <div>
         <div class="text-left">1.符合该位置的底层图片如下，请选择：</div>
@@ -38,7 +38,7 @@
 
 <script>
     import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
-    import {PROGRAMME_DIMENSION, LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
+    import {LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
 
     export default {
@@ -62,7 +62,7 @@
         },
         data() {
             return {
-                size: PROGRAMME_DIMENSION,
+                size: [],
                 imageUploadDialogVisible: false,
                 coverImageSpec: LAYOUT_IMAGE_DIMENSION[this.$route.params.imageSpec].coverImage,
                 // 当前模板封面图片的出格背景图的尺寸
@@ -83,8 +83,24 @@
         },
         methods: {
             init() {
+                this.initSize();
                 this.programmeCoverImageId = this.originState.coverImage ? this.originState.coverImage.id : '';
                 this.programmeCoverImageBackgroundId = this.originState.coverImageBackground ? this.originState.coverImageBackground.id : '';
+            },
+            initSize() {
+                // 初始化当前尺寸的size
+                let spec = this.coverImageSpec.width + '*' + this.coverImageSpec.height;
+                this.size.push({
+                    value: spec,
+                    label: '当前底层图片尺寸：' + spec
+                });
+                if (this.coverImageBackgroundSpec) {
+                    let spec = this.coverImageBackgroundSpec.width + '*' + this.coverImageBackgroundSpec.height;
+                    this.size.push({
+                        value: spec,
+                        label: '当前浮层图片尺寸：' + spec
+                    });
+                }
             },
             // 放大预览图片
             displayImage(index) {
@@ -130,6 +146,14 @@
                 }).then(response => {
                     if (response && response.code === 0) {
                         this.programme.posterImageList.push(newPosterImage.posterImage);
+                        // 筛选当前添加的图片的尺寸是底层还是浮层，并选中
+                        // 添加为底层
+                        if (newPosterImage.posterImage.width === this.coverImageSpec.width && newPosterImage.posterImage.height === this.coverImageSpec.height) {
+                            this.programmeCoverImageId = newPosterImage.posterImage.id;
+                            // 添加为浮层
+                        } else {
+                            this.programmeCoverImageBackgroundId = newPosterImage.posterImage.id;
+                        }
                     }
                 });
             }

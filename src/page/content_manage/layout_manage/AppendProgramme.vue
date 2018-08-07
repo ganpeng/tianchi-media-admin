@@ -30,104 +30,9 @@
             </component>
         </keep-alive>
         <template v-if="mode === 'EDIT' && activeStep === 0">
-            <el-table
-                :data="currentProgramme"
-                border
-                style="width: 100%">
-                <el-table-column
-                    prop="code"
-                    label="编号">
-                    <template slot-scope="scope">
-                        <i class="el-icon-success"></i>
-                        <label>{{scope.row.code}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="name"
-                    label="名称">
-                </el-table-column>
-                <el-table-column
-                    label="图片">
-                    <template slot-scope="scope">
-                        <img :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl"
-                             :alt="scope.row.coverImage.name"
-                             v-if="scope.row.coverImage">
-                        <label v-else>------</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="description"
-                    label="简介">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.description}}</label>
-                        <el-popover
-                            placement="right"
-                            :title="scope.row.name + '简介'"
-                            width="250"
-                            trigger="hover"
-                            :content="scope.row.description">
-                            <el-button slot="reference" type="text" class="more">更多</el-button>
-                        </el-popover>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="featureVideoCount"
-                    label="正片数量">
-                </el-table-column>
-                <el-table-column
-                    prop="extraVideoCount"
-                    label="相关视频数量">
-                </el-table-column>
-                <el-table-column
-                    prop="announceAt"
-                    label="上映时间">
-                    <template slot-scope="scope">
-                        {{scope.row.announceAt | formatDate('yyyy-MM-DD')}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="releaseArea"
-                    label="地区">
-                </el-table-column>
-                <el-table-column
-                    label="分类">
-                    <template slot-scope="scope">
-                        {{scope.row.categoryList | jsonJoin('name')}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="typeList"
-                    label="类型">
-                    <template slot-scope="scope">
-                        {{scope.row.typeList | jsonJoin('name')}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    label="主演">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    label="导演">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.figureListMap | displayFigures('DIRECTOR')}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="visible"
-                    label="状态">
-                    <template slot-scope="scope">
-                        {{scope.row.visible ? '已上架' :'已下架'}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    label="更新时间">
-                    <template slot-scope="scope">
-                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
-                    </template>
-                </el-table-column>
-            </el-table>
+            <single-programme-table
+                :singleProgrammeList="currentProgramme">
+            </single-programme-table>
         </template>
         <div class="step-button">
             <el-button @click="switchMode" v-if="activeStep === 0 && mode === 'EDIT'">更换节目</el-button>
@@ -142,13 +47,15 @@
     import ProgrammeSecondStep from './ProgrammeSecondStep';
     import SelectSingleProgramme from './SelectSingleProgramme';
     import SetCornerMarks from './SetCornerMarks';
+    import SingleProgrammeTable from './SingleProgrammeTable';
 
     export default {
         name: 'AppendProgramme',
         components: {
             ProgrammeSecondStep,
             SelectSingleProgramme,
-            SetCornerMarks
+            SetCornerMarks,
+            SingleProgrammeTable
         },
         data() {
             return {
@@ -312,34 +219,6 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
 
-    .el-table {
-        img {
-            width: 120px;
-        }
-        label {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            -ms-text-overflow: ellipsis;
-            text-overflow: ellipsis;
-        }
-        .more {
-            float: right;
-        }
-
-        .el-icon-success {
-            margin-right: 5px;
-            color: #409EFF;
-            visibility: hidden;
-        }
-        .current-row {
-            .el-icon-success {
-                visibility: visible;
-            }
-        }
-    }
-
     .el-steps {
         margin: 30px 60px 0 60px;
     }
@@ -347,4 +226,5 @@
     .step-button {
         margin: 50px 0px;
     }
+
 </style>

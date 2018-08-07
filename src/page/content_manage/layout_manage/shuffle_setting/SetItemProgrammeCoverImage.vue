@@ -29,7 +29,6 @@
 
 <script>
     import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
-    import {PROGRAMME_DIMENSION as subjectDimension} from '@/util/config/dimension';
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
 
     export default {
@@ -41,7 +40,7 @@
         props: ['programme', 'imageSpec', 'originState'],
         data() {
             return {
-                size: subjectDimension,
+                size: [],
                 programmeImageUri: '',
                 previewImage: {
                     display: false,
@@ -62,9 +61,17 @@
         },
         methods: {
             init() {
+                this.initImageSize();
                 if (this.originState.coverImage) {
                     this.programmeImageUri = this.originState.coverImage.uri;
                 }
+            },
+            initImageSize() {
+                let spec = this.imageSpec.width + '*' + this.imageSpec.height;
+                this.size.push({
+                    value: spec,
+                    label: '当前尺寸：' + spec
+                });
             },
             appendImagePrefix(uri) {
                 let baseUri = window.localStorage.getItem('imageBaseUri');
@@ -109,6 +116,9 @@
                 }).then(response => {
                     if (response && response.code === 0) {
                         this.programme.posterImageList.push(newPosterImage.posterImage);
+                        // 设置新添加的图片为选中状态
+                        this.programmeImageUri = newPosterImage.posterImage.uri;
+                        this.$emit('setCoverImage', newPosterImage.posterImage);
                     }
                 });
             }

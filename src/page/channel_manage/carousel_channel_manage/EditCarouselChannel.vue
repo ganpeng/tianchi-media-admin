@@ -190,7 +190,7 @@
             :sourceList="currentSelectedVideoList"
             sortKey="sort"
             uniqueKey="storageVideoId"
-            displayKey="originName"
+            displayKey="name"
             v-on:closeDialog="sortDialogVisible = false"
             v-on:setSortedList="setSortedList">
         </sort-dialog>
@@ -402,6 +402,16 @@
             },
             // 视频列表排序
             sortVideoList() {
+                /** 在频道排序时，含有的视频必须有展示名称  */
+                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                    if (!this.currentSelectedVideoList[i].name) {
+                        this.$message({
+                            message: '请先完整填写当前频道中的视频展示名称',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+                }
                 this.sortDialogVisible = true;
             },
             // 设置排序完成的列表

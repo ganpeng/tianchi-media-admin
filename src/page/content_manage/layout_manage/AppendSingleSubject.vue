@@ -11,7 +11,7 @@
             </el-breadcrumb-item>
             <el-breadcrumb-item>单个推荐位选择专题</el-breadcrumb-item>
         </el-breadcrumb>
-        <h3 class="text-left">请选择要推荐的专题：</h3>
+        <h3 class="text-left">{{mode === 'EDIT' ? '当前选择的专题：':'请选择要推荐的专题：'}}</h3>
         <select-single-subject
             v-show="mode === 'NORMAL'"
             ref="selectSingleSubject"
@@ -19,83 +19,11 @@
             v-on:setSubject="setSubject">
         </select-single-subject>
         <template v-if="mode === 'EDIT'">
-            <el-table
-                :data="currentSubjectList"
-                border
-                style="width: 100%">
-                <el-table-column
-                    prop="code"
-                    width="60px"
-                    label="编号">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.code}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="name"
-                    label="名称">
-                </el-table-column>
-                <el-table-column
-                    label="包含节目/人物数">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.subjectItemList === null ? 0 : scope.row.subjectItemList.length}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="description"
-                    label="简介">
-                    <template slot-scope="scope">
-                        <label class="ellipsis-three">{{scope.row.description}}</label>
-                        <el-popover
-                            placement="right"
-                            :title="scope.row.name + '简介'"
-                            width="250"
-                            trigger="hover"
-                            :content="scope.row.description">
-                            <el-button slot="reference" type="text" class="more">更多</el-button>
-                        </el-popover>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="tagList"
-                    label="专题标签">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.tagList.join(',')}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="owner"
-                    label="专题创建者">
-                </el-table-column>
-                <el-table-column
-                    prop="category"
-                    label="专题类型">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.category === 'FIGURE'?'人物' : '节目'}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="type"
-                    label="节目专题类型">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.type ? scope.row.type : '------' }}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    label="创建时间">
-                    <template slot-scope="scope">
-                        {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    label="状态">
-                    <template slot-scope="scope">
-                        {{scope.row.visible ? '已上架' : '已下架'}}
-                    </template>
-                </el-table-column>
-            </el-table>
+            <single-subject-table
+                :singleSubjectList="currentSubjectList">
+            </single-subject-table>
         </template>
-        <h3 class="text-left">请选择专题的封面海报：</h3>
+        <h3 class="text-left">{{mode === 'EDIT' ? '当前选择的封面海报：':'请选择专题的封面海报：'}}</h3>
         <ul class="cover-list">
             <li v-for="(item,index) in specPosterImages" :key="index">
                 <img :src="item.uri | imageUrl" :alt="item.name" @click="displayImage(index)">
@@ -124,19 +52,21 @@
 <script>
     import SelectSingleSubject from './SelectSingleSubject';
     import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
-    import {PROGRAMME_DIMENSION as subjectDimension, LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
+    import {LAYOUT_IMAGE_DIMENSION} from '@/util/config/dimension';
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
+    import SingleSubjectTable from './SingleSubjectTable';
 
     export default {
         name: 'AppendSingleSubject',
         components: {
             SelectSingleSubject,
             UploadImage,
-            PreviewMultipleImages
+            PreviewMultipleImages,
+            SingleSubjectTable
         },
         data() {
             return {
-                size: subjectDimension,
+                size: [],
                 imageUploadDialogVisible: false,
                 imageSpec: LAYOUT_IMAGE_DIMENSION[this.$route.params.imageSpec],
                 navBarId: this.$route.params.navBarId,
@@ -174,6 +104,7 @@
         },
         methods: {
             init() {
+                this.initImageSize();
                 // 获取本地数据
                 this.currentRecommendItem = this.$store.getters['layout/getRecommendItemInfo']({
                     navBarSignCode: this.$route.params.navBarSignCode,
@@ -194,6 +125,14 @@
                 } else {
                     this.initCurrentRecommendItem();
                 }
+            },
+            // 初始化上传图片的size
+            initImageSize() {
+                let spec = this.imageSpec.coverImage.width + '*' + this.imageSpec.coverImage.height;
+                this.size.push({
+                    value: spec,
+                    label: '当前位图尺寸：' + spec
+                });
             },
             // 初始化当前推荐项的数据
             initCurrentRecommendItem() {
@@ -265,6 +204,8 @@
                 }).then(response => {
                     if (response && response.code === 0) {
                         this.posterImageList.push(newPosterImage.posterImage);
+                        // 设置新添加的图片为选中状态
+                        this.subjectImageId = newPosterImage.posterImage.id;
                     }
                 });
             },
