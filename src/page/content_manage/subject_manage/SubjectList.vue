@@ -7,7 +7,7 @@
             <el-breadcrumb-item>专题管理</el-breadcrumb-item>
             <el-breadcrumb-item>专题列表</el-breadcrumb-item>
         </el-breadcrumb>
-        <div class="block-box">
+        <div class="block-box" @keyup.enter="getSubjectList">
             <el-form :inline="true" class="demo-form-inline search-form">
                 <el-form-item label="专题类型">
                     <el-select v-model="listQueryParams.category" clearable placeholder="请选择专题类型">

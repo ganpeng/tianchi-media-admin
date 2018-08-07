@@ -1,6 +1,6 @@
 <!--内容管理-栏目管理-选择单个专题组件-->
 <template>
-    <div>
+    <div @keyup.enter="initSubjectList(recommendIdList)">
         <el-form :inline="true" class="demo-form-inline search-form">
             <template v-if="listQueryParams.category === 'PROGRAMME'">
                 <el-form-item label="节目类别">
@@ -24,8 +24,7 @@
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="专题名称">
-                <el-input v-model="listQueryParams.name" placeholder="请填写专题名称">
-                </el-input>
+                <el-input v-model="listQueryParams.name" placeholder="请填写专题名称"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="success" @click="initSubjectList(recommendIdList)">查 询</el-button>

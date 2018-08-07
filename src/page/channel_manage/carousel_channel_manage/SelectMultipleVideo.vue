@@ -1,5 +1,5 @@
 <template>
-    <div class="video-table-container text-center">
+    <div class="video-table-container text-center" @keyup.enter="getVideoList">
         <el-form :inline="true" class="text-left">
             <el-form-item class="search">
                 <el-input
@@ -8,6 +8,7 @@
                     clearable>
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                 </el-input>
+                <el-input v-show="false"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="getVideoList">搜索</el-button>

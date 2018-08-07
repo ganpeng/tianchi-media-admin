@@ -1,6 +1,6 @@
 <!--管理员列表组件-->
 <template>
-    <div>
+    <div @keyup.enter="getAdminList">
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>管理员管理</el-breadcrumb-item>

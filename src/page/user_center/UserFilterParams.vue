@@ -1,6 +1,6 @@
 <!--搜索节目参数设置组件-->
 <template>
-    <div>
+    <div @keyup.enter="getUserList">
         <el-form :inline="true" class="search-form">
             <el-form-item class="search">
                 <el-input
@@ -9,6 +9,7 @@
                     placeholder="搜索你想要的信息">
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                 </el-input>
+                <el-input v-show="false"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button @click="getUserList" type="primary">搜 索</el-button>
