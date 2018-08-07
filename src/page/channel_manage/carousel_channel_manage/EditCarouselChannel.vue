@@ -164,6 +164,18 @@
             <el-button type="success" @click="sortVideoList">点击视频排序</el-button>
             <el-button type="success" @click="revertVideoList">反转当前视频列表</el-button>
         </div>
+        <div id="auto-sort">
+            <div v-for="(item, index) in sectionList" :key="index">
+                <el-input v-model="item.name" placeholder="请填写名称"></el-input>
+                <el-button type="primary" plain @click="removeSection(index)" v-if="sectionList.length !== 1">
+                    删除
+                </el-button>
+            </div>
+            <el-button type="primary" @click="addSection">添加名称</el-button>
+            <div class="text-center">
+                <el-button type="primary" @click="autoSort">自动化排序</el-button>
+            </div>
+        </div>
         <display-video-dialog
             :url="previewVideoInfo.url"
             :displayVideoDialogVisible="previewVideoInfo.visible"
@@ -294,6 +306,7 @@
                     typeIdList: [],
                     visible: ''
                 },
+                sectionList: [{name: ''}],
                 typeOptions: [],
                 // 当前的频道含有的视频列表
                 currentSelectedVideoList: [],
@@ -421,6 +434,78 @@
                     array.push(this.currentSelectedVideoList[i]);
                 }
                 this.currentSelectedVideoList = array;
+            },
+            removeSection(index) {
+                this.sectionList.splice(index, 1);
+            },
+            // 自动化排序
+            autoSort() {
+                // 检测是否全部填写部的列表
+                let sectionTag = true;
+                this.sectionList.map(section => {
+                    if (!section.name) {
+                        sectionTag = false;
+                    }
+                });
+                if (!sectionTag) {
+                    this.$message('请完整部填写名称');
+                    return;
+                }
+                // 检测是否完整填写展示名称
+                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                    if (!this.currentSelectedVideoList[i].name) {
+                        this.$message({
+                            message: '请完整填写当前频道中的视频展示名称',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+                }
+                // 检测部的列表中的名称是否完整包含当前视频列表
+                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                    let tag = false;
+                    for (let k = 0; k < this.sectionList.length; k++) {
+                        if (this.currentSelectedVideoList[i].name.split('-')[0] === this.sectionList[k].name) {
+                            tag = true;
+                        }
+                    }
+                    if (!tag) {
+                        this.$message({
+                            message: '第' + (i + 1) + '个视频的名称没有包含在部的名称列表中',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+                }
+                // 对每一部进行分类
+                let videoTwoDimension = [];
+                for (let k = 0; k < this.sectionList.length; k++) {
+                    videoTwoDimension.push([]);
+                    // 分析所有的视频是否属于当前的部的名称中，并添加
+                    for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                        if (this.currentSelectedVideoList[i].name.split('-')[0] === this.sectionList[k].name) {
+                            videoTwoDimension[k].push(this.currentSelectedVideoList[i]);
+                        }
+                    }
+                }
+                this.currentSelectedVideoList = this.sortTwoDimension(videoTwoDimension);
+            },
+            sortTwoDimension(videoTwoDimension) {
+                for (let k = 0; k < videoTwoDimension.length; k++) {
+                    videoTwoDimension[k].sort(function (pre, next) {
+                        return parseInt(pre.name.split('-')[1]) > parseInt(next.name.split('-')[1]);
+                    });
+                }
+                let array = [];
+                for (let k = 0; k < videoTwoDimension.length; k++) {
+                    for (let i = 0; i < videoTwoDimension[k].length; i++) {
+                        array.push(videoTwoDimension[k][i]);
+                    }
+                }
+                return array;
+            },
+            addSection() {
+                this.sectionList.push({name: ''});
             },
             // 设置排序完成的列表
             setSortedList(sortedList) {
@@ -630,6 +715,18 @@
     .el-table {
         .el-input {
             width: 100%;
+        }
+    }
+
+    #auto-sort {
+        padding: 30px;
+        margin-top: 30px;
+        border: 1px solid gray;
+        .el-button {
+            margin-bottom: 30px;
+        }
+        .el-input {
+            margin-bottom: 20px;
         }
     }
 </style>
