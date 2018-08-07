@@ -1,12 +1,12 @@
 <!--添加节目-->
 <template>
     <div class="program-container">
-        <el-breadcrumb class="gp-breadcrumb" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>节目资源管理</el-breadcrumb-item>
-            <el-breadcrumb-item>新增节目</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'节目资源管理'},
+            {name:getPageName}]">
+        </custom-breadcrumb>
         <el-row>
             <programme-basic-info v-if="status === 1"></programme-basic-info>
             <el-col :span="24" v-if="status !== 1">
@@ -520,6 +520,18 @@
             },
             copyVideoList() {
                 return _.cloneDeep(this.video.list);
+            },
+            getPageName() {
+                switch (this.status) {
+                    case 0:
+                        return '节目列表-新增';
+                    case 1:
+                        return '节目列表-详情';
+                    case 2:
+                        return '节目列表-编辑';
+                    default:
+                        return '';
+                }
             },
             filterSize() {
                 const {posterImageList} = this.programme;

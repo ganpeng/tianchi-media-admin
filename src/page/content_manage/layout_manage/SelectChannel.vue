@@ -272,7 +272,10 @@ export default {
             channel.imageList = this.channelImageList;
             this.$service.updateChannelById(channelId, channel)
                 .then((res) => {
-                    if (res && res.code === 0) {}
+                    if (res && res.code === 0) {
+                        this.imageUri = data.posterImage.uri;
+                        this.channelForm.coverImage = _.cloneDeep(data.posterImage);
+                    }
                 });
         }
         // 图片相关结束

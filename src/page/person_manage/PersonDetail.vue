@@ -1,12 +1,12 @@
 <!-- 人物详情 -->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>人物资源管理</el-breadcrumb-item>
-            <el-breadcrumb-item>新增人物</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'人物资源管理'},
+            {name:getPageName}]">
+        </custom-breadcrumb>
         <el-row>
             <person-form
                 v-on:uploadSuccess="uploadSuccess($event)"
@@ -71,6 +71,18 @@
 
             isEdit() {
                 return this.status === 2;
+            },
+            getPageName() {
+                switch (this.status) {
+                    case 0:
+                        return '人物列表-新增';
+                    case 1:
+                        return '人物列表-详情';
+                    case 2:
+                        return '人物列表-编辑';
+                    default:
+                        return '';
+                }
             }
         },
         methods: {

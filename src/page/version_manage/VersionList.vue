@@ -1,11 +1,12 @@
 <!--版本列表组件-->
 <template>
     <div>
-        <el-breadcrumb class="gp-breadcrumb" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>版本列表</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'版本管理'},
+            {name:'版本列表'}]">
+        </custom-breadcrumb>
         <el-form :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
             <el-col :span="20">
                 <el-form-item label="升级类型">

@@ -1,13 +1,12 @@
 <!--显示人物-->
 <template>
     <div class="person-container">
-        <!-- <person-detail :status='1'></person-detail> -->
-        <el-breadcrumb class="gp-breadcrumb" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>人物资源管理</el-breadcrumb-item>
-            <el-breadcrumb-item>人物详情</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'人物资源管理'},
+            {name:'人物列表-详情'}]">
+        </custom-breadcrumb>
         <el-row>
             <el-col :span="10">
                 <div class="block-title">节目基本信息</div>

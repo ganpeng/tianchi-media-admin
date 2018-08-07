@@ -1,12 +1,12 @@
 <!-- 节目列表页组件 -->
 <template>
     <div class="program-list-container">
-        <el-breadcrumb class="gp-breadcrumb" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>节目资源管理</el-breadcrumb-item>
-            <el-breadcrumb-item>节目列表</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'节目资源管理'},
+            {name:'节目列表'}]">
+        </custom-breadcrumb>
         <div class="table-container">
             <el-form :inline="true" class="demo-form-inline text-left">
                 <el-col :span="19">

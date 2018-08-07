@@ -1,11 +1,11 @@
 <template>
     <div class="container">
-        <el-breadcrumb class="gp-breadcrumb" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>人物资源管理</el-breadcrumb-item>
-            <el-breadcrumb-item>推荐人物管理</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'人物资源管理'},
+            {name:'推荐人物管理'}]">
+        </custom-breadcrumb>
         <el-table class="my-table-style" :data="Object.keys(hotPerson.hotPerson)" border>
             <el-table-column align="center" width="240px" label="栏目/模块">
                 <template slot-scope="scope">

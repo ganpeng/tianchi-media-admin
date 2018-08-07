@@ -1,13 +1,13 @@
 <!-- 频道单独设置页面 -->
 <template>
     <div class="container">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
-            <el-breadcrumb-item>频道页面设置</el-breadcrumb-item>
-            <el-breadcrumb-item>频道模块设置</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'栏目管理'},
+            {name:'频道页面设置'},
+            {name:'频道模块设置'}]">
+        </custom-breadcrumb>
         <div class="form">
             <select-channel
                 :size="size"
