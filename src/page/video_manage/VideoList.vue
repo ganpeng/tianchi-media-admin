@@ -7,55 +7,63 @@
             {name:'视频资源管理'},
             {name:'视频列表'}]">
         </custom-breadcrumb>
-        <el-form :inline="true" class="demo-form-inline search-form text-left" @keyup.enter.native="searchHandler" @submit.native.prevent>
-            <el-form-item class="search">
-                <el-input
-                    :value="searchFields.name"
-                    placeholder="搜索你想要的信息"
-                    clearable
-                    @input="inputHandler($event, 'name')"
-                >
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-            </el-form-item>
-            <el-form-item class="search">
-                <el-select
-                    :value="searchFields.videoType"
-                    clearable
-                    placeholder="请选择视频类型"
-                    @input="inputHandler($event, 'videoType')"
-                >
-                    <el-option
-                        v-for="(item, index) in videoTypeOptions"
-                        :key="index"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item class="search">
-                <el-select
-                    :value="searchFields.status"
-                    clearable
-                    placeholder="请选择视频注入状态"
-                    @input="inputHandler($event, 'status')"
-                >
-                    <el-option
-                        v-for="(item, index) in statusOptions"
-                        :key="index"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="searchHandler"><i class="el-icon-search"></i> 搜索</el-button>
-            </el-form-item>
-            <el-form-item class="create-account">
-                <el-button type="primary" plain @click="showVideoUploadDialog('VOD')"><i class="el-icon-circle-plus-outline"></i> 上传视频</el-button>
-                <!-- <el-button type="primary" plain @click="showVideoUploadDialog('VOD')"><i class="el-icon-circle-plus-outline"></i> 上传点播视频</el-button>
-                <el-button type="primary" plain @click="showVideoUploadDialog('CAROUSEL')"><i class="el-icon-circle-plus-outline"></i> 上传轮播视频</el-button> -->
-            </el-form-item>
+        <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @keyup.enter.native="searchHandler" @submit.native.prevent>
+            <el-col :span="5" class="float-right">
+                <el-form-item class="create-account">
+                    <el-button type="primary" plain @click="showVideoUploadDialog('VOD')"><i class="el-icon-circle-plus-outline"></i> 上传视频</el-button>
+                    <!-- <el-button type="primary" plain @click="showVideoUploadDialog('VOD')"><i class="el-icon-circle-plus-outline"></i> 上传点播视频</el-button>
+                    <el-button type="primary" plain @click="showVideoUploadDialog('CAROUSEL')"><i class="el-icon-circle-plus-outline"></i> 上传轮播视频</el-button> -->
+                </el-form-item>
+            </el-col>
+            <el-col :span="24">
+                <el-form-item class="search">
+                    <el-input
+                        :value="searchFields.name"
+                        placeholder="搜索你想要的信息"
+                        clearable
+                        @input="inputHandler($event, 'name')"
+                    >
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                    <el-select
+                        :value="searchFields.videoType"
+                        clearable
+                        placeholder="请选择视频类型"
+                        @input="inputHandler($event, 'videoType')"
+                    >
+                        <el-option
+                            v-for="(item, index) in videoTypeOptions"
+                            :key="index"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item class="search">
+                    <el-select
+                        :value="searchFields.status"
+                        clearable
+                        placeholder="请选择视频注入状态"
+                        @input="inputHandler($event, 'status')"
+                    >
+                        <el-option
+                            v-for="(item, index) in statusOptions"
+                            :key="index"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="searchHandler"><i class="el-icon-search"></i> 搜索</el-button>
+                    <el-button type="danger" :disabled="!isDisabled" @click="deleteVideoList">批量删除节目</el-button>
+                    <el-button type="warning" @click="toggleUpdateHandler">
+                        {{timer ? '停止更新' : '恢复更新'}}
+                    </el-button>
+                </el-form-item>
+            </el-col>
         </el-form>
         <video-table></video-table>
         <el-dialog
@@ -88,7 +96,8 @@
                             @click="cancelUpload(index)"
                             class="delete-btn el-icon-close"></i>
                         <span class="percent">
-                            {{ item.progress.percent + '% ' + (isChecking(index) ? '视频校验中, 请等待片刻' : uploadStatus(index)) }}
+                            <span>{{item.progress.percent}}%</span>
+                            <span :class="uploadStatusColor(index)">{{(isChecking(index) ? '视频校验中, 请等待片刻' : uploadStatus(index))}}</span>
                             <i v-if="item.progress.status === 'uploading'" class="el-icon-loading"></i>
                         </span>
                     </div>
@@ -124,9 +133,14 @@
         },
         computed: {
             ...mapGetters({
+                video: 'video/video',
                 searchFields: 'video/searchFields',
                 getVideoType: 'video/getVideoType'
             }),
+            isDisabled() {
+                let deleteList = this.video.list.filter((item) => item.checked === 'yes');
+                return deleteList.length > 0;
+            },
             getProgress() {
                 return (index) => {
                     return {
@@ -139,7 +153,14 @@
                 return (index) => {
                     let status = this.files[index].progress.status;
                     let percent = this.files[index].progress.percent;
-                    return status === 'canceled' || status === 'uploaded' || status === 'error' || status === 'fail' || percent === 100;
+                    return status === 'canceled' ||
+                           status === 'uploaded' ||
+                           status === 'error' ||
+                           status === 'exist' ||
+                           status === 'saveErr' ||
+                           status === 'sizeErr' ||
+                           status === 'transErr' ||
+                           percent === 100;
                 };
             },
             isChecking() {
@@ -149,12 +170,40 @@
                     return status === 'uploading' && percent === 100;
                 };
             },
+            uploadStatusColor() {
+                return (index) => {
+                    let status = this.files[index].progress.status;
+                    switch (status) {
+                        // uploading checking canceld waiting uploaded error fail
+                        //  exist 已存在， saveErr 保存失败, sizeErr, transErr 转码失败
+                        case 'uploading':
+                            return 'text-success';
+                        case 'canceled':
+                        case 'waiting':
+                        case 'exist':
+                            return 'text-info';
+                        case 'uploaded':
+                            return 'text-success';
+                        case 'error':
+                        case 'saveErr':
+                        case 'transErr':
+                            return 'text-danger';
+                        case 'checking':
+                            return 'text-success';
+                        case 'sizeErr':
+                            return 'text-warning';
+                        default:
+                            return '';
+                    }
+                };
+            },
             uploadStatus() {
                 return (index) => {
                     let status = this.files[index].progress.status;
                     let message = this.files[index].progress.message;
                     switch (status) {
                         // uploading checking canceld waiting uploaded error fail
+                        //  exist 已存在， saveErr 保存失败, sizeErr, transErr 转码失败
                         case 'uploading':
                             return '上传中';
                         case 'canceled':
@@ -167,7 +216,10 @@
                             return '上传失败';
                         case 'checking':
                             return '视频校验中，请稍候片刻';
-                        case 'fail':
+                        case 'exist':
+                        case 'saveErr':
+                        case 'sizeErr':
+                        case 'transErr':
                             return message;
                         default:
                             return '';
@@ -198,6 +250,42 @@
                 getVideoList: 'video/getVideoList',
                 checkVideoMd5: 'video/checkVideoMd5'
             }),
+            toggleUpdateHandler() {
+                if (this.timer) {
+                    clearInterval(this.timer);
+                    this.timer = null;
+                } else {
+                    clearInterval(this.timer);
+                    this.timer = setInterval(() => {
+                        this.getVideoList();
+                    }, 1000 * 10);
+                }
+            },
+            deleteVideoList() {
+                this.$confirm(`您确定要删除吗, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    }).then(() => {
+                        let deleteList = this.video.list.filter((item) => item.checked === 'yes');
+                        if (deleteList.length > 0) {
+                            let ids = deleteList.map((item) => item.id);
+                            this.$service.deleteVideoByIdList(ids)
+                                .then((res) => {
+                                    if (res && res.code === 0) {
+                                        this.$message.success('删除成功');
+                                    } else {
+                                        this.$message.error('删除失败');
+                                    }
+                                });
+                        }
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+            },
             keyupHandler(e) {
                 if (e.keyCode === 13) {
                     this.searchHandler();
@@ -300,13 +388,31 @@
                                     }
                                 });
                             } else {
+                                let status = '';
+                                //  exist 已存在， saveErr 保存失败, sizeErr 分辨率不合适, transErr 转码失败
+                                switch (result.failCode) {
+                                    case 3302:
+                                        status = 'transErr';
+                                        break;
+                                    case 3305:
+                                        status = 'saveErr';
+                                        break;
+                                    case 3300:
+                                        status = 'exist';
+                                        break;
+                                    case 3307:
+                                        status = 'sizeErr';
+                                        break;
+                                    default:
+                                }
+
                                 that.files = that.files.map((obj, index) => {
                                     if (index === that.count) {
                                         return {
                                             file: obj.file,
                                             progress: {
                                                 percent: obj.progress.percent,
-                                                status: 'fail',
+                                                status,
                                                 message: result.failReason
                                             }
                                         };

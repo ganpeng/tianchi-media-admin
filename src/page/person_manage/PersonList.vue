@@ -7,83 +7,89 @@
             {name:'人物资源管理'},
             {name:'人物列表'}]">
         </custom-breadcrumb>
-        <el-form :inline="true" class="demo-form-inline search-form text-left">
-            <el-form-item label="地区">
-                <el-select
-                    :value="searchFields.area"
-                    filterable
-                    clearable
-                    placeholder="请选择地区"
-                    @input="inputHandler($event, 'area')">
-                    <el-option
-                        v-for="(item, index) in areaOptions"
-                        :key="index"
-                        :label="item.name"
-                        :value="item.code">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item class="search">
-                <el-input
-                    :value="searchFields.name"
-                    @input="inputHandler($event, 'name')"
-                    placeholder="搜索你想要的信息"
-                    clearable
-                >
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="getPersonList">搜索</el-button>
-            </el-form-item>
-            <el-form-item class="create-account">
-                <el-button type="primary" plain @click="createPerson"><i class="el-icon-circle-plus-outline"></i> 新增人物</el-button>
-                <el-button type="primary" plain @click="showFileUploadDialog"> 导入人物</el-button>
-            </el-form-item>
+        <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left">
+            <el-col :span="5" class="float-right">
+                <el-form-item class="create-account">
+                    <el-button type="primary" plain @click="createPerson"><i class="el-icon-circle-plus-outline"></i> 新增人物</el-button>
+                    <el-button type="primary" plain @click="showFileUploadDialog"> 导入人物</el-button>
+                </el-form-item>
+            </el-col>
+            <el-col :span="24">
+                <el-form-item label="地区">
+                    <el-select
+                        :value="searchFields.area"
+                        filterable
+                        clearable
+                        placeholder="请选择地区"
+                        @input="inputHandler($event, 'area')">
+                        <el-option
+                            v-for="(item, index) in areaOptions"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.code">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item class="search">
+                    <el-input
+                        :value="searchFields.name"
+                        @input="inputHandler($event, 'name')"
+                        placeholder="搜索你想要的信息"
+                        clearable
+                    >
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="getPersonList">搜索</el-button>
+                </el-form-item>
+            </el-col>
         </el-form>
         <el-table class="my-table-style" :data="list" border>
-            <el-table-column prop="id" align="center" width="120px" label="编号"></el-table-column>
+            <el-table-column prop="id" align="center" width="120px" label="编号">
+                <template slot-scope="scope">
+                    {{scope.row.id | padEmpty}}
+                </template>
+            </el-table-column>
             <el-table-column label="照片" align="center" >
                 <template slot-scope="scope">
-                    <img @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="80px" height="80px" class="person-image pointer" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">
+                    <img v-if="scope.row.avatarImage" @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="80px" height="80px" class="person-image pointer" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">
+                    <span v-else>------</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="name" align="center" width="200px" label="名字"></el-table-column>
-            <!--
-            <el-table-column prop="description" align="center" width="300px" label="人物简介">
+            <el-table-column prop="name" align="center" width="200px" label="名字">
                 <template slot-scope="scope">
-                    <label class="ellipsis-three">{{scope.row.description}}</label>
-                    <el-popover
-                        placement="right"
-                        :title="scope.row.name + '简介'"
-                        width="250"
-                        trigger="hover"
-                        :content="scope.row.description">
-                        <el-button slot="reference" type="text" class="float-right">更多</el-button>
-                    </el-popover>
+                    {{scope.row.name | padEmpty}}
                 </template>
             </el-table-column>
-            -->
             <el-table-column prop="area" width="120px" align="center" label="地区">
                 <template slot-scope="scope">
-                    {{areaLabel(scope.row.area)}}
+                    {{areaLabel(scope.row.area) | padEmpty}}
                 </template>
             </el-table-column>
             <el-table-column prop="birthday" width="120px" align="center" label="出生日期">
                 <template slot-scope="scope">
-                    {{scope.row.birthday | formatDate('yyyy-MM-DD')}}
+                    {{scope.row.birthday | formatDate('yyyy-MM-DD') | padEmpty}}
                 </template>
             </el-table-column>
-            <el-table-column prop="height" align="center" label="身高"></el-table-column>
-            <el-table-column prop="weight" align="center" label="体重"></el-table-column>
+            <el-table-column prop="height" align="center" label="身高">
+                <template slot-scope="scope">
+                    {{scope.row.height | padEmpty}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="weight" align="center" label="体重">
+                <template slot-scope="scope">
+                    {{scope.row.weight | padEmpty}}
+                </template>
+            </el-table-column>
             <el-table-column prop="mainRole" align="center" min-width="150" label="职业">
                 <template slot-scope="scope">
-                    {{mainRoleLabel(scope.row.mainRoleList).join(', ')}}
+                    {{mainRoleLabel(scope.row.mainRoleList).join(', ') | padEmpty}}
                 </template>
             </el-table-column>
             <el-table-column align="center" width="120px" label="更新时间">
                 <template slot-scope="scope">
-                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
+                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
                 </template>
             </el-table-column>
             <el-table-column align="center" width="120px" fixed="right" label="操作">

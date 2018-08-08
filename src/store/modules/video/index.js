@@ -101,6 +101,30 @@ const mutations = {
     },
     resetSearchFields(state) {
         state.searchFields = _.cloneDeep(defaultSearchFields);
+    },
+    //  对节目列表的操作
+    toggleChecked(state, payload) {
+        let {id} = payload;
+        state.list = state.list.map((item) => {
+            if (item.id === id) {
+                item.checked = item.checked === 'yes' ? 'no' : 'yes';
+            }
+            return item;
+        });
+    },
+    toggleAll(state, payload) {
+        let {all} = payload;
+        if (all) {
+            state.list = state.list.map((item) => {
+                item.checked = 'yes';
+                return item;
+            });
+        } else {
+            state.list = state.list.map((item) => {
+                item.checked = 'no';
+                return item;
+            });
+        }
     }
 };
 
@@ -112,6 +136,10 @@ const actions = {
             let result = await service.getVideoList(params);
             if (result && result.code === 0) {
                 let {list, pageSize, pageNum, total} = result.data;
+                list = list.map((item) => {
+                    item.checked = 'no';
+                    return item;
+                });
                 commit('setList', {list});
                 commit('setPagination', {pageNum: pageNum + 1, pageSize, total});
             }

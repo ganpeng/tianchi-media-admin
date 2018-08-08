@@ -38,3 +38,12 @@ export const deleteVideoById = (id) => {
         baseURL: '/'
     });
 };
+
+/**
+ * 根据id列表删除视频
+ */
+export const deleteVideoByIdList = (ids) => {
+    return service.patch(`/v1/storage/video/delete`, ids, {
+        baseURL: '/'
+    });
+};

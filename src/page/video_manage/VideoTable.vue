@@ -1,6 +1,11 @@
 <template>
     <div class="video-table-container">
        <el-table class="my-table-style" :data="video.list" border>
+            <el-table-column align="center" width="120px" :render-header="renderHeader">
+                <template slot-scope="scope">
+                    <el-checkbox :true-label="'yes'" :false-label="'no'" @change="_toggleChecked($event, scope.row.id)" :value="scope.row.checked"></el-checkbox>
+                </template>
+            </el-table-column>
             <el-table-column v-if="hasRadio" align="center" label="选择">
                 <template slot-scope="scope">
                     <el-radio :value="video.selectedVideoId" :label="scope.row.id" @input="setSelectedVideoId({id: scope.row.id})">&nbsp;</el-radio>
@@ -38,13 +43,6 @@
                     {{duration(scope.row.takeTimeInSec)}}
                 </template>
             </el-table-column>
-            <!--
-            <el-table-column align="center" label="视频类型">
-                <template slot-scope="scope">
-                    {{scope.row.videoType === 'VOD' ? '点播视频' : '轮播视频'}}
-                </template>
-            </el-table-column>
-            -->
             <el-table-column prop="takeTimeInSec" align="center" label="注入状态">
                 <template slot-scope="scope">
                     {{getStatus(scope.row.status)}}
@@ -131,7 +129,9 @@ export default {
         ...mapMutations({
             setSelectedVideoId: 'video/setSelectedVideoId',
             setPagination: 'video/setPagination',
-            updatePagination: 'video/updatePagination'
+            updatePagination: 'video/updatePagination',
+            toggleChecked: 'video/toggleChecked',
+            toggleAll: 'video/toggleAll'
         }),
         ...mapActions({
             getVideoList: 'video/getVideoList',
@@ -146,6 +146,20 @@ export default {
         },
         closeDisplayVideoDialog(status) {
             this.displayVideoDialogVisible = status;
+        },
+        renderHeader(h, data) {
+            return h('el-checkbox',
+                {
+                    on: {
+                        change: this.checkAllHandler
+                    }
+            });
+        },
+        _toggleChecked(val, id) {
+            this.toggleChecked({id});
+        },
+        checkAllHandler(all) {
+            this.toggleAll({all});
         },
         displayVideo(url) {
             this.displayVideoDialogVisible = true;

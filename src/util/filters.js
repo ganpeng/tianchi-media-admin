@@ -56,6 +56,9 @@ const FILTERS = {
                 return role.VIDEO_TYPE[i].label;
             }
         }
+    },
+    padEmpty(value) {
+        return value === '' || value === undefined || value === null ? '------' : value;
     }
 };
 

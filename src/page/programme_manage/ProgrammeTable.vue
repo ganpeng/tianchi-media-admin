@@ -2,30 +2,27 @@
 <template>
     <div class="tele-play-table-container">
         <el-row>
-            <!-- <h2 class="table-title">{{title}}</h2> -->
             <el-table
                 :data="dataList"
                 border
                 style="width: 100%">
-                <!--
-                <el-table-column
-                    prop="order"
-                    label="视频排序"
-                    align="center"
-                    width="240px">
-                </el-table-column>
-                -->
                 <el-table-column
                     prop="storageVideoId"
                     label="视频ID"
                     align="center"
                     width="120px">
+                        <template slot-scope="scope">
+                            {{scope.row.storageVideoId | padEmpty}}
+                        </template>
                 </el-table-column>
                 <el-table-column
                     prop="originName"
                     label="视频文件名"
                     align="center"
                     width="180">
+                        <template slot-scope="scope">
+                            {{scope.row.originName | padEmpty}}
+                        </template>
                 </el-table-column>
                 <el-table-column
                     prop="name"
@@ -33,6 +30,9 @@
                     label="视频展示名"
                     align="center"
                     width="180">
+                        <template slot-scope="scope">
+                            {{scope.row.name | padEmpty}}
+                        </template>
                 </el-table-column>
                 <el-table-column
                     prop="sort"
@@ -40,6 +40,9 @@
                     label="集数/期号"
                     align="center"
                     width="180">
+                        <template slot-scope="scope">
+                            {{scope.row.sort | padEmpty}}
+                        </template>
                 </el-table-column>
                 <el-table-column
                     prop="description"
@@ -48,22 +51,14 @@
                     align="center"
                     label="视频简介">
                         <template slot-scope="scope">
-                            <label class="ellipsis-three">{{scope.row.description}}</label>
-                            <el-popover
-                                placement="right"
-                                :title="scope.row.name + '简介'"
-                                width="250"
-                                trigger="hover"
-                                :content="scope.row.description">
-                                <el-button slot="reference" type="text" class="float-right">更多</el-button>
-                            </el-popover>
+                            {{scope.row.description | padEmpty}}
                         </template>
                 </el-table-column>
                 <el-table-column
                     align="center"
                     label="相关人物">
                         <template slot-scope="scope">
-                            {{videoPersonName(scope.row.figureList)}}
+                            {{videoPersonName(scope.row.figureList) | padEmpty}}
                         </template>
                 </el-table-column>
                 <el-table-column
@@ -71,7 +66,8 @@
                     align="center"
                     label="视频封面">
                         <template slot-scope="scope">
-                            <img @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="person-image pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
+                            <img v-if="scope.row.coverImage" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="person-image pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
+                            <span v-else>------</span>
                         </template>
                 </el-table-column>
                 <el-table-column
@@ -79,7 +75,7 @@
                     align="center"
                     label="关联正片">
                         <template slot-scope="scope">
-                            {{(scope.row.parentId ? featureVideoName(scope.row.parentId) : '/')}}
+                            {{(scope.row.parentId ? featureVideoName(scope.row.parentId) : '') | padEmpty}}
                         </template>
                 </el-table-column>
                 <el-table-column
@@ -120,7 +116,7 @@
                     min-width="120px"
                     label="内容类型">
                         <template slot-scope="scope">
-                            {{getVideoType(scope.row.type)}}
+                            {{getVideoType(scope.row.type) | padEmpty}}
                         </template>
                 </el-table-column>
                 <el-table-column
@@ -138,7 +134,7 @@
                     min-width="120px"
                     label="时长">
                     <template slot-scope="scope">
-                        {{duration(scope.row.takeTimeInSec)}}
+                        {{duration(scope.row.takeTimeInSec) | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -158,7 +154,7 @@
                     min-width="120px"
                     label="上传时间">
                     <template slot-scope="scope">
-                        {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                        {{scope.row.createdAt | formatDate('yyyy-MM-DD') | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -173,7 +169,7 @@
                         <el-button v-if="status !== 1 && isShow" @click="deleteVideo(scope.row.id, scope.row.visible)" type="text" size="small">
                             {{scope.row.visible ? '下架' : '上架'}}
                         </el-button>
-                        <el-button v-if="status !== 1" @click="realDeleteVideo(scope.row.id)" type="text" class="text-danger" size="small">删除</el-button>
+                        <el-button v-if="status !== 1" @click="realDeleteVideo(scope.row.id)" type="text" class="text-danger" size="small">取消关联</el-button>
                     </template>
                 </el-table-column>
             </el-table>

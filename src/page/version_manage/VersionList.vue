@@ -7,8 +7,13 @@
             {name:'版本管理'},
             {name:'版本列表'}]">
         </custom-breadcrumb>
-        <el-form :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
-            <el-col :span="20">
+        <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
+            <el-col :span="24">
+                <el-form-item class="create-account">
+                    <el-button type="primary" plain @click="showFileUploadDialog"><i class="el-icon-circle-plus-outline"></i> 新增版本</el-button>
+                </el-form-item>
+            </el-col>
+            <el-col :span="24">
                 <el-form-item label="升级类型">
                     <el-select
                         :value="searchFields.productType"
@@ -65,11 +70,6 @@
                     <el-button type="primary" icon="el-icon-search" @click="getVersionList">搜索</el-button>
                 </el-form-item>
             </el-col>
-            <el-col :span="4">
-                <el-form-item class="create-account">
-                    <el-button type="primary" plain @click="showFileUploadDialog"><i class="el-icon-circle-plus-outline"></i> 新增版本</el-button>
-                </el-form-item>
-            </el-col>
         </el-form>
         <el-table class="my-table-style" :data="list" border>
             <el-table-column align="center" width="120px" label="编号" prop="id"></el-table-column>
@@ -91,7 +91,11 @@
                     {{scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="设备统计"></el-table-column>
+            <el-table-column align="center" label="设备统计">
+                <template slot-scope="scope">
+                    {{scope.row.installed | padEmpty}}
+                </template>
+            </el-table-column>
             <el-table-column align="center" width="120px" label="升级包下载">
                 <template slot-scope="scope">
                     <a class="text-primary" :href="(scope.row.uriPrefix + scope.row.fullPackageUri)">{{scope.row.version}}</a>

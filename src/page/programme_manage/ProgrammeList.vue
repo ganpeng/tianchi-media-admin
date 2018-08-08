@@ -8,8 +8,14 @@
             {name:'节目列表'}]">
         </custom-breadcrumb>
         <div class="table-container">
-            <el-form :inline="true" class="demo-form-inline text-left">
-                <el-col :span="19">
+            <el-form id="label-font" :inline="true" class="demo-form-inline text-left">
+                <el-col :span="5" class="float-right">
+                    <el-form-item class="create-account">
+                        <el-button type="primary" plain @click="createProgramme"><i class="el-icon-circle-plus-outline"></i> 新增节目</el-button>
+                        <el-button type="primary" plain @click="showFileUploadDialog">导入节目</el-button>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="24">
                     <el-form-item label="上映开始年">
                         <el-date-picker
                             :value="programmeSearchFields.releaseAtStart"
@@ -100,76 +106,78 @@
                     <el-form-item>
                         <el-button @click="searchHandler" icon="el-icon-search" type="primary">搜索</el-button>
                         <el-button type="warning" @click="clearSearchFields">清空筛选条件</el-button>
+                        <!-- <el-button type="danger" :disabled="!isDisabled" @click="deleteProgrammeList">批量删除节目</el-button> -->
                     </el-form-item>
                     <el-form-item>
                     </el-form-item>
                 </el-col>
-                <el-col :span="5">
-                    <el-form-item class="create-account">
-                        <el-button type="primary" plain @click="createProgramme"><i class="el-icon-circle-plus-outline"></i> 新增节目</el-button>
-                        <el-button type="primary" plain @click="showFileUploadDialog">导入节目</el-button>
-                    </el-form-item>
-                </el-col>
             </el-form>
             <el-table class="my-table-style" :data="list" border>
-                <el-table-column prop="code" align="center" width="120px" label="节目编号"></el-table-column>
+                <!--
+                <el-table-column align="center" width="120px" :render-header="renderHeader">
+                    <template slot-scope="scope">
+                        <el-checkbox :true-label="'yes'" :false-label="'no'" @change="_toggleChecked($event, scope.row.id)" :value="scope.row.checked"></el-checkbox>
+                    </template>
+                </el-table-column>
+                -->
+                <el-table-column prop="code" align="center" width="120px" label="节目编号">
+                    <template slot-scope="scope">
+                        {{scope.row.code | padEmpty}}
+                    </template>
+                </el-table-column>
                 <el-table-column label="节目图片" align="center" >
                     <template slot-scope="scope">
                         <img @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="person-image pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
                     </template>
                 </el-table-column>
-                <el-table-column prop="name" align="center" min-width="100px" label="节目名称"></el-table-column>
-                <!--
-                <el-table-column prop="description" align="center" width="300px" label="节目简介">
+                <el-table-column prop="name" align="center" min-width="100px" label="节目名称">
                     <template slot-scope="scope">
-                        <label class="ellipsis-three">{{scope.row.description}}</label>
-                        <el-popover
-                            placement="right"
-                            :title="scope.row.name + '简介'"
-                            width="250"
-                            trigger="hover"
-                            :content="scope.row.description">
-                            <el-button slot="reference" type="text" class="float-right">更多</el-button>
-                        </el-popover>
+                        {{scope.row.name | padEmpty}}
                     </template>
                 </el-table-column>
-                -->
-                <el-table-column prop="featureVideoCount" min-width="100px" align="center" label="正片数量"></el-table-column>
+                <el-table-column prop="featureVideoCount" min-width="100px" align="center" label="正片数量">
+                    <template slot-scope="scope">
+                        {{scope.row.featurevideocount | padEmpty}}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="extraVideoCount" align="center" min-width="120px" label="相关视频数量">
+                    <template slot-scope="scope">
+                        {{scope.row.extraVideoCount | padEmpty}}
+                    </template>
                 </el-table-column>
                 <el-table-column prop="releaseAt" align="center" width="100px" label="上映时间">
                     <template slot-scope="scope">
-                        {{ scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
+                        {{ scope.row.releaseAt | formatDate('yyyy-MM-DD') | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="produceAreaList" min-width="150px" align="center" label="地区">
                     <template slot-scope="scope">
-                        {{areaLabel(scope.row.produceAreaList)}}
+                        {{areaLabel(scope.row.produceAreaList) | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column align="center" width="100px" label="分类">
                     <template slot-scope="scope">
-                        {{categoryListString(scope.row.categoryList)}}
+                        {{categoryListString(scope.row.categoryList) | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column align="center" min-width="100px" label="类型">
                     <template slot-scope="scope">
-                        {{typeList(scope.row.id)}}
+                        {{typeList(scope.row.id) | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column align="center" min-width="100px" label="演员">
                     <template slot-scope="scope">
-                        {{getChiefActor(scope.row.id)}}
+                        {{getChiefActor(scope.row.id) | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column align="center" min-width="100px" label="导演">
                     <template slot-scope="scope">
-                        {{getDirector(scope.row.id)}}
+                        {{getDirector(scope.row.id) | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column align="center" min-width="100px" label="编剧">
                     <template slot-scope="scope">
-                        {{getScenarist(scope.row.id)}}
+                        {{getScenarist(scope.row.id) | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
@@ -179,7 +187,7 @@
                 </el-table-column>
                 <el-table-column align="center" min-width="100px" label="更新时间">
                     <template slot-scope="scope">
-                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
+                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column fixed="right" align="center" width="120px" label="操作">
@@ -241,6 +249,7 @@ export default {
             areaOptions: store.get('areaList'),
             fileUploadDialogVisible: false,
             fileList: [],
+            multipleSelection: [],
             uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
             visibleOptions: [
                 {
@@ -278,8 +287,14 @@ export default {
             categoryListString: 'programme/categoryListString',
             getDirector: 'programme/getDirector',
             getChiefActor: 'programme/getChiefActor',
-            getScenarist: 'programme/getScenarist'
-        })
+            getScenarist: 'programme/getScenarist',
+            getChecked: 'programme/getChecked',
+            isCheckedAll: 'programme/isCheckedAll'
+        }),
+        isDisabled() {
+            let deleteList = this.list.filter((item) => item.checked === 'yes');
+            return deleteList.length > 0;
+        }
     },
     beforeRouteLeave(to, from, next) {
         window.localStorage.setItem('programmeSearchFields', JSON.stringify(this.programmeSearchFields));
@@ -297,12 +312,31 @@ export default {
         ...mapMutations({
             updateProgrammePagination: 'programme/updateProgrammePagination',
             updateProgrammeSearchFields: 'programme/updateProgrammeSearchFields',
-            resetProgrammeSearchFields: 'programme/resetProgrammeSearchFields'
+            resetProgrammeSearchFields: 'programme/resetProgrammeSearchFields',
+            toggleChecked: 'programme/toggleChecked',
+            toggleAll: 'programme/toggleAll'
         }),
         ...mapActions({
             getProgrammeList: 'programme/getProgrammeList',
             getProgrammeCategory: 'programme/getProgrammeCategory'
         }),
+        handleSelectionChange(val) {
+            this.multipleSelection = val;
+        },
+        _toggleChecked(val, id) {
+            this.toggleChecked({id});
+        },
+        renderHeader(h, data) {
+            return h('el-checkbox',
+                {
+                    on: {
+                        change: this.checkAllHandler
+                    }
+            });
+        },
+        checkAllHandler(all) {
+            this.toggleAll({all});
+        },
         keyupHandler(e) {
             if (e.keyCode === 13) {
                 this.getProgrammeList();
@@ -356,6 +390,23 @@ export default {
         },
         submitUpload() {
             this.$refs.upload.submit();
+        },
+        deleteProgrammeList() {
+            this.$confirm(`您确定要删除吗, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    let deleteList = this.list.filter((item) => item.checked === 'yes');
+                    if (deleteList.length > 0) {
+                        //  TODO
+                    }
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
         },
         uploadSuccessHandler(res, file, fileList) {
             if (res && res.code === 0) {

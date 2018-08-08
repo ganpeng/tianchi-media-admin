@@ -371,8 +371,8 @@
             <el-col :span="24">
                 <div class="block-title">节目视频</div>
                 <div class="preview-sort clearfix">
-                    <el-button class="float-right" v-if="!readonly" type="primary" @click="showUploadDialog">添加视频<i class="el-icon-upload el-icon--right"></i></el-button>
-                    <el-button class="float-left sort-btn" v-if="!readonly" type="success" @click="showSortDialog">点击视频排序</el-button>
+                    <el-button class="float-right" v-if="!readonly" type="primary" @click="showUploadDialog" plain><i class="el-icon-plus el-icon--right"></i> 关联视频</el-button>
+                    <el-button class="float-left sort-btn" v-if="!readonly" type="primary" @click="showSortDialog" plain>点击视频排序</el-button>
                 </div>
                 <programme-table title="已添加视频列表" :tableStatus="1" :status="status" :data-list="video.list"></programme-table>
             </el-col>
