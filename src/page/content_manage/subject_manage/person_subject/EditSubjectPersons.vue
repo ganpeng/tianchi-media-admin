@@ -1,49 +1,64 @@
 <!--人物专题中的人物设置组件-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>专题管理</el-breadcrumb-item>
-            <el-breadcrumb-item>编辑<label class="subject-name">{{subjectName}}</label>专题的人物</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'专题管理'},
+            {name:'编辑专题的人物'}]">
+        </custom-breadcrumb>
         <div class="block-box text-left">
+            <div class="block-title">添加人物</div>
             <select-multiple-person
                 ref="selectMultiplePerson"
                 :selectedPersonList="selectedPersonList"
                 v-on:setPersonList="setPerson">
             </select-multiple-person>
-            <el-tag>已选人物</el-tag>
-            <el-table
-                :data="selectedPersonList"
-                border
-                style="width: 100%">
-                <el-table-column
-                    type="index"
-                    label="序号">
-                </el-table-column>
-                <el-table-column
-                    prop="id"
-                    label="编号">
-                </el-table-column>
-                <el-table-column
-                    prop="name"
-                    label="名称">
-                </el-table-column>
-                <el-table-column
-                    prop="area"
-                    label="地区">
-                </el-table-column>
-                <el-table-column align="center"
-                                 label="操作"
-                                 class="operate">
-                    <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="removePerson(scope.$index)">删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
+            <div class="vice-block">
+                <h3 class="block-vice-title">已选节目</h3>
+                <el-table
+                    :data="selectedPersonList"
+                    border
+                    style="width: 100%">
+                    <el-table-column
+                        align="center"
+                        width="70px"
+                        type="index"
+                        label="序号">
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        width="120px"
+                        prop="id"
+                        label="编号">
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        prop="name"
+                        label="名称">
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        prop="area"
+                        label="地区">
+                        <template slot-scope="scope">
+                            {{scope.row.area.length !== 0 ? areaLabel(scope.row.area) : '------'}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        label="操作"
+                        class="operate">
+                        <template slot-scope="scope">
+                            <el-button type="text" size="small" class="remove-btn" @click="removePerson(scope.$index)">
+                                取消关联
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="text-center update-btn">
-                <el-button type="success" @click="updateSubjectPersons">更 新</el-button>
+                <el-button type="primary" class="page-main-btn" @click="updateSubjectPersons">更 新</el-button>
             </div>
         </div>
     </div>
@@ -51,6 +66,7 @@
 
 <script>
     import SelectMultiplePerson from './SelectMultiplePerson';
+    import store from 'store';
 
     export default {
         name: 'EditSubjectPersons',
@@ -80,6 +96,10 @@
                     }
                 });
             },
+            areaLabel(code) {
+                let area = store.get('areaList').find((area) => area.code === code);
+                return area ? area.name : '-------';
+            },
             // 删除选中的人物
             removePerson(index) {
                 let removedRow = this.selectedPersonList.splice(index, 1)[0];
@@ -107,27 +127,20 @@
     };
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
-    .subject-name {
-        font-style: italic;
-        font-weight: bold;
-        font-size: 16px;
+    .el-breadcurmb {
+        margin-bottom: 0px;
     }
 
-    .block-box {
-        margin-top: 50px;
-        .el-tag {
-            margin-top: 50px;
+    .el-table {
+        margin: 0px;
+        .remove-btn {
+            color: $baseRed;
         }
     }
 
-    .no-person {
-        margin-top: 40px;
-        margin-bottom: 50px;
-    }
-
     .update-btn {
-        margin: 80px 0 40px 0;
+        margin: 60px 0px;
     }
 </style>

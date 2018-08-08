@@ -1,25 +1,8 @@
 <!--搜索节目参数设置组件-->
 <template>
     <div @keyup.enter="getProgrammeList">
-        <el-form :inline="true" class="search-form">
-            <el-form-item class="search">
-                <el-input
-                    v-model="listQueryParams.keyword"
-                    clearable
-                    placeholder="搜索你想要的信息">
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-                <el-input v-show="false"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button @click="getProgrammeList" type="primary">搜 索</el-button>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="warning" @click="clearSearchFields">清空筛选条件</el-button>
-            </el-form-item>
-        </el-form>
         <el-form :inline="true">
-            <el-form-item label="上映开始年">
+            <el-form-item label="上映开始时间">
                 <el-date-picker
                     v-model="listQueryParams.releaseAtStart"
                     type="year"
@@ -27,7 +10,7 @@
                     placeholder="请选择上映时间">
                 </el-date-picker>
             </el-form-item>
-            <el-form-item label="上映结束年">
+            <el-form-item label="上映结束时间">
                 <el-date-picker
                     v-model="listQueryParams.releaseAtEnd"
                     type="year"
@@ -35,7 +18,7 @@
                     placeholder="请选择上映时间">
                 </el-date-picker>
             </el-form-item>
-            <el-form-item label="地区">
+            <el-form-item label="制片地区">
                 <el-select
                     v-model="listQueryParams.produceAreaList"
                     clearable
@@ -83,6 +66,22 @@
                         :value="item.value">
                     </el-option>
                 </el-select>
+            </el-form-item>
+        </el-form>
+        <el-form :inline="true">
+            <el-form-item>
+                <el-input
+                    v-model="listQueryParams.keyword"
+                    clearable
+                    placeholder="请输入关键字">
+                </el-input>
+                <el-input v-show="false"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" plain icon="el-icon-search" @click="getProgrammeList">搜索</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" plain @click="clearSearchFields">清空筛选条件</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -170,13 +169,10 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
-    .search-title {
-        display: inline-block;
-        font-size: 20px;
-        line-height: 40px
+    .el-form-item {
+        margin-right: 30px;
     }
 
 </style>

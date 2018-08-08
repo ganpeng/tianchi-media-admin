@@ -8,51 +8,48 @@
             :data="personList"
             border
             style="width: 100%"
-            header-row-class-name="table-header-row"
             ref="multiplePerson"
             @select="selectRow">
             <el-table-column
                 type="selection"
-                width="55">
+                width="40px">
             </el-table-column>
             <el-table-column
+                align="center"
+                width="120px"
                 prop="id"
                 label="编号">
             </el-table-column>
             <el-table-column
+                align="center"
                 prop="name"
                 label="姓名">
             </el-table-column>
             <el-table-column
+                align="center"
                 label="头像">
                 <template slot-scope="scope">
                     <img v-if="scope.row.avatarImage"
                          :src="scope.row.avatarImage ? scope.row.avatarImage.uri : '' | imageUrl"
-                         @click="displayImage(scope.row.avatarImage)"
                          :alt="scope.row.avatarImage ? scope.row.avatarImage.name : ''">
                     <label v-else>------</label>
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
                 prop="description"
+                show-overflow-tooltip
                 label="人物简介">
                 <template slot-scope="scope">
-                    <label class="ellipsis-three">{{scope.row.description}}</label>
-                    <el-popover
-                        placement="right"
-                        :title="scope.row.name + '简介'"
-                        width="250"
-                        trigger="hover"
-                        :content="scope.row.description">
-                        <el-button slot="reference" type="text" class="more">更多</el-button>
-                    </el-popover>
+                    <label>{{scope.row.description ? scope.row.description : '------'}}</label>
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
                 prop="area"
                 label="地区">
                 <template slot-scope="scope">
-                    {{areaLabel(scope.row.area)}}
+                    {{scope.row.area.length !== 0 ? areaLabel(scope.row.area) : '------'}}
                 </template>
             </el-table-column>
         </el-table>
@@ -65,21 +62,22 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="totalAmount">
         </el-pagination>
-        <el-button type="success" @click="appendPerson" size="small">添加/更新所选人物</el-button>
-        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
+        <el-button type="primary" plain
+                   class="apppend-programme"
+                   @click="appendPerson" size="small">
+            添加所选人物
+        </el-button>
     </div>
 </template>
 
 <script>
     import store from 'store';
     import PersonFilterParams from '../../searchFilterParams/PersonFilterParams';
-    import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 
     export default {
         name: 'SelectMultiplePerson',
         components: {
-            PersonFilterParams,
-            PreviewSingleImage
+            PersonFilterParams
         },
         // 当前外部选中的人物列表
         props: ['selectedPersonList'],
@@ -88,11 +86,6 @@
                 listQueryParams: {
                     pageNum: 0,
                     pageSize: 10
-                },
-                previewImage: {
-                    title: '',
-                    display: false,
-                    uri: ''
                 },
                 pageNum: 1,
                 totalAmount: 0,
@@ -137,10 +130,10 @@
             },
             areaLabel(code) {
                 let area = store.get('areaList').find((area) => area.code === code);
-                return area ? area.name : '';
+                return area ? area.name : '------';
             },
             handleSizeChange(pageSize) {
-                this.pageSize = pageSize;
+                this.listQueryParams.pageSize = pageSize;
                 this.getPersonList();
             },
             handleCurrentChange(pageNum) {
@@ -150,12 +143,6 @@
             // 添加人物
             appendPerson() {
                 this.$emit('setPersonList', this.multipleSelection);
-            },
-            // 放大预览图片
-            displayImage(image) {
-                this.previewImage.title = image.name;
-                this.previewImage.display = true;
-                this.previewImage.uri = image.uri;
             },
             selectRow(selection, row) {
                 let checkStatus;
@@ -195,16 +182,12 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
 
     .el-table {
         img {
-            width: 120px;
-            cursor: zoom-in;
-        }
-        .more {
-            float: right;
+            width: 100px;
+            height: 100px;
         }
     }
 

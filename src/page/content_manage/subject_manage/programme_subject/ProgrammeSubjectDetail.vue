@@ -1,88 +1,92 @@
 <!--节目专题详情组件-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>专题管理</el-breadcrumb-item>
-            <el-breadcrumb-item><label class="subject-name">{{subjectInfo.name}}</label>节目专题详情</el-breadcrumb-item>
-        </el-breadcrumb>
-        <div class="block-box text-left">
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'专题管理'},
+            {name:'节目专题详情'}]">
+        </custom-breadcrumb>
+        <div class="text-left main-block">
             <subject-basic-info-detail
                 :subjectInfo="subjectInfo"
                 status="0">
             </subject-basic-info-detail>
-            <label class="list-title">专题内节目列表:</label>
-            <el-table
-                :data="subjectInfo.subjectItemList"
-                border
-                style="width: 100%">
-                <el-table-column
-                    label="序号">
-                    <template slot-scope="scope">
-                        {{scope.$index + 1}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="code"
-                    label="编号">
-                </el-table-column>
-                <el-table-column
-                    prop="name"
-                    label="名称">
-                </el-table-column>
-                <el-table-column
-                    label="图片">
-                    <template slot-scope="scope">
-                        <img
-                            :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl"
-                            :alt="scope.row.coverImage.name"
-                            @click="displayImage(scope.row)"
-                            v-if="scope.row.coverImage">
-                        <label v-else>------</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    label="主演">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    label="导演">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.figureListMap | displayFigures('DIRECTOR')}}</label>
-                    </template>
-                </el-table-column>
-            </el-table>
+            <div class="vice-block" id="programme-list">
+                <h3 class="block-vice-title">专题内节目列表</h3>
+                <el-table
+                    :data="subjectInfo.subjectItemList"
+                    border>
+                    <el-table-column
+                        width="70px"
+                        align="center"
+                        label="序号">
+                        <template slot-scope="scope">
+                            {{scope.$index + 1}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        width="120px"
+                        align="center"
+                        prop="code"
+                        label="编号">
+                    </el-table-column>
+                    <el-table-column
+                        width="256px"
+                        align="center"
+                        prop="name"
+                        label="名称">
+                    </el-table-column>
+                    <el-table-column
+                        width="160px"
+                        align="center"
+                        label="图片">
+                        <template slot-scope="scope">
+                            <img
+                                :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl"
+                                :alt="scope.row.coverImage.name"
+                                v-if="scope.row.coverImage">
+                            <label v-else>------</label>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        width="360px"
+                        align="center"
+                        label="主演">
+                        <template slot-scope="scope">
+                            <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        width="160px"
+                        align="center"
+                        label="导演">
+                        <template slot-scope="scope">
+                            <label>{{scope.row.figureListMap | displayFigures('DIRECTOR')}}</label>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <div id="operate-list">
+                <el-button type="primary" @click="editBasicInfo">编辑基本信息</el-button>
+                <el-button type="primary" @click="editSubjectProgrammes">编辑节目</el-button>
+                <el-button type="danger" @click="setSubjectVisible">{{subjectInfo.visible ? '下架' : '上架'}}</el-button>
+                <el-button type="danger" @click="removeSubject">删 除</el-button>
+            </div>
         </div>
-        <div class="operate-list">
-            <el-button type="primary" @click="editBasicInfo">编辑基本信息</el-button>
-            <el-button type="primary" @click="editSubjectProgrammes">编辑节目</el-button>
-            <el-button type="danger" @click="setSubjectVisible">{{subjectInfo.visible ? '下架' : '上架'}}</el-button>
-            <el-button type="danger" @click="removeSubject">删 除</el-button>
-        </div>
-        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
     </div>
 </template>
 
 <script>
     import SubjectBasicInfoDetail from '../SubjectBasicInfoDetail';
-    import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 
     export default {
         name: 'PersonSubjectDetail',
         components: {
-            SubjectBasicInfoDetail,
-            PreviewSingleImage
+            SubjectBasicInfoDetail
         },
         data() {
             return {
-                previewImage: {
-                    title: '',
-                    display: false,
-                    url: ''
-                },
                 subjectInfo: {}
             };
         },
@@ -96,12 +100,6 @@
                         this.subjectInfo = response.data;
                     }
                 });
-            },
-            // 放大预览图片
-            displayImage(image) {
-                this.previewImage.title = image.name;
-                this.previewImage.display = true;
-                this.previewImage.url = image.uri;
             },
             // 设置专题的上下架
             setSubjectVisible() {
@@ -163,35 +161,32 @@
     };
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
-    .subject-name {
-        font-style: italic;
-        font-weight: bold;
-        font-size: 16px;
+    .main-block {
+        position: relative;
+        padding-top: 80px;
     }
 
-    .block-box {
-        margin-top: 50px;
-    }
-
-    .list-title {
-        margin-left: 20px;
-    }
-
-    .el-table {
-        margin-top: 20px;
-        margin-bottom: 40px;
+    #programme-list {
+        margin-bottom: 200px;
+        .el-table {
+            margin-top: 0px;
+            width: 1128px;
+        }
         img {
-            width: 120px;
-            cursor: zoom-in;
+            width: 100px;
+            height: 145px;
         }
     }
 
-    .operate-list {
+    #operate-list {
+        position: absolute;
+        right: 0px;
+        top: 10px;
         .el-button {
             margin-right: 30px;
-            width: 124px;
+            width: 120px;
         }
     }
 </style>

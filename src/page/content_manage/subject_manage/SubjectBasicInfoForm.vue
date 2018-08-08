@@ -71,7 +71,7 @@
                     </ul>
                 </el-form-item>
                 <!--只有节目专题有背景图片-->
-                <el-form-item label="专题背景图片：">
+                <el-form-item label="专题背景图片：" class="bg-box">
                     <el-button class="btn-icon-normal" type="primary" plain @click="popUploadImage('BACKGROUNDIMAGE')">
                         <i class="el-icon-picture el-icon--left"></i>
                         添加专题背景图
@@ -369,28 +369,10 @@
 
 <style lang="less" scoped>
 
-    .cover-image-block {
-        margin-bottom: 0px;
-    }
-
-    /*缩略图样式*/
-    .cover-list {
-        display: flex;
-        margin-top: 30px;
-        margin-bottom: 60px;
-        justify-content: left;
-        flex-wrap: wrap;
-        li {
-            display: flex;
-            margin-right: 30px;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 230px;
-            img {
-                display: block;
-                height: 180px;
-                cursor: zoom-in;
-            }
+    .cover-image-block, .bg-box {
+        margin-bottom: 40px;
+        .el-button {
+            margin-bottom: 30px;
         }
     }
 

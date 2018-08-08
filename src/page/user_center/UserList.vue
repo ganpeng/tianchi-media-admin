@@ -111,10 +111,12 @@
                     }
                 });
             },
-            handleSizeChange() {
+            handleSizeChange(pageSize) {
+                this.listQueryParams.pageSize = pageSize;
                 this.getUserList();
             },
-            handleCurrentChange() {
+            handleCurrentChange(pageNum) {
+                this.listQueryParams.pageNum = pageNum;
                 this.getUserList();
             },
             checkUserDetailInfo(row) {

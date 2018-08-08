@@ -46,7 +46,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" plain icon="el-icon-search" @click="getSubjectList">查 询</el-button>
+                    <el-button type="primary" plain icon="el-icon-search" @click="getSubjectList">搜索</el-button>
                 </el-form-item>
                 <el-form-item class="create-item">
                     <el-dropdown @command="createSubject">
@@ -65,15 +65,20 @@
                 border
                 style="width: 100%">
                 <el-table-column
+                    align="center"
                     prop="code"
-                    width="60px"
+                    width="120px"
                     label="编号">
                 </el-table-column>
                 <el-table-column
+                    align="center"
+                    width="186px"
                     prop="name"
                     label="名称">
                 </el-table-column>
                 <el-table-column
+                    align="center"
+                    width="140px"
                     prop="itemCount"
                     label="包含节目/人物数">
                     <template slot-scope="scope">
@@ -81,28 +86,27 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                    align="center"
                     prop="description"
+                    width="210px"
+                    show-overflow-tooltip
                     label="简介">
                     <template slot-scope="scope">
-                        <label class="ellipsis-three">{{scope.row.description}}</label>
-                        <el-popover
-                            placement="right"
-                            :title="scope.row.name + '简介'"
-                            width="250"
-                            trigger="hover"
-                            :content="scope.row.description">
-                            <el-button slot="reference" type="text" class="float-right">更多</el-button>
-                        </el-popover>
+                        <label>{{scope.row.description ? scope.row.description : '------'}}</label>
                     </template>
                 </el-table-column>
                 <el-table-column
+                    align="center"
                     prop="tagList"
+                    width="120px"
                     label="专题标签">
                     <template slot-scope="scope">
-                        <label>{{scope.row.tagList.join(',')}}</label>
+                        <label>{{scope.row.tagList.length === 0 ? '------' : scope.row.tagList.join(',')}}</label>
                     </template>
                 </el-table-column>
                 <el-table-column
+                    align="center"
+                    width="128px"
                     prop="authorName"
                     label="专题创建者">
                     <template slot-scope="scope">
@@ -110,6 +114,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                    align="center"
                     prop="category"
                     label="专题类型">
                     <template slot-scope="scope">
@@ -117,6 +122,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                    align="center"
                     prop="programmeCategoryList"
                     label="节目专题类型">
                     <template slot-scope="scope">
@@ -126,12 +132,15 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                    align="center"
+                    width="120px"
                     label="创建时间">
                     <template slot-scope="scope">
                         {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
                     </template>
                 </el-table-column>
                 <el-table-column
+                    align="center"
                     label="状态">
                     <template slot-scope="scope">
                         {{scope.row.visible ? '已上架' : '已下架'}}
@@ -139,9 +148,13 @@
                 </el-table-column>
                 <el-table-column align="center"
                                  label="操作"
+                                 width="120px"
+                                 fixed="right"
                                  class="operate">
                     <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="checkSubjectDetail(scope.row)">查看</el-button>
+                        <el-button type="text" size="small" class="detail-btn" @click="checkSubjectDetail(scope.row)">
+                            查看
+                        </el-button>
                         <el-button type="text" size="small" @click="editBasicInfo(scope.row)">编辑基本信息</el-button>
                         <el-button type="text" size="small" @click="editSubjectContainer(scope.row)">增删内容</el-button>
                     </template>
@@ -277,6 +290,15 @@
         position: absolute;
         right: 0px;
         top: 10px;
+    }
+
+    .el-form-item {
+        margin-bottom: 0px;
+        margin-right: 30px;
+    }
+
+    .el-pagination {
+        margin-bottom: 200px;
     }
 
 </style>

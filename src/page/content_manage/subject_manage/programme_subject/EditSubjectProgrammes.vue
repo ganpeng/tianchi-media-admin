@@ -1,61 +1,73 @@
 <!--节目专题中的节目设置组件-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>专题管理</el-breadcrumb-item>
-            <el-breadcrumb-item>编辑<label class="subject-name">{{subjectName}}</label>专题的节目
-            </el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'专题管理'},
+            {name:'编辑专题的节目'}]">
+        </custom-breadcrumb>
         <div class="block-box text-left">
+            <div class="block-title">添加节目</div>
             <select-multiple-programme
                 :selectedProgrammeList="selectedProgrammeList"
                 ref="selectMultipleProgramme"
                 v-on:setProgramme="setProgramme">
             </select-multiple-programme>
-            <el-tag>已选节目</el-tag>
-            <el-table
-                :data="selectedProgrammeList"
-                border
-                style="width: 100%">
-                <el-table-column
-                    label="序号"
-                    width="55">
-                    <template slot-scope="scope">
-                        <label>{{scope.$index + 1}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="code"
-                    label="编号">
-                </el-table-column>
-                <el-table-column
-                    prop="name"
-                    label="名称">
-                </el-table-column>
-                <el-table-column
-                    label="主演">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    label="导演">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.figureListMap | displayFigures('DIRECTOR')}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center"
-                                 label="操作"
-                                 class="operate">
-                    <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="removeProgramme(scope.$index)">删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
+            <div class="vice-block">
+                <h3 class="block-vice-title">已选节目</h3>
+                <el-table
+                    :data="selectedProgrammeList"
+                    border
+                    style="width: 100%">
+                    <el-table-column
+                        align="center"
+                        width="70px"
+                        label="序号">
+                        <template slot-scope="scope">
+                            <label>{{scope.$index + 1}}</label>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        width="120px"
+                        prop="code"
+                        label="编号">
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        prop="name"
+                        label="名称">
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        label="主演">
+                        <template slot-scope="scope">
+                            <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        label="导演">
+                        <template slot-scope="scope">
+                            <label>{{scope.row.figureListMap | displayFigures('DIRECTOR')}}</label>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        label="操作"
+                        class="operate">
+                        <template slot-scope="scope">
+                            <el-button type="text" size="small" class="remove-btn"
+                                       @click="removeProgramme(scope.$index)">
+                                取消关联
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div class="text-center update-btn">
-                <el-button type="success" @click="updateSubjectProgrammes">更 新</el-button>
+                <el-button type="primary" class="page-main-btn" @click="updateSubjectProgrammes">更 新</el-button>
             </div>
         </div>
     </div>
@@ -119,22 +131,21 @@
     };
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
-    .subject-name {
-        font-style: italic;
-        font-weight: bold;
-        font-size: 16px;
+    .el-breadcurmb {
+        margin-bottom: 0px;
     }
 
-    .block-box {
-        margin-top: 50px;
-        .el-tag {
-            margin-top: 50px;
+    .el-table {
+        margin: 0px;
+        .remove-btn {
+            color: $baseRed;
         }
     }
 
     .update-btn {
-        margin: 80px 0 40px 0;
+        margin: 60px 0px;
     }
+
 </style>
