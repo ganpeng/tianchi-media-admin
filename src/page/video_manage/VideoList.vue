@@ -273,6 +273,7 @@
                             this.$service.deleteVideoByIdList(ids)
                                 .then((res) => {
                                     if (res && res.code === 0) {
+                                        this.getVideoList();
                                         this.$message.success('删除成功');
                                     } else {
                                         this.$message.error('删除失败');
