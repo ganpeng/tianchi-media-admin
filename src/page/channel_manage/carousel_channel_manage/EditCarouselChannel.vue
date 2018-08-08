@@ -163,6 +163,7 @@
         <div class="preview-sort">
             <el-button type="success" @click="sortVideoList">点击视频排序</el-button>
             <el-button type="success" @click="revertVideoList">反转当前视频列表</el-button>
+            <el-button type="success" @click="setVideoNameList">设置视频展示名称</el-button>
         </div>
         <div id="auto-sort">
             <div v-for="(item, index) in sectionList" :key="index">
@@ -427,6 +428,16 @@
                     }
                 }
                 this.sortDialogVisible = true;
+            },
+            // 设置视频列表中每个视频的展示名称,'（高清）新还珠格格（收录）01&&新还珠格格-01.mpg'
+            setVideoNameList() {
+                this.currentSelectedVideoList.map(video => {
+                    if (video.originName.indexOf('&&') === -1) {
+                        video.name = '';
+                    } else {
+                        video.name = video.originName.split('&&')[1].split('.')[0];
+                    }
+                });
             },
             revertVideoList() {
                 let array = [];
