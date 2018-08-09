@@ -1,7 +1,7 @@
 <template>
     <div class="video-table-container">
        <el-table @selection-change="handleSelectionChange" class="my-table-style" :data="video.list" border>
-            <el-table-column type="selection" align="center" width="120px"></el-table-column>
+            <el-table-column v-if="!hasRadio" type="selection" align="center" width="120px"></el-table-column>
             <el-table-column v-if="hasRadio" align="center" label="选择">
                 <template slot-scope="scope">
                     <el-radio :value="video.selectedVideoId" :label="scope.row.id" @input="setSelectedVideoId({id: scope.row.id})">&nbsp;</el-radio>
