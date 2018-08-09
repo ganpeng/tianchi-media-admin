@@ -32,6 +32,9 @@
                 <el-form-item label="serviceId：">
                     <label>{{channelInfo.serviceId}}</label>
                 </el-form-item>
+                <el-form-item label="所在服务器：">
+                    <label>{{channelInfo.pushServer}}</label>
+                </el-form-item>
                 <el-form-item label="状态：">
                     <label>{{channelInfo.visible ? '正常' : '禁播'}}</label>
                 </el-form-item>

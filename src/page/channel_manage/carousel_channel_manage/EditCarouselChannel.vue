@@ -10,7 +10,7 @@
         </el-breadcrumb>
         <el-tag class="title">频道基本信息</el-tag>
         <el-form :model="channelInfo" :rules="infoRules" status-icon ref="channelInfo"
-                 label-width="80px"
+                 label-width="100px"
                  class="form-block">
             <el-form-item label="名称" prop="innerName" required>
                 <el-input v-model="channelInfo.innerName" placeholder="请填写10个字以内的名称"></el-input>
@@ -40,6 +40,9 @@
             <el-form-item label="serviceId" prop="serviceId">
                 <el-input v-model="channelInfo.serviceId" placeholder="请填写serviceId"></el-input>
             </el-form-item>
+            <el-form-item label="所在服务器" prop="pushServer" required>
+                <el-input v-model="channelInfo.pushServer" placeholder="请填写所在服务器的IP地址"></el-input>
+            </el-form-item>
             <el-form-item label="状态：" prop="visible">
                 <label>{{channelInfo.visible ? '正常' : '禁播'}}</label>
             </el-form-item>
@@ -67,22 +70,28 @@
             border
             style="width: 100%">
             <el-table-column
-                width="100px"
+                width="50px"
+                align="center"
                 label="播放顺序">
                 <template slot-scope="scope">
                     {{scope.$index + 1}}
                 </template>
             </el-table-column>
             <el-table-column
+                width="120px"
+                align="center"
                 prop="code"
                 label="视频编号">
             </el-table-column>
             <el-table-column
                 prop="originName"
+                width="200px"
+                align="center"
                 label="视频文件名">
             </el-table-column>
             <el-table-column
                 prop="name"
+                align="center"
                 label="视频展示名">
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.name"></el-input>
@@ -91,7 +100,7 @@
             <el-table-column
                 prop="link"
                 align="center"
-                width="300px"
+                width="100px"
                 label="预览视频">
                 <template slot-scope="scope">
                     <el-button
@@ -119,6 +128,7 @@
             </el-table-column>
             <el-table-column
                 prop="takeTimeInSec"
+                width="120px"
                 align="center"
                 label="视频时长">
                 <template slot-scope="scope">
@@ -127,6 +137,7 @@
             </el-table-column>
             <el-table-column
                 width="100px"
+                align="center"
                 label="视频状态">
                 <template slot-scope="scope">
                     <label>{{scope.row.visible ? '正常':'禁播'}}</label>
@@ -134,6 +145,7 @@
             </el-table-column>
             <el-table-column align="center"
                              label="操作"
+                             width="200px"
                              class="operate">
                 <template slot-scope="scope">
                     <el-button v-if="scope.row.visible" type="danger" size="mini" plain
@@ -190,7 +202,7 @@
             title="选择相应的视频"
             :visible.sync="selectDialogVisible"
             center
-            width="60%">
+            width="80%">
             <select-multiple-video
                 v-if="selectDialogVisible"
                 :currentSelectedVideoList="currentSelectedVideoList"
@@ -291,6 +303,15 @@
                     callback();
                 }
             };
+            let checkPushServer = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('请填写所在服务器IP地址'));
+                } else if (!this.$util.isIPAddress(value)) {
+                    return callback(new Error('请填写正确的所在服务器IP地址'));
+                } else {
+                    callback();
+                }
+            };
             let checkLogoUri = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('请设置频道的封面图片'));
@@ -337,6 +358,9 @@
                     ],
                     serviceId: [
                         {validator: checkServiceId, trigger: 'blur'}
+                    ],
+                    pushServer: [
+                        {validator: checkPushServer, trigger: 'blur'}
                     ],
                     logoUri: [
                         {validator: checkLogoUri, trigger: 'blur'}
@@ -534,16 +558,8 @@
             closeDisplayVideoDialog(status) {
                 this.previewVideoInfo.visible = status;
             },
-            // 禁播视频
+            // 禁播视频,当前正在播放视频可以禁播-2018.08.09
             disabledConfirm(videoItem) {
-                // 当前正在播放视频不能禁播
-                if (this.channelInfo.currentProgramme === videoItem.originName) {
-                    this.$message({
-                        message: '当前视频正在播放，不能禁播',
-                        type: 'warning'
-                    });
-                    return;
-                }
                 this.$confirm('此操作将禁播该视频, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -580,16 +596,8 @@
                     });
                 });
             },
-            // 删除视频
-            removeConfirm(index, videoItem) {
-                // 当前正在播放视频不能删除
-                if (this.channelInfo.currentProgramme === videoItem.originName) {
-                    this.$message({
-                        message: '当前视频正在播放，不能删除',
-                        type: 'warning'
-                    });
-                    return;
-                }
+            // 删除视频，当前正在播放视频可以删除-2018.08.09
+            removeConfirm(index) {
                 this.$confirm('此操作将删除该视频, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -632,13 +640,21 @@
             },
             // 更新频道信息
             updateInfo() {
-                /** 在正常频道保存时，必须含有视频  */
-                if (this.channelInfo.visible && this.currentSelectedVideoList.length === 0) {
-                    this.$message({
-                        message: '当前正常频道中不含有视频，不能更新保存',
-                        type: 'warning'
+                /** 在正常频道保存时，必须含有没有禁播的视频  */
+                if (this.channelInfo.visible) {
+                    let tag = false;
+                    this.currentSelectedVideoList.map(video => {
+                        if (video.visible) {
+                            tag = true;
+                        }
                     });
-                    return;
+                    if (!tag) {
+                        this.$message({
+                            message: '当前正常频道中不含能正常播放的视频，不能更新保存',
+                            type: 'warning'
+                        });
+                        return;
+                    }
                 }
                 /** 在频道保存时，含有的视频必须有展示名称  */
                 for (let i = 0; i < this.currentSelectedVideoList.length; i++) {

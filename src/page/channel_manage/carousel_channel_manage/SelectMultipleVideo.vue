@@ -1,7 +1,7 @@
 <template>
     <div class="video-table-container text-center" @keyup.enter="getVideoList">
         <el-form :inline="true" class="text-left">
-            <el-form-item class="search">
+            <el-form-item>
                 <el-input
                     v-model="queryParams.name"
                     placeholder="搜索你想要的信息"
@@ -24,25 +24,26 @@
             :row-class-name="tableRowClassName"
             style="width:100%;margin:20px 0;">
             <el-table-column
+                align="center"
                 type="selection"
                 width="55">
             </el-table-column>
             <el-table-column
                 prop="code"
                 align="center"
-                width="240px"
+                width="120px"
                 label="编号">
             </el-table-column>
             <el-table-column
                 prop="originName"
                 align="center"
-                width="120px"
+                width="300px"
                 label="视频名称">
             </el-table-column>
             <el-table-column
                 prop="link"
                 align="center"
-                width="180px"
+                width="150px"
                 label="预览视频">
                 <template slot-scope="scope">
                     <el-button
@@ -295,5 +296,13 @@
     };
 </script>
 <style lang="scss" scoped>
+
+    .el-input {
+        width: 400px;
+    }
+
+    .el-pagination {
+        margin-bottom: 30px;
+    }
 
 </style>

@@ -65,12 +65,20 @@ let util = {
         return constants.RegExpConstants.PASSWORD.test(this.trim(str));
     },
     /**
-     *Judge string is or not a right IP address
-     * @param {String} str  The base string as a IP address
-     * @return {Boolean} Is or not a right IP address
+     *Judge string is or not a right multicast IP address
+     * @param {String} str  The base string as a multicast IP address
+     * @return {Boolean} Is or not a right multicast IP address
      */
     isMulticastIPAddress(str) {
         return constants.RegExpConstants.MULTIPLE_IP_ADDRESS.test(this.trim(str));
+    },
+    /**
+     * Judge string is or not a right IP address
+     * @param {String} str  The base string as a IP address
+     * @return {Boolean} Is or not a right IP address
+     */
+    isIPAddress(str) {
+        return constants.RegExpConstants.IP_ADDRESS.test(this.trim(str));
     },
     /**
      *Judge string is or not a right IP port

@@ -47,6 +47,7 @@
                 style="width: 100%">
                 <el-table-column
                     width="60px"
+                    align="center"
                     label="序号">
                     <template slot-scope="scope">
                         <label>{{scope.$index + 1}}</label>
@@ -54,37 +55,50 @@
                 </el-table-column>
                 <el-table-column
                     prop="no"
+                    align="center"
                     label="编号">
                 </el-table-column>
                 <el-table-column
                     prop="innerName"
+                    align="center"
                     label="名称">
                 </el-table-column>
                 <el-table-column
+                    align="center"
                     label="类别">
                     <template slot-scope="scope">
                         <label>{{scope.row.typeList | jsonJoin('name')}}</label>
                     </template>
                 </el-table-column>
                 <el-table-column
+                    align="center"
                     prop="multicastIp"
                     label="组播地址">
                 </el-table-column>
                 <el-table-column
+                    align="center"
                     prop="multicastPort"
                     label="端口号">
                 </el-table-column>
                 <!--tsId-->
                 <el-table-column
+                    align="center"
                     prop="tsId"
                     label="tsId">
                 </el-table-column>
                 <!--serviceId-->
                 <el-table-column
+                    align="center"
                     prop="serviceId"
                     label="serviceId">
                 </el-table-column>
                 <el-table-column
+                    align="center"
+                    prop="pushServer"
+                    label="所在服务器">
+                </el-table-column>
+                <el-table-column
+                    align="center"
                     label="状态">
                     <template slot-scope="scope">
                         <label>{{scope.row.visible ? '正常' : '禁播'}}</label>
