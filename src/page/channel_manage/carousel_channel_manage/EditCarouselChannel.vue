@@ -641,6 +641,7 @@
             // 更新频道信息
             updateInfo() {
                 /** 在正常频道保存时，必须含有没有禁播的视频  */
+                /** 写的什么玩意？暂时注释掉，能正常禁用和删除视频
                 if (this.channelInfo.visible) {
                     let tag = false;
                     this.currentSelectedVideoList.map(video => {
@@ -656,6 +657,7 @@
                         return;
                     }
                 }
+                */
                 /** 在频道保存时，含有的视频必须有展示名称  */
                 for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
                     if (!this.currentSelectedVideoList[i].name) {
@@ -666,37 +668,32 @@
                         return;
                     }
                 }
-                this.$refs['channelInfo'].validate((valid) => {
-                    if (valid) {
-                        for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
-                            this.currentSelectedVideoList[i].sort = i;
+                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                    this.currentSelectedVideoList[i].sort = i;
+                }
+                this.channelInfo.carouselVideoList = this.currentSelectedVideoList;
+                this.channelInfo.typeList = [];
+                this.channelInfo.typeIdList.map(typeId => {
+                    this.typeOptions.map(type => {
+                        if (typeId === type.id) {
+                            this.channelInfo.typeList.push(type);
                         }
-                        this.channelInfo.carouselVideoList = this.currentSelectedVideoList;
-                        this.channelInfo.typeList = [];
-                        this.channelInfo.typeIdList.map(typeId => {
-                            this.typeOptions.map(type => {
-                                if (typeId === type.id) {
-                                    this.channelInfo.typeList.push(type);
-                                }
-                            });
-                        });
-                        this.$service.updateChannelById(
-                            this.$route.params.id,
-                            this.channelInfo
-                        ).then(response => {
-                            if (response && response.code === 0) {
-                                this.$message('保存频道信息成功');
-                            } else {
-                                this.$message({
-                                    message: response.message,
-                                    type: 'warning'
-                                });
-                            }
-                        });
+                    });
+                });
+                this.$service.updateChannelById(
+                    this.$route.params.id,
+                    this.channelInfo
+                ).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message('保存频道信息成功');
                     } else {
-                        return false;
+                        this.$message({
+                            message: response.message,
+                            type: 'warning'
+                        });
                     }
                 });
+
             }
         }
     };
