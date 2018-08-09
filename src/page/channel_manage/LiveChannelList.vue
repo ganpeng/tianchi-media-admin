@@ -57,6 +57,7 @@
             </el-table-column>
             <el-table-column prop="multicastIp" width="150px" align="center" label="频道IP"></el-table-column>
             <el-table-column prop="multicastPort" align="center" label="频道端口"></el-table-column>
+            <el-table-column prop="pushServer" align="center" label="所属服务器"></el-table-column>
             <el-table-column align="center" width="320px" fixed="right" label="操作">
                 <template slot-scope="scope">
                     <el-button type="text" size="small" @click="previewChannelPage(scope.row.id, scope.row.name, true)">节目单下载</el-button>

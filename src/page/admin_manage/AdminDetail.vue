@@ -1,12 +1,11 @@
 <!--管理员详情组件-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>管理员管理</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ path: '/admin-manage/list' }">管理员列表</el-breadcrumb-item>
-            <el-breadcrumb-item>管理员详情</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'管理员管理'},
+            {name:'管理员列表-详情'}]">
+        </custom-breadcrumb>
         <el-row>
             <el-col :span="8">
                 <div class="block-title">管理员信息

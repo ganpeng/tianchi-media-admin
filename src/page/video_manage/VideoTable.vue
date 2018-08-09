@@ -1,11 +1,7 @@
 <template>
     <div class="video-table-container">
-       <el-table class="my-table-style" :data="video.list" border>
-            <el-table-column align="center" width="120px" :render-header="renderHeader">
-                <template slot-scope="scope">
-                    <el-checkbox :true-label="'yes'" :false-label="'no'" @change="_toggleChecked($event, scope.row.id)" :value="scope.row.checked"></el-checkbox>
-                </template>
-            </el-table-column>
+       <el-table @selection-change="handleSelectionChange" class="my-table-style" :data="video.list" border>
+            <el-table-column type="selection" align="center" width="120px"></el-table-column>
             <el-table-column v-if="hasRadio" align="center" label="选择">
                 <template slot-scope="scope">
                     <el-radio :value="video.selectedVideoId" :label="scope.row.id" @input="setSelectedVideoId({id: scope.row.id})">&nbsp;</el-radio>
@@ -130,8 +126,7 @@ export default {
             setSelectedVideoId: 'video/setSelectedVideoId',
             setPagination: 'video/setPagination',
             updatePagination: 'video/updatePagination',
-            toggleChecked: 'video/toggleChecked',
-            toggleAll: 'video/toggleAll'
+            setSelectedVideoList: 'video/setSelectedVideoList'
         }),
         ...mapActions({
             getVideoList: 'video/getVideoList',
@@ -146,20 +141,6 @@ export default {
         },
         closeDisplayVideoDialog(status) {
             this.displayVideoDialogVisible = status;
-        },
-        renderHeader(h, data) {
-            return h('el-checkbox',
-                {
-                    on: {
-                        change: this.checkAllHandler
-                    }
-            });
-        },
-        _toggleChecked(val, id) {
-            this.toggleChecked({id});
-        },
-        checkAllHandler(all) {
-            this.toggleAll({all});
         },
         displayVideo(url) {
             this.displayVideoDialogVisible = true;
@@ -186,6 +167,9 @@ export default {
                     message: '已取消删除'
                 });
             });
+        },
+        handleSelectionChange(list) {
+            this.setSelectedVideoList({list});
         }
     }
 };

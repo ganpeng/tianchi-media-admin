@@ -1,24 +1,24 @@
 <!--管理员列表组件-->
 <template>
     <div @keyup.enter="getAdminList">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>管理员管理</el-breadcrumb-item>
-            <el-breadcrumb-item>管理员列表</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'管理员管理'},
+            {name:'管理员列表'}]">
+        </custom-breadcrumb>
         <el-form :inline="true" class="search-form">
-            <el-form-item>
-                <el-input v-model="keyword" placeholder="搜索你想要的信息" clearable></el-input>
-                <el-input v-show="false"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" plain @click="getAdminList">搜索</el-button>
-            </el-form-item>
             <el-form-item class="create-account">
-                <el-tag>
-                    <router-link to="/admin-manage/create">创建管理员</router-link>
-                </el-tag>
+                <el-button type="primary" plain @click="createAdmin"><i class="el-icon-circle-plus-outline"></i> 创建管理员</el-button>
             </el-form-item>
+            <el-col :span="24">
+                <el-form-item>
+                    <el-input v-model="keyword" placeholder="搜索你想要的信息" clearable></el-input>
+                    <el-input v-show="false"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="getAdminList"><i class="el-icon-search"></i> 搜索</el-button>
+                </el-form-item>
+            </el-col>
         </el-form>
         <el-table
             :data="adminList"
@@ -26,37 +26,55 @@
             style="width: 100%">
             <el-table-column
                 prop="name"
+                align="center"
                 label="姓名">
-            </el-table-column>
-            <el-table-column
-                prop="email"
-                label="邮箱">
-            </el-table-column>
-            <el-table-column
-                prop="telephone"
-                label="电话">
-            </el-table-column>
-            <el-table-column
-                prop="mobile"
-                label="手机号码">
-            </el-table-column>
-            <el-table-column
-                label="创建日期">
                 <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                    {{scope.row.name | padEmpty}}
                 </template>
             </el-table-column>
             <el-table-column
+                prop="email"
+                align="center"
+                label="邮箱">
+                <template slot-scope="scope">
+                    {{scope.row.email | padEmpty}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                prop="telephone"
+                align="center"
+                label="电话">
+                <template slot-scope="scope">
+                    {{scope.row.telephone | padEmpty}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                prop="mobile"
+                align="center"
+                label="手机号码">
+                <template slot-scope="scope">
+                    {{scope.row.mobile | padEmpty}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                label="创建日期">
+                <template slot-scope="scope">
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
                 label="最后登录时间">
                 <template slot-scope="scope">
-                    {{scope.row.lastLoginAt | formatDate('yyyy-MM-DD')}}
+                    {{scope.row.lastLoginAt | formatDate('yyyy-MM-DD') | padEmpty}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              fixed="right"
                              label="操作">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="checkDetail(scope.row.id)">查看</el-button>
+                    <el-button class="text-success" type="text" size="small" @click="checkDetail(scope.row.id)">详情</el-button>
                     <el-button type="text" size="small" @click="editAdminInfo(scope.row.id)">编辑</el-button>
                     <el-button v-if="scope.row.status === 'NORMAL'" type="danger" size="mini" plain
                                @click="disabledConfirm(scope.row.id,scope.row.status)">
@@ -113,6 +131,9 @@
             // 跳转到详情页面
             checkDetail(userId) {
                 this.$router.push({name: 'AdminDetail', params: {id: userId}});
+            },
+            createAdmin() {
+                this.$router.push({name: 'CreateAdmin'});
             },
             editAdminInfo(userId) {
                 this.$router.push({name: 'EditAdmin', params: {id: userId}});

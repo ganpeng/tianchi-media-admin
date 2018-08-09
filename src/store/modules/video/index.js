@@ -17,6 +17,7 @@ const defaultPagination = {
 
 const state = {
     selectedVideoId: '',
+    selectedVideoList: [],
     videoType: 'VOD', //  VOD: 点播 CAROUSEL: 轮播 这是上传视频是的字段
     searchFields: _.cloneDeep(defaultSearchFields),
     pagination: _.cloneDeep(defaultPagination),
@@ -40,6 +41,9 @@ const getters = {
         return (status) => {
             return role.VIDEO_UPLOAD_STATUS[status];
         };
+    },
+    selectedVideoIdList(state) {
+        return state.selectedVideoList.map((video) => video.id);
     },
     qualityOptions(state) {
         let video = state.list.find((video) => video.id === state.selectedVideoId);
@@ -102,29 +106,8 @@ const mutations = {
     resetSearchFields(state) {
         state.searchFields = _.cloneDeep(defaultSearchFields);
     },
-    //  对节目列表的操作
-    toggleChecked(state, payload) {
-        let {id} = payload;
-        state.list = state.list.map((item) => {
-            if (item.id === id) {
-                item.checked = item.checked === 'yes' ? 'no' : 'yes';
-            }
-            return item;
-        });
-    },
-    toggleAll(state, payload) {
-        let {all} = payload;
-        if (all) {
-            state.list = state.list.map((item) => {
-                item.checked = 'yes';
-                return item;
-            });
-        } else {
-            state.list = state.list.map((item) => {
-                item.checked = 'no';
-                return item;
-            });
-        }
+    setSelectedVideoList(state, payload) {
+        state.selectedVideoList = payload.list;
     }
 };
 
@@ -136,10 +119,6 @@ const actions = {
             let result = await service.getVideoList(params);
             if (result && result.code === 0) {
                 let {list, pageSize, pageNum, total} = result.data;
-                list = list.map((item) => {
-                    item.checked = 'no';
-                    return item;
-                });
                 commit('setList', {list});
                 commit('setPagination', {pageNum: pageNum + 1, pageSize, total});
             }

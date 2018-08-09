@@ -116,6 +116,21 @@ export const checkPort = (rule, value, callback) => {
     }
 };
 
+/**
+ *  校验真实ip地址
+ */
+export const checkIp = (rule, value, callback) => {
+    if (!_.isEmpty(value)) {
+        if (constants.RegExpConstants.IP_ADDRESS.test(value)) {
+            callback();
+        } else {
+            return callback(new Error('请输入正确的所属服务器地址'));
+        }
+    } else {
+        callback();
+    }
+};
+
 export const getPageSize = (key) => {
     let pageSize = window.localStorage.getItem(key);
     return pageSize ? parseInt(pageSize) : 10;

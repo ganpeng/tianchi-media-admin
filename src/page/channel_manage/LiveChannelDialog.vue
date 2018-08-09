@@ -44,7 +44,7 @@
             <el-form-item label="频道IP" prop="multicastIp">
                 <el-input
                     :disabled="readonly"
-                    placeholder="请输频道IP"
+                    placeholder="请输入频道IP"
                     :value="liveChannel.multicastIp"
                     @input="inputHandler($event, 'multicastIp')"
                 >
@@ -54,9 +54,18 @@
                 <el-input
                     :disabled="readonly"
                     type="number"
-                    placeholder="请输频道IP"
+                    placeholder="请输入频道端口"
                     :value="liveChannel.multicastPort"
                     @input="inputHandler($event, 'multicastPort')"
+                >
+                </el-input>
+            </el-form-item>
+            <el-form-item label="所属服务器" prop="pushServer">
+                <el-input
+                    :disabled="readonly"
+                    placeholder="请输入所属服务器地址"
+                    :value="liveChannel.pushServer"
+                    @input="inputHandler($event, 'pushServer')"
                 >
                 </el-input>
             </el-form-item>
@@ -112,7 +121,7 @@
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import dimension from '@/util/config/dimension';
-    import {checkIP, checkPort, checkChannelNo} from '@/util/formValidate';
+    import {checkIP, checkPort, checkChannelNo, checkIp} from '@/util/formValidate';
 
     export default {
         props: {
@@ -149,6 +158,10 @@
                     multicastPort: [
                         { required: true, message: '请输入直播频道端口' },
                         { validator: checkPort }
+                    ],
+                    pushServer: [
+                        { required: true, message: '请输入所属服务器地址' },
+                        { validator: checkIp }
                     ],
                     typeList: [
                         { required: true, message: '请选择直播频道类别' }

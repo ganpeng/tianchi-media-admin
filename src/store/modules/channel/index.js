@@ -38,6 +38,7 @@ let defaultLiveChannel = {
     logoUri: '',
     multicastIp: '', // ip地址
     multicastPort: '', // 端口
+    pushServer: '', // 所属服务器
     releaseStatus: '', // 直播频道的发布状态
     status: '', // 直播频道状态`
     //  直播频道的类型列表

@@ -1,11 +1,11 @@
 <!--创建管理员账号组件-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>管理员管理</el-breadcrumb-item>
-            <el-breadcrumb-item>创建管理员</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'管理员管理'},
+            {name:'创建管理员'}]">
+        </custom-breadcrumb>
         <el-row>
             <el-col :span="8">
                 <div>
@@ -24,12 +24,8 @@
                         <el-form-item label="手机" prop="mobile" required>
                             <el-input v-model="createInfo.mobile" placeholder="请填写手机号码"></el-input>
                         </el-form-item>
-                        <el-form-item class="tips">
-                            <label class="tips">带 <i>*</i> 号的为必填项</label>
-                        </el-form-item>
                         <el-form-item class="operate">
                             <el-button type="primary" @click="createAdmin">创 建</el-button>
-                            <el-button @click="reset">重 置</el-button>
                         </el-form-item>
                     </el-form>
                 </div>

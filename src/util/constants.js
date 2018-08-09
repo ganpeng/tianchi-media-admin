@@ -30,6 +30,7 @@ let RegExpConstants = {
     /**
      * The RegExp of IP address.
      */
+    IP_ADDRESS: /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/,
     MULTIPLE_IP_ADDRESS: /^2(?:2[4-9]|3\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d?|0)){3}$/,
     /**
      * The RegExp of IP port.

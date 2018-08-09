@@ -21,6 +21,7 @@
                         :value="searchFields.name"
                         placeholder="搜索你想要的信息"
                         clearable
+                        style="width:400px;"
                         @input="inputHandler($event, 'name')"
                     >
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
@@ -107,7 +108,6 @@
                 <el-button @click="cancelHandler">关闭</el-button>
             </div>
         </el-dialog>
-
     </div>
 </template>
 <script>
@@ -135,11 +135,11 @@
             ...mapGetters({
                 video: 'video/video',
                 searchFields: 'video/searchFields',
-                getVideoType: 'video/getVideoType'
+                getVideoType: 'video/getVideoType',
+                selectedVideoIdList: 'video/selectedVideoIdList'
             }),
             isDisabled() {
-                let deleteList = this.video.list.filter((item) => item.checked === 'yes');
-                return deleteList.length > 0;
+                return this.selectedVideoIdList.length > 0;
             },
             getProgress() {
                 return (index) => {
@@ -267,10 +267,8 @@
                         cancelButtonText: '取消',
                         type: 'error'
                     }).then(() => {
-                        let deleteList = this.video.list.filter((item) => item.checked === 'yes');
-                        if (deleteList.length > 0) {
-                            let ids = deleteList.map((item) => item.id);
-                            this.$service.deleteVideoByIdList(ids)
+                        if (this.selectedVideoIdList.length > 0) {
+                            this.$service.deleteVideoByIdList(this.selectedVideoIdList)
                                 .then((res) => {
                                     if (res && res.code === 0) {
                                         this.getVideoList();

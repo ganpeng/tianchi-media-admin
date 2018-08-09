@@ -41,7 +41,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="getPersonList">搜索</el-button>
+                    <el-button type="primary" @click="getPersonList"><i class="el-icon-search"></i> 搜索</el-button>
                 </el-form-item>
             </el-col>
         </el-form>
