@@ -1,8 +1,9 @@
 <template>
         <el-dialog
-            title="视频播放"
+            :title="getTitle"
             :visible.sync="displayVideoDialogVisible"
-            :show-close="false"
+            :show-close="true"
+            :before-close="beforeCloseHandler"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
             :append-to-body="true"
@@ -27,11 +28,15 @@ export default {
         },
         url: {
             type: String
+        },
+        title: {
+            type: String,
+            default: ''
         }
     },
     data() {
         return {
-            autoplay: false,
+            autoplay: true,
             player: null,
             contextmenu: [
                 {
@@ -41,12 +46,22 @@ export default {
             ]
         };
     },
+    computed: {
+        getTitle() {
+            let videoName = this.title.substring(0, this.title.lastIndexOf('.'));
+            return `正在播放：${videoName}`;
+        }
+    },
     methods: {
         initVideo() {
             setTimeout(() => {
                 this.player = this.$refs.player.dp;
                 this.player.switchVideo({url: this.url});
+                this.player.play();
             }, 0);
+        },
+        beforeCloseHandler() {
+            this.cancelHandler();
         },
         cancelHandler() {
             this.$emit('changeDisplayVideoDialogStatus', false);

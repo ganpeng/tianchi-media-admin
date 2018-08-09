@@ -331,6 +331,14 @@ export const VIDEO_UPLOAD_STATUS = {
     FAILED: '失败',
     SUCCESS: '成功'
 };
+// 视频转换的状态
+export const VIDEO_TRANSFER_STATUS = {
+    READY: '准备转码',
+    ALLOCATING: '分配中',
+    TRANSCODING: '转码中',
+    SUCCESS: '转码成功',
+    FAILED: '转码失败'
+};
 
 // 视频注入的状态
 export const VIDEO_UPLOAD_STATUS_OPTIONS = [
@@ -466,6 +474,7 @@ export default {
     SPEC,
     SUBJECT,
     VIDEO_UPLOAD_STATUS,
+    VIDEO_TRANSFER_STATUS,
     CONTEST,
     PLATFORM,
     ANNOUNCER,

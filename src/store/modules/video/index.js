@@ -38,8 +38,17 @@ const getters = {
         return state.videoType;
     },
     getStatus(state) {
-        return (status) => {
-            return role.VIDEO_UPLOAD_STATUS[status];
+        return (video) => {
+            let {status, transcodeProgress, transcodeStatus} = video;
+            if (status === 'INJECTING') {
+                if (transcodeStatus === 'TRANSCODING') {
+                    return role.VIDEO_TRANSFER_STATUS[transcodeStatus] + ': ' + transcodeProgress + '%';
+                } else {
+                    return transcodeStatus ? role.VIDEO_TRANSFER_STATUS[transcodeStatus] : role.VIDEO_UPLOAD_STATUS[status];
+                }
+            } else {
+                return role.VIDEO_UPLOAD_STATUS[status];
+            }
         };
     },
     selectedVideoIdList(state) {

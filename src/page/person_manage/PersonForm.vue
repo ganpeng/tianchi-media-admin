@@ -110,9 +110,6 @@
                         </li>
                     </ul>
                 </el-form-item>
-                <el-form-item class="tips">
-                    <label class="tips">带 <i>*</i> 号的为必填项</label>
-                </el-form-item>
             </el-col>
         </el-form>
         <upload-image

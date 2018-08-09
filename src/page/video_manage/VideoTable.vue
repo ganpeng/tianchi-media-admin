@@ -15,25 +15,25 @@
                         v-if="scope.row.m3u8For4K"
                         type="text"
                         size="small"
-                        @click="displayVideo(scope.row.m3u8For4K)"
+                        @click="displayVideo(scope.row.m3u8For4K, scope.row.originName)"
                         >4K</el-button>
                     <el-button
                         v-if="scope.row.m3u8For1080P"
                         type="text"
                         size="small"
-                        @click="displayVideo(scope.row.m3u8For1080P)"
+                        @click="displayVideo(scope.row.m3u8For1080P, scope.row.originName)"
                         >1080</el-button>
                     <el-button
                         v-if="scope.row.m3u8For720P"
                         type="text"
                         size="small"
-                        @click="displayVideo(scope.row.m3u8For720P)"
+                        @click="displayVideo(scope.row.m3u8For720P, scope.row.originName)"
                         >720</el-button>
                     <el-button
                         v-if="scope.row.m3u8For480P"
                         type="text"
                         size="small"
-                        @click="displayVideo(scope.row.m3u8For480P)"
+                        @click="displayVideo(scope.row.m3u8For480P, scope.row.originName)"
                         >480</el-button>
                 </template>
             </el-table-column>
@@ -44,8 +44,7 @@
             </el-table-column>
             <el-table-column width="150px" align="center" label="注入状态">
                 <template slot-scope="scope">
-                    {{getStatus(scope.row.status)}}
-                    <!-- <el-progress v-if="scope.row.status === ''" :text-inside="true" :stroke-width="16" :percentage="80"></el-progress> -->
+                    {{getStatus(scope.row)}}
                 </template>
             </el-table-column>
             <el-table-column align="center" width="220px" label="上传日期">
@@ -70,6 +69,7 @@
         </el-pagination>
         <display-video-dialog
             :url="url"
+            :title="title"
             :displayVideoDialogVisible="displayVideoDialogVisible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
@@ -95,7 +95,8 @@ export default {
     data() {
         return {
             displayVideoDialogVisible: false,
-            url: ''
+            url: '',
+            title: ''
         };
     },
     created() {
@@ -146,10 +147,11 @@ export default {
         closeDisplayVideoDialog(status) {
             this.displayVideoDialogVisible = status;
         },
-        displayVideo(url) {
+        displayVideo(url, name) {
             this.displayVideoDialogVisible = true;
             let baseUri = window.localStorage.getItem('videoBaseUri');
             this.url = `${baseUri}${url}`;
+            this.title = name;
         },
         _deleteVideoById(id) {
             this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
@@ -162,7 +164,9 @@ export default {
                         if (res && res.code === 0) {
                             this.getVideoList();
                         } else if (res && res.code === 3306) {
-                            this.$message.error(`该视频在如下节目${res.data.join(', ')}中有引用`);
+                            this.$message.error(`该视频在如下节目 [${res.data.join(', ')}] 中有引用`);
+                        } else if (res && res.code === 3308) {
+                            this.$message.error(`该视频在如下频道 [${res.data.join(', ')}] 中有引用`);
                         }
                     });
             }).catch(() => {

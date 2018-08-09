@@ -90,7 +90,7 @@
                             class="bar"
                             :stroke-width="3"
                             :percentage="item.progress.percent"
-                            :status="item.progress.percent !== 100 ? 'exception' : 'success'">
+                            :status="item.progress.percent !== 100 ? 'primary' : 'success'">
                         </el-progress>
                         <i
                             v-if="!showDelete(index)"

@@ -137,7 +137,7 @@
                 </el-table-column>
                 <el-table-column prop="featureVideoCount" min-width="100px" align="center" label="正片数量">
                     <template slot-scope="scope">
-                        {{scope.row.featurevideocount | padEmpty}}
+                        {{scope.row.featureVideoCount | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="extraVideoCount" align="center" min-width="120px" label="相关视频数量">
