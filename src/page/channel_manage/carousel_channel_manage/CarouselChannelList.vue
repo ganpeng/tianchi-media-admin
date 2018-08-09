@@ -8,8 +8,8 @@
             <el-breadcrumb-item>轮播频道管理</el-breadcrumb-item>
             <el-breadcrumb-item>轮播频道列表</el-breadcrumb-item>
         </el-breadcrumb>
-        <div class="block-box">
-            <el-form :inline="true" class="demo-form-inline search-form">
+        <div class="block-box" @keyup.enter="getChannelList">
+            <el-form :inline="true" class="search-form">
                 <el-form-item label="频道类别">
                     <el-select v-model="listQueryParams.typeIdList" clearable multiple placeholder="请选择频道类别">
                         <el-option

@@ -1,152 +1,88 @@
 <!--内容管理-栏目管理-节目模块设置-->
 <template>
     <div class="text-left">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
-            <el-breadcrumb-item
-                :to="'/nav-bar-manage/layout-setting/' + currentNavBarInfo.signCode + '/' + currentNavBarInfo.id">
-                {{currentNavBarInfo.name}}页面设置
-            </el-breadcrumb-item>
-            <el-breadcrumb-item>节目模块设置</el-breadcrumb-item>
-        </el-breadcrumb>
-        <h3 class="text-left">1.请输入节目模块名称：</h3>
-        <el-input
-            placeholder="请输入模块名称，30个字符以内"
-            v-model="title"
-            clearable>
-        </el-input>
-        <h3 class="text-left">2.{{mode === 'EDIT' ? '当前推荐的专题' : '请选择要推荐的节目专题'}}：</h3>
-        <select-single-subject
-            v-show="mode === 'NORMAL'"
-            ref="selectSingleSubject"
-            mode="PROGRAMME"
-            v-on:resetSubjectInfo='resetSubjectInfo'
-            v-on:setSubject="setSubject">
-        </select-single-subject>
-        <template v-if="mode === 'EDIT'">
-            <el-table
-                :data="currentSubjectList"
-                border
-                style="width: 100%">
-                <el-table-column
-                    prop="code"
-                    width="60px"
-                    label="编号">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.code}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="name"
-                    label="名称">
-                </el-table-column>
-                <el-table-column
-                    label="包含节目/人物数">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.subjectItemList === null ? 0 : scope.row.subjectItemList.length}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="description"
-                    label="简介">
-                    <template slot-scope="scope">
-                        <label class="ellipsis-three">{{scope.row.description}}</label>
-                        <el-popover
-                            placement="right"
-                            :title="scope.row.name + '简介'"
-                            width="250"
-                            trigger="hover"
-                            :content="scope.row.description">
-                            <el-button slot="reference" type="text" class="more">更多</el-button>
-                        </el-popover>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="tagList"
-                    label="专题标签">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.tagList.join(',')}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="owner"
-                    label="专题创建者">
-                </el-table-column>
-                <el-table-column
-                    prop="category"
-                    label="专题类型">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.category === 'FIGURE'?'人物' : '节目'}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="type"
-                    label="节目专题类型">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.type ?scope.row.type : '------' }}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    label="创建时间">
-                    <template slot-scope="scope">
-                        {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    label="状态">
-                    <template slot-scope="scope">
-                        {{scope.row.visible ? '已上架' : '已下架'}}
-                    </template>
-                </el-table-column>
-            </el-table>
-        </template>
-        <h3 class="text-left">3.请选择模块板式：</h3>
-        <el-select v-model="templateType" clearable placeholder="请选择模块板式" @change="setBlockModel"
-                   :disabled="!currentSubject.id">
-            <el-option
-                v-for="item in templateTypeOptions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.name">
-            </el-option>
-        </el-select>
-        <div class="model-block">
-            <ul :class="row.listClass" v-for="(row,rowIndex) in subjectLayoutItemList" :key="rowIndex">
-                <li v-for="(item,index) in row" :key="index"
-                    @click="setModelItem(rowIndex,index,row.listClass,item.layoutItemType === 'ALL',item)">
-                    <div class="ab-center text-center">
-                        <img :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
-                             :alt="item.coverImage.name"
-                             v-if="item.coverImage && item.coverImage.id">
-                        <label class="all-tip"
-                               v-if="item.layoutItemType === 'ALL' && !item.coverImage.id">此处为“更多“入口，点击上传图片</label>
-                    </div>
-                    <!--左上角标-->
-                    <span v-if="item.cornerMark && item.cornerMark.leftTop"
-                          class="corner-mark left-top">
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'栏目管理'},
+            {name:currentNavBarInfo.name + '-节目模块设置'}]">
+        </custom-breadcrumb>
+        <!--模块名称-->
+        <div class="vice-block">
+            <h3 class="block-vice-title">1.请输入节目模块名称：</h3>
+            <el-input
+                placeholder="请输入模块名称，30个字符以内"
+                v-model="title"
+                clearable>
+            </el-input>
+        </div>
+        <!--选择专题-->
+        <div class="vice-block">
+            <h3 class="block-vice-title">2.{{mode === 'EDIT' ? '当前推荐的专题' : '请选择要推荐的节目专题'}}：</h3>
+            <select-single-subject
+                v-show="mode === 'NORMAL'"
+                ref="selectSingleSubject"
+                mode="PROGRAMME"
+                v-on:resetSubjectInfo='resetSubjectInfo'
+                v-on:setSubject="setSubject">
+            </select-single-subject>
+            <template v-if="mode === 'EDIT'">
+                <single-subject-table
+                    :singleSubjectList="currentSubjectList">
+                </single-subject-table>
+            </template>
+        </div>
+        <div class="vice-block">
+            <h3 class="block-vice-title">3.请选择模块板式：</h3>
+            <el-select v-model="templateType" clearable placeholder="请选择模块板式" @change="setBlockModel"
+                       :disabled="!currentSubject.id">
+                <el-option
+                    v-for="item in templateTypeOptions"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.name">
+                </el-option>
+            </el-select>
+            <div class="model-block">
+                <ul :class="row.listClass" v-for="(row,rowIndex) in subjectLayoutItemList" :key="rowIndex">
+                    <li v-for="(item,index) in row" :key="index"
+                        @click="setModelItem(rowIndex,index,row.listClass,item.layoutItemType === 'ALL',item)">
+                        <div class="ab-center text-center">
+                            <img :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
+                                 :alt="item.coverImage.name"
+                                 v-if="item.coverImage && item.coverImage.id">
+                            <template v-else>
+                                <label class="tip"
+                                       v-if="item.layoutItemType === 'ALL' && !item.coverImage.id">此处为“更多“入口，点击上传图片</label>
+                                <label class="tip"
+                                       v-else>点击设置模块推荐位内的节目</label>
+                            </template>
+                        </div>
+                        <!--左上角标-->
+                        <span v-if="item.cornerMark && item.cornerMark.leftTop"
+                              class="corner-mark left-top">
                                  <img :src="item.cornerMark.leftTop.caption | setPlatformImage"
                                       :alt="item.cornerMark.leftTop.caption">
                              </span>
-                    <!--左下角标-->
-                    <span v-if="item.cornerMark && item.cornerMark.leftBottom"
-                          class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
-                    <!--右上角标-->
-                    <span v-if="item.cornerMark && item.cornerMark.rightTop"
-                          class="corner-mark right-top">
+                        <!--左下角标-->
+                        <span v-if="item.cornerMark && item.cornerMark.leftBottom"
+                              class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
+                        <!--右上角标-->
+                        <span v-if="item.cornerMark && item.cornerMark.rightTop"
+                              class="corner-mark right-top">
                                 <img :src="item.cornerMark.rightTop.imageUri | imageUrl"
                                      :alt="item.cornerMark.rightTop.caption">
                                 </span>
-                    <!--右下角标-->
-                    <span v-if="item.cornerMark && item.cornerMark.rightBottom"
-                          class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
-                </li>
-            </ul>
+                        <!--右下角标-->
+                        <span v-if="item.cornerMark && item.cornerMark.rightBottom"
+                              class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="text-center save-btn">
-            <el-button type="success" @click="switchMode" v-if="mode === 'EDIT'">更换专题</el-button>
-            <el-button type="success" @click="saveBlock">保 存</el-button>
+            <el-button type="primary" @click="switchMode" v-if="mode === 'EDIT'" class="page-main-btn">更换专题</el-button>
+            <el-button type="primary" @click="saveBlock" class="page-main-btn">保 存</el-button>
         </div>
         <el-dialog title="设置模块推荐位内的节目" center :visible.sync="dialogTableVisible">
             <set-subject-programme
@@ -170,8 +106,8 @@
 <script>
     import SelectSingleSubject from './SelectSingleSubject';
     import SetSubjectProgramme from './SetSubjectProgramme';
+    import SingleSubjectTable from './SingleSubjectTable';
     import templateTypeInfo from '@/util/config/template_type';
-    import {PROGRAMME_DIMENSION} from '@/util/config/dimension';
     import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import _ from 'lodash';
 
@@ -180,13 +116,14 @@
         components: {
             SelectSingleSubject,
             SetSubjectProgramme,
+            SingleSubjectTable,
             UploadImage
         },
         data() {
             return {
                 // 以'_'分割，设置每层的样式高度
                 templateHeight: '',
-                size: PROGRAMME_DIMENSION,
+                size: [],
                 imageUploadDialogVisible: false,
                 navBarId: this.$route.params.navBarId,
                 navBarSignCode: this.$route.params.navBarSignCode,
@@ -357,12 +294,18 @@
             },
             // 设置模板样式中的节目项
             setModelItem(row, index, imageModel, isAll, item) {
+                imageModel = imageModel.split('-')[1] + '-' + imageModel.split('-')[2];
+                this.imageSpec = templateTypeInfo.SIZE_TO_INFO[imageModel];
                 if (isAll) {
+                    this.size = [];
+                    let spec = this.imageSpec.width + '*' + this.imageSpec.height;
+                    this.size.push({
+                        value: spec,
+                        label: '当前尺寸：' + spec
+                    });
                     this.imageUploadDialogVisible = true;
                     return;
                 }
-                imageModel = imageModel.split('-')[1] + '-' + imageModel.split('-')[2];
-                this.imageSpec = templateTypeInfo.SIZE_TO_INFO[imageModel];
                 this.currentRow = row;
                 this.currentIndex = index;
                 this.originProgramme = item;
@@ -455,20 +398,17 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
-    h3 {
-        margin-top: 30px;
-        margin-bottom: 30px;
-        font-size: 18px;
+    .vice-block {
+        margin-top: 60px;
     }
 
-    .el-input {
-        width: 500px;
+    .el-table {
+        margin: 0px;
     }
 
-    .el-select {
+    .el-input, .el-select {
         width: 500px;
     }
 
@@ -482,16 +422,21 @@
                 position: relative;
                 margin-right: 30px;
                 flex-grow: 1;
-                background: #5daf34;
                 cursor: pointer;
+                background: $dynamicGray;
+                border: 1px solid #fff;
+                &:hover {
+                    border: 1px solid $baseBlue;
+                }
                 div {
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
                 }
-                .all-tip {
-                    font-size: 20px;
-                    color: #fff;
+                .tip {
+                    font-size: $normalFontSize;
+                    color: $baseBlue;
+                    cursor: pointer;
                 }
                 img {
                     display: block;
@@ -586,6 +531,6 @@
     }
 
     .save-btn {
-        margin: 60px 0 40px 0;
+        margin: 120px 0 80px 0;
     }
 </style>
