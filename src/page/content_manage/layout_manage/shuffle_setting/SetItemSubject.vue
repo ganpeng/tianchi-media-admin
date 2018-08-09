@@ -89,7 +89,7 @@
                 } else {
                     this.mode = 'NORMAL';
                 }
-                this.$refs.currentComponent.initSubjectList([]);
+                this.$refs.currentComponent.getSubjectList();
             },
             initSubjectDetail() {
                 this.$service.getSubjectDetail(this.subject.id).then(response => {

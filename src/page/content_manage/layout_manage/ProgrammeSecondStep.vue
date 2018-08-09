@@ -150,9 +150,11 @@
                         // 添加为底层
                         if (newPosterImage.posterImage.width === this.coverImageSpec.width && newPosterImage.posterImage.height === this.coverImageSpec.height) {
                             this.programmeCoverImageId = newPosterImage.posterImage.id;
+                            this.$emit('setProgrammeCoverImage', newPosterImage.posterImage);
                             // 添加为浮层
                         } else {
                             this.programmeCoverImageBackgroundId = newPosterImage.posterImage.id;
+                            this.$emit('setProgrammeCoverImageBackground', newPosterImage.posterImage);
                         }
                     }
                 });

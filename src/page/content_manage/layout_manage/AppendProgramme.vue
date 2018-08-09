@@ -1,20 +1,16 @@
 <!--内容管理-栏目管理-节目选择组件-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
-            <el-breadcrumb-item
-                :to="'/nav-bar-manage/layout-setting/' + currentNavBarInfo.signCode + '/' + currentNavBarInfo.id">
-                {{currentNavBarInfo.name}}页面设置
-            </el-breadcrumb-item>
-            <el-breadcrumb-item>节目选择</el-breadcrumb-item>
-        </el-breadcrumb>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'栏目管理'},
+            {name:currentNavBarInfo.name + '-节目选择'}]">
+        </custom-breadcrumb>
         <el-steps :active="activeStep" align-center>
-            <el-step title="步骤1" description="选择节目资源"></el-step>
-            <el-step title="步骤2" description="选择节目图片"></el-step>
-            <el-step title="步骤3" description="设置节目角标"></el-step>
+            <el-step title="步骤1" :status='stepFirstStatus' description="选择节目资源"></el-step>
+            <el-step title="步骤2" :status='stepSecondStatus' description="选择节目图片"></el-step>
+            <el-step title="步骤3" :status='stepThirdStatus' description="设置节目角标"></el-step>
         </el-steps>
         <keep-alive>
             <component v-show="mode !== 'EDIT' || activeStep !== 0"
@@ -35,10 +31,30 @@
             </single-programme-table>
         </template>
         <div class="step-button">
-            <el-button @click="switchMode" v-if="activeStep === 0 && mode === 'EDIT'">更换节目</el-button>
-            <el-button @click="previous" v-if="activeStep === 1 || activeStep === 2">上一步</el-button>
-            <el-button @click="next" v-if="activeStep === 0 ||activeStep === 1">下一步</el-button>
-            <el-button @click="complete" v-if="activeStep === 2">完成</el-button>
+            <el-button type="primary"
+                       @click="switchMode"
+                       v-if="activeStep === 0 && mode === 'EDIT'"
+                       class="page-main-btn">
+                更换节目
+            </el-button>
+            <el-button type="primary"
+                       @click="previous"
+                       v-if="activeStep === 1 || activeStep === 2"
+                       class="page-main-btn">
+                上一步
+            </el-button>
+            <el-button type="primary"
+                       @click="next"
+                       v-if="activeStep === 0 ||activeStep === 1"
+                       class="page-main-btn">
+                下一步
+            </el-button>
+            <el-button type="primary"
+                       @click="complete"
+                       v-if="activeStep === 2"
+                       class="page-main-btn">
+                完成
+            </el-button>
         </div>
     </div>
 </template>
@@ -94,6 +110,27 @@
                 return this.$store.getters['layout/getNavBarInfo']({
                     navBarId: this.navBarId
                 });
+            },
+            stepFirstStatus() {
+                if (this.activeStep > 0) {
+                    return 'success';
+                } else {
+                    return '';
+                }
+            },
+            stepSecondStatus() {
+                if (this.activeStep > 1) {
+                    return 'success';
+                } else {
+                    return '';
+                }
+            },
+            stepThirdStatus() {
+                if (this.activeStep > 2) {
+                    return 'success';
+                } else {
+                    return '';
+                }
             }
         },
         created() {
@@ -216,15 +253,15 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
     .el-steps {
-        margin: 30px 60px 0 60px;
+        margin: 50px auto 30px auto;
+        width: 80%;
     }
 
     .step-button {
-        margin: 50px 0px;
+        margin: 50px 0px 80px 0px;
     }
 
 </style>

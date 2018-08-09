@@ -1,41 +1,46 @@
 <!--内容管理-栏目管理-单个推荐位选择专题-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
-            <el-breadcrumb-item
-                :to="'/nav-bar-manage/layout-setting/' + currentNavBarInfo.signCode + '/' + currentNavBarInfo.id">
-                {{currentNavBarInfo.name}}页面设置
-            </el-breadcrumb-item>
-            <el-breadcrumb-item>单个推荐位选择专题</el-breadcrumb-item>
-        </el-breadcrumb>
-        <h3 class="text-left">{{mode === 'EDIT' ? '当前选择的专题：':'请选择要推荐的专题：'}}</h3>
-        <select-single-subject
-            v-show="mode === 'NORMAL'"
-            ref="selectSingleSubject"
-            v-on:resetSubjectInfo="resetSubjectInfo"
-            v-on:setSubject="setSubject">
-        </select-single-subject>
-        <template v-if="mode === 'EDIT'">
-            <single-subject-table
-                :singleSubjectList="currentSubjectList">
-            </single-subject-table>
-        </template>
-        <h3 class="text-left">{{mode === 'EDIT' ? '当前选择的封面海报：':'请选择专题的封面海报：'}}</h3>
-        <ul class="cover-list">
-            <li v-for="(item,index) in specPosterImages" :key="index">
-                <img :src="item.uri | imageUrl" :alt="item.name" @click="displayImage(index)">
-                <el-radio v-model="subjectImageId" :label="item.id" @change="setPosterImage(index)">{{item.name}}
-                </el-radio>
-            </li>
-        </ul>
-        <div class="add-box">
-            <el-button type="success" @click="addCover">添加图片</el-button>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'栏目管理'},
+            {name:currentNavBarInfo.name + '-单个推荐位推荐专题'}]">
+        </custom-breadcrumb>
+        <!--选择专题-->
+        <div class="vice-block">
+            <h3 class="block-vice-title">{{mode === 'EDIT' ? '1.当前选择的专题：':'1.请选择要推荐的专题：'}}</h3>
+            <select-single-subject
+                v-show="mode === 'NORMAL'"
+                ref="selectSingleSubject"
+                v-on:resetSubjectInfo="resetSubjectInfo"
+                v-on:setSubject="setSubject">
+            </select-single-subject>
+            <template v-if="mode === 'EDIT'">
+                <single-subject-table
+                    :singleSubjectList="currentSubjectList">
+                </single-subject-table>
+            </template>
         </div>
-        <el-button v-if="mode === 'EDIT'" type="success" @click="switchMode">更换专题</el-button>
-        <el-button type="primary" @click="saveSubject">保 存</el-button>
+        <!--设置封面-->
+        <div class="vice-block">
+            <h3 class="block-vice-title">{{mode === 'EDIT' ? '2.当前选择的封面海报：':'2.请设置专题的封面海报：'}}</h3>
+            <div class="text-left">
+                <el-button class="btn-icon-normal" type="primary" plain @click="addCover">
+                    <i class="el-icon-picture el-icon--left"></i>
+                    添加封面图片
+                </el-button>
+            </div>
+            <ul class="cover-list">
+                <li v-for="(item,index) in specPosterImages" :key="index">
+                    <img :src="item.uri | imageUrl" :alt="item.name" @click="displayImage(index)">
+                    <el-radio v-model="subjectImageId" :label="item.id" @change="setPosterImage(index)">{{item.name}}
+                    </el-radio>
+                </li>
+            </ul>
+        </div>
+        <el-button v-if="mode === 'EDIT'" type="primary" @click="switchMode" class="page-main-btn">更换专题</el-button>
+        <el-button type="primary" @click="saveSubject" class="page-main-btn">保 存</el-button>
         <preview-multiple-images
             :previewMultipleImages="previewImage">
         </preview-multiple-images>
@@ -120,7 +125,7 @@
                 }
                 if (this.mode !== 'EDIT') {
                     this.$nextTick(function () {
-                        this.$refs.selectSingleSubject.initSubjectList([]);
+                        this.$refs.selectSingleSubject.getSubjectList();
                     });
                 } else {
                     this.initCurrentRecommendItem();
@@ -145,7 +150,7 @@
                         this.posterImageList = response.data.posterImageList;
                     } else {
                         this.mode = 'NORMAL';
-                        this.$refs.selectSingleSubject.initSubjectList([]);
+                        this.$refs.selectSingleSubject.getSubjectList();
                         this.resetSubjectInfo();
                     }
                 });
@@ -167,7 +172,7 @@
             // 切换到选择专题模式
             switchMode() {
                 this.mode = 'NORMAL';
-                this.$refs.selectSingleSubject.initSubjectList([]);
+                this.$refs.selectSingleSubject.getSubjectList();
                 this.resetSubjectInfo();
             },
             // 放大预览图片
@@ -248,14 +253,7 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-
-    h3 {
-        margin-top: 30px;
-        margin-bottom: 30px;
-        font-size: 18px;
-    }
 
     ul.cover-list {
         display: flex;
@@ -280,8 +278,9 @@
         }
     }
 
-    .add-box {
-        margin-bottom: 50px;
+    .page-main-btn {
+        margin-top: 120px;
+        margin-bottom: 80px;
     }
 
 </style>

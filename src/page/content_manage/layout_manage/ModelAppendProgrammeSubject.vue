@@ -252,7 +252,8 @@
                 });
                 if (this.mode !== 'EDIT') {
                     this.$nextTick(function () {
-                        this.$refs.selectSingleSubject.initSubjectList(this.recommendSubjectIdList);
+                        this.$refs.selectSingleSubject.initRecommendIdList(this.recommendSubjectIdList);
+                        this.$refs.selectSingleSubject.getSubjectList();
                     });
                 }
             },
@@ -287,7 +288,8 @@
                 this.mode = 'NORMAL';
                 this.title = '';
                 this.resetSubjectInfo();
-                this.$refs.selectSingleSubject.initSubjectList(this.recommendSubjectIdList);
+                this.$refs.selectSingleSubject.initRecommendIdList(this.recommendSubjectIdList);
+                this.$refs.selectSingleSubject.getSubjectList();
             },
             // 重置专题信息
             resetSubjectInfo() {

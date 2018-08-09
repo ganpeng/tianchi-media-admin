@@ -1,6 +1,6 @@
 <!--人物列表搜索参数设置组件-->
 <template>
-    <div @keyup.enter="getPersonList">
+    <div @keyup.enter="getPersonList" class="text-left">
         <el-form :inline="true">
             <el-form-item label="地区">
                 <el-select

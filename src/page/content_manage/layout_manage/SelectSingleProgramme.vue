@@ -20,6 +20,8 @@
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
+                width="120px"
                 prop="code"
                 label="编号">
                 <template slot-scope="scope">
@@ -27,10 +29,14 @@
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
+                width="126px"
                 prop="name"
                 label="名称">
             </el-table-column>
             <el-table-column
+                align="center"
+                width="120px"
                 label="图片">
                 <template slot-scope="scope">
                     <img :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl"
@@ -40,43 +46,49 @@
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
                 prop="description"
+                width="210px"
+                show-overflow-tooltip
                 label="简介">
                 <template slot-scope="scope">
-                    <label class="ellipsis-three">{{scope.row.description}}</label>
-                    <el-popover
-                        placement="right"
-                        :title="scope.row.name + '简介'"
-                        width="250"
-                        trigger="hover"
-                        :content="scope.row.description">
-                        <el-button slot="reference" type="text" class="more">更多</el-button>
-                    </el-popover>
+                    <label>{{scope.row.description ? scope.row.description : '------'}}</label>
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
+                width="88px"
                 prop="featureVideoCount"
                 label="正片数量">
             </el-table-column>
             <el-table-column
+                align="center"
+                width="108px"
                 prop="extraVideoCount"
                 label="相关视频数量">
             </el-table-column>
             <el-table-column
+                width="128px"
+                align="center"
                 prop="announceAt"
                 label="上映时间">
                 <template slot-scope="scope">
-                    {{scope.row.announceAt | formatDate('yyyy-MM-DD')}}
+                    <label v-if="scope.row.announceAt">{{scope.row.announceAt | formatDate('yyyy-MM-DD')}}</label>
+                    <label v-else>------</label>
                 </template>
             </el-table-column>
             <el-table-column
+                width="200px"
+                align="center"
                 prop="produceAreaList"
                 label="地区">
                 <template slot-scope="scope">
-                    {{areaLabel(scope.row.produceAreaList)}}
+                    {{scope.row.produceAreaList.length !== 0 ? areaLabel(scope.row.produceAreaList) : '------'}}
                 </template>
             </el-table-column>
             <el-table-column
+                width="140px"
+                align="center"
                 label="分类">
                 <template slot-scope="scope">
                     {{scope.row.categoryList | jsonJoin('name')}}
@@ -84,24 +96,28 @@
             </el-table-column>
             <el-table-column
                 prop="typeList"
+                align="center"
                 label="类型">
                 <template slot-scope="scope">
                     {{scope.row.typeList | jsonJoin('name')}}
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
                 label="主演">
                 <template slot-scope="scope">
                     <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
                 label="导演">
                 <template slot-scope="scope">
                     <label>{{scope.row.figureListMap | displayFigures('DIRECTOR')}}</label>
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
                 prop="visible"
                 label="状态">
                 <template slot-scope="scope">
@@ -109,6 +125,7 @@
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
                 label="更新时间">
                 <template slot-scope="scope">
                     {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
@@ -219,37 +236,13 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-
-    .el-form {
-        margin-left: 20px;
-        text-align: left;
-        &.search-form {
-            margin-top: 60px;
-            .search {
-                margin-left: 50px;
-                margin-right: 30px;
-            }
-        }
-    }
 
     .el-table {
         img {
-            width: 120px;
+            width: 100px;
+            height: 145px;
         }
-        label {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            -ms-text-overflow: ellipsis;
-            text-overflow: ellipsis;
-        }
-        .more {
-            float: right;
-        }
-
         .el-icon-success {
             margin-right: 5px;
             color: #409EFF;

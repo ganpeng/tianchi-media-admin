@@ -1,6 +1,6 @@
 <!--搜索节目参数设置组件-->
 <template>
-    <div @keyup.enter="getProgrammeList">
+    <div @keyup.enter="getProgrammeList" class="text-left">
         <el-form :inline="true">
             <el-form-item label="上映开始时间">
                 <el-date-picker

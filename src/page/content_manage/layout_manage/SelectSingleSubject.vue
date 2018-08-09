@@ -1,35 +1,10 @@
 <!--内容管理-栏目管理-选择单个专题组件-->
 <template>
-    <div @keyup.enter="initSubjectList(recommendIdList)">
-        <el-form :inline="true" class="demo-form-inline search-form">
-            <template v-if="listQueryParams.category === 'PROGRAMME'">
-                <el-form-item label="节目类别">
-                    <el-select v-model="listQueryParams.subjectType" clearable placeholder="请选择节目类别">
-                        <el-option
-                            v-for="item in typeListOptions"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-            </template>
-            <el-form-item label="创建时间">
-                <el-date-picker
-                    v-model="createRangeTime"
-                    type="daterange"
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期">
-                </el-date-picker>
-            </el-form-item>
-            <el-form-item label="专题名称">
-                <el-input v-model="listQueryParams.name" placeholder="请填写专题名称"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="success" @click="initSubjectList(recommendIdList)">查 询</el-button>
-            </el-form-item>
-        </el-form>
+    <div>
+        <subject-filter-params
+            :mode="mode"
+            v-on:getSubjectList="getSubjectList">
+        </subject-filter-params>
         <el-table
             :data="subjectList"
             border
@@ -46,50 +21,56 @@
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
                 prop="code"
-                width="60px"
+                width="120px"
                 label="编号">
-                <template slot-scope="scope">
-                    <label>{{scope.row.code}}</label>
-                </template>
             </el-table-column>
             <el-table-column
+                align="center"
+                width="186px"
                 prop="name"
                 label="名称">
             </el-table-column>
             <el-table-column
+                align="center"
+                width="140px"
+                prop="itemCount"
                 label="包含节目/人物数">
                 <template slot-scope="scope">
                     <label>{{scope.row.subjectItemList === null ? 0 : scope.row.subjectItemList.length}}</label>
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
                 prop="description"
+                width="210px"
+                show-overflow-tooltip
                 label="简介">
                 <template slot-scope="scope">
-                    <label class="ellipsis-three">{{scope.row.description}}</label>
-                    <el-popover
-                        placement="right"
-                        :title="scope.row.name + '简介'"
-                        width="250"
-                        trigger="hover"
-                        :content="scope.row.description">
-                        <el-button slot="reference" type="text" class="more">更多</el-button>
-                    </el-popover>
+                    <label>{{scope.row.description ? scope.row.description : '------'}}</label>
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
                 prop="tagList"
+                width="120px"
                 label="专题标签">
                 <template slot-scope="scope">
-                    <label>{{scope.row.tagList.join(',')}}</label>
+                    <label>{{scope.row.tagList.length === 0 ? '------' : scope.row.tagList.join(',')}}</label>
                 </template>
             </el-table-column>
             <el-table-column
-                prop="owner"
+                align="center"
+                width="128px"
+                prop="authorName"
                 label="专题创建者">
+                <template slot-scope="scope">
+                    <label>{{scope.row.authorName ? scope.row.authorName : '------' }}</label>
+                </template>
             </el-table-column>
             <el-table-column
+                align="center"
                 prop="category"
                 label="专题类型">
                 <template slot-scope="scope">
@@ -97,19 +78,25 @@
                 </template>
             </el-table-column>
             <el-table-column
-                prop="type"
+                align="center"
+                prop="programmeCategoryList"
                 label="节目专题类型">
                 <template slot-scope="scope">
-                    <label>{{scope.row.type ?scope.row.type : '------' }}</label>
+                    <label v-if="scope.row.programmeCategoryList && scope.row.programmeCategoryList.length !== 0">
+                        {{scope.row.programmeCategoryList | jsonJoin('name') }}</label>
+                    <label v-else>------</label>
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
+                width="120px"
                 label="创建时间">
                 <template slot-scope="scope">
                     {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
                 label="状态">
                 <template slot-scope="scope">
                     {{scope.row.visible ? '已上架' : '已下架'}}
@@ -129,22 +116,23 @@
 </template>
 
 <script>
+    import SubjectFilterParams from '../searchFilterParams/SubjectFilterParams';
+
     export default {
         name: 'SelectSingleSubject',
         // mode:The category of subject, such as 'PROGRAMME' & 'FIGURE'
         props: ['mode'],
+        components: {
+            SubjectFilterParams
+        },
         data() {
             return {
                 recommendIdList: [],
                 listQueryParams: {
                     category: this.mode,
-                    subjectType: '',
-                    name: '',
                     pageNum: 1,
                     pageSize: 10
                 },
-                createRangeTime: '',
-                typeListOptions: [],
                 totalAmount: 0,
                 subjectList: []
             };
@@ -166,16 +154,25 @@
                 }
                 return '';
             },
-            initSubjectList(recommendIdList) {
+            // 初始化被推荐的专题的list
+            initRecommendIdList(recommendIdList) {
                 this.recommendIdList = recommendIdList;
+            },
+            getSubjectList(searchParams) {
+                // 设置请求参数
+                if (searchParams) {
+                    for (let key in searchParams) {
+                        this.listQueryParams[key] = searchParams[key];
+                    }
+                }
                 this.$service.getSubjectList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.subjectList = response.data.list;
                         this.totalAmount = response.data.total;
                         // 设置重复推荐专题的筛选
-                        for (let i = 0; i < recommendIdList.length; i++) {
+                        for (let i = 0; i < this.recommendIdList.length; i++) {
                             for (let k = 0; k < this.subjectList.length; k++) {
-                                if (recommendIdList[i] === this.subjectList[k].id) {
+                                if (this.recommendIdList[i] === this.subjectList[k].id) {
                                     this.subjectList[k].recommend = true;
                                 }
                             }
@@ -214,11 +211,11 @@
             },
             handleSizeChange(pageSize) {
                 this.listQueryParams.pageSize = pageSize;
-                this.initSubjectList(this.recommendIdList);
+                this.getSubjectList();
             },
             handleCurrentChange(pageNum) {
                 this.listQueryParams.pageNum = pageNum;
-                this.initSubjectList(this.recommendIdList);
+                this.getSubjectList(this.recommendIdList);
             }
         }
     };
@@ -227,25 +224,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
 
-    .el-form {
-        margin-left: 20px;
-        text-align: left;
-        &.search-form {
-            margin-top: 20px;
-            .search {
-                margin-left: 50px;
-                margin-right: 30px;
-            }
-            .el-input {
-                width: 360px;
-            }
-        }
-    }
-
     .el-table {
-        .more {
-            float: right;
-        }
         .el-icon-success {
             margin-right: 5px;
             color: #409EFF;
