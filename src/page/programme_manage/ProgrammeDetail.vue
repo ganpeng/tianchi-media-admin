@@ -352,6 +352,7 @@
                 <div class="block-title">节目图片</div>
                 <div class="text-left" style="padding-left:20px;">
                     <el-button v-if="!readonly" type="primary" icon="el-icon-picture" @click="uploadImageHandler" plain>添加节目图片</el-button>
+                    <span v-if="!readonly" class="text-info">节目横版海报图: 807*455,节目纵版海报图: 240*350都必须上传</span>
                 </div>
                 <ul class="cover-list">
                     <li v-for="(img, index) in programme.posterImageList" :key="index">

@@ -11,9 +11,12 @@
             <el-table-column prop="originName" align="center" width="200px" label="视频名称"></el-table-column>
             <el-table-column prop="link" align="center" width="300px" label="预览视频">
                 <template slot-scope="scope">
-                    <!-- <el-button
-                        v-if="scope.row.m3u8For1080P"
-                        type="text" @click="displayVideo(scope.row.playUrl)" size="small">4K</el-button> -->
+                    <el-button
+                        v-if="scope.row.m3u8For4K"
+                        type="text"
+                        size="small"
+                        @click="displayVideo(scope.row.m3u8For4K)"
+                        >4K</el-button>
                     <el-button
                         v-if="scope.row.m3u8For1080P"
                         type="text"
@@ -39,9 +42,10 @@
                     {{duration(scope.row.takeTimeInSec)}}
                 </template>
             </el-table-column>
-            <el-table-column prop="takeTimeInSec" align="center" label="注入状态">
+            <el-table-column width="150px" align="center" label="注入状态">
                 <template slot-scope="scope">
                     {{getStatus(scope.row.status)}}
+                    <!-- <el-progress v-if="scope.row.status === ''" :text-inside="true" :stroke-width="16" :percentage="80"></el-progress> -->
                 </template>
             </el-table-column>
             <el-table-column align="center" width="220px" label="上传日期">

@@ -90,33 +90,11 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <!--
-                <el-form-item label="是否推荐">
-                    <el-radio-group :value="recommend.isRecommend">
-                        <el-radio :label="0" @change="changeIsRecommendHandler(0)">是</el-radio>
-                        <el-radio :label="1" @change="changeIsRecommendHandler(1)">否</el-radio>
-                    </el-radio-group>
-                    <el-select
-                        style="margin-left:20px;"
-                        v-if="recommend.isRecommend === 0"
-                        multiple
-                        :value="recommend.recommendList"
-                        placeholder="请选择推荐位"
-                        @input="inputRecommendHandler($event, 'recommendList')"
-                    >
-                        <el-option
-                            v-for="(item, index) in recommendOptions"
-                            :key="index"
-                            :label="item.name"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                -->
             </el-col>
             <el-col :span="24">
                 <el-form-item label="人物图片" required>
                     <el-button v-if="!readonly" type="primary" @click="uploadImageHandler">上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
+                    <span class="text-info">人物的头像: 200*200,人物背景图: 1920*1080都必须上传</span>
                     <ul class="cover-list">
                         <li v-for="(img, index) in person.posterImageList" :key="index">
                             <div
