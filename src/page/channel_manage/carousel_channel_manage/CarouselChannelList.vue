@@ -38,7 +38,10 @@
                     <el-button type="success" @click="getChannelList">查 询</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="success" @click="createChannelDialogVisible = true">新增轮播频道</el-button>
+                    <el-button type="success" @click="createChannelDialogVisible = true">新增单个轮播频道</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="success" @click="createChannelByImportExcel">导入新增轮播频道</el-button>
                 </el-form-item>
             </el-form>
             <el-table
@@ -95,7 +98,7 @@
                 <el-table-column
                     align="center"
                     prop="pushServer"
-                    label="所在服务器">
+                    label="所属服务器">
                 </el-table-column>
                 <el-table-column
                     align="center"
@@ -210,6 +213,11 @@
                 this.$router.push({
                     name: 'EditCarouselChannel',
                     params: {id: item.id}
+                });
+            },
+            createChannelByImportExcel() {
+                this.$router.push({
+                    name: 'CreateChannelByImportExcel'
                 });
             },
             // 关闭创建频道对话框

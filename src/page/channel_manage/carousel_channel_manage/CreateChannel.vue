@@ -32,8 +32,8 @@
             <el-form-item label="serviceId" prop="serviceId">
                 <el-input v-model="channelInfo.serviceId" placeholder="请填写serviceId"></el-input>
             </el-form-item>
-            <el-form-item label="所在服务器" prop="pushServer" required>
-                <el-input v-model="channelInfo.pushServer" placeholder="请填写所在服务器的IP地址"></el-input>
+            <el-form-item label="所属服务器" prop="pushServer" required>
+                <el-input v-model="channelInfo.pushServer" placeholder="请填写所属服务器的IP地址"></el-input>
             </el-form-item>
             <el-form-item label="频道状态" required>
                 <label>禁播</label>
@@ -121,9 +121,9 @@
             };
             let checkPushServer = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    return callback(new Error('请填写所在服务器IP地址'));
+                    return callback(new Error('请填写所属服务器IP地址'));
                 } else if (!this.$util.isIPAddress(value)) {
-                    return callback(new Error('请填写正确的所在服务器IP地址'));
+                    return callback(new Error('请填写正确的所属服务器IP地址'));
                 } else {
                     callback();
                 }

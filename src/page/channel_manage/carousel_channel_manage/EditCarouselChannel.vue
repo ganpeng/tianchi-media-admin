@@ -40,8 +40,8 @@
             <el-form-item label="serviceId" prop="serviceId">
                 <el-input v-model="channelInfo.serviceId" placeholder="请填写serviceId"></el-input>
             </el-form-item>
-            <el-form-item label="所在服务器" prop="pushServer" required>
-                <el-input v-model="channelInfo.pushServer" placeholder="请填写所在服务器的IP地址"></el-input>
+            <el-form-item label="所属服务器" prop="pushServer" required>
+                <el-input v-model="channelInfo.pushServer" placeholder="请填写所属服务器的IP地址"></el-input>
             </el-form-item>
             <el-form-item label="状态：" prop="visible">
                 <label>{{channelInfo.visible ? '正常' : '禁播'}}</label>
@@ -103,6 +103,13 @@
                 width="100px"
                 label="预览视频">
                 <template slot-scope="scope">
+                    <el-button
+                        v-if="scope.row.m3u8For4K"
+                        type="text"
+                        size="small"
+                        @click="displayVideo(scope.row.m3u8For4K)"
+                    >4K
+                    </el-button>
                     <el-button
                         v-if="scope.row.m3u8For1080P"
                         type="text"
@@ -305,9 +312,9 @@
             };
             let checkPushServer = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    return callback(new Error('请填写所在服务器IP地址'));
+                    return callback(new Error('请填写所属服务器IP地址'));
                 } else if (!this.$util.isIPAddress(value)) {
-                    return callback(new Error('请填写正确的所在服务器IP地址'));
+                    return callback(new Error('请填写正确的所属服务器IP地址'));
                 } else {
                     callback();
                 }

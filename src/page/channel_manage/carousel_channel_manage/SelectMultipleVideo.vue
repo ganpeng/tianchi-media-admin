@@ -47,6 +47,13 @@
                 label="预览视频">
                 <template slot-scope="scope">
                     <el-button
+                        v-if="scope.row.m3u8For4K"
+                        type="text"
+                        size="small"
+                        @click="displayVideo(scope.row.m3u8For4K)"
+                    >4K
+                    </el-button>
+                    <el-button
                         v-if="scope.row.m3u8For1080P"
                         type="text"
                         size="small"

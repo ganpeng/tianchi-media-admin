@@ -32,7 +32,7 @@
                 <el-form-item label="serviceId：">
                     <label>{{channelInfo.serviceId}}</label>
                 </el-form-item>
-                <el-form-item label="所在服务器：">
+                <el-form-item label="所属服务器：">
                     <label>{{channelInfo.pushServer}}</label>
                 </el-form-item>
                 <el-form-item label="状态：">
@@ -80,6 +80,13 @@
                     width="300px"
                     label="预览视频">
                     <template slot-scope="scope">
+                        <el-button
+                            v-if="scope.row.m3u8For4K"
+                            type="text"
+                            size="small"
+                            @click="previewVideo(scope.row.m3u8For4K)"
+                        >4K
+                        </el-button>
                         <el-button
                             v-if="scope.row.m3u8For1080P"
                             type="text"
