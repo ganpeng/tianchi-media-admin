@@ -3,9 +3,14 @@
     <div>
         <input id="excel-upload-input" ref="excel-upload-input" type="file" accept=".xlsx, .xls" @change="handleClick">
         <div id="drop" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">
-            Drop excel file here or
-            <el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" @click="handleUpload">
-                Browse
+            将文件拖到此处或
+            <el-button
+                :loading="loading"
+                style="margin-left:16px;"
+                size="mini"
+                type="primary"
+                @click="handleUpload">
+                点击上传
             </el-button>
         </div>
     </div>

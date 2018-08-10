@@ -184,6 +184,7 @@
             <el-button type="success" @click="revertVideoList">反转当前视频列表</el-button>
             <el-button type="success" @click="setVideoNameList">设置视频展示名称</el-button>
         </div>
+        <!--自动化排序-->
         <div id="auto-sort">
             <div v-for="(item, index) in sectionList" :key="index">
                 <el-input v-model="item.name" placeholder="请填写名称"></el-input>
@@ -194,6 +195,21 @@
             <el-button type="primary" @click="addSection">添加名称</el-button>
             <div class="text-center">
                 <el-button type="primary" @click="autoSort">自动化排序</el-button>
+            </div>
+        </div>
+        <!--填写视频展示名称-->
+        <div id="fill-display-name">
+            <div>
+                <el-input v-model="displayNameParams.prefix" placeholder="请填写前缀"></el-input>
+            </div>
+            <div>
+                <el-input v-model="displayNameParams.suffix" placeholder="请填写后缀"></el-input>
+            </div>
+            <div class="text-center">
+                <el-button type="primary" @click="setDisplayName">填写展示名称</el-button>
+            </div>
+            <div class="text-center">
+                <el-button type="primary" @click="removeDisplayNameNo">删除展示名称后面的数字</el-button>
             </div>
         </div>
         <display-video-dialog
@@ -238,6 +254,7 @@
 </template>
 
 <script>
+    import Vue from 'vue';
     import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
     import SelectMultipleVideo from './SelectMultipleVideo';
     import SortDialog from 'sysComponents/custom_components/custom/SortDialog';
@@ -327,6 +344,7 @@
                 }
             };
             return {
+                displayNameParams: {},
                 size: CHANNEL_LOGO_DIMENSION,
                 imageUploadDialogVisible: false,
                 sortDialogVisible: false,
@@ -379,6 +397,19 @@
             this.init();
         },
         methods: {
+            setDisplayName() {
+                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].originName.replace(this.displayNameParams.prefix, '');
+                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(this.displayNameParams.suffix, '');
+                    Vue.set(this.currentSelectedVideoList, i, this.currentSelectedVideoList[i]);
+                }
+            },
+            removeDisplayNameNo() {
+                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(/\d+$/, '');
+                    Vue.set(this.currentSelectedVideoList, i, this.currentSelectedVideoList[i]);
+                }
+            },
             init() {
                 this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
                     if (response && response.code === 0) {
@@ -535,7 +566,7 @@
             sortTwoDimension(videoTwoDimension) {
                 for (let k = 0; k < videoTwoDimension.length; k++) {
                     videoTwoDimension[k].sort(function (pre, next) {
-                        return parseInt(pre.name.split('-')[1]) > parseInt(next.name.split('-')[1]);
+                        return parseInt(pre.name.split('-')[1]) - parseInt(next.name.split('-')[1]);
                     });
                 }
                 let array = [];
@@ -649,7 +680,7 @@
             updateInfo() {
                 /** 在正常频道保存时，必须含有没有禁播的视频  */
                 /** 写的什么玩意？暂时注释掉，能正常禁用和删除视频
-                if (this.channelInfo.visible) {
+                 if (this.channelInfo.visible) {
                     let tag = false;
                     this.currentSelectedVideoList.map(video => {
                         if (video.visible) {
@@ -664,7 +695,7 @@
                         return;
                     }
                 }
-                */
+                 */
                 /** 在频道保存时，含有的视频必须有展示名称  */
                 for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
                     if (!this.currentSelectedVideoList[i].name) {
@@ -700,7 +731,6 @@
                         });
                     }
                 });
-
             }
         }
     };
@@ -760,4 +790,14 @@
             margin-bottom: 20px;
         }
     }
+
+    #fill-display-name {
+        padding: 30px;
+        margin-top: 30px;
+        border: 1px solid gray;
+        div {
+            margin-bottom: 20px;
+        }
+    }
+
 </style>
