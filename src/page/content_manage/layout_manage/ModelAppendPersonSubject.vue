@@ -1,129 +1,65 @@
 <!--内容管理-栏目管理-人物模块设置-->
 <template>
     <div class="text-left">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
-            <el-breadcrumb-item
-                :to="'/nav-bar-manage/layout-setting/' + currentNavBarInfo.signCode + '/' + currentNavBarInfo.id">
-                {{currentNavBarInfo.name}}页面设置
-            </el-breadcrumb-item>
-            <el-breadcrumb-item>人物模块设置</el-breadcrumb-item>
-        </el-breadcrumb>
-        <h3 class="text-left">1.请输入人物模块名称：</h3>
-        <el-input
-            placeholder="请输入模块名称，30个字符以内"
-            v-model="title"
-            clearable>
-        </el-input>
-        <h3 class="text-left">2.{{mode === 'EDIT' ? '当前推荐的专题' : '请选择要推荐的人物专题'}}：</h3>
-        <select-single-subject
-            v-show="mode === 'NORMAL'"
-            ref="selectSingleSubject"
-            mode="FIGURE"
-            v-on:resetSubjectInfo='resetSubjectInfo'
-            v-on:setSubject="setSubject">
-        </select-single-subject>
-        <template v-if="mode === 'EDIT'">
-            <el-table
-                :data="currentSubjectList"
-                border
-                style="width: 100%">
-                <el-table-column
-                    prop="code"
-                    width="60px"
-                    label="编号">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.code}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="name"
-                    label="名称">
-                </el-table-column>
-                <el-table-column
-                    label="包含节目/人物数">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.subjectItemList === null ? 0 : scope.row.subjectItemList.length}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="description"
-                    label="简介">
-                    <template slot-scope="scope">
-                        <label class="ellipsis-three">{{scope.row.description}}</label>
-                        <el-popover
-                            placement="right"
-                            :title="scope.row.name + '简介'"
-                            width="250"
-                            trigger="hover"
-                            :content="scope.row.description">
-                            <el-button slot="reference" type="text" class="more">更多</el-button>
-                        </el-popover>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="tagList"
-                    label="专题标签">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.tagList.join(',')}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="owner"
-                    label="专题创建者">
-                </el-table-column>
-                <el-table-column
-                    prop="category"
-                    label="专题类型">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.category === 'FIGURE'?'人物' : '节目'}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="type"
-                    label="节目专题类型">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.type ?scope.row.type : '------' }}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    label="创建时间">
-                    <template slot-scope="scope">
-                        {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    label="状态">
-                    <template slot-scope="scope">
-                        {{scope.row.visible ? '已上架' : '已下架'}}
-                    </template>
-                </el-table-column>
-            </el-table>
-        </template>
-        <h3 class="text-left">3.请对专题中的人物排序：</h3>
-        <label v-if="personList.length === 0">暂无选中的人物</label>
-        <ul id="person-list" v-else>
-            <li v-for="(item, index) in personList" :key="index" :data-id="item.id">
-                <img :src="item.avatarImage ? item.avatarImage.uri : '' | imageUrl" :alt="item.name"/>
-                <label>{{item.name}}</label>
-            </li>
-        </ul>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'栏目管理'},
+            {name:currentNavBarInfo.name + '-人物模块设置'}]">
+        </custom-breadcrumb>
+        <!--人物模块名称-->
+        <div class="vice-block">
+            <h3 class="block-vice-title">1.请输入人物模块名称：</h3>
+            <el-input
+                placeholder="请输入人物模块名称，30个字符以内"
+                v-model="title"
+                clearable>
+            </el-input>
+        </div>
+        <!--选择人物专题-->
+        <div class="vice-block">
+            <h3 class="block-vice-title">2.{{mode === 'EDIT' ? '当前推荐的专题' : '请选择要推荐的人物专题'}}：</h3>
+            <select-single-subject
+                v-show="mode === 'NORMAL'"
+                ref="selectSingleSubject"
+                mode="FIGURE"
+                v-on:resetSubjectInfo='resetSubjectInfo'
+                v-on:setSubject="setSubject">
+            </select-single-subject>
+            <template v-if="mode === 'EDIT'">
+                <single-subject-table
+                    :singleSubjectList="currentSubjectList">
+                </single-subject-table>
+            </template>
+        </div>
+        <div class="vice-block">
+            <h3 class="block-vice-title">3.请对专题中的人物排序：</h3>
+            <label v-if="personList.length === 0">暂无选中的人物</label>
+            <el-card v-else>
+                <ul id="person-list">
+                    <li v-for="(item, index) in personList" :key="index" :data-id="item.id">
+                        <img :src="item.avatarImage ? item.avatarImage.uri : '' | imageUrl" :alt="item.name"/>
+                        <label>{{item.name}}</label>
+                    </li>
+                </ul>
+            </el-card>
+        </div>
         <div class="text-center save-btn">
-            <el-button type="success" @click="switchMode" v-if="mode === 'EDIT'">更换专题</el-button>
-            <el-button type="success" @click="saveBlock">保 存</el-button>
+            <el-button type="primary" @click="switchMode" v-if="mode === 'EDIT'" class="page-main-btn">更换专题</el-button>
+            <el-button type="primary" @click="saveBlock" class="page-main-btn">保 存</el-button>
         </div>
     </div>
 </template>
 
 <script>
     import SelectSingleSubject from './SelectSingleSubject';
+    import SingleSubjectTable from './SingleSubjectTable';
 
     export default {
         name: 'ModelAppendPersonSubject',
         components: {
-            SelectSingleSubject
+            SelectSingleSubject,
+            SingleSubjectTable
         },
         data() {
             return {
@@ -282,30 +218,29 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
-    h3 {
-        margin-top: 30px;
-        margin-bottom: 30px;
-        font-size: 18px;
+    .vice-block {
+        margin-top: 60px;
     }
 
-    .el-input {
+    .el-table {
+        margin: 0px;
+    }
+
+    .el-input, .el-select {
         width: 500px;
     }
 
     #person-list {
         display: flex;
-        margin-top: 30px;
-        padding: 0 20px 20px 20px;
+        margin-top: 20px;
         justify-content: left;
         flex-wrap: wrap;
-        border: 1px dotted gray;
         li {
             display: flex;
             margin-right: 30px;
-            margin-top: 20px;
+            margin-bottom: 30px;
             flex-direction: column;
             justify-content: space-between;
             height: 230px;
@@ -355,6 +290,6 @@
     }
 
     .save-btn {
-        margin: 60px 0 40px 0;
+        margin: 120px 0 80px 0;
     }
 </style>

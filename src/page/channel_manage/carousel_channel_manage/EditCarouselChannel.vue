@@ -598,7 +598,7 @@
             },
             // 禁播视频,当前正在播放视频可以禁播-2018.08.09
             disabledConfirm(videoItem) {
-                this.$confirm('此操作将禁播该视频, 是否继续?', '提示', {
+                this.$confirm('是否确认禁播视频，此操作将在点击保存时生效，请知晓。', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -617,7 +617,7 @@
             },
             // 恢复视频播放
             recoverConfirm(videoItem) {
-                this.$confirm('此操作将恢复播出该视频, 是否继续?', '提示', {
+                this.$confirm('是否确认恢复视频，此操作将在点击保存时生效，请知晓。', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -636,7 +636,7 @@
             },
             // 删除视频，当前正在播放视频可以删除-2018.08.09
             removeConfirm(index) {
-                this.$confirm('此操作将删除该视频, 是否继续?', '提示', {
+                this.$confirm('是否确认删除视频，此操作将在点击保存时生效，请知晓。', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'

@@ -32,6 +32,7 @@
                 </single-subject-table>
             </template>
         </div>
+        <!--设置模板各项-->
         <div class="vice-block">
             <h3 class="block-vice-title">3.请选择模块板式：</h3>
             <el-select v-model="templateType" clearable placeholder="请选择模块板式" @change="setBlockModel"

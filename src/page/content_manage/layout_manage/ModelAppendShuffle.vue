@@ -1,83 +1,84 @@
 <!--内容管理-栏目管理-混排模块设置-->
 <template>
     <div class="text-left">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>栏目管理</el-breadcrumb-item>
-            <el-breadcrumb-item
-                :to="'/nav-bar-manage/layout-setting/' + currentNavBarInfo.signCode + '/' + currentNavBarInfo.id">
-                {{currentNavBarInfo.name}}页面设置
-            </el-breadcrumb-item>
-            <el-breadcrumb-item>混排模块设置</el-breadcrumb-item>
-        </el-breadcrumb>
-        <h3 class="text-left">1.请输入混排模块名称：</h3>
-        <el-input
-            placeholder="请输入混排模块名称，30个字符以内"
-            v-model="title"
-            clearable>
-        </el-input>
-        <h3 class="text-left">2.请选择模块板式：</h3>
-        <el-select v-model="templateType" clearable placeholder="请选择模块板式" @change="setBlockModel">
-            <el-option
-                v-for="item in templateTypeOptions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.name">
-            </el-option>
-        </el-select>
-        <div class="model-block">
-            <ul v-for="(row,rowIndex) in shuffleLayoutItemList" :key="rowIndex" :class="row.listClass">
-                <li v-for="(item,index) in row"
-                    :key="index">
-                    <div class="ab-center text-center">
-                        <img :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
-                             :alt="item.coverImage.name"
-                             v-if="item.coverImage && item.coverImage.id">
-                    </div>
-                    <!--左上角标-->
-                    <span v-if="item.cornerMark && item.cornerMark.leftTop"
-                          class="corner-mark left-top">
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'栏目管理'},
+            {name:currentNavBarInfo.name + '-混排模块设置'}]">
+        </custom-breadcrumb>
+        <!--混排模块名称-->
+        <div class="vice-block">
+            <h3 class="block-vice-title">1.请输入混排模块名称：</h3>
+            <el-input
+                placeholder="请输入混排模块名称，30个字符以内"
+                v-model="title"
+                clearable>
+            </el-input>
+        </div>
+        <div class="vice-block">
+            <h3 class="block-vice-title">2.请选择模块板式：</h3>
+            <el-select v-model="templateType" clearable placeholder="请选择模块板式" @change="setBlockModel">
+                <el-option
+                    v-for="item in templateTypeOptions"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.name">
+                </el-option>
+            </el-select>
+            <div class="model-block">
+                <ul v-for="(row,rowIndex) in shuffleLayoutItemList" :key="rowIndex" :class="row.listClass">
+                    <li v-for="(item,index) in row"
+                        :key="index">
+                        <div class="ab-center text-center">
+                            <img :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
+                                 :alt="item.coverImage.name"
+                                 v-if="item.coverImage && item.coverImage.id">
+                        </div>
+                        <!--左上角标-->
+                        <span v-if="item.cornerMark && item.cornerMark.leftTop"
+                              class="corner-mark left-top">
                                  <img :src="item.cornerMark.leftTop.caption | setPlatformImage"
                                       :alt="item.cornerMark.leftTop.caption">
                              </span>
-                    <!--左下角标-->
-                    <span v-if="item.cornerMark && item.cornerMark.leftBottom"
-                          class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
-                    <!--右上角标-->
-                    <span v-if="item.cornerMark && item.cornerMark.rightTop"
-                          class="corner-mark right-top">
+                        <!--左下角标-->
+                        <span v-if="item.cornerMark && item.cornerMark.leftBottom"
+                              class="corner-mark left-bottom">{{item.cornerMark.leftBottom.caption}}</span>
+                        <!--右上角标-->
+                        <span v-if="item.cornerMark && item.cornerMark.rightTop"
+                              class="corner-mark right-top">
                                 <img :src="item.cornerMark.rightTop.imageUri | imageUrl"
                                      :alt="item.cornerMark.rightTop.caption">
                                 </span>
-                    <!--右下角标-->
-                    <span v-if="item.cornerMark && item.cornerMark.rightBottom"
-                          class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
-                    <!--编辑或者设置-->
-                    <div class="item-operate">
-                        <el-dropdown
-                            @command="setModelItem($event,row.listClass, rowIndex, index, item)"
-                            placement="bottom">
+                        <!--右下角标-->
+                        <span v-if="item.cornerMark && item.cornerMark.rightBottom"
+                              class="corner-mark right-bottom">{{item.cornerMark.rightBottom.caption}}</span>
+                        <!--编辑或者设置-->
+                        <div class="item-operate">
+                            <el-dropdown
+                                @command="setModelItem($event,row.listClass, rowIndex, index, item)"
+                                placement="bottom">
                          <span class="el-dropdown-link">
                          <i class="el-icon-edit"></i>
                          </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
-                                <el-dropdown-item command="FIGURE">设置为人物</el-dropdown-item>
-                                <el-dropdown-item command="PROGRAMME_SUBJECT">设置为专题</el-dropdown-item>
-                                <el-dropdown-item command="CHANNEL">设置为频道</el-dropdown-item>
-                                <el-dropdown-item command="WEB_PAGE">设置为网页</el-dropdown-item>
-                                <el-dropdown-item command="PROGRAMME_VIDEO">设置为节目内视频</el-dropdown-item>
-                                <el-dropdown-item command="FILTER">设置为筛选页面</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                    </div>
-                    <label class="item-type">{{item | setItemDescription}}</label>
-                </li>
-            </ul>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
+                                    <el-dropdown-item command="FIGURE">设置为人物</el-dropdown-item>
+                                    <el-dropdown-item command="PROGRAMME_SUBJECT">设置为专题</el-dropdown-item>
+                                    <el-dropdown-item command="CHANNEL">设置为频道</el-dropdown-item>
+                                    <el-dropdown-item command="WEB_PAGE">设置为网页</el-dropdown-item>
+                                    <el-dropdown-item command="PROGRAMME_VIDEO">设置为节目内视频</el-dropdown-item>
+                                    <el-dropdown-item command="FILTER">设置为筛选页面</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </div>
+                        <label class="item-type">{{item | setItemDescription}}</label>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="text-center save-btn">
-            <el-button type="success" @click="saveBlock">保 存</el-button>
+            <el-button type="primary" @click="saveBlock" class="page-main-btn">保 存</el-button>
         </div>
         <!--设置混排的节目-->
         <el-dialog
@@ -477,20 +478,13 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
-    h3 {
-        margin-top: 30px;
-        margin-bottom: 30px;
-        font-size: 18px;
+    .vice-block {
+        margin-top: 60px;
     }
 
-    .el-input {
-        width: 500px;
-    }
-
-    .el-select {
+    .el-input, .el-select {
         width: 500px;
     }
 
@@ -504,16 +498,21 @@
                 position: relative;
                 margin-right: 30px;
                 flex-grow: 1;
-                background: #5daf34;
                 cursor: pointer;
+                background: $dynamicGray;
+                border: 1px solid #fff;
+                &:hover {
+                    border: 1px solid $baseBlue;
+                }
                 div {
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
                 }
-                .all-tip {
-                    font-size: 20px;
-                    color: #fff;
+                .tip {
+                    font-size: $normalFontSize;
+                    color: $baseBlue;
+                    cursor: pointer;
                 }
                 img {
                     display: block;
@@ -525,6 +524,7 @@
                 }
             }
         }
+
         ul.model-1-200 {
             li {
                 width: 100%;
@@ -632,6 +632,7 @@
     }
 
     .save-btn {
-        margin: 60px 0 40px 0;
+        margin: 120px 0 80px 0;
     }
+
 </style>
