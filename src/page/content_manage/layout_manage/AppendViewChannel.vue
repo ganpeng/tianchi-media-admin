@@ -43,6 +43,7 @@
     </div>
 </template>
 <script>
+import {mapGetters} from 'vuex';
 import _ from 'lodash';
 export default {
     name: 'AppendViewChannel',
@@ -72,13 +73,21 @@ export default {
                 }
             });
     },
+    computed: {
+        ...mapGetters({
+            getNavBarInfo: 'layout/getNavBarInfo'
+        })
+    },
     methods: {
         saveViewChannel() {
             this.$refs.channelForm.validate(valid => {
                 if (valid) {
                     let {navBarId} = this.$route.params;
+                    let navBarInfo = this.getNavBarInfo({navBarId});
+                    let navBarName = navBarInfo ? navBarInfo.name : '';
                     let reqBody = [{
                         navBarId,
+                        navBarName,
                         channel: this.channel,
                         channelCategory: this.channel.category
                     }];

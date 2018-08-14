@@ -86,27 +86,43 @@
                         <el-button
                             v-if="scope.row.m3u8For4K"
                             type="text"
-                            @click="displayVideoPlayer(scope.row.m3u8For4K)"
                             size="small"
+                            @click="displayVideoPlayer(scope.row.m3u8For4K, scope.row.originName)"
                             >4K</el-button>
+                            <i class="copy-btn pointer el-icon-printer"
+                                v-if="scope.row.m3u8For4K"
+                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
+                            </i>
                         <el-button
                             v-if="scope.row.m3u8For1080P"
                             type="text"
                             size="small"
-                            @click="displayVideoPlayer(scope.row.m3u8For1080P)"
+                            @click="displayVideoPlayer(scope.row.m3u8For1080P, scope.row.originName)"
                             >1080</el-button>
+                            <i class="copy-btn pointer el-icon-printer"
+                                v-if="scope.row.m3u8For1080P"
+                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
+                            </i>
                         <el-button
                             v-if="scope.row.m3u8For720P"
                             type="text"
                             size="small"
-                            @click="displayVideoPlayer(scope.row.m3u8For720P)"
+                            @click="displayVideoPlayer(scope.row.m3u8For720P, scope.row.originName)"
                             >720</el-button>
+                            <i class="copy-btn pointer el-icon-printer"
+                                v-if="scope.row.m3u8For720P"
+                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
+                            </i>
                         <el-button
                             v-if="scope.row.m3u8For480P"
                             type="text"
                             size="small"
-                            @click="displayVideoPlayer(scope.row.m3u8For480P)"
+                            @click="displayVideoPlayer(scope.row.m3u8For480P, scope.row.originName)"
                             >480</el-button>
+                            <i class="copy-btn pointer el-icon-printer"
+                                v-if="scope.row.m3u8For480P"
+                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For480P)">
+                            </i>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -177,6 +193,7 @@
         <upload-programme-video-dialog :videoStatus="videoStatus" :videoUploadDialogVisible="videoUploadDialogVisible" v-on:changeVideoDialogStatus="closeVideoDialog($event)"></upload-programme-video-dialog>
         <display-video-dialog
             :url="url"
+            :title="videoTitle"
             :displayVideoDialogVisible="displayVideoDialogVisible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
@@ -189,6 +206,7 @@ import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 import DisplayVideoDialog from '../video_manage/DisplayVideoDialog';
 import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 import role from '@/util/config/role';
+const ClipboardJS = require('clipboard');
 export default {
     name: 'ProgrammeTable',
     components: {
@@ -218,6 +236,7 @@ export default {
             videoUploadDialogVisible: false,
             displayVideoDialogVisible: false,
             url: '',
+            videoTitle: '',
             isEdit: true,
             //  videoStatus 有三中状态，0：表示创建， 1: 表示编辑， 2： 表示查看
             videoStatus: 1,
@@ -227,6 +246,17 @@ export default {
                 uri: ''
             }
         };
+    },
+    created() {
+        let that = this;
+        let clipboard = new ClipboardJS('.copy-btn');
+        clipboard.on('success', function(e) {
+            that.$message.success('视频链接复制成功');
+            e.clearSelection();
+        });
+        clipboard.on('error', function(e) {
+            that.$message.error('视频链接复制失败');
+        });
     },
     computed: {
         ...mapGetters({
@@ -244,6 +274,12 @@ export default {
         getVideoType() {
             return (key) => {
                 return role.VIDEO_TYPE_OBJ[key];
+            };
+        },
+        getVideoUrl() {
+            return (uri) => {
+                let baseUri = window.localStorage.getItem('videoBaseUri');
+                return `${baseUri}${uri}`;
             };
         }
     },
@@ -347,10 +383,11 @@ export default {
         closeDisplayVideoDialog(status) {
             this.displayVideoDialogVisible = status;
         },
-        displayVideoPlayer(url) {
+        displayVideoPlayer(url, name) {
             this.displayVideoDialogVisible = true;
             let baseUri = window.localStorage.getItem('videoBaseUri');
             this.url = `${baseUri}${url}`;
+            this.videoTitle = name;
         },
         // 放大预览图片
         displayImage(image) {

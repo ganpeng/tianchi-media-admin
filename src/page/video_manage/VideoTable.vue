@@ -15,26 +15,42 @@
                         v-if="scope.row.m3u8For4K"
                         type="text"
                         size="small"
-                        @click="displayVideo(scope.row.m3u8For4K, scope.row.originName)"
+                        @click="displayVideoPlayer(scope.row.m3u8For4K, scope.row.originName)"
                         >4K</el-button>
+                        <i class="copy-btn pointer el-icon-printer"
+                            v-if="scope.row.m3u8For4K"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
+                        </i>
                     <el-button
                         v-if="scope.row.m3u8For1080P"
                         type="text"
                         size="small"
-                        @click="displayVideo(scope.row.m3u8For1080P, scope.row.originName)"
+                        @click="displayVideoPlayer(scope.row.m3u8For1080P, scope.row.originName)"
                         >1080</el-button>
+                        <i class="copy-btn pointer el-icon-printer"
+                            v-if="scope.row.m3u8For1080P"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
+                        </i>
                     <el-button
                         v-if="scope.row.m3u8For720P"
                         type="text"
                         size="small"
-                        @click="displayVideo(scope.row.m3u8For720P, scope.row.originName)"
+                        @click="displayVideoPlayer(scope.row.m3u8For720P, scope.row.originName)"
                         >720</el-button>
+                        <i class="copy-btn pointer el-icon-printer"
+                            v-if="scope.row.m3u8For720P"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
+                        </i>
                     <el-button
                         v-if="scope.row.m3u8For480P"
                         type="text"
                         size="small"
-                        @click="displayVideo(scope.row.m3u8For480P, scope.row.originName)"
+                        @click="displayVideoPlayer(scope.row.m3u8For480P, scope.row.originName)"
                         >480</el-button>
+                        <i class="copy-btn pointer el-icon-printer"
+                            v-if="scope.row.m3u8For480P"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For480P)">
+                        </i>
                 </template>
             </el-table-column>
             <el-table-column prop="takeTimeInSec" align="center" label="视频时长">
@@ -78,6 +94,7 @@
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import DisplayVideoDialog from './DisplayVideoDialog';
+const ClipboardJS = require('clipboard');
 export default {
     components: {
         DisplayVideoDialog
@@ -100,7 +117,16 @@ export default {
         };
     },
     created() {
+        let that = this;
         this.getVideoList();
+        let clipboard = new ClipboardJS('.copy-btn');
+        clipboard.on('success', function(e) {
+            that.$message.success('视频链接复制成功');
+            e.clearSelection();
+        });
+        clipboard.on('error', function(e) {
+            that.$message.error('视频链接复制失败');
+        });
     },
     computed: {
         ...mapGetters({
@@ -123,6 +149,12 @@ export default {
                 let minute = date.getMinutes();
                 let second = date.getSeconds();
                 return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+            };
+        },
+        getVideoUrl() {
+            return (uri) => {
+                let baseUri = window.localStorage.getItem('videoBaseUri');
+                return `${baseUri}${uri}`;
             };
         }
     },
@@ -147,7 +179,7 @@ export default {
         closeDisplayVideoDialog(status) {
             this.displayVideoDialogVisible = status;
         },
-        displayVideo(url, name) {
+        displayVideoPlayer(url, name) {
             this.displayVideoDialogVisible = true;
             let baseUri = window.localStorage.getItem('videoBaseUri');
             this.url = `${baseUri}${url}`;
