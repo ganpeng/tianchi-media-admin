@@ -160,8 +160,8 @@
                     } else {
                         this.failNo++;
                         this.channelList[index].message = '第' + (index + 1) + '个:频道创建失败：' + response.message;
-                        this.tips = '提示：当前一共有' + this.channelList.length + '个轮播频道，已经进行了' + this.finishNo + '个，失败' + this.failNo + '个';
                     }
+                    this.tips = '提示：当前一共有' + this.channelList.length + '个轮播频道，已经进行了' + this.finishNo + '个，失败' + this.failNo + '个';
                     this.$set(this.channelList, index, this.channelList[index]);
                     if (this.finishNo === this.channelList.length) {
                         this.createDisabled = false;
@@ -175,8 +175,8 @@
                 // 验证名称
                 if (this.$util.isEmpty(channel.innerName)) {
                     message = message + '频道名称不能为空;';
-                } else if (this.$util.trim(channel.innerName).length > 10) {
-                    message = message + '频道名称不能超过10个字;';
+                } else if (this.$util.trim(channel.innerName).length > 20) {
+                    message = message + '频道名称不能超过20个字;';
                 }
                 // 频道编号
                 if (this.$util.isEmpty(channel.no)) {

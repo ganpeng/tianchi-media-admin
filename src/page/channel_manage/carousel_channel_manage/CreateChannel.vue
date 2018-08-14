@@ -1,11 +1,15 @@
-<!--新建频道的弹出框组件-->
+<!--新建轮播频道的弹出框组件-->
 <template>
     <div>
-        <el-form :model="channelInfo" :rules="infoRules" status-icon ref="channelInfo"
-                 label-width="140px"
-                 class="form-block">
+        <el-form
+            :model="channelInfo"
+            :rules="infoRules"
+            status-icon
+            ref="channelInfo"
+            class="text-left"
+            label-width="100px">
             <el-form-item label="频道名称" prop="innerName" required>
-                <el-input v-model="channelInfo.innerName" placeholder="请填写10个字以内的名称"></el-input>
+                <el-input v-model="channelInfo.innerName" placeholder="请填写20个字以内的名称"></el-input>
             </el-form-item>
             <el-form-item label="频道编号" prop="no" required>
                 <el-input v-model="channelInfo.no" placeholder="请填写三位频道编号数字，例如'001'"></el-input>
@@ -39,7 +43,14 @@
                 <label>禁播</label>
             </el-form-item>
             <el-form-item label="频道封面" prop="logoUri" required>
-                <el-button type="success" @click="imageUploadDialogVisible = true">上传图片</el-button>
+                <el-button
+                    class="btn-icon-normal"
+                    type="primary"
+                    plain
+                    @click="imageUploadDialogVisible = true">
+                    <i class="el-icon-picture el-icon--left"></i>
+                    上传图片
+                </el-button>
                 <div v-if="channelInfo.logoUri" class="image-box">
                     <img :src="channelInfo.logoUri | imageUrl">
                 </div>
@@ -72,8 +83,8 @@
             let checkInnerName = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('频道名称不能为空'));
-                } else if (this.$util.trim(value).length > 10) {
-                    return callback(new Error('频道名称不能超过10字'));
+                } else if (this.$util.trim(value).length > 20) {
+                    return callback(new Error('频道名称不能超过20字'));
                 } else {
                     callback();
                 }
@@ -243,18 +254,18 @@
     };
 </script>
 
-<style lang="less" scoped>
-
-    .block-box {
-        margin-top: 50px;
-    }
-
-    .el-input, .el-select {
-        width: 600px;
-    }
+<style lang="scss" scoped>
 
     .image-box {
         margin-top: 20px;
+    }
+
+    .el-select {
+        width: 100%;
+    }
+
+    .dialog-footer {
+        margin: 30px 0px;
     }
 
 </style>

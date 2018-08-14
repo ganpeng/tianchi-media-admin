@@ -230,7 +230,6 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 
     .block-box {
@@ -245,7 +244,7 @@
     }
 
     .el-pagination {
-        margin-bottom: 200px;
+        margin-bottom: 126px;
     }
 
 </style>

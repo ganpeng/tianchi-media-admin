@@ -1,216 +1,264 @@
 <!--轮播频道编辑页面-->
 <template>
-    <div class="text-left">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>频道管理</el-breadcrumb-item>
-            <el-breadcrumb-item>轮播频道管理</el-breadcrumb-item>
-            <el-breadcrumb-item>编辑<label class="channel-name">{{channelInfo.innerName}}</label>轮播频道</el-breadcrumb-item>
-        </el-breadcrumb>
-        <el-tag class="title">频道基本信息</el-tag>
-        <el-form :model="channelInfo" :rules="infoRules" status-icon ref="channelInfo"
-                 label-width="100px"
-                 class="form-block">
-            <el-form-item label="名称" prop="innerName" required>
-                <el-input v-model="channelInfo.innerName" placeholder="请填写10个字以内的名称"></el-input>
-            </el-form-item>
-            <el-form-item label="编号" prop="no" required>
-                <el-input v-model="channelInfo.no" placeholder="请填写三位频道编号数字，例如'001'"></el-input>
-            </el-form-item>
-            <el-form-item label="类别" prop="typeIdList" required>
-                <el-select v-model="channelInfo.typeIdList" multiple placeholder="请选择频道类别">
-                    <el-option
-                        v-for="item in typeOptions"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="组播地址" prop="multicastIp" required>
-                <el-input v-model="channelInfo.multicastIp" placeholder="请填写组播地址"></el-input>
-            </el-form-item>
-            <el-form-item label="端口号" prop="multicastPort" required>
-                <el-input v-model="channelInfo.multicastPort" placeholder="请填写端口号"></el-input>
-            </el-form-item>
-            <el-form-item label="tsId" prop="tsId">
-                <el-input v-model="channelInfo.tsId" placeholder="请填写tsId"></el-input>
-            </el-form-item>
-            <el-form-item label="serviceId" prop="serviceId">
-                <el-input v-model="channelInfo.serviceId" placeholder="请填写serviceId"></el-input>
-            </el-form-item>
-            <el-form-item label="所属服务器" prop="pushServer" required>
-                <el-input v-model="channelInfo.pushServer" placeholder="请填写所属服务器的IP地址"></el-input>
-            </el-form-item>
-            <el-form-item label="状态：" prop="visible">
-                <label>{{channelInfo.visible ? '正常' : '禁播'}}</label>
-            </el-form-item>
-            <el-form-item label="频道封面" prop="logoUri" required>
-                <el-button type="success" @click="imageUploadDialogVisible = true">设置封面</el-button>
-                <div v-if="channelInfo.logoUri" class="image-box">
-                    <img :src="channelInfo.logoUri | imageUrl">
+    <div>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'频道管理'},
+            {name:'频道管理'},
+            {name:'编辑轮播频道'}]">
+        </custom-breadcrumb>
+        <!--基本信息-->
+        <div class="vice-block">
+            <h3 class="block-vice-title">频道基本信息</h3>
+            <el-form :model="channelInfo" :rules="infoRules" status-icon ref="channelInfo"
+                     label-width="100px"
+                     class="form-block">
+                <el-form-item label="名称" prop="innerName" required>
+                    <el-input v-model="channelInfo.innerName" placeholder="请填写20个字以内的名称"></el-input>
+                </el-form-item>
+                <el-form-item label="编号" prop="no" required>
+                    <el-input v-model="channelInfo.no" placeholder="请填写三位频道编号数字，例如'001'"></el-input>
+                </el-form-item>
+                <el-form-item label="类别" prop="typeIdList" required>
+                    <el-select v-model="channelInfo.typeIdList" multiple placeholder="请选择频道类别">
+                        <el-option
+                            v-for="item in typeOptions"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="组播地址" prop="multicastIp" required>
+                    <el-input v-model="channelInfo.multicastIp" placeholder="请填写组播地址"></el-input>
+                </el-form-item>
+                <el-form-item label="端口号" prop="multicastPort" required>
+                    <el-input v-model="channelInfo.multicastPort" placeholder="请填写端口号"></el-input>
+                </el-form-item>
+                <el-form-item label="tsId" prop="tsId">
+                    <el-input v-model="channelInfo.tsId" placeholder="请填写tsId"></el-input>
+                </el-form-item>
+                <el-form-item label="serviceId" prop="serviceId">
+                    <el-input v-model="channelInfo.serviceId" placeholder="请填写serviceId"></el-input>
+                </el-form-item>
+                <el-form-item label="所属服务器" prop="pushServer" required>
+                    <el-input v-model="channelInfo.pushServer" placeholder="请填写所属服务器的IP地址"></el-input>
+                </el-form-item>
+                <el-form-item label="状态：" prop="visible">
+                    <label>
+                        <i class="status-normal" v-if="channelInfo.visible">正常</i>
+                        <i class="status-abnormal" v-else>禁播</i>
+                    </label>
+                </el-form-item>
+            </el-form>
+        </div>
+        <!--频道封面-->
+        <div class="vice-block text-left">
+            <h3 class="block-vice-title">频道封面</h3>
+            <el-button
+                class="btn-icon-normal"
+                type="primary"
+                plain
+                @click="imageUploadDialogVisible = true">
+                <i class="el-icon-picture el-icon--left"></i>
+                添加频道封面
+            </el-button>
+            <div v-if="channelInfo.logoUri" class="image-box">
+                <img :src="channelInfo.logoUri | imageUrl">
+            </div>
+        </div>
+        <div class="vice-block text-left">
+            <h3 class="block-vice-title">频道节目信息</h3>
+            <el-card>
+                <ul>
+                    <li>
+                        <span>当前播放</span>
+                        <label class="on-play">
+                            {{channelInfo.currentProgramme ? channelInfo.currentProgramme : '暂无当前播放节目'}}
+                        </label>
+                    </li>
+                    <li><span>播放时段</span><label>{{channelInfo.duration}}</label></li>
+                    <li>
+                        <span>视频个数</span>
+                        <label>
+                            {{currentSelectedVideoList ? currentSelectedVideoList.length : ''}}个
+                        </label>
+                    </li>
+                </ul>
+            </el-card>
+            <el-button
+                v-if="currentSelectedVideoList.length === 0"
+                type="primary"
+                class="add-video"
+                @click="popAppendVideoDialogue(0)">
+                点击添加视频
+            </el-button>
+            <el-table
+                :data="currentSelectedVideoList"
+                border
+                style="width: 100%">
+                <el-table-column
+                    width="50px"
+                    align="center"
+                    label="播放顺序">
+                    <template slot-scope="scope">
+                        {{scope.$index + 1}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    width="120px"
+                    align="center"
+                    prop="code"
+                    label="视频编号">
+                </el-table-column>
+                <el-table-column
+                    prop="originName"
+                    width="200px"
+                    align="center"
+                    label="视频文件名">
+                </el-table-column>
+                <el-table-column
+                    prop="name"
+                    align="center"
+                    label="视频展示名">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.name"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="link"
+                    align="center"
+                    width="160px"
+                    label="预览视频">
+                    <template slot-scope="scope">
+                        <el-button
+                            v-if="scope.row.m3u8For4K"
+                            type="text"
+                            size="small"
+                            @click="displayVideo(scope.row.m3u8For4K)"
+                        >4K
+                        </el-button>
+                        <el-button
+                            v-if="scope.row.m3u8For1080P"
+                            type="text"
+                            size="small"
+                            @click="displayVideo(scope.row.m3u8For1080P)"
+                        >1080
+                        </el-button>
+                        <el-button
+                            v-if="scope.row.m3u8For720P"
+                            type="text"
+                            size="small"
+                            @click="displayVideo(scope.row.m3u8For720P)"
+                        >720
+                        </el-button>
+                        <el-button
+                            v-if="scope.row.m3u8For480P"
+                            type="text"
+                            size="small"
+                            @click="displayVideo(scope.row.m3u8For480P)"
+                        >480
+                        </el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="takeTimeInSec"
+                    width="120px"
+                    align="center"
+                    label="视频时长">
+                    <template slot-scope="scope">
+                        {{scope.row.takeTimeInSec | fromSecondsToTime}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    width="100px"
+                    align="center"
+                    label="视频状态">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.visible ? '正常':'禁播'}}</label>
+                    </template>
+                </el-table-column>
+                <el-table-column align="center"
+                                 label="操作"
+                                 width="200px"
+                                 class="operate">
+                    <template slot-scope="scope">
+                        <el-button v-if="scope.row.visible" type="danger" size="mini" plain
+                                   @click="disabledConfirm(scope.row)">
+                            禁播
+                        </el-button>
+                        <el-button v-else type="success" size="mini" plain
+                                   @click="recoverConfirm(scope.row)">
+                            恢复
+                        </el-button>
+                        <el-button type="danger" size="mini" plain
+                                   @click="removeConfirm(scope.$index,scope.row)">删除
+                        </el-button>
+                        <el-button type="text" size="small" @click="popAppendVideoDialogue(scope.$index)">上方添加视频
+                        </el-button>
+                        <el-button type="text" size="small" @click="popAppendVideoDialogue(scope.$index + 1)">下方添加视频
+                        </el-button>
+                        <el-button type="text" size="small" @click="moveUpVideo(scope.$index)">
+                            上移
+                        </el-button>
+                        <el-button type="text" size="small" @click="moveDownVideo(scope.$index)">
+                            下移
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <!--自动化排序-->
+            <el-card id="auto-sort">
+                <div slot="header" class="clearfix">
+                    <h3 class="block-vice-title">排序：</h3>
+                    <div v-for="(item, index) in sectionList" :key="index">
+                        <el-input v-model="item.name" placeholder="请填写部的名称"></el-input>
+                        <el-button type="primary" plain @click="removeSection(index)" v-if="sectionList.length !== 1">
+                            删除
+                        </el-button>
+                    </div>
+                    <el-tooltip content="填写部的名称，例如'还珠格格'、'还珠格格2'、'新还珠格格'等" placement="top" effect="light">
+                        <el-button type="primary" plain @click="addSection">添加部的名称</el-button>
+                    </el-tooltip>
+                    <div class="text-center">
+                        <el-tooltip content="根据填写的部的名称列表，以及视频的展示名称，例如'还珠格格2-02'进行自动排序" placement="top" effect="light">
+                            <el-button type="primary" plain @click="autoSort">自动排序</el-button>
+                        </el-tooltip>
+                    </div>
                 </div>
-            </el-form-item>
-        </el-form>
-        <el-tag class="title">频道节目信息</el-tag>
-        <el-form label-position="right" label-width="90px">
-            <el-form-item label="当前播放：">
-                <label>{{channelInfo.currentProgramme ? channelInfo.currentProgramme : '暂无当前播放节目'}}</label>
-            </el-form-item>
-            <el-form-item label="播放时段：" v-if="channelInfo.currentProgramme">
-                <label>{{channelInfo.duration}}</label>
-            </el-form-item>
-        </el-form>
-        <el-button v-if="currentSelectedVideoList.length === 0" type="success" class="add-video"
-                   @click="popAppendVideoDialogue(0)">点击添加视频
-        </el-button>
-        <el-table
-            :data="currentSelectedVideoList"
-            border
-            style="width: 100%">
-            <el-table-column
-                width="50px"
-                align="center"
-                label="播放顺序">
-                <template slot-scope="scope">
-                    {{scope.$index + 1}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                width="120px"
-                align="center"
-                prop="code"
-                label="视频编号">
-            </el-table-column>
-            <el-table-column
-                prop="originName"
-                width="200px"
-                align="center"
-                label="视频文件名">
-            </el-table-column>
-            <el-table-column
-                prop="name"
-                align="center"
-                label="视频展示名">
-                <template slot-scope="scope">
-                    <el-input v-model="scope.row.name"></el-input>
-                </template>
-            </el-table-column>
-            <el-table-column
-                prop="link"
-                align="center"
-                width="100px"
-                label="预览视频">
-                <template slot-scope="scope">
-                    <el-button
-                        v-if="scope.row.m3u8For4K"
-                        type="text"
-                        size="small"
-                        @click="displayVideo(scope.row.m3u8For4K)"
-                    >4K
-                    </el-button>
-                    <el-button
-                        v-if="scope.row.m3u8For1080P"
-                        type="text"
-                        size="small"
-                        @click="displayVideo(scope.row.m3u8For1080P)"
-                    >1080
-                    </el-button>
-                    <el-button
-                        v-if="scope.row.m3u8For720P"
-                        type="text"
-                        size="small"
-                        @click="displayVideo(scope.row.m3u8For720P)"
-                    >720
-                    </el-button>
-                    <el-button
-                        v-if="scope.row.m3u8For480P"
-                        type="text"
-                        size="small"
-                        @click="displayVideo(scope.row.m3u8For480P)"
-                    >480
-                    </el-button>
-                </template>
-            </el-table-column>
-            <el-table-column
-                prop="takeTimeInSec"
-                width="120px"
-                align="center"
-                label="视频时长">
-                <template slot-scope="scope">
-                    {{scope.row.takeTimeInSec | fromSecondsToTime}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                width="100px"
-                align="center"
-                label="视频状态">
-                <template slot-scope="scope">
-                    <label>{{scope.row.visible ? '正常':'禁播'}}</label>
-                </template>
-            </el-table-column>
-            <el-table-column align="center"
-                             label="操作"
-                             width="200px"
-                             class="operate">
-                <template slot-scope="scope">
-                    <el-button v-if="scope.row.visible" type="danger" size="mini" plain
-                               @click="disabledConfirm(scope.row)">
-                        禁播
-                    </el-button>
-                    <el-button v-else type="success" size="mini" plain
-                               @click="recoverConfirm(scope.row)">
-                        恢复
-                    </el-button>
-                    <el-button type="danger" size="mini" plain
-                               @click="removeConfirm(scope.$index,scope.row)">删除
-                    </el-button>
-                    <el-button type="text" size="small" @click="popAppendVideoDialogue(scope.$index)">上方添加视频
-                    </el-button>
-                    <el-button type="text" size="small" @click="popAppendVideoDialogue(scope.$index + 1)">下方添加视频
-                    </el-button>
-                    <el-button type="text" size="small" @click="moveUpVideo(scope.$index)">
-                        上移
-                    </el-button>
-                    <el-button type="text" size="small" @click="moveDownVideo(scope.$index)">
-                        下移
-                    </el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <div class="preview-sort">
-            <el-button type="success" @click="sortVideoList">点击视频排序</el-button>
-            <el-button type="success" @click="revertVideoList">反转当前视频列表</el-button>
-            <el-button type="success" @click="setVideoNameList">设置视频展示名称</el-button>
-        </div>
-        <!--自动化排序-->
-        <div id="auto-sort">
-            <div v-for="(item, index) in sectionList" :key="index">
-                <el-input v-model="item.name" placeholder="请填写名称"></el-input>
-                <el-button type="primary" plain @click="removeSection(index)" v-if="sectionList.length !== 1">
-                    删除
-                </el-button>
-            </div>
-            <el-button type="primary" @click="addSection">添加名称</el-button>
-            <div class="text-center">
-                <el-button type="primary" @click="autoSort">自动化排序</el-button>
-            </div>
-        </div>
-        <!--填写视频展示名称-->
-        <div id="fill-display-name">
-            <div>
-                <el-input v-model="displayNameParams.prefix" placeholder="请填写前缀"></el-input>
-            </div>
-            <div>
-                <el-input v-model="displayNameParams.suffix" placeholder="请填写后缀"></el-input>
-            </div>
-            <div class="text-center">
-                <el-button type="primary" @click="setDisplayName">填写展示名称</el-button>
-            </div>
-            <div class="text-center">
-                <el-button type="primary" @click="removeDisplayNameNo">删除展示名称后面的数字</el-button>
-            </div>
+                <el-tooltip content="拖动排序功能" placement="top" effect="light">
+                    <el-button type="primary" plain @click="sortVideoList">视频拖动排序</el-button>
+                </el-tooltip>
+                <el-tooltip content="反转当前视频列表功能" placement="top" effect="light">
+                    <el-button type="primary" plain @click="revertVideoList">反转列表</el-button>
+                </el-tooltip>
+            </el-card>
+            <!--填写视频展示名称-->
+            <el-card id="fill-display-name">
+                <div slot="header" class="clearfix">
+                    <h3 class="block-vice-title">设置展示名称：</h3>
+                    <div>
+                        <label>删除原始文件名称第一部分：</label>
+                        <el-input v-model="displayNameParams.prefix" placeholder="请填写前缀等需要删除的连续文字，例如'（高清）'等"></el-input>
+                    </div>
+                    <div>
+                        <label>删除原始文件名称第二部分：</label>
+                        <el-input v-model="displayNameParams.suffix" placeholder="请填写后缀等需要删除的连续文字，例如'.mpg'等"></el-input>
+                    </div>
+                    <div class="text-center">
+                        <el-tooltip content="根据填写的删除部分，对视频原始文件名称进行截取删除操作，并填写到展示名称处" placement="top" effect="light">
+                            <el-button type="primary" plain @click="setDisplayName">填写展示名称</el-button>
+                        </el-tooltip>
+                    </div>
+                </div>
+                <el-tooltip content="分割原始文件名'&&'，自动填写展示名称" placement="top" effect="light">
+                    <el-button type="primary" plain @click="setVideoNameList">设置展示名称</el-button>
+                </el-tooltip>
+                <el-tooltip content="删除当前视频中的展示名称中的最后面的数字" placement="top" effect="light">
+                    <el-button type="primary" plain @click="removeDisplayNameNo">删除展示名称后面的数字</el-button>
+                </el-tooltip>
+            </el-card>
         </div>
         <display-video-dialog
             :url="previewVideoInfo.url"
@@ -218,8 +266,14 @@
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
         <div class="text-center update-box">
-            <el-button :disabled="channelInfo.visible" type="danger" @click="removeChannel">删除频道</el-button>
-            <el-button type="success" @click="updateInfo">保 存</el-button>
+            <el-button
+                :disabled="channelInfo.visible"
+                type="danger"
+                @click="removeChannel"
+                class="page-main-btn">
+                删除频道
+            </el-button>
+            <el-button type="primary" @click="updateInfo" class="page-main-btn">更新</el-button>
         </div>
         <el-dialog
             title="选择相应的视频"
@@ -273,8 +327,8 @@
             let checkInnerName = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('频道名称不能为空'));
-                } else if (this.$util.trim(value).length > 10) {
-                    return callback(new Error('频道名称不能超过10个字'));
+                } else if (this.$util.trim(value).length > 20) {
+                    return callback(new Error('频道名称不能超过20个字'));
                 } else {
                     callback();
                 }
@@ -403,12 +457,14 @@
                     this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(this.displayNameParams.suffix, '');
                     Vue.set(this.currentSelectedVideoList, i, this.currentSelectedVideoList[i]);
                 }
+                this.$message('已根据删除文字部分填写完成视频展示名称');
             },
             removeDisplayNameNo() {
                 for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
                     this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(/\d+$/, '');
                     Vue.set(this.currentSelectedVideoList, i, this.currentSelectedVideoList[i]);
                 }
+                this.$message('已删除展示名称后面的数字');
             },
             init() {
                 this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
@@ -500,6 +556,7 @@
                         video.name = video.originName.split('&&')[1].split('.')[0];
                     }
                 });
+                this.$message('设置视频展示名称已完成');
             },
             revertVideoList() {
                 let array = [];
@@ -507,6 +564,7 @@
                     array.push(this.currentSelectedVideoList[i]);
                 }
                 this.currentSelectedVideoList = array;
+                this.$message('视频列表已反转');
             },
             removeSection(index) {
                 this.sectionList.splice(index, 1);
@@ -562,6 +620,7 @@
                     }
                 }
                 this.currentSelectedVideoList = this.sortTwoDimension(videoTwoDimension);
+                this.$message('已完成根据部的名称列表以及视频展示名称对其进行排序');
             },
             sortTwoDimension(videoTwoDimension) {
                 for (let k = 0; k < videoTwoDimension.length; k++) {
@@ -736,24 +795,46 @@
     };
 </script>
 
-<style lang="less" scoped>
-
-    .channel-name {
-        font-style: italic;
-        font-weight: bold;
-        font-size: 16px;
-    }
-
-    .block-box {
-        margin-top: 50px;
-    }
+<style lang="scss" scoped>
 
     .el-input, .el-select {
         width: 600px;
     }
 
-    .title {
-        margin: 50px 0 30px 30px;
+    .el-card {
+        width: 600px;
+        ul {
+            li {
+                display: flex;
+                margin-bottom: 10px;
+                min-height: 32px;
+                flex-direction: row;
+                justify-content: left;
+                align-items: center;
+                > span {
+                    margin-right: 80px;
+                    width: 120px;
+                    text-align: right;
+                    flex-shrink: 0;
+                    font-size: $largerFontSize;
+                    color: $baseGray;
+                }
+                label {
+                    width: 380px;
+                    font-size: $normalFontSize;
+                    color: #909399;
+                    flex-shrink: 0;
+                    line-height: 2;
+                    text-align: left;
+                    &.on-play {
+                        color: $baseBlue;
+                    }
+                    .el-tag {
+                        margin-right: 10px;
+                    }
+                }
+            }
+        }
     }
 
     .add-video {
@@ -761,12 +842,8 @@
         margin-left: 20px;
     }
 
-    .preview-sort {
-        padding-left: 10px;
-    }
-
     .update-box {
-        margin: 60px 0px 40px 0px;
+        margin: 120px 0px 80px 0px;
     }
 
     .image-box {
@@ -779,23 +856,14 @@
         }
     }
 
-    #auto-sort {
-        padding: 30px;
+    #auto-sort, #fill-display-name {
         margin-top: 30px;
-        border: 1px solid gray;
+        width: 100%;
         .el-button {
             margin-bottom: 30px;
+            margin-right: 50px;
         }
         .el-input {
-            margin-bottom: 20px;
-        }
-    }
-
-    #fill-display-name {
-        padding: 30px;
-        margin-top: 30px;
-        border: 1px solid gray;
-        div {
             margin-bottom: 20px;
         }
     }

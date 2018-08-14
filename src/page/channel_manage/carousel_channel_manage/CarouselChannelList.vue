@@ -1,49 +1,17 @@
 <!--内容管理-频道管理-轮播频道管理-轮播频道列表组件-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>频道管理</el-breadcrumb-item>
-            <el-breadcrumb-item>轮播频道管理</el-breadcrumb-item>
-            <el-breadcrumb-item>轮播频道列表</el-breadcrumb-item>
-        </el-breadcrumb>
-        <div class="block-box" @keyup.enter="getChannelList">
-            <el-form :inline="true" class="search-form">
-                <el-form-item label="频道类别">
-                    <el-select v-model="listQueryParams.typeIdList" clearable multiple placeholder="请选择频道类别">
-                        <el-option
-                            v-for="item in typeOptions"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="频道状态">
-                    <el-select v-model="listQueryParams.visible" clearable placeholder="请选择频道状态">
-                        <el-option
-                            v-for="item in visibleOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="关键字">
-                    <el-input v-model="listQueryParams.keyword" placeholder="请填写频道名称或编号">
-                    </el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="success" @click="getChannelList">查 询</el-button>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="success" @click="createChannelDialogVisible = true">新增单个轮播频道</el-button>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="success" @click="createChannelByImportExcel">批量导入轮播频道</el-button>
-                </el-form-item>
-            </el-form>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'频道管理'},
+            {name:'轮播频道管理'},
+            {name:'轮播频道列表'}]">
+        </custom-breadcrumb>
+        <div class="block-box">
+            <channel-filter-params
+                v-on:getChannelList="getChannelList">
+            </channel-filter-params>
             <el-table
                 :data="channelList"
                 border
@@ -58,16 +26,19 @@
                 </el-table-column>
                 <el-table-column
                     prop="no"
+                    width="80px"
                     align="center"
                     label="编号">
                 </el-table-column>
                 <el-table-column
                     prop="innerName"
+                    width="200px"
                     align="center"
                     label="名称">
                 </el-table-column>
                 <el-table-column
                     align="center"
+                    width="120px"
                     label="类别">
                     <template slot-scope="scope">
                         <label>{{scope.row.typeList | jsonJoin('name')}}</label>
@@ -80,6 +51,7 @@
                 </el-table-column>
                 <el-table-column
                     align="center"
+                    width="80px"
                     prop="multicastPort"
                     label="端口号">
                 </el-table-column>
@@ -88,33 +60,61 @@
                     align="center"
                     prop="tsId"
                     label="tsId">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.tsId ? scope.row.tsId : '------'}}</label>
+                    </template>
                 </el-table-column>
                 <!--serviceId-->
                 <el-table-column
                     align="center"
                     prop="serviceId"
                     label="serviceId">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.serviceId ? scope.row.serviceId : '------'}}</label>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     align="center"
                     prop="pushServer"
                     label="所属服务器">
+                    <template slot-scope="scope">
+                        <label>{{scope.row.pushServer ? scope.row.pushServer : '------'}}</label>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     align="center"
+                    width="80px"
                     label="状态">
                     <template slot-scope="scope">
-                        <label>{{scope.row.visible ? '正常' : '禁播'}}</label>
+                        <i class="status-normal" v-if="scope.row.visible">正常</i>
+                        <i class="status-abnormal" v-else>禁播</i>
                     </template>
                 </el-table-column>
-                <el-table-column align="center"
-                                 label="操作"
-                                 class="operate">
+                <el-table-column
+                    fixed="right"
+                    align="center"
+                    width="100px"
+                    label="操作"
+                    class="operate">
                     <template slot-scope="scope">
-                        <el-button type="danger" size="mini" @click="disableChannel(scope.row)">
-                            {{scope.row.visible ? '禁播' : '恢复'}}
+                        <el-button v-if="scope.row.visible"
+                                   type="danger"
+                                   size="mini"
+                                   plain
+                                   @click="disableChannel(scope.row)">
+                            禁播
                         </el-button>
-                        <el-button type="text" size="small" @click="checkChannelDetail(scope.row)">查看</el-button>
+                        <el-button
+                            v-else
+                            type="primary"
+                            plain
+                            size="mini"
+                            @click="disableChannel(scope.row)">
+                            恢复
+                        </el-button>
+                        <el-button type="text" size="small" @click="checkChannelDetail(scope.row)" class="detail-btn">
+                            查看
+                        </el-button>
                         <el-button type="text" size="small" @click="editChannelInfo(scope.row)">编辑</el-button>
                     </template>
                 </el-table-column>
@@ -128,6 +128,14 @@
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="total">
             </el-pagination>
+            <div class="create-item">
+                <el-button type="primary" icon="el-icon-circle-plus-outline" @click="createChannelDialogVisible = true">
+                    新增单个轮播频道
+                </el-button>
+                <el-button type="primary" icon="el-icon-circle-plus-outline" @click="createChannelByImportExcel">
+                    批量导入轮播频道
+                </el-button>
+            </div>
         </div>
         <el-dialog
             title="新增轮播频道"
@@ -143,30 +151,22 @@
 
 <script>
     import CreateChannel from './CreateChannel';
+    import ChannelFilterParams from '../../content_manage/searchFilterParams/ChannelFilterParams';
 
     export default {
         name: 'CarouselChannelList',
-        components: {CreateChannel},
+        components: {
+            CreateChannel,
+            ChannelFilterParams
+        },
         data() {
             return {
                 createChannelDialogVisible: false,
                 listQueryParams: {
-                    category: 'CAROUSEL',
-                    typeIdList: '',
-                    visible: '',
-                    keyword: '',
                     pageNum: 0,
                     pageSize: 10
                 },
                 pageNum: 1,
-                typeOptions: [],
-                visibleOptions: [{
-                    value: true,
-                    label: '正常'
-                }, {
-                    value: false,
-                    label: '禁播'
-                }],
                 total: 0,
                 channelList: []
             };
@@ -176,15 +176,15 @@
         },
         methods: {
             init() {
-                // 初始化频道类别列表
-                this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
-                    if (response && response.code === 0) {
-                        this.typeOptions = response.data;
-                    }
-                });
                 this.getChannelList();
             },
-            getChannelList() {
+            getChannelList(searchParams) {
+                // 设置请求参数
+                if (searchParams) {
+                    for (let key in searchParams) {
+                        this.listQueryParams[key] = searchParams[key];
+                    }
+                }
                 this.listQueryParams.pageNum = this.pageNum - 1;
                 this.$service.getChannelList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
@@ -254,18 +254,21 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
     .block-box {
-        margin-top: 50px;
+        position: relative;
+        padding-top: 80px;
     }
 
-    .el-form {
-        margin-left: 20px;
-        text-align: left;
-        &.search-form {
-            margin-top: 60px;
-        }
+    .create-item {
+        position: absolute;
+        right: 0px;
+        top: 10px;
+    }
+
+    .el-pagination {
+        margin-bottom: 126px;
     }
 
 </style>

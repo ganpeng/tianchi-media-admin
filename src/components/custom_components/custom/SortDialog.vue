@@ -7,15 +7,13 @@
         <ul id="sort-list">
             <li v-for="(item, index) in sourceList"
                 :key="index"
-                :data-id="item[uniqueKey]"
-                :class="{'edit-mode': mode==='EDIT'}">
+                :data-id="item[uniqueKey]">
                 <el-tooltip :content="item[displayKey]" placement="bottom" effect="light">
                     <el-button>{{index + 1}}.{{item[displayKey].slice(0,8)}}</el-button>
                 </el-tooltip>
             </li>
         </ul>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="editItem">编 辑</el-button>
             <el-button @click="closeDialog">取 消</el-button>
             <el-button type="primary" @click="confirmSort">确 定</el-button>
         </div>
@@ -47,11 +45,11 @@
             }
         },
         data() {
-            return {
-                mode: 'NORMAL'
-            };
+            return {};
         },
-        mounted() {},
+        mounted() {
+            this.initDragula();
+        },
         methods: {
             initDragula() {
                 this.$nextTick(function () {
@@ -67,10 +65,6 @@
             // 确定排序
             confirmSort() {
                 this.$emit('setSortedList', this.sortList());
-            },
-            editItem() {
-                this.mode = 'EDIT';
-                this.initDragula();
             },
             sortList() {
                 let sortedList = [];
@@ -106,9 +100,6 @@
             color: #fff;
             font-size: 16px;
             cursor: grab;
-            &.edit-mode {
-                border: 2px dotted chartreuse;
-            }
         }
     }
 
