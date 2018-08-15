@@ -11,8 +11,6 @@
             <el-col :span="5" class="float-right">
                 <el-form-item class="create-account">
                     <el-button type="primary" plain @click="showVideoUploadDialog('VOD')"><i class="el-icon-circle-plus-outline"></i> 上传视频</el-button>
-                    <!-- <el-button type="primary" plain @click="showVideoUploadDialog('VOD')"><i class="el-icon-circle-plus-outline"></i> 上传点播视频</el-button>
-                    <el-button type="primary" plain @click="showVideoUploadDialog('CAROUSEL')"><i class="el-icon-circle-plus-outline"></i> 上传轮播视频</el-button> -->
                 </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -26,21 +24,6 @@
                     >
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
-                </el-form-item>
-                <el-form-item class="search">
-                    <el-select
-                        :value="searchFields.videoType"
-                        clearable
-                        placeholder="请选择视频类型"
-                        @input="inputHandler($event, 'videoType')"
-                    >
-                        <el-option
-                            v-for="(item, index) in videoTypeOptions"
-                            :key="index"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
                 </el-form-item>
                 <el-form-item class="search">
                     <el-select
@@ -59,10 +42,24 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="searchHandler"><i class="el-icon-search"></i> 搜索</el-button>
-                    <el-button type="danger" :disabled="!isDisabled" @click="deleteVideoList">批量删除节目</el-button>
-                    <el-button type="warning" @click="toggleUpdateHandler">
-                        {{timer ? '停止更新' : '恢复更新'}}
+                </el-form-item>
+                <el-form-item class="float-right">
+                    <el-button
+                        size="small"
+                        v-if="!!timer"
+                        class="pause-btn"
+                        @click="toggleUpdateHandler"
+                        plain>
+                        {{timer ? '停止刷新页面' : '恢复刷新页面'}}
                     </el-button>
+                    <el-button
+                        size="small"
+                        v-else
+                        type="primary" @click="toggleUpdateHandler">
+                        {{timer ? '停止刷新页面' : '恢复刷新页面'}}
+                    </el-button>
+                    <el-button v-if="!isDisabled" size="small" class="delete-btn" plain @click="deleteVideoList"><i class="el-icon-delete"></i> 批量删除节目</el-button>
+                    <el-button v-else size="small" type="danger" @click="deleteVideoList"><i class="el-icon-delete"></i> 批量删除节目</el-button>
                 </el-form-item>
             </el-col>
         </el-form>
@@ -262,6 +259,7 @@
                 }
             },
             deleteVideoList() {
+                if (this.isDisabled) {
                 this.$confirm(`您确定要删除吗, 是否继续?`, '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
@@ -284,6 +282,7 @@
                             message: '已取消删除'
                         });
                     });
+                }
             },
             keyupHandler(e) {
                 if (e.keyCode === 13) {
@@ -552,6 +551,20 @@
     .delete-btn {
         margin-right: 10px;
         cursor: pointer;
+    }
+}
+
+.pause-btn {
+    color: #409EFF;
+    border-color: #409EFF;
+}
+.delete-btn {
+    color: #F56C6C;
+    border-color: #F56C6C;
+    &:hover,
+    &:focus {
+        color: #F56C6C;
+        border-color: #F56C6C;
     }
 }
 </style>

@@ -94,7 +94,7 @@
                 <el-menu-item index="/kits" :style="directSecondLeftIndent">小功能</el-menu-item>
             </el-submenu>
             <!--广告管理-->
-            <el-submenu index="4">
+            <el-submenu v-if="false" index="4">
                 <template slot="title">
                     <i class="el-icon-goods"></i>
                     <span>广告管理</span>
