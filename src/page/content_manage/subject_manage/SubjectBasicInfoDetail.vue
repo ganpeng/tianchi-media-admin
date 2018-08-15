@@ -7,7 +7,6 @@
                 <ul>
                     <li><span>专题名称</span><label>{{subjectInfo.name}}</label></li>
                     <li><span>创建人</span><label>{{subjectInfo.authorName}}</label></li>
-                    <li><span>专题状态</span><label>{{subjectInfo.visible ? '已上架' :'已下架'}}</label></li>
                     <li><span>专题简介</span><label>{{subjectInfo.description}}</label></li>
                     <li>
                         <span>专题类别</span>
@@ -27,6 +26,13 @@
                                     type="info">
                                 {{item}}
                             </el-tag>
+                        </label>
+                    </li>
+                    <li>
+                        <span>专题状态</span>
+                        <label>
+                            <i class="status-normal" v-if="subjectInfo.visible">已上架</i>
+                            <i class="status-abnormal" v-else>已下架</i>
                         </label>
                     </li>
                 </ul>

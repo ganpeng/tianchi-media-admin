@@ -10,7 +10,7 @@
                 :value="item.signCode">
             </el-option>
         </el-select>
-        <el-form :inline="true" class="demo-form-inline search-form">
+        <el-form :inline="true" class="text-left filters">
             <el-form-item :label="item.name" v-for="(item, index) in classDictionary[categorySignCode]" :key="index">
                 <!--二级分类-->
                 <el-select v-if="item.type === 'CLASS'"
@@ -120,9 +120,12 @@
              class="image-box">
         </div>
         <div class="add-box">
-            <el-button type="success" @click="imageUploadDialogVisible = true">添加图片</el-button>
+            <el-button class="btn-icon-normal" type="primary" plain @click="imageUploadDialogVisible = true">
+                <i class="el-icon-picture el-icon--left"></i>
+                添加图片
+            </el-button>
         </div>
-        <el-button type="success" @click="complete">确 定</el-button>
+        <el-button type="primary" @click="complete" class="page-main-btn">确 定</el-button>
         <upload-image
             :size='size'
             title="上传筛选推荐项封面图片"
@@ -419,6 +422,10 @@
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
+    }
+
+    .filters {
+        margin-top: 30px;
     }
 
     img {

@@ -121,7 +121,8 @@
                 prop="visible"
                 label="状态">
                 <template slot-scope="scope">
-                    {{scope.row.visible ? '已上架' :'已下架'}}
+                    <i class="status-normal" v-if="scope.row.visible">已上架</i>
+                    <i class="status-abnormal" v-else>已下架</i>
                 </template>
             </el-table-column>
             <el-table-column

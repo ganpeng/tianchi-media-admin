@@ -120,6 +120,7 @@
 </template>
 
 <script>
+    import store from 'store';
 
     export default {
         name: 'SingleProgrammeTable',
@@ -133,6 +134,14 @@
         },
         data() {
             return {};
+        },
+        methods: {
+            areaLabel(areaList) {
+                return areaList.reduce((res, curr) => {
+                    let area = store.get('areaList').find((item) => item.code === curr);
+                    return area ? `${res}, ${area.name}` : res;
+                }, '').replace(/^,/, '');
+            }
         }
     };
 </script>

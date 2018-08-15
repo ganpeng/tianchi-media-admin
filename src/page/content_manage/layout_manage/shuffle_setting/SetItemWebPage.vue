@@ -13,9 +13,12 @@
              class="image-box">
         </div>
         <div class="add-box">
-            <el-button type="success" @click="imageUploadDialogVisible = true">添加图片</el-button>
+            <el-button class="btn-icon-normal" type="primary" plain @click="imageUploadDialogVisible = true">
+                <i class="el-icon-picture el-icon--left"></i>
+                添加图片
+            </el-button>
         </div>
-        <el-button type="success" @click="complete">确 定</el-button>
+        <el-button type="primary" @click="complete" class="page-main-btn">确 定</el-button>
         <upload-image
             :size='size'
             title="上传网页封面图片"

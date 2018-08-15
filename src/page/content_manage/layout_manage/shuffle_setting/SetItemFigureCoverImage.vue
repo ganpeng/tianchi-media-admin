@@ -12,7 +12,10 @@
             </li>
         </ul>
         <div class="add-box">
-            <el-button type="success" @click="addCover">添加图片</el-button>
+            <el-button class="btn-icon-normal" type="primary" plain @click="addCover">
+                <i class="el-icon-picture el-icon--left"></i>
+                添加图片
+            </el-button>
         </div>
         <preview-multiple-images
             :previewMultipleImages="previewImage">
