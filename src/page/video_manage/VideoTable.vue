@@ -11,46 +11,60 @@
             <el-table-column prop="originName" align="center" width="200px" label="视频名称"></el-table-column>
             <el-table-column prop="link" align="center" width="300px" label="预览视频">
                 <template slot-scope="scope">
-                    <el-button
-                        v-if="scope.row.m3u8For4K"
-                        type="text"
-                        size="small"
-                        @click="displayVideoPlayer(scope.row.m3u8For4K, scope.row.originName)"
-                        >4K</el-button>
-                        <i class="copy-btn pointer el-icon-printer"
+                    <div class="btn-icon-container">
+                        <el-button
                             v-if="scope.row.m3u8For4K"
-                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
-                        </i>
-                    <el-button
-                        v-if="scope.row.m3u8For1080P"
-                        type="text"
-                        size="small"
-                        @click="displayVideoPlayer(scope.row.m3u8For1080P, scope.row.originName)"
+                            type="text"
+                            size="small"
+                            @click="displayVideoPlayer(scope.row.m3u8For4K, scope.row.originName)"
+                        >4K</el-button>
+                        <icon color="#409EFF"
+                            class="copy-btn pointer el-icon-printer"
+                            v-if="scope.row.m3u8For4K"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)"
+                            name="copy">
+                        </icon>
+                    </div>
+                    <div class="btn-icon-container">
+                        <el-button
+                            v-if="scope.row.m3u8For1080P"
+                            type="text"
+                            size="small"
+                            @click="displayVideoPlayer(scope.row.m3u8For1080P, scope.row.originName)"
                         >1080</el-button>
-                        <i class="copy-btn pointer el-icon-printer"
+                        <icon color="#409EFF" name="copy" class="copy-btn pointer el-icon-printer"
                             v-if="scope.row.m3u8For1080P"
                             :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
-                        </i>
-                    <el-button
-                        v-if="scope.row.m3u8For720P"
-                        type="text"
-                        size="small"
-                        @click="displayVideoPlayer(scope.row.m3u8For720P, scope.row.originName)"
-                        >720</el-button>
-                        <i class="copy-btn pointer el-icon-printer"
+                        </icon>
+                    </div>
+                    <div class="btn-icon-container">
+                        <el-button
                             v-if="scope.row.m3u8For720P"
-                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
-                        </i>
-                    <el-button
-                        v-if="scope.row.m3u8For480P"
-                        type="text"
-                        size="small"
-                        @click="displayVideoPlayer(scope.row.m3u8For480P, scope.row.originName)"
-                        >480</el-button>
-                        <i class="copy-btn pointer el-icon-printer"
+                            type="text"
+                            size="small"
+                            @click="displayVideoPlayer(scope.row.m3u8For720P, scope.row.originName)"
+                            >720</el-button>
+                        <icon
+                            v-if="scope.row.m3u8For720P"
+                            color="#409EFF" class="copy-btn pointer el-icon-printer"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)"
+                            name="copy">
+                        </icon>
+                    </div>
+                    <div class="btn-icon-container">
+                        <el-button
                             v-if="scope.row.m3u8For480P"
-                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For480P)">
-                        </i>
+                            type="text"
+                            size="small"
+                            @click="displayVideoPlayer(scope.row.m3u8For480P, scope.row.originName)"
+                        >480</el-button>
+                        <icon
+                            v-if="scope.row.m3u8For480P"
+                            name="copy" color="#409EFF"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)"
+                            class="copy-btn pointer el-icon-printer"
+                        ></icon>
+                    </div>
                 </template>
             </el-table-column>
             <el-table-column prop="takeTimeInSec" align="center" label="视频时长">
@@ -70,7 +84,7 @@
             </el-table-column>
             <el-table-column v-if="!hasRadio" align="center" width="120px" fixed="right" label="操作">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="_deleteVideoById(scope.row.id)" size="small">删除</el-button>
+                    <el-button class="text-danger" type="text" @click="_deleteVideoById(scope.row.id)" size="small">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>

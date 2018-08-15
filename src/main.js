@@ -16,6 +16,10 @@ import '@/util/directives';
 import 'sysComponents/custom_components/global/install';
 import dragula from 'dragula';
 import wsCache from '@/util/webStorage';
+import Icon from 'vue-awesome/components/Icon';
+import 'vue-awesome/icons';
+
+Vue.component('icon', Icon);
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);

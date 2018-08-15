@@ -58,8 +58,8 @@
                         type="primary" @click="toggleUpdateHandler">
                         {{timer ? '停止刷新页面' : '恢复刷新页面'}}
                     </el-button>
-                    <el-button v-if="!isDisabled" size="small" class="delete-btn" plain @click="deleteVideoList"><i class="el-icon-delete"></i> 批量删除节目</el-button>
-                    <el-button v-else size="small" type="danger" @click="deleteVideoList"><i class="el-icon-delete"></i> 批量删除节目</el-button>
+                    <el-button v-if="!isDisabled" size="small" class="delete-btn" plain @click="deleteVideoList"><i class="el-icon-delete"></i> 批量删除</el-button>
+                    <el-button v-else size="small" type="danger" @click="deleteVideoList"><i class="el-icon-delete"></i> 批量删除</el-button>
                 </el-form-item>
             </el-col>
         </el-form>
@@ -557,14 +557,26 @@
 .pause-btn {
     color: #409EFF;
     border-color: #409EFF;
+    background-color: transparent;
+    &:hover,
+    &:focus {
+        color: #409EFF;
+        border-color: #409EFF;
+        background-color: transparent;
+    }
+    span {
+        color: #409EFF;
+    }
 }
 .delete-btn {
     color: #F56C6C;
     border-color: #F56C6C;
+    background-color: transparent;
     &:hover,
     &:focus {
         color: #F56C6C;
         border-color: #F56C6C;
+        background-color: transparent;
     }
 }
 </style>
