@@ -160,7 +160,8 @@
                     min-width="120px"
                     label="上下架">
                     <template slot-scope="scope">
-                        {{scope.row.visible ? '已上架' : '已下架'}}
+                        <i v-if="scope.row.visible" class="status-normal">已上架</i>
+                        <i v-else class="status-abnormal">已下架</i>
                     </template>
                 </el-table-column>
                 <el-table-column

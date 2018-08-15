@@ -6,7 +6,7 @@
             {name:'内容管理'},
             {name:'栏目管理'},
             {name:'频道页面设置'},
-            {name:'直播频道设置'}]">
+            {name:'频道设置'}]">
         </custom-breadcrumb>
         <el-form
             label-width="100px"

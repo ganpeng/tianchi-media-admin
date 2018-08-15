@@ -12,7 +12,6 @@
                 <div role="tablist" aria-multiselectable="true" class="el-collapse">
                     <div
                         @mouseover="mouseoverHandler(index)"
-                        @mouseout="mouseoutHandler(null)"
                         v-for="(category, index) in global.categoryList" :key="index" class="el-collapse-item">
                         <div role="tab" aria-controls="el-collapse-content-3171" style="position:relative;" aria-describedby="el-collapse-content-3171">
                             <div role="button" class="el-collapse-item__header">
@@ -49,15 +48,10 @@
 <script>
 import {mapActions, mapGetters, mapMutations} from 'vuex';
 
-    export default {
-        data() {
+export default {
+    data() {
         return {
-            showTypeList: false,
-            currentIndex: null,
-            defaultProps: {
-                children: 'programmeTypeList',
-                label: 'name'
-            }
+            currentIndex: null
         };
     },
     created() {
@@ -81,9 +75,6 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
         }),
         mouseoverHandler(index) {
             this.currentIndex = index;
-        },
-        mouseoutHandler(index) {
-            // this.currentIndex = null;
         },
         _updateProgrammeCategory() {
             this.updateProgrammeCategory()
@@ -147,61 +138,11 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
                 message: '已取消删除'
             });
         });
-      },
-      renderContent(h, { node, data, store }) {
-        return (
-          <span class="custom-tree-node">
-            <span>{node.label}</span>
-            {
-                node.level === 1
-                ? <span>
-                    <el-button size="mini" type="text" icon="el-icon-plus" on-click={ () => this.append(data, node) }></el-button>
-                </span>
-                : <span>
-                    <el-button size="mini" type="text" icon="el-icon-minus" on-click={ () => this.remove(node, data) }></el-button>
-                </span>
-            }
-          </span>);
       }
     }
   };
 </script>
 <style lang="less" scoped>
-.el-collapse {
-    position: relative;
-    width: 240px;
-    border-radius: 4px;
-    .el-collapse-item {
-        span.category-name {
-            font-size: 18px;
-            &:hover {
-                color: #409EFF;
-            }
-        }
-        .edit-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            right: 50px;
-        }
-        .item-content {
-            position: absolute;
-            top: 0;
-            left: 260px;
-            width: 600px;
-            background-color: #fff;
-            border-radius: 4px;
-            z-index: 20;
-            padding: 0 20px;
-            .add-header {
-                border-bottom: 1px solid #ebeef5;
-            }
-            .tag-btn {
-                margin: 20px 10px 0 0;
-            }
-        }
-    }
-}
 .save-btn {
     margin-top: 20px;
 }

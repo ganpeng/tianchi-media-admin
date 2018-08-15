@@ -312,8 +312,7 @@ li {
 /* 非正常状态 */
 .status-abnormal {
     display: inline-block;
-    width: 50px;
-    height: 22px;
+    padding: 0 10px;
     line-height: 22px;
     background: #F6CCD1;
     border-radius: 14px;
@@ -325,8 +324,7 @@ li {
 /* 正常状态 */
 .status-normal {
     display: inline-block;
-    width: 50px;
-    height: 22px;
+    padding: 0 10px;
     line-height: 22px;
     background: #B8E986;
     border-radius: 14px;
@@ -339,8 +337,7 @@ li {
 /* 中间状态 */
 .status-mid {
     display: inline-block;
-    width: 50px;
-    height: 22px;
+    padding: 0 10px;
     line-height: 22px;
     background: #A3D0FD;
     border-radius: 14px;
@@ -378,4 +375,53 @@ li {
     overflow: hidden;
     -ms-text-overflow: ellipsis;
     text-overflow: ellipsis;
+}
+
+//  表格圆角样式
+.el-table {
+    border-radius: 4px !important;
+}
+
+#label-font {
+    label {
+        font-size: 16px;
+    }
+}
+
+
+//  节目类型管理以及频道类型管理样式
+.el-collapse {
+    position: relative;
+    width: 240px;
+    border-radius: 4px;
+    .el-collapse-item {
+        span.category-name {
+            font-size: 18px;
+            &:hover {
+                color: #409EFF;
+            }
+        }
+        .edit-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 50px;
+        }
+        .item-content {
+            position: absolute;
+            top: 0;
+            left: 260px;
+            width: 600px;
+            background-color: #fff;
+            border-radius: 4px;
+            z-index: 20;
+            padding: 0 20px 20px 20px;
+            .add-header {
+                border-bottom: 1px solid #ebeef5;
+            }
+            .tag-btn {
+                margin: 20px 10px 0 0;
+            }
+        }
+    }
 }

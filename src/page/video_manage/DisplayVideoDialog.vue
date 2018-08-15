@@ -67,6 +67,7 @@ export default {
             this.$emit('changeDisplayVideoDialogStatus', false);
             this.player.switchVideo({url: ''});
             this.player.pause();
+            this.player.seek(0);
         },
         play() {}
     }

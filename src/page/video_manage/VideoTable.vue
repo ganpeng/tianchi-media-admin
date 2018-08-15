@@ -60,7 +60,7 @@
             </el-table-column>
             <el-table-column width="150px" align="center" label="注入状态">
                 <template slot-scope="scope">
-                    {{getStatus(scope.row)}}
+                    <span v-html="getStatus(scope.row)"></span>
                 </template>
             </el-table-column>
             <el-table-column align="center" width="220px" label="上传日期">
@@ -113,12 +113,16 @@ export default {
         return {
             displayVideoDialogVisible: false,
             url: '',
-            title: ''
+            title: '',
+            isFetching: true
         };
     },
     created() {
         let that = this;
-        this.getVideoList();
+        this.getVideoList()
+            .finally(() => {
+                this.isFetching = false;
+            });
         let clipboard = new ClipboardJS('.copy-btn');
         clipboard.on('success', function(e) {
             that.$message.success('视频链接复制成功');
@@ -194,11 +198,20 @@ export default {
                 this.deleteVideoById(id)
                     .then((res) => {
                         if (res && res.code === 0) {
+                            this.$message.success('视频删除成功');
                             this.getVideoList();
                         } else if (res && res.code === 3306) {
-                            this.$message.error(`该视频在如下节目 [${res.data.join(', ')}] 中有引用`);
+                            this.$message({
+                                type: 'error',
+                                message: `该视频在如下节目 [${res.data.join(', ')}] 中有引用`,
+                                duration: 5000
+                            });
                         } else if (res && res.code === 3308) {
-                            this.$message.error(`该视频在如下频道 [${res.data.join(', ')}] 中有引用`);
+                            this.$message({
+                                type: 'error',
+                                message: `该视频在如下频道 [${res.data.join(', ')}] 中有引用`,
+                                duration: 5000
+                            });
                         }
                     });
             }).catch(() => {

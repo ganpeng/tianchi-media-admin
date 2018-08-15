@@ -3,6 +3,8 @@ import service from '../../../service';
 import role from '@/util/config/role';
 import {getPageSize} from '@/util/formValidate';
 
+let isLoading = false; // 解决重复调用列表接口的问题
+
 const defaultSearchFields = {
     name: '',
     status: '',
@@ -42,12 +44,18 @@ const getters = {
             let {status, transcodeProgress, transcodeStatus} = video;
             if (status === 'INJECTING') {
                 if (transcodeStatus === 'TRANSCODING') {
-                    return role.VIDEO_TRANSFER_STATUS[transcodeStatus] + ': ' + transcodeProgress + '%';
+                    return `<i class="status-mid">${role.VIDEO_TRANSFER_STATUS[transcodeStatus]} ${transcodeProgress}%</i>`;
                 } else {
-                    return transcodeStatus ? role.VIDEO_TRANSFER_STATUS[transcodeStatus] : role.VIDEO_UPLOAD_STATUS[status];
+                    let text = transcodeStatus ? role.VIDEO_TRANSFER_STATUS[transcodeStatus] : role.VIDEO_UPLOAD_STATUS[status];
+                    return `<i class="status-mid">${text}</i>`;
                 }
             } else {
-                return role.VIDEO_UPLOAD_STATUS[status];
+                let text = role.VIDEO_UPLOAD_STATUS[status];
+                if (status === 'FAILED') {
+                    return `<i class="status-abnormal">${text}</i>`;
+                } else {
+                    return `<i class="status-normal">${text}</i>`;
+                }
             }
         };
     },
@@ -123,16 +131,20 @@ const mutations = {
 const actions = {
     async getVideoList({commit, state}) {
         try {
-            let {pageNum, pageSize} = state.pagination;
-            let params = Object.assign({}, {pageNum: pageNum > 0 ? pageNum - 1 : 0, pageSize}, {...state.searchFields});
-            let result = await service.getVideoList(params);
-            if (result && result.code === 0) {
-                let {list, pageSize, pageNum, total} = result.data;
-                commit('setList', {list});
-                commit('setPagination', {pageNum: pageNum + 1, pageSize, total});
+            if (!isLoading) {
+                isLoading = true;
+                let {pageNum, pageSize} = state.pagination;
+                let params = Object.assign({}, {pageNum: pageNum > 0 ? pageNum - 1 : 0, pageSize}, {...state.searchFields});
+                let result = await service.getVideoList(params);
+                if (result && result.code === 0) {
+                    let {list, pageSize, pageNum, total} = result.data;
+                    commit('setList', {list});
+                    commit('setPagination', {pageNum: pageNum + 1, pageSize, total});
+                }
+                isLoading = false;
             }
         } catch (err) {
-
+            isLoading = false;
         }
     },
 

@@ -127,6 +127,7 @@
                 this.$emit('changeImageDialogStatus', false);
                 this.$refs.uploadImageForm.resetFields();
                 this.fileList = [];
+                this.form.size = '';
             },
             async beforeUploadHandler(file) {
                 try {
