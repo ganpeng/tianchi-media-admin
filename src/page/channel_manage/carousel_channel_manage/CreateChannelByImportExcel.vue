@@ -182,7 +182,7 @@
                 if (this.$util.isEmpty(channel.no)) {
                     message = message + '频道编号不能为空;';
                 } else if (!this.$util.isChannelNo(channel.no)) {
-                    message = message + '请填写三位频道编号数字，例如"001";';
+                    message = message + '请填写频道编号数字，例如"001";';
                 }
                 // 频道类别
                 if (this.$util.isEmpty(channel.type)) {

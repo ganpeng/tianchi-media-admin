@@ -121,7 +121,7 @@
                     <i class="el-icon-setting"></i>
                     <span>个人中心</span>
                 </template>
-                <el-menu-item index="/personal-center/info-setting" :style="directSecondLeftIndent">信息设置</el-menu-item>
+                <el-menu-item index="/personal-center/my-info" :style="directSecondLeftIndent">我的信息</el-menu-item>
                 <el-menu-item index="/personal-center/modify-password" :style="directSecondLeftIndent">修改密码
                 </el-menu-item>
                 <el-menu-item index="/" @click="logout" :style="directSecondLeftIndent">退出登录</el-menu-item>

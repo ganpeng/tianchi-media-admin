@@ -43,7 +43,7 @@ let RegExpConstants = {
     /**
      * The RegExp of channel no.
      */
-    CHANNEL_NO: /^[0-9]{3}$/,
+    CHANNEL_NO: /^\d+$/,
     /**
      * The RegExp of channel ts id.
      */

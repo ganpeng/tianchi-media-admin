@@ -1,6 +1,11 @@
 <!--编辑用户信息组件-->
 <template>
     <div>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'用户中心'},
+            {name:'编辑用户信息'}]">
+        </custom-breadcrumb>
         <user-info-form
             status="1">
         </user-info-form>
@@ -23,5 +28,9 @@
 </script>
 
 <style lang="scss" scoped>
+
+    .el-breadcrumb {
+        margin-bottom: 60px;
+    }
 
 </style>

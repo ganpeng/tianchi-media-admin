@@ -6,6 +6,7 @@ import Login from 'sysPage/login/Login';
 import Layout from 'sysPage/layout/Layout';
 import Home from 'sysPage/home/Home';
 import InfoSetting from 'sysPage/personal_center/InfoSetting';
+import MyInfo from 'sysPage/personal_center/MyInfo';
 import ModifyPassword from 'sysPage/personal_center/ModifyPassword';
 import UserList from 'sysPage/user_center/UserList';
 import CreateUser from 'sysPage/user_center/CreateUser';
@@ -99,6 +100,12 @@ let router = new Router({
                     path: '/kits',
                     name: 'Kits',
                     component: Kits
+                },
+                // 个人中心-我的信息
+                {
+                    path: '/personal-center/my-info',
+                    name: 'MyInfo',
+                    component: MyInfo
                 },
                 // 个人中心-信息设置页面
                 {

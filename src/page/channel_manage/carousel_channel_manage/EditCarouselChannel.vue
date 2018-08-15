@@ -18,7 +18,7 @@
                     <el-input v-model="channelInfo.innerName" placeholder="请填写20个字以内的名称"></el-input>
                 </el-form-item>
                 <el-form-item label="编号" prop="no" required>
-                    <el-input v-model="channelInfo.no" placeholder="请填写三位频道编号数字，例如'001'"></el-input>
+                    <el-input v-model="channelInfo.no" type="number" placeholder="请填写频道编号数字，例如'001'"></el-input>
                 </el-form-item>
                 <el-form-item label="类别" prop="typeIdList" required>
                     <el-select v-model="channelInfo.typeIdList" multiple placeholder="请选择频道类别">
@@ -34,13 +34,13 @@
                     <el-input v-model="channelInfo.multicastIp" placeholder="请填写组播地址"></el-input>
                 </el-form-item>
                 <el-form-item label="端口号" prop="multicastPort" required>
-                    <el-input v-model="channelInfo.multicastPort" placeholder="请填写端口号"></el-input>
+                    <el-input v-model="channelInfo.multicastPort" type="number" placeholder="请填写端口号"></el-input>
                 </el-form-item>
                 <el-form-item label="tsId" prop="tsId">
-                    <el-input v-model="channelInfo.tsId" placeholder="请填写tsId"></el-input>
+                    <el-input v-model="channelInfo.tsId" type="number" placeholder="请填写tsId"></el-input>
                 </el-form-item>
                 <el-form-item label="serviceId" prop="serviceId">
-                    <el-input v-model="channelInfo.serviceId" placeholder="请填写serviceId"></el-input>
+                    <el-input v-model="channelInfo.serviceId" type="number" placeholder="请填写serviceId"></el-input>
                 </el-form-item>
                 <el-form-item label="所属服务器" prop="pushServer" required>
                     <el-input v-model="channelInfo.pushServer" placeholder="请填写所属服务器的IP地址"></el-input>
@@ -266,6 +266,7 @@
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
         <div class="text-center update-box">
+            <el-button type="primary" @click="updateInfo" class="page-main-btn">更新</el-button>
             <el-button
                 :disabled="channelInfo.visible"
                 type="danger"
@@ -273,7 +274,6 @@
                 class="page-main-btn">
                 删除频道
             </el-button>
-            <el-button type="primary" @click="updateInfo" class="page-main-btn">更新</el-button>
         </div>
         <el-dialog
             title="选择相应的视频"
@@ -337,7 +337,7 @@
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('频道编号不能为空'));
                 } else if (!this.$util.isChannelNo(value)) {
-                    return callback(new Error('请填写三位频道编号数字，例如"001"'));
+                    return callback(new Error('请填写频道编号数字，例如"001"'));
                 } else {
                     callback();
                 }
@@ -350,6 +350,7 @@
                 }
             };
             let checkMulticastIp = (rule, value, callback) => {
+                this.channelInfo.multicastIp = this.$util.trim(this.channelInfo.multicastIp);
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('组播地址不能为空'));
                 } else if (!this.$util.isMulticastIPAddress(value)) {
@@ -382,6 +383,7 @@
                 }
             };
             let checkPushServer = (rule, value, callback) => {
+                this.channelInfo.pushServer = this.$util.trim(this.channelInfo.pushServer);
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('请填写所属服务器IP地址'));
                 } else if (!this.$util.isIPAddress(value)) {
@@ -405,6 +407,8 @@
                 selectDialogVisible: false,
                 channelInfo: {
                     typeIdList: [],
+                    multicastIp: '',
+                    pushServer: '',
                     visible: ''
                 },
                 sectionList: [{name: ''}],

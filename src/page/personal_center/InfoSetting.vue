@@ -1,59 +1,46 @@
 <!--个人中心信息设置组件-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>个人中心</el-breadcrumb-item>
-            <el-breadcrumb-item>信息设置</el-breadcrumb-item>
-        </el-breadcrumb>
-        <el-row>
-            <el-col :span="10">
-                <div class="block-title">我的信息</div>
-                <div class="grid-content bg-purple">
-                    <el-form :model="updateInfo" :rules="infoRules" :status-icon='editStatus' ref="updateInfo"
-                             label-width="100px"
-                             class="demo-ruleForm">
-                        <el-form-item label="姓名" prop="name">
-                            <el-input v-model="updateInfo.name" readonly></el-input>
-                        </el-form-item>
-                        <el-form-item label="邮箱" prop="email">
-                            <el-input v-model="updateInfo.email" :readonly="!editStatus"></el-input>
-                        </el-form-item>
-                        <el-form-item label="手机" prop="mobile">
-                            <el-input v-model="updateInfo.mobile" :readonly="!editStatus"></el-input>
-                        </el-form-item>
-                        <el-form-item label="电话" prop="telephone">
-                            <el-input v-model="updateInfo.telephone" :readonly="!editStatus"></el-input>
-                        </el-form-item>
-                        <el-form-item class="tips">
-                            <label class="tips">此账号创建于{{updateInfo.createdAt | formatDate('yyyy年MM月DD日')}}</label>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" @click="editStatus = true" v-if="!editStatus">编辑信息
-                            </el-button>
-                            <template v-else>
-                                <el-button type="primary" @click="updateForm">确定</el-button>
-                                <el-button @click="resetForm">重置</el-button>
-                            </template>
-                        </el-form-item>
-                    </el-form>
-                </div>
-            </el-col>
-            <el-col :span="14">
-                <div class="grid-content bg-purple-light">
-                    <el-upload
-                        class="avatar-uploader"
-                        action="https://jsonplaceholder.typicode.com/posts/"
-                        :show-file-list="false"
-                        :on-success="handleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload">
-                        <img v-if="updateInfo.imageUrl" :src="updateInfo.imageUrl" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                    <label>用户头像</label>
-                </div>
-            </el-col>
-        </el-row>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'个人中心'},
+            {name:'编辑信息'}]">
+        </custom-breadcrumb>
+        <div class="main-container">
+            <el-form :model="updateInfo"
+                     :rules="infoRules"
+                     ref="updateInfo"
+                     label-width="100px">
+                <el-form-item label="用户名" prop="name">
+                    <label class="value">{{updateInfo.name}}</label>
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
+                    <label class="value">{{updateInfo.email}}</label>
+                </el-form-item>
+                <el-form-item label="手机" prop="mobile" required>
+                    <el-input v-model="updateInfo.mobile" placeholder="请输入手机号" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="电话" prop="telephone">
+                    <el-input v-model="updateInfo.telephone" placeholder="请输入电话号" clearable></el-input>
+                </el-form-item>
+            </el-form>
+            <div class="upload-box" @click="showMessage">
+                <el-upload
+                    @click="showMessage"
+                    class="avatar-uploader"
+                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :show-file-list="false"
+                    :on-success="handleAvatarSuccess"
+                    :before-upload="beforeAvatarUpload">
+                    <img v-if="updateInfo.imageUrl" :src="updateInfo.imageUrl" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+                <label>上传头像</label>
+            </div>
+        </div>
+        <div class="btn-box">
+            <el-button type="primary" @click="updateForm" class="page-main-btn">确定</el-button>
+        </div>
     </div>
 </template>
 
@@ -62,24 +49,7 @@
     export default {
         name: 'InfoSetting',
         data() {
-            let checkEmail = (rule, value, callback) => {
-                if (!this.editStatus) {
-                    callback();
-                    return;
-                }
-                if (this.$util.isEmpty(value)) {
-                    return callback(new Error('邮箱地址不能为空'));
-                } else if (!this.$util.isEmail(value)) {
-                    return callback(new Error('请填写正确的邮箱地址'));
-                } else {
-                    callback();
-                }
-            };
             let checkMobile = (rule, value, callback) => {
-                if (!this.editStatus) {
-                    callback();
-                    return;
-                }
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('手机号码不能为空'));
                 } else if (!this.$util.isMobile(value)) {
@@ -89,10 +59,6 @@
                 }
             };
             let checkTelephone = (rule, value, callback) => {
-                if (!this.editStatus) {
-                    callback();
-                    return;
-                }
                 if (!this.$util.isEmpty(value) && !this.$util.isTelephone(value)) {
                     return callback(new Error('请填写正确的电话号码'));
                 } else {
@@ -109,11 +75,7 @@
                     createdAt: '',
                     imageUrl: ''
                 },
-                editStatus: false,
                 infoRules: {
-                    email: [
-                        {validator: checkEmail, trigger: 'blur'}
-                    ],
                     mobile: [
                         {validator: checkMobile, trigger: 'blur'}
                     ],
@@ -146,8 +108,11 @@
                             mobile: this.updateInfo.mobile,
                             name: this.updateInfo.name
                         }).then(response => {
-                            if (response) {
-                                this.$message('您的账号信息更新成功');
+                            if (response && response.code === 0) {
+                                this.$message({
+                                    message: '您的账号信息更新成功',
+                                    type: 'success'
+                                });
                             }
                         });
                     } else {
@@ -155,68 +120,85 @@
                     }
                 });
             },
-            resetForm() {
-                this.$refs['updateInfo'].resetFields();
-            },
             // 成功上传回调
             handleAvatarSuccess(res, file) {
                 this.imageUrl = URL.createObjectURL(file.raw);
             },
             // 上传图片之前回调
-            beforeAvatarUpload(file) {
-                const isJPG = file.type === 'image/jpeg';
-                const isLt2M = file.size / 1024 / 1024 < 2;
-
-                if (!isJPG) {
-                    this.$message.error('上传头像图片只能是 JPG 格式!');
-                }
-                if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!');
-                }
-                return isJPG && isLt2M;
+            beforeAvatarUpload() {
+                this.$message('暂时不支持设置头像，敬请期待');
+            },
+            showMessage() {
+                this.$notify.info({
+                    title: '消息',
+                    message: '暂时不支持设置头像，敬请期待'
+                });
             }
         }
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
-    .block-title {
-        padding: 30px 0 20px 20px;
-        line-height: 2;
-        text-align: left;
-        font-size: 22px;
+<style lang="scss" scoped>
+
+    .el-breadcrumb {
+        margin-bottom: 80px;
     }
 
-    .tips {
-        text-align: left;
+    .main-container {
+        display: flex;
+        justify-content: space-between;
+        max-width: 1200px;
+        align-items: center;
     }
 
-    .avatar-uploader i {
-        margin-bottom: 20px;
-        margin-top: 70px;
-        border: 1px dashed #d9d9d9;
-        border-radius: 6px;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-        &:hover {
-            border-color: #409EFF;
+    .el-form {
+        width: 600px;
+        .el-form-item {
+            width: 400px;
+            text-align: left;
+            .value {
+                font-size: $normalFontSize;
+                color: #909399;
+            }
         }
     }
 
-    .avatar-uploader-icon {
-        font-size: 28px;
-        color: #8c939d;
-        width: 178px;
-        height: 178px;
-        line-height: 178px;
-        text-align: center;
+    .upload-box {
+        .avatar-uploader i {
+            position: relative;
+            margin-bottom: 10px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            overflow: hidden;
+            &:hover {
+                border-color: #409EFF;
+                color: $baseBlue;
+            }
+        }
+        .avatar-uploader-icon {
+            width: 178px;
+            height: 178px;
+            font-size: 28px;
+            color: #8c939d;
+            line-height: 178px;
+            text-align: center;
+        }
+
+        .avatar {
+            display: block;
+            width: 200px;
+            height: 200px;
+        }
+        label {
+            color: $baseGray;
+            font-size: $largerFontSize;
+        }
     }
 
-    .avatar {
-        width: 178px;
-        height: 178px;
-        display: block;
+    .btn-box {
+        max-width: 1200px;
+        margin: 300px 0px 80px 0px;
     }
+
 </style>

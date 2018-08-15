@@ -1,26 +1,6 @@
-<!--搜索节目参数设置组件-->
+<!--搜索用户参数设置组件-->
 <template>
-    <div @keyup.enter="getUserList">
-        <el-form :inline="true" class="search-form">
-            <el-form-item class="search">
-                <el-input
-                    v-model="listQueryParams.keyword"
-                    clearable
-                    placeholder="搜索你想要的信息">
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-                <el-input v-show="false"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button @click="getUserList" type="primary">搜 索</el-button>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="warning" @click="clearSearchFields">清空筛选条件</el-button>
-            </el-form-item>
-            <el-form-item class="create-user">
-                <el-button type="primary" @click="toCreateUser">创建用户</el-button>
-            </el-form-item>
-        </el-form>
+    <div @keyup.enter="getUserList" class="text-left">
         <el-form :inline="true">
             <el-form-item label="创建起始时间">
                 <el-date-picker
@@ -91,6 +71,23 @@
                         :value="item.code">
                     </el-option>
                 </el-select>
+            </el-form-item>
+        </el-form>
+        <el-form :inline="true">
+            <el-form-item>
+                <el-input
+                    v-model="listQueryParams.keyword"
+                    clearable
+                    placeholder="搜索你想要的信息">
+                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                </el-input>
+                <el-input v-show="false"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button @click="getUserList" type="primary" plain icon="el-icon-search">搜索</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" plain @click="clearSearchFields">清空筛选条件</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -208,9 +205,6 @@
                     districtCode: districtCode
                 });
             },
-            toCreateUser() {
-                this.$router.push({name: 'CreateUser'});
-            },
             // 清空搜索条件
             clearSearchFields() {
                 for (let key in this.listQueryParams) {
@@ -225,17 +219,10 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
-    .search-title {
-        display: inline-block;
-        font-size: 20px;
-        line-height: 40px
-    }
-
-    .create-user {
-        margin-left: 50px;
+    .el-form-item {
+        margin-right: 30px;
     }
 
 </style>

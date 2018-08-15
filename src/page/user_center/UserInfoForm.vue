@@ -1,11 +1,6 @@
 <!--专题基本信息表单组件-->
 <template>
     <div class="text-left">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item>用户中心</el-breadcrumb-item>
-            <el-breadcrumb-item v-if="status === '0'">创建用户</el-breadcrumb-item>
-            <el-breadcrumb-item v-else>编辑用户信息</el-breadcrumb-item>
-        </el-breadcrumb>
         <el-form :model="userInfo"
                  :rules="infoRules"
                  status-icon
@@ -90,19 +85,24 @@
             <el-form-item label="详细地址" prop="address" required>
                 <el-input v-model="userInfo.address" placeholder="请输入详细地址"></el-input>
             </el-form-item>
-            <el-form-item label="电话" prop="telephone">
-                <el-input v-model="userInfo.telephone" placeholder="请输入固定电话号码"></el-input>
-            </el-form-item>
             <el-form-item label="手机" prop="mobile" required>
                 <el-input v-model="userInfo.mobile" placeholder="请输入手机号码"></el-input>
             </el-form-item>
-            <el-form-item class="operate">
-                <el-button :disabled="btnDisabled" type="primary" @click="operateUser">{{status === '0' ? '创建' :
-                    '更新'}}
-                </el-button>
-                <el-button @click="reset">重 置</el-button>
+            <el-form-item label="电话" prop="telephone">
+                <el-input v-model="userInfo.telephone" placeholder="请输入固定电话号码"></el-input>
             </el-form-item>
         </el-form>
+        <div class="operate-item">
+            <el-button
+                class="page-main-btn"
+                :disabled="btnDisabled"
+                type="primary"
+                @click="operateUser">
+                {{status === '0' ? '创建' : '更新'}}
+            </el-button>
+            <el-button type="primary" plain @click="reset" class="page-vice-btn">重置</el-button>
+            <el-button @click="toUserList" class="page-main-btn">返回用户列表</el-button>
+        </div>
     </div>
 </template>
 
@@ -461,6 +461,9 @@
                 this.countyOptions = [];
                 this.streetDisabled = true;
                 this.streetOptions = [];
+            },
+            toUserList() {
+                this.$router.push({name: 'UserList'});
             }
         }
     };
@@ -470,6 +473,15 @@
 
     .el-input, .el-select {
         width: 600px;
+    }
+
+    .operate-item {
+        margin: 120px 0px 80px 0px;
+        text-align: center;
+        .el-button {
+            margin-right: 30px;
+            margin-left: 0px;
+        }
     }
 
 </style>

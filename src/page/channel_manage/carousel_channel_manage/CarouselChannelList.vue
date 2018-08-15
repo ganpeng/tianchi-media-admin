@@ -228,7 +228,7 @@
             // 禁播/恢复频道
             disableChannel(channelInfo) {
                 let operateWords = channelInfo.visible ? '禁播' : '恢复';
-                this.$confirm('此操作将' + operateWords + '该频道, 是否继续?', '提示', {
+                this.$confirm('此操作将' + operateWords + channelInfo.innerName + '频道, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -237,15 +237,31 @@
                         if (response && response.code === 0) {
                             this.$message({
                                 type: 'success',
-                                message: operateWords + '成功!'
+                                message: operateWords + channelInfo.innerName + '频道成功!'
                             });
                             channelInfo.visible = !channelInfo.visible;
+                        //    频道在栏目推荐位上
+                        } else if (response && response.code === 3610) {
+                            let message = '';
+                            response.data.map(item => {
+                                message = message + '、' + item.navBarName;
+                            });
+                            message = channelInfo.innerName + '频道在"' + message.slice(1) + '"栏目推荐位上，不能被禁播';
+                            this.$message(message);
+                            // 频道在栏目频道布局推荐位上
+                        } else if (response && response.code === 3611) {
+                            let message = '';
+                            response.data.map(item => {
+                                message = message + '、' + item.navBarName;
+                            });
+                            message = channelInfo.innerName + '频道在"' + message.slice(1) + '"栏目频道布局推荐位上，不能被禁播';
+                            this.$message(message);
                         }
                     });
                 }).catch(() => {
                     this.$message({
                         type: 'info',
-                        message: '已取消' + operateWords
+                        message: '已取消' + operateWords + channelInfo.innerName + '频道'
                     });
                 });
             }

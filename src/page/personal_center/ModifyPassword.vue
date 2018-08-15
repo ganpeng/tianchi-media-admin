@@ -1,29 +1,45 @@
 <!--个人中心更改密码组件-->
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>个人中心</el-breadcrumb-item>
-            <el-breadcrumb-item>修改密码</el-breadcrumb-item>
-        </el-breadcrumb>
-        <el-form :model="form" status-icon :rules="passwordRules" ref="form" label-width="100px"
-                 class="demo-ruleForm">
-            <el-form-item label="原密码" prop="password">
-                <el-input v-model="form.password" placeholder="请输入原密码"></el-input>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'个人中心'},
+            {name:'修改密码'}]">
+        </custom-breadcrumb>
+        <el-form
+            :model="passwordForm"
+            status-icon
+            :rules="passwordRules"
+            ref="passwordForm"
+            label-width="100px">
+            <el-form-item label="原密码" prop="password" required>
+                <el-input
+                    v-model="passwordForm.password"
+                    placeholder="请输入原密码"
+                    clearable>
+                </el-input>
             </el-form-item>
-            <el-form-item label="新密码" prop="newPassword">
-                <el-input type="password" v-model="form.newPassword" auto-complete="off"
-                          placeholder="请输入6-8位新密码"></el-input>
+            <el-form-item label="新密码" prop="newPassword" required>
+                <el-input type="password"
+                          v-model="passwordForm.newPassword"
+                          auto-complete="off"
+                          placeholder="请输入6-8位新密码"
+                          clearable>
+                </el-input>
             </el-form-item>
-            <el-form-item label="确认新密码" prop="checkPassword">
-                <el-input type="password" v-model="form.checkPassword" auto-complete="off"
-                          placeholder="请重新输入新密码"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="submitForm">更 新</el-button>
-                <el-button @click="resetForm">重 置</el-button>
+            <el-form-item label="确认新密码" prop="checkPassword" required>
+                <el-input type="password"
+                          v-model="passwordForm.checkPassword"
+                          auto-complete="off"
+                          placeholder="请重新输入新密码"
+                          clearable>
+                </el-input>
             </el-form-item>
         </el-form>
+        <div class="operate-item">
+            <el-button type="primary" @click="submitForm" class="page-main-btn">更 新</el-button>
+            <el-button type="primary" plain @click="resetForm" class="page-main-btn">重 置</el-button>
+        </div>
     </div>
 </template>
 
@@ -53,14 +69,14 @@
             let validatePassword2 = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     callback(new Error('请再次输入密码'));
-                } else if (this.$util.trim(value) !== this.$util.trim(this.form.newPassword)) {
+                } else if (this.$util.trim(value) !== this.$util.trim(this.passwordForm.newPassword)) {
                     callback(new Error('两次输入密码不一致!'));
                 } else {
                     callback();
                 }
             };
             return {
-                form: {
+                passwordForm: {
                     password: '',
                     newPassword: '',
                     checkPassword: ''
@@ -80,7 +96,7 @@
         },
         methods: {
             submitForm() {
-                this.$refs['form'].validate((valid) => {
+                this.$refs['passwordForm'].validate((valid) => {
                     if (valid) {
                         this.updatePassword();
                     } else {
@@ -88,28 +104,41 @@
                     }
                 });
             },
-            resetForm() {
-                this.$refs['form'].resetFields();
-            },
             updatePassword() {
-                // 请求接口
                 this.$service.updateAdminSelfPassword({
-                    password: this.form.password,
-                    newPassword: this.form.newPassword
+                    password: this.passwordForm.password,
+                    newPassword: this.passwordForm.newPassword
                 }).then(response => {
-                    if (response) {
-                        this.$message('您的密码更新成功');
+                    if (response && response.code === 0) {
+                        this.$message({
+                            message: '您的密码更新成功',
+                            type: 'success'
+                        });
                     }
                 });
+            },
+            resetForm() {
+                this.$refs['passwordForm'].resetFields();
             }
         }
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
+<style lang="scss" scoped>
+
     .el-form {
-        margin-top: 40px;
-        width: 650px;
+        margin-top: 80px;
+        max-width: 600px;
     }
+
+    .operate-item {
+        margin: 200px 0px 80px 0px;
+        max-width: 600px;
+        .el-button {
+            &:first-child {
+                margin-right: 30px;
+            }
+        }
+    }
+
 </style>

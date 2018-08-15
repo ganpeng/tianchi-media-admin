@@ -9,7 +9,7 @@
         </div>
         <div class="info">
             <div class="avatar-box">
-                <img src="~assets/img/avatar_default.png"/>
+                <img src="~assets/img/avatar_circle_default.png"/>
             </div>
             <label>您好，{{name}}</label>
             <span @click="logout">退出</span>

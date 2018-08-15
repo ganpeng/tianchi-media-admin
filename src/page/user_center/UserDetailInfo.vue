@@ -1,36 +1,37 @@
 <!--用户详情组件-->
 <template>
-    <div class="text-left">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item>用户中心</el-breadcrumb-item>
-            <el-breadcrumb-item>用户详情</el-breadcrumb-item>
-        </el-breadcrumb>
-        <el-form label-width="90px"
-                 class="form-block">
-            <el-form-item label="姓名:" prop="name">
-                <label>{{userInfo.name}}</label>
-            </el-form-item>
-            <el-form-item label="身份证号:" prop="identityId">
-                <label>{{userInfo.identityId}}</label>
-            </el-form-item>
-            <el-form-item :label="'设备ID' + (index + 1) + ':'"
-                          v-for="(item, index) in userInfo.stbList"
-                          :key="index">
-                <label>{{item.no}}</label>
-            </el-form-item>
-            <el-form-item label="详细地址:" prop="fullAddress">
-                <label>{{userInfo.fullAddress}}</label>
-            </el-form-item>
-            <el-form-item label="电话:" prop="telephone">
-                <label>{{userInfo.telephone}}</label>
-            </el-form-item>
-            <el-form-item label="手机:" prop="mobile">
-                <label>{{userInfo.mobile}}</label>
-            </el-form-item>
-            <div class="btn-box">
-                <el-button type="primary" @click="toUserList">返回列表页</el-button>
-            </div>
-        </el-form>
+    <div>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'用户中心'},
+            {name:'用户详情'}]">
+        </custom-breadcrumb>
+        <div class="vice-block" id="basic-info">
+            <h3 class="block-vice-title">专题基本信息</h3>
+            <el-card>
+                <ul class="text-left">
+                    <li><span>用户姓名</span><label>{{userInfo.name}}</label></li>
+                    <li><span>身份证号</span><label>{{userInfo.identityId}}</label></li>
+                    <li>
+                        <span>设备ID</span>
+                        <label>
+                            <el-tag v-for="(item, index) in userInfo.stbList"
+                                    :key="index"
+                                    type="info">
+                                {{item.no}}
+                            </el-tag>
+                        </label>
+                    </li>
+                    <li><span>详细地址</span><label>{{userInfo.fullAddress}}</label></li>
+                    <li><span>手机号码</span><label>{{userInfo.mobile}}</label></li>
+                    <li><span>电话号码</span><label>{{userInfo.telephone}}</label></li>
+                </ul>
+            </el-card>
+        </div>
+        <div class="operate-item">
+            <el-button type="primary" @click="toEdit" class="page-main-btn">编辑</el-button>
+            <el-button type="primary" plain @click="toUserList" class="page-main-btn">返回列表页</el-button>
+        </div>
     </div>
 </template>
 
@@ -66,6 +67,15 @@
                     }
                 });
             },
+            toEdit() {
+                this.$router.push({
+                        name: 'EditUserInfo',
+                        params: {
+                            id: this.$route.params.id
+                        }
+                    }
+                );
+            },
             toUserList() {
                 this.$router.push({name: 'UserList'});
             }
@@ -75,19 +85,46 @@
 
 <style lang="scss" scoped>
 
-    .el-breadcrumb {
-        margin-bottom: 50px;
-    }
-
-    .el-form-item {
-        margin-bottom: 10px;
-        &:last-child {
-            margin-bottom: 40px;
+    #basic-info {
+        .el-card {
+            width: 600px;
+            ul {
+                li {
+                    display: flex;
+                    margin-bottom: 10px;
+                    min-height: 32px;
+                    flex-direction: row;
+                    justify-content: left;
+                    align-items: center;
+                    > span {
+                        width: 120px;
+                        flex-shrink: 0;
+                        text-align: center;
+                        font-size: $largerFontSize;
+                        color: $baseGray;
+                    }
+                    label {
+                        width: 380px;
+                        font-size: $normalFontSize;
+                        color: #909399;
+                        flex-shrink: 0;
+                        line-height: 2;
+                        .el-tag {
+                            margin-right: 10px;
+                        }
+                    }
+                }
+            }
         }
     }
 
-    .btn-box {
-        text-align: center;
+    .operate-item {
+        margin: 120px 0px 80px 0px;
+        .el-button {
+            &:first-child {
+                margin-right: 30px;
+            }
+        }
     }
 
 </style>
