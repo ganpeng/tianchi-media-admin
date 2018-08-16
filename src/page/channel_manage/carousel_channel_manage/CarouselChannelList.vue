@@ -15,6 +15,7 @@
             </channel-filter-params>
             <el-table
                 :data="channelList"
+                @row-dblclick="showChannelVideoMessage"
                 border
                 style="width: 100%">
                 <el-table-column
@@ -177,6 +178,17 @@
             this.init();
         },
         methods: {
+            showChannelVideoMessage(row) {
+                this.$service.getChannelDetail(row.id).then(response => {
+                    if (response && response.code === 0) {
+                        this.channelInfo = response.data;
+                        this.$message({
+                            message: row.innerName + '频道含有视频' + this.channelInfo.carouselVideoList.length + '个',
+                            type: 'success'
+                        });
+                    }
+                });
+            },
             init() {
                 if (wsCache.localStorage.get('carouselChannelListParams')) {
                     this.listQueryParams = wsCache.localStorage.get('carouselChannelListParams');

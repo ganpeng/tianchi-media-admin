@@ -296,6 +296,9 @@
                 <el-tooltip content="删除当前视频中的展示名称中的最后面的数字" placement="top" effect="light">
                     <el-button type="primary" plain @click="removeDisplayNameNo">删除展示名称后面的数字</el-button>
                 </el-tooltip>
+                <el-tooltip content="在展示名称的文字最后插入'-'，例如'天龙八部01'改为'天龙八部-01'" placement="top" effect="light">
+                    <el-button type="primary" plain @click="insertShortLine">插入'-'</el-button>
+                </el-tooltip>
             </el-card>
         </div>
         <display-video-dialog
@@ -501,6 +504,17 @@
             this.init();
         },
         methods: {
+            // 根据视频展示名在文字的最后添加'-'
+            insertShortLine() {
+                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(/([\u4e00-\u9fa5]+)/, '$1-');
+                    Vue.set(this.currentSelectedVideoList, i, this.currentSelectedVideoList[i]);
+                }
+                this.$message({
+                    message: '已根据视频展示名在文字的最后添加"-"',
+                    type: 'success'
+                });
+            },
             setDisplayNameFromOriginName() {
                 for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
                     this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].originName.replace(this.originNameParams.prefix, '');
