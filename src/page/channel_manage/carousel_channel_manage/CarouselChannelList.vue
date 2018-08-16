@@ -10,6 +10,7 @@
         </custom-breadcrumb>
         <div class="block-box">
             <channel-filter-params
+                ref="channelFilterParams"
                 v-on:getChannelList="getChannelList">
             </channel-filter-params>
             <el-table
@@ -123,7 +124,7 @@
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="pageNum"
-                :page-sizes="[10, 20, 30, 50]"
+                :page-sizes="[10, 20, 50, 100, 200, 500]"
                 :page-size="listQueryParams.pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="total">
@@ -152,6 +153,7 @@
 <script>
     import CreateChannel from './CreateChannel';
     import ChannelFilterParams from '../../content_manage/searchFilterParams/ChannelFilterParams';
+    import wsCache from '@/util/webStorage';
 
     export default {
         name: 'CarouselChannelList',
@@ -176,6 +178,10 @@
         },
         methods: {
             init() {
+                if (wsCache.localStorage.get('carouselChannelListParams')) {
+                    this.listQueryParams = wsCache.localStorage.get('carouselChannelListParams');
+                    this.$refs.channelFilterParams.initFilterParams(this.listQueryParams);
+                }
                 this.getChannelList();
             },
             getChannelList(searchParams) {
@@ -186,6 +192,8 @@
                     }
                 }
                 this.listQueryParams.pageNum = this.pageNum - 1;
+                // 保存当前参数到localStorage中，下次页面重建的时候，自动填写并查询
+                wsCache.localStorage.set('carouselChannelListParams', this.listQueryParams);
                 this.$service.getChannelList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.channelList = response.data.list;
@@ -240,7 +248,7 @@
                                 message: operateWords + channelInfo.innerName + '频道成功!'
                             });
                             channelInfo.visible = !channelInfo.visible;
-                        //    频道在栏目推荐位上
+                            //    频道在栏目推荐位上
                         } else if (response && response.code === 3610) {
                             let message = '';
                             response.data.map(item => {

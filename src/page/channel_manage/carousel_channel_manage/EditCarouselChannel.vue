@@ -222,7 +222,8 @@
                         <el-button type="primary" plain @click="addSection">添加部的名称</el-button>
                     </el-tooltip>
                     <div class="text-center">
-                        <el-tooltip content="根据填写的部的名称列表，以及视频的展示名称，例如'还珠格格2-02'进行自动排序" placement="top" effect="light">
+                        <el-tooltip content="根据填写的部的名称列表，例如'还珠格格2'，以及视频的展示名称，例如'还珠格格2-02'进行自动排序" placement="top"
+                                    effect="light">
                             <el-button type="primary" plain @click="autoSort">自动排序</el-button>
                         </el-tooltip>
                     </div>
@@ -237,22 +238,59 @@
             <!--填写视频展示名称-->
             <el-card id="fill-display-name">
                 <div slot="header" class="clearfix">
-                    <h3 class="block-vice-title">设置展示名称：</h3>
+                    <h3 class="block-vice-title">根据视频文件名设置展示名称：</h3>
                     <div>
                         <label>删除原始文件名称第一部分：</label>
-                        <el-input v-model="displayNameParams.prefix" placeholder="请填写前缀等需要删除的连续文字，例如'（高清）'等"></el-input>
+                        <el-input
+                            v-model="originNameParams.prefix"
+                            placeholder="请填写前缀等需要删除的连续文字，例如'（高清）'等">
+                        </el-input>
                     </div>
                     <div>
                         <label>删除原始文件名称第二部分：</label>
-                        <el-input v-model="displayNameParams.suffix" placeholder="请填写后缀等需要删除的连续文字，例如'.mpg'等"></el-input>
+                        <el-input
+                            v-model="originNameParams.midWords"
+                            placeholder="请填写中间等需要删除的连续文字，例如'（高清）'等">
+                        </el-input>
+                    </div>
+                    <div>
+                        <label>删除原始文件名称第三部分：</label>
+                        <el-input
+                            v-model="originNameParams.suffix"
+                            placeholder="请填写后缀等需要删除的连续文字，例如'.mpg'等">
+                        </el-input>
                     </div>
                     <div class="text-center">
-                        <el-tooltip content="根据填写的删除部分，对视频原始文件名称进行截取删除操作，并填写到展示名称处" placement="top" effect="light">
-                            <el-button type="primary" plain @click="setDisplayName">填写展示名称</el-button>
+                        <el-tooltip
+                            content="根据填写的视频文件名称需要删除的部分，对视频原始文件名称进行截取删除操作，并填写到展示名称处"
+                            placement="top"
+                            effect="light">
+                            <el-button type="primary" plain @click="setDisplayNameFromOriginName">填写展示名称</el-button>
                         </el-tooltip>
                     </div>
                 </div>
-                <el-tooltip content="分割原始文件名'&&'，自动填写展示名称" placement="top" effect="light">
+                <div slot="header" class="clearfix">
+                    <h3 class="block-vice-title">根据视频展示名对视频展示名称进行设置：</h3>
+                    <div>
+                        <label>删除视频展示名部分：</label>
+                        <el-input
+                            v-model="displayNameParams.words"
+                            placeholder="请填写需要删除的连续文字，例如'-'等">
+                        </el-input>
+                    </div>
+                    <div class="text-center">
+                        <el-tooltip
+                            content="根据填写的展示名称需要删除的部分，对视频展示名进行截取删除操作，并填回到展示名称处"
+                            placement="top"
+                            effect="light">
+                            <el-button type="primary" plain @click="setDisplayNameFromSelf">填写展示名称</el-button>
+                        </el-tooltip>
+                    </div>
+                </div>
+                <el-tooltip
+                    content="分割原始文件名'&&'，自动填写展示名称，例如原始文件名称为'（高清）新还珠格格（收录）01&&新还珠格格-01.mpg'"
+                    placement="top"
+                    effect="light">
                     <el-button type="primary" plain @click="setVideoNameList">设置展示名称</el-button>
                 </el-tooltip>
                 <el-tooltip content="删除当前视频中的展示名称中的最后面的数字" placement="top" effect="light">
@@ -274,6 +312,7 @@
                 class="page-main-btn">
                 删除频道
             </el-button>
+            <el-button @click="toChannelList">返回轮播频道列表</el-button>
         </div>
         <el-dialog
             title="选择相应的视频"
@@ -400,7 +439,14 @@
                 }
             };
             return {
-                displayNameParams: {},
+                originNameParams: {
+                    prefix: '',
+                    midWords: '',
+                    suffix: ''
+                },
+                displayNameParams: {
+                    words: ''
+                },
                 size: CHANNEL_LOGO_DIMENSION,
                 imageUploadDialogVisible: false,
                 sortDialogVisible: false,
@@ -455,20 +501,37 @@
             this.init();
         },
         methods: {
-            setDisplayName() {
+            setDisplayNameFromOriginName() {
                 for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
-                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].originName.replace(this.displayNameParams.prefix, '');
-                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(this.displayNameParams.suffix, '');
+                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].originName.replace(this.originNameParams.prefix, '');
+                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(this.originNameParams.midWords, '');
+                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(this.originNameParams.suffix, '');
                     Vue.set(this.currentSelectedVideoList, i, this.currentSelectedVideoList[i]);
                 }
-                this.$message('已根据删除文字部分填写完成视频展示名称');
+                this.$message({
+                    message: '已根据删除文字部分填写完成视频展示名称',
+                    type: 'success'
+                });
             },
             removeDisplayNameNo() {
                 for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
                     this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(/\d+$/, '');
                     Vue.set(this.currentSelectedVideoList, i, this.currentSelectedVideoList[i]);
                 }
-                this.$message('已删除展示名称后面的数字');
+                this.$message({
+                    message: '已删除展示名称后面的数字',
+                    type: 'success'
+                });
+            },
+            setDisplayNameFromSelf() {
+                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(this.displayNameParams.words, '');
+                    Vue.set(this.currentSelectedVideoList, i, this.currentSelectedVideoList[i]);
+                }
+                this.$message({
+                    message: '已根据填写的删除部分对展示名称进行了处理',
+                    type: 'success'
+                });
             },
             init() {
                 this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
@@ -794,6 +857,9 @@
                         });
                     }
                 });
+            },
+            toChannelList() {
+                this.$router.push({name: 'CarouselChannelList'});
             }
         }
     };
@@ -848,6 +914,9 @@
 
     .update-box {
         margin: 120px 0px 80px 0px;
+        .el-button {
+            margin-right: 30px;
+        }
     }
 
     .image-box {

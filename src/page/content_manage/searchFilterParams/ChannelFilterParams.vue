@@ -23,7 +23,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="关键字">
-                <el-input v-model="listQueryParams.keyword" placeholder="请填写频道名称或编号">
+                <el-input v-model="listQueryParams.keyword" placeholder="请填写频道名称或编号" clearable>
                 </el-input>
             </el-form-item>
             <el-form-item>
@@ -59,6 +59,11 @@
             this.init();
         },
         methods: {
+            initFilterParams(params) {
+                this.listQueryParams.typeIdList = params.typeIdList;
+                this.listQueryParams.visible = params.visible;
+                this.listQueryParams.keyword = params.keyword;
+            },
             init() {
                 // 初始化频道类别列表
                 this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
