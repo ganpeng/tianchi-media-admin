@@ -90,6 +90,7 @@
             <el-button
                 v-if="currentSelectedVideoList.length === 0"
                 type="primary"
+                plain
                 class="add-video"
                 @click="popAppendVideoDialogue(0)">
                 点击添加视频
@@ -176,7 +177,8 @@
                     align="center"
                     label="视频状态">
                     <template slot-scope="scope">
-                        <label>{{scope.row.visible ? '正常':'禁播'}}</label>
+                        <i class="status-normal" v-if="scope.row.visible">正常</i>
+                        <i class="status-abnormal" v-else>禁播</i>
                     </template>
                 </el-table-column>
                 <el-table-column align="center"
@@ -272,10 +274,17 @@
                 <div slot="header" class="clearfix">
                     <h3 class="block-vice-title">根据视频展示名对视频展示名称进行设置：</h3>
                     <div>
-                        <label>删除视频展示名部分：</label>
+                        <label>被替换视频展示名部分：</label>
                         <el-input
                             v-model="displayNameParams.words"
-                            placeholder="请填写需要删除的连续文字，例如'-'等">
+                            placeholder="请填写需要被替换的连续文字，例如'（高清）'等">
+                        </el-input>
+                    </div>
+                    <div>
+                        <label>替换为视频展示名部分：</label>
+                        <el-input
+                            v-model="displayNameParams.replacer"
+                            placeholder="请填写需要替换为的连续文字，例如'-'等">
                         </el-input>
                     </div>
                     <div class="text-center">
@@ -448,7 +457,8 @@
                     suffix: ''
                 },
                 displayNameParams: {
-                    words: ''
+                    words: '',
+                    replacer: ''
                 },
                 size: CHANNEL_LOGO_DIMENSION,
                 imageUploadDialogVisible: false,
@@ -539,7 +549,7 @@
             },
             setDisplayNameFromSelf() {
                 for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
-                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(this.displayNameParams.words, '');
+                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(this.displayNameParams.words, this.displayNameParams.replacer);
                     Vue.set(this.currentSelectedVideoList, i, this.currentSelectedVideoList[i]);
                 }
                 this.$message({
@@ -818,9 +828,8 @@
             },
             // 更新频道信息
             updateInfo() {
-                /** 在正常频道保存时，必须含有没有禁播的视频  */
-                /** 写的什么玩意？暂时注释掉，能正常禁用和删除视频
-                 if (this.channelInfo.visible) {
+                /** 在正常频道保存时，必须含有能正常播放的视频  */
+                if (this.channelInfo.visible) {
                     let tag = false;
                     this.currentSelectedVideoList.map(video => {
                         if (video.visible) {
@@ -835,7 +844,6 @@
                         return;
                     }
                 }
-                 */
                 /** 在频道保存时，含有的视频必须有展示名称  */
                 for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
                     if (!this.currentSelectedVideoList[i].name) {
@@ -846,29 +854,35 @@
                         return;
                     }
                 }
-                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
-                    this.currentSelectedVideoList[i].sort = i;
-                }
-                this.channelInfo.carouselVideoList = this.currentSelectedVideoList;
-                this.channelInfo.typeList = [];
-                this.channelInfo.typeIdList.map(typeId => {
-                    this.typeOptions.map(type => {
-                        if (typeId === type.id) {
-                            this.channelInfo.typeList.push(type);
+                this.$refs['channelInfo'].validate((valid) => {
+                    if (valid) {
+                        for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                            this.currentSelectedVideoList[i].sort = i;
                         }
-                    });
-                });
-                this.$service.updateChannelById(
-                    this.$route.params.id,
-                    this.channelInfo
-                ).then(response => {
-                    if (response && response.code === 0) {
-                        this.$message('保存频道信息成功');
-                    } else {
-                        this.$message({
-                            message: response.message,
-                            type: 'warning'
+                        this.channelInfo.carouselVideoList = this.currentSelectedVideoList;
+                        this.channelInfo.typeList = [];
+                        this.channelInfo.typeIdList.map(typeId => {
+                            this.typeOptions.map(type => {
+                                if (typeId === type.id) {
+                                    this.channelInfo.typeList.push(type);
+                                }
+                            });
                         });
+                        this.$service.updateChannelById(
+                            this.$route.params.id,
+                            this.channelInfo
+                        ).then(response => {
+                            if (response && response.code === 0) {
+                                this.$message('保存频道信息成功');
+                            } else {
+                                this.$message({
+                                    message: response.message,
+                                    type: 'warning'
+                                });
+                            }
+                        });
+                    } else {
+                        return false;
                     }
                 });
             },

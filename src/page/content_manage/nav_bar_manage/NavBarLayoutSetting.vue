@@ -103,7 +103,7 @@
         <el-button v-if="modified" type="primary" @click="clearModify" class="column-operate">清除修改</el-button>
         <el-button type="primary" @click="publish" class="column-operate">保 存</el-button>
         <!--模块排序组件-->
-        <el-collapse-transition>
+        <transition name="slide-fade">
             <sort-layout-model
                 v-if="sortSlideVisible"
                 :navBarId="navBarId"
@@ -111,7 +111,7 @@
                 :modelInfoList="massLayoutBlockList"
                 v-on:closeSortSlide="closeSortSlide">
             </sort-layout-model>
-        </el-collapse-transition>
+        </transition>
     </div>
 </template>
 
@@ -377,8 +377,20 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+
+    .slide-fade-enter-active {
+        transition: all .3s ease;
+    }
+
+    .slide-fade-leave-active {
+        transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+
+    .slide-fade-enter, .slide-fade-leave-to {
+        transform: translateX(10px);
+        opacity: 0;
+    }
 
     .nav-bar-name {
         font-size: 16px;

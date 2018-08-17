@@ -131,10 +131,18 @@
                 :total="total">
             </el-pagination>
             <div class="create-item">
-                <el-button type="primary" icon="el-icon-circle-plus-outline" @click="createChannelDialogVisible = true">
+                <el-button
+                    type="primary"
+                    plain
+                    icon="el-icon-circle-plus-outline"
+                    @click="createChannelDialogVisible = true">
                     新增单个轮播频道
                 </el-button>
-                <el-button type="primary" icon="el-icon-circle-plus-outline" @click="createChannelByImportExcel">
+                <el-button
+                    type="primary"
+                    plain
+                    icon="el-icon-circle-plus-outline"
+                    @click="createChannelByImportExcel">
                     批量导入轮播频道
                 </el-button>
             </div>

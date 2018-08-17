@@ -76,9 +76,9 @@
 <style lang="scss" scoped>
 
     .sort-layout-model {
+        position: absolute;
         display: flex;
         flex-direction: column;
-        position: absolute;
         right: 0px;
         top: 64px;
         bottom: 64px;
@@ -86,7 +86,7 @@
         background: rgba(240, 242, 245, 0.95);
         text-align: center;
         box-shadow: -4px 0 20px 0 rgba(0, 0, 0, 0.20);
-        z-index: 400;
+        z-index: 100;
         overflow: hidden;
     }
 
@@ -134,12 +134,11 @@
     }
 
     .btn {
+        position: absolute;
         flex-grow: 0;
         flex-shrink: 0;
-        position: fixed;
-        bottom: 84px;
+        bottom: 20px;
         right: 18px;
-        margin-top: 20px;
         width: 262px;
     }
 

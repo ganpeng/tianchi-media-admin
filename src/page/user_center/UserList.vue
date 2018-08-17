@@ -104,7 +104,13 @@
                 :total="total">
             </el-pagination>
             <div class="create-item">
-                <el-button type="primary" icon="el-icon-circle-plus-outline" @click="toCreateUser">创建用户</el-button>
+                <el-button
+                    type="primary"
+                    plain
+                    icon="el-icon-circle-plus-outline"
+                    @click="toCreateUser">
+                    创建用户
+                </el-button>
             </div>
         </div>
     </div>

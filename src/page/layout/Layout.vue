@@ -58,9 +58,10 @@
     }
 
     .el-header {
+        position: relative;
         padding: 0px;
-        background: #FFFFFF;
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.20);
+        box-shadow: 0px 2px 10px 0 rgba(0, 0, 0, 0.20);
+        z-index: 400;
     }
 
     .el-aside {
@@ -68,7 +69,9 @@
     }
 
     .el-footer {
+        position: relative;
         padding: 0px;
+        z-index: 400;
     }
 
     .main-view {

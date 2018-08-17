@@ -54,10 +54,10 @@
     .container {
         padding-right: 20px;
         display: flex;
+        background: white;
         justify-content: space-between;
         align-items: center;
-        height: 62px;
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.20);
+        height: 64px;
     }
 
     .info {

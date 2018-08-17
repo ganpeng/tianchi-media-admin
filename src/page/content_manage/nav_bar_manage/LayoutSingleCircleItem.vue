@@ -42,7 +42,7 @@
 
     .figure-name {
         margin-top: 8px;
-        font-size: 20px;
+        font-size: $normalFontSize;
         color: $baseAsideColor;
     }
 

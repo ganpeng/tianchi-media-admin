@@ -122,7 +122,7 @@
                 :total="totalAmount">
             </el-pagination>
             <el-dropdown @command="createSubject" class="create-item">
-                <el-button type="primary" icon="el-icon-circle-plus-outline">
+                <el-button type="primary" plain icon="el-icon-circle-plus-outline">
                     创建专题<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">

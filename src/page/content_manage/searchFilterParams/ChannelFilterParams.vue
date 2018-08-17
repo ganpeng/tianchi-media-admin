@@ -41,7 +41,7 @@
             return {
                 listQueryParams: {
                     category: 'CAROUSEL',
-                    typeIdList: '',
+                    typeIdList: [],
                     visible: '',
                     keyword: ''
                 },
@@ -60,9 +60,9 @@
         },
         methods: {
             initFilterParams(params) {
-                this.listQueryParams.typeIdList = params.typeIdList;
-                this.listQueryParams.visible = params.visible;
-                this.listQueryParams.keyword = params.keyword;
+                this.listQueryParams.typeIdList = params.typeIdList ? params.typeIdList : [];
+                this.listQueryParams.visible = params.visible ? params.visible : '';
+                this.listQueryParams.keyword = params.keyword ? params.keyword : '';
             },
             init() {
                 // 初始化频道类别列表
