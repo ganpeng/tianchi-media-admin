@@ -3,6 +3,7 @@
     <div>
         <el-table
             :data="singleVideoList"
+            header-row-class-name="common-table-header"
             border
             style="width:100%;margin:20px 0;">
             <el-table-column

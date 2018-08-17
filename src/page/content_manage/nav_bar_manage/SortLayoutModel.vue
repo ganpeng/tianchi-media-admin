@@ -145,8 +145,9 @@
     i {
         position: absolute;
         right: 10px;
-        top: 10px;
-        font-size: 28px;
+        top: 30px;
+        font-size: 16px;
+        color: #909399;
         cursor: pointer;
         &:hover {
             color: $baseBlue;

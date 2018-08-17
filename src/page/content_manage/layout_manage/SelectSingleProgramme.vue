@@ -6,6 +6,7 @@
         </programme-filter-params>
         <el-table
             :data="programmeList"
+            header-row-class-name="common-table-header"
             border
             ref="selectSingleProgramme"
             style="width: 100%"

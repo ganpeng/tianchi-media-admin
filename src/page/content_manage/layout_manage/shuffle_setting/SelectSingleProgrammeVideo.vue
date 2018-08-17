@@ -5,6 +5,7 @@
             :data="programmeVideoList"
             border
             ref="selectSingleProgrammeVideo"
+            header-row-class-name="common-table-header"
             style="width: 100%"
             highlight-current-row
             :row-class-name="tableRowClassName"

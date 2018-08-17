@@ -15,6 +15,7 @@
             </channel-filter-params>
             <el-table
                 :data="channelList"
+                header-row-class-name="common-table-header"
                 @row-dblclick="showChannelVideoMessage"
                 border
                 style="width: 100%">

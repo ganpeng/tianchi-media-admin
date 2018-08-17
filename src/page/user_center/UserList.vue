@@ -12,6 +12,7 @@
             </user-filter-params>
             <el-table
                 :data="userList"
+                header-row-class-name="common-table-header"
                 border
                 style="width: 100%">
                 <el-table-column

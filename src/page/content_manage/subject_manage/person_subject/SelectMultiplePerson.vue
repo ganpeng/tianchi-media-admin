@@ -6,6 +6,7 @@
         </person-filter-params>
         <el-table
             :data="personList"
+            header-row-class-name="common-table-header"
             border
             style="width: 100%"
             ref="multiplePerson"

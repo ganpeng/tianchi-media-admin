@@ -7,6 +7,7 @@
         </subject-filter-params>
         <el-table
             :data="subjectList"
+            header-row-class-name="common-table-header"
             border
             ref="singleSubject"
             highlight-current-row

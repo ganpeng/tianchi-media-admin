@@ -11,10 +11,12 @@
             :on-success='handleSuccess'
             :before-upload="beforeUpload">
         </upload-excel-component>
-        <el-table :data="channelList"
-                  border
-                  highlight-current-row
-                  style="width: 100%;margin-top:20px;">
+        <el-table
+            :data="channelList"
+            header-row-class-name="common-table-header"
+            border
+            highlight-current-row
+            style="width: 100%;margin-top:20px;">
             <el-table-column
                 align="center"
                 width="60px"

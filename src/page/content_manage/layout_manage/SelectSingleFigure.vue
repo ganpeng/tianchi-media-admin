@@ -6,6 +6,7 @@
         </person-filter-params>
         <el-table
             :data="figureList"
+            header-row-class-name="common-table-header"
             border
             style="width: 100%"
             ref="selectSingleFigure"

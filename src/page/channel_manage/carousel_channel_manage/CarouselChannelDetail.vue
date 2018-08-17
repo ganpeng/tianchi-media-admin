@@ -68,6 +68,7 @@
                     </ul>
                 </el-card>
                 <el-table
+                    header-row-class-name="common-table-header"
                     :data="channelInfo.carouselVideoList"
                     border
                     style="width: 100%">

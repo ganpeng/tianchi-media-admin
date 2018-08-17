@@ -18,6 +18,7 @@
                 <h3 class="block-vice-title">已选节目</h3>
                 <el-table
                     :data="selectedProgrammeList"
+                    header-row-class-name="common-table-header"
                     border
                     style="width: 100%">
                     <el-table-column

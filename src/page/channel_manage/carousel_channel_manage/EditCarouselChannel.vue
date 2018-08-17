@@ -96,6 +96,7 @@
                 点击添加视频
             </el-button>
             <el-table
+                header-row-class-name="common-table-header"
                 :data="currentSelectedVideoList"
                 border
                 style="width: 100%">

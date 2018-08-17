@@ -12,6 +12,7 @@
                 v-on:getSubjectList="getSubjectList">
             </subject-filter-params>
             <el-table
+                header-row-class-name="common-table-header"
                 :data="subjectList"
                 border
                 style="width: 100%">

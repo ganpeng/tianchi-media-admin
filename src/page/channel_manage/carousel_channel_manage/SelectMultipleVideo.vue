@@ -17,10 +17,10 @@
         <el-table
             ref="selectMultipleVideoTable"
             :data="videoList"
+            header-row-class-name="common-table-header"
             border
             @select="selectVideo"
             @select-all="selectAll"
-            header-row-class-name="table-header-row"
             :row-class-name="tableRowClassName"
             style="width:100%;margin:20px 0;">
             <el-table-column

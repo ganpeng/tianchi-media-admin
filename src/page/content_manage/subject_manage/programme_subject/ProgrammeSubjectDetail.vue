@@ -16,6 +16,7 @@
                 <h3 class="block-vice-title">专题内节目列表</h3>
                 <el-table
                     :data="subjectInfo.subjectItemList"
+                    header-row-class-name="common-table-header"
                     border>
                     <el-table-column
                         width="70px"

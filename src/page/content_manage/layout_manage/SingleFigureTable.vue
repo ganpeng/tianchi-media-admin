@@ -2,6 +2,7 @@
 <template>
     <el-table
         :data="singleFigureList"
+        header-row-class-name="common-table-header"
         border
         style="width: 100%">
         <el-table-column

@@ -6,10 +6,10 @@
         </programme-filter-params>
         <el-table
             :data="programmeList"
+            header-row-class-name="common-table-header"
             border
             ref="selectProgramme"
             style="width: 100%"
-            header-row-class-name="table-header-row"
             @select="selectRow">
             <el-table-column
                 type="selection"
