@@ -93,7 +93,7 @@
             </el-col>
             <el-col :span="24">
                 <el-form-item label="人物图片" required>
-                    <el-button v-if="!readonly" type="primary" @click="uploadImageHandler">上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
+                    <el-button class="page-main-btn" icon="el-icon-picture" v-if="!readonly" type="primary" @click="uploadImageHandler" plain>上传图片</el-button>
                     <span class="text-info">人物的头像: 200*200,人物背景图: 1920*1080都必须上传</span>
                     <ul class="cover-list">
                         <li v-for="(img, index) in person.posterImageList" :key="index">

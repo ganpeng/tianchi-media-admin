@@ -10,8 +10,8 @@
         <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left">
             <el-col :span="5" class="float-right">
                 <el-form-item class="create-account">
-                    <el-button type="primary" plain @click="createPerson"><i class="el-icon-circle-plus-outline"></i> 新增人物</el-button>
-                    <el-button type="primary" plain @click="showFileUploadDialog"> 导入人物</el-button>
+                    <el-button class="page-main-btn" type="primary" plain @click="createPerson"><i class="el-icon-circle-plus-outline"></i> 新增人物</el-button>
+                    <el-button class="page-main-btn" type="primary" plain @click="showFileUploadDialog"> 导入人物</el-button>
                 </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -41,11 +41,11 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="getPersonList"><i class="el-icon-search"></i> 搜索</el-button>
+                    <el-button class="page-main-btn" type="primary" @click="getPersonList" icon="el-icon-search" plain>搜索</el-button>
                 </el-form-item>
             </el-col>
         </el-form>
-        <el-table class="my-table-style" :data="list" border>
+        <el-table header-row-class-name=“common-table-header” class="my-table-style" :data="list" border>
             <el-table-column prop="id" align="center" width="120px" label="编号">
                 <template slot-scope="scope">
                     {{scope.row.id | padEmpty}}
@@ -57,37 +57,22 @@
                     <span v-else>------</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="name" align="center" width="200px" label="名字">
+            <el-table-column prop="name" align="center" label="名字">
                 <template slot-scope="scope">
                     {{scope.row.name | padEmpty}}
                 </template>
             </el-table-column>
-            <el-table-column prop="area" width="120px" align="center" label="地区">
+            <el-table-column prop="area" align="center" label="地区">
                 <template slot-scope="scope">
                     {{areaLabel(scope.row.area) | padEmpty}}
                 </template>
             </el-table-column>
-            <el-table-column prop="birthday" width="120px" align="center" label="出生日期">
-                <template slot-scope="scope">
-                    {{scope.row.birthday | formatDate('yyyy-MM-DD') | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column prop="height" align="center" label="身高">
-                <template slot-scope="scope">
-                    {{scope.row.height | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column prop="weight" align="center" label="体重">
-                <template slot-scope="scope">
-                    {{scope.row.weight | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column prop="mainRole" align="center" min-width="150" label="职业">
+            <el-table-column prop="mainRole" align="center" label="职业">
                 <template slot-scope="scope">
                     {{mainRoleLabel(scope.row.mainRoleList).join(', ') | padEmpty}}
                 </template>
             </el-table-column>
-            <el-table-column align="center" width="120px" label="更新时间">
+            <el-table-column align="center" label="更新时间">
                 <template slot-scope="scope">
                     {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
                 </template>

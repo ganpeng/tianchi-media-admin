@@ -12,8 +12,8 @@
             ref="personForm">
         </person-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="cancelHandler">取消</el-button>
-            <el-button type="primary" @click="_createPerson">创建</el-button>
+            <el-button size="medium" @click="cancelHandler">取消</el-button>
+            <el-button size="medium" type="primary" @click="_createPerson">创建</el-button>
         </div>
     </el-dialog>
 </template>

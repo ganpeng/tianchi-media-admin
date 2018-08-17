@@ -7,41 +7,28 @@
             {name:'管理员列表-详情'}]">
         </custom-breadcrumb>
         <el-row>
-            <el-col :span="8">
-                <div class="block-title">管理员信息
-                    <el-tag size="mini">{{adminInfo.status | displayStatus}}</el-tag>
-                </div>
-                <div class="grid-content bg-purple">
-                    <el-form :model="adminInfo" ref="adminInfo"
-                             label-width="100px">
-                        <el-form-item label="姓名">
-                            <el-input v-model="adminInfo.name" readonly></el-input>
-                        </el-form-item>
-                        <el-form-item label="邮箱">
-                            <el-input v-model="adminInfo.email" readonly></el-input>
-                        </el-form-item>
-                        <el-form-item label="手机">
-                            <el-input v-model="adminInfo.mobile" readonly></el-input>
-                        </el-form-item>
-                        <el-form-item label="电话">
-                            <el-input v-model="adminInfo.telephone" readonly></el-input>
-                        </el-form-item>
-                        <el-form-item class="tips">
-                            <label class="tips">此账号创建于{{adminInfo.createdAt | formatDate('yyyy年MM月DD日')}}</label>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" @click="toEdit">编辑信息</el-button>
-                        </el-form-item>
-                    </el-form>
+            <el-col :span="12">
+                <div class="vice-block" id="basic-info">
+                    <h3 class="block-vice-title">管理员基本信息</h3>
+                    <el-card>
+                        <ul class="text-left">
+                            <li><span>姓名</span><label>{{adminInfo.name}}</label></li>
+                            <li><span>邮箱</span><label>{{adminInfo.email}}</label></li>
+                            <li><span>手机</span><label>{{adminInfo.mobile}}</label></li>
+                            <li><span>电话</span><label>{{adminInfo.telephone}}</label></li>
+                            <li><span>创建时间</span><label>{{adminInfo.createdAt | formatDate('yyyy年MM月DD日')}}</label></li>
+                        </ul>
+                    </el-card>
                 </div>
             </el-col>
-            <el-col :span="16">
-                <div class="avatar">
+            <el-col :span="12">
+                <div class="vice-block" id="basic-info">
+                    <h3 class="block-vice-title">管理员头像</h3>
                     <img src="adminInfo.imageUrl">
-                    <label>用户头像</label>
                 </div>
             </el-col>
         </el-row>
+        <el-button class="page-main-btn page-margin-btn" @click="goBack" plain>返回人物列表</el-button>
     </div>
 </template>
 
@@ -84,22 +71,53 @@
             },
             toEdit() {
                 this.$router.push({name: 'EditAdmin', params: {id: this.$route.params.id}});
+            },
+            goBack() {
+                this.$router.push({name: 'AdminList'});
             }
         }
     };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
-
-    .tips {
-        text-align: left;
-    }
-
+<style lang="scss" scoped>
     img {
         display: block;
-        margin: 96px auto 20px auto;
+        // margin: 96px auto 20px auto;
         width: 178px;
         height: 178px;
+    }
+
+    #basic-info {
+        .el-card {
+            width: 600px;
+            ul {
+                li {
+                    display: flex;
+                    margin-bottom: 10px;
+                    min-height: 32px;
+                    flex-direction: row;
+                    justify-content: left;
+                    align-items: center;
+                    > span {
+                        width: 120px;
+                        flex-shrink: 0;
+                        text-align: center;
+                        font-size: $largerFontSize;
+                        color: $baseGray;
+                    }
+                    label {
+                        width: 380px;
+                        font-size: $normalFontSize;
+                        color: #909399;
+                        flex-shrink: 0;
+                        line-height: 2;
+                        .el-tag {
+                            margin-right: 10px;
+                        }
+                    }
+                }
+            }
+        }
     }
 </style>

@@ -11,8 +11,8 @@
             <el-form id="label-font" :inline="true" class="demo-form-inline text-left">
                 <el-col :span="5" class="float-right">
                     <el-form-item class="create-account">
-                        <el-button type="primary" plain @click="createProgramme"><i class="el-icon-circle-plus-outline"></i> 新增节目</el-button>
-                        <el-button type="primary" plain @click="showFileUploadDialog">导入节目</el-button>
+                        <el-button class="page-main-btn" type="primary" plain @click="createProgramme"><i class="el-icon-circle-plus-outline"></i> 新增节目</el-button>
+                        <el-button class="page-main-btn" type="primary" plain @click="showFileUploadDialog">导入节目</el-button>
                     </el-form-item>
                 </el-col>
                 <el-col :span="24">
@@ -104,22 +104,14 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button @click="searchHandler" icon="el-icon-search" type="primary">搜索</el-button>
-                        <el-button type="warning" @click="clearSearchFields">清空筛选条件</el-button>
-                        <!-- <el-button type="danger" :disabled="!isDisabled" @click="deleteProgrammeList">批量删除节目</el-button> -->
+                        <el-button class="page-main-btn" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                        <el-button class="page-main-btn" type="warning" @click="clearSearchFields">清空筛选条件</el-button>
                     </el-form-item>
                     <el-form-item>
                     </el-form-item>
                 </el-col>
             </el-form>
-            <el-table class="my-table-style" :data="list" border>
-                <!--
-                <el-table-column align="center" width="120px" :render-header="renderHeader">
-                    <template slot-scope="scope">
-                        <el-checkbox :true-label="'yes'" :false-label="'no'" @change="_toggleChecked($event, scope.row.id)" :value="scope.row.checked"></el-checkbox>
-                    </template>
-                </el-table-column>
-                -->
+            <el-table header-row-class-name=“common-table-header” class="my-table-style" :data="list" border>
                 <el-table-column prop="code" align="center" width="120px" label="节目编号">
                     <template slot-scope="scope">
                         {{scope.row.code | padEmpty}}
@@ -138,11 +130,6 @@
                 <el-table-column prop="featureVideoCount" min-width="100px" align="center" label="正片数量">
                     <template slot-scope="scope">
                         {{scope.row.featureVideoCount | padEmpty}}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="extraVideoCount" align="center" min-width="120px" label="相关视频数量">
-                    <template slot-scope="scope">
-                        {{scope.row.extraVideoCount | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="releaseAt" align="center" width="100px" label="上映时间">
@@ -168,16 +155,6 @@
                 <el-table-column align="center" min-width="100px" label="演员">
                     <template slot-scope="scope">
                         {{getChiefActor(scope.row.id) | padEmpty}}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" min-width="100px" label="导演">
-                    <template slot-scope="scope">
-                        {{getDirector(scope.row.id) | padEmpty}}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" min-width="100px" label="编剧">
-                    <template slot-scope="scope">
-                        {{getScenarist(scope.row.id) | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">

@@ -9,42 +9,56 @@
         </custom-breadcrumb>
         <el-row>
             <el-col :span="10">
-                <div class="block-title">节目基本信息</div>
+                <div class="vice-block">
+                    <h3 class="block-vice-title">节目基本信息</h3>
+                </div>
                 <div class="base-info-container">
-                    <el-form status-icon :model="person" label-width="120px" class="form-block">
-                        <el-form-item label="姓名">
-                            <span>{{person.name}}</span>
-                        </el-form-item>
-                        <el-form-item label="出生日期">
-                            <span>{{person.birthday | formatDate('yyyy-MM-DD')}}</span>
-                        </el-form-item>
-                        <el-form-item label="所属地区">
-                            <span>{{areaLabel(person.area)}}</span>
-                        </el-form-item>
-                        <el-form-item label="身高">
-                            <span>{{person.height}}</span>
-                        </el-form-item>
-                        <el-form-item label="体重">
-                            <span>{{person.weight}}</span>
-                        </el-form-item>
-                        <el-form-item label="职业">
-                            <el-tag class="margin-right-s" v-for="(name, index) in mainRoleLabel(person.mainRoleList)" :key="index" type="info">{{name}}</el-tag>
-                        </el-form-item>
-                    </el-form>
+                    <div class="form-block">
+                        <div class="info-wrapper">
+                            <span class="label">姓名</span>
+                            <span class="text">{{person.name}}</span>
+                        </div>
+                        <div class="info-wrapper">
+                            <span class="label">出生日期</span>
+                            <span class="text">{{person.birthday | formatDate('yyyy-MM-DD')}}</span>
+                        </div>
+                        <div class="info-wrapper">
+                            <span class="label">所属地区</span>
+                            <span class="text">{{areaLabel(person.area)}}</span>
+                        </div>
+                        <div class="info-wrapper">
+                            <span class="label">身高</span>
+                            <span class="text">{{person.height}}</span>
+                        </div>
+                        <div class="info-wrapper">
+                            <span class="label">体重</span>
+                            <span class="text">{{person.weight}}</span>
+                        </div>
+                        <div class="info-wrapper">
+                            <span class="label">职业</span>
+                            <el-tag size="small" class="margin-right-s" v-for="(name, index) in mainRoleLabel(person.mainRoleList)" :key="index" type="info">{{name}}</el-tag>
+                        </div>
+                    </div>
                 </div>
             </el-col>
             <el-col :span="12">
                 <el-row>
-                    <div class="block-title">人物简介</div>
-                    <div class="programme-desc-container">
-                        <p class="text-left">{{person.description}}</p>
+                    <div class="vice-block">
+                        <h3 class="block-vice-title">人物简介</h3>
+                    </div>
+                    <div class="programme-desc-container text-left">
+                        <p class="desc">
+                            {{person.description}}
+                        </p>
                     </div>
                 </el-row>
             </el-col>
         </el-row>
         <el-row>
             <el-col :span="24">
-                <div class="block-title">人物图片</div>
+                <div class="vice-block">
+                    <h3 class="block-vice-title">人物图片</h3>
+                </div>
                 <ul class="cover-list">
                     <li v-for="(img, index) in person.posterImageList" :key="index">
                         <div
@@ -119,12 +133,14 @@
     };
 </script>
 <style lang="less" scoped>
-.base-info-container, .programme-desc-container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 4px;
+.desc {
+    font-family: PingFangSC-Regular;
+    font-size: 14px;
+    line-height: 18px;
+    color: #909399;
+    letter-spacing: 0;
 }
-.base-info-container {
-    margin-right: 20px;
+.el-tag {
+    border: none;
 }
 </style>

@@ -30,8 +30,8 @@ switch (npmEventName) {
         uploadProxyTarget = 'http://10.0.1.254:8230';
         break;
     case 'dev:lian':
-        proxyTarget = 'http://10.0.3.241:8100';
-        uploadProxyTarget = 'http://10.0.3.241:8230';
+        proxyTarget = 'http://10.0.3.225:8100';
+        uploadProxyTarget = 'http://10.0.3.225:8230';
         break;
     // default is dev url
     default:

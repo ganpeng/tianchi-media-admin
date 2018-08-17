@@ -41,8 +41,9 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="cancelHandler">取 消</el-button>
+            <el-button size="medium" @click="cancelHandler">取 消</el-button>
             <el-button
+                size="medium"
                 type="primary"
                 @click="submitUpload"
                 v-loading.fullscreen.lock="isLoading">确 定</el-button>

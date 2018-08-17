@@ -6,7 +6,7 @@
             {name:'人物资源管理'},
             {name:'推荐人物管理'}]">
         </custom-breadcrumb>
-        <el-table class="my-table-style" :data="Object.keys(hotPerson.hotPerson)" border>
+        <el-table header-row-class-name=“common-table-header” class="my-table-style" :data="Object.keys(hotPerson.hotPerson)" border>
             <el-table-column align="center" width="240px" label="栏目/模块">
                 <template slot-scope="scope">
                     {{getHotName(scope.row)}}

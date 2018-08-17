@@ -25,7 +25,7 @@
                             <el-input v-model="createInfo.mobile" placeholder="请填写手机号码"></el-input>
                         </el-form-item>
                         <el-form-item class="operate">
-                            <el-button type="primary" @click="createAdmin">创 建</el-button>
+                            <el-button class="page-main-btn page-margin-btn" type="primary" @click="createAdmin">创 建</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -41,7 +41,7 @@
                         <img v-if="createInfo.imageUrl" :src="createInfo.imageUrl" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
-                    <label>用户头像</label>
+                    <label>管理员头像</label>
                 </div>
             </el-col>
         </el-row>

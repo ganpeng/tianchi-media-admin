@@ -125,7 +125,7 @@ export default {
             this.$service.getChannelList(params)
                 .then((res) => {
                     if (res && res.code === 0) {
-                        let channelList = _.uniqBy(this.channelList.concat(res.data.list), 'id');
+                        let channelList = _.uniqBy(res.data.list, 'id');
                         this.channelList = channelList;
                     }
                 });

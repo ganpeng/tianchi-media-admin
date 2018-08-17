@@ -1,15 +1,19 @@
 <template>
     <div class="video-table-container">
-       <el-table @selection-change="handleSelectionChange" class="my-table-style" :data="video.list" border>
-            <el-table-column v-if="!hasRadio" type="selection" align="center" width="120px"></el-table-column>
+        <el-table
+            ref="multipleTable"
+            header-row-class-name=“common-table-header”
+            @selection-change="handleSelectionChange"
+            class="my-table-style" :data="video.list" border>
+            <el-table-column v-if="!hasRadio" type="selection" align="center"></el-table-column>
             <el-table-column v-if="hasRadio" align="center" label="选择">
                 <template slot-scope="scope">
                     <el-radio :value="video.selectedVideoId" :label="scope.row.id" @input="setSelectedVideoId({id: scope.row.id})">&nbsp;</el-radio>
                 </template>
             </el-table-column>
-            <el-table-column prop="id" align="center" width="120px" label="编号"></el-table-column>
-            <el-table-column prop="originName" align="center" width="200px" label="视频名称"></el-table-column>
-            <el-table-column prop="link" align="center" width="300px" label="预览视频">
+            <el-table-column prop="id" align="center" label="编号"></el-table-column>
+            <el-table-column prop="originName" align="center" label="视频名称"></el-table-column>
+            <el-table-column prop="link" align="center" label="预览视频">
                 <template slot-scope="scope">
                     <div class="btn-icon-container">
                         <el-button
@@ -72,17 +76,17 @@
                     {{duration(scope.row.takeTimeInSec)}}
                 </template>
             </el-table-column>
-            <el-table-column width="150px" align="center" label="注入状态">
+            <el-table-column align="center" label="注入状态">
                 <template slot-scope="scope">
                     <span v-html="getStatus(scope.row)"></span>
                 </template>
             </el-table-column>
-            <el-table-column align="center" width="220px" label="上传日期">
+            <el-table-column align="center" label="上传日期">
                 <template slot-scope="scope">
                     {{timeStampFormat(scope.row.createdAt)}}
                 </template>
             </el-table-column>
-            <el-table-column v-if="!hasRadio" align="center" width="120px" fixed="right" label="操作">
+            <el-table-column v-if="!hasRadio" align="center" fixed="right" label="操作">
                 <template slot-scope="scope">
                     <el-button class="text-danger" type="text" @click="_deleteVideoById(scope.row.id)" size="small">删除</el-button>
                 </template>
@@ -127,16 +131,12 @@ export default {
         return {
             displayVideoDialogVisible: false,
             url: '',
-            title: '',
-            isFetching: true
+            title: ''
         };
     },
     created() {
         let that = this;
-        this.getVideoList()
-            .finally(() => {
-                this.isFetching = false;
-            });
+        this.getVideoList();
         let clipboard = new ClipboardJS('.copy-btn');
         clipboard.on('success', function(e) {
             that.$message.success('视频链接复制成功');

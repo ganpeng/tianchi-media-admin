@@ -67,11 +67,11 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" icon="el-icon-search" @click="getVersionList">搜索</el-button>
+                    <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="getVersionList" plain>搜索</el-button>
                 </el-form-item>
             </el-col>
         </el-form>
-        <el-table class="my-table-style" :data="list" border>
+        <el-table header-row-class-name=“common-table-header” class="my-table-style" :data="list" border>
             <el-table-column align="center" width="120px" label="编号" prop="id"></el-table-column>
             <el-table-column label="版本名称" align="center" prop="version"></el-table-column>
             <el-table-column label="版本号" align="center" prop="versionCode"></el-table-column>

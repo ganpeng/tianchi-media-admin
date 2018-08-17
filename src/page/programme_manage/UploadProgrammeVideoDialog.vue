@@ -169,8 +169,9 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="cancelHandler">取 消</el-button>
+            <el-button size="medium" @click="cancelHandler">取 消</el-button>
             <el-button
+                size="medium"
                 v-if="videoStatus !== 2"
                 type="primary"
                 @click="successHandler"

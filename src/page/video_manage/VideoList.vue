@@ -41,7 +41,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="searchHandler"><i class="el-icon-search"></i> 搜索</el-button>
+                    <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="searchHandler" plain>搜索</el-button>
                 </el-form-item>
                 <el-form-item class="float-right">
                     <el-button
@@ -63,7 +63,7 @@
                 </el-form-item>
             </el-col>
         </el-form>
-        <video-table></video-table>
+        <video-table ref="videoTable"></video-table>
         <el-dialog
             title="上传视频"
             :visible.sync="videoUploadDialogVisible"

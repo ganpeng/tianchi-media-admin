@@ -7,7 +7,7 @@
             {name:'管理员列表'}]">
         </custom-breadcrumb>
         <el-form :inline="true" class="search-form">
-            <el-form-item class="create-account">
+            <el-form-item class="float-right">
                 <el-button type="primary" plain @click="createAdmin"><i class="el-icon-circle-plus-outline"></i> 创建管理员</el-button>
             </el-form-item>
             <el-col :span="24">
@@ -16,13 +16,14 @@
                     <el-input v-show="false"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="getAdminList"><i class="el-icon-search"></i> 搜索</el-button>
+                    <el-button class="page-main-btn" icon="el-icon-search" type="primary" @click="getAdminList" plain>搜索</el-button>
                 </el-form-item>
             </el-col>
         </el-form>
         <el-table
             :data="adminList"
             border
+            header-row-class-name=“common-table-header”
             style="width: 100%">
             <el-table-column
                 prop="name"
@@ -70,12 +71,12 @@
                     {{scope.row.lastLoginAt | formatDate('yyyy-MM-DD') | padEmpty}}
                 </template>
             </el-table-column>
-            <el-table-column align="center"
-                             fixed="right"
-                             label="操作">
+            <el-table-column
+                            width="100"
+                            align="center"
+                            fixed="right"
+                            label="操作">
                 <template slot-scope="scope">
-                    <el-button class="text-success" type="text" size="small" @click="checkDetail(scope.row.id)">详情</el-button>
-                    <el-button type="text" size="small" @click="editAdminInfo(scope.row.id)">编辑</el-button>
                     <el-button v-if="scope.row.status === 'NORMAL'" type="danger" size="mini" plain
                                @click="disabledConfirm(scope.row.id,scope.row.status)">
                         禁用
@@ -84,6 +85,8 @@
                                @click="recoverConfirm(scope.row.id,scope.row.status)">
                         恢复
                     </el-button>
+                    <el-button class="text-success" type="text" size="small" @click="checkDetail(scope.row.id)">详情</el-button>
+                    <el-button type="text" size="small" @click="editAdminInfo(scope.row.id)">编辑</el-button>
                 </template>
             </el-table-column>
         </el-table>

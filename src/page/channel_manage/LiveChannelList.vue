@@ -41,11 +41,11 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="searchHandler"><i class="el-icon-search"></i> 搜索</el-button>
+                    <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="searchHandler" plain>搜索</el-button>
                 </el-form-item>
             </el-col>
         </el-form>
-        <el-table class="my-table-style" :data="list" border>
+        <el-table header-row-class-name=“common-table-header” class="my-table-style" :data="list" border>
             <el-table-column prop="code" align="center" width="120px" label="直播频道编号"></el-table-column>
             <el-table-column prop="no" align="center" width="200px" label="直播频道展示编号"></el-table-column>
             <el-table-column prop="innerName" align="center" width="200px" label="直播频道名称"></el-table-column>
@@ -63,7 +63,7 @@
                     <el-button type="text" size="small" @click="previewChannelPage(scope.row.id, scope.row.name, true)">节目单下载</el-button>
                     <el-button type="text" size="small" @click="previewChannelPage(scope.row.id)">节目单预览</el-button>
                     <el-button type="text" size="small" @click="_updateLiveChannel(scope.row.id)">编辑</el-button>
-                    <el-button type="text" size="small" @click="_deleteLiveChannel(scope.row.id)">删除</el-button>
+                    <el-button class="text-danger" type="text" size="small" @click="_deleteLiveChannel(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -105,7 +105,7 @@
             </el-upload>
 
             <div slot="footer" class="dialog-footer">
-                <el-button @click="closeFileUploadDialog">关闭</el-button>
+                <el-button size="medium" @click="closeFileUploadDialog">关闭</el-button>
             </div>
         </el-dialog>
     </div>

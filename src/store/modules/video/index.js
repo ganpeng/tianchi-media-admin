@@ -62,6 +62,9 @@ const getters = {
     selectedVideoIdList(state) {
         return state.selectedVideoList.map((video) => video.id);
     },
+    selectedVideoList(state) {
+        return state.selectedVideoList;
+    },
     qualityOptions(state) {
         let video = state.list.find((video) => video.id === state.selectedVideoId);
         let qualityOptions = [];
@@ -147,13 +150,11 @@ const actions = {
             isLoading = false;
         }
     },
-
     async deleteVideoById({commit, state}, id) {
         try {
             let result = await service.deleteVideoById(id);
             return result;
-        } catch (err) {
-        }
+        } catch (err) {}
     },
     async checkVideoMd5({commit, state}, key) {
         try {

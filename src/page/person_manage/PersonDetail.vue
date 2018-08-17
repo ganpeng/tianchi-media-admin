@@ -18,14 +18,15 @@
             <el-col :span="24">
                 <div class="form-btn">
                     <span class="btn-wrapper" v-show="!readonly">
-                        <el-button v-show="isEdit" type="primary" @click="_updatePerson">保存</el-button>
+                        <el-button class="page-main-btn page-margin-btn" v-show="isEdit" type="primary" @click="_updatePerson">保存</el-button>
                         <el-button
+                            class="page-main-btn page-margin-btn"
                             v-show="!isEdit"
                             type="primary"
                             @click="_createPerson"
                             v-loading.fullscreen.lock="isLoading">创 建</el-button>
                     </span>
-                    <el-button @click="goBack" plain>返回人物列表</el-button>
+                    <el-button class="page-main-btn page-margin-btn" @click="goBack" plain>返回人物列表</el-button>
                 </div>
             </el-col>
         </el-row>
@@ -57,7 +58,6 @@
                 let {id} = this.$route.params;
                 if (id) {
                     this.getPersonById(id);
-                    // this.getHotPerson(id);
                 }
             }
         },
