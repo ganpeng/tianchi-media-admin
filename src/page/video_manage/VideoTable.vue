@@ -1,9 +1,11 @@
+<!-- 视频表格组件 -->
 <template>
     <div class="video-table-container">
         <el-table
             ref="multipleTable"
             header-row-class-name=“common-table-header”
-            @selection-change="handleSelectionChange"
+            @select="selectHandler"
+            @select-all="selectAllHandler"
             class="my-table-style" :data="video.list" border>
             <el-table-column v-if="!hasRadio" type="selection" align="center"></el-table-column>
             <el-table-column v-if="hasRadio" align="center" label="选择">
@@ -11,7 +13,7 @@
                     <el-radio :value="video.selectedVideoId" :label="scope.row.id" @input="setSelectedVideoId({id: scope.row.id})">&nbsp;</el-radio>
                 </template>
             </el-table-column>
-            <el-table-column prop="id" align="center" label="编号"></el-table-column>
+            <el-table-column prop="code" align="center" width="118" label="编号"></el-table-column>
             <el-table-column prop="originName" align="center" label="视频名称"></el-table-column>
             <el-table-column prop="link" align="center" label="预览视频">
                 <template slot-scope="scope">
@@ -112,6 +114,7 @@
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import DisplayVideoDialog from './DisplayVideoDialog';
+import _ from 'lodash';
 const ClipboardJS = require('clipboard');
 export default {
     components: {
@@ -131,12 +134,16 @@ export default {
         return {
             displayVideoDialogVisible: false,
             url: '',
-            title: ''
+            title: '',
+            selectedVideoList: []
         };
     },
     created() {
         let that = this;
-        this.getVideoList();
+        this.getVideoList()
+            .then(() => {
+                !this.hasRadio && this.checkedVideoList();
+            });
         let clipboard = new ClipboardJS('.copy-btn');
         clipboard.on('success', function(e) {
             that.$message.success('视频链接复制成功');
@@ -180,8 +187,7 @@ export default {
         ...mapMutations({
             setSelectedVideoId: 'video/setSelectedVideoId',
             setPagination: 'video/setPagination',
-            updatePagination: 'video/updatePagination',
-            setSelectedVideoList: 'video/setSelectedVideoList'
+            updatePagination: 'video/updatePagination'
         }),
         ...mapActions({
             getVideoList: 'video/getVideoList',
@@ -192,7 +198,10 @@ export default {
             if (key === 'pageSize') {
                 window.localStorage.setItem('videoPageSize', value);
             }
-            this.getVideoList();
+            this.getVideoList()
+                .then(() => {
+                    !this.hasRadio && this.checkedVideoList();
+                });
         },
         closeDisplayVideoDialog(status) {
             this.displayVideoDialogVisible = status;
@@ -213,7 +222,10 @@ export default {
                     .then((res) => {
                         if (res && res.code === 0) {
                             this.$message.success('视频删除成功');
-                            this.getVideoList();
+                            this.getVideoList()
+                                .then(() => {
+                                    !this.hasRadio && this.checkedVideoList();
+                                });
                         } else if (res && res.code === 3306) {
                             this.$message({
                                 type: 'error',
@@ -235,8 +247,37 @@ export default {
                 });
             });
         },
-        handleSelectionChange(list) {
-            this.setSelectedVideoList({list});
+        selectHandler(list, row) {
+            let isSelected = list.findIndex((item) => item.id === row.id) >= 0;
+            if (isSelected) {
+                this.selectedVideoList.push(row);
+            } else {
+                this.selectedVideoList = this.selectedVideoList.filter((item) => item.id !== row.id);
+            }
+        },
+        selectAllHandler(list) {
+            if (list.length > 0) {
+                this.selectedVideoList = _.uniqBy(this.selectedVideoList.concat(list), 'id');
+            } else {
+                this.selectedVideoList = this.selectedVideoList.filter((item) => {
+                    let index = this.video.list.findIndex((video) => {
+                        return video.id === item.id;
+                    });
+                    return index < 0;
+                });
+            }
+        },
+        checkedVideoList() {
+            this.selectedVideoList.forEach((item) => {
+                let video = this.video.list.find((video) => {
+                    return item.code === video.code;
+                });
+                if (video) {
+                    this.$nextTick(() => {
+                        this.$refs.multipleTable.toggleRowSelection(video, true);
+                    });
+                }
+            });
         }
     }
 };

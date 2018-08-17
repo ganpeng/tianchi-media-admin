@@ -44,6 +44,7 @@
                     <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="searchHandler" plain>搜索</el-button>
                 </el-form-item>
                 <el-form-item class="float-right">
+                    <!--
                     <el-button
                         size="small"
                         v-if="!!timer"
@@ -58,8 +59,8 @@
                         type="primary" @click="toggleUpdateHandler">
                         {{timer ? '停止刷新页面' : '恢复刷新页面'}}
                     </el-button>
-                    <el-button v-if="!isDisabled" size="small" class="delete-btn" plain @click="deleteVideoList"><i class="el-icon-delete"></i> 批量删除</el-button>
-                    <el-button v-else size="small" type="danger" @click="deleteVideoList"><i class="el-icon-delete"></i> 批量删除</el-button>
+                    -->
+                    <el-button size="small" type="danger" @click="deleteVideoList"><i class="el-icon-delete"></i> 批量删除</el-button>
                 </el-form-item>
             </el-col>
         </el-form>
@@ -135,9 +136,6 @@
                 getVideoType: 'video/getVideoType',
                 selectedVideoIdList: 'video/selectedVideoIdList'
             }),
-            isDisabled() {
-                return this.selectedVideoIdList.length > 0;
-            },
             getProgress() {
                 return (index) => {
                     return {
@@ -227,7 +225,10 @@
         created() {
             window.addEventListener('keyup', this.keyupHandler);
             this.timer = setInterval(() => {
-                this.getVideoList();
+                this.getVideoList()
+                    .then(() => {
+                        this.$refs.videoTable.checkedVideoList();
+                    });
             }, 1000 * 10);
         },
         beforeRouteLeave(to, from, next) {
@@ -254,22 +255,31 @@
                 } else {
                     clearInterval(this.timer);
                     this.timer = setInterval(() => {
-                        this.getVideoList();
+                        this.getVideoList(this.elTable)
+                            .then(() => {
+                                this.$refs.videoTable.checkedVideoList();
+                            });
                     }, 1000 * 10);
                 }
             },
             deleteVideoList() {
-                if (this.isDisabled) {
-                this.$confirm(`您确定要删除吗, 是否继续?`, '提示', {
+                let idList = this.$refs.videoTable.selectedVideoList.map((item) => {
+                    return item.id;
+                });
+                if (idList.length > 0) {
+                    this.$confirm(`您确定要删除吗, 是否继续?`, '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'error'
                     }).then(() => {
-                        if (this.selectedVideoIdList.length > 0) {
-                            this.$service.deleteVideoByIdList(this.selectedVideoIdList)
+                        if (idList.length > 0) {
+                            this.$service.deleteVideoByIdList(idList)
                                 .then((res) => {
                                     if (res && res.code === 0) {
-                                        this.getVideoList();
+                                        this.getVideoList()
+                                            .then(() => {
+                                                this.$refs.videoTable.checkedVideoList();
+                                            });
                                         this.$message.success('删除成功');
                                     } else {
                                         this.$message.error('删除失败');
@@ -326,7 +336,10 @@
                 this.updateSearchFields({key, value});
             },
             searchHandler() {
-                this.getVideoList();
+                this.getVideoList()
+                    .then(() => {
+                        this.$refs.videoTable.checkedVideoList();
+                    });
             },
             uploadChangeHandler(e) {
                 let files = Array.from(e.target.files);

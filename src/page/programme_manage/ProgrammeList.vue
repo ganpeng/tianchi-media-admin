@@ -105,7 +105,7 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button class="page-main-btn" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
-                        <el-button class="page-main-btn" type="warning" @click="clearSearchFields">清空筛选条件</el-button>
+                        <el-button class="page-main-btn" type="primary" @click="clearSearchFields" plain>清空筛选条件</el-button>
                     </el-form-item>
                     <el-form-item>
                     </el-form-item>

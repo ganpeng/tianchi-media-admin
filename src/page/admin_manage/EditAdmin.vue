@@ -8,8 +8,8 @@
         </custom-breadcrumb>
         <el-row>
             <el-col :span="8">
-                <div class="block-title">管理员信息
-                    <el-tag size="mini">{{editInfo.status | displayStatus}}</el-tag>
+                <div class="vice-block" id="basic-info">
+                    <h3 class="block-vice-title">管理员基本信息</h3>
                 </div>
                 <div class="grid-content bg-purple">
                     <el-form :model="editInfo" :rules="infoRules" status-icon ref="editInfo"
@@ -28,7 +28,7 @@
                             <el-input v-model="editInfo.telephone" placeholder="请填写电话号码"></el-input>
                         </el-form-item>
                         <el-form-item class="operate">
-                            <el-button type="primary" @click="updateAdminInfo">更 新</el-button>
+                            <el-button class="page-main-btn page-margin-btn" type="primary" @click="updateAdminInfo">保存</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -44,7 +44,7 @@
                         <img v-if="editInfo.imageUrl" :src="editInfo.imageUrl" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
-                    <label>用户头像</label>
+                    <label >管理员头像</label>
                 </div>
             </el-col>
         </el-row>

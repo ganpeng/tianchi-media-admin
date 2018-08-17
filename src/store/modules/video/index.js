@@ -132,7 +132,7 @@ const mutations = {
 };
 
 const actions = {
-    async getVideoList({commit, state}) {
+    async getVideoList({commit, state}, elTable) {
         try {
             if (!isLoading) {
                 isLoading = true;
@@ -143,6 +143,19 @@ const actions = {
                     let {list, pageSize, pageNum, total} = result.data;
                     commit('setList', {list});
                     commit('setPagination', {pageNum: pageNum + 1, pageSize, total});
+
+                    if (elTable) {
+                        state.selectedVideoList.forEach((item) => {
+                            let video = state.list.find((video) => {
+                                return item.code === video.code;
+                            });
+                            if (video) {
+                                console.log(video);
+                                console.log(elTable);
+                                elTable.toggleRowSelection(video);
+                            }
+                        });
+                    }
                 }
                 isLoading = false;
             }
