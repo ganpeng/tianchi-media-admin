@@ -121,25 +121,25 @@ let router = new Router({
                 },
                 // 管理员中心——管理员列表页面
                 {
-                    path: '/admin-manage/list',
+                    path: '/manage-admin/list',
                     name: 'AdminList',
                     component: AdminList
                 },
                 // 管理员管理——创建管理员页面
                 {
-                    path: '/admin-manage/create',
+                    path: '/manage-admin/create',
                     name: 'CreateAdmin',
                     component: CreateAdmin
                 },
                 // 管理员管理——管理员详情
                 {
-                    path: '/admin-manage/detail/:id',
+                    path: '/manage-admin/detail/:id',
                     name: 'AdminDetail',
                     component: AdminDetail
                 },
                 // 管理员管理——管理员信息编辑
                 {
-                    path: '/admin-manage/edit/:id',
+                    path: '/manage-admin/edit/:id',
                     name: 'EditAdmin',
                     component: EditAdmin
                 },

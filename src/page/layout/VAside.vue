@@ -13,78 +13,93 @@
             :collapse="!isActive"
             active-text-color="#fff">
             <!--内容管理-->
-            <el-submenu index="1">
+            <!--栏目管理-->
+            <el-submenu index="1" :style="secondLeftIndent">
                 <template slot="title">
-                    <i class="el-icon-menu"></i>
-                    <span>内容管理</span>
+                    <i class="el-icon-tickets"></i>
+                    <span>栏目管理</span>
                 </template>
-                <!--栏目管理-->
-                <el-submenu index="1-1" :style="secondLeftIndent">
-                    <template slot="title">栏目管理</template>
-                    <el-menu-item index="/nav-bar-manage/setting">栏目项管理</el-menu-item>
-                    <el-menu-item v-if="item.signCode !== 'SEARCH'"
-                                  v-for="(item, index) in navBarList"
-                                  :key='index'
-                                  :index="'/nav-bar-manage/layout-setting/' + item.signCode + '/' + item.id">
-                        {{item.name}}
-                    </el-menu-item>
+                <el-menu-item index="/nav-bar-manage/setting">栏目项管理</el-menu-item>
+                <el-menu-item v-if="item.signCode !== 'SEARCH'"
+                              v-for="(item, index) in navBarList"
+                              :key='index'
+                              :index="'/nav-bar-manage/layout-setting/' + item.signCode + '/' + item.id">
+                    {{item.name}}
+                </el-menu-item>
+            </el-submenu>
+            <!--节目资源管理-->
+            <el-submenu index="2" :style="secondLeftIndent">
+                <template slot="title">
+                    <i class="el-icon-document"></i>
+                    <span>节目资源管理</span>
+                </template>
+                <el-menu-item index="/programme-manage/create">新增节目</el-menu-item>
+                <el-menu-item index="/programme-manage/list">节目列表</el-menu-item>
+                <el-menu-item index="/programme-manage/type">节目类别管理</el-menu-item>
+            </el-submenu>
+            <!--人物资源管理-->
+            <el-submenu index="3" :style="secondLeftIndent">
+                <template slot="title">
+                    <i class="el-icon-goods"></i>
+                    <span>人物资源管理</span>
+                </template>
+                <el-menu-item index="/person-manage/create">新增人物</el-menu-item>
+                <el-menu-item index="/person-manage/list">人物列表</el-menu-item>
+                <el-menu-item index="/person-manage/hot">热门人物管理</el-menu-item>
+            </el-submenu>
+            <!--视频资源管理-->
+            <el-submenu index="4" :style="secondLeftIndent">
+                <template slot="title">
+                    <i class="el-icon-bell"></i>
+                    <span>视频资源管理</span>
+                </template>
+                <el-menu-item index="/video-manage/list">视频列表</el-menu-item>
+            </el-submenu>
+            <!--频道管理-->
+            <el-submenu index="5" :style="secondLeftIndent">
+                <template slot="title">
+                    <i class="el-icon-mobile-phone"></i>
+                    <span>频道管理</span>
+                </template>
+                <el-submenu index="5-1">
+                    <template slot="title">直播频道管理</template>
+                    <el-menu-item index="/channel-manage/live/list">直播频道列表</el-menu-item>
                 </el-submenu>
-                <!--节目资源管理-->
-                <el-submenu index="1-2" :style="secondLeftIndent">
-                    <template slot="title">节目资源管理</template>
-                    <el-menu-item index="/programme-manage/create">新增节目</el-menu-item>
-                    <el-menu-item index="/programme-manage/list">节目列表</el-menu-item>
-                    <el-menu-item index="/programme-manage/type">节目类别管理</el-menu-item>
+                <el-submenu index="5-2">
+                    <template slot="title">轮播频道管理</template>
+                    <el-menu-item index="/channel-manage/carousel/list">轮播频道列表</el-menu-item>
                 </el-submenu>
-                <!--人物资源管理-->
-                <el-submenu index="1-3" :style="secondLeftIndent">
-                    <template slot="title">人物资源管理</template>
-                    <el-menu-item index="/person-manage/create">新增人物</el-menu-item>
-                    <el-menu-item index="/person-manage/list">人物列表</el-menu-item>
-                    <el-menu-item index="/person-manage/hot">热门人物管理</el-menu-item>
-                </el-submenu>
-                <!--视频资源管理-->
-                <el-submenu index="1-4" :style="secondLeftIndent">
-                    <template slot="title">视频资源管理</template>
-                    <el-menu-item index="/video-manage/list">视频列表</el-menu-item>
-                </el-submenu>
-                <!--频道管理-->
-                <el-submenu index="1-5" :style="secondLeftIndent">
-                    <template slot="title">频道管理</template>
-                    <el-submenu index="1-5-1">
-                        <template slot="title">直播频道管理</template>
-                        <el-menu-item index="/channel-manage/live/list">直播频道列表</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="1-5-2">
-                        <template slot="title">轮播频道管理</template>
-                        <el-menu-item index="/channel-manage/carousel/list">轮播频道列表</el-menu-item>
-                    </el-submenu>
-                    <el-menu-item index="/channel-manage/category">频道类别管理</el-menu-item>
-                </el-submenu>
-                <!--专题管理-->
-                <el-submenu index="1-6" :style="secondLeftIndent">
-                    <template slot="title">专题管理</template>
-                    <el-menu-item index="/subject-manage/programme/create">新增节目专题</el-menu-item>
-                    <el-menu-item index="/subject-manage/person/create">新增人物专题</el-menu-item>
-                    <el-menu-item index="/subject-manage/list">专题列表</el-menu-item>
-                </el-submenu>
-                <!-- 版本管理 -->
-                <el-submenu index="1-7" :style="secondLeftIndent">
-                    <template slot="title">版本管理</template>
-                    <el-menu-item index="/version-manage/list">版本列表</el-menu-item>
-                </el-submenu>
+                <el-menu-item index="/channel-manage/category">频道类别管理</el-menu-item>
+            </el-submenu>
+            <!--专题管理-->
+            <el-submenu index="6" :style="secondLeftIndent">
+                <template slot="title">
+                    <i class="el-icon-star-off"></i>
+                    <span>专题管理</span>
+                </template>
+                <el-menu-item index="/subject-manage/programme/create">新增节目专题</el-menu-item>
+                <el-menu-item index="/subject-manage/person/create">新增人物专题</el-menu-item>
+                <el-menu-item index="/subject-manage/list">专题列表</el-menu-item>
+            </el-submenu>
+            <!-- 版本管理 -->
+            <el-submenu index="7" :style="secondLeftIndent">
+                <template slot="title">
+                    <i class="el-icon-more"></i>
+                    <span>版本管理</span>
+                </template>
+                <el-menu-item index="/version-manage/list">版本列表</el-menu-item>
             </el-submenu>
             <!--管理员管理-->
-            <el-submenu index="2">
+            <el-submenu index="8">
                 <template slot="title">
                     <i class="el-icon-setting"></i>
                     <span>管理员管理</span>
                 </template>
-                <el-menu-item index="/admin-manage/create" :style="directSecondLeftIndent">创建管理员</el-menu-item>
-                <el-menu-item index="/admin-manage/list" :style="directSecondLeftIndent">管理员列表</el-menu-item>
+                <el-menu-item index="/manage-admin/create" :style="directSecondLeftIndent">创建管理员</el-menu-item>
+                <el-menu-item index="/manage-admin/list" :style="directSecondLeftIndent">管理员列表</el-menu-item>
             </el-submenu>
             <!--用户管理-->
-            <el-submenu index="3">
+            <el-submenu index="9">
                 <template slot="title">
                     <i class="el-icon-tickets"></i>
                     <span>用户管理</span>
@@ -94,16 +109,16 @@
                 <el-menu-item index="/kits" :style="directSecondLeftIndent">小功能</el-menu-item>
             </el-submenu>
             <!--广告管理-->
-            <el-submenu v-if="false" index="4">
+            <el-submenu v-if="false" index="10">
                 <template slot="title">
                     <i class="el-icon-goods"></i>
                     <span>广告管理</span>
                 </template>
-                <el-submenu index="5-1" :style="secondLeftIndent">
+                <el-submenu index="10-1" :style="secondLeftIndent">
                     <template slot="title">广告资源管理</template>
                     <el-menu-item index="/advert-resource/list">广告资源列表</el-menu-item>
                 </el-submenu>
-                <el-submenu index="5-2" :style="secondLeftIndent">
+                <el-submenu index="10-2" :style="secondLeftIndent">
                     <template slot="title">广告投放管理</template>
                     <el-menu-item index="/advert-launch/starting/list">开机广告列表</el-menu-item>
                     <el-menu-item index="/advert-launch/preprogramme/list">节目前置广告列表</el-menu-item>
@@ -116,7 +131,7 @@
                 </el-submenu>
             </el-submenu>
             <!--个人中心-->
-            <el-submenu index="5">
+            <el-submenu index="11">
                 <template slot="title">
                     <i class="el-icon-setting"></i>
                     <span>个人中心</span>
