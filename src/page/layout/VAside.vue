@@ -92,7 +92,10 @@
             <!--管理员管理-->
             <el-submenu index="8">
                 <template slot="title">
-                    <i class="el-icon-setting"></i>
+                    <svg-icon
+                        icon-class="admin_manage"
+                        class-name="svg-box">
+                    </svg-icon>
                     <span>管理员管理</span>
                 </template>
                 <el-menu-item index="/manage-admin/create" :style="directSecondLeftIndent">创建管理员</el-menu-item>
@@ -101,7 +104,10 @@
             <!--用户管理-->
             <el-submenu index="9">
                 <template slot="title">
-                    <i class="el-icon-tickets"></i>
+                    <svg-icon
+                        icon-class="user_manage"
+                        class-name="svg-box">
+                    </svg-icon>
                     <span>用户管理</span>
                 </template>
                 <el-menu-item index="/user-center/create" :style="directSecondLeftIndent">创建用户</el-menu-item>
@@ -111,7 +117,10 @@
             <!--广告管理-->
             <el-submenu v-if="false" index="10">
                 <template slot="title">
-                    <i class="el-icon-goods"></i>
+                    <svg-icon
+                        icon-class="ad_manage"
+                        class-name="svg-box">
+                    </svg-icon>
                     <span>广告管理</span>
                 </template>
                 <el-submenu index="10-1" :style="secondLeftIndent">
@@ -133,7 +142,10 @@
             <!--个人中心-->
             <el-submenu index="11">
                 <template slot="title">
-                    <i class="el-icon-setting"></i>
+                    <svg-icon
+                        icon-class="personal_center"
+                        class-name="svg-box">
+                    </svg-icon>
                     <span>个人中心</span>
                 </template>
                 <el-menu-item index="/personal-center/my-info" :style="directSecondLeftIndent">我的信息</el-menu-item>
@@ -183,7 +195,6 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
     .wrap-box {
         background-color: $baseAsideColor;
@@ -194,7 +205,7 @@
             &.broad {
                 width: 240px;
             }
-            i {
+            i, .svg-box {
                 margin-right: 16px;
             }
         }

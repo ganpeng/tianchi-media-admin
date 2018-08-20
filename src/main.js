@@ -14,6 +14,7 @@ import util from '@/util/extend';
 import '@/util/filters';
 import '@/util/directives';
 import 'sysComponents/custom_components/global/install';
+import './icons';
 import dragula from 'dragula';
 import wsCache from '@/util/webStorage';
 import Icon from 'vue-awesome/components/Icon';

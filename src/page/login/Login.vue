@@ -3,16 +3,22 @@
         <el-main>
             <div class="form-box" @keyup.enter="submitForm">
                 <h3>用户登录</h3>
-                <el-form :model="formData" status-icon :rules="rules" ref="login">
+                <el-form
+                    :model="formData"
+                    status-icon
+                    :rules="rules"
+                    ref="login">
                     <el-form-item prop="name" class="name">
-                        <md-input icon="tickets"
-                                  v-model="formData.name">用户名
+                        <md-input
+                            icon="personal_center"
+                            v-model="formData.name">用户名
                         </md-input>
                     </el-form-item>
                     <el-form-item prop="password" class="password">
-                        <md-input icon="goods"
-                                  type="password"
-                                  v-model="formData.password">密码
+                        <md-input
+                            icon="password"
+                            type="password"
+                            v-model="formData.password">密码
                         </md-input>
                     </el-form-item>
                     <el-form-item class="password-relate">

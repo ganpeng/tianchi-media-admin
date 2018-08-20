@@ -1,7 +1,10 @@
 <template>
     <div class="material-input__component" :class="computedClasses">
         <div :class="{iconClass:icon}">
-            <i class="el-input__icon material-input__icon" :class="['el-icon-' + icon]" v-if="icon"></i>
+            <svg-icon
+                :icon-class="icon"
+                class-name="svg-box">
+            </svg-icon>
             <input v-if="type === 'email'" type="email" class="material-input" :name="name"
                    :placeholder="fillPlaceHolder" v-model="currentValue"
                    :readonly="readonly" :disabled="disabled" :autoComplete="autoComplete" :required="required"
@@ -129,6 +132,7 @@
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+
     // Fonts:
     $font-size-base: 16px;
     $font-size-small: 18px;
@@ -172,6 +176,18 @@
         position: relative;
         * {
             box-sizing: border-box;
+        }
+        .svg-box {
+            position: absolute;
+            left: 0;
+            line-height: $font-size-base;
+            color: $color-blue;
+            top: $spacer;
+            width: $index-has-icon;
+            height: $font-size-base;
+            font-size: $font-size-base;
+            font-weight: $font-weight-normal;
+            pointer-events: none;
         }
         .iconClass {
             .material-input__icon {
