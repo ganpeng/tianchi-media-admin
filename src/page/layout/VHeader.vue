@@ -21,7 +21,6 @@
 
     import Hamburger from 'sysComponents/custom_components/custom/Hamburger';
     import Cookies from 'js-cookie';
-
     export default {
         name: 'VHeader',
         components: {

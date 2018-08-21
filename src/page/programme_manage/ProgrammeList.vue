@@ -9,11 +9,9 @@
         </custom-breadcrumb>
         <div class="table-container">
             <el-form id="label-font" :inline="true" class="demo-form-inline text-left">
-                <el-col :span="5" class="float-right">
-                    <el-form-item class="create-account">
-                        <el-button class="page-main-btn" type="primary" plain @click="createProgramme"><i class="el-icon-circle-plus-outline"></i> 新增节目</el-button>
-                        <el-button class="page-main-btn" type="primary" plain @click="showFileUploadDialog">导入节目</el-button>
-                    </el-form-item>
+                <el-col :span="6" class="float-right text-right">
+                    <el-button class="page-main-btn" @click="createProgramme" icon="el-icon-circle-plus-outline" type="primary" plain>新增节目</el-button>
+                    <el-button class="page-main-btn" type="primary" plain @click="showFileUploadDialog">导入节目</el-button>
                 </el-col>
                 <el-col :span="24">
                     <el-form-item label="上映开始年">

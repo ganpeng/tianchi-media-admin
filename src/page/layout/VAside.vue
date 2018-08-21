@@ -53,7 +53,7 @@
                     <i class="el-icon-bell"></i>
                     <span>视频资源管理</span>
                 </template>
-                <el-menu-item index="/video-manage/list">视频列表</el-menu-item>
+                <el-menu-item index="/manage-video/list">视频列表</el-menu-item>
             </el-submenu>
             <!--频道管理-->
             <el-submenu index="5">
@@ -81,7 +81,7 @@
                     <i class="el-icon-more"></i>
                     <span>版本管理</span>
                 </template>
-                <el-menu-item index="/version-manage/list">版本列表</el-menu-item>
+                <el-menu-item index="/manage-version/list">版本列表</el-menu-item>
             </el-submenu>
             <!--管理员管理-->
             <el-submenu index="8">

@@ -404,7 +404,7 @@ let router = new Router({
                 },
                 //  视频管理
                 {
-                    path: '/video-manage/list',
+                    path: '/manage-video/list',
                     name: 'VideoList',
                     component: VideoList
                 },
@@ -446,7 +446,7 @@ let router = new Router({
                 },
                 //  版本管理
                 {
-                    path: '/version-manage/list',
+                    path: '/manage-version/list',
                     name: 'VersionList',
                     component: VersionList
                 }

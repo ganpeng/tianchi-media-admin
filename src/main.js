@@ -31,6 +31,8 @@ Vue.prototype.$wsCache = wsCache;
 
 window.Hls = require('hls.js');
 
+window.eventBus = new Vue(); // 注册全局事件对象
+
 /* eslint-disable no-new */
 new Vue({
     el: '#app',

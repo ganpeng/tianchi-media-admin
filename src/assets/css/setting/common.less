@@ -87,13 +87,6 @@
 .el-form {
     .create-account {
         float: right;
-        // margin-right: 40px;
-        i {
-            cursor: pointer;
-            &:hover {
-                color: #409eff;
-            }
-        }
     }
     .el-tag {
         cursor: pointer;
@@ -406,11 +399,19 @@ li {
     width: 240px;
     border-radius: 4px;
     .el-collapse-item {
+        height: 40px;
         span.category-name {
             font-size: 18px;
             &:hover {
                 color: #409EFF;
             }
+        }
+        .el-collapse-item__header {
+            height: 40px;
+            line-height: 40px;
+        }
+        .el-collapse-item__arrow {
+            line-height: 40px;
         }
         .edit-btn {
             position: absolute;
@@ -432,6 +433,7 @@ li {
             }
             .tag-btn {
                 margin: 20px 10px 0 0;
+                border-color: #fff;
             }
         }
     }

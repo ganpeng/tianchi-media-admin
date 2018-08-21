@@ -1,20 +1,23 @@
 <template>
+    <div class="player-container">
         <el-dialog
             :title="getTitle"
             :visible.sync="displayVideoDialogVisible"
-            :show-close="true"
+            :show-close="false"
             :before-close="beforeCloseHandler"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
             :append-to-body="true"
             @open="initVideo">
-                <div>
+                <div v-if="displayVideoDialogVisible">
                     <video-player ref="player" @play="play" :video="{url, type: 'hls'}" :contextmenu="contextmenu"></video-player>
+                    <i @click="beforeCloseHandler" class="pointer close-btn el-icon-close"></i>
                 </div>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="cancelHandler">关闭</el-button>
                 </div>
         </el-dialog>
+    </div>
 </template>
 <script>
 import VideoPlayer from './VideoPlayer';
@@ -74,4 +77,13 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 16px;
+    &:hover {
+        color: #F56C6C;
+    }
+}
 </style>

@@ -12,8 +12,9 @@
                 </v-header>
             </el-header>
             <el-container>
-                <el-main class="main-view">
+                <el-main class="main-view" style="padding-bottom: 100px;">
                     <!--主内容区-->
+                    <upload-video></upload-video>
                     <router-view></router-view>
                 </el-main>
                 <el-footer height="64px">
@@ -29,13 +30,15 @@
     import vHeader from './VHeader.vue';
     import vFooter from './VFooter.vue';
     import vAside from './VAside.vue';
+    import UploadVideo from '../video_manage/UploadVideo';
 
     export default {
         name: 'Layout',
         components: {
             vHeader,
             vAside,
-            vFooter
+            vFooter,
+            UploadVideo
         },
         data() {
             return {

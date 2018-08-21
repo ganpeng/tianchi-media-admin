@@ -1,62 +1,91 @@
 <!--视频列表组件-->
 <template>
     <div>
-        <el-breadcrumb class="gp-breadcrumb" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-            <el-breadcrumb-item>视频资源管理</el-breadcrumb-item>
-            <el-breadcrumb-item>视频列表</el-breadcrumb-item>
-        </el-breadcrumb>
-        <el-form :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
-            <el-form-item class="search">
-                <el-input
-                    :value="searchFields.name"
-                    placeholder="搜索你想要的信息"
-                    clearable
-                    @input="inputHandler($event, 'name')"
-                >
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-            </el-form-item>
-            <el-form-item class="search">
-                <el-select
-                    :value="searchFields.videoType"
-                    clearable
-                    placeholder="请选择视频类型"
-                    @input="inputHandler($event, 'videoType')"
-                >
-                    <el-option
-                        v-for="(item, index) in videoTypeOptions"
-                        :key="index"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item class="search">
-                <el-select
-                    :value="searchFields.status"
-                    clearable
-                    placeholder="请选择视频注入状态"
-                    @input="inputHandler($event, 'status')"
-                >
-                    <el-option
-                        v-for="(item, index) in statusOptions"
-                        :key="index"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="searchHandler">搜索</el-button>
-            </el-form-item>
-            <el-form-item class="create-account">
-                <el-button type="primary" plain @click="showVideoUploadDialog('VOD')">上传点播视频</el-button>
-                <el-button type="primary" plain @click="showVideoUploadDialog('CAROUSEL')">上传轮播视频</el-button>
-            </el-form-item>
+        <custom-breadcrumb
+            v-bind:breadcrumbList="[
+            {name:'内容管理'},
+            {name:'视频资源管理'},
+            {name:'视频列表'}]">
+        </custom-breadcrumb>
+        <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @keyup.enter.native="searchHandler" @submit.native.prevent>
+            <el-col :span="24">
+            <el-dropdown class="float-right">
+                <el-button icon="el-icon-circle-plus-outline" type="primary" plain>
+                    上传视频<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item>
+                        <div class="wrapper">
+                            <label for="upload-input">选择文件</label>
+                            <input id="upload-input-file" class="upload-input" type="file" ref="uploadInput" multiple>
+                        </div>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                        <div class="wrapper">
+                            <label for="upload-input">选择文件夹</label>
+                            <input id="upload-input-dir" class="upload-input" type="file" ref="uploadInput" multiple directory webkitdirectory allowdirs>
+                        </div>
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+                <!--
+                <el-form-item class="create-account">
+                    <el-button type="primary" plain @click="showVideoUploadDialog('VOD')"><i class="el-icon-circle-plus-outline"></i> 上传视频</el-button>
+                </el-form-item>
+                -->
+            </el-col>
+            <el-col :span="24">
+                <el-form-item class="search">
+                    <el-input
+                        :value="searchFields.name"
+                        placeholder="搜索你想要的信息"
+                        clearable
+                        style="width:400px;"
+                        @input="inputHandler($event, 'name')"
+                    >
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                    <el-select
+                        :value="searchFields.status"
+                        clearable
+                        placeholder="请选择视频注入状态"
+                        @input="inputHandler($event, 'status')"
+                    >
+                        <el-option
+                            v-for="(item, index) in statusOptions"
+                            :key="index"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="searchHandler" plain>搜索</el-button>
+                </el-form-item>
+                <el-form-item class="float-right">
+                    <!--
+                    <el-button
+                        size="small"
+                        v-if="!!timer"
+                        class="pause-btn"
+                        @click="toggleUpdateHandler"
+                        plain>
+                        {{timer ? '停止刷新页面' : '恢复刷新页面'}}
+                    </el-button>
+                    <el-button
+                        size="small"
+                        v-else
+                        type="primary" @click="toggleUpdateHandler">
+                        {{timer ? '停止刷新页面' : '恢复刷新页面'}}
+                    </el-button>
+                    -->
+                    <el-button size="small" type="danger" @click="deleteVideoList"><i class="el-icon-delete"></i> 批量删除</el-button>
+                </el-form-item>
+            </el-col>
         </el-form>
-        <video-table></video-table>
+        <video-table ref="videoTable"></video-table>
         <el-dialog
             title="上传视频"
             :visible.sync="videoUploadDialogVisible"
@@ -64,32 +93,32 @@
             width="80%"
             :close-on-click-modal="false"
             :close-on-press-escape="false">
-            <div v-show="!isUploading" class="upload-file">
+            <div class="upload-file">
                 <div class="wrapper">
                     <label for="upload-input">
                         <el-button size="small" type="primary">选取文件</el-button>
                     </label>
                     <input id="upload-input" class="upload-input" type="file" ref="uploadInput" @change="uploadChangeHandler" multiple>
                 </div>
-                <el-button style="margin-left: 10px;" size="small" @click="uploadHandler" type="success">点击上传</el-button>
             </div>
             <ul class="progress-bar-list">
                 <li class="progress-bar-item" v-for="(item, index) in files" :key="index">
-                    <p class="file-name">{{item.name}}</p>
+                    <p class="file-name">{{item.file.name}}</p>
                     <div class="progress-bar">
                         <el-progress
                             class="bar"
                             :stroke-width="3"
-                            :percentage="getProgress(index).percent"
-                            :status="getProgress(index).percent !== 100 ? 'exception' : 'success'">
+                            :percentage="item.progress.percent"
+                            :status="item.progress.percent !== 100 ? 'primary' : 'success'">
                         </el-progress>
                         <i
                             v-if="!showDelete(index)"
                             @click="cancelUpload(index)"
                             class="delete-btn el-icon-close"></i>
                         <span class="percent">
-                            {{ getProgress(index).percent + '% ' + (isChecking(index) ? '视频校验中, 请等待片刻' : uploadStatus(index)) }}
-                            <i v-if="getProgress(index).status === 'uploading'" class="el-icon-loading"></i>
+                            <span>{{item.progress.percent}}%</span>
+                            <span :class="uploadStatusColor(index)">{{(isChecking(index) ? '视频校验中, 请等待片刻' : uploadStatus(index))}}</span>
+                            <i v-if="item.progress.status === 'uploading'" class="el-icon-loading"></i>
                         </span>
                     </div>
                 </li>
@@ -98,12 +127,10 @@
                 <el-button @click="cancelHandler">关闭</el-button>
             </div>
         </el-dialog>
-
     </div>
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
-    import _ from 'lodash';
     import VideoTable from './VideoTable';
     import role from '@/util/config/role';
     export default {
@@ -115,49 +142,84 @@
             return {
                 xhr: null,
                 files: [],
-                progress: [],
                 count: 0,
                 isUploading: false,
                 videoUploadDialogVisible: false,
                 videoTypeOptions: role.VIDEO_TYPE_OPTIONS,
                 statusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
-                isLoading: false,
                 timer: null
             };
         },
         computed: {
             ...mapGetters({
+                video: 'video/video',
                 searchFields: 'video/searchFields',
-                getVideoType: 'video/getVideoType'
+                getVideoType: 'video/getVideoType',
+                selectedVideoIdList: 'video/selectedVideoIdList'
             }),
             getProgress() {
                 return (index) => {
                     return {
-                        percent: this.progress[index].percent,
-                        status: this.progress[index].status
+                        percent: this.files[index].progress.percent,
+                        status: this.files[index].progress.status
                     };
                 };
             },
             showDelete() {
                 return (index) => {
-                    let status = this.progress[index].status;
-                    let percent = this.progress[index].percent;
-                    return status === 'canceled' || status === 'uploaded' || status === 'error' || status === 'fail' || percent === 100;
+                    let status = this.files[index].progress.status;
+                    let percent = this.files[index].progress.percent;
+                    return status === 'canceled' ||
+                           status === 'uploaded' ||
+                           status === 'error' ||
+                           status === 'exist' ||
+                           status === 'saveErr' ||
+                           status === 'sizeErr' ||
+                           status === 'transErr' ||
+                           percent === 100;
                 };
             },
             isChecking() {
                 return (index) => {
-                    let status = this.progress[index].status;
-                    let percent = this.progress[index].percent;
+                    let status = this.files[index].progress.status;
+                    let percent = this.files[index].progress.percent;
                     return status === 'uploading' && percent === 100;
+                };
+            },
+            uploadStatusColor() {
+                return (index) => {
+                    let status = this.files[index].progress.status;
+                    switch (status) {
+                        // uploading checking canceld waiting uploaded error fail
+                        //  exist 已存在， saveErr 保存失败, sizeErr, transErr 转码失败
+                        case 'uploading':
+                            return 'text-success';
+                        case 'canceled':
+                        case 'waiting':
+                        case 'exist':
+                            return 'text-info';
+                        case 'uploaded':
+                            return 'text-success';
+                        case 'error':
+                        case 'saveErr':
+                        case 'transErr':
+                            return 'text-danger';
+                        case 'checking':
+                            return 'text-success';
+                        case 'sizeErr':
+                            return 'text-warning';
+                        default:
+                            return '';
+                    }
                 };
             },
             uploadStatus() {
                 return (index) => {
-                    let status = this.progress[index].status;
-                    let message = this.progress[index].message;
+                    let status = this.files[index].progress.status;
+                    let message = this.files[index].progress.message;
                     switch (status) {
-                        // uploading canceld waiting uploaded error fail
+                        // uploading checking canceld waiting uploaded error fail
+                        //  exist 已存在， saveErr 保存失败, sizeErr, transErr 转码失败
                         case 'uploading':
                             return '上传中';
                         case 'canceled':
@@ -168,7 +230,12 @@
                             return '上传成功';
                         case 'error':
                             return '上传失败';
-                        case 'fail':
+                        case 'checking':
+                            return '视频校验中，请稍候片刻';
+                        case 'exist':
+                        case 'saveErr':
+                        case 'sizeErr':
+                        case 'transErr':
                             return message;
                         default:
                             return '';
@@ -177,14 +244,25 @@
             }
         },
         created() {
-            this.timer = setInterval(() => {
-                this.getVideoList();
-            }, 1000 * 10);
+            this.$nextTick(() => {
+                uppie(document.querySelector('#upload-input-file'), this.uploadChangeHandler.bind(this));
+                uppie(document.querySelector('#upload-input-dir'), this.uploadChangeHandler.bind(this));
+            });
+            window.addEventListener('keyup', this.keyupHandler);
+            // this.timer = setInterval(() => {
+            //     this.getVideoList()
+            //         .then(() => {
+            //             this.$refs.videoTable.checkedVideoList();
+            //         });
+            // }, 1000 * 10);
         },
         beforeRouteLeave(to, from, next) {
             clearInterval(this.timer);
             this.timer = null;
             next();
+        },
+        beforeDestroy() {
+            window.removeEventListener('keyup', this.keyupHandler);
         },
         methods: {
             ...mapMutations({
@@ -195,20 +273,71 @@
                 getVideoList: 'video/getVideoList',
                 checkVideoMd5: 'video/checkVideoMd5'
             }),
+            toggleUpdateHandler() {
+                if (this.timer) {
+                    clearInterval(this.timer);
+                    this.timer = null;
+                } else {
+                    clearInterval(this.timer);
+                    this.timer = setInterval(() => {
+                        this.getVideoList(this.elTable)
+                            .then(() => {
+                                this.$refs.videoTable.checkedVideoList();
+                            });
+                    }, 1000 * 10);
+                }
+            },
+            deleteVideoList() {
+                let idList = this.$refs.videoTable.selectedVideoList.map((item) => {
+                    return item.id;
+                });
+                if (idList.length > 0) {
+                    this.$confirm(`您确定要删除吗, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    }).then(() => {
+                        if (idList.length > 0) {
+                            this.$service.deleteVideoByIdList(idList)
+                                .then((res) => {
+                                    if (res && res.code === 0) {
+                                        this.getVideoList()
+                                            .then(() => {
+                                                this.$refs.videoTable.checkedVideoList();
+                                            });
+                                        this.$message.success('删除成功');
+                                    } else {
+                                        this.$message.error('删除失败');
+                                    }
+                                });
+                        }
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+                }
+            },
+            keyupHandler(e) {
+                if (e.keyCode === 13) {
+                    this.searchHandler();
+                }
+            },
             showVideoUploadDialog(videoType) {
                 this.videoUploadDialogVisible = true;
+                this.count = 0;
                 this.setVideoType({videoType});
             },
             cancelHandler() {
-                if (this.$refs.uploadInput.value) {
+                if (this.isUploading) {
                     this.$confirm('你确定要取消上传操作吗, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'error'
                     }).then(() => {
-                        this.$refs.uploadInput.value = '';
-                        this.resetUpload();
                         this.videoUploadDialogVisible = false;
+                        this.resetField();
                     }).catch(() => {
                         this.$message({
                             type: 'info',
@@ -216,84 +345,115 @@
                         });
                     });
                 } else {
-                    this.resetUpload();
                     this.videoUploadDialogVisible = false;
+                    this.resetField();
                 }
+            },
+            resetField() {
+                this.count = 0;
+                this.xhr && this.xhr.abort();
+                this.xhr = null;
+                this.files = [];
+                this.isUploading = false;
+                this.$refs.uploadInput.value = '';
             },
             inputHandler(value, key) {
                 this.updateSearchFields({key, value});
             },
             searchHandler() {
-                this.getVideoList();
-            },
-            resetUpload() {
-                this.count = 0;
-                this.xhr && this.xhr.abort();
-                this.xhr = null;
-                this.files = [];
-                this.progress = [];
-                this.isUploading = false;
+                this.getVideoList()
+                    .then(() => {
+                        this.$refs.videoTable.checkedVideoList();
+                    });
             },
             uploadChangeHandler(e) {
-                this.count = 0;
-                this.xhr && this.xhr.abort();
-                this.xhr = null;
-                this.isUploading = false;
-
                 let files = Array.from(e.target.files);
-                this.files = _.uniqBy(this.files.concat(files), 'name');
-                this.progress = this.files.map((item) => {
-                    return {
-                        percent: 0,
-                        status: 'waiting',
-                        message: ''
-                    };
+                let newFileList = [];
+                files.forEach((file) => {
+                    let index = this.files.findIndex((item) => {
+                        return item.file.name === file.name;
+                    });
+                    if (index === -1) {
+                        let obj = {
+                            file,
+                            progress: {
+                                percent: 0,
+                                status: 'waiting',
+                                message: ''
+                            }
+                        };
+                        newFileList.push(obj);
+                    }
                 });
+                this.files = this.files.concat(newFileList);
+                this.uploadHandler();
             },
-            uploadHandler(obj) {
+            uploadHandler() {
                 let that = this;
-                if (!this.isUploading) {
-                    this.isUploading = true;
+                if (!that.isUploading) {
+                    that.isUploading = true;
                     upload();
                 }
+
                 function upload() {
                     if (typeof that.files[that.count] === 'undefined') {
-                        that.$refs.uploadInput.value = '';
-                        that.count = 0;
-                        that.xhr = null;
+                        that.isUploading = false;
                         return false;
                     }
-
                     let formData = new FormData();
-                    let file = that.files[that.count];
+                    let file = that.files[that.count].file;
                     let videoType = that.getVideoType;
-                    formData.append('file', file);
                     formData.append('videoType', videoType);
+                    formData.append('file', file);
 
                     that.uploadRequest(formData)
                         .then((res) => {
                             let result = JSON.parse(res).data[0];
                             if (result.failCode === 0) {
-                                that.progress = that.progress.map((progress, index) => {
+                                that.files = that.files.map((obj, index) => {
                                     if (index === that.count) {
                                         return {
-                                            percent: progress.percent,
-                                            status: 'uploaded'
+                                            file: obj.file,
+                                            progress: {
+                                                percent: obj.progress.percent,
+                                                status: 'uploaded'
+                                            }
                                         };
                                     } else {
-                                        return progress;
+                                        return obj;
                                     }
                                 });
                             } else {
-                                that.progress = that.progress.map((progress, index) => {
+                                let status = '';
+                                //  exist 已存在， saveErr 保存失败, sizeErr 分辨率不合适, transErr 转码失败
+                                switch (result.failCode) {
+                                    case 3302:
+                                        status = 'transErr';
+                                        break;
+                                    case 3305:
+                                        status = 'saveErr';
+                                        break;
+                                    case 3300:
+                                        status = 'exist';
+                                        break;
+                                    case 3307:
+                                        status = 'sizeErr';
+                                        break;
+                                    default:
+                                }
+
+                                that.files = that.files.map((obj, index) => {
                                     if (index === that.count) {
                                         return {
-                                            percent: progress.percent,
-                                            status: 'fail',
-                                            message: result.failReason
+                                            file: obj.file,
+                                            progress: {
+                                                percent: obj.progress.percent,
+                                                status,
+                                                message: result.failReason
+                                            }
                                         };
                                     } else {
-                                        return progress;
+                                        return obj;
                                     }
                                 });
                             }
@@ -301,25 +461,33 @@
                             upload();
                         }).catch((err) => {
                             if (err && err.message === 'canceled_flag') {
-                                that.progress = that.progress.map((progress, index) => {
+                                that.files = that.files.map((obj, index) => {
                                     if (index === that.count) {
                                         return {
-                                            percent: progress.percent,
-                                            status: 'canceled'
+                                            file: obj.file,
+                                            progress: {
+                                                percent: obj.progress.percent,
+                                                status: 'canceled',
+                                                message: ''
+                                            }
                                         };
                                     } else {
-                                        return progress;
+                                        return obj;
                                     }
                                 });
                             } else {
-                                that.progress = that.progress.map((progress, index) => {
+                                that.files = that.files.map((obj, index) => {
                                     if (index === that.count) {
                                         return {
-                                            percent: progress.percent,
-                                            status: 'error'
+                                            file: obj.file,
+                                            progress: {
+                                                percent: obj.progress.percent,
+                                                status: 'error',
+                                                message: ''
+                                            }
                                         };
                                     } else {
-                                        return progress;
+                                        return obj;
                                     }
                                 });
                             }
@@ -333,7 +501,6 @@
                     this.xhr.abort();
                 } else {
                     this.files = this.files.filter((file, index) => index !== count);
-                    this.progress = this.progress.filter((progress, index) => index !== count);
                 }
             },
             uploadRequest(data) {
@@ -358,14 +525,19 @@
                     };
                     xhr.upload.onprogress = (evt) => {
                         let percent = evt.loaded / evt.total * 100;
-                        that.progress = that.progress.map((progress, index) => {
+                        that.files = that.files.map((obj, index) => {
+                            let progress = {
+                                percent: parseInt(percent),
+                                status: 'uploading',
+                                message: ''
+                            };
                             if (index === that.count) {
                                 return {
-                                    percent: parseInt(percent),
-                                    status: 'uploading'
+                                    file: obj.file,
+                                    progress
                                 };
                             } else {
-                                return progress;
+                                return obj;
                             }
                         });
                     };
@@ -416,6 +588,50 @@
     }
     .delete-btn {
         margin-right: 10px;
+        cursor: pointer;
+    }
+}
+
+.pause-btn {
+    color: #409EFF;
+    border-color: #409EFF;
+    background-color: transparent;
+    &:hover,
+    &:focus {
+        color: #409EFF;
+        border-color: #409EFF;
+        background-color: transparent;
+    }
+    span {
+        color: #409EFF;
+    }
+}
+.delete-btn {
+    color: #F56C6C;
+    border-color: #F56C6C;
+    background-color: transparent;
+    &:hover,
+    &:focus {
+        color: #F56C6C;
+        border-color: #F56C6C;
+        background-color: transparent;
+    }
+}
+
+.wrapper {
+    position: relative;
+    width: 80px;
+    height: 32px;
+    margin-right: 10px;
+    label, .upload-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 80px;
+        height: 32px;
+    }
+    .upload-input {
+        opacity: 0;
         cursor: pointer;
     }
 }

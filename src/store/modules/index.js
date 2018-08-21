@@ -9,6 +9,7 @@ import programmeVideo from './programme_video';
 import video from './video';
 import channel from './channel';
 import version from './version';
+import uploadVideo from './upload_video';
 
 export default {
     permission,
@@ -19,5 +20,6 @@ export default {
     programmeVideo,
     video,
     channel,
-    version
+    version,
+    uploadVideo
 };

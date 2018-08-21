@@ -19,7 +19,7 @@
                                 <i class="el-collapse-item__arrow el-icon-arrow-right"></i>
                             </div>
                         </div>
-                        <div v-show="index === currentIndex" :style="{minHeight: (global.categoryList.length * 48) + 'px'}" class="item-content text-left">
+                        <div v-show="index === currentIndex" :style="{minHeight: (global.categoryList.length * 40) + 'px'}" class="item-content text-left">
                             <div class="add-header">
                                 <el-button @click="append(category)" type="text">
                                     <i class="el-icon-plus"></i>添加
