@@ -65,7 +65,7 @@
     }
 
     .el-aside {
-        background-color: $baseAsideColor;
+        background-color: #222D32;
     }
 
     .el-footer {

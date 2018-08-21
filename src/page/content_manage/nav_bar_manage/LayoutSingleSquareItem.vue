@@ -44,7 +44,9 @@
                 @visible-change="dropdownMenuChange"
                 @command="setRecommend($event,modelIndex,rowIndex,index,rowLength)"
                 placement="bottom">
-                <i class="el-icon-edit-outline"></i>
+                <span>
+                  <i class="el-icon-edit-outline"></i>
+                </span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
                     <el-dropdown-item command="FIGURE">设置为专题</el-dropdown-item>
@@ -207,6 +209,7 @@
         position: absolute;
         right: 52px;
         top: 5px;
+        width: 80px;
         z-index: 300;
         .el-tooltip {
             margin-right: 26px;

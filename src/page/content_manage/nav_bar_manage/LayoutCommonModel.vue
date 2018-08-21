@@ -31,7 +31,9 @@
             <!--除了频道栏目外的设置--添加、编辑-->
             <template v-if="navBarSignCode !== 'LIVE_CHANNEL'">
                 <el-dropdown @command="addModel($event,modelIndex)" placement="bottom">
-                    <span class="el-dropdown-link"><i class="el-icon-circle-plus-outline"></i></span>
+                    <span class="el-dropdown-link">
+                        <i class="el-icon-circle-plus-outline"></i>
+                    </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item command="SHUFFLE">新增混排模块</el-dropdown-item>
                         <el-dropdown-item command="PROGRAMME">新增节目专题</el-dropdown-item>
@@ -45,11 +47,11 @@
             </template>
             <!--频道栏目设置--添加、编辑-->
             <template v-else>
-                <el-tooltip class="item" effect="dark" content="添加" placement="top">
+                <el-tooltip class="item add" effect="dark" content="添加" placement="top">
                     <i class="el-icon-circle-plus-outline"
                        @click="setModelChannel(modelIndex, 'add')"></i>
                 </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="编辑" placement="top">
+                <el-tooltip class="item edit" effect="dark" content="编辑" placement="top">
                     <i class="el-icon-edit-outline"
                        @click="setModelChannel(modelIndex, 'edit')"></i>
                 </el-tooltip>
@@ -346,8 +348,24 @@
         border: 1px solid #DCDFE6;
         border-radius: 4px;
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
         align-items: center;
+        .el-dropdown {
+            position: absolute;
+            top: 5px;
+            left: -10px;
+            width: 80px;
+        }
+        i.item:nth-child(2) {
+            position: absolute;
+            top: 6px;
+            left: 60px;
+        }
+        i.item:last-child {
+            position: absolute;
+            top: 6px;
+            left: 100px;
+        }
         i {
             font-size: 26px;
             color: $baseBlue;

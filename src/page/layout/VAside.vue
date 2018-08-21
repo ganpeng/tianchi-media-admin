@@ -1,11 +1,11 @@
 <!--左侧导航栏-->
 <template>
-    <div class="wrap-box">
+    <div class="wrap-box" id="nav-menu-box">
         <img v-if="isActive" src="~assets/img/logo.png">
         <img v-else src="~assets/img/single_logo.png">
         <el-menu
             unique-opened
-            background-color="#283841"
+            background-color="#222D32"
             text-color="#8AA4AF"
             router
             :default-active="$route.path"
@@ -14,7 +14,7 @@
             active-text-color="#fff">
             <!--内容管理-->
             <!--栏目管理-->
-            <el-submenu index="1" :style="secondLeftIndent">
+            <el-submenu index="1">
                 <template slot="title">
                     <i class="el-icon-tickets"></i>
                     <span>栏目管理</span>
@@ -28,7 +28,7 @@
                 </el-menu-item>
             </el-submenu>
             <!--节目资源管理-->
-            <el-submenu index="2" :style="secondLeftIndent">
+            <el-submenu index="2">
                 <template slot="title">
                     <i class="el-icon-document"></i>
                     <span>节目资源管理</span>
@@ -38,7 +38,7 @@
                 <el-menu-item index="/programme-manage/type">节目类别管理</el-menu-item>
             </el-submenu>
             <!--人物资源管理-->
-            <el-submenu index="3" :style="secondLeftIndent">
+            <el-submenu index="3">
                 <template slot="title">
                     <i class="el-icon-goods"></i>
                     <span>人物资源管理</span>
@@ -48,7 +48,7 @@
                 <el-menu-item index="/person-manage/hot">热门人物管理</el-menu-item>
             </el-submenu>
             <!--视频资源管理-->
-            <el-submenu index="4" :style="secondLeftIndent">
+            <el-submenu index="4">
                 <template slot="title">
                     <i class="el-icon-bell"></i>
                     <span>视频资源管理</span>
@@ -56,23 +56,17 @@
                 <el-menu-item index="/video-manage/list">视频列表</el-menu-item>
             </el-submenu>
             <!--频道管理-->
-            <el-submenu index="5" :style="secondLeftIndent">
+            <el-submenu index="5">
                 <template slot="title">
                     <i class="el-icon-mobile-phone"></i>
                     <span>频道管理</span>
                 </template>
-                <el-submenu index="5-1">
-                    <template slot="title">直播频道管理</template>
-                    <el-menu-item index="/channel-manage/live/list">直播频道列表</el-menu-item>
-                </el-submenu>
-                <el-submenu index="5-2">
-                    <template slot="title">轮播频道管理</template>
-                    <el-menu-item index="/channel-manage/carousel/list">轮播频道列表</el-menu-item>
-                </el-submenu>
+                <el-menu-item index="/channel-manage/live/list">直播频道列表</el-menu-item>
+                <el-menu-item index="/channel-manage/carousel/list">轮播频道列表</el-menu-item>
                 <el-menu-item index="/channel-manage/category">频道类别管理</el-menu-item>
             </el-submenu>
             <!--专题管理-->
-            <el-submenu index="6" :style="secondLeftIndent">
+            <el-submenu index="6">
                 <template slot="title">
                     <i class="el-icon-star-off"></i>
                     <span>专题管理</span>
@@ -82,7 +76,7 @@
                 <el-menu-item index="/subject-manage/list">专题列表</el-menu-item>
             </el-submenu>
             <!-- 版本管理 -->
-            <el-submenu index="7" :style="secondLeftIndent">
+            <el-submenu index="7">
                 <template slot="title">
                     <i class="el-icon-more"></i>
                     <span>版本管理</span>
@@ -98,8 +92,14 @@
                     </svg-icon>
                     <span>管理员管理</span>
                 </template>
-                <el-menu-item index="/manage-admin/create" :style="directSecondLeftIndent">创建管理员</el-menu-item>
-                <el-menu-item index="/manage-admin/list" :style="directSecondLeftIndent">管理员列表</el-menu-item>
+                <el-menu-item
+                    index="/manage-admin/create">
+                    创建管理员
+                </el-menu-item>
+                <el-menu-item
+                    index="/manage-admin/list">
+                    管理员列表
+                </el-menu-item>
             </el-submenu>
             <!--用户管理-->
             <el-submenu index="9">
@@ -110,9 +110,9 @@
                     </svg-icon>
                     <span>用户管理</span>
                 </template>
-                <el-menu-item index="/user-center/create" :style="directSecondLeftIndent">创建用户</el-menu-item>
-                <el-menu-item index="/user-center/list" :style="directSecondLeftIndent">用户列表</el-menu-item>
-                <el-menu-item index="/kits" :style="directSecondLeftIndent">小功能</el-menu-item>
+                <el-menu-item index="/user-center/create">创建用户</el-menu-item>
+                <el-menu-item index="/user-center/list">用户列表</el-menu-item>
+                <el-menu-item index="/kits">小功能</el-menu-item>
             </el-submenu>
             <!--广告管理-->
             <el-submenu v-if="false" index="10">
@@ -123,11 +123,11 @@
                     </svg-icon>
                     <span>广告管理</span>
                 </template>
-                <el-submenu index="10-1" :style="secondLeftIndent">
+                <el-submenu index="10-1">
                     <template slot="title">广告资源管理</template>
                     <el-menu-item index="/advert-resource/list">广告资源列表</el-menu-item>
                 </el-submenu>
-                <el-submenu index="10-2" :style="secondLeftIndent">
+                <el-submenu index="10-2">
                     <template slot="title">广告投放管理</template>
                     <el-menu-item index="/advert-launch/starting/list">开机广告列表</el-menu-item>
                     <el-menu-item index="/advert-launch/preprogramme/list">节目前置广告列表</el-menu-item>
@@ -148,10 +148,10 @@
                     </svg-icon>
                     <span>个人中心</span>
                 </template>
-                <el-menu-item index="/personal-center/my-info" :style="directSecondLeftIndent">我的信息</el-menu-item>
-                <el-menu-item index="/personal-center/modify-password" :style="directSecondLeftIndent">修改密码
+                <el-menu-item index="/personal-center/my-info">我的信息</el-menu-item>
+                <el-menu-item index="/personal-center/modify-password">修改密码
                 </el-menu-item>
-                <el-menu-item index="/" @click="logout" :style="directSecondLeftIndent">退出登录</el-menu-item>
+                <el-menu-item index="/" @click="logout">退出登录</el-menu-item>
             </el-submenu>
         </el-menu>
     </div>
@@ -164,8 +164,6 @@
         data() {
             return {
                 isActive: true,
-                secondLeftIndent: {paddingLeft: '0px'},
-                directSecondLeftIndent: {},
                 navBarList: []
             };
         },
@@ -197,7 +195,6 @@
 
 <style scoped lang="scss">
     .wrap-box {
-        background-color: $baseAsideColor;
         overflow-y: scroll;
         .el-menu {
             text-align: left;
@@ -208,23 +205,47 @@
             i, .svg-box {
                 margin-right: 16px;
             }
-        }
-    }
-
-    // 一级菜单
-    .el-submenu {
-        .el-submenu__title {
-            * {
-                font-size: 20px;
+            .el-menu-item {
+                padding-left: 65px !important;
+                font-size: 18px;
+                color: $loginFontColor;
             }
         }
     }
 
-    // active的一级菜单
-    .is-active {
-        div {
-            * {
-                color: white;
+</style>
+
+<style lang="scss">
+
+    #nav-menu-box {
+        // 一级菜单
+        .el-submenu {
+            .el-submenu__title {
+                * {
+                    font-size: 20px;
+                    color: #B8C7CE;
+                }
+            }
+            // active的一级菜单
+            &.is-active {
+                .el-submenu__title {
+                    background-color: #1A2227 !important;
+                    * {
+                        color: white;
+                    }
+                }
+                // active的二级菜单
+                .el-menu-item {
+                    &.is-active, &:hover {
+                        background-color: #283841 !important;
+                    }
+                }
+                .el-menu {
+                    background-color: #2B414B !important;
+                    li {
+                        background-color: #2B414B !important;
+                    }
+                }
             }
         }
     }

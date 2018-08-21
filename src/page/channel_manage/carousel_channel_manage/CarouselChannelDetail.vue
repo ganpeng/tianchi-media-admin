@@ -269,6 +269,7 @@
                         color: $baseBlue;
                     }
                     .el-tag {
+                        border: none;
                         margin-right: 10px;
                     }
                 }

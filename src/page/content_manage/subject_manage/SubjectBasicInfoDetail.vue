@@ -121,6 +121,7 @@
                         flex-shrink: 0;
                         line-height: 2;
                         .el-tag {
+                            border: none;
                             margin-right: 10px;
                         }
                     }
