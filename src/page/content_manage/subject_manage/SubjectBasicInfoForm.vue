@@ -91,9 +91,16 @@
             </template>
             <el-form-item class="operate">
                 <el-button type="primary" @click="operateSubject" class="page-main-btn">
-                    {{this.status === '0' || this.status === '1' ? '创建' : '更新'}}
+                    {{this.status === '0' || this.status === '1' ? '创建' : '保存'}}
                 </el-button>
-                <el-button @click="reset" class="page-vice-btn" type="primary" plain>重 置</el-button>
+                <el-button @click="reset"
+                           v-if="this.status === '0' || this.status === '1' "
+                           class="page-main-btn"
+                           type="primary"
+                           plain>
+                    重置
+                </el-button>
+                <el-button @click="toSubjectList" class="page-main-btn">返回列表页</el-button>
             </el-form-item>
         </el-form>
         <preview-multiple-images

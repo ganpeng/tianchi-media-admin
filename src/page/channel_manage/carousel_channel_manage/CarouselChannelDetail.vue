@@ -48,7 +48,7 @@
                 </div>
             </div>
             <!--节目信息-->
-            <div class="vice-block">
+            <div class="vice-block text-left">
                 <h3 class="block-vice-title">频道节目信息</h3>
                 <el-card>
                     <ul>
@@ -102,34 +102,66 @@
                         width="240px"
                         label="预览视频">
                         <template slot-scope="scope">
-                            <el-button
-                                v-if="scope.row.m3u8For4K"
-                                type="text"
-                                size="small"
-                                @click="previewVideo(scope.row.m3u8For4K)"
-                            >4K
-                            </el-button>
-                            <el-button
-                                v-if="scope.row.m3u8For1080P"
-                                type="text"
-                                size="small"
-                                @click="previewVideo(scope.row.m3u8For1080P)"
-                            >1080
-                            </el-button>
-                            <el-button
-                                v-if="scope.row.m3u8For720P"
-                                type="text"
-                                size="small"
-                                @click="previewVideo(scope.row.m3u8For720P)"
-                            >720
-                            </el-button>
-                            <el-button
-                                v-if="scope.row.m3u8For480P"
-                                type="text"
-                                size="small"
-                                @click="previewVideo(scope.row.m3u8For480P)"
-                            >480
-                            </el-button>
+                            <div class="btn-icon-container">
+                                <el-button
+                                    v-if="scope.row.m3u8For4K"
+                                    type="text"
+                                    size="small"
+                                    @click="displayVideo(scope.row.m3u8For4K,scope.row.originName)"
+                                >4K
+                                </el-button>
+                                <svg-icon
+                                    v-if="scope.row.m3u8For4K"
+                                    icon-class="copy_btn"
+                                    class-name="copy-btn"
+                                    :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
+                                </svg-icon>
+                            </div>
+                            <div class="btn-icon-container">
+                                <el-button
+                                    v-if="scope.row.m3u8For1080P"
+                                    type="text"
+                                    size="small"
+                                    @click="displayVideo(scope.row.m3u8For1080P,scope.row.originName)"
+                                >1080
+                                </el-button>
+                                <svg-icon
+                                    v-if="scope.row.m3u8For1080P"
+                                    icon-class="copy_btn"
+                                    class-name="copy-btn"
+                                    :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
+                                </svg-icon>
+                            </div>
+                            <div class="btn-icon-container">
+                                <el-button
+                                    v-if="scope.row.m3u8For720P"
+                                    type="text"
+                                    size="small"
+                                    @click="displayVideo(scope.row.m3u8For720P,scope.row.originName)"
+                                >720
+                                </el-button>
+                                <svg-icon
+                                    v-if="scope.row.m3u8For720P"
+                                    icon-class="copy_btn"
+                                    class-name="copy-btn"
+                                    :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
+                                </svg-icon>
+                            </div>
+                            <div class="btn-icon-container">
+                                <el-button
+                                    v-if="scope.row.m3u8For480P"
+                                    type="text"
+                                    size="small"
+                                    @click="displayVideo(scope.row.m3u8For480P,scope.row.originName)"
+                                >480
+                                </el-button>
+                                <svg-icon
+                                    v-if="scope.row.m3u8For480P"
+                                    icon-class="copy_btn"
+                                    class-name="copy-btn"
+                                    :data-clipboard-text="getVideoUrl(scope.row.m3u8For480P)">
+                                </svg-icon>
+                            </div>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -168,6 +200,8 @@
 <script>
     import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
 
+    const ClipboardJS = require('clipboard');
+
     export default {
         name: 'CarouselChannelDetail',
         components: {
@@ -182,6 +216,14 @@
                 }
             };
         },
+        computed: {
+            getVideoUrl() {
+                return (uri) => {
+                    let baseUri = window.localStorage.getItem('videoBaseUri');
+                    return `${baseUri}${uri}`;
+                };
+            }
+        },
         mounted() {
             this.init();
         },
@@ -193,10 +235,19 @@
                         this.channelInfo.carouselVideoList.map(video => {
                             if (video.onPlay) {
                                 this.channelInfo.currentProgramme = video.originName;
-                                this.channelInfo.duration = this.$util.formatDate(video.lastPlayTime) + '-' + this.$util.formatDate(video.lastPlayTime + video.takeTimeInSec * 1000);
+                                this.channelInfo.duration = this.$util.formatDate(new Date(video.lastPlayTime), 'yyyy年MM月DD日HH时mm分SS秒') + '---' + this.$util.formatDate(new Date(video.lastPlayTime + video.takeTimeInSec * 1000), 'yyyy年MM月DD日HH时mm分SS秒');
                             }
                         });
                     }
+                });
+                let that = this;
+                let clipboard = new ClipboardJS('.copy-btn');
+                clipboard.on('success', function (e) {
+                    that.$message.success('视频链接复制成功');
+                    e.clearSelection();
+                });
+                clipboard.on('error', function (e) {
+                    that.$message.error('视频链接复制失败');
                 });
             },
             // 预览视频
@@ -241,7 +292,8 @@
     }
 
     .el-card {
-        width: 600px;
+        display: inline-block;
+        padding-right: 50px;
         ul {
             li {
                 display: flex;
@@ -279,6 +331,10 @@
 
     img {
         display: block;
+    }
+
+    .copy-btn {
+        cursor: pointer;
     }
 
     #operate-list {

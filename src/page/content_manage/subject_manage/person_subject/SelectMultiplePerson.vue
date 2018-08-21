@@ -50,7 +50,7 @@
                 prop="area"
                 label="地区">
                 <template slot-scope="scope">
-                    {{scope.row.area.length !== 0 ? areaLabel(scope.row.area) : '------'}}
+                    {{scope.row.area && scope.row.area.length !== 0 ? areaLabel(scope.row.area) : '------'}}
                 </template>
             </el-table-column>
         </el-table>
@@ -81,7 +81,14 @@
             PersonFilterParams
         },
         // 当前外部选中的人物列表
-        props: ['selectedPersonList'],
+        props: {
+            selectedPersonList: {
+                type: Array,
+                default: function () {
+                    return [];
+                }
+            }
+        },
         data() {
             return {
                 listQueryParams: {

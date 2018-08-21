@@ -297,10 +297,41 @@ li {
     }
 }
 
+/** 删除按钮样式  */
+.remove-btn {
+    span {
+        color: #F56C6C;
+    }
+}
+
+/** 列表页面右上角添加按钮样式  */
+.create-blue-btn {
+    border: 1px solid #1989FA;
+    color: #1989FA;
+    * {
+        color: #1989FA;
+    }
+}
+
 /** 页面表单中的尺寸样式 */
 .fill-form {
     .el-input, .el-textarea, .el-select {
         width: 600px;
+    }
+}
+
+/** 清除筛选项的button样式 */
+.clear-filter {
+    .svg-icon {
+        margin-right: 2px;
+        fill: #ecf5ff;
+        stroke: #409EFF;
+    }
+    &:hover {
+        .svg-icon {
+            fill: #409EFF;
+            stroke: #fff;
+        }
     }
 }
 
@@ -483,6 +514,7 @@ li {
         }
     }
 }
+
 .programme-desc-container, .programme-person-container {
     .info-wrapper {
         span.label {

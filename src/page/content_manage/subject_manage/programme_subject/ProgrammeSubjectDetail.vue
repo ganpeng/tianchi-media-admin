@@ -69,10 +69,9 @@
                 </el-table>
             </div>
             <div id="operate-list">
-                <el-button type="primary" @click="editBasicInfo">编辑基本信息</el-button>
-                <el-button type="primary" @click="editSubjectProgrammes">编辑节目</el-button>
-                <el-button type="danger" @click="setSubjectVisible">{{subjectInfo.visible ? '下架' : '上架'}}</el-button>
-                <el-button type="danger" @click="removeSubject">删 除</el-button>
+                <el-button type="primary" class="page-main-btn" @click="editBasicInfo">编辑基本信息</el-button>
+                <el-button type="primary" class="page-main-btn" @click="editSubjectProgrammes">编辑节目</el-button>
+                <el-button @click="toSubjectList" class="page-main-btn">返回列表页</el-button>
             </div>
         </div>
     </div>
@@ -102,50 +101,6 @@
                     }
                 });
             },
-            // 设置专题的上下架
-            setSubjectVisible() {
-                this.$confirm('此操作将' + (this.subjectInfo.visible ? '下架该专题' : '上架该专题') + ', 是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }
-                ).then(() => {
-                    this.$service.setSubjectVisible(this.subjectInfo.id).then(response => {
-                        if (response && response.code === 0) {
-                            this.$message(this.subjectInfo.visible ? '下架成功' : '上架成功');
-                            this.subjectInfo.visible = !this.subjectInfo.visible;
-                        }
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消' + (this.subjectInfo.visible ? '下架该专题' : '上架该专题')
-                    });
-                });
-            },
-            // 删除当前专题，并跳转专题列表页面
-            removeSubject() {
-                this.$confirm('此操作将删除当前专题, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.$service.deleteSubject(this.$route.params.id).then(response => {
-                        if (response && response.code === 0) {
-                            this.$message({
-                                type: 'success',
-                                message: '删除成功!'
-                            });
-                            this.$router.push({name: 'SubjectList'});
-                        }
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
-            },
             // 编辑当前专题基本信息
             editBasicInfo() {
                 this.$router.push({
@@ -157,6 +112,9 @@
                 this.$router.push({
                     name: 'EditSubjectProgrammes', params: this.$route.params
                 });
+            },
+            toSubjectList() {
+                this.$router.push({name: 'SubjectList'});
             }
         }
     };
@@ -185,9 +143,5 @@
         position: absolute;
         right: 0px;
         top: 10px;
-        .el-button {
-            margin-right: 30px;
-            width: 120px;
-        }
     }
 </style>

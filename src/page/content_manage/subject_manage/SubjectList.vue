@@ -108,8 +108,32 @@
                         <el-button type="text" size="small" class="detail-btn" @click="checkSubjectDetail(scope.row)">
                             查看
                         </el-button>
-                        <el-button type="text" size="small" @click="editBasicInfo(scope.row)">编辑基本信息</el-button>
-                        <el-button type="text" size="small" @click="editSubjectContainer(scope.row)">增删内容</el-button>
+                        <el-dropdown id="edit-dropdown" @command="handleEdit($event,scope.row)">
+                            <span
+                                class="el-dropdown-link">
+                                编辑<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item
+                                    command="BASIC">
+                                    基本信息
+                                </el-dropdown-item>
+                                <el-dropdown-item
+                                    command="CONTENT">
+                                    增删内容
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <el-button type="text" size="small" @click="setSubjectVisible(scope.row)">
+                            {{scope.row.visible ? '下架' : '上架'}}
+                        </el-button>
+                        <el-button
+                            type="text"
+                            size="small"
+                            class="remove-btn"
+                            @click="removeSubject(scope.row)">
+                            删除
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -123,7 +147,7 @@
                 :total="totalAmount">
             </el-pagination>
             <el-dropdown @command="createSubject" class="create-item">
-                <el-button type="primary" plain icon="el-icon-circle-plus-outline">
+                <el-button icon="el-icon-circle-plus-outline" class="create-blue-btn">
                     创建专题<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
@@ -174,6 +198,18 @@
                     }
                 });
             },
+            handleEdit(command, info) {
+                switch (command) {
+                    case 'BASIC':
+                        this.editBasicInfo(info);
+                        break;
+                    case 'CONTENT':
+                        this.editSubjectContainer(info);
+                        break;
+                    default:
+                        break;
+                }
+            },
             handleSizeChange(pageSize) {
                 this.listQueryParams.pageSize = pageSize;
                 this.getSubjectList();
@@ -190,23 +226,46 @@
                 });
             },
             // 设置专题的上下架
-            setSubjectVisible(row) {
-                this.$confirm('此操作将' + (row.visible ? '下架该专题' : '上架该专题') + ', 是否继续?', '提示', {
+            setSubjectVisible(item) {
+                this.$confirm('此操作将' + (item.visible ? '下架该专题' : '上架该专题') + ', 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
                     }
                 ).then(() => {
-                    this.$service.setSubjectVisible(row.id).then(response => {
+                    this.$service.setSubjectVisible(item.id).then(response => {
                         if (response && response.code === 0) {
-                            this.$message(row.visible ? '下架成功' : '上架成功');
-                            row.visible = !row.visible;
+                            this.$message.success(item.name + '专题' + (item.visible ? '下架成功' : '上架成功'));
+                            item.visible = !item.visible;
                         }
                     });
                 }).catch(() => {
                     this.$message({
                         type: 'info',
-                        message: '已取消' + (row.visible ? '下架该专题' : '上架该专题')
+                        message: '已取消' + (item.visible ? '下架' : '上架' + item.name + '专题')
+                    });
+                });
+            },
+            // 删除当前专题，并跳转专题列表页面
+            removeSubject(item) {
+                this.$confirm('此操作将删除当前专题, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$service.deleteSubject(item.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message({
+                                type: 'success',
+                                message: item.name + '专题删除成功!'
+                            });
+                            this.getSubjectList();
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
                     });
                 });
             },
@@ -247,6 +306,19 @@
 
     .el-pagination {
         margin-bottom: 126px;
+    }
+
+    #edit-dropdown {
+        cursor: pointer;
+        .el-dropdown-link {
+            color: $baseBlue;
+            font-size: 12px;
+        }
+    }
+
+    .detail-btn {
+        padding-left: 12px;
+        margin-right: 12px;
     }
 
 </style>

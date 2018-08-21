@@ -134,34 +134,66 @@
                     width="160px"
                     label="预览视频">
                     <template slot-scope="scope">
-                        <el-button
-                            v-if="scope.row.m3u8For4K"
-                            type="text"
-                            size="small"
-                            @click="displayVideo(scope.row.m3u8For4K)"
-                        >4K
-                        </el-button>
-                        <el-button
-                            v-if="scope.row.m3u8For1080P"
-                            type="text"
-                            size="small"
-                            @click="displayVideo(scope.row.m3u8For1080P)"
-                        >1080
-                        </el-button>
-                        <el-button
-                            v-if="scope.row.m3u8For720P"
-                            type="text"
-                            size="small"
-                            @click="displayVideo(scope.row.m3u8For720P)"
-                        >720
-                        </el-button>
-                        <el-button
-                            v-if="scope.row.m3u8For480P"
-                            type="text"
-                            size="small"
-                            @click="displayVideo(scope.row.m3u8For480P)"
-                        >480
-                        </el-button>
+                        <div class="btn-icon-container">
+                            <el-button
+                                v-if="scope.row.m3u8For4K"
+                                type="text"
+                                size="small"
+                                @click="displayVideo(scope.row.m3u8For4K,scope.row.originName)"
+                            >4K
+                            </el-button>
+                            <svg-icon
+                                v-if="scope.row.m3u8For4K"
+                                icon-class="copy_btn"
+                                class-name="copy-btn"
+                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
+                            </svg-icon>
+                        </div>
+                        <div class="btn-icon-container">
+                            <el-button
+                                v-if="scope.row.m3u8For1080P"
+                                type="text"
+                                size="small"
+                                @click="displayVideo(scope.row.m3u8For1080P,scope.row.originName)"
+                            >1080
+                            </el-button>
+                            <svg-icon
+                                v-if="scope.row.m3u8For1080P"
+                                icon-class="copy_btn"
+                                class-name="copy-btn"
+                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
+                            </svg-icon>
+                        </div>
+                        <div class="btn-icon-container">
+                            <el-button
+                                v-if="scope.row.m3u8For720P"
+                                type="text"
+                                size="small"
+                                @click="displayVideo(scope.row.m3u8For720P,scope.row.originName)"
+                            >720
+                            </el-button>
+                            <svg-icon
+                                v-if="scope.row.m3u8For720P"
+                                icon-class="copy_btn"
+                                class-name="copy-btn"
+                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
+                            </svg-icon>
+                        </div>
+                        <div class="btn-icon-container">
+                            <el-button
+                                v-if="scope.row.m3u8For480P"
+                                type="text"
+                                size="small"
+                                @click="displayVideo(scope.row.m3u8For480P,scope.row.originName)"
+                            >480
+                            </el-button>
+                            <svg-icon
+                                v-if="scope.row.m3u8For480P"
+                                icon-class="copy_btn"
+                                class-name="copy-btn"
+                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For480P)">
+                            </svg-icon>
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -211,108 +243,114 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <!--自动化排序-->
-            <el-card id="auto-sort">
-                <div slot="header" class="clearfix">
-                    <h3 class="block-vice-title">排序：</h3>
-                    <div v-for="(item, index) in sectionList" :key="index">
-                        <el-input v-model="item.name" placeholder="请填写部的名称"></el-input>
-                        <el-button type="primary" plain @click="removeSection(index)" v-if="sectionList.length !== 1">
-                            删除
-                        </el-button>
-                    </div>
-                    <el-tooltip content="填写部的名称，例如'还珠格格'、'还珠格格2'、'新还珠格格'等" placement="top" effect="light">
-                        <el-button type="primary" plain @click="addSection">添加部的名称</el-button>
-                    </el-tooltip>
-                    <div class="text-center">
-                        <el-tooltip content="根据填写的部的名称列表，例如'还珠格格2'，以及视频的展示名称，例如'还珠格格2-02'进行自动排序" placement="top"
+            <el-collapse id="channel-setting" v-model="activeNames">
+                <el-collapse-item title="排序" name="1">
+                    <el-card id="auto-sort">
+                        <div slot="header" class="clearfix">
+                            <div v-for="(item, index) in sectionList" :key="index">
+                                <el-input v-model="item.name" placeholder="请填写部的名称"></el-input>
+                                <el-button type="primary" plain @click="removeSection(index)"
+                                           v-if="sectionList.length !== 1">
+                                    删除
+                                </el-button>
+                            </div>
+                            <el-tooltip content="填写部的名称，例如'还珠格格'、'还珠格格2'、'新还珠格格'等" placement="top" effect="light">
+                                <el-button type="primary" plain @click="addSection">添加部的名称</el-button>
+                            </el-tooltip>
+                            <div class="text-center">
+                                <el-tooltip content="根据填写的部的名称列表，例如'还珠格格2'，以及视频的展示名称，例如'还珠格格2-02'进行自动排序" placement="top"
+                                            effect="light">
+                                    <el-button type="primary" plain @click="autoSort">自动排序</el-button>
+                                </el-tooltip>
+                            </div>
+                        </div>
+                        <el-tooltip content="拖动排序功能" placement="top" effect="light">
+                            <el-button type="primary" plain @click="sortVideoList">视频拖动排序</el-button>
+                        </el-tooltip>
+                        <el-tooltip content="反转当前视频列表功能" placement="top" effect="light">
+                            <el-button type="primary" plain @click="revertVideoList">反转列表</el-button>
+                        </el-tooltip>
+                    </el-card>
+                </el-collapse-item>
+                <el-collapse-item title="设置展示名称" name="2">
+                    <el-card id="fill-display-name">
+                        <div slot="header" class="clearfix">
+                            <div>
+                                <label>删除原始文件名称第一部分：</label>
+                                <el-input
+                                    v-model="originNameParams.prefix"
+                                    placeholder="请填写前缀等需要删除的连续文字，例如'（高清）'等">
+                                </el-input>
+                            </div>
+                            <div>
+                                <label>删除原始文件名称第二部分：</label>
+                                <el-input
+                                    v-model="originNameParams.midWords"
+                                    placeholder="请填写中间等需要删除的连续文字，例如'（高清）'等">
+                                </el-input>
+                            </div>
+                            <div>
+                                <label>删除原始文件名称第三部分：</label>
+                                <el-input
+                                    v-model="originNameParams.suffix"
+                                    placeholder="请填写后缀等需要删除的连续文字，例如'.mpg'等">
+                                </el-input>
+                            </div>
+                            <div class="text-center">
+                                <el-tooltip
+                                    content="根据填写的视频文件名称需要删除的部分，对视频原始文件名称进行截取删除操作，并填写到展示名称处"
+                                    placement="top"
                                     effect="light">
-                            <el-button type="primary" plain @click="autoSort">自动排序</el-button>
+                                    <el-button type="primary" plain @click="setDisplayNameFromOriginName">填写展示名称
+                                    </el-button>
+                                </el-tooltip>
+                            </div>
+                        </div>
+                        <div slot="header" class="clearfix">
+                            <h3 class="block-vice-title">根据视频展示名对视频展示名称进行设置：</h3>
+                            <div>
+                                <label>被替换视频展示名部分：</label>
+                                <el-input
+                                    v-model="displayNameParams.words"
+                                    placeholder="请填写需要被替换的连续文字，例如'（高清）'等">
+                                </el-input>
+                            </div>
+                            <div>
+                                <label>替换为视频展示名部分：</label>
+                                <el-input
+                                    v-model="displayNameParams.replacer"
+                                    placeholder="请填写需要替换为的连续文字，例如'-'等">
+                                </el-input>
+                            </div>
+                            <div class="text-center">
+                                <el-tooltip
+                                    content="根据填写的展示名称需要删除的部分，对视频展示名进行截取删除操作，并填回到展示名称处"
+                                    placement="top"
+                                    effect="light">
+                                    <el-button type="primary" plain @click="setDisplayNameFromSelf">填写展示名称</el-button>
+                                </el-tooltip>
+                            </div>
+                        </div>
+                        <el-tooltip
+                            content="分割原始文件名'&&'，自动填写展示名称，例如原始文件名称为'（高清）新还珠格格（收录）01&&新还珠格格-01.mpg'"
+                            placement="top"
+                            effect="light">
+                            <el-button type="primary" plain @click="setVideoNameList">设置展示名称</el-button>
                         </el-tooltip>
-                    </div>
-                </div>
-                <el-tooltip content="拖动排序功能" placement="top" effect="light">
-                    <el-button type="primary" plain @click="sortVideoList">视频拖动排序</el-button>
-                </el-tooltip>
-                <el-tooltip content="反转当前视频列表功能" placement="top" effect="light">
-                    <el-button type="primary" plain @click="revertVideoList">反转列表</el-button>
-                </el-tooltip>
-            </el-card>
+                        <el-tooltip content="删除当前视频中的展示名称中的最后面的数字" placement="top" effect="light">
+                            <el-button type="primary" plain @click="removeDisplayNameNo">删除展示名称后面的数字</el-button>
+                        </el-tooltip>
+                        <el-tooltip content="在展示名称的文字最后插入'-'，例如'天龙八部01'改为'天龙八部-01'" placement="top" effect="light">
+                            <el-button type="primary" plain @click="insertShortLine">插入'-'</el-button>
+                        </el-tooltip>
+                    </el-card>
+                </el-collapse-item>
+            </el-collapse>
             <!--填写视频展示名称-->
-            <el-card id="fill-display-name">
-                <div slot="header" class="clearfix">
-                    <h3 class="block-vice-title">根据视频文件名设置展示名称：</h3>
-                    <div>
-                        <label>删除原始文件名称第一部分：</label>
-                        <el-input
-                            v-model="originNameParams.prefix"
-                            placeholder="请填写前缀等需要删除的连续文字，例如'（高清）'等">
-                        </el-input>
-                    </div>
-                    <div>
-                        <label>删除原始文件名称第二部分：</label>
-                        <el-input
-                            v-model="originNameParams.midWords"
-                            placeholder="请填写中间等需要删除的连续文字，例如'（高清）'等">
-                        </el-input>
-                    </div>
-                    <div>
-                        <label>删除原始文件名称第三部分：</label>
-                        <el-input
-                            v-model="originNameParams.suffix"
-                            placeholder="请填写后缀等需要删除的连续文字，例如'.mpg'等">
-                        </el-input>
-                    </div>
-                    <div class="text-center">
-                        <el-tooltip
-                            content="根据填写的视频文件名称需要删除的部分，对视频原始文件名称进行截取删除操作，并填写到展示名称处"
-                            placement="top"
-                            effect="light">
-                            <el-button type="primary" plain @click="setDisplayNameFromOriginName">填写展示名称</el-button>
-                        </el-tooltip>
-                    </div>
-                </div>
-                <div slot="header" class="clearfix">
-                    <h3 class="block-vice-title">根据视频展示名对视频展示名称进行设置：</h3>
-                    <div>
-                        <label>被替换视频展示名部分：</label>
-                        <el-input
-                            v-model="displayNameParams.words"
-                            placeholder="请填写需要被替换的连续文字，例如'（高清）'等">
-                        </el-input>
-                    </div>
-                    <div>
-                        <label>替换为视频展示名部分：</label>
-                        <el-input
-                            v-model="displayNameParams.replacer"
-                            placeholder="请填写需要替换为的连续文字，例如'-'等">
-                        </el-input>
-                    </div>
-                    <div class="text-center">
-                        <el-tooltip
-                            content="根据填写的展示名称需要删除的部分，对视频展示名进行截取删除操作，并填回到展示名称处"
-                            placement="top"
-                            effect="light">
-                            <el-button type="primary" plain @click="setDisplayNameFromSelf">填写展示名称</el-button>
-                        </el-tooltip>
-                    </div>
-                </div>
-                <el-tooltip
-                    content="分割原始文件名'&&'，自动填写展示名称，例如原始文件名称为'（高清）新还珠格格（收录）01&&新还珠格格-01.mpg'"
-                    placement="top"
-                    effect="light">
-                    <el-button type="primary" plain @click="setVideoNameList">设置展示名称</el-button>
-                </el-tooltip>
-                <el-tooltip content="删除当前视频中的展示名称中的最后面的数字" placement="top" effect="light">
-                    <el-button type="primary" plain @click="removeDisplayNameNo">删除展示名称后面的数字</el-button>
-                </el-tooltip>
-                <el-tooltip content="在展示名称的文字最后插入'-'，例如'天龙八部01'改为'天龙八部-01'" placement="top" effect="light">
-                    <el-button type="primary" plain @click="insertShortLine">插入'-'</el-button>
-                </el-tooltip>
-            </el-card>
         </div>
         <display-video-dialog
             :url="previewVideoInfo.url"
+            :title="previewVideoInfo.title"
             :displayVideoDialogVisible="previewVideoInfo.visible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
@@ -366,6 +404,8 @@
     import SortDialog from 'sysComponents/custom_components/custom/SortDialog';
     import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import {CHANNEL_LOGO_DIMENSION} from '@/util/config/dimension';
+
+    const ClipboardJS = require('clipboard');
 
     export default {
         name: 'EditCarouselChannel',
@@ -452,6 +492,7 @@
                 }
             };
             return {
+                activeNames: ['1'],
                 originNameParams: {
                     prefix: '',
                     midWords: '',
@@ -478,6 +519,7 @@
                 currentVideoIndex: '',
                 previewVideoInfo: {
                     url: '',
+                    title: '',
                     visible: false
                 },
                 infoRules: {
@@ -510,6 +552,14 @@
                     ]
                 }
             };
+        },
+        computed: {
+            getVideoUrl() {
+                return (uri) => {
+                    let baseUri = window.localStorage.getItem('videoBaseUri');
+                    return `${baseUri}${uri}`;
+                };
+            }
         },
         mounted() {
             this.init();
@@ -576,10 +626,19 @@
                         this.currentSelectedVideoList.map(video => {
                             if (video.onPlay) {
                                 this.channelInfo.currentProgramme = video.originName;
-                                this.channelInfo.duration = this.$util.formatDate(video.lastPlayTime) + '-' + this.$util.formatDate(video.lastPlayTime + video.takeTimeInSec * 1000);
+                                this.channelInfo.duration = this.$util.formatDate(new Date(video.lastPlayTime), 'yyyy年MM月DD日HH时mm分SS秒') + '---' + this.$util.formatDate(new Date(video.lastPlayTime + video.takeTimeInSec * 1000), 'yyyy年MM月DD日HH时mm分SS秒');
                             }
                         });
                     }
+                });
+                let that = this;
+                let clipboard = new ClipboardJS('.copy-btn');
+                clipboard.on('success', function (e) {
+                    that.$message.success('视频链接复制成功');
+                    e.clearSelection();
+                });
+                clipboard.on('error', function (e) {
+                    that.$message.error('视频链接复制失败');
                 });
             },
             // 设置频道封面的uri
@@ -641,14 +700,18 @@
             },
             // 设置视频列表中每个视频的展示名称,'（高清）新还珠格格（收录）01&&新还珠格格-01.mpg'
             setVideoNameList() {
-                this.currentSelectedVideoList.map(video => {
-                    if (video.originName.indexOf('&&') === -1) {
-                        video.name = '';
+                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                    if (this.currentSelectedVideoList[i].originName.indexOf('&&') === -1) {
+                        this.currentSelectedVideoList[i].name = '';
                     } else {
-                        video.name = video.originName.split('&&')[1].split('.')[0];
+                        this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].originName.split('&&')[1].split('.')[0];
                     }
+                    Vue.set(this.currentSelectedVideoList, i, this.currentSelectedVideoList[i]);
+                }
+                this.$message({
+                    message: '设置视频展示名称已完成',
+                    type: 'success'
                 });
-                this.$message('设置视频展示名称已完成');
             },
             revertVideoList() {
                 let array = [];
@@ -656,7 +719,10 @@
                     array.push(this.currentSelectedVideoList[i]);
                 }
                 this.currentSelectedVideoList = array;
-                this.$message('视频列表已反转');
+                this.$message({
+                    message: '视频列表已反转',
+                    type: 'success'
+                });
             },
             removeSection(index) {
                 this.sectionList.splice(index, 1);
@@ -738,9 +804,10 @@
                 this.$message('视频列表排序成功');
             },
             // 预览视频
-            displayVideo(url) {
+            displayVideo(url, title) {
                 let baseUri = window.localStorage.getItem('videoBaseUri');
                 this.previewVideoInfo.url = `${baseUri}${url}`;
+                this.previewVideoInfo.title = title;
                 this.previewVideoInfo.visible = true;
             },
             // 关闭视频预览
@@ -901,7 +968,8 @@
     }
 
     .el-card {
-        width: 600px;
+        display: inline-block;
+        padding-right: 50px;
         ul {
             li {
                 display: flex;
@@ -919,7 +987,7 @@
                     color: $baseGray;
                 }
                 label {
-                    width: 380px;
+                    min-width: 380px;
                     font-size: $normalFontSize;
                     color: #909399;
                     flex-shrink: 0;
@@ -952,6 +1020,10 @@
         margin-top: 20px;
     }
 
+    .copy-btn {
+        cursor: pointer;
+    }
+
     .el-table {
         .el-input {
             width: 100%;
@@ -959,7 +1031,6 @@
     }
 
     #auto-sort, #fill-display-name {
-        margin-top: 30px;
         width: 100%;
         .el-button {
             margin-bottom: 30px;
@@ -970,4 +1041,20 @@
         }
     }
 
+</style>
+
+<style lang="scss">
+    #channel-setting {
+        width: 100%;
+        .el-collapse-item__header {
+            padding-left: 20px;
+            font-size: 16px;
+        }
+        .el-collapse-item__content {
+            padding-bottom: 0px;
+        }
+        .el-collapse-item__wrap {
+            background: $stillGray;
+        }
+    }
 </style>

@@ -25,6 +25,14 @@
             <el-form-item>
                 <el-button type="primary" plain icon="el-icon-search" @click="getPersonList">搜索</el-button>
             </el-form-item>
+            <el-form-item>
+                <el-button type="primary" plain class="clear-filter" @click="clearFilters">
+                    <svg-icon
+                        icon-class="clear_filter">
+                    </svg-icon>
+                    清除筛选项
+                </el-button>
+            </el-form-item>
         </el-form>
     </div>
 </template>
@@ -46,6 +54,16 @@
         methods: {
             getPersonList() {
                 this.$emit('getPersonList', this.listQueryParams);
+            },
+            clearFilters() {
+                for (let key in this.listQueryParams) {
+                    if (Array.isArray(this.listQueryParams[key])) {
+                        this.listQueryParams[key] = [];
+                    } else {
+                        this.listQueryParams[key] = '';
+                    }
+                }
+                this.createRangeTime = [];
             }
         }
     };
@@ -54,10 +72,7 @@
 <style lang="scss" scoped>
 
     .el-form-item {
-        margin-right: 60px;
-        &:first-child {
-            margin-left: 20px;
-        }
+        margin-right: 30px;
     }
 
 </style>

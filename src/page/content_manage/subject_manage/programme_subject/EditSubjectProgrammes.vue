@@ -68,7 +68,8 @@
                 </el-table>
             </div>
             <div class="text-center update-btn">
-                <el-button type="primary" class="page-main-btn" @click="updateSubjectProgrammes">更 新</el-button>
+                <el-button type="primary" class="page-main-btn" @click="updateSubjectProgrammes">保存</el-button>
+                <el-button @click="toSubjectList" class="page-main-btn">返回列表页</el-button>
             </div>
         </div>
     </div>
@@ -124,9 +125,12 @@
                     subjectItemList: this.selectedProgrammeList
                 }).then(response => {
                     if (response && response.code === 0) {
-                        this.$message('更新节目列表成功');
+                        this.$message.success('更新节目列表成功');
                     }
                 });
+            },
+            toSubjectList() {
+                this.$router.push({name: 'SubjectList'});
             }
         }
     };
@@ -146,7 +150,7 @@
     }
 
     .update-btn {
-        margin: 60px 0px;
+        margin: 120px 0px 80px 0px;
     }
 
 </style>

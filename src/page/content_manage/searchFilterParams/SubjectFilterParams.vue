@@ -41,6 +41,14 @@
             <el-form-item>
                 <el-button type="primary" plain icon="el-icon-search" @click="getSubjectList">搜索</el-button>
             </el-form-item>
+            <el-form-item>
+                <el-button type="primary" plain class="clear-filter" @click="clearFilters">
+                    <svg-icon
+                        icon-class="clear_filter">
+                    </svg-icon>
+                    清除筛选项
+                </el-button>
+            </el-form-item>
         </el-form>
     </div>
 </template>
@@ -95,6 +103,16 @@
                     this.listQueryParams.createdAtEnd = Date.parse(this.createRangeTime[1]);
                 }
                 this.$emit('getSubjectList', this.listQueryParams);
+            },
+            clearFilters() {
+                for (let key in this.listQueryParams) {
+                    if (Array.isArray(this.listQueryParams[key])) {
+                        this.listQueryParams[key] = [];
+                    } else {
+                        this.listQueryParams[key] = '';
+                    }
+                }
+                this.createRangeTime = [];
             }
         }
     };

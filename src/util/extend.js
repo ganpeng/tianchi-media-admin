@@ -135,18 +135,30 @@ let util = {
      * @return {String} formated string
      **/
     formatDate(date, format) {
-        // handle yyyy
-        format = format.replace(/yyyy/g, date.getFullYear());
-        // handle MM
-        format = format.replace(/MM/g, date.getMonth() + 1);
-        // handle DD
-        format = format.replace(/DD/g, date.getDate());
-        // handle HH
-        format = format.replace(/HH/g, date.getHours());
-        // handle mm
-        format = format.replace(/mm/g, date.getMinutes());
-        // handle SS
-        format = format.replace(/SS/g, date.getSeconds());
+        if (format) {
+            // handle yyyy
+            format = format.replace(/yyyy/g, date.getFullYear());
+        }
+        if (format) {
+            // handle MM
+            format = format.replace(/MM/g, date.getMonth() + 1);
+        }
+        if (format) {
+            // handle DD
+            format = format.replace(/DD/g, date.getDate());
+        }
+        if (format) {
+            // handle HH
+            format = format.replace(/HH/g, date.getHours());
+        }
+        if (format) {
+            // handle mm
+            format = format.replace(/mm/g, date.getMinutes());
+        }
+        if (format) {
+            // handle SS
+            format = format.replace(/SS/g, date.getSeconds());
+        }
         return format;
     },
     fromSecondsToTime(seconds) {

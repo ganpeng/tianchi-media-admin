@@ -50,28 +50,28 @@
                         v-if="scope.row.m3u8For4K"
                         type="text"
                         size="small"
-                        @click="displayVideo(scope.row.m3u8For4K)"
+                        @click="displayVideo(scope.row.m3u8For4K,scope.row.originName)"
                     >4K
                     </el-button>
                     <el-button
                         v-if="scope.row.m3u8For1080P"
                         type="text"
                         size="small"
-                        @click="displayVideo(scope.row.m3u8For1080P)"
+                        @click="displayVideo(scope.row.m3u8For1080P,scope.row.originName)"
                     >1080
                     </el-button>
                     <el-button
                         v-if="scope.row.m3u8For720P"
                         type="text"
                         size="small"
-                        @click="displayVideo(scope.row.m3u8For720P)"
+                        @click="displayVideo(scope.row.m3u8For720P,scope.row.originName)"
                     >720
                     </el-button>
                     <el-button
                         v-if="scope.row.m3u8For480P"
                         type="text"
                         size="small"
-                        @click="displayVideo(scope.row.m3u8For480P)"
+                        @click="displayVideo(scope.row.m3u8For480P,scope.row.originName)"
                     >480
                     </el-button>
                 </template>
@@ -123,8 +123,9 @@
               <el-button type="primary" @click="appendVideo">确 定</el-button>
             </span>
         <display-video-dialog
-            :url="url"
-            :displayVideoDialogVisible="displayVideoDialogVisible"
+            :url="previewVideoInfo.url"
+            :title="previewVideoInfo.title"
+            :displayVideoDialogVisible="previewVideoInfo.visible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
     </div>
@@ -149,8 +150,11 @@
                 },
                 pageNum: 1,
                 total: 0,
-                displayVideoDialogVisible: false,
-                url: '',
+                previewVideoInfo: {
+                    url: '',
+                    title: '',
+                    visible: false
+                },
                 hasRadio: true,
                 videoList: [],
                 selectedMultipleVideo: []
@@ -291,10 +295,11 @@
             closeDisplayVideoDialog(status) {
                 this.displayVideoDialogVisible = status;
             },
-            displayVideo(url) {
+            displayVideo(url, title) {
                 let baseUri = window.localStorage.getItem('videoBaseUri');
-                this.displayVideoDialogVisible = true;
-                this.url = `${baseUri}${url}`;
+                this.previewVideoInfo.url = `${baseUri}${url}`;
+                this.previewVideoInfo.title = title;
+                this.previewVideoInfo.visible = true;
             },
             closeSelectVideoDialog() {
                 this.$emit('closeSelectVideoDialog');
