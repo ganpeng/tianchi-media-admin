@@ -11,7 +11,7 @@
             <el-form id="label-font" :inline="true" class="demo-form-inline text-left">
                 <el-col :span="6" class="float-right text-right">
                     <el-button class="page-main-btn" @click="createProgramme" icon="el-icon-circle-plus-outline" type="primary" plain>新增节目</el-button>
-                    <el-button class="page-main-btn" type="primary" plain @click="showFileUploadDialog">导入节目</el-button>
+                    <el-button class="page-main-btn" type="primary" icon="el-icon-upload2" plain @click="showFileUploadDialog">导入节目</el-button>
                 </el-col>
                 <el-col :span="24">
                     <el-form-item label="上映开始年">
@@ -103,7 +103,13 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button class="page-main-btn" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
-                        <el-button class="page-main-btn" type="primary" @click="clearSearchFields" plain>清空筛选条件</el-button>
+                        <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
+                            <svg-icon
+                                icon-class="clear_filter"
+                                class-name="svg-box">
+                            </svg-icon>
+                            清空筛选条件
+                        </el-button>
                     </el-form-item>
                     <el-form-item>
                     </el-form-item>

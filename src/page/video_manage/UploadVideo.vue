@@ -10,7 +10,7 @@
         <div v-else class="max-container upload-wrapper">
             <div class="upload-file">
                 <el-dropdown class="float-left">
-                    <el-button class="upload-btn" size="small" icon="el-icon-circle-plus-outline" type="primary" plain>
+                    <el-button class="upload-btn" size="small" icon="el-icon-upload2" type="primary" plain>
                         上传视频<i class="el-icon-arrow-down el-icon--right"></i>
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
@@ -99,8 +99,10 @@ export default {
         let that = this;
         window.eventBus.$on('startUpload', that.uploadHandler);
         this.$nextTick(() => {
-            uppie(document.querySelector('#upload-input-file'), this.uploadChangeHandler.bind(this));
-            uppie(document.querySelector('#upload-input-dir'), this.uploadChangeHandler.bind(this));
+            let uploadInputFile = document.querySelector('#upload-input-file');
+            let uploadInputDir = document.querySelector('#upload-input-dir');
+            uploadInputFile && uppie(uploadInputFile, this.uploadChangeHandler.bind(this));
+            uploadInputDir && uppie(uploadInputDir, this.uploadChangeHandler.bind(this));
         });
         window.addEventListener('beforeunload', (e) => {
             if (that.uploadState.isUploading) {

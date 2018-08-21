@@ -7,6 +7,15 @@
             {name:'节目资源管理'},
             {name:getPageName}]">
         </custom-breadcrumb>
+        <div class="text-right">
+            <el-button class="page-main-btn" v-if="status === 0" type="primary" @click="_createProgramme">创建</el-button>
+            <el-button class="page-main-btn" v-if="status === 2" type="primary" @click="_editProgramme">保存</el-button>
+            <el-button class="page-main-btn" v-if="status === 2" type="primary" @click="_deleteProgramme">
+                {{programme.visible ? '节目下架' : '节目上架'}}
+            </el-button>
+            <el-button class="page-main-btn" v-if="status === 2 && !programme.visible" type="danger" @click="_realDeleteProgramme">节目删除</el-button>
+            <el-button class="page-main-btn" @click="goBack" plain>返回列表页</el-button>
+        </div>
         <el-row>
             <programme-basic-info v-if="status === 1"></programme-basic-info>
             <el-col :span="24" v-if="status !== 1">

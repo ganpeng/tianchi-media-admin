@@ -12,6 +12,7 @@
                 <div v-if="displayVideoDialogVisible">
                     <video-player ref="player" @play="play" :video="{url, type: 'hls'}" :contextmenu="contextmenu"></video-player>
                     <i @click="beforeCloseHandler" class="pointer close-btn el-icon-close"></i>
+                    <p class="video-link">视频地址：{{url}}</p>
                 </div>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="cancelHandler">关闭</el-button>
@@ -81,9 +82,18 @@ export default {
     position: absolute;
     top: 20px;
     right: 20px;
-    font-size: 16px;
+    font-size: 20px;
     &:hover {
         color: #F56C6C;
     }
+}
+.el-dialog__header {
+    padding: 20px 40px 10px 20px!important;
+    .el-dialog__title {
+        color: green;
+    }
+}
+.video-link {
+    margin-top: 10px;
 }
 </style>

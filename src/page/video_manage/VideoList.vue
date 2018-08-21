@@ -10,7 +10,7 @@
         <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @keyup.enter.native="searchHandler" @submit.native.prevent>
             <el-col :span="24">
                 <el-dropdown class="float-right">
-                    <el-button icon="el-icon-circle-plus-outline" type="primary" plain>
+                    <el-button icon="el-icon-upload2" type="primary" plain>
                         上传视频<i class="el-icon-arrow-down el-icon--right"></i>
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
@@ -58,6 +58,13 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="searchHandler" plain>搜索</el-button>
+                    <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
+                        <svg-icon
+                            icon-class="clear_filter"
+                            class-name="svg-box">
+                        </svg-icon>
+                        清空筛选条件
+                    </el-button>
                 </el-form-item>
                 <el-form-item class="float-right">
                     <el-button size="small" type="danger" @click="deleteVideoList"><i class="el-icon-delete"></i> 批量删除</el-button>
@@ -117,11 +124,15 @@
         methods: {
             ...mapMutations({
                 updateSearchFields: 'video/updateSearchFields',
+                resetSearchFields: 'video/resetSearchFields',
                 updateUploadState: 'uploadVideo/updateUploadState'
             }),
             ...mapActions({
                 getVideoList: 'video/getVideoList'
             }),
+            clearSearchFields() {
+                this.resetSearchFields();
+            },
             clearInputValue() {
                 this.$refs.uploadInputFile.value = '';
                 this.$refs.uploadInputDir.value = '';

@@ -68,6 +68,13 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="getVersionList" plain>搜索</el-button>
+                    <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
+                        <svg-icon
+                            icon-class="clear_filter"
+                            class-name="svg-box">
+                        </svg-icon>
+                        清空筛选条件
+                    </el-button>
                 </el-form-item>
             </el-col>
         </el-form>
@@ -103,7 +110,7 @@
             </el-table-column>
             <el-table-column align="center" width="120px" fixed="right" label="操作">
                 <template slot-scope="scope">
-                    <el-button class="text-success" type="text" size="small" @click="displayVersion(scope.row.id)">查看</el-button>
+                    <el-button class="text-success" type="text" size="small" @click="displayVersion(scope.row.id)">详情</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -170,6 +177,7 @@
                 updatePagination: 'version/updatePagination',
                 resetVersion: 'version/resetVersion',
                 resetPagination: 'version/resetPagination',
+                resetSearchFields: 'version/resetSearchFields',
                 setVersion: 'version/setVersion',
                 resetState: 'version/resetState'
             }),
@@ -177,6 +185,9 @@
                 postVersion: 'version/postVersion',
                 getVersionList: 'version/getVersionList'
             }),
+            clearSearchFields() {
+                this.resetSearchFields();
+            },
             keyupHandler(e) {
                 if (e.keyCode === 13) {
                     this.getVersionList();

@@ -11,7 +11,7 @@
             <el-col :span="24" class="float-right">
                 <el-form-item class="create-account">
                     <el-button type="primary" plain @click="createLiveChannel"><i class="el-icon-circle-plus-outline"></i> 新增直播频道</el-button>
-                    <el-button type="primary" plain @click="showFileUploadDialog">导入节目单</el-button>
+                    <el-button type="primary" icon="el-icon-upload2" plain @click="showFileUploadDialog">导入节目单</el-button>
                 </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -42,15 +42,22 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="searchHandler" plain>搜索</el-button>
+                    <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
+                        <svg-icon
+                            icon-class="clear_filter"
+                            class-name="svg-box">
+                        </svg-icon>
+                        清空筛选条件
+                    </el-button>
                 </el-form-item>
             </el-col>
         </el-form>
         <el-table header-row-class-name=“common-table-header” class="my-table-style" :data="list" border>
             <el-table-column prop="code" align="center" width="120px" label="直播频道编号"></el-table-column>
-            <el-table-column prop="no" align="center" width="200px" label="直播频道展示编号"></el-table-column>
-            <el-table-column prop="innerName" align="center" width="200px" label="直播频道名称"></el-table-column>
-            <el-table-column prop="name" align="center" width="200px" label="直播频道展示名"></el-table-column>
-            <el-table-column prop="type" width="200px" align="center" label="频道类别">
+            <el-table-column prop="no" align="center" width="140px" label="直播频道展示编号"></el-table-column>
+            <el-table-column prop="innerName" align="center" width="120px" label="直播频道名称"></el-table-column>
+            <el-table-column prop="name" align="center" width="120px" label="直播频道展示名"></el-table-column>
+            <el-table-column prop="type" width="120px" align="center" label="频道类别">
                 <template slot-scope="scope">
                     {{typeName(scope.row.id)}}
                 </template>
@@ -150,7 +157,8 @@
             ...mapMutations({
                 setLiveChannel: 'channel/setLiveChannel',
                 updatePagination: 'channel/updatePagination',
-                updateSearchFields: 'channel/updateSearchFields'
+                updateSearchFields: 'channel/updateSearchFields',
+                resetSearchFields: 'channel/resetSearchFields'
             }),
             ...mapActions({
                 getChannelType: 'channel/getChannelType',
@@ -159,6 +167,9 @@
                 getLiveChannelById: 'channel/getLiveChannelById',
                 getChannelPageById: 'channel/getChannelPageById'
             }),
+            clearSearchFields() {
+                this.resetSearchFields();
+            },
             keyupHandler(e) {
                 if (e.keyCode === 13) {
                     this.searchHandler();

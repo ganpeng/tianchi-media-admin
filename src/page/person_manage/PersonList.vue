@@ -11,7 +11,7 @@
             <el-col :span="5" class="float-right">
                 <el-form-item class="create-account">
                     <el-button class="page-main-btn" type="primary" plain @click="createPerson"><i class="el-icon-circle-plus-outline"></i> 新增人物</el-button>
-                    <el-button class="page-main-btn" type="primary" plain @click="showFileUploadDialog"> 导入人物</el-button>
+                    <el-button class="page-main-btn" icon="el-icon-upload2" type="primary" plain @click="showFileUploadDialog"> 导入人物</el-button>
                 </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -42,6 +42,13 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button class="page-main-btn" type="primary" @click="getPersonList" icon="el-icon-search" plain>搜索</el-button>
+                    <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
+                        <svg-icon
+                            icon-class="clear_filter"
+                            class-name="svg-box">
+                        </svg-icon>
+                        清空筛选条件
+                    </el-button>
                 </el-form-item>
             </el-col>
         </el-form>
@@ -163,11 +170,15 @@
             ...mapMutations({
                 updateSearchFields: 'person/updateSearchFields',
                 updatePagination: 'person/updatePagination',
-                resetPerson: 'person/resetPerson'
+                resetPerson: 'person/resetPerson',
+                resetSearchFields: 'person/resetSearchFields'
             }),
             ...mapActions({
                 getPersonList: 'person/getPersonList'
             }),
+            clearSearchFields() {
+                this.resetSearchFields();
+            },
             keyupHandler(e) {
                 if (e.keyCode === 13) {
                     this.getPersonList({isProgramme: false});
