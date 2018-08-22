@@ -46,7 +46,7 @@
                     <svg-icon
                         icon-class="clear_filter">
                     </svg-icon>
-                    清除筛选项
+                    清空筛选条件
                 </el-button>
             </el-form-item>
         </el-form>

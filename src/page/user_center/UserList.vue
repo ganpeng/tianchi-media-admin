@@ -45,9 +45,14 @@
                     prop="stbList"
                     label="设备ID">
                     <template slot-scope="scope">
-                        <label v-if="!scope.row.stbList || scope.row.stbList.length === 0">------
-                        </label>
-                        <label v-else>{{scope.row.stbList | jsonJoin('no')}}</label>
+                        <label v-if="!scope.row.stbList || scope.row.stbList.length === 0">------</label>
+                        <div
+                            v-else
+                            v-for="(item, index) in scope.row.stbList"
+                            :key="index">
+                            {{item.no}}
+                            <label v-if="!item.online" class="disabled-stb">已禁用</label>
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -92,6 +97,13 @@
                             @click="editUserInfo(scope.row)">
                             编辑
                         </el-button>
+                        <el-button
+                            type="text"
+                            size="small"
+                            class="operate-stb"
+                            @click="operateStb(scope.row)">
+                            操作设备
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -106,27 +118,40 @@
             </el-pagination>
             <div class="create-item">
                 <el-button
-                    type="primary"
-                    plain
+                    class="create-blue-btn"
                     icon="el-icon-circle-plus-outline"
                     @click="toCreateUser">
                     创建用户
                 </el-button>
             </div>
         </div>
+        <el-dialog
+            :title='currentUserInfo.name + "的设备操作"'
+            :visible.sync="operateStbDialogVisible"
+            width="50%">
+            <operate-stb
+                v-if="operateStbDialogVisible"
+                :userInfo="currentUserInfo"
+                v-on:closeDialog="closeDialog">
+            </operate-stb>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import UserFilterParams from './UserFilterParams';
+    import OperateStb from './OperateStb';
 
     export default {
         name: 'UserList',
         components: {
-            UserFilterParams
+            UserFilterParams,
+            OperateStb
         },
         data() {
             return {
+                operateStbDialogVisible: false,
+                currentUserInfo: {},
                 listQueryParams: {
                     pageNum: 1,
                     pageSize: 10
@@ -174,6 +199,14 @@
             },
             toCreateUser() {
                 this.$router.push({name: 'CreateUser'});
+            },
+            // 操作设备
+            operateStb(userInfo) {
+                this.currentUserInfo = userInfo;
+                this.operateStbDialogVisible = true;
+            },
+            closeDialog() {
+                this.operateStbDialogVisible = false;
             }
         }
     };
@@ -194,6 +227,15 @@
 
     .el-table {
         margin: 0px;
+    }
+
+    .disabled-stb {
+        margin-left: 10px;
+        color: $baseRed;
+    }
+
+    .operate-stb {
+        margin-left: 0px;
     }
 
     .el-pagination {

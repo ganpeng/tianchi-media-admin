@@ -87,7 +87,14 @@
                 <el-button @click="getUserList" type="primary" plain icon="el-icon-search">搜索</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" plain @click="clearSearchFields">清空筛选条件</el-button>
+                <el-button
+                    type="primary"
+                    plain
+                    class="clear-filter"
+                    @click="clearSearchFields">
+                    <svg-icon icon-class="clear_filter"></svg-icon>
+                    清空筛选条件
+                </el-button>
             </el-form-item>
         </el-form>
     </div>
