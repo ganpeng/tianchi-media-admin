@@ -90,7 +90,8 @@
         data() {
             return {
                 statusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
-                timer: null
+                timer: null,
+                servers: []
             };
         },
         computed: {
@@ -105,6 +106,12 @@
             }
         },
         created() {
+            this.$service.getServers()
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        this.servers = res.data;
+                    }
+                });
             window.eventBus.$on('clearInputValue', this.clearInputValue.bind(this));
             this.$nextTick(() => {
                 uppie(document.querySelector('#upload-input-file'), this.uploadChangeHandler.bind(this));

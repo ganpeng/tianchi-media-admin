@@ -20,6 +20,7 @@ const defaultPagination = {
 const state = {
     selectedVideoId: '',
     selectedVideoList: [],
+    servers: [], // 上传视频的服务器地址
     videoType: 'VOD', //  VOD: 点播 CAROUSEL: 轮播 这是上传视频是的字段
     searchFields: _.cloneDeep(defaultSearchFields),
     pagination: _.cloneDeep(defaultPagination),
@@ -64,6 +65,9 @@ const getters = {
     },
     selectedVideoList(state) {
         return state.selectedVideoList;
+    },
+    servers(state) {
+        return state.servers;
     },
     qualityOptions(state) {
         let video = state.list.find((video) => video.id === state.selectedVideoId);
@@ -128,6 +132,9 @@ const mutations = {
     },
     setSelectedVideoList(state, payload) {
         state.selectedVideoList = payload.list;
+    },
+    setServers(state, payload) {
+        state.servers = payload.servers;
     }
 };
 
@@ -179,6 +186,14 @@ const actions = {
         } catch (err) {
             console.log(err);
         }
+    },
+    async getServers({commit, state}) {
+        try {
+            let res = await service.getServers();
+            if (res && res.code === 0) {
+                commit('setServers', {servers: res.data});
+            }
+        } catch (err) { }
     }
 };
 

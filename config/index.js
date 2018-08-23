@@ -4,7 +4,6 @@
 
 const path = require('path');
 const env = require('./env');
-
 module.exports = {
     stats: 'verbose',
     dev: {

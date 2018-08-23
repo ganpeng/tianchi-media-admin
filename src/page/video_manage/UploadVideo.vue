@@ -86,7 +86,7 @@
     </div>
 </template>
 <script>
-import {mapGetters, mapMutations} from 'vuex';
+import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
 const Uppie = require('../../assets/js/uppie');
 const uppie = new Uppie();
@@ -110,10 +110,12 @@ export default {
                 return '当前有视频正在上传中，确定要离开吗？';
             }
         }, true);
+        this.getServers(); // 获取上传视频的服务器地址
     },
     computed: {
         ...mapGetters({
-            uploadState: 'uploadVideo/uploadState'
+            uploadState: 'uploadVideo/uploadState',
+            servers: 'video/servers'
         }),
         currentFileName() {
             let obj = this.uploadState.files[this.uploadState.count];
@@ -208,6 +210,9 @@ export default {
     methods: {
         ...mapMutations({
             updateUploadState: 'uploadVideo/updateUploadState'
+        }),
+        ...mapActions({
+            getServers: 'video/getServers'
         }),
         cutStr(str) {
             return str.length > 30 ? str.substring(0, 30) + '...' : str;
@@ -391,13 +396,13 @@ export default {
             this.$message.error(`${name}, 已取消上传`);
         },
         getRandomIp() {
-            let {servers} = process.env.HOST_CONF;
-            servers = servers && JSON.parse(servers);
-            let totalServers = servers.reduce((res, curr) => {
+            // let {servers} = process.env.HOST_CONF;
+            // servers = servers && JSON.parse(servers);
+            let totalServers = this.servers.reduce((res, curr) => {
                 let times = curr.weight;
                 let currServers = [];
                 for (let i = 0; i < times; i++) {
-                    currServers.push(curr.ip);
+                    currServers.push(curr.server);
                 }
                 return res.concat(currServers);
             }, []);
@@ -407,7 +412,7 @@ export default {
             let that = this;
             return new Promise((resolve, reject) => {
                 let ip = that.getRandomIp();
-                let url = `http://${ip}:8500/v1/storage/video`;
+                let url = `http://${ip}/v1/storage/video`;
                 // let url = '/v1/storage/video';
                 let xhr = new XMLHttpRequest();
                 that.updateUploadState({key: 'xhr', value: xhr});

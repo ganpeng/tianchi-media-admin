@@ -47,3 +47,12 @@ export const deleteVideoByIdList = (ids) => {
         baseURL: '/storage'
     });
 };
+
+/**
+ * 获取当前环境上传视频的服务器地址
+ */
+export const getServers = () => {
+    return service.get('/v1/storage/upstreams', {
+        baseURL: '/storage'
+    });
+};
