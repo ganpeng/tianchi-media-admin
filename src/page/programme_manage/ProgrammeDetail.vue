@@ -382,7 +382,13 @@
                     <h3 class="block-vice-title">节目视频</h3>
                 </div>
                 <div class="preview-sort clearfix">
-                    <el-button class="float-right page-main-btn" v-if="!readonly" type="primary" @click="showUploadDialog" plain><icon name="file-video"></icon> 关联视频</el-button>
+                    <el-button class="float-right page-main-btn create-blue-btn" v-if="!readonly" @click="showUploadDialog">
+                        <svg-icon
+                            icon-class="video"
+                            class-name="svg-box">
+                        </svg-icon>
+                        关联视频
+                    </el-button>
                     <el-button class="float-left sort-btn page-main-btn" v-if="!readonly" type="primary" @click="showSortDialog" plain>点击视频排序</el-button>
                 </div>
                 <programme-table title="已添加视频列表" :tableStatus="1" :status="status" :data-list="video.list"></programme-table>

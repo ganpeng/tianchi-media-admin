@@ -60,7 +60,6 @@
                         </template>
                 </el-table-column>
                 <el-table-column
-                    min-width="240px"
                     align="center"
                     label="视频地址">
                     <template slot-scope="scope">

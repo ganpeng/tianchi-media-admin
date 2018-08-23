@@ -1,8 +1,9 @@
 'use strict';
-
 /**
  * @fileOverview Define proxy url in the develop environment
  */
+
+require('./mult_env');
 
 const npmEventName = process.env.npm_lifecycle_event;
 let proxyTarget;

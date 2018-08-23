@@ -16,7 +16,14 @@ module.exports = {
                 target: env.proxyTarget,
                 changeOrigin: true,
                 bypass: function (req, res, proxyOptions) {
-                    console.log('URL:' + proxyOptions.target + req.originalUrl);
+                    console.log('URL-Admin:' + proxyOptions.target + req.originalUrl);
+                }
+            },
+            '/storage/v': {
+                target: env.proxyTarget,
+                changeOrigin: true,
+                bypass: function (req, res, proxyOptions) {
+                    console.log('URL-Storage:' + proxyOptions.target + req.originalUrl);
                 }
             }
         },

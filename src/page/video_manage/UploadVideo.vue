@@ -391,11 +391,8 @@ export default {
             this.$message.error(`${name}, 已取消上传`);
         },
         getRandomIp() {
-            let servers = [
-                {ip: '10.1.1.102', weight: 1},
-                {ip: '10.1.1.103', weight: 3},
-                {ip: '10.1.1.104', weight: 1}
-            ];
+            let {servers} = process.env.HOST_CONF;
+            servers = servers && JSON.parse(servers);
             let totalServers = servers.reduce((res, curr) => {
                 let times = curr.weight;
                 let currServers = [];
