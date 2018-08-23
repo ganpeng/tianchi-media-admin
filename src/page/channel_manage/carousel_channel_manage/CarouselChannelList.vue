@@ -156,13 +156,13 @@
             <div class="visible-item">
                 <el-button
                     class="create-blue-btn"
-                    size="medium"
+                    size="small"
                     @click="batchRecoverChannel">
                     批量恢复
                 </el-button>
                 <el-button
                     class="disabled-red-btn"
-                    size="medium"
+                    size="small"
                     @click="batchDisabledChannel">
                     批量禁播
                 </el-button>

@@ -9,7 +9,7 @@
                 <label>设备{{index + 1}}：</label>
                 <span>{{item.no}}</span>
                 <el-button
-                    v-if="item.onLine"
+                    v-if="item.status === 'NORMAL'"
                     size="mini"
                     type="danger"
                     plain
@@ -17,7 +17,7 @@
                     禁用
                 </el-button>
                 <el-button
-                    v-else
+                    v-if="item.status === 'FORBIDDEN'"
                     size="mini"
                     type="success"
                     plain
@@ -25,12 +25,12 @@
                     恢复
                 </el-button>
                 <el-select
-                    v-if="!item.onLine"
-                    v-model="item.reason"
-                    @change="pickReason($event,item,index)"
+                    v-if="item.status === 'FORBIDDEN'"
+                    v-model="item.remark"
+                    @change="pickRemark($event,item,index)"
                     placeholder="请选择禁用原因">
                     <el-option
-                        v-for="item in reasonOptions"
+                        v-for="item in remarkOptions"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -62,11 +62,11 @@
         data() {
             return {
                 currentUserInfo: [],
-                reasonOptions: [{
-                    value: 0,
+                remarkOptions: [{
+                    value: '1',
                     label: '欠费'
                 }, {
-                    value: 1,
+                    value: '0',
                     label: '其它'
                 }]
             };
@@ -76,30 +76,48 @@
         },
         methods: {
             init() {
-                this.currentUserInfo = this.userInfo;
+                this.currentUserInfo = JSON.parse(JSON.stringify(this.userInfo));
             },
             // 禁用设备
             disabledStb(item, index) {
-                item.onLine = false;
+                item.status = 'FORBIDDEN';
                 this.currentUserInfo.stbList.splice(index, 1, item);
             },
             // 恢复设备
             recoverStb(item, index) {
-                item.onLine = true;
-                item.reason = '';
+                item.status = 'NORMAL';
+                item.remark = '';
                 this.currentUserInfo.stbList.splice(index, 1, item);
             },
             // 选择禁用原因
-            pickReason(value, item, index) {
-                item.reason = value;
+            pickRemark(value, item, index) {
+                item.remark = value;
                 this.currentUserInfo.stbList.splice(index, 1, item);
             },
             // 保存禁用设备用户,关闭窗口，刷新列表
             operateStb() {
-                this.$emit('closeDialog');
+                // 验证数据是否正确
+                let tag = true;
+                this.currentUserInfo.stbList.map(stb => {
+                    if (stb.status === 'FORBIDDEN' && !stb.remark) {
+                        tag = false;
+                    }
+                });
+                if (!tag) {
+                    this.$message.warning('请完整填写设备禁用的原因');
+                    return;
+                }
+                this.$service.setStbListStatus({
+                    stbList: this.currentUserInfo.stbList
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message.success('保存' + this.currentUserInfo.name + '用户的设备状态成功');
+                        this.$emit('closeDialog', true);
+                    }
+                });
             },
             closeDialog() {
-                this.$emit('closeDialog');
+                this.$emit('closeDialog', false);
             }
         }
     };

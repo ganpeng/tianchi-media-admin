@@ -51,7 +51,7 @@
                             v-for="(item, index) in scope.row.stbList"
                             :key="index">
                             {{item.no}}
-                            <label v-if="!item.online" class="disabled-stb">已禁用</label>
+                            <label v-if="item.status === 'FORBIDDEN'" class="disabled-stb">已禁用</label>
                         </div>
                     </template>
                 </el-table-column>
@@ -205,8 +205,11 @@
                 this.currentUserInfo = userInfo;
                 this.operateStbDialogVisible = true;
             },
-            closeDialog() {
+            closeDialog(refresh) {
                 this.operateStbDialogVisible = false;
+                if (refresh) {
+                    this.getUserList();
+                }
             }
         }
     };

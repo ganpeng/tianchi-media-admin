@@ -75,3 +75,10 @@ export const getUserInfoById = ({id}) => {
 export const getUserInfoByIdentityId = ({identityId}) => {
     return service.get(util.format(`/v1/user/page?keyword={0}`, identityId));
 };
+
+/**
+ * 禁用及恢复用户设备
+ */
+export const setStbListStatus = ({stbList}) => {
+    return service.patch(`/v1/stb/status`, stbList);
+};

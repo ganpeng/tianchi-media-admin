@@ -48,25 +48,9 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                prop="description"
-                width="210px"
-                show-overflow-tooltip
-                label="简介">
-                <template slot-scope="scope">
-                    <label>{{scope.row.description ? scope.row.description : '------'}}</label>
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
                 width="88px"
                 prop="featureVideoCount"
                 label="正片数量">
-            </el-table-column>
-            <el-table-column
-                align="center"
-                width="108px"
-                prop="extraVideoCount"
-                label="相关视频数量">
             </el-table-column>
             <el-table-column
                 width="128px"
@@ -105,16 +89,9 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                label="主演">
+                label="演员">
                 <template slot-scope="scope">
                     <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                label="导演">
-                <template slot-scope="scope">
-                    <label>{{scope.row.figureListMap | displayFigures('DIRECTOR')}}</label>
                 </template>
             </el-table-column>
             <el-table-column
