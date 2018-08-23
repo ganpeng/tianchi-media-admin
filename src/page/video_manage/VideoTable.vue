@@ -197,6 +197,8 @@ export default {
             this.updatePagination({value, key});
             if (key === 'pageSize') {
                 window.localStorage.setItem('videoPageSize', value);
+            } else {
+                this.selectedVideoList = [];
             }
             this.getVideoList()
                 .then(() => {

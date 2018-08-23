@@ -39,20 +39,9 @@
                     prop="sort"
                     v-if="tableStatus === 1"
                     label="集数/期号"
-                    align="center"
-                    width="180">
+                    align="center">
                         <template slot-scope="scope">
                             {{scope.row.sort | padEmpty}}
-                        </template>
-                </el-table-column>
-                <el-table-column
-                    prop="description"
-                    v-if="tableStatus === 1"
-                    width="200px"
-                    align="center"
-                    label="视频简介">
-                        <template slot-scope="scope">
-                            {{scope.row.description | padEmpty}}
                         </template>
                 </el-table-column>
                 <el-table-column
@@ -60,15 +49,6 @@
                     label="相关人物">
                         <template slot-scope="scope">
                             {{videoPersonName(scope.row.figureList) | padEmpty}}
-                        </template>
-                </el-table-column>
-                <el-table-column
-                    v-if="tableStatus === 1"
-                    align="center"
-                    label="视频封面">
-                        <template slot-scope="scope">
-                            <img v-if="scope.row.coverImage" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="person-image pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
-                            <span v-else>------</span>
                         </template>
                 </el-table-column>
                 <el-table-column
@@ -148,15 +128,6 @@
                     label="内容类型">
                         <template slot-scope="scope">
                             {{getVideoType(scope.row.type) | padEmpty}}
-                        </template>
-                </el-table-column>
-                <el-table-column
-                    v-if="status === 1 && tableStatus === 1"
-                    prop="free"
-                    align="center"
-                    label="是否付费">
-                        <template slot-scope="scope">
-                            {{scope.row.free ? '是' : '否'}}
                         </template>
                 </el-table-column>
                 <el-table-column

@@ -1029,8 +1029,8 @@ const actions = {
             if (res && res.code === 0) {
                 commit('updateProgrammeVisible');
             }
-        } catch (err) {
-        }
+            return res;
+        } catch (err) {}
     },
     async getProgrammeTagList({commit, state}) {
         try {

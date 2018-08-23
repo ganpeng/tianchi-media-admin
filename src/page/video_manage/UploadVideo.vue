@@ -16,13 +16,13 @@
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item>
                             <div class="wrapper">
-                                <input id="upload-input-file" class="upload-input" type="file" ref="uploadInputFile" multiple>
+                                <input id="upload-input-file2" class="upload-input" accept="video/*" type="file" ref="uploadInputFile" multiple>
                                 <label for="upload-input-file">选择文件</label>
                             </div>
                         </el-dropdown-item>
                         <el-dropdown-item>
                             <div class="wrapper">
-                                <input id="upload-input-dir" class="upload-input" type="file" ref="uploadInputDir" multiple directory webkitdirectory allowdirs>
+                                <input id="upload-input-dir2" class="upload-input" type="file" accept="video/*" ref="uploadInputDir" multiple directory webkitdirectory allowdirs>
                                 <label for="upload-input-dir">选择文件夹</label>
                             </div>
                         </el-dropdown-item>
@@ -42,14 +42,12 @@
                     style="width: 100%">
                     <el-table-column
                         width="400"
-                        align="center"
                         label="文件名">
                         <template slot-scope="scope">
                             {{cutStr(scope.row.file.name)}}
                         </template>
                     </el-table-column>
                     <el-table-column
-                        align="center"
                         width="100"
                         label="文件大小">
                         <template slot-scope="scope">
@@ -57,7 +55,6 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                        align="center"
                         width="180"
                         label="上传进度">
                         <template slot-scope="scope">
@@ -75,7 +72,6 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                        align="center"
                         label="操作">
                         <template slot-scope="scope">
                             <i
@@ -91,6 +87,7 @@
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex';
+import _ from 'lodash';
 const Uppie = require('../../assets/js/uppie');
 const uppie = new Uppie();
 export default {
@@ -99,8 +96,8 @@ export default {
         let that = this;
         window.eventBus.$on('startUpload', that.uploadHandler);
         this.$nextTick(() => {
-            let uploadInputFile = document.querySelector('#upload-input-file');
-            let uploadInputDir = document.querySelector('#upload-input-dir');
+            let uploadInputFile = document.querySelector('#upload-input-file2');
+            let uploadInputDir = document.querySelector('#upload-input-dir2');
             uploadInputFile && uppie(uploadInputFile, this.uploadChangeHandler.bind(this));
             uploadInputDir && uppie(uploadInputDir, this.uploadChangeHandler.bind(this));
         });
@@ -239,6 +236,9 @@ export default {
             let files = Array.from(e.target.files).filter((file) => {
                 return /.mpg$/.test(file.name);
             });
+            if (files.length === 0) {
+                this.$message.warning('本次选择没有符合要求的文件');
+            }
             let newFileList = [];
             files.forEach((file) => {
                 let index = this.uploadState.files.findIndex((item) => {
@@ -259,6 +259,8 @@ export default {
             let newFiles = this.uploadState.files.concat(newFileList);
             this.updateUploadState({key: 'files', value: newFiles});
             window.eventBus.$emit('startUpload');
+            this.$refs.uploadInputFile.value = null;
+            this.$refs.uploadInputDir.value = null;
         },
         uploadHandler() {
             let that = this;
@@ -388,10 +390,28 @@ export default {
             let name = this.uploadState.files[count].file.name;
             this.$message.error(`${name}, 已取消上传`);
         },
+        getRandomIp() {
+            let servers = [
+                {ip: '10.1.1.102', weight: 1},
+                {ip: '10.1.1.103', weight: 3},
+                {ip: '10.1.1.104', weight: 1}
+            ];
+            let totalServers = servers.reduce((res, curr) => {
+                let times = curr.weight;
+                let currServers = [];
+                for (let i = 0; i < times; i++) {
+                    currServers.push(curr.ip);
+                }
+                return res.concat(currServers);
+            }, []);
+            return _.sample(totalServers);
+        },
         uploadRequest(data) {
             let that = this;
             return new Promise((resolve, reject) => {
-                let url = '/v1/storage/video';
+                let ip = that.getRandomIp();
+                let url = `http://${ip}:8500/v1/storage/video`;
+                // let url = '/v1/storage/video';
                 let xhr = new XMLHttpRequest();
                 that.updateUploadState({key: 'xhr', value: xhr});
                 xhr.open('post', url);
@@ -472,7 +492,7 @@ export default {
     background: #fff;
     z-index: 1000;
     border-radius: 8px;
-    box-shadow: #000 0 0 5px;
+    box-shadow: #409EFF 0 0 5px;
     .min-container {
         height: 60px;
         line-height: 60px;
@@ -493,7 +513,7 @@ export default {
 }
 .upload-file {
     padding: 20px 0;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid #409EFF;
     overflow: hidden;
     .clear-btn {
         float: left;

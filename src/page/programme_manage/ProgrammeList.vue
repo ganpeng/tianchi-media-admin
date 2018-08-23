@@ -9,9 +9,11 @@
         </custom-breadcrumb>
         <div class="table-container">
             <el-form id="label-font" :inline="true" class="demo-form-inline text-left">
-                <el-col :span="6" class="float-right text-right">
-                    <el-button class="page-main-btn" @click="createProgramme" icon="el-icon-circle-plus-outline" type="primary" plain>新增节目</el-button>
-                    <el-button class="page-main-btn" type="primary" icon="el-icon-upload2" plain @click="showFileUploadDialog">导入节目</el-button>
+                <el-col :span="24" class="float-right text-right">
+                    <el-form-item>
+                        <el-button class="page-main-btn create-blue-btn" @click="createProgramme" icon="el-icon-circle-plus-outline" type="primary" plain>新增节目</el-button>
+                        <el-button class="page-main-btn create-blue-btn" type="primary" icon="el-icon-upload2" plain @click="showFileUploadDialog">导入节目</el-button>
+                    </el-form-item>
                 </el-col>
                 <el-col :span="24">
                     <el-form-item label="上映开始年">
@@ -115,20 +117,20 @@
                     </el-form-item>
                 </el-col>
             </el-form>
-            <el-table header-row-class-name=“common-table-header” class="my-table-style" :data="list" border>
+            <el-table row-class-name=“programme-row” header-row-class-name=“common-table-header” class="my-table-style" :data="list" border>
                 <el-table-column prop="code" align="center" width="120px" label="节目编号">
                     <template slot-scope="scope">
                         {{scope.row.code | padEmpty}}
                     </template>
                 </el-table-column>
-                <el-table-column label="节目图片" align="center" >
-                    <template slot-scope="scope">
-                        <img @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="person-image pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
-                    </template>
-                </el-table-column>
                 <el-table-column prop="name" align="center" min-width="100px" label="节目名称">
                     <template slot-scope="scope">
                         {{scope.row.name | padEmpty}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="节目图片" width="120px" align="center" >
+                    <template slot-scope="scope">
+                        <img width="100" height="145" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
                     </template>
                 </el-table-column>
                 <el-table-column prop="featureVideoCount" min-width="100px" align="center" label="正片数量">
@@ -176,6 +178,9 @@
                     <template slot-scope="scope">
                         <el-button class="text-success" type="text" size="small" @click="displayProgramme(scope.row.id)">详情</el-button>
                         <el-button type="text" size="small" @click="editProgramme(scope.row.id)">编辑</el-button>
+                        <el-button type="text" size="small" @click="lowerFrameProgramme(scope.row)">
+                            {{scope.row.visible ? '下架' : '上架'}}
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -300,25 +305,9 @@ export default {
         }),
         ...mapActions({
             getProgrammeList: 'programme/getProgrammeList',
-            getProgrammeCategory: 'programme/getProgrammeCategory'
+            getProgrammeCategory: 'programme/getProgrammeCategory',
+            deleteProgramme: 'programme/deleteProgramme'
         }),
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
-        },
-        _toggleChecked(val, id) {
-            this.toggleChecked({id});
-        },
-        renderHeader(h, data) {
-            return h('el-checkbox',
-                {
-                    on: {
-                        change: this.checkAllHandler
-                    }
-            });
-        },
-        checkAllHandler(all) {
-            this.toggleAll({all});
-        },
         keyupHandler(e) {
             if (e.keyCode === 13) {
                 this.getProgrammeList();
@@ -373,22 +362,46 @@ export default {
         submitUpload() {
             this.$refs.upload.submit();
         },
-        deleteProgrammeList() {
-            this.$confirm(`您确定要删除吗, 是否继续?`, '提示', {
+        lowerFrameProgramme(programme) {
+            let {id, visible} = programme;
+            this.$confirm(`您确定要${visible ? '下架节目' : '上架节目'}吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'error'
                 }).then(() => {
-                    let deleteList = this.list.filter((item) => item.checked === 'yes');
-                    if (deleteList.length > 0) {
-                        //  TODO
-                    }
+                    this.deleteProgramme(id)
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                this.$message.success('节目下架成功');
+                                this.getProgrammeList();
+                            } else {
+                                this.$message.warning(this.lowerFrameProgrammeErrorHandler(res));
+                            }
+                        });
                 }).catch(() => {
                     this.$message({
                         type: 'info',
                         message: '已取消删除'
                     });
                 });
+        },
+        lowerFrameProgrammeErrorHandler(res) {
+            let {code, data, message} = res;
+            let msg = '';
+            switch (code) {
+                case 3110:
+                    msg = data.map((item) => {
+                        return item ? `"${item}"` : '';
+                    }).join(',');
+                    return `节目包含在如下${msg}专题中`;
+                case 3111:
+                    msg = data.map((item) => {
+                        return item ? `"${item}"` : '';
+                    }).join(',');
+                    return `节目包含在如下${msg}推荐位`;
+                default:
+                    return message;
+            }
         },
         uploadSuccessHandler(res, file, fileList) {
             if (res && res.code === 0) {

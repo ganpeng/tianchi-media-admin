@@ -9,25 +9,27 @@
         </custom-breadcrumb>
         <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @keyup.enter.native="searchHandler" @submit.native.prevent>
             <el-col :span="24">
-                <el-dropdown class="float-right">
-                    <el-button icon="el-icon-upload2" type="primary" plain>
-                        上传视频<i class="el-icon-arrow-down el-icon--right"></i>
-                    </el-button>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>
-                            <div class="wrapper">
-                                <label for="upload-input">选择文件</label>
-                                <input id="upload-input-file" class="upload-input" type="file" ref="uploadInputFile" multiple>
-                            </div>
-                        </el-dropdown-item>
-                        <el-dropdown-item>
-                            <div class="wrapper">
-                                <label for="upload-input">选择文件夹</label>
-                                <input id="upload-input-dir" class="upload-input" type="file" ref="uploadInputDir" multiple directory webkitdirectory allowdirs>
-                            </div>
-                        </el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
+                <el-form-item class="float-right">
+                    <el-dropdown>
+                        <el-button class="page-main-btn create-blue-btn" icon="el-icon-upload2" type="primary" plain>
+                            上传视频<i class="el-icon-arrow-down el-icon--right"></i>
+                        </el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>
+                                <div class="wrapper">
+                                    <label for="upload-input">选择文件</label>
+                                    <input id="upload-input-file" class="upload-input" type="file" accept="video/*" ref="uploadInputFile" multiple>
+                                </div>
+                            </el-dropdown-item>
+                            <el-dropdown-item>
+                                <div class="wrapper">
+                                    <label for="upload-input">选择文件夹</label>
+                                    <input id="upload-input-dir" class="upload-input" type="file" accet="video/*" ref="uploadInputDir" multiple directory webkitdirectory allowdirs>
+                                </div>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </el-form-item>
             </el-col>
             <el-col :span="24">
                 <el-form-item class="search">
@@ -67,7 +69,7 @@
                     </el-button>
                 </el-form-item>
                 <el-form-item class="float-right">
-                    <el-button size="small" type="danger" @click="deleteVideoList"><i class="el-icon-delete"></i> 批量删除</el-button>
+                    <el-button class="delete-btn" size="small" icon="el-icon-delete" type="danger" @click="deleteVideoList" plain>批量删除</el-button>
                 </el-form-item>
             </el-col>
         </el-form>
@@ -97,7 +99,10 @@
                 searchFields: 'video/searchFields',
                 uploadState: 'uploadVideo/uploadState',
                 selectedVideoIdList: 'video/selectedVideoIdList'
-            })
+            }),
+            showDeleteBtn() {
+                return this.$refs.videoTable && this.$refs.videoTable.selectedVideoList.length > 0;
+            }
         },
         created() {
             window.eventBus.$on('clearInputValue', this.clearInputValue.bind(this));
@@ -134,8 +139,8 @@
                 this.resetSearchFields();
             },
             clearInputValue() {
-                this.$refs.uploadInputFile.value = '';
-                this.$refs.uploadInputDir.value = '';
+                this.$refs.uploadInputFile.value = null;
+                this.$refs.uploadInputDir.value = null;
             },
             deleteVideoList() {
                 let idList = this.$refs.videoTable.selectedVideoList.map((item) => {
@@ -187,6 +192,9 @@
                 let files = Array.from(e.target.files).filter((file) => {
                     return /.mpg$/.test(file.name);
                 });
+                if (files.length === 0) {
+                    this.$message.warning('本次选择没有符合要求的文件');
+                }
                 let newFileList = [];
                 files.forEach((file) => {
                     let index = this.uploadState.files.findIndex((item) => {
@@ -207,6 +215,7 @@
                 let newFiles = this.uploadState.files.concat(newFileList);
                 this.updateUploadState({key: 'files', value: newFiles});
                 window.eventBus.$emit('startUpload');
+                this.clearInputValue();
             }
         }
     };

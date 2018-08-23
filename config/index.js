@@ -18,13 +18,6 @@ module.exports = {
                 bypass: function (req, res, proxyOptions) {
                     console.log('URL:' + proxyOptions.target + req.originalUrl);
                 }
-            },
-            '/v': {
-                target: env.uploadProxyTarget,
-                changeOrigin: true,
-                bypass: function (req, res, proxyOptions) {
-                    console.log('URL:' + proxyOptions.target + req.originalUrl);
-                }
             }
         },
 

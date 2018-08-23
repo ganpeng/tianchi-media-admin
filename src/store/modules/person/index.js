@@ -285,6 +285,18 @@ const actions = {
                 commit('updateHotPerson', {key: 'hotPerson', value: groupHotPerson(res.data)});
             }
         } catch (err) {}
+    },
+    async lowerFramePerson({commit, state}, id) {
+        try {
+            let res = await service.lowerFramePerson(id);
+            return res;
+        } catch (err) {}
+    },
+    async deletePerson({commit, state}, id) {
+        try {
+            let res = await service.deletePerson(id);
+            return res;
+        } catch (err) { }
     }
 };
 

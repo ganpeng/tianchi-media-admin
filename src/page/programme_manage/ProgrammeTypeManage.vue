@@ -9,7 +9,7 @@
         </custom-breadcrumb>
         <div class="category-container">
             <div class="source">
-                <div role="tablist" aria-multiselectable="true" class="el-collapse">
+                <div role="tablist" aria-multiselectable="true" class="gan-el-collapse">
                     <div
                         @mouseover="mouseoverHandler(index)"
                         v-for="(category, index) in global.categoryList" :key="index" class="el-collapse-item">

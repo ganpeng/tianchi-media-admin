@@ -10,7 +10,7 @@
         <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
             <el-col :span="24">
                 <el-form-item class="create-account">
-                    <el-button type="primary" plain @click="showFileUploadDialog"><i class="el-icon-circle-plus-outline"></i> 新增版本</el-button>
+                    <el-button type="primary" class="page-main-btn create-blue-btn" plain @click="showFileUploadDialog"><i class="el-icon-circle-plus-outline"></i> 新增版本</el-button>
                 </el-form-item>
             </el-col>
             <el-col :span="24">

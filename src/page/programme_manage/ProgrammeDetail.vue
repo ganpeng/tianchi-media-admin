@@ -10,9 +10,6 @@
         <div class="text-right">
             <el-button class="page-main-btn" v-if="status === 0" type="primary" @click="_createProgramme">创建</el-button>
             <el-button class="page-main-btn" v-if="status === 2" type="primary" @click="_editProgramme">保存</el-button>
-            <el-button class="page-main-btn" v-if="status === 2" type="primary" @click="_deleteProgramme">
-                {{programme.visible ? '节目下架' : '节目上架'}}
-            </el-button>
             <el-button class="page-main-btn" v-if="status === 2 && !programme.visible" type="danger" @click="_realDeleteProgramme">节目删除</el-button>
             <el-button class="page-main-btn" @click="goBack" plain>返回列表页</el-button>
         </div>
@@ -394,9 +391,6 @@
         <div class="group">
             <el-button class="page-margin-btn page-main-btn" v-if="status === 0" type="primary" @click="_createProgramme">创建</el-button>
             <el-button class="page-margin-btn page-main-btn" v-if="status === 2" type="primary" @click="_editProgramme">保存</el-button>
-            <el-button class="page-margin-btn page-main-btn" v-if="status === 2" type="primary" @click="_deleteProgramme">
-                {{programme.visible ? '节目下架' : '节目上架'}}
-            </el-button>
             <el-button class="page-margin-btn page-main-btn" v-if="status === 2 && !programme.visible" type="danger" @click="_realDeleteProgramme">节目删除</el-button>
             <el-button class="page-margin-btn page-main-btn" @click="goBack" plain>返回列表页</el-button>
         </div>

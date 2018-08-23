@@ -29,6 +29,10 @@ switch (npmEventName) {
         proxyTarget = 'http://10.0.1.254:8100';
         uploadProxyTarget = 'http://10.0.1.254:8230';
         break;
+    case 'dev:chongqing':
+        proxyTarget = 'http://gateway.tianchiapi.com';
+        uploadProxyTarget = 'http://gateway.tianchiapi.com';
+        break;
     case 'dev:lian':
         proxyTarget = 'http://10.0.3.225:8100';
         uploadProxyTarget = 'http://10.0.3.225:8230';

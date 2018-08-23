@@ -8,10 +8,10 @@
             {name:'人物列表'}]">
         </custom-breadcrumb>
         <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left">
-            <el-col :span="5" class="float-right">
-                <el-form-item class="create-account">
-                    <el-button class="page-main-btn" type="primary" plain @click="createPerson"><i class="el-icon-circle-plus-outline"></i> 新增人物</el-button>
-                    <el-button class="page-main-btn" icon="el-icon-upload2" type="primary" plain @click="showFileUploadDialog"> 导入人物</el-button>
+            <el-col :span="24">
+                <el-form-item class="float-right">
+                    <el-button class="page-main-btn create-blue-btn" type="primary" plain @click="createPerson"><i class="el-icon-circle-plus-outline"></i> 新增人物</el-button>
+                    <el-button class="page-main-btn create-blue-btn" icon="el-icon-upload2" type="primary" plain @click="showFileUploadDialog"> 导入人物</el-button>
                 </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -52,21 +52,21 @@
                 </el-form-item>
             </el-col>
         </el-form>
-        <el-table header-row-class-name=“common-table-header” class="my-table-style" :data="list" border>
+        <el-table row-class-name=“figure-row” header-row-class-name=“common-table-header” class="my-table-style" :data="list" border>
             <el-table-column prop="id" align="center" width="120px" label="编号">
                 <template slot-scope="scope">
                     {{scope.row.id | padEmpty}}
                 </template>
             </el-table-column>
-            <el-table-column label="照片" align="center" >
-                <template slot-scope="scope">
-                    <img v-if="scope.row.avatarImage" @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="80px" height="80px" class="person-image pointer" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">
-                    <span v-else>------</span>
-                </template>
-            </el-table-column>
             <el-table-column prop="name" align="center" label="名字">
                 <template slot-scope="scope">
                     {{scope.row.name | padEmpty}}
+                </template>
+            </el-table-column>
+            <el-table-column label="照片" width="120px" align="center" >
+                <template slot-scope="scope">
+                    <img v-if="scope.row.avatarImage" @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="100px" height="100px" class="pointer" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">
+                    <span v-else>------</span>
                 </template>
             </el-table-column>
             <el-table-column prop="area" align="center" label="地区">
@@ -79,6 +79,12 @@
                     {{mainRoleLabel(scope.row.mainRoleList).join(', ') | padEmpty}}
                 </template>
             </el-table-column>
+            <el-table-column align="center" label="状态">
+                <template slot-scope="scope">
+                    <i v-if="scope.row.visible" class="status-normal">已上架</i>
+                    <i v-else class="status-abnormal">已下架</i>
+                </template>
+            </el-table-column>
             <el-table-column align="center" label="更新时间">
                 <template slot-scope="scope">
                     {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
@@ -88,6 +94,10 @@
                 <template slot-scope="scope">
                     <el-button class="text-success" type="text" size="small" @click="displayPerson(scope.row.id)">详情</el-button>
                     <el-button type="text" size="small" @click="editPerson(scope.row.id)">编辑</el-button>
+                    <el-button type="text" size="small" @click="_lowerFramePerson(scope.row)">
+                        {{scope.row.visible ? '下架' : '上架'}}
+                    </el-button>
+                    <el-button class="text-danger" type="text" size="small" @click="_deletePerson(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -131,6 +141,7 @@
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import store from 'store';
     import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
+    import role from '../../util/config/role';
     export default {
         name: 'PersonList',
         components: {
@@ -174,7 +185,9 @@
                 resetSearchFields: 'person/resetSearchFields'
             }),
             ...mapActions({
-                getPersonList: 'person/getPersonList'
+                getPersonList: 'person/getPersonList',
+                lowerFramePerson: 'person/lowerFramePerson',
+                deletePerson: 'person/deletePerson'
             }),
             clearSearchFields() {
                 this.resetSearchFields();
@@ -207,6 +220,76 @@
             },
             inputHandler(value, key) {
                 this.updateSearchFields({key, value});
+            },
+            _lowerFramePerson(person) {
+                let {id, visible} = person;
+                this.$confirm(`您确定要${visible ? '下架人物' : '上架人物'}吗, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    }).then(() => {
+                        this.lowerFramePerson(id)
+                            .then((res) => {
+                                if (res && res.code === 0) {
+                                    this.$message.success(`人物${visible ? '下架' : '上架'}成功`);
+                                    this.getPersonList({isProgramme: false});
+                                } else {
+                                    this.$message.error(this.lowerFramePersonErrorHandler(res));
+                                }
+                            });
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+            },
+            lowerFramePersonErrorHandler(res) {
+                let {code, data, message} = res;
+                let msg = '';
+                switch (code) {
+                    case 3206:
+                        msg = data.map((item) => {
+                            return item ? `"${item}"` : '';
+                        }).join(',');
+                        return `人物包含在如下${msg}专题中`;
+                    case 3207:
+                        msg = data.map((item) => {
+                            return item ? `"${item}"` : '';
+                        }).join(',');
+                        return `人物包含在如下${msg}推荐位`;
+                    case 3208:
+                        msg = data.map((item) => {
+                            let obj = role.RECOMMEND_OPTIONS.find((ele) => ele.value === item);
+                            return obj ? `"${obj.name}"` : '';
+                        }).join(', ');
+                        return `人物在以下栏目${msg}中是热门人物`;
+                    default:
+                        return message;
+                }
+            },
+            _deletePerson(id) {
+                this.$confirm(`您确定要删除该人物吗, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    }).then(() => {
+                        this.deletePerson(id)
+                            .then((res) => {
+                                if (res && res.code === 0) {
+                                    this.$message.success('人物删除成功');
+                                    this.getPersonList({isProgramme: false});
+                                } else {
+                                    let msg = res.message || '人物删除失败';
+                                    this.$message.error(msg);
+                                }
+                            });
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
             },
             // 放大预览图片
             displayImage(image) {

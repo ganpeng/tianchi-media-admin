@@ -56,3 +56,17 @@ export const putHotPerson = (hotCategory, hotFigureList) => {
 export const getHotPerson = () => {
     return service.get(`/v1/content/hot-figure/list`);
 };
+
+/**
+ * 删除人物
+ */
+export const deletePerson = (id) => {
+    return service.delete(`/v1/content/figure/${id}`);
+};
+
+/**
+ * 下架人物
+ */
+export const lowerFramePerson = (id) => {
+    return service.patch(`/v1/content/figure/${id}/visible`);
+};

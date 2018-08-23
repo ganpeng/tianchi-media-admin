@@ -26,7 +26,7 @@ export const getVideoList = ({ status, userId, name, key, m3u8For480P, m3u8For72
     }));
 
     return service.get(`/v1/storage/video/page?${paramsStr}`, {
-        baseURL: '/'
+        baseURL: '/storage'
     });
 };
 
@@ -35,7 +35,7 @@ export const getVideoList = ({ status, userId, name, key, m3u8For480P, m3u8For72
  */
 export const deleteVideoById = (id) => {
     return service.delete(`/v1/storage/video/${id}`, {
-        baseURL: '/'
+        baseURL: '/storage'
     });
 };
 
@@ -44,6 +44,6 @@ export const deleteVideoById = (id) => {
  */
 export const deleteVideoByIdList = (ids) => {
     return service.patch(`/v1/storage/video/delete`, ids, {
-        baseURL: '/'
+        baseURL: '/storage'
     });
 };
