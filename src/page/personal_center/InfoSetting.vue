@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="btn-box">
-            <el-button type="primary" @click="updateForm" class="page-main-btn">确定</el-button>
+            <el-button type="primary" @click="updateForm" class="page-main-btn">保存</el-button>
         </div>
     </div>
 </template>

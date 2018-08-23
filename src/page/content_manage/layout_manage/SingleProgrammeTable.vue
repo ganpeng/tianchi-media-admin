@@ -3,6 +3,7 @@
     <el-table
         :data="singleProgrammeList"
         header-row-class-name="common-table-header"
+        row-class-name=programme-row
         border
         style="width: 100%">
         <el-table-column
@@ -33,25 +34,9 @@
         </el-table-column>
         <el-table-column
             align="center"
-            prop="description"
-            width="210px"
-            show-overflow-tooltip
-            label="简介">
-            <template slot-scope="scope">
-                <label>{{scope.row.description ? scope.row.description : '------'}}</label>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
             width="88px"
             prop="featureVideoCount"
             label="正片数量">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            width="108px"
-            prop="extraVideoCount"
-            label="相关视频数量">
         </el-table-column>
         <el-table-column
             width="128px"
@@ -93,13 +78,6 @@
             label="主演">
             <template slot-scope="scope">
                 <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            label="导演">
-            <template slot-scope="scope">
-                <label>{{scope.row.figureListMap | displayFigures('DIRECTOR')}}</label>
             </template>
         </el-table-column>
         <el-table-column

@@ -38,21 +38,6 @@
                 </template>
             </el-table-column>
             <el-table-column
-                prop="description"
-                label="简介">
-                <template slot-scope="scope">
-                    <label class="ellipsis-three">{{scope.row.description}}</label>
-                    <el-popover
-                        placement="right"
-                        :title="scope.row.name + '简介'"
-                        width="250"
-                        trigger="hover"
-                        :content="scope.row.description">
-                        <el-button slot="reference" type="text" class="more">更多</el-button>
-                    </el-popover>
-                </template>
-            </el-table-column>
-            <el-table-column
                 prop="type"
                 label="时间">
                 <template slot-scope="scope">
@@ -185,9 +170,9 @@
             },
             tableRowClassName({row}) {
                 if (!row.visible) {
-                    return 'warning-row';
+                    return 'warning-row video-row';
                 }
-                return '';
+                return 'video-row';
             },
             // 预览视频
             displayVideo(url) {

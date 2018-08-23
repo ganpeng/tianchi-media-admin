@@ -8,6 +8,7 @@
             :data="personList"
             header-row-class-name="common-table-header"
             border
+            row-class-name=figure-row
             style="width: 100%"
             ref="multiplePerson"
             @select="selectRow">
@@ -28,7 +29,7 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                label="头像">
+                label="图片">
                 <template slot-scope="scope">
                     <img v-if="scope.row.avatarImage"
                          :src="scope.row.avatarImage ? scope.row.avatarImage.uri : '' | imageUrl"
@@ -38,19 +39,15 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                prop="description"
-                show-overflow-tooltip
-                label="人物简介">
-                <template slot-scope="scope">
-                    <label>{{scope.row.description ? scope.row.description : '------'}}</label>
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
                 prop="area"
                 label="地区">
                 <template slot-scope="scope">
                     {{scope.row.area && scope.row.area.length !== 0 ? areaLabel(scope.row.area) : '------'}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="更新时间">
+                <template slot-scope="scope">
+                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
                 </template>
             </el-table-column>
         </el-table>
@@ -63,9 +60,10 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="totalAmount">
         </el-pagination>
-        <el-button type="primary" plain
-                   class="apppend-programme"
-                   @click="appendPerson" size="small">
+        <el-button
+            class="apppend-programme create-blue-btn"
+            @click="appendPerson"
+            size="small">
             添加所选人物
         </el-button>
     </div>
@@ -193,6 +191,7 @@
 <style lang="less" scoped>
 
     .el-table {
+        margin-top: 0px;
         img {
             width: 100px;
             height: 100px;

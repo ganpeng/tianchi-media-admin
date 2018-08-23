@@ -217,9 +217,9 @@
             },
             tableRowClassName({row}) {
                 if (row.hadSelected) {
-                    return 'unselectable-row';
+                    return 'unselectable-row video-row';
                 }
-                return '';
+                return 'video-row';
             },
             selectAll(selections) {
                 // 判断是添加还是删除所有当前videoList

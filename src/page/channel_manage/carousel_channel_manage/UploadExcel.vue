@@ -9,6 +9,7 @@
                 style="margin-left:16px;"
                 size="mini"
                 type="primary"
+                plain
                 @click="handleUpload">
                 点击上传
             </el-button>

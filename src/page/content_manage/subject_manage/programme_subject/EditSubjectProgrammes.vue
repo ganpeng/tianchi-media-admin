@@ -19,6 +19,7 @@
                 <el-table
                     :data="selectedProgrammeList"
                     header-row-class-name="common-table-header"
+                    row-class-name=programme-row
                     border
                     style="width: 100%">
                     <el-table-column
@@ -41,17 +42,22 @@
                         label="名称">
                     </el-table-column>
                     <el-table-column
+                        width="160px"
                         align="center"
-                        label="主演">
+                        label="图片">
                         <template slot-scope="scope">
-                            <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
+                            <img
+                                :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl"
+                                :alt="scope.row.coverImage.name"
+                                v-if="scope.row.coverImage">
+                            <label v-else>------</label>
                         </template>
                     </el-table-column>
                     <el-table-column
                         align="center"
-                        label="导演">
+                        label="主演">
                         <template slot-scope="scope">
-                            <label>{{scope.row.figureListMap | displayFigures('DIRECTOR')}}</label>
+                            <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -146,6 +152,10 @@
         margin: 0px;
         .remove-btn {
             color: $baseRed;
+        }
+        img {
+            width: 100px;
+            height: 145px;
         }
     }
 

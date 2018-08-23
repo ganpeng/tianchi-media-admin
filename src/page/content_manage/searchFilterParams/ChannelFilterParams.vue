@@ -29,6 +29,14 @@
             <el-form-item>
                 <el-button type="primary" plain icon="el-icon-search" @click="getChannelList">搜索</el-button>
             </el-form-item>
+            <el-form-item>
+                <el-button type="primary" plain class="clear-filter" @click="clearFilters">
+                    <svg-icon
+                        icon-class="clear_filter">
+                    </svg-icon>
+                    清空筛选条件
+                </el-button>
+            </el-form-item>
         </el-form>
     </div>
 </template>
@@ -74,6 +82,16 @@
             },
             getChannelList() {
                 this.$emit('getChannelList', this.listQueryParams);
+            },
+            clearFilters() {
+                for (let key in this.listQueryParams) {
+                    if (Array.isArray(this.listQueryParams[key])) {
+                        this.listQueryParams[key] = [];
+                    } else {
+                        this.listQueryParams[key] = '';
+                    }
+                }
+                this.listQueryParams.category = 'CAROUSEL';
             }
         }
     };
@@ -81,11 +99,12 @@
 
 <style lang="scss" scoped>
 
+    .el-form {
+        margin-right: 210px;
+    }
+
     .el-form-item {
-        margin-right: 60px;
-        &:first-child {
-            margin-left: 20px;
-        }
+        margin-right: 30px;
     }
 
 </style>

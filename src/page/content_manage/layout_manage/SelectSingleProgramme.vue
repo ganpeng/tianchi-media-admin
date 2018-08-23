@@ -207,9 +207,9 @@
             },
             tableRowClassName({row}) {
                 if (row.recommend || !row.visible) {
-                    return 'warning-row';
+                    return 'warning-row programme-row';
                 }
-                return '';
+                return 'programme-row';
             },
             handleSizeChange(pageSize) {
                 this.listQueryParams.pageSize = pageSize;

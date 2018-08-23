@@ -69,6 +69,7 @@
                 </el-card>
                 <el-table
                     header-row-class-name="common-table-header"
+                    row-class-name=video-row
                     :data="channelInfo.carouselVideoList"
                     border
                     style="width: 100%">
@@ -185,8 +186,8 @@
                 </el-table>
             </div>
             <div id="operate-list">
-                <el-button type="primary" @click="editInfo">编辑频道信息</el-button>
-                <el-button type="primary" @click="toChannelList">返回轮播频道列表</el-button>
+                <el-button type="primary" class="page-main-btn" @click="editInfo">编辑</el-button>
+                <el-button @click="toChannelList" class="page-main-btn">返回列表页</el-button>
             </div>
         </div>
         <display-video-dialog
@@ -341,8 +342,5 @@
         position: absolute;
         right: 0px;
         top: 10px;
-        .el-button {
-            margin-right: 30px;
-        }
     }
 </style>

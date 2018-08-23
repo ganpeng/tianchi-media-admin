@@ -44,34 +44,6 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                prop="description"
-                width="210px"
-                show-overflow-tooltip
-                label="简介">
-                <template slot-scope="scope">
-                    <label>{{scope.row.description ? scope.row.description : '------'}}</label>
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                prop="tagList"
-                width="120px"
-                label="专题标签">
-                <template slot-scope="scope">
-                    <label>{{scope.row.tagList.length === 0 ? '------' : scope.row.tagList.join(',')}}</label>
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                width="128px"
-                prop="authorName"
-                label="专题创建者">
-                <template slot-scope="scope">
-                    <label>{{scope.row.authorName ? scope.row.authorName : '------' }}</label>
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
                 prop="category"
                 label="专题类型">
                 <template slot-scope="scope">
@@ -152,9 +124,9 @@
             },
             tableRowClassName({row}) {
                 if (row.recommend || !row.visible) {
-                    return 'warning-row';
+                    return 'warning-row subject-row';
                 }
-                return '';
+                return 'subject-row';
             },
             // 初始化被推荐的专题的list
             initRecommendIdList(recommendIdList) {

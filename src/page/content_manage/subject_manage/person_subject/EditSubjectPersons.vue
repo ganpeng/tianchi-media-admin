@@ -18,6 +18,7 @@
                 <h3 class="block-vice-title">已选节目</h3>
                 <el-table
                     :data="selectedPersonList"
+                    row-class-name=figure-row
                     header-row-class-name="common-table-header"
                     border
                     style="width: 100%">
@@ -37,6 +38,15 @@
                         align="center"
                         prop="name"
                         label="名称">
+                    </el-table-column>
+                    <el-table-column
+                        width="160px"
+                        align="center"
+                        label="图片">
+                        <template slot-scope="scope">
+                            <img :src="scope.row.avatarImage ? scope.row.avatarImage.uri : '' | imageUrl"
+                                 :alt="scope.row.avatarImage ? scope.row.avatarImage.name : ''">
+                        </template>
                     </el-table-column>
                     <el-table-column
                         align="center"
@@ -142,6 +152,10 @@
         margin: 0px;
         .remove-btn {
             color: $baseRed;
+        }
+        img {
+            width: 100px;
+            height: 100px;
         }
     }
 

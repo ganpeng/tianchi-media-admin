@@ -30,7 +30,7 @@
         </div>
         <div class="operate-item">
             <el-button type="primary" @click="toEdit" class="page-main-btn">编辑</el-button>
-            <el-button type="primary" plain @click="toUserList" class="page-main-btn">返回列表页</el-button>
+            <el-button @click="toUserList" class="page-main-btn">返回列表页</el-button>
         </div>
     </div>
 </template>
@@ -111,6 +111,7 @@
                         line-height: 2;
                         .el-tag {
                             margin-right: 10px;
+                            border: none;
                         }
                     }
                 }
@@ -120,11 +121,6 @@
 
     .operate-item {
         margin: 120px 0px 80px 0px;
-        .el-button {
-            &:first-child {
-                margin-right: 30px;
-            }
-        }
     }
 
 </style>

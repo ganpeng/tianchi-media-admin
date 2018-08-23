@@ -3,6 +3,7 @@
     <el-table
         :data="singleFigureList"
         header-row-class-name="common-table-header"
+        row-class-name=figure-row
         border
         style="width: 100%">
         <el-table-column
@@ -17,7 +18,7 @@
             label="姓名">
         </el-table-column>
         <el-table-column
-            label="头像">
+            label="图片">
             <template slot-scope="scope">
                 <img v-if="scope.row.avatarImage"
                      :src="scope.row.avatarImage ? scope.row.avatarImage.uri : '' | imageUrl"
@@ -26,23 +27,13 @@
             </template>
         </el-table-column>
         <el-table-column
-            prop="description"
-            label="人物简介">
-            <template slot-scope="scope">
-                <label class="ellipsis-three">{{scope.row.description}}</label>
-                <el-popover
-                    placement="right"
-                    :title="scope.row.name + '简介'"
-                    width="250"
-                    trigger="hover"
-                    :content="scope.row.description">
-                    <el-button slot="reference" type="text" class="more">更多</el-button>
-                </el-popover>
-            </template>
-        </el-table-column>
-        <el-table-column
             prop="area"
             label="地区">
+        </el-table-column>
+        <el-table-column align="center" label="更新时间">
+            <template slot-scope="scope">
+                {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+            </template>
         </el-table-column>
     </el-table>
 </template>

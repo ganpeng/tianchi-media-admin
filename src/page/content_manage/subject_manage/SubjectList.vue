@@ -15,6 +15,7 @@
                 header-row-class-name="common-table-header"
                 :data="subjectList"
                 border
+                row-class-name=subject-row
                 style="width: 100%">
                 <el-table-column
                     align="center"
@@ -24,7 +25,6 @@
                 </el-table-column>
                 <el-table-column
                     align="center"
-                    width="186px"
                     prop="name"
                     label="名称">
                 </el-table-column>
@@ -35,34 +35,6 @@
                     label="包含节目/人物数">
                     <template slot-scope="scope">
                         <label>{{scope.row.subjectItemList === null ? 0 : scope.row.subjectItemList.length}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    prop="description"
-                    width="210px"
-                    show-overflow-tooltip
-                    label="简介">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.description ? scope.row.description : '------'}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    prop="tagList"
-                    width="120px"
-                    label="专题标签">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.tagList.length === 0 ? '------' : scope.row.tagList.join(',')}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    width="128px"
-                    prop="authorName"
-                    label="专题创建者">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.authorName ? scope.row.authorName : '------' }}</label>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -85,7 +57,6 @@
                 </el-table-column>
                 <el-table-column
                     align="center"
-                    width="120px"
                     label="创建时间">
                     <template slot-scope="scope">
                         {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}

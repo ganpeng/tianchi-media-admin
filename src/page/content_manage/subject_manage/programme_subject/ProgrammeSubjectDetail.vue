@@ -17,6 +17,7 @@
                 <el-table
                     :data="subjectInfo.subjectItemList"
                     header-row-class-name="common-table-header"
+                    row-class-name=programme-row
                     border>
                     <el-table-column
                         width="70px"
@@ -56,14 +57,6 @@
                         label="主演">
                         <template slot-scope="scope">
                             <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        width="160px"
-                        align="center"
-                        label="导演">
-                        <template slot-scope="scope">
-                            <label>{{scope.row.figureListMap | displayFigures('DIRECTOR')}}</label>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -131,7 +124,7 @@
         margin-bottom: 200px;
         .el-table {
             margin-top: 0px;
-            width: 1128px;
+            width: 967px;
         }
         img {
             width: 100px;

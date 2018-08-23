@@ -57,9 +57,7 @@
         <div class="vice-block text-left">
             <h3 class="block-vice-title">频道封面</h3>
             <el-button
-                class="btn-icon-normal"
-                type="primary"
-                plain
+                class="create-blue-btn"
                 @click="imageUploadDialogVisible = true">
                 <i class="el-icon-picture el-icon--left"></i>
                 添加频道封面
@@ -87,17 +85,20 @@
                     </li>
                 </ul>
             </el-card>
-            <el-button
-                v-if="currentSelectedVideoList.length === 0"
-                type="primary"
-                plain
-                class="add-video"
-                @click="popAppendVideoDialogue(0)">
-                点击添加视频
-            </el-button>
+            <div class="text-left" v-if="currentSelectedVideoList.length === 0">
+                <el-button
+                    class="add-video create-blue-btn"
+                    @click="popAppendVideoDialogue(0)">
+                    <svg-icon
+                        icon-class="video">
+                    </svg-icon>
+                    点击添加视频
+                </el-button>
+            </div>
             <el-table
                 header-row-class-name="common-table-header"
                 :data="currentSelectedVideoList"
+                row-class-name=video-larger-row
                 border
                 style="width: 100%">
                 <el-table-column
@@ -355,15 +356,8 @@
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
         <div class="text-center update-box">
-            <el-button type="primary" @click="updateInfo" class="page-main-btn">更新</el-button>
-            <el-button
-                :disabled="channelInfo.visible"
-                type="danger"
-                @click="removeChannel"
-                class="page-main-btn">
-                删除频道
-            </el-button>
-            <el-button @click="toChannelList">返回轮播频道列表</el-button>
+            <el-button type="primary" @click="updateInfo" class="page-main-btn">保存</el-button>
+            <el-button @click="toChannelList" class="page-main-btn">返回列表页</el-button>
         </div>
         <el-dialog
             title="选择相应的视频"
@@ -871,29 +865,6 @@
                     });
                 });
             },
-            // 删除频道
-            removeChannel() {
-                this.$confirm('此操作将删除该频道, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.$service.deleteChannelById(this.$route.params.id).then(response => {
-                        if (response && response.code === 0) {
-                            this.$message({
-                                type: 'success',
-                                message: '成功删除频道!'
-                            });
-                            this.$router.push({name: 'CarouselChannelList'});
-                        }
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
-            },
             // 更新频道信息
             updateInfo() {
                 /** 在正常频道保存时，必须含有能正常播放的视频  */
@@ -941,7 +912,7 @@
                             this.channelInfo
                         ).then(response => {
                             if (response && response.code === 0) {
-                                this.$message('保存频道信息成功');
+                                this.$message.success('保存频道信息成功');
                             } else {
                                 this.$message({
                                     message: response.message,
@@ -1006,14 +977,10 @@
 
     .add-video {
         margin-top: 30px;
-        margin-left: 20px;
     }
 
     .update-box {
         margin: 120px 0px 80px 0px;
-        .el-button {
-            margin-right: 30px;
-        }
     }
 
     .image-box {

@@ -46,14 +46,13 @@
             :disabled="createDisabled"
             @click="createChannels"
             type="primary"
-            class="create-btn">
-            创建{{channelList.length}}个轮播频道
+            class="page-main-btn">
+            创建
         </el-button>
         <el-button
-            @click="toChannelList"
-            type="primary"
-            class="create-btn">
-            返回轮播频道列表页面
+            class="page-main-btn"
+            @click="toChannelList">
+            返回列表页
         </el-button>
     </div>
 </template>
@@ -247,7 +246,7 @@
 <style lang="scss" scoped>
 
     .create-btn {
-        margin: 120px 30px 80px 0px;
+        margin: 120px 20px 80px 0px;
     }
 
 </style>

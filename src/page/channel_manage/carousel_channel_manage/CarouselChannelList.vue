@@ -16,9 +16,16 @@
             <el-table
                 :data="channelList"
                 header-row-class-name="common-table-header"
+                row-class-name=channel-row
                 @row-dblclick="showChannelVideoMessage"
+                @selection-change="handleSelectionChange"
                 border
                 style="width: 100%">
+                <el-table-column
+                    type="selection"
+                    align="center"
+                    width="55">
+                </el-table-column>
                 <el-table-column
                     width="60px"
                     align="center"
@@ -100,25 +107,40 @@
                     label="操作"
                     class="operate">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.visible"
-                                   type="danger"
-                                   size="mini"
-                                   plain
-                                   @click="disableChannel(scope.row)">
+                        <el-button
+                            type="text"
+                            size="small"
+                            @click="checkChannelDetail(scope.row)"
+                            class="detail-btn">
+                            查看
+                        </el-button>
+                        <el-button
+                            type="text"
+                            size="small"
+                            @click="editChannelInfo(scope.row)">
+                            编辑
+                        </el-button>
+                        <el-button
+                            v-if="scope.row.visible"
+                            type="text"
+                            size="small"
+                            @click="disableChannel(scope.row)">
                             禁播
                         </el-button>
                         <el-button
                             v-else
-                            type="primary"
-                            plain
-                            size="mini"
+                            type="text"
+                            size="small"
                             @click="disableChannel(scope.row)">
                             恢复
                         </el-button>
-                        <el-button type="text" size="small" @click="checkChannelDetail(scope.row)" class="detail-btn">
-                            查看
+                        <el-button
+                            class="remove-btn"
+                            type="text"
+                            size="small"
+                            @click="removeChannel(scope.row)">
+                            删除
                         </el-button>
-                        <el-button type="text" size="small" @click="editChannelInfo(scope.row)">编辑</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -131,17 +153,29 @@
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="total">
             </el-pagination>
+            <div class="visible-item">
+                <el-button
+                    class="create-blue-btn"
+                    size="medium"
+                    @click="batchRecoverChannel">
+                    批量恢复
+                </el-button>
+                <el-button
+                    class="disabled-red-btn"
+                    size="medium"
+                    @click="batchDisabledChannel">
+                    批量禁播
+                </el-button>
+            </div>
             <div class="create-item">
                 <el-button
-                    type="primary"
-                    plain
+                    class="create-blue-btn"
                     icon="el-icon-circle-plus-outline"
                     @click="createChannelDialogVisible = true">
                     新增单个轮播频道
                 </el-button>
                 <el-button
-                    type="primary"
-                    plain
+                    class="create-blue-btn"
                     icon="el-icon-circle-plus-outline"
                     @click="createChannelByImportExcel">
                     批量导入轮播频道
@@ -180,7 +214,8 @@
                 },
                 pageNum: 1,
                 total: 0,
-                channelList: []
+                channelList: [],
+                multipleSelection: []
             };
         },
         mounted() {
@@ -219,6 +254,7 @@
                     if (response && response.code === 0) {
                         this.channelList = response.data.list;
                         this.total = response.data.total;
+                        this.multipleSelection = [];
                     }
                 });
             },
@@ -293,12 +329,49 @@
                         message: '已取消' + operateWords + channelInfo.innerName + '频道'
                     });
                 });
+            },
+            // 删除频道
+            removeChannel(channelInfo) {
+                if (channelInfo.visible) {
+                    this.$message.warning('由于' + channelInfo.innerName + '频道为正常状态，暂时不能删除');
+                    return;
+                }
+                this.$confirm('此操作将删除' + channelInfo.innerName + '频道, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$service.deleteChannelById(channelInfo.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message({
+                                type: 'success',
+                                message: '成功删除' + channelInfo.innerName + '频道!'
+                            });
+                            this.getChannelList();
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            // 批量禁播频道
+            batchDisabledChannel() {
+
+            },
+            // 批量恢复频道
+            batchRecoverChannel() {
+
             }
         }
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 
     .block-box {
@@ -306,10 +379,22 @@
         padding-top: 80px;
     }
 
+    .visible-item {
+        position: absolute;
+        right: 0px;
+        top: 85px;
+    }
+
     .create-item {
         position: absolute;
         right: 0px;
         top: 10px;
+    }
+
+    .el-table {
+        .el-button {
+            margin: 0px 5px;
+        }
     }
 
     .el-pagination {

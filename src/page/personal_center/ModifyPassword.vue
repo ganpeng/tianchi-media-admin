@@ -37,8 +37,8 @@
             </el-form-item>
         </el-form>
         <div class="operate-item">
-            <el-button type="primary" @click="submitForm" class="page-main-btn">更 新</el-button>
-            <el-button type="primary" plain @click="resetForm" class="page-main-btn">重 置</el-button>
+            <el-button type="primary" @click="submitForm" class="page-main-btn">保存</el-button>
+            <el-button type="primary" plain @click="resetForm" class="page-main-btn">重置</el-button>
         </div>
     </div>
 </template>
@@ -134,11 +134,6 @@
     .operate-item {
         margin: 200px 0px 80px 0px;
         max-width: 600px;
-        .el-button {
-            &:first-child {
-                margin-right: 30px;
-            }
-        }
     }
 
 </style>

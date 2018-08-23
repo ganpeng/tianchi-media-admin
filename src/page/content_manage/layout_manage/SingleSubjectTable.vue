@@ -3,6 +3,7 @@
     <el-table
         :data="singleSubjectList"
         header-row-class-name="common-table-header"
+        row-class-name=subject-row
         border
         style="width: 100%">
         <el-table-column
@@ -28,32 +29,6 @@
         </el-table-column>
         <el-table-column
             align="center"
-            prop="description"
-            show-overflow-tooltip
-            label="简介">
-            <template slot-scope="scope">
-                <label>{{scope.row.description ? scope.row.description : '------'}}</label>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="tagList"
-            label="专题标签">
-            <template slot-scope="scope">
-                <label>{{scope.row.tagList.length === 0 ? '------' : scope.row.tagList.join(',')}}</label>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            width="128px"
-            prop="authorName"
-            label="专题创建者">
-            <template slot-scope="scope">
-                <label>{{scope.row.authorName ? scope.row.authorName : '------' }}</label>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
             prop="category"
             label="专题类型">
             <template slot-scope="scope">
@@ -68,6 +43,21 @@
                 <label v-if="scope.row.programmeCategoryList && scope.row.programmeCategoryList.length !== 0">
                     {{scope.row.programmeCategoryList | jsonJoin('name') }}</label>
                 <label v-else>------</label>
+            </template>
+        </el-table-column>
+        <el-table-column
+            align="center"
+            label="创建时间">
+            <template slot-scope="scope">
+                {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+            </template>
+        </el-table-column>
+        <el-table-column
+            align="center"
+            label="状态">
+            <template slot-scope="scope">
+                <i class="status-normal" v-if="scope.row.visible">已上架</i>
+                <i class="status-abnormal" v-else>已下架</i>
             </template>
         </el-table-column>
     </el-table>

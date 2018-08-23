@@ -14,8 +14,9 @@
                 <el-input v-model="userInfo.identityId" @change="changeIdentityId" placeholder="请输入身份证号"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button @click="verifyIdentityId" type="primary" plain>验证身份证号</el-button>
-                <el-button @click="toEditUserInfo" type="primary" plain v-if="identityIdExist">该用户已存在，点此编辑信息</el-button>
+                <el-button @click="verifyIdentityId" class="create-blue-btn">验证身份证号</el-button>
+                <el-button @click="toEditUserInfo" class="create-blue-btn" v-if="identityIdExist">该用户已存在，点此编辑信息
+                </el-button>
             </el-form-item>
             <el-form-item :label="'设备ID' + (index + 1)"
                           props="stbList"
@@ -26,7 +27,7 @@
                 <el-button v-if="userInfo.stbList.length > 1" plain @click="removeDevice(index)">删除设备</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button @click="addDevice" type="primary" plain>添加设备</el-button>
+                <el-button @click="addDevice" class="create-blue-btn">添加设备</el-button>
             </el-form-item>
             <el-form-item label="省份" prop="province" required>
                 <el-select v-model="userInfo.province"
@@ -98,10 +99,10 @@
                 :disabled="btnDisabled"
                 type="primary"
                 @click="operateUser">
-                {{status === '0' ? '创建' : '更新'}}
+                {{status === '0' ? '创建' : '保存'}}
             </el-button>
-            <el-button type="primary" plain @click="reset" class="page-vice-btn">重置</el-button>
-            <el-button @click="toUserList" class="page-main-btn">返回用户列表</el-button>
+            <el-button type="primary" plain @click="reset" class="page-main-btn">重置</el-button>
+            <el-button @click="toUserList" class="page-main-btn">返回列表页</el-button>
         </div>
     </div>
 </template>
@@ -478,10 +479,6 @@
     .operate-item {
         margin: 120px 0px 80px 0px;
         text-align: center;
-        .el-button {
-            margin-right: 30px;
-            margin-left: 0px;
-        }
     }
 
 </style>

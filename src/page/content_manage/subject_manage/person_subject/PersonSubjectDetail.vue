@@ -16,6 +16,7 @@
                 <h3 class="block-vice-title">专题内节目列表</h3>
                 <el-table
                     :data="subjectInfo.subjectItemList"
+                    row-class-name=figure-row
                     header-row-class-name="common-table-header"
                     border>
                     <el-table-column
@@ -41,7 +42,7 @@
                     <el-table-column
                         width="160px"
                         align="center"
-                        label="头像">
+                        label="图片">
                         <template slot-scope="scope">
                             <img :src="scope.row.avatarImage ? scope.row.avatarImage.uri : '' | imageUrl"
                                  :alt="scope.row.avatarImage ? scope.row.avatarImage.name : ''">

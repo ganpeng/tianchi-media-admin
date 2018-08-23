@@ -122,6 +122,30 @@
             display: none;
         }
     }
+    //  专题列表行的样式
+    .subject-row {
+        height: 90px;
+    }
+    // 节目列表行的样式
+    .programme-row {
+        height: 170px;
+    }
+    // 人物列表行的样式
+    .figure-row {
+        height: 125px;
+    }
+    // 频道列表行的样式
+    .channel-row {
+        height: 90px;
+    }
+    // 视频列表行的样式（正常）
+    .video-row {
+        height: 72px;
+    }
+    // 视频列表行的样式(较大)
+    .video-larger-row {
+        height: 118px;
+    }
 }
 
 // 表格下面分页右对齐
@@ -306,10 +330,38 @@ li {
 
 /** 列表页面右上角添加按钮样式  */
 .create-blue-btn {
+    background-color: transparent;
     border: 1px solid #1989FA;
     color: #1989FA;
     * {
         color: #1989FA;
+    }
+    .svg-icon {
+        margin-right: 2px;
+        fill: #A3D0FD;
+    }
+    &:hover, &:focus {
+        background-color: #1989FA;
+        * {
+            color: #fff;
+        }
+        .svg-icon {
+            fill: #fff;
+        }
+    }
+}
+
+/** 禁播、删除等按钮样式  */
+.disabled-red-btn {
+    background-color: transparent;
+    border: 1px solid #fbc4c4;
+    color: #f56c6c;
+    * {
+        color: #f56c6c;
+    }
+    &:hover, &:focus {
+        background-color: #fef0f0;
+        border: 1px solid #fbc4c4;
     }
 }
 

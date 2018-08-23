@@ -226,6 +226,21 @@
                     color: #B8C7CE;
                 }
             }
+            // 打开一级菜单
+            &.is-opened {
+                .el-menu {
+                    background-color: #2B414B !important;
+                    li {
+                        background-color: #2B414B !important;
+                    }
+                }
+                // active的二级菜单
+                .el-menu-item {
+                    &:hover {
+                        background-color: #283841 !important;
+                    }
+                }
+            }
             // active的一级菜单
             &.is-active {
                 .el-submenu__title {
