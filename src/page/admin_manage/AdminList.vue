@@ -8,7 +8,7 @@
         </custom-breadcrumb>
         <el-form :inline="true" class="search-form">
             <el-form-item class="float-right">
-                <el-button type="primary" plain @click="createAdmin"><i class="el-icon-circle-plus-outline"></i> 创建管理员</el-button>
+                <el-button class="create-blue-btn" icon="el-icon-circle-plus-outline" @click="createAdmin">创建管理员</el-button>
             </el-form-item>
             <el-col :span="24">
                 <el-form-item>
@@ -23,7 +23,7 @@
         <el-table
             :data="adminList"
             border
-            header-row-class-name=“common-table-header”
+            header-row-class-name="common-table-header"
             style="width: 100%">
             <el-table-column
                 prop="name"

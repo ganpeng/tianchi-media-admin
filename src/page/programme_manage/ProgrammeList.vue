@@ -11,8 +11,8 @@
             <el-form id="label-font" :inline="true" class="demo-form-inline text-left">
                 <el-col :span="24" class="float-right text-right">
                     <el-form-item>
-                        <el-button class="page-main-btn create-blue-btn" @click="createProgramme" icon="el-icon-circle-plus-outline" type="primary" plain>新增节目</el-button>
-                        <el-button class="page-main-btn create-blue-btn" type="primary" icon="el-icon-upload2" plain @click="showFileUploadDialog">导入节目</el-button>
+                        <el-button class="page-main-btn create-blue-btn" @click="createProgramme" icon="el-icon-circle-plus-outline">新增节目</el-button>
+                        <el-button class="page-main-btn create-blue-btn" icon="el-icon-upload2" @click="showFileUploadDialog">导入节目</el-button>
                     </el-form-item>
                 </el-col>
                 <el-col :span="24">
@@ -117,7 +117,7 @@
                     </el-form-item>
                 </el-col>
             </el-form>
-            <el-table row-class-name=“programme-row” header-row-class-name=“common-table-header” class="my-table-style" :data="list" border>
+            <el-table row-class-name="programme-row" header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
                 <el-table-column prop="code" align="center" width="120px" label="节目编号">
                     <template slot-scope="scope">
                         {{scope.row.code | padEmpty}}

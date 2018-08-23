@@ -3,7 +3,7 @@
     <div class="video-table-container">
         <el-table
             ref="multipleTable"
-            header-row-class-name=“common-table-header”
+            header-row-class-name="common-table-header"
             @select="selectHandler"
             @select-all="selectAllHandler"
             class="my-table-style" :data="video.list" border>

@@ -51,7 +51,7 @@
                 </el-form-item>
                 <div :class="showBtn ? 'text-right' : 'text-center'">
                     <el-button v-if="showBtn"  @click="closeSetChannelDialog">取 消</el-button>
-                    <el-button type="primary" @click="setChannel">确定</el-button>
+                    <el-button :class="{'page-main-btn': !showBtn}" type="primary" @click="setChannel">确定</el-button>
                 </div>
             </el-col>
         </el-form>

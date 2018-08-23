@@ -10,7 +10,7 @@
         <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
             <el-col :span="24">
                 <el-form-item class="create-account">
-                    <el-button type="primary" class="page-main-btn create-blue-btn" plain @click="showFileUploadDialog"><i class="el-icon-circle-plus-outline"></i> 新增版本</el-button>
+                    <el-button class="page-main-btn create-blue-btn" icon="el-icon-circle-plus-outline" @click="showFileUploadDialog">新增版本</el-button>
                 </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -78,7 +78,7 @@
                 </el-form-item>
             </el-col>
         </el-form>
-        <el-table header-row-class-name=“common-table-header” class="my-table-style" :data="list" border>
+        <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
             <el-table-column align="center" width="120px" label="编号" prop="id"></el-table-column>
             <el-table-column label="版本名称" align="center" prop="version"></el-table-column>
             <el-table-column label="版本号" align="center" prop="versionCode"></el-table-column>

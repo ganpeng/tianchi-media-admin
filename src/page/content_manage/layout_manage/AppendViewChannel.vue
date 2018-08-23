@@ -17,7 +17,7 @@
             @submit.native.prevent
             ref="channelForm"
             >
-            <el-col :span="6">
+            <el-col :span="8">
                 <el-form-item label="频道" prop="channelId">
                     <el-select
                         v-model="channelForm.channelId"
@@ -35,9 +35,9 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <div class="text-center">
-                    <el-button type="primary" @click="saveViewChannel">确定</el-button>
-                </div>
+                <el-form-item class="text-left">
+                    <el-button class="page-main-btn" type="primary" @click="saveViewChannel">确定</el-button>
+                </el-form-item>
             </el-col>
         </el-form>
     </div>

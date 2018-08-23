@@ -10,8 +10,8 @@
         <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left">
             <el-col :span="24">
                 <el-form-item class="float-right">
-                    <el-button class="page-main-btn create-blue-btn" type="primary" plain @click="createPerson"><i class="el-icon-circle-plus-outline"></i> 新增人物</el-button>
-                    <el-button class="page-main-btn create-blue-btn" icon="el-icon-upload2" type="primary" plain @click="showFileUploadDialog"> 导入人物</el-button>
+                    <el-button class="page-main-btn create-blue-btn" @click="createPerson"><i class="el-icon-circle-plus-outline"></i> 新增人物</el-button>
+                    <el-button class="page-main-btn create-blue-btn" icon="el-icon-upload2" @click="showFileUploadDialog">导入人物</el-button>
                 </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -52,7 +52,7 @@
                 </el-form-item>
             </el-col>
         </el-form>
-        <el-table row-class-name=“figure-row” header-row-class-name=“common-table-header” class="my-table-style" :data="list" border>
+        <el-table :row-class-name='"figure-row"' :header-row-class-name='"common-table-header"' class="my-table-style" :data="list" border>
             <el-table-column prop="id" align="center" width="120px" label="编号">
                 <template slot-scope="scope">
                     {{scope.row.id | padEmpty}}

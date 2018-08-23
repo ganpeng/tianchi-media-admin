@@ -10,8 +10,8 @@
         <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
             <el-col :span="24" class="float-right">
                 <el-form-item class="create-account">
-                    <el-button type="primary" class="page-main-btn create-blue-btn" icon="el-icon-circle-plus-outline" plain @click="createLiveChannel">新增直播频道</el-button>
-                    <el-button type="primary" class="page-main-btn create-blue-btn"  icon="el-icon-upload2" plain @click="showFileUploadDialog">导入节目单</el-button>
+                    <el-button class="page-main-btn create-blue-btn" icon="el-icon-circle-plus-outline" @click="createLiveChannel">新增直播频道</el-button>
+                    <el-button class="page-main-btn create-blue-btn"  icon="el-icon-upload2" @click="showFileUploadDialog">导入节目单</el-button>
                 </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -52,7 +52,7 @@
                 </el-form-item>
             </el-col>
         </el-form>
-        <el-table header-row-class-name=“common-table-header” class="my-table-style" :data="list" border>
+        <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
             <el-table-column prop="code" align="center" width="120px" label="直播频道编号"></el-table-column>
             <el-table-column prop="no" align="center" width="140px" label="直播频道展示编号"></el-table-column>
             <el-table-column prop="innerName" align="center" width="120px" label="直播频道名称"></el-table-column>

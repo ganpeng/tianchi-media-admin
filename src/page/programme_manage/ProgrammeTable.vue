@@ -5,7 +5,7 @@
             <el-table
                 :data="dataList"
                 border
-                header-row-class-name=“common-table-header”
+                header-row-class-name="common-table-header"
                 style="width: 100%">
                 <el-table-column
                     prop="storageVideoId"

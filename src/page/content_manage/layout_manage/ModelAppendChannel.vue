@@ -57,7 +57,7 @@
                 </div>
             </el-col>
             <el-col :span="24" class="text-center">
-                <el-button class="model-btn" type="primary" @click="saveChannelModel">确定</el-button>
+                <el-button class="model-btn page-main-btn" type="primary" @click="saveChannelModel">确定</el-button>
             </el-col>
         </el-form>
         <el-dialog

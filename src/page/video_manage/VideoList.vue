@@ -11,7 +11,7 @@
             <el-col :span="24">
                 <el-form-item class="float-right">
                     <el-dropdown>
-                        <el-button class="page-main-btn create-blue-btn" icon="el-icon-upload2" type="primary" plain>
+                        <el-button class="page-main-btn create-blue-btn" icon="el-icon-upload2">
                             上传视频<i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
@@ -69,7 +69,7 @@
                     </el-button>
                 </el-form-item>
                 <el-form-item class="float-right">
-                    <el-button class="delete-btn" size="small" icon="el-icon-delete" type="danger" @click="deleteVideoList" plain>批量删除</el-button>
+                    <el-button class="delete-btn disabled-red-btn" size="small" icon="el-icon-delete" @click="deleteVideoList">批量删除</el-button>
                 </el-form-item>
             </el-col>
         </el-form>
