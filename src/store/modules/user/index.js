@@ -45,7 +45,7 @@ const actions = {
                     commit('setName', data.name);
                     commit('setToken', data.token);
                     // 当前环境的域名
-                    let currentDomain = window.location.host;
+                    let currentDomain = window.location.protocol + '//' + window.location.host;
                     // 设置图片的根路径为当前地址域名
                     window.localStorage.setItem('imageBaseUri', currentDomain);
                     // 设置视频的根路径为当前地址域名
