@@ -51,7 +51,7 @@ export const updateChannelById = (id, channel) => {
 };
 
 /**
- * 根据id禁播或者恢复节目
+ * 根据id禁播或者恢复频道
  */
 export const setChannelVisible = (id) => {
     return service.patch(`/v1/live/channel/${id}/visible`);
@@ -95,4 +95,20 @@ export const getChannelPageById = (id) => {
             endDate: new Date().getTime() + sevenDayTimeStamp
         }
     });
+};
+
+/**
+ * 根据id的列表批量禁播或者恢复频道
+ */
+export const batchSetChannel = ({idList, visible}) => {
+    const params = {
+        idList,
+        visible
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.patch(`/v1/live/channel/visible?${paramsStr}`);
 };

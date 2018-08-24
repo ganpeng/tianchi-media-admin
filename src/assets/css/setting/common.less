@@ -578,3 +578,60 @@ li {
         }
     }
 }
+
+// 步骤条
+.el-steps {
+    // 完成步骤
+    .el-step__head {
+        // 等待步骤样式
+        .is-text {
+            background-color: #D8D8D8;
+            border-color: #D8D8D8;
+            .el-step__icon-inner {
+                color: #fff;
+            }
+        }
+        // 当前步骤样式
+        &.is-process {
+            .is-text {
+                background-color: #1989FA;
+                border-color: #1989FA;
+                .el-step__icon-inner {
+                    color: #fff;
+                }
+            }
+        }
+        // 完成步骤样式
+        &.is-finish {
+            .is-text {
+                background-color: #67C23A;
+                border-color: #67C23A;
+                .el-step__icon-inner {
+                    color: #fff;
+                }
+            }
+        }
+    }
+    .el-step__main {
+        .el-step__title {
+            font-size: 16px;
+            color: #8C8C8C;
+            &.is-process {
+                color: #283841;
+            }
+            &.is-finish {
+                color: #283841;
+            }
+        }
+        .el-step__description {
+            color: #8C8C8C;
+            font-size: 14px;
+            &.is-process {
+                color: #606060;
+            }
+            &.is-finish {
+                color: #606060;
+            }
+        }
+    }
+}

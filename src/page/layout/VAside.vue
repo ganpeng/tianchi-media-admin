@@ -1,8 +1,16 @@
 <!--左侧导航栏-->
 <template>
     <div class="wrap-box" id="nav-menu-box">
-        <img v-if="isActive" src="~assets/img/logo.png">
-        <img v-else src="~assets/img/single_logo.png">
+        <svg-icon
+            v-if="isActive"
+            icon-class="logo_home"
+            class-name="logo-home">
+        </svg-icon>
+        <svg-icon
+            v-else
+            icon-class="logo_simple"
+            class-name="logo-simple">
+        </svg-icon>
         <el-menu
             unique-opened
             background-color="#222D32"
@@ -16,7 +24,10 @@
             <!--栏目管理-->
             <el-submenu index="1">
                 <template slot="title">
-                    <i class="el-icon-tickets"></i>
+                    <svg-icon
+                        icon-class="nav_manage"
+                        class-name="svg-box">
+                    </svg-icon>
                     <span>栏目管理</span>
                 </template>
                 <el-menu-item index="/nav-bar-manage/setting">栏目项管理</el-menu-item>
@@ -30,7 +41,10 @@
             <!--节目资源管理-->
             <el-submenu index="2">
                 <template slot="title">
-                    <i class="el-icon-document"></i>
+                    <svg-icon
+                        icon-class="programme_manage"
+                        class-name="svg-box">
+                    </svg-icon>
                     <span>节目资源管理</span>
                 </template>
                 <el-menu-item index="/programme-manage/create">新增节目</el-menu-item>
@@ -40,7 +54,10 @@
             <!--人物资源管理-->
             <el-submenu index="3">
                 <template slot="title">
-                    <i class="el-icon-goods"></i>
+                    <svg-icon
+                        icon-class="person_manage"
+                        class-name="svg-box">
+                    </svg-icon>
                     <span>人物资源管理</span>
                 </template>
                 <el-menu-item index="/person-manage/create">新增人物</el-menu-item>
@@ -50,7 +67,10 @@
             <!--视频资源管理-->
             <el-submenu index="4">
                 <template slot="title">
-                    <i class="el-icon-bell"></i>
+                    <svg-icon
+                        icon-class="video_manage"
+                        class-name="svg-box">
+                    </svg-icon>
                     <span>视频资源管理</span>
                 </template>
                 <el-menu-item index="/manage-video/list">视频列表</el-menu-item>
@@ -58,7 +78,10 @@
             <!--频道管理-->
             <el-submenu index="5">
                 <template slot="title">
-                    <i class="el-icon-mobile-phone"></i>
+                    <svg-icon
+                        icon-class="channel_manage"
+                        class-name="svg-box">
+                    </svg-icon>
                     <span>频道管理</span>
                 </template>
                 <el-menu-item index="/channel-manage/live/list">直播频道列表</el-menu-item>
@@ -68,7 +91,10 @@
             <!--专题管理-->
             <el-submenu index="6">
                 <template slot="title">
-                    <i class="el-icon-star-off"></i>
+                    <svg-icon
+                        icon-class="subject_manage"
+                        class-name="svg-box">
+                    </svg-icon>
                     <span>专题管理</span>
                 </template>
                 <el-menu-item index="/subject-manage/programme/create">新增节目专题</el-menu-item>
@@ -78,7 +104,10 @@
             <!-- 版本管理 -->
             <el-submenu index="7">
                 <template slot="title">
-                    <i class="el-icon-more"></i>
+                    <svg-icon
+                        icon-class="version_manage"
+                        class-name="svg-box">
+                    </svg-icon>
                     <span>版本管理</span>
                 </template>
                 <el-menu-item index="/manage-version/list">版本列表</el-menu-item>
@@ -194,8 +223,18 @@
 </script>
 
 <style scoped lang="scss">
+
     .wrap-box {
         overflow-y: scroll;
+        .logo-home {
+            width: 240px !important;
+            height: 64px !important;
+        }
+
+        .logo-simple {
+            width: 64px !important;
+            height: 64px !important;
+        }
         .el-menu {
             text-align: left;
             border: none;

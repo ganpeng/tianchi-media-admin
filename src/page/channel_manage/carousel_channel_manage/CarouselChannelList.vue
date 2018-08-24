@@ -157,13 +157,13 @@
                 <el-button
                     class="create-blue-btn"
                     size="small"
-                    @click="batchRecoverChannel">
+                    @click="batchSetChannel(true)">
                     批量恢复
                 </el-button>
                 <el-button
                     class="disabled-red-btn"
                     size="small"
-                    @click="batchDisabledChannel">
+                    @click="batchSetChannel(false)">
                     批量禁播
                 </el-button>
             </div>
@@ -360,13 +360,33 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            // 批量禁播频道
-            batchDisabledChannel() {
-
-            },
-            // 批量恢复频道
-            batchRecoverChannel() {
-
+            // 批量禁播、恢复频道
+            batchSetChannel(visible) {
+                if (this.multipleSelection.length === 0) {
+                    this.$message.warning('请选择需要' + (visible ? '恢复' : '禁播') + '的频道');
+                    return;
+                }
+                let idList = [];
+                this.multipleSelection.map(channel => {
+                    idList.push(channel.id);
+                });
+                this.$service.batchSetChannel({
+                    idList: idList,
+                    visible: visible
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message.success('批量' + (visible ? '恢复' : '禁播') + '成功');
+                        // 刷新页面数据
+                        this.getChannelList();
+                        // 下架失败，设置提醒信息
+                    } else if (response && response.code === 3604) {
+                        let message = '';
+                        response.data.map(channel => {
+                            message = message + channel.innerName + channel.reason;
+                        });
+                        this.$message.warning(message + '，暂时不能批量禁播');
+                    }
+                });
             }
         }
     };

@@ -8,9 +8,18 @@
             {name:currentNavBarInfo.name + '-节目选择'}]">
         </custom-breadcrumb>
         <el-steps :active="activeStep" align-center>
-            <el-step title="步骤1" :status='stepFirstStatus' description="选择节目资源"></el-step>
-            <el-step title="步骤2" :status='stepSecondStatus' description="选择节目图片"></el-step>
-            <el-step title="步骤3" :status='stepThirdStatus' description="设置节目角标"></el-step>
+            <el-step
+                title="步骤1"
+                description="选择节目资源">
+            </el-step>
+            <el-step
+                title="步骤2"
+                description="选择节目图片">
+            </el-step>
+            <el-step
+                title="步骤3"
+                description="设置节目角标">
+            </el-step>
         </el-steps>
         <keep-alive>
             <component v-show="mode !== 'EDIT' || activeStep !== 0"
@@ -110,27 +119,6 @@
                 return this.$store.getters['layout/getNavBarInfo']({
                     navBarId: this.navBarId
                 });
-            },
-            stepFirstStatus() {
-                if (this.activeStep > 0) {
-                    return 'success';
-                } else {
-                    return '';
-                }
-            },
-            stepSecondStatus() {
-                if (this.activeStep > 1) {
-                    return 'success';
-                } else {
-                    return '';
-                }
-            },
-            stepThirdStatus() {
-                if (this.activeStep > 2) {
-                    return 'success';
-                } else {
-                    return '';
-                }
             }
         },
         created() {

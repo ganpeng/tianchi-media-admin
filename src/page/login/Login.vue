@@ -30,7 +30,10 @@
                     </el-form-item>
                 </el-form>
             </div>
-            <img src="~assets/img/login_logo.png" class="login-logo">
+            <svg-icon
+                icon-class="login_logo_words"
+                class-name="login-logo">
+            </svg-icon>
         </el-main>
         <v-footer></v-footer>
     </el-container>
