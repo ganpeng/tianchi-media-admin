@@ -242,7 +242,7 @@
                 width: 240px;
             }
             i, .svg-box {
-                margin-right: 16px;
+                margin-right: 18px;
             }
             .el-menu-item {
                 padding-left: 65px !important;
@@ -265,6 +265,9 @@
                     color: #B8C7CE;
                 }
             }
+            .svg-box {
+                fill: $asideIconColor;
+            }
             // 打开一级菜单
             &.is-opened {
                 .el-menu {
@@ -286,6 +289,9 @@
                     background-color: #1A2227 !important;
                     * {
                         color: white;
+                    }
+                    .svg-box {
+                        fill: #fff;
                     }
                 }
                 // active的二级菜单

@@ -9,7 +9,10 @@
         </div>
         <div class="info">
             <div class="avatar-box">
-                <img src="~assets/img/avatar_circle_default.png"/>
+                <svg-icon
+                    icon-class="avatar_default"
+                    class-name="avatar_default">
+                </svg-icon>
             </div>
             <label>您好，{{name}}</label>
             <span @click="logout">退出</span>
@@ -21,6 +24,7 @@
 
     import Hamburger from 'sysComponents/custom_components/custom/Hamburger';
     import Cookies from 'js-cookie';
+
     export default {
         name: 'VHeader',
         components: {
@@ -88,6 +92,11 @@
         padding: 0 20px;
         height: 100%;
         fill: $grayLineColor;
+    }
+
+    .avatar_default {
+        width: 45px !important;
+        height: 45px !important;
     }
 
 </style>

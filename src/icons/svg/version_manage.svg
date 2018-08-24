@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
     <title>更新icon</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="菜单栏-new" transform="translate(-1893.000000, -549.000000)" fill="#B8C7CE">
+    <g id="Design" stroke="none" stroke-width="1">
+        <g id="菜单栏-new" transform="translate(-1893.000000, -549.000000)">
             <g id="菜单栏1级" transform="translate(1865.000000, 75.000000)">
-                <path d="M41.5,482.008929 L46,482.008929 L37,491.651786 L28,482.008929 L32.5,482.008929 L32.5,474.973214 C32.5,474.42093 32.9477153,473.973214 33.5,473.973214 L40.5,473.973214 C41.0522847,473.973214 41.5,474.42093 41.5,474.973214 L41.5,482.008929 Z" id="更新icon" transform="translate(37.000000, 482.812500) scale(1, -1) translate(-37.000000, -482.812500) "></path>
+                <path
+                    d="M41.5,482.008929 L46,482.008929 L37,491.651786 L28,482.008929 L32.5,482.008929 L32.5,474.973214 C32.5,474.42093 32.9477153,473.973214 33.5,473.973214 L40.5,473.973214 C41.0522847,473.973214 41.5,474.42093 41.5,474.973214 L41.5,482.008929 Z"
+                    id="更新icon"
+                    transform="translate(37.000000, 482.812500) scale(1, -1) translate(-37.000000, -482.812500) "></path>
             </g>
         </g>
     </g>

@@ -41,7 +41,7 @@ exports.cssLoaders = function (options) {
                 }, {
                     data: '$smallestFontSize:12px;$normalFontSize: 14px;$baseAsideColor: #283841;$largerFontSize: 16px;$grayLineColor: #D8D8D8;$baseGray: #606060;' +
                     '$generalBgColor: #F0F2F5;$loginFontColor: #8AA4AF;$baseBlue: #1989FA;$stillGray: #F0F2F5;$dynamicGray: #DCDFE6;$orangeFontColor: #ED6819;' +
-                    '$baseLightGray: #606060;$baseRed: #F56C6C;'
+                    '$baseLightGray: #606060;$baseRed: #F56C6C;$asideIconColor: #B8C7CE;'
                 })
             });
         }

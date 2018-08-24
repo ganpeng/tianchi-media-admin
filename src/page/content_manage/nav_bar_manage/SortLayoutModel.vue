@@ -150,7 +150,7 @@
         color: #909399;
         cursor: pointer;
         &:hover {
-            color: $baseBlue;
+            color: $baseRed;
         }
     }
 
