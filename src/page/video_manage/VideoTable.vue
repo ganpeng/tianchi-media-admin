@@ -18,7 +18,7 @@
                 <template slot-scope="scope">
                     <el-tooltip effect="dark" placement="top">
                         <div class="gan-tooltip" slot="content">{{scope.row.originName}}</div>
-                        <span>{{cutStr(scope.row.originName)}}</span>
+                        <span class="ellipsis-two">{{scope.row.originName}}</span>
                     </el-tooltip>
                 </template>
             </el-table-column>
