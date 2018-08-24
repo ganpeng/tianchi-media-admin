@@ -18,6 +18,13 @@ module.exports = {
                     console.log('URL-Admin:' + proxyOptions.target + req.originalUrl);
                 }
             },
+            '/storage/v': {
+                target: env.h5NginxProxyTarget,
+                changeOrigin: true,
+                bypass: function (req, res, proxyOptions) {
+                    console.log('URL-Storage:' + proxyOptions.target + req.originalUrl);
+                }
+            },
             '/group': {
                 target: env.h5NginxProxyTarget,
                 changeOrigin: true,

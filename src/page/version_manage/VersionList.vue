@@ -82,7 +82,6 @@
             <el-table-column align="center" width="120px" label="编号" prop="id"></el-table-column>
             <el-table-column label="版本名称" align="center" prop="version"></el-table-column>
             <el-table-column label="版本号" align="center" prop="versionCode"></el-table-column>
-            <el-table-column label="版本说明" align="center" width="200px" prop="updateLog"></el-table-column>
             <el-table-column align="center" width="120px" label="升级类型">
                 <template slot-scope="scope">
                     {{scope.row.productType === 'TV_LAUNCHER' ? '应用升级' : '系统升级'}}

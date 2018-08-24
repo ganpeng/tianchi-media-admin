@@ -55,7 +55,7 @@ function getSearchFields() {
     }
 }
 
-const state = {
+const defaultState = {
     recommend: _.cloneDeep(defaultRecommend),
     hotPerson: _.cloneDeep(defaultHotPerson),
     searchFields: getSearchFields(),
@@ -63,6 +63,8 @@ const state = {
     list: [],
     pagination: _.cloneDeep(defaultPagination)
 };
+
+const state = _.cloneDeep(defaultState);
 
 const getters = {
     list(state) {

@@ -22,7 +22,10 @@
                     align="center"
                     width="180">
                         <template slot-scope="scope">
-                            {{scope.row.originName | padEmpty}}
+                            <el-tooltip effect="dark" placement="top">
+                                <div class="gan-tooltip" slot="content">{{scope.row.originName}}</div>
+                                <span>{{cutStr(scope.row.originName) | padEmpty}}</span>
+                            </el-tooltip>
                         </template>
                 </el-table-column>
                 <el-table-column
@@ -32,11 +35,16 @@
                     align="center"
                     width="180">
                         <template slot-scope="scope">
-                            {{scope.row.name | padEmpty}}
+                            <el-tooltip v-if="scope.row.name" effect="dark" placement="top">
+                                <div class="gan-tooltip" slot="content">{{scope.row.name}}</div>
+                                <span>{{cutStr(scope.row.name) | padEmpty}}</span>
+                            </el-tooltip>
+                            <span v-else>{{cutStr(scope.row.name) | padEmpty}}</span>
                         </template>
                 </el-table-column>
                 <el-table-column
                     prop="sort"
+                    width="100"
                     v-if="tableStatus === 1"
                     label="集数/期号"
                     align="center">
@@ -283,6 +291,9 @@ export default {
             getProgrammeVideoListById: 'programme/getProgrammeVideoListById',
             getFeatureVideoList: 'programme/getFeatureVideoList'
         }),
+        cutStr(str) {
+            return str.length > 30 ? str.substring(0, 30) + '...' : str;
+        },
         editVideo(id) {
             if (this.isUnsavedVideo(id)) {
                 let video = this.video.list.find((video) => video.id === id);
@@ -385,4 +396,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.gan-tooltip {
+    width: 300px;
+}
 </style>

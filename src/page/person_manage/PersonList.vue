@@ -162,6 +162,12 @@
             };
         },
         created() {
+            let searchFieldsStr = window.localStorage.getItem('personSearchFields');
+            if (searchFieldsStr) {
+                let searchFields = JSON.parse(searchFieldsStr);
+                this.updateSearchFields({key: 'name', value: searchFields.name});
+                this.updateSearchFields({key: 'area', value: searchFields.area});
+            }
             this.getPersonList({isProgramme: false});
             window.addEventListener('keyup', this.keyupHandler);
         },

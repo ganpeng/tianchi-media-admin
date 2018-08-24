@@ -14,7 +14,14 @@
                 </template>
             </el-table-column>
             <el-table-column prop="code" align="center" width="118" label="编号"></el-table-column>
-            <el-table-column prop="originName" align="center" label="视频名称"></el-table-column>
+            <el-table-column width="540px" prop="originName" align="center" label="视频名称">
+                <template slot-scope="scope">
+                    <el-tooltip effect="dark" placement="top">
+                        <div class="gan-tooltip" slot="content">{{scope.row.originName}}</div>
+                        <span>{{cutStr(scope.row.originName)}}</span>
+                    </el-tooltip>
+                </template>
+            </el-table-column>
             <el-table-column prop="link" align="center" label="预览视频">
                 <template slot-scope="scope">
                     <div class="btn-icon-container">
@@ -88,7 +95,7 @@
                     {{timeStampFormat(scope.row.createdAt)}}
                 </template>
             </el-table-column>
-            <el-table-column v-if="!hasRadio" align="center" fixed="right" label="操作">
+            <el-table-column v-if="!hasRadio" width="80px" align="center" fixed="right" label="操作">
                 <template slot-scope="scope">
                     <el-button class="text-danger" type="text" @click="_deleteVideoById(scope.row.id)" size="small">删除</el-button>
                 </template>
@@ -193,6 +200,9 @@ export default {
             getVideoList: 'video/getVideoList',
             deleteVideoById: 'video/deleteVideoById'
         }),
+        cutStr(str) {
+            return str.length > 40 ? str.substring(0, 40) + '...' : str;
+        },
         handlePaginationChange(value, key) {
             this.updatePagination({value, key});
             if (key === 'pageSize') {
@@ -285,4 +295,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.gan-tooltip {
+    width: 300px;
+}
 </style>
