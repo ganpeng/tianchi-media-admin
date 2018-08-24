@@ -30,9 +30,15 @@
         <div class="model-operate" v-if="judgeIsModel(layoutModelItemInfo)">
             <!--除了频道栏目外的设置--添加、编辑-->
             <template v-if="navBarSignCode !== 'LIVE_CHANNEL'">
-                <el-dropdown @command="addModel($event,modelIndex)" placement="bottom">
+                <el-dropdown
+                    @command="addModel($event,modelIndex)"
+                    placement="bottom"
+                    class="pre-icon-box">
                     <span class="el-dropdown-link">
-                        <i class="el-icon-circle-plus-outline"></i>
+                        <svg-icon
+                            icon-class="add"
+                            class-name="svg-box">
+                    </svg-icon>
                     </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item command="SHUFFLE">新增混排模块</el-dropdown-item>
@@ -40,27 +46,35 @@
                         <el-dropdown-item command="FIGURE">新增人物专题</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-                    <i class="el-icon-edit-outline"
-                       @click="editModel(layoutModelItemInfo.renderType,modelIndex)"></i>
-                </el-tooltip>
+                <div @click="editModel(layoutModelItemInfo.renderType,modelIndex)" class="mid-icon-box">
+                    <svg-icon
+                        icon-class="edit"
+                        class-name="svg-box">
+                    </svg-icon>
+                </div>
             </template>
             <!--频道栏目设置--添加、编辑-->
             <template v-else>
-                <el-tooltip class="item add" effect="dark" content="添加" placement="top">
-                    <i class="el-icon-circle-plus-outline"
-                       @click="setModelChannel(modelIndex, 'add')"></i>
-                </el-tooltip>
-                <el-tooltip class="item edit" effect="dark" content="编辑" placement="top">
-                    <i class="el-icon-edit-outline"
-                       @click="setModelChannel(modelIndex, 'edit')"></i>
-                </el-tooltip>
+                <div @click="setModelChannel(modelIndex, 'add')" class="pre-icon-box">
+                    <svg-icon
+                        icon-class="add"
+                        class-name="svg-box">
+                    </svg-icon>
+                </div>
+                <div @click="setModelChannel(modelIndex, 'edit')" class="mid-icon-box">
+                    <svg-icon
+                        icon-class="edit"
+                        class-name="svg-box">
+                    </svg-icon>
+                </div>
             </template>
             <!--模块删除-->
-            <el-tooltip class="item" effect="dark" content="删除" placement="top">
-                <i class="el-icon-delete"
-                   @click="removeModel(layoutModelItemInfo.title,modelIndex)"></i>
-            </el-tooltip>
+            <div @click="removeModel(layoutModelItemInfo.title,modelIndex)" class="post-icon-box">
+                <svg-icon
+                    icon-class="remove"
+                    class-name="svg-box">
+                </svg-icon>
+            </div>
         </div>
     </div>
 </template>
@@ -350,25 +364,31 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        .el-dropdown {
+        .el-dropdown:not(.pre-icon-box) {
             position: absolute;
             top: 5px;
             left: -10px;
             width: 80px;
         }
-        i.item:nth-child(2) {
+        .pre-icon-box {
             position: absolute;
             top: 6px;
-            left: 60px;
+            left: 15px;
         }
-        i.item:last-child {
+        .mid-icon-box {
             position: absolute;
             top: 6px;
-            left: 100px;
+            left: 65px;
         }
-        i {
-            font-size: 26px;
-            color: $baseBlue;
+        .post-icon-box {
+            position: absolute;
+            top: 6px;
+            left: 110px;
+        }
+        .svg-box {
+            height: 26px !important;
+            width: 26px !important;
+            fill: $baseBlue;
             cursor: pointer;
         }
     }

@@ -75,7 +75,9 @@
                     <el-dropdown
                         @command="addModel($event,layoutBlockList.length)" placement="bottom">
                        <span class="el-dropdown-link">
-                           <i class="el-icon-circle-plus-outline"></i>
+                           <svg-icon icon-class="add"
+                                     class-name="svg-box">
+                           </svg-icon>
                            <label>添加</label>
                        </span>
                         <el-dropdown-menu slot="dropdown">
@@ -89,13 +91,17 @@
                 <template v-else>
                     <div v-if="massLayoutBlockList.length > 1" @click="setModelChannel(layoutBlockList.length, 'add')"
                          class="box">
-                        <i class="el-icon-circle-plus-outline"></i>
+                        <svg-icon icon-class="add"
+                                  class-name="svg-box">
+                        </svg-icon>
                         <label>添加</label>
                     </div>
                 </template>
                 <!--模块排序-->
                 <div v-if="massLayoutBlockList.length > 1" @click="initSortModel" class="box">
-                    <i class="el-icon-sort" @click="initSortModel"></i>
+                    <svg-icon icon-class="sort_model"
+                              class-name="svg-box">
+                    </svg-icon>
                     <label>模块排序</label>
                 </div>
             </div>
@@ -522,10 +528,10 @@
                 }
             }
         }
-        i {
+        .svg-box {
             margin-right: 8px;
-            font-size: 28px;
-            color: #606060;
+            width: 28px !important;
+            height: 28px !important;
         }
         label {
             cursor: pointer;

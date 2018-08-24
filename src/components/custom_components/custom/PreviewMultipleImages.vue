@@ -1,7 +1,10 @@
 <!--多张图片预览组件-->
 <template>
     <div>
-        <el-dialog :visible.sync="previewMultipleImages.display" append-to-body>
+        <el-dialog
+            width="70%"
+            :visible.sync="previewMultipleImages.display"
+            append-to-body>
             <el-carousel class="text-center"
                          v-if="previewMultipleImages.display"
                          trigger="click"

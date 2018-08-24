@@ -45,7 +45,10 @@
                 @command="setRecommend($event,modelIndex,rowIndex,index,rowLength)"
                 placement="bottom">
                 <span>
-                  <i class="el-icon-edit-outline"></i>
+                    <svg-icon
+                        icon-class="edit"
+                        class-name="icon-edit">
+                    </svg-icon>
                 </span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="PROGRAMME">设置为节目</el-dropdown-item>
@@ -57,7 +60,10 @@
         <template v-if="!isModelItem && navBarSignCode === 'LIVE_CHANNEL'">
             <div class="recommend-operate"
                  @click="appendSingleChannel(modelIndex,rowIndex,index,rowLength)">
-                <i class="el-icon-edit"></i>
+                <svg-icon
+                    icon-class="edit"
+                    class-name="icon-edit">
+                </svg-icon>
             </div>
         </template>
     </div>
@@ -214,9 +220,10 @@
         .el-tooltip {
             margin-right: 26px;
         }
-        i {
-            font-size: 24px;
-            color: white;
+        .icon-edit {
+            height: 24px !important;
+            width: 24px !important;
+            fill: #fff;
             cursor: pointer;
         }
     }
