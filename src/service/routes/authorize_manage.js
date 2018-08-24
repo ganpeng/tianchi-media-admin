@@ -45,3 +45,10 @@ export const getDistrictList = ({level, code}) => {
     }));
     return service.get(`/v1/sys/district/page?${paramsStr}`);
 };
+
+/**
+ * 获取当前环境上传视频的服务器地址
+ */
+export const getServers = () => {
+    return service.get('/v1/sys/config/upstreams');
+};

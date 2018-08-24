@@ -68,13 +68,13 @@
                     ref="versionUpload"
                     :headers="uploadHeaders"
                     :accept="accept"
-                    action="/v1/storage/file"
+                    :action="actionUrl"
                     :auto-upload="false"
                     :file-list="fileList"
                     :on-change="uploadChangeHandler"
                     :on-success="uploadSuccessHandler"
                     :on-error="uploadErrorHandler"
-                    :with-credentials="true">
+                    :with-credentials="false">
                         <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
                         <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
                 </el-upload>
@@ -110,10 +110,14 @@ export default {
             },
             fileList: [],
             accept: '',
+            actionUrl: '',
             productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
             forcedOptions: role.FORCED_OPTIONS,
             uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token)
         };
+    },
+    created() {
+        this.actionUrl = this.$util.getRandomUrl('/v1/storage/file');
     },
     computed: {
         ...mapGetters({

@@ -103,13 +103,10 @@
         },
         created() {
             let {id} = this.$route.params;
-            this.resetPerson();
             this.getPersonById(id);
         },
         methods: {
-            ...mapMutations({
-                resetPerson: 'person/resetPerson'
-            }),
+            ...mapMutations({}),
             ...mapActions({
                 getPersonById: 'person/getPersonById'
             }),

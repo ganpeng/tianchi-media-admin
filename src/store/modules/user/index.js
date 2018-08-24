@@ -44,17 +44,24 @@ const actions = {
                     // 设置user模块
                     commit('setName', data.name);
                     commit('setToken', data.token);
+                    // 获取区域列表
+                    service.fetchAreaList()
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                wsCache.localStorage.set('areaList', res.data);
+                            }
+                        });
                     // 当前环境的域名
                     let currentDomain = window.location.protocol + '//' + window.location.host;
                     // 设置图片的根路径为当前地址域名
                     window.localStorage.setItem('imageBaseUri', currentDomain);
                     // 设置视频的根路径为当前地址域名
                     window.localStorage.setItem('videoBaseUri', currentDomain);
-                    // 获取区域列表
-                    service.fetchAreaList()
+                    // 获取当前环境对应的上传服务器的地址列表
+                    service.getServers()
                         .then((res) => {
                             if (res && res.code === 0) {
-                                wsCache.localStorage.set('areaList', res.data);
+                                wsCache.localStorage.set('servers', res.data);
                             }
                         });
                 }

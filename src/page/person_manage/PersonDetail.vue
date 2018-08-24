@@ -53,12 +53,13 @@
             };
         },
         created() {
-            this.resetPerson();
             if (this.status === 1 || this.status === 2) {
                 let {id} = this.$route.params;
                 if (id) {
                     this.getPersonById(id);
                 }
+            } else {
+                this.resetPerson();
             }
         },
         computed: {

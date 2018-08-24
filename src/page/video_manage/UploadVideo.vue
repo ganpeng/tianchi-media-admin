@@ -86,8 +86,7 @@
     </div>
 </template>
 <script>
-import {mapGetters, mapMutations, mapActions} from 'vuex';
-import _ from 'lodash';
+import {mapGetters, mapMutations} from 'vuex';
 const Uppie = require('../../assets/js/uppie');
 const uppie = new Uppie();
 export default {
@@ -110,12 +109,10 @@ export default {
                 return '当前有视频正在上传中，确定要离开吗？';
             }
         }, true);
-        this.getServers(); // 获取上传视频的服务器地址
     },
     computed: {
         ...mapGetters({
-            uploadState: 'uploadVideo/uploadState',
-            servers: 'video/servers'
+            uploadState: 'uploadVideo/uploadState'
         }),
         currentFileName() {
             let obj = this.uploadState.files[this.uploadState.count];
@@ -210,9 +207,6 @@ export default {
     methods: {
         ...mapMutations({
             updateUploadState: 'uploadVideo/updateUploadState'
-        }),
-        ...mapActions({
-            getServers: 'video/getServers'
         }),
         cutStr(str) {
             return str.length > 30 ? str.substring(0, 30) + '...' : str;
@@ -395,25 +389,10 @@ export default {
             let name = this.uploadState.files[count].file.name;
             this.$message.error(`${name}, 已取消上传`);
         },
-        getRandomIp() {
-            // let {servers} = process.env.HOST_CONF;
-            // servers = servers && JSON.parse(servers);
-            let totalServers = this.servers.reduce((res, curr) => {
-                let times = curr.weight;
-                let currServers = [];
-                for (let i = 0; i < times; i++) {
-                    currServers.push(curr.server);
-                }
-                return res.concat(currServers);
-            }, []);
-            return _.sample(totalServers);
-        },
         uploadRequest(data) {
             let that = this;
             return new Promise((resolve, reject) => {
-                let ip = that.getRandomIp();
-                let url = `http://${ip}/v1/storage/video`;
-                // let url = '/v1/storage/video';
+                let url = this.$util.getRandomUrl('/v1/storage/video', this.uploadState.count);
                 let xhr = new XMLHttpRequest();
                 that.updateUploadState({key: 'xhr', value: xhr});
                 xhr.open('post', url);

@@ -162,12 +162,23 @@
             };
         },
         created() {
-            this.resetPerson();
             this.getPersonList({isProgramme: false});
             window.addEventListener('keyup', this.keyupHandler);
         },
         beforeDestroy() {
             window.removeEventListener('keyup', this.keyupHandler);
+        },
+        beforeRouteLeave(to, from, next) {
+            window.localStorage.setItem('personSearchFields', JSON.stringify(this.searchFields));
+            this.resetSearchFields();
+            next();
+        },
+        beforeRouteEnter(to, from, next) {
+            let {name} = from;
+            if (name !== 'DisplayPerson' && name !== 'EditPerson') {
+                window.localStorage.removeItem('personSearchFields');
+            }
+            next();
         },
         computed: {
             ...mapGetters({
@@ -181,7 +192,6 @@
             ...mapMutations({
                 updateSearchFields: 'person/updateSearchFields',
                 updatePagination: 'person/updatePagination',
-                resetPerson: 'person/resetPerson',
                 resetSearchFields: 'person/resetSearchFields'
             }),
             ...mapActions({

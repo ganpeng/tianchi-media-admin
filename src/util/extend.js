@@ -1,3 +1,5 @@
+import store from 'store';
+import _ from 'lodash';
 import constants from './constants';
 
 /**
@@ -189,6 +191,24 @@ let util = {
             'x-tianchi-client': '{"role":"ADVISER","version":"v1.1.1","deviceId":"1234fads"}',
             'x-tianchi-token': token
         };
+    },
+    getRandomUrl(uri, count) {
+        let servers = store.get('servers') || [];
+        let totalServers = servers.reduce((res, curr) => {
+            let times = curr.weight;
+            let currServers = [];
+            for (let i = 0; i < times; i++) {
+                currServers.push(`${curr.ip}:${curr.port}`);
+            }
+            return res.concat(currServers);
+        }, []);
+
+        if (count) {
+            let index = count % totalServers.length;
+            return `http://${totalServers[index]}${uri}`;
+        } else {
+            return `http://${_.sample(totalServers)}${uri}`;
+        }
     }
 };
 

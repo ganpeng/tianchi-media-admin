@@ -90,8 +90,7 @@
         data() {
             return {
                 statusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
-                timer: null,
-                servers: []
+                timer: null
             };
         },
         computed: {
@@ -106,12 +105,6 @@
             }
         },
         created() {
-            this.$service.getServers()
-                .then((res) => {
-                    if (res && res.code === 0) {
-                        this.servers = res.data;
-                    }
-                });
             window.eventBus.$on('clearInputValue', this.clearInputValue.bind(this));
             this.$nextTick(() => {
                 uppie(document.querySelector('#upload-input-file'), this.uploadChangeHandler.bind(this));
@@ -245,4 +238,26 @@
         cursor: pointer;
     }
 }
+.create-blue-btn {
+    background-color: transparent;
+    border: 1px solid #1989FA;
+    color: #1989FA;
+    * {
+        color: #1989FA;
+    }
+    .svg-icon {
+        margin-right: 2px;
+        fill: #A3D0FD;
+    }
+    &:hover {
+        background-color: #1989FA;
+        * {
+            color: #fff;
+        }
+        .svg-icon {
+            fill: #fff;
+        }
+    }
+}
+
 </style>

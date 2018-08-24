@@ -105,7 +105,7 @@
             </el-table-column>
             <el-table-column align="center" width="120px" label="升级包下载">
                 <template slot-scope="scope">
-                    <a class="text-primary" :href="(scope.row.uriPrefix + scope.row.fullPackageUri)">{{scope.row.version}}</a>
+                    <a class="text-primary" :href="packageUrl(scope.row.fullPackageUri)">{{scope.row.version}}</a>
                 </template>
             </el-table-column>
             <el-table-column align="center" width="120px" fixed="right" label="操作">
@@ -169,7 +169,13 @@
                 version: 'version/version',
                 pagination: 'version/pagination',
                 searchFields: 'version/searchFields'
-            })
+            }),
+            packageUrl(uri) {
+                return (uri) => {
+                    let baseUri = window.localStorage.getItem('videoBaseUri');
+                    return `${baseUri}${uri}`;
+                };
+            }
         },
         methods: {
             ...mapMutations({

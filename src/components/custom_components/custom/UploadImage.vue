@@ -83,6 +83,7 @@
                 },
                 isLoading: false,
                 isChecked: false,
+                actionUrl: '',
                 fileList: [],
                 posterImageList: [],
                 imageUploadRules: {
@@ -113,6 +114,9 @@
                     return size + 'Byte';
                 }
             }
+        },
+        created() {
+            this.actionUrl = this.$util.getRandomUrl('/v1/storage/image');
         },
         methods: {
             ...mapMutations({
@@ -177,10 +181,11 @@
                 let { checkedStatus, img } = await this.beforeUploadHandler(obj.file);
                 if (checkedStatus) {
                     let formData = new FormData();
+                    let url = this.actionUrl;
                     formData.append('file', obj.file);
                     formData.append('fileNames', this.form.name);
                     this.isLoading = true;
-                    this.$service.uploadImage({formData})
+                    this.$service.uploadImage({formData, url})
                         .then((res) => {
                             if (res && (res.code === 0)) {
                                 let data = res.data[0].image;
