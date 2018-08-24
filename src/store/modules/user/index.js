@@ -50,20 +50,6 @@ const actions = {
                     window.localStorage.setItem('imageBaseUri', currentDomain);
                     // 设置视频的根路径为当前地址域名
                     window.localStorage.setItem('videoBaseUri', currentDomain);
-                    // 获取图片的根路径
-                    // service.getImageBaseUri()
-                    //     .then((res) => {
-                    //         if (res && res.code === 0) {
-                    //             window.localStorage.setItem('imageBaseUri', res.data);
-                    //         }
-                    //     });
-                    // 获取视频的根路径
-                    // service.getVideoBaseUri()
-                    //     .then((res) => {
-                    //         if (res && res.code === 0) {
-                    //             window.localStorage.setItem('videoBaseUri', res.data);
-                    //         }
-                    //     });
                     // 获取区域列表
                     service.fetchAreaList()
                         .then((res) => {

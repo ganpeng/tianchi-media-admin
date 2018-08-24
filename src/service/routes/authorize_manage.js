@@ -21,20 +21,6 @@ export const logout = () => {
 };
 
 /**
- * 获取图片地址的根路径
- */
-export const getImageBaseUri = () => {
-    return service.get('/v1/sys/config/image/url-prefix');
-};
-
-/**
- * 获取视频地址的根路径
- */
-export const getVideoBaseUri = () => {
-    return service.get('/v1/sys/config/video/url-prefix');
-};
-
-/**
  * 获取区域数据
  */
 export const fetchAreaList = () => {

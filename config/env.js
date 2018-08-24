@@ -6,17 +6,20 @@
 const npmEventName = process.env.npm_lifecycle_event;
 let proxyTarget;
 let uploadProxyTarget;
+let resourceProxyTarget;
 switch (npmEventName) {
     // develop url
     case 'dev':
     case 'dev:dev':
         proxyTarget = 'http://dev-gateway.tianchiapi.com';
         uploadProxyTarget = 'http://dev-storage.tianchiapi.com';
+        resourceProxyTarget = 'http://dev-admin.tianchiapi.com';
         break;
     // test url
     case 'dev:test':
         proxyTarget = 'http://test-gateway.tianchiapi.com';
         uploadProxyTarget = 'http://test-storage.tianchiapi.com';
+        resourceProxyTarget = 'http://test-admin.tianchiapi.com';
         break;
     // test url
     case 'dev:prod':
@@ -31,6 +34,7 @@ switch (npmEventName) {
     case 'dev:chongqing':
         proxyTarget = 'http://gateway.tianchiapi.com';
         uploadProxyTarget = 'http://gateway.tianchiapi.com';
+        resourceProxyTarget = 'http://admin.tianchiapi.com';
         break;
     case 'dev:lian':
         proxyTarget = 'http://10.0.3.225:8100';
@@ -40,7 +44,8 @@ switch (npmEventName) {
     default:
         proxyTarget = 'http://dev-gateway.tianchiapi.com';
         uploadProxyTarget = 'http://dev-storage.tianchiapi.com';
+        resourceProxyTarget = 'http://dev-admin.tianchiapi.com';
         break;
 }
 
-module.exports = {proxyTarget, uploadProxyTarget};
+module.exports = {proxyTarget, uploadProxyTarget, resourceProxyTarget};

@@ -24,6 +24,13 @@ module.exports = {
                 bypass: function (req, res, proxyOptions) {
                     console.log('URL-Storage:' + proxyOptions.target + req.originalUrl);
                 }
+            },
+            '/group': {
+                target: env.resourceProxyTarget,
+                changeOrigin: true,
+                bypass: function (req, res, proxyOptions) {
+                    console.log('URL-Resource:' + proxyOptions.target + req.originalUrl);
+                }
             }
         },
 
