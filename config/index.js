@@ -12,21 +12,14 @@ module.exports = {
         assetsPublicPath: '/',
         proxyTable: {
             '/admin/v': {
-                target: env.proxyTarget,
+                target: env.h5NginxProxyTarget,
                 changeOrigin: true,
                 bypass: function (req, res, proxyOptions) {
                     console.log('URL-Admin:' + proxyOptions.target + req.originalUrl);
                 }
             },
-            '/storage/v': {
-                target: env.proxyTarget,
-                changeOrigin: true,
-                bypass: function (req, res, proxyOptions) {
-                    console.log('URL-Storage:' + proxyOptions.target + req.originalUrl);
-                }
-            },
             '/group': {
-                target: env.resourceProxyTarget,
+                target: env.h5NginxProxyTarget,
                 changeOrigin: true,
                 bypass: function (req, res, proxyOptions) {
                     console.log('URL-Resource:' + proxyOptions.target + req.originalUrl);

@@ -4,48 +4,33 @@
  */
 
 const npmEventName = process.env.npm_lifecycle_event;
-let proxyTarget;
-let uploadProxyTarget;
-let resourceProxyTarget;
+let h5NginxProxyTarget;
+
 switch (npmEventName) {
     // develop url
     case 'dev':
     case 'dev:dev':
-        proxyTarget = 'http://dev-gateway.tianchiapi.com';
-        uploadProxyTarget = 'http://dev-storage.tianchiapi.com';
-        resourceProxyTarget = 'http://dev-admin.tianchiapi.com';
+        h5NginxProxyTarget = 'http://dev-admin.tianchiapi.com';
         break;
     // test url
     case 'dev:test':
-        proxyTarget = 'http://test-gateway.tianchiapi.com';
-        uploadProxyTarget = 'http://test-storage.tianchiapi.com';
-        resourceProxyTarget = 'http://test-admin.tianchiapi.com';
+        h5NginxProxyTarget = 'http://test-admin.tianchiapi.com';
         break;
     // test url
     case 'dev:prod':
-        proxyTarget = 'http://gateway.tianchiapi.com';
-        uploadProxyTarget = 'http://storage.tianchiapi.com';
         break;
     // xiongbao gateway
     case 'dev:xiongbao':
-        proxyTarget = 'http://10.0.1.246:8100';
-        uploadProxyTarget = 'http://10.0.1.254:8230';
         break;
     case 'dev:chongqing':
-        proxyTarget = 'http://gateway.tianchiapi.com';
-        uploadProxyTarget = 'http://gateway.tianchiapi.com';
-        resourceProxyTarget = 'http://admin.tianchiapi.com';
+        h5NginxProxyTarget = 'http://admin.tianchiapi.com';
         break;
     case 'dev:lian':
-        proxyTarget = 'http://10.0.3.225:8100';
-        uploadProxyTarget = 'http://10.0.3.225:8230';
         break;
     // default is dev url
     default:
-        proxyTarget = 'http://dev-gateway.tianchiapi.com';
-        uploadProxyTarget = 'http://dev-storage.tianchiapi.com';
-        resourceProxyTarget = 'http://dev-admin.tianchiapi.com';
+        h5NginxProxyTarget = 'http://dev-admin.tianchiapi.com';
         break;
 }
 
-module.exports = {proxyTarget, uploadProxyTarget, resourceProxyTarget};
+module.exports = {h5NginxProxyTarget};
