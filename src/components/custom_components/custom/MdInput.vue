@@ -167,7 +167,7 @@
         top: - ($font-size-base + $spacer);
         left: 0;
         font-size: $font-size-base;
-        font-weight: $font-weight-bold;
+        font-weight: normal;
     }
 
     // Component:
@@ -225,7 +225,6 @@
             }
         }
         .material-label {
-            font-weight: $font-weight-normal;
             position: absolute;
             pointer-events: none;
             left: $index;
@@ -233,6 +232,7 @@
             transition: $transition;
             font-size: 16px;
             color: #8AA4AF;
+            font-weight: normal;
         }
         .material-input-bar {
             position: relative;

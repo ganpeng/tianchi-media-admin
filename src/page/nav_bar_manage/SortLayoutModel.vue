@@ -86,7 +86,7 @@
         background: rgba(240, 242, 245, 0.95);
         text-align: center;
         box-shadow: -4px 0 20px 0 rgba(0, 0, 0, 0.20);
-        z-index: 100;
+        z-index: 1000;
         overflow: hidden;
     }
 

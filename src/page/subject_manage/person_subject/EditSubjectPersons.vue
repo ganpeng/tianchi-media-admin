@@ -3,7 +3,6 @@
     <div>
         <custom-breadcrumb
             v-bind:breadcrumbList="[
-            {name:'内容管理'},
             {name:'专题管理'},
             {name:'编辑专题的人物'}]">
         </custom-breadcrumb>

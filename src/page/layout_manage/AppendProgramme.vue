@@ -3,7 +3,6 @@
     <div>
         <custom-breadcrumb
             v-bind:breadcrumbList="[
-            {name:'内容管理'},
             {name:'栏目管理'},
             {name:currentNavBarInfo.name + '-节目选择'}]">
         </custom-breadcrumb>

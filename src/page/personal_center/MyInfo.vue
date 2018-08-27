@@ -15,27 +15,50 @@
             </div>
             <div class="info">
                 <div>
-                    <label>我</label>
+                    <label>
+                        <svg-icon
+                            icon-class="personal_center"
+                            class-name="svg-box">
+                        </svg-icon>
+                        我</label>
                     <span>{{info.name}}</span>
                 </div>
                 <div>
-                    <label><i class="el-icon-message"></i>邮箱</label>
+                    <label>
+                        <svg-icon
+                            icon-class="email"
+                            class-name="svg-box">
+                        </svg-icon>
+                        邮箱</label>
                     <span>{{info.email}}</span>
                 </div>
                 <div class="box">
                     <div>
-                        <label><i class="el-icon-mobile-phone"></i>手机</label>
+                        <label>
+                            <svg-icon
+                                icon-class="mobile"
+                                class-name="svg-box">
+                            </svg-icon>
+                            手机</label>
                         <span>{{info.mobile}}</span>
                     </div>
                     <img src="~assets/img/angle-line.png">
                     <div>
-                        <label><i class="el-icon-phone"></i>电话</label>
-                        <span>{{info.telephone ? info.telephone : '------'}}</span>
+                        <label>
+                            <svg-icon
+                                icon-class="telephone"
+                                class-name="svg-box">
+                            </svg-icon>
+                            电话</label>
+                        <span>{{info.telephone ? info.telephone : ''}}</span>
                     </div>
                 </div>
             </div>
             <div @click="toInfoSetting" class="edit-icon-box">
-                <i class="el-icon-edit-outline"></i>
+                <svg-icon
+                    icon-class="edit"
+                    class-name="svg-box">
+                </svg-icon>
             </div>
         </el-card>
     </div>
@@ -110,10 +133,6 @@
                 display: flex;
                 flex-direction: row;
                 justify-content: left;
-                img {
-                    margin: 0px 20px;
-                    height: 40px;
-                }
             }
             label {
                 text-align: left;
@@ -126,6 +145,9 @@
                 font-size: 20px;
                 color: $baseAsideColor;
             }
+            .svg-box {
+                fill: $dynamicGray;
+            }
         }
         .edit-icon-box {
             position: absolute;
@@ -134,9 +156,10 @@
             height: 30px;
             width: 30px;
             cursor: pointer;
-            i {
-                font-size: 30px;
-                color: $baseBlue;
+            .svg-box {
+                height: 30px !important;
+                width: 30px !important;
+                fill: $baseBlue;
             }
         }
     }

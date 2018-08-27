@@ -64,7 +64,7 @@
         position: relative;
         padding: 0px;
         box-shadow: 0px 2px 10px 0 rgba(0, 0, 0, 0.20);
-        z-index: 400;
+        z-index: 2000;
     }
 
     .el-aside {
@@ -74,7 +74,7 @@
     .el-footer {
         position: relative;
         padding: 0px;
-        z-index: 400;
+        z-index: 2000;
     }
 
     .main-view {

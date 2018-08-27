@@ -3,7 +3,6 @@
     <div class="container">
         <custom-breadcrumb
             v-bind:breadcrumbList="[
-            {name:'内容管理'},
             {name:'栏目管理'},
             {name:'频道页面设置'},
             {name:'频道模块设置'}]">

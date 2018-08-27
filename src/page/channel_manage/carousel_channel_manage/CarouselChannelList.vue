@@ -3,7 +3,6 @@
     <div>
         <custom-breadcrumb
             v-bind:breadcrumbList="[
-            {name:'内容管理'},
             {name:'频道管理'},
             {name:'轮播频道管理'},
             {name:'轮播频道列表'}]">
@@ -412,6 +411,7 @@
     }
 
     .el-table {
+        margin-top: 0px;
         .el-button {
             margin: 0px 5px;
         }

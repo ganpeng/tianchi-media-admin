@@ -30,7 +30,6 @@ import ProgrammeTypeManage from 'sysPage/programme_manage/ProgrammeTypeManage';
 import EditProgramme from 'sysPage/programme_manage/EditProgramme';
 import DisplayProgramme from 'sysPage/programme_manage/DisplayProgramme';
 import ProgrammeList from 'sysPage/programme_manage/ProgrammeList';
-import SetChannel from 'sysPage/layout_manage/SetChannel';
 import AppendProgramme from 'sysPage/layout_manage/AppendProgramme';
 import AppendSingleSubject from 'sysPage/layout_manage/AppendSingleSubject';
 import ModelAppendShuffle from 'sysPage/layout_manage/ModelAppendShuffle';
@@ -178,12 +177,6 @@ let router = new Router({
                     path: '/nav-bar-manage/layout-setting/:navBarSignCode/:navBarId',
                     name: 'NavBarLayoutSetting',
                     component: NavBarLayoutSetting
-                },
-                // 内容管理-栏目管理-直播频道设置(根据navBarId设置对应的直播频道)
-                {
-                    path: '/layout-manage/channel/:navBarSignCode/:navBarId',
-                    name: 'SetChannel',
-                    component: SetChannel
                 },
                 // 内容管理-栏目管理-节目选择设置
                 {
