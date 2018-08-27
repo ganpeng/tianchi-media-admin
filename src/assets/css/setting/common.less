@@ -128,7 +128,7 @@
     }
     // 节目列表行的样式
     .programme-row {
-        height: 170px;
+        height: 120px;
     }
     // 人物列表行的样式
     .figure-row {
@@ -301,7 +301,7 @@ li {
 }
 
 .page-margin-btn {
-    margin: 120px 0px 80px 0;
+    margin: 120px 0px 0 0;
 }
 
 .page-vice-btn {
@@ -446,7 +446,27 @@ li {
     }
 }
 
-/*! autoprefixer: off */
+.ellipsis {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    &.one {
+        -webkit-line-clamp: 1;
+    }
+    &.two {
+        -webkit-line-clamp: 2;
+    }
+    &.three {
+        -webkit-line-clamp: 3;
+    }
+    &.four {
+        -webkit-line-clamp: 4;
+    }
+}
+
 .ellipsis-three {
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -645,11 +665,20 @@ li {
     }
 }
 
-// 弹窗右上角关闭icon样式
+//  弹窗样式
 .el-dialog {
+    // 弹窗右上角关闭icon样式
     .el-dialog__close {
         &:hover {
             color: #F56C6C;
         }
+    }
+    // 弹窗title剧中
+    .el-dialog__header {
+        .el-dialog__title {
+            margin-right: 10px;
+            display: inline-block;
+        }
+        text-align: center;
     }
 }

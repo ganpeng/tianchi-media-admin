@@ -3,7 +3,6 @@
     <div>
         <custom-breadcrumb
             v-bind:breadcrumbList="[
-            {name:'内容管理'},
             {name:'直播频道管理'},
             {name:'直播频道列表'}]">
         </custom-breadcrumb>
@@ -55,17 +54,31 @@
         <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
             <el-table-column prop="code" align="center" width="120px" label="直播频道编号"></el-table-column>
             <el-table-column prop="no" align="center" width="140px" label="直播频道展示编号"></el-table-column>
-            <el-table-column prop="innerName" align="center" width="120px" label="直播频道名称"></el-table-column>
-            <el-table-column prop="name" align="center" width="120px" label="直播频道展示名"></el-table-column>
+            <el-table-column prop="innerName" align="center" width="120px" label="直播频道名称">
+                <template slot-scope="scope">
+                    <span class="ellipsis two">
+                        {{scope.row.innerName}}
+                    </span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="name" align="center" width="120px" label="直播频道展示名">
+                <template slot-scope="scope">
+                    <span class="ellipsis two">
+                        {{scope.row.name}}
+                    </span>
+                </template>
+            </el-table-column>
             <el-table-column prop="type" width="120px" align="center" label="频道类别">
                 <template slot-scope="scope">
-                    {{typeName(scope.row.id)}}
+                    <span class="ellipsis two">
+                        {{typeName(scope.row.id)}}
+                    </span>
                 </template>
             </el-table-column>
             <el-table-column prop="multicastIp" width="150px" align="center" label="频道IP"></el-table-column>
-            <el-table-column prop="multicastPort" align="center" label="频道端口"></el-table-column>
+            <el-table-column prop="multicastPort" width="100px" align="center" label="频道端口"></el-table-column>
             <el-table-column prop="pushServer" align="center" label="所属服务器"></el-table-column>
-            <el-table-column align="center" width="320px" fixed="right" label="操作">
+            <el-table-column align="center" width="300px" fixed="right" label="操作">
                 <template slot-scope="scope">
                     <el-button type="text" size="small" @click="previewChannelPage(scope.row.id, scope.row.name, true)">节目单下载</el-button>
                     <el-button type="text" size="small" @click="previewChannelPage(scope.row.id)">节目单预览</el-button>

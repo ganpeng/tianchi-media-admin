@@ -31,6 +31,7 @@
                         :auto-upload="false"
                         :http-request="uploadRequest"
                         :file-list="fileList"
+                        :on-remove="onRemoveHandler"
                         :with-credentials="true">
                             <el-button size="small" type="primary">点击上传</el-button>
                     </el-upload>
@@ -164,6 +165,9 @@
                 } else {
                     return true;
                 }
+            },
+            onRemoveHandler() {
+                this.form.size = '';
             },
             loadFile(file) {
                 return new Promise((resolve, reject) => {

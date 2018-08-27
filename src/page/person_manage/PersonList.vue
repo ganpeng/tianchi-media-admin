@@ -3,7 +3,6 @@
     <div>
         <custom-breadcrumb
             v-bind:breadcrumbList="[
-            {name:'内容管理'},
             {name:'人物资源管理'},
             {name:'人物列表'}]">
         </custom-breadcrumb>
@@ -60,7 +59,9 @@
             </el-table-column>
             <el-table-column prop="name" align="center" label="名字">
                 <template slot-scope="scope">
-                    {{scope.row.name | padEmpty}}
+                    <span class="ellipsis three">
+                        {{scope.row.name | padEmpty}}
+                    </span>
                 </template>
             </el-table-column>
             <el-table-column label="照片" width="120px" align="center" >
@@ -76,7 +77,9 @@
             </el-table-column>
             <el-table-column prop="mainRole" align="center" label="职业">
                 <template slot-scope="scope">
-                    {{mainRoleLabel(scope.row.mainRoleList).join(', ') | padEmpty}}
+                    <span class="ellipsis three">
+                        {{mainRoleLabel(scope.row.mainRoleList).join(', ') | padEmpty}}
+                    </span>
                 </template>
             </el-table-column>
             <el-table-column align="center" label="状态">

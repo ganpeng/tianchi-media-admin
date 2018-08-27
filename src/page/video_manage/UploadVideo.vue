@@ -471,7 +471,7 @@ export default {
     width: 800px;
     padding: 0 20px;
     background: #fff;
-    z-index: 1000;
+    z-index: 300;
     border-radius: 8px;
     box-shadow: #409EFF 0 0 5px;
     .min-container {

@@ -2,7 +2,6 @@
     <div class="container">
         <custom-breadcrumb
             v-bind:breadcrumbList="[
-            {name:'内容管理'},
             {name:'人物资源管理'},
             {name:'推荐人物管理'}]">
         </custom-breadcrumb>
@@ -16,7 +15,7 @@
                 <template slot-scope="scope">
                     <div :id="'hot-person-list-' + scope.$index" class="hot-person-list text-left">
                         <span :data-person="JSON.stringify(person)"
-                            class="margin-right-s hot-person-item"
+                            class="margin-right-s hot-person-item pointer"
                             v-for="(person, index) in getHotPersonList(scope.row)"
                             :key="index">
                             <el-tag closable @close="removePerson(person.figureId, scope.row)" type="info">{{person.figureName}}</el-tag>

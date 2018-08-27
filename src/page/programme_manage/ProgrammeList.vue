@@ -3,7 +3,6 @@
     <div class="program-list-container">
         <custom-breadcrumb
             v-bind:breadcrumbList="[
-            {name:'内容管理'},
             {name:'节目资源管理'},
             {name:'节目列表'}]">
         </custom-breadcrumb>
@@ -113,11 +112,18 @@
                             清空筛选条件
                         </el-button>
                     </el-form-item>
-                    <el-form-item>
+                    <el-form-item class="float-right">
+                        <el-button class="delete-btn create-blue-btn" size="small" @click="multUpFrameProgrammeHandler">批量上架</el-button>
+                        <el-button class="delete-btn disabled-red-btn" size="small" @click="multLowerFrameProgrammeHandler">批量下架</el-button>
                     </el-form-item>
                 </el-col>
             </el-form>
-            <el-table row-class-name="programme-row" header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
+            <el-table
+                ref="multipleTable"
+                @select="selectHandler"
+                @select-all="selectAllHandler"
+                row-class-name="programme-row" header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
+                <el-table-column type="selection" align="center"></el-table-column>
                 <el-table-column prop="code" align="center" width="120px" label="节目编号">
                     <template slot-scope="scope">
                         {{scope.row.code | padEmpty}}
@@ -125,12 +131,14 @@
                 </el-table-column>
                 <el-table-column prop="name" align="center" min-width="100px" label="节目名称">
                     <template slot-scope="scope">
-                        {{scope.row.name | padEmpty}}
+                        <span class="ellipsis four">
+                            {{scope.row.name | padEmpty}}
+                        </span>
                     </template>
                 </el-table-column>
-                <el-table-column label="节目图片" width="120px" align="center" >
+                <el-table-column label="节目图片" width="90" align="center" >
                     <template slot-scope="scope">
-                        <img width="100" height="145" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
+                        <img style="width:70px;height:auto;" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
                     </template>
                 </el-table-column>
                 <el-table-column prop="featureVideoCount" min-width="100px" align="center" label="正片数量">
@@ -145,22 +153,30 @@
                 </el-table-column>
                 <el-table-column prop="produceAreaList" min-width="150px" align="center" label="地区">
                     <template slot-scope="scope">
-                        {{areaLabel(scope.row.produceAreaList) | padEmpty}}
+                        <span class="ellipsis four">
+                            {{areaLabel(scope.row.produceAreaList) | padEmpty}}
+                        </span>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" width="100px" label="分类">
                     <template slot-scope="scope">
-                        {{categoryListString(scope.row.categoryList) | padEmpty}}
+                        <span class="ellipsis four">
+                            {{categoryListString(scope.row.categoryList) | padEmpty}}
+                        </span>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" min-width="100px" label="类型">
                     <template slot-scope="scope">
-                        {{typeList(scope.row.id) | padEmpty}}
+                        <span class="ellipsis four">
+                            {{typeList(scope.row.id) | padEmpty}}
+                        </span>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" min-width="100px" label="演员">
                     <template slot-scope="scope">
-                        {{getChiefActor(scope.row.id) | padEmpty}}
+                        <span class="ellipsis four">
+                            {{getChiefActor(scope.row.id) | padEmpty}}
+                        </span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
@@ -224,6 +240,7 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import store from 'store';
+import _ from 'lodash';
 import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 
 export default {
@@ -237,6 +254,7 @@ export default {
             fileUploadDialogVisible: false,
             fileList: [],
             multipleSelection: [],
+            selectedVideoList: [],
             uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
             visibleOptions: [
                 {
@@ -256,7 +274,12 @@ export default {
         };
     },
     created() {
-        this.getProgrammeList();
+        this.getProgrammeList()
+            .then((res) => {
+                if (res && res.code === 0) {
+                    this.checkedVideoList();
+                }
+            });
         this.getProgrammeCategory();
         window.addEventListener('keyup', this.keyupHandler);
     },
@@ -306,11 +329,17 @@ export default {
         ...mapActions({
             getProgrammeList: 'programme/getProgrammeList',
             getProgrammeCategory: 'programme/getProgrammeCategory',
-            deleteProgramme: 'programme/deleteProgramme'
+            deleteProgramme: 'programme/deleteProgramme',
+            upLowerFrameProgramme: 'programme/upLowerFrameProgramme'
         }),
         keyupHandler(e) {
             if (e.keyCode === 13) {
-                this.getProgrammeList();
+                this.getProgrammeList()
+                    .then((res) => {
+                        if (res && res.code === 0) {
+                            this.checkedVideoList();
+                        }
+                    });
             }
         },
         createProgramme() {
@@ -338,7 +367,12 @@ export default {
             }
         },
         searchHandler() {
-            this.getProgrammeList();
+            this.getProgrammeList()
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        this.checkedVideoList();
+                    }
+                });
         },
         displayImage(image) {
             this.previewImage.title = image.name;
@@ -350,7 +384,12 @@ export default {
             if (key === 'pageSize') {
                 window.localStorage.setItem('programmePageSize', value);
             }
-            this.getProgrammeList();
+            this.getProgrammeList()
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        this.checkedVideoList();
+                    }
+                });
         },
         showFileUploadDialog() {
             this.fileUploadDialogVisible = true;
@@ -373,7 +412,12 @@ export default {
                         .then((res) => {
                             if (res && res.code === 0) {
                                 this.$message.success('节目下架成功');
-                                this.getProgrammeList();
+                                this.getProgrammeList()
+                                    .then((res) => {
+                                        if (res && res.code === 0) {
+                                            this.checkedVideoList();
+                                        }
+                                    });
                             } else {
                                 this.$message.warning(this.lowerFrameProgrammeErrorHandler(res));
                             }
@@ -403,6 +447,34 @@ export default {
                     return message;
             }
         },
+        multUpFrameProgrammeHandler() {
+            let idList = this.selectedVideoList.map((item) => item.id);
+            this.upLowerFrameProgramme({idList, visible: true})
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        this.getProgrammeList()
+                            .then((result) => {
+                                if (result && result.code === 0) {
+                                    this.checkedVideoList();
+                                }
+                            });
+                    }
+                });
+        },
+        multLowerFrameProgrammeHandler() {
+            let idList = this.selectedVideoList.map((item) => item.id);
+            this.upLowerFrameProgramme({idList, visible: false})
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        this.getProgrammeList()
+                            .then((result) => {
+                                if (result && result.code === 0) {
+                                    this.checkedVideoList();
+                                }
+                            });
+                    }
+                });
+        },
         uploadSuccessHandler(res, file, fileList) {
             if (res && res.code === 0) {
                 this.$message({
@@ -426,7 +498,44 @@ export default {
                 });
             }
             this.closeFileUploadDialog();
-            this.getProgrammeList();
+            this.getProgrammeList()
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        this.checkedVideoList();
+                    }
+                });
+        },
+        selectHandler(list, row) {
+            let isSelected = list.findIndex((item) => item.id === row.id) >= 0;
+            if (isSelected) {
+                this.selectedVideoList.push(row);
+            } else {
+                this.selectedVideoList = this.selectedVideoList.filter((item) => item.id !== row.id);
+            }
+        },
+        selectAllHandler(list) {
+            if (list.length > 0) {
+                this.selectedVideoList = _.uniqBy(this.selectedVideoList.concat(list), 'id');
+            } else {
+                this.selectedVideoList = this.selectedVideoList.filter((item) => {
+                    let index = this.ist.findIndex((programme) => {
+                        return programme.id === item.id;
+                    });
+                    return index < 0;
+                });
+            }
+        },
+        checkedVideoList() {
+            this.selectedVideoList.forEach((item) => {
+                let programme = this.list.find((programme) => {
+                    return item.code === programme.code;
+                });
+                if (programme) {
+                    this.$nextTick(() => {
+                        this.$refs.multipleTable.toggleRowSelection(programme, true);
+                    });
+                }
+            });
         }
     }
 };

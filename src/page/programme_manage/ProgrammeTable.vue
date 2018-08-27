@@ -22,10 +22,9 @@
                     align="center"
                     width="180">
                         <template slot-scope="scope">
-                            <el-tooltip effect="dark" placement="top">
-                                <div class="gan-tooltip" slot="content">{{scope.row.originName}}</div>
-                                <span>{{cutStr(scope.row.originName) | padEmpty}}</span>
-                            </el-tooltip>
+                            <span class="ellipsis two">
+                                {{scope.row.originName | padEmpty}}
+                            </span>
                         </template>
                 </el-table-column>
                 <el-table-column
@@ -35,11 +34,9 @@
                     align="center"
                     width="180">
                         <template slot-scope="scope">
-                            <el-tooltip v-if="scope.row.name" effect="dark" placement="top">
-                                <div class="gan-tooltip" slot="content">{{scope.row.name}}</div>
-                                <span>{{cutStr(scope.row.name) | padEmpty}}</span>
-                            </el-tooltip>
-                            <span v-else>{{cutStr(scope.row.name) | padEmpty}}</span>
+                            <span class="ellipsis two">
+                                {{scope.row.name | padEmpty}}
+                            </span>
                         </template>
                 </el-table-column>
                 <el-table-column
@@ -56,7 +53,9 @@
                     align="center"
                     label="相关人物">
                         <template slot-scope="scope">
-                            {{videoPersonName(scope.row.figureList) | padEmpty}}
+                            <span class="ellipsis two">
+                                {{videoPersonName(scope.row.figureList) | padEmpty}}
+                            </span>
                         </template>
                 </el-table-column>
                 <el-table-column
@@ -64,7 +63,9 @@
                     align="center"
                     label="关联正片">
                         <template slot-scope="scope">
-                            {{(scope.row.parentId ? featureVideoName(scope.row.parentId) : '') | padEmpty}}
+                            <span class="ellipsis two">
+                                {{(scope.row.parentId ? featureVideoName(scope.row.parentId) : '') | padEmpty}}
+                            </span>
                         </template>
                 </el-table-column>
                 <el-table-column

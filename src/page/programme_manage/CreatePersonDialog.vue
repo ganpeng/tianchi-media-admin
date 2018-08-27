@@ -35,6 +35,9 @@ export default {
             person: 'person/currentPerson'
         })
     },
+    created() {
+        this.resetPerson();
+    },
     methods: {
         ...mapMutations({
             resetPerson: 'person/resetPerson'

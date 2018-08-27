@@ -8,7 +8,7 @@
             @select-all="selectAllHandler"
             class="my-table-style" :data="video.list" border>
             <el-table-column v-if="!hasRadio" type="selection" align="center"></el-table-column>
-            <el-table-column v-if="hasRadio" align="center" label="选择">
+            <el-table-column v-if="hasRadio" width="60px" align="center" label="选择">
                 <template slot-scope="scope">
                     <el-radio :value="video.selectedVideoId" :label="scope.row.id" @input="setSelectedVideoId({id: scope.row.id})">&nbsp;</el-radio>
                 </template>

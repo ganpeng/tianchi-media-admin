@@ -3,7 +3,6 @@
     <div class="program-container">
         <custom-breadcrumb
             v-bind:breadcrumbList="[
-            {name:'内容管理'},
             {name:'节目资源管理'},
             {name:getPageName}]">
         </custom-breadcrumb>
@@ -896,6 +895,14 @@
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     inputPattern: /\S/,
+                    inputValidator: (value) => {
+                        let index = this.global.programmeTagList.findIndex((item) => item === value);
+                        if (index >= 0) {
+                            return `新关键字${value}已经存在`;
+                        } else {
+                            return true;
+                        }
+                    },
                     inputErrorMessage: `关键字不能为空`
                 }).then(({value}) => {
                     this.addProgrammeTag({value});
@@ -917,14 +924,26 @@
                     inputPattern: /\S/,
                     inputValidator: (value) => {
                         if (key === 'platformList') {
-                            let existing = platformList.find((item) => item === value);
-                            if (existing) {
-                                return true;
-                            } else {
+                            let existing = platformList.findIndex((item) => item === value);
+                            let index = this.global.platformList.findIndex((item) => item.value === value);
+                            if (!existing) {
                                 return `播出平台只能填写[${platformList.join(', ')}]中的`;
                             }
+                            if (index >= 0) {
+                                return `新播放平台${value}已经存在`;
+                            } else {
+                                return true;
+                            }
+                        } else if (key === 'programmeTagList') {
+                            let index = this.global.programmeTagList.findIndex((item) => item === value);
+                            console.log(index);
+                            if (index >= 0) {
+                                return `新关键字${value}已经存在`;
+                            } else {
+                                return true;
+                            }
                         } else {
-                            return true;
+                            return this.selectItemValidator(key, value);
                         }
                     },
                     inputErrorMessage: `${this.selectItemObj[key]}不能为空`
@@ -940,6 +959,15 @@
                         message: '取消输入'
                     });
                 });
+            },
+            selectItemValidator(key, value) {
+                let list = this.global[key];
+                let index = list.findIndex((item) => item.value === value);
+                if (index >= 0) {
+                    return `新${value}已经存在`;
+                } else {
+                    return true;
+                }
             },
             displayImage(index) {
                 this.previewImage.display = true;

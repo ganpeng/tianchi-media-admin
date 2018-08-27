@@ -86,14 +86,14 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="视频封面图" prop="logoUri">
-                <el-button v-if="!readonly" type="primary" @click="uploadImageHandler">上传封面图<i class="el-icon-upload el-icon--right"></i></el-button>
+                <el-button class="page-main-btn" v-if="!readonly" type="primary" icon="el-icon-picture" @click="uploadImageHandler" plain>上传图片</el-button>
                 <ul
                     v-if="liveChannel.logoUri"
                     class="cover-list">
                     <li>
                         <div
                             class="image-box"
-                            :style="{'background-image': 'url(' + appendImagePrefix(liveChannel.logoUri) + ')'}">
+                            :style="{'cursor': 'default', 'background-image': 'url(' + appendImagePrefix(liveChannel.logoUri) + ')'}">
                         </div>
                     </li>
                 </ul>
@@ -108,7 +108,7 @@
                 v-loading.fullscreen.lock="isLoading">确 定</el-button>
         </div>
         <upload-image
-            title="上传节目图片"
+            title="上传频道图片"
             :size="size"
             :withName="false"
             :successHandler="setChannelLogo"

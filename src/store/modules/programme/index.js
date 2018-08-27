@@ -910,8 +910,8 @@ const actions = {
                 commit('setProgrammeList', {list});
                 commit('setProgrammePagination', {pageSize, pageNum: pageNum + 1, total});
             }
-        } catch (err) {
-        }
+            return res;
+        } catch (err) { }
     },
     /**
      * 获取节目分类
@@ -1175,6 +1175,15 @@ const actions = {
                  commit('updateGlobal', {key: 'platformList', value: platformList});
             }
         } catch (err) {
+        }
+    },
+    //  节目批量上下架
+    async upLowerFrameProgramme({commit, state}, {idList, visible}) {
+        try {
+            let res = await service.upLowerFrameProgramme(idList, visible);
+            return res;
+        } catch (err) {
+            console.log(err);
         }
     }
 };

@@ -3,7 +3,6 @@
     <div>
         <custom-breadcrumb
             v-bind:breadcrumbList="[
-            {name:'内容管理'},
             {name:'版本管理'},
             {name:'版本列表'}]">
         </custom-breadcrumb>
@@ -80,7 +79,13 @@
         </el-form>
         <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
             <el-table-column align="center" width="120px" label="编号" prop="id"></el-table-column>
-            <el-table-column label="版本名称" align="center" prop="version"></el-table-column>
+            <el-table-column label="版本名称" align="center" prop="version">
+                <template slot-scope="scope">
+                    <span class="ellipsis two">
+                        {{scope.row.version}}
+                    </span>
+                </template>
+            </el-table-column>
             <el-table-column label="版本号" align="center" prop="versionCode"></el-table-column>
             <el-table-column align="center" width="120px" label="升级类型">
                 <template slot-scope="scope">

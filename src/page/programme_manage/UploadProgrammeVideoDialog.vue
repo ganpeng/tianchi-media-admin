@@ -114,14 +114,14 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="视频封面图">
-                <el-button v-if="!readonly" type="primary" @click="uploadImageHandler">上传封面图<i class="el-icon-upload el-icon--right"></i></el-button>
+                <el-button class="page-main-btn" v-if="!readonly" type="primary" icon="el-icon-picture" @click="uploadImageHandler" plain>上传图片</el-button>
                 <ul
                     v-if="video.coverImage"
                     class="cover-list">
                     <li>
                         <div
                             class="image-box"
-                            :style="{'background-image': 'url(' + appendImagePrefix(video.coverImage.uri) + ')'}">
+                            :style="{'cursor': 'default','background-image': 'url(' + appendImagePrefix(video.coverImage.uri) + ')'}">
                         </div>
                     </li>
                 </ul>

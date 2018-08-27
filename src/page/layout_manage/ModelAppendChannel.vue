@@ -51,6 +51,7 @@
                                 <img :src="item.coverImage ? item.coverImage.uri : '' | imageUrl"
                                     :alt="item.coverImage.name"
                                     v-if="item.coverImage && item.coverImage.id">
+                                <label class="tip" v-else>点击设置模块推荐位内的频道</label>
                             </div>
                         </li>
                     </ul>
@@ -242,7 +243,7 @@ export default {
     }
 };
 </script>
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
     .form {
         margin-top: 20px;
@@ -260,8 +261,18 @@ export default {
                 position: relative;
                 margin-right: 30px;
                 flex-grow: 1;
-                background: #5daf34;
+                // background: #5daf34;
+                background: $dynamicGray;
+                border: 1px solid #fff;
                 cursor: pointer;
+                &:hover {
+                    border: 1px solid $baseBlue;
+                }
+                .tip {
+                    font-size: $normalFontSize;
+                    color: $baseBlue;
+                    cursor: pointer;
+                }
                 div {
                     display: flex;
                     flex-direction: column;

@@ -3,7 +3,6 @@
     <div class="channel-type-container">
         <custom-breadcrumb
             v-bind:breadcrumbList="[
-            {name:'内容管理'},
             {name:'频道管理'},
             {name:'频道类别管理'}]">
         </custom-breadcrumb>
