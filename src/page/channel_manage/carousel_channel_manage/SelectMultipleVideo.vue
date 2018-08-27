@@ -293,7 +293,7 @@
                 this.getVideoList();
             },
             closeDisplayVideoDialog(status) {
-                this.displayVideoDialogVisible = status;
+                this.previewVideoInfo.visible = status;
             },
             displayVideo(url, title) {
                 let baseUri = window.localStorage.getItem('videoBaseUri');

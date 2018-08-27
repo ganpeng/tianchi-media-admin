@@ -192,6 +192,7 @@
         </div>
         <display-video-dialog
             :url="previewVideoInfo.url"
+            :title="previewVideoInfo.title"
             :displayVideoDialogVisible="previewVideoInfo.visible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
@@ -213,6 +214,7 @@
                 channelInfo: {},
                 previewVideoInfo: {
                     url: '',
+                    title: '',
                     visible: false
                 }
             };
@@ -252,9 +254,10 @@
                 });
             },
             // 预览视频
-            previewVideo(url) {
+            displayVideo(url, title) {
                 let baseUri = window.localStorage.getItem('videoBaseUri');
                 this.previewVideoInfo.url = `${baseUri}${url}`;
+                this.previewVideoInfo.title = title;
                 this.previewVideoInfo.visible = true;
             },
             // 关闭视频预览
