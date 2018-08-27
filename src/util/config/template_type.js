@@ -73,6 +73,12 @@ const TYPE = [
     }, {
         id: 22,
         name: 's6+s6'
+    }, {
+        id: 23,
+        name: '6'
+    }, {
+        id: 24,
+        name: '2+4+s6'
     }
 ];
 

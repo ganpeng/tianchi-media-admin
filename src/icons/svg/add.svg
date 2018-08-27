@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="29px" height="29px" viewBox="0 0 29 29" version="1.1" xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
     <title>添加icon copy</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.7">
-        <g id="01推荐设置" transform="translate(-1257.000000, -1420.000000)">
-            <g id="添加icon-copy" transform="translate(1258.000000, 1421.000000)">
-                <path
-                    d="M15,12 L23.5,12 C24.3284271,12 25,12.6715729 25,13.5 C25,14.3284271 24.3284271,15 23.5,15 L15,15 L15,23.5 C15,24.3284271 14.3284271,25 13.5,25 C12.6715729,25 12,24.3284271 12,23.5 L12,15 L3.5,15 C2.67157288,15 2,14.3284271 2,13.5 C2,12.6715729 2.67157288,12 3.5,12 L12,12 L12,3.5 C12,2.67157288 12.6715729,2 13.5,2 C14.3284271,2 15,2.67157288 15,3.5 L15,12 Z"
-                    id="Combined-Shape" fill="#1989FA"></path>
-                <circle id="Oval-3" stroke="#1989FA" stroke-width="2" cx="13.5" cy="13.5" r="13.5"></circle>
+    <g id="Design" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g id="01推荐设置" transform="translate(-304.000000, -1990.000000)">
+            <g id="添加按钮-灰" transform="translate(290.000000, 1984.000000)">
+                <g id="添加icon-copy-" transform="translate(14.000000, 6.000000)">
+                    <g id="Group">
+                        <path
+                            d="M16,13 L24.5,13 C25.3284271,13 26,13.6715729 26,14.5 C26,15.3284271 25.3284271,16 24.5,16 L16,16 L16,24.5 C16,25.3284271 15.3284271,26 14.5,26 C13.6715729,26 13,25.3284271 13,24.5 L13,16 L4.5,16 C3.67157288,16 3,15.3284271 3,14.5 C3,13.6715729 3.67157288,13 4.5,13 L13,13 L13,4.5 C13,3.67157288 13.6715729,3 14.5,3 C15.3284271,3 16,3.67157288 16,4.5 L16,13 Z"
+                            id="Combined-Shape"></path>
+                        <path
+                            d="M14.5,29 C6.49187113,29 0,22.5081289 0,14.5 C0,6.49187113 6.49187113,0 14.5,0 C22.5081289,0 29,6.49187113 29,14.5 C29,22.5081289 22.5081289,29 14.5,29 Z M14.5,27 C21.4035594,27 27,21.4035594 27,14.5 C27,7.59644063 21.4035594,2 14.5,2 C7.59644063,2 2,7.59644063 2,14.5 C2,21.4035594 7.59644063,27 14.5,27 Z"
+                            id="Combined-Shape"></path>
+                    </g>
+                </g>
             </g>
         </g>
     </g>

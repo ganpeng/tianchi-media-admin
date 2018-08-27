@@ -499,6 +499,7 @@
                 border: 1px solid $baseBlue;
                 * {
                     color: $baseBlue;
+                    fill: $baseBlue;
                 }
             }
             .el-dropdown-link {
@@ -525,6 +526,7 @@
                 border: 1px solid $baseBlue;
                 * {
                     color: $baseBlue;
+                    fill: $baseBlue;
                 }
             }
         }
@@ -532,6 +534,7 @@
             margin-right: 8px;
             width: 28px !important;
             height: 28px !important;
+            fill: $dynamicGray;
         }
         label {
             cursor: pointer;

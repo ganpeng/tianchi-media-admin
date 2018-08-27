@@ -5,7 +5,10 @@
             width="70%"
             :title="previewSingleImage.title"
             :visible.sync="previewSingleImage.display">
-            <img :src="previewSingleImage.uri | imageUrl">
+            <div
+                :style="{ 'background-image': 'url(' + appendImagePrefix(previewSingleImage.uri) + ')'}"
+                class="image-box">
+            </div>
         </el-dialog>
     </div>
 </template>
@@ -14,18 +17,24 @@
     export default {
         name: 'PreviewSingleImage',
         props: ['previewSingleImage'],
-        data() {
-            return {};
-        },
-        mounted() {
-        },
-        methods: {}
+        methods: {
+            appendImagePrefix(uri) {
+                let baseUri = window.localStorage.getItem('imageBaseUri');
+                return baseUri + uri;
+            }
+        }
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-    img {
-        width: 80%;
+
+    .image-box {
+        margin: 0px auto;
+        width: 70%;
+        height: 500px;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
     }
+
 </style>
