@@ -196,7 +196,7 @@
 
 <script>
     import CreateChannel from './CreateChannel';
-    import ChannelFilterParams from '../../searchFilterParams/ChannelFilterParams';
+    import ChannelFilterParams from '../../search_filter_params/ChannelFilterParams';
     import wsCache from '@/util/webStorage';
 
     export default {

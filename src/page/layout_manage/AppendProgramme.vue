@@ -236,6 +236,14 @@
                     message: '设置节目成功',
                     type: 'success'
                 });
+                // 跳转返回栏目布局页面
+                this.$router.push({
+                    name: 'NavBarLayoutSetting',
+                    params: {
+                        navBarSignCode: this.$route.params.navBarSignCode,
+                        navBarId: this.$route.params.navBarId
+                    }
+                });
             }
         }
     };

@@ -67,7 +67,7 @@
 
 <script>
     import store from 'store';
-    import PersonFilterParams from '../searchFilterParams/PersonFilterParams';
+    import PersonFilterParams from '../search_filter_params/PersonFilterParams';
 
     export default {
         name: 'SelectSingleFigure',

@@ -125,7 +125,7 @@
 
 <script>
     import store from 'store';
-    import ProgrammeFilterParams from '../searchFilterParams/ProgrammeFilterParams';
+    import ProgrammeFilterParams from '../search_filter_params/ProgrammeFilterParams';
 
     export default {
         name: 'SelectSingleProgramme',

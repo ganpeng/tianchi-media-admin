@@ -248,6 +248,14 @@
                     message: '设置推荐专题成功',
                     type: 'success'
                 });
+                // 跳转返回栏目布局页面
+                this.$router.push({
+                    name: 'NavBarLayoutSetting',
+                    params: {
+                        navBarSignCode: this.$route.params.navBarSignCode,
+                        navBarId: this.$route.params.navBarId
+                    }
+                });
             }
         }
     };

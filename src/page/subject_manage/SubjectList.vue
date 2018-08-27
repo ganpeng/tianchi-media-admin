@@ -131,7 +131,7 @@
 </template>
 
 <script>
-    import SubjectFilterParams from '../searchFilterParams/SubjectFilterParams';
+    import SubjectFilterParams from '../search_filter_params/SubjectFilterParams';
 
     export default {
         name: 'SubjectList',
