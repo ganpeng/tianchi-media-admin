@@ -349,6 +349,21 @@ li {
             fill: #fff;
         }
     }
+    &.is-disabled {
+        background-color: transparent;
+        border-color: #a5d2ff;
+        span {
+            color: #a5d2ff;
+        }
+        &:hover {
+            color:#a5d2ff;
+            background-color: transparent;
+            border-color: #a5d2ff;
+            span {
+                color:#a5d2ff;
+            }
+        }
+    }
 }
 
 /** 禁播、删除等按钮样式  */
@@ -362,6 +377,21 @@ li {
     &:hover, &:focus {
         background-color: #fef0f0;
         border: 1px solid #fbc4c4;
+    }
+    &.is-disabled {
+        background-color: transparent;
+        border-color: #fbc4c4;
+        span {
+            color: #fbc4c4;
+        }
+        &:hover {
+            color:#fbc4c4;
+            background-color: transparent;
+            border-color: #fbc4c4;
+            span {
+                color:#fbc4c4;
+            }
+        }
     }
 }
 
@@ -446,6 +476,7 @@ li {
     }
 }
 
+/*! autoprefixer: off */
 .ellipsis {
     display: -webkit-box;
     -webkit-line-clamp: 3;

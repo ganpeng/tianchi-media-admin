@@ -68,7 +68,7 @@
                     </el-button>
                 </el-form-item>
                 <el-form-item class="float-right">
-                    <el-button class="delete-btn disabled-red-btn" size="small" icon="el-icon-delete" @click="deleteVideoList">批量删除</el-button>
+                    <el-button class="delete-btn disabled-red-btn" size="small" :disabled="isDisabled" @click="deleteVideoList">批量删除</el-button>
                 </el-form-item>
             </el-col>
         </el-form>
@@ -89,7 +89,8 @@
         data() {
             return {
                 statusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
-                timer: null
+                timer: null,
+                isDisabled: true
             };
         },
         computed: {
@@ -105,6 +106,7 @@
         },
         created() {
             window.eventBus.$on('clearInputValue', this.clearInputValue.bind(this));
+            window.eventBus.$on('setDisabled', this.setDisabled.bind(this));
             this.$nextTick(() => {
                 uppie(document.querySelector('#upload-input-file'), this.uploadChangeHandler.bind(this));
                 uppie(document.querySelector('#upload-input-dir'), this.uploadChangeHandler.bind(this));
@@ -134,6 +136,9 @@
             ...mapActions({
                 getVideoList: 'video/getVideoList'
             }),
+            setDisabled(value) {
+                this.isDisabled = value;
+            },
             clearSearchFields() {
                 this.resetSearchFields();
             },

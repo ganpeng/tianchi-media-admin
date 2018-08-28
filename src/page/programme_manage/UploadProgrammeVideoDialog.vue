@@ -258,6 +258,12 @@
                 };
             }
         },
+        created() {
+            window.addEventListener('keyup', this.keyupHandler);
+        },
+        beforeDestroy() {
+            window.removeEventListener('keyup', this.keyupHandler);
+        },
         methods: {
             ...mapMutations({
                 updateVideo: 'programme/updateVideo',
@@ -278,6 +284,11 @@
                 getVideoList: 'video/getVideoList',
                 getFeatureVideoList: 'programme/getFeatureVideoList'
             }),
+            keyupHandler(e) {
+                if (e.keyCode === 13) {
+                    this.getVideoList();
+                }
+            },
             cancelHandler() {
                 this.$emit('changeVideoDialogStatus', false);
                 // 清楚校验的规则

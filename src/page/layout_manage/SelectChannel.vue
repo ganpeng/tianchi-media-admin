@@ -275,6 +275,9 @@ export default {
                     if (res && res.code === 0) {
                         this.imageUri = data.posterImage.uri;
                         this.channelForm.coverImage = _.cloneDeep(data.posterImage);
+                    } else {
+                        this.$message.error(res.message);
+                        return false;
                     }
                 });
         }

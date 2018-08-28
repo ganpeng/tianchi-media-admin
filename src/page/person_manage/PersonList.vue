@@ -93,7 +93,7 @@
                     {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
                 </template>
             </el-table-column>
-            <el-table-column align="center" width="120px" fixed="right" label="操作">
+            <el-table-column align="center" width="120px" label="操作">
                 <template slot-scope="scope">
                     <el-button class="text-success" type="text" size="small" @click="displayPerson(scope.row.id)">详情</el-button>
                     <el-button type="text" size="small" @click="editPerson(scope.row.id)">编辑</el-button>

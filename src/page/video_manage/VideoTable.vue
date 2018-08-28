@@ -266,6 +266,11 @@ export default {
             } else {
                 this.selectedVideoList = this.selectedVideoList.filter((item) => item.id !== row.id);
             }
+            if (this.selectedVideoList.length > 0) {
+                window.eventBus.$emit('setDisabled', false);
+            } else {
+                window.eventBus.$emit('setDisabled', true);
+            }
         },
         selectAllHandler(list) {
             if (list.length > 0) {
@@ -277,6 +282,11 @@ export default {
                     });
                     return index < 0;
                 });
+            }
+            if (this.selectedVideoList.length > 0) {
+                window.eventBus.$emit('setDisabled', false);
+            } else {
+                window.eventBus.$emit('setDisabled', true);
             }
         },
         checkedVideoList() {

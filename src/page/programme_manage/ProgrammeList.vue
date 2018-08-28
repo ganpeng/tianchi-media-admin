@@ -14,7 +14,7 @@
                         <el-button class="page-main-btn create-blue-btn" icon="el-icon-upload2" @click="showFileUploadDialog">导入节目</el-button>
                     </el-form-item>
                 </el-col>
-                <el-col :span="24">
+                <el-row>
                     <el-form-item label="上映开始年">
                         <el-date-picker
                             :value="programmeSearchFields.releaseAtStart"
@@ -64,6 +64,8 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
+                </el-row>
+                <el-row>
                     <el-form-item label="类型">
                         <el-select
                             :value="programmeSearchFields.programmeTypeIdList"
@@ -113,10 +115,10 @@
                         </el-button>
                     </el-form-item>
                     <el-form-item class="float-right">
-                        <el-button class="delete-btn create-blue-btn" size="small" @click="multUpFrameProgrammeHandler">批量上架</el-button>
-                        <el-button class="delete-btn disabled-red-btn" size="small" @click="multLowerFrameProgrammeHandler">批量下架</el-button>
+                        <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small" @click="multUpFrameProgrammeHandler">批量上架</el-button>
+                        <el-button class="delete-btn disabled-red-btn" :disabled="isDisabled"  size="small" @click="multLowerFrameProgrammeHandler">批量下架</el-button>
                     </el-form-item>
-                </el-col>
+                </el-row>
             </el-form>
             <el-table
                 ref="multipleTable"
@@ -141,7 +143,7 @@
                         <img style="width:70px;height:auto;" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
                     </template>
                 </el-table-column>
-                <el-table-column prop="featureVideoCount" min-width="100px" align="center" label="正片数量">
+                <el-table-column prop="featureVideoCount" width="80px" align="center" label="正片数量">
                     <template slot-scope="scope">
                         {{scope.row.featureVideoCount | padEmpty}}
                     </template>
@@ -190,7 +192,7 @@
                         {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
                     </template>
                 </el-table-column>
-                <el-table-column fixed="right" align="center" width="120px" label="操作">
+                <el-table-column align="center" width="120px" label="操作">
                     <template slot-scope="scope">
                         <el-button class="text-success" type="text" size="small" @click="displayProgramme(scope.row.id)">详情</el-button>
                         <el-button type="text" size="small" @click="editProgramme(scope.row.id)">编辑</el-button>
@@ -302,8 +304,7 @@ export default {
             isCheckedAll: 'programme/isCheckedAll'
         }),
         isDisabled() {
-            let deleteList = this.list.filter((item) => item.checked === 'yes');
-            return deleteList.length > 0;
+            return this.selectedVideoList.length === 0;
         }
     },
     beforeRouteLeave(to, from, next) {
@@ -449,20 +450,53 @@ export default {
         },
         multUpFrameProgrammeHandler() {
             let idList = this.selectedVideoList.map((item) => item.id);
-            this.upLowerFrameProgramme({idList, visible: true})
-                .then((res) => {
-                    if (res && res.code === 0) {
-                        this.getProgrammeList()
-                            .then((result) => {
-                                if (result && result.code === 0) {
-                                    this.checkedVideoList();
-                                }
-                            });
-                    }
+            this.$confirm(`您确定要上架选中的节目吗?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.upLowerFrameProgramme({idList, visible: true})
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                this.getProgrammeList()
+                                    .then((result) => {
+                                        if (result && result.code === 0) {
+                                            this.checkedVideoList();
+                                        }
+                                    });
+                            }
+                        });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
                 });
         },
         multLowerFrameProgrammeHandler() {
             let idList = this.selectedVideoList.map((item) => item.id);
+            this.$confirm(`您确定要下架选中的节目吗?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.upLowerFrameProgramme({idList, visible: false})
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                this.getProgrammeList()
+                                    .then((result) => {
+                                        if (result && result.code === 0) {
+                                            this.checkedVideoList();
+                                        }
+                                    });
+                            }
+                        });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             this.upLowerFrameProgramme({idList, visible: false})
                 .then((res) => {
                     if (res && res.code === 0) {
