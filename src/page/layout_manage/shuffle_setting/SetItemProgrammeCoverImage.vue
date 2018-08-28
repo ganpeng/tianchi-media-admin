@@ -12,8 +12,8 @@
             </li>
         </ul>
         <div class="add-box">
-            <el-button class="btn-icon-normal" type="primary" plain @click="addCover">
-                <i class="el-icon-picture el-icon--left"></i>
+            <el-button class="create-blue-btn contain-svg-icon" @click="addCover">
+                <svg-icon icon-class="image"></svg-icon>
                 添加图片
             </el-button>
         </div>

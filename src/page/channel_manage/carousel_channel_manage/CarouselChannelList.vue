@@ -168,21 +168,21 @@
             </div>
             <div class="create-item">
                 <el-button
-                    class="create-blue-btn"
-                    icon="el-icon-circle-plus-outline"
+                    class="create-blue-btn contain-svg-icon"
                     @click="createChannelDialogVisible = true">
+                    <svg-icon icon-class="add"></svg-icon>
                     新增轮播频道
                 </el-button>
                 <el-button
-                    class="create-blue-btn"
-                    icon="el-icon-circle-plus-outline"
+                    class="create-blue-btn contain-svg-icon"
                     @click="createChannelByImportExcel">
+                    <svg-icon icon-class="add"></svg-icon>
                     批量导入轮播频道
                 </el-button>
                 <el-button
-                    class="create-blue-btn"
-                    icon="el-icon-edit"
+                    class="create-blue-btn contain-svg-icon"
                     @click="editChannelByImportExcel">
+                    <svg-icon icon-class="edit"></svg-icon>
                     批量修改轮播频道
                 </el-button>
             </div>

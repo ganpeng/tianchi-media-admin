@@ -183,7 +183,7 @@
             line-height: $font-size-base;
             color: $color-blue;
             top: $spacer;
-            fill: #B8C7CE;
+            fill: #DCDFE6;
             width: $index-has-icon;
             height: $font-size-base;
             font-size: $font-size-base;

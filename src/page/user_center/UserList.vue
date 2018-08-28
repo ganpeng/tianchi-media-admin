@@ -118,9 +118,9 @@
             </el-pagination>
             <div class="create-item">
                 <el-button
-                    class="create-blue-btn"
-                    icon="el-icon-circle-plus-outline"
+                    class="create-blue-btn contain-svg-icon"
                     @click="toCreateUser">
+                    <svg-icon icon-class="add"></svg-icon>
                     创建用户
                 </el-button>
             </div>

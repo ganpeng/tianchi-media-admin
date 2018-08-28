@@ -25,8 +25,8 @@
         <div class="vice-block">
             <h3 class="block-vice-title">{{mode === 'EDIT' ? '2.当前选择的封面海报：':'2.请设置专题的封面海报：'}}</h3>
             <div class="text-left">
-                <el-button class="btn-icon-normal" type="primary" plain @click="addCover">
-                    <i class="el-icon-picture el-icon--left"></i>
+                <el-button class="create-blue-btn contain-svg-icon" @click="addCover">
+                    <svg-icon icon-class="image"></svg-icon>
                     添加封面图片
                 </el-button>
             </div>

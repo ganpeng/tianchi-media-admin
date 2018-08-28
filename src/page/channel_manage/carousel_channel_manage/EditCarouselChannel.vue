@@ -56,9 +56,9 @@
         <div class="vice-block text-left">
             <h3 class="block-vice-title">频道封面</h3>
             <el-button
-                class="create-blue-btn"
+                class="create-blue-btn contain-svg-icon"
                 @click="imageUploadDialogVisible = true">
-                <i class="el-icon-picture el-icon--left"></i>
+                <svg-icon icon-class="image"></svg-icon>
                 添加频道封面
             </el-button>
             <div v-if="channelInfo.logoUri" class="image-box">
@@ -86,11 +86,9 @@
             </el-card>
             <div class="text-left" v-if="currentSelectedVideoList.length === 0">
                 <el-button
-                    class="add-video create-blue-btn"
+                    class="add-video create-blue-btn contain-svg-icon"
                     @click="popAppendVideoDialogue(0)">
-                    <svg-icon
-                        icon-class="video">
-                    </svg-icon>
+                    <svg-icon icon-class="video"></svg-icon>
                     点击添加视频
                 </el-button>
             </div>

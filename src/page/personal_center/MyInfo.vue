@@ -42,16 +42,18 @@
                             手机</label>
                         <span>{{info.mobile}}</span>
                     </div>
-                    <img src="~assets/img/angle-line.png">
-                    <div>
-                        <label>
-                            <svg-icon
-                                icon-class="telephone"
-                                class-name="svg-box">
-                            </svg-icon>
-                            电话</label>
-                        <span>{{info.telephone ? info.telephone : ''}}</span>
-                    </div>
+                    <template v-if="info.telephone">
+                        <img src="~assets/img/angle-line.png">
+                        <div>
+                            <label>
+                                <svg-icon
+                                    icon-class="telephone"
+                                    class-name="svg-box">
+                                </svg-icon>
+                                电话</label>
+                            <span>{{info.telephone ? info.telephone : ''}}</span>
+                        </div>
+                    </template>
                 </div>
             </div>
             <div @click="toInfoSetting" class="edit-icon-box">

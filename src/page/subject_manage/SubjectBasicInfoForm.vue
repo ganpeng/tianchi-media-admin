@@ -50,8 +50,9 @@
             <!--只有节目专题有封面图片-->
             <template v-if="status === '0' || status === '2'">
                 <el-form-item label="专题封面：" class="cover-image-block">
-                    <el-button class="btn-icon-normal" type="primary" plain @click="popUploadImage('COVERIMAGE')">
-                        <i class="el-icon-picture el-icon--left"></i>
+                    <el-button
+                        class="create-blue-btn contain-svg-icon" @click="popUploadImage('COVERIMAGE')">
+                        <svg-icon icon-class="image"></svg-icon>
                         添加专题封面
                     </el-button>
                     <ul class="cover-list">
@@ -72,8 +73,8 @@
                 </el-form-item>
                 <!--只有节目专题有背景图片-->
                 <el-form-item label="专题背景图片：" class="bg-box">
-                    <el-button class="btn-icon-normal" type="primary" plain @click="popUploadImage('BACKGROUNDIMAGE')">
-                        <i class="el-icon-picture el-icon--left"></i>
+                    <el-button class="create-blue-btn contain-svg-icon" @click="popUploadImage('BACKGROUNDIMAGE')">
+                        <svg-icon icon-class="image"></svg-icon>
                         添加专题背景图
                     </el-button>
                     <div v-if="subjectInfo.backgroundImage && subjectInfo.backgroundImage.uri"

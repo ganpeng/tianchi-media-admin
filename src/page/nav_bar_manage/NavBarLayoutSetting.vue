@@ -73,12 +73,10 @@
                 <template v-if="navBarSignCode !== 'LIVE_CHANNEL'">
                     <el-dropdown
                         @command="addModel($event,layoutBlockList.length)" placement="bottom">
-                       <span class="el-dropdown-link">
-                           <svg-icon icon-class="add"
-                                     class-name="svg-box">
-                           </svg-icon>
-                           <label>添加</label>
-                       </span>
+                        <el-button class="create-blue-btn contain-svg-icon">
+                            <svg-icon icon-class="add"></svg-icon>
+                            添加
+                        </el-button>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item command="SHUFFLE">新增混排模块</el-dropdown-item>
                             <el-dropdown-item command="PROGRAMME">新增节目专题</el-dropdown-item>
@@ -88,21 +86,22 @@
                 </template>
                 <!--频道栏目添加模块-->
                 <template v-else>
-                    <div v-if="massLayoutBlockList.length > 1" @click="setModelChannel(layoutBlockList.length, 'add')"
-                         class="box">
-                        <svg-icon icon-class="add"
-                                  class-name="svg-box">
-                        </svg-icon>
-                        <label>添加</label>
-                    </div>
+                    <el-button
+                        v-if="massLayoutBlockList.length > 1"
+                        @click="setModelChannel(layoutBlockList.length, 'add')"
+                        class="create-blue-btn contain-svg-icon">
+                        <svg-icon icon-class="add"></svg-icon>
+                        添加
+                    </el-button>
                 </template>
                 <!--模块排序-->
-                <div v-if="massLayoutBlockList.length > 1" @click="initSortModel" class="box">
-                    <svg-icon icon-class="sort_model"
-                              class-name="svg-box">
-                    </svg-icon>
-                    <label>模块排序</label>
-                </div>
+                <el-button
+                    v-if="massLayoutBlockList.length > 1"
+                    @click="initSortModel"
+                    class="create-blue-btn contain-svg-icon">
+                    <svg-icon icon-class="sort_model"></svg-icon>
+                    模块排序
+                </el-button>
             </div>
         </div>
         <el-button v-if="modified" type="primary" @click="clearModify" class="column-operate">清除修改</el-button>
@@ -486,57 +485,6 @@
         margin-top: 30px;
         .el-dropdown {
             margin-right: 30px;
-            width: 95px;
-            height: 40px;
-            border: 1px solid #DCDFE6;
-            border-radius: 4px;
-            font-size: 14px;
-            color: #606060;
-            letter-spacing: 0;
-            cursor: pointer;
-            &:hover {
-                border: 1px solid $baseBlue;
-                * {
-                    color: $baseBlue;
-                    fill: $baseBlue;
-                }
-            }
-            .el-dropdown-link {
-                display: flex;
-                height: 100%;
-                justify-content: center;
-                align-items: center;
-            }
-        }
-        .box {
-            display: flex;
-            margin-right: 30px;
-            justify-content: center;
-            align-items: center;
-            width: 110px;
-            height: 40px;
-            border: 1px solid #DCDFE6;
-            border-radius: 4px;
-            font-size: 14px;
-            color: #606060;
-            letter-spacing: 0;
-            cursor: pointer;
-            &:hover {
-                border: 1px solid $baseBlue;
-                * {
-                    color: $baseBlue;
-                    fill: $baseBlue;
-                }
-            }
-        }
-        .svg-box {
-            margin-right: 8px;
-            width: 28px !important;
-            height: 28px !important;
-            fill: $dynamicGray;
-        }
-        label {
-            cursor: pointer;
         }
     }
 

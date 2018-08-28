@@ -16,7 +16,7 @@
                 <label>右上角标</label>
                 <label>运营角标</label>
                 <img v-if="customImageUri" :src="customImageUri | imageUrl" class="custom-image">
-                <el-button size="mini" type="success" @click="customCornerMarkVisible = true">选择运营角标</el-button>
+                <el-button size="mini" type="primary" plain @click="customCornerMarkVisible = true">选择运营角标</el-button>
             </el-checkbox>
         </el-checkbox-group>
         <el-dialog title="设置运营角标"
@@ -30,11 +30,14 @@
                 </el-radio>
             </el-radio-group>
             <div class="text-center">
-                <el-button @click="addCover">添加图片</el-button>
+                <el-button class="create-blue-btn contain-svg-icon" @click="addCover">
+                    <svg-icon icon-class="image"></svg-icon>
+                    添加图片
+                </el-button>
             </div>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="customCornerMarkVisible = false">取 消</el-button>
-                <el-button type="primary" @click="setCustomImageUri">确 定</el-button>
+                <el-button class="page-vice-btn" @click="customCornerMarkVisible = false">取 消</el-button>
+                <el-button class="page-vice-btn" type="primary" @click="setCustomImageUri">确 定</el-button>
             </div>
         </el-dialog>
         <upload-image
@@ -275,6 +278,7 @@
 
     .el-radio-group {
         display: flex;
+        margin-bottom: 20px;
         flex-direction: row;
         .el-radio {
             display: flex;

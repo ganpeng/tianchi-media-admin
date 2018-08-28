@@ -44,11 +44,9 @@
             </el-form-item>
             <el-form-item label="频道封面" prop="logoUri" required>
                 <el-button
-                    class="btn-icon-normal"
-                    type="primary"
-                    plain
+                    class="create-blue-btn contain-svg-icon"
                     @click="imageUploadDialogVisible = true">
-                    <i class="el-icon-picture el-icon--left"></i>
+                    <svg-icon icon-class="image"></svg-icon>
                     上传图片
                 </el-button>
                 <div v-if="channelInfo.logoUri" class="image-box">
