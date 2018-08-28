@@ -46,6 +46,22 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item v-if="version.productType === 'TV_ROM_3798'" label="硬件类型" prop="hardwareType">
+                <el-select
+                    clearable
+                    filterable
+                    :value="version.hardwareType"
+                    placeholder="请选择升级类型"
+                    @input="inputHandler($event, 'hardwareType')"
+                >
+                    <el-option
+                        v-for="(item, index) in hardwareTypeOptions"
+                        :key="index"
+                        :label="item.name"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="升级方式" prop="forced">
                 <el-select
                     clearable
@@ -105,6 +121,7 @@ export default {
                 ],
                 updateLog: [{required: true, message: '请输入版本说明'}],
                 productType: [{required: true, message: '请选择升级类型'}],
+                hardwareType: [{required: true, message: '请选择硬件类型'}],
                 forced: [{required: true, message: '请选择升级方式'}],
                 fullPackageUri: [{required: true, message: '请上传升级包'}]
             },
@@ -113,6 +130,13 @@ export default {
             actionUrl: '',
             productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
             forcedOptions: role.FORCED_OPTIONS,
+            hardwareTypeOptions: [{
+                name: '3796',
+                value: '3796'
+            }, {
+                name: '3798',
+                value: '3798'
+            }],
             uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token)
         };
     },

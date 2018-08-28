@@ -40,7 +40,7 @@
             </div>
         </div>
         <el-col :span="24">
-            <el-button class="page-margin-btn page-main-btn" type="primary" @click="_updateProgrammeCategory">保存</el-button>
+            <el-button class="page-main-btn" type="primary" @click="_updateProgrammeCategory">保存</el-button>
         </el-col>
     </div>
 </template>
@@ -142,4 +142,7 @@ export default {
   };
 </script>
 <style lang="less" scoped>
+.category-container {
+    margin-bottom: 120px;
+}
 </style>

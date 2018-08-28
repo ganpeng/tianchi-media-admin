@@ -66,7 +66,7 @@
                     </el-form-item>
                 </el-row>
                 <el-row>
-                    <el-form-item label="类型">
+                    <el-form-item class="margin-bottom-0" label="类型">
                         <el-select
                             :value="programmeSearchFields.programmeTypeIdList"
                             @change="inputHandler($event, 'programmeTypeIdList')"
@@ -81,7 +81,7 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="节目状态">
+                    <el-form-item class="margin-bottom-0" label="节目状态">
                         <el-select
                             :value="programmeSearchFields.visible"
                             @change="inputHandler($event, 'visible')"
@@ -95,7 +95,7 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item class="search">
+                    <el-form-item class="margin-bottom-0 search">
                         <el-input
                             :value="programmeSearchFields.keyword"
                             clearable
@@ -104,7 +104,7 @@
                             <i slot="prefix" class="el-input__icon el-icon-search"></i>
                         </el-input>
                     </el-form-item>
-                    <el-form-item>
+                    <el-form-item class="margin-bottom-0">
                         <el-button class="page-main-btn" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
                         <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
                             <svg-icon
@@ -114,7 +114,7 @@
                             清空筛选条件
                         </el-button>
                     </el-form-item>
-                    <el-form-item class="float-right">
+                    <el-form-item class="float-right margin-bottom-0">
                         <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small" @click="multUpFrameProgrammeHandler">批量上架</el-button>
                         <el-button class="delete-btn disabled-red-btn" :disabled="isDisabled"  size="small" @click="multLowerFrameProgrammeHandler">批量下架</el-button>
                     </el-form-item>
@@ -552,7 +552,7 @@ export default {
                 this.selectedVideoList = _.uniqBy(this.selectedVideoList.concat(list), 'id');
             } else {
                 this.selectedVideoList = this.selectedVideoList.filter((item) => {
-                    let index = this.ist.findIndex((programme) => {
+                    let index = this.list.findIndex((programme) => {
                         return programme.id === item.id;
                     });
                     return index < 0;
@@ -575,9 +575,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.search-title {
-    display: inline-block;
-    font-size: 20px;
-    line-height: 40px
+.margin-bottom-0 {
+    margin-bottom: 0;
 }
 </style>

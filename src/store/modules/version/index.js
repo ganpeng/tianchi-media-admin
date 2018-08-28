@@ -9,6 +9,7 @@ const defaultVersion = {
     updateLog: '', // 更新日志
     forced: '', // 是否强制升级
     uriPrefix: '', // 域名前缀
+    hardwareType: '', // 硬件类型
     fullPackageUri: '', // 全量升级包地址
     fullPackageMd5: '', // 包的md5
     incrPackageUri: '' // 增量升级包地址

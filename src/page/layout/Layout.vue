@@ -12,15 +12,14 @@
                 </v-header>
             </el-header>
             <el-container>
-                <el-main class="main-view" style="padding-bottom: 100px;">
+                <el-main class="main-view" style="padding: 0;">
                     <!--主内容区-->
-                    <upload-video></upload-video>
-                    <router-view></router-view>
+                    <div class="wrapper" :style="`min-height: ${minHeight}px`">
+                        <upload-video></upload-video>
+                        <router-view></router-view>
+                    </div>
+                    <v-footer style="margin-top: 100px;"></v-footer>
                 </el-main>
-                <el-footer height="64px">
-                    <!--页脚-->
-                    <v-footer></v-footer>
-                </el-footer>
             </el-container>
         </el-container>
     </el-container>
@@ -42,8 +41,13 @@
         },
         data() {
             return {
-                isActive: true
+                isActive: true,
+                minHeight: 400
             };
+        },
+        created() {
+            let minHeight = window.innerHeight - 100 - 65 - 64;
+            this.minHeight = minHeight;
         },
         methods: {
             toggleAside(isActive) {
@@ -56,6 +60,15 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+    .wrapper {
+        padding: 20px;
+        background-color: $stillGray;
+        text-align: center;
+        * {
+            line-height: 1;
+        }
+    }
+
     .main-container {
         height: 100%;
     }

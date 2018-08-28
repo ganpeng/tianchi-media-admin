@@ -3,7 +3,7 @@
     <div>
         <custom-breadcrumb
             v-bind:breadcrumbList="[
-            {name:'直播频道管理'},
+            {name:'频道管理'},
             {name:'直播频道列表'}]">
         </custom-breadcrumb>
         <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>

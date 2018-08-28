@@ -92,6 +92,11 @@
                     {{scope.row.productType === 'TV_LAUNCHER' ? '应用升级' : '系统升级'}}
                 </template>
             </el-table-column>
+            <el-table-column align="center" width="120px" label="硬件类型">
+                <template slot-scope="scope">
+                    {{hardwareType(scope.row.hardwareType)}}
+                </template>
+            </el-table-column>
             <el-table-column width="120px" align="center" label="升级方式">
                 <template slot-scope="scope">
                     {{scope.row.forced ? '强制升级' : '选择升级'}}
@@ -195,6 +200,9 @@
                 postVersion: 'version/postVersion',
                 getVersionList: 'version/getVersionList'
             }),
+            hardwareType(hardwareType) {
+                return hardwareType ? (hardwareType === '3796' ? '3796' : '3798') : '------';
+            },
             clearSearchFields() {
                 this.resetSearchFields();
             },

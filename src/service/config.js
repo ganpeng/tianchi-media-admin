@@ -43,10 +43,17 @@ service.interceptors.response.use((response) => {
     });
     return response.data;
 }, () => {
-    Message({
-        message: '网络异常',
-        type: 'error'
-    });
+    if (window.navigator.onLine) {
+        Message({
+            message: '服务器连接失败，请稍后重试',
+            type: 'error'
+        });
+    } else {
+        Message({
+            message: '网络连接失败，请检查您的网络连接情况',
+            type: 'error'
+        });
+    }
 });
 
 export default service;
