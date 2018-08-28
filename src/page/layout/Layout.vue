@@ -18,7 +18,7 @@
                         <upload-video></upload-video>
                         <router-view></router-view>
                     </div>
-                    <v-footer style="margin-top: 100px;"></v-footer>
+                    <v-footer id="page-footer"></v-footer>
                 </el-main>
             </el-container>
         </el-container>
@@ -46,7 +46,7 @@
             };
         },
         created() {
-            let minHeight = window.innerHeight - 100 - 65 - 64;
+            let minHeight = window.innerHeight - 100 - 64 - 64;
             this.minHeight = minHeight;
         },
         methods: {
@@ -68,7 +68,11 @@
             line-height: 1;
         }
     }
-
+    #page-footer {
+        height: 64px;
+        line-height: 64px;
+        margin-top: 100px;
+    }
     .main-container {
         height: 100%;
     }

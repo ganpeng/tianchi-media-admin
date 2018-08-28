@@ -66,6 +66,7 @@ import AppendChannel from 'sysPage/layout_manage/AppendChannel';
 import AppendViewChannel from 'sysPage/layout_manage/AppendViewChannel';
 import VersionList from 'sysPage/version_manage/VersionList';
 import HotPerson from 'sysPage/person_manage/HotPerson';
+import PreviewProgrammeList from 'sysPage/channel_manage/PreviewProgrammeList';
 
 Vue.use(Router);
 
@@ -407,6 +408,11 @@ let router = new Router({
                     path: '/channel-manage/live/list',
                     name: 'LiveChannelList',
                     component: LiveChannelList
+                },
+                {
+                    path: '/channel-manage/live/preview/:id',
+                    name: 'PreviewProgrammeList',
+                    component: PreviewProgrammeList
                 },
                 // 轮播频道列表
                 {

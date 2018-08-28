@@ -222,7 +222,12 @@
                             if (flag) {
                                 this.openDownloadDialog(blob, `${name}.xml`);
                             } else {
-                                this.openNewTab(blob);
+                                if (res.data.length > 0) {
+                                    this.$router.push({ name: 'PreviewProgrammeList', params: { id } });
+                                } else {
+                                    this.$message.error('当前频道下没有节目单');
+                                    return false;
+                                }
                             }
                         }
                     });
