@@ -57,6 +57,7 @@ import VideoList from 'sysPage/video_manage/VideoList';
 import LiveChannelList from 'sysPage/channel_manage/LiveChannelList';
 import CarouselChannelList from 'sysPage/channel_manage/carousel_channel_manage/CarouselChannelList';
 import CreateChannelByImportExcel from 'sysPage/channel_manage/carousel_channel_manage/CreateChannelByImportExcel';
+import EditChannelByImportExcel from 'sysPage/channel_manage/carousel_channel_manage/EditChannelByImportExcel';
 import CarouselChannelDetail from 'sysPage/channel_manage/carousel_channel_manage/CarouselChannelDetail';
 import EditCarouselChannel from 'sysPage/channel_manage/carousel_channel_manage/EditCarouselChannel';
 import ChannelCategory from 'sysPage/channel_manage/ChannelCategory';
@@ -413,11 +414,17 @@ let router = new Router({
                     name: 'CarouselChannelList',
                     component: CarouselChannelList
                 },
-                // 轮播频道列表
+                // 轮播频道-批量创建轮播频道
                 {
                     path: '/channel-manage/carousel/import-create',
                     name: 'CreateChannelByImportExcel',
                     component: CreateChannelByImportExcel
+                },
+                // 轮播频道-批量修改轮播频道
+                {
+                    path: '/channel-manage/carousel/import-edit',
+                    name: 'EditChannelByImportExcel',
+                    component: EditChannelByImportExcel
                 },
                 // 轮播频道详情
                 {

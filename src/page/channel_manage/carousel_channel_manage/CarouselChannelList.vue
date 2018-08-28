@@ -171,13 +171,19 @@
                     class="create-blue-btn"
                     icon="el-icon-circle-plus-outline"
                     @click="createChannelDialogVisible = true">
-                    新增单个轮播频道
+                    新增轮播频道
                 </el-button>
                 <el-button
                     class="create-blue-btn"
                     icon="el-icon-circle-plus-outline"
                     @click="createChannelByImportExcel">
                     批量导入轮播频道
+                </el-button>
+                <el-button
+                    class="create-blue-btn"
+                    icon="el-icon-edit"
+                    @click="editChannelByImportExcel">
+                    批量修改轮播频道
                 </el-button>
             </div>
         </div>
@@ -282,6 +288,11 @@
             createChannelByImportExcel() {
                 this.$router.push({
                     name: 'CreateChannelByImportExcel'
+                });
+            },
+            editChannelByImportExcel() {
+                this.$router.push({
+                    name: 'EditChannelByImportExcel'
                 });
             },
             // 关闭创建频道对话框
