@@ -10,14 +10,16 @@
             row-class-name=figure-row
             border
             style="width: 100%"
-            ref="selectSingleFigure"
-            highlight-current-row
-            @current-change="setFigure">
+            highlight-current-row>
             <el-table-column
                 width="50px"
                 label="选择">
                 <template slot-scope="scope">
-                    <i class="el-icon-success"></i>
+                    <el-radio
+                        v-model="singleFigure.id"
+                        :label="scope.row.id"
+                        @change="setFigure(scope.row)">
+                    </el-radio>
                 </template>
             </el-table-column>
             <el-table-column
@@ -104,13 +106,6 @@
                     if (response && response.code === 0) {
                         this.figureList = response.data.list;
                         this.totalAmount = response.data.total;
-                        // 对于选择的项进行勾选
-                        this.figureList.map(figure => {
-                            if (figure.id === this.singleFigure.id) {
-                                this.$refs.selectSingleFigure.setCurrentRow(figure);
-                                this.$emit('setFigure', figure);
-                            }
-                        });
                     }
                 });
             },
@@ -128,7 +123,6 @@
             },
             setFigure(row) {
                 if (row) {
-                    this.singleFigure = row;
                     this.$emit('setFigure', row);
                 }
             }
@@ -136,25 +130,11 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
 
     .el-table {
         img {
             width: 120px;
-        }
-        .more {
-            float: right;
-        }
-        .el-icon-success {
-            margin-right: 5px;
-            color: #409EFF;
-            visibility: hidden;
-        }
-        .current-row {
-            .el-icon-success {
-                visibility: visible;
-            }
         }
     }
 

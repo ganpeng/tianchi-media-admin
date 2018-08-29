@@ -375,7 +375,7 @@
     };
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
     .cover-image-block, .bg-box {
         margin-bottom: 40px;

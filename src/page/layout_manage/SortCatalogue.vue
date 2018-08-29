@@ -4,7 +4,7 @@
         <ul class="display-catalogue">
             <li class="operator" @click="setPickCatalogueVisible(true)">
                 <div class="ab-center">
-                    <i class="el-icon-edit-outline"></i>
+                    <svg-icon icon-class="edit" class-name="svg-box"></svg-icon>
                     <label>设置分类</label>
                 </div>
             </li>
@@ -294,10 +294,11 @@
                     &:hover {
                         border: 1px solid $baseBlue;
                     }
-                    i {
-                        margin-bottom: 10px;
-                        font-size: 30px;
-                        color: $baseBlue;
+                    .svg-box {
+                        margin: 10px auto;
+                        height: 30px !important;
+                        width: 30px !important;
+                        fill: $baseBlue;
                     }
                     label {
                         color: #8C8C8C;

@@ -44,6 +44,8 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+        </el-form>
+        <el-form :inline="true">
             <el-form-item label="县区" prop="county">
                 <el-select
                     v-model="listQueryParams.county"
@@ -72,8 +74,6 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-        </el-form>
-        <el-form :inline="true">
             <el-form-item>
                 <el-input
                     v-model="listQueryParams.keyword"

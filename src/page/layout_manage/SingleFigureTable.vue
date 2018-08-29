@@ -7,6 +7,7 @@
         border
         style="width: 100%">
         <el-table-column
+            align="center"
             prop="id"
             label="编号">
             <template slot-scope="scope">
@@ -14,10 +15,12 @@
             </template>
         </el-table-column>
         <el-table-column
+            align="center"
             prop="name"
             label="姓名">
         </el-table-column>
         <el-table-column
+            align="center"
             label="图片">
             <template slot-scope="scope">
                 <img v-if="scope.row.avatarImage"
@@ -27,10 +30,13 @@
             </template>
         </el-table-column>
         <el-table-column
+            align="center"
             prop="area"
             label="地区">
         </el-table-column>
-        <el-table-column align="center" label="更新时间">
+        <el-table-column
+            align="center"
+            label="更新时间">
             <template slot-scope="scope">
                 {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
             </template>
@@ -62,9 +68,6 @@
     .el-table {
         img {
             width: 120px;
-        }
-        .more {
-            float: right;
         }
     }
 

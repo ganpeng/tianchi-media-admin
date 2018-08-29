@@ -9,16 +9,18 @@
             :data="subjectList"
             header-row-class-name="common-table-header"
             border
-            ref="singleSubject"
             highlight-current-row
-            @current-change="setSubject"
             :row-class-name="tableRowClassName"
             style="width: 100%">
             <el-table-column
                 width="50px"
                 label="选择">
                 <template slot-scope="scope">
-                    <i class="el-icon-success"></i>
+                    <el-radio
+                        v-model="singleSubject.id"
+                        :label="scope.row.id"
+                        @change="setSubject(scope.row)">
+                    </el-radio>
                 </template>
             </el-table-column>
             <el-table-column
@@ -108,6 +110,7 @@
                     pageSize: 10
                 },
                 totalAmount: 0,
+                singleSubject: {},
                 subjectList: []
             };
         },
@@ -177,7 +180,7 @@
                         message: message,
                         type: 'warning'
                     });
-                    this.$refs.singleSubject.setCurrentRow();
+                    this.singleSubject = {};
                     this.$emit('resetSubjectInfo');
                     return;
                 }
@@ -195,20 +198,6 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
-
-    .el-table {
-        .el-icon-success {
-            margin-right: 5px;
-            color: #409EFF;
-            visibility: hidden;
-        }
-        .current-row {
-            .el-icon-success {
-                visibility: visible;
-            }
-        }
-    }
+<style lang="scss" scoped>
 
 </style>

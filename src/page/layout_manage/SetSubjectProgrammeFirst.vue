@@ -2,18 +2,27 @@
 <template>
     <div>
         <el-table
-            ref="singleProgrammeTable"
             :data="programmeList"
             border
             highlight-current-row
-            @current-change="selectProgramme"
             :row-class-name="tableRowClassName"
             style="width: 100%">
+            <el-table-column
+                width="55px"
+                label="选择">
+                <template slot-scope="scope">
+                    <el-radio
+                        v-model="singleProgramme.id"
+                        :label="scope.row.id"
+                        @change="selectProgramme(scope.row)">
+                    </el-radio>
+                </template>
+            </el-table-column>
             <el-table-column
                 width="60px"
                 label="编号">
                 <template slot-scope="scope">
-                    <label><i class="el-icon-success"></i>{{scope.$index + 1}}</label>
+                    <label>{{scope.$index + 1}}</label>
                 </template>
             </el-table-column>
             <el-table-column
@@ -26,12 +35,6 @@
                     <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
                 </template>
             </el-table-column>
-            <el-table-column
-                label="导演">
-                <template slot-scope="scope">
-                    <label>{{scope.row.figureListMap | displayFigures('DIRECTOR')}}</label>
-                </template>
-            </el-table-column>
         </el-table>
     </div>
 </template>
@@ -42,7 +45,9 @@
         name: 'SetSubjectProgrammeFirst',
         props: ['programmeList'],
         data() {
-            return {};
+            return {
+                singleProgramme: {}
+            };
         },
         mounted() {
             this.init();
@@ -70,7 +75,7 @@
                         type: 'warning'
                     });
                     this.$emit('resetProgramme');
-                    this.$refs.singleProgrammeTable.setCurrentRow();
+                    this.singleProgramme = {};
                     return;
                 }
                 this.$emit('setProgramme', item);
@@ -79,28 +84,6 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
-
-    .el-table {
-        label {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            -ms-text-overflow: ellipsis;
-            text-overflow: ellipsis;
-        }
-        .el-icon-success {
-            margin-right: 5px;
-            color: #409EFF;
-            visibility: hidden;
-        }
-        .current-row {
-            .el-icon-success {
-                visibility: visible;
-            }
-        }
-    }
+<style lang="scss" scoped>
 
 </style>

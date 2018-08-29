@@ -232,13 +232,9 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
-
-    .el-steps {
-        margin: 30px 60px 0 60px;
-    }
+<style lang="scss" scoped>
 
     .step-button {
-        margin: 50px 0px;
+        margin: 50px 0px 80px 0px;
     }
 </style>

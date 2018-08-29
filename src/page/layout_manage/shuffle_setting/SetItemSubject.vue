@@ -15,6 +15,7 @@
                 :imageSpec="imageSpec"
                 :originState="currentState"
                 v-on:setSubject="setSubject"
+                v-on:resetSubjectInfo='resetSubjectInfo'
                 v-on:setCoverImage="setCoverImage">
             </component>
         </keep-alive>
@@ -107,6 +108,10 @@
             // 设置选择专题
             setSubject(subject) {
                 this.subject = subject;
+                this.currentState = {};
+            },
+            resetSubjectInfo() {
+                this.subject = {};
                 this.currentState = {};
             },
             setCoverImage(coverImage) {

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>批量导入</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Design" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g id="03内容管理/频道管理/轮播频道列表" transform="translate(-1315.000000, -120.000000)">
+            <g id="批量导入" transform="translate(1315.000000, 120.000000)">
+                <path
+                    d="M14,28 C6.2680135,28 0,21.7319865 0,14 C0,6.2680135 6.2680135,0 14,0 C21.7319865,0 28,6.2680135 28,14 C28,21.7319865 21.7319865,28 14,28 Z M14,26 C20.627417,26 26,20.627417 26,14 C26,7.372583 20.627417,2 14,2 C7.372583,2 2,7.372583 2,14 C2,20.627417 7.372583,26 14,26 Z"
+                    id="Combined-Shape"></path>
+                <path
+                    d="M15.470074,13.9666766 L15.470074,21.5 C15.470074,22.3284271 14.7985011,23 13.970074,23 C13.1416468,23 12.470074,22.3284271 12.470074,21.5 L12.470074,13.9666766 L5,13.9666766 L13.9282532,5 L23,13.9666766 L15.470074,13.9666766 Z"
+                    id="Combined-Shape" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

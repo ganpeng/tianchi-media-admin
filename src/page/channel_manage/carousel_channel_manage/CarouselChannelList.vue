@@ -26,14 +26,6 @@
                     width="55">
                 </el-table-column>
                 <el-table-column
-                    width="60px"
-                    align="center"
-                    label="序号">
-                    <template slot-scope="scope">
-                        <label>{{scope.$index + 1}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
                     prop="no"
                     width="80px"
                     align="center"
@@ -176,7 +168,7 @@
                 <el-button
                     class="create-blue-btn contain-svg-icon"
                     @click="createChannelByImportExcel">
-                    <svg-icon icon-class="add"></svg-icon>
+                    <svg-icon icon-class="upload"></svg-icon>
                     批量导入轮播频道
                 </el-button>
                 <el-button

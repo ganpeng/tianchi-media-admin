@@ -46,6 +46,8 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+        </el-form>
+        <el-form :inline="true">
             <el-form-item label="类型" v-if="listQueryParams.programmeCategoryIdList">
                 <el-select v-model="listQueryParams.programmeTypeIdList"
                            multiple clearable placeholder="请选择类型">
@@ -67,8 +69,6 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-        </el-form>
-        <el-form :inline="true">
             <el-form-item>
                 <el-input
                     v-model="listQueryParams.keyword"

@@ -8,16 +8,17 @@
             :data="programmeList"
             header-row-class-name="common-table-header"
             border
-            ref="selectSingleProgramme"
             style="width: 100%"
-            highlight-current-row
-            :row-class-name="tableRowClassName"
-            @current-change="setProgramme">
+            :row-class-name="tableRowClassName">
             <el-table-column
-                width="50px"
+                width="55px"
                 label="选择">
                 <template slot-scope="scope">
-                    <i class="el-icon-success"></i>
+                    <el-radio
+                        v-model="singleProgramme.id"
+                        :label="scope.row.id"
+                        @change="setProgramme(scope.row)">
+                    </el-radio>
                 </template>
             </el-table-column>
             <el-table-column
@@ -164,15 +165,6 @@
                     if (response && response.code === 0) {
                         this.programmeList = response.data.list;
                         this.totalAmount = response.data.total;
-                        // 对于选择的单选项进行勾选
-                        for (let k = 0; k < this.programmeList.length; k++) {
-                            if (this.singleProgramme.id === this.programmeList[k].id) {
-                                this.$nextTick(function () {
-                                    this.$refs.selectSingleProgramme.setCurrentRow(this.programmeList[k]);
-                                    this.$emit('setProgramme', this.programmeList[k]);
-                                });
-                            }
-                        }
                     }
                 });
             },
@@ -203,11 +195,10 @@
                     return;
                 }
                 if (row.visible) {
-                    this.singleProgramme = row;
                     this.$emit('setProgramme', row);
                 } else {
                     this.$message('当前节目已经下架，不可选择');
-                    this.$refs.selectSingleProgramme.setCurrentRow();
+                    this.singleProgramme = {};
                     this.$emit('resetProgramme');
                 }
             }
@@ -215,22 +206,13 @@
     };
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
     .el-table {
+        margin-top: 0px;
         img {
             width: 100px;
             height: 145px;
-        }
-        .el-icon-success {
-            margin-right: 5px;
-            color: #409EFF;
-            visibility: hidden;
-        }
-        .current-row {
-            .el-icon-success {
-                visibility: visible;
-            }
         }
     }
 

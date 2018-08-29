@@ -54,7 +54,8 @@
             prop="produceAreaList"
             label="地区">
             <template slot-scope="scope">
-                {{scope.row.produceAreaList.length !== 0 ? areaLabel(scope.row.produceAreaList) : '------'}}
+                {{(scope.row.produceAreaList && scope.row.produceAreaList.length !== 0) ?
+                areaLabel(scope.row.produceAreaList) : '------'}}
             </template>
         </el-table-column>
         <el-table-column

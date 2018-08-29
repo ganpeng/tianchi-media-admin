@@ -11,7 +11,7 @@
                 <el-input v-show="false"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="getVideoList">搜索</el-button>
+                <el-button type="primary" plain icon="el-icon-search" @click="getVideoList">搜索</el-button>
             </el-form-item>
         </el-form>
         <el-table

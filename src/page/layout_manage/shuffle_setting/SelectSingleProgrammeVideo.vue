@@ -4,17 +4,19 @@
         <el-table
             :data="programmeVideoList"
             border
-            ref="selectSingleProgrammeVideo"
             header-row-class-name="common-table-header"
             style="width: 100%"
             highlight-current-row
-            :row-class-name="tableRowClassName"
-            @current-change="setProgrammeVideo">
+            :row-class-name="tableRowClassName">
             <el-table-column
                 width="50px"
                 label="选择">
                 <template slot-scope="scope">
-                    <i class="el-icon-success"></i>
+                    <el-radio
+                        v-model="singleProgrammeVideo.id"
+                        :label="scope.row.id"
+                        @change="setProgrammeVideo(scope.row)">
+                    </el-radio>
                 </template>
             </el-table-column>
             <el-table-column
@@ -156,15 +158,6 @@
                     if (response && response.code === 0) {
                         this.programmeVideoList = response.data.list;
                         this.totalAmount = response.data.total;
-                        // 对于选择的单选项进行勾选
-                        for (let k = 0; k < this.programmeVideoList.length; k++) {
-                            if (this.singleProgrammeVideo.id === this.programmeVideoList[k].id) {
-                                this.$nextTick(function () {
-                                    this.$refs.selectSingleProgrammeVideo.setCurrentRow(this.programmeVideoList[k]);
-                                    this.$emit('setProgrammeVideo', this.programmeVideoList[k]);
-                                });
-                            }
-                        }
                     }
                 });
             },
@@ -198,11 +191,10 @@
                     return;
                 }
                 if (row.visible) {
-                    this.singleProgrammeVideo = row;
                     this.$emit('setProgrammeVideo', row);
                 } else {
                     this.$message('当前节目中的视频已经下架，不可选择');
-                    this.$refs.selectSingleProgrammeVideo.setCurrentRow();
+                    this.singleProgrammeVideo = {};
                     this.$emit('resetProgrammeVideo');
                 }
             }
@@ -216,20 +208,6 @@
     .el-table {
         img {
             width: 120px;
-        }
-        .more {
-            float: right;
-        }
-
-        .el-icon-success {
-            margin-right: 5px;
-            color: #409EFF;
-            visibility: hidden;
-        }
-        .current-row {
-            .el-icon-success {
-                visibility: visible;
-            }
         }
     }
 
