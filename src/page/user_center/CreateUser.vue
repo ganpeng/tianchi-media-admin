@@ -3,7 +3,7 @@
     <div>
         <custom-breadcrumb
             v-bind:breadcrumbList="[
-            {name:'用户中心'},
+            {name:'用户管理'},
             {name:'创建用户'}]">
         </custom-breadcrumb>
         <user-info-form

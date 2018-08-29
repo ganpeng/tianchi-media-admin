@@ -22,9 +22,9 @@
             },
             svgClass() {
                 if (this.className) {
-                    return 'svg-icon ' + this.className;
+                    return 'svg-icon svg-icon-' + this.iconClass + ' ' + this.className;
                 } else {
-                    return 'svg-icon';
+                    return 'svg-icon svg-icon-' + this.iconClass;
                 }
             }
         }

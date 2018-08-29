@@ -4,7 +4,6 @@
         <custom-breadcrumb
             v-bind:breadcrumbList="[
             {name:'频道管理'},
-            {name:'轮播频道管理'},
             {name:'轮播频道列表'}]">
         </custom-breadcrumb>
         <div class="block-box">
@@ -163,19 +162,19 @@
                     class="create-blue-btn contain-svg-icon"
                     @click="createChannelDialogVisible = true">
                     <svg-icon icon-class="add"></svg-icon>
-                    新增轮播频道
+                    新增频道
                 </el-button>
                 <el-button
                     class="create-blue-btn contain-svg-icon"
                     @click="createChannelByImportExcel">
                     <svg-icon icon-class="upload"></svg-icon>
-                    批量导入轮播频道
+                    批量导入频道
                 </el-button>
                 <el-button
                     class="create-blue-btn contain-svg-icon"
                     @click="editChannelByImportExcel">
                     <svg-icon icon-class="edit"></svg-icon>
-                    批量修改轮播频道
+                    批量修改频道
                 </el-button>
             </div>
         </div>

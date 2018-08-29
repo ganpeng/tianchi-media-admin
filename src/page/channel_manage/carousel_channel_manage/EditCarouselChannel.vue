@@ -4,7 +4,6 @@
         <custom-breadcrumb
             v-bind:breadcrumbList="[
             {name:'频道管理'},
-            {name:'频道管理'},
             {name:'编辑轮播频道'}]">
         </custom-breadcrumb>
         <!--基本信息-->

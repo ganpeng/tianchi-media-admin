@@ -40,14 +40,10 @@
         </div>
         <div class="vice-block" v-if="subjectInfo.posterImageList && subjectInfo.posterImageList.length > 0">
             <h3 class="block-vice-title">专题封面图</h3>
-            <ul class="cover-list">
-                <li v-for="(item,index) in subjectInfo.posterImageList" :key="index">
-                    <div :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
-                         class="image-box"
-                         @click="displayImage(index)"></div>
-                    <label>{{item.name}}</label>
-                </li>
-            </ul>
+            <thumbnail
+                :imageList="subjectInfo.posterImageList"
+                :removeSign=false>
+            </thumbnail>
         </div>
         <div class="vice-block" id="bg-box" v-if="subjectInfo.backgroundImage && subjectInfo.backgroundImage.uri">
             <h3 class="block-vice-title">专题背景图</h3>
@@ -61,11 +57,13 @@
 
 <script>
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
+    import Thumbnail from 'sysComponents/custom_components/custom/Thumbnail';
 
     export default {
         name: 'SubjectBasicInfoDetail',
         components: {
-            PreviewMultipleImages
+            PreviewMultipleImages,
+            Thumbnail
         },
         // status: '0'对应节目专题； '1'对应人物专题
         props: ['status', 'subjectInfo'],

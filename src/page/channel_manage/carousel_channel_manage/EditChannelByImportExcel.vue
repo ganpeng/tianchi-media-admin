@@ -4,7 +4,7 @@
         <custom-breadcrumb
             v-bind:breadcrumbList="[
             {name:'频道管理'},
-            {name:'轮播-批量修改'}]">
+            {name:'轮播频道批量修改'}]">
         </custom-breadcrumb>
         <div class="import-container">
             <upload-excel-component
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-    import UploadExcelComponent from './UploadExcel';
+    import UploadExcelComponent from 'sysComponents/custom_components/custom/UploadExcel';
     import XLSX from 'xlsx';
 
     export default {

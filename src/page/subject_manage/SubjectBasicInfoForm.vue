@@ -55,21 +55,10 @@
                         <svg-icon icon-class="image"></svg-icon>
                         添加专题封面
                     </el-button>
-                    <ul class="cover-list">
-                        <li v-for="(item,index) in subjectInfo.posterImageList" :key="index">
-                            <div :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
-                                 class="image-box"
-                                 @click="displayImage(index)">
-                            </div>
-                            <div class="info">
-                                <div class="name">{{item.name}}</div>
-                                <div>
-                                    <label>{{item.width}}*{{item.height}}</label>
-                                    <label @click="removePosterImage(index)" class="remove">删除</label>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+                    <thumbnail
+                        :imageList="subjectInfo.posterImageList"
+                        v-on:removeImage="removePosterImage">
+                    </thumbnail>
                 </el-form-item>
                 <!--只有节目专题有背景图片-->
                 <el-form-item label="专题背景图片：" class="bg-box">
@@ -132,6 +121,7 @@
 
 <script>
     import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
+    import Thumbnail from 'sysComponents/custom_components/custom/Thumbnail';
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import {
         PROGRAMME_DIMENSION as SUBJECT_DIMENSION,
@@ -142,7 +132,8 @@
         name: 'CreateSubjectForm',
         components: {
             UploadImage,
-            PreviewMultipleImages
+            PreviewMultipleImages,
+            Thumbnail
         },
         /* status: 0代表创建节目专题，1代表创建人物专题，2代表编辑节目专题，3代表编辑人物专题 */
         props: ['status', 'subjectInfo'],
