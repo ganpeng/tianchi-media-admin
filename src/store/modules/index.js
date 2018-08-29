@@ -1,5 +1,4 @@
 // modules设置
-
 import permission from './permission';
 import user from './user';
 import person from './person';
@@ -10,6 +9,7 @@ import video from './video';
 import channel from './channel';
 import version from './version';
 import uploadVideo from './upload_video';
+import device from './device';
 
 export default {
     permission,
@@ -21,5 +21,6 @@ export default {
     video,
     channel,
     version,
-    uploadVideo
+    uploadVideo,
+    device
 };

@@ -112,8 +112,19 @@
                 </template>
                 <el-menu-item index="/manage-version/list">版本列表</el-menu-item>
             </el-submenu>
-            <!--管理员管理-->
+            <!-- 设备管理 -->
             <el-submenu index="8">
+                <template slot="title">
+                    <svg-icon
+                        icon-class="version_manage"
+                        class-name="svg-box">
+                    </svg-icon>
+                    <span>设备管理</span>
+                </template>
+                <el-menu-item index="/manage-device/list">设备列表</el-menu-item>
+            </el-submenu>
+            <!--管理员管理-->
+            <el-submenu index="9">
                 <template slot="title">
                     <svg-icon
                         icon-class="admin_manage"
@@ -131,7 +142,7 @@
                 </el-menu-item>
             </el-submenu>
             <!--用户管理-->
-            <el-submenu index="9">
+            <el-submenu index="10">
                 <template slot="title">
                     <svg-icon
                         icon-class="user_manage"
@@ -144,7 +155,7 @@
                 <el-menu-item index="/kits">小功能</el-menu-item>
             </el-submenu>
             <!--广告管理-->
-            <el-submenu v-if="false" index="10">
+            <el-submenu v-if="false" index="11">
                 <template slot="title">
                     <svg-icon
                         icon-class="ad_manage"
@@ -169,7 +180,7 @@
                 </el-submenu>
             </el-submenu>
             <!--个人中心-->
-            <el-submenu index="11">
+            <el-submenu index="12">
                 <template slot="title">
                     <svg-icon
                         icon-class="personal_center"

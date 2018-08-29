@@ -465,6 +465,19 @@ export default {
                     this.upLowerFrameProgramme({idList, visible: true})
                         .then((res) => {
                             if (res && res.code === 0) {
+                                if (res.data && res.data.length && res.data.length > 0) {
+                                    let nameStr = res.data.map((item) => {
+                                        return `'${item.name}'`;
+                                    }).join(',');
+                                    this.$message({
+                                        type: 'error',
+                                        showClose: true,
+                                        duration: 0,
+                                        message: `以下节目【${nameStr}】上架失败`
+                                    });
+                                } else {
+                                    this.$message.success('已选节目上架成功');
+                                }
                                 this.getProgrammeList()
                                     .then((result) => {
                                         if (result && result.code === 0) {
@@ -490,6 +503,19 @@ export default {
                     this.upLowerFrameProgramme({idList, visible: false})
                         .then((res) => {
                             if (res && res.code === 0) {
+                                if (res.data && res.data.length && res.data.length > 0) {
+                                    let nameStr = res.data.map((item) => {
+                                        return `'${item.name}'`;
+                                    }).join(',  ');
+                                    this.$message({
+                                        type: 'error',
+                                        showClose: true,
+                                        duration: 0,
+                                        message: `以下节目【${nameStr}】下架失败`
+                                    });
+                                } else {
+                                    this.$message.success('已选节目下架成功');
+                                }
                                 this.getProgrammeList()
                                     .then((result) => {
                                         if (result && result.code === 0) {

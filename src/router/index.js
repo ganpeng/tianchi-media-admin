@@ -67,6 +67,7 @@ import AppendViewChannel from 'sysPage/layout_manage/AppendViewChannel';
 import VersionList from 'sysPage/version_manage/VersionList';
 import HotPerson from 'sysPage/person_manage/HotPerson';
 import PreviewProgrammeList from 'sysPage/channel_manage/PreviewProgrammeList';
+import DeviceList from 'sysPage/device_manage/DeviceList';
 
 Vue.use(Router);
 
@@ -455,6 +456,12 @@ let router = new Router({
                     path: '/manage-version/list',
                     name: 'VersionList',
                     component: VersionList
+                },
+                //  设备管理
+                {
+                    path: '/manage-device/list',
+                    name: 'DeviceList',
+                    component: DeviceList
                 }
             ]
         },
