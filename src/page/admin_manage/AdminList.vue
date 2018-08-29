@@ -8,7 +8,12 @@
         </custom-breadcrumb>
         <el-form :inline="true" class="search-form">
             <el-form-item class="float-right">
-                <el-button class="create-blue-btn" icon="el-icon-circle-plus-outline" @click="createAdmin">创建管理员</el-button>
+                <el-button
+                    class="page-main-btn create-blue-btn contain-svg-icon"
+                    @click="createAdmin">
+                    <svg-icon icon-class="add"></svg-icon>
+                    创建管理员
+                </el-button>
             </el-form-item>
             <el-col :span="24">
                 <el-form-item>
@@ -204,7 +209,7 @@
         margin-left: 20px;
         text-align: left;
         &.search-form {
-            margin-top: 60px;
+            // margin-top: 60px;
         }
         .create-account {
             float: right;

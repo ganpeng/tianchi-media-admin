@@ -101,7 +101,7 @@
                                     :value="item.id">
                                 </el-option>
                             </el-select>
-                            <el-button class="page-main-btn" v-if="!readonly" type="primary" icon="el-icon-setting" @click="gotoProgramTypePage" plain>管理分类和类型</el-button>
+                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-setting" @click="gotoProgramTypePage" plain>管理分类和类型</el-button>
                         </el-form-item>
                         <el-form-item label="节目类型" prop="typeList">
                             <el-select
@@ -134,7 +134,7 @@
                                     :value="item">
                                 </el-option>
                             </el-select>
-                            <el-button class="page-main-btn" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addprogrammeTagHandler">新增关键字</el-button>
+                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addprogrammeTagHandler">新增关键字</el-button>
                         </el-form-item>
                         <el-form-item label="节目主演">
                             <label for="leadActor"></label>
@@ -145,7 +145,7 @@
                                 :changeSuccessHandler="leadActorChangeHandler"
                                 :searchSuccessHandler="leadActorSuccessHandler"
                             ></person-select>
-                            <el-button class="page-main-btn" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增人物</el-button>
+                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                         </el-form-item>
                         <el-form-item label="节目导演">
                             <label for="director"></label>
@@ -156,7 +156,7 @@
                                 :changeSuccessHandler="directorChangeHandler"
                                 :searchSuccessHandler="directorSuccessHandler"
                             ></person-select>
-                            <el-button class="page-main-btn" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增人物</el-button>
+                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                         </el-form-item>
                         <el-form-item label="节目编剧">
                             <label for="scenarist"></label>
@@ -167,7 +167,7 @@
                                 :changeSuccessHandler="scenaristChangeHandler"
                                 :searchSuccessHandler="scenaristSuccessHandler"
                             ></person-select>
-                            <el-button class="page-main-btn" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增人物</el-button>
+                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增人物</el-button>
                         </el-form-item>
                         <el-form-item label="版权起始日期" prop="copyrightRange">
                             <el-date-picker
@@ -196,7 +196,7 @@
                                     :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-button class="page-main-btn" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('licenceList')">新增牌照方</el-button>
+                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('licenceList')">新增牌照方</el-button>
                         </el-form-item>
                         <el-form-item label="版权方" prop="copyrightReserved">
                             <el-select
@@ -214,7 +214,7 @@
                                     :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-button class="page-main-btn" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('copyrightReserverList')">新增版权方</el-button>
+                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('copyrightReserverList')">新增版权方</el-button>
                         </el-form-item>
                         <el-form-item label="发行方" prop="announcer">
                             <el-select
@@ -232,7 +232,7 @@
                                     :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-button class="page-main-btn" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('announcerList')">新增发行方</el-button>
+                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('announcerList')">新增发行方</el-button>
                         </el-form-item>
                         <el-form-item
                             v-if="isMovie"
@@ -305,7 +305,7 @@
                                     :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-button class="page-main-btn" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('contestList')">新增赛事</el-button>
+                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('contestList')">新增赛事</el-button>
                         </el-form-item>
                         <el-form-item
                             label="播放平台">
@@ -323,7 +323,7 @@
                                     :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-button class="page-main-btn" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('platformList')">新增播放平台</el-button>
+                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('platformList')">新增播放平台</el-button>
                         </el-form-item>
                         <el-form-item
                             :rules="isTvPlay ? [{ required: true, message: '请输入总集数' }, {validator: checkPositiveInteger}] : [{validator: checkPositiveInteger}]"
@@ -357,9 +357,18 @@
                 <div class="vice-block">
                     <h3 class="block-vice-title">节目图片</h3>
                 </div>
-                <div class="text-left" style="padding-left:20px;">
-                    <el-button class="page-main-btn" v-if="!readonly" type="primary" icon="el-icon-picture" @click="uploadImageHandler" plain>添加节目图片</el-button>
-                    <span v-if="!readonly" class="text-info">节目横版海报图: 807*455,节目纵版海报图: 240*350都必须上传</span>
+                <div class="text-left clearfix" style="padding-left:20px;">
+                    <el-button
+                        class="float-left page-main-btn create-blue-btn contain-svg-icon"
+                        v-if="!readonly"
+                        @click="uploadImageHandler">
+                        <svg-icon
+                            icon-class="image"
+                            class-name="svg-box">
+                        </svg-icon>
+                        添加节目图片
+                    </el-button>
+                    <span v-if="!readonly" class="float-left text-info">节目横版海报图: 807*455,节目纵版海报图: 240*350都必须上传</span>
                 </div>
                 <ul class="cover-list">
                     <li v-for="(img, index) in programme.posterImageList" :key="index">
@@ -381,14 +390,16 @@
                     <h3 class="block-vice-title">节目视频</h3>
                 </div>
                 <div class="preview-sort clearfix">
-                    <el-button class="float-right page-main-btn create-blue-btn" v-if="!readonly" @click="showUploadDialog">
+                    <el-button
+                        class="float-right page-main-btn create-blue-btn contain-svg-icon"
+                        v-if="!readonly" @click="showUploadDialog">
                         <svg-icon
                             icon-class="video"
                             class-name="svg-box">
                         </svg-icon>
                         关联视频
                     </el-button>
-                    <el-button class="float-left sort-btn page-main-btn" v-if="!readonly" type="primary" @click="showSortDialog" plain>点击视频排序</el-button>
+                    <el-button class="float-left sort-btn page-main-btn btn-style" v-if="!readonly" type="primary" @click="showSortDialog" plain>点击视频排序</el-button>
                 </div>
                 <programme-table title="已添加视频列表" :tableStatus="1" :status="status" :data-list="video.list"></programme-table>
             </el-col>
@@ -1052,5 +1063,12 @@
 <style lang="less" scoped>
 .sort-btn {
     padding-left: 20px;
+}
+.text-info {
+    line-height: 38px;
+    margin-left: 10px;
+}
+.btn-style {
+    background-color: transparent;
 }
 </style>

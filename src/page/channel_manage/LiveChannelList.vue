@@ -9,8 +9,18 @@
         <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
             <el-col :span="24" class="float-right">
                 <el-form-item class="create-account">
-                    <el-button class="page-main-btn create-blue-btn" icon="el-icon-circle-plus-outline" @click="createLiveChannel">新增直播频道</el-button>
-                    <el-button class="page-main-btn create-blue-btn"  icon="el-icon-upload2" @click="showFileUploadDialog">导入节目单</el-button>
+                    <el-button
+                        class="page-main-btn create-blue-btn contain-svg-icon"
+                        @click="createLiveChannel">
+                        <svg-icon icon-class="add"></svg-icon>
+                        新增直播频道
+                    </el-button>
+                    <el-button
+                        class="page-main-btn create-blue-btn contain-svg-icon"
+                        @click="showFileUploadDialog">
+                        <svg-icon icon-class="upload"></svg-icon>
+                        导入节目单
+                    </el-button>
                 </el-form-item>
             </el-col>
             <el-col :span="24">

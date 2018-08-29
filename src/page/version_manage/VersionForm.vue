@@ -130,13 +130,7 @@ export default {
             actionUrl: '',
             productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
             forcedOptions: role.FORCED_OPTIONS,
-            hardwareTypeOptions: [{
-                name: '3796',
-                value: '3796'
-            }, {
-                name: '3798',
-                value: '3798'
-            }],
+            hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS,
             uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token)
         };
     },

@@ -78,13 +78,13 @@
                                 type="text"
                                 size="small"
                                 @click="displayVideoPlayer(scope.row.m3u8For4K, scope.row.originName)"
-                            >4K</el-button>
-                            <icon color="#409EFF"
-                                class="copy-btn pointer el-icon-printer"
-                                v-if="scope.row.m3u8For4K"
-                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)"
-                                name="copy">
-                            </icon>
+                                >4K</el-button>
+                                <svg-icon
+                                    v-if="scope.row.m3u8For4K"
+                                    icon-class="copy_btn"
+                                    class-name="copy-btn pointer"
+                                    :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
+                                </svg-icon>
                         </div>
                         <div class="btn-icon-container">
                             <el-button
@@ -92,11 +92,13 @@
                                 type="text"
                                 size="small"
                                 @click="displayVideoPlayer(scope.row.m3u8For1080P, scope.row.originName)"
-                            >1080</el-button>
-                            <icon color="#409EFF" name="copy" class="copy-btn pointer el-icon-printer"
-                                v-if="scope.row.m3u8For1080P"
-                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
-                            </icon>
+                                >1080</el-button>
+                                <svg-icon
+                                    v-if="scope.row.m3u8For1080P"
+                                    icon-class="copy_btn"
+                                    class-name="copy-btn pointer"
+                                    :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
+                                </svg-icon>
                         </div>
                         <div class="btn-icon-container">
                             <el-button
@@ -105,12 +107,12 @@
                                 size="small"
                                 @click="displayVideoPlayer(scope.row.m3u8For720P, scope.row.originName)"
                                 >720</el-button>
-                            <icon
-                                v-if="scope.row.m3u8For720P"
-                                color="#409EFF" class="copy-btn pointer el-icon-printer"
-                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)"
-                                name="copy">
-                            </icon>
+                                <svg-icon
+                                    v-if="scope.row.m3u8For720P"
+                                    icon-class="copy_btn"
+                                    class-name="copy-btn pointer"
+                                    :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
+                                </svg-icon>
                         </div>
                         <div class="btn-icon-container">
                             <el-button
@@ -118,13 +120,13 @@
                                 type="text"
                                 size="small"
                                 @click="displayVideoPlayer(scope.row.m3u8For480P, scope.row.originName)"
-                            >480</el-button>
-                            <icon
-                                v-if="scope.row.m3u8For480P"
-                                name="copy" color="#409EFF"
-                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)"
-                                class="copy-btn pointer el-icon-printer"
-                            ></icon>
+                                >480</el-button>
+                                <svg-icon
+                                    v-if="scope.row.m3u8For480P"
+                                    icon-class="copy_btn"
+                                    class-name="copy-btn pointer"
+                                    :data-clipboard-text="getVideoUrl(scope.row.m3u8For480P)">
+                                </svg-icon>
                         </div>
                     </template>
                 </el-table-column>

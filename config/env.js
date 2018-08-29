@@ -23,6 +23,9 @@ switch (npmEventName) {
     case 'dev:xiongbao':
         h5NginxProxyTarget = 'http://10.0.1.254:8100';
         break;
+    case 'dev:xingyu':
+        h5NginxProxyTarget = 'http://10.0.3.206:8100';
+        break;
     case 'dev:chongqing':
         h5NginxProxyTarget = 'http://admin.tianchiapi.com';
         break;

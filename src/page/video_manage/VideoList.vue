@@ -10,7 +10,10 @@
             <el-col :span="24">
                 <el-form-item class="float-right">
                     <el-dropdown>
-                        <el-button class="page-main-btn create-blue-btn" icon="el-icon-upload2">
+                        <el-button
+                            class="page-main-btn create-blue-btn contain-svg-iconn"
+                            >
+                            <svg-icon icon-class="upload"></svg-icon>
                             上传视频<i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
@@ -242,26 +245,4 @@
         cursor: pointer;
     }
 }
-.create-blue-btn {
-    background-color: transparent;
-    border: 1px solid #1989FA;
-    color: #1989FA;
-    * {
-        color: #1989FA;
-    }
-    .svg-icon {
-        margin-right: 2px;
-        fill: #A3D0FD;
-    }
-    &:hover {
-        background-color: #1989FA;
-        * {
-            color: #fff;
-        }
-        .svg-icon {
-            fill: #fff;
-        }
-    }
-}
-
 </style>

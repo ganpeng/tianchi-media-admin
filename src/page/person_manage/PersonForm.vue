@@ -93,8 +93,19 @@
             </el-col>
             <el-col :span="24">
                 <el-form-item label="人物图片" required>
-                    <el-button class="page-main-btn" icon="el-icon-picture" v-if="!readonly" type="primary" @click="uploadImageHandler" plain>上传图片</el-button>
-                    <span class="text-info">人物的头像: 200*200,人物背景图: 1920*1080都必须上传</span>
+                    <div class="text-left clearfix">
+                        <el-button
+                            class="float-left page-main-btn create-blue-btn contain-svg-icon"
+                            v-if="!readonly"
+                            @click="uploadImageHandler">
+                            <svg-icon
+                                icon-class="image"
+                                class-name="svg-box">
+                            </svg-icon>
+                            上传图片
+                        </el-button>
+                        <span class="text-info">人物的头像: 200*200,人物背景图: 1920*1080都必须上传</span>
+                    </div>
                     <ul class="cover-list">
                         <li v-for="(img, index) in person.posterImageList" :key="index">
                             <div
@@ -253,5 +264,8 @@ export default {
 <style lang="less" scoped>
 .person-form-container {
     margin-top: 60px;
+}
+.text-info {
+    margin-left: 10px;
 }
 </style>

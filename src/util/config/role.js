@@ -392,6 +392,19 @@ const FORCED_OPTIONS = [
     }
 ];
 
+// 硬件类型
+const HARDWARE_TYPE_OPTIONS = [
+    //  HARDWARE_3796      HARDWARE_3798
+    {
+        value: 'HARDWARE_3796',
+        name: '3796'
+    },
+    {
+        value: 'HARDWARE_3798',
+        name: '3798'
+    }
+];
+
 const RECOMMEND_OPTIONS = [
     {
         value: 'SEARCH',
@@ -482,5 +495,6 @@ export default {
     VIDEO_UPLOAD_STATUS_OPTIONS,
     PRODUCT_TYPE_OPTIONS,
     FORCED_OPTIONS,
-    RECOMMEND_OPTIONS
+    RECOMMEND_OPTIONS,
+    HARDWARE_TYPE_OPTIONS
 };

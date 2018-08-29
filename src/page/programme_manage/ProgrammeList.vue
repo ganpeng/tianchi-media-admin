@@ -8,13 +8,23 @@
         </custom-breadcrumb>
         <div class="table-container">
             <el-form id="label-font" :inline="true" class="demo-form-inline text-left">
-                <el-col :span="24" class="float-right text-right">
-                    <el-form-item>
-                        <el-button class="page-main-btn create-blue-btn" @click="createProgramme" icon="el-icon-circle-plus-outline">新增节目</el-button>
-                        <el-button class="page-main-btn create-blue-btn" icon="el-icon-upload2" @click="showFileUploadDialog">导入节目</el-button>
+                <el-col :span="24">
+                    <el-form-item class="float-right">
+                        <el-button
+                            class="page-main-btn create-blue-btn contain-svg-icon"
+                            @click="createProgramme">
+                            <svg-icon icon-class="add"></svg-icon>
+                            新增节目
+                        </el-button>
+                        <el-button
+                            class="page-main-btn create-blue-btn contain-svg-icon"
+                            @click="showFileUploadDialog">
+                            <svg-icon icon-class="upload"></svg-icon>
+                            导入节目
+                        </el-button>
                     </el-form-item>
                 </el-col>
-                <el-row>
+                <div>
                     <el-form-item label="上映开始年">
                         <el-date-picker
                             :value="programmeSearchFields.releaseAtStart"
@@ -64,8 +74,8 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                </el-row>
-                <el-row>
+                </div>
+                <div>
                     <el-form-item class="margin-bottom-0" label="类型">
                         <el-select
                             :value="programmeSearchFields.programmeTypeIdList"
@@ -118,7 +128,7 @@
                         <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small" @click="multUpFrameProgrammeHandler">批量上架</el-button>
                         <el-button class="delete-btn disabled-red-btn" :disabled="isDisabled"  size="small" @click="multLowerFrameProgrammeHandler">批量下架</el-button>
                     </el-form-item>
-                </el-row>
+                </div>
             </el-form>
             <el-table
                 ref="multipleTable"
