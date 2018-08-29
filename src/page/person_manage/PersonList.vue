@@ -175,12 +175,6 @@
             };
         },
         created() {
-            let searchFieldsStr = window.localStorage.getItem('personSearchFields');
-            if (searchFieldsStr) {
-                let searchFields = JSON.parse(searchFieldsStr);
-                this.updateSearchFields({key: 'name', value: searchFields.name});
-                this.updateSearchFields({key: 'area', value: searchFields.area});
-            }
             this.getPersonList({isProgramme: false});
             window.addEventListener('keyup', this.keyupHandler);
         },
@@ -188,14 +182,10 @@
             window.removeEventListener('keyup', this.keyupHandler);
         },
         beforeRouteLeave(to, from, next) {
-            window.localStorage.setItem('personSearchFields', JSON.stringify(this.searchFields));
-            this.resetSearchFields();
-            next();
-        },
-        beforeRouteEnter(to, from, next) {
-            let {name} = from;
+            let {name} = to;
             if (name !== 'DisplayPerson' && name !== 'EditPerson') {
-                window.localStorage.removeItem('personSearchFields');
+                this.resetSearchFields();
+                this.resetPagination();
             }
             next();
         },
@@ -211,7 +201,8 @@
             ...mapMutations({
                 updateSearchFields: 'person/updateSearchFields',
                 updatePagination: 'person/updatePagination',
-                resetSearchFields: 'person/resetSearchFields'
+                resetSearchFields: 'person/resetSearchFields',
+                resetPagination: 'person/resetPagination'
             }),
             ...mapActions({
                 getPersonList: 'person/getPersonList',

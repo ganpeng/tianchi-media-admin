@@ -197,17 +197,8 @@ const defaultGlobal = {
     personId: ''
 };
 
-function getSearchFields() {
-    let localSearchFields = window.localStorage.getItem('programmeSearchFields');
-    if (localSearchFields) {
-        return _.cloneDeep(JSON.parse(localSearchFields));
-    } else {
-        return _.cloneDeep(defaultProgrammeSearchFields);
-    }
-}
-
 const defaultState = {
-    searchFields: getSearchFields(), // 新加
+    searchFields: _.cloneDeep(defaultProgrammeSearchFields), // 新加
     pagination: _.cloneDeep(defaultPagination), // 新加
     global: _.cloneDeep(defaultGlobal), // 新加
     list: [],
@@ -447,9 +438,6 @@ const getters = {
 
 const mutations = {
     resetProgramme(state) {
-        // state.searchFields = _.cloneDeep(defaultProgrammeSearchFields); // 新加
-        state.searchFields = getSearchFields(); // 新加
-        state.pagination = _.cloneDeep(defaultPagination); // 新加
         state.global = _.cloneDeep(defaultGlobal); // 新加
         state.list = [];
         state.programme = _.cloneDeep(defaultProgramme); // 新加
@@ -570,7 +558,6 @@ const mutations = {
         state.video.video.coverImage = payload.posterImage;
     },
     resetVideoPagination(state) {
-        // state.video.pagination = _.cloneDeep(defaultPagination);
         state.video.pagination = _.cloneDeep(defaultVideoPagination);
     },
     resetCurrentVideo(state) {

@@ -318,14 +318,10 @@ export default {
         }
     },
     beforeRouteLeave(to, from, next) {
-        window.localStorage.setItem('programmeSearchFields', JSON.stringify(this.programmeSearchFields));
-        this.resetProgrammeSearchFields();
-        next();
-    },
-    beforeRouteEnter(to, from, next) {
-        let {name} = from;
+        let {name} = to;
         if (name !== 'DisplayProgramme' && name !== 'EditProgramme') {
-            window.localStorage.removeItem('programmeSearchFields');
+            this.resetProgrammeSearchFields();
+            this.resetProgrammePagination();
         }
         next();
     },
@@ -334,6 +330,7 @@ export default {
             updateProgrammePagination: 'programme/updateProgrammePagination',
             updateProgrammeSearchFields: 'programme/updateProgrammeSearchFields',
             resetProgrammeSearchFields: 'programme/resetProgrammeSearchFields',
+            resetProgrammePagination: 'programme/resetProgrammePagination',
             toggleChecked: 'programme/toggleChecked',
             toggleAll: 'programme/toggleAll'
         }),

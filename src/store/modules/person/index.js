@@ -46,19 +46,10 @@ const defaultHotPerson = {
     }, {})
 };
 
-function getSearchFields() {
-    let localSearchFields = window.localStorage.getItem('personSearchFields');
-    if (localSearchFields) {
-        return _.cloneDeep(JSON.parse(localSearchFields));
-    } else {
-        return _.cloneDeep(defaultSearchFields);
-    }
-}
-
 const defaultState = {
     recommend: _.cloneDeep(defaultRecommend),
     hotPerson: _.cloneDeep(defaultHotPerson),
-    searchFields: getSearchFields(),
+    searchFields: _.cloneDeep(defaultSearchFields),
     currentPerson: _.cloneDeep(defaultPerson),
     list: [],
     pagination: _.cloneDeep(defaultPagination)
@@ -119,10 +110,8 @@ const getters = {
 
 const mutations = {
     resetState(state) {
-        state.searchFields = getSearchFields();
         state.currentPerson = _.cloneDeep(defaultPerson);
         state.list = [];
-        state.pagination = _.cloneDeep(defaultPagination);
     },
     setPersonList(state, payload) {
         state.list = payload.list;
@@ -135,6 +124,9 @@ const mutations = {
     updatePagination(state, payload) {
         let {key, value} = payload;
         state.pagination[key] = value;
+    },
+    resetPagination(state) {
+        state.pagination = _.cloneDeep(defaultPagination);
     },
     setCurrentPerson(state, payload) {
         state.currentPerson = payload.currentPerson;

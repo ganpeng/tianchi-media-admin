@@ -46,13 +46,20 @@
             };
         },
         created() {
-            let minHeight = window.innerHeight - 100 - 64 - 64;
-            this.minHeight = minHeight;
+            this.setMinHeight();
+            window.addEventListener('resize', this.setMinHeight, false);
+        },
+        beforeDestroy() {
+            window.removeEventListener('resize', this.setMinHeight);
         },
         methods: {
             toggleAside(isActive) {
                 this.isActive = isActive;
                 this.$refs.vAside.setIsActive(isActive);
+            },
+            setMinHeight() {
+                let minHeight = window.innerHeight - 100 - 64 - 64;
+                this.minHeight = minHeight;
             }
         }
     };

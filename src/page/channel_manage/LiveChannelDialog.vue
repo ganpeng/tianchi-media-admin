@@ -86,7 +86,18 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="视频封面图" prop="logoUri">
-                <el-button class="page-main-btn" v-if="!readonly" type="primary" icon="el-icon-picture" @click="uploadImageHandler" plain>上传图片</el-button>
+                <div class="text-left clearfix">
+                    <el-button
+                        class="float-left page-main-btn create-blue-btn contain-svg-icon"
+                        v-if="!readonly"
+                        @click="uploadImageHandler">
+                        <svg-icon
+                            icon-class="image"
+                            class-name="svg-box">
+                        </svg-icon>
+                        上传图片
+                    </el-button>
+                </div>
                 <ul
                     v-if="liveChannel.logoUri"
                     class="cover-list">
