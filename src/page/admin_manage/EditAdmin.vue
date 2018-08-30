@@ -27,8 +27,10 @@
                         <el-form-item label="电话" prop="telephone">
                             <el-input v-model="editInfo.telephone" placeholder="请填写电话号码"></el-input>
                         </el-form-item>
-                        <el-form-item class="operate">
-                            <el-button class="page-main-btn page-margin-btn" type="primary" @click="updateAdminInfo">保存</el-button>
+                        <el-form-item class="operate-item">
+                            <el-button class="page-main-btn" type="primary" @click="updateAdminInfo">保存</el-button>
+                            <el-button class="page-main-btn" type="primary" plain @click="reset">重置</el-button>
+                            <el-button class="page-main-btn" @click="toAdminList">返回列表页</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -44,7 +46,7 @@
                         <img v-if="editInfo.imageUrl" :src="editInfo.imageUrl" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
-                    <label >管理员头像</label>
+                    <label>管理员头像</label>
                 </div>
             </el-col>
         </el-row>
@@ -155,6 +157,9 @@
                     }
                 });
             },
+            toAdminList() {
+                this.$router.push({name: 'AdminList'});
+            },
             reset() {
                 this.$refs['editInfo'].resetFields();
             },
@@ -179,8 +184,12 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
+
+    .operate-item {
+        text-align: center;
+        margin-top: 100px;
+    }
 
     .avatar-uploader i {
         margin-bottom: 20px;

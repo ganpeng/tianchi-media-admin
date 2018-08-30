@@ -113,6 +113,7 @@
                                     message: '您的账号信息更新成功',
                                     type: 'success'
                                 });
+                                this.$router.push({name: 'MyInfo'});
                             }
                         });
                     } else {

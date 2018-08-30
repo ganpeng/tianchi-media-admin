@@ -1,23 +1,20 @@
 <!--多张图片预览组件-->
 <template>
-    <div>
-        <el-dialog
-            width="70%"
-            :visible.sync="previewMultipleImages.display"
-            append-to-body>
-            <el-carousel class="text-center"
-                         v-if="previewMultipleImages.display"
-                         trigger="click"
-                         indicator-position="outside"
-                         :autoplay='previewMultipleImages.autoplay'
-                         :initial-index="previewMultipleImages.activeIndex">
-                <el-carousel-item v-for="(item,index) in previewMultipleImages.list" :key="index">
-                    <div class="title">{{ item.name }}</div>
-                    <div class="image-box"
-                         :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"></div>
-                </el-carousel-item>
-            </el-carousel>
-        </el-dialog>
+    <div v-if="previewMultipleImages.display" class="cover-mask">
+        <div class="title">
+            <label>{{previewMultipleImages.activeIndex + 1}}/{{previewMultipleImages.list.length}}</label>
+            <span>{{currentImage.name}}</span>
+        </div>
+        <div class="image-box">
+            <img :src="currentImage.uri | imageUrl">
+        </div>
+        <div class="scroll-btn left">
+            <i class="el-icon-arrow-left" @click="scrollImageList('LEFT')"></i>
+        </div>
+        <div class="scroll-btn right">
+            <i class="el-icon-arrow-right" @click="scrollImageList('RIGHT')"></i>
+        </div>
+        <i class="el-icon-close" @click="closePreview"></i>
     </div>
 </template>
 
@@ -25,12 +22,35 @@
     export default {
         name: 'PreviewMultipleImages',
         props: ['previewMultipleImages'],
-        data() {
-            return {};
-        },
-        mounted() {
+        computed: {
+            currentImage() {
+                return this.previewMultipleImages.list[this.previewMultipleImages.activeIndex];
+            }
         },
         methods: {
+            scrollImageList(directionSign) {
+                switch (directionSign) {
+                    case 'LEFT':
+                        if (this.previewMultipleImages.activeIndex === 0) {
+                            this.previewMultipleImages.activeIndex = this.previewMultipleImages.list.length - 1;
+                        } else {
+                            this.previewMultipleImages.activeIndex = this.previewMultipleImages.activeIndex - 1;
+                        }
+                        break;
+                    case 'RIGHT':
+                        if (this.previewMultipleImages.activeIndex === this.previewMultipleImages.list.length - 1) {
+                            this.previewMultipleImages.activeIndex = 0;
+                        } else {
+                            this.previewMultipleImages.activeIndex = this.previewMultipleImages.activeIndex + 1;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            },
+            closePreview() {
+                this.previewMultipleImages.display = false;
+            },
             appendImagePrefix(uri) {
                 let baseUri = window.localStorage.getItem('imageBaseUri');
                 return baseUri + uri;
@@ -39,32 +59,71 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
-    .el-carousel {
-        height: 360px;
-        .el-carousel-item {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-            height: 100%;
-            text-align: center;
-        }
+    .cover-mask {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 3000;
+        background-color: rgba(0, 0, 0, 0.8);
     }
 
     .title {
-        margin-bottom: 30px;
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 64px;
         font-size: 20px;
+        color: #fff;
+        line-height: 64px;
     }
 
     .image-box {
-        margin: 30px auto 0px auto;
-        height: 200px;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
+        width: 100%;
+        overflow-x: scroll;
+    }
+
+    .scroll-btn {
+        display: block;
+        position: fixed;
+        bottom: 50%;
+        margin-bottom: -25px;
+        &.left {
+            left: 20px;
+        }
+        &.right {
+            right: 20px;
+        }
+        i {
+            font-size: 50px;
+            color: #fff;
+            cursor: pointer;
+            &:hover {
+                color: $baseBlue;
+            }
+        }
+    }
+
+    .el-icon-close {
+        position: fixed;
+        right: 26px;
+        top: 26px;
+        padding: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        color: #fff;
+        &:hover {
+            color: $baseRed;
+        }
     }
 
 </style>

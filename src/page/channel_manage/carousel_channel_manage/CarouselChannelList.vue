@@ -383,7 +383,7 @@
                     } else if (response && response.code === 3604) {
                         let message = '';
                         response.data.map(channel => {
-                            message = message + channel.innerName + channel.reason;
+                            message = message + '"' + channel.innerName + '"' + channel.reason + ';    ';
                         });
                         this.$message.warning(message + '，暂时不能批量禁播');
                     }

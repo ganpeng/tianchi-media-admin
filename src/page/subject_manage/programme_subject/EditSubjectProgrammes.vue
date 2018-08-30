@@ -131,6 +131,7 @@
                 }).then(response => {
                     if (response && response.code === 0) {
                         this.$message.success('更新节目列表成功');
+                        this.toSubjectList();
                     }
                 });
             },

@@ -442,8 +442,8 @@
                             this.userInfo.id = this.$route.params.id;
                             this.$service.updateUser(this.userInfo).then(response => {
                                 if (response && response.code === 0) {
-                                    this.$message('更新成功');
-                                    this.$router.push({name: 'UserList'});
+                                    this.$message.success('更新成功');
+                                    this.toUserList();
                                 } else {
                                     this.btnDisabled = false;
                                 }

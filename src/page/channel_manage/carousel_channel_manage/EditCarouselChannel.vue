@@ -909,6 +909,7 @@
                         ).then(response => {
                             if (response && response.code === 0) {
                                 this.$message.success('保存频道信息成功');
+                                this.toChannelList();
                             } else {
                                 this.$message({
                                     message: response.message,
