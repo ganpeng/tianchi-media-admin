@@ -106,20 +106,13 @@
                         </el-button>
                         <span class="text-info">人物的头像: 200*200,人物背景图: 1920*1080都必须上传</span>
                     </div>
-                    <ul class="cover-list">
-                        <li v-for="(img, index) in person.posterImageList" :key="index">
-                            <div
-                                class="image-box"
-                                :style="{'background-image': 'url(' + appendImagePrefix(img.uri) + ')'}"
-                                @click="displayImage(index)">
-                            </div>
-                            <i
-                                v-if="!readonly"
-                                @click="_deletePosterImage(img.id)"
-                                class="el-icon-delete delete-btn">
-                            </i>
-                        </li>
-                    </ul>
+                    <div class="wrapper">
+                        <thumbnail
+                            :removeSign="!readonly"
+                            :imageList="person.posterImageList"
+                            v-on:removeImage="_deletePosterImage">
+                        </thumbnail>
+                    </div>
                 </el-form-item>
             </el-col>
         </el-form>
@@ -146,6 +139,7 @@ import {mapGetters, mapMutations} from 'vuex';
 import store from 'store';
 import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
 import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
+import Thumbnail from '../../components/custom_components/custom/Thumbnail';
 import dimension from '@/util/config/dimension';
 import role from '@/util/config/role';
 import {requiredValidator} from '@/util/formValidate';
@@ -168,7 +162,8 @@ export default {
     },
     components: {
         UploadImage,
-        PreviewMultipleImages
+        PreviewMultipleImages,
+        Thumbnail
     },
     computed: {
         ...mapGetters({
@@ -235,7 +230,7 @@ export default {
                 this.updateRecommend({key: 'recommendList', value: []});
             }
         },
-        _deletePosterImage(id) {
+        _deletePosterImage(index, id) {
             this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -267,5 +262,8 @@ export default {
 }
 .text-info {
     margin-left: 10px;
+}
+.wrapper {
+    margin-top: 20px;
 }
 </style>

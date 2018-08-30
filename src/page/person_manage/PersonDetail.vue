@@ -75,7 +75,7 @@
             getPageName() {
                 switch (this.status) {
                     case 0:
-                        return '人物列表-新增';
+                        return '新增人物';
                     case 1:
                         return '人物列表-详情';
                     case 2:

@@ -2,8 +2,8 @@ import _ from 'lodash';
 // let isLoading = false; // 解决重复调用列表接口的问题
 const defaultSearchFields = {
     keyword: '',
-    deviceType: '',
-    status: ''
+    hardwareType: '',
+    visible: ''
 };
 
 const defaultPagination = {
@@ -12,15 +12,25 @@ const defaultPagination = {
     total: 0
 };
 
+const defaultDevice = {
+    caNo: '',
+    hardwareType: '',
+    visible: true
+};
+
 const state = {
     searchFields: _.cloneDeep(defaultSearchFields),
     pagination: _.cloneDeep(defaultPagination),
-    list: []
+    list: [],
+    device: _.cloneDeep(defaultDevice)
 };
 
 const getters = {
     state(state) {
         return state;
+    },
+    device(state) {
+        return state.device;
     },
     pagination(state) {
         return state.pagination;
@@ -55,6 +65,19 @@ const mutations = {
     },
     resetSearchFields(state) {
         state.searchFields = _.cloneDeep(defaultSearchFields);
+    },
+    updateDevice(state, payload) {
+        let {key, value} = payload;
+        state.device[key] = value;
+    },
+    resetDevice(state) {
+        state.device = _.cloneDeep(defaultDevice);
+    },
+    resetState(state) {
+        state.searchFields = _.cloneDeep(defaultSearchFields);
+        state.pagination = _.cloneDeep(defaultPagination);
+        state.list = [];
+        state.device = _.cloneDeep(defaultDevice);
     }
 };
 

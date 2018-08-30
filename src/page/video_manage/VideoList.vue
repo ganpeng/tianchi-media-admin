@@ -11,7 +11,7 @@
                 <el-form-item class="float-right">
                     <el-dropdown>
                         <el-button
-                            class="page-main-btn create-blue-btn contain-svg-iconn"
+                            class="page-main-btn create-blue-btn contain-svg-icon"
                             >
                             <svg-icon icon-class="upload"></svg-icon>
                             上传视频<i class="el-icon-arrow-down el-icon--right"></i>

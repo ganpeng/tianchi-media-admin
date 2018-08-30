@@ -58,15 +58,10 @@
                 <div class="vice-block">
                     <h3 class="block-vice-title">人物图片</h3>
                 </div>
-                <ul class="cover-list">
-                    <li v-for="(img, index) in person.posterImageList" :key="index">
-                        <div
-                            class="image-box"
-                            :style="{'background-image': 'url(' + appendImagePrefix(img.uri) + ')'}"
-                            @click="displayImage(index)">
-                        </div>
-                    </li>
-                </ul>
+                <thumbnail
+                    :removeSign="false"
+                    :imageList="person.posterImageList">
+                </thumbnail>
             </el-col>
         </el-row>
         <el-button @click="goBack" plain>返回人物列表</el-button>
@@ -78,11 +73,13 @@
     import store from 'store';
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import PersonDetail from './PersonDetail';
+    import Thumbnail from '../../components/custom_components/custom/Thumbnail';
     export default {
         name: 'DisplayPerson',
         components: {
             PersonDetail,
-            PreviewMultipleImages
+            PreviewMultipleImages,
+            Thumbnail
         },
         data() {
             return {

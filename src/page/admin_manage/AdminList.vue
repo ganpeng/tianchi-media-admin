@@ -77,11 +77,12 @@
                 </template>
             </el-table-column>
             <el-table-column
-                            width="100"
+                            width="200"
                             align="center"
-                            fixed="right"
                             label="操作">
                 <template slot-scope="scope">
+                    <el-button class="text-success" type="text" size="small" @click="checkDetail(scope.row.id)">详情</el-button>
+                    <el-button type="text" size="small" @click="editAdminInfo(scope.row.id)">编辑</el-button>
                     <el-button v-if="scope.row.status === 'NORMAL'" type="danger" size="mini" plain
                                @click="disabledConfirm(scope.row.id,scope.row.status)">
                         禁用
@@ -90,8 +91,6 @@
                                @click="recoverConfirm(scope.row.id,scope.row.status)">
                         恢复
                     </el-button>
-                    <el-button class="text-success" type="text" size="small" @click="checkDetail(scope.row.id)">详情</el-button>
-                    <el-button type="text" size="small" @click="editAdminInfo(scope.row.id)">编辑</el-button>
                 </template>
             </el-table-column>
         </el-table>

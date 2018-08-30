@@ -3,8 +3,10 @@
         <div v-if="uploadState.min" class="min-container">
             <span class="upload-status">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{currentFileName}}</span>
             <div class="btn-wrapper float-right">
-                <el-button @click="toggleWindow(false)" class="text-primary" type="text" size="small">展开</el-button>
-                <i  @click="resetFiles" class="delete-btn el-icon-close pointer"></i>
+                <span @click="toggleWindow(false)"><svg-icon class-name="max-min pointer" icon-class="max_larger"></svg-icon></span>
+                <span>
+                    <i @click="resetFiles" class="delete-btn el-icon-close pointer"></i>
+                </span>
             </div>
         </div>
         <div v-else class="max-container upload-wrapper">
@@ -28,10 +30,11 @@
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <!-- <el-button class="clear-btn" size="small" type="danger" icon="el-icon-delete" @click="resetFiles">清空上传列表</el-button> -->
                 <div class="float-right">
-                    <el-button @click="toggleWindow(true)" class="text-primary" type="text" size="small">收起</el-button>
-                    <i @click="resetFiles" class="delete-btn el-icon-close pointer"></i>
+                    <span @click="toggleWindow(true)"><svg-icon class-name="max-min pointer" icon-class="min_smaller"></svg-icon></span>
+                    <span>
+                        <i @click="resetFiles" class="delete-btn el-icon-close pointer"></i>
+                    </span>
                 </div>
             </div>
             <div class="table-wrapper">
@@ -561,15 +564,20 @@ export default {
     }
 }
 .delete-btn {
-    color: #F56C6C;
+    color: #000;
     border-color: #F56C6C;
     background-color: transparent;
-    font-size: 20px;
+    font-size: 18px;
     &:hover,
     &:focus {
         color: #F56C6C;
         border-color: #F56C6C;
         background-color: transparent;
+    }
+}
+.max-min {
+    &:hover {
+        fill:#1989FA;
     }
 }
 </style>

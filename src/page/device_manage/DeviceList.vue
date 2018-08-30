@@ -22,39 +22,38 @@
                     <el-input
                         :value="searchFields.keyword"
                         placeholder="请输入关键字"
-                        @input="inputHandler($event, 'keyword')"
-                        clearable
-                    >
+                        @input="inputSearchFieldHandler($event, 'keyword')"
+                        clearable>
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                 </el-form-item>
                 <el-form-item class="search">
                     <el-select
-                        :value="searchFields.deviceType"
-                        multiple
+                        :value="searchFields.hardwareType"
                         placeholder="请选择设备类型"
-                        @input="inputHandler($event, 'deviceType')"
+                        clearable
+                        @input="inputSearchFieldHandler($event, 'hardwareType')"
                     >
                         <el-option
-                            v-for="(item, index) in []"
+                            v-for="(item, index) in hardwareTypeOptions"
                             :key="index"
                             :label="item.name"
-                            :value="item.id">
+                            :value="item.value">
                         </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item class="search">
                     <el-select
-                        :value="searchFields.status"
-                        multiple
+                        :value="searchFields.visible"
                         placeholder="请选择设备状态"
-                        @input="inputHandler($event, 'status')"
+                        clearable
+                        @input="inputSearchFieldHandler($event, 'visible')"
                     >
                         <el-option
-                            v-for="(item, index) in []"
+                            v-for="(item, index) in visibleOptions"
                             :key="index"
                             :label="item.name"
-                            :value="item.id">
+                            :value="item.value">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -108,14 +107,45 @@
             :show-close="false"
             :close-on-click-modal="false"
             :close-on-press-escape="false">
+            <el-form :model="device" :rules="deviceRules" ref="deviceForm" class="form-block" label-width="100px">
+
+                <el-form-item label="CA卡号" prop="caNo">
+                    <el-input
+                        :value="device.caNo"
+                        clearable
+                        placeholder="请输入设备CA卡号"
+                        @input="inputHandler($event, 'caNo')"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item label="设备类型" prop="hardwareType">
+                    <el-select
+                        :value="device.hardwareType"
+                        clearable
+                        placeholder="请选择内容类型"
+                        @input="inputHandler($event, 'hardwareType')"
+                    >
+                        <el-option
+                            v-for="item in hardwareTypeOptions"
+                            :key="item.value"
+                            :label="item.name"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="设备状态">
+                    <span v-html="getStatus(device.visible)"></span>
+                </el-form-item>
+            </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button size="medium" @click="hideDeviceDialog">关闭</el-button>
+                <el-button type="primary" size="medium" @click="addDeviceEnterHandler">确认</el-button>
             </div>
         </el-dialog>
     </div>
 </template>
 <script>
     import {mapGetters, mapActions, mapMutations} from 'vuex';
+    import role from '@/util/config/role';
     export default {
         name: 'DeviceList',
         components: {},
@@ -123,7 +153,20 @@
             return {
                 value6: [],
                 deviceDialogVisible: false,
-                dialogTitle: ''
+                hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS,
+                dialogTitle: '',
+                visibleOptions: [
+                    {value: true, name: '正常'}, {value: false, name: '禁用'}
+                ],
+                deviceRules: {
+                    caNo: [
+                        { required: true, message: '请输入设备CA卡号' }
+                        // { validator: requiredValidator('请选择区域') }
+                    ],
+                    hardwareType: [
+                        { required: true, message: '请选择设备类型' }
+                    ]
+                }
             };
         },
         created() {
@@ -136,24 +179,53 @@
             ...mapGetters({
                 list: 'device/list',
                 pagination: 'device/pagination',
-                searchFields: 'device/searchFields'
-            })
+                searchFields: 'device/searchFields',
+                device: 'device/device'
+            }),
+            getStatus() {
+                return (visible) => {
+                    let text = visible ? '正常' : '禁用';
+                    let className = visible ? 'status-normal' : 'status-abnormal';
+                    return `<i class="${className}">${text}</i>`;
+                };
+            }
         },
         methods: {
-            ...mapMutations({}),
+            ...mapMutations({
+                updatePagination: 'device/updatePagination',
+                updateSearchFields: 'device/updateSearchFields',
+                resetSearchFields: 'device/resetSearchFields',
+                updateDevice: 'device/updateDevice',
+                resetDevice: 'device/resetDevice'
+            }),
             ...mapActions({}),
             clearSearchFields() {},
             keyupHandler(e) {
                 if (e.keyCode === 13) {}
             },
             handlePaginationChange(value, key) { },
-            inputHandler(value, key) { },
-            addDeviceHandler() {},
+            inputSearchFieldHandler(value, key) {
+                this.updateSearchFields({key, value});
+            },
+            inputHandler(value, key) {
+                this.updateDevice({key, value});
+            },
+            addDeviceHandler() {
+                this.showDeviceDialog();
+                this.dialogTitle = '添加设备';
+            },
             showDeviceDialog() {
                 this.deviceDialogVisible = true;
+                this.$nextTick(() => {
+                    this.$refs.deviceForm.clearValidate();
+                });
             },
             hideDeviceDialog() {
                 this.deviceDialogVisible = false;
+                this.resetDevice();
+            },
+            addDeviceEnterHandler() {
+
             }
         }
     };

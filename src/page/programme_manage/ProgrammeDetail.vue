@@ -370,20 +370,13 @@
                     </el-button>
                     <span v-if="!readonly" class="float-left text-info">节目横版海报图: 807*455,节目纵版海报图: 240*350都必须上传</span>
                 </div>
-                <ul class="cover-list">
-                    <li v-for="(img, index) in programme.posterImageList" :key="index">
-                        <div
-                            class="image-box"
-                            :style="{'background-image': 'url(' + appendImagePrefix(img.uri) + ')'}"
-                            @click="displayImage(index)">
-                        </div>
-                        <i
-                            v-if="!readonly"
-                            @click="_deletePosterImage(img.id)"
-                            class="el-icon-delete delete-btn">
-                        </i>
-                    </li>
-                </ul>
+                <div class="image-list-wrapper">
+                    <thumbnail
+                        :removeSign="!readonly"
+                        :imageList="programme.posterImageList"
+                        v-on:removeImage="_deletePosterImage">
+                    </thumbnail>
+                </div>
             </el-col>
             <el-col :span="24">
                 <div class="vice-block">
@@ -401,7 +394,7 @@
                     </el-button>
                     <el-button class="float-left sort-btn page-main-btn btn-style" v-if="!readonly" type="primary" @click="showSortDialog" plain>点击视频排序</el-button>
                 </div>
-                <programme-table title="已添加视频列表" :tableStatus="1" :status="status" :data-list="video.list"></programme-table>
+                <programme-table title="已添加视频列表" :status="status" :data-list="video.list"></programme-table>
             </el-col>
         </el-row>
         <div class="group">
@@ -445,6 +438,7 @@
     import role from '@/util/config/role';
     import PersonSelect from './PersonSelect';
     import ProgrammeBasicInfo from './ProgrammeBasicInfo';
+    import Thumbnail from '../../components/custom_components/custom/Thumbnail';
     import {checkScore, checkCategory, checkPositiveInteger} from '@/util/formValidate';
     import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
     const platformList = [ '中央电视台', '浙江卫视', '东方卫视', '江苏卫视', '湖南卫视', '安徽卫视', '北京卫视', '腾讯', '爱奇艺', '优酷', '搜狐', '芒果' ];
@@ -453,6 +447,7 @@
         name: 'ProgrammeDetail',
         components: {
             UploadImage,
+            Thumbnail,
             CreatePersonDialog,
             ProgrammeTable,
             UploadProgrammeVideoDialog,
@@ -548,7 +543,7 @@
             getPageName() {
                 switch (this.status) {
                     case 0:
-                        return '节目列表-新增';
+                        return '新增节目';
                     case 1:
                         return '节目列表-详情';
                     case 2:
@@ -887,7 +882,7 @@
                     this.imageUploadDialogVisible = true;
                 }
             },
-            _deletePosterImage(id) {
+            _deletePosterImage(index, id) {
                 this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
@@ -1070,5 +1065,9 @@
 }
 .btn-style {
     background-color: transparent;
+}
+.image-list-wrapper {
+    margin-top: 20px;
+    padding-left: 20px;
 }
 </style>

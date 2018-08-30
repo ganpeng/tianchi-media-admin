@@ -29,10 +29,9 @@
                 </el-table-column>
                 <el-table-column
                     prop="name"
-                    v-if="tableStatus === 1"
                     label="视频展示名"
                     align="center"
-                    width="180">
+                    width="160">
                         <template slot-scope="scope">
                             <span class="ellipsis two">
                                 {{scope.row.name | padEmpty}}
@@ -42,7 +41,6 @@
                 <el-table-column
                     prop="sort"
                     width="100"
-                    v-if="tableStatus === 1"
                     label="集数/期号"
                     align="center">
                         <template slot-scope="scope">
@@ -59,7 +57,6 @@
                         </template>
                 </el-table-column>
                 <el-table-column
-                    v-if="tableStatus === 1"
                     align="center"
                     label="关联正片">
                         <template slot-scope="scope">
@@ -132,9 +129,8 @@
                 </el-table-column>
                 <el-table-column
                     prop="type"
-                    v-if="tableStatus === 1"
                     align="center"
-                    min-width="120px"
+                    min-width="80px"
                     label="内容类型">
                         <template slot-scope="scope">
                             {{getVideoType(scope.row.type) | padEmpty}}
@@ -143,17 +139,16 @@
                 <el-table-column
                     prop="duration"
                     align="center"
-                    min-width="120px"
+                    min-width="80px"
                     label="时长">
                     <template slot-scope="scope">
                         {{duration(scope.row.takeTimeInSec) | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column
-                    v-if="tableStatus === 1"
                     prop="duration"
                     align="center"
-                    min-width="120px"
+                    min-width="80px"
                     label="上下架">
                     <template slot-scope="scope">
                         <i v-if="scope.row.visible" class="status-normal">已上架</i>
@@ -161,23 +156,20 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    v-if="tableStatus === 1"
                     prop="createdAt"
                     align="center"
-                    min-width="120px"
+                    min-width="100px"
                     label="上传时间">
                     <template slot-scope="scope">
                         {{scope.row.createdAt | formatDate('yyyy-MM-DD') | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column
-                    v-if="tableStatus === 1"
-                    fixed="right"
                     label="操作"
                     align="center"
                     width="160">
                     <template slot-scope="scope">
-                        <el-button v-if="tableStatus !== 0" @click="displayVideo(scope.row.id)" type="text" class="text-success" size="small">查看</el-button>
+                        <el-button @click="displayVideo(scope.row.id)" type="text" class="text-success" size="small">查看</el-button>
                         <el-button v-if="status !== 1" @click="editVideo(scope.row.id)" type="text" size="small">编辑</el-button>
                         <el-button v-if="status !== 1 && isShow" @click="deleteVideo(scope.row.id, scope.row.visible)" type="text" size="small">
                             {{scope.row.visible ? '下架' : '上架'}}
@@ -221,11 +213,8 @@ export default {
             default: ''
         },
         status: {
-            type: Number, // 1表示“电视剧”， 2表示“电影”， 3表示“综艺”
+            type: Number,
             default: 1
-        },
-        tableStatus: {
-            type: Number // 0表示“待添加视频列表“ 1表示”已添加视频列表“
         }
     },
     data() {

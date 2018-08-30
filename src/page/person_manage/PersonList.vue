@@ -105,12 +105,14 @@
             </el-table-column>
             <el-table-column align="center" width="120px" label="操作">
                 <template slot-scope="scope">
-                    <el-button class="text-success" type="text" size="small" @click="displayPerson(scope.row.id)">详情</el-button>
-                    <el-button type="text" size="small" @click="editPerson(scope.row.id)">编辑</el-button>
-                    <el-button type="text" size="small" @click="_lowerFramePerson(scope.row)">
-                        {{scope.row.visible ? '下架' : '上架'}}
-                    </el-button>
-                    <el-button class="text-danger" type="text" size="small" @click="_deletePerson(scope.row.id)">删除</el-button>
+                    <div class="btn-wrapper">
+                        <el-button class="text-success" type="text" size="small" @click="displayPerson(scope.row.id)">详情</el-button>
+                        <el-button type="text" size="small" @click="editPerson(scope.row.id)">编辑</el-button>
+                        <el-button type="text" size="small" @click="_lowerFramePerson(scope.row)">
+                            {{scope.row.visible ? '下架' : '上架'}}
+                        </el-button>
+                        <el-button class="text-danger" type="text" size="small" @click="_deletePerson(scope.row.id)">删除</el-button>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -346,4 +348,9 @@
     };
 </script>
 <style scoped lang="less">
+.btn-wrapper .el-button {
+    &:nth-of-type(2n + 1) {
+        margin-left: 10px;
+    }
+}
 </style>
