@@ -3,9 +3,10 @@
     <div class="ab-center win-live">
         <img src="~assets/img/live_win.png">
         <span>点击设置 / 查看</span>
-        <label>直播频道
-            {{liveChannelList[0] && liveChannelList[0].liveChannel ?
-            liveChannelList[0].liveChannel.name : ''}}
+        <label>{{liveChannelList[0] && liveChannelList[0].channel ?
+            (liveChannelList[0].channel.category === 'LIVE' ? '直播' : '轮播') : ''}}频道
+            {{liveChannelList[0] && liveChannelList[0].channel ?
+            liveChannelList[0].channel.innerName : '未设置'}}
         </label>
     </div>
 </template>
@@ -15,15 +16,36 @@
     export default {
         name: 'WinLiveChannel',
         props: {
-            liveChannelList: {
-                type: Array,
-                default: function () {
-                    return [];
-                }
+            navBarId: {
+                type: String,
+                default: ''
+            }
+        },
+        watch: {
+            '$route'(to, from) {
+                this.init();
             }
         },
         data() {
-            return {};
+            return {
+                liveChannelList: []
+            };
+        },
+        mounted() {
+            this.init();
+        },
+        methods: {
+            init() {
+                this.$service.getChannelLayout({
+                    navBarId: this.navBarId,
+                    pageNum: 0,
+                    pageSize: 10
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.liveChannelList = response.data.list;
+                    }
+                });
+            }
         }
     };
 </script>

@@ -388,8 +388,11 @@
         .svg-box {
             height: 26px !important;
             width: 26px !important;
-            fill: $baseBlue;
+            fill: $lightBlue;
             cursor: pointer;
+            &:hover {
+                fill: $baseBlue;
+            }
         }
     }
 

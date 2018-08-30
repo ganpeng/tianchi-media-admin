@@ -81,7 +81,7 @@
         flex-direction: column;
         right: 0px;
         top: 64px;
-        bottom: 64px;
+        bottom: 0px;
         width: 300px;
         background: rgba(240, 242, 245, 0.95);
         text-align: center;

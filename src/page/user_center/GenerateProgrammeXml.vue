@@ -165,7 +165,17 @@
                         };
                         // 设置下一个节目的开始时间
                         time = this.setNextProgrammeBeginTime(time, randomVideoArray[i - len].duration);
+                        let array = [];
+                        array = time.split('');
+                        if (parseInt(time.charAt(5)) === 9) {
+                            array[5] = '0';
+                            array[4] = '1';
+                        } else {
+                            array[5] = parseInt(time.charAt(5)) + 1;
+                        }
+                        time = array.toString().replace(/,/g, '');
                         /** 设置节目视频循环，直到时间到达第八天超出，不在设置 */
+                        console.log('当前时间：' + time);
                         if (parseInt(time) > parseInt(this.finalTime)) {
                             pushEvent = false;
                             break;
@@ -250,16 +260,26 @@
                 }
             },
             setNextProgrammeBeginTime(preBeginTime, preDuration) {
+                console.log('preBeginTime1:' + preBeginTime);
+                console.log('preDuration:' + preDuration);
                 // 换成秒数
                 let array = [];
                 array = preBeginTime.split('');
-                array[5] = parseInt(preBeginTime.charAt(5)) + 1;
+                // if (parseInt(preBeginTime.charAt(5)) === 9) {
+                //     array[5] = '0';
+                //     array[4] = '1';
+                // } else {
+                //     array[5] = parseInt(preBeginTime.charAt(5)) + 1;
+                // }
                 preBeginTime = array.toString().replace(/,/g, '');
+                console.log('preBeginTime2:' + preBeginTime);
                 let day = preBeginTime.substring(0, 4) + '-' + preBeginTime.substring(4, 6) + '-' + preBeginTime.substring(6, 8) + 'T' + preBeginTime.substring(8, 10) + ':' + preBeginTime.substring(10, 12) + ':' + preBeginTime.substring(12, 14);
+                console.log('day2:' + day);
                 let preDate = new Date(day);
                 let preDurationSeconds = preDuration.substring(0, 2) * 60 * 60 * 1000 + preDuration.substring(2, 4) * 60 * 1000 + preDuration.substring(4, 6) * 1000;
                 let nextSeconds = preDate.getTime() + preDurationSeconds;
                 let nextDate = new Date(nextSeconds);
+                console.log('nextDate2:' + nextDate);
                 return this.formDateToString(nextDate);
             },
             formatStringToDate(stringDate) {

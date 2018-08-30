@@ -79,7 +79,7 @@
                     </div>
                 </el-form-item>
             </template>
-            <el-form-item class="operate">
+            <div class="operate">
                 <el-button type="primary" @click="operateSubject" class="page-main-btn">
                     {{this.status === '0' || this.status === '1' ? '创建' : '保存'}}
                 </el-button>
@@ -91,7 +91,7 @@
                     重置
                 </el-button>
                 <el-button @click="toSubjectList" class="page-main-btn">返回列表页</el-button>
-            </el-form-item>
+            </div>
         </el-form>
         <preview-multiple-images
             :previewMultipleImages="previewImage">

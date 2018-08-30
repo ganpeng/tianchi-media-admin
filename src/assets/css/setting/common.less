@@ -393,8 +393,11 @@ li {
         color: #f56c6c;
     }
     &:hover, &:focus {
-        background-color: #fef0f0;
+        background-color: #F56C6C;
         border: 1px solid #fbc4c4;
+        * {
+            color: #fff;
+        }
     }
     &.is-disabled {
         background-color: transparent;
@@ -699,10 +702,17 @@ li {
     }
     // 弹窗title剧中
     .el-dialog__header {
+        text-align: center;
         .el-dialog__title {
             margin-right: 10px;
             display: inline-block;
         }
-        text-align: center;
+    }
+}
+
+// 侧边导航栏的收起右侧弹出导航，二级菜单样式
+.el-menu--popup {
+    li {
+        font-size: 18px;
     }
 }

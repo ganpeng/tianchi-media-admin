@@ -116,7 +116,7 @@
             <el-submenu index="8">
                 <template slot="title">
                     <svg-icon
-                        icon-class="version_manage"
+                        icon-class="device_manage"
                         class-name="svg-box">
                     </svg-icon>
                     <span>设备管理</span>
@@ -274,6 +274,10 @@
                 * {
                     font-size: 20px;
                     color: #B8C7CE;
+                }
+                i {
+                    font-size: 12px;
+                    margin-top: -6px;
                 }
             }
             .svg-box {

@@ -98,7 +98,7 @@
     .el-footer {
         position: relative;
         padding: 0px;
-        z-index: 2000;
+        z-index: 800;
     }
 
     .main-view {

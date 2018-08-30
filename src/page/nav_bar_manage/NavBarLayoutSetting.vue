@@ -27,8 +27,7 @@
                     :class="'live-channel settable ' + (navBarSignCode === 'RECOMMEND' || navBarSignCode === 'LIVE_CHANNEL' ? 'small' : 'big')"
                     @click="setViewChannel">
                     <win-live-channel
-                        :navBarSignCode="navBarSignCode"
-                        :liveChannelList="liveChannelList">
+                        :navBarId="navBarId">
                     </win-live-channel>
                 </div>
                 <!--首屏右上侧位置-->
@@ -171,6 +170,7 @@
         },
         methods: {
             init() {
+                this.sortSlideVisible = false;
                 this.modified = this.$store.getters['layout/getCurrentLayoutStatus']({
                     navBarSignCode: this.navBarSignCode
                 });
