@@ -91,6 +91,7 @@
                         this.channelAllList.map(channel => {
                             let simpleChannel = {
                                 id: channel.id,
+                                innerName: channel.innerName,
                                 no: channel.no,
                                 multicastIp: channel.multicastIp,
                                 multicastPort: channel.multicastPort,
@@ -155,16 +156,6 @@
                     return;
                 }
                 this.updateDisabled = true;
-                // 对每一项进行设置
-                for (let i = 0; i < this.channelList.length; i++) {
-                    this.typeOptions.map(type => {
-                        if (type.name === this.channelList[i].type) {
-                            this.channelList[i].typeList = [type];
-                        }
-                    });
-                    this.channelList[i].category = 'CAROUSEL';
-                    this.channelList[i].visible = false;
-                }
                 this.$message('当前有' + this.channelList.length + '个轮播频道,大约需要' + this.channelList.length + '秒,请耐心等待');
                 // 依次修改轮播频道
                 for (let i = 0; i < this.channelList.length; i++) {
@@ -177,6 +168,28 @@
                 }
             },
             updateSingleChannel(index) {
+                let channelInfo = JSON.parse(JSON.stringify(this.channelList[index]));
+                delete channelInfo.id;
+                delete channelInfo.innerName;
+                this.$service.updateChannelPartInfoById({
+                    id: this.channelList[index].id,
+                    putChannelReq: channelInfo
+                }).then(response => {
+                    this.finishNo++;
+                    if (response && response.code === 0) {
+                        this.channelList[index].message = 'OK';
+                        this.$message('修改成功');
+                    } else {
+                        this.failNo++;
+                        this.channelList[index].message = '第' + (index + 1) + '个:频道修改失败：' + response.message;
+                    }
+                    this.tips = '提示：当前一共有' + this.channelList.length + '个轮播频道，已经进行了' + this.finishNo + '个，失败' + this.failNo + '个';
+                    this.$set(this.channelList, index, this.channelList[index]);
+                    if (this.finishNo === this.channelList.length) {
+                        this.updateDisabled = false;
+                        this.$message(this.channelList.length + '个轮播频道的修改完成，请查看对应的信息提示');
+                    }
+                });
             },
             // 验证频道信息
             validateChannel(channel, index) {

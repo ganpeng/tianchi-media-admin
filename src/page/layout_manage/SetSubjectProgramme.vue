@@ -81,9 +81,11 @@
         },
         methods: {
             init() {
-                this.currentState = this.originProgramme;
-                this.coverImage = this.originProgramme.coverImage;
-                this.checkedCornerMarks = this.originProgramme.cornerMark;
+                if (this.originProgramme.coverImage) {
+                    this.currentState = this.originProgramme;
+                    this.coverImage = this.originProgramme.coverImage;
+                    this.checkedCornerMarks = this.originProgramme.cornerMark;
+                }
                 // 初始化设置当前节目列表,设置选中以及当前编辑的节目
                 this.subjectLayoutItemList.map(list => {
                     list.map(layoutItem => {
@@ -108,6 +110,8 @@
             setProgramme(programme) {
                 this.programme = programme;
                 this.currentState = {};
+                this.coverImage = {};
+                this.checkedCornerMarks = {};
             },
             setCoverImage(coverImage) {
                 this.coverImage = coverImage;

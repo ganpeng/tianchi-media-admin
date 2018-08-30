@@ -37,17 +37,24 @@ export const getChannelCount = (id) => {
 };
 
 /**
- * 批量新增直播频道
+ * 批量新增频道
  */
 export const createChannels = (channelList) => {
     return service.post('/v1/live/channel', channelList);
 };
 
 /**
- * 根据id修改直播频道
+ * 根据id全量修改频道
  */
 export const updateChannelById = (id, channel) => {
     return service.put(`/v1/live/channel/${id}`, channel);
+};
+
+/**
+ * 根据id部分修改频道
+ */
+export const updateChannelPartInfoById = ({id, putChannelReq}) => {
+    return service.patch(`/v1/live/channel/${id}`, putChannelReq);
 };
 
 /**

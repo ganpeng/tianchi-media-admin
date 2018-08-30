@@ -9,6 +9,7 @@
             style="width: 100%">
             <el-table-column
                 width="55px"
+                align="center"
                 label="选择">
                 <template slot-scope="scope">
                     <el-radio
@@ -20,6 +21,7 @@
             </el-table-column>
             <el-table-column
                 width="60px"
+                align="center"
                 label="编号">
                 <template slot-scope="scope">
                     <label>{{scope.$index + 1}}</label>
@@ -27,10 +29,12 @@
             </el-table-column>
             <el-table-column
                 prop="name"
+                align="center"
                 label="节目名称">
             </el-table-column>
             <el-table-column
-                label="主演">
+                align="center"
+                label="演员">
                 <template slot-scope="scope">
                     <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
                 </template>
@@ -43,7 +47,7 @@
 
     export default {
         name: 'SetSubjectProgrammeFirst',
-        props: ['programmeList'],
+        props: ['programmeList', 'currentState'],
         data() {
             return {
                 singleProgramme: {}

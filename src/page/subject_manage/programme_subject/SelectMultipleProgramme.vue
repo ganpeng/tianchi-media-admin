@@ -20,21 +20,21 @@
                 align="center"
                 width="120px"
                 prop="code"
-                label="编号">
+                label="节目编号">
                 <template slot-scope="scope">
                     <label>{{scope.row.code}}</label>
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
-                width="126px"
+                min-width="100px"
                 prop="name"
-                label="名称">
+                label="节目名称">
             </el-table-column>
             <el-table-column
                 align="center"
-                width="120px"
-                label="图片">
+                width="100px"
+                label="节目图片">
                 <template slot-scope="scope">
                     <img :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl"
                          :alt="scope.row.coverImage.name"
@@ -44,12 +44,12 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                width="88px"
+                width="80px"
                 prop="featureVideoCount"
                 label="正片数量">
             </el-table-column>
             <el-table-column
-                width="128px"
+                width="100px"
                 align="center"
                 prop="announceAt"
                 label="上映时间">
@@ -59,16 +59,17 @@
                 </template>
             </el-table-column>
             <el-table-column
-                width="200px"
+                min-width="150px"
                 align="center"
                 prop="produceAreaList"
                 label="地区">
                 <template slot-scope="scope">
-                    {{scope.row.produceAreaList.length !== 0 ? areaLabel(scope.row.produceAreaList) : '------'}}
+                    {{(scope.row.produceAreaList && scope.row.produceAreaList.length !== 0) ?
+                    areaLabel(scope.row.produceAreaList) : '------'}}
                 </template>
             </el-table-column>
             <el-table-column
-                width="140px"
+                width="100px"
                 align="center"
                 label="分类">
                 <template slot-scope="scope">
@@ -78,6 +79,7 @@
             <el-table-column
                 prop="typeList"
                 align="center"
+                min-width="100px"
                 label="类型">
                 <template slot-scope="scope">
                     {{scope.row.typeList | jsonJoin('name')}}
@@ -85,6 +87,7 @@
             </el-table-column>
             <el-table-column
                 align="center"
+                min-width="100px"
                 label="演员">
                 <template slot-scope="scope">
                     <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
@@ -93,14 +96,15 @@
             <el-table-column
                 align="center"
                 prop="visible"
+                min-width="100px"
                 label="状态">
                 <template slot-scope="scope">
-                    <i class="status-normal" v-if="scope.row.visible">已上架</i>
-                    <i class="status-abnormal" v-else>已下架</i>
+                    {{scope.row.visible ? '已上架' :'已下架'}}
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
+                min-width="100px"
                 label="更新时间">
                 <template slot-scope="scope">
                     {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
@@ -244,18 +248,8 @@
 
     .el-table {
         img {
-            width: 100px;
-            height: 145px;
-        }
-        .el-icon-success {
-            margin-right: 5px;
-            color: #409EFF;
-            visibility: hidden;
-        }
-        .current-row {
-            .el-icon-success {
-                visibility: visible;
-            }
+            width: 70px;
+            height: auto;
         }
     }
 
