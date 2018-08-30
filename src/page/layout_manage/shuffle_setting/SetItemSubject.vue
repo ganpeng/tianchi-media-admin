@@ -14,6 +14,7 @@
                 mode="PROGRAMME"
                 :imageSpec="imageSpec"
                 :originState="currentState"
+                :backgroundFilter=true
                 v-on:setSubject="setSubject"
                 v-on:resetSubjectInfo='resetSubjectInfo'
                 v-on:setCoverImage="setCoverImage">

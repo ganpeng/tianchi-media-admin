@@ -36,9 +36,8 @@
                     v-model="subjectInfo.tagList"
                     multiple
                     filterable
-                    allow-create
-                    default-first-option
-                    placeholder="请选择或填写专题标签">
+                    clearable
+                    placeholder="请选择专题标签">
                     <el-option
                         v-for="item in tagOptions"
                         :key="item"
@@ -46,6 +45,14 @@
                         :value="item">
                     </el-option>
                 </el-select>
+                <el-button
+                    type="primary"
+                    plain
+                    class="page-main-btn"
+                    icon="el-icon-plus"
+                    @click="addSubjectTag">
+                    添加标签
+                </el-button>
             </el-form-item>
             <!--只有节目专题有封面图片-->
             <template v-if="status === '0' || status === '2'">
@@ -249,6 +256,36 @@
             popUploadImage(mode) {
                 this.uploadImageMode = mode;
                 this.imageUploadDialogVisible = true;
+            },
+            // 添加专题的标签
+            addSubjectTag() {
+                this.$prompt('请输入专题标签', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /\S/,
+                    inputErrorMessage: '专题标签不能为空'
+                }).then(({value}) => {
+                    let sign = true;
+                    this.tagOptions.map(tag => {
+                        if (tag === value) {
+                            sign = false;
+                        }
+                    });
+                    if (sign) {
+                        this.tagOptions.push(value);
+                        this.$message.success(value + '标签已添加');
+                    } else {
+                        this.$message({
+                            type: 'warning',
+                            message: value + '标签重复'
+                        });
+                    }
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消添加'
+                    });
+                });
             },
             // 添加图片
             addPosterImage(newPosterImage) {

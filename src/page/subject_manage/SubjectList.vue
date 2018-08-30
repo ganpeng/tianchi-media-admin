@@ -110,7 +110,7 @@
             <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                :current-page="listQueryParams.currentPage"
+                :current-page="listQueryParams.pageNum"
                 :page-sizes="[10, 20, 30, 50]"
                 :page-size="listQueryParams.pageSize"
                 layout="total, sizes, prev, pager, next, jumper"

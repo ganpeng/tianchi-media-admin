@@ -12,6 +12,7 @@
             <select-single-subject
                 v-show="mode === 'NORMAL'"
                 ref="selectSingleSubject"
+                :backgroundFilter=true
                 v-on:resetSubjectInfo="resetSubjectInfo"
                 v-on:setSubject="setSubject">
             </select-single-subject>

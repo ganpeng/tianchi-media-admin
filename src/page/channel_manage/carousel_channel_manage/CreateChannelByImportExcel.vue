@@ -96,15 +96,47 @@
                 let newWsName = '表1';
                 /* make worksheet */
                 let wsData = [{
-                    innerName: '香港电影',
-                    no: 1001,
-                    type: '电影',
-                    multicastIp: '238.1.238.1',
-                    multicastPort: '3001',
-                    tsId: '10001',
-                    serviceId: '10001',
-                    pushServer: '10.1.1.101',
-                    logoUri: '/group1/M00/01/4E/CgEBIVtIS4aAGkD6AAB24nYcJBk201.png'
+                    innerName: '频道名称（20字以内）\n（必填）',
+                    no: '频道编号\n' +
+                    '（必填）',
+                    type: '频道类别（请确保类别已建好）\n' +
+                    '（必填）',
+                    multicastIp: '组播地址\n' +
+                    '（必填）',
+                    multicastPort: '组播端口\n' +
+                    '（必填）',
+                    tsId: 'tsid',
+                    serviceId: 'serviceId',
+                    pushServer: '所属服务器\n' +
+                    '（必填）',
+                    logoUri: '频道封面链接\n' +
+                    ' 240*134' +
+                    '（必填）\n',
+                    '备注说明': '1 封面图片不为空即可，可以等频道建好后补充；\n' +
+                    '2 导入或新建的频道默认为禁播状态；\n' +
+                    '3 导入时请先删除该文本示例数据。'
+                }, {
+                    innerName: '新片速递',
+                    no: '814',
+                    type: '体育',
+                    multicastIp: '232.1.1.2',
+                    multicastPort: '1234',
+                    tsId: '202',
+                    serviceId: '2002',
+                    pushServer: '192.168.0.2',
+                    logoUri: '/image',
+                    '备注说明': ''
+                }, {
+                    innerName: '射雕英雄传剧场',
+                    no: '813',
+                    type: '娱乐',
+                    multicastIp: '232.1.1.3',
+                    multicastPort: '1234',
+                    tsId: '203',
+                    serviceId: '2003',
+                    pushServer: '192.168.0.3',
+                    logoUri: '/image',
+                    '备注说明': ''
                 }];
                 let ws = XLSX.utils.json_to_sheet(wsData);
                 /* Add the worksheet to the workbook */

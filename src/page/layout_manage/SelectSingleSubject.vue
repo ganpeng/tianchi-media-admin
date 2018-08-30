@@ -97,7 +97,16 @@
     export default {
         name: 'SelectSingleSubject',
         // mode:The category of subject, such as 'PROGRAMME' & 'FIGURE'
-        props: ['mode'],
+        props: {
+            mode: {
+                type: String,
+                default: ''
+            },
+            backgroundFilter: {
+                type: Boolean,
+                default: false
+            }
+        },
         components: {
             SubjectFilterParams
         },
@@ -173,6 +182,11 @@
                         break;
                     case this.mode === 'FIGURE' && row.subjectItemList.length < 7:
                         message = '该专题中没有人物数量少于7个，不可选择';
+                        break;
+                    case this.backgroundFilter === true && !row.backgroundImage:
+                        message = '该专题缺少背景图，请先前往“专题管理“编辑该专题';
+                        break;
+                    default:
                         break;
                 }
                 if (message) {
