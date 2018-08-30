@@ -392,7 +392,7 @@
                         </svg-icon>
                         关联视频
                     </el-button>
-                    <el-button class="float-left sort-btn page-main-btn btn-style" v-if="!readonly" type="primary" @click="showSortDialog" plain>点击视频排序</el-button>
+                    <el-button class="float-left sort-btn page-main-btn btn-style" v-if="!readonly && video.list.length > 1" type="primary" @click="showSortDialog" plain>点击视频排序</el-button>
                 </div>
                 <programme-table title="已添加视频列表" :status="status" :data-list="video.list"></programme-table>
             </el-col>
