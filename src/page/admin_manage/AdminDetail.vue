@@ -28,7 +28,7 @@
                 </div>
             </el-col>
         </el-row>
-        <el-button class="page-main-btn page-margin-btn" @click="goBack" plain>返回人物列表</el-button>
+        <el-button class="page-main-btn bak-btn page-margin-btn" @click="goBack" plain>返回人物列表</el-button>
     </div>
 </template>
 
@@ -86,6 +86,10 @@
         // margin: 96px auto 20px auto;
         width: 178px;
         height: 178px;
+    }
+    .bak-btn {
+        position: absolute;
+        bottom: 164px;
     }
 
     #basic-info {

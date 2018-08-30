@@ -64,7 +64,7 @@
                 </thumbnail>
             </el-col>
         </el-row>
-        <el-button @click="goBack" plain>返回人物列表</el-button>
+        <el-button class="bak-btn" @click="goBack" plain>返回人物列表</el-button>
         <preview-multiple-images :previewMultipleImages="previewImage"></preview-multiple-images>
     </div>
 </template>
@@ -135,5 +135,9 @@
 }
 .el-tag {
     border: none;
+}
+.bak-btn {
+    position: absolute;
+    bottom: 164px;
 }
 </style>

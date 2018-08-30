@@ -27,11 +27,6 @@
                         <el-form-item label="电话" prop="telephone">
                             <el-input v-model="editInfo.telephone" placeholder="请填写电话号码"></el-input>
                         </el-form-item>
-                        <el-form-item class="operate-item">
-                            <el-button class="page-main-btn" type="primary" @click="updateAdminInfo">保存</el-button>
-                            <el-button class="page-main-btn" type="primary" plain @click="reset">重置</el-button>
-                            <el-button class="page-main-btn" @click="toAdminList">返回列表页</el-button>
-                        </el-form-item>
                     </el-form>
                 </div>
             </el-col>
@@ -50,6 +45,10 @@
                 </div>
             </el-col>
         </el-row>
+        <div class="bak-btn">
+            <el-button class="page-main-btn" type="primary" @click="updateAdminInfo">保存</el-button>
+            <el-button class="page-main-btn" @click="toAdminList">返回列表页</el-button>
+        </div>
     </div>
 </template>
 
@@ -185,12 +184,12 @@
 </script>
 
 <style lang="less" scoped>
-
-    .operate-item {
-        text-align: center;
-        margin-top: 100px;
+    .bak-btn {
+        position: absolute;
+        bottom: 164px;
+        left: 50%;
+        transform: translateX(-50%);
     }
-
     .avatar-uploader i {
         margin-bottom: 20px;
         margin-top: 70px;

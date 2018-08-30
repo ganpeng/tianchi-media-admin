@@ -24,9 +24,6 @@
                         <el-form-item label="手机" prop="mobile" required>
                             <el-input v-model="createInfo.mobile" placeholder="请填写手机号码"></el-input>
                         </el-form-item>
-                        <el-form-item class="operate">
-                            <el-button class="page-main-btn page-margin-btn" type="primary" @click="createAdmin">创 建</el-button>
-                        </el-form-item>
                     </el-form>
                 </div>
             </el-col>
@@ -45,6 +42,7 @@
                 </div>
             </el-col>
         </el-row>
+        <el-button class="bak-btn page-main-btn" type="primary" @click="createAdmin">创 建</el-button>
     </div>
 </template>
 
@@ -155,7 +153,12 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-
+    .bak-btn {
+        position: absolute;
+        bottom: 164px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
     .el-row {
         margin-top: 50px;
     }
