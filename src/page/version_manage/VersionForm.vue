@@ -126,7 +126,7 @@ export default {
                 fullPackageUri: [{required: true, message: '请上传升级包'}]
             },
             fileList: [],
-            accept: '',
+            accept: '.apk, .zip',
             actionUrl: '',
             productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
             forcedOptions: role.FORCED_OPTIONS,
@@ -149,19 +149,8 @@ export default {
         }),
         inputHandler(value, key) {
             this.updateVersion({key, value});
-            if (key === 'productType') {
-                if (value === 'TV_LAUNCHER') {
-                    this.accept = '.apk';
-                } else if (value === 'TV_ROM_3798') {
-                    this.accept = '.zip';
-                } else {
-                    this.accept = '';
-                }
-            }
         },
-        uploadChangeHandler() {
-            // this.$refs.uploadItem.resetField();
-        },
+        uploadChangeHandler() {},
         submitUpload() {
             this.$refs.versionUpload.submit();
         },

@@ -29,10 +29,10 @@
                 </el-form-item>
                 <el-form-item class="search">
                     <el-select
-                        :value="searchFields.hardwareType"
+                        :value="searchFields.hardWareId"
                         placeholder="请选择设备类型"
                         clearable
-                        @input="inputSearchFieldHandler($event, 'hardwareType')"
+                        @input="inputSearchFieldHandler($event, 'hardWareId')"
                     >
                         <el-option
                             v-for="(item, index) in hardwareTypeOptions"
@@ -109,20 +109,20 @@
             :close-on-press-escape="false">
             <el-form :model="device" :rules="deviceRules" ref="deviceForm" class="form-block" label-width="100px">
 
-                <el-form-item label="CA卡号" prop="caNo">
+                <el-form-item label="CA卡号" prop="caCardNo">
                     <el-input
-                        :value="device.caNo"
+                        :value="device.caCardNo"
                         clearable
                         placeholder="请输入设备CA卡号"
-                        @input="inputHandler($event, 'caNo')"
+                        @input="inputHandler($event, 'caCardNo')"
                     ></el-input>
                 </el-form-item>
-                <el-form-item label="设备类型" prop="hardwareType">
+                <el-form-item label="设备类型" prop="hardWareId">
                     <el-select
-                        :value="device.hardwareType"
+                        :value="device.hardWareId"
                         clearable
                         placeholder="请选择内容类型"
-                        @input="inputHandler($event, 'hardwareType')"
+                        @input="inputHandler($event, 'hardWareId')"
                     >
                         <el-option
                             v-for="item in hardwareTypeOptions"
@@ -133,7 +133,8 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="设备状态">
-                    <span v-html="getStatus(device.visible)"></span>
+                    <i v-if="status === 0" class="status-normal">正常</i>
+                    <span v-else v-html="getStatus(device.status)"></span>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -152,6 +153,7 @@
         data() {
             return {
                 value6: [],
+                status: 0, // 0 是创建，1 是编辑
                 deviceDialogVisible: false,
                 hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS,
                 dialogTitle: '',
@@ -159,11 +161,11 @@
                     {value: true, name: '正常'}, {value: false, name: '禁用'}
                 ],
                 deviceRules: {
-                    caNo: [
+                    caCardNo: [
                         { required: true, message: '请输入设备CA卡号' }
                         // { validator: requiredValidator('请选择区域') }
                     ],
-                    hardwareType: [
+                    hardWareId: [
                         { required: true, message: '请选择设备类型' }
                     ]
                 }
@@ -198,7 +200,9 @@
                 updateDevice: 'device/updateDevice',
                 resetDevice: 'device/resetDevice'
             }),
-            ...mapActions({}),
+            ...mapActions({
+                addDevice: 'device/addDevice'
+            }),
             clearSearchFields() {},
             keyupHandler(e) {
                 if (e.keyCode === 13) {}
@@ -225,7 +229,17 @@
                 this.resetDevice();
             },
             addDeviceEnterHandler() {
-
+                this.$refs.deviceForm.validate(valid => {
+                    if (valid) {
+                        this.addDevice()
+                            .then((res) => {
+                                if (res && res.code === 0) {
+                                    this.hideDeviceDialog();
+                                    this.$message.success('设备添加成功');
+                                }
+                            });
+                    }
+                });
             }
         }
     };

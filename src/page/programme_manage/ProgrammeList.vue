@@ -227,7 +227,8 @@
             title="上传节目表格"
             :visible.sync="fileUploadDialogVisible"
             :headers="uploadHeaders"
-            :show-close="false"
+            :show-close="true"
+            :before-close="closeFileUploadDialog"
             :close-on-click-modal="false"
             :close-on-press-escape="false">
             <el-upload

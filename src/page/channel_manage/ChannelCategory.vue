@@ -166,7 +166,7 @@ export default {
 <style lang="less" scoped>
 .save-btn {
     position:absolute;
-    bottom: 86px;
+    bottom: 164px;
     left: 50%;
     transform: translateX(-50%);
 }

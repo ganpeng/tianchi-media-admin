@@ -120,6 +120,7 @@
                         }).then(response => {
                             if (response) {
                                 this.$message(response.data.name + '的账号创建成功');
+                                this.$router.push({name: 'AdminList'});
                             }
                         });
                     } else {

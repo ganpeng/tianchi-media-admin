@@ -2,17 +2,20 @@
     <div v-if="uploadState.files.length > 0" class="upload-video-container">
         <div v-if="uploadState.min" class="min-container">
             <span class="upload-status">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{currentFileName}}</span>
-            <div class="btn-wrapper float-right">
+            <div class="btn-wrapper-min float-right">
                 <span @click="toggleWindow(false)"><svg-icon class-name="max-min pointer" icon-class="max_larger"></svg-icon></span>
                 <span>
-                    <i @click="resetFiles" class="delete-btn el-icon-close pointer"></i>
+                    <i @click="resetFiles" class="close-btn el-icon-close pointer"></i>
                 </span>
             </div>
         </div>
         <div v-else class="max-container upload-wrapper">
             <div class="upload-file">
                 <el-dropdown class="float-left">
-                    <el-button class="upload-btn" size="small" icon="el-icon-upload2" type="primary" plain>
+                    <el-button
+                        class="page-main-btn create-blue-btn contain-svg-icon"
+                        >
+                        <svg-icon icon-class="upload"></svg-icon>
                         上传视频<i class="el-icon-arrow-down el-icon--right"></i>
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
@@ -30,10 +33,10 @@
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <div class="float-right">
+                <div class="btn-wrapper-max float-right">
                     <span @click="toggleWindow(true)"><svg-icon class-name="max-min pointer" icon-class="min_smaller"></svg-icon></span>
                     <span>
-                        <i @click="resetFiles" class="delete-btn el-icon-close pointer"></i>
+                        <i @click="resetFiles" class="close-btn el-icon-close pointer"></i>
                     </span>
                 </div>
             </div>
@@ -575,9 +578,28 @@ export default {
         background-color: transparent;
     }
 }
+.close-btn {
+    color: #D8D8D8;
+    font-size: 18px;
+    margin-left: 6px;
+    &:hover {
+        color: #F56C6C;
+    }
+}
+
 .max-min {
+    fill: #D8D8D8;
     &:hover {
         fill:#1989FA;
     }
+}
+.btn-wrapper-max {
+    height: 38px;
+    line-height: 38px;
+}
+
+.btn-wrapper-min {
+    height: 60px;
+    line-height: 60px;
 }
 </style>

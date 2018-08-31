@@ -33,7 +33,8 @@
         <el-dialog
             title="添加推荐人物"
             :visible.sync="hotPersonDialog"
-            :show-close="false"
+            :show-close="true"
+            :before-close="closeHotPersonDialog"
             :close-on-click-modal="false"
             :close-on-press-escape="false">
                 <div class="wrapper">

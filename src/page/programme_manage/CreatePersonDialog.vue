@@ -3,7 +3,8 @@
     <el-dialog
         title="新增人物"
         :visible.sync="createPersonDialogVisible"
-        :show-close="false"
+        :show-close="true"
+        :before-close="beforeCloseHandler"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
         append-to-body>
@@ -45,6 +46,9 @@ export default {
         ...mapActions({
             createPerson: 'person/createPerson'
         }),
+        beforeCloseHandler() {
+            this.cancelHandler();
+        },
         _createPerson() {
             const personForm = this.$refs.personForm.$refs['createPerson'];
             personForm.validate(valid => {

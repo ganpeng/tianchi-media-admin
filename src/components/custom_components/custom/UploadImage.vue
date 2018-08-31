@@ -3,7 +3,8 @@
     <el-dialog
         :title="title"
         :visible.sync="imageUploadDialogVisible"
-        :show-close="false"
+        :show-close="true"
+        :before-close="beforeCloseHandler"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
         append-to-body>
@@ -123,6 +124,9 @@
             ...mapMutations({
                 addPosterImage: 'person/addPosterImage'
             }),
+            beforeCloseHandler() {
+                this.cancelHandler();
+            },
             fileChangeHandler(file, fileList) {
                 this.form.file = file;
                 this.form.size = file.size;

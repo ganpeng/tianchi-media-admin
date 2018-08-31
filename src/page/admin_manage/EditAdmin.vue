@@ -149,6 +149,7 @@
                         }).then(response => {
                             if (response) {
                                 this.$message(response.data.name + '的账号更新成功');
+                                this.$router.push({name: 'AdminList'});
                             }
                         });
                     } else {

@@ -3,7 +3,8 @@
     <el-dialog
         :title="title"
         :visible.sync="liveChannelDialogVisible"
-        :show-close="false"
+        :show-close="true"
+        :before-close="cancelHandler"
         :close-on-click-modal="false"
         :close-on-press-escape="false">
         <el-form :model="liveChannel" :rules="inputRules" ref="liveChannelForm" @submit.native.prevent class="form-block" label-width="150px">

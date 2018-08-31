@@ -3,7 +3,8 @@
     <el-dialog
         :title="title"
         :visible.sync="videoUploadDialogVisible"
-        :show-close="false"
+        :show-close="true"
+        :before-close="beforeCloseHandler"
         :close-on-click-modal="false"
         :close-on-press-escape="false">
         <!-- 选择视频的表格 -->
@@ -11,7 +12,8 @@
             title="选择视频"
             width="80%"
             :visible.sync="selectVideoDialogVisible"
-            :show-close="false"
+            :show-close="true"
+            :before-close="closeSelectVideoDialog"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
             :append-to-body="true">
@@ -295,6 +297,9 @@
                 getVideoList: 'video/getVideoList',
                 getFeatureVideoList: 'programme/getFeatureVideoList'
             }),
+            beforeCloseHandler() {
+                this.cancelHandler();
+            },
             keyupHandler(e) {
                 if (e.keyCode === 13) {
                     this.getVideoList();

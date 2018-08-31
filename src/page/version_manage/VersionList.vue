@@ -140,7 +140,8 @@
         <el-dialog
             :title="title"
             :visible.sync="versonFormDialogStatus"
-            :show-close="false"
+            :show-close="true"
+            :before-close="closeVersionFormDialog"
             :close-on-click-modal="false"
             :close-on-press-escape="false">
                 <version-form v-if="!display" ref="versionForm"></version-form>

@@ -1,9 +1,10 @@
 import _ from 'lodash';
+import service from '../../../service';
 // let isLoading = false; // 解决重复调用列表接口的问题
 const defaultSearchFields = {
     keyword: '',
-    hardwareType: '',
-    visible: ''
+    hardWareId: '',
+    status: ''
 };
 
 const defaultPagination = {
@@ -13,9 +14,8 @@ const defaultPagination = {
 };
 
 const defaultDevice = {
-    caNo: '',
-    hardwareType: '',
-    visible: true
+    caCardNo: '',
+    hardWareId: ''
 };
 
 const state = {
@@ -83,6 +83,13 @@ const mutations = {
 
 const actions = {
     async getDeviceList({commit, state}) {
+    },
+    async addDevice({commit, state}) {
+        try {
+            let device = _.cloneDeep(state.device);
+            let res = await service.addDevice(device);
+            return res;
+        } catch (err) { }
     }
 };
 
