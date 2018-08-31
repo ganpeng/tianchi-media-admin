@@ -39,10 +39,10 @@
                 <el-button type="primary" plain @click="switchVideo">更换视频</el-button>
             </div>
         </template>
-        <div class="step-button">
+        <div class="step-button text-right">
             <el-button @click="previous" v-if="activeStep > 0">上一步</el-button>
             <el-button @click="next" v-if="activeStep < 2">下一步</el-button>
-            <el-button @click="complete" v-if="activeStep === 2">完成</el-button>
+            <el-button @click="complete" v-if="activeStep === 2">完 成</el-button>
         </div>
     </div>
 </template>
@@ -235,6 +235,6 @@
 <style lang="scss" scoped>
 
     .step-button {
-        margin: 50px 0px 80px 0px;
+        margin-top: 50px;
     }
 </style>

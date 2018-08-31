@@ -18,7 +18,9 @@
                 添加图片
             </el-button>
         </div>
-        <el-button type="primary" @click="complete" class="page-main-btn">确 定</el-button>
+        <div class="text-right">
+            <el-button type="primary" @click="complete">确 定</el-button>
+        </div>
         <upload-image
             :size='size'
             title="上传网页封面图片"

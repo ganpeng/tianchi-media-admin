@@ -36,8 +36,8 @@
                 </el-button>
             </div>
             <div slot="footer" class="dialog-footer">
-                <el-button class="page-vice-btn" @click="customCornerMarkVisible = false">取 消</el-button>
-                <el-button class="page-vice-btn" type="primary" @click="setCustomImageUri">确 定</el-button>
+                <el-button @click="customCornerMarkVisible = false">取 消</el-button>
+                <el-button type="primary" @click="setCustomImageUri">确 定</el-button>
             </div>
         </el-dialog>
         <upload-image

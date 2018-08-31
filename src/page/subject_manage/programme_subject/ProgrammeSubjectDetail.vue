@@ -39,7 +39,7 @@
                         label="名称">
                     </el-table-column>
                     <el-table-column
-                        width="160px"
+                        width="100px"
                         align="center"
                         label="图片">
                         <template slot-scope="scope">
@@ -126,8 +126,7 @@
             width: 967px;
         }
         img {
-            width: 100px;
-            height: 145px;
+            width: 70px;
         }
     }
 

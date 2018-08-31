@@ -54,10 +54,10 @@
                 </div>
             </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer">
-               <el-button @click="closeDialog">取 消</el-button>
-               <el-button type="primary" @click="createChannel">确 定</el-button>
-        </span>
+        <div slot="footer" class="dialog-footer text-right">
+            <el-button @click="closeDialog">取 消</el-button>
+            <el-button type="primary" @click="createChannel">确 定</el-button>
+        </div>
         <upload-image
             :size='size'
             title="上传频道封面图片"
@@ -266,7 +266,7 @@
     }
 
     .dialog-footer {
-        margin: 30px 0px;
+        margin-top: 50px;
     }
 
 </style>

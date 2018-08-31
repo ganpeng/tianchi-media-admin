@@ -31,10 +31,10 @@
                 <el-button type="primary" plain @click="switchMode">更换节目</el-button>
             </div>
         </template>
-        <div class="step-button">
+        <div class="step-button text-right">
             <el-button @click="previous" v-if="activeStep > 0">上一步</el-button>
             <el-button @click="next" v-if="activeStep < 3">下一步</el-button>
-            <el-button @click="complete" v-if="activeStep === 3">完成</el-button>
+            <el-button @click="complete" v-if="activeStep === 3">完 成</el-button>
         </div>
     </div>
 </template>
@@ -203,6 +203,6 @@
 <style lang="less" scoped>
 
     .step-button {
-        margin: 50px 0px 80px 0px;
+        margin-top: 50px;
     }
 </style>

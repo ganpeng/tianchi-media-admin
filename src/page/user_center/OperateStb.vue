@@ -38,11 +38,9 @@
                 </el-select>
             </li>
         </ul>
-        <div class="text-right">
-            <span slot="footer" class="dialog-footer">
-               <el-button @click="closeDialog" class="page-vice-btn">取消</el-button>
-               <el-button type="primary" @click="operateStb" class="page-vice-btn">确定</el-button>
-            </span>
+        <div slot="footer" class="dialog-footer text-right">
+            <el-button @click="closeDialog">取 消</el-button>
+            <el-button type="primary" @click="operateStb">确 定</el-button>
         </div>
     </div>
 </template>
@@ -149,7 +147,7 @@
     }
 
     .dialog-footer {
-        margin: 30px 0px;
+        margin-top: 50px;
     }
 
 </style>

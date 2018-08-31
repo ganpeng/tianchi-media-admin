@@ -247,6 +247,7 @@
 <style lang="scss" scoped>
 
     .el-table {
+        margin-top: 0px;
         img {
             width: 70px;
             height: auto;

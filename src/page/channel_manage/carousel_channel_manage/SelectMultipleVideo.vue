@@ -118,10 +118,10 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
         </el-pagination>
-        <span slot="footer" class="dialog-footer">
-              <el-button @click="closeSelectVideoDialog">取 消</el-button>
-              <el-button type="primary" @click="appendVideo">确 定</el-button>
-            </span>
+        <div slot="footer" class="dialog-footer text-right">
+            <el-button @click="closeSelectVideoDialog">取 消</el-button>
+            <el-button type="primary" @click="appendVideo">确 定</el-button>
+        </div>
         <display-video-dialog
             :url="previewVideoInfo.url"
             :title="previewVideoInfo.title"
@@ -313,8 +313,8 @@
         width: 400px;
     }
 
-    .el-pagination {
-        margin-bottom: 30px;
+    .dialog-footer {
+        margin-top: 50px;
     }
 
 </style>

@@ -54,9 +54,9 @@
                         </el-select>
                     </li>
                 </ul>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="setPickCatalogueVisible(false)" size="medium">取 消</el-button>
-                    <el-button type="primary" @click="setCatalogue" size="medium">确 定</el-button>
+                <div slot="footer" class="dialog-footer text-right">
+                    <el-button @click="setPickCatalogueVisible(false)">取 消</el-button>
+                    <el-button type="primary" @click="setCatalogue">确 定</el-button>
                 </div>
             </template>
         </el-dialog>
@@ -390,11 +390,6 @@
         cursor: grab;
         cursor: -moz-grab;
         cursor: -webkit-grab;
-    }
-
-    .el-button {
-        margin-left: 26px;
-        width: 96px;
     }
 
 </style>
