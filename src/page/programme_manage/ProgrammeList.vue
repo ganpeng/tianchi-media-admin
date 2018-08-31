@@ -25,30 +25,36 @@
                     </el-form-item>
                 </el-col>
                 <div>
-                    <el-form-item label="上映开始年">
+                    <el-form-item
+                        label-width="100px" label="上映开始年">
                         <el-date-picker
                             :value="programmeSearchFields.releaseAtStart"
                             type="year"
                             clearable
+                            style="width:180px;"
                             @input="inputHandler($event, 'releaseAtStart')"
                             placeholder="请选择上映时间">
                         </el-date-picker>
                     </el-form-item>
-                    <el-form-item label="上映结束年">
+                    <el-form-item
+                        label-width="100px" label="上映结束年">
                         <el-date-picker
                             :value="programmeSearchFields.releaseAtEnd"
                             type="year"
                             clearable
+                            style="width:180px;"
                             @input="inputHandler($event, 'releaseAtEnd')"
                             placeholder="请选择上映时间">
                         </el-date-picker>
                     </el-form-item>
-                    <el-form-item label="地区">
+                    <el-form-item
+                        label-width="50px" label="地区">
                         <el-select
                             :value="programmeSearchFields.produceAreaList"
                             clearable
                             filterable
                             multiple
+                            style="width:180px;"
                             @change="inputHandler($event, 'produceAreaList')"
                             placeholder="请选择制片地区"
                         >
@@ -60,10 +66,12 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="分类">
+                    <el-form-item
+                        label-width="50px" label="分类">
                         <el-select
                             :value="programmeSearchFields.programmeCategoryIdList"
                             multiple
+                            style="width:180px;"
                             @change="inputHandler($event, 'programmeCategoryIdList')"
                             placeholder="请选择">
                             <el-option
@@ -76,11 +84,13 @@
                     </el-form-item>
                 </div>
                 <div>
-                    <el-form-item class="margin-bottom-0" label="类型">
+                    <el-form-item
+                        label-width="100px" class="margin-bottom-0" label="类型">
                         <el-select
                             :value="programmeSearchFields.programmeTypeIdList"
                             @change="inputHandler($event, 'programmeTypeIdList')"
                             clearable
+                            style="width:180px;"
                             multiple
                             placeholder="请选择">
                             <el-option
@@ -91,11 +101,13 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item class="margin-bottom-0" label="节目状态">
+                    <el-form-item
+                        label-width="100px" class="margin-bottom-0" label="节目状态">
                         <el-select
                             :value="programmeSearchFields.visible"
                             @change="inputHandler($event, 'visible')"
                             clearable
+                            style="width:180px;"
                             placeholder="请选择">
                             <el-option
                                 v-for="item in visibleOptions"
@@ -105,10 +117,12 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item class="margin-bottom-0 search">
+                    <el-form-item
+                        label-width="50px" class="margin-bottom-0 search" label=" ">
                         <el-input
                             :value="programmeSearchFields.keyword"
                             clearable
+                            style="width:180px;"
                             @input="inputHandler($event, 'keyword')"
                             placeholder="搜索你想要的信息">
                             <i slot="prefix" class="el-input__icon el-icon-search"></i>

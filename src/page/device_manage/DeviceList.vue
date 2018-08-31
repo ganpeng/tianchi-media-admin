@@ -19,15 +19,6 @@
             </el-col>
             <el-col :span="24">
                 <el-form-item class="search">
-                    <el-input
-                        :value="searchFields.keyword"
-                        placeholder="请输入关键字"
-                        @input="inputSearchFieldHandler($event, 'keyword')"
-                        clearable>
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
-                </el-form-item>
-                <el-form-item class="search">
                     <el-select
                         :value="searchFields.hardWareId"
                         placeholder="请选择设备类型"
@@ -44,10 +35,10 @@
                 </el-form-item>
                 <el-form-item class="search">
                     <el-select
-                        :value="searchFields.visible"
+                        :value="searchFields.status"
                         placeholder="请选择设备状态"
                         clearable
-                        @input="inputSearchFieldHandler($event, 'visible')"
+                        @input="inputSearchFieldHandler($event, 'status')"
                     >
                         <el-option
                             v-for="(item, index) in visibleOptions"
@@ -66,6 +57,15 @@
                         end-placeholder="结束日期">
                     </el-date-picker>
                 </el-form-item>
+                <el-form-item class="search">
+                    <el-input
+                        :value="searchFields.keyword"
+                        placeholder="请输入关键字"
+                        @input="inputSearchFieldHandler($event, 'no')"
+                        clearable>
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-input>
+                </el-form-item>
                 <el-form-item>
                     <el-button class="page-main-btn" type="primary" icon="el-icon-search" plain>搜索</el-button>
                     <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
@@ -80,10 +80,26 @@
         </el-form>
         <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
             <el-table-column align="center" label="序号"></el-table-column>
-            <el-table-column align="center" label="CA卡号"></el-table-column>
-            <el-table-column align="center" label="设备类型"></el-table-column>
-            <el-table-column align="center" label="创建时间"></el-table-column>
-            <el-table-column  align="center" label="状态"></el-table-column>
+            <el-table-column align="center" label="设备ID">
+                <template slot-scope="scope">
+                    {{scope.row.no | padEmpty}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="设备类型">
+                <template slot-scope="scope">
+                    {{getType(scope.row.hardWareId)}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="创建时间">
+                <template slot-scope="scope">
+                    {{scope.row.registeredAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                </template>
+            </el-table-column>
+            <el-table-column  align="center" label="状态">
+                <template slot-scope="scope">
+                    <span v-html="getStatus(scope.row.status)"></span>
+                </template>
+            </el-table-column>
             <el-table-column align="center" width="300px" fixed="right" label="操作">
                 <template slot-scope="scope">
                     <el-button type="text" size="small">编辑</el-button>
@@ -111,10 +127,10 @@
 
                 <el-form-item label="CA卡号" prop="caCardNo">
                     <el-input
-                        :value="device.caCardNo"
+                        :value="device.no"
                         clearable
                         placeholder="请输入设备CA卡号"
-                        @input="inputHandler($event, 'caCardNo')"
+                        @input="inputHandler($event, 'no')"
                     ></el-input>
                 </el-form-item>
                 <el-form-item label="设备类型" prop="hardWareId">
@@ -158,7 +174,7 @@
                 hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS,
                 dialogTitle: '',
                 visibleOptions: [
-                    {value: true, name: '正常'}, {value: false, name: '禁用'}
+                    {value: 'NORMAL', name: '正常'}, {value: 'FORBIDDEN', name: '禁用'}
                 ],
                 deviceRules: {
                     caCardNo: [
@@ -172,6 +188,7 @@
             };
         },
         created() {
+            this.getDeviceList();
             window.addEventListener('keyup', this.keyupHandler);
         },
         beforeDestroy() {
@@ -184,10 +201,15 @@
                 searchFields: 'device/searchFields',
                 device: 'device/device'
             }),
+            getType() {
+                return (type) => {
+                    return type ? (type === 'HARDWARE_3796' ? '3796' : '3798') : '------';
+                };
+            },
             getStatus() {
-                return (visible) => {
-                    let text = visible ? '正常' : '禁用';
-                    let className = visible ? 'status-normal' : 'status-abnormal';
+                return (status) => {
+                    let text = status === 'NORMAL' ? '正常' : '禁用';
+                    let className = status === 'NORMAL' ? 'status-normal' : 'status-abnormal';
                     return `<i class="${className}">${text}</i>`;
                 };
             }
@@ -201,7 +223,8 @@
                 resetDevice: 'device/resetDevice'
             }),
             ...mapActions({
-                addDevice: 'device/addDevice'
+                addDevice: 'device/addDevice',
+                getDeviceList: 'device/getDeviceList'
             }),
             clearSearchFields() {},
             keyupHandler(e) {

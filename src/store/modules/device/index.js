@@ -2,7 +2,7 @@ import _ from 'lodash';
 import service from '../../../service';
 // let isLoading = false; // 解决重复调用列表接口的问题
 const defaultSearchFields = {
-    keyword: '',
+    no: '',
     hardWareId: '',
     status: ''
 };
@@ -14,7 +14,7 @@ const defaultPagination = {
 };
 
 const defaultDevice = {
-    caCardNo: '',
+    no: '',
     hardWareId: ''
 };
 
@@ -83,6 +83,15 @@ const mutations = {
 
 const actions = {
     async getDeviceList({commit, state}) {
+        try {
+            let params = Object.assign({}, state.pageSize, state.searchFields);
+            let res = await service.getDeviceList(params);
+            if (res && res.code === 0) {
+                let {list, pageNum, pageSize, total} = res.data;
+                commit('setList', {list});
+                commit('setPagination', { pageNum, pageSize, total });
+            }
+        } catch (err) {}
     },
     async addDevice({commit, state}) {
         try {
