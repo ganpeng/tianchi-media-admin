@@ -120,9 +120,8 @@
 
 <style lang="scss" scoped>
 
-    .el-form-item {
-        margin-bottom: 0px;
-        margin-right: 30px;
+    .el-date-picker {
+        width: 700px;
     }
 
 </style>

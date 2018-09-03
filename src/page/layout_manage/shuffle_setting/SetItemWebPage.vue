@@ -33,7 +33,6 @@
 
 <script>
     import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
-    import {PROGRAMME_DIMENSION as webPageDimension} from '@/util/config/dimension';
 
     export default {
         name: 'SetItemWebPage',
@@ -46,7 +45,7 @@
         },
         data() {
             return {
-                size: webPageDimension,
+                size: [],
                 imageUploadDialogVisible: false,
                 webPage: {
                     href: '',
@@ -59,10 +58,18 @@
         },
         methods: {
             init() {
+                this.initImageSize();
                 if (this.originState && this.originState.coverImage) {
                     this.webPage.coverImage = this.originState.coverImage;
                     this.webPage.href = JSON.parse(this.originState.params).href;
                 }
+            },
+            initImageSize() {
+                let spec = this.imageSpec.width + '*' + this.imageSpec.height;
+                this.size.push({
+                    value: spec,
+                    label: '当前尺寸：' + spec
+                });
             },
             appendImagePrefix(uri) {
                 let baseUri = window.localStorage.getItem('imageBaseUri');

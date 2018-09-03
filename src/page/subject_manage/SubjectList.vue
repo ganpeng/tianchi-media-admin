@@ -275,8 +275,12 @@
         top: 10px;
     }
 
+    .el-table {
+        margin-top: 0px;
+    }
+
     .el-pagination {
-        margin-bottom: 126px;
+        margin-bottom: 50px;
     }
 
     #edit-dropdown {

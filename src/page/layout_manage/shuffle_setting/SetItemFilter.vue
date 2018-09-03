@@ -140,7 +140,6 @@
 
 <script>
     import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
-    import {PROGRAMME_DIMENSION as filterDimension} from '@/util/config/dimension';
     import dict from '@/util/config/dictionary';
     import CATALOGUE_CONFIG_MAP from '@/util/config/catalogue';
 
@@ -195,7 +194,7 @@
                 gradeOptions: [],
                 subjectOptions: [],
                 classDictionary: dict.CLASS_FILTER_DICTIONARY,
-                size: filterDimension,
+                size: [],
                 imageUploadDialogVisible: false,
                 coverImage: {},
                 entertainmentList: []
@@ -206,6 +205,7 @@
         },
         methods: {
             init() {
+                this.initImageSize();
                 this.initTime();
                 this.initArea();
                 this.initSpec();
@@ -249,6 +249,13 @@
                             });
                         }
                     }
+                });
+            },
+            initImageSize() {
+                let spec = this.imageSpec.width + '*' + this.imageSpec.height;
+                this.size.push({
+                    value: spec,
+                    label: '当前尺寸：' + spec
                 });
             },
             // 当前年份往前一共三年以及'更早'

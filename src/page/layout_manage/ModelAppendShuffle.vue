@@ -499,7 +499,7 @@
                 flex-grow: 1;
                 cursor: pointer;
                 background: $dynamicGray;
-                border: 1px solid #fff;
+                border: 1px solid $stillGray;
                 &:hover {
                     border: 1px solid $baseBlue;
                 }
@@ -566,43 +566,59 @@
     // 角标样式
     span.corner-mark {
         position: absolute;
-        line-height: 30px;
-        background: #5daf34;
-        color: #fff;
-        font-size: 14px;
-        border-radius: 6px;
-        text-align: center;
-        img {
-            width: 100%;
-            height: auto;
-        }
+        z-index: 100;
     }
 
-    span.left-bottom {
-        left: 10px;
-        bottom: 10px;
-        height: 30px;
-        width: 100px;
-    }
-
+    // 版权图片标志
     span.left-top {
         left: 10px;
         top: 10px;
-        background: transparent;
+        img {
+            display: block;
+            padding: 5px 8px;
+            background: rgba(0, 0, 0, 0.80);
+            border-radius: 4px;
+        }
     }
 
+    // 更新集数
+    span.left-bottom {
+        left: 5px;
+        bottom: 5px;
+        padding: 0px 10px;
+        height: 24px;
+        line-height: 24px;
+        background: rgba(0, 0, 0, 0.80);
+        border-radius: 4px;
+        font-size: $normalFontSize;
+        color: #FFFFFF;
+    }
+
+    // 运营图片标志
     span.right-top {
-        right: 10px;
-        top: 10px;
-        height: 30px;
-        width: 60px;
+        right: 5px;
+        top: 5px;
+        height: 24px;
+        width: 44px;
+        border-radius: 4px;
+        overflow: hidden;
+        img {
+            height: 100%;
+        }
     }
 
+    // 评分
     span.right-bottom {
-        right: 10px;
-        bottom: 10px;
-        height: 30px;
-        width: 60px;
+        right: 5px;
+        bottom: 5px;
+        padding: 0px 10px;
+        height: 24px;
+        width: 44px;
+        line-height: 24px;
+        color: $orangeFontColor;
+        background: rgba(0, 0, 0, 0.80);
+        border-radius: 4px;
+        font-size: $normalFontSize;
     }
 
     .item-operate {

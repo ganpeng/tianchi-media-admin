@@ -103,8 +103,4 @@
         margin-right: 210px;
     }
 
-    .el-form-item {
-        margin-right: 30px;
-    }
-
 </style>

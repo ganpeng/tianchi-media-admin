@@ -10,6 +10,7 @@
             :row-class-name="tableRowClassName">
             <el-table-column
                 width="50px"
+                align="center"
                 label="选择">
                 <template slot-scope="scope">
                     <el-radio
@@ -21,16 +22,21 @@
             </el-table-column>
             <el-table-column
                 prop="id"
+                width="120px"
+                align="center"
                 label="编号">
                 <template slot-scope="scope">
                     <label>{{scope.row.id}}</label>
                 </template>
             </el-table-column>
             <el-table-column
+                align="center"
                 prop="name"
                 label="名称">
             </el-table-column>
             <el-table-column
+                align="center"
+                width="100px"
                 label="图片">
                 <template slot-scope="scope">
                     <img :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl"
@@ -41,6 +47,7 @@
             </el-table-column>
             <el-table-column
                 prop="type"
+                align="center"
                 label="时间">
                 <template slot-scope="scope">
                     {{scope.row.takeTimeInSec | fromSecondsToTime}}
@@ -48,6 +55,7 @@
             </el-table-column>
             <el-table-column
                 prop="type"
+                align="center"
                 label="类别">
                 <template slot-scope="scope">
                     {{scope.row.type | setVideoType}}
@@ -56,34 +64,42 @@
             <el-table-column
                 prop="link"
                 align="center"
-                width="300px"
+                width="150px"
                 label="预览视频">
                 <template slot-scope="scope">
+                    <el-button
+                        v-if="scope.row.m3u8For4K"
+                        type="text"
+                        size="small"
+                        @click="displayVideo(scope.row.m3u8For4K,scope.row.originName)"
+                    >4K
+                    </el-button>
                     <el-button
                         v-if="scope.row.m3u8For1080P"
                         type="text"
                         size="small"
-                        @click="displayVideo(scope.row.m3u8For1080P)"
+                        @click="displayVideo(scope.row.m3u8For1080P,scope.row.originName)"
                     >1080
                     </el-button>
                     <el-button
                         v-if="scope.row.m3u8For720P"
                         type="text"
                         size="small"
-                        @click="displayVideo(scope.row.m3u8For720P)"
+                        @click="displayVideo(scope.row.m3u8For720P,scope.row.originName)"
                     >720
                     </el-button>
                     <el-button
                         v-if="scope.row.m3u8For480P"
                         type="text"
                         size="small"
-                        @click="displayVideo(scope.row.m3u8For480P)"
+                        @click="displayVideo(scope.row.m3u8For480P,scope.row.originName)"
                     >480
                     </el-button>
                 </template>
             </el-table-column>
             <el-table-column
                 prop="visible"
+                align="center"
                 label="状态">
                 <template slot-scope="scope">
                     {{scope.row.visible ? '已上架' :'已下架'}}
@@ -101,6 +117,7 @@
         </el-pagination>
         <display-video-dialog
             :url="previewVideoInfo.url"
+            :title="previewVideoInfo.title"
             :displayVideoDialogVisible="previewVideoInfo.visible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
@@ -168,9 +185,10 @@
                 return 'video-row';
             },
             // 预览视频
-            displayVideo(url) {
+            displayVideo(url, title) {
                 let baseUri = window.localStorage.getItem('videoBaseUri');
                 this.previewVideoInfo.url = `${baseUri}${url}`;
+                this.previewVideoInfo.title = title;
                 this.previewVideoInfo.visible = true;
             },
             // 关闭视频预览
@@ -202,12 +220,11 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
 
     .el-table {
         img {
-            width: 120px;
+            width: 70px;
         }
     }
 

@@ -71,8 +71,4 @@
 
 <style lang="scss" scoped>
 
-    .el-form-item {
-        margin-right: 30px;
-    }
-
 </style>

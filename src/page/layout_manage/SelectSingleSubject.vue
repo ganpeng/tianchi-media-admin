@@ -96,7 +96,7 @@
 
     export default {
         name: 'SelectSingleSubject',
-        // mode:The category of subject, such as 'PROGRAMME' & 'FIGURE'
+        /* mode:The category of subject, such as 'PROGRAMME' & 'FIGURE' */
         props: {
             mode: {
                 type: String,
@@ -213,5 +213,9 @@
 </script>
 
 <style lang="scss" scoped>
+
+    .el-table {
+        margin-top: 0px;
+    }
 
 </style>
