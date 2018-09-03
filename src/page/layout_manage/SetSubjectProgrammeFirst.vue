@@ -47,10 +47,12 @@
 
     export default {
         name: 'SetSubjectProgrammeFirst',
-        props: ['programmeList', 'currentState'],
+        props: ['programmeList'],
         data() {
             return {
-                singleProgramme: {}
+                singleProgramme: {
+                    id: ''
+                }
             };
         },
         mounted() {
@@ -58,6 +60,13 @@
         },
         methods: {
             init() {
+                this.$nextTick(function () {
+                    for (let i = 0; i < this.programmeList.length; i++) {
+                        if (this.programmeList[i].originProgramme) {
+                            this.singleProgramme.id = this.programmeList[i].id;
+                        }
+                    }
+                });
             },
             tableRowClassName({row}) {
                 if (row.selected && !row.originProgramme) {

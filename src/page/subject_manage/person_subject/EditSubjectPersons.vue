@@ -52,7 +52,7 @@
                         prop="area"
                         label="地区">
                         <template slot-scope="scope">
-                            {{scope.row.area.length !== 0 ? areaLabel(scope.row.area) : '------'}}
+                            {{scope.row.area && scope.row.area.length !== 0 ? areaLabel(scope.row.area) : '------'}}
                         </template>
                     </el-table-column>
                     <el-table-column

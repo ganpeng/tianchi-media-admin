@@ -11,6 +11,7 @@
             row-class-name=figure-row
             style="width: 100%"
             ref="multiplePerson"
+            @select-all="selectAll"
             @select="selectRow">
             <el-table-column
                 type="selection"
@@ -168,6 +169,39 @@
                     for (let n = 0; n < this.multipleSelection.length; n++) {
                         if (this.multipleSelection[n].id === row.id) {
                             this.multipleSelection.splice(n, 1);
+                        }
+                    }
+                }
+            },
+            selectAll(selections) {
+                // 判断是添加还是删除所有当前personList
+                // 取消全选
+                if (selections.length === 0) {
+                    for (let i = 0; i < this.personList.length; i++) {
+                        for (let k = 0; k < this.multipleSelection.length; k++) {
+                            if (this.personList[i].id === this.multipleSelection[k].id) {
+                                this.multipleSelection.splice(k, 1);
+                            }
+                        }
+                    }
+                    // 全选添加
+                } else {
+                    for (let i = 0; i < this.personList.length; i++) {
+                        let tag = false;
+                        // 去掉当前已选择的
+                        for (let k = 0; k < this.multipleSelection.length; k++) {
+                            if (this.personList[i].id === this.multipleSelection[k].id) {
+                                tag = true;
+                            }
+                        }
+                        // 去掉原先已选择的
+                        for (let m = 0; m < this.multipleSelection.length; m++) {
+                            if (this.personList[i].id === this.multipleSelection[m].id) {
+                                tag = true;
+                            }
+                        }
+                        if (tag === false) {
+                            this.multipleSelection.push(this.personList[i]);
                         }
                     }
                 }

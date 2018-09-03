@@ -175,7 +175,7 @@
                         }
                         time = array.toString().replace(/,/g, '');
                         /** 设置节目视频循环，直到时间到达第八天超出，不在设置 */
-                        console.log('当前时间：' + time);
+                        // console.log('当前时间：' + time);
                         if (parseInt(time) > parseInt(this.finalTime)) {
                             pushEvent = false;
                             break;
@@ -204,10 +204,21 @@
                 }
                 // 设置最后一个结束event的 _duration 为 000100
                 eventList[eventList.length - 1]._duration = '000100';
+                // 重新设置'结束'的event的_begintime
+                for (let i = 0; i < eventList.length; i++) {
+                    if (eventList[i].EventText.Name === '结束') {
+                        eventList[i]._begintime = this.getCurrentDayLastMinutes(eventList[i - 1]._begintime);
+                        eventList[i]._eventtype = '22';
+                        eventList[i - 1]._eventtype = '11';
+                    }
+                }
                 return eventList;
             },
             setOverEvent(eventList) {
                 for (let i = 0; i < this.insertArray.length; i++) {
+                    console.log('开始时间');
+                    // console.log(this.insertArray[i]);
+                    console.log(eventList[this.insertArray[i]]._begintime);
                     let overEvent = {
                         _begintime: this.getCurrentDayLastMinutes(eventList[this.insertArray[i]]._begintime),
                         _duration: eventList[this.insertArray[i]]._duration,
@@ -250,6 +261,8 @@
                 return duration;
             },
             getCurrentDayLastMinutes(dateString) {
+                // console.log('最后时间');
+                // console.log(dateString);
                 return dateString.slice(0, 8) + '235900';
             },
             isSameDay(preDateString, nextDateString) {
@@ -260,8 +273,8 @@
                 }
             },
             setNextProgrammeBeginTime(preBeginTime, preDuration) {
-                console.log('preBeginTime1:' + preBeginTime);
-                console.log('preDuration:' + preDuration);
+                // console.log('preBeginTime1:' + preBeginTime);
+                // console.log('preDuration:' + preDuration);
                 // 换成秒数
                 let array = [];
                 array = preBeginTime.split('');
@@ -272,14 +285,14 @@
                 //     array[5] = parseInt(preBeginTime.charAt(5)) + 1;
                 // }
                 preBeginTime = array.toString().replace(/,/g, '');
-                console.log('preBeginTime2:' + preBeginTime);
+                // console.log('preBeginTime2:' + preBeginTime);
                 let day = preBeginTime.substring(0, 4) + '-' + preBeginTime.substring(4, 6) + '-' + preBeginTime.substring(6, 8) + 'T' + preBeginTime.substring(8, 10) + ':' + preBeginTime.substring(10, 12) + ':' + preBeginTime.substring(12, 14);
-                console.log('day2:' + day);
+                // console.log('day2:' + day);
                 let preDate = new Date(day);
                 let preDurationSeconds = preDuration.substring(0, 2) * 60 * 60 * 1000 + preDuration.substring(2, 4) * 60 * 1000 + preDuration.substring(4, 6) * 1000;
                 let nextSeconds = preDate.getTime() + preDurationSeconds;
                 let nextDate = new Date(nextSeconds);
-                console.log('nextDate2:' + nextDate);
+                // console.log('nextDate2:' + nextDate);
                 return this.formDateToString(nextDate);
             },
             formatStringToDate(stringDate) {
