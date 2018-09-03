@@ -22,12 +22,16 @@ const state = {
     searchFields: _.cloneDeep(defaultSearchFields),
     pagination: _.cloneDeep(defaultPagination),
     list: [],
-    device: _.cloneDeep(defaultDevice)
+    device: _.cloneDeep(defaultDevice),
+    currentId: null
 };
 
 const getters = {
     state(state) {
         return state;
+    },
+    currentId() {
+        return state.currentId;
     },
     device(state) {
         return state.device;
@@ -66,6 +70,12 @@ const mutations = {
     resetSearchFields(state) {
         state.searchFields = _.cloneDeep(defaultSearchFields);
     },
+    setCurrentId(state, payload) {
+        state.currentId = payload.id;
+    },
+    setDevice(state, payload) {
+        state.device = _.cloneDeep(payload.device);
+    },
     updateDevice(state, payload) {
         let {key, value} = payload;
         state.device[key] = value;
@@ -78,18 +88,20 @@ const mutations = {
         state.pagination = _.cloneDeep(defaultPagination);
         state.list = [];
         state.device = _.cloneDeep(defaultDevice);
+        state.currentId = null;
     }
 };
 
 const actions = {
     async getDeviceList({commit, state}) {
         try {
-            let params = Object.assign({}, state.pageSize, state.searchFields);
+            let {pageNum, pageSize} = state.pagination;
+            let params = Object.assign({}, state.searchFields, {pageNum: pageNum - 1, pageSize});
             let res = await service.getDeviceList(params);
             if (res && res.code === 0) {
                 let {list, pageNum, pageSize, total} = res.data;
                 commit('setList', {list});
-                commit('setPagination', { pageNum, pageSize, total });
+                commit('setPagination', { pageNum: pageNum + 1, pageSize, total });
             }
         } catch (err) {}
     },
@@ -99,6 +111,14 @@ const actions = {
             let res = await service.addDevice(device);
             return res;
         } catch (err) { }
+    },
+    async updateDeviceById({commit, state}) {
+        try {
+            let device = state.device;
+            let id = state.currentId;
+            let res = await service.updateDeviceById(id, device);
+            return res;
+        } catch (err) {}
     }
 };
 

@@ -84,6 +84,7 @@
                                 v-if="!showDelete(scope.$index)"
                                 @click="cancelUpload(scope.$index)"
                                 class="delete-btn el-icon-close pointer"></i>
+                            <el-button type="text" v-if="showRetryBtn(scope.$index)" @click="retryUploadHandler(scope.$index)">重试</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -97,6 +98,11 @@ const Uppie = require('../../assets/js/uppie');
 const uppie = new Uppie();
 export default {
     name: 'UploadVideo',
+    data() {
+        return {
+            cancelFlag: 0 // 0 表示手动cancel， 1表示点击重试之后的cancel
+        };
+    },
     created() {
         let that = this;
         window.eventBus.$on('startUpload', that.uploadHandler);
@@ -151,6 +157,15 @@ export default {
                 let status = this.uploadState.files[index].progress.status;
                 let percent = this.uploadState.files[index].progress.percent;
                 return status === 'uploading' && percent === 100;
+            };
+        },
+        showRetryBtn() {
+            return (index) => {
+                let status = this.uploadState.files[index].progress.status;
+                return status === 'saveErr' ||
+                        status === 'canceled' ||
+                        status === 'error' ||
+                        status === 'transErr';
             };
         },
         uploadStatusColor() {
@@ -278,108 +293,119 @@ export default {
                     that.updateUploadState({key: 'isUploading', value: false});
                     return false;
                 }
-                let formData = new FormData();
-                let file = that.uploadState.files[that.uploadState.count].file;
-                formData.append('videoType', 'VOD');
-                formData.append('file', file);
-
-                that.uploadRequest(formData)
-                    .then((res) => {
-                        let result = JSON.parse(res).data[0];
-                        if (result.failCode === 0) {
-                            let files = that.uploadState.files.map((obj, index) => {
-                                if (index === that.uploadState.count) {
-                                    return {
-                                        file: obj.file,
-                                        progress: {
-                                            percent: obj.progress.percent,
-                                            status: 'uploaded'
-                                        }
-                                    };
-                                } else {
-                                    return obj;
+                let obj = that.uploadState.files[that.uploadState.count];
+                let status = obj.progress.status === 'saveErr' ||
+                             obj.progress.status === 'canceled' ||
+                             obj.progress.status === 'error' ||
+                             obj.progress.status === 'waiting' ||
+                             obj.progress.status === 'transErr';
+                if (status) {
+                    let formData = new FormData();
+                    let file = that.uploadState.files[that.uploadState.count].file;
+                    formData.append('videoType', 'VOD');
+                    formData.append('file', file);
+                    that.uploadRequest(formData)
+                        .then((res) => {
+                            let result = JSON.parse(res).data[0];
+                            if (result.failCode === 0) {
+                                let files = that.uploadState.files.map((obj, index) => {
+                                    if (index === that.uploadState.count) {
+                                        return {
+                                            file: obj.file,
+                                            progress: {
+                                                percent: obj.progress.percent,
+                                                status: 'uploaded'
+                                            }
+                                        };
+                                    } else {
+                                        return obj;
+                                    }
+                                });
+                                that.updateUploadState({key: 'files', value: files});
+                            } else {
+                                let status = '';
+                                //  exist 已存在， saveErr 保存失败, sizeErr 分辨率不合适, transErr 转码失败
+                                switch (result.failCode) {
+                                    case 3302:
+                                        status = 'transErr';
+                                        break;
+                                    case 3305:
+                                        status = 'saveErr';
+                                        break;
+                                    case 3300:
+                                        status = 'exist';
+                                        break;
+                                    case 3307:
+                                        status = 'sizeErr';
+                                        break;
+                                    default:
                                 }
-                            });
-                            that.updateUploadState({key: 'files', value: files});
-                        } else {
-                            let status = '';
-                            //  exist 已存在， saveErr 保存失败, sizeErr 分辨率不合适, transErr 转码失败
-                            switch (result.failCode) {
-                                case 3302:
-                                    status = 'transErr';
-                                    break;
-                                case 3305:
-                                    status = 'saveErr';
-                                    break;
-                                case 3300:
-                                    status = 'exist';
-                                    break;
-                                case 3307:
-                                    status = 'sizeErr';
-                                    break;
-                                default:
+
+                                let files = that.uploadState.files.map((obj, index) => {
+                                    if (index === that.uploadState.count) {
+                                        return {
+                                            file: obj.file,
+                                            progress: {
+                                                percent: obj.progress.percent,
+                                                status,
+                                                message: result.failReason
+                                            }
+                                        };
+                                    } else {
+                                        return obj;
+                                    }
+                                });
+
+                                that.updateUploadState({key: 'files', value: files});
                             }
-
-                            let files = that.uploadState.files.map((obj, index) => {
-                                if (index === that.uploadState.count) {
-                                    return {
-                                        file: obj.file,
-                                        progress: {
-                                            percent: obj.progress.percent,
-                                            status,
-                                            message: result.failReason
-                                        }
-                                    };
-                                } else {
-                                    return obj;
+                            that.updateUploadState({key: 'count', value: that.uploadState.count + 1});
+                            upload();
+                        }).catch((err) => {
+                            if (err && err.message === 'canceled_flag') {
+                                let files = that.uploadState.files.map((obj, index) => {
+                                    if (index === that.uploadState.count) {
+                                        return {
+                                            file: obj.file,
+                                            progress: {
+                                                percent: obj.progress.percent,
+                                                status: 'canceled',
+                                                message: ''
+                                            }
+                                        };
+                                    } else {
+                                        return obj;
+                                    }
+                                });
+                                that.updateUploadState({key: 'files', value: files});
+                                if (!that.uploadState.clearFlag) {
+                                    that.updateUploadState({key: 'count', value: that.uploadState.count + 1});
                                 }
-                            });
-
-                            that.updateUploadState({key: 'files', value: files});
-                        }
-                        that.updateUploadState({key: 'count', value: that.uploadState.count + 1});
-                        upload();
-                    }).catch((err) => {
-                        if (err && err.message === 'canceled_flag') {
-                            let files = that.uploadState.files.map((obj, index) => {
-                                if (index === that.uploadState.count) {
-                                    return {
-                                        file: obj.file,
-                                        progress: {
-                                            percent: obj.progress.percent,
-                                            status: 'canceled',
-                                            message: ''
-                                        }
-                                    };
-                                } else {
-                                    return obj;
-                                }
-                            });
-                            that.updateUploadState({key: 'files', value: files});
-                            if (!that.uploadState.clearFlag) {
+                                that.updateUploadState({key: 'clearFlag', value: false});
+                            } else {
+                                let files = that.uploadState.files.map((obj, index) => {
+                                    if (index === that.uploadState.count) {
+                                        return {
+                                            file: obj.file,
+                                            progress: {
+                                                percent: obj.progress.percent,
+                                                status: 'error',
+                                                message: ''
+                                            }
+                                        };
+                                    } else {
+                                        return obj;
+                                    }
+                                });
+                                that.updateUploadState({key: 'files', value: files});
                                 that.updateUploadState({key: 'count', value: that.uploadState.count + 1});
                             }
-                            that.updateUploadState({key: 'clearFlag', value: false});
-                        } else {
-                            let files = that.uploadState.files.map((obj, index) => {
-                                if (index === that.uploadState.count) {
-                                    return {
-                                        file: obj.file,
-                                        progress: {
-                                            percent: obj.progress.percent,
-                                            status: 'error',
-                                            message: ''
-                                        }
-                                    };
-                                } else {
-                                    return obj;
-                                }
-                            });
-                            that.updateUploadState({key: 'files', value: files});
-                            that.updateUploadState({key: 'count', value: that.uploadState.count + 1});
-                        }
-                        upload();
-                    });
+                            upload();
+                        });
+                } else {
+                    that.updateUploadState({key: 'count', value: that.uploadState.count + 1});
+                    that.updateUploadState({key: 'isUploading', value: false});
+                    upload();
+                }
             }
         },
         toggleWindow(status) {
@@ -447,6 +473,17 @@ export default {
                 };
                 xhr.send(data);
             });
+        },
+        retryUploadHandler(count) {
+            this.cancelFlag = 1;
+            if (this.uploadState.isUploading) {
+                // this.cancelUpload(this.uploadState.count);
+                this.$message.error('当前有视频正在上传中，请稍后再重试');
+                return false;
+            } else {
+                this.updateUploadState({key: 'count', value: count});
+                this.uploadHandler();
+            }
         },
         resetField() {
             this.uploadState.xhr && this.uploadState.xhr.abort();

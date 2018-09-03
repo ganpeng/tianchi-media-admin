@@ -67,7 +67,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button class="page-main-btn" type="primary" icon="el-icon-search" plain>搜索</el-button>
+                    <el-button class="page-main-btn" type="primary" icon="el-icon-search" plain @click="searchHandler">搜索</el-button>
                     <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
                         <svg-icon
                             icon-class="clear_filter"
@@ -79,7 +79,11 @@
             </el-col>
         </el-form>
         <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
-            <el-table-column align="center" label="序号"></el-table-column>
+            <el-table-column align="center" label="序号">
+                <template slot-scope="scope">
+                    {{getIndex(scope.$index)}}
+                </template>
+            </el-table-column>
             <el-table-column align="center" label="设备ID">
                 <template slot-scope="scope">
                     {{scope.row.no | padEmpty}}
@@ -102,8 +106,15 @@
             </el-table-column>
             <el-table-column align="center" width="300px" fixed="right" label="操作">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small">编辑</el-button>
-                    <el-button type="text" size="small">禁用</el-button>
+                    <el-button type="text" size="small" @click="updateDeviceHandler(scope.row.id)">编辑</el-button>
+                    <el-button v-if="scope.row.status === 'NORMAL'" type="danger" size="mini" plain
+                               @click="toggleStatusHandler(scope.row.id)">
+                        禁用
+                    </el-button>
+                    <el-button v-else type="success" size="mini" plain
+                               @click="toggleStatusHandler(scope.row.id)">
+                        恢复
+                    </el-button>
                     <el-button class="text-danger" type="text" size="small">删除</el-button>
                 </template>
             </el-table-column>
@@ -124,8 +135,7 @@
             :close-on-click-modal="false"
             :close-on-press-escape="false">
             <el-form :model="device" :rules="deviceRules" ref="deviceForm" class="form-block" label-width="100px">
-
-                <el-form-item label="CA卡号" prop="caCardNo">
+                <el-form-item label="CA卡号" prop="no">
                     <el-input
                         :value="device.no"
                         clearable
@@ -155,7 +165,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button size="medium" @click="hideDeviceDialog">关闭</el-button>
-                <el-button type="primary" size="medium" @click="addDeviceEnterHandler">确认</el-button>
+                <el-button type="primary" size="medium" @click="deviceEnterHandler">确认</el-button>
             </div>
         </el-dialog>
     </div>
@@ -177,7 +187,7 @@
                     {value: 'NORMAL', name: '正常'}, {value: 'FORBIDDEN', name: '禁用'}
                 ],
                 deviceRules: {
-                    caCardNo: [
+                    no: [
                         { required: true, message: '请输入设备CA卡号' }
                         // { validator: requiredValidator('请选择区域') }
                     ],
@@ -201,6 +211,12 @@
                 searchFields: 'device/searchFields',
                 device: 'device/device'
             }),
+            getIndex() {
+                return (index) => {
+                    let {pageNum, pageSize} = this.pagination;
+                    return index + 1 + (pageNum - 1) * pageSize;
+                };
+            },
             getType() {
                 return (type) => {
                     return type ? (type === 'HARDWARE_3796' ? '3796' : '3798') : '------';
@@ -220,17 +236,23 @@
                 updateSearchFields: 'device/updateSearchFields',
                 resetSearchFields: 'device/resetSearchFields',
                 updateDevice: 'device/updateDevice',
+                setDevice: 'device/setDevice',
+                setCurrentId: 'device/setCurrentId',
                 resetDevice: 'device/resetDevice'
             }),
             ...mapActions({
                 addDevice: 'device/addDevice',
-                getDeviceList: 'device/getDeviceList'
+                getDeviceList: 'device/getDeviceList',
+                updateDeviceById: 'device/updateDeviceById'
             }),
             clearSearchFields() {},
             keyupHandler(e) {
                 if (e.keyCode === 13) {}
             },
-            handlePaginationChange(value, key) { },
+            handlePaginationChange(value, key) {
+                this.updatePagination({key, value});
+                this.getDeviceList();
+            },
             inputSearchFieldHandler(value, key) {
                 this.updateSearchFields({key, value});
             },
@@ -240,6 +262,15 @@
             addDeviceHandler() {
                 this.showDeviceDialog();
                 this.dialogTitle = '添加设备';
+                this.status = 0;
+            },
+            updateDeviceHandler(id) {
+                this.showDeviceDialog();
+                let device = this.list.find((device) => device.id === id);
+                this.setDevice({device});
+                this.setCurrentId({id});
+                this.dialogTitle = '编辑设备';
+                this.status = 1;
             },
             showDeviceDialog() {
                 this.deviceDialogVisible = true;
@@ -251,17 +282,61 @@
                 this.deviceDialogVisible = false;
                 this.resetDevice();
             },
-            addDeviceEnterHandler() {
+            searchHandler() {
+                this.getDeviceList();
+            },
+            deviceEnterHandler() {
                 this.$refs.deviceForm.validate(valid => {
                     if (valid) {
-                        this.addDevice()
-                            .then((res) => {
-                                if (res && res.code === 0) {
-                                    this.hideDeviceDialog();
-                                    this.$message.success('设备添加成功');
-                                }
-                            });
+                        if (this.status) {
+                            //  编辑
+                            this.updateDeviceById()
+                                .then((res) => {
+                                    if (res && res.code === 0) {
+                                        this.hideDeviceDialog();
+                                        this.getDeviceList();
+                                        this.$message.success('设备更新成功');
+                                    }
+                                });
+                        } else {
+                            //  新增
+                            this.addDevice()
+                                .then((res) => {
+                                    if (res && res.code === 0) {
+                                        this.hideDeviceDialog();
+                                        this.getDeviceList();
+                                        this.$message.success('设备添加成功');
+                                    }
+                                });
+                        }
                     }
+                });
+            },
+            toggleStatusHandler(id) {
+                let _device = this.list.find((device) => device.id === id);
+                let isForbidden = _device.status !== 'NORMAL';
+                this.$confirm(`您确定要${isForbidden ? '恢复设备' : '禁用设备'}吗, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    let status = _device.status === 'NORMAL' ? 'FORBIDDEN' : 'NORMAL';
+                    let device = JSON.parse(JSON.stringify(_device));
+                    device.status = status;
+                    this.setDevice({device});
+                    this.setCurrentId({id});
+                    this.updateDeviceById()
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                this.getDeviceList();
+                                this.$message.success('设备更新成功');
+                            }
+                        });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
                 });
             }
         }

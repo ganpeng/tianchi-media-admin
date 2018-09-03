@@ -6,7 +6,14 @@ import service from '../config';
  * 新增设备
  */
 export const addDevice = (device) => {
-    return service.put('/v1/stb', device);
+    return service.post('/v1/stb', device);
+};
+
+/**
+ * 根据id修改设备信息
+ */
+export const updateDeviceById = (id, device) => {
+    return service.put(`/v1/stb/${id}`, device);
 };
 
 /**
@@ -17,11 +24,11 @@ export const addDevice = (device) => {
 /**
  * 获取设备列表
  */
-export const getDeviceList = ({pageNum, pageSize, caCardNo, hardWareId, status, registeredAt}) => {
+export const getDeviceList = ({pageNum, pageSize, no, hardWareId, status, registeredAt}) => {
     const params = {
         pageNum,
         pageSize,
-        caCardNo,
+        no,
         hardWareId,
         status,
         registeredAt
