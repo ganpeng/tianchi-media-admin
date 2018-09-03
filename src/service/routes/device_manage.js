@@ -24,14 +24,15 @@ export const updateDeviceById = (id, device) => {
 /**
  * 获取设备列表
  */
-export const getDeviceList = ({pageNum, pageSize, no, hardWareId, status, registeredAt}) => {
+export const getDeviceList = ({pageNum, pageSize, no, hardWareId, status, registeredAtStart, registeredAtEnd}) => {
     const params = {
         pageNum,
         pageSize,
         no,
         hardWareId,
         status,
-        registeredAt
+        registeredAtStart,
+        registeredAtEnd
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {

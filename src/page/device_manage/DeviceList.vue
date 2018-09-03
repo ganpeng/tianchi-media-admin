@@ -50,10 +50,12 @@
                 </el-form-item>
                 <el-form-item>
                     <el-date-picker
-                        v-model="value6"
+                        :value="searchFields.registeredAt"
                         type="daterange"
+                        value-format="timestamp"
                         range-separator="至"
                         start-placeholder="开始日期"
+                        @input="inputSearchFieldHandler($event, 'registeredAt')"
                         end-placeholder="结束日期">
                     </el-date-picker>
                 </el-form-item>

@@ -4,7 +4,8 @@ import service from '../../../service';
 const defaultSearchFields = {
     no: '',
     hardWareId: '',
-    status: ''
+    status: '',
+    registeredAt: []
 };
 
 const defaultPagination = {
@@ -96,7 +97,12 @@ const actions = {
     async getDeviceList({commit, state}) {
         try {
             let {pageNum, pageSize} = state.pagination;
-            let params = Object.assign({}, state.searchFields, {pageNum: pageNum - 1, pageSize});
+            let {registeredAt, no, hardWareId, status} = state.searchFields;
+            let [registeredAtStart, registeredAtEnd] = registeredAt;
+            let params = Object.assign({},
+                {pageNum: pageNum - 1, pageSize}, {
+                    no, hardWareId, status, registeredAtStart, registeredAtEnd
+                });
             let res = await service.getDeviceList(params);
             if (res && res.code === 0) {
                 let {list, pageNum, pageSize, total} = res.data;
