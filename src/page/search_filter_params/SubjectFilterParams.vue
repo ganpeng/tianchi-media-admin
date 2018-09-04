@@ -107,9 +107,12 @@
                 });
             },
             getSubjectList() {
-                if (this.createRangeTime.length === 2) {
+                if (this.createRangeTime && this.createRangeTime.length === 2) {
                     this.listQueryParams.createdAtBegin = this.createRangeTime[0];
                     this.listQueryParams.createdAtEnd = this.createRangeTime[1];
+                } else {
+                    this.listQueryParams.createdAtBegin = '';
+                    this.listQueryParams.createdAtEnd = '';
                 }
                 this.$emit('getSubjectList', this.listQueryParams);
             },
