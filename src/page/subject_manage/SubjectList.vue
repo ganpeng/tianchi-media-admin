@@ -8,6 +8,7 @@
         </custom-breadcrumb>
         <div class="block-box">
             <subject-filter-params
+                ref="subjectFilterParams"
                 v-on:getSubjectList="getSubjectList">
             </subject-filter-params>
             <el-table
@@ -153,6 +154,10 @@
         },
         methods: {
             init() {
+                if (this.$wsCache.localStorage.get('subjectFilter')) {
+                    this.listQueryParams = this.$wsCache.localStorage.get('subjectFilter');
+                    this.$refs.subjectFilterParams.initFilterParams(this.listQueryParams);
+                }
                 this.getSubjectList();
             },
             getSubjectList(searchParams) {
@@ -162,6 +167,7 @@
                         this.listQueryParams[key] = searchParams[key];
                     }
                 }
+                this.$wsCache.localStorage.set('subjectFilter', this.listQueryParams);
                 this.$service.getSubjectList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.subjectList = response.data.list;

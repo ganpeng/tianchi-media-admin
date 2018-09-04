@@ -145,13 +145,13 @@
             </el-pagination>
             <div class="visible-item">
                 <el-button
-                    class="create-blue-btn"
+                    :class="'create-blue-btn ' + (multipleSelection.length === 0 ? 'is-disabled' : '')"
                     size="small"
                     @click="batchSetChannel(true)">
                     批量恢复
                 </el-button>
                 <el-button
-                    class="disabled-red-btn"
+                    :class="'disabled-red-btn ' + (multipleSelection.length === 0 ? 'is-disabled' : '')"
                     size="small"
                     @click="batchSetChannel(false)">
                     批量禁播
@@ -364,7 +364,6 @@
             // 批量禁播、恢复频道
             batchSetChannel(visible) {
                 if (this.multipleSelection.length === 0) {
-                    this.$message.warning('请选择需要' + (visible ? '恢复' : '禁播') + '的频道');
                     return;
                 }
                 let idList = [];

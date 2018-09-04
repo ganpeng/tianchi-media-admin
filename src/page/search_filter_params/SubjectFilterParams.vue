@@ -29,6 +29,7 @@
                 <el-date-picker
                     v-model="createRangeTime"
                     type="daterange"
+                    value-format="timestamp"
                     range-separator="至"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期">
@@ -87,6 +88,14 @@
             this.init();
         },
         methods: {
+            initFilterParams(params) {
+                this.listQueryParams.category = params.category ? params.category : '';
+                this.listQueryParams.programmeCategoryIdList = params.programmeCategoryIdList ? params.programmeCategoryIdList : [];
+                this.listQueryParams.createdAtBegin = params.createdAtBegin ? params.createdAtBegin : '';
+                this.listQueryParams.createdAtEnd = params.createdAtEnd ? params.createdAtEnd : '';
+                this.createRangeTime = params.createdAtBegin ? [params.createdAtBegin, params.createdAtEnd] : [];
+                this.listQueryParams.name = params.name ? params.name : '';
+            },
             init() {
                 if (this.mode) {
                     this.listQueryParams.category = this.mode;
@@ -99,8 +108,8 @@
             },
             getSubjectList() {
                 if (this.createRangeTime.length === 2) {
-                    this.listQueryParams.createdAtBegin = Date.parse(this.createRangeTime[0]);
-                    this.listQueryParams.createdAtEnd = Date.parse(this.createRangeTime[1]);
+                    this.listQueryParams.createdAtBegin = this.createRangeTime[0];
+                    this.listQueryParams.createdAtEnd = this.createRangeTime[1];
                 }
                 this.$emit('getSubjectList', this.listQueryParams);
             },
