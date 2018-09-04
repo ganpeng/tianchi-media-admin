@@ -13,7 +13,7 @@
                     <el-radio :value="video.selectedVideoId" :label="scope.row.id" @input="setSelectedVideoId({id: scope.row.id})">&nbsp;</el-radio>
                 </template>
             </el-table-column>
-            <el-table-column prop="code" align="center" width="118" label="编号"></el-table-column>
+            <el-table-column prop="id" align="center" width="118" label="编号"></el-table-column>
             <el-table-column width="540px" prop="originName" align="center" label="视频名称">
                 <template slot-scope="scope">
                     <el-tooltip effect="dark" placement="top">
