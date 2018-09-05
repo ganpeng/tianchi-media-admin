@@ -231,7 +231,7 @@
                             }
                         });
                         for (let i = 0; i < this.categoryOptions.length; i++) {
-                            if (this.categoryOptions[i].name === '新时代党建') {
+                            if (this.categoryOptions[i].name === '党建') {
                                 this.categoryOptions.splice(i, 1);
                             }
                         }

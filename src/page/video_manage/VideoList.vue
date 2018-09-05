@@ -39,7 +39,6 @@
                         :value="searchFields.name"
                         placeholder="搜索你想要的信息"
                         clearable
-                        style="width:400px;"
                         @input="inputHandler($event, 'name')"
                     >
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
@@ -61,6 +60,17 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
+                    <el-date-picker
+                        :value="searchFields.dateRange"
+                        type="daterange"
+                        value-format="timestamp"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        @input="inputHandler($event, 'dateRange')"
+                        end-placeholder="结束日期">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item>
                     <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="searchHandler" plain>搜索</el-button>
                     <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
                         <svg-icon
@@ -71,6 +81,8 @@
                     </el-button>
                 </el-form-item>
                 <el-form-item class="float-right">
+                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small" @click="retrySelectedVideoHandler">批量重试</el-button>
+                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small" @click="exportSelectedVideoHandler">批量导出</el-button>
                     <el-button class="delete-btn disabled-red-btn" size="small" :disabled="isDisabled" @click="deleteVideoList">批量删除</el-button>
                 </el-form-item>
             </el-col>
@@ -80,8 +92,10 @@
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
+    import XLSX from 'xlsx';
     import VideoTable from './VideoTable';
     import role from '@/util/config/role';
+    const FileSaver = require('file-saver');
     const Uppie = require('../../assets/js/uppie');
     const uppie = new Uppie();
     export default {
@@ -102,10 +116,7 @@
                 searchFields: 'video/searchFields',
                 uploadState: 'uploadVideo/uploadState',
                 selectedVideoIdList: 'video/selectedVideoIdList'
-            }),
-            showDeleteBtn() {
-                return this.$refs.videoTable && this.$refs.videoTable.selectedVideoList.length > 0;
-            }
+            })
         },
         created() {
             window.eventBus.$on('clearInputValue', this.clearInputValue.bind(this));
@@ -137,7 +148,8 @@
                 updateUploadState: 'uploadVideo/updateUploadState'
             }),
             ...mapActions({
-                getVideoList: 'video/getVideoList'
+                getVideoList: 'video/getVideoList',
+                retryVideoByIdList: 'video/retryVideoByIdList'
             }),
             setDisabled(value) {
                 this.isDisabled = value;
@@ -148,6 +160,43 @@
             clearInputValue() {
                 this.$refs.uploadInputFile.value = null;
                 this.$refs.uploadInputDir.value = null;
+            },
+            retrySelectedVideoHandler() {
+                let idList = this.$refs.videoTable.selectedVideoList.filter((video) => {
+                    return this.needRetry(video);
+                }).map((item) => item.id);
+                if (idList.length > 0) {
+                    this.retryVideoByIdList(idList)
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                this.$message.success('批量重新注入成功');
+                            } else {
+                                this.$message.error('批量重新注入失败');
+                            }
+                            this.getVideoList()
+                                .then(() => {
+                                    this.$refs.videoTable.checkedVideoList();
+                                });
+                        });
+                } else {
+                    this.$message.warning('没有可以重新注入的视频存在');
+                }
+            },
+            needRetry(video) {
+                let {status, transcodeStatus} = video;
+                return (status === 'INJECTING' && transcodeStatus === 'FAILED') || status === 'FAILED';
+            },
+            exportSelectedVideoHandler() {
+                let videoList = this.$refs.videoTable.selectedVideoList.map((video) => {
+                    let obj = {};
+                    obj['编号'] = video.id;
+                    obj['视频名称'] = video.originName;
+                    obj['视频地址'] = this.joinVideoUrl(video);
+                    obj['视频时长'] = this.$util.fromSecondsToTime(video.takeTimeInSec);
+                    obj['上传日期'] = this.timeStampFormat(video.createdAt);
+                    return obj;
+                });
+                this.downloadExl(videoList);
             },
             deleteVideoList() {
                 let idList = this.$refs.videoTable.selectedVideoList.map((item) => {
@@ -223,6 +272,79 @@
                 this.updateUploadState({key: 'files', value: newFiles});
                 window.eventBus.$emit('startUpload');
                 this.clearInputValue();
+            },
+            //  导出部分代码
+            getCharCol(n) {
+                let s = '';
+                let m = 0;
+                while (n > 0) {
+                    m = n % 26 + 1;
+                    s = String.fromCharCode(m + 64) + s;
+                    n = (n - m) / 26;
+                }
+                return s;
+            },
+            string2ArrayBuffer(s) {
+                let buf = new ArrayBuffer(s.length);
+                let view = new Uint8Array(buf);
+                for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+                return buf;
+            },
+            downloadExl(data, type) {
+                let keys = Object.keys(data[0]);
+                let firstRow = {};
+                keys.forEach(function (item) {
+                    firstRow[item] = item;
+                });
+                data.unshift(firstRow);
+
+                let content = {};
+
+                // 把json格式的数据转为excel的行列形式
+                let sheetsData = data.map(function (item, rowIndex) {
+                    return keys.map(function (key, columnIndex) {
+                        return Object.assign({}, {
+                            value: item[key],
+                            position: (columnIndex > 25 ? this.getCharCol(columnIndex) : String.fromCharCode(65 + columnIndex)) + (rowIndex + 1)
+                        });
+                    });
+                }).reduce(function (prev, next) {
+                    return prev.concat(next);
+                });
+
+                sheetsData.forEach(function (item, index) {
+                    content[item.position] = { v: item.value };
+                });
+                // 设置区域,比如表格从A1到D10,SheetNames:标题
+                let coordinate = Object.keys(content);
+                let workBook = {
+                    SheetNames: ['视频列表'],
+                    Sheets: {
+                        '视频列表': Object.assign({}, content, { '!ref': coordinate[0] + ':' + coordinate[coordinate.length - 1] })
+                    }
+                };
+                // 这里的数据是用来定义导出的格式类型
+                let excelData = XLSX.write(workBook, { bookType: 'xlsx', bookSST: false, type: 'binary' });
+                let blob = new Blob([this.string2ArrayBuffer(excelData)], { type: '' });
+                FileSaver.saveAs(blob, '导出视频列表.xlsx');
+            },
+            timeStampFormat(seconds) {
+                let date = new Date(seconds);
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1;
+                let day = date.getDate();
+                let hour = date.getHours();
+                let minute = date.getMinutes();
+                let second = date.getSeconds();
+                return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+            },
+            joinVideoUrl(video) {
+                let baseUri = window.localStorage.getItem('videoBaseUri');
+                let urlList = [video.m3u8For4K, video.m3u8For1080P, video.m3u8For720P, video.m3u8For480P];
+                let urlStr = urlList.filter((item) => item).map((item) => {
+                    return `${baseUri}${item}`;
+                }).join(', ');
+                return urlStr;
             }
         }
     };

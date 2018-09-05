@@ -128,7 +128,7 @@ export default {
         }),
         currentFileName() {
             let obj = this.uploadState.files[this.uploadState.count];
-            return obj ? obj.file.name : '';
+            return obj ? obj.file.name : '上传完成';
         },
         getProgress() {
             return (index) => {

@@ -5,7 +5,7 @@ import service from '../config';
 /**
  * 获取所有视频的列表
  */
-export const getVideoList = ({ status, userId, name, key, m3u8For480P, m3u8For720P, m3u8For1080P, bitrate, frameRate, pageNum, pageSize, videoType }) => {
+export const getVideoList = ({ startedAt, endedAt, status, userId, name, key, m3u8For480P, m3u8For720P, m3u8For1080P, bitrate, frameRate, pageNum, pageSize, videoType }) => {
     let params = {
         userId,
         name,
@@ -18,7 +18,9 @@ export const getVideoList = ({ status, userId, name, key, m3u8For480P, m3u8For72
         status,
         pageNum,
         pageSize,
-        videoType
+        videoType,
+        startedAt,
+        endedAt
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
@@ -44,6 +46,15 @@ export const deleteVideoById = (id) => {
  */
 export const deleteVideoByIdList = (ids) => {
     return service.patch(`/v1/storage/video/delete`, ids, {
+        baseURL: '/storage'
+    });
+};
+
+/**
+ * 根据id列表重新转吗视频
+ */
+export const retryVideoByIdList = (ids) => {
+    return service.patch('/v1/storage/video/retry', ids, {
         baseURL: '/storage'
     });
 };

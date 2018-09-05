@@ -61,7 +61,7 @@
                 </el-form-item>
                 <el-form-item class="search">
                     <el-input
-                        :value="searchFields.keyword"
+                        :value="searchFields.no"
                         placeholder="请输入关键字"
                         @input="inputSearchFieldHandler($event, 'no')"
                         clearable>
@@ -117,7 +117,7 @@
                                @click="toggleStatusHandler(scope.row.id)">
                         恢复
                     </el-button>
-                    <el-button class="text-danger" type="text" size="small">删除</el-button>
+                    <el-button class="text-danger" type="text" size="small" @click="deleteDeviceHandler(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -133,7 +133,8 @@
         <el-dialog
             :title="dialogTitle"
             :visible.sync="deviceDialogVisible"
-            :show-close="false"
+            :before-close="hideDeviceDialog"
+            :show-close="true"
             :close-on-click-modal="false"
             :close-on-press-escape="false">
             <el-form :model="device" :rules="deviceRules" ref="deviceForm" class="form-block" label-width="100px">
@@ -245,9 +246,12 @@
             ...mapActions({
                 addDevice: 'device/addDevice',
                 getDeviceList: 'device/getDeviceList',
-                updateDeviceById: 'device/updateDeviceById'
+                updateDeviceById: 'device/updateDeviceById',
+                deleteDeviceById: 'device/deleteDeviceById'
             }),
-            clearSearchFields() {},
+            clearSearchFields() {
+                this.resetSearchFields();
+            },
             keyupHandler(e) {
                 if (e.keyCode === 13) {}
             },
@@ -332,6 +336,26 @@
                             if (res && res.code === 0) {
                                 this.getDeviceList();
                                 this.$message.success('设备更新成功');
+                            }
+                        });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            deleteDeviceHandler(id) {
+                this.$confirm(`您确定要删除该设备吗, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.deleteDeviceById(id)
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                this.getDeviceList();
+                                this.$message.success('设备删除成功');
                             }
                         });
                 }).catch(() => {

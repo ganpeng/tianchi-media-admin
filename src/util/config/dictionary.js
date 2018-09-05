@@ -161,7 +161,7 @@ const CLASS_FILTER_DICTIONARY = {
             type: 'CLASS',
             name: '分类'
         }],
-    // 新时代党建
+    // 党建
     COMMUNIST_PARTY_BUILD: null
 };
 

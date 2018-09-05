@@ -254,13 +254,14 @@
                         </el-form-item>
                         <el-form-item
                             v-if="isEducation"
-                            label="年级" prop="grade">
+                            label="年级" prop="gradeList">
                             <el-select
                                 :disabled="readonly"
-                                :value="programme.grade"
+                                :value="programme.gradeList"
                                 clearable
+                                multiple
                                 placeholder="请选择"
-                                @input="inputHandler($event, 'grade')"
+                                @input="inputHandler($event, 'gradeList')"
                             >
                                 <el-option
                                     v-for="item in gradeOptions"

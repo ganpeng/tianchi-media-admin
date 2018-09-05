@@ -41,8 +41,8 @@
             </div>
         </el-dialog>
         <el-form :model="video" :rules="uploadVideoRules" ref="uploadVideoForm" class="form-block" label-width="100px">
-            <el-form-item label="选择视频">
-                <el-button v-if="!readonly" type="primary" @click="selectVideo">选择</el-button>
+            <el-form-item v-if="!readonly" label="选择视频">
+                <el-button type="primary" @click="selectVideo">选择</el-button>
             </el-form-item>
             <el-form-item label="视频ID">
                 <el-input :value="video.storageVideoId" disabled></el-input>

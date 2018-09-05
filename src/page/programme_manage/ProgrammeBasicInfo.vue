@@ -69,7 +69,7 @@
                             </div>
                             <div v-if="isEducation" class="info-wrapper">
                                 <span class="label">年级</span>
-                                <span class="text">{{programme.grade}}</span>
+                                <el-tag size="small" class="margin-right-s" v-for="(name, index) in programme.gradeList" :key="index" type="info">{{name}}</el-tag>
                             </div>
                             <div v-if="isEducation" class="info-wrapper">
                                 <span class="label">科目</span>

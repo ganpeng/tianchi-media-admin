@@ -90,6 +90,7 @@
             <el-table-column align="center" label="注入状态">
                 <template slot-scope="scope">
                     <span v-html="getStatus(scope.row)"></span>
+                    <el-button v-if="needRetry(scope.row)" class="text-primary" type="text" @click="retrySingleVideo(scope.row.id)" size="small">重试</el-button>
                 </template>
             </el-table-column>
             <el-table-column align="center" label="上传日期">
@@ -107,7 +108,7 @@
             @size-change="handlePaginationChange($event, 'pageSize')"
             @current-change="handlePaginationChange($event, 'pageNum')"
             :current-page="pagination.pageNum"
-            :page-sizes="[5, 10, 20, 30, 50]"
+            :page-sizes="[5, 10, 20, 30, 50, 100, 200, 500]"
             :page-size="pagination.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="pagination.total">
@@ -200,10 +201,15 @@ export default {
         }),
         ...mapActions({
             getVideoList: 'video/getVideoList',
-            deleteVideoById: 'video/deleteVideoById'
+            deleteVideoById: 'video/deleteVideoById',
+            retryVideoByIdList: 'video/retryVideoByIdList'
         }),
         cutStr(str) {
             return str.length > 40 ? str.substring(0, 40) + '...' : str;
+        },
+        needRetry(video) {
+            let {status, transcodeStatus} = video;
+            return (status === 'INJECTING' && transcodeStatus === 'FAILED') || status === 'FAILED';
         },
         handlePaginationChange(value, key) {
             this.updatePagination({value, key});
@@ -290,6 +296,20 @@ export default {
             } else {
                 window.eventBus.$emit('setDisabled', true);
             }
+        },
+        retrySingleVideo(id) {
+            this.retryVideoByIdList([id])
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        this.$message.success('该视频重新注入成功');
+                    } else {
+                        this.$message.error('该视频重新注入失败');
+                    }
+                    this.getvideolist()
+                        .then(() => {
+                            !this.hasradio && this.checkedvideolist();
+                        });
+                });
         },
         checkedVideoList() {
             this.selectedVideoList.forEach((item) => {

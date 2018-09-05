@@ -8,7 +8,10 @@ let isLoading = false; // 解决重复调用列表接口的问题
 const defaultSearchFields = {
     name: '',
     status: '',
-    videoType: null
+    videoType: null,
+    dateRange: [],
+    startedAt: '',
+    endedAt: ''
 };
 
 const defaultPagination = {
@@ -126,6 +129,10 @@ const mutations = {
     updateSearchFields(state, payload) {
         let {key, value} = payload;
         state.searchFields[key] = value;
+        if (key === 'dateRange') {
+            state.searchFields.startedAt = state.searchFields.dateRange ? state.searchFields.dateRange[0] : '';
+            state.searchFields.endedAt = state.searchFields.dateRange ? state.searchFields.dateRange[1] : '';
+        }
     },
     resetSearchFields(state) {
         state.searchFields = _.cloneDeep(defaultSearchFields);
@@ -145,6 +152,7 @@ const actions = {
                 isLoading = true;
                 let {pageNum, pageSize} = state.pagination;
                 let params = Object.assign({}, {pageNum: pageNum > 0 ? pageNum - 1 : 0, pageSize}, {...state.searchFields});
+                delete params.dateRange;
                 let result = await service.getVideoList(params);
                 if (result && result.code === 0) {
                     let {list, pageSize, pageNum, total} = result.data;
@@ -194,6 +202,14 @@ const actions = {
                 commit('setServers', {servers: res.data});
             }
         } catch (err) { }
+    },
+    async retryVideoByIdList({commit, state}, ids) {
+        try {
+            let res = await service.retryVideoByIdList(ids);
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
     }
 };
 

@@ -51,7 +51,12 @@ export default {
     },
     computed: {
         getTitle() {
-            let videoName = this.title.substring(0, this.title.lastIndexOf('.'));
+            let videoName = '';
+            if (this.title.lastIndexOf('.') >= 0) {
+                videoName = this.title.substring(0, this.title.lastIndexOf('.'));
+            } else {
+                videoName = this.title;
+            }
             return `正在播放：${videoName}`;
         }
     },

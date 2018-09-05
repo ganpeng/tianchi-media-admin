@@ -136,7 +136,7 @@ const CATALOGUE_CONFIG_MAP = {
         },
         allExist: true
     },
-    // 新时代党建
+    // 党建
     COMMUNIST_PARTY_BUILD: null
 };
 

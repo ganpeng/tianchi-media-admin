@@ -17,9 +17,11 @@ export const updateDeviceById = (id, device) => {
 };
 
 /**
- * 设备禁用
+ * 根据id删除设备信息
  */
-// export const deviceStatus = ()
+export const deleteDeviceById = (id) => {
+    return service.delete(`/v1/stb/${id}`);
+};
 
 /**
  * 获取设备列表

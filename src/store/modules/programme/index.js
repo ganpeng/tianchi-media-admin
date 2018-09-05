@@ -51,7 +51,7 @@ const defaultProgramme = {
     // 节目类别
     categoryList: [],
     // 年级
-    grade: '',
+    gradeList: [],
     // 规格
     specList: [],
     // 科目

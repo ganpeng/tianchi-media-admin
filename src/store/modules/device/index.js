@@ -125,6 +125,12 @@ const actions = {
             let res = await service.updateDeviceById(id, device);
             return res;
         } catch (err) {}
+    },
+    async deleteDeviceById({commit, state}, id) {
+        try {
+            let res = await service.deleteDeviceById(id);
+            return res;
+        } catch (err) { }
     }
 };
 
