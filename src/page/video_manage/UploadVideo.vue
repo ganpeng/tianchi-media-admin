@@ -254,7 +254,7 @@ export default {
         },
         uploadChangeHandler(e) {
             let files = Array.from(e.target.files).filter((file) => {
-                return /.mpg$/.test(file.name);
+                return /(.mpg|.ts)$/.test(file.name);
             });
             if (files.length === 0) {
                 this.$message.warning('本次选择没有符合要求的文件');
@@ -293,6 +293,7 @@ export default {
                     that.updateUploadState({key: 'isUploading', value: false});
                     return false;
                 }
+                that.updateUploadState({key: 'isUploading', value: true});
                 let obj = that.uploadState.files[that.uploadState.count];
                 let status = obj.progress.status === 'saveErr' ||
                              obj.progress.status === 'canceled' ||

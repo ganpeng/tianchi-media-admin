@@ -17,6 +17,17 @@ const mutations = {
     updateUploadState(state, payload) {
         let {key, value} = payload;
         state[key] = value;
+    },
+    resetState(state) {
+        if (state.xhr) {
+            state.xhr.abort();
+            state.xhr = null;
+        }
+        state.files = [];
+        state.count = 0;
+        state.isUploading = false;
+        state.clearFlag = false;
+        state.min = false;
     }
 };
 

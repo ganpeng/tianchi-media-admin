@@ -246,7 +246,7 @@
             },
             uploadChangeHandler(e) {
                 let files = Array.from(e.target.files).filter((file) => {
-                    return /.mpg$/.test(file.name);
+                    return /(.mpg|.ts)$/.test(file.name);
                 });
                 if (files.length === 0) {
                     this.$message.warning('本次选择没有符合要求的文件');

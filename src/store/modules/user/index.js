@@ -78,6 +78,8 @@ const actions = {
         commit('setToken', '');
         wsCache.localStorage.clearAll();
         store.commit('layout/setState', {navBarList: []});
+        //  清除上传视频的所有数据
+        store.commit('uploadVideo/resetState');
         router.push({name: 'Login'});
         if (hasToken) {
             // 请求登出接口

@@ -584,6 +584,7 @@ const mutations = {
         let {video, list} = state.video;
         video.id = uuid();
         video.new = true;
+        video.visible = true;
         list.unshift(video);
         state.video.list = list;
     },

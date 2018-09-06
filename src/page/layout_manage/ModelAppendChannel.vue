@@ -250,11 +250,12 @@
     };
 </script>
 <style lang="scss" scoped>
-
+    .set-channel-container {
+        overflow: hidden;
+    }
     .form {
         margin-top: 20px;
     }
-
     .model-btn {
         margin-top: 40px;
     }

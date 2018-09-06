@@ -28,6 +28,14 @@
                         </template>
                 </el-table-column>
                 <el-table-column
+                    label="是否有封面图"
+                    align="center"
+                    width="120">
+                        <template slot-scope="scope">
+                            {{scope.row.coverImage ? '是' : '否'}}
+                        </template>
+                </el-table-column>
+                <el-table-column
                     prop="name"
                     label="视频展示名"
                     align="center"
@@ -67,6 +75,7 @@
                 </el-table-column>
                 <el-table-column
                     align="center"
+                    width="180"
                     label="视频地址">
                     <template slot-scope="scope">
                         <div class="btn-icon-container">
@@ -139,7 +148,7 @@
                 <el-table-column
                     prop="duration"
                     align="center"
-                    min-width="80px"
+                    width="100"
                     label="时长">
                     <template slot-scope="scope">
                         {{duration(scope.row.takeTimeInSec) | padEmpty}}
