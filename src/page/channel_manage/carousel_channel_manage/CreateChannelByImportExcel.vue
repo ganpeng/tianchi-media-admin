@@ -105,6 +105,7 @@
                         '（必填）',
                         type: '频道类别（请确保类别已建好）\n' +
                         '（必填）',
+                        transcribe: '提供回看服务（必选）',
                         multicastIp: '组播地址\n' +
                         '（必填）',
                         multicastPort: '组播端口\n' +
@@ -121,6 +122,7 @@
                         innerName: 'CCTV1',
                         no: '814',
                         type: '体育',
+                        transcribe: '是',
                         multicastIp: '232.1.1.2',
                         multicastPort: '1234',
                         pushServer: '192.168.0.2',
@@ -131,6 +133,7 @@
                         innerName: '东方（上海）卫视',
                         no: '813',
                         type: '娱乐',
+                        transcribe: '否',
                         multicastIp: '232.1.1.3',
                         multicastPort: '1234',
                         pushServer: '192.168.0.3',
@@ -141,6 +144,7 @@
                         innerName: '',
                         no: '',
                         type: '',
+                        transcribe: '',
                         multicastIp: '',
                         multicastPort: '',
                         pushServer: '',
@@ -250,6 +254,12 @@
                             this.channelList[i].typeList = [type];
                         }
                     });
+                    // 设置是否回看
+                    if (this.$route.params.category === 'LIVE') {
+                        this.channelList[i].record = this.channelList[i].transcribe === '是';
+                    } else {
+                        this.channelList[i].record = false;
+                    }
                     this.channelList[i].category = this.$route.params.category;
                     this.channelList[i].visible = false;
                 }
@@ -311,6 +321,12 @@
                     message = message + '请填写频道类别;';
                 } else if (!this.isChannelTypeExist(channel.type)) {
                     message = message + '频道类别不存在;';
+                }
+                // 只有直播频道含有回看服务
+                if (this.$route.params.category === 'LIVE') {
+                    if (channel.transcribe !== '是' && channel.transcribe !== '否') {
+                        message = message + '请正确填写是否回看服务;';
+                    }
                 }
                 // 组播地址
                 if (this.$util.isEmpty(channel.multicastIp)) {

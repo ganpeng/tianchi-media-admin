@@ -167,6 +167,7 @@
                     serviceId: '',
                     pushServer: '',
                     visible: false,
+                    record: false,
                     logoUri: ''
                 },
                 typeOptions: [],
