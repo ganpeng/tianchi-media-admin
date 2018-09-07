@@ -84,7 +84,11 @@
             <el-button type="primary" @click="switchMode" v-if="mode === 'EDIT'" class="page-main-btn">更换专题</el-button>
             <el-button type="primary" @click="saveBlock" class="page-main-btn">保 存</el-button>
         </div>
-        <el-dialog title="设置模块推荐位内的节目" center :visible.sync="dialogTableVisible">
+        <el-dialog
+            title="设置模块推荐位内的节目"
+            center
+            :close-on-click-modal=false
+            :visible.sync="dialogTableVisible">
             <set-subject-programme
                 v-if="dialogTableVisible"
                 :imageSpec="imageSpec"

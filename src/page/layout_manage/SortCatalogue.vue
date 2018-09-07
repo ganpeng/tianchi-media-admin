@@ -17,6 +17,7 @@
         </ul>
         <el-dialog
             :title="setCatalogueTitle"
+            :close-on-click-modal=false
             :visible.sync="pickCatalogueVisible"
             custom-class="catalogue-dialog"
             width="70%">

@@ -20,6 +20,7 @@
             </el-checkbox>
         </el-checkbox-group>
         <el-dialog title="设置运营角标"
+                   :close-on-click-modal=false
                    :visible.sync="customCornerMarkVisible"
                    class="text-center"
                    append-to-body>

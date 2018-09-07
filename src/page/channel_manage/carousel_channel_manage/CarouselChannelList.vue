@@ -180,6 +180,7 @@
         </div>
         <el-dialog
             title="新增轮播频道"
+            :close-on-click-modal=false
             :visible.sync="createChannelDialogVisible"
             width="50%">
             <create-channel

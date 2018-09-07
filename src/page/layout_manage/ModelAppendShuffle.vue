@@ -82,6 +82,7 @@
         <!--设置混排的节目-->
         <el-dialog
             title="设置混排模块的节目"
+            :close-on-click-modal=false
             width="80%"
             center
             :visible.sync="dialogVisible.programmeDialogVisible">
@@ -95,6 +96,7 @@
         <!--设置混排的人物-->
         <el-dialog
             title="设置混排模块的人物"
+            :close-on-click-modal=false
             width="80%"
             center
             :visible.sync="dialogVisible.figureDialogVisible">
@@ -108,6 +110,7 @@
         <!--设置混排的频道-->
         <el-dialog
             title="设置混排模块的频道"
+            :close-on-click-modal=false
             width="50%"
             center
             :visible.sync="dialogVisible.channelDialogVisible">
@@ -125,6 +128,7 @@
         <!--设置混排的专题-->
         <el-dialog
             title="设置混排模块的专题"
+            :close-on-click-modal=false
             width="80%"
             center
             :visible.sync="dialogVisible.subjectDialogVisible">
@@ -138,6 +142,7 @@
         <!--设置混排的网页-->
         <el-dialog
             title="设置混排模块的网页"
+            :close-on-click-modal=false
             width="50%"
             center
             :visible.sync="dialogVisible.webPageDialogVisible">
@@ -151,6 +156,7 @@
         <!--设置混排的节目中的视频-->
         <el-dialog
             title="设置混排模块的节目中的视频"
+            :close-on-click-modal=false
             width="80%"
             center
             :visible.sync="dialogVisible.programmeVideoDialogVisible">
@@ -164,6 +170,7 @@
         <!--设置混排的筛选推荐项-->
         <el-dialog
             title="设置混排模块的筛选推荐项"
+            :close-on-click-modal=false
             width="80%"
             center
             :visible.sync="dialogVisible.filterDialogVisible">
