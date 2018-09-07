@@ -423,7 +423,7 @@ let router = new Router({
                 },
                 // 轮播频道-批量创建轮播频道
                 {
-                    path: '/channel-manage/carousel/import-create',
+                    path: '/channel-manage/carousel/import-create/:category',
                     name: 'CreateChannelByImportExcel',
                     component: CreateChannelByImportExcel
                 },

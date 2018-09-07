@@ -278,7 +278,8 @@
             },
             createChannelByImportExcel() {
                 this.$router.push({
-                    name: 'CreateChannelByImportExcel'
+                    name: 'CreateChannelByImportExcel',
+                    params: {category: 'CAROUSEL'}
                 });
             },
             editChannelByImportExcel() {

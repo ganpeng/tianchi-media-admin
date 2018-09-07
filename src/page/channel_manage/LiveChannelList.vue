@@ -16,6 +16,12 @@
                         新增直播频道
                     </el-button>
                     <el-button
+                        class="create-blue-btn contain-svg-icon"
+                        @click="createChannelByImportExcel">
+                        <svg-icon icon-class="upload"></svg-icon>
+                        批量导入频道
+                    </el-button>
+                    <el-button
                         class="page-main-btn create-blue-btn contain-svg-icon"
                         @click="showFileUploadDialog">
                         <svg-icon icon-class="upload"></svg-icon>
@@ -302,6 +308,13 @@
             createLiveChannel() {
                 this.liveChannelDialogVisible = true;
                 this.status = 0;
+            },
+            // 批量创建直播频道
+            createChannelByImportExcel() {
+                this.$router.push({
+                    name: 'CreateChannelByImportExcel',
+                    params: {category: 'LIVE'}
+                });
             },
             searchHandler() {
                 this.getChannelList();
