@@ -55,6 +55,21 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item class="search">
+                    <el-select
+                        :value="searchFields.record"
+                        clearable
+                        placeholder="请选择是否录制回看"
+                        @input="inputHandler($event, 'record')"
+                    >
+                        <el-option
+                            v-for="(item, index) in recordOptinos"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item>
                     <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="searchHandler" plain>搜索</el-button>
                     <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
@@ -163,6 +178,16 @@
                 fileUploadDialogVisible: false,
                 fileList: [],
                 uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
+                recordOptinos: [
+                    {
+                        name: '是',
+                        value: true
+                    },
+                    {
+                        name: '否',
+                        value: false
+                    }
+                ],
                 status: 0
             };
         },

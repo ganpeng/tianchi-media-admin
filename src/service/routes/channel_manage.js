@@ -2,7 +2,7 @@ import qs from 'querystring';
 import _ from 'lodash';
 import service from '../config';
 
-const sevenDayTimeStamp = 60 * 60 * 24 * 7 * 1000;
+const sevenDayTimeStamp = 60 * 60 * 24 * 14 * 1000;
 
 /**
  * 获取频道详情
@@ -74,10 +74,11 @@ export const deleteChannelById = (id) => {
 /**
  * 获取频道的列表
  */
-export const getChannelList = ({pageNum, pageSize, keyword, typeIdList, visible, category}) => {
+export const getChannelList = ({pageNum, pageSize, record, keyword, typeIdList, visible, category}) => {
     let params = {
         pageNum,
         pageSize,
+        record,
         keyword,
         typeIdList,
         visible,

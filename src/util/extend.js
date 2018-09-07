@@ -1,6 +1,7 @@
 import store from 'store';
 import _ from 'lodash';
 import constants from './constants';
+import {Message} from 'element-ui';
 
 /**
  * 扩展公共方法的工具类模块，使用ES6 module
@@ -208,6 +209,19 @@ let util = {
             return `http://${totalServers[index]}${uri}`;
         } else {
             return `http://${_.sample(totalServers)}${uri}`;
+        }
+    },
+    showNetworkErrorMessage() {
+        if (window.navigator.onLine) {
+            Message({
+                message: '服务器连接失败，请稍后重试',
+                type: 'error'
+            });
+        } else {
+            Message({
+                message: '网络连接失败，请检查您的网络连接情况',
+                type: 'error'
+            });
         }
     }
 };

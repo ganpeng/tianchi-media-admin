@@ -9,3 +9,10 @@ import service from '../config';
 export const uploadImage = ({formData, url}) => {
     return service.post(url, formData);
 };
+
+/**
+ * 检测服务器是不是可用
+ */
+export const checkServerAvailable = (uri) => {
+    return service.get(`${uri}/v1/server/available`);
+};

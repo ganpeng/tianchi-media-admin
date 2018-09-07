@@ -19,7 +19,7 @@
                 <el-input
                     :disabled="readonly"
                     :value="liveChannel.innerName"
-                    :maxlength="30"
+                    :maxlength="20"
                     placeholder="请输入直播频道名称"
                     @input="inputHandler($event, 'innerName')"
                 ></el-input>
@@ -27,6 +27,7 @@
             <el-form-item label="直播频道展示名" prop="name">
                 <el-input
                     :value="liveChannel.name"
+                    :maxlength="20"
                     placeholder="请输入直播频道展示名"
                     @input="inputHandler($event, 'name')"
                     :disabled="readonly"
@@ -85,6 +86,10 @@
                         :value="item.id">
                     </el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item label="是否录制回看" prop="record">
+                <el-radio @input="inputHandler(true, 'record')" :value="liveChannel.record" :label="true">是</el-radio>
+                <el-radio @input="inputHandler(false, 'record')" :value="liveChannel.record" :label="false">否</el-radio>
             </el-form-item>
             <el-form-item label="视频封面图" prop="logoUri">
                 <div class="text-left clearfix">
@@ -151,6 +156,7 @@
             return {
                 isLoading: false,
                 imageUploadDialogVisible: false,
+                radio2: 3,
                 size: dimension.CHANNEL_LOGO_DIMENSION,
                 inputRules: {
                     name: [
@@ -174,6 +180,9 @@
                     pushServer: [
                         { required: true, message: '请输入所属服务器地址' },
                         { validator: checkIp }
+                    ],
+                    record: [
+                        { required: true, message: '请选择是否录制直播回看' }
                     ],
                     typeList: [
                         { required: true, message: '请选择直播频道类别' }

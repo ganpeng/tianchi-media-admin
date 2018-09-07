@@ -6,33 +6,33 @@
             {name:'视频资源管理'},
             {name:'视频列表'}]">
         </custom-breadcrumb>
+        <el-col :span="24">
+            <div style="margin-bottom:20px;" class="float-right">
+                <el-dropdown>
+                    <el-button
+                        class="page-main-btn create-blue-btn contain-svg-icon"
+                        >
+                        <svg-icon icon-class="upload"></svg-icon>
+                        上传视频<i class="el-icon-arrow-down el-icon--right"></i>
+                    </el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>
+                            <div class="wrapper">
+                                <label for="upload-input">选择文件</label>
+                                <input id="upload-input-file" class="upload-input" type="file" accept="video/*" ref="uploadInputFile" multiple>
+                            </div>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <div class="wrapper">
+                                <label for="upload-input">选择文件夹</label>
+                                <input id="upload-input-dir" class="upload-input" type="file" accet="video/*" ref="uploadInputDir" multiple directory webkitdirectory allowdirs>
+                            </div>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </div>
+        </el-col>
         <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @keyup.enter.native="searchHandler" @submit.native.prevent>
-            <el-col :span="24">
-                <el-form-item class="float-right">
-                    <el-dropdown>
-                        <el-button
-                            class="page-main-btn create-blue-btn contain-svg-icon"
-                            >
-                            <svg-icon icon-class="upload"></svg-icon>
-                            上传视频<i class="el-icon-arrow-down el-icon--right"></i>
-                        </el-button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item>
-                                <div class="wrapper">
-                                    <label for="upload-input">选择文件</label>
-                                    <input id="upload-input-file" class="upload-input" type="file" accept="video/*" ref="uploadInputFile" multiple>
-                                </div>
-                            </el-dropdown-item>
-                            <el-dropdown-item>
-                                <div class="wrapper">
-                                    <label for="upload-input">选择文件夹</label>
-                                    <input id="upload-input-dir" class="upload-input" type="file" accet="video/*" ref="uploadInputDir" multiple directory webkitdirectory allowdirs>
-                                </div>
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </el-form-item>
-            </el-col>
             <el-col :span="24">
                 <el-form-item class="search">
                     <el-input
@@ -158,8 +158,12 @@
                 this.resetSearchFields();
             },
             clearInputValue() {
-                this.$refs.uploadInputFile.value = null;
-                this.$refs.uploadInputDir.value = null;
+                if (this.$refs.uploadInputFile && this.$refs.uploadInputFile.value) {
+                    this.$refs.uploadInputFile.value = null;
+                }
+                if (this.$refs.uploadInputDir && this.$refs.uploadInputDir.value) {
+                    this.$refs.uploadInputDir.value = null;
+                }
             },
             retrySelectedVideoHandler() {
                 let idList = this.$refs.videoTable.selectedVideoList.filter((video) => {

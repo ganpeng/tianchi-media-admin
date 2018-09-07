@@ -18,6 +18,7 @@ let defaultChannelTypeList = [
 let defaultSearchFields = {
     keyword: '',
     typeIdList: '',
+    record: undefined,
     category: 'LIVE'
 };
 
@@ -41,6 +42,7 @@ let defaultLiveChannel = {
     pushServer: '', // 所属服务器
     releaseStatus: '', // 直播频道的发布状态
     status: '', // 直播频道状态`
+    record: '', // 是否支持直播回看
     //  直播频道的类型列表
     typeList: [],
     visible: false // 是否上下架
