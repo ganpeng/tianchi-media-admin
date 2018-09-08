@@ -102,7 +102,8 @@ const getters = {
     mainRoleLabel(state) {
         return (mainRoleList) => {
             return mainRoleList.map((item) => {
-                return role.MAIN_ROLE_OPTIONS.find((mainRoleItem) => mainRoleItem.value === item).label;
+                let obj = role.MAIN_ROLE_OPTIONS.find((mainRoleItem) => mainRoleItem.value === item);
+                return obj && obj.label ? obj.label : '';
             });
         };
     }

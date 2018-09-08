@@ -88,8 +88,8 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="是否录制回看" prop="record">
-                <el-radio @input="inputHandler(true, 'record')" :value="liveChannel.record" :label="true">是</el-radio>
-                <el-radio @input="inputHandler(false, 'record')" :value="liveChannel.record" :label="false">否</el-radio>
+                <el-radio :disabled="readonly" @input="inputHandler(true, 'record')" :value="liveChannel.record" :label="true">是</el-radio>
+                <el-radio :disabled="readonly" @input="inputHandler(false, 'record')" :value="liveChannel.record" :label="false">否</el-radio>
             </el-form-item>
             <el-form-item label="视频封面图" prop="logoUri">
                 <div class="text-left clearfix">

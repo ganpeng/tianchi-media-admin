@@ -44,6 +44,10 @@ export const MAIN_ROLE_OPTIONS = [
     {
         value: 'CARTOON_CHARACTER',
         label: '卡通人物'
+    },
+    {
+        value: 'ANIME_CHARACTER',
+        label: '动漫人物'
     }
 ];
 

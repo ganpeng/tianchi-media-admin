@@ -595,8 +595,8 @@ export default {
 <style lang="less" scoped>
 .upload-video-container {
     position:absolute;
-    bottom: 85px;
-    right: 40px;
+    bottom: 3px;
+    right: 20px;
     width: 800px;
     padding: 0 20px;
     background: #fff;

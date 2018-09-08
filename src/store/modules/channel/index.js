@@ -215,7 +215,7 @@ const actions = {
         try {
             let res = await service.getChannelDetail(id);
             if (res && res.code === 0) {
-                commit('setLiveChannel', {liveChannel: res.data});
+                commit('setLiveChannel', {liveChannel: Object.assign({record: null}, res.data)});
                 return res;
             }
         } catch (err) {}
