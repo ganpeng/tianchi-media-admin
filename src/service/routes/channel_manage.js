@@ -2,7 +2,7 @@ import qs from 'querystring';
 import _ from 'lodash';
 import service from '../config';
 
-const sevenDayTimeStamp = 60 * 60 * 24 * 14 * 1000;
+const sevenDayTimeStamp = 60 * 60 * 24 * 7 * 1000;
 
 /**
  * 获取频道详情
