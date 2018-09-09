@@ -65,7 +65,7 @@
                                 :disabled="readonly"
                                 :value="programme.releaseAt"
                                 @input="inputHandler($event, 'releaseAt')"
-                                type="year"
+                                type="date"
                                 placeholder="选择年">
                             </el-date-picker>
                         </el-form-item>
@@ -933,7 +933,7 @@
                         if (key === 'platformList') {
                             let existing = platformList.findIndex((item) => item === value);
                             let index = this.global.platformList.findIndex((item) => item.value === value);
-                            if (!existing) {
+                            if (existing === -1) {
                                 return `播出平台只能填写[${platformList.join(', ')}]中的`;
                             }
                             if (index >= 0) {
