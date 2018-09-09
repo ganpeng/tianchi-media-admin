@@ -154,52 +154,40 @@ export const RELEASE_STATUS = {
 // 年级
 export const GRADE = [
     {
-        value: 'ONE',
         label: '一年级'
     },
     {
-        value: 'TWO',
         label: '二年级'
     },
     {
-        value: 'THREE',
         label: '三年级'
     },
     {
-        value: 'FOUR',
         label: '四年级'
     },
     {
-        value: 'FIVE',
         label: '五年级'
     },
     {
-        value: 'SIX',
         label: '六年级'
     },
     {
-        value: 'CZ_ONE',
-        label: '初中一年级'
+        label: '初一'
     },
     {
-        value: 'CZ_TWO',
-        label: '初中二年级'
+        label: '初二'
     },
     {
-        value: 'CZ_THREE',
-        label: '初中三年级'
+        label: '初三'
     },
     {
-        value: 'GZ_ONE',
-        label: '高中一年级'
+        label: '高一'
     },
     {
-        value: 'GZ_TWO',
-        label: '高中二年级'
+        label: '高二'
     },
     {
-        value: 'GZ_THREE',
-        label: '高中三年级'
+        label: '高三'
     }
 ];
 

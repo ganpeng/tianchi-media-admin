@@ -265,9 +265,9 @@
                             >
                                 <el-option
                                     v-for="item in gradeOptions"
-                                    :key="item.value"
+                                    :key="item.label"
                                     :label="item.label"
-                                    :value="item.value">
+                                    :value="item.label">
                                 </el-option>
                             </el-select>
                         </el-form-item>
