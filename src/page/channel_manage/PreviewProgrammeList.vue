@@ -147,6 +147,7 @@
                         res[timeKey].push(curr);
                     } else {
                         res[timeKey] = [];
+                        res[timeKey].push(curr);
                     }
                     return res;
                 }, {});
