@@ -70,6 +70,7 @@
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
+    import store from 'store';
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import PersonDetail from './PersonDetail';
     import Thumbnail from '../../components/custom_components/custom/Thumbnail';
@@ -82,6 +83,7 @@
         },
         data() {
             return {
+                areaOptions: store.get('areaList'),
                 previewImage: {
                     display: false,
                     autoplay: false,

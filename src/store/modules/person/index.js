@@ -301,6 +301,23 @@ const actions = {
             let res = await service.deletePerson(id);
             return res;
         } catch (err) { }
+    },
+    async getDuplicateList({commit, state}) {
+        try {
+            let {pageNum, pageSize} = state.pagination;
+            let res = await service.getDuplicateList({pageNum: pageNum - 1, pageSize});
+            if (res && res.code === 0) {
+                let {pageNum, pageSize, total, list} = res.data;
+                let newList = list.reduce((result, curr) => {
+                    result = result.concat(curr.figureList);
+                    return result;
+                }, []);
+                commit('setPersonList', {list: newList});
+                commit('setPagination', {pageSize, pageNum: pageNum + 1, total});
+            }
+        } catch (err) {
+            console.log(err);
+        }
     }
 };
 

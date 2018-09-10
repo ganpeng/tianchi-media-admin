@@ -59,6 +59,9 @@
                         清空筛选条件
                     </el-button>
                 </el-form-item>
+                    <el-form-item class="float-right margin-bottom-0">
+                        <!-- <el-button class="create-blue-btn" size="small" @click="getDuplicateListHandler">重复人物查询</el-button> -->
+                    </el-form-item>
             </el-col>
         </el-form>
         <el-table :row-class-name='"figure-row"' :header-row-class-name='"common-table-header"' class="my-table-style" :data="list" border>
@@ -210,7 +213,8 @@
             ...mapActions({
                 getPersonList: 'person/getPersonList',
                 lowerFramePerson: 'person/lowerFramePerson',
-                deletePerson: 'person/deletePerson'
+                deletePerson: 'person/deletePerson',
+                getDuplicateList: 'person/getDuplicateList'
             }),
             clearSearchFields() {
                 this.resetSearchFields();
@@ -318,6 +322,10 @@
                             message: '已取消删除'
                         });
                     });
+            },
+            // 重复人物查询
+            getDuplicateListHandler() {
+                this.getDuplicateList();
             },
             // 放大预览图片
             displayImage(image) {

@@ -70,3 +70,12 @@ export const deletePerson = (id) => {
 export const lowerFramePerson = (id) => {
     return service.patch(`/v1/content/figure/${id}/visible`);
 };
+
+/**
+ * 人物去重查询
+ */
+export const getDuplicateList = ({pageNum, pageSize}) => {
+    return service.get(`/v1/content/figure/duplicate/page`, {
+        params: {pageNum, pageSize}
+    });
+};
