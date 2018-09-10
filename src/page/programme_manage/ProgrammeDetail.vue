@@ -9,7 +9,6 @@
         <div class="text-right">
             <el-button class="page-main-btn" v-if="status === 0" type="primary" @click="_createProgramme">创建</el-button>
             <el-button class="page-main-btn" v-if="status === 2" type="primary" @click="_editProgramme">保存</el-button>
-            <el-button class="page-main-btn" v-if="status === 2 && !programme.visible" type="danger" @click="_realDeleteProgramme">节目删除</el-button>
             <el-button class="page-main-btn" @click="goBack" plain>返回列表页</el-button>
         </div>
         <el-row>
@@ -401,7 +400,6 @@
         <div class="group">
             <el-button class="page-margin-btn page-main-btn" v-if="status === 0" type="primary" @click="_createProgramme">创建</el-button>
             <el-button class="page-margin-btn page-main-btn" v-if="status === 2" type="primary" @click="_editProgramme">保存</el-button>
-            <el-button class="page-margin-btn page-main-btn" v-if="status === 2 && !programme.visible" type="danger" @click="_realDeleteProgramme">节目删除</el-button>
             <el-button class="page-margin-btn page-main-btn" @click="goBack" plain>返回列表页</el-button>
         </div>
         <upload-image
@@ -442,7 +440,6 @@
     import Thumbnail from '../../components/custom_components/custom/Thumbnail';
     import {checkScore, checkCategory, checkPositiveInteger} from '@/util/formValidate';
     import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
-    const platformList = [ '中央电视台', '浙江卫视', '东方卫视', '江苏卫视', '湖南卫视', '安徽卫视', '北京卫视', '腾讯', '爱奇艺', '优酷', '搜狐', '芒果' ];
 
     export default {
         name: 'ProgrammeDetail',
@@ -531,7 +528,6 @@
                 isTvPlay: 'programme/isTvPlay',
                 isMovie: 'programme/isMovie',
                 isEducation: 'programme/isEducation',
-                isShow: 'programme/isShow',
                 isSports: 'programme/isSports'
             }),
             readonly() {
@@ -585,7 +581,6 @@
             ...mapMutations({
                 addSelectItem: 'programme/addSelectItem',
                 addProgrammeTag: 'programme/addProgrammeTag',
-                updateGlobal: 'programme/updateGlobal',
                 updateProgramme: 'programme/updateProgramme',
                 updatePersonResult: 'programme/updatePersonResult',
                 updatePerson: 'programme/updatePerson',
@@ -604,10 +599,8 @@
                 updateProgrammeById: 'programme/updateProgrammeById',
                 createMultProgrammeVideo: 'programme/createMultProgrammeVideo',
                 getDict: 'programme/getDict',
-                realDeleteProgramme: 'programme/realDeleteProgramme',
                 // 新加结束
                 createProgramme: 'programme/createProgramme',
-                getPersonList: 'person/getPersonList',
                 getProgrammeCategory: 'programme/getProgrammeCategory',
                 getProgrammeVideoListById: 'programme/getProgrammeVideoListById',
                 getProgrammeTagList: 'programme/getProgrammeTagList',
@@ -824,29 +817,6 @@
                         });
                     });
             },
-            _realDeleteProgramme() {
-                let {id} = this.$route.params;
-                this.$confirm(`您确定要删除该吗, 是否继续?`, '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'error'
-                    }).then(() => {
-                        this.realDeleteProgramme(id)
-                            .then((res) => {
-                                if (res && res.code === 0) {
-                                    this.$message.success({ message: '节目删除成功' });
-                                    this.$router.push({ name: 'ProgrammeList' });
-                                } else {
-                                    this.$message.error({ message: '节目删除失败' });
-                                }
-                            });
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                    });
-            },
             showSortDialog() {
                 this.sortDialogVisible = true;
             },
@@ -933,11 +903,7 @@
                     inputPattern: /\S/,
                     inputValidator: (value) => {
                         if (key === 'platformList') {
-                            let existing = platformList.findIndex((item) => item === value);
                             let index = this.global.platformList.findIndex((item) => item.value === value);
-                            if (existing === -1) {
-                                return `播出平台只能填写[${platformList.join(', ')}]中的`;
-                            }
                             if (index >= 0) {
                                 return `新播放平台${value}已经存在`;
                             } else {
@@ -945,7 +911,6 @@
                             }
                         } else if (key === 'programmeTagList') {
                             let index = this.global.programmeTagList.findIndex((item) => item === value);
-                            console.log(index);
                             if (index >= 0) {
                                 return `新关键字${value}已经存在`;
                             } else {

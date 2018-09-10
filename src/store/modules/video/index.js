@@ -165,8 +165,6 @@ const actions = {
                                 return item.code === video.code;
                             });
                             if (video) {
-                                console.log(video);
-                                console.log(elTable);
                                 elTable.toggleRowSelection(video);
                             }
                         });

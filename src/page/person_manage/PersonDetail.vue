@@ -52,13 +52,12 @@
             };
         },
         created() {
+            let {id} = this.$route.params;
+            this.resetPerson();
             if (this.status === 1 || this.status === 2) {
-                let {id} = this.$route.params;
                 if (id) {
                     this.getPersonById(id);
                 }
-            } else {
-                this.resetPerson();
             }
         },
         computed: {
@@ -94,9 +93,7 @@
             ...mapActions({
                 createPerson: 'person/createPerson',
                 updatePersonById: 'person/updatePersonById',
-                getPersonById: 'person/getPersonById',
-                putHotPerson: 'person/putHotPerson',
-                getHotPerson: 'person/getHotPerson'
+                getPersonById: 'person/getPersonById'
             }),
             // 新增人物
             _createPerson() {
@@ -106,8 +103,6 @@
                             this.isLoading = true;
                             this.createPerson()
                                 .then((res) => {
-                                    // let id = res.data.id;
-                                    // this.putHotPerson(id);
                                     this.$message.success('创建人物成功');
                                     this.$router.push({ name: 'PersonList' });
                                 }).finally(() => {
@@ -127,8 +122,6 @@
                             this.isLoading = true;
                             this.updatePersonById()
                                 .then(() => {
-                                    // let {id} = this.$route.params;
-                                    // this.putHotPerson(id);
                                     this.$message.success('编辑人物成功');
                                     this.$router.push({ name: 'PersonList' });
                                 }).finally(() => {

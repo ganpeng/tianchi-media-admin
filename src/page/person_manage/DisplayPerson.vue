@@ -70,7 +70,6 @@
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
-    import store from 'store';
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import PersonDetail from './PersonDetail';
     import Thumbnail from '../../components/custom_components/custom/Thumbnail';
@@ -116,8 +115,13 @@
                 return baseUri + uri;
             },
             areaLabel(code) {
-                let area = store.get('areaList').find((area) => area.code === code);
-                return area ? area.name : '';
+                let reg = /^\d+(\.\d+)?$/;
+                if (reg.test(code)) {
+                    let area = this.areaOptions.find((area) => area.code === code);
+                    return area ? area.name : '';
+                } else {
+                    return code;
+                }
             },
             goBack() {
                 this.$router.push({name: 'PersonList'});

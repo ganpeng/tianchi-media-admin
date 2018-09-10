@@ -25,7 +25,7 @@
                             </div>
                             <div class="info-wrapper">
                                 <span class="label">上映年</span>
-                                <span class="text">{{getYear(programme.releaseAt)}}</span>
+                                <span class="text">{{programme.releaseAt | formatDate('yyyy-MM-DD')}}</span>
                             </div>
                             <div class="info-wrapper">
                                 <span class="label">所属地区</span>

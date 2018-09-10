@@ -29,7 +29,7 @@
                         label-width="100px" label="上映开始年">
                         <el-date-picker
                             :value="programmeSearchFields.releaseAtStart"
-                            type="year"
+                            type="date"
                             clearable
                             style="width:180px;"
                             @input="inputHandler($event, 'releaseAtStart')"
@@ -40,7 +40,7 @@
                         label-width="100px" label="上映结束年">
                         <el-date-picker
                             :value="programmeSearchFields.releaseAtEnd"
-                            type="year"
+                            type="date"
                             clearable
                             style="width:180px;"
                             @input="inputHandler($event, 'releaseAtEnd')"
@@ -218,11 +218,14 @@
                 </el-table-column>
                 <el-table-column align="center" width="120px" label="操作">
                     <template slot-scope="scope">
-                        <el-button class="text-success" type="text" size="small" @click="displayProgramme(scope.row.id)">详情</el-button>
-                        <el-button type="text" size="small" @click="editProgramme(scope.row.id)">编辑</el-button>
-                        <el-button type="text" size="small" @click="lowerFrameProgramme(scope.row)">
-                            {{scope.row.visible ? '下架' : '上架'}}
-                        </el-button>
+                        <div class="btn-wrapper">
+                            <el-button class="text-success" type="text" size="small" @click="displayProgramme(scope.row.id)">详情</el-button>
+                            <el-button type="text" size="small" @click="editProgramme(scope.row.id)">编辑</el-button>
+                            <el-button type="text" size="small" @click="lowerFrameProgramme(scope.row)">
+                                {{scope.row.visible ? '下架' : '上架'}}
+                            </el-button>
+                            <el-button class="text-danger" type="text" size="small" @click="_realDeleteProgramme(scope.row.id)">删除</el-button>
+                        </div>
                     </template>
                 </el-table-column>
             </el-table>
@@ -353,6 +356,7 @@ export default {
             getProgrammeList: 'programme/getProgrammeList',
             getProgrammeCategory: 'programme/getProgrammeCategory',
             deleteProgramme: 'programme/deleteProgramme',
+            realDeleteProgramme: 'programme/realDeleteProgramme',
             upLowerFrameProgramme: 'programme/upLowerFrameProgramme'
         }),
         keyupHandler(e) {
@@ -434,7 +438,7 @@ export default {
                     this.deleteProgramme(id)
                         .then((res) => {
                             if (res && res.code === 0) {
-                                this.$message.success('节目下架成功');
+                                this.$message.success(`节目${visible ? '下架' : '上架'}成功`);
                                 this.getProgrammeList()
                                     .then((res) => {
                                         if (res && res.code === 0) {
@@ -557,6 +561,29 @@ export default {
                     }
                 });
         },
+        _realDeleteProgramme(id) {
+            this.$confirm(`您确定要删除该节目吗, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.realDeleteProgramme(id)
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                this.$message.success({ message: '节目删除成功' });
+                                this.$router.push({ name: 'ProgrammeList' });
+                            } else {
+                                let message = res.message || '节目删除失败';
+                                this.$message.error({ message });
+                            }
+                        });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+        },
         uploadSuccessHandler(res, file, fileList) {
             if (res && res.code === 0) {
                 this.$message({
@@ -625,5 +652,10 @@ export default {
 <style lang="less" scoped>
 .margin-bottom-0 {
     margin-bottom: 0;
+}
+.btn-wrapper .el-button {
+    &:nth-of-type(2n + 1) {
+        margin-left: 10px;
+    }
 }
 </style>

@@ -224,8 +224,13 @@
                 this.$router.push({ name: 'CreatePerson' });
             },
             areaLabel(code) {
-                let area = this.areaOptions.find((area) => area.code === code);
-                return area ? area.name : '';
+                let reg = /^\d+(\.\d+)?$/;
+                if (reg.test(code)) {
+                    let area = this.areaOptions.find((area) => area.code === code);
+                    return area ? area.name : '';
+                } else {
+                    return code;
+                }
             },
             // 跳转到详情页面
             displayPerson(userId) {
