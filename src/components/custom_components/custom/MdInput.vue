@@ -1,5 +1,5 @@
 <template>
-    <div class="material-input__component" :class="computedClasses">
+    <div class="material-input__component material--raised" :class="computedClasses">
         <div :class="{iconClass:icon}">
             <svg-icon
                 :icon-class="icon"

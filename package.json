@@ -10,6 +10,7 @@
     "dev:test": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "dev:prod": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "dev:xiongbao": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev:wubinhong": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "dev:xingyu": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "dev:lian": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "dev:chongqing": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",

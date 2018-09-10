@@ -183,8 +183,9 @@
                 timeOptions: [],
                 specOptions: [],
                 platformOptions: [],
-                // 包含网络综艺、卫视综艺的频道
+                // 包含网视、网络综艺、卫视综艺的频道
                 platformObject: {
+                    NETWORK: [],
                     TV_SHOW_NETWORK: [],
                     TV_SHOW_SATELLITE: []
                 },
@@ -212,6 +213,7 @@
                 this.initPlatform();
                 this.initGrade();
                 this.initSubject();
+                // 回填相应的数据
                 if (this.originState && this.originState.coverImage) {
                     this.coverImage = this.originState.coverImage;
                     this.categorySignCode = this.originState.layoutItemType.replace('_PROGRAMME_CATEGORY', '');
@@ -223,6 +225,7 @@
                 this.$service.getProgrammeCategory().then(response => {
                     if (response && response.code === 0) {
                         this.categoryOptions = response.data;
+                        // 设置娱乐项目的筛选列表
                         this.categoryOptions.map(category => {
                             for (let i = 0; i < CATALOGUE_CONFIG_MAP.ENTERTAINMENT.categorySignCode.length; i++) {
                                 if (category.signCode === CATALOGUE_CONFIG_MAP.ENTERTAINMENT.categorySignCode[i]) {
@@ -230,11 +233,13 @@
                                 }
                             }
                         });
+                        // 删除项目列表中的'党建'项目，混排筛选中不存在'党建'项目
                         for (let i = 0; i < this.categoryOptions.length; i++) {
                             if (this.categoryOptions[i].name === '党建') {
                                 this.categoryOptions.splice(i, 1);
                             }
                         }
+                        // 删除项目列表中的'幽默'项目，混排筛选中不存在'幽默'项目
                         for (let i = 0; i < this.categoryOptions.length; i++) {
                             if (this.categoryOptions[i].name === '幽默') {
                                 this.categoryOptions.splice(i, 1);
@@ -283,7 +288,7 @@
                 });
             },
             /** 出品方'ANNOUNCER'(纪实 RECORD)
-             *  网站'PLATFORM'（网络综艺 TV_SHOW_NETWORK、卫视综艺 TV_SHOW_SATELLITE）
+             *  网站'PLATFORM'（网视 NETWORK、网络综艺 TV_SHOW_NETWORK、卫视综艺 TV_SHOW_SATELLITE）
              *  赛事'CONTEST'（体育 SPORTS）
              *  人物'FIGURE'（曲艺 TUNE_ART）
              */
@@ -292,6 +297,15 @@
                 this.$service.getDict({categoryList: ['RECORD'], nameList: ['ANNOUNCER']}).then(response => {
                     if (response && response.code === 0 && response.data[0]) {
                         this.announcerOptions = response.data[0].optionList;
+                    }
+                });
+                // 网视的网站
+                this.$service.getDict({categoryList: ['NETWORK'], nameList: ['PLATFORM']}).then(response => {
+                    if (response && response.code === 0 && response.data[0]) {
+                        this.platformObject.NETWORK = response.data[0].optionList;
+                        if (this.categorySignCode === 'NETWORK') {
+                            this.platformOptions = this.platformObject.NETWORK;
+                        }
                     }
                 });
                 // 网络综艺的网站
