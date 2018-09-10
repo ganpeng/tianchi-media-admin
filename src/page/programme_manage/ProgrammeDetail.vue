@@ -354,7 +354,7 @@
                     </el-col>
                 </el-form>
             </el-col>
-            <el-col :span="24">
+            <el-col :span="24" id="upload-image">
                 <div class="vice-block">
                     <h3 class="block-vice-title">节目图片</h3>
                 </div>
@@ -462,10 +462,12 @@
                 type: Number
             }
         },
-        created() {
+        mounted() {
             this.resetProgramme();
             this.getProgrammeTagList();
             this.getProgrammeCategory();
+            // 直接定位到上传图片的位置
+            this.$el.querySelector('#upload-image').scrollIntoView();
         },
         data() {
             return {
