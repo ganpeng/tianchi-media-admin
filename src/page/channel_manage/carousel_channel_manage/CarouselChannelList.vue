@@ -206,6 +206,7 @@
             return {
                 createChannelDialogVisible: false,
                 listQueryParams: {
+                    category: 'CAROUSEL',
                     pageNum: 0,
                     pageSize: 10
                 },

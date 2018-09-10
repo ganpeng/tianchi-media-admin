@@ -132,7 +132,7 @@
                         name: '东方卫视',
                         innerName: '东方（上海）卫视',
                         no: '813',
-                        type: '娱乐',
+                        type: '娱乐/体育',
                         transcribe: '否',
                         multicastIp: '232.1.1.3',
                         multicastPort: '1234',
@@ -186,7 +186,7 @@
                     }, {
                         innerName: '射雕英雄传剧场',
                         no: '813',
-                        type: '娱乐',
+                        type: '娱乐/体育',
                         multicastIp: '232.1.1.3',
                         multicastPort: '1234',
                         tsId: '203',
@@ -249,11 +249,16 @@
                 this.createDisabled = true;
                 // 对每一项进行设置
                 for (let i = 0; i < this.channelList.length; i++) {
-                    this.typeOptions.map(type => {
-                        if (type.name === this.channelList[i].type) {
-                            this.channelList[i].typeList = [type];
-                        }
-                    });
+                    this.channelList[i].typeList = [];
+                    // 设置type
+                    let typeList = this.channelList[i].type.split('/');
+                    for (let k = 0; k < typeList.length; k++) {
+                        this.typeOptions.map(type => {
+                            if (type.name === typeList[k]) {
+                                this.channelList[i].typeList.push(type);
+                            }
+                        });
+                    }
                     // 设置是否回看
                     if (this.$route.params.category === 'LIVE') {
                         this.channelList[i].record = this.channelList[i].transcribe === '是';
@@ -371,13 +376,19 @@
             },
             // 检测频道的类型是否存在
             isChannelTypeExist(channelType) {
-                let tag = false;
-                this.typeOptions.map(type => {
-                    if (type.name === channelType) {
-                        tag = true;
+                let typeList = channelType.split('/');
+                for (let i = 0; i < typeList.length; i++) {
+                    let tag = false;
+                    this.typeOptions.map(type => {
+                        if (type.name === typeList[i]) {
+                            tag = true;
+                        }
+                    });
+                    if (!tag) {
+                        return false;
                     }
-                });
-                return tag;
+                }
+                return true;
             }
         }
     };
