@@ -68,6 +68,7 @@ import VersionList from 'sysPage/version_manage/VersionList';
 import HotPerson from 'sysPage/person_manage/HotPerson';
 import PreviewProgrammeList from 'sysPage/channel_manage/PreviewProgrammeList';
 import DeviceList from 'sysPage/device_manage/DeviceList';
+import DuplicateList from 'sysPage/person_manage/DuplicateList';
 
 Vue.use(Router);
 
@@ -311,6 +312,11 @@ let router = new Router({
                     path: '/person-manage/hot',
                     name: 'HotPerson',
                     component: HotPerson
+                },
+                {
+                    path: '/person-manage/duplicate',
+                    name: 'DuplicateList',
+                    component: DuplicateList
                 },
                 // 节目管理
                 // 新增节目

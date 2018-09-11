@@ -4,41 +4,13 @@
         <custom-breadcrumb
             v-bind:breadcrumbList="[
             {name:'人物资源管理'},
-            {name:'人物列表'}]">
+            {name:'人物列表-查询重复'}]">
         </custom-breadcrumb>
         <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left">
+            <el-form-item class="float-right">
+                <el-button class="page-main-btn" @click="goBack" plain>返回人物列表</el-button>
+            </el-form-item>
             <el-col :span="24">
-                <el-form-item class="float-right">
-                    <el-button
-                        class="page-main-btn create-blue-btn contain-svg-icon"
-                        @click="createPerson">
-                        <svg-icon icon-class="add"></svg-icon>
-                        新增人物
-                    </el-button>
-                    <el-button
-                        class="page-main-btn create-blue-btn contain-svg-icon"
-                        @click="showFileUploadDialog">
-                        <svg-icon icon-class="upload"></svg-icon>
-                        导入人物
-                    </el-button>
-                </el-form-item>
-            </el-col>
-            <el-col :span="24">
-                <el-form-item label="地区">
-                    <el-select
-                        :value="searchFields.area"
-                        filterable
-                        clearable
-                        placeholder="请选择地区"
-                        @input="inputHandler($event, 'area')">
-                        <el-option
-                            v-for="(item, index) in areaOptions"
-                            :key="index"
-                            :label="item.name"
-                            :value="item.code">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
                 <el-form-item class="search">
                     <el-input
                         :value="searchFields.name"
@@ -51,20 +23,10 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button class="page-main-btn" type="primary" @click="getPersonList" icon="el-icon-search" plain>搜索</el-button>
-                    <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
-                        <svg-icon
-                            icon-class="clear_filter"
-                            class-name="svg-box">
-                        </svg-icon>
-                        清空筛选条件
-                    </el-button>
                 </el-form-item>
-                    <el-form-item class="float-right margin-bottom-0">
-                        <el-button class="create-blue-btn" size="small" @click="getDuplicateListHandler">重复人物查询</el-button>
-                    </el-form-item>
             </el-col>
         </el-form>
-        <el-table :row-class-name='"figure-row"' :header-row-class-name='"common-table-header"' class="my-table-style" :data="list" border>
+        <el-table :row-class-name='"figure-row"' :header-row-class-name='"common-table-header"' class="my-table-style" :data="duplicate.list" border>
             <el-table-column prop="id" align="center" width="120px" label="编号">
                 <template slot-scope="scope">
                     {{scope.row.id | padEmpty}}
@@ -122,38 +84,13 @@
         <el-pagination
             @size-change="handlePaginationChange($event, 'pageSize')"
             @current-change="handlePaginationChange($event, 'pageNum')"
-            :current-page="pagination.pageNum"
+            :current-page="duplicate.pagination.pageNum"
             :page-sizes="[5, 10, 20, 30, 50]"
-            :page-size="pagination.pageSize"
+            :page-size="duplicate.pagination.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="pagination.total">
+            :total="duplicate.pagination.total">
         </el-pagination>
         <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
-        <el-dialog
-            title="上传人物表格"
-            :visible.sync="fileUploadDialogVisible"
-            :headers="uploadHeaders"
-            :show-close="true"
-            :before-close="closeFileUploadDialog"
-            :close-on-click-modal="false"
-            :close-on-press-escape="false">
-            <el-upload
-                class="upload-demo"
-                ref="upload"
-                :headers="uploadHeaders"
-                accept=".xlsx, .xls"
-                action="/admin/v1/content/figure/import"
-                :auto-upload="false"
-                :file-list="fileList"
-                :on-success="uploadSuccessHandler"
-                :with-credentials="true">
-                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-                    <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
-            </el-upload>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="closeFileUploadDialog">关闭</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 <script>
@@ -162,7 +99,7 @@
     import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
     import role from '../../util/config/role';
     export default {
-        name: 'PersonList',
+        name: 'DuplicateList',
         components: {
             PreviewSingleImage
         },
@@ -173,15 +110,11 @@
                     title: '',
                     display: false,
                     uri: ''
-                },
-                //  人物导入
-                fileUploadDialogVisible: false,
-                fileList: [],
-                uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token)
+                }
             };
         },
         created() {
-            this.getPersonList({isProgramme: false});
+            this.getDuplicateList();
             window.addEventListener('keyup', this.keyupHandler);
         },
         beforeDestroy() {
@@ -190,13 +123,12 @@
         beforeRouteLeave(to, from, next) {
             let {name} = to;
             if (name !== 'DisplayPerson' && name !== 'EditPerson') {
-                this.resetSearchFields();
-                this.resetPagination();
             }
             next();
         },
         computed: {
             ...mapGetters({
+                duplicate: 'person/duplicate',
                 list: 'person/list',
                 searchFields: 'person/searchFields',
                 pagination: 'person/pagination',
@@ -208,7 +140,11 @@
                 updateSearchFields: 'person/updateSearchFields',
                 updatePagination: 'person/updatePagination',
                 resetSearchFields: 'person/resetSearchFields',
-                resetPagination: 'person/resetPagination'
+                resetPagination: 'person/resetPagination',
+                // 人物去重部分
+                setDuplicateList: 'person/setDuplicateList',
+                setDuplicatePagination: 'person/setDuplicatePagination',
+                updateDuplicatePagination: 'person/updateDuplicatePagination'
             }),
             ...mapActions({
                 getPersonList: 'person/getPersonList',
@@ -244,11 +180,8 @@
                 this.$router.push({ name: 'EditPerson', params: { id: userId } });
             },
             handlePaginationChange(value, key) {
-                this.updatePagination({value, key});
-                if (key === 'pageSize') {
-                    window.localStorage.setItem('personPageSize', value);
-                }
-                this.getPersonList({isProgramme: false});
+                this.updateDuplicatePagination({value, key});
+                this.getDuplicateList();
             },
             inputHandler(value, key) {
                 this.updateSearchFields({key, value});
@@ -325,13 +258,16 @@
             },
             // 重复人物查询
             getDuplicateListHandler() {
-                this.$router.push({ name: 'DuplicateList' });
+                this.getDuplicateList();
             },
             // 放大预览图片
             displayImage(image) {
                 this.previewImage.title = image.name;
                 this.previewImage.display = true;
                 this.previewImage.uri = image.uri;
+            },
+            goBack() {
+                this.$router.back();
             },
             //  人物导入
             submitUpload() {

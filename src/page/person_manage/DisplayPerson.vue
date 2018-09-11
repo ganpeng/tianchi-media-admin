@@ -126,7 +126,7 @@
                 }
             },
             goBack() {
-                this.$router.push({name: 'PersonList'});
+                this.$router.back();
             }
         }
     };

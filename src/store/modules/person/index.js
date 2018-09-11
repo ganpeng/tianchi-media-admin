@@ -46,13 +46,19 @@ const defaultHotPerson = {
     }, {})
 };
 
+const defaultDuplicate = {
+    list: [],
+    pagination: _.cloneDeep(defaultPagination)
+};
+
 const defaultState = {
     recommend: _.cloneDeep(defaultRecommend),
     hotPerson: _.cloneDeep(defaultHotPerson),
     searchFields: _.cloneDeep(defaultSearchFields),
     currentPerson: _.cloneDeep(defaultPerson),
     list: [],
-    pagination: _.cloneDeep(defaultPagination)
+    pagination: _.cloneDeep(defaultPagination),
+    duplicate: _.cloneDeep(defaultDuplicate)
 };
 
 const state = _.cloneDeep(defaultState);
@@ -72,6 +78,9 @@ const getters = {
     },
     recommend(state) {
         return state.recommend;
+    },
+    duplicate(state) {
+        return state.duplicate;
     },
     // 热门人物部分
     hotPerson(state) {
@@ -211,6 +220,19 @@ const mutations = {
         state.currentPerson.backgroundImage = state.currentPerson.posterImageList.find((img) => {
             return parseInt(img.width) === 1920 && parseInt(img.height) === 1080;
         });
+    },
+    //  人物去重部分
+    setDuplicateList(state, payload) {
+        state.duplicate.list = payload.list;
+    },
+    setDuplicatePagination(state, payload) {
+        state.duplicate.pagination.pageSize = payload.pageSize;
+        state.duplicate.pagination.pageNum = payload.pageNum;
+        state.duplicate.pagination.total = payload.total;
+    },
+    updateDuplicatePagination(state, payload) {
+        let {key, value} = payload;
+        state.duplicate.pagination[key] = value;
     }
 };
 
@@ -304,7 +326,7 @@ const actions = {
     },
     async getDuplicateList({commit, state}) {
         try {
-            let {pageNum, pageSize} = state.pagination;
+            let {pageNum, pageSize} = state.duplicate.pagination;
             let res = await service.getDuplicateList({pageNum: pageNum - 1, pageSize});
             if (res && res.code === 0) {
                 let {pageNum, pageSize, total, list} = res.data;
@@ -312,8 +334,8 @@ const actions = {
                     result = result.concat(curr.figureList);
                     return result;
                 }, []);
-                commit('setPersonList', {list: newList});
-                commit('setPagination', {pageSize, pageNum: pageNum + 1, total});
+                commit('setDuplicateList', {list: newList});
+                commit('setDuplicatePagination', {pageSize, pageNum: pageNum + 1, total});
             }
         } catch (err) {
             console.log(err);

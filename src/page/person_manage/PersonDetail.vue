@@ -123,7 +123,7 @@
                             this.updatePersonById()
                                 .then(() => {
                                     this.$message.success('编辑人物成功');
-                                    this.$router.push({ name: 'PersonList' });
+                                    this.$router.back();
                                 }).finally(() => {
                                     this.isLoading = false;
                                 });
@@ -139,12 +139,6 @@
                     this.$message.error('请上传图片');
                     return false;
                 }
-
-                // if (posterImageList.length > 2) {
-                //     this.$message.error('只能上传两张图片');
-                //     return false;
-                // }
-
                 let sizeOne = posterImageList.findIndex((img) => parseInt(img.width) === 200 && parseInt(img.height) === 200);
                 let sizeTwo = posterImageList.findIndex((img) => parseInt(img.width) === 1920 && parseInt(img.height) === 1080);
 
@@ -168,7 +162,7 @@
                 this.$refs.personForm.$refs['createPerson'].resetFields();
             },
             goBack() {
-                this.$router.push({name: 'PersonList'});
+                this.$router.back();
             }
         }
     };
