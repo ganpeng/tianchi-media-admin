@@ -47,6 +47,7 @@ const defaultHotPerson = {
 };
 
 const defaultDuplicate = {
+    searchFields: _.cloneDeep(defaultSearchFields),
     list: [],
     pagination: _.cloneDeep(defaultPagination)
 };
@@ -233,6 +234,10 @@ const mutations = {
     updateDuplicatePagination(state, payload) {
         let {key, value} = payload;
         state.duplicate.pagination[key] = value;
+    },
+    updateDuplicateSearchFields(state, payload) {
+        let {key, value} = payload;
+        state.duplicate.searchFields[key] = value;
     }
 };
 
@@ -326,8 +331,9 @@ const actions = {
     },
     async getDuplicateList({commit, state}) {
         try {
+            let {name} = state.duplicate.searchFields;
             let {pageNum, pageSize} = state.duplicate.pagination;
-            let res = await service.getDuplicateList({pageNum: pageNum - 1, pageSize});
+            let res = await service.getDuplicateList({pageNum: pageNum - 1, pageSize, name});
             if (res && res.code === 0) {
                 let {pageNum, pageSize, total, list} = res.data;
                 let newList = list.reduce((result, curr) => {

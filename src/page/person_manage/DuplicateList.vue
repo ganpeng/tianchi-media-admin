@@ -13,7 +13,7 @@
             <el-col :span="24">
                 <el-form-item class="search">
                     <el-input
-                        :value="searchFields.name"
+                        :value="duplicate.searchFields.name"
                         @input="inputHandler($event, 'name')"
                         placeholder="搜索你想要的信息"
                         clearable
@@ -22,7 +22,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button class="page-main-btn" type="primary" @click="getPersonList" icon="el-icon-search" plain>搜索</el-button>
+                    <el-button class="page-main-btn" type="primary" @click="getDuplicateListHandler" icon="el-icon-search" plain>搜索</el-button>
                 </el-form-item>
             </el-col>
         </el-form>
@@ -144,10 +144,10 @@
                 // 人物去重部分
                 setDuplicateList: 'person/setDuplicateList',
                 setDuplicatePagination: 'person/setDuplicatePagination',
-                updateDuplicatePagination: 'person/updateDuplicatePagination'
+                updateDuplicatePagination: 'person/updateDuplicatePagination',
+                updateDuplicateSearchFields: 'person/updateDuplicateSearchFields'
             }),
             ...mapActions({
-                getPersonList: 'person/getPersonList',
                 lowerFramePerson: 'person/lowerFramePerson',
                 deletePerson: 'person/deletePerson',
                 getDuplicateList: 'person/getDuplicateList'
@@ -157,7 +157,7 @@
             },
             keyupHandler(e) {
                 if (e.keyCode === 13) {
-                    this.getPersonList({isProgramme: false});
+                    this.getDuplicateList();
                 }
             },
             createPerson() {
@@ -184,7 +184,7 @@
                 this.getDuplicateList();
             },
             inputHandler(value, key) {
-                this.updateSearchFields({key, value});
+                this.updateDuplicateSearchFields({key, value});
             },
             _lowerFramePerson(person) {
                 let {id, visible} = person;
@@ -197,7 +197,7 @@
                             .then((res) => {
                                 if (res && res.code === 0) {
                                     this.$message.success(`人物${visible ? '下架' : '上架'}成功`);
-                                    this.getPersonList({isProgramme: false});
+                                    this.getDuplicateList();
                                 } else {
                                     this.$message.error(this.lowerFramePersonErrorHandler(res));
                                 }
@@ -243,7 +243,7 @@
                             .then((res) => {
                                 if (res && res.code === 0) {
                                     this.$message.success('人物删除成功');
-                                    this.getPersonList({isProgramme: false});
+                                    this.getDuplicateList();
                                 } else {
                                     let msg = res.message || '人物删除失败';
                                     this.$message.error(msg);

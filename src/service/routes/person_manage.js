@@ -74,8 +74,8 @@ export const lowerFramePerson = (id) => {
 /**
  * 人物去重查询
  */
-export const getDuplicateList = ({pageNum, pageSize}) => {
+export const getDuplicateList = ({pageNum, pageSize, name}) => {
     return service.get(`/v1/content/figure/duplicate/page`, {
-        params: {pageNum, pageSize}
+        params: {pageNum, pageSize, name}
     });
 };
