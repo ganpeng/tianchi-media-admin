@@ -17,18 +17,24 @@
             <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
         </el-upload>
+        <!--生成直播节目单-->
         <generate-programme-xml>
         </generate-programme-xml>
+        <!--导出所有注入失败的视频-->
+        <export-excel-video-failed>
+        </export-excel-video-failed>
     </div>
 </template>
 
 <script>
     import GenerateProgrammeXml from './GenerateProgrammeXml';
+    import ExportExcelVideoFailed from './ExportExcelVideoFailed';
 
     export default {
         name: 'Kits',
         components: {
-            GenerateProgrammeXml
+            GenerateProgrammeXml,
+            ExportExcelVideoFailed
         },
         data() {
             return {

@@ -206,7 +206,6 @@
             return {
                 createChannelDialogVisible: false,
                 listQueryParams: {
-                    category: 'CAROUSEL',
                     pageNum: 0,
                     pageSize: 10
                 },
@@ -246,6 +245,7 @@
                     }
                 }
                 this.listQueryParams.pageNum = this.pageNum - 1;
+                this.listQueryParams.category = 'CAROUSEL';
                 // 保存当前参数到localStorage中，下次页面重建的时候，自动填写并查询
                 wsCache.localStorage.set('carouselChannelListParams', this.listQueryParams);
                 this.$service.getChannelList(this.listQueryParams).then(response => {
