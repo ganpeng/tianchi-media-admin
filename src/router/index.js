@@ -55,6 +55,7 @@ import DialogAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/Di
 import DetailPageAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/DetailPageAdvertGroupList';
 import VideoList from 'sysPage/video_manage/VideoList';
 import LiveChannelList from 'sysPage/channel_manage/LiveChannelList';
+import EditLiveChannelByImportExcel from 'sysPage/channel_manage/EditLiveChannelByImportExcel';
 import CarouselChannelList from 'sysPage/channel_manage/carousel_channel_manage/CarouselChannelList';
 import CreateChannelByImportExcel from 'sysPage/channel_manage/carousel_channel_manage/CreateChannelByImportExcel';
 import EditChannelByImportExcel from 'sysPage/channel_manage/carousel_channel_manage/EditChannelByImportExcel';
@@ -415,6 +416,12 @@ let router = new Router({
                     path: '/channel-manage/live/list',
                     name: 'LiveChannelList',
                     component: LiveChannelList
+                },
+                //  直播频道管理-批量修改
+                {
+                    path: '/channel-manage/live/import-edit',
+                    name: 'EditLiveChannelByImportExcel',
+                    component: EditLiveChannelByImportExcel
                 },
                 {
                     path: '/channel-manage/live/preview/:id',

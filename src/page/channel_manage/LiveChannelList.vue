@@ -22,6 +22,12 @@
                         批量导入频道
                     </el-button>
                     <el-button
+                        class="create-blue-btn contain-svg-icon"
+                        @click="editChannelByImportExcel">
+                        <svg-icon icon-class="edit"></svg-icon>
+                        批量修改频道
+                    </el-button>
+                    <el-button
                         class="page-main-btn create-blue-btn contain-svg-icon"
                         @click="showFileUploadDialog">
                         <svg-icon icon-class="upload"></svg-icon>
@@ -254,6 +260,11 @@
                         this.liveChannelDialogVisible = true;
                         this.status = 1;
                     });
+            },
+            editChannelByImportExcel() {
+                this.$router.push({
+                    name: 'EditLiveChannelByImportExcel'
+                });
             },
             previewChannelPage(id, name, flag) {
                 this.getChannelPageById(id)

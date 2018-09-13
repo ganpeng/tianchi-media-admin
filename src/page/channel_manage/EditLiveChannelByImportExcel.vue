@@ -1,10 +1,10 @@
-<!--导入excel统一批量修改轮播频道组件-->
+<!--导入excel统一批量修改直播频道组件-->
 <template>
     <div>
         <custom-breadcrumb
             v-bind:breadcrumbList="[
             {name:'频道管理'},
-            {name:'轮播频道批量修改'}]">
+            {name:'直播频道批量修改'}]">
         </custom-breadcrumb>
         <div class="import-container">
             <upload-excel-component
@@ -55,7 +55,7 @@
                 返回列表页
             </el-button>
             <div class="operate-item">
-                <el-button class="create-blue-btn" @click="exportTemplate">导出所有轮播频道</el-button>
+                <el-button class="create-blue-btn" @click="exportTemplate">导出所有直播频道</el-button>
             </div>
         </div>
     </div>
@@ -76,37 +76,51 @@
                 channelList: [],
                 tableHeader: [],
                 failNo: 0,
-                finishNo: 0
+                finishNo: 0,
+                typeOptions: []
             };
         },
         mounted() {
+            this.init();
         },
         methods: {
-            // 导出所有轮播频道的表格
+            init() {
+                this.$service.getChannelType({category: 'LIVE'}).then(response => {
+                    if (response && response.code === 0) {
+                        this.typeOptions = response.data;
+                    }
+                });
+            },
+            // 导出所有直播频道的表格
             exportTemplate() {
-                this.$service.getChannelList({category: 'CAROUSEL', pageSize: 2000, pageNum: 0}).then(response => {
+                this.$service.getChannelList({category: 'LIVE', pageSize: 2000, pageNum: 0}).then(response => {
                     if (response && response.code === 0) {
                         this.channelAllList = response.data.list;
                         let exportChannelData = [];
                         this.channelAllList.map(channel => {
+                            let type = '';
+                            for (let i = 0; i < channel.typeList.length; i++) {
+                                type = type + '/' + channel.typeList[i].name;
+                            }
                             let simpleChannel = {
                                 id: channel.id,
                                 innerName: channel.innerName,
+                                name: channel.name,
                                 no: channel.no,
+                                type: type.slice(1),
                                 multicastIp: channel.multicastIp,
                                 multicastPort: channel.multicastPort,
-                                tsId: channel.tsId,
-                                serviceId: channel.serviceId,
-                                pushServer: channel.pushServer
+                                pushServer: channel.pushServer,
+                                transcribe: channel.record ? '是' : '否'
                             };
                             exportChannelData.push(simpleChannel);
                         });
-                        // 目前可以修改的字段有编号、组播地址、端口号、tsId、serviceId、所属服务器
+                        // 目前可以修改的字段有编号、类型、组播地址、端口号、所属服务器、是否录制回看
                         let wb = XLSX.utils.book_new();
                         let newWsName = '表1';
                         let ws = XLSX.utils.json_to_sheet(exportChannelData);
                         XLSX.utils.book_append_sheet(wb, ws, newWsName);
-                        XLSX.writeFile(wb, '轮播频道批量修改导入表.xlsx');
+                        XLSX.writeFile(wb, '直播频道批量修改导入表.xlsx');
                     }
                 });
             },
@@ -120,7 +134,7 @@
                 this.tableHeader = header;
             },
             toChannelList() {
-                this.$router.push({name: 'CarouselChannelList'});
+                this.$router.push({name: 'LiveChannelList'});
             },
             reset() {
                 this.tips = '';
@@ -130,12 +144,12 @@
                     channel.message = '';
                 });
             },
-            // 批量修改轮播频道
+            // 批量修改直播频道
             UpdateChannels() {
                 this.reset();
                 if (this.channelList.length === 0) {
                     this.$message({
-                        message: '当前没有轮播频道需要修改',
+                        message: '当前没有直播频道需要修改',
                         type: 'warning'
                     });
                     return;
@@ -156,8 +170,8 @@
                     return;
                 }
                 this.updateDisabled = true;
-                this.$message('当前有' + this.channelList.length + '个轮播频道,大约需要' + this.channelList.length + '秒,请耐心等待');
-                // 依次修改轮播频道
+                this.$message('当前有' + this.channelList.length + '个直播频道,大约需要' + this.channelList.length + '秒,请耐心等待');
+                // 依次修改直播频道
                 for (let i = 0; i < this.channelList.length; i++) {
                     let newFunction = function () {
                         return (function (i) {
@@ -171,6 +185,18 @@
                 let channelInfo = JSON.parse(JSON.stringify(this.channelList[index]));
                 delete channelInfo.id;
                 delete channelInfo.innerName;
+                delete channelInfo.name;
+                channelInfo.record = channelInfo.transcribe === '是';
+                channelInfo.typeList = [];
+                // 设置type
+                let typeList = channelInfo.type.split('/');
+                for (let k = 0; k < typeList.length; k++) {
+                    this.typeOptions.map(type => {
+                        if (type.name === typeList[k]) {
+                            channelInfo.typeList.push(type);
+                        }
+                    });
+                }
                 this.$service.updateChannelPartInfoById({
                     id: this.channelList[index].id,
                     putChannelReq: channelInfo
@@ -183,11 +209,11 @@
                         this.failNo++;
                         this.channelList[index].message = '第' + (index + 1) + '个:频道修改失败：' + response.message;
                     }
-                    this.tips = '提示：当前一共有' + this.channelList.length + '个轮播频道，已经进行了' + this.finishNo + '个，失败' + this.failNo + '个';
+                    this.tips = '提示：当前一共有' + this.channelList.length + '个直播频道，已经进行了' + this.finishNo + '个，失败' + this.failNo + '个';
                     this.$set(this.channelList, index, this.channelList[index]);
                     if (this.finishNo === this.channelList.length) {
                         this.updateDisabled = false;
-                        this.$message(this.channelList.length + '个轮播频道的修改完成，请查看对应的信息提示');
+                        this.$message(this.channelList.length + '个直播频道的修改完成，请查看对应的信息提示');
                     }
                 });
             },
@@ -204,6 +230,12 @@
                 } else if (!this.$util.isChannelNo(channel.no)) {
                     message = message + '请填写频道编号数字，例如"001";';
                 }
+                // 频道类别
+                if (this.$util.isEmpty(channel.type)) {
+                    message = message + '请填写频道类别;';
+                } else if (!this.isChannelTypeExist(channel.type)) {
+                    message = message + '频道类别不存在;';
+                }
                 // 组播地址
                 if (this.$util.isEmpty(channel.multicastIp)) {
                     message = message + '组播地址不能为空;';
@@ -216,19 +248,14 @@
                 } else if (!this.$util.isPort(channel.multicastPort)) {
                     message = message + '请填写正确的端口号;';
                 }
-                // tsId
-                if (!this.$util.isEmpty(channel.tsId) && !this.$util.isChannelServiceId(channel.tsId)) {
-                    message = message + '请填写正确的serviceId;';
-                }
-                // serviceId
-                if (!this.$util.isEmpty(channel.serviceId) && !this.$util.isChannelServiceId(channel.serviceId)) {
-                    message = message + '请填写正确的serviceId;';
-                }
                 // 所属服务器
                 if (this.$util.isEmpty(channel.pushServer)) {
                     message = message + '请填写所属服务器IP地址;';
                 } else if (!this.$util.isIPAddress(channel.pushServer)) {
                     message = message + '请填写正确的所属服务器IP地址;';
+                }
+                if (channel.transcribe !== '是' && channel.transcribe !== '否') {
+                    message = message + '请正确填写是否回看服务;';
                 }
                 if (message) {
                     this.channelList[index].message = '第' + (index + 1) + '个:' + message;
@@ -237,6 +264,22 @@
                 } else {
                     return true;
                 }
+            },
+            // 检测频道的类型是否存在
+            isChannelTypeExist(channelType) {
+                let typeList = channelType.split('/');
+                for (let i = 0; i < typeList.length; i++) {
+                    let tag = false;
+                    this.typeOptions.map(type => {
+                        if (type.name === typeList[i]) {
+                            tag = true;
+                        }
+                    });
+                    if (!tag) {
+                        return false;
+                    }
+                }
+                return true;
             }
         }
     };

@@ -1,6 +1,7 @@
 <!--生成节目单XML文件组件-供产品使用-->
 <template>
-    <div class="container">
+    <div class="vice-block">
+        <h3 class="block-vice-title">1.生成直播节目单</h3>
         <el-form :model="channelProgrammeForm" ref="channelProgrammeForm" label-width="120px">
             <el-form-item label="创建者名称">
                 <el-input v-model="createName" placeholder="请填写创建者名称"></el-input>
