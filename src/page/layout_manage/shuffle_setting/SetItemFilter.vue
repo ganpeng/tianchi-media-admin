@@ -404,10 +404,15 @@
                         params[key] = this.selectValue[key];
                     }
                 }
-                // 选中的二级分类的typeId所对应的typeName
+                // 选中的二级分类的typeId所对应的typeName,如果没有相应的typeId，则typeName置空
+                if (!this.selectValue.typeId) {
+                    delete params.typeName;
+                    delete params.typeId;
+                }
                 this.typeOptions.map(type => {
                     if (type.id === this.selectValue.typeId) {
                         params.typeName = type.name;
+                        params.typeId = this.selectValue.typeId;
                     }
                 });
                 // 设置娱乐下的一级分类的list

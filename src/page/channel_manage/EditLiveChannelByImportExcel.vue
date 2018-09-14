@@ -104,14 +104,15 @@
                             }
                             let simpleChannel = {
                                 id: channel.id,
-                                innerName: channel.innerName,
+                                code: channel.code,
                                 name: channel.name,
+                                innerName: channel.innerName,
                                 no: channel.no,
                                 type: type.slice(1),
+                                transcribe: channel.record ? '是' : '否',
                                 multicastIp: channel.multicastIp,
                                 multicastPort: channel.multicastPort,
-                                pushServer: channel.pushServer,
-                                transcribe: channel.record ? '是' : '否'
+                                pushServer: channel.pushServer
                             };
                             exportChannelData.push(simpleChannel);
                         });
@@ -184,6 +185,7 @@
             updateSingleChannel(index) {
                 let channelInfo = JSON.parse(JSON.stringify(this.channelList[index]));
                 delete channelInfo.id;
+                delete channelInfo.code;
                 delete channelInfo.innerName;
                 delete channelInfo.name;
                 channelInfo.record = channelInfo.transcribe === '是';
