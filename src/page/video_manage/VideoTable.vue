@@ -10,7 +10,7 @@
             <el-table-column v-if="!hasRadio" type="selection" align="center"></el-table-column>
             <el-table-column v-if="hasRadio" width="60px" align="center" label="选择">
                 <template slot-scope="scope">
-                    <el-radio :value="video.selectedVideoId" :label="scope.row.id" @input="setSelectedVideoId({id: scope.row.id})">&nbsp;</el-radio>
+                    <el-radio :disabled="isDisabled(scope.row.id)" :value="video.selectedVideoId" :label="scope.row.id" @input="setSelectedVideoId({id: scope.row.id})">&nbsp;</el-radio>
                 </template>
             </el-table-column>
             <el-table-column prop="id" align="center" width="118" label="编号"></el-table-column>
@@ -167,11 +167,19 @@ export default {
         ...mapGetters({
             video: 'video/video',
             pagination: 'video/pagination',
-            getStatus: 'video/getStatus'
+            getStatus: 'video/getStatus',
+            programmeVideo: 'programme/video'
         }),
         duration() {
             return (seconds) => {
                 return this.$util.fromSecondsToTime(seconds);
+            };
+        },
+        isDisabled() {
+            return (id) => {
+                let list = this.programmeVideo.list;
+                let index = list.findIndex((video) => video.storageVideoId === id);
+                return index >= 0;
             };
         },
         timeStampFormat() {

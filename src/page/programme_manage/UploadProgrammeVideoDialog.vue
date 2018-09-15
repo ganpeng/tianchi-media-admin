@@ -384,8 +384,10 @@
             closeSelectVideoDialog() {
                 this.selectVideoDialogVisible = false;
                 this.updateSearchFields({key: 'name', value: ''});
+                this.updateSearchFields({key: 'status', value: ''});
             },
             selectVideo() {
+                this.updateSearchFields({key: 'status', value: 'SUCCESS'});
                 this.getVideoList();
                 this.selectVideoDialogVisible = true;
             },

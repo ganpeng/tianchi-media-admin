@@ -303,18 +303,7 @@ export default {
                 let baseUri = `http://${totalServers[index]}`;
                 let timer = null;
 
-                that.checkServerAvailableRequest(baseUri)
-                    .then((res) => {
-                        if (res.status === 200) {
-                            if (res.data && res.data.code === 0) {
-                                resolve(baseUri);
-                            } else {
-                                loopCheck();
-                            }
-                        }
-                    }).catch(() => {
-                        this.$util.showNetworkErrorMessage();
-                    });
+                loopCheck();
 
                 function loopCheck() {
                     if (index + 1 >= totalServers.length) {
@@ -327,17 +316,22 @@ export default {
                     that.checkServerAvailableRequest(baseUri)
                         .then((res) => {
                             if (res.status === 200) {
-                                if (res && res.code === 0) {
+                                if (res && res.data && res.data.code === 0) {
                                     resolve(baseUri);
                                     clearTimeout(timer);
                                 } else {
+                                    clearTimeout(timer);
                                     timer = setTimeout(() => {
                                         loopCheck();
                                     }, 3000);
                                 }
                             }
                         }).catch(() => {
-                            this.$util.showNetworkErrorMessage();
+                            clearTimeout(timer);
+                            timer = setTimeout(() => {
+                                loopCheck();
+                            }, 3000);
+                            that.$util.showNetworkErrorMessage();
                         });
                 }
             });
@@ -345,7 +339,8 @@ export default {
         checkServerAvailableRequest(baseUri) {
             let headers = this.$util.getUploadHeaders(this.$store.state.user.token);
             return axios.get(`${baseUri}/v1/server/available`, {
-                headers
+                headers,
+                timeout: 2000
             });
         },
         uploadHandler() {
