@@ -1,7 +1,11 @@
 <template>
     <div v-if="uploadState.files.length > 0" class="upload-video-container">
         <div v-if="uploadState.min" class="min-container">
-            <span class="upload-status">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{currentFileName}}</span>
+            <!-- <span class="upload-status">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{currentFileName}}</span> -->
+            <el-tooltip v-if="currentFileName.length > 32" class="item" effect="dark" :content="currentFileName" placement="top-start">
+                <span class="upload-status float-left">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{cutStr(currentFileName, 32)}}</span>
+            </el-tooltip>
+            <span v-else class="upload-status float-left">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{cutStr(currentFileName, 32)}}</span>
             <div class="btn-wrapper-min float-right">
                 <span @click="toggleWindow(false)"><svg-icon class-name="max-min pointer" icon-class="max_larger"></svg-icon></span>
                 <span>
@@ -33,6 +37,10 @@
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
+                <el-tooltip v-if="currentFileName.length > 32" class="item" effect="dark" :content="currentFileName" placement="top-start">
+                    <span class="max-status upload-status float-left">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{cutStr(currentFileName, 32)}}</span>
+                </el-tooltip>
+                <span v-else class="max-status upload-status float-left">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{cutStr(currentFileName, 32)}}</span>
                 <div class="btn-wrapper-max float-right">
                     <span @click="toggleWindow(true)"><svg-icon class-name="max-min pointer" icon-class="min_smaller"></svg-icon></span>
                     <span>
@@ -233,8 +241,11 @@ export default {
         ...mapMutations({
             updateUploadState: 'uploadVideo/updateUploadState'
         }),
-        cutStr(str) {
-            return str.length > 30 ? str.substring(0, 30) + '...' : str;
+        cutStr(str, count) {
+            if (count === undefined || count === null) {
+                count = 30;
+            }
+            return str.length > count ? str.substring(0, count) + '...' : str;
         },
         resetFiles() {
             if (this.uploadState.isUploading) {
@@ -708,5 +719,12 @@ export default {
 .btn-wrapper-min {
     height: 60px;
     line-height: 60px;
+}
+
+.max-status {
+    width: 500px;
+    line-height: 38px;
+    text-align: left;
+    margin-left: 10px;
 }
 </style>

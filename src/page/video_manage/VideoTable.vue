@@ -14,7 +14,7 @@
                 </template>
             </el-table-column>
             <el-table-column prop="id" align="center" width="118" label="编号"></el-table-column>
-            <el-table-column width="540px" prop="originName" align="center" label="视频名称">
+            <el-table-column width="420px" prop="originName" align="center" label="视频名称">
                 <template slot-scope="scope">
                     <el-tooltip effect="dark" placement="top">
                         <div class="gan-tooltip" slot="content">{{scope.row.originName}}</div>
@@ -96,6 +96,11 @@
             <el-table-column align="center" label="上传日期">
                 <template slot-scope="scope">
                     {{timeStampFormat(scope.row.createdAt)}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="更新日期">
+                <template slot-scope="scope">
+                    {{timeStampFormat(scope.row.updatedAt)}}
                 </template>
             </el-table-column>
             <el-table-column v-if="!hasRadio" width="80px" align="center" fixed="right" label="操作">
