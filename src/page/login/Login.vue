@@ -160,7 +160,7 @@
             }
             .el-checkbox {
                 float: left;
-                padding-left: 5px;
+                padding: 5px 0px 0px 0px;
             }
             label {
                 float: right;

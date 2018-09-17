@@ -357,6 +357,7 @@
         </div>
         <el-dialog
             title="选择相应的视频"
+            :close-on-click-modal=false
             :visible.sync="selectDialogVisible"
             center
             width="80%">
@@ -369,6 +370,7 @@
         </el-dialog>
         <sort-dialog
             v-if="sortDialogVisible"
+            :close-on-click-modal=false
             title="视频排序"
             :sourceList="currentSelectedVideoList"
             sortKey="sort"

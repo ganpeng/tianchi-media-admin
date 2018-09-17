@@ -26,7 +26,7 @@ let RegExpConstants = {
     /**
      * The RegExp of password in project of h5-admin.
      */
-    PASSWORD: /^[\da-zA-Z]{6,8}$/,
+    PASSWORD: /^[\x21-\x7e]{6,20}$/,
     /**
      * The RegExp of IP address.
      */

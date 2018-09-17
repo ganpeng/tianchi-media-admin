@@ -123,7 +123,7 @@
         margin-bottom: 200px;
         .el-table {
             margin-top: 0px;
-            width: 967px;
+            width: 908px;
         }
         img {
             width: 70px;

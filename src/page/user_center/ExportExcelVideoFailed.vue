@@ -25,6 +25,10 @@
             <h3 class="block-vice-title">3.导出所有注入成功的视频列表</h3>
             <el-button class="create-blue-btn" @click="exportVideoSuccessList">导出成功注入视频列表</el-button>
         </div>
+        <div class="vice-block">
+            <h3 class="block-vice-title">3.导出所有视频列表</h3>
+            <el-button class="create-blue-btn" @click="exportVideoAllList">导出所有视频列表</el-button>
+        </div>
     </div>
 </template>
 
@@ -98,6 +102,20 @@
                         let ws = XLSX.utils.json_to_sheet(exportChannelData);
                         XLSX.utils.book_append_sheet(wb, ws, newWsName);
                         XLSX.writeFile(wb, '视频注入成功表_' + new Date() + '.xlsx');
+                    }
+                });
+            },
+            exportVideoAllList() {
+                this.videoAllListQueryParams.status = '';
+                this.$service.getVideoList(this.videoAllListQueryParams).then(response => {
+                    if (response && response.code === 0) {
+                        this.videoAllList = response.data.list;
+                        let exportChannelData = this.videoAllList;
+                        let wb = XLSX.utils.book_new();
+                        let newWsName = '表1';
+                        let ws = XLSX.utils.json_to_sheet(exportChannelData);
+                        XLSX.utils.book_append_sheet(wb, ws, newWsName);
+                        XLSX.writeFile(wb, '所有视频表_' + new Date() + '.xlsx');
                     }
                 });
             },

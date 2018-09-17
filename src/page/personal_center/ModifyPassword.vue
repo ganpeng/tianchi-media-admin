@@ -23,7 +23,7 @@
                 <el-input type="password"
                           v-model="passwordForm.newPassword"
                           auto-complete="off"
-                          placeholder="请输入6-8位新密码"
+                          placeholder="请输入6-20位新密码，必须包含数字、字母和特殊字符"
                           clearable>
                 </el-input>
             </el-form-item>
