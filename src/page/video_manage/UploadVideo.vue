@@ -55,7 +55,15 @@
                     :empty-text="'暂无上传内容'"
                     style="width: 100%">
                     <el-table-column
+                        width="40"
+                        label="序号">
+                        <template slot-scope="scope">
+                            {{scope.$index + 1}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
                         width="400"
+                        align="left"
                         label="文件名">
                         <template slot-scope="scope">
                             <el-tooltip class="item" effect="dark" :content="scope.row.file.name" placement="top-start">

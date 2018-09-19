@@ -81,22 +81,47 @@
             </el-col>
         </el-form>
         <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
-            <el-table-column align="center" label="序号">
+            <el-table-column width="60" align="center" label="序号">
                 <template slot-scope="scope">
                     {{getIndex(scope.$index)}}
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="设备ID">
+            <el-table-column width="150" align="center" label="设备序列号">
                 <template slot-scope="scope">
                     {{scope.row.no | padEmpty}}
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="设备类型">
+            <el-table-column width="150" align="center" label="ca卡号">
                 <template slot-scope="scope">
-                    {{getType(scope.row.hardWareId)}}
+                    {{scope.row.caNo | padEmpty}}
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="创建时间">
+            <el-table-column width="120" align="center" label="硬件系统标识">
+                <template slot-scope="scope">
+                    {{getType(scope.row.hardWareId) | padEmpty}}
+                </template>
+            </el-table-column>
+            <el-table-column width="120" align="center" label="软件系统版本">
+                <template slot-scope="scope">
+                    {{scope.row.currentVersion | padEmpty}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="固件版本">
+                <template slot-scope="scope">
+                    {{scope.row.currentHardVersion | padEmpty}}
+                </template>
+            </el-table-column>
+            <el-table-column width="140" align="center" label="MAC网卡地址">
+                <template slot-scope="scope">
+                    {{scope.row.mac | padEmpty}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="最后在线时间">
+                <template slot-scope="scope">
+                    {{scope.row.lastOnlineTime | formatDate('yyyy-MM-DD') | padEmpty}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="注册时间">
                 <template slot-scope="scope">
                     {{scope.row.registeredAt | formatDate('yyyy-MM-DD') | padEmpty}}
                 </template>
@@ -106,7 +131,7 @@
                     <span v-html="getStatus(scope.row.status)"></span>
                 </template>
             </el-table-column>
-            <el-table-column align="center" width="300px" fixed="right" label="操作">
+            <el-table-column align="center" width="200px" fixed="right" label="操作">
                 <template slot-scope="scope">
                     <el-button type="text" size="small" @click="updateDeviceHandler(scope.row.id)">编辑</el-button>
                     <el-button v-if="scope.row.status === 'NORMAL'" type="danger" size="mini" plain
@@ -138,12 +163,12 @@
             :close-on-click-modal="false"
             :close-on-press-escape="false">
             <el-form :model="device" :rules="deviceRules" ref="deviceForm" class="form-block" label-width="100px">
-                <el-form-item label="CA卡号" prop="no">
+                <el-form-item label="CA卡号" prop="caNo">
                     <el-input
-                        :value="device.no"
+                        :value="device.caNo"
                         clearable
                         placeholder="请输入设备CA卡号"
-                        @input="inputHandler($event, 'no')"
+                        @input="inputHandler($event, 'caNo')"
                     ></el-input>
                 </el-form-item>
                 <el-form-item label="设备类型" prop="hardWareId">
@@ -162,7 +187,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="设备状态">
-                    <i v-if="status === 0" class="status-normal">正常</i>
+                    <i v-if="status === 0" class="status-abnormal">禁用</i>
                     <span v-else v-html="getStatus(device.status)"></span>
                 </el-form-item>
             </el-form>
@@ -190,9 +215,8 @@
                     {value: 'NORMAL', name: '正常'}, {value: 'FORBIDDEN', name: '禁用'}
                 ],
                 deviceRules: {
-                    no: [
+                    caNo: [
                         { required: true, message: '请输入设备CA卡号' }
-                        // { validator: requiredValidator('请选择区域') }
                     ],
                     hardWareId: [
                         { required: true, message: '请选择设备类型' }

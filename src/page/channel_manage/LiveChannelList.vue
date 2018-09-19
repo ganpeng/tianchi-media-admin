@@ -145,28 +145,47 @@
             v-on:changeLiveChannelDialogStatus="closeLiveChannelDialog">
         </live-channel-dialog>
         <el-dialog
-            title="上传节目表格"
+            title="上传节目单表格"
             :visible.sync="fileUploadDialogVisible"
             :show-close="true"
             :before-close="closeFileUploadDialog"
             :close-on-click-modal="false"
+            @open="dialogOpenHandler"
             :close-on-press-escape="false">
-            <el-upload
-                class="upload-demo"
-                ref="upload"
-                name="files"
-                :headers="uploadHeaders"
-                action="/admin/v1/live/channel-programme/list"
-                accept=".xml"
-                :on-success="uploadSuccessHandler"
-                :auto-upload="false"
-                :file-list="fileList"
-                :with-credentials="true"
-                multiple>
-                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-                    <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
-            </el-upload>
-
+            <div class="file">
+                <input id="upload-file" type="file" multiple ref="uploadXml">选择文件
+            </div>
+            <div class="table-wrapper">
+                <el-table
+                    :data="files"
+                    :show-header="false"
+                    :empty-text="'暂无上传内容'"
+                    style="width: 100%">
+                    <el-table-column
+                        width="140"
+                        align="center"
+                        label="序号">
+                        <template slot-scope="scope">
+                            {{scope.$index + 1}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        align="left"
+                        label="文件名">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.file.name}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        width="200"
+                        align="left"
+                        label="上传状态">
+                        <template slot-scope="scope">
+                            <span v-html="scope.row.message"></span>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <div slot="footer" class="dialog-footer">
                 <el-button size="medium" @click="closeFileUploadDialog">关闭</el-button>
             </div>
@@ -185,6 +204,11 @@
         },
         data() {
             return {
+                //  节目单上传变量
+                isUploading: false,
+                files: [],
+                count: 0,
+                //  节目单上传变量结束
                 liveChannelDialogVisible: false,
                 fileUploadDialogVisible: false,
                 fileList: [],
@@ -361,53 +385,225 @@
                 this.getChannelList();
             },
             //  上传节目单
+            dialogOpenHandler() {
+                this.$nextTick(() => {
+                    let uploadInputFile = document.querySelector('#upload-file');
+                    console.log(uploadInputFile);
+                    uploadInputFile.addEventListener('input', this.uploadChangeHandler);
+                });
+            },
             showFileUploadDialog() {
                 this.fileUploadDialogVisible = true;
                 this.fileList = [];
             },
             closeFileUploadDialog() {
-                this.fileUploadDialogVisible = false;
-                this.fileList = [];
+                if (this.isUploading) {
+                    this.$confirm('此操作将删除该频道, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    }).then(() => {
+                        this.fileUploadDialogVisible = false;
+                        this.isUploading = false;
+                        this.files = [];
+                        this.count = 0;
+                        this.$refs.uploadXml.value = null;
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+                } else {
+                    this.fileUploadDialogVisible = false;
+                    this.isUploading = false;
+                    this.files = [];
+                    this.count = 0;
+                    this.$refs.uploadXml.value = null;
+                }
             },
             submitUpload() {
                 this.$refs.upload.submit();
             },
             timeStampFormat(seconds) {
-                    let date = new Date(seconds);
-                    let year = date.getFullYear();
-                    let month = date.getMonth() + 1;
-                    let day = date.getDate();
-                    let hour = date.getHours();
-                    let minute = date.getMinutes();
-                    let second = date.getSeconds();
-                    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+                let date = new Date(seconds);
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1;
+                let day = date.getDate();
+                let hour = date.getHours();
+                let minute = date.getMinutes();
+                let second = date.getSeconds();
+                return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
             },
             uploadSuccessHandler(res, file, fileList) {
                 if (res && res.code === 0) {
                     this.$message({
                         type: 'success',
-                        message: '节目导入成功'
+                        message: '节目单导入成功'
                     });
-                } else if (res && res.code === 3119) {
+                } else if (res && res.code === 3605) {
+                    let fileNameList = res.data.join(', ');
+                    let message = `${fileNameList}, 以上文件导入失败`;
                     this.$message({
                         type: 'error',
-                        message: '节目视频导入失败'
-                    });
-                } else if (res && res.code === 3117) {
-                    this.$message({
-                        type: 'error',
-                        message: '节目导入部分成功'
+                        message
                     });
                 } else {
                     this.$message({
                         type: 'error',
-                        message: '节目导入失败'
+                        message: '节目单导入失败'
                     });
                 }
                 this.closeFileUploadDialog();
+            },
+            uploadRequest(data) {
+                let that = this;
+                return new Promise((resolve, reject) => {
+                    let url = `/admin/v1/live/channel-programme/list`;
+                    let xhr = new XMLHttpRequest();
+                    xhr.open('post', url);
+                    let headers = that.$util.getUploadHeaders(that.$store.state.user.token);
+                    for (let key in headers) {
+                        xhr.setRequestHeader(key, headers[key]);
+                    }
+                    xhr.onload = (evt) => {
+                        resolve(evt.target.responseText);
+                    };
+                    xhr.onerror = (err) => {
+                        if (window.navigator.onLine) {
+                            this.$message({
+                                message: '服务器连接失败，请稍后重试',
+                                type: 'error'
+                            });
+                        } else {
+                            this.$message({
+                                message: '网络连接失败，请检查您的网络连接情况',
+                                type: 'error'
+                            });
+                        }
+                        reject(err);
+                    };
+                    xhr.onabort = () => {
+                        reject(new Error('canceled_flag')); // eslint-disable-line
+                    };
+                    xhr.upload.onprogress = (evt) => {
+                        let percent = evt.loaded / evt.total * 100;
+                        console.log(percent);
+                    };
+                    xhr.send(data);
+                });
+            },
+            uploadChangeHandler(e) {
+                let files = Array.from(e.target.files).filter((file) => {
+                    return /(.xml)$/.test(file.name);
+                });
+                if (files.length === 0) {
+                    this.$message.warning('本次选择没有符合要求的文件');
+                }
+                let newFileList = [];
+                files.forEach((file) => {
+                    let index = this.files.findIndex((item) => {
+                        return item.file.name === file.name;
+                    });
+                    if (index === -1) {
+                        let obj = {
+                            file,
+                            status: 'waiting', // waiting 等待， uploading 上传中， success 成功， error 失败
+                            message: '等待上传' // 等待上传，上传中，上传成功， 上传失败
+                        };
+                        newFileList.push(obj);
+                    }
+                });
+                let newFiles = this.files.concat(newFileList);
+                this.files = newFiles;
+                this.uploadHandler();
+                this.$refs.uploadXml.value = null;
+            },
+            uploadHandler() {
+                let that = this;
+                if (!that.isUploading) {
+                    that.isUploading = true;
+                    upload();
+                }
+                function upload() {
+                    if (typeof that.files[that.count] === 'undefined') {
+                        that.isUploading = false;
+                        return false;
+                    }
+                    let formData = new FormData();
+                    let file = that.files[that.count].file;
+                    formData.append('files', file);
+                    that.uploadRequest(formData)
+                        .then((res) => {
+                            let result = JSON.parse(res);
+                            if (result && result.code === 0) {
+                                that.files = that.files.map((obj, index) => {
+                                    if (index === that.count) {
+                                        obj.message = '导入成功';
+                                        obj.status = 'success';
+                                        return obj;
+                                    } else {
+                                        return obj;
+                                    }
+                                });
+                            } else {
+                                let message = result.message ? result.message : `文件导入失败`;
+                                that.files = that.files.map((obj, index) => {
+                                    if (index === that.count) {
+                                        obj.message = `<span class="text-danger">${message}</span>`;
+                                        obj.status = 'error';
+                                        return obj;
+                                    } else {
+                                        return obj;
+                                    }
+                                });
+                            }
+                            that.count = that.count + 1;
+                            upload();
+                        }).catch(() => {
+                            that.files = that.files.map((obj, index) => {
+                                if (index === that.count) {
+                                    obj.message = `<span class="text-danger">文件导入失败</span>`;
+                                    obj.status = 'error';
+                                    return obj;
+                                } else {
+                                    return obj;
+                                }
+                            });
+                            that.count = that.count + 1;
+                            upload();
+                        });
+                }
             }
         }
     };
 </script>
 <style scoped lang="less">
+.table-wrapper {
+    height: 500px;
+    overflow-y: scroll;
+}
+.file {
+    position: relative;
+    display: inline-block;
+    background: #409EFF;
+    border: 1px solid #409EFF;
+    border-radius: 3px;
+    font-size: 12px;
+    padding: 3px 15px;
+    overflow: hidden;
+    color: #fff;
+    text-decoration: none;
+    text-indent: 0;
+}
+.file input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    width: 80px;
+    height: 34px;
+    opacity: 0;
+    cursor: pointer;
+}
 </style>

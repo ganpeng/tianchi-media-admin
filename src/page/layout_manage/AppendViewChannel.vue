@@ -120,7 +120,7 @@ export default {
             }
         },
         searchChannel: _.debounce(function(value) {
-            let params = { keyword: value };
+            let params = { keyword: value, pageSize: 1000 };
             this.$service.getChannelList(params)
                 .then((res) => {
                     if (res && res.code === 0) {

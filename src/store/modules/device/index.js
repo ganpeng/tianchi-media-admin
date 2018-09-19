@@ -15,6 +15,7 @@ const defaultPagination = {
 };
 
 const defaultDevice = {
+    caNo: '',
     no: '',
     hardWareId: ''
 };
