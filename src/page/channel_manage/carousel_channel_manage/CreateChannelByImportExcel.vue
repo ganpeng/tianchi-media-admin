@@ -333,13 +333,11 @@
                         message = message + '请正确填写是否回看服务;';
                     }
                 }
-                // 组播地址,去除直播的ip地址校验
-                if (this.$route.params.category === 'CAROUSEL') {
-                    if (this.$util.isEmpty(channel.multicastIp)) {
-                        message = message + '组播地址不能为空;';
-                    } else if (!this.$util.isMulticastIPAddress(channel.multicastIp)) {
-                        message = message + '请填写正确的组播地址;';
-                    }
+                // 组播地址
+                if (this.$util.isEmpty(channel.multicastIp)) {
+                    message = message + '组播地址不能为空;';
+                } else if (!this.$util.isMulticastIPAddress(channel.multicastIp)) {
+                    message = message + '请填写正确的组播地址;';
                 }
                 // 端口号
                 if (this.$util.isEmpty(channel.multicastPort)) {
@@ -358,11 +356,13 @@
                         message = message + '请填写正确的serviceId;';
                     }
                 }
-                // 所属服务器
-                if (this.$util.isEmpty(channel.pushServer)) {
-                    message = message + '请填写所属服务器IP地址;';
-                } else if (!this.$util.isIPAddress(channel.pushServer)) {
-                    message = message + '请填写正确的所属服务器IP地址;';
+                // 所属服务器，只对轮播的pushServer进行验证
+                if (this.$route.params.category === 'CAROUSEL') {
+                    if (this.$util.isEmpty(channel.pushServer)) {
+                        message = message + '请填写所属服务器IP地址;';
+                    } else if (!this.$util.isIPAddress(channel.pushServer)) {
+                        message = message + '请填写正确的所属服务器IP地址;';
+                    }
                 }
                 // 频道封面
                 if (this.$util.isEmpty(channel.logoUri)) {

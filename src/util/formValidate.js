@@ -75,15 +75,15 @@ export const checkPositiveInteger = (msg) => {
  *  校验ip地址，直播的IP地址会使用域名，因此暂时去掉校验
  */
 export const checkIP = (rule, value, callback) => {
-    // if (!_.isEmpty(value)) {
-    //     if (constants.RegExpConstants.MULTIPLE_IP_ADDRESS.test(value)) {
-    //         callback();
-    //     } else {
-    //         return callback(new Error('请输入正确的IP地址'));
-    //     }
-    // } else {
-    callback();
-    // }
+    if (!_.isEmpty(value)) {
+        if (constants.RegExpConstants.MULTIPLE_IP_ADDRESS.test(value)) {
+            callback();
+        } else {
+            return callback(new Error('请输入正确的IP地址'));
+        }
+    } else {
+        callback();
+    }
 };
 
 /**
@@ -120,15 +120,15 @@ export const checkPort = (rule, value, callback) => {
  *  校验真实ip地址
  */
 export const checkIp = (rule, value, callback) => {
-    if (!_.isEmpty(value)) {
-        if (constants.RegExpConstants.IP_ADDRESS.test(value)) {
-            callback();
-        } else {
-            return callback(new Error('请输入正确的所属服务器地址'));
-        }
-    } else {
-        callback();
-    }
+    // if (!_.isEmpty(value)) {
+    //     if (constants.RegExpConstants.IP_ADDRESS.test(value)) {
+    //         callback();
+    //     } else {
+    //         return callback(new Error('请输入正确的所属服务器地址'));
+    //     }
+    // } else {
+    callback();
+    // }
 };
 
 export const getPageSize = (key) => {

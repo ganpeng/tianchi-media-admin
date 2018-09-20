@@ -241,22 +241,21 @@
                 // 组播地址
                 if (this.$util.isEmpty(channel.multicastIp)) {
                     message = message + '组播地址不能为空;';
+                } else if (!this.$util.isMulticastIPAddress(channel.multicastIp)) {
+                    message = message + '请填写正确的组播地址;';
                 }
-                // else if (!this.$util.isMulticastIPAddress(channel.multicastIp)) {
-                //     message = message + '请填写正确的组播地址;';
-                // }
                 // 端口号
                 if (this.$util.isEmpty(channel.multicastPort)) {
                     message = message + '端口号不能为空;';
                 } else if (!this.$util.isPort(channel.multicastPort)) {
                     message = message + '请填写正确的端口号;';
                 }
-                // 所属服务器
-                if (this.$util.isEmpty(channel.pushServer)) {
-                    message = message + '请填写所属服务器IP地址;';
-                } else if (!this.$util.isIPAddress(channel.pushServer)) {
-                    message = message + '请填写正确的所属服务器IP地址;';
-                }
+                // 所属服务器，去掉直播频道的pushServer服务器
+                // if (this.$util.isEmpty(channel.pushServer)) {
+                //     message = message + '请填写所属服务器IP地址;';
+                // } else if (!this.$util.isIPAddress(channel.pushServer)) {
+                //     message = message + '请填写正确的所属服务器IP地址;';
+                // }
                 if (channel.transcribe !== '是' && channel.transcribe !== '否') {
                     message = message + '请正确填写是否回看服务;';
                 }
