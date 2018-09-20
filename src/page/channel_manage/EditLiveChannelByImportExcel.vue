@@ -241,9 +241,10 @@
                 // 组播地址
                 if (this.$util.isEmpty(channel.multicastIp)) {
                     message = message + '组播地址不能为空;';
-                } else if (!this.$util.isMulticastIPAddress(channel.multicastIp)) {
-                    message = message + '请填写正确的组播地址;';
                 }
+                // else if (!this.$util.isMulticastIPAddress(channel.multicastIp)) {
+                //     message = message + '请填写正确的组播地址;';
+                // }
                 // 端口号
                 if (this.$util.isEmpty(channel.multicastPort)) {
                     message = message + '端口号不能为空;';

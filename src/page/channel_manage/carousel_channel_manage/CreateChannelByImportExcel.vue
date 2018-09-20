@@ -333,11 +333,13 @@
                         message = message + '请正确填写是否回看服务;';
                     }
                 }
-                // 组播地址
-                if (this.$util.isEmpty(channel.multicastIp)) {
-                    message = message + '组播地址不能为空;';
-                } else if (!this.$util.isMulticastIPAddress(channel.multicastIp)) {
-                    message = message + '请填写正确的组播地址;';
+                // 组播地址,去除直播的ip地址校验
+                if (this.$route.params.category === 'CAROUSEL') {
+                    if (this.$util.isEmpty(channel.multicastIp)) {
+                        message = message + '组播地址不能为空;';
+                    } else if (!this.$util.isMulticastIPAddress(channel.multicastIp)) {
+                        message = message + '请填写正确的组播地址;';
+                    }
                 }
                 // 端口号
                 if (this.$util.isEmpty(channel.multicastPort)) {
