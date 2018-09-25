@@ -126,7 +126,7 @@ export default {
                 fullPackageUri: [{required: true, message: '请上传升级包'}]
             },
             fileList: [],
-            accept: '.apk, .zip',
+            accept: '.apk .zip',
             actionUrl: '',
             productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
             forcedOptions: role.FORCED_OPTIONS,

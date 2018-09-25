@@ -55,14 +55,14 @@
                     :empty-text="'暂无上传内容'"
                     style="width: 100%">
                     <el-table-column
-                        width="40"
+                        width="80"
                         label="序号">
                         <template slot-scope="scope">
                             {{scope.$index + 1}}
                         </template>
                     </el-table-column>
                     <el-table-column
-                        width="400"
+                        width="300"
                         align="left"
                         label="文件名">
                         <template slot-scope="scope">
@@ -611,7 +611,7 @@ export default {
     position:absolute;
     bottom: 3px;
     right: 20px;
-    width: 800px;
+    width: 880px;
     padding: 0 20px;
     background: #fff;
     z-index: 300;
