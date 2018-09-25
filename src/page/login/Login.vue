@@ -55,7 +55,7 @@
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('用户名不能为空'));
                 } else if (!this.$util.isMobile(value) && !this.$util.isEmail(value)) {
-                    return callback(new Error('请填写正确账号'));
+                    return callback(new Error('请填写正确的账号'));
                 } else {
                     callback();
                 }
