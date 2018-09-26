@@ -83,16 +83,16 @@
                     class="upload-demo"
                     ref="versionUpload"
                     :headers="uploadHeaders"
-                    :accept="accept"
                     :action="actionUrl"
-                    :auto-upload="true"
+                    :accept="accept"
+                    :auto-upload="false"
                     :file-list="fileList"
                     :on-change="uploadChangeHandler"
                     :on-success="uploadSuccessHandler"
                     :on-error="uploadErrorHandler"
                     :with-credentials="false">
                         <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-                        <!-- <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button> -->
+                        <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
                 </el-upload>
             </el-form-item>
         </el-form>
@@ -126,7 +126,7 @@ export default {
                 fullPackageUri: [{required: true, message: '请上传升级包'}]
             },
             fileList: [],
-            accept: '.apk .zip',
+            accept: '.apk, .zip',
             actionUrl: '',
             productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
             forcedOptions: role.FORCED_OPTIONS,

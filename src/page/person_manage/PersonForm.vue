@@ -167,8 +167,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-            person: 'person/currentPerson',
-            recommend: 'person/recommend'
+            person: 'person/currentPerson'
         })
     },
     data() {
@@ -192,15 +191,13 @@ export default {
             imageUploadDialogVisible: false,
             areaOptions: store.get('areaList'),
             mainRoleoptions: role.MAIN_ROLE_OPTIONS,
-            recommendOptions: role.RECOMMEND_OPTIONS,
             size: dimension.PERSON_DIMENSION,
             previewImage: {
                 display: false,
                 autoplay: false,
                 activeIndex: 0,
                 list: []
-            },
-            isRecomend: 1
+            }
         };
     },
     methods: {
@@ -223,12 +220,6 @@ export default {
         },
         inputRecommendHandler(value, key) {
             this.updateRecommend({key, value});
-        },
-        changeIsRecommendHandler(value) {
-            this.updateRecommend({key: 'isRecommend', value});
-            if (value === 1) {
-                this.updateRecommend({key: 'recommendList', value: []});
-            }
         },
         _deletePosterImage(index, id) {
             this.$confirm('此操作将删除该文件, 是否继续?', '提示', {

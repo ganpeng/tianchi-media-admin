@@ -4,6 +4,7 @@
         :title="title"
         :visible.sync="videoUploadDialogVisible"
         :show-close="true"
+        @open="openDialogHandler"
         :before-close="beforeCloseHandler"
         :close-on-click-modal="false"
         :close-on-press-escape="false">
@@ -282,7 +283,6 @@
                 updateVideo: 'programme/updateVideo',
                 setVideoCoverImage: 'programme/setVideoCoverImage',
                 resetCurrentVideo: 'programme/resetCurrentVideo',
-                addVideoToTempList: 'programme/addVideoToTempList',
                 addVideoToList: 'programme/addVideoToList',
                 syncVideoMetaData: 'programme/syncVideoMetaData',
                 updateCurrentVideo: 'programme/updateCurrentVideo',
@@ -290,7 +290,8 @@
                 updateSearchFields: 'video/updateSearchFields',
                 // 更新人物
                 updateVideoPersonResult: 'programme/updateVideoPersonResult',
-                updateVideoPerson: 'programme/updateVideoPerson'
+                updateVideoPerson: 'programme/updateVideoPerson',
+                setList: 'video/setList'
             }),
             ...mapActions({
                 updateProgrammeVideoById: 'programme/updateProgrammeVideoById',
@@ -304,6 +305,10 @@
                 if (e.keyCode === 13) {
                     this.getVideoList();
                 }
+            },
+            openDialogHandler() {
+                //  当弹窗打开的时候，先清除表单遗留的校验信息
+                this.$refs.uploadVideoForm.clearValidate();
             },
             cancelHandler() {
                 this.$emit('changeVideoDialogStatus', false);
@@ -392,6 +397,7 @@
             },
             selectVideo() {
                 this.updateSearchFields({key: 'status', value: 'SUCCESS'});
+                this.setList({list: []}); // 获取列表之前，先清空列表的缓存数据
                 this.getVideoList();
                 this.selectVideoDialogVisible = true;
             },

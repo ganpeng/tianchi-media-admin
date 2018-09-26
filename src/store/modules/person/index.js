@@ -30,11 +30,6 @@ const defaultPagination = {
     total: 0
 };
 
-const defaultRecommend = {
-    isRecommend: 1,
-    recommendList: []
-};
-
 const defaultHotPerson = {
     persons: [],
     personsResult: [],
@@ -53,7 +48,6 @@ const defaultDuplicate = {
 };
 
 const defaultState = {
-    recommend: _.cloneDeep(defaultRecommend),
     hotPerson: _.cloneDeep(defaultHotPerson),
     searchFields: _.cloneDeep(defaultSearchFields),
     currentPerson: _.cloneDeep(defaultPerson),
@@ -76,9 +70,6 @@ const getters = {
     },
     currentPerson(state) {
         return state.currentPerson;
-    },
-    recommend(state) {
-        return state.recommend;
     },
     duplicate(state) {
         return state.duplicate;
@@ -149,9 +140,6 @@ const mutations = {
     updateCurrentPerson(state, payload) {
         state.currentPerson[payload.key] = payload.value;
     },
-    setRecommend(state, payload) {
-        state.recommend = payload.recommend;
-    },
     // 热门人物管理
     updatePersonResult(state, payload) {
         let {key, value} = payload;
@@ -183,11 +171,6 @@ const mutations = {
         state.hotPerson.hotCode = payload.hotCode;
     },
     // 热门人物结束
-
-    updateRecommend(state, payload) {
-        let {key, value} = payload;
-        state.recommend[key] = value;
-    },
     updateSearchFields(state, payload) {
         let {key, value} = payload;
         state.searchFields[key] = value;

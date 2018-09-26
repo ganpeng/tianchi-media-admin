@@ -575,11 +575,6 @@ const mutations = {
             }
         });
     },
-    addVideoToTempList(state) {
-        let {video} = state.video;
-        state.video.video.uid = uuid();
-        state.video.tempList.push(video);
-    },
     addVideoToList(state) {
         let {video, list} = state.video;
         video.id = uuid();

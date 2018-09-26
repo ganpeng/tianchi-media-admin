@@ -40,9 +40,6 @@ const getters = {
     searchFields(state) {
         return state.searchFields;
     },
-    getVideoType(state) {
-        return state.videoType;
-    },
     getStatus(state) {
         return (video) => {
             let {status, transcodeProgress, transcodeStatus} = video;
@@ -71,36 +68,6 @@ const getters = {
     },
     servers(state) {
         return state.servers;
-    },
-    qualityOptions(state) {
-        let video = state.list.find((video) => video.id === state.selectedVideoId);
-        let qualityOptions = [];
-        if (video) {
-            if (video.m3u8For1080P) {
-                qualityOptions.push({
-                    value: 'HD_1080',
-                    label: 'HD_1080'
-                });
-            }
-            if (video.m3u8For720P) {
-                qualityOptions.push({
-                    value: 'HD_720',
-                    label: 'HD_720'
-                });
-            }
-            if (video.m3u8For480P) {
-                qualityOptions.push({
-                    value: 'HD_480',
-                    label: 'HD_480'
-                });
-            }
-
-            qualityOptions.push({
-                value: 'HD_480',
-                label: 'HD_480'
-            });
-        }
-        return qualityOptions;
     }
 };
 
@@ -112,9 +79,6 @@ const mutations = {
         state.pagination.pageSize = payload.pageSize;
         state.pagination.pageNum = payload.pageNum;
         state.pagination.total = payload.total;
-    },
-    setVideoType(state, payload) {
-        state.videoType = payload.videoType;
     },
     resetPagination(state) {
         state.pagination = _.cloneDeep(defaultPagination);
@@ -187,7 +151,6 @@ const actions = {
             let result = await service.getVideoList({key});
             if (result && result.code === 0) {
                 return result;
-                // return result.data.list && result.data.list.length === 0;
             }
         } catch (err) {
             console.log(err);
