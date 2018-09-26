@@ -352,10 +352,14 @@
                             } else {
                                 this.updateProgrammeVideoById()
                                     .then((res) => {
-                                        this.updateCurrentVideo({video: res.data});
-                                        // 调这个接口的原因是更新完单个视频的时候要更新一下正片的列表
-                                        this.getFeatureVideoList({id: this.$route.params.id, pageSize: 1000});
-                                        this.cancelHandler();
+                                        if (res && res.code === 0) {
+                                            this.updateCurrentVideo({video: res.data});
+                                            // 调这个接口的原因是更新完单个视频的时候要更新一下正片的列表
+                                            this.getFeatureVideoList({id: this.$route.params.id, pageSize: 1000});
+                                            this.cancelHandler();
+                                        } else {
+                                            this.$message.error(res.message);
+                                        }
                                     });
                             }
                         }

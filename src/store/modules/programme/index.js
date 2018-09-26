@@ -1111,11 +1111,8 @@ const actions = {
                 video.parentId = '';
             }
             let res = await service.updateProgrammeVideoInfo({id, video});
-            if (res && res.code === 0) {
-                return res;
-            }
-        } catch (err) {
-        }
+            return res;
+        } catch (err) {}
     },
     async realDeleteProgrammeVideoById({commit, state}, id) {
         try {
