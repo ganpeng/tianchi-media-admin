@@ -161,7 +161,8 @@
                 }
             };
         },
-        mounted() {
+        // 组件被keep-live设置为active状态时
+        activated() {
             this.init();
         },
         methods: {
@@ -179,7 +180,7 @@
                 });
             },
             tableRowClassName({row}) {
-                if (!row.visible) {
+                if (!row.visible || !row.name) {
                     return 'warning-row video-row';
                 }
                 return 'video-row';
@@ -208,10 +209,11 @@
                 if (!row) {
                     return;
                 }
-                if (row.visible) {
+                if (row.visible && row.name) {
                     this.$emit('setProgrammeVideo', row);
+                    // 节目中的视频下架或者没有展示名称时
                 } else {
-                    this.$message('当前节目中的视频已经下架，不可选择');
+                    this.$message.warning(!row.visible ? '当前节目中的视频已经下架，不可选择' : '当前节目中的视频没有展示名称，不可选择，请添加相应的展示名称后再选择');
                     this.singleProgrammeVideo = {};
                     this.$emit('resetProgrammeVideo');
                 }
