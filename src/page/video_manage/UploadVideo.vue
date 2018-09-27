@@ -385,7 +385,7 @@ export default {
                     let file = that.uploadState.files[that.uploadState.count].file;
                     formData.append('videoType', 'VOD');
                     formData.append('file', file);
-                    that.checkServerIsLiving(that.uploadState.count)
+                    that.$util.getUploadServer()
                         .then((baseUri) => {
                             that.uploadRequest(formData, baseUri)
                                 .then((res) => {
@@ -513,7 +513,6 @@ export default {
         uploadRequest(data, baseUri) {
             let that = this;
             return new Promise((resolve, reject) => {
-                // let url = this.$util.getRandomUrl('/v1/storage/video', this.uploadState.count);
                 let url = `${baseUri}/v1/storage/video`;
                 let xhr = new XMLHttpRequest();
                 that.updateUploadState({key: 'xhr', value: xhr});

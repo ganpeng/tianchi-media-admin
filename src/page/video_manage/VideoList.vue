@@ -83,6 +83,7 @@
                 <el-form-item class="float-right">
                     <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small" @click="retrySelectedVideoHandler">批量重试</el-button>
                     <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small" @click="exportSelectedVideoHandler">批量导出</el-button>
+                    <el-button class="delete-btn create-blue-btn" size="small" @click="exportVideoHandler">导出视频</el-button>
                     <el-button class="delete-btn disabled-red-btn" size="small" :disabled="isDisabled" @click="deleteVideoList">批量删除</el-button>
                 </el-form-item>
             </el-col>
@@ -349,6 +350,9 @@
                     return `${baseUri}${item}`;
                 }).join(', ');
                 return urlStr;
+            },
+            exportVideoHandler() {
+                window.eventBus.$emit('startExportVideoExecel');
             }
         }
     };

@@ -79,21 +79,20 @@
                 </el-select>
             </el-form-item>
             <el-form-item ref="uploadItem" label="升级包">
-                <el-upload
-                    class="upload-demo"
-                    ref="versionUpload"
-                    :headers="uploadHeaders"
-                    :action="actionUrl"
-                    :accept="accept"
-                    :auto-upload="false"
-                    :file-list="fileList"
-                    :on-change="uploadChangeHandler"
-                    :on-success="uploadSuccessHandler"
-                    :on-error="uploadErrorHandler"
-                    :with-credentials="false">
-                        <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-                        <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
-                </el-upload>
+                <div class="wrapper clearfix">
+                    <div class="file float-left">
+                        <input ref="versionUpload" type="file" accept=".zip, .apk" id="version-file-input">选择文件
+                    </div>
+                    <span class="float-left">{{file.name}}</span>
+                </div>
+                <el-progress
+                    v-show="percent !== 0"
+                    class="bar"
+                    :stroke-width="3"
+                    :percentage="percent"
+                    :status="percent !== 100 ? 'primary' : 'success'">
+                </el-progress>
+                <span v-show="percent !== 0">{{percent}}%</span>
             </el-form-item>
         </el-form>
     </div>
@@ -101,6 +100,7 @@
 <script>
 import {mapGetters, mapMutations} from 'vuex';
 import role from '@/util/config/role';
+import axios from 'axios';
 
 export default {
     name: 'VersionForm',
@@ -125,17 +125,20 @@ export default {
                 forced: [{required: true, message: '请选择升级方式'}],
                 fullPackageUri: [{required: true, message: '请上传升级包'}]
             },
-            fileList: [],
-            accept: '.apk, .zip',
+            percent: 0,
+            file: {},
             actionUrl: '',
             productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
             forcedOptions: role.FORCED_OPTIONS,
-            hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS,
-            uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token)
+            hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS
         };
     },
     created() {
-        this.actionUrl = this.$util.getRandomUrl('/v1/storage/file');
+        // this.actionUrl = this.$util.getRandomUrl('/v1/storage/file');
+        this.$nextTick(() => {
+            let uploadInputFile = document.querySelector('#version-file-input');
+            uploadInputFile.addEventListener('input', this.uploadChangeHandler);
+        });
     },
     computed: {
         ...mapGetters({
@@ -150,9 +153,37 @@ export default {
         inputHandler(value, key) {
             this.updateVersion({key, value});
         },
-        uploadChangeHandler() {},
-        submitUpload() {
-            this.$refs.versionUpload.submit();
+        uploadChangeHandler(e) {
+            let files = Array.from(e.target.files).filter((file) => {
+                return /(.zip|.apk)$/.test(file.name);
+            });
+            if (files.length === 0) {
+                this.$message.warning('只能上传.zip或者.apk文件');
+                this.$refs.versionUpload.value = null;
+                return false;
+            }
+            this.uploadHandler(files[0]);
+            this.$refs.versionUpload.value = null;
+        },
+        uploadHandler(file) {
+            let formData = new FormData();
+            formData.append('file', file);
+            this.file = file;
+            this.$util.getUploadServer()
+                .then((baseUri) => {
+                    let url = `${baseUri}/v1/storage/file`;
+                    axios.post(`${url}`, formData, {
+                        headers: this.$util.getUploadHeaders(this.$store.state.user.token),
+                        onUploadProgress: (progressEvent) => {
+                            let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                            this.percent = percentCompleted;
+                        }
+                    }).then((res) => {
+                        this.uploadSuccessHandler(res.data);
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+                });
         },
         uploadSuccessHandler(res) {
             if (res && res.code === 0 && res.data[0]) {
@@ -170,10 +201,39 @@ export default {
                     message: res.data[0].failReason
                 });
             }
-        },
-        uploadErrorHandler() {
-            this.$message.error('网络异常');
         }
     }
 };
 </script>
+<style lang="less" scoped>
+.file {
+    position: relative;
+    display: inline-block;
+    background: #409EFF;
+    border: 1px solid #409EFF;
+    border-radius: 3px;
+    font-size: 12px;
+    line-height: 34px;
+    padding: 0px 15px;
+    overflow: hidden;
+    color: #fff;
+    text-decoration: none;
+    text-indent: 0;
+    margin-right: 10px;
+}
+.file input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    width: 80px;
+    height: 34px;
+    opacity: 0;
+    cursor: pointer;
+}
+.bar {
+    width: 80%;
+    margin-right: -30px;
+    display: inline-block;
+}
+</style>

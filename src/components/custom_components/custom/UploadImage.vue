@@ -117,9 +117,6 @@
                 }
             }
         },
-        created() {
-            this.actionUrl = this.$util.getRandomUrl('/v1/storage/image');
-        },
         methods: {
             ...mapMutations({
                 addPosterImage: 'person/addPosterImage'
@@ -196,15 +193,21 @@
                     this.$service.uploadImage({formData, url})
                         .then((res) => {
                             if (res && (res.code === 0)) {
-                                let data = res.data[0].image;
-                                let obj = {};
-                                obj.id = data.id;
-                                obj.height = img.height;
-                                obj.width = img.width;
-                                obj.uri = data.uri;
-                                obj.name = data.fileName;
-                                this.successHandler({posterImage: obj});
-                                this.cancelHandler();
+                                if (res.data[0] && (res.data[0].failCode === 0 || res.data[0].failCode === 3300)) {
+                                    let data = res.data[0].image;
+                                    let obj = {};
+                                    obj.id = data.id;
+                                    obj.height = img.height;
+                                    obj.width = img.width;
+                                    obj.uri = data.uri;
+                                    obj.name = data.fileName;
+                                    this.successHandler({posterImage: obj});
+                                    this.cancelHandler();
+                                } else {
+                                    this.$message.error(res.data[0].failReason);
+                                }
+                            } else {
+                                this.$message.error('图片保存失败');
                             }
                         }).finally(() => {
                             this.isLoading = false;
@@ -219,7 +222,12 @@
             submitUpload() {
                 this.$refs.uploadImageForm.validate(value => {
                     if (value) {
-                        this.$refs.upload.submit();
+                        this.$util.getUploadServer()
+                            .then((baseUri) => {
+                                let url = `${baseUri}/v1/storage/image`;
+                                this.actionUrl = url;
+                                this.$refs.upload.submit();
+                            });
                     } else {
                         return false;
                     }

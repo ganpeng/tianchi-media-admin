@@ -26,11 +26,11 @@
 </template>
 
 <script>
+    import axios from 'axios';
     import vHeader from './VHeader.vue';
     import vFooter from './VFooter.vue';
     import vAside from './VAside.vue';
     import UploadVideo from '../video_manage/UploadVideo';
-
     export default {
         name: 'Layout',
         components: {
@@ -42,12 +42,15 @@
         data() {
             return {
                 isActive: true,
-                minHeight: 400
+                minHeight: 400,
+                isDownloading: false,
+                noticer: null
             };
         },
         created() {
             this.setMinHeight();
             window.addEventListener('resize', this.setMinHeight, false);
+            window.eventBus.$on('startExportVideoExecel', this.exportExecelHandler);
         },
         beforeDestroy() {
             window.removeEventListener('resize', this.setMinHeight);
@@ -60,6 +63,43 @@
             setMinHeight() {
                 let minHeight = window.innerHeight - 100 - 64 - 64;
                 this.minHeight = minHeight;
+            },
+            exportExecelHandler() {
+                if (!this.isDownloading) {
+                    this.isDownloading = true;
+                    this.noticer = this.$notify({
+                        title: '提示',
+                        message: '视频文件正在导出中，请稍等...',
+                        duration: 0
+                    });
+                    axios.get('/storage/v1/storage/video/check/excel', {
+                        headers: this.$util.getUploadHeaders(this.$store.state.user.token),
+                        responseType: 'blob'
+                    }).then((res) => {
+                        if (res && res.status === 200) {
+                            let data = res.data;
+                            if (!data) {
+                                return;
+                            }
+                            let url = window.URL.createObjectURL(new Blob([data]));
+                            let link = document.createElement('a');
+                            link.style.display = 'none';
+                            link.href = url;
+                            link.setAttribute('download', 'excel.xlsx');
+
+                            document.body.appendChild(link);
+                            link.click();
+                            this.$message.success('视频列表文件导出成功');
+                        }
+                    }).catch(() => {
+                        this.$message.error('视频列表文件导出失败');
+                    }).finally(() => {
+                        setTimeout(() => {
+                            this.isDownloading = false;
+                            this.noticer.close();
+                        }, 1000);
+                    });
+                }
             }
         }
     };

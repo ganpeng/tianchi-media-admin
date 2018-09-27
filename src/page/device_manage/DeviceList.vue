@@ -187,7 +187,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="设备状态">
-                    <i v-if="status === 0" class="status-abnormal">禁用</i>
+                    <i v-if="status === 0" class="status-normal">正常</i>
                     <span v-else v-html="getStatus(device.status)"></span>
                 </el-form-item>
             </el-form>

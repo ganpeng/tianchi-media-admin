@@ -43,6 +43,8 @@ let defaultLiveChannel = {
     releaseStatus: '', // 直播频道的发布状态
     status: '', // 直播频道状态`
     record: '', // 是否支持直播回看
+    audioPid: '',
+    videoPid: '',
     //  直播频道的类型列表
     typeList: [],
     visible: false // 是否上下架
@@ -53,12 +55,17 @@ const defaultState = {
     list: [],
     pagination: _.cloneDeep(defaultPagination),
     liveChannel: _.cloneDeep(defaultLiveChannel),
+    liveChannelTypeList: [],
+    carouselChannelTypeList: [],
     channelTypeList: []
 };
 
 const state = _.cloneDeep(defaultState);
 
 const getters = {
+    channelState(state) {
+        return state;
+    },
     list(state) {
         return state.list;
     },
@@ -143,14 +150,28 @@ const mutations = {
     setChannelTypeList(state, payload) {
         state.channelTypeList = payload.list;
     },
+    setLiveChannelTypeList(state, payload) {
+        state.liveChannelTypeList = payload.list;
+    },
+    setCarouselChannelTypeList(state, payload) {
+        state.carouselChannelTypeList = payload.list;
+    },
     addChannelCategory(state, payload) {
         let {name, data: {category}} = payload;
         let channelCategory = { name, category, id: _.uniqueId('category_') };
-        state.channelTypeList.push(channelCategory);
+        if (category === 'LIVE') {
+            state.liveChannelTypeList.push(channelCategory);
+        } else {
+            state.carouselChannelTypeList.push(channelCategory);
+        }
     },
     deleteChannelCategory(state, payload) {
-        let {data: {id}} = payload;
-        state.channelTypeList = state.channelTypeList.filter((type) => type.id !== id);
+        let {data: {id, category}} = payload;
+        if (category === 'LIVE') {
+            state.liveChannelTypeList = state.liveChannelTypeList.filter((type) => type.id !== id);
+        } else {
+            state.carouselChannelTypeList = state.carouselChannelTypeList.filter((type) => type.id !== id);
+        }
     }
 };
 
@@ -162,16 +183,20 @@ const actions = {
         try {
             let res = await service.getChannelType({});
             if (res && res.code === 0) {
+                let liveChannelTypeList = res.data.filter((item) => item.category === 'LIVE');
+                let carouselChannelTypeList = res.data.filter((item) => item.category !== 'LIVE');
                 commit('setChannelTypeList', {list: res.data});
+                commit('setLiveChannelTypeList', {list: liveChannelTypeList});
+                commit('setCarouselChannelTypeList', {list: carouselChannelTypeList});
             }
         } catch (err) { }
     },
     /**
      * 保存频道分类
      */
-    async putChannelType() {
+    async putChannelType({commit, state}, list) {
         try {
-            let channelTypeList = _.cloneDeep(state.channelTypeList);
+            let channelTypeList = _.cloneDeep(list);
             channelTypeList.forEach((item) => {
                 if (/^category_/.test(item.id)) {
                     delete item.id;

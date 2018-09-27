@@ -120,6 +120,16 @@
                         {{scope.row.record ? '是' : '否'}}
                 </template>
             </el-table-column>
+            <el-table-column prop="videoPid" align="center" label="videoPid">
+                <template slot-scope="scope">
+                        {{scope.row.videoPid | padEmpty}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="audioPid" align="center" label="audioPid">
+                <template slot-scope="scope">
+                        {{scope.row.audioPid | padEmpty}}
+                </template>
+            </el-table-column>
             <el-table-column align="center" width="300px" fixed="right" label="操作">
                 <template slot-scope="scope">
                     <el-button type="text" size="small" @click="previewChannelPage(scope.row.id, scope.row.name, true)">节目单下载</el-button>
@@ -153,7 +163,7 @@
             @open="dialogOpenHandler"
             :close-on-press-escape="false">
             <div class="file">
-                <input id="upload-file" type="file" multiple ref="uploadXml">选择文件
+                <input id="upload-file" accept="application/xml" type="file" multiple ref="uploadXml">选择文件
             </div>
             <div class="table-wrapper">
                 <el-table
@@ -388,7 +398,6 @@
             dialogOpenHandler() {
                 this.$nextTick(() => {
                     let uploadInputFile = document.querySelector('#upload-file');
-                    console.log(uploadInputFile);
                     uploadInputFile.addEventListener('input', this.uploadChangeHandler);
                 });
             },
@@ -487,8 +496,7 @@
                         reject(new Error('canceled_flag')); // eslint-disable-line
                     };
                     xhr.upload.onprogress = (evt) => {
-                        let percent = evt.loaded / evt.total * 100;
-                        console.log(percent);
+                        // let percent = evt.loaded / evt.total * 100;
                     };
                     xhr.send(data);
                 });
@@ -590,7 +598,8 @@
     border: 1px solid #409EFF;
     border-radius: 3px;
     font-size: 12px;
-    padding: 3px 15px;
+    line-height: 34px;
+    padding: 0px 15px;
     overflow: hidden;
     color: #fff;
     text-decoration: none;

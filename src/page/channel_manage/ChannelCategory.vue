@@ -26,16 +26,19 @@
                                     <i class="el-icon-plus"></i>添加
                                 </el-button>
                             </div>
-                            <el-tag
-                                v-for="(item, index) in channel.list"
-                                :key="index"
-                                closable
-                                class="tag-btn"
-                                type="info"
-                                :disable-transitions="false"
-                                @close="remove(item)">
-                                {{item.name}}
-                            </el-tag>
+                            <div :id="`sort-list-${index}`">
+                                <el-tag
+                                    v-for="(item, index) in channelList(index)"
+                                    :key="index"
+                                    :data-channel="JSON.stringify(item)"
+                                    closable
+                                    class="tag-btn"
+                                    type="info"
+                                    :disable-transitions="false"
+                                    @close="remove(item)">
+                                    {{item.name}}
+                                </el-tag>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -48,45 +51,90 @@
 </template>
 <script>
 import {mapActions, mapGetters, mapMutations} from 'vuex';
-
 export default {
     data() {
         return {
-            currentIndex: null
+            currentIndex: null,
+            drake: null
         };
     },
     created() {
         this.resetProgramme();
-        this.getChannelType();
+        this.getChannelType()
+            .then(() => {
+                this.initDragula();
+            });
     },
     computed: {
         ...mapGetters({
             serializeChannelTypeList: 'channel/serializeChannelTypeList',
-            channelTypeList: 'channel/channelTypeList'
-        })
+            channelTypeList: 'channel/channelTypeList',
+            channelState: 'channel/channelState'
+        }),
+        channelList() {
+            return (index) => {
+                if (index === 1) {
+                    return this.channelState.carouselChannelTypeList;
+                } else {
+                    return this.channelState.liveChannelTypeList;
+                }
+            };
+        }
     },
     methods: {
         ...mapMutations({
             addChannelCategory: 'channel/addChannelCategory',
             resetProgramme: 'programme/resetProgramme',
-            deleteChannelCategory: 'channel/deleteChannelCategory'
+            deleteChannelCategory: 'channel/deleteChannelCategory',
+            setChannelTypeList: 'channel/setChannelTypeList'
         }),
         ...mapActions({
             getChannelType: 'channel/getChannelType',
             getChannelCount: 'channel/getChannelCount',
             putChannelType: 'channel/putChannelType'
         }),
+        initDragula() {
+            this.$nextTick(function () {
+                let eleList = [];
+                for (let i = 0; i < this.serializeChannelTypeList.length; i++) {
+                    let id = `sort-list-${i}`;
+                    let ele = document.getElementById(id);
+                    eleList.push(ele);
+                }
+                this.drake = this.$dragula(eleList, {
+                    direction: 'horizontal'
+                });
+            });
+        },
         mouseoverHandler(index) {
             this.currentIndex = index;
         },
         _putChannelType() {
-            this.putChannelType()
+            let list = this.serializeSortedChannelTypeList();
+            this.putChannelType(list)
                 .then(() => {
                     this.$message({
                         type: 'success',
                         message: '节目类型保存成功'
                     });
                 });
+        },
+        serializeSortedChannelTypeList() {
+            let len = this.serializeChannelTypeList.length;
+            let sortedChannelTypeList = [];
+            for (let i = 0; i < len; i++) {
+                let id = `sort-list-${i}`;
+                let ele = document.getElementById(id);
+                let eleList = ele.querySelectorAll('.el-tag--info');
+                let list = [];
+                for (let j = 0; j < eleList.length; j++) {
+                    let channel = JSON.parse(eleList[j].getAttribute('data-channel'));
+                    channel.sort = j;
+                    list.push(channel);
+                }
+                sortedChannelTypeList = sortedChannelTypeList.concat(list);
+            }
+            return sortedChannelTypeList;
         },
         append(data) {
             this.$prompt('请输入新类型', '提示', {
@@ -169,5 +217,8 @@ export default {
     bottom: 164px;
     left: 50%;
     transform: translateX(-50%);
+}
+.tag-btn {
+    cursor: pointer;
 }
 </style>

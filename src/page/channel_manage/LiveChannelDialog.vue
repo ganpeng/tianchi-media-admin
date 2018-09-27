@@ -71,6 +71,24 @@
                 >
                 </el-input>
             </el-form-item>
+            <el-form-item label="videoPid" prop="videoPid">
+                <el-input
+                    :disabled="readonly"
+                    placeholder="请输入videoPid"
+                    :value="liveChannel.videoPid"
+                    @input="inputHandler($event, 'videoPid')"
+                >
+                </el-input>
+            </el-form-item>
+            <el-form-item label="audioPid" prop="audioPid">
+                <el-input
+                    :disabled="readonly"
+                    placeholder="请输入audioPid"
+                    :value="liveChannel.audioPid"
+                    @input="inputHandler($event, 'audioPid')"
+                >
+                </el-input>
+            </el-form-item>
             <el-form-item label="频道类别" prop="typeList">
                 <el-select
                     :disabled="readonly"

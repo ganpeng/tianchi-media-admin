@@ -237,7 +237,8 @@
                 this.resetVersion();
                 if (!this.display) {
                     this.$refs.versionForm.$refs.createVersion.resetFields();
-                    this.$refs.versionForm.fileList = [];
+                    this.$refs.versionForm.file = {};
+                    this.$refs.versionForm.percent = 0;
                 }
                 this.display = false;
             },
