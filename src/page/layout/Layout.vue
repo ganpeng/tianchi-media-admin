@@ -72,7 +72,7 @@
                         message: '视频文件正在导出中，请稍等...',
                         duration: 0
                     });
-                    axios.get('/storage/v1/storage/video/check/excel', {
+                    axios.get('/storage/v1/storage/video/duration-diff/list', {
                         headers: this.$util.getUploadHeaders(this.$store.state.user.token),
                         responseType: 'blob'
                     }).then((res) => {

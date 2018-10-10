@@ -127,14 +127,12 @@ export default {
             },
             percent: 0,
             file: {},
-            actionUrl: '',
             productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
             forcedOptions: role.FORCED_OPTIONS,
             hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS
         };
     },
     created() {
-        // this.actionUrl = this.$util.getRandomUrl('/v1/storage/file');
         this.$nextTick(() => {
             let uploadInputFile = document.querySelector('#version-file-input');
             uploadInputFile.addEventListener('input', this.uploadChangeHandler);
