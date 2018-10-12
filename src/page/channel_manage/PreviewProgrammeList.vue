@@ -69,7 +69,7 @@
                     if (res && res.code === 0) {
                         let prevList = [];
                         let afterList = [];
-                        let today = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate();
+                        let today = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' 00:00:00';
                         let timeStamp = new Date(today).getTime();
                         res.data.forEach((item) => {
                             if (item.startTime < timeStamp) {

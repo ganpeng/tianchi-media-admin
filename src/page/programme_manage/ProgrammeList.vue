@@ -327,9 +327,7 @@ export default {
             categoryListString: 'programme/categoryListString',
             getDirector: 'programme/getDirector',
             getChiefActor: 'programme/getChiefActor',
-            getScenarist: 'programme/getScenarist',
-            getChecked: 'programme/getChecked',
-            isCheckedAll: 'programme/isCheckedAll'
+            getScenarist: 'programme/getScenarist'
         }),
         isDisabled() {
             return this.selectedVideoList.length === 0;
@@ -348,9 +346,7 @@ export default {
             updateProgrammePagination: 'programme/updateProgrammePagination',
             updateProgrammeSearchFields: 'programme/updateProgrammeSearchFields',
             resetProgrammeSearchFields: 'programme/resetProgrammeSearchFields',
-            resetProgrammePagination: 'programme/resetProgrammePagination',
-            toggleChecked: 'programme/toggleChecked',
-            toggleAll: 'programme/toggleAll'
+            resetProgrammePagination: 'programme/resetProgrammePagination'
         }),
         ...mapActions({
             getProgrammeList: 'programme/getProgrammeList',

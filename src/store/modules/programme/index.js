@@ -5,6 +5,8 @@ import service from '../../../service';
 import wsCache from '@/util/webStorage';
 import {checkImageExist, getPageSize} from '@/util/formValidate';
 
+let isLoading = false; //  列表页面重复点击的校验
+
 const defaultProgramme = {
     // 全平台通用id，从媒资系统过来
     commonId: '',
@@ -420,19 +422,6 @@ const getters = {
             let scenarist = programme.figureListMap['SCENARIST'] ? programme.figureListMap['SCENARIST'] : [];
             return scenarist.map((item) => item.name).join(', ');
         };
-    },
-    //  对节目列表的操作
-    isCheckedAll(state) {
-        let flag = _.some(state.list, (item) => {
-            return item.checked === 'yes';
-        });
-        return flag ? 'yes' : 'no';
-    },
-    getChecked(state) {
-        return (id) => {
-            let programme = state.list.find((programme) => programme.id === id);
-            return programme ? programme.checked : false;
-        };
     }
 };
 
@@ -709,30 +698,6 @@ const mutations = {
     },
     getProgrammeFromLocalStorage() {
         return wsCache.localStorage.get('programme');
-    },
-    //  对节目列表的操作
-    toggleChecked(state, payload) {
-        let {id} = payload;
-        state.list = state.list.map((item) => {
-            if (item.id === id) {
-                item.checked = item.checked === 'yes' ? 'no' : 'yes';
-            }
-            return item;
-        });
-    },
-    toggleAll(state, payload) {
-        let {all} = payload;
-        if (all) {
-            state.list = state.list.map((item) => {
-                item.checked = 'yes';
-                return item;
-            });
-        } else {
-            state.list = state.list.map((item) => {
-                item.checked = 'no';
-                return item;
-            });
-        }
     }
 };
 
@@ -879,22 +844,24 @@ const actions = {
      */
     async getProgrammeList({commit, state}) {
         try {
-            let params = Object.assign({}, state.searchFields, {
-                pageSize: state.pagination.pageSize,
-                pageNum: state.pagination.pageNum - 1
-            });
-            let res = await service.getProgrammeList(params);
-            if (res && res.code === 0) {
-                let {pageNum, pageSize, total, list} = res.data;
-                list = list.map((item) => {
-                    item.checked = 'no'; // 'yes' 为选中，'no'为未选中
-                    return item;
+            if (!isLoading) {
+                isLoading = true;
+                let params = Object.assign({}, state.searchFields, {
+                    pageSize: state.pagination.pageSize,
+                    pageNum: state.pagination.pageNum - 1
                 });
-                commit('setProgrammeList', {list});
-                commit('setProgrammePagination', {pageSize, pageNum: pageNum + 1, total});
+                let res = await service.getProgrammeList(params);
+                if (res && res.code === 0) {
+                    let {pageNum, pageSize, total, list} = res.data;
+                    commit('setProgrammeList', {list});
+                    commit('setProgrammePagination', {pageSize, pageNum: pageNum + 1, total});
+                }
+                isLoading = false;
+                return res;
             }
-            return res;
-        } catch (err) { }
+        } catch (err) {
+            isLoading = false;
+        }
     },
     /**
      * 获取节目分类
