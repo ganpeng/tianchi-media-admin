@@ -74,7 +74,6 @@
                     :disabled="readonly"
                     :value="video.name"
                     auto-complete="off"
-                    :maxlength="30"
                     placeholder="请输入子集名称"
                     @input="inputHandler($event, 'name')"
                 ></el-input>
