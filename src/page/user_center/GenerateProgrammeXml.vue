@@ -82,7 +82,8 @@
             };
         },
         mounted() {
-            this.startTime = '' + new Date().getFullYear() + (new Date().getMonth().toString().length === 1 ? '0' : '') + (new Date().getMonth() + 1) + (new Date().getDate().toString().length === 1 ? '0' : '') + new Date().getDate() + '000000';
+            this.startTime = '' + new Date().getFullYear() + ((new Date().getMonth().toString().length === 1 && new Date().getMonth().toString() !== '9') ? '0' : '') + (new Date().getMonth() + 1) + (new Date().getDate().toString().length === 1 ? '0' : '') + new Date().getDate() + '000000';
+            console.log(this.startTime);
         },
         methods: {
             validateVideoInfo(rule, value, callback) {

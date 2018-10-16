@@ -133,8 +133,6 @@
                 this.channelInfo.pushServer = this.$util.trim(this.channelInfo.pushServer);
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('请填写所属服务器IP地址'));
-                } else if (!this.$util.isIPAddress(value)) {
-                    return callback(new Error('请填写正确的所属服务器IP地址'));
                 } else {
                     callback();
                 }

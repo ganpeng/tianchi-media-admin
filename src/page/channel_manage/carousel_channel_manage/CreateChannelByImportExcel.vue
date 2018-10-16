@@ -356,14 +356,7 @@
                         message = message + '请填写正确的serviceId;';
                     }
                 }
-                // 所属服务器，只对轮播的pushServer进行验证
-                if (this.$route.params.category === 'CAROUSEL') {
-                    if (this.$util.isEmpty(channel.pushServer)) {
-                        message = message + '请填写所属服务器IP地址;';
-                    } else if (!this.$util.isIPAddress(channel.pushServer)) {
-                        message = message + '请填写正确的所属服务器IP地址;';
-                    }
-                }
+                // 所属服务器，只对轮播、直播都不验证
                 // 频道封面
                 if (this.$util.isEmpty(channel.logoUri)) {
                     message = message + '请设置频道的封面图片;';

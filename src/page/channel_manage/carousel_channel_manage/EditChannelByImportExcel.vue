@@ -226,9 +226,7 @@
                 }
                 // 所属服务器
                 if (this.$util.isEmpty(channel.pushServer)) {
-                    message = message + '请填写所属服务器IP地址;';
-                } else if (!this.$util.isIPAddress(channel.pushServer)) {
-                    message = message + '请填写正确的所属服务器IP地址;';
+                    message = message + '请填写所属服务器;';
                 }
                 if (message) {
                     this.channelList[index].message = '第' + (index + 1) + '个:' + message;
