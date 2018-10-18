@@ -42,11 +42,16 @@ service.interceptors.response.use((response) => {
         type: 'warning'
     });
     return response.data;
-}, () => {
+}, (err) => {
+    let errResponse = err.response;
+    if (errResponse && errResponse.status === 500 && errResponse.data.code === 1001) {
+        store.dispatch('user/logout', false);
+        return false;
+    }
     if (window.navigator.onLine) {
         Message({
-            message: '服务器连接失败，请稍后重试',
-            type: 'error'
+            message: errResponse.data.message,
+            type: 'warning'
         });
     } else {
         Message({
