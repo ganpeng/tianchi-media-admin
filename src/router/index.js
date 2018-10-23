@@ -69,6 +69,9 @@ import VersionList from 'sysPage/version_manage/VersionList';
 import HotPerson from 'sysPage/person_manage/HotPerson';
 import PreviewProgrammeList from 'sysPage/channel_manage/PreviewProgrammeList';
 import DeviceList from 'sysPage/device_manage/DeviceList';
+import ProductList from 'sysPage/product_manage/ProductList';
+import CreateTypeProduct from 'sysPage/product_manage/type_product/CreateTypeProduct';
+import EditTypeProduct from 'sysPage/product_manage/type_product/EditTypeProduct';
 import DuplicateList from 'sysPage/person_manage/DuplicateList';
 
 Vue.use(Router);
@@ -475,6 +478,24 @@ let router = new Router({
                     path: '/manage-device/list',
                     name: 'DeviceList',
                     component: DeviceList
+                },
+                //  产品管理-产品包列表
+                {
+                    path: '/product-manage/list',
+                    name: 'ProductList',
+                    component: ProductList
+                },
+                //  产品管理-创建类型包
+                {
+                    path: '/product-manage/create-type',
+                    name: 'CreateTypeProduct',
+                    component: CreateTypeProduct
+                },
+                //  产品管理-编辑类型包
+                {
+                    path: '/product-manage/edit-type',
+                    name: 'EditTypeProduct',
+                    component: EditTypeProduct
                 }
             ]
         },

@@ -1,0 +1,164 @@
+<!--类别产品包表单组件-->
+<template>
+    <div class="text-left">
+        <el-form :model="productInfo"
+                 :rules="infoRules"
+                 status-icon
+                 ref="productInfo"
+                 label-width="120px"
+                 class="form-block fill-form">
+            <el-form-item label="类型" prop="category">
+                类别包
+            </el-form-item>
+            <el-form-item label="名称" prop="name" required>
+                <el-input v-model="productInfo.name" placeholder="请填写100个字以内的名称"></el-input>
+            </el-form-item>
+            <el-form-item label="简介" prop="description">
+                <el-input
+                    v-model="productInfo.description"
+                    placeholder="请填写100个字以内的简介"
+                    type="textarea"
+                    :rows="4">
+                </el-input>
+            </el-form-item>
+            <el-form-item label="类型" prop="typeList" required>
+                <el-select
+                    v-model="productInfo.typeList"
+                    multiple
+                    filterable
+                    clearable
+                    placeholder="请选择类型">
+                    <el-option
+                        v-for="item in typeOptions"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <div class="operate">
+                <el-button type="primary" @click="operateSubject" class="page-main-btn">
+                    {{this.status === '0' ? '创建' : '保存'}}
+                </el-button>
+                <el-button @click="reset"
+                           v-if="this.status === '0' || this.status === '1' "
+                           class="page-main-btn"
+                           type="primary"
+                           plain>
+                    重置
+                </el-button>
+                <el-button @click="toSubjectList" class="page-main-btn">返回列表页</el-button>
+            </div>
+        </el-form>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: 'TypeProductForm',
+        // status为1代表编辑，0代表创建
+        props: ['status'],
+        data() {
+            let checkName = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('产品包名称不能为空'));
+                } else if (this.$util.trim(value).length > 30) {
+                    return callback(new Error('产品包名称不能超过30字'));
+                } else {
+                    callback();
+                }
+            };
+            let checkDescription = (rule, value, callback) => {
+                if (this.$util.trim(value).length > 100) {
+                    return callback(new Error('产品包描述不能超过100字'));
+                } else {
+                    callback();
+                }
+            };
+            let checkTypeList = (rule, value, callback) => {
+                if (this.productInfo.typeList.length === 0) {
+                    return callback(new Error('类型不能为空'));
+                } else {
+                    callback();
+                }
+            };
+            return {
+                productInfo: {
+                    id: '',
+                    name: '',
+                    description: '',
+                    typeList: []
+                },
+                typeOptions: [],
+                infoRules: {
+                    name: [
+                        {validator: checkName, trigger: 'blur'}
+                    ],
+                    description: [
+                        {validator: checkDescription, trigger: 'blur'}
+                    ],
+                    typeList: [
+                        {validator: checkTypeList, trigger: 'change'}
+                    ]
+                }
+            };
+        },
+        mounted() {
+            this.init();
+        },
+        methods: {
+            // 初始化数据
+            init() {
+                // 初始化类别列表
+                this.$service.getProgrammeCategory().then(response => {
+                    if (response && response.code === 0) {
+                        this.typeOptions = response.data;
+                    }
+                });
+            },
+            // 创建或更新产品包
+            operateSubject() {
+                this.$refs['productInfo'].validate((valid) => {
+                    if (valid) {
+                        // 创建产品包
+                        if (this.status === '0' || this.status === '1') {
+                            this.productInfo.category = this.status === '0' ? 'PROGRAMME' : 'FIGURE';
+                            this.$service.createSubject(this.productInfo).then(response => {
+                                if (response && response.code === 0) {
+                                    this.subjectId = response.data.id;
+                                    this.dialogVisible = true;
+                                }
+                            });
+                        } else {
+                            // 更新产品包
+                            this.productInfo.id = this.$route.params.id;
+                            this.$service.updateSubjectBasicInfo(this.productInfo).then(response => {
+                                if (response && response.code === 0) {
+                                    this.subjectId = response.data.id;
+                                    this.dialogVisible = true;
+                                }
+                            });
+                        }
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            reset() {
+                this.$refs['productInfo'].resetFields();
+            },
+            toSubjectList() {
+                this.$router.push({name: 'ProductList'});
+            }
+        }
+    };
+</script>
+
+<style lang="scss" scoped>
+
+    .operate {
+        margin-top: 200px;
+        margin-bottom: 80px;
+    }
+
+</style>
