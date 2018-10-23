@@ -3,7 +3,8 @@ import Router from 'vue-router';
 import store from '../store';
 import './reload';
 import Login from 'sysPage/login/Login';
-import Layout from 'sysPage/layout/Layout';
+// import Layout from 'sysPage/layout/Layout';
+import GlobalLayout from 'sysPage/layout/GlobalLayout';
 import Home from 'sysPage/home/Home';
 import InfoSetting from 'sysPage/personal_center/InfoSetting';
 import MyInfo from 'sysPage/personal_center/MyInfo';
@@ -70,6 +71,9 @@ import HotPerson from 'sysPage/person_manage/HotPerson';
 import PreviewProgrammeList from 'sysPage/channel_manage/PreviewProgrammeList';
 import DeviceList from 'sysPage/device_manage/DeviceList';
 import DuplicateList from 'sysPage/person_manage/DuplicateList';
+import Worktop from 'sysPage/worktop/Worktop';
+import ClientLogList from 'sysPage/client_log/ClientLogList';
+import Category from 'sysPage/category_manage/Category';
 
 Vue.use(Router);
 
@@ -90,8 +94,11 @@ let router = new Router({
         // 网站内容结构
         {
             path: '/layout',
-            name: 'Layout',
-            component: Layout,
+            name: 'GlobalLayout',
+            component: GlobalLayout,
+            // path: '/layout',
+            // name: 'Layout',
+            // component: Layout,
             // 首页
             children: [
                 {
@@ -475,6 +482,23 @@ let router = new Router({
                     path: '/manage-device/list',
                     name: 'DeviceList',
                     component: DeviceList
+                },
+                //  操作台管理
+                {
+                    path: '/worktop-manage',
+                    name: 'Worktop',
+                    component: Worktop
+                },
+                //  客户端日志管理
+                {
+                    path: '/clientlog/list',
+                    name: 'ClientLogList',
+                    component: ClientLogList
+                },
+                {
+                    path: '/category-manage',
+                    name: 'Category',
+                    component: Category
                 }
             ]
         },

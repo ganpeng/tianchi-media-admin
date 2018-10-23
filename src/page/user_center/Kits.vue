@@ -10,18 +10,24 @@
         <!--导出所有注入失败的视频-->
         <export-excel-video-failed>
         </export-excel-video-failed>
+        <single-image-uploader></single-image-uploader>
+        <multi-image-uploader></multi-image-uploader>
     </div>
 </template>
 
 <script>
     import GenerateProgrammeXml from './GenerateProgrammeXml';
     import ExportExcelVideoFailed from './ExportExcelVideoFailed';
+    import SingleImageUploader from '../../components/custom_components/custom/SingleImageUploader';
+    import MultiImageUploader from '../../components/custom_components/custom/MultiImageUploader';
 
     export default {
         name: 'Kits',
         components: {
             GenerateProgrammeXml,
-            ExportExcelVideoFailed
+            ExportExcelVideoFailed,
+            SingleImageUploader,
+            MultiImageUploader
         },
         data() {
             return {

@@ -464,6 +464,100 @@ const RECOMMEND_OPTIONS = [
     }
 ];
 
+const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员'];
+const ASIDE_LIST = [
+    [
+        {
+            text: '操控台',
+            uri: '/worktop-manage',
+            icon: 'el-icon-menu'
+        },
+        {
+            text: '客户端日志',
+            uri: '/clientlog/list',
+            icon: 'el-icon-document'
+        }
+    ],
+    [
+        {
+            text: '节目管理',
+            uri: '/programme-manage/list',
+            icon: 'el-icon-setting'
+        },
+        {
+            text: '视频管理',
+            uri: '/manage-video/list',
+            icon: 'el-icon-document'
+        },
+        {
+            text: '专题管理',
+            uri: '/subject-manage/list',
+            icon: 'el-icon-menu'
+        },
+        {
+            text: '人物管理',
+            uri: '/person-manage/list',
+            icon: 'el-icon-setting'
+        },
+        {
+            text: '栏目管理',
+            uri: '/nav-bar-manage/setting',
+            icon: 'el-icon-setting'
+        },
+        {
+            text: '页面布局',
+            uri: '/nav-bar-manage/layout-setting',
+            icon: 'el-icon-setting'
+        },
+        {
+            text: '直播频道',
+            uri: '/channel-manage/live/list',
+            icon: 'el-icon-setting'
+        },
+        {
+            text: '轮播频道',
+            uri: '/channel-manage/carousel/list',
+            icon: 'el-icon-setting'
+        },
+        {
+            text: '类型管理',
+            uri: '/category-manage',
+            icon: 'el-icon-setting'
+        },
+        {
+            text: '角标管理',
+            uri: '/corner-manage/list',
+            icon: 'el-icon-setting'
+        }
+    ],
+    [
+        {
+            text: '用户管理',
+            uri: '/user-center/list',
+            icon: 'el-icon-setting'
+        }
+    ],
+    [
+        {
+            text: '版本管理',
+            uri: '/manage-version/list',
+            icon: 'el-icon-setting'
+        },
+        {
+            text: '设备管理',
+            uri: '/manage-device/list',
+            icon: 'el-icon-menu'
+        }
+    ],
+    [
+        {
+            text: '管理员',
+            uri: '/manage-admin/list',
+            icon: 'el-icon-document'
+        }
+    ]
+];
+
 export default {
     MAIN_ROLE_OPTIONS,
     VIDEO_TYPE,
@@ -488,5 +582,9 @@ export default {
     PRODUCT_TYPE_OPTIONS,
     FORCED_OPTIONS,
     RECOMMEND_OPTIONS,
-    HARDWARE_TYPE_OPTIONS
+    HARDWARE_TYPE_OPTIONS,
+
+    //  页面样式布局相关
+    NAV_LIST,
+    ASIDE_LIST
 };
