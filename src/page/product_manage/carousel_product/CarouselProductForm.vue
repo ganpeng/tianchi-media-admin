@@ -1,4 +1,4 @@
-<!--节目包表单组件-->
+<!--轮播频道包表单组件-->
 <template>
     <div class="text-left">
         <el-form :model="productInfo"
@@ -8,7 +8,7 @@
                  label-width="120px"
                  class="form-block fill-form">
             <el-form-item label="类型" prop="category">
-                节目包
+                轮播频道包
             </el-form-item>
             <el-form-item label="名称" prop="name" required>
                 <el-input v-model="productInfo.name" placeholder="请填写30个字以内的名称"></el-input>
@@ -23,56 +23,89 @@
             </el-form-item>
         </el-form>
         <div class="block-box text-left">
-            <div class="block-title">添加节目</div>
-            <select-multiple-programme
-                :selectedProgrammeList="selectedProgrammeList"
-                ref="selectMultipleProgramme"
-                v-on:setProgramme="setProgramme">
-            </select-multiple-programme>
+            <div class="block-title">添加轮播频道</div>
+            <select-multiple-carousel-channel
+                :selectedChannelList="selectedChannelList"
+                ref="selectMultipleCarouselChannel"
+                v-on:setChannel="setChannel">
+            </select-multiple-carousel-channel>
             <div class="vice-block">
-                <h3 class="block-vice-title">已选节目</h3>
+                <h3 class="block-vice-title">已选轮播频道</h3>
                 <el-table
-                    :data="selectedProgrammeList"
+                    :data="selectedChannelList"
                     header-row-class-name="common-table-header"
-                    row-class-name=programme-row
+                    row-class-name=channel-row
                     border
                     style="width: 100%">
                     <el-table-column
+                        type="selection"
                         align="center"
-                        width="70px"
-                        label="序号">
-                        <template slot-scope="scope">
-                            <label>{{scope.$index + 1}}</label>
-                        </template>
+                        width="55">
+                    </el-table-column>
+                    <el-table-column
+                        prop="no"
+                        width="80px"
+                        align="center"
+                        label="编号">
+                    </el-table-column>
+                    <el-table-column
+                        prop="innerName"
+                        width="200px"
+                        align="center"
+                        label="名称">
                     </el-table-column>
                     <el-table-column
                         align="center"
                         width="120px"
-                        prop="code"
-                        label="编号">
-                    </el-table-column>
-                    <el-table-column
-                        align="center"
-                        prop="name"
-                        label="名称">
-                    </el-table-column>
-                    <el-table-column
-                        width="100px"
-                        align="center"
-                        label="图片">
+                        label="类别">
                         <template slot-scope="scope">
-                            <img
-                                :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl"
-                                :alt="scope.row.coverImage.name"
-                                v-if="scope.row.coverImage">
-                            <label v-else>------</label>
+                            <label>{{scope.row.typeList | jsonJoin('name')}}</label>
                         </template>
                     </el-table-column>
                     <el-table-column
                         align="center"
-                        label="主演">
+                        prop="multicastIp"
+                        label="组播地址">
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        width="80px"
+                        prop="multicastPort"
+                        label="端口号">
+                    </el-table-column>
+                    <!--tsId-->
+                    <el-table-column
+                        align="center"
+                        prop="tsId"
+                        label="tsId">
                         <template slot-scope="scope">
-                            <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
+                            <label>{{scope.row.tsId ? scope.row.tsId : '------'}}</label>
+                        </template>
+                    </el-table-column>
+                    <!--serviceId-->
+                    <el-table-column
+                        align="center"
+                        prop="serviceId"
+                        label="serviceId">
+                        <template slot-scope="scope">
+                            <label>{{scope.row.serviceId ? scope.row.serviceId : '------'}}</label>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        prop="pushServer"
+                        label="所属服务器">
+                        <template slot-scope="scope">
+                            <label>{{scope.row.pushServer ? scope.row.pushServer : '------'}}</label>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        width="80px"
+                        label="状态">
+                        <template slot-scope="scope">
+                            <i class="status-normal" v-if="scope.row.visible">正常</i>
+                            <i class="status-abnormal" v-else>禁播</i>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -81,7 +114,7 @@
                         class="operate">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" class="remove-btn"
-                                       @click="removeProgramme(scope.$index)">
+                                       @click="removeChannel(scope.$index)">
                                 取消关联
                             </el-button>
                         </template>
@@ -106,14 +139,14 @@
 </template>
 
 <script>
-    import SelectMultipleProgramme from '../../subject_manage/programme_subject/SelectMultipleProgramme';
+    import SelectMultipleCarouselChannel from './SelectMultipleCarouselChannel';
 
     export default {
-        name: 'ProgrammeProductForm',
+        name: 'ChannelProductForm',
         // status为1代表编辑，0代表创建
         props: ['status'],
         components: {
-            SelectMultipleProgramme
+            SelectMultipleCarouselChannel
         },
         data() {
             let checkName = (rule, value, callback) => {
@@ -138,7 +171,7 @@
                     name: '',
                     description: ''
                 },
-                selectedProgrammeList: [],
+                selectedChannelList: [],
                 infoRules: {
                     name: [
                         {validator: checkName, trigger: 'blur'}
@@ -156,7 +189,7 @@
             // 初始化数据
             init() {
                 this.$nextTick(function () {
-                    this.$refs.selectMultipleProgramme.init();
+                    this.$refs.selectMultipleCarouselChannel.init();
                 });
             },
             // 创建或更新产品包
@@ -187,16 +220,16 @@
                     }
                 });
             },
-            // 删除选中的节目
-            removeProgramme(index) {
-                let removedRow = this.selectedProgrammeList.splice(index, 1)[0];
-                this.$refs.selectMultipleProgramme.cancelSelectRow(removedRow);
+            // 删除选中的轮播频道
+            removeChannel(index) {
+                let removedRow = this.selectedChannelList.splice(index, 1)[0];
+                this.$refs.selectMultipleChannel.cancelSelectRow(removedRow);
             },
-            // 设置选择的节目
-            setProgramme(selectedProgrammes) {
-                this.selectedProgrammeList = [];
-                for (let i = 0; i < selectedProgrammes.length; i++) {
-                    this.selectedProgrammeList.push(selectedProgrammes[i]);
+            // 设置选择的轮播频道
+            setChannel(selectedChannels) {
+                this.selectedChannelList = [];
+                for (let i = 0; i < selectedChannels.length; i++) {
+                    this.selectedChannelList.push(selectedChannels[i]);
                 }
             },
             reset() {

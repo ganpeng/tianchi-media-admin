@@ -74,6 +74,8 @@ import CreateTypeProduct from 'sysPage/product_manage/type_product/CreateTypePro
 import EditTypeProduct from 'sysPage/product_manage/type_product/EditTypeProduct';
 import CreateProgrammeProduct from 'sysPage/product_manage/programme_product/CreateProgrammeProduct';
 import EditProgrammeProduct from 'sysPage/product_manage/programme_product/EditProgrammeProduct';
+import CreateCarouselProduct from 'sysPage/product_manage/carousel_product/CreateCarouselProduct';
+import EditCarouselProduct from 'sysPage/product_manage/carousel_product/EditCarouselProduct';
 import DuplicateList from 'sysPage/person_manage/DuplicateList';
 
 Vue.use(Router);
@@ -510,6 +512,18 @@ let router = new Router({
                     path: '/product-manage/edit-programme',
                     name: 'EditProgrammeProduct',
                     component: EditProgrammeProduct
+                },
+                //  产品管理-创建轮播频道包
+                {
+                    path: '/product-manage/create-carousel',
+                    name: 'CreateCarouselProduct',
+                    component: CreateCarouselProduct
+                },
+                //  产品管理-编辑轮播频道包
+                {
+                    path: '/product-manage/edit-carousel',
+                    name: 'EditCarouselProduct',
+                    component: EditCarouselProduct
                 }
             ]
         },
