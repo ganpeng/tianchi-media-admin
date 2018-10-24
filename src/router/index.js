@@ -72,6 +72,8 @@ import DeviceList from 'sysPage/device_manage/DeviceList';
 import ProductList from 'sysPage/product_manage/ProductList';
 import CreateTypeProduct from 'sysPage/product_manage/type_product/CreateTypeProduct';
 import EditTypeProduct from 'sysPage/product_manage/type_product/EditTypeProduct';
+import CreateProgrammeProduct from 'sysPage/product_manage/programme_product/CreateProgrammeProduct';
+import EditProgrammeProduct from 'sysPage/product_manage/programme_product/EditProgrammeProduct';
 import DuplicateList from 'sysPage/person_manage/DuplicateList';
 
 Vue.use(Router);
@@ -496,6 +498,18 @@ let router = new Router({
                     path: '/product-manage/edit-type',
                     name: 'EditTypeProduct',
                     component: EditTypeProduct
+                },
+                //  产品管理-创建节目包
+                {
+                    path: '/product-manage/create-programme',
+                    name: 'CreateProgrammeProduct',
+                    component: CreateProgrammeProduct
+                },
+                //  产品管理-编辑节目包
+                {
+                    path: '/product-manage/edit-programme',
+                    name: 'EditProgrammeProduct',
+                    component: EditProgrammeProduct
                 }
             ]
         },
