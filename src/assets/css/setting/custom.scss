@@ -5,3 +5,96 @@
     text-align: left;
     margin-top: 10px;
 }
+
+//  表格样式
+.el-table {
+    &::before {
+        background-color: #343d4f;
+    }
+    .el-checkbox {
+        padding: 0;
+    }
+    .el-table__header {
+        height: 60px;
+        tr, th {
+            background: #293550;
+        }
+        th {
+            border: 1px solid #343d4f;
+            .cell {
+                font-size: 14px;
+                color: #747a86;
+            }
+        }
+    }
+    .el-table__body {
+        tr {
+            background: #2a3040;
+        }
+        td {
+            border: 1px solid #343d4f;
+        }
+    }
+    .el-table__empty-block {
+        background: #2a3040;
+    }
+}
+
+.el-table--border {
+    border: 1px solid #343d4f;
+}
+
+.el-table--border::after, .el-table--group::after {
+    background-color: #343d4f;
+}
+
+//  分页的样式修改
+.el-pagination {
+    .el-select {
+        .el-input__inner {
+            background-color: transparent;
+            border: 1px solid #2c3549;
+        }
+    }
+    .el-pagination__jump {
+        .el-input__inner {
+            border: 1px solid #2c3549;
+            background-color: transparent;
+        }
+    }
+    button {
+        &.btn-prev, &.btn-next {
+            background-color: transparent;
+        }
+        &:disabled {}
+    }
+    .el-pager {
+        li.number {
+            background: transparent;
+            color: #595c61;
+            &.active {
+                color: #409EFF;
+                cursor: default;
+            }
+        }
+        li.more.btn-quicknext, li.more.btn-quickprev {
+            color: #595c61;
+            background: transparent;
+        }
+    }
+}
+
+//  下拉选择框样式
+.el-select, .el-input {
+    width: 132px;
+    height: 35px;
+}
+
+.el-input {
+    input.el-input__inner {
+        background: transparent;
+        &:focus {
+            background: transparent;
+        }
+    }
+}

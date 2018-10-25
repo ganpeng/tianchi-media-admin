@@ -39,50 +39,70 @@
             </ul>
         </div>
         <div class="content">
-            <router-view></router-view>
+            <div class="content-wrapper" :style="`min-height: ${minHeight}px`">
+                <router-view></router-view>
+            </div>
+            <v-footer id="page-footer"></v-footer>
         </div>
     </div>
 </template>
 <script>
 import role from '@/util/config/role';
+import vFooter from './VFooter.vue';
 export default {
+    components: { vFooter },
     data() {
         return {
             navList: role.NAV_LIST,
             asideList: role.ASIDE_LIST,
             active: 0,
-            defaultActive: ''
+            defaultActive: '',
+            minHeight: 400
         };
     },
     created() {
-        let {path} = this.$route;
-        if (path === '/home') {
-            this.$router.push('/worktop-manage');
-            path = '/worktop-manage';
-        }
-        let leftPart = path.split('/')[1];
-        let active = 0;
-        let activePath = '';
-        for (let i = 0; i < this.asideList.length; i++) {
-            for (let j = 0; j < this.asideList[i].length; j++) {
-                let {uri} = this.asideList[i][j];
-                if (leftPart === uri.split('/')[1]) {
-                    active = i;
-                    activePath = uri;
-                    break;
-                }
-            }
-        }
-
+        let {active, activePath} = this.getActivePath();
         this.active = active;
         this.defaultActive = activePath;
+
+        this.setMinHeight();
+        window.addEventListener('resize', this.setMinHeight, false);
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.setMinHeight);
     },
     methods: {
+        getActivePath() {
+            let {path} = this.$route;
+            if (path === '/home') {
+                this.$router.push('/worktop-manage');
+                path = '/worktop-manage';
+            }
+            let leftPart = path.split('/')[1];
+            let active = 0;
+            let activePath = '';
+            for (let i = 0; i < this.asideList.length; i++) {
+                for (let j = 0; j < this.asideList[i].length; j++) {
+                    let {uri} = this.asideList[i][j];
+                    if (leftPart === uri.split('/')[1]) {
+                        active = i;
+                        activePath = uri;
+                        break;
+                    }
+                }
+            }
+
+            return {active, activePath};
+        },
         changeActive(index) {
             this.active = index;
             let newPath = this.asideList[this.active][0].uri;
             this.defaultActive = newPath;
             this.$router.push(newPath);
+        },
+        setMinHeight() {
+            let minHeight = window.innerHeight - 60 - 65;
+            this.minHeight = minHeight;
         }
     }
 };
@@ -97,15 +117,15 @@ export default {
         top: 0;
         left: 0;
         right: 0;
-        height: 60px;
-        background: #0f1623;
+        height: $headerHeight;
+        background: $headerBg;
         color: #585e6a;
         .logo, .logo-home {
             width: 200px;
-            height: 60px;
+            height: $headerHeight;
         }
         .nav-list {
-            line-height: 60px;
+            line-height: $headerHeight;
             padding-left: 50px;
             .nav-item{
                 float: left;
@@ -120,21 +140,23 @@ export default {
     }
     .aside {
         position: absolute;
-        top: 60px;
+        top: $headerHeight;
         left: 0px;
         bottom: 0px;
         width: 200px;
-        background: #232e44;
+        background: $asideBg;
     }
     .content {
         position: absolute;
-        top: 60px;
+        top: $headerHeight;
         left: 200px;
         right: 0px;
         bottom: 0px;
         overflow: scroll;
-        padding: 20px;
-        background: #1a2233;
+        background: $contentBg;
+        .content-wrapper {
+            padding: 20px;
+        }
     }
 }
 .el-menu {
