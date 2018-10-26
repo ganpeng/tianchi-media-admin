@@ -14,16 +14,6 @@
                     <li><span>产品包名称</span><label>{{productInfo.name}}</label></li>
                     <li><span>产品包简介</span><label>{{productInfo.description}}</label></li>
                     <li>
-                        <span>包含类型</span>
-                        <label>
-                            <el-tag v-for="(item, index) in productInfo.categoryList"
-                                    :key="index"
-                                    type="info">
-                                {{item.name}}
-                            </el-tag>
-                        </label>
-                    </li>
-                    <li>
                         <span>产品包状态</span>
                         <label>
                             <i class="status-normal" v-if="productInfo.visible">已上架</i>
@@ -32,6 +22,69 @@
                     </li>
                 </ul>
             </el-card>
+            <div class="vice-block">
+                <h3 class="block-vice-title">产品包内直播回看列表</h3>
+                <el-table
+                    :data="channelList"
+                    header-row-class-name="common-table-header"
+                    row-class-name=channel-row
+                    border
+                    style="width: 100%">
+                    <el-table-column
+                        align="center"
+                        width="70px"
+                        label="序号">
+                        <template slot-scope="scope">
+                            <label>{{scope.$index + 1}}</label>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="code" align="center" width="120px" label="直播频道编号"></el-table-column>
+                    <el-table-column prop="no" align="center" width="140px" label="直播频道展示编号"></el-table-column>
+                    <el-table-column prop="innerName" align="center" width="120px" label="直播频道名称">
+                        <template slot-scope="scope">
+                    <span class="ellipsis two">
+                        {{scope.row.innerName}}
+                    </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="name" align="center" width="120px" label="直播频道展示名">
+                        <template slot-scope="scope">
+                    <span class="ellipsis two">
+                        {{scope.row.name}}
+                    </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="type" width="120px" align="center" label="频道类别">
+                        <template slot-scope="scope">
+                    <span class="ellipsis two">
+                        {{scope.row.typeList | getTypeName}}
+                    </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="multicastIp" width="150px" align="center" label="频道IP"></el-table-column>
+                    <el-table-column prop="multicastPort" width="100px" align="center" label="频道端口"></el-table-column>
+                    <el-table-column prop="pushServer" align="center" label="所属服务器"></el-table-column>
+                    <el-table-column align="center" label="是否录制回看">
+                        <template slot-scope="scope">
+                            {{scope.row.record ? '是' : '否'}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="videoPid" align="center" label="videoPid">
+                        <template slot-scope="scope">
+                            {{scope.row.videoPid | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="audioPid" align="center" label="audioPid">
+                        <template slot-scope="scope">
+                            {{scope.row.audioPid | padEmpty}}
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <div id="operate-list">
+                <el-button type="primary" class="page-main-btn" @click="editInfo">编辑信息</el-button>
+                <el-button @click="toProductList" class="page-main-btn">返回列表页</el-button>
+            </div>
         </div>
     </div>
 </template>
@@ -43,20 +96,31 @@
         data() {
             return {
                 productInfo: {
-                    name: '',
-                    description: '',
-                    categoryList: [],
+                    name: 'CCTV1回看包',
+                    description: '这个是CCTV1回看包',
                     visible: true
-                }
+                },
+                channelList: []
             };
         },
-        methods: {}
+        methods: {
+            editInfo() {
+                this.$router.push({
+                    name: 'EditLookBackProduct', params: this.$route.params
+                });
+            },
+            toProductList() {
+                this.$router.push({name: 'ProductList'});
+            }
+        }
     };
 </script>
 
 <style lang="scss" scoped>
 
     #basic-info {
+        position: relative;
+        padding-top: 80px;
         .el-card {
             width: 600px;
             ul {
@@ -87,6 +151,11 @@
                     }
                 }
             }
+        }
+        #operate-list {
+            position: absolute;
+            right: 0px;
+            top: 10px;
         }
     }
 
