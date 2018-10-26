@@ -94,7 +94,7 @@
                         this.listQueryParams[key] = '';
                     }
                 }
-                this.listQueryParams.category = 'CAROUSEL';
+                this.listQueryParams.category = 'LIVE';
             }
         }
     };
