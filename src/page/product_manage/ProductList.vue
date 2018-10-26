@@ -159,6 +159,7 @@
                 ],
                 totalAmount: 0,
                 productList: [{
+                    id: 2131312313,
                     code: 1,
                     name: '电视剧全包',
                     category: 'TYPE',
@@ -167,11 +168,30 @@
                     visible: true
                 },
                     {
+                        id: 2131312315,
                         code: 2,
                         name: '天龙八部全包',
                         category: 'PROGRAMME',
                         updatedAt: 1538274321938,
                         createdAt: 1523245320938,
+                        visible: false
+                    },
+                    {
+                        id: 2131312317,
+                        code: 3,
+                        name: '好莱坞频道包',
+                        category: 'CAROUSEL',
+                        updatedAt: 1538575321938,
+                        createdAt: 1503245320938,
+                        visible: true
+                    },
+                    {
+                        id: 2131312319,
+                        code: 4,
+                        name: 'CCTV5包',
+                        category: 'LOOK_BACK',
+                        updatedAt: 1538474321938,
+                        createdAt: 1521245320938,
                         visible: false
                     }]
             };
@@ -204,10 +224,24 @@
                 });
             },
             editProductInfo(item) {
-                this.$router.push({
-                    name: 'EditProduct',
-                    params: {id: item.id}
-                });
+                let routeName = '';
+                switch (item.category) {
+                    case 'TYPE':
+                        routeName = 'EditTypeProduct';
+                        break;
+                    case 'PROGRAMME':
+                        routeName = 'EditProgrammeProduct';
+                        break;
+                    case 'CAROUSEL':
+                        routeName = 'EditCarouselProduct';
+                        break;
+                    case 'LOOK_BACK':
+                        routeName = 'EditLookBackProduct';
+                        break;
+                    default:
+                        break;
+                }
+                this.$router.push({name: routeName, params: {id: item.id}});
             },
             clearFilters() {
                 for (let key in this.listQueryParams) {
@@ -229,10 +263,24 @@
             },
             // 查询产品详情
             checkProductDetail(item) {
-                this.$router.push({
-                    name: 'ProductDetail',
-                    params: {id: item.id}
-                });
+                let routeName = '';
+                switch (item.category) {
+                    case 'TYPE':
+                        routeName = 'TypeProductDetail';
+                        break;
+                    case 'PROGRAMME':
+                        routeName = 'ProgrammeProductDetail';
+                        break;
+                    case 'CAROUSEL':
+                        routeName = 'CarouselProductDetail';
+                        break;
+                    case 'LOOK_BACK':
+                        routeName = 'LookBackProductDetail';
+                        break;
+                    default:
+                        break;
+                }
+                this.$router.push({name: routeName, params: {id: item.id}});
             },
             // 设置产品包的上下架
             setProductVisible(item) {
@@ -256,8 +304,23 @@
                 });
             },
             // 创建产品包
-            createProduct() {
-                this.$router.push({name: 'CreateTypeProduct'});
+            createProduct(command) {
+                switch (command) {
+                    case 'TYPE':
+                        this.$router.push({name: 'CreateTypeProduct'});
+                        break;
+                    case 'PROGRAMME':
+                        this.$router.push({name: 'CreateProgrammeProduct'});
+                        break;
+                    case 'CAROUSEL':
+                        this.$router.push({name: 'CreateCarouselProduct'});
+                        break;
+                    case 'LOOK_BACK':
+                        this.$router.push({name: 'CreateLookBackProduct'});
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     };

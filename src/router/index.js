@@ -78,6 +78,10 @@ import CreateCarouselProduct from 'sysPage/product_manage/carousel_product/Creat
 import EditCarouselProduct from 'sysPage/product_manage/carousel_product/EditCarouselProduct';
 import CreateLookBackProduct from 'sysPage/product_manage/look_back_product/CreateLookBackProduct';
 import EditLookBackProduct from 'sysPage/product_manage/look_back_product/EditLookBackProduct';
+import TypeProductDetail from 'sysPage/product_manage/type_product/TypeProductDetail';
+import ProgrammeProductDetail from 'sysPage/product_manage/programme_product/ProgrammeProductDetail';
+import CarouselProductDetail from 'sysPage/product_manage/carousel_product/CarouselProductDetail';
+import LookBackProductDetail from 'sysPage/product_manage/look_back_product/LookBackProductDetail';
 import DuplicateList from 'sysPage/person_manage/DuplicateList';
 
 Vue.use(Router);
@@ -538,6 +542,30 @@ let router = new Router({
                     path: '/product-manage/edit-look-back',
                     name: 'EditLookBackProduct',
                     component: EditLookBackProduct
+                },
+                //  产品管理-类别包详情
+                {
+                    path: '/product-manage/detail-type/:id',
+                    name: 'TypeProductDetail',
+                    component: TypeProductDetail
+                },
+                //  产品管理-节目包详情
+                {
+                    path: '/product-manage/detail-programme/:id',
+                    name: 'ProgrammeProductDetail',
+                    component: ProgrammeProductDetail
+                },
+                //  产品管理-轮播频道包详情
+                {
+                    path: '/product-manage/detail-carousel/:id',
+                    name: 'CarouselProductDetail',
+                    component: CarouselProductDetail
+                },
+                //  产品管理-直播回看包详情
+                {
+                    path: '/product-manage/detail-look-back/:id',
+                    name: 'LookBackProductDetail',
+                    component: LookBackProductDetail
                 }
             ]
         },
