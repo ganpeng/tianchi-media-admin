@@ -74,6 +74,7 @@ import DuplicateList from 'sysPage/person_manage/DuplicateList';
 import Worktop from 'sysPage/worktop/Worktop';
 import ClientLogList from 'sysPage/client_log/ClientLogList';
 import Category from 'sysPage/category_manage/Category';
+import Search from 'sysPage/search_manage/Search';
 
 Vue.use(Router);
 
@@ -499,6 +500,11 @@ let router = new Router({
                     path: '/category-manage',
                     name: 'Category',
                     component: Category
+                },
+                {
+                    path: '/search-manage',
+                    name: 'Search',
+                    component: Search
                 }
             ]
         },

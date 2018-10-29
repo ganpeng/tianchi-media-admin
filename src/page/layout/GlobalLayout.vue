@@ -15,6 +15,16 @@
                     {{item}}
                 </li>
             </ul>
+            <div class="user-info float-right clearfix">
+                <div class="avatar-box float-left">
+                    <svg-icon
+                        icon-class="avatar_default"
+                        class-name="avatar_default">
+                    </svg-icon>
+                </div>
+                <label class="float-left">您好，{{name}}</label>
+                <span class="float-left" @click="logout">退出</span>
+            </div>
         </div>
         <div class="aside">
             <ul class="aside-list">
@@ -103,6 +113,9 @@ export default {
         setMinHeight() {
             let minHeight = window.innerHeight - 60 - 65;
             this.minHeight = minHeight;
+        },
+        logout() {
+            this.$store.dispatch('user/logout', true);
         }
     }
 };
@@ -137,6 +150,18 @@ export default {
                 }
             }
         }
+        .user-info {
+            line-height: $headerHeight;
+            margin-right: 20px;
+            .avatar_default {
+                width: 40px;
+                height: 40px;
+                margin: 10px 10px 0 0;
+            }
+            span {
+                cursor: pointer;
+            }
+        }
     }
     .aside {
         position: absolute;
@@ -167,5 +192,4 @@ export default {
         background: #0a1730!important;
     }
 }
-
 </style>

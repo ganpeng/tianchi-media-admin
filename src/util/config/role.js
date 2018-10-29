@@ -528,6 +528,11 @@ const ASIDE_LIST = [
             text: '角标管理',
             uri: '/corner-manage/list',
             icon: 'el-icon-setting'
+        },
+        {
+            text: '搜索管理',
+            uri: '/search-manage',
+            icon: 'el-icon-setting'
         }
     ],
     [

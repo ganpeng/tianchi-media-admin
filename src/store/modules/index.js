@@ -10,6 +10,7 @@ import channel from './channel';
 import version from './version';
 import uploadVideo from './upload_video';
 import device from './device';
+import clientErrorLog from './client_errorlog';
 
 export default {
     permission,
@@ -22,5 +23,6 @@ export default {
     channel,
     version,
     uploadVideo,
-    device
+    device,
+    clientErrorLog
 };

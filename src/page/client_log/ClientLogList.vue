@@ -4,10 +4,10 @@
         <el-table
             row-class-name=''
             :header-row-class-name='"common-table-header"'
-            class="my-table-style" :data="[]" border>
+            class="my-table-style" :data="state.list" border>
             <el-table-column align="center" label="时间">
                 <template slot-scope="scope">
-                    {{scope.row.createdAt | padEmpty}}
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD') | padEmpty}}
                 </template>
             </el-table-column>
             <el-table-column align="center" label="系统名称">
@@ -63,16 +63,44 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+            @size-change="handlePaginationChange($event, 'pageSize')"
+            @current-change="handlePaginationChange($event, 'pageNum')"
+            :current-page="state.pagination.pageNum"
+            :page-sizes="[5, 10, 20, 30, 50]"
+            :page-size="state.pagination.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="state.pagination.total">
+        </el-pagination>
     </div>
 </template>
 <script>
+import {mapActions, mapGetters, mapMutations} from 'vuex';
 export default {
     name: 'ClientLogList',
     data() {
         return {};
     },
+    created() {
+        this.getClientErrorLogList();
+    },
+    computed: {
+        ...mapGetters({
+            state: 'clientErrorLog/state'
+        })
+    },
     methods: {
-        display(id) { }
+        ...mapMutations({
+            updatePagination: 'clientErrorLog/updatePagination'
+        }),
+        ...mapActions({
+            getClientErrorLogList: 'clientErrorLog/getClientErrorLogList'
+        }),
+        display(id) { },
+        handlePaginationChange(value, key) {
+            this.updatePagination({key, value});
+            this.getClientErrorLogList();
+        }
     }
 };
 </script>

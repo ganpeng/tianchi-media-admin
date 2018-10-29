@@ -4,8 +4,8 @@ const defaultSearchFields = {
     keyword: '',
     errorType: '',
     apkVersion: '',
-    startedAt: '',
-    endedAt: ''
+    startedAt: undefined,
+    endedAt: undefined
 };
 
 const defaultPagination = {
@@ -68,7 +68,9 @@ const mutations = {
 const actions = {
     async getClientErrorLogList({commit, state}) {
         try {
-            let params = Object.assign({}, state.searchFields, state.pagination);
+            let params = Object.assign({}, state.searchFields, state.pagination, {
+                pageNum: state.pagination.pageNum - 1
+            });
             let res = await service.getClientErrorLogList(params);
             if (res && res.code === 0) {
                 let {list, pageNum, pageSize, total} = res.data;

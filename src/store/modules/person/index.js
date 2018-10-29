@@ -4,6 +4,8 @@ import service from '../../../service';
 import role from '@/util/config/role';
 
 const defaultPerson = {
+    alias: '',
+    englishName: '',
     area: '',
     birthday: '',
     description: '',

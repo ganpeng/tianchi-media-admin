@@ -14,6 +14,22 @@
                         placeholder="请输入人物姓名"
                     ></el-input>
                 </el-form-item>
+                <el-form-item label="人物别名" prop="alias">
+                    <el-input
+                        :value="person.alias"
+                        :disabled="readonly"
+                        @input="inputHandler($event, 'alias')"
+                        placeholder="请输入人物别名"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item label="英文名" prop="englishName">
+                    <el-input
+                        :value="person.englishName"
+                        :disabled="readonly"
+                        @input="inputHandler($event, 'englishName')"
+                        placeholder="请输入人物英文名"
+                    ></el-input>
+                </el-form-item>
                 <el-form-item label="人物简介" prop="description">
                     <el-input
                         type="textarea"
