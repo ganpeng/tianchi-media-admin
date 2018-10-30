@@ -9,11 +9,16 @@
                 <button v-else class="save-btn" @click="searchItemSaveHandler(index)">保存</button>
             </li>
         </ul>
+        <search-person></search-person>
     </div>
 </template>
 <script>
+import SearchPerson from '../../components/custom_components/custom/SearchPerson';
 export default {
     name: 'Search',
+    components: {
+        SearchPerson
+    },
     data() {
         return {
             list: [
