@@ -22,8 +22,8 @@
                         class-name="avatar_default">
                     </svg-icon>
                 </div>
-                <label class="float-left">您好，{{name}}</label>
-                <span class="float-left" @click="logout">退出</span>
+                <label class="float-left">您好，小盆友</label>
+                <span class="float-left" @click="logout">&nbsp;退出</span>
             </div>
         </div>
         <div class="aside">
