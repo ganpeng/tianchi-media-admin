@@ -555,7 +555,7 @@
                                     }
                                 });
                             } else {
-                                let message = result.message ? result.message : `文件导入失败`;
+                                let message = result.data[0] ? result.data[0] : `文件导入失败`;
                                 that.files = that.files.map((obj, index) => {
                                     if (index === that.count) {
                                         obj.message = `<span class="text-danger">${message}</span>`;
