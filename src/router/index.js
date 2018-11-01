@@ -75,6 +75,7 @@ import Worktop from 'sysPage/worktop/Worktop';
 import ClientLogList from 'sysPage/client_log/ClientLogList';
 import Category from 'sysPage/category_manage/Category';
 import Search from 'sysPage/search_manage/Search';
+import PageLayout from 'sysPage/page_layout/PageLayout';
 
 Vue.use(Router);
 
@@ -505,6 +506,12 @@ let router = new Router({
                     path: '/search-manage',
                     name: 'Search',
                     component: Search
+                },
+                //  页面布局
+                {
+                    path: '/page-layout',
+                    name: 'PageLayout',
+                    component: PageLayout
                 }
             ]
         },

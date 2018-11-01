@@ -1,234 +1,238 @@
 <!-- 节目列表页组件 -->
 <template>
     <div class="program-list-container">
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'节目资源管理'},
-            {name:'节目列表'}]">
-        </custom-breadcrumb>
         <div class="table-container">
-            <el-form id="label-font" :inline="true" class="demo-form-inline text-left">
-                <el-col :span="24">
-                    <el-form-item class="float-right">
-                        <el-button
-                            class="page-main-btn create-blue-btn contain-svg-icon"
-                            @click="createProgramme">
-                            <svg-icon icon-class="add"></svg-icon>
-                            新增节目
-                        </el-button>
-                        <el-button
-                            class="page-main-btn create-blue-btn contain-svg-icon"
-                            @click="showFileUploadDialog">
-                            <svg-icon icon-class="upload"></svg-icon>
-                            导入节目
-                        </el-button>
-                    </el-form-item>
-                </el-col>
-                <div>
-                    <el-form-item
-                        label-width="100px" label="上映开始年">
-                        <el-date-picker
-                            :value="programmeSearchFields.releaseAtStart"
-                            type="date"
-                            clearable
-                            style="width:180px;"
-                            @input="inputHandler($event, 'releaseAtStart')"
-                            placeholder="请选择上映时间">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item
-                        label-width="100px" label="上映结束年">
-                        <el-date-picker
-                            :value="programmeSearchFields.releaseAtEnd"
-                            type="date"
-                            clearable
-                            style="width:180px;"
-                            @input="inputHandler($event, 'releaseAtEnd')"
-                            placeholder="请选择上映时间">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item
-                        label-width="50px" label="地区">
-                        <el-select
-                            :value="programmeSearchFields.produceAreaList"
-                            clearable
-                            filterable
-                            multiple
-                            style="width:180px;"
-                            @change="inputHandler($event, 'produceAreaList')"
-                            placeholder="请选择制片地区"
-                        >
-                            <el-option
-                                v-for="(item, index) in areaOptions"
-                                :key="index"
-                                :label="item.name"
-                                :value="item.code">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item
-                        label-width="50px" label="分类">
-                        <el-select
-                            :value="programmeSearchFields.programmeCategoryIdList"
-                            multiple
-                            style="width:180px;"
-                            @change="inputHandler($event, 'programmeCategoryIdList')"
-                            placeholder="请选择">
-                            <el-option
-                                v-for="item in global.categoryList"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </div>
-                <div>
-                    <el-form-item
-                        label-width="100px" class="margin-bottom-0" label="类型">
-                        <el-select
-                            :value="programmeSearchFields.programmeTypeIdList"
-                            @change="inputHandler($event, 'programmeTypeIdList')"
-                            clearable
-                            style="width:180px;"
-                            multiple
-                            placeholder="请选择">
-                            <el-option
-                                v-for="item in programmeTypeOptions"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item
-                        label-width="100px" class="margin-bottom-0" label="节目状态">
-                        <el-select
-                            :value="programmeSearchFields.visible"
-                            @change="inputHandler($event, 'visible')"
-                            clearable
-                            style="width:180px;"
-                            placeholder="请选择">
-                            <el-option
-                                v-for="item in visibleOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item
-                        label-width="50px" class="margin-bottom-0 search" label=" ">
-                        <el-input
-                            :value="programmeSearchFields.keyword"
-                            clearable
-                            style="width:180px;"
-                            @input="inputHandler($event, 'keyword')"
-                            placeholder="搜索你想要的信息">
-                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item class="margin-bottom-0">
-                        <el-button class="page-main-btn" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
-                        <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
+            <h2 class="content-title">搜索筛选</h2>
+            <div class="search-field">
+                <el-form id="label-font" :inline="true" class="demo-form-inline text-left">
+                    <div class="field-row">
+                        <el-form-item
+                            class="margin-bottom-0 search" label=" ">
+                            <el-input
+                                :value="programmeSearchFields.keyword"
+                                clearable
+                                class="border-input"
+                                @input="inputHandler($event, 'keyword')"
+                                placeholder="搜索你想要的信息">
+                            </el-input>
+                        </el-form-item>
+                        <el-button class="btn-style-one" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                        <el-form-item
+                            label-width="80px" class="margin-bottom-0" label="状态">
+                            <el-select
+                                :value="programmeSearchFields.visible"
+                                @change="inputHandler($event, 'visible')"
+                                clearable
+                                placeholder="请选择状态">
+                                <el-option
+                                    v-for="item in visibleOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item
+                            label-width="80px" label="分类">
+                            <el-select
+                                :value="programmeSearchFields.programmeCategoryIdList"
+                                multiple
+                                @change="inputHandler($event, 'programmeCategoryIdList')"
+                                placeholder="请选择分类">
+                                <el-option
+                                    v-for="item in global.categoryList"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item
+                            label-width="80px" class="margin-bottom-0" label="类型">
+                            <el-select
+                                :value="programmeSearchFields.programmeTypeIdList"
+                                @change="inputHandler($event, 'programmeTypeIdList')"
+                                clearable
+                                multiple
+                                placeholder="请选择类型">
+                                <el-option
+                                    v-for="item in programmeTypeOptions"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
                             <svg-icon
                                 icon-class="clear_filter"
                                 class-name="svg-box">
                             </svg-icon>
-                            清空筛选条件
+                            重置
                         </el-button>
-                    </el-form-item>
-                    <el-form-item class="float-right margin-bottom-0">
-                        <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small" @click="multUpFrameProgrammeHandler">批量上架</el-button>
-                        <el-button class="delete-btn disabled-red-btn" :disabled="isDisabled"  size="small" @click="multLowerFrameProgrammeHandler">批量下架</el-button>
-                    </el-form-item>
+                        <span
+                            @click="toggleSearchField"
+                            class="el-dropdown-link">
+                            更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                    </div>
+                    <div v-show="searchFieldVisible" class="field-row">
+                        <el-form-item label-width="100px" label="开始时间">
+                            <el-date-picker
+                                :value="programmeSearchFields.releaseAtStart"
+                                type="date"
+                                clearable
+                                style="width:180px;"
+                                @input="inputHandler($event, 'releaseAtStart')"
+                                placeholder="请选择开始时间">
+                            </el-date-picker>
+                        </el-form-item>
+                        <el-form-item label-width="100px" label="结束时间">
+                            <el-date-picker
+                                :value="programmeSearchFields.releaseAtEnd"
+                                type="date"
+                                clearable
+                                style="width:180px;"
+                                @input="inputHandler($event, 'releaseAtEnd')"
+                                placeholder="请选择结束时间">
+                            </el-date-picker>
+                        </el-form-item>
+                        <el-form-item
+                            label-width="85px" label="地区">
+                            <el-select
+                                :value="programmeSearchFields.produceAreaList"
+                                clearable
+                                filterable
+                                multiple
+                                @change="inputHandler($event, 'produceAreaList')"
+                                placeholder="请选择地区"
+                            >
+                                <el-option
+                                    v-for="(item, index) in areaOptions"
+                                    :key="index"
+                                    :label="item.name"
+                                    :value="item.code">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                </el-form>
+            </div>
+            <div class="seperator-line"></div>
+            <div class="table-field">
+                <h2 class="content-title">节目列表</h2>
+                <div class="table-operator-field clearfix">
+                    <div class="float-left">
+                        <el-checkbox v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+                        <el-checkbox v-model="reverseAll" @change="handleReverseAllChange">反选</el-checkbox>
+                    </div>
+                    <div class="float-right">
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="createProgramme">
+                            <svg-icon icon-class="add"></svg-icon>
+                            添加
+                        </el-button>
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="showFileUploadDialog">
+                            <svg-icon icon-class="upload"></svg-icon>
+                            导入
+                        </el-button>
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="showFileUploadDialog">
+                            <svg-icon icon-class="upload"></svg-icon>
+                            导出
+                        </el-button>
+                    </div>
                 </div>
-            </el-form>
-            <el-table
-                ref="multipleTable"
-                @select="selectHandler"
-                @select-all="selectAllHandler"
-                row-class-name="programme-row" header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
-                <el-table-column type="selection" align="center"></el-table-column>
-                <el-table-column prop="code" align="center" width="120px" label="节目编号">
-                    <template slot-scope="scope">
-                        {{scope.row.code | padEmpty}}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="name" align="center" min-width="100px" label="节目名称">
-                    <template slot-scope="scope">
-                        <span class="ellipsis four">
-                            {{scope.row.name | padEmpty}}
-                        </span>
-                    </template>
-                </el-table-column>
-                <el-table-column label="节目图片" width="90" align="center" >
-                    <template slot-scope="scope">
-                        <img style="width:70px;height:auto;" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
-                    </template>
-                </el-table-column>
-                <el-table-column prop="featureVideoCount" width="80px" align="center" label="正片数量">
-                    <template slot-scope="scope">
-                        {{scope.row.featureVideoCount | padEmpty}}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="releaseAt" align="center" width="100px" label="上映时间">
-                    <template slot-scope="scope">
-                        {{ scope.row.releaseAt | formatDate('yyyy-MM-DD') | padEmpty}}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="produceAreaList" min-width="150px" align="center" label="地区">
-                    <template slot-scope="scope">
-                        <span class="ellipsis four">
-                            {{areaLabel(scope.row.produceAreaList) | padEmpty}}
-                        </span>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" width="100px" label="分类">
-                    <template slot-scope="scope">
-                        <span class="ellipsis four">
-                            {{categoryListString(scope.row.categoryList) | padEmpty}}
-                        </span>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" min-width="100px" label="类型">
-                    <template slot-scope="scope">
-                        <span class="ellipsis four">
-                            {{typeList(scope.row.id) | padEmpty}}
-                        </span>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" min-width="100px" label="演员">
-                    <template slot-scope="scope">
-                        <span class="ellipsis four">
-                            {{getChiefActor(scope.row.id) | padEmpty}}
-                        </span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
-                    <template slot-scope="scope">
-                        <i v-if="scope.row.visible" class="status-normal">已上架</i>
-                        <i v-else class="status-abnormal">已下架</i>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" min-width="100px" label="更新时间">
-                    <template slot-scope="scope">
-                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" width="120px" label="操作">
-                    <template slot-scope="scope">
-                        <div class="btn-wrapper">
-                            <el-button class="text-success" type="text" size="small" @click="displayProgramme(scope.row.id)">详情</el-button>
-                            <el-button type="text" size="small" @click="editProgramme(scope.row.id)">编辑</el-button>
-                            <el-button type="text" size="small" @click="lowerFrameProgramme(scope.row)">
-                                {{scope.row.visible ? '下架' : '上架'}}
-                            </el-button>
-                            <el-button class="text-danger" type="text" size="small" @click="_realDeleteProgramme(scope.row.id)">删除</el-button>
-                        </div>
-                    </template>
-                </el-table-column>
-            </el-table>
+                <el-table
+                    ref="multipleTable"
+                    @select="selectHandler"
+                    @select-all="selectAllHandler"
+                    row-class-name="programme-row" header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
+                    <el-table-column type="selection" align="center"></el-table-column>
+                    <el-table-column prop="code" align="center" width="120px" label="节目编号">
+                        <template slot-scope="scope">
+                            {{scope.row.code | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="name" align="center" min-width="100px" label="节目名称">
+                        <template slot-scope="scope">
+                            <span class="ellipsis four">
+                                {{scope.row.name | padEmpty}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="节目图片" width="90" align="center" >
+                        <template slot-scope="scope">
+                            <img style="width:70px;height:auto;" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="featureVideoCount" width="80px" align="center" label="正片数量">
+                        <template slot-scope="scope">
+                            {{scope.row.featureVideoCount | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="releaseAt" align="center" width="100px" label="上映时间">
+                        <template slot-scope="scope">
+                            {{ scope.row.releaseAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="produceAreaList" min-width="150px" align="center" label="地区">
+                        <template slot-scope="scope">
+                            <span class="ellipsis four">
+                                {{areaLabel(scope.row.produceAreaList) | padEmpty}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" width="100px" label="分类">
+                        <template slot-scope="scope">
+                            <span class="ellipsis four">
+                                {{categoryListString(scope.row.categoryList) | padEmpty}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" min-width="100px" label="类型">
+                        <template slot-scope="scope">
+                            <span class="ellipsis four">
+                                {{typeList(scope.row.id) | padEmpty}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" min-width="100px" label="演员">
+                        <template slot-scope="scope">
+                            <span class="ellipsis four">
+                                {{getChiefActor(scope.row.id) | padEmpty}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
+                        <template slot-scope="scope">
+                            <i v-if="scope.row.visible" class="status-normal">已上架</i>
+                            <i v-else class="status-abnormal">已下架</i>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" min-width="100px" label="更新时间">
+                        <template slot-scope="scope">
+                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" width="120px" label="操作">
+                        <template slot-scope="scope">
+                            <div class="btn-wrapper">
+                                <el-button class="text-success" type="text" size="small" @click="displayProgramme(scope.row.id)">详情</el-button>
+                                <el-button type="text" size="small" @click="editProgramme(scope.row.id)">编辑</el-button>
+                                <el-button type="text" size="small" @click="lowerFrameProgramme(scope.row)">
+                                    {{scope.row.visible ? '下架' : '上架'}}
+                                </el-button>
+                                <el-button class="text-danger" type="text" size="small" @click="_realDeleteProgramme(scope.row.id)">删除</el-button>
+                            </div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <el-pagination
                 @size-change="handlePaginationChange($event, 'pageSize')"
                 @current-change="handlePaginationChange($event, 'pageNum')"
@@ -280,6 +284,11 @@ export default {
     },
     data() {
         return {
+            //  toggle搜索区域
+            searchFieldVisible: false,
+            //  选择数据
+            checkAll: false,
+            reverseAll: false,
             areaOptions: store.get('areaList'),
             fileUploadDialogVisible: false,
             fileList: [],
@@ -641,6 +650,15 @@ export default {
                     });
                 }
             });
+        },
+        handleCheckAllChange() {
+
+        },
+        handleReverseAllChange() {
+
+        },
+        toggleSearchField() {
+            this.searchFieldVisible = !this.searchFieldVisible;
         }
     }
 };

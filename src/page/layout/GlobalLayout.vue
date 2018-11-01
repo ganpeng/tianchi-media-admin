@@ -52,7 +52,6 @@
             <div class="content-wrapper" :style="`min-height: ${minHeight}px`">
                 <router-view></router-view>
             </div>
-            <v-footer id="page-footer"></v-footer>
         </div>
     </div>
 </template>
@@ -144,9 +143,11 @@ export default {
                 float: left;
                 padding: 0 12px;
                 cursor: pointer;
+                font-size: 20px;
+                color: #6F7480;
                 &.active {
                     color: #fff;
-                    background: $lightBlue;
+                    background: $mainColor;
                 }
             }
         }
@@ -169,7 +170,7 @@ export default {
         left: 0px;
         bottom: 0px;
         width: 200px;
-        background: $asideBg;
+        background-image: linear-gradient(-90deg, #152036 0%, #252F46 100%);
     }
     .content {
         position: absolute;
@@ -180,7 +181,7 @@ export default {
         overflow: scroll;
         background: $contentBg;
         .content-wrapper {
-            padding: 20px;
+            padding: 20px 20px 100px 20px;
         }
     }
 }
@@ -188,8 +189,13 @@ export default {
     border-right: none;
 }
 .aside-list {
-    .el-menu-item.is-active {
-        background: #0a1730!important;
+    .el-menu-item {
+        font-size: 20px;
+        color: #6F7480;
+        &.is-active {
+            background: #0A1730!important;
+            border-left: 4px solid $mainColor;
+        }
     }
 }
 </style>

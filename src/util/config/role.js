@@ -506,7 +506,7 @@ const ASIDE_LIST = [
         },
         {
             text: '页面布局',
-            uri: '/nav-bar-manage/layout-setting',
+            uri: '/page-layout',
             icon: 'el-icon-setting'
         },
         {

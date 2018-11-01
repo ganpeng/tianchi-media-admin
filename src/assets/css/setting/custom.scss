@@ -1,9 +1,16 @@
 //  内容区域的title样式
 .content-title {
     font-size: 24px;
-    color: #5a606d;
+    color: #6F7480;
     text-align: left;
-    margin-top: 10px;
+    margin: 10px 0 20px 0;
+}
+
+//  内容区域小点的title
+.content-sub-title {
+    font-size: 20px;
+    color: #6F7480;
+    margin: 20px 0;
 }
 
 //  表格样式
@@ -20,24 +27,34 @@
             background: #293550;
         }
         th {
-            border: 1px solid #343d4f;
+            border: 1px solid #3E495E;
             .cell {
-                font-size: 14px;
-                color: #747a86;
+                font-size: 18px;
+                color: #909399;
             }
         }
     }
     .el-table__body {
         tr {
             background: #2a3040;
+            &:hover {
+                background: #333A4C;
+            }
         }
         td {
+            font-size: 14px;
+            color: #909399;
             border: 1px solid #343d4f;
         }
     }
     .el-table__empty-block {
         background: #2a3040;
     }
+}
+
+//  表格每一行hover之后改变背景色
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+    background-color: #333A4C!important;
 }
 
 .el-table--border {
@@ -47,6 +64,7 @@
 .el-table--border::after, .el-table--group::after {
     background-color: #343d4f;
 }
+
 
 //  分页的样式修改
 .el-pagination {
@@ -84,17 +102,284 @@
     }
 }
 
-//  下拉选择框样式
-.el-select, .el-input {
-    width: 132px;
-    height: 35px;
+//  按钮样式重写
+
+.fixed-btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    height: 80px;
+    background: #293550;
+    box-shadow: 0 2px 10px 0 rgba(0,0,0,0.20);
+    border-radius: 8px;
+    z-index: 100;
+}
+
+.el-button {
+    min-width: 100px;
+    padding: 0;
+    font-size: 16px;
+    border-radius: 20px;
+    //  按钮样式一
+    &.btn-style-one {
+        height: 34px;
+        line-height: 34px;
+        color: #A3D0FD;
+        border: 1px solid #64A4E5;
+        background: transparent;
+        &:hover {
+            background: #4987C6;
+            border: none;
+            color: #A3D0FD;
+        }
+    }
+    //  按钮样式二
+    &.btn-style-two {
+        height: 40px;
+        line-height: 40px;
+        color: #A3D0FD;
+        background: #1989FA;
+        border: none;
+        &.big {
+            width: 130px;
+        }
+        &:hover {
+            color: #A3D0FD;
+            background: #0062C4;
+        }
+    }
+    //  按钮样式三
+    &.btn-style-three {
+        height: 40px;
+        line-height: 40px;
+        background: #FFFFFF;
+        border-radius: 20px;
+        border: none;
+        &:hover {
+            background: #CCCCCC;
+        }
+    }
+    //  按钮样式四
+    &.btn-style-four {
+        width: 130px;
+        height: 34px;
+        line-height: 34px;
+        color: #A3D0FD;
+        background: #1989FA;
+        border: none;
+        &:hover {
+            color: #A3D0FD;
+            background: #0062C4;
+        }
+    }
+}
+
+//  自定义input输入框
+//  此处覆盖element-ui的样式
+.el-form-item.is-success .el-input__inner,
+.el-form-item.is-success .el-input__inner:focus,
+.el-form-item.is-success .el-textarea__inner,
+.el-form-item.is-success .el-textarea__inner:focus {
+    border-color: #3AC26F;
+}
+
+.el-form-item.is-error .el-input__inner,
+.el-form-item.is-error .el-input__inner:focus,
+.el-form-item.is-error .el-textarea__inner,
+.el-form-item.is-error .el-textarea__inner:focus,
+.el-message-box__input input.invalid,
+.el-message-box__input input.invalid:focus {
+    border-color: #C35757;
+}
+
+.el-textarea__inner {
+    color: #fff;
+    font-size: 12px;
+    border: 1px solid #3E495E;
+    background-color: transparent;
+    &::-webkit-input-placeholder {
+        color: #6F7480;
+    }
+}
+
+// 时间日期选择器样式重写
+.el-date-editor {
+    border: 1px solid #3E495E;
+    border-radius: 4px;
+    input {
+        border: none;
+    }
+    .el-input__icon {
+        color: #6F7480;
+    }
+    .el-range-input {
+        &::-webkit-input-placeholder {
+            color: #6F7480;
+        }
+    }
+}
+
+//  弹出框的小箭头的样式重写
+.el-popper[x-placement^=bottom] .popper__arrow {
+    border-bottom-color: rgba(65,74,93,0.90);
+}
+
+//  时间日期选择器弹出框部分样式重写
+.el-picker-panel {
+    background: rgba(65,74,93,0.90);
+    border: none;
+    color: #fff;
+    .el-date-table th {
+        color: #909399;
+        border-bottom: solid 1px #637497;
+    }
+    .el-date-table td.next-month, .el-date-table td.prev-month {
+        color: #637497;
+    }
+    .el-date-table td.today span {
+        color: $mainColor;
+    }
+    .el-date-table td.current:not(.disabled) span {
+        color: #fff;
+        background: $mainColor;
+    }
+
+    .el-date-table td.in-range div,
+    .el-date-table td.in-range div:hover,
+    .el-date-table.is-week-mode .el-date-table__row.current div,
+    .el-date-table.is-week-mode .el-date-table__row:hover div {
+        background: #3AC26F;
+    }
+    .el-date-range-picker__content.is-left {
+        border-right: 1px solid #909399;
+    }
+    .el-picker-panel__icon-btn {
+        color: #909399;
+        &:hover {
+            color: $mainColor;
+        }
+    }
+}
+
+//  form表单相关的样式重写
+.el-form-item__label {
+    font-size: 16px;
+    color: #6F7480;
+}
+
+
+.el-input__inner {
+    background: transparent;
+    :focus {
+        background: transparent;
+    }
 }
 
 .el-input {
-    input.el-input__inner {
-        background: transparent;
-        &:focus {
+    input {
+        color: #fff;
+        font-size: 12px;
+        border: 1px solid #3E495E;
+        &::-webkit-input-placeholder {
+            color: #6F7480;
+        }
+    }
+    // 自定义下边框输入框
+    &.border-input {
+        input {
+            width: 200px;
+            height: 34px;
             background: transparent;
+            border-radius: 0px;
+            border: none;
+            font-size: 16px;
+            color: #A3D0FD;
+            border-bottom: 1px solid #3E495E;
+            &:focus {
+                border-bottom: 1px solid #1989FA;
+            }
+        }
+    }
+}
+
+//  下拉选择框样式重写
+.el-select-dropdown.el-popper {
+    background: rgba(65,74,93,0.90);
+    border: 0 solid #637497;
+    box-shadow: 2px 4px 10px 0 rgba(0,0,0,0.30);
+    border-radius: 4px 0px 0px 0px 4px 4px 4px;
+    .el-select-dropdown__item {
+        color: #D8D8D8;
+        background: rgba(65,74,93,0.90);
+        &:hover {
+            color: #fff;
+            background: $mainColor;
+        }
+    }
+}
+
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
+    color: #fff;
+    background: $mainColor;
+    &:hover {
+        color: #D8D8D8;
+        background: rgba(65,74,93,0.90);
+    }
+}
+
+
+//  自定义分割线
+.seperator-line {
+    width: 100%;
+    height: 0px;
+    border-bottom: 1px solid #252D3F;
+    margin: 20px 0;
+}
+
+//  搜索区域的样式重写
+.search-field {
+    background: #2A3040;
+    border-radius: 8px;
+    padding: 20px 10px;
+    .field-row {
+        display: flex;
+        align-items: center;
+        &:last-child {
+            margin-top: 20px;
+        }
+        .el-form-item {
+            margin-bottom: 0;
+            .el-date-editor, .el-input__inner {
+                color: #A3D0FD;
+                height: 34px;
+            }
+            .el-date-editor {
+                border: none;
+            }
+        }
+        .el-dropdown-link {
+            display: inline-block;
+            font-size: 12px;
+            color: #6F7480;
+            margin-left: 30px;
+            cursor: pointer;
+        }
+    }
+    .el-select {
+        .el-input {
+            height: 34px;
+            .el-input__icon {
+                height: 34px;
+                line-height: 34px;
+            }
+            .el-input__inner {
+                height: 34px;
+            }
         }
     }
 }

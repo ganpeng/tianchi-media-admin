@@ -1,390 +1,375 @@
 <!--添加节目-->
 <template>
     <div class="program-container">
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'节目资源管理'},
-            {name:getPageName}]">
-        </custom-breadcrumb>
-        <div class="text-right">
-            <el-button class="page-main-btn" v-if="status === 0" type="primary" @click="_createProgramme">创建</el-button>
-            <el-button class="page-main-btn" v-if="status === 2" type="primary" @click="_editProgramme">保存</el-button>
-            <el-button class="page-main-btn" @click="goBack" plain>返回列表页</el-button>
-        </div>
+        <h2 class="content-title">{{getPageName}}</h2>
+        <div class="seperator-line"></div>
         <el-row>
             <programme-basic-info v-if="status === 1"></programme-basic-info>
             <el-col :span="24" v-if="status !== 1">
-                <div class="block-title">节目基本信息</div>
                 <el-form :rules="rules" ref="createProgramForm" status-icon :model="programme" label-width="120px" class="form-block" @submit.native.prevent>
-                    <el-col :span="9">
-                        <el-form-item
-                            v-if="status !== 0"
-                        label="全平台通用ID">
-                            <el-input :value="programme.code" disabled></el-input>
+                    <el-col :span="12" style="border-right: 1px solid #252D3F;">
+                        <h2 class="content-sub-title">节目基本信息</h2>
+                        <el-col :span="18">
+                            <el-form-item label="节目名称" prop="name">
+                                <el-input
+                                    :disabled="readonly"
+                                    @input="inputHandler($event, 'name')"
+                                    :value="programme.name">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="内部节目名称" prop="innerName">
+                                <el-input
+                                    :disabled="readonly"
+                                    @input="inputHandler($event, 'innerName')"
+                                    :value="programme.innerName">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="节目看点" prop="desc">
+                                <el-input
+                                    :value="programme.desc"
+                                    :disabled="readonly"
+                                    @input="inputHandler($event, 'desc')"
+                                ></el-input>
+                            </el-form-item>
+                            <el-form-item label="节目简介" prop="description">
+                                <el-input
+                                    type="textarea"
+                                    :disabled="readonly"
+                                    @input="inputHandler($event, 'description')"
+                                    :autosize="{ minRows: 4, maxRows: 40}"
+                                    placeholder="请输入内容"
+                                    :value="programme.description">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="上映时间" prop="releaseAt">
+                                <el-date-picker
+                                    :disabled="readonly"
+                                    :value="programme.releaseAt"
+                                    @input="inputHandler($event, 'releaseAt')"
+                                    type="date"
+                                    placeholder="选择年">
+                                </el-date-picker>
+                            </el-form-item>
+                            <el-form-item label="所属地区" prop="produceAreaList">
+                                <el-select
+                                    :value="programme.produceAreaList"
+                                    @change="inputHandler($event, 'produceAreaList')"
+                                    multiple
+                                    clearable
+                                    filterable
+                                    placeholder="请选择"
+                                    :disabled="readonly"
+                                >
+                                    <el-option
+                                        v-for="(item, index) in areaOptions"
+                                        :key="index"
+                                        :label="item.name"
+                                        :value="item.code">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="节目分类" prop="categoryList">
+                                <el-select
+                                    :value="programme.categoryList"
+                                    multiple
+                                    @input="inputHandler($event, 'categoryList')"
+                                    :disabled="readonly"
+                                    placeholder="请选择">
+                                    <el-option
+                                        v-for="(item, index) in global.categoryList"
+                                        :key="index"
+                                        :label="item.name"
+                                        :value="item.id">
+                                    </el-option>
+                                </el-select>
+                                <el-button class="btn-style-two" v-if="!readonly" type="primary" @click="gotoProgramTypePage" plain>新增</el-button>
+                            </el-form-item>
+                            <el-form-item label="节目类型" prop="typeList">
+                                <el-select
+                                    :value="programme.typeList"
+                                    multiple
+                                    :disabled="readonly"
+                                    @input="inputHandler($event, 'typeList')"
+                                    placeholder="请选择">
+                                    <el-option
+                                        v-for="(item, index) in typeListOptions"
+                                        :key="index"
+                                        :label="item.name"
+                                        :value="item.id">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="关键字" prop="tagList">
+                                <el-select
+                                    :value="programme.tagList"
+                                    multiple
+                                    filterable
+                                    placeholder="请选择"
+                                    @change="inputHandler($event, 'tagList')"
+                                    :disabled="readonly"
+                                >
+                                    <el-option
+                                        v-for="(item, index) in global.programmeTagList"
+                                        :key="index"
+                                        :label="item"
+                                        :value="item">
+                                    </el-option>
+                                </el-select>
+                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addprogrammeTagHandler">新增</el-button>
+                            </el-form-item>
+                            <el-form-item label="节目主演">
+                                <label for="leadActor"></label>
+                                <person-select
+                                    :disabled="readonly"
+                                    :value="programme.leadActor"
+                                    :searchResult="programme.leadActorResult"
+                                    :changeSuccessHandler="leadActorChangeHandler"
+                                    :searchSuccessHandler="leadActorSuccessHandler"
+                                ></person-select>
+                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增</el-button>
+                            </el-form-item>
+                            <el-form-item label="节目导演">
+                                <label for="director"></label>
+                                <person-select
+                                    :disabled="readonly"
+                                    :value="programme.director"
+                                    :searchResult="programme.directorResult"
+                                    :changeSuccessHandler="directorChangeHandler"
+                                    :searchSuccessHandler="directorSuccessHandler"
+                                ></person-select>
+                                <el-button class="btn-style-two" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增</el-button>
+                            </el-form-item>
+                            <el-form-item label="节目编剧">
+                                <label for="scenarist"></label>
+                                <person-select
+                                    :disabled="readonly"
+                                    :value="programme.scenarist"
+                                    :searchResult="programme.scenaristResult"
+                                    :changeSuccessHandler="scenaristChangeHandler"
+                                    :searchSuccessHandler="scenaristSuccessHandler"
+                                ></person-select>
+                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增</el-button>
+                            </el-form-item>
+                            <el-form-item label="版权起始日期" prop="copyrightRange">
+                                <el-date-picker
+                                    :value="programme.copyrightRange"
+                                    :disabled="readonly"
+                                    type="daterange"
+                                    @input="inputHandler($event, 'copyrightRange')"
+                                    range-separator="至"
+                                    start-placeholder="开始日期"
+                                    end-placeholder="结束日期">
+                                </el-date-picker>
+                            </el-form-item>
+                            <el-form-item label="牌照方" prop="licence">
+                                <el-select
+                                    :disabled="readonly"
+                                    :value="programme.licence"
+                                    filterable
+                                    clearable
+                                    placeholder="请选择"
+                                    @input="inputHandler($event, 'licence')"
+                                >
+                                    <el-option
+                                        v-for="(item, index) in global.licenceList"
+                                        :key="index"
+                                        :label="item.value"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addSelectItemHandler('licenceList')">新增</el-button>
+                            </el-form-item>
+                            <el-form-item label="版权方" prop="copyrightReserved">
+                                <el-select
+                                    :disabled="readonly"
+                                    filterable
+                                    clearable
+                                    :value="programme.copyrightReserved"
+                                    placeholder="请选择"
+                                    @input="inputHandler($event, 'copyrightReserved')"
+                                >
+                                    <el-option
+                                        v-for="(item, index) in global.copyrightReserverList"
+                                        :key="index"
+                                        :label="item.value"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addSelectItemHandler('copyrightReserverList')">新增</el-button>
+                            </el-form-item>
+                            <el-form-item label="发行方" prop="announcer">
+                                <el-select
+                                    :disabled="readonly"
+                                    filterable
+                                    clearable
+                                    :value="programme.announcer"
+                                    placeholder="请选择"
+                                    @input="inputHandler($event, 'announcer')"
+                                >
+                                    <el-option
+                                        v-for="(item, index) in global.announcerList"
+                                        :key="index"
+                                        :label="item.value"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addSelectItemHandler('announcerList')">新增</el-button>
+                            </el-form-item>
+                            <el-form-item
+                                v-if="isMovie"
+                                label="规格" prop="specList">
+                                <el-select
+                                    :disabled="readonly"
+                                    :value="programme.specList"
+                                    placeholder="请选择"
+                                    multiple
+                                    @input="inputHandler($event, 'specList')"
+                                >
+                                    <el-option
+                                        v-for="item in specOptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item
+                                v-if="isEducation"
+                                label="年级" prop="gradeList">
+                                <el-select
+                                    :disabled="readonly"
+                                    :value="programme.gradeList"
+                                    clearable
+                                    multiple
+                                    placeholder="请选择"
+                                    @input="inputHandler($event, 'gradeList')"
+                                >
+                                    <el-option
+                                        v-for="item in gradeOptions"
+                                        :key="item.label"
+                                        :label="item.label"
+                                        :value="item.label">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item
+                                v-if="isEducation"
+                                label="科目" prop="subject">
+                                <el-select
+                                    :disabled="readonly"
+                                    :value="programme.subject"
+                                    clearable
+                                    placeholder="请选择"
+                                    @input="inputHandler($event, 'subject')"
+                                >
+                                    <el-option
+                                        v-for="item in subjectOptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item
+                                v-if="isSports"
+                                label="赛事">
+                                <el-select
+                                    :disabled="readonly"
+                                    :value="programme.contest"
+                                    clearable
+                                    placeholder="请选择"
+                                    @input="inputHandler($event, 'contest')"
+                                >
+                                    <el-option
+                                        v-for="(item, index) in global.contestList"
+                                        :key="index"
+                                        :label="item.value"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addSelectItemHandler('contestList')">新增</el-button>
+                            </el-form-item>
+                            <el-form-item
+                                label="播放平台">
+                                <el-select
+                                    :disabled="readonly"
+                                    :value="programme.platformList"
+                                    multiple
+                                    placeholder="请选择"
+                                    @input="inputHandler($event, 'platformList')"
+                                >
+                                    <el-option
+                                        v-for="(item, index) in global.platformList"
+                                        :key="index"
+                                        :label="item.value"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addSelectItemHandler('platformList')">新增</el-button>
+                            </el-form-item>
+                            <el-form-item
+                                :rules="isTvPlay ? [{ required: true, message: '请输入总集数' }, {validator: checkPositiveInteger}] : [{validator: checkPositiveInteger}]"
+                                label="总集数" prop="totalSets">
+                                <el-input
+                                    type="number"
+                                    :disabled="readonly"
+                                    :value="programme.totalSets"
+                                    @input="inputHandler($event, 'totalSets')" >
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="评分" prop="score">
+                                <el-input
+                                    type="number"
+                                    :disabled="readonly"
+                                    :value="programme.score"
+                                    @input="inputHandler($event, 'score')">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="播放量" prop="playCountBasic">
+                                <el-input
+                                    :disabled="readonly"
+                                    :value="programme.playCountBasic"
+                                    @input="inputHandler($event, 'playCountBasic')">
+                                </el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="节目海报">
+                            <span class="little-tips">(240*350 六分位图必传)</span>
                         </el-form-item>
-                        <el-form-item label="节目来源">
-                            <el-input
-                                :value="'内容中心'"
-                                disabled
-                            ></el-input>
-                        </el-form-item>
-                        <el-form-item label="节目名称" prop="name">
-                            <el-input
-                                :disabled="readonly"
-                                @input="inputHandler($event, 'name')"
-                                :value="programme.name">
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item label="内部节目名称" prop="innerName">
-                            <el-input
-                                :disabled="readonly"
-                                @input="inputHandler($event, 'innerName')"
-                                :value="programme.innerName">
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item label="节目看点" prop="desc">
-                            <el-input
-                                :value="programme.desc"
-                                :disabled="readonly"
-                                @input="inputHandler($event, 'desc')"
-                            ></el-input>
-                        </el-form-item>
-                        <el-form-item label="节目简介" prop="description">
-                            <el-input
-                                type="textarea"
-                                :disabled="readonly"
-                                @input="inputHandler($event, 'description')"
-                                :autosize="{ minRows: 4, maxRows: 40}"
-                                placeholder="请输入内容"
-                                :value="programme.description">
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item label="上映时间" prop="releaseAt">
-                            <el-date-picker
-                                :disabled="readonly"
-                                :value="programme.releaseAt"
-                                @input="inputHandler($event, 'releaseAt')"
-                                type="date"
-                                placeholder="选择年">
-                            </el-date-picker>
-                        </el-form-item>
-                        <el-form-item label="所属地区" prop="produceAreaList">
-                            <el-select
-                                :value="programme.produceAreaList"
-                                @change="inputHandler($event, 'produceAreaList')"
-                                multiple
-                                clearable
-                                filterable
-                                placeholder="请选择"
-                                :disabled="readonly"
-                            >
-                                <el-option
-                                    v-for="(item, index) in areaOptions"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.code">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="节目分类" prop="categoryList">
-                            <el-select
-                                :value="programme.categoryList"
-                                multiple
-                                @input="inputHandler($event, 'categoryList')"
-                                :disabled="readonly"
-                                placeholder="请选择">
-                                <el-option
-                                    v-for="(item, index) in global.categoryList"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-setting" @click="gotoProgramTypePage" plain>管理分类和类型</el-button>
-                        </el-form-item>
-                        <el-form-item label="节目类型" prop="typeList">
-                            <el-select
-                                :value="programme.typeList"
-                                multiple
-                                :disabled="readonly"
-                                @input="inputHandler($event, 'typeList')"
-                                placeholder="请选择">
-                                <el-option
-                                    v-for="(item, index) in typeListOptions"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="关键字" prop="tagList">
-                            <el-select
-                                :value="programme.tagList"
-                                multiple
-                                filterable
-                                placeholder="请选择"
-                                @change="inputHandler($event, 'tagList')"
-                                :disabled="readonly"
-                            >
-                                <el-option
-                                    v-for="(item, index) in global.programmeTagList"
-                                    :key="index"
-                                    :label="item"
-                                    :value="item">
-                                </el-option>
-                            </el-select>
-                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addprogrammeTagHandler">新增关键字</el-button>
-                        </el-form-item>
-                        <el-form-item label="节目主演">
-                            <label for="leadActor"></label>
-                            <person-select
-                                :disabled="readonly"
-                                :value="programme.leadActor"
-                                :searchResult="programme.leadActorResult"
-                                :changeSuccessHandler="leadActorChangeHandler"
-                                :searchSuccessHandler="leadActorSuccessHandler"
-                            ></person-select>
-                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增人物</el-button>
-                        </el-form-item>
-                        <el-form-item label="节目导演">
-                            <label for="director"></label>
-                            <person-select
-                                :disabled="readonly"
-                                :value="programme.director"
-                                :searchResult="programme.directorResult"
-                                :changeSuccessHandler="directorChangeHandler"
-                                :searchSuccessHandler="directorSuccessHandler"
-                            ></person-select>
-                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增人物</el-button>
-                        </el-form-item>
-                        <el-form-item label="节目编剧">
-                            <label for="scenarist"></label>
-                            <person-select
-                                :disabled="readonly"
-                                :value="programme.scenarist"
-                                :searchResult="programme.scenaristResult"
-                                :changeSuccessHandler="scenaristChangeHandler"
-                                :searchSuccessHandler="scenaristSuccessHandler"
-                            ></person-select>
-                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增人物</el-button>
-                        </el-form-item>
-                        <el-form-item label="版权起始日期" prop="copyrightRange">
-                            <el-date-picker
-                                :value="programme.copyrightRange"
-                                :disabled="readonly"
-                                type="daterange"
-                                @input="inputHandler($event, 'copyrightRange')"
-                                range-separator="至"
-                                start-placeholder="开始日期"
-                                end-placeholder="结束日期">
-                            </el-date-picker>
-                        </el-form-item>
-                        <el-form-item label="牌照方" prop="licence">
-                            <el-select
-                                :disabled="readonly"
-                                :value="programme.licence"
-                                filterable
-                                clearable
-                                placeholder="请选择"
-                                @input="inputHandler($event, 'licence')"
-                            >
-                                <el-option
-                                    v-for="(item, index) in global.licenceList"
-                                    :key="index"
-                                    :label="item.value"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('licenceList')">新增牌照方</el-button>
-                        </el-form-item>
-                        <el-form-item label="版权方" prop="copyrightReserved">
-                            <el-select
-                                :disabled="readonly"
-                                filterable
-                                clearable
-                                :value="programme.copyrightReserved"
-                                placeholder="请选择"
-                                @input="inputHandler($event, 'copyrightReserved')"
-                            >
-                                <el-option
-                                    v-for="(item, index) in global.copyrightReserverList"
-                                    :key="index"
-                                    :label="item.value"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('copyrightReserverList')">新增版权方</el-button>
-                        </el-form-item>
-                        <el-form-item label="发行方" prop="announcer">
-                            <el-select
-                                :disabled="readonly"
-                                filterable
-                                clearable
-                                :value="programme.announcer"
-                                placeholder="请选择"
-                                @input="inputHandler($event, 'announcer')"
-                            >
-                                <el-option
-                                    v-for="(item, index) in global.announcerList"
-                                    :key="index"
-                                    :label="item.value"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('announcerList')">新增发行方</el-button>
-                        </el-form-item>
-                        <el-form-item
-                            v-if="isMovie"
-                            label="规格" prop="specList">
-                            <el-select
-                                :disabled="readonly"
-                                :value="programme.specList"
-                                placeholder="请选择"
-                                multiple
-                                @input="inputHandler($event, 'specList')"
-                            >
-                                <el-option
-                                    v-for="item in specOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item
-                            v-if="isEducation"
-                            label="年级" prop="gradeList">
-                            <el-select
-                                :disabled="readonly"
-                                :value="programme.gradeList"
-                                clearable
-                                multiple
-                                placeholder="请选择"
-                                @input="inputHandler($event, 'gradeList')"
-                            >
-                                <el-option
-                                    v-for="item in gradeOptions"
-                                    :key="item.label"
-                                    :label="item.label"
-                                    :value="item.label">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item
-                            v-if="isEducation"
-                            label="科目" prop="subject">
-                            <el-select
-                                :disabled="readonly"
-                                :value="programme.subject"
-                                clearable
-                                placeholder="请选择"
-                                @input="inputHandler($event, 'subject')"
-                            >
-                                <el-option
-                                    v-for="item in subjectOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item
-                            v-if="isSports"
-                            label="赛事">
-                            <el-select
-                                :disabled="readonly"
-                                :value="programme.contest"
-                                clearable
-                                placeholder="请选择"
-                                @input="inputHandler($event, 'contest')"
-                            >
-                                <el-option
-                                    v-for="(item, index) in global.contestList"
-                                    :key="index"
-                                    :label="item.value"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('contestList')">新增赛事</el-button>
-                        </el-form-item>
-                        <el-form-item
-                            label="播放平台">
-                            <el-select
-                                :disabled="readonly"
-                                :value="programme.platformList"
-                                multiple
-                                placeholder="请选择"
-                                @input="inputHandler($event, 'platformList')"
-                            >
-                                <el-option
-                                    v-for="(item, index) in global.platformList"
-                                    :key="index"
-                                    :label="item.value"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                            <el-button class="page-main-btn btn-style" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="addSelectItemHandler('platformList')">新增播放平台</el-button>
-                        </el-form-item>
-                        <el-form-item
-                            :rules="isTvPlay ? [{ required: true, message: '请输入总集数' }, {validator: checkPositiveInteger}] : [{validator: checkPositiveInteger}]"
-                            label="总集数" prop="totalSets">
-                            <el-input
-                                type="number"
-                                :disabled="readonly"
-                                :value="programme.totalSets"
-                                @input="inputHandler($event, 'totalSets')" >
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item label="评分" prop="score">
-                            <el-input
-                                type="number"
-                                :disabled="readonly"
-                                :value="programme.score"
-                                @input="inputHandler($event, 'score')">
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item label="显示播放量" prop="playCountBasic">
-                            <el-input
-                                :disabled="readonly"
-                                :value="programme.playCountBasic"
-                                @input="inputHandler($event, 'playCountBasic')">
-                            </el-input>
-                        </el-form-item>
+                        <el-col :span="24" id="upload-image">
+                            <div class="text-left clearfix" style="padding-left:20px;">
+                                <el-button
+                                    class="float-left page-main-btn create-blue-btn contain-svg-icon"
+                                    v-if="!readonly"
+                                    @click="uploadImageHandler">
+                                    <svg-icon
+                                        icon-class="image"
+                                        class-name="svg-box">
+                                    </svg-icon>
+                                    添加节目图片
+                                </el-button>
+                            </div>
+                            <div class="image-list-wrapper">
+                                <thumbnail
+                                    :removeSign="!readonly"
+                                    :imageList="programme.posterImageList"
+                                    v-on:removeImage="_deletePosterImage">
+                                </thumbnail>
+                            </div>
+                        </el-col>
                     </el-col>
                 </el-form>
             </el-col>
-            <el-col :span="24" id="upload-image">
-                <div class="vice-block">
-                    <h3 class="block-vice-title">节目图片</h3>
-                </div>
-                <div class="text-left clearfix" style="padding-left:20px;">
-                    <el-button
-                        class="float-left page-main-btn create-blue-btn contain-svg-icon"
-                        v-if="!readonly"
-                        @click="uploadImageHandler">
-                        <svg-icon
-                            icon-class="image"
-                            class-name="svg-box">
-                        </svg-icon>
-                        添加节目图片
-                    </el-button>
-                    <span v-if="!readonly" class="float-left text-info">节目横版海报图: 807*455,节目纵版海报图: 240*350都必须上传</span>
-                </div>
-                <div class="image-list-wrapper">
-                    <thumbnail
-                        :removeSign="!readonly"
-                        :imageList="programme.posterImageList"
-                        v-on:removeImage="_deletePosterImage">
-                    </thumbnail>
-                </div>
-            </el-col>
+        </el-row>
+        <el-row>
+            <div class="seperator-line"></div>
             <el-col :span="24">
-                <div class="vice-block">
-                    <h3 class="block-vice-title">节目视频</h3>
-                </div>
                 <div class="preview-sort clearfix">
+                    <h2 class="float-left programme-video-title">节目视频</h2>
                     <el-button
-                        class="float-right page-main-btn create-blue-btn contain-svg-icon"
+                        class="float-left btn-style-four contain-svg-icon"
                         v-if="!readonly" @click="showUploadDialog">
                         <svg-icon
                             icon-class="video"
@@ -392,15 +377,20 @@
                         </svg-icon>
                         关联视频
                     </el-button>
-                    <el-button class="float-left sort-btn page-main-btn btn-style" v-if="!readonly && video.list.length > 1" type="primary" @click="showSortDialog" plain>点击视频排序</el-button>
+                    <el-button
+                        class="float-left btn-style-four"
+                        v-if="!readonly && video.list.length > 1"
+                        type="primary"
+                        @click="showSortDialog"
+                        plain>视频排序</el-button>
                 </div>
                 <programme-table title="已添加视频列表" :status="status" :data-list="video.list"></programme-table>
             </el-col>
         </el-row>
-        <div class="group">
-            <el-button class="page-margin-btn page-main-btn" v-if="status === 0" type="primary" @click="_createProgramme">创建</el-button>
-            <el-button class="page-margin-btn page-main-btn" v-if="status === 2" type="primary" @click="_editProgramme">保存</el-button>
-            <el-button class="page-margin-btn page-main-btn" @click="goBack" plain>返回列表页</el-button>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-two" v-if="status === 0" type="primary" @click="_createProgramme">创建</el-button>
+            <el-button class="btn-style-two" v-if="status === 2" type="primary" @click="_editProgramme">保存</el-button>
+            <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
         </div>
         <upload-image
             title="上传节目图片"
@@ -542,7 +532,7 @@
             getPageName() {
                 switch (this.status) {
                     case 0:
-                        return '新增节目';
+                        return '添加节目';
                     case 1:
                         return '节目列表-详情';
                     case 2:
@@ -1024,9 +1014,6 @@
     };
 </script>
 <style lang="less" scoped>
-.sort-btn {
-    padding-left: 20px;
-}
 .text-info {
     line-height: 38px;
     margin-left: 10px;
@@ -1037,5 +1024,16 @@
 .image-list-wrapper {
     margin-top: 20px;
     padding-left: 20px;
+}
+.little-tips {
+    font-size: 12px;
+    color: #909399;
+}
+.programme-video-title {
+    font-size: 20px;
+    height: 34px;
+    line-height: 30px;
+    color: #6F7480;
+    margin-right: 10px;
 }
 </style>
