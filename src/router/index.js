@@ -70,18 +70,18 @@ import HotPerson from 'sysPage/person_manage/HotPerson';
 import PreviewProgrammeList from 'sysPage/channel_manage/PreviewProgrammeList';
 import DeviceList from 'sysPage/device_manage/DeviceList';
 import ProductList from 'sysPage/product_manage/ProductList';
-import CreateTypeProduct from 'sysPage/product_manage/type_product/CreateTypeProduct';
-import EditTypeProduct from 'sysPage/product_manage/type_product/EditTypeProduct';
+import CreateCategoryProduct from 'sysPage/product_manage/category_product/CreateCategoryProduct';
+import EditCategoryProduct from 'sysPage/product_manage/category_product/EditCategoryProduct';
 import CreateProgrammeProduct from 'sysPage/product_manage/programme_product/CreateProgrammeProduct';
 import EditProgrammeProduct from 'sysPage/product_manage/programme_product/EditProgrammeProduct';
 import CreateCarouselProduct from 'sysPage/product_manage/carousel_product/CreateCarouselProduct';
 import EditCarouselProduct from 'sysPage/product_manage/carousel_product/EditCarouselProduct';
-import CreateLookBackProduct from 'sysPage/product_manage/look_back_product/CreateLookBackProduct';
-import EditLookBackProduct from 'sysPage/product_manage/look_back_product/EditLookBackProduct';
-import TypeProductDetail from 'sysPage/product_manage/type_product/TypeProductDetail';
+import CreateRecordProduct from 'sysPage/product_manage/record_product/CreateRecordProduct';
+import EditRecordProduct from 'sysPage/product_manage/record_product/EditRecordProduct';
+import CategoryProductDetail from 'sysPage/product_manage/category_product/CategoryProductDetail';
 import ProgrammeProductDetail from 'sysPage/product_manage/programme_product/ProgrammeProductDetail';
 import CarouselProductDetail from 'sysPage/product_manage/carousel_product/CarouselProductDetail';
-import LookBackProductDetail from 'sysPage/product_manage/look_back_product/LookBackProductDetail';
+import RecordProductDetail from 'sysPage/product_manage/record_product/RecordProductDetail';
 import DuplicateList from 'sysPage/person_manage/DuplicateList';
 
 Vue.use(Router);
@@ -497,15 +497,15 @@ let router = new Router({
                 },
                 //  产品管理-创建类型包
                 {
-                    path: '/product-manage/create-type',
-                    name: 'CreateTypeProduct',
-                    component: CreateTypeProduct
+                    path: '/product-manage/create-category',
+                    name: 'CreateCategoryProduct',
+                    component: CreateCategoryProduct
                 },
                 //  产品管理-编辑类型包
                 {
-                    path: '/product-manage/edit-type',
-                    name: 'EditTypeProduct',
-                    component: EditTypeProduct
+                    path: '/product-manage/edit-category',
+                    name: 'EditCategoryProduct',
+                    component: EditCategoryProduct
                 },
                 //  产品管理-创建节目包
                 {
@@ -533,21 +533,21 @@ let router = new Router({
                 },
                 //  产品管理-创建直播回看包
                 {
-                    path: '/product-manage/create-look-back',
-                    name: 'CreateLookBackProduct',
-                    component: CreateLookBackProduct
+                    path: '/product-manage/create-record',
+                    name: 'CreateRecordProduct',
+                    component: CreateRecordProduct
                 },
                 //  产品管理-编辑直播回看包
                 {
-                    path: '/product-manage/edit-look-back',
-                    name: 'EditLookBackProduct',
-                    component: EditLookBackProduct
+                    path: '/product-manage/edit-record',
+                    name: 'EditRecordProduct',
+                    component: EditRecordProduct
                 },
                 //  产品管理-类别包详情
                 {
-                    path: '/product-manage/detail-type/:id',
-                    name: 'TypeProductDetail',
-                    component: TypeProductDetail
+                    path: '/product-manage/detail-category/:id',
+                    name: 'CategoryProductDetail',
+                    component: CategoryProductDetail
                 },
                 //  产品管理-节目包详情
                 {
@@ -563,9 +563,9 @@ let router = new Router({
                 },
                 //  产品管理-直播回看包详情
                 {
-                    path: '/product-manage/detail-look-back/:id',
-                    name: 'LookBackProductDetail',
-                    component: LookBackProductDetail
+                    path: '/product-manage/detail-record/:id',
+                    name: 'RecordProductDetail',
+                    component: RecordProductDetail
                 }
             ]
         },

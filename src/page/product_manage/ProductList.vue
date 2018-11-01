@@ -128,10 +128,10 @@
                     创建产品包<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="TYPE">创建类别包</el-dropdown-item>
+                    <el-dropdown-item command="PROGRAMME_CATEGORY">创建类别包</el-dropdown-item>
                     <el-dropdown-item command="PROGRAMME">创建节目包</el-dropdown-item>
                     <el-dropdown-item command="CAROUSEL">创建轮播频道包</el-dropdown-item>
-                    <el-dropdown-item command="LOOK_BACK">创建直播回看包</el-dropdown-item>
+                    <el-dropdown-item command="RECORD">创建直播回看包</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
@@ -145,24 +145,23 @@
         data() {
             return {
                 listQueryParams: {
-                    category: '',
                     keyword: '',
                     pageNum: 1,
                     pageSize: 10
                 },
                 createRangeTime: [],
                 categoryOptions: [
-                    {value: 'TYPE', label: '类别包'},
+                    {value: 'PROGRAMME_CATEGORY', label: '类别包'},
                     {value: 'PROGRAMME', label: '节目包'},
                     {value: 'CAROUSEL', label: '轮播频道包'},
-                    {value: 'LOOK_BACK', label: '直播回看包'}
+                    {value: 'RECORD', label: '直播回看包'}
                 ],
                 totalAmount: 0,
                 productList: [{
                     id: 2131312313,
                     code: 1,
                     name: '电视剧全包',
-                    category: 'TYPE',
+                    category: 'PROGRAMME_CATEGORY',
                     updatedAt: 1538275321938,
                     createdAt: 1533245320938,
                     visible: true
@@ -189,7 +188,7 @@
                         id: 2131312319,
                         code: 4,
                         name: 'CCTV5包',
-                        category: 'LOOK_BACK',
+                        category: 'RECORD',
                         updatedAt: 1538474321938,
                         createdAt: 1521245320938,
                         visible: false
@@ -199,13 +198,13 @@
         filters: {
             getCategoryName: function (category) {
                 switch (category) {
-                    case 'TYPE':
+                    case 'PROGRAMME_CATEGORY':
                         return '类型包';
                     case 'PROGRAMME':
                         return '节目包';
                     case 'CAROUSEL':
                         return '轮播频道包';
-                    case 'LOOK_BACK':
+                    case 'RECORD':
                         return '直播回看包';
                     default:
                         break;
@@ -213,10 +212,11 @@
             }
         },
         mounted() {
+            this.getProductList();
         },
         methods: {
             getProductList() {
-                this.$service.getSubjectList(this.listQueryParams).then(response => {
+                this.$service.getProductList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.productList = response.data.list;
                         this.totalAmount = response.data.total;
@@ -226,8 +226,8 @@
             editProductInfo(item) {
                 let routeName = '';
                 switch (item.category) {
-                    case 'TYPE':
-                        routeName = 'EditTypeProduct';
+                    case 'PROGRAMME_CATEGORY':
+                        routeName = 'EditCategoryProduct';
                         break;
                     case 'PROGRAMME':
                         routeName = 'EditProgrammeProduct';
@@ -235,8 +235,8 @@
                     case 'CAROUSEL':
                         routeName = 'EditCarouselProduct';
                         break;
-                    case 'LOOK_BACK':
-                        routeName = 'EditLookBackProduct';
+                    case 'RECORD':
+                        routeName = 'EditRecordProduct';
                         break;
                     default:
                         break;
@@ -265,8 +265,8 @@
             checkProductDetail(item) {
                 let routeName = '';
                 switch (item.category) {
-                    case 'TYPE':
-                        routeName = 'TypeProductDetail';
+                    case 'PROGRAMME_CATEGORY':
+                        routeName = 'CategoryProductDetail';
                         break;
                     case 'PROGRAMME':
                         routeName = 'ProgrammeProductDetail';
@@ -274,8 +274,8 @@
                     case 'CAROUSEL':
                         routeName = 'CarouselProductDetail';
                         break;
-                    case 'LOOK_BACK':
-                        routeName = 'LookBackProductDetail';
+                    case 'RECORD':
+                        routeName = 'RecordProductDetail';
                         break;
                     default:
                         break;
@@ -306,8 +306,8 @@
             // 创建产品包
             createProduct(command) {
                 switch (command) {
-                    case 'TYPE':
-                        this.$router.push({name: 'CreateTypeProduct'});
+                    case 'PROGRAMME_CATEGORY':
+                        this.$router.push({name: 'CreateCategoryProduct'});
                         break;
                     case 'PROGRAMME':
                         this.$router.push({name: 'CreateProgrammeProduct'});
@@ -315,8 +315,8 @@
                     case 'CAROUSEL':
                         this.$router.push({name: 'CreateCarouselProduct'});
                         break;
-                    case 'LOOK_BACK':
-                        this.$router.push({name: 'CreateLookBackProduct'});
+                    case 'RECORD':
+                        this.$router.push({name: 'CreateRecordProduct'});
                         break;
                     default:
                         break;

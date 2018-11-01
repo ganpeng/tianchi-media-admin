@@ -1,26 +1,26 @@
-<!--创建直播回看包组件-->
+<!--编辑类型包组件-->
 <template>
     <div>
         <custom-breadcrumb
             v-bind:breadcrumbList="[
             {name:'产品管理'},
-            {name:'创建直播回看包'}]">
+            {name:'编辑类型包'}]">
         </custom-breadcrumb>
         <div class="block-box">
-            <look-back-product-form
-                status="0">
-            </look-back-product-form>
+            <category-product-form
+                status="1">
+            </category-product-form>
         </div>
     </div>
 </template>
 
 <script>
-    import LookBackProductForm from './LookBackProductForm';
+    import CategoryProductForm from './CategoryProductForm';
 
     export default {
-        name: 'CreateLookBackProduct',
+        name: 'EditCategoryProduct',
         components: {
-            LookBackProductForm
+            CategoryProductForm
         },
         data() {
             return {};

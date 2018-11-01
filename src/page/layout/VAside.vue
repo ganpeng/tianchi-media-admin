@@ -132,10 +132,10 @@
                     </svg-icon>
                     <span>产品管理</span>
                 </template>
-                <el-menu-item index="/product-manage/create-type">新增类别包</el-menu-item>
+                <el-menu-item index="/product-manage/create-category">新增类别包</el-menu-item>
                 <el-menu-item index="/product-manage/create-programme">新增节目包</el-menu-item>
                 <el-menu-item index="/product-manage/create-carousel">新增轮播频道包</el-menu-item>
-                <el-menu-item index="/product-manage/create-look-back">新增直播回看包</el-menu-item>
+                <el-menu-item index="/product-manage/create-record">新增直播回看包</el-menu-item>
                 <el-menu-item index="/product-manage/list">产品包列表</el-menu-item>
             </el-submenu>
             <!--管理员管理-->
