@@ -16,7 +16,7 @@ export const createProduct = ({category, name, desc, targetIdList}) => {
  * 获取产品包列表
  */
 export const getProductList = ({pageNum, pageSize, keyword}) => {
-    return service.get(util.format('/v1/product/page?pageNum={0}&pageSize={1}&keyword={2}', pageNum - 1, pageSize, keyword));
+    return service.get(util.format('/v1/product/page?pageNum={0}&pageSize={1}&keyword={2}&orderList=ID_ASC', pageNum - 1, pageSize, keyword));
 };
 
 /**

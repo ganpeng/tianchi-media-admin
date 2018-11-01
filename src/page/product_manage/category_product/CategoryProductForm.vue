@@ -122,7 +122,7 @@
                     }
                 });
                 if (this.status === '1') {
-                    this.$service.getProductInfo(this.$route.params.id).then(response => {
+                    this.$service.getProductInfo({id: this.$route.params.id}).then(response => {
                         if (response && response.code === 0) {
                             this.productInfo = response.data;
                         }
