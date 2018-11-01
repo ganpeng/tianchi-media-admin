@@ -13,9 +13,9 @@
             <el-form-item label="名称" prop="name" required>
                 <el-input v-model="productInfo.name" placeholder="请填写30个字以内的名称"></el-input>
             </el-form-item>
-            <el-form-item label="简介" prop="description">
+            <el-form-item label="简介" prop="desc">
                 <el-input
-                    v-model="productInfo.description"
+                    v-model="productInfo.desc"
                     placeholder="请填写100个字以内的简介"
                     type="textarea"
                     :rows="4">
@@ -90,7 +90,7 @@
             </div>
         </div>
         <div class="operate">
-            <el-button type="primary" @click="operateSubject" class="page-main-btn">
+            <el-button type="primary" @click="operateProduct" class="page-main-btn">
                 {{this.status === '0' ? '创建' : '保存'}}
             </el-button>
             <el-button @click="reset"
@@ -100,7 +100,7 @@
                        plain>
                 重置
             </el-button>
-            <el-button @click="toSubjectList" class="page-main-btn">返回列表页</el-button>
+            <el-button @click="toProductList" class="page-main-btn">返回列表页</el-button>
         </div>
     </div>
 </template>
@@ -111,7 +111,12 @@
     export default {
         name: 'ProgrammeProductForm',
         // status为1代表编辑，0代表创建
-        props: ['status'],
+        props: {
+            status: {
+                type: String,
+                required: true
+            }
+        },
         components: {
             SelectMultipleProgramme
         },
@@ -125,7 +130,7 @@
                     callback();
                 }
             };
-            let checkDescription = (rule, value, callback) => {
+            let checkDesc = (rule, value, callback) => {
                 if (this.$util.trim(value).length > 100) {
                     return callback(new Error('产品包描述不能超过100字'));
                 } else {
@@ -135,16 +140,18 @@
             return {
                 productInfo: {
                     id: '',
+                    category: 'PROGRAMME',
                     name: '',
-                    description: ''
+                    desc: '',
+                    targetIdList: []
                 },
                 selectedProgrammeList: [],
                 infoRules: {
                     name: [
                         {validator: checkName, trigger: 'blur'}
                     ],
-                    description: [
-                        {validator: checkDescription, trigger: 'blur'}
+                    desc: [
+                        {validator: checkDesc, trigger: 'blur'}
                     ]
                 }
             };
@@ -158,27 +165,38 @@
                 this.$nextTick(function () {
                     this.$refs.selectMultipleProgramme.init();
                 });
+                if (this.status === '1') {
+                    this.$service.getProductInfo(this.$route.params.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.productInfo = response.data;
+                        }
+                    });
+                }
             },
             // 创建或更新产品包
-            operateSubject() {
+            operateProduct() {
                 this.$refs['productInfo'].validate((valid) => {
                     if (valid) {
+                        // 设置targetIdList
+                        this.productInfo.targetIdList = [];
+                        this.selectedProgrammeList.map(programme => {
+                            this.productInfo.targetIdList.push(programme.id);
+                        });
                         // 创建产品包
-                        if (this.status === '0' || this.status === '1') {
-                            this.productInfo.category = this.status === '0' ? 'PROGRAMME' : 'FIGURE';
-                            this.$service.createSubject(this.productInfo).then(response => {
+                        if (this.status === '0') {
+                            this.$service.createProduct(this.productInfo).then(response => {
                                 if (response && response.code === 0) {
-                                    this.subjectId = response.data.id;
-                                    this.dialogVisible = true;
+                                    this.$message.success('成功创建节目包');
+                                    this.toProductList();
                                 }
                             });
                         } else {
                             // 更新产品包
                             this.productInfo.id = this.$route.params.id;
-                            this.$service.updateSubjectBasicInfo(this.productInfo).then(response => {
+                            this.$service.updateProductInfo(this.productInfo).then(response => {
                                 if (response && response.code === 0) {
-                                    this.subjectId = response.data.id;
-                                    this.dialogVisible = true;
+                                    this.$message.success('成功更新产品包');
+                                    this.toProductList();
                                 }
                             });
                         }
@@ -202,7 +220,7 @@
             reset() {
                 this.$refs['productInfo'].resetFields();
             },
-            toSubjectList() {
+            toProductList() {
                 this.$router.push({name: 'ProductList'});
             }
         }

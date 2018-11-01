@@ -1,26 +1,26 @@
-<!--创建类型包组件-->
+<!--创建直播回看包组件-->
 <template>
     <div>
         <custom-breadcrumb
             v-bind:breadcrumbList="[
             {name:'产品管理'},
-            {name:'创建类型包'}]">
+            {name:'创建直播回看包'}]">
         </custom-breadcrumb>
         <div class="block-box">
-            <type-product-form
+            <record-product-form
                 status="0">
-            </type-product-form>
+            </record-product-form>
         </div>
     </div>
 </template>
 
 <script>
-    import TypeProductForm from './TypeProductForm';
+    import RecordProductForm from './RecordProductForm';
 
     export default {
-        name: 'CreateTypeProduct',
+        name: 'CreateRecordProduct',
         components: {
-            TypeProductForm
+            RecordProductForm
         },
         data() {
             return {};

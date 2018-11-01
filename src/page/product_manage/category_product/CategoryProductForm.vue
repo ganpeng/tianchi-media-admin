@@ -13,23 +13,23 @@
             <el-form-item label="名称" prop="name" required>
                 <el-input v-model="productInfo.name" placeholder="请填写30个字以内的名称"></el-input>
             </el-form-item>
-            <el-form-item label="简介" prop="description">
+            <el-form-item label="简介" prop="desc">
                 <el-input
-                    v-model="productInfo.description"
+                    v-model="productInfo.desc"
                     placeholder="请填写100个字以内的简介"
                     type="textarea"
                     :rows="4">
                 </el-input>
             </el-form-item>
-            <el-form-item label="类型" prop="typeList" required>
+            <el-form-item label="类型" prop="targetIdList" required>
                 <el-select
-                    v-model="productInfo.typeList"
+                    v-model="productInfo.targetIdList"
                     multiple
                     filterable
                     clearable
                     placeholder="请选择类型">
                     <el-option
-                        v-for="item in typeOptions"
+                        v-for="item in categoryOptions"
                         :key="item.id"
                         :label="item.name"
                         :value="item.id">
@@ -37,7 +37,7 @@
                 </el-select>
             </el-form-item>
             <div class="operate">
-                <el-button type="primary" @click="operateSubject" class="page-main-btn">
+                <el-button type="primary" @click="operateProduct" class="page-main-btn">
                     {{this.status === '0' ? '创建' : '保存'}}
                 </el-button>
                 <el-button @click="reset"
@@ -47,7 +47,7 @@
                            plain>
                     重置
                 </el-button>
-                <el-button @click="toSubjectList" class="page-main-btn">返回列表页</el-button>
+                <el-button @click="toProductList" class="page-main-btn">返回列表页</el-button>
             </div>
         </el-form>
     </div>
@@ -55,9 +55,14 @@
 
 <script>
     export default {
-        name: 'TypeProductForm',
+        name: 'CategoryProductForm',
         // status为1代表编辑，0代表创建
-        props: ['status'],
+        props: {
+            status: {
+                type: String,
+                required: true
+            }
+        },
         data() {
             let checkName = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
@@ -68,15 +73,15 @@
                     callback();
                 }
             };
-            let checkDescription = (rule, value, callback) => {
+            let checkDesc = (rule, value, callback) => {
                 if (this.$util.trim(value).length > 100) {
                     return callback(new Error('产品包描述不能超过100字'));
                 } else {
                     callback();
                 }
             };
-            let checkTypeList = (rule, value, callback) => {
-                if (this.productInfo.typeList.length === 0) {
+            let checkTargetIdList = (rule, value, callback) => {
+                if (value.length === 0) {
                     return callback(new Error('类型不能为空'));
                 } else {
                     callback();
@@ -85,20 +90,21 @@
             return {
                 productInfo: {
                     id: '',
+                    category: 'PROGRAMME_CATEGORY',
                     name: '',
-                    description: '',
-                    typeList: []
+                    desc: '',
+                    targetIdList: []
                 },
-                typeOptions: [],
+                categoryOptions: [],
                 infoRules: {
                     name: [
                         {validator: checkName, trigger: 'blur'}
                     ],
                     description: [
-                        {validator: checkDescription, trigger: 'blur'}
+                        {validator: checkDesc, trigger: 'blur'}
                     ],
-                    typeList: [
-                        {validator: checkTypeList, trigger: 'change'}
+                    targetIdList: [
+                        {validator: checkTargetIdList, trigger: 'change'}
                     ]
                 }
             };
@@ -112,30 +118,35 @@
                 // 初始化类别列表
                 this.$service.getProgrammeCategory().then(response => {
                     if (response && response.code === 0) {
-                        this.typeOptions = response.data;
+                        this.categoryOptions = response.data;
                     }
                 });
+                if (this.status === '1') {
+                    this.$service.getProductInfo(this.$route.params.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.productInfo = response.data;
+                        }
+                    });
+                }
             },
             // 创建或更新产品包
-            operateSubject() {
+            operateProduct() {
                 this.$refs['productInfo'].validate((valid) => {
                     if (valid) {
                         // 创建产品包
-                        if (this.status === '0' || this.status === '1') {
-                            this.productInfo.category = this.status === '0' ? 'PROGRAMME' : 'FIGURE';
-                            this.$service.createSubject(this.productInfo).then(response => {
+                        if (this.status === '0') {
+                            this.$service.createProduct(this.productInfo).then(response => {
                                 if (response && response.code === 0) {
-                                    this.subjectId = response.data.id;
-                                    this.dialogVisible = true;
+                                    this.$message.success('成功创建类别包');
+                                    this.toProductList();
                                 }
                             });
                         } else {
                             // 更新产品包
-                            this.productInfo.id = this.$route.params.id;
-                            this.$service.updateSubjectBasicInfo(this.productInfo).then(response => {
+                            this.$service.updateProductInfo(this.productInfo).then(response => {
                                 if (response && response.code === 0) {
-                                    this.subjectId = response.data.id;
-                                    this.dialogVisible = true;
+                                    this.$message.success('成功更新产品包信息');
+                                    this.toProductList();
                                 }
                             });
                         }
@@ -147,7 +158,7 @@
             reset() {
                 this.$refs['productInfo'].resetFields();
             },
-            toSubjectList() {
+            toProductList() {
                 this.$router.push({name: 'ProductList'});
             }
         }
