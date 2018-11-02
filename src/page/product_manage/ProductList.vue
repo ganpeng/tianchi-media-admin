@@ -56,7 +56,7 @@
                 style="width: 100%">
                 <el-table-column
                     align="center"
-                    prop="code"
+                    prop="aaaCode"
                     width="120px"
                     label="编号">
                 </el-table-column>
@@ -157,42 +157,7 @@
                     {value: 'RECORD', label: '直播回看包'}
                 ],
                 totalAmount: 0,
-                productList: [{
-                    id: 2131312313,
-                    code: 1,
-                    name: '电视剧全包',
-                    category: 'PROGRAMME_CATEGORY',
-                    updatedAt: 1538275321938,
-                    createdAt: 1533245320938,
-                    visible: true
-                },
-                    {
-                        id: 2131312315,
-                        code: 2,
-                        name: '天龙八部全包',
-                        category: 'PROGRAMME',
-                        updatedAt: 1538274321938,
-                        createdAt: 1523245320938,
-                        visible: false
-                    },
-                    {
-                        id: 2131312317,
-                        code: 3,
-                        name: '好莱坞频道包',
-                        category: 'CAROUSEL',
-                        updatedAt: 1538575321938,
-                        createdAt: 1503245320938,
-                        visible: true
-                    },
-                    {
-                        id: 2131312319,
-                        code: 4,
-                        name: 'CCTV5包',
-                        category: 'RECORD',
-                        updatedAt: 1538474321938,
-                        createdAt: 1521245320938,
-                        visible: false
-                    }]
+                productList: []
             };
         },
         filters: {

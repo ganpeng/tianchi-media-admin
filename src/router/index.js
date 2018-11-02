@@ -503,7 +503,7 @@ let router = new Router({
                 },
                 //  产品管理-编辑类型包
                 {
-                    path: '/product-manage/edit-category',
+                    path: '/product-manage/edit-category/:id',
                     name: 'EditCategoryProduct',
                     component: EditCategoryProduct
                 },
@@ -515,7 +515,7 @@ let router = new Router({
                 },
                 //  产品管理-编辑节目包
                 {
-                    path: '/product-manage/edit-programme',
+                    path: '/product-manage/edit-programme/:id',
                     name: 'EditProgrammeProduct',
                     component: EditProgrammeProduct
                 },
@@ -527,7 +527,7 @@ let router = new Router({
                 },
                 //  产品管理-编辑轮播频道包
                 {
-                    path: '/product-manage/edit-carousel',
+                    path: '/product-manage/edit-carousel/:id',
                     name: 'EditCarouselProduct',
                     component: EditCarouselProduct
                 },
@@ -539,7 +539,7 @@ let router = new Router({
                 },
                 //  产品管理-编辑直播回看包
                 {
-                    path: '/product-manage/edit-record',
+                    path: '/product-manage/edit-record/:id',
                     name: 'EditRecordProduct',
                     component: EditRecordProduct
                 },
