@@ -10,11 +10,13 @@ switch (npmEventName) {
     // develop url
     case 'dev':
     case 'dev:dev':
-        h5NginxProxyTarget = 'http://dev-admin.tianchiapi.com';
+        // h5NginxProxyTarget = 'http://dev-admin.tianchiapi.com';
+        h5NginxProxyTarget = 'http://dev1-admin.tianchiapi.com';
         break;
     // test url
     case 'dev:test':
-        h5NginxProxyTarget = 'http://test-admin.tianchiapi.com';
+        // h5NginxProxyTarget = 'http://test-admin.tianchiapi.com';
+        h5NginxProxyTarget = 'http://test1-admin.tianchiapi.com';
         break;
     // test url
     case 'dev:prod':

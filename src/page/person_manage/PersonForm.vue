@@ -68,28 +68,6 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="身高" prop="height">
-                    <el-input
-                        type="number"
-                        :disabled="readonly"
-                        placeholder=""
-                        :value="person.height"
-                        @input="inputHandler($event, 'height')"
-                    >
-                        <template slot="append">cm</template>
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="体重" prop="weight">
-                    <el-input
-                        type="number"
-                        :disabled="readonly"
-                        placeholder=""
-                        :value="person.weight"
-                        @input="inputHandler($event, 'weight')"
-                    >
-                        <template slot="append">kg</template>
-                    </el-input>
-                </el-form-item>
                 <el-form-item label="职业" prop="mainRoleList">
                     <el-select
                         multiple
@@ -109,6 +87,14 @@
             </el-col>
             <el-col :span="24">
                 <el-form-item label="人物图片" required>
+                    <div class="uploader person-uploader">
+                        <label class="ui_button ui_button_primary" for="personUploader">
+                            <i class="el-icon-plus"></i>
+                        </label>
+                        <input type="file" id="personUploader">
+                    </div>
+
+                    <!--
                     <div class="text-left clearfix">
                         <el-button
                             class="float-left page-main-btn create-blue-btn contain-svg-icon"
@@ -129,6 +115,7 @@
                             v-on:removeImage="_deletePosterImage">
                         </thumbnail>
                     </div>
+                    -->
                 </el-form-item>
             </el-col>
         </el-form>
@@ -264,9 +251,6 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.person-form-container {
-    margin-top: 60px;
-}
 .text-info {
     margin-left: 10px;
 }

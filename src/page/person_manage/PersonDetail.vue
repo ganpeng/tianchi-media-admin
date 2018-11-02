@@ -1,11 +1,8 @@
 <!-- 人物详情 -->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'人物资源管理'},
-            {name:getPageName}]">
-        </custom-breadcrumb>
+    <div class="person-container">
+        <h2 class="content-title">{{getPageName}}</h2>
+        <div class="seperator-line"></div>
         <el-row>
             <person-form
                 v-on:uploadSuccess="uploadSuccess($event)"
@@ -14,20 +11,13 @@
                 :readonly="readonly"
                 ref="personForm"
             ></person-form>
-            <el-col :span="24">
-                <div class="form-btn">
-                    <span class="btn-wrapper" v-show="!readonly">
-                        <el-button class="page-main-btn page-margin-btn" v-show="isEdit" type="primary" @click="_updatePerson">保存</el-button>
-                        <el-button
-                            class="page-main-btn page-margin-btn"
-                            v-show="!isEdit"
-                            type="primary"
-                            @click="_createPerson"
-                            v-loading.fullscreen.lock="isLoading">创 建</el-button>
-                    </span>
-                    <el-button class="page-main-btn page-margin-btn" @click="goBack" plain>返回人物列表</el-button>
-                </div>
-            </el-col>
+            <div class="fixed-btn-container">
+                <span style="margin-right: 10px;" v-show="!readonly">
+                    <el-button class="btn-style-two" v-if="isEdit" type="primary" @click="_updatePerson">保存</el-button>
+                    <el-button class="btn-style-two" v-if="!isEdit" type="primary" @click="_createPerson">创建</el-button>
+                </span>
+                <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
+            </div>
         </el-row>
     </div>
 </template>
@@ -74,7 +64,7 @@
             getPageName() {
                 switch (this.status) {
                     case 0:
-                        return '新增人物';
+                        return '添加人物';
                     case 1:
                         return '人物列表-详情';
                     case 2:

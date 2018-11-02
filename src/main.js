@@ -24,7 +24,6 @@ Vue.prototype.$service = service;
 Vue.prototype.$util = util;
 Vue.prototype.$dragula = dragula;
 Vue.prototype.$wsCache = wsCache;
-
 window.Hls = require('hls.js');
 
 window.eventBus = new Vue(); // 注册全局事件对象

@@ -125,6 +125,32 @@
                     <div class="float-left">
                         <el-checkbox v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
                         <el-checkbox v-model="reverseAll" @change="handleReverseAllChange">反选</el-checkbox>
+                        <el-dropdown
+                            trigger="click"
+                            v-show="isDisabled"
+                            class="my-dropdown disabled">
+                            <span class="el-dropdown-link">
+                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <el-dropdown
+                            trigger="click"
+                            v-show="!isDisabled"
+                            class="my-dropdown">
+                            <span class="el-dropdown-link">
+                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item>
+                                    <span @click="multUpFrameProgrammeHandler">批量上架</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span @click="multLowerFrameProgrammeHandler">批量下架</span>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
                     </div>
                     <div class="float-right">
                         <el-button
@@ -160,17 +186,19 @@
                     </el-table-column>
                     <el-table-column prop="name" align="center" min-width="100px" label="节目名称">
                         <template slot-scope="scope">
-                            <span class="ellipsis four">
+                            <span
+                                @click="displayProgramme(scope.row.id)"
+                                class="ellipsis four name">
                                 {{scope.row.name | padEmpty}}
                             </span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="节目图片" width="90" align="center" >
+                    <el-table-column label="节目图片" width="100px" align="center" >
                         <template slot-scope="scope">
                             <img style="width:70px;height:auto;" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
                         </template>
                     </el-table-column>
-                    <el-table-column prop="featureVideoCount" width="80px" align="center" label="正片数量">
+                    <el-table-column prop="featureVideoCount" width="100px" align="center" label="正片数量">
                         <template slot-scope="scope">
                             {{scope.row.featureVideoCount | padEmpty}}
                         </template>
@@ -210,8 +238,13 @@
                     </el-table-column>
                     <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
                         <template slot-scope="scope">
-                            <i v-if="scope.row.visible" class="status-normal">已上架</i>
-                            <i v-else class="status-abnormal">已下架</i>
+                            <input
+                                class="my-switch switch-anim"
+                                type="checkbox"
+                                :checked="scope.row.visible"
+                                @click.prevent="lowerFrameProgramme(scope.row)"/>
+                            <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                            <i v-else class="off-the-shelf">已下架</i>
                         </template>
                     </el-table-column>
                     <el-table-column align="center" min-width="100px" label="更新时间">
@@ -221,13 +254,9 @@
                     </el-table-column>
                     <el-table-column align="center" width="120px" label="操作">
                         <template slot-scope="scope">
-                            <div class="btn-wrapper">
-                                <el-button class="text-success" type="text" size="small" @click="displayProgramme(scope.row.id)">详情</el-button>
-                                <el-button type="text" size="small" @click="editProgramme(scope.row.id)">编辑</el-button>
-                                <el-button type="text" size="small" @click="lowerFrameProgramme(scope.row)">
-                                    {{scope.row.visible ? '下架' : '上架'}}
-                                </el-button>
-                                <el-button class="text-danger" type="text" size="small" @click="_realDeleteProgramme(scope.row.id)">删除</el-button>
+                            <div class="operator-btn-wrapper">
+                                <span class="btn-text" @click="editProgramme(scope.row.id)">编辑</span>
+                                <span class="btn-text text-danger" @click="_realDeleteProgramme(scope.row.id)">删除</span>
                             </div>
                         </template>
                     </el-table-column>
@@ -292,7 +321,6 @@ export default {
             areaOptions: store.get('areaList'),
             fileUploadDialogVisible: false,
             fileList: [],
-            multipleSelection: [],
             selectedVideoList: [],
             uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
             visibleOptions: [
@@ -666,10 +694,5 @@ export default {
 <style lang="less" scoped>
 .margin-bottom-0 {
     margin-bottom: 0;
-}
-.btn-wrapper .el-button {
-    &:nth-of-type(2n + 1) {
-        margin-left: 10px;
-    }
 }
 </style>
