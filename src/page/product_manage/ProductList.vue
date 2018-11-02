@@ -16,7 +16,7 @@
                         <el-button type="primary" plain icon="el-icon-search" @click="getProductList">搜索</el-button>
                     </el-form-item>
                     <el-form-item label="产品包类型">
-                        <el-select v-model="listQueryParams.category" clearable placeholder="请选择产品包类型">
+                        <el-select v-model="listQueryParams.productCategory" clearable placeholder="请选择产品包类型">
                             <el-option
                                 v-for="item in categoryOptions"
                                 :key="item.value"
@@ -51,13 +51,16 @@
             <el-table
                 header-row-class-name="common-table-header"
                 :data="productList"
+                :default-sort="{prop: 'aaaCode', order: 'descending'}"
                 border
+                @sort-change=sortProductList
                 row-class-name=product-row
                 style="width: 100%">
                 <el-table-column
                     align="center"
                     prop="aaaCode"
                     width="120px"
+                    sortable='custom'
                     label="编号">
                 </el-table-column>
                 <el-table-column
@@ -75,16 +78,20 @@
                 </el-table-column>
                 <el-table-column
                     align="center"
+                    prop="updatedAt"
+                    sortable="custom"
                     label="更新时间">
                     <template slot-scope="scope">
-                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
+                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:mm')}}
                     </template>
                 </el-table-column>
                 <el-table-column
                     align="center"
+                    prop="createdAt"
+                    sortable="custom"
                     label="创建时间">
                     <template slot-scope="scope">
-                        {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                        {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm')}}
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -146,8 +153,12 @@
             return {
                 listQueryParams: {
                     keyword: '',
+                    productCategory: '',
+                    createdAtStart: '',
+                    createdAtEnd: '',
                     pageNum: 1,
-                    pageSize: 10
+                    pageSize: 10,
+                    orderList: 'ID_ASC'
                 },
                 createRangeTime: [],
                 categoryOptions: [
@@ -181,12 +192,36 @@
         },
         methods: {
             getProductList() {
+                if (this.createRangeTime && this.createRangeTime.length === 2) {
+                    this.listQueryParams.createdAtStart = this.createRangeTime[0];
+                    this.listQueryParams.createdAtEnd = this.createRangeTime[1];
+                } else {
+                    this.listQueryParams.createdAtStart = '';
+                    this.listQueryParams.createdAtEnd = '';
+                }
                 this.$service.getProductList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.productList = response.data.list;
                         this.totalAmount = response.data.total;
                     }
                 });
+            },
+            // 对列表进行排序
+            sortProductList(column) {
+                if (column.prop === 'aaaCode') {
+                    this.listQueryParams.orderList = column.order === 'ascending' ? 'ID_ASC' : 'ID_DESC';
+                } else if (column.prop === 'createdAt') {
+                    this.listQueryParams.orderList = column.order === 'ascending' ? 'CREATED_AT_ASC' : 'CREATED_AT_DESC';
+                } else if (column.prop === 'updatedAt') {
+                    this.listQueryParams.orderList = column.order === 'ascending' ? 'UPDATED_AT_ASC' : 'UPDATED_AT_DESC';
+                } else {
+                    this.listQueryParams.orderList = 'ID_ASC';
+                }
+                if (this.listQueryParams.pageNum === 1) {
+                    this.getProductList();
+                } else {
+                    this.listQueryParams.pageNum = 1;
+                }
             },
             editProductInfo(item) {
                 let routeName = '';
@@ -255,7 +290,7 @@
                         type: 'warning'
                     }
                 ).then(() => {
-                    this.$service.setProductVisible(item.id).then(response => {
+                    this.$service.setProductVisible({id: item.id}).then(response => {
                         if (response && response.code === 0) {
                             this.$message.success(item.name + '产品包' + (item.visible ? '下架成功' : '上架成功'));
                             item.visible = !item.visible;
