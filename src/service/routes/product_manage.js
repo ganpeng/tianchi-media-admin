@@ -4,6 +4,8 @@
 
 import service from '../config';
 import util from '../../util/extend';
+import qs from 'querystring';
+import _ from 'lodash';
 
 /**
  * 添加产品包
@@ -16,7 +18,21 @@ export const createProduct = ({category, name, desc, targetIdList}) => {
  * 获取产品包列表
  */
 export const getProductList = ({productCategory, pageNum, pageSize, keyword, orderList, createdAtStart, createdAtEnd}) => {
-    return service.get(util.format('/v1/product/page?pageNum={0}&pageSize={1}&keyword={2}&orderList={3}&productCategory={4}&createdAtStart={5}&createdAtEnd={6}', pageNum - 1, pageSize, keyword, orderList, productCategory, createdAtStart, createdAtEnd));
+    const params = {
+        pageNum: pageNum - 1,
+        pageSize,
+        keyword,
+        productCategory,
+        orderList,
+        createdAtStart,
+        createdAtEnd
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/product/page?${paramsStr}`);
 };
 
 /**
@@ -24,6 +40,23 @@ export const getProductList = ({productCategory, pageNum, pageSize, keyword, ord
  */
 export const getProductInfo = ({id}) => {
     return service.get(util.format('/v1/product/{0}', id));
+};
+
+/**
+ * 获取产品包详细信息
+ */
+export const getProductContentListInfo = ({id, pageNum, pageSize}) => {
+    const params = {
+        id,
+        pageNum: pageNum - 1,
+        pageSize
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/product/page?${paramsStr}`);
 };
 
 /**

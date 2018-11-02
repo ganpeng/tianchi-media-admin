@@ -13,9 +13,9 @@
             <el-form-item label="名称" prop="name" required>
                 <el-input v-model="productInfo.name" placeholder="请填写30个字以内的名称"></el-input>
             </el-form-item>
-            <el-form-item label="简介" prop="desc">
+            <el-form-item label="简介" prop="description">
                 <el-input
-                    v-model="productInfo.desc"
+                    v-model="productInfo.description"
                     placeholder="请填写100个字以内的简介"
                     type="textarea"
                     :rows="4">
@@ -130,7 +130,7 @@
                     callback();
                 }
             };
-            let checkDesc = (rule, value, callback) => {
+            let checkDescription = (rule, value, callback) => {
                 if (this.$util.trim(value).length > 100) {
                     return callback(new Error('产品包描述不能超过100字'));
                 } else {
@@ -142,7 +142,7 @@
                     id: '',
                     category: 'PROGRAMME',
                     name: '',
-                    desc: '',
+                    description: '',
                     targetIdList: []
                 },
                 selectedProgrammeList: [],
@@ -150,8 +150,8 @@
                     name: [
                         {validator: checkName, trigger: 'blur'}
                     ],
-                    desc: [
-                        {validator: checkDesc, trigger: 'blur'}
+                    description: [
+                        {validator: checkDescription, trigger: 'blur'}
                     ]
                 }
             };

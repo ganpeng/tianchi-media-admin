@@ -10,6 +10,7 @@
             <h3 class="block-vice-title">类别包信息</h3>
             <el-card>
                 <ul>
+                    <li><span>产品包编号</span><label>{{productInfo.id}}</label></li>
                     <li><span>产品包类别</span><label>类别包</label></li>
                     <li><span>产品包名称</span><label>{{productInfo.name}}</label></li>
                     <li><span>产品包简介</span><label>{{productInfo.description}}</label></li>
@@ -47,6 +48,7 @@
         data() {
             return {
                 productInfo: {
+                    id: '',
                     name: '电影全包',
                     description: '这个是电影券包',
                     categoryList: [
@@ -58,7 +60,17 @@
                 }
             };
         },
+        mounted() {
+            this.getProductDetail();
+        },
         methods: {
+            getProductDetail() {
+                this.$service.getProductInfo({id: this.$route.params.id}).then(response => {
+                    if (response && response.code === 0) {
+                        this.productInfo = response.data;
+                    }
+                });
+            },
             editInfo() {
                 this.$router.push({
                     name: 'EditTypeProduct', params: this.$route.params
