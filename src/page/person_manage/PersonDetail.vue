@@ -24,8 +24,6 @@
 <script>
     import { mapActions, mapGetters, mapMutations } from 'vuex';
     import PersonForm from './PersonForm';
-    import _ from 'lodash';
-
     export default {
         name: 'PersonDetail',
         components: {
@@ -126,25 +124,11 @@
             checkImageLength(next) {
                 let {posterImageList} = this.person;
                 if (posterImageList.length <= 0) {
-                    this.$message.error('请上传图片');
-                    return false;
-                }
-                let sizeOne = posterImageList.findIndex((img) => parseInt(img.width) === 200 && parseInt(img.height) === 200);
-                let sizeTwo = posterImageList.findIndex((img) => parseInt(img.width) === 1920 && parseInt(img.height) === 1080);
-
-                if (sizeOne < 0 || sizeTwo < 0) {
-                    this.$message.error('人物的头像和背景图都必须上传且只能上传一张');
+                    this.$message.error('请上传人物头像');
                     return false;
                 }
                 // 设置默认图
-                this.setAvatarImage();
-                this.setBackgroundImage();
-
-                if (_.isEmpty(this.person.avatarImage)) {
-                    this.$message.error('请选择人物默认的封面图');
-                    return false;
-                }
-
+                // this.setAvatarImage();
                 next();
             },
             // 重制表单

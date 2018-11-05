@@ -4,43 +4,41 @@
         <div class="table-container">
             <h2 class="content-title">搜索筛选</h2>
             <div class="search-field">
-                <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left">
-                    <div class="field-row">
-                        <el-form-item
-                            class="margin-bottom-0 search" label=" ">
-                            <el-input
-                                :value="searchFields.name"
-                                clearable
-                                class="border-input"
-                                @input="inputHandler($event, 'name')"
-                                placeholder="搜索你想要的信息">
-                            </el-input>
-                        </el-form-item>
-                        <el-button class="btn-style-one" @click="getPersonList" icon="el-icon-search" type="primary" plain>搜索</el-button>
-                        <el-form-item label-width="80px" label="地区">
-                            <el-select
-                                :value="searchFields.area"
-                                filterable
-                                clearable
-                                placeholder="请选择地区"
-                                @input="inputHandler($event, 'area')">
-                                <el-option
-                                    v-for="(item, index) in areaOptions"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.code">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
-                            <svg-icon
-                                icon-class="clear_filter"
-                                class-name="svg-box">
-                            </svg-icon>
-                            重置
-                        </el-button>
+                <div class="field-row">
+                    <div class="search-field-item">
+                        <el-input
+                            :value="searchFields.name"
+                            clearable
+                            class="border-input"
+                            @input="inputHandler($event, 'name')"
+                            placeholder="搜索你想要的信息">
+                        </el-input>
                     </div>
-                </el-form>
+                    <el-button class="btn-style-one" @click="getPersonList" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">地区</label>
+                        <el-select
+                            :value="searchFields.area"
+                            filterable
+                            clearable
+                            placeholder="请选择地区"
+                            @input="inputHandler($event, 'area')">
+                            <el-option
+                                v-for="(item, index) in areaOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.code">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
+                        <svg-icon
+                            icon-class="clear_filter"
+                            class-name="svg-box">
+                        </svg-icon>
+                        重置
+                    </el-button>
+                </div>
             </div>
             <div class="seperator-line"></div>
             <div class="table-field">
@@ -371,13 +369,7 @@
     };
 </script>
 <style scoped lang="less">
-.btn-wrapper .el-button {
-    &:nth-of-type(2n + 1) {
-        margin-left: 10px;
-    }
-}
 .btn-style-one {
-    margin-left: 30px;
+    margin-left: 10px;
 }
-
 </style>

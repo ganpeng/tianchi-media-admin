@@ -4,7 +4,7 @@
         <ul id="image-list">
             <li v-for="(item,index) in imageList" :key="index">
                 <div
-                    :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
+                    :style="{ width: width, height: height, 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
                     @click="displayImage(index)">
                 </div>
                 <label>{{item.width}}*{{item.height}}</label>
@@ -30,6 +30,14 @@
             PreviewMultipleImages
         },
         props: {
+            width: {
+                type: String,
+                default: '170px'
+            },
+            height: {
+                type: String,
+                default: '100px'
+            },
             imageList: {
                 type: Array,
                 default: function () {
@@ -81,11 +89,14 @@
             align-items: center;
             margin-right: 20px;
             div {
-                width: 150px;
+                width: 170px;
                 height: 100px;
                 background-size: cover;
                 background-repeat: no-repeat;
                 background-position: center;
+                background-color: #2A3040;
+                border: 1px solid #3E495E;
+                border-radius: 8px;
                 cursor: zoom-in;
             }
             label {

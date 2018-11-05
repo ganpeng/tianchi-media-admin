@@ -3,6 +3,7 @@
     <div class="tele-play-table-container">
         <el-row>
             <el-table
+                class="my-table-style"
                 :data="dataList"
                 border
                 header-row-class-name="common-table-header"
@@ -18,7 +19,7 @@
                 </el-table-column>
                 <el-table-column
                     prop="originName"
-                    label="视频文件名"
+                    label="文件名"
                     align="center"
                     width="180">
                         <template slot-scope="scope">
@@ -27,6 +28,7 @@
                             </span>
                         </template>
                 </el-table-column>
+                <!--
                 <el-table-column
                     label="是否有封面图"
                     align="center"
@@ -35,9 +37,11 @@
                             {{scope.row.coverImage ? '是' : '否'}}
                         </template>
                 </el-table-column>
+                -->
+                <!--
                 <el-table-column
                     prop="name"
-                    label="视频展示名"
+                    label="展示名"
                     align="center"
                     width="160">
                         <template slot-scope="scope">
@@ -46,6 +50,7 @@
                             </span>
                         </template>
                 </el-table-column>
+                -->
                 <el-table-column
                     prop="sort"
                     width="100"
@@ -55,6 +60,7 @@
                             {{scope.row.sort | padEmpty}}
                         </template>
                 </el-table-column>
+                <!--
                 <el-table-column
                     align="center"
                     label="相关人物">
@@ -64,6 +70,7 @@
                             </span>
                         </template>
                 </el-table-column>
+                -->
                 <el-table-column
                     align="center"
                     label="关联正片">
@@ -76,7 +83,7 @@
                 <el-table-column
                     align="center"
                     width="180"
-                    label="视频地址">
+                    label="预览">
                     <template slot-scope="scope">
                         <div class="btn-icon-container">
                             <el-button
@@ -160,8 +167,14 @@
                     min-width="80px"
                     label="上下架">
                     <template slot-scope="scope">
-                        <i v-if="scope.row.visible" class="status-normal">已上架</i>
-                        <i v-else class="status-abnormal">已下架</i>
+                        <input
+                            v-if="status !== 1 && isShow"
+                            class="my-switch switch-anim"
+                            type="checkbox"
+                            :checked="scope.row.visible"
+                            @click.prevent="_lowerFramePerson(scope.row)"/>
+                        <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                        <i v-else class="off-the-shelf">已下架</i>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -178,12 +191,11 @@
                     align="center"
                     width="160">
                     <template slot-scope="scope">
-                        <el-button @click="displayVideo(scope.row.id)" type="text" class="text-success" size="small">查看</el-button>
-                        <el-button v-if="status !== 1" @click="editVideo(scope.row.id)" type="text" size="small">编辑</el-button>
-                        <el-button v-if="status !== 1 && isShow" @click="deleteVideo(scope.row.id, scope.row.visible)" type="text" size="small">
-                            {{scope.row.visible ? '下架' : '上架'}}
-                        </el-button>
-                        <el-button v-if="status !== 1" @click="realDeleteVideo(scope.row.id)" type="text" class="text-danger" size="small">取消关联</el-button>
+                        <div class="operator-btn-wrapper">
+                            <span class="btn-text" @click="displayVideo(scope.row.id)">查看</span>
+                            <span class="btn-text" v-if="status !== 1" @click="editVideo(scope.row.id)">编辑</span>
+                            <span class="btn-text text-danger" v-if="status !== 1" @click="realDeleteVideo(scope.row.id)">取消关联</span>
+                        </div>
                     </template>
                 </el-table-column>
             </el-table>

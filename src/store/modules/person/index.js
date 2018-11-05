@@ -199,7 +199,7 @@ const mutations = {
     },
     setAvatarImage(state) {
         state.currentPerson.avatarImage = state.currentPerson.posterImageList.find((img) => {
-            return parseInt(img.width) === 200 && parseInt(img.height) === 200;
+            return parseInt(img.width) === 260 && parseInt(img.height) === 260;
         });
     },
     setBackgroundImage(state) {

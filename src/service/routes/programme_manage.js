@@ -179,3 +179,16 @@ export const upLowerFrameProgramme = (idList, visible) => {
 
     return service.patch(`/v1/content/programme/visible?${paramsStr}`);
 };
+
+/**
+ * 批量删除节目
+ */
+export const batchDeleteProgrammes = (idList) => {
+    const params = {
+        idList
+    };
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+    return service.delete(`/v1/content/programme?${paramsStr}`);
+};

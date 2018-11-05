@@ -4,119 +4,118 @@
         <div class="table-container">
             <h2 class="content-title">搜索筛选</h2>
             <div class="search-field">
-                <el-form id="label-font" :inline="true" class="demo-form-inline text-left">
-                    <div class="field-row">
-                        <el-form-item
-                            class="margin-bottom-0 search" label=" ">
-                            <el-input
-                                :value="programmeSearchFields.keyword"
-                                clearable
-                                class="border-input"
-                                @input="inputHandler($event, 'keyword')"
-                                placeholder="搜索你想要的信息">
-                            </el-input>
-                        </el-form-item>
-                        <el-button class="btn-style-one" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
-                        <el-form-item
-                            label-width="80px" class="margin-bottom-0" label="状态">
-                            <el-select
-                                :value="programmeSearchFields.visible"
-                                @change="inputHandler($event, 'visible')"
-                                clearable
-                                placeholder="请选择状态">
-                                <el-option
-                                    v-for="item in visibleOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item
-                            label-width="80px" label="分类">
-                            <el-select
-                                :value="programmeSearchFields.programmeCategoryIdList"
-                                multiple
-                                @change="inputHandler($event, 'programmeCategoryIdList')"
-                                placeholder="请选择分类">
-                                <el-option
-                                    v-for="item in global.categoryList"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item
-                            label-width="80px" class="margin-bottom-0" label="类型">
-                            <el-select
-                                :value="programmeSearchFields.programmeTypeIdList"
-                                @change="inputHandler($event, 'programmeTypeIdList')"
-                                clearable
-                                multiple
-                                placeholder="请选择类型">
-                                <el-option
-                                    v-for="item in programmeTypeOptions"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
-                            <svg-icon
-                                icon-class="clear_filter"
-                                class-name="svg-box">
-                            </svg-icon>
-                            重置
-                        </el-button>
-                        <span
-                            @click="toggleSearchField"
-                            class="el-dropdown-link">
-                            更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
-                        </span>
+                <div class="field-row">
+                    <div class="search-field-item">
+                        <el-input
+                            :value="programmeSearchFields.keyword"
+                            clearable
+                            class="border-input"
+                            @input="inputHandler($event, 'keyword')"
+                            placeholder="搜索你想要的信息">
+                        </el-input>
                     </div>
-                    <div v-show="searchFieldVisible" class="field-row">
-                        <el-form-item label-width="100px" label="开始时间">
-                            <el-date-picker
-                                :value="programmeSearchFields.releaseAtStart"
-                                type="date"
-                                clearable
-                                style="width:180px;"
-                                @input="inputHandler($event, 'releaseAtStart')"
-                                placeholder="请选择开始时间">
-                            </el-date-picker>
-                        </el-form-item>
-                        <el-form-item label-width="100px" label="结束时间">
-                            <el-date-picker
-                                :value="programmeSearchFields.releaseAtEnd"
-                                type="date"
-                                clearable
-                                style="width:180px;"
-                                @input="inputHandler($event, 'releaseAtEnd')"
-                                placeholder="请选择结束时间">
-                            </el-date-picker>
-                        </el-form-item>
-                        <el-form-item
-                            label-width="85px" label="地区">
-                            <el-select
-                                :value="programmeSearchFields.produceAreaList"
-                                clearable
-                                filterable
-                                multiple
-                                @change="inputHandler($event, 'produceAreaList')"
-                                placeholder="请选择地区"
-                            >
-                                <el-option
-                                    v-for="(item, index) in areaOptions"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.code">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
+                    <el-button class="btn-style-one" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">状态</label>
+                        <el-select
+                            :value="programmeSearchFields.visible"
+                            @change="inputHandler($event, 'visible')"
+                            clearable
+                            placeholder="请选择状态">
+                            <el-option
+                                v-for="item in visibleOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
                     </div>
-                </el-form>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">分类</label>
+                        <el-select
+                            :value="programmeSearchFields.programmeCategoryIdList"
+                            multiple
+                            @change="inputHandler($event, 'programmeCategoryIdList')"
+                            placeholder="请选择分类">
+                            <el-option
+                                v-for="item in global.categoryList"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">类型</label>
+                        <el-select
+                            :value="programmeSearchFields.programmeTypeIdList"
+                            @change="inputHandler($event, 'programmeTypeIdList')"
+                            clearable
+                            multiple
+                            placeholder="请选择类型">
+                            <el-option
+                                v-for="item in programmeTypeOptions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
+                        <svg-icon
+                            icon-class="clear_filter"
+                            class-name="svg-box">
+                        </svg-icon>
+                        重置
+                    </el-button>
+                    <span
+                        @click="toggleSearchField"
+                        class="el-dropdown-link">
+                        更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
+                </div>
+                <div v-show="searchFieldVisible" class="field-row">
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">开始时间</label>
+                        <el-date-picker
+                            :value="programmeSearchFields.releaseAtStart"
+                            type="date"
+                            clearable
+                            style="width:180px;"
+                            @input="inputHandler($event, 'releaseAtStart')"
+                            placeholder="请选择开始时间">
+                        </el-date-picker>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">结束时间</label>
+                        <el-date-picker
+                            :value="programmeSearchFields.releaseAtEnd"
+                            type="date"
+                            clearable
+                            style="width:180px;"
+                            @input="inputHandler($event, 'releaseAtEnd')"
+                            placeholder="请选择结束时间">
+                        </el-date-picker>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">地区</label>
+                        <el-select
+                            :value="programmeSearchFields.produceAreaList"
+                            clearable
+                            filterable
+                            multiple
+                            @change="inputHandler($event, 'produceAreaList')"
+                            placeholder="请选择地区"
+                        >
+                            <el-option
+                                v-for="(item, index) in areaOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.code">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
             </div>
             <div class="seperator-line"></div>
             <div class="table-field">
@@ -148,6 +147,9 @@
                                 </el-dropdown-item>
                                 <el-dropdown-item>
                                     <span @click="multLowerFrameProgrammeHandler">批量下架</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span @click="batchDeletProgrammeHandler">批量删除</span>
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
@@ -390,7 +392,8 @@ export default {
             getProgrammeCategory: 'programme/getProgrammeCategory',
             deleteProgramme: 'programme/deleteProgramme',
             realDeleteProgramme: 'programme/realDeleteProgramme',
-            upLowerFrameProgramme: 'programme/upLowerFrameProgramme'
+            upLowerFrameProgramme: 'programme/upLowerFrameProgramme',
+            batchDeleteProgrammes: 'programme/batchDeleteProgrammes'
         }),
         keyupHandler(e) {
             if (e.keyCode === 13) {
@@ -594,6 +597,34 @@ export default {
                     }
                 });
         },
+        batchDeletProgrammeHandler() {
+            let idList = this.selectedVideoList.map((item) => item.id);
+            this.$confirm(`您确定要删除选中的节目吗?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.batchDeleteProgrammes(idList)
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                this.$message.success('节目批量删除成功');
+                                this.getProgrammeList()
+                                    .then((result) => {
+                                        if (result && result.code === 0) {
+                                            this.checkedVideoList();
+                                        }
+                                    });
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+        },
         _realDeleteProgramme(id) {
             this.$confirm(`您确定要删除该节目吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
@@ -692,7 +723,4 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.margin-bottom-0 {
-    margin-bottom: 0;
-}
 </style>

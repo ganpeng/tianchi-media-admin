@@ -422,6 +422,13 @@ const getters = {
             let scenarist = programme.figureListMap['SCENARIST'] ? programme.figureListMap['SCENARIST'] : [];
             return scenarist.map((item) => item.name).join(', ');
         };
+    },
+    getAllRoleList(state) {
+        let {figureListMap} = state.programme;
+        let directorList = figureListMap['DIRECTOR'] ? figureListMap['DIRECTOR'] : [];
+        let chiefActorList = figureListMap['CHIEF_ACTOR'] ? figureListMap['CHIEF_ACTOR'] : [];
+        let scenaristList = figureListMap['SCENARIST'] ? figureListMap['SCENARIST'] : [];
+        return [...directorList, ...chiefActorList, ...scenaristList];
     }
 };
 
@@ -1128,6 +1135,15 @@ const actions = {
     async upLowerFrameProgramme({commit, state}, {idList, visible}) {
         try {
             let res = await service.upLowerFrameProgramme(idList, visible);
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    //   节目批量删除
+    async batchDeleteProgrammes({commit, state}, idList) {
+        try {
+            let res = await service.batchDeleteProgrammes(idList);
             return res;
         } catch (err) {
             console.log(err);

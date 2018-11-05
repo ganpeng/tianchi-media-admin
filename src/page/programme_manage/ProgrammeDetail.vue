@@ -367,7 +367,11 @@
             <div class="seperator-line"></div>
             <el-col :span="24">
                 <div class="preview-sort clearfix">
-                    <h2 class="float-left programme-video-title">节目视频</h2>
+                    <h4 class="content-sub-title">
+                        节目视频
+                        <span class="count"></span>
+                        <span class="count">1个正片</span>
+                    </h4>
                     <el-button
                         class="float-left btn-style-four contain-svg-icon"
                         v-if="!readonly" @click="showUploadDialog">
@@ -534,9 +538,9 @@
                     case 0:
                         return '添加节目';
                     case 1:
-                        return '节目列表-详情';
+                        return '节目详情';
                     case 2:
-                        return '节目列表-编辑';
+                        return '节目编辑';
                     default:
                         return '';
                 }
@@ -1014,12 +1018,14 @@
     };
 </script>
 <style lang="less" scoped>
-.text-info {
-    line-height: 38px;
-    margin-left: 10px;
+.content-sub-title {
+    .count {
+        font-size: 14px;
+        color: #6F7480;
+    }
 }
-.btn-style {
-    background-color: transparent;
+.preview-sort {
+    margin-bottom: 20px;
 }
 .image-list-wrapper {
     margin-top: 20px;
@@ -1028,12 +1034,5 @@
 .little-tips {
     font-size: 12px;
     color: #909399;
-}
-.programme-video-title {
-    font-size: 20px;
-    height: 34px;
-    line-height: 30px;
-    color: #6F7480;
-    margin-right: 10px;
 }
 </style>

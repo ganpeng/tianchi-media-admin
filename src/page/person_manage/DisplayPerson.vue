@@ -1,70 +1,56 @@
 <!--显示人物-->
 <template>
-    <div class="person-container">
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'人物资源管理'},
-            {name:'人物列表-详情'}]">
-        </custom-breadcrumb>
-        <el-row>
-            <el-col :span="10">
-                <div class="vice-block">
-                    <h3 class="block-vice-title">节目基本信息</h3>
+    <div class="person-detail-container">
+        <h2 class="content-title">人物详情</h2>
+        <div class="seperator-line"></div>
+        <div class="common-details">
+            <div class="poster-section person">
+                <div class="visible-wrapper">
+                    <span :class="['visible', person.visible ? 'is-visible' : 'dis-visible']">
+                        {{person.visible ? '已上架' : '已下架'}}
+                    </span>
                 </div>
-                <div class="base-info-container">
-                    <div class="form-block">
-                        <div class="info-wrapper">
-                            <span class="label">姓名</span>
-                            <span class="text">{{person.name}}</span>
-                        </div>
-                        <div class="info-wrapper">
-                            <span class="label">出生日期</span>
-                            <span class="text">{{person.birthday | formatDate('yyyy-MM-DD')}}</span>
-                        </div>
-                        <div class="info-wrapper">
-                            <span class="label">所属地区</span>
-                            <span class="text">{{areaLabel(person.area)}}</span>
-                        </div>
-                        <div class="info-wrapper">
-                            <span class="label">身高</span>
-                            <span class="text">{{person.height}}</span>
-                        </div>
-                        <div class="info-wrapper">
-                            <span class="label">体重</span>
-                            <span class="text">{{person.weight}}</span>
-                        </div>
-                        <div class="info-wrapper">
-                            <span class="label">职业</span>
-                            <el-tag size="small" class="margin-right-s" v-for="(name, index) in mainRoleLabel(person.mainRoleList)" :key="index" type="info">{{name}}</el-tag>
-                        </div>
+                <img :src="person.posterImageList[0] ? person.posterImageList[0].uri : ''" alt="" width="200" height="200">
+            </div>
+            <div class="info-section">
+                <div class="title-wrapper">
+                    <span class="title">{{person.name}}</span>
+                    <div class="date">
+                        <span class="create-date">
+                            创建于{{person.createdAt | formatDate('yyyy-MM-DD')}}
+                        </span>
+                        <span class="update-date">
+                            更新于{{person.updatedAt | formatDate('yyyy-MM-DD')}}
+                        </span>
                     </div>
                 </div>
-            </el-col>
-            <el-col :span="12">
-                <el-row>
-                    <div class="vice-block">
-                        <h3 class="block-vice-title">人物简介</h3>
-                    </div>
-                    <div class="programme-desc-container text-left">
-                        <p class="desc">
-                            {{person.description}}
-                        </p>
-                    </div>
-                </el-row>
-            </el-col>
-        </el-row>
-        <el-row>
-            <el-col :span="24">
-                <div class="vice-block">
-                    <h3 class="block-vice-title">人物图片</h3>
+                <div class="seperator-line"></div>
+                <div class="tags-section">
+                    <span class="address-tag">
+                        {{areaLabel(person.area)}}
+                    </span>
+                    <span v-for="(name, index) in mainRoleLabel(person.mainRoleList)" :key="index" class="role-tag">
+                        {{name}}
+                    </span>
                 </div>
-                <thumbnail
-                    :removeSign="false"
-                    :imageList="person.posterImageList">
-                </thumbnail>
-            </el-col>
-        </el-row>
-        <el-button class="bak-btn" @click="goBack" plain>返回人物列表</el-button>
+                <div class="attributes">
+                    <div class="attribute-item">
+                        <label class="item-label">别名:</label>
+                        <span class="value">小张</span>
+                    </div>
+                    <div class="attribute-item">
+                        <label class="item-label">英文名:</label>
+                        <span class="value">xiaozhang</span>
+                    </div>
+                </div>
+                <p class="description">
+                    {{person.description}}
+                </p>
+            </div>
+        </div>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
+        </div>
         <preview-multiple-images :previewMultipleImages="previewImage"></preview-multiple-images>
     </div>
 </template>

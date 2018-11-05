@@ -1,52 +1,24 @@
 <!--视频列表组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'频道管理'},
-            {name:'直播频道列表'}]">
-        </custom-breadcrumb>
-        <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
-            <el-col :span="24" class="float-right">
-                <el-form-item class="create-account">
-                    <el-button
-                        class="page-main-btn create-blue-btn contain-svg-icon"
-                        @click="createLiveChannel">
-                        <svg-icon icon-class="add"></svg-icon>
-                        新增直播频道
-                    </el-button>
-                    <el-button
-                        class="create-blue-btn contain-svg-icon"
-                        @click="createChannelByImportExcel">
-                        <svg-icon icon-class="upload"></svg-icon>
-                        批量导入频道
-                    </el-button>
-                    <el-button
-                        class="create-blue-btn contain-svg-icon"
-                        @click="editChannelByImportExcel">
-                        <svg-icon icon-class="edit"></svg-icon>
-                        批量修改频道
-                    </el-button>
-                    <el-button
-                        class="page-main-btn create-blue-btn contain-svg-icon"
-                        @click="showFileUploadDialog">
-                        <svg-icon icon-class="upload"></svg-icon>
-                        导入节目单
-                    </el-button>
-                </el-form-item>
-            </el-col>
-            <el-col :span="24">
-                <el-form-item class="search">
+    <div class="live-channel-container">
+        <div class="table-container">
+            <h2 class="content-title">搜索筛选</h2>
+        </div>
+        <div class="search-field">
+            <div class="field-row">
+                <div class="search-field-item">
                     <el-input
                         :value="searchFields.keyword"
                         placeholder="支持频道名称，编号搜索"
                         @input="inputHandler($event, 'keyword')"
                         clearable
+                        class="border-input"
                     >
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
-                </el-form-item>
-                <el-form-item class="search">
+                </div>
+                <el-button class="btn-style-one" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                <div class="search-field-item">
+                    <label class="search-field-item-label">类型</label>
                     <el-select
                         :value="searchFields.typeIdList"
                         multiple
@@ -60,8 +32,11 @@
                             :value="item.id">
                         </el-option>
                     </el-select>
-                </el-form-item>
-                <el-form-item class="search">
+                </div>
+                <div class="search-field-item">
+                    <label class="search-field-item-label">
+                        回看
+                    </label>
                     <el-select
                         :value="searchFields.record"
                         clearable
@@ -75,70 +50,116 @@
                             :value="item.value">
                         </el-option>
                     </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="searchHandler" plain>搜索</el-button>
-                    <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
-                        <svg-icon
-                            icon-class="clear_filter"
-                            class-name="svg-box">
-                        </svg-icon>
-                        清空筛选条件
+                </div>
+                <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
+                    <svg-icon
+                        icon-class="clear_filter"
+                        class-name="svg-box">
+                    </svg-icon>
+                    重置
+                </el-button>
+            </div>
+        </div>
+        <div class="seperator-line"></div>
+        <div class="tabel-field">
+            <h2 class="content-title">频道列表</h2>
+            <div class="table-operator-field clearfix">
+                <div class="float-left"></div>
+                <div class="float-right">
+                    <el-button
+                        class="btn-style-two contain-svg-icon"
+                        @click="createLiveChannel">
+                            <svg-icon icon-class="add"></svg-icon>
+                        添加
                     </el-button>
-                </el-form-item>
-            </el-col>
-        </el-form>
-        <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
-            <el-table-column prop="code" align="center" width="120px" label="直播频道编号"></el-table-column>
-            <el-table-column prop="no" align="center" width="140px" label="直播频道展示编号"></el-table-column>
-            <el-table-column prop="innerName" align="center" width="120px" label="直播频道名称">
-                <template slot-scope="scope">
-                    <span class="ellipsis two">
-                        {{scope.row.innerName}}
-                    </span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="name" align="center" width="120px" label="直播频道展示名">
-                <template slot-scope="scope">
-                    <span class="ellipsis two">
-                        {{scope.row.name}}
-                    </span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="type" width="120px" align="center" label="频道类别">
-                <template slot-scope="scope">
-                    <span class="ellipsis two">
-                        {{typeName(scope.row.id)}}
-                    </span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="multicastIp" width="150px" align="center" label="频道IP"></el-table-column>
-            <el-table-column prop="multicastPort" width="100px" align="center" label="频道端口"></el-table-column>
-            <el-table-column prop="pushServer" align="center" label="所属服务器"></el-table-column>
-            <el-table-column align="center" label="是否录制回看">
-                <template slot-scope="scope">
-                        {{scope.row.record ? '是' : '否'}}
-                </template>
-            </el-table-column>
-            <el-table-column prop="videoPid" align="center" label="videoPid">
-                <template slot-scope="scope">
-                        {{scope.row.videoPid | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column prop="audioPid" align="center" label="audioPid">
-                <template slot-scope="scope">
-                        {{scope.row.audioPid | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column align="center" width="300px" fixed="right" label="操作">
-                <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="previewChannelPage(scope.row.id, scope.row.name, true)">节目单下载</el-button>
-                    <el-button type="text" size="small" @click="previewChannelPage(scope.row.id)">节目单预览</el-button>
-                    <el-button type="text" size="small" @click="_updateLiveChannel(scope.row.id)">编辑</el-button>
-                    <el-button class="text-danger" type="text" size="small" @click="_deleteLiveChannel(scope.row.id)">删除</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+                    <el-button
+                        class="btn-style-two contain-svg-icon"
+                        @click="createChannelByImportExcel">
+                            <svg-icon icon-class="upload"></svg-icon>
+                        导入
+                    </el-button>
+                    <el-button
+                        class="btn-style-two contain-svg-icon"
+                        @click="editChannelByImportExcel">
+                            <svg-icon icon-class="upload"></svg-icon>
+                        修改
+                    </el-button>
+                    <el-button
+                        class="btn-style-two contain-svg-icon"
+                        @click="showFileUploadDialog">
+                            <svg-icon icon-class="upload"></svg-icon>节目单
+                    </el-button>
+                </div>
+            </div>
+            <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
+                <el-table-column prop="code" align="center" width="120px" label="编号"></el-table-column>
+                <el-table-column prop="no" align="center" width="120px" label="展示编号"></el-table-column>
+                <el-table-column prop="innerName" align="center" width="120px" label="名称">
+                    <template slot-scope="scope">
+                        <span class="ellipsis two">
+                            {{scope.row.innerName}}
+                        </span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="name" align="center" width="120px" label="展示名">
+                    <template slot-scope="scope">
+                        <span class="ellipsis two">
+                            {{scope.row.name}}
+                        </span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="type" width="120px" align="center" label="类别">
+                    <template slot-scope="scope">
+                        <span class="ellipsis two">
+                            {{typeName(scope.row.id)}}
+                        </span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="multicastIp" width="150px" align="center" label="IP"></el-table-column>
+                <el-table-column prop="multicastPort" width="100px" align="center" label="端口"></el-table-column>
+                <el-table-column prop="pushServer" align="center" width="120px" label="服务器"></el-table-column>
+                <el-table-column align="center" width="60px" label="回看">
+                    <template slot-scope="scope">
+                        <span :class="[scope.row.record ? 'yes' : 'no']">
+                            {{scope.row.record ? '是' : '否'}}
+                        </span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="videoPid" align="center" width="100px" label="videoPid">
+                    <template slot-scope="scope">
+                            {{scope.row.videoPid | padEmpty}}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="audioPid" align="center" width="100px" label="audioPid">
+                    <template slot-scope="scope">
+                            {{scope.row.audioPid | padEmpty}}
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" label="操作">
+                    <template slot-scope="scope">
+                        <div class="operator-btn-wrapper">
+                            <el-dropdown
+                                trigger="click"
+                                class="my-dropdown">
+                                <span class="el-dropdown-link">
+                                    节目单<i class="el-icon-arrow-down el-icon--right"></i>
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item>
+                                        <span @click="previewChannelPage(scope.row.id, scope.row.name, true)">下载</span>
+                                    </el-dropdown-item>
+                                    <el-dropdown-item>
+                                        <span @click="previewChannelPage(scope.row.id)">预览</span>
+                                    </el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                            <span class="btn-text" @click="_updateLiveChannel(scope.row.id)">编辑</span>
+                            <span class="btn-text text-danger" @click="_deleteLiveChannel(scope.row.id)">删除</span>
+                        </div>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
         <el-pagination
             @size-change="handlePaginationChange($event, 'pageSize')"
             @current-change="handlePaginationChange($event, 'pageNum')"
@@ -586,7 +607,22 @@
         }
     };
 </script>
-<style scoped lang="less">
+<style scoped lang="scss">
+.my-dropdown {
+    border: none;
+    color: $mainColor;
+    width: 70px;
+    height: 18px;
+    line-height: 18px;
+    font-size: 14px;
+}
+.yes {
+    color: $successColor;
+}
+.no {
+    color: $dangerColor;
+}
+
 .table-wrapper {
     height: 500px;
     overflow-y: scroll;
