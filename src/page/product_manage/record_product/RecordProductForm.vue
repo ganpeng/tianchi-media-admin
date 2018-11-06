@@ -26,7 +26,7 @@
             <div class="block-title">添加直播回看频道</div>
             <select-multiple-live-channel
                 :selectedChannelList="selectedChannelList"
-                ref="selectMultipleLiveChannel"
+                ref="selectMultipleChannel"
                 v-on:setChannel="setChannel">
             </select-multiple-live-channel>
             <div class="vice-block">
@@ -37,6 +37,13 @@
                     row-class-name=channel-row
                     border
                     style="width: 100%">
+                    <el-table-column prop="code" align="center" width="60px" label="序号">
+                        <template slot-scope="scope">
+                    <span>
+                        {{scope.$index + 1}}
+                    </span>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="code" align="center" width="120px" label="直播频道编号"></el-table-column>
                     <el-table-column prop="no" align="center" width="140px" label="直播频道展示编号"></el-table-column>
                     <el-table-column prop="innerName" align="center" width="120px" label="直播频道名称">
@@ -112,7 +119,7 @@
     import SelectMultipleLiveChannel from './SelectMultipleLiveChannel';
 
     export default {
-        name: 'LookBackProductForm',
+        name: 'RecordProductForm',
         // status为1代表编辑，0代表创建
         props: {
             status: {
@@ -174,13 +181,29 @@
         methods: {
             // 初始化数据
             init() {
-                this.$nextTick(function () {
-                    this.$refs.selectMultipleLiveChannel.init();
-                });
+                if (this.status === '0') {
+                    this.$nextTick(function () {
+                        this.$refs.selectMultipleChannel.init();
+                    });
+                }
                 if (this.status === '1') {
+                    // 获取基本信息
                     this.$service.getProductInfo({id: this.$route.params.id}).then(response => {
                         if (response && response.code === 0) {
                             this.productInfo = response.data;
+                        }
+                    });
+                    // 获取内容列表
+                    this.$service.getRecordProductContentList({
+                        id: this.$route.params.id,
+                        pageNum: 1,
+                        pageSize: 1000
+                    }).then(response => {
+                        if (response && response.code === 0) {
+                            this.selectedChannelList = response.data.list;
+                            this.$nextTick(function () {
+                                this.$refs.selectMultipleChannel.init();
+                            });
                         }
                     });
                 }
@@ -221,6 +244,7 @@
             removeChannel(index) {
                 let removedRow = this.selectedChannelList.splice(index, 1)[0];
                 this.$refs.selectMultipleChannel.cancelSelectRow(removedRow);
+                this.$message.success('"' + removedRow.name + '"' + '频道成功取消关联');
             },
             // 设置选择的直播频道
             setChannel(selectedChannels) {
