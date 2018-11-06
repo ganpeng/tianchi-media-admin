@@ -1,12 +1,13 @@
 <!--轮播频道包表单组件-->
 <template>
     <div class="text-left">
-        <el-form :model="productInfo"
-                 :rules="infoRules"
-                 status-icon
-                 ref="productInfo"
-                 label-width="120px"
-                 class="form-block fill-form">
+        <el-form
+            :model="productInfo"
+            :rules="infoRules"
+            status-icon
+            ref="productInfo"
+            label-width="120px"
+            class="form-block fill-form">
             <el-form-item label="类型" prop="category">
                 轮播频道包
             </el-form-item>
@@ -26,7 +27,7 @@
             <div class="block-title">添加轮播频道</div>
             <select-multiple-carousel-channel
                 :selectedChannelList="selectedChannelList"
-                ref="selectMultipleCarouselChannel"
+                ref="selectMultipleChannel"
                 v-on:setChannel="setChannel">
             </select-multiple-carousel-channel>
             <div class="vice-block">
@@ -37,6 +38,14 @@
                     row-class-name=channel-row
                     border
                     style="width: 100%">
+                    <el-table-column
+                        width="60px"
+                        align="center"
+                        label="序号">
+                        <template slot-scope="scope">
+                            <label>{{scope.$index + 1}}</label>
+                        </template>
+                    </el-table-column>
                     <el-table-column
                         prop="no"
                         width="80px"
@@ -137,7 +146,7 @@
     import SelectMultipleCarouselChannel from './SelectMultipleCarouselChannel';
 
     export default {
-        name: 'EditCarouselProductForm',
+        name: 'CreateCarouselProductForm',
         // status为1代表编辑，0代表创建
         props: {
             status: {
@@ -190,13 +199,27 @@
         methods: {
             // 初始化数据
             init() {
-                this.$nextTick(function () {
-                    this.$refs.selectMultipleCarouselChannel.init();
-                });
+                if (this.status === '0') {
+                    this.$nextTick(function () {
+                        this.$refs.selectMultipleChannel.init();
+                    });
+                }
                 if (this.status === '1') {
                     this.$service.getProductInfo({id: this.$route.params.id}).then(response => {
                         if (response && response.code === 0) {
                             this.productInfo = response.data;
+                        }
+                    });
+                    this.$service.getCarouselProductContentList({
+                        id: this.$route.params.id,
+                        pageNum: 1,
+                        pageSize: 1000
+                    }).then(response => {
+                        if (response && response.code === 0) {
+                            this.selectedChannelList = response.data.list;
+                            this.$nextTick(function () {
+                                this.$refs.selectMultipleChannel.init();
+                            });
                         }
                     });
                 }
@@ -237,6 +260,7 @@
             removeChannel(index) {
                 let removedRow = this.selectedChannelList.splice(index, 1)[0];
                 this.$refs.selectMultipleChannel.cancelSelectRow(removedRow);
+                this.$message.success('"' + removedRow.name + '"' + '频道成功取消关联');
             },
             // 设置选择的轮播频道
             setChannel(selectedChannels) {

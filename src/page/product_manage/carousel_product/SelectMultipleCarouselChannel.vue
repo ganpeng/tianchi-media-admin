@@ -6,6 +6,7 @@
         </channel-filter-params>
         <el-table
             :data="channelList"
+            ref="selectChannel"
             header-row-class-name="common-table-header"
             row-class-name=channel-row
             @select-all="selectAll"
@@ -144,7 +145,16 @@
                     if (response && response.code === 0) {
                         this.channelList = response.data.list;
                         this.total = response.data.total;
-                        this.multipleSelection = [];
+                        // 对于选择的多选项项进行勾选
+                        for (let i = 0; i < this.multipleSelection.length; i++) {
+                            for (let k = 0; k < this.channelList.length; k++) {
+                                if (this.multipleSelection[i].id === this.channelList[k].id) {
+                                    this.$nextTick(function () {
+                                        this.$refs.selectChannel.toggleRowSelection(this.channelList[k], true);
+                                    });
+                                }
+                            }
+                        }
                     }
                 });
             },
