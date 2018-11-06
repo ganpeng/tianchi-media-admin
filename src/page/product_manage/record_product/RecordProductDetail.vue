@@ -80,15 +80,6 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="listQueryParams.pageNum"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="listQueryParams.pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="totalAmount">
-                </el-pagination>
             </div>
             <div id="operate-list">
                 <el-button type="primary" class="page-main-btn" @click="editInfo">编辑信息</el-button>
@@ -118,37 +109,40 @@
                 totalAmount: 0
             };
         },
+        filters: {
+            getTypeName: function (typeList) {
+                let name = '';
+                typeList.map(type => {
+                    name = '、' + name + type.name;
+                });
+                return name.slice(1);
+            }
+        },
         mounted() {
             this.init();
         },
         methods: {
             init() {
+                // 获取基本信息
                 this.$service.getProductInfo({id: this.$route.params.id}).then(response => {
                     if (response && response.code === 0) {
                         this.productInfo = response.data;
                     }
                 });
-                this.getProductContentListInfo();
-            },
-            getProductContentListInfo() {
-                this.$service.getProductContentListInfo(this.listQueryParams).then(response => {
+                // 获取内容列表
+                this.$service.getRecordProductContentList({
+                    id: this.$route.params.id,
+                    pageNum: 1,
+                    pageSize: 1000
+                }).then(response => {
                     if (response && response.code === 0) {
-                        this.channelList = response.data;
-                        this.totalAmount = response.total;
+                        this.channelList = response.data.list;
                     }
                 });
             },
-            handleSizeChange(pageSize) {
-                this.listQueryParams.pageSize = pageSize;
-                this.getProductContentListInfo();
-            },
-            handleCurrentChange(pageNum) {
-                this.listQueryParams.pageNum = pageNum;
-                this.getProductContentListInfo();
-            },
             editInfo() {
                 this.$router.push({
-                    name: 'EditLookBackProduct', params: this.$route.params
+                    name: 'EditRecordProduct', params: this.$route.params
                 });
             },
             toProductList() {
