@@ -7,20 +7,19 @@
             {name:'编辑节目包'}]">
         </custom-breadcrumb>
         <div class="block-box">
-            <programme-product-form
-                status="1">
-            </programme-product-form>
+            <edit-programme-product-form>
+            </edit-programme-product-form>
         </div>
     </div>
 </template>
 
 <script>
-    import ProgrammeProductForm from './ProgrammeProductForm';
+    import EditProgrammeProductForm from './EditProgrammeProductForm';
 
     export default {
         name: 'EditProgrammeProduct',
         components: {
-            ProgrammeProductForm
+            EditProgrammeProductForm
         },
         data() {
             return {};

@@ -80,6 +80,15 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="listQueryParams.pageNum"
+                    :page-sizes="[10, 20, 30, 50]"
+                    :page-size="listQueryParams.pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="totalAmount">
+                </el-pagination>
             </div>
             <div id="operate-list">
                 <el-button type="primary" class="page-main-btn" @click="editInfo">编辑信息</el-button>
@@ -92,18 +101,51 @@
 <script>
 
     export default {
-        name: 'LookBackProductDetail',
+        name: 'RecordProductDetail',
         data() {
             return {
                 productInfo: {
-                    name: 'CCTV1回看包',
-                    description: '这个是CCTV1回看包',
+                    name: '',
+                    description: '',
                     visible: true
                 },
-                channelList: []
+                channelList: [],
+                listQueryParams: {
+                    id: this.$route.params.id,
+                    pageSize: 10,
+                    pageNum: 1
+                },
+                totalAmount: 0
             };
         },
+        mounted() {
+            this.init();
+        },
         methods: {
+            init() {
+                this.$service.getProductInfo({id: this.$route.params.id}).then(response => {
+                    if (response && response.code === 0) {
+                        this.productInfo = response.data;
+                    }
+                });
+                this.getProductContentListInfo();
+            },
+            getProductContentListInfo() {
+                this.$service.getProductContentListInfo(this.listQueryParams).then(response => {
+                    if (response && response.code === 0) {
+                        this.channelList = response.data;
+                        this.totalAmount = response.total;
+                    }
+                });
+            },
+            handleSizeChange(pageSize) {
+                this.listQueryParams.pageSize = pageSize;
+                this.getProductContentListInfo();
+            },
+            handleCurrentChange(pageNum) {
+                this.listQueryParams.pageNum = pageNum;
+                this.getProductContentListInfo();
+            },
             editInfo() {
                 this.$router.push({
                     name: 'EditLookBackProduct', params: this.$route.params

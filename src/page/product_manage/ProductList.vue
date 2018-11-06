@@ -244,13 +244,10 @@
                 this.$router.push({name: routeName, params: {id: item.id}});
             },
             clearFilters() {
-                for (let key in this.listQueryParams) {
-                    if (Array.isArray(this.listQueryParams[key])) {
-                        this.listQueryParams[key] = [];
-                    } else {
-                        this.listQueryParams[key] = '';
-                    }
-                }
+                this.listQueryParams.keyword = '';
+                this.listQueryParams.productCategory = '';
+                this.listQueryParams.createdAtStart = '';
+                this.listQueryParams.createdAtEnd = '';
                 this.createRangeTime = [];
             },
             handleSizeChange(pageSize) {

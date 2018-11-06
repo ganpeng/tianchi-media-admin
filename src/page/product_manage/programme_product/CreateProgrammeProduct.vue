@@ -7,20 +7,19 @@
             {name:'创建节目包'}]">
         </custom-breadcrumb>
         <div class="block-box">
-            <programme-product-form
-                status="0">
-            </programme-product-form>
+            <create-programme-product-form>
+            </create-programme-product-form>
         </div>
     </div>
 </template>
 
 <script>
-    import ProgrammeProductForm from './ProgrammeProductForm';
+    import CreateProgrammeProductForm from './CreateProgrammeProductForm';
 
     export default {
         name: 'CreateProgrammeProduct',
         components: {
-            ProgrammeProductForm
+            CreateProgrammeProductForm
         },
         data() {
             return {};

@@ -185,34 +185,34 @@
                 }
             },
             selectAll(selections) {
-                // 判断是添加还是删除所有当前personList
+                // 判断是添加还是删除所有当前channelList
                 // 取消全选
                 if (selections.length === 0) {
-                    for (let i = 0; i < this.ChannelList.length; i++) {
+                    for (let i = 0; i < this.channelList.length; i++) {
                         for (let k = 0; k < this.multipleSelection.length; k++) {
-                            if (this.ChannelList[i].id === this.multipleSelection[k].id) {
+                            if (this.channelList[i].id === this.multipleSelection[k].id) {
                                 this.multipleSelection.splice(k, 1);
                             }
                         }
                     }
                     // 全选添加
                 } else {
-                    for (let i = 0; i < this.ChannelList.length; i++) {
+                    for (let i = 0; i < this.channelList.length; i++) {
                         let tag = false;
                         // 去掉当前已选择的
                         for (let k = 0; k < this.multipleSelection.length; k++) {
-                            if (this.ChannelList[i].id === this.multipleSelection[k].id) {
+                            if (this.channelList[i].id === this.multipleSelection[k].id) {
                                 tag = true;
                             }
                         }
                         // 去掉原先已选择的
                         for (let m = 0; m < this.multipleSelection.length; m++) {
-                            if (this.ChannelList[i].id === this.multipleSelection[m].id) {
+                            if (this.channelList[i].id === this.multipleSelection[m].id) {
                                 tag = true;
                             }
                         }
                         if (tag === false) {
-                            this.multipleSelection.push(this.ChannelList[i]);
+                            this.multipleSelection.push(this.channelList[i]);
                         }
                     }
                 }
@@ -223,9 +223,9 @@
                         this.multipleSelection.splice(i, 1);
                     }
                 }
-                for (let i = 0; i < this.ChannelList.length; i++) {
-                    if (row.id === this.ChannelList[i].id) {
-                        this.$refs.selectChannel.toggleRowSelection(this.ChannelList[i], false);
+                for (let i = 0; i < this.channelList.length; i++) {
+                    if (row.id === this.channelList[i].id) {
+                        this.$refs.selectChannel.toggleRowSelection(this.channelList[i], false);
                     }
                 }
             }

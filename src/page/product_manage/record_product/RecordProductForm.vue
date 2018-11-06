@@ -146,7 +146,7 @@
                     category: 'RECORD',
                     name: '',
                     description: '',
-                    targetIdList: []
+                    contentIdList: []
                 },
                 selectedChannelList: [],
                 infoRules: {
@@ -189,10 +189,10 @@
             operateProduct() {
                 this.$refs['productInfo'].validate((valid) => {
                     if (valid) {
-                        // 设置targetIdList
-                        this.productInfo.targetIdList = [];
+                        // 设置contentIdList
+                        this.productInfo.contentIdList = [];
                         this.selectedChannelList.map(channel => {
-                            this.productInfo.targetIdList.push(channel.id);
+                            this.productInfo.contentIdList.push(channel.id);
                         });
                         // 创建产品包
                         if (this.status === '0') {
