@@ -21,9 +21,9 @@
                     :rows="4">
                 </el-input>
             </el-form-item>
-            <el-form-item label="类型" prop="targetIdList" required>
+            <el-form-item label="类型" prop="contentIdList" required>
                 <el-select
-                    v-model="productInfo.targetIdList"
+                    v-model="productInfo.contentIdList"
                     multiple
                     filterable
                     clearable
@@ -93,7 +93,7 @@
                     category: 'PROGRAMME_CATEGORY',
                     name: '',
                     description: '',
-                    targetIdList: []
+                    contentIdList: []
                 },
                 categoryOptions: [],
                 infoRules: {
@@ -103,7 +103,7 @@
                     description: [
                         {validator: checkDescription, trigger: 'blur'}
                     ],
-                    targetIdList: [
+                    contentIdList: [
                         {validator: checkTargetIdList, trigger: 'change'}
                     ]
                 }

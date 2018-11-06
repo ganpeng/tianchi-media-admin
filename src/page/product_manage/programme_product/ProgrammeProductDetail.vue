@@ -24,51 +24,18 @@
             </el-card>
             <div class="vice-block">
                 <h3 class="block-vice-title">产品包内节目列表</h3>
-                <el-table
-                    :data="programmeList"
-                    header-row-class-name="common-table-header"
-                    row-class-name=programme-row
-                    border
-                    style="width: 100%">
-                    <el-table-column
-                        align="center"
-                        width="70px"
-                        label="序号">
-                        <template slot-scope="scope">
-                            <label>{{scope.$index + 1}}</label>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        align="center"
-                        width="120px"
-                        prop="code"
-                        label="编号">
-                    </el-table-column>
-                    <el-table-column
-                        align="center"
-                        prop="name"
-                        label="名称">
-                    </el-table-column>
-                    <el-table-column
-                        width="100px"
-                        align="center"
-                        label="图片">
-                        <template slot-scope="scope">
-                            <img
-                                :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl"
-                                :alt="scope.row.coverImage.name"
-                                v-if="scope.row.coverImage">
-                            <label v-else>------</label>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        align="center"
-                        label="主演">
-                        <template slot-scope="scope">
-                            <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
-                        </template>
-                    </el-table-column>
-                </el-table>
+                <programme-product-operate-table
+                    :programmeList="programmeList">
+                </programme-product-operate-table>
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="listQueryParams.pageNum"
+                    :page-sizes="[10, 20, 30, 50]"
+                    :page-size="listQueryParams.pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="totalAmount">
+                </el-pagination>
             </div>
             <div id="operate-list">
                 <el-button type="primary" class="page-main-btn" @click="editInfo">编辑信息</el-button>
@@ -79,20 +46,57 @@
 </template>
 
 <script>
+    import ProgrammeProductOperateTable from './ProgrammeProductOperateTable';
 
     export default {
         name: 'ProgrammeProductDetail',
+        components: {
+            ProgrammeProductOperateTable
+        },
         data() {
             return {
                 productInfo: {
-                    name: '天龙八部包',
-                    description: '这个是天龙八部包',
+                    name: '',
+                    description: '',
                     visible: true
                 },
-                programmeList: []
+                programmeList: [],
+                listQueryParams: {
+                    id: this.$route.params.id,
+                    pageSize: 10,
+                    pageNum: 1
+                },
+                totalAmount: 0
             };
         },
+        mounted() {
+            this.init();
+        },
         methods: {
+            init() {
+                this.$service.getProductInfo({id: this.$route.params.id}).then(response => {
+                    if (response && response.code === 0) {
+                        this.productInfo = response.data;
+                    }
+                });
+                this.getProductContentList();
+            },
+            getProductContentList() {
+                this.$service.getProgrammeProductContentList(this.listQueryParams).then(response => {
+                    if (response && response.code === 0) {
+                        this.programmeList = response.data.list;
+                        this.totalAmount = response.data.total;
+                    }
+                });
+            },
+            handleSizeChange(pageSize) {
+                this.listQueryParams.pageSize = pageSize;
+                this.getProductContentList();
+            },
+            handleCurrentChange(pageNum) {
+                this.listQueryParams.pageNum = pageNum;
+                this.getProductContentList();
+            },
             editInfo() {
                 this.$router.push({
                     name: 'EditProgrammeProduct', params: this.$route.params
@@ -142,7 +146,13 @@
             }
         }
         .el-table {
-            margin-top: 0px;
+            margin: 0px;
+            .remove-btn {
+                color: $baseRed;
+            }
+            img {
+                width: 70px;
+            }
         }
         #operate-list {
             position: absolute;

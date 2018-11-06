@@ -17,7 +17,7 @@
                     <li>
                         <span>包含类型</span>
                         <label>
-                            <el-tag v-for="(item, index) in productInfo.categoryList"
+                            <el-tag v-for="(item, index) in categoryList"
                                     :key="index"
                                     type="info">
                                 {{item.name}}
@@ -51,23 +51,36 @@
                     id: '',
                     name: '电影全包',
                     description: '这个是电影券包',
-                    categoryList: [
-                        {name: '电影'},
-                        {name: '电视剧'},
-                        {name: '动画片'}
-                    ],
+                    contentIdList: [],
                     visible: true
-                }
+                },
+                categoryOptions: [],
+                categoryList: []
             };
         },
         mounted() {
-            this.getProductDetail();
+            this.init();
         },
         methods: {
-            getProductDetail() {
-                this.$service.getProductInfo({id: this.$route.params.id}).then(response => {
-                    if (response && response.code === 0) {
-                        this.productInfo = response.data;
+            init() {
+                let getProgrammeCategory = this.$service.getProgrammeCategory();
+                let getProductInfo = this.$service.getProductInfo({id: this.$route.params.id});
+                Promise.all([getProgrammeCategory, getProductInfo]).then(value => {
+                    if (value[0] && value[0].code === 0) {
+                        this.categoryOptions = value[0].data;
+                    }
+                    if (value[1] && value[1].code === 0) {
+                        this.productInfo = value[1].data;
+                    }
+                    // 设置包含类型
+                    if (this.productInfo.contentIdList) {
+                        for (let i = 0; i < this.productInfo.contentIdList.length; i++) {
+                            this.categoryOptions.map(category => {
+                                if (category.id === this.productInfo.contentIdList[i]) {
+                                    this.categoryList.push(category);
+                                }
+                            });
+                        }
                     }
                 });
             },
@@ -112,8 +125,8 @@
                         flex-shrink: 0;
                         line-height: 2;
                         .el-tag {
+                            margin: 5px 10px 5px 0px;
                             border: none;
-                            margin-right: 10px;
                         }
                     }
                 }

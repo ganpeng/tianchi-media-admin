@@ -146,7 +146,9 @@
                 pageNum: 1,
                 totalAmount: 0,
                 programmeList: [],
-                multipleSelection: []
+                multipleSelection: [],
+                // 曾经被移除过的节目数组
+                removedSelection: []
             };
         },
         mounted() {
@@ -201,7 +203,31 @@
             },
             // 添加节目
             appendProgramme() {
-                this.$emit('setProgramme', this.multipleSelection);
+                this.$emit('setProgramme', this.multipleSelection, this.removedSelection);
+            },
+            // 将一个节目放入曾经取消的列表中
+            pushRemovedSelection(programme) {
+                if (this.removedSelection.length === 0) {
+                    this.removedSelection.push(programme);
+                } else {
+                    for (let i = 0; i < this.removedSelection.length; i++) {
+                        if (programme.id === this.removedSelection[i]) {
+                            return;
+                        }
+                        if (i === this.removedSelection.length - 1) {
+                            this.removedSelection.push(programme);
+                            return;
+                        }
+                    }
+                }
+            },
+            // 将一个节目去除曾经取消的列表中
+            spliceRemovedSelection(programme) {
+                for (let i = 0; i < this.removedSelection.length; i++) {
+                    if (programme.id === this.removedSelection[i].id) {
+                        this.removedSelection.splice(i, 1);
+                    }
+                }
             },
             // 多选的模式中选择或取消某一行
             selectRow(selection, row) {
@@ -213,6 +239,7 @@
                     }
                 }
                 if (checkStatus) {
+                    this.spliceRemovedSelection(row);
                     for (let k = 0; k < this.multipleSelection.length; k++) {
                         if (this.multipleSelection[k].id === row.id) {
                             return;
@@ -220,6 +247,8 @@
                     }
                     this.multipleSelection.push(row);
                 } else {
+                    // 取消选择
+                    this.pushRemovedSelection(row);
                     for (let n = 0; n < this.multipleSelection.length; n++) {
                         if (this.multipleSelection[n].id === row.id) {
                             this.multipleSelection.splice(n, 1);
@@ -232,6 +261,7 @@
                 // 取消全选
                 if (selections.length === 0) {
                     for (let i = 0; i < this.programmeList.length; i++) {
+                        this.pushRemovedSelection(this.programmeList[i]);
                         for (let k = 0; k < this.multipleSelection.length; k++) {
                             if (this.programmeList[i].id === this.multipleSelection[k].id) {
                                 this.multipleSelection.splice(k, 1);
@@ -255,12 +285,15 @@
                             }
                         }
                         if (tag === false) {
+                            this.spliceRemovedSelection(this.programmeList[i]);
                             this.multipleSelection.push(this.programmeList[i]);
                         }
                     }
                 }
             },
+            // 取消关联某一个节目
             cancelSelectRow(row) {
+                this.pushRemovedSelection(row);
                 for (let i = 0; i < this.multipleSelection.length; i++) {
                     if (row.id === this.multipleSelection[i].id) {
                         this.multipleSelection.splice(i, 1);
@@ -269,6 +302,16 @@
                 for (let i = 0; i < this.programmeList.length; i++) {
                     if (row.id === this.programmeList[i].id) {
                         this.$refs.selectProgramme.toggleRowSelection(this.programmeList[i], false);
+                    }
+                }
+            },
+            // 恢复关联某一个节目
+            recoverSelectRow(row) {
+                this.multipleSelection.push(row);
+                this.spliceRemovedSelection(row);
+                for (let i = 0; i < this.programmeList.length; i++) {
+                    if (row.id === this.programmeList[i].id) {
+                        this.$refs.selectProgramme.toggleRowSelection(this.programmeList[i], true);
                     }
                 }
             }

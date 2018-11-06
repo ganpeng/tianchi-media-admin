@@ -7,20 +7,20 @@
             {name:'创建轮播频道包'}]">
         </custom-breadcrumb>
         <div class="block-box">
-            <carousel-product-form
+            <create-carousel-product-form
                 status="0">
-            </carousel-product-form>
+            </create-carousel-product-form>
         </div>
     </div>
 </template>
 
 <script>
-    import CarouselProductForm from './CarouselProductForm';
+    import CreateCarouselProductForm from './CreateCarouselProductForm';
 
     export default {
         name: 'CreateCarouselProduct',
         components: {
-            CarouselProductForm
+            CreateCarouselProductForm
         },
         data() {
             return {};

@@ -7,20 +7,20 @@
             {name:'编辑轮播频道包'}]">
         </custom-breadcrumb>
         <div class="block-box">
-            <carousel-product-form
+            <edit-carousel-product-form
                 status="1">
-            </carousel-product-form>
+            </edit-carousel-product-form>
         </div>
     </div>
 </template>
 
 <script>
-    import CarouselProductForm from './CarouselProductForm';
+    import EditCarouselProductForm from './EditCarouselProductForm';
 
     export default {
         name: 'EditCarouselProduct',
         components: {
-            CarouselProductForm
+            EditCarouselProductForm
         },
         data() {
             return {};
