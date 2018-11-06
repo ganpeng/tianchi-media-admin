@@ -1,6 +1,6 @@
 # h5-admin
 
-> A Vue.js project
+> A Vue.js project haha
 
 
 前端代码打包环境：
