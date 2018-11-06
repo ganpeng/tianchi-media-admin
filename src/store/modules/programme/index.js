@@ -264,9 +264,9 @@ const getters = {
     },
     // 分类，类型
     typeListOptions(state) {
-        return state.programme.categoryList.reduce((res, id) => {
+        return state.programme.categoryList.reduce((res, _category) => {
             let category = state.global.categoryList.find((category) => {
-                return category.id === id;
+                return category.id === _category.id;
             });
             if (!_.isEmpty(category)) {
                 res = res.concat(category.programmeTypeList);
@@ -705,6 +705,62 @@ const mutations = {
     },
     getProgrammeFromLocalStorage() {
         return wsCache.localStorage.get('programme');
+    },
+    // 新的人物搜索的交互代码
+    addPersonByRole(state, payload) {
+        let {role, person} = payload;
+        let obj = {};
+        let pRole = '';
+
+        switch (role) {
+            case 'leadActor':
+                pRole = 'CHIEF_ACTOR';
+                break;
+            case 'director':
+                pRole = 'DIRECTOR';
+                break;
+            case 'scenarist':
+                pRole = 'SCENARIST';
+                break;
+            default:
+                throw new Error('人物类型错误');
+        }
+
+        obj.id = person.id;
+        obj.name = person.name;
+        obj.avatarUri = _.get(person, 'avatarImage.uri');
+        obj.role = pRole;
+        obj.playRole = null;
+        obj.visible = null;
+
+        state.programme[role].push(obj);
+        state.programme[role] = _.uniqBy(state.programme[role], 'id');
+    },
+    //  新增分类类型
+    addCategoryToList(state, payload) {
+        let {category} = payload;
+        state.programme.categoryList.push(category);
+        state.programme.categoryList = _.uniqBy(state.programme.categoryList, 'id');
+    },
+    addTypeToList(state, type) {
+        console.log(type);
+        // state.programme.typeList.push(type);
+        // state.programme.typeList = _.uniqBy(state.programme.typeList, 'id');
+    },
+    setCurrentTypeList(state) {
+        let programmeCategoryList = state.programme.categoryList;
+        let globalCategoryList = state.global.categoryList;
+        let resList = programmeCategoryList.reduce((res, _category) => {
+            let category = globalCategoryList.find((category) => {
+                return category.id === _category.id;
+            });
+            if (!_.isEmpty(category)) {
+                res = res.concat(category.programmeTypeList);
+            }
+            return res;
+        }, []);
+
+        state.programme.currentTypeList = resList;
     }
 };
 
@@ -800,23 +856,23 @@ function serializeProgrammData(programme, state) {
         scenaristResult = scenarist;
     }
 
-    let allTypeList = programme.categoryList.reduce((prev, curr) => {
-        let obj = state.global.categoryList.find((item) => item.id === curr.id);
-        if (obj) {
-            return prev.concat(obj.programmeTypeList);
-        } else {
-            return prev.concat([]);
-        }
-    }, []);
-    let typeList = programme.typeList.filter((item) => {
-        let findIndex = allTypeList.findIndex((ele) => ele.id === item.id);
-        return findIndex > -1;
-    });
+    // let allTypeList = programme.categoryList.reduce((prev, curr) => {
+    //     let obj = state.global.categoryList.find((item) => item.id === curr.id);
+    //     if (obj) {
+    //         return prev.concat(obj.programmeTypeList);
+    //     } else {
+    //         return prev.concat([]);
+    //     }
+    // }, []);
+    // let typeList = programme.typeList.filter((item) => {
+    //     let findIndex = allTypeList.findIndex((ele) => ele.id === item.id);
+    //     return findIndex > -1;
+    // });
 
     let res = Object.assign({}, defaultProgramme, programme, {
         copyrightRange: [programme.copyrightStartedAt, programme.copyrightEndedAt],
-        categoryList: programme.categoryList.map((category) => category.id),
-        typeList: typeList.filter((type) => type !== null).map((type) => type.id),
+        // categoryList: programme.categoryList.map((category) => category.id),
+        // typeList: typeList.filter((type) => type !== null).map((type) => type.id),
         director,
         leadActor,
         scenarist,
@@ -975,6 +1031,7 @@ const actions = {
             }
             if (res[0] && res[0].code === 0) {
                 commit('setProgramme', {programme: serializeProgrammData(res[0].data, state)});
+                commit('setCurrentTypeList');
             }
             return res;
         } catch (err) {

@@ -337,13 +337,13 @@ let router = new Router({
                 },
                 // 节目管理-编辑节目
                 {
-                    path: '/progrmme-manage/edit/:id',
+                    path: '/programme-manage/edit/:id',
                     name: 'EditProgramme',
                     component: EditProgramme
                 },
                 // 节目管理-节目详情
                 {
-                    path: '/progrmme-manage/display/:id',
+                    path: '/programme-manage/display/:id',
                     name: 'DisplayProgramme',
                     component: DisplayProgramme
                 },

@@ -100,7 +100,6 @@ export default {
                     }
                 }
             }
-
             return {active, activePath};
         },
         changeActive(index) {

@@ -69,35 +69,35 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="节目分类" prop="categoryList">
-                                <el-select
-                                    :value="programme.categoryList"
-                                    multiple
-                                    @input="inputHandler($event, 'categoryList')"
-                                    :disabled="readonly"
-                                    placeholder="请选择">
-                                    <el-option
-                                        v-for="(item, index) in global.categoryList"
+                                <div class="my-tags">
+                                    <el-tag
                                         :key="index"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-select>
+                                        v-for="(category, index) in programme.categoryList"
+                                        closable
+                                        :disable-transitions="false"
+                                        @close="() => {}">
+                                        {{category.name}}
+                                    </el-tag>
+                                </div>
+                                <category-search
+                                    :handleSelect="selectCategoryHandler"
+                                ></category-search>
                                 <el-button class="btn-style-two" v-if="!readonly" type="primary" @click="gotoProgramTypePage" plain>新增</el-button>
                             </el-form-item>
                             <el-form-item label="节目类型" prop="typeList">
-                                <el-select
-                                    :value="programme.typeList"
-                                    multiple
-                                    :disabled="readonly"
-                                    @input="inputHandler($event, 'typeList')"
-                                    placeholder="请选择">
-                                    <el-option
-                                        v-for="(item, index) in typeListOptions"
+                                <div class="my-tags">
+                                    <el-tag
                                         :key="index"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-select>
+                                        v-for="(type, index) in programme.typeList"
+                                        closable
+                                        :disable-transitions="false"
+                                        @close="() => {}">
+                                        {{type.name}}
+                                    </el-tag>
+                                </div>
+                                <type-search
+                                    :handleSelect="selectTypeHandler"
+                                ></type-search>
                             </el-form-item>
                             <el-form-item label="关键字" prop="tagList">
                                 <el-select
@@ -119,35 +119,53 @@
                             </el-form-item>
                             <el-form-item label="节目主演">
                                 <label for="leadActor"></label>
-                                <person-select
-                                    :disabled="readonly"
-                                    :value="programme.leadActor"
-                                    :searchResult="programme.leadActorResult"
-                                    :changeSuccessHandler="leadActorChangeHandler"
-                                    :searchSuccessHandler="leadActorSuccessHandler"
-                                ></person-select>
+                                <div class="my-tags">
+                                    <el-tag
+                                        :key="index"
+                                        v-for="(person, index) in programme.leadActor"
+                                        closable
+                                        :disable-transitions="false"
+                                        @close="() => {}">
+                                        {{person.name}}
+                                    </el-tag>
+                                </div>
+                                <search-person
+                                    :handleSelect="selectChiefActorHandler"
+                                ></search-person>
                                 <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增</el-button>
                             </el-form-item>
                             <el-form-item label="节目导演">
                                 <label for="director"></label>
-                                <person-select
-                                    :disabled="readonly"
-                                    :value="programme.director"
-                                    :searchResult="programme.directorResult"
-                                    :changeSuccessHandler="directorChangeHandler"
-                                    :searchSuccessHandler="directorSuccessHandler"
-                                ></person-select>
+                                <div class="my-tags">
+                                    <el-tag
+                                        :key="index"
+                                        v-for="(person, index) in programme.director"
+                                        closable
+                                        :disable-transitions="false"
+                                        @close="() => {}">
+                                        {{person.name}}
+                                    </el-tag>
+                                </div>
+                                 <search-person
+                                    :handleSelect="selectDirectorHandler"
+                                ></search-person>
                                 <el-button class="btn-style-two" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增</el-button>
                             </el-form-item>
                             <el-form-item label="节目编剧">
                                 <label for="scenarist"></label>
-                                <person-select
-                                    :disabled="readonly"
-                                    :value="programme.scenarist"
-                                    :searchResult="programme.scenaristResult"
-                                    :changeSuccessHandler="scenaristChangeHandler"
-                                    :searchSuccessHandler="scenaristSuccessHandler"
-                                ></person-select>
+                                <div class="my-tags">
+                                    <el-tag
+                                        :key="index"
+                                        v-for="(person, index) in programme.scenarist"
+                                        closable
+                                        :disable-transitions="false"
+                                        @close="() => {}">
+                                        {{person.name}}
+                                    </el-tag>
+                                </div>
+                                 <search-person
+                                    :handleSelect="selectScenaristHandler"
+                                ></search-person>
                                 <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增</el-button>
                             </el-form-item>
                             <el-form-item label="版权起始日期" prop="copyrightRange">
@@ -435,6 +453,11 @@
     import {checkScore, checkCategory, checkPositiveInteger} from '@/util/formValidate';
     import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 
+    //  新加
+    import SearchPerson from '../../components/custom_components/custom/SearchPerson';
+    import CategorySearch from './CategorySearch';
+    import TypeSearch from './TypeSearch';
+
     export default {
         name: 'ProgrammeDetail',
         components: {
@@ -446,7 +469,10 @@
             PreviewMultipleImages,
             PersonSelect,
             SortDialog,
-            ProgrammeBasicInfo
+            ProgrammeBasicInfo,
+            SearchPerson,
+            CategorySearch,
+            TypeSearch
         },
         props: {
             status: { // status 有三种状态，0代表创建 "create", 1代表显示 "display", 2代表编辑 "edit"
@@ -457,8 +483,6 @@
             this.resetProgramme();
             this.getProgrammeTagList();
             this.getProgrammeCategory();
-            // 直接定位到上传图片的位置
-            this.$el.querySelector('#upload-image').scrollIntoView();
         },
         data() {
             return {
@@ -586,7 +610,12 @@
                 setCoverImage: 'programme/setCoverImage',
                 setVideoList: 'programme/setVideoList',
                 // 视频video
-                updateSearchFields: 'video/updateSearchFields'
+                updateSearchFields: 'video/updateSearchFields',
+                //  新的人物实时搜索
+                addPersonByRole: 'programme/addPersonByRole',
+                //  新的分类类型
+                addCategoryToList: 'programme/addCategoryToList',
+                addTypeToList: 'programme/addCategoryToList'
             }),
             ...mapActions({
                 // 新加
@@ -600,6 +629,25 @@
                 getProgrammeTagList: 'programme/getProgrammeTagList',
                 deleteProgramme: 'programme/deleteProgramme'
             }),
+            //  人物搜索
+            selectChiefActorHandler(person) {
+                this.addPersonByRole({role: 'leadActor', person});
+            },
+            selectDirectorHandler(person) {
+                this.addPersonByRole({role: 'director', person});
+            },
+            selectScenaristHandler(person) {
+                this.addPersonByRole({role: 'scenarist', person});
+            },
+            //  人物搜索结束
+            //  类型和分类搜索
+            selectCategoryHandler(category) {
+                this.addCategoryToList({category});
+            },
+            selectTypeHandler(type) {
+                this.addTypeToList(type);
+            },
+            //  类型和分类搜索结束
             _addPosterImage({posterImage}) {
                 const {posterImageList} = this.programme;
                 let sizeOneImages = posterImageList.filter((img) => {

@@ -356,6 +356,25 @@
     }
 }
 
+//  人物搜索的弹出框的样式覆盖
+.el-autocomplete-suggestion.el-popper {
+    background: rgba(65,74,93,0.90);
+    border: 0 solid #637497;
+    box-shadow: 2px 4px 10px 0 rgba(0,0,0,0.30);
+    border-radius: 4px 0px 0px 0px 4px 4px 4px;
+    .el-autocomplete-suggestion__wrap.el-scrollbar__wrap {
+        border: none;
+        background: rgba(65,74,93,0.90);
+        li {
+            color: #D8D8D8;
+            background: rgba(65,74,93,0.90);
+            &:hover {
+                color: #fff;
+                background: $mainColor;
+            }
+        }
+    }
+}
 
 //  自定义分割线
 .seperator-line {
@@ -373,7 +392,13 @@
         display: flex;
         align-items: center;
         padding: 20px 10px;
+        &:first-child {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
         &:last-child {
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
             background: #252C3D;
         }
         .search-field-item {
@@ -727,3 +752,26 @@
         }
     }
 }
+
+//  自定义tag标签
+.my-tags {
+    .el-tag {
+        background: #2A3040;
+        border-radius: 4px;
+        font-size: 12px;
+        color: #6F7480;
+        transform: scale(0.8);
+        border: 1px solid #2A3040;
+        &:hover {
+            border: 1px solid $mainColor;
+        }
+        .el-tag__close.el-icon-close {
+            color: #2A3040;
+            background: #C0C4CC;
+            &:hover {
+                background: $dangerColor;
+            }
+        }
+    }
+}
+
