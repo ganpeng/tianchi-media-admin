@@ -51,7 +51,6 @@
             <el-table
                 header-row-class-name="common-table-header"
                 :data="productList"
-                :default-sort="{prop: 'aaaCode', order: 'descending'}"
                 border
                 @sort-change=sortProductList
                 row-class-name=product-row
@@ -158,7 +157,7 @@
                     createdAtEnd: '',
                     pageNum: 1,
                     pageSize: 10,
-                    orderList: 'ID_ASC'
+                    orderList: 'ID_DESC'
                 },
                 createRangeTime: [],
                 categoryOptions: [

@@ -105,15 +105,6 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="listQueryParams.pageNum"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="listQueryParams.pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="totalAmount">
-                </el-pagination>
             </div>
             <div id="operate-list">
                 <el-button type="primary" class="page-main-btn" @click="editInfo">编辑信息</el-button>
@@ -153,23 +144,15 @@
                         this.productInfo = response.data;
                     }
                 });
-                this.getProductContentListInfo();
-            },
-            getProductContentListInfo() {
-                this.$service.getProductContentListInfo(this.listQueryParams).then(response => {
+                this.$service.getCarouselProductContentList({
+                    id: this.$route.params.id,
+                    pageNum: 1,
+                    pageSize: 1000
+                }).then(response => {
                     if (response && response.code === 0) {
-                        this.channelList = response.data;
-                        this.totalAmount = response.total;
+                        this.channelList = response.data.list;
                     }
                 });
-            },
-            handleSizeChange(pageSize) {
-                this.listQueryParams.pageSize = pageSize;
-                this.getProductContentListInfo();
-            },
-            handleCurrentChange(pageNum) {
-                this.listQueryParams.pageNum = pageNum;
-                this.getProductContentListInfo();
             },
             editInfo() {
                 this.$router.push({
