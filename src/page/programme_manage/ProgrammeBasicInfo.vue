@@ -157,36 +157,6 @@
                     });
                 };
             },
-            getPersonNameList() {
-                return (role) => {
-                    let personList = this.programme.figureListMap[role];
-                    if (personList) {
-                       return personList.map((item) => item.name);
-                    } else {
-                        return [];
-                    }
-                };
-            },
-            getCategoryNameList() {
-                return (categoryIdList) => {
-                    return categoryIdList.map((id) => {
-                        let category = this.global.categoryList.find((category) => category.id === id);
-                        return category ? category.name : '';
-                    });
-                };
-            },
-            getTypeNameList() {
-                return (typeIdList) => {
-                    let typeList = this.global.categoryList.reduce((prev, curr) => {
-                        return prev.concat(curr.programmeTypeList);
-                    }, []);
-
-                    return typeIdList.map((id) => {
-                        let type = typeList.find((type) => type.id === id);
-                        return type ? type.name : '';
-                    });
-                };
-            },
             fixedEmptyValue() {
                 return (value) => {
                     return _.isEmpty(value) ? '无' : value;

@@ -9,7 +9,7 @@
                 <div class="search-field-item">
                     <el-input
                         :value="searchFields.keyword"
-                        placeholder="支持频道名称，编号搜索"
+                        placeholder="请输入频道名称或编号"
                         @input="inputHandler($event, 'keyword')"
                         clearable
                         class="border-input"
@@ -21,7 +21,7 @@
                     <label class="search-field-item-label">类型</label>
                     <el-select
                         :value="searchFields.typeIdList"
-                        multiple
+                        clearable
                         placeholder="请选择频道类型"
                         @input="inputHandler($event, 'typeIdList')"
                     >

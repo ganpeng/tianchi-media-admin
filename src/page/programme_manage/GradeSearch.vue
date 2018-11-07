@@ -8,9 +8,10 @@
     ></el-autocomplete>
 </template>
 <script>
-import {mapGetters, mapMutations} from 'vuex';
+import {mapGetters} from 'vuex';
+import role from '@/util/config/role';
 export default {
-    name: 'TypeSearch',
+    name: 'GradeSearch',
     props: {
         handleSelect: {
             type: Function,
@@ -25,15 +26,17 @@ export default {
     },
     computed: {
         ...mapGetters({
-            typeListOptions: 'programme/typeListOptions'
+            global: 'programme/global'
         })
     },
     methods: {
-        ...mapMutations({
-            addTypeToList: 'programme/addTypeToList'
-        }),
         querySearchAsync(queryString, cb) {
-            var results = queryString ? this.typeListOptions.filter(this.createStateFilter(queryString)) : this.typeListOptions;
+            let restaurants = role.GRADE.map((item) => {
+                return {
+                    name: item.label
+                };
+            });
+            var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
             cb(results);
         },
         createStateFilter(queryString) {
@@ -41,8 +44,8 @@ export default {
                 return (state.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
             };
         },
-        selectHandler(type) {
-            this.handleSelect(type);
+        selectHandler(category) {
+            this.handleSelect(category);
             this.qs = '';
         }
     }

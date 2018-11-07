@@ -40,7 +40,6 @@ export default {
             };
         },
         selectHandler(category) {
-            console.log(this.global.categoryList);
             this.handleSelect(category);
             this.qs = '';
         }

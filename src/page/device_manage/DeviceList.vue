@@ -1,151 +1,155 @@
 <!--视频列表组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'设备管理'},
-            {name:'设备列表'}]">
-        </custom-breadcrumb>
-        <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
-            <el-col :span="24" class="float-right">
-                <el-form-item class="create-account">
-                    <el-button
-                        class="page-main-btn create-blue-btn contain-svg-icon"
-                        @click="addDeviceHandler">
-                        <svg-icon icon-class="add"></svg-icon>
-                        新增设备
-                    </el-button>
-                </el-form-item>
-            </el-col>
-            <el-col :span="24">
-                <el-form-item class="search">
-                    <el-select
-                        :value="searchFields.hardWareId"
-                        placeholder="请选择设备类型"
-                        clearable
-                        @input="inputSearchFieldHandler($event, 'hardWareId')"
-                    >
-                        <el-option
-                            v-for="(item, index) in hardwareTypeOptions"
-                            :key="index"
-                            :label="item.name"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item class="search">
-                    <el-select
-                        :value="searchFields.status"
-                        placeholder="请选择设备状态"
-                        clearable
-                        @input="inputSearchFieldHandler($event, 'status')"
-                    >
-                        <el-option
-                            v-for="(item, index) in visibleOptions"
-                            :key="index"
-                            :label="item.name"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-date-picker
-                        :value="searchFields.registeredAt"
-                        type="daterange"
-                        value-format="timestamp"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        @input="inputSearchFieldHandler($event, 'registeredAt')"
-                        end-placeholder="结束日期">
-                    </el-date-picker>
-                </el-form-item>
-                <el-form-item class="search">
-                    <el-input
-                        :value="searchFields.no"
-                        placeholder="请输入关键字"
-                        @input="inputSearchFieldHandler($event, 'no')"
-                        clearable>
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button class="page-main-btn" type="primary" icon="el-icon-search" plain @click="searchHandler">搜索</el-button>
-                    <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
+    <div class="device-container">
+        <div class="table-container">
+            <h2 class="content-title">搜索筛选</h2>
+            <div class="search-field">
+                <div class="field-row">
+                    <div class="search-field-item">
+                        <el-input
+                            :value="searchFields.no"
+                            placeholder="请输入关键字"
+                            @input="inputSearchFieldHandler($event, 'no')"
+                            clearable
+                            class="border-input">
+                        </el-input>
+                    </div>
+                    <el-button class="btn-style-one" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">类型</label>
+                        <el-select
+                            :value="searchFields.hardWareId"
+                            placeholder="请选择设备类型"
+                            clearable
+                            @input="inputSearchFieldHandler($event, 'hardWareId')"
+                        >
+                            <el-option
+                                v-for="(item, index) in hardwareTypeOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">状态</label>
+                        <el-select
+                            :value="searchFields.status"
+                            placeholder="请选择设备状态"
+                            clearable
+                            @input="inputSearchFieldHandler($event, 'status')"
+                        >
+                            <el-option
+                                v-for="(item, index) in visibleOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">时间</label>
+                        <el-date-picker
+                            :value="searchFields.registeredAt"
+                            type="daterange"
+                            value-format="timestamp"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            @input="inputSearchFieldHandler($event, 'registeredAt')"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </div>
+                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
                         <svg-icon
                             icon-class="clear_filter"
                             class-name="svg-box">
                         </svg-icon>
-                        清空筛选条件
+                        重置
                     </el-button>
-                </el-form-item>
-            </el-col>
-        </el-form>
-        <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
-            <el-table-column width="60" align="center" label="序号">
-                <template slot-scope="scope">
-                    {{getIndex(scope.$index)}}
-                </template>
-            </el-table-column>
-            <el-table-column width="150" align="center" label="设备序列号">
-                <template slot-scope="scope">
-                    {{scope.row.no | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column width="150" align="center" label="ca卡号">
-                <template slot-scope="scope">
-                    {{scope.row.caNo | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column width="120" align="center" label="硬件系统标识">
-                <template slot-scope="scope">
-                    {{getType(scope.row.hardWareId) | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column width="120" align="center" label="软件系统版本">
-                <template slot-scope="scope">
-                    {{scope.row.currentVersion | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column align="center" label="固件版本">
-                <template slot-scope="scope">
-                    {{scope.row.currentHardVersion | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column width="140" align="center" label="MAC网卡地址">
-                <template slot-scope="scope">
-                    {{scope.row.mac | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column align="center" label="最后在线时间">
-                <template slot-scope="scope">
-                    {{scope.row.lastOnlineTime | formatDate('yyyy-MM-DD') | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column align="center" label="注册时间">
-                <template slot-scope="scope">
-                    {{scope.row.registeredAt | formatDate('yyyy-MM-DD') | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column  align="center" label="状态">
-                <template slot-scope="scope">
-                    <span v-html="getStatus(scope.row.status)"></span>
-                </template>
-            </el-table-column>
-            <el-table-column align="center" width="200px" fixed="right" label="操作">
-                <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="updateDeviceHandler(scope.row.id)">编辑</el-button>
-                    <el-button v-if="scope.row.status === 'NORMAL'" type="danger" size="mini" plain
-                               @click="toggleStatusHandler(scope.row.id)">
-                        禁用
-                    </el-button>
-                    <el-button v-else type="success" size="mini" plain
-                               @click="toggleStatusHandler(scope.row.id)">
-                        恢复
-                    </el-button>
-                    <el-button class="text-danger" type="text" size="small" @click="deleteDeviceHandler(scope.row.id)">删除</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+                </div>
+            </div>
+            <div class="seperator-line"></div>
+            <div class="table-field">
+                <h2 class="content-title">设备列表</h2>
+                <div class="table-operator-field clearfix">
+                    <div class="float-left"></div>
+                    <div class="float-right">
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="addDeviceHandler">
+                                <svg-icon icon-class="add"></svg-icon>
+                            添加
+                        </el-button>
+                    </div>
+                </div>
+                <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
+                    <el-table-column width="60" align="center" label="序号">
+                        <template slot-scope="scope">
+                            {{getIndex(scope.$index)}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="150" align="center" label="序列号">
+                        <template slot-scope="scope">
+                            {{scope.row.no | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="150" align="center" label="ca卡号">
+                        <template slot-scope="scope">
+                            {{scope.row.caNo | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="120" align="center" label="系统标识">
+                        <template slot-scope="scope">
+                            {{getType(scope.row.hardWareId) | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="120" align="center" label="系统版本">
+                        <template slot-scope="scope">
+                            {{scope.row.currentVersion | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="固件版本">
+                        <template slot-scope="scope">
+                            {{scope.row.currentHardVersion | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="140" align="center" label="MAC地址">
+                        <template slot-scope="scope">
+                            {{scope.row.mac | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" width="160" label="最后在线时间">
+                        <template slot-scope="scope">
+                            {{scope.row.lastOnlineTime | formatDate('yyyy-MM-DD') | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="注册时间">
+                        <template slot-scope="scope">
+                            {{scope.row.registeredAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column  align="center" label="状态">
+                        <template slot-scope="scope">
+                            <input
+                                class="my-switch switch-anim"
+                                type="checkbox"
+                                :checked="scope.row.status === 'NORMAL'"
+                                @click.prevent="toggleStatusHandler(scope.row.id)"/>
+                            <i v-if="scope.row.status === 'NORMAL'" class="on-the-shelf">正常</i>
+                            <i v-else class="off-the-shelf">禁止</i>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" width="200px" label="操作">
+                        <template slot-scope="scope">
+                            <div class="operator-btn-wrapper">
+                                <span class="btn-text" @click="updateDeviceHandler(scope.row.id)">编辑</span>
+                                <span class="btn-text text-danger" @click="deleteDeviceHandler(scope.row.id)">删除</span>
+                            </div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
         <el-pagination
             @size-change="handlePaginationChange($event, 'pageSize')"
             @current-change="handlePaginationChange($event, 'pageNum')"

@@ -1,133 +1,139 @@
 <!--版本列表组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'版本管理'},
-            {name:'版本列表'}]">
-        </custom-breadcrumb>
-        <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @submit.native.prevent>
-            <el-col :span="24">
-                <el-form-item class="create-account">
-                    <el-button
-                        class="page-main-btn create-blue-btn contain-svg-icon"
-                        @click="showFileUploadDialog">
-                        <svg-icon icon-class="add"></svg-icon>
-                        新增版本
-                    </el-button>
-                </el-form-item>
-            </el-col>
-            <el-col :span="24">
-                <el-form-item label="升级类型">
-                    <el-select
-                        :value="searchFields.productType"
-                        filterable
-                        clearable
-                        @input="inputHandler($event, 'productType')"
-                        placeholder="请选择升级类型">
-                        <el-option
-                            v-for="(item, index) in productTypeOptions"
-                            :key="index"
-                            :label="item.name"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="升级方式">
-                    <el-select
-                        :value="searchFields.forced"
-                        filterable
-                        clearable
-                        @input="inputHandler($event, 'forced')"
-                        placeholder="请选择升级方式">
-                        <el-option
-                            v-for="(item, index) in forcedOptions"
-                            :key="index"
-                            :label="item.name"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="起止时间">
-                    <el-date-picker
-                        :value="searchFields.dateRange"
-                        type="daterange"
-                        align="right"
-                        unlink-panels
-                        value-format="timestamp"
-                        @input="inputHandler($event, 'dateRange')"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期">
-                    </el-date-picker>
-                </el-form-item>
-                <el-form-item class="search">
-                    <el-input
-                        :value="searchFields.keyword"
-                        placeholder="搜索你想要的信息"
-                        @input="inputHandler($event, 'keyword')"
-                        clearable>
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="getVersionList" plain>搜索</el-button>
-                    <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
+    <div class="version-container">
+        <div class="table-container">
+            <h2 class="content-title">搜索筛选</h2>
+            <div class="search-field">
+                <div class="field-row">
+                    <div class="search-field-item">
+                        <el-input
+                            :value="searchFields.keyword"
+                            @input="inputHandler($event, 'keyword')"
+                            clearable
+                            class="border-input"
+                            placeholder="搜索你想要的信息">
+                        </el-input>
+                    </div>
+                    <el-button class="btn-style-one" @click="getVersionList" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">类型</label>
+                        <el-select
+                            :value="searchFields.productType"
+                            filterable
+                            clearable
+                            @input="inputHandler($event, 'productType')"
+                            placeholder="请选择升级类型">
+                            <el-option
+                                v-for="(item, index) in productTypeOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">方式</label>
+                        <el-select
+                            :value="searchFields.forced"
+                            filterable
+                            clearable
+                            @input="inputHandler($event, 'forced')"
+                            placeholder="请选择升级方式">
+                            <el-option
+                                v-for="(item, index) in forcedOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">时间</label>
+                        <el-date-picker
+                            :value="searchFields.dateRange"
+                            type="daterange"
+                            align="right"
+                            unlink-panels
+                            value-format="timestamp"
+                            @input="inputHandler($event, 'dateRange')"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </div>
+                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
                         <svg-icon
                             icon-class="clear_filter"
                             class-name="svg-box">
                         </svg-icon>
-                        清空筛选条件
+                        重置
                     </el-button>
-                </el-form-item>
-            </el-col>
-        </el-form>
-        <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
-            <el-table-column align="center" width="120px" label="编号" prop="id"></el-table-column>
-            <el-table-column label="版本名称" align="center" prop="version">
-                <template slot-scope="scope">
-                    <span class="ellipsis two">
-                        {{scope.row.version}}
-                    </span>
-                </template>
-            </el-table-column>
-            <el-table-column label="版本号" align="center" prop="versionCode"></el-table-column>
-            <el-table-column align="center" width="120px" label="升级类型">
-                <template slot-scope="scope">
-                    {{scope.row.productType === 'TV_LAUNCHER' ? '应用升级' : '系统升级'}}
-                </template>
-            </el-table-column>
-            <el-table-column align="center" width="120px" label="硬件类型">
-                <template slot-scope="scope">
-                    {{hardwareType(scope.row.hardwareType)}}
-                </template>
-            </el-table-column>
-            <el-table-column width="120px" align="center" label="升级方式">
-                <template slot-scope="scope">
-                    {{scope.row.forced ? '强制升级' : '选择升级'}}
-                </template>
-            </el-table-column>
-            <el-table-column width="120px" align="center" label="版本发布时间" prop="releaseAt">
-                <template slot-scope="scope">
-                    {{scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
-                </template>
-            </el-table-column>
-            <el-table-column align="center" label="设备统计">
-                <template slot-scope="scope">
-                    {{scope.row.installed | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column align="center" width="120px" label="升级包下载">
-                <template slot-scope="scope">
-                    <a class="text-primary" :href="packageUrl(scope.row.fullPackageUri)">{{scope.row.version}}</a>
-                </template>
-            </el-table-column>
-            <el-table-column align="center" width="120px" fixed="right" label="操作">
-                <template slot-scope="scope">
-                    <el-button class="text-success" type="text" size="small" @click="displayVersion(scope.row.id)">详情</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+                </div>
+            </div>
+            <div class="seperator-line"></div>
+            <div class="table-field">
+                <h2 class="content-title">版本列表</h2>
+                <div class="table-operator-field clearfix">
+                    <div class="float-left"></div>
+                    <div class="float-right">
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="showFileUploadDialog">
+                            <svg-icon icon-class="add"></svg-icon>
+                            添加
+                        </el-button>
+                    </div>
+                </div>
+                <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
+                    <el-table-column align="center" width="120px" label="编号" prop="id"></el-table-column>
+                    <el-table-column label="版本名称" width="120px" align="center" prop="version">
+                        <template slot-scope="scope">
+                            <span class="ellipsis two">
+                                {{scope.row.version}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="版本号" align="center" prop="versionCode"></el-table-column>
+                    <el-table-column align="center" label="升级类型">
+                        <template slot-scope="scope">
+                            {{scope.row.productType === 'TV_LAUNCHER' ? '应用升级' : '系统升级'}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="硬件类型">
+                        <template slot-scope="scope">
+                            {{hardwareType(scope.row.hardwareType)}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="120px" align="center" label="升级方式">
+                        <template slot-scope="scope">
+                            {{scope.row.forced ? '强制升级' : '选择升级'}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="120px" align="center" label="发布时间" prop="releaseAt">
+                        <template slot-scope="scope">
+                            {{scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="设备统计">
+                        <template slot-scope="scope">
+                            {{scope.row.installed | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" width="120px" label="升级包下载">
+                        <template slot-scope="scope">
+                            <a class="text-primary" :href="packageUrl(scope.row.fullPackageUri)">{{scope.row.version}}</a>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" width="120px" label="操作">
+                        <template slot-scope="scope">
+                            <div class="operator-btn-wrapper">
+                                <span class="btn-text" @click="displayVersion(scope.row.id)">详情</span>
+                            </div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
         <el-pagination
             @size-change="handlePaginationChange($event, 'pageSize')"
             @current-change="handlePaginationChange($event, 'pageNum')"

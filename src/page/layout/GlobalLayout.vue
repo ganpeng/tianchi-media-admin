@@ -57,9 +57,7 @@
 </template>
 <script>
 import role from '@/util/config/role';
-import vFooter from './VFooter.vue';
 export default {
-    components: { vFooter },
     data() {
         return {
             navList: role.NAV_LIST,
@@ -73,12 +71,6 @@ export default {
         let {active, activePath} = this.getActivePath();
         this.active = active;
         this.defaultActive = activePath;
-
-        this.setMinHeight();
-        window.addEventListener('resize', this.setMinHeight, false);
-    },
-    beforeDestroy() {
-        window.removeEventListener('resize', this.setMinHeight);
     },
     methods: {
         getActivePath() {

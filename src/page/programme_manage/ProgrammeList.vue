@@ -34,8 +34,8 @@
                         <label class="search-field-item-label">分类</label>
                         <el-select
                             :value="programmeSearchFields.programmeCategoryIdList"
-                            multiple
                             @change="inputHandler($event, 'programmeCategoryIdList')"
+                            clearable
                             placeholder="请选择分类">
                             <el-option
                                 v-for="item in global.categoryList"
@@ -51,7 +51,6 @@
                             :value="programmeSearchFields.programmeTypeIdList"
                             @change="inputHandler($event, 'programmeTypeIdList')"
                             clearable
-                            multiple
                             placeholder="请选择类型">
                             <el-option
                                 v-for="item in programmeTypeOptions"
@@ -103,7 +102,6 @@
                             :value="programmeSearchFields.produceAreaList"
                             clearable
                             filterable
-                            multiple
                             @change="inputHandler($event, 'produceAreaList')"
                             placeholder="请选择地区"
                         >
@@ -213,7 +211,7 @@
                     <el-table-column prop="produceAreaList" min-width="150px" align="center" label="地区">
                         <template slot-scope="scope">
                             <span class="ellipsis four">
-                                {{areaLabel(scope.row.produceAreaList) | padEmpty}}
+                                {{areaLabel(scope.row.produceAreaList).map((area) => area.name).join(', ') | padEmpty}}
                             </span>
                         </template>
                     </el-table-column>
@@ -366,7 +364,8 @@ export default {
             categoryListString: 'programme/categoryListString',
             getDirector: 'programme/getDirector',
             getChiefActor: 'programme/getChiefActor',
-            getScenarist: 'programme/getScenarist'
+            getScenarist: 'programme/getScenarist',
+            areaLabel: 'programme/areaLabel'
         }),
         isDisabled() {
             return this.selectedVideoList.length === 0;
@@ -411,12 +410,6 @@ export default {
         clearSearchFields() {
             this.resetProgrammeSearchFields();
         },
-        areaLabel(areaList) {
-            return areaList.reduce((res, curr) => {
-                let area = this.areaOptions.find((item) => item.code === curr);
-                return area ? `${res}, ${area.name}` : res;
-            }, '').replace(/^,/, '');
-        },
         editProgramme(id) {
             this.$router.push({ name: 'EditProgramme', params: { id } });
         },
@@ -426,7 +419,7 @@ export default {
         inputHandler(value, key) {
             this.updateProgrammeSearchFields({key, value});
             if (key === 'programmeCategoryIdList') {
-                this.updateProgrammeSearchFields({key: 'programmeTypeIdList', value: []});
+                this.updateProgrammeSearchFields({key: 'programmeTypeIdList', value: ''});
             }
         },
         searchHandler() {

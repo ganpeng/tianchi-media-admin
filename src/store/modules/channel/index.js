@@ -272,7 +272,10 @@ const actions = {
      */
     async getChannelList({commit, state}) {
         try {
-            let params = Object.assign({}, state.searchFields, state.pagination, {pageNum: state.pagination.pageNum - 1});
+            let searchFields = Object.assign({}, state.searchFields, {
+                typeIdList: [state.searchFields.typeIdList]
+            });
+            let params = Object.assign({}, searchFields, state.pagination, {pageNum: state.pagination.pageNum - 1});
             let res = await service.getChannelList(params);
             if (res && res.code === 0) {
                 let {pageSize, pageNum, total, list} = res.data;

@@ -51,33 +51,34 @@
                                 </el-date-picker>
                             </el-form-item>
                             <el-form-item label="所属地区" prop="produceAreaList">
-                                <el-select
-                                    :value="programme.produceAreaList"
-                                    @change="inputHandler($event, 'produceAreaList')"
-                                    multiple
-                                    clearable
-                                    filterable
-                                    placeholder="请选择"
-                                    :disabled="readonly"
-                                >
-                                    <el-option
-                                        v-for="(item, index) in areaOptions"
-                                        :key="index"
-                                        :label="item.name"
-                                        :value="item.code">
-                                    </el-option>
-                                </el-select>
+                                <div id="area-sort" class="my-tags">
+                                    <draggable v-model="produceAreaList">
+                                        <el-tag
+                                            :key="index"
+                                            v-for="(area, index) in areaLabel(produceAreaList)"
+                                            closable
+                                            :disable-transitions="false"
+                                            @close="deleteAreaHandler(area.code)">
+                                            {{area.name}}
+                                        </el-tag>
+                                    </draggable>
+                                </div>
+                                <area-search
+                                    :handleSelect="selectAreaHandler"
+                                ></area-search>
                             </el-form-item>
                             <el-form-item label="节目分类" prop="categoryList">
-                                <div class="my-tags">
-                                    <el-tag
-                                        :key="index"
-                                        v-for="(category, index) in programme.categoryList"
-                                        closable
-                                        :disable-transitions="false"
-                                        @close="() => {}">
-                                        {{category.name}}
-                                    </el-tag>
+                                <div id="category-sort" class="my-tags">
+                                    <draggable v-model="categoryList">
+                                        <el-tag
+                                            :key="index"
+                                            v-for="(category, index) in categoryList"
+                                            closable
+                                            :disable-transitions="false"
+                                            @close="deleteCategoryHandler(category.id)">
+                                            {{category.name}}
+                                        </el-tag>
+                                    </draggable>
                                 </div>
                                 <category-search
                                     :handleSelect="selectCategoryHandler"
@@ -85,49 +86,51 @@
                                 <el-button class="btn-style-two" v-if="!readonly" type="primary" @click="gotoProgramTypePage" plain>新增</el-button>
                             </el-form-item>
                             <el-form-item label="节目类型" prop="typeList">
-                                <div class="my-tags">
-                                    <el-tag
-                                        :key="index"
-                                        v-for="(type, index) in programme.typeList"
-                                        closable
-                                        :disable-transitions="false"
-                                        @close="() => {}">
-                                        {{type.name}}
-                                    </el-tag>
+                                <div id="type-sort" class="my-tags">
+                                    <draggable v-model="typeList">
+                                        <el-tag
+                                            :key="index"
+                                            v-for="(type, index) in typeList"
+                                            closable
+                                            :disable-transitions="false"
+                                            @close="deleteTypeHandler(type.id)">
+                                            {{type.name}}
+                                        </el-tag>
+                                    </draggable>
                                 </div>
                                 <type-search
                                     :handleSelect="selectTypeHandler"
                                 ></type-search>
                             </el-form-item>
                             <el-form-item label="关键字" prop="tagList">
-                                <el-select
-                                    :value="programme.tagList"
-                                    multiple
-                                    filterable
-                                    placeholder="请选择"
-                                    @change="inputHandler($event, 'tagList')"
-                                    :disabled="readonly"
-                                >
-                                    <el-option
-                                        v-for="(item, index) in global.programmeTagList"
-                                        :key="index"
-                                        :label="item"
-                                        :value="item">
-                                    </el-option>
-                                </el-select>
+                                <div id="tag-sort" class="my-tags">
+                                    <draggable v-model="tagList">
+                                        <el-tag
+                                            :key="index"
+                                            v-for="(tag, index) in tagList"
+                                            closable
+                                            :disable-transitions="false"
+                                            @close="deleteTagHandler(tag)">
+                                            {{tag}}
+                                        </el-tag>
+                                    </draggable>
+                                </div>
+                                <tag-search :handleSelect="selectTagHandler"></tag-search>
                                 <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addprogrammeTagHandler">新增</el-button>
                             </el-form-item>
                             <el-form-item label="节目主演">
                                 <label for="leadActor"></label>
                                 <div class="my-tags">
-                                    <el-tag
-                                        :key="index"
-                                        v-for="(person, index) in programme.leadActor"
-                                        closable
-                                        :disable-transitions="false"
-                                        @close="() => {}">
-                                        {{person.name}}
-                                    </el-tag>
+                                    <draggable v-model="leadActor">
+                                        <el-tag
+                                            :key="index"
+                                            v-for="(person, index) in leadActor"
+                                            closable
+                                            :disable-transitions="false"
+                                            @close="deleteChiefActorHandler(person.id)">
+                                            {{person.name}}
+                                        </el-tag>
+                                    </draggable>
                                 </div>
                                 <search-person
                                     :handleSelect="selectChiefActorHandler"
@@ -136,15 +139,17 @@
                             </el-form-item>
                             <el-form-item label="节目导演">
                                 <label for="director"></label>
-                                <div class="my-tags">
-                                    <el-tag
-                                        :key="index"
-                                        v-for="(person, index) in programme.director"
-                                        closable
-                                        :disable-transitions="false"
-                                        @close="() => {}">
-                                        {{person.name}}
-                                    </el-tag>
+                                <div id="director-sort" class="my-tags">
+                                    <draggable v-model="director">
+                                        <el-tag
+                                            :key="index"
+                                            v-for="(person, index) in director"
+                                            closable
+                                            :disable-transitions="false"
+                                            @close="deleteDirectorHandler(person.id)">
+                                            {{person.name}}
+                                        </el-tag>
+                                    </draggable>
                                 </div>
                                  <search-person
                                     :handleSelect="selectDirectorHandler"
@@ -153,15 +158,17 @@
                             </el-form-item>
                             <el-form-item label="节目编剧">
                                 <label for="scenarist"></label>
-                                <div class="my-tags">
-                                    <el-tag
-                                        :key="index"
-                                        v-for="(person, index) in programme.scenarist"
-                                        closable
-                                        :disable-transitions="false"
-                                        @close="() => {}">
-                                        {{person.name}}
-                                    </el-tag>
+                                <div id="scenarist-sort" class="my-tags">
+                                    <draggable v-model="scenarist">
+                                        <el-tag
+                                            :key="index"
+                                            v-for="(person, index) in scenarist"
+                                            closable
+                                            :disable-transitions="false"
+                                            @close="deleteScenaristHandler(person.id)">
+                                            {{person.name}}
+                                        </el-tag>
+                                    </draggable>
                                 </div>
                                  <search-person
                                     :handleSelect="selectScenaristHandler"
@@ -233,42 +240,39 @@
                                 </el-select>
                                 <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addSelectItemHandler('announcerList')">新增</el-button>
                             </el-form-item>
-                            <el-form-item
-                                v-if="isMovie"
-                                label="规格" prop="specList">
-                                <el-select
-                                    :disabled="readonly"
-                                    :value="programme.specList"
-                                    placeholder="请选择"
-                                    multiple
-                                    @input="inputHandler($event, 'specList')"
-                                >
-                                    <el-option
-                                        v-for="item in specOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                    </el-option>
-                                </el-select>
+                            <el-form-item v-if="isMovie" label="规格" prop="specList">
+                                <div class="my-tags">
+                                    <draggable v-model="specList">
+                                        <el-tag
+                                            :key="index"
+                                            v-for="(item, index) in specList"
+                                            closable
+                                            :disable-transitions="false"
+                                            @close="deleteSpecHandler(item)">
+                                            {{item}}
+                                        </el-tag>
+                                    </draggable>
+                                </div>
+                                <spec-search
+                                    :handleSelect="selectSpecHandler"
+                                ></spec-search>
                             </el-form-item>
-                            <el-form-item
-                                v-if="isEducation"
-                                label="年级" prop="gradeList">
-                                <el-select
-                                    :disabled="readonly"
-                                    :value="programme.gradeList"
-                                    clearable
-                                    multiple
-                                    placeholder="请选择"
-                                    @input="inputHandler($event, 'gradeList')"
-                                >
-                                    <el-option
-                                        v-for="item in gradeOptions"
-                                        :key="item.label"
-                                        :label="item.label"
-                                        :value="item.label">
-                                    </el-option>
-                                </el-select>
+                            <el-form-item v-show="isEducation" label="年级" prop="gradeList">
+                                <div id="grade-sort" class="my-tags">
+                                    <draggable v-model="gradeList">
+                                        <el-tag
+                                            :key="index"
+                                            v-for="(item, index) in gradeList"
+                                            closable
+                                            :disable-transitions="false"
+                                            @close="deleteGradeHandler(item)">
+                                            {{item}}
+                                        </el-tag>
+                                    </draggable>
+                                </div>
+                                <grade-search
+                                    :handleSelect="selectGradeHandler"
+                                ></grade-search>
                             </el-form-item>
                             <el-form-item
                                 v-if="isEducation"
@@ -307,22 +311,22 @@
                                 </el-select>
                                 <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addSelectItemHandler('contestList')">新增</el-button>
                             </el-form-item>
-                            <el-form-item
-                                label="播放平台">
-                                <el-select
-                                    :disabled="readonly"
-                                    :value="programme.platformList"
-                                    multiple
-                                    placeholder="请选择"
-                                    @input="inputHandler($event, 'platformList')"
-                                >
-                                    <el-option
-                                        v-for="(item, index) in global.platformList"
-                                        :key="index"
-                                        :label="item.value"
-                                        :value="item.value">
-                                    </el-option>
-                                </el-select>
+                            <el-form-item label="播放平台">
+                                <div id="platform-sort" class="my-tags">
+                                    <draggable v-model="platformList">
+                                        <el-tag
+                                            :key="index"
+                                            v-for="(item, index) in platformList"
+                                            closable
+                                            :disable-transitions="false"
+                                            @close="deletePlatformHandler(item)">
+                                            {{item}}
+                                        </el-tag>
+                                    </draggable>
+                                </div>
+                                <plat-form-search
+                                    :handleSelect="selectPlatformHandler"
+                                ></plat-form-search>
                                 <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addSelectItemHandler('platformList')">新增</el-button>
                             </el-form-item>
                             <el-form-item
@@ -437,9 +441,9 @@
     </div>
 </template>
 <script>
+    import draggable from 'vuedraggable';
     import { mapMutations, mapGetters, mapActions } from 'vuex';
     import _ from 'lodash';
-    import store from 'store';
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import CreatePersonDialog from './CreatePersonDialog';
     import ProgrammeTable from './ProgrammeTable';
@@ -457,6 +461,11 @@
     import SearchPerson from '../../components/custom_components/custom/SearchPerson';
     import CategorySearch from './CategorySearch';
     import TypeSearch from './TypeSearch';
+    import AreaSearch from './AreaSearch';
+    import TagSearch from './TagSearch';
+    import PlatFormSearch from './PlatFormSearch';
+    import GradeSearch from './GradeSearch';
+    import SpecSearch from './SpecSearch';
 
     export default {
         name: 'ProgrammeDetail',
@@ -472,7 +481,13 @@
             ProgrammeBasicInfo,
             SearchPerson,
             CategorySearch,
-            TypeSearch
+            TypeSearch,
+            AreaSearch,
+            TagSearch,
+            PlatFormSearch,
+            GradeSearch,
+            SpecSearch,
+            draggable
         },
         props: {
             status: { // status 有三种状态，0代表创建 "create", 1代表显示 "display", 2代表编辑 "edit"
@@ -488,18 +503,10 @@
             return {
                 sortMessage: '',
                 isLoading: false,
-                selectedCountries: [],
-                countries: [],
-                isLeadActorLoading: false,
-                isDirectorLoading: false,
-                isScenaristLoading: false,
                 imageUploadDialogVisible: false,
-                dialogVisible: false,
                 videoUploadDialogVisible: false,
                 createPersonDialogVisible: false,
                 sortDialogVisible: false,
-                areaOptions: store.get('areaList'),
-                gradeOptions: role.GRADE,
                 specOptions: role.SPEC,
                 subjectOptions: role.SUBJECT,
                 size: dimension.PROGRAMME_DIMENSION,
@@ -540,14 +547,96 @@
             ...mapGetters({
                 global: 'programme/global',
                 programme: 'programme/programme',
-                typeListOptions: 'programme/typeListOptions',
                 role: 'programme/role',
                 video: 'programme/video',
                 isTvPlay: 'programme/isTvPlay',
                 isMovie: 'programme/isMovie',
                 isEducation: 'programme/isEducation',
-                isSports: 'programme/isSports'
+                isSports: 'programme/isSports',
+                areaLabel: 'programme/areaLabel'
             }),
+            //  拖拽排序的字段
+            produceAreaList: {
+                get() {
+                    return this.programme.produceAreaList;
+                },
+                set(value) {
+                    this.updateProgramme({key: 'produceAreaList', value});
+                }
+            },
+            categoryList: {
+                get() {
+                    return this.programme.categoryList;
+                },
+                set(value) {
+                    this.updateProgramme({key: 'categoryList', value});
+                }
+            },
+            typeList: {
+                get() {
+                    return this.programme.typeList;
+                },
+                set(value) {
+                    this.updateProgramme({key: 'typeList', value});
+                }
+            },
+            tagList: {
+                get() {
+                    return this.programme.tagList;
+                },
+                set(value) {
+                    this.updateProgramme({key: 'tagList', value});
+                }
+            },
+            leadActor: {
+                get() {
+                    return this.programme.leadActor;
+                },
+                set(value) {
+                    this.updateProgramme({key: 'leadActor', value});
+                }
+            },
+            director: {
+                get() {
+                    return this.programme.director;
+                },
+                set(value) {
+                    this.updateProgramme({key: 'director', value});
+                }
+            },
+            scenarist: {
+                get() {
+                    return this.programme.scenarist;
+                },
+                set(value) {
+                    this.updateProgramme({key: 'scenarist', value});
+                }
+            },
+            gradeList: {
+                get() {
+                    return this.programme.gradeList;
+                },
+                set(value) {
+                    this.updateProgramme({key: 'gradeList', value});
+                }
+            },
+            platformList: {
+                get() {
+                    return this.programme.platformList;
+                },
+                set(value) {
+                    this.updateProgramme({key: 'platformList', value});
+                }
+            },
+            specList: {
+                get() {
+                    return this.programme.specList;
+                },
+                set(value) {
+                    this.updateProgramme({key: 'specList', value});
+                }
+            },
+            //  拖拽排序的字段结束
             readonly() {
                 return parseInt(this.status) === 1;
             },
@@ -600,9 +689,6 @@
                 addSelectItem: 'programme/addSelectItem',
                 addProgrammeTag: 'programme/addProgrammeTag',
                 updateProgramme: 'programme/updateProgramme',
-                updatePersonResult: 'programme/updatePersonResult',
-                updatePerson: 'programme/updatePerson',
-                updateVideoPagination: 'programme/updateVideoPagination',
                 deleteTempList: 'programme/deleteTempList',
                 resetProgramme: 'programme/resetProgramme',
                 addPosterImage: 'programme/addPosterImage',
@@ -613,9 +699,26 @@
                 updateSearchFields: 'video/updateSearchFields',
                 //  新的人物实时搜索
                 addPersonByRole: 'programme/addPersonByRole',
+                deletePersonById: 'programme/deletePersonById',
                 //  新的分类类型
                 addCategoryToList: 'programme/addCategoryToList',
-                addTypeToList: 'programme/addCategoryToList'
+                addTypeToList: 'programme/addTypeToList',
+                deleteCategoryOrTypeById: 'programme/deleteCategoryOrTypeById',
+                //  新的地区搜索
+                addAreaToList: 'programme/addAreaToList',
+                deleteAreaByCode: 'programme/deleteAreaByCode',
+                //  新的关键字搜索
+                addTagToList: 'programme/addTagToList',
+                deleteTagByName: 'programme/deleteTagByName',
+                //  新的播放平台搜索
+                addPlatformToList: 'programme/addPlatformToList',
+                deletePlatformByName: 'programme/deletePlatformByName',
+                //  新的年级搜索
+                addGradeToList: 'programme/addGradeToList',
+                deleteGradeByName: 'programme/deleteGradeByName',
+                //  新的规格搜索
+                addSpecToList: 'programme/addSpecToList',
+                deleteSpecByName: 'programme/deleteSpecByName'
             }),
             ...mapActions({
                 // 新加
@@ -633,21 +736,76 @@
             selectChiefActorHandler(person) {
                 this.addPersonByRole({role: 'leadActor', person});
             },
+            deleteChiefActorHandler(id) {
+                this.deletePersonById({id, key: 'leadActor'});
+            },
             selectDirectorHandler(person) {
                 this.addPersonByRole({role: 'director', person});
             },
+            deleteDirectorHandler(id) {
+                this.deletePersonById({id, key: 'director'});
+            },
             selectScenaristHandler(person) {
                 this.addPersonByRole({role: 'scenarist', person});
+            },
+            deleteScenaristHandler(id) {
+                this.deletePersonById({id, key: 'scenarist'});
             },
             //  人物搜索结束
             //  类型和分类搜索
             selectCategoryHandler(category) {
                 this.addCategoryToList({category});
             },
+            deleteCategoryHandler(id) {
+                this.deleteCategoryOrTypeById({id, key: 'categoryList'});
+            },
             selectTypeHandler(type) {
                 this.addTypeToList(type);
             },
+            deleteTypeHandler(id) {
+                this.deleteCategoryOrTypeById({id, key: 'typeList'});
+            },
             //  类型和分类搜索结束
+            // 地区开始
+            selectAreaHandler(area) {
+                this.addAreaToList({area});
+            },
+            deleteAreaHandler(code) {
+                this.deleteAreaByCode({code});
+            },
+            //  地区结束
+            // 关键字搜索开始
+            selectTagHandler(tag) {
+                this.addTagToList({tag});
+            },
+            deleteTagHandler(tag) {
+                this.deleteTagByName({tag});
+            },
+            //  关键字搜索结束
+            //  播放平台搜索开始
+            selectPlatformHandler(platform) {
+                this.addPlatformToList({platform});
+            },
+            deletePlatformHandler(platform) {
+                this.deletePlatformByName({platform});
+            },
+            //  播放平台搜索结束
+            //  年级搜索开始
+            selectGradeHandler(grade) {
+                this.addGradeToList({grade});
+            },
+            deleteGradeHandler(grade) {
+                this.deleteGradeByName({grade});
+            },
+            //  年级搜索结束
+            //  规格搜索开始
+            selectSpecHandler(spec) {
+                this.addSpecToList({spec});
+            },
+            deleteSpecHandler(spec) {
+                this.deleteSpecByName({spec});
+            },
+            //  规格搜索结束
             _addPosterImage({posterImage}) {
                 const {posterImageList} = this.programme;
                 let sizeOneImages = posterImageList.filter((img) => {
@@ -844,21 +1002,6 @@
                     return true;
                 }
             },
-            _deleteProgramme() {
-                let {id} = this.$route.params;
-                this.$confirm(`您确定要${this.programme.visible ? '下架节目' : '上架节目'}吗, 是否继续?`, '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'error'
-                    }).then(() => {
-                        this.deleteProgramme(id);
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                    });
-            },
             showSortDialog() {
                 this.sortDialogVisible = true;
             },
@@ -1026,36 +1169,12 @@
                 let baseUri = window.localStorage.getItem('imageBaseUri');
                 return baseUri + uri;
             },
-            handlePaginationChange(value, key) {
-                let {id} = this.$route.params;
-                this.updateVideoPagination({key, value});
-                this.getProgrammeVideoListById(id);
-            },
             getVideoListName(list) {
                 return list.map((id) => {
                     return this.video.tempList.find((video) => video.storageVideoId === id);
                 }).map((video) => {
                     return video && video.originName ? video.originName : '';
                 }).join(', ');
-            },
-            // 人物的即时搜索
-            leadActorSuccessHandler(list) {
-                this.updatePersonResult({key: 'leadActorResult', value: list});
-            },
-            leadActorChangeHandler(value) {
-                this.updatePerson({key: 'leadActor', idList: value});
-            },
-            directorSuccessHandler(list) {
-                this.updatePersonResult({key: 'directorResult', value: list});
-            },
-            directorChangeHandler(value) {
-                this.updatePerson({key: 'director', idList: value});
-            },
-            scenaristSuccessHandler(list) {
-                this.updatePersonResult({key: 'scenaristResult', value: list});
-            },
-            scenaristChangeHandler(value) {
-                this.updatePerson({key: 'scenarist', idList: value});
             },
             //  人物即时搜索方法结束
             setSortedList(list) {
