@@ -1,91 +1,53 @@
 <!--专题基本信息表单组件-->
 <template>
     <div class="text-left">
-        <el-form :model="subjectInfo"
-                 :rules="infoRules"
-                 status-icon
-                 ref="subjectInfo"
-                 label-width="120px"
-                 class="form-block fill-form">
-            <el-form-item label="名称" prop="name" required>
+        <div class="content-sub-title">专题基本信息</div>
+        <el-form
+            :model="subjectInfo"
+            :rules="infoRules"
+            status-icon
+            ref="subjectInfo"
+            label-width="120px"
+            class="form-block fill-form">
+            <el-form-item label="专题名称" prop="name" required>
                 <el-input v-model="subjectInfo.name" placeholder="请填写30个字以内的名称"></el-input>
             </el-form-item>
-            <template v-if="status === '0' || status === '2'">
-                <el-form-item label="节目专题类别" prop="programmeCategoryList" required>
-                    <el-select v-model="programmeCategoryList" @change="setProgrammeCategoryList" multiple
-                               placeholder="请选择节目专题类别">
-                        <el-option
-                            v-for="item in programmeCategoryListOptions"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-            </template>
-            <el-form-item label="简介" prop="description">
-                <el-input
-                    v-model="subjectInfo.description"
-                    placeholder="请填写150个字以内的简介"
-                    type="textarea"
-                    :rows="4">
-                </el-input>
-            </el-form-item>
-            <el-form-item label="专题标签" prop="tagList">
-                <el-select
-                    v-model="subjectInfo.tagList"
-                    multiple
-                    filterable
-                    clearable
-                    placeholder="请选择专题标签">
+            <el-form-item label="内容分类" prop="programmeCategoryList" required>
+                <el-select v-model="programmeCategoryList" @change="setProgrammeCategoryList" multiple
+                           placeholder="请选择内容分类">
                     <el-option
-                        v-for="item in tagOptions"
-                        :key="item"
-                        :label="item"
-                        :value="item">
+                        v-for="item in programmeCategoryListOptions"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
                     </el-option>
                 </el-select>
-                <el-button
-                    type="primary"
-                    plain
-                    class="page-main-btn"
-                    icon="el-icon-plus"
-                    @click="addSubjectTag">
-                    添加标签
-                </el-button>
             </el-form-item>
-            <!--只有节目专题有封面图片-->
-            <template v-if="status === '0' || status === '2'">
-                <el-form-item label="专题封面：" class="cover-image-block">
-                    <el-button
-                        class="create-blue-btn contain-svg-icon" @click="popUploadImage('COVERIMAGE')">
-                        <svg-icon icon-class="image"></svg-icon>
-                        添加专题封面
-                    </el-button>
-                    <thumbnail
-                        :imageList="subjectInfo.posterImageList"
-                        v-on:removeImage="removePosterImage">
-                    </thumbnail>
-                </el-form-item>
-                <!--只有节目专题有背景图片-->
-                <el-form-item label="专题背景图片：" class="bg-box">
-                    <el-button class="create-blue-btn contain-svg-icon" @click="popUploadImage('BACKGROUNDIMAGE')">
-                        <svg-icon icon-class="image"></svg-icon>
-                        添加专题背景图
-                    </el-button>
-                    <div v-if="subjectInfo.backgroundImage && subjectInfo.backgroundImage.uri"
-                         :style="{ 'background-image': 'url(' + appendImagePrefix(subjectInfo.backgroundImage.uri) + ')'}"
-                         class="background-image">
-                    </div>
-                    <div class="info background" v-if="subjectInfo.backgroundImage && subjectInfo.backgroundImage.name">
-                        <div class="name">{{subjectInfo.backgroundImage.name}}</div>
-                        <div>
-                            <label>{{subjectInfo.backgroundImage.width}}*{{subjectInfo.backgroundImage.height}}</label>
-                            <label @click="removeBackgroundImage" class="remove">删除</label>
-                        </div>
-                    </div>
-                </el-form-item>
-            </template>
+            <el-form-item label="状态" required>
+                <el-radio-group v-model="subjectInfo.visible">
+                    <el-radio label="上架"></el-radio>
+                    <el-radio label="下架"></el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item label="专题封面图" class="cover-image-block">
+                <el-button
+                    class="create-blue-btn contain-svg-icon" @click="popUploadImage('COVERIMAGE')">
+                    <svg-icon icon-class="image"></svg-icon>
+                    添加专题封面
+                </el-button>
+                <thumbnail
+                    :imageList="subjectInfo.posterImageList"
+                    v-on:removeImage="removePosterImage">
+                </thumbnail>
+            </el-form-item>
+            <div class="content-sub-title">专题内节目
+                <el-button @click="linkProgramme" class="page-vice-btn">关联节目</el-button>
+            </div>
+            <programme-operate-table
+                v-if="selectedProgrammeList.length !== 0"
+                model="CANCEL"
+                :programmeList="selectedProgrammeList">
+            </programme-operate-table>
             <div class="operate">
                 <el-button type="primary" @click="operateSubject" class="page-main-btn">
                     {{this.status === '0' || this.status === '1' ? '创建' : '保存'}}
@@ -103,33 +65,26 @@
         <preview-multiple-images
             :previewMultipleImages="previewImage">
         </preview-multiple-images>
-        <upload-image
-            :size='size'
-            :title='uploadImageTitle'
-            :successHandler="addPosterImage"
-            :imageUploadDialogVisible="imageUploadDialogVisible"
-            v-on:changeImageDialogStatus="closeImageDialog($event)">
-        </upload-image>
         <el-dialog
-            title="提示"
-            :visible.sync="dialogVisible"
-            width="30%"
-            :before-close="handleClose">
-            <span>{{remainder}}</span>
+            title="关联节目"
+            :visible.sync="selectProgrammeVisible"
+            width="80%">
+            <select-multiple-programme
+                ref="selectMultipleProgramme">
+            </select-multiple-programme>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="toSubjectList">前往专题列表页面</el-button>
-                <el-button type="primary" @click="toEdit">
-                    前往编辑专题{{ status === '0' || status === '2' ? '节目':'人物'}}
-                </el-button>
+                <el-button @click="cancelLinkProgramme">取消</el-button>
+                <el-button type="primary" @click="confirmLinkProgramme">确定</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
-    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import Thumbnail from 'sysComponents/custom_components/custom/Thumbnail';
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
+    import SelectMultipleProgramme from './programme_subject/SelectMultipleProgramme';
+    import ProgrammeOperateTable from './programme_subject/ProgrammeOperateTable';
     import {
         PROGRAMME_DIMENSION as SUBJECT_DIMENSION,
         SUBJECT_BACKGROUND_IMAGE_DIMENSION
@@ -138,9 +93,10 @@
     export default {
         name: 'CreateSubjectForm',
         components: {
-            UploadImage,
             PreviewMultipleImages,
-            Thumbnail
+            Thumbnail,
+            SelectMultipleProgramme,
+            ProgrammeOperateTable
         },
         /* status: 0代表创建节目专题，1代表创建人物专题，2代表编辑节目专题，3代表编辑人物专题 */
         props: ['status', 'subjectInfo'],
@@ -169,14 +125,12 @@
                 uploadImageMode: 'COVERIMAGE',
                 programmeCategoryList: [],
                 programmeCategoryListOptions: [],
-                tagOptions: [],
                 previewImage: {
                     display: false,
                     autoplay: false,
                     activeIndex: 0,
                     list: []
                 },
-                imageUploadDialogVisible: false,
                 infoRules: {
                     name: [
                         {validator: checkName, trigger: 'blur'}
@@ -185,44 +139,38 @@
                         {validator: checkProgrammeCategoryList, trigger: 'change'}
                     ]
                 },
-                dialogVisible: false,
-                subjectId: ''
+                // 关联节目弹框
+                selectProgrammeVisible: false,
+                subjectId: '',
+                // 已选择的节目列表
+                selectedProgrammeList: []
             };
         },
         computed: {
-            remainder() {
-                switch (this.status) {
-                    case '0':
-                        return '成功创建节目专题，关闭本对话框可继续添加专题，请选择：';
-                    case '1':
-                        return '成功创建人物专题，关闭本对话框可继续添加专题，请选择：';
-                    case '2':
-                        return '成功更新节目专题，关闭本对话框可继续编辑专题，请选择：';
-                    case '3':
-                        return '成功更新人物专题，关闭本对话框可继续编辑专题，请选择：';
-                    default:
-                        break;
-                }
-            },
             size() {
                 return this.uploadImageMode === 'COVERIMAGE' ? SUBJECT_DIMENSION : SUBJECT_BACKGROUND_IMAGE_DIMENSION;
-            },
-            uploadImageTitle() {
-                return this.uploadImageMode === 'COVERIMAGE' ? '上传专题封面图片' : '上传专题背景图片';
             }
         },
         mounted() {
             this.init();
         },
         methods: {
+            // 关联节目
+            linkProgramme() {
+                this.selectProgrammeVisible = true;
+            },
+            // 确认关联节目
+            confirmLinkProgramme() {
+                this.selectedProgrammeList = this.$refs.selectMultipleProgramme.getSelectedProgrammeList();
+                this.selectProgrammeVisible = false;
+                this.$message.success('成功关联节目');
+            },
+            // 取消关联节目
+            cancelLinkProgramme() {
+                this.selectProgrammeVisible = false;
+            },
             // 初始化数据
             init() {
-                // 初始化专题标签列表
-                this.$service.getSubjectTagList().then(response => {
-                    if (response) {
-                        this.tagOptions = response.data;
-                    }
-                });
                 // 初始化专题类别
                 this.$service.getProgrammeCategory().then(response => {
                     if (response && response.code === 0) {
@@ -256,36 +204,6 @@
             popUploadImage(mode) {
                 this.uploadImageMode = mode;
                 this.imageUploadDialogVisible = true;
-            },
-            // 添加专题的标签
-            addSubjectTag() {
-                this.$prompt('请输入专题标签', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    inputPattern: /\S/,
-                    inputErrorMessage: '专题标签不能为空'
-                }).then(({value}) => {
-                    let sign = true;
-                    this.tagOptions.map(tag => {
-                        if (tag === value) {
-                            sign = false;
-                        }
-                    });
-                    if (sign) {
-                        this.tagOptions.push(value);
-                        this.$message.success(value + '标签已添加');
-                    } else {
-                        this.$message({
-                            type: 'warning',
-                            message: value + '标签重复'
-                        });
-                    }
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '取消添加'
-                    });
-                });
             },
             // 添加图片
             addPosterImage(newPosterImage) {
@@ -367,10 +285,6 @@
                     }
                 });
             },
-            // 关闭上传图片对话框
-            closeImageDialog(status) {
-                this.imageUploadDialogVisible = status;
-            },
             // 放大预览图片
             displayImage(index) {
                 this.previewImage.display = true;
@@ -380,21 +294,6 @@
             reset() {
                 this.$refs['subjectInfo'].resetFields();
                 this.programmeCategoryList = [];
-                this.subjectInfo.posterImageList = [];
-            },
-            // 关闭对话框
-            handleClose() {
-                if (this.status === '0' || this.status === '1') {
-                    this.reset();
-                }
-                this.dialogVisible = false;
-            },
-            // 编辑专题内的节目或者人物
-            toEdit() {
-                this.$router.push({
-                    name: this.status === '0' || this.status === '2' ? 'EditSubjectProgrammes' : 'EditSubjectPersons',
-                    params: {id: this.subjectId}
-                });
             },
             toSubjectList() {
                 this.$router.push({name: 'SubjectList'});

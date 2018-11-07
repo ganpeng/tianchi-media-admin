@@ -1,11 +1,7 @@
 <!--创建节目专题组件-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'专题管理'},
-            {name:'创建节目专题'}]">
-        </custom-breadcrumb>
+        <div class="content-title">添加节目专题</div>
         <div class="block-box">
             <subject-basic-info-form
                 :subjectInfo="subjectInfo"
