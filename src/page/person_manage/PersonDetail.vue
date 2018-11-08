@@ -3,7 +3,7 @@
     <div class="person-container">
         <h2 class="content-title">{{getPageName}}</h2>
         <div class="seperator-line"></div>
-        <el-row>
+        <div class="form-container">
             <person-form
                 v-on:uploadSuccess="uploadSuccess($event)"
                 :isDialog="false"
@@ -11,14 +11,14 @@
                 :readonly="readonly"
                 ref="personForm"
             ></person-form>
-            <div class="fixed-btn-container">
-                <span style="margin-right: 10px;" v-show="!readonly">
-                    <el-button class="btn-style-two" v-if="isEdit" type="primary" @click="_updatePerson">保存</el-button>
-                    <el-button class="btn-style-two" v-if="!isEdit" type="primary" @click="_createPerson">创建</el-button>
-                </span>
-                <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
-            </div>
-        </el-row>
+        </div>
+        <div class="fixed-btn-container">
+            <span style="margin-right: 10px;" v-show="!readonly">
+                <el-button class="btn-style-two" v-if="isEdit" type="primary" @click="_updatePerson">保存</el-button>
+                <el-button class="btn-style-two" v-if="!isEdit" type="primary" @click="_createPerson">创建</el-button>
+            </span>
+            <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
+        </div>
     </div>
 </template>
 <script>
@@ -64,9 +64,9 @@
                     case 0:
                         return '添加人物';
                     case 1:
-                        return '人物列表-详情';
+                        return '人物详情';
                     case 2:
-                        return '人物列表-编辑';
+                        return '编辑人物';
                     default:
                         return '';
                 }

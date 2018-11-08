@@ -1,17 +1,14 @@
 <!--创建管理员账号组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'管理员管理'},
-            {name:'创建管理员'}]">
-        </custom-breadcrumb>
-        <el-row>
-            <el-col :span="8">
-                <div>
+    <div class="create-admin-container">
+        <h2 class="content-title">添加管理员</h2>
+        <div class="seperator-line"></div>
+        <div class="form-container">
+            <el-row>
+                <el-col :span="8">
                     <el-form :model="createInfo" :rules="infoRules" status-icon ref="createInfo"
-                             label-width="100px"
-                             class="form-block">
+                                label-width="100px"
+                                class="form-block">
                         <el-form-item label="姓名" prop="name" required>
                             <el-input v-model="createInfo.name" placeholder="请填写姓名"></el-input>
                         </el-form-item>
@@ -25,29 +22,16 @@
                             <el-input v-model="createInfo.mobile" placeholder="请填写手机号码"></el-input>
                         </el-form-item>
                     </el-form>
-                </div>
-            </el-col>
-            <el-col :span="16">
-                <div class="grid-content bg-purple-light">
-                    <el-upload
-                        class="avatar-uploader"
-                        action="https://jsonplaceholder.typicode.com/posts/"
-                        :show-file-list="false"
-                        :on-success="handleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload">
-                        <img v-if="createInfo.imageUrl" :src="createInfo.imageUrl" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                    <label>管理员头像</label>
-                </div>
-            </el-col>
-        </el-row>
-        <el-button class="bak-btn page-main-btn" type="primary" @click="createAdmin">创 建</el-button>
+                </el-col>
+            </el-row>
+        </div>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-two" type="primary" @click="createAdmin">创建</el-button>
+            <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
+        </div>
     </div>
 </template>
-
 <script>
-
     export default {
         name: 'CreateAdmin',
         data() {
@@ -131,64 +115,11 @@
             reset() {
                 this.$refs['createInfo'].resetFields();
             },
-            // 成功上传回调
-            handleAvatarSuccess(res, file) {
-                this.imageUrl = URL.createObjectURL(file.raw);
-            },
-            // 上传图片之前回调
-            beforeAvatarUpload(file) {
-                const isJPG = file.type === 'image/jpeg';
-                const isLt2M = file.size / 1024 / 1024 < 2;
-
-                if (!isJPG) {
-                    this.$message.error('上传头像图片只能是 JPG 格式!');
-                }
-                if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!');
-                }
-                return isJPG && isLt2M;
+            goBack() {
+                this.$router.back();
             }
         }
     };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
-    .bak-btn {
-        position: absolute;
-        bottom: 164px;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-    .el-row {
-        margin-top: 50px;
-    }
-
-    .avatar-uploader i {
-        margin-bottom: 20px;
-        margin-top: 70px;
-        border: 1px dashed #d9d9d9;
-        border-radius: 6px;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-        &:hover {
-            border-color: #409EFF;
-        }
-    }
-
-    .avatar-uploader-icon {
-        font-size: 28px;
-        color: #8c939d;
-        width: 178px;
-        height: 178px;
-        line-height: 178px;
-        text-align: center;
-    }
-
-    .avatar {
-        width: 178px;
-        height: 178px;
-        display: block;
-    }
+<style lang="scss" scoped>
 </style>

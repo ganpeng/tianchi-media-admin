@@ -120,8 +120,6 @@
                 <h2 class="content-title">节目列表</h2>
                 <div class="table-operator-field clearfix">
                     <div class="float-left">
-                        <el-checkbox v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-                        <el-checkbox v-model="reverseAll" @change="handleReverseAllChange">反选</el-checkbox>
                         <el-dropdown
                             trigger="click"
                             v-show="isDisabled"

@@ -199,6 +199,10 @@
     }
 }
 
+//  自定义form表单的样式
+.form-container {
+    margin-top: 20px;
+}
 
 //  自定义input输入框
 //  此处覆盖element-ui的样式
@@ -428,7 +432,8 @@
                         line-height: 34px;
                     }
                     .el-input__inner {
-                        height: 34px!important;
+                        // height: 34px!important;
+                        height: 34px;
                     }
                 }
             }
@@ -450,7 +455,7 @@
     justify-content: space-between;
     margin-bottom: 10px;
     .my-dropdown {
-        margin-left: 20px;
+        margin-left: 0px;
     }
     .el-checkbox {
         padding: 0;
@@ -779,3 +784,56 @@
     }
 }
 
+//  消息提示盒子样式重写
+.el-message-box {
+    width: 500px;
+    background: #293550;
+    border: none;
+    box-shadow: 2px 4px 10px 0 rgba(0,0,0,0.30);
+    border-radius: 8px;
+    padding-bottom: 20px;
+    .el-message-box__header {
+        background: #1F2D4D;
+        text-align: center;
+        span {
+            font-size: 20px;
+            color: #fff;
+        }
+        .el-message-box__close.el-icon-close {
+            color: $closeBtnColor;
+            &:hover {
+                color: $closeBtnHoverColor;
+            }
+        }
+    }
+    .el-message-box__status {
+        display: none;
+    }
+    .el-message-box__message {
+        text-align: center;
+        p {
+            font-size: 20px;
+            color: #fff;
+            padding: 30px 0;
+        }
+    }
+    .el-message-box__btns {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: center;
+        align-items: center;
+        .el-button {
+            width: 100px;
+            height: 40px;
+            &.el-button--default {
+                color: $dangerColor;
+            }
+            &.el-button--default.el-button--primary {
+                color: #A3D0FD;
+            }
+            &:first-child {
+                margin-left: 10px;
+            }
+        }
+    }
+}

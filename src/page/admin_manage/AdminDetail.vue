@@ -1,15 +1,11 @@
 <!--管理员详情组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'管理员管理'},
-            {name:'管理员列表-详情'}]">
-        </custom-breadcrumb>
+    <div class="admin-detail-container">
+        <h2 class="content-title">管理员详情</h2>
+        <div class="seperator-line"></div>
         <el-row>
             <el-col :span="12">
                 <div class="vice-block" id="basic-info">
-                    <h3 class="block-vice-title">管理员基本信息</h3>
                     <el-card>
                         <ul class="text-left">
                             <li><span>姓名</span><label>{{adminInfo.name}}</label></li>
@@ -21,19 +17,13 @@
                     </el-card>
                 </div>
             </el-col>
-            <el-col :span="12">
-                <div class="vice-block" id="basic-info">
-                    <h3 class="block-vice-title">管理员头像</h3>
-                    <img src="adminInfo.imageUrl">
-                </div>
-            </el-col>
         </el-row>
-        <el-button class="page-main-btn bak-btn page-margin-btn" @click="goBack" plain>返回人物列表</el-button>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
+        </div>
     </div>
 </template>
-
 <script>
-
     export default {
         name: 'AdminDetail',
         data() {
@@ -78,20 +68,7 @@
         }
     };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-    img {
-        display: block;
-        // margin: 96px auto 20px auto;
-        width: 178px;
-        height: 178px;
-    }
-    .bak-btn {
-        position: absolute;
-        bottom: 164px;
-    }
-
     #basic-info {
         .el-card {
             width: 600px;

@@ -1,99 +1,122 @@
 <!--管理员列表组件-->
 <template>
-    <div @keyup.enter="getAdminList">
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'管理员管理'},
-            {name:'管理员列表'}]">
-        </custom-breadcrumb>
-        <el-form :inline="true" class="search-form">
-            <el-form-item class="float-right">
-                <el-button
-                    class="page-main-btn create-blue-btn contain-svg-icon"
-                    @click="createAdmin">
-                    <svg-icon icon-class="add"></svg-icon>
-                    创建管理员
-                </el-button>
-            </el-form-item>
-            <el-col :span="24">
-                <el-form-item>
-                    <el-input v-model="keyword" placeholder="搜索你想要的信息" clearable></el-input>
-                    <el-input v-show="false"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button class="page-main-btn" icon="el-icon-search" type="primary" @click="getAdminList" plain>搜索</el-button>
-                </el-form-item>
-            </el-col>
-        </el-form>
-        <el-table
-            :data="adminList"
-            border
-            header-row-class-name="common-table-header"
-            style="width: 100%">
-            <el-table-column
-                prop="name"
-                align="center"
-                label="姓名">
-                <template slot-scope="scope">
-                    {{scope.row.name | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                prop="email"
-                align="center"
-                label="邮箱">
-                <template slot-scope="scope">
-                    {{scope.row.email | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                prop="telephone"
-                align="center"
-                label="电话">
-                <template slot-scope="scope">
-                    {{scope.row.telephone | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                prop="mobile"
-                align="center"
-                label="手机号码">
-                <template slot-scope="scope">
-                    {{scope.row.mobile | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                label="创建日期">
-                <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD') | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                label="最后登录时间">
-                <template slot-scope="scope">
-                    {{scope.row.lastLoginAt | formatDate('yyyy-MM-DD') | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                            width="200"
-                            align="center"
-                            label="操作">
-                <template slot-scope="scope">
-                    <el-button class="text-success" type="text" size="small" @click="checkDetail(scope.row.id)">详情</el-button>
-                    <el-button type="text" size="small" @click="editAdminInfo(scope.row.id)">编辑</el-button>
-                    <el-button v-if="scope.row.status === 'NORMAL'" type="danger" size="mini" plain
-                               @click="disabledConfirm(scope.row.id,scope.row.status)">
-                        禁用
+    <div class="admin-container" @keyup.enter="getAdminList">
+        <div class="table-container">
+            <h2 class="content-title">搜索筛选</h2>
+        </div>
+        <div class="search-field">
+            <div class="field-row">
+                <div class="search-field-item">
+                    <el-input
+                        v-model="keyword"
+                        placeholder="请输入关键字"
+                        clearable
+                        class="border-input">
+                    </el-input>
+                </div>
+                <el-button class="btn-style-one" @click="getAdminList" icon="el-icon-search" type="primary" plain>搜索</el-button>
+            </div>
+        </div>
+        <div class="seperator-line"></div>
+        <div class="table-field">
+            <h2 class="content-title">管理员列表</h2>
+            <div class="table-operator-field clearfix">
+                <div class="float-left"></div>
+                <div class="float-right">
+                    <el-button
+                        class="btn-style-two contain-svg-icon"
+                        @click="createAdmin">
+                            <svg-icon icon-class="add"></svg-icon>
+                        添加
                     </el-button>
-                    <el-button v-else type="success" size="mini" plain
-                               @click="recoverConfirm(scope.row.id,scope.row.status)">
-                        恢复
-                    </el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+                </div>
+            </div>
+            <el-table
+                :data="adminList"
+                border
+                header-row-class-name="common-table-header"
+                class="my-table-style"
+                style="width: 100%">
+                <el-table-column
+                    prop="name"
+                    align="center"
+                    label="姓名">
+                    <template slot-scope="scope">
+                        <span
+                            @click="checkDetail(scope.row.id)"
+                            class="name">
+                            {{scope.row.name | padEmpty}}
+                        </span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="email"
+                    align="center"
+                    label="邮箱">
+                    <template slot-scope="scope">
+                        {{scope.row.email | padEmpty}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="telephone"
+                    align="center"
+                    label="电话">
+                    <template slot-scope="scope">
+                        {{scope.row.telephone | padEmpty}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="mobile"
+                    align="center"
+                    label="手机号码">
+                    <template slot-scope="scope">
+                        {{scope.row.mobile | padEmpty}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    align="center"
+                    label="创建日期">
+                    <template slot-scope="scope">
+                        {{scope.row.createdAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    align="center"
+                    label="最后登录时间">
+                    <template slot-scope="scope">
+                        {{scope.row.lastLoginAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    align="center"
+                    label="状态">
+                    <template slot-scope="scope">
+                        <input
+                            class="my-switch switch-anim"
+                            type="checkbox"
+                            v-if="scope.row.status === 'NORMAL'"
+                            :checked="scope.row.status === 'NORMAL'"
+                            @click.prevent="disabledConfirm(scope.row.id, scope.row.status)"/>
+                        <input
+                            class="my-switch switch-anim"
+                            type="checkbox"
+                            v-if="scope.row.status !== 'NORMAL'"
+                            :checked="scope.row.status === 'NORMAL'"
+                            @click.prevent="recoverConfirm(scope.row.id, scope.row.status)"/>
+                        <i v-if="scope.row.status === 'NORMAL'" class="on-the-shelf">正常</i>
+                        <i v-else class="off-the-shelf">禁用</i>
+                    </template>
+                </el-table-column>
+                <el-table-column width="200" align="center" label="操作">
+                    <template slot-scope="scope">
+                        <div class="operator-btn-wrapper">
+                            <span class="btn-text" @click="editAdminInfo(scope.row.id)">编辑</span>
+                            <!-- <span class="btn-text" @click="checkDetail(scope.row.id)">详情</span> -->
+                        </div>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
         <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -105,7 +128,6 @@
         </el-pagination>
     </div>
 </template>
-
 <script>
     export default {
         name: 'AdminList',
@@ -200,32 +222,5 @@
         }
     };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
-    .el-form {
-        margin-left: 20px;
-        text-align: left;
-        &.search-form {
-            // margin-top: 60px;
-        }
-        .create-account {
-            float: right;
-            margin-right: 40px;
-            i {
-                cursor: pointer;
-                &:hover {
-                    color: #409EFF;
-                }
-            }
-        }
-        .el-tag {
-            cursor: pointer;
-            a {
-                display: block;
-                height: 100%;
-                width: 100%;
-            }
-        }
-    }
 </style>
