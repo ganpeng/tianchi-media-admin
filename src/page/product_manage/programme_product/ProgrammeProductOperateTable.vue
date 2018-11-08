@@ -176,7 +176,7 @@
                     case 'ADDED':
                         // 编辑中新增的节目列表取消关联,删除数据，通知更新节目查询列表
                         let addRemovedRow = this.programmeList.splice(index, 1)[0];
-                        this.$emit('removeSelectRow', 'ADD', addRemovedRow);
+                        this.$emit('removeSelectRow', 'ADDED', addRemovedRow);
                         break;
                     default:
                         break;

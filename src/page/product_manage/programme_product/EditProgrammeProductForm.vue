@@ -193,11 +193,6 @@
             operateProduct() {
                 this.$refs['productInfo'].validate((valid) => {
                     if (valid) {
-                        // 设置contentIdList
-                        this.productInfo.contentIdList = [];
-                        for (let i = 0; i < this.selectedProgrammeList.length; i++) {
-                            this.productInfo.contentIdList.push(this.selectedProgrammeList[i].id);
-                        }
                         // 更新产品包
                         this.$service.updateProductInfo(this.productInfo).then(response => {
                             if (response && response.code === 0) {
@@ -253,6 +248,12 @@
                     for (let n = 0; n < this.originContentIdList.length; n++) {
                         if (removedProgrammes[m].id === this.originContentIdList[n]) {
                             this.removedProgrammeList.push(removedProgrammes[m]);
+                            // 从总的选择节目id列表中删除
+                            for (let k = 0; k < this.productInfo.contentIdList.length; k++) {
+                                if (this.productInfo.contentIdList[k] === removedProgrammes[m].id) {
+                                    this.productInfo.contentIdList.splice(k, 1);
+                                }
+                            }
                             break;
                         }
                     }
@@ -265,6 +266,7 @@
                     if (programme.name) {
                         if (this.originContentIdList.length === 0) {
                             this.addedProgrammeList.push(programme);
+                            this.productInfo.contentIdList.push(programme.id);
                         } else {
                             for (let i = 0; i < this.originContentIdList.length; i++) {
                                 if (programme.id === this.originContentIdList[i]) {
@@ -272,6 +274,15 @@
                                 }
                                 if (i === this.originContentIdList.length - 1) {
                                     this.addedProgrammeList.push(programme);
+                                    // 从总的选择节目id列表中增加
+                                    for (let k = 0; k < this.productInfo.contentIdList.length; k++) {
+                                        if (this.productInfo.contentIdList[k] === programme.id) {
+                                            break;
+                                        }
+                                        if (k === this.productInfo.contentIdList.length - 1) {
+                                            this.productInfo.contentIdList.push(programme.id);
+                                        }
+                                    }
                                 }
                             }
                         }
