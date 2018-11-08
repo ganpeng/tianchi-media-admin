@@ -21,13 +21,13 @@
                     :rows="4">
                 </el-input>
             </el-form-item>
-            <el-form-item label="类型" prop="contentIdList" required>
+            <el-form-item label="类别" prop="contentIdList" required>
                 <el-select
                     v-model="productInfo.contentIdList"
                     multiple
                     filterable
                     clearable
-                    placeholder="请选择类型">
+                    placeholder="请选择类别">
                     <el-option
                         v-for="item in categoryOptions"
                         :key="item.id"
@@ -82,7 +82,7 @@
             };
             let checkTargetIdList = (rule, value, callback) => {
                 if (value.length === 0) {
-                    return callback(new Error('类型不能为空'));
+                    return callback(new Error('类别不能为空'));
                 } else {
                     callback();
                 }

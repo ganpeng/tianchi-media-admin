@@ -174,7 +174,7 @@
             getCategoryName: function (category) {
                 switch (category) {
                     case 'PROGRAMME_CATEGORY':
-                        return '类型包';
+                        return '类别包';
                     case 'PROGRAMME':
                         return '节目包';
                     case 'CAROUSEL':

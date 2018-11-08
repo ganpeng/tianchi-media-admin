@@ -150,7 +150,10 @@
                 this.$service.getProductInfo({id: this.$route.params.id}).then(response => {
                     if (response && response.code === 0) {
                         this.productInfo = response.data;
-                        this.originContentIdList = response.data.contentIdList.slice(0);
+                        if (response.data.contentIdList === null) {
+                            this.productInfo.contentIdList = [];
+                        }
+                        this.originContentIdList = this.productInfo.contentIdList.slice(0);
                         // 设置全部的数据
                         for (let i = 0; i < response.data.contentIdList.length; i++) {
                             this.selectedProgrammeList.push({id: response.data.contentIdList[i]});
@@ -190,6 +193,11 @@
             operateProduct() {
                 this.$refs['productInfo'].validate((valid) => {
                     if (valid) {
+                        // 设置contentIdList
+                        this.productInfo.contentIdList = [];
+                        for (let i = 0; i < this.selectedProgrammeList.length; i++) {
+                            this.productInfo.contentIdList.push(this.selectedProgrammeList[i].id);
+                        }
                         // 更新产品包
                         this.$service.updateProductInfo(this.productInfo).then(response => {
                             if (response && response.code === 0) {
