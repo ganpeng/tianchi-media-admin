@@ -46,17 +46,19 @@
             <programme-operate-table
                 v-if="selectedProgrammeList.length !== 0"
                 model="CANCEL"
+                v-on:cancelLinkProgramme="cancelLinkProgramme"
                 :programmeList="selectedProgrammeList">
             </programme-operate-table>
             <div class="operate">
                 <el-button type="primary" @click="operateSubject" class="page-main-btn">
                     {{this.status === '0' || this.status === '1' ? '创建' : '保存'}}
                 </el-button>
-                <el-button @click="reset"
-                           v-if="this.status === '0' || this.status === '1' "
-                           class="page-main-btn"
-                           type="primary"
-                           plain>
+                <el-button
+                    @click="reset"
+                    v-if="this.status === '0' || this.status === '1' "
+                    class="page-main-btn"
+                    type="primary"
+                    plain>
                     重置
                 </el-button>
                 <el-button @click="toSubjectList" class="page-main-btn">返回列表页</el-button>
@@ -70,10 +72,12 @@
             :visible.sync="selectProgrammeVisible"
             width="80%">
             <select-multiple-programme
-                ref="selectMultipleProgramme">
+                v-if="selectProgrammeVisible"
+                ref="selectMultipleProgramme"
+                :selectedProgrammeList="selectedProgrammeList">
             </select-multiple-programme>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="cancelLinkProgramme">取消</el-button>
+                <el-button @click="cancelSelectProgramme">取消</el-button>
                 <el-button type="primary" @click="confirmLinkProgramme">确定</el-button>
             </span>
         </el-dialog>
@@ -165,9 +169,14 @@
                 this.selectProgrammeVisible = false;
                 this.$message.success('成功关联节目');
             },
-            // 取消关联节目
-            cancelLinkProgramme() {
+            // 选择节目取消
+            cancelSelectProgramme() {
                 this.selectProgrammeVisible = false;
+            },
+            // 已关联的节目取消节目关联
+            cancelLinkProgramme(index) {
+                let cancelLinkProgramme = this.selectedProgrammeList.splice(index, 1)[0];
+                this.$message.success('"' + cancelLinkProgramme.name + '"' + '成功取消关联');
             },
             // 初始化数据
             init() {

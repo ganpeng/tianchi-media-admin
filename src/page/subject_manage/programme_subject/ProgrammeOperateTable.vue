@@ -11,6 +11,15 @@
             @select-all="selectAll"
             @select="selectRow">
             <el-table-column
+                v-if="model === 'CANCEL' || model === 'DETAIL'"
+                align="center"
+                width="60px"
+                label="序号">
+                <template slot-scope="scope">
+                    <label>{{scope.$index + 1}}</label>
+                </template>
+            </el-table-column>
+            <el-table-column
                 v-if="model==='MULTIPLE'"
                 type="selection"
                 width="40px">
@@ -109,6 +118,18 @@
                     {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
+            <el-table-column
+                v-if="model === 'CANCEL'"
+                align="center"
+                label="操作"
+                class="operate">
+                <template slot-scope="scope">
+                    <el-button type="text" size="small" class="remove-btn"
+                               @click="cancelLinkProgramme(scope.$index)">
+                        取消关联
+                    </el-button>
+                </template>
+            </el-table-column>
         </el-table>
     </div>
 </template>
@@ -145,20 +166,16 @@
                 multipleSelection: []
             };
         },
-        mounted() {
-        },
         methods: {
-            init() {
-                // 初始化选中的项
-                for (let i = 0; i < this.selectedProgrammeList.length; i++) {
-                    this.multipleSelection.push(this.selectedProgrammeList[i]);
-                }
-                // 对于选择的多选项项进行勾选
+            // programmeList为节目源数据
+            initSelection(programmeList) {
+                this.multipleSelection = this.selectedProgrammeList.slice(0);
+                // 对于选择的多选项进行勾选
                 for (let i = 0; i < this.multipleSelection.length; i++) {
-                    for (let k = 0; k < this.programmeList.length; k++) {
-                        if (this.multipleSelection[i].id === this.programmeList[k].id) {
+                    for (let k = 0; k < programmeList.length; k++) {
+                        if (this.multipleSelection[i].id === programmeList[k].id) {
                             this.$nextTick(function () {
-                                this.$refs.programmeTable.toggleRowSelection(this.programmeList[k], true);
+                                this.$refs.programmeTable.toggleRowSelection(programmeList[k], true);
                             });
                         }
                     }
@@ -193,7 +210,9 @@
                         }
                     }
                 }
+                this.$emit('setSelectedProgrammeList', this.multipleSelection);
             },
+            // 多选模式下的全选
             selectAll(selections) {
                 // 判断是添加还是删除所有当前list
                 // 取消全选
@@ -226,7 +245,9 @@
                         }
                     }
                 }
+                this.$emit('setSelectedProgrammeList', this.multipleSelection);
             },
+            // 取消选择
             cancelSelectRow(row) {
                 for (let i = 0; i < this.multipleSelection.length; i++) {
                     if (row.id === this.multipleSelection[i].id) {
@@ -238,6 +259,10 @@
                         this.$refs.programmeTable.toggleRowSelection(this.programmeList[i], false);
                     }
                 }
+            },
+            // 取消模式下取消关联
+            cancelLinkProgramme(index) {
+                this.$emit('cancelLinkProgramme', index);
             },
             // 获取当前选中的节目列表
             getSelectedProgramme() {

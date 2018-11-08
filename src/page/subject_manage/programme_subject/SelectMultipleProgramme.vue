@@ -1,6 +1,19 @@
 <!--选择多个节目组件-->
 <template>
     <div>
+        <div>
+            <div>
+                <span>已选{{localSelectedProgrammeList.length}}项</span>
+                <label @click="tagListVisible = false">收起</label>
+                <label @click="tagListVisible = true">展开</label>
+            </div>
+            <p v-if="tagListVisible">
+                <el-tag v-for="(item, index) in localSelectedProgrammeList" :key="index">
+                    {{item.name}}
+                    <span @click="cancelSelectedProgramme(item,index)">X</span>
+                </el-tag>
+            </p>
+        </div>
         <div class="search-field-item">
             <el-input
                 v-model="listQueryParams.keyword"
@@ -21,10 +34,11 @@
             ref="programmeOperateTable"
             model="MULTIPLE"
             :programmeList="programmeList"
-            :selectedProgrammeList="selectedProgrammeList">
+            :selectedProgrammeList="localSelectedProgrammeList"
+            v-on:setSelectedProgrammeList="setSelectedProgrammeList">
         </programme-operate-table>
         <el-pagination
-            @size-change="handleSizeChange"
+            id="select-multiple-programme"
             @current-change="handleCurrentChange"
             :current-page="pageNum"
             :page-sizes="[5]"
@@ -47,6 +61,8 @@
         props: ['selectedProgrammeList'],
         data() {
             return {
+                // 本地选择节目列表
+                localSelectedProgrammeList: this.selectedProgrammeList,
                 listQueryParams: {
                     keyword: '',
                     pageNum: 0,
@@ -54,7 +70,8 @@
                 },
                 pageNum: 1,
                 total: 0,
-                programmeList: []
+                programmeList: [],
+                tagListVisible: true
             };
         },
         mounted() {
@@ -73,17 +90,25 @@
                     if (response && response.code === 0) {
                         this.programmeList = response.data.list;
                         this.total = response.data.total;
+                        // 初始化节目列表的勾选项
+                        this.$refs.programmeOperateTable.initSelection(this.programmeList);
                     }
                 });
-            },
-            handleSizeChange(pageSize) {
-                this.listQueryParams.pageSize = pageSize;
-                this.getProgrammeList();
             },
             handleCurrentChange(pageNum) {
                 this.pageNum = pageNum;
                 this.getProgrammeList();
             },
+            // 节目列表选择或取消节目
+            setSelectedProgrammeList(programmeList) {
+                this.localSelectedProgrammeList = programmeList;
+            },
+            // 取消选择某一个节目
+            cancelSelectedProgramme(programme, index) {
+                this.$refs.programmeOperateTable.cancelSelectRow(programme);
+                this.localSelectedProgrammeList.splice(index, 1);
+            },
+            // 获取选择的节目列表
             getSelectedProgrammeList() {
                 return this.$refs.programmeOperateTable.getSelectedProgramme();
             }
@@ -99,6 +124,16 @@
         .el-input {
             margin-right: 20px;
             width: 180px;
+        }
+    }
+
+</style>
+
+<style lang="scss">
+
+    #select-multiple-programme {
+        .el-pagination__sizes {
+            display: none;
         }
     }
 
