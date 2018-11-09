@@ -52,7 +52,7 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                width="80px"
+                width="100px"
                 prop="featureVideoCount"
                 label="正片数量">
             </el-table-column>
@@ -91,31 +91,6 @@
                 label="类型">
                 <template slot-scope="scope">
                     {{scope.row.typeList | jsonJoin('name')}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                min-width="100px"
-                label="演员">
-                <template slot-scope="scope">
-                    <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                prop="visible"
-                min-width="100px"
-                label="状态">
-                <template slot-scope="scope">
-                    {{scope.row.visible ? '已上架' :'已下架'}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                min-width="100px"
-                label="更新时间">
-                <template slot-scope="scope">
-                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
             <el-table-column

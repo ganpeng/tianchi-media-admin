@@ -25,8 +25,8 @@
             </el-form-item>
             <el-form-item label="状态" required>
                 <el-radio-group v-model="subjectInfo.visible">
-                    <el-radio label="上架"></el-radio>
-                    <el-radio label="下架"></el-radio>
+                    <el-radio :label="true">上架</el-radio>
+                    <el-radio :label="false">下架</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="专题封面图" class="cover-image-block">
@@ -41,7 +41,10 @@
                 </thumbnail>
             </el-form-item>
             <div class="content-sub-title">专题内节目
-                <el-button @click="linkProgramme" class="page-vice-btn">关联节目</el-button>
+                <el-button @click="linkProgramme" class="contain-svg-icon btn-style-two">
+                    <svg-icon icon-class="image"></svg-icon>
+                    关联节目
+                </el-button>
             </div>
             <programme-operate-table
                 v-if="selectedProgrammeList.length !== 0"
@@ -50,18 +53,8 @@
                 :programmeList="selectedProgrammeList">
             </programme-operate-table>
             <div class="operate">
-                <el-button type="primary" @click="operateSubject" class="page-main-btn">
-                    {{this.status === '0' || this.status === '1' ? '创建' : '保存'}}
-                </el-button>
-                <el-button
-                    @click="reset"
-                    v-if="this.status === '0' || this.status === '1' "
-                    class="page-main-btn"
-                    type="primary"
-                    plain>
-                    重置
-                </el-button>
-                <el-button @click="toSubjectList" class="page-main-btn">返回列表页</el-button>
+                <el-button type="primary" @click="operateSubject" class="btn-style-two">保存</el-button>
+                <el-button @click="toSubjectList" class="btn-style-three">返回列表页</el-button>
             </div>
         </el-form>
         <preview-multiple-images
@@ -70,6 +63,9 @@
         <el-dialog
             title="关联节目"
             :visible.sync="selectProgrammeVisible"
+            :close-on-click-modal=false
+            custom-class="normal-dialog"
+            top="13vh"
             width="80%">
             <select-multiple-programme
                 v-if="selectProgrammeVisible"
@@ -300,10 +296,6 @@
                 this.previewImage.list = this.subjectInfo.posterImageList;
                 this.previewImage.activeIndex = index;
             },
-            reset() {
-                this.$refs['subjectInfo'].resetFields();
-                this.programmeCategoryList = [];
-            },
             toSubjectList() {
                 this.$router.push({name: 'SubjectList'});
             }
@@ -312,6 +304,61 @@
 </script>
 
 <style lang="scss" scoped>
+
+    .el-radio-group {
+        .el-radio {
+            padding: 0px;
+        }
+    }
+
+    .btn-style-two {
+        &.contain-svg-icon {
+            padding: 4px 12px;
+            line-height: 34px;
+        }
+        span {
+            display: flex;
+            align-items: center;
+        }
+        * {
+            color: #1989FA;
+        }
+        .svg-icon {
+            margin-right: 8px;
+            width: 20px !important;
+            height: 20px !important;
+            fill: #1989FA;
+            // 图片的icon颜色设置
+            &.svg-icon-image, &.svg-icon-video {
+                fill: #A3D0FD;
+            }
+        }
+
+        &:hover, &:focus {
+            background-color: #1989FA;
+            * {
+                color: #fff;
+            }
+            .svg-icon {
+                fill: #fff;
+            }
+        }
+        &.is-disabled {
+            background-color: transparent;
+            border-color: #a5d2ff;
+            span {
+                color: #a5d2ff;
+            }
+            &:hover {
+                color: #a5d2ff;
+                background-color: transparent;
+                border-color: #a5d2ff;
+                span {
+                    color: #a5d2ff;
+                }
+            }
+        }
+    }
 
     .cover-image-block, .bg-box {
         margin-bottom: 40px;
@@ -366,6 +413,53 @@
     .operate {
         margin-top: 200px;
         margin-bottom: 80px;
+        .el-button:nth-child(2) {
+            margin-left: 40px;
+        }
+    }
+
+</style>
+
+<!--全局el-dialog样式-->
+<style lang="scss">
+
+    .normal-dialog {
+        background: #293550;
+        border: 0 solid #637497;
+        box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
+        border-radius: 8px;
+        .el-dialog__header {
+            padding: 0px;
+            height: 50px;
+            line-height: 55px;
+            background: #1F2D4D;
+            .el-dialog__title {
+                font-size: 20px;
+                color: #909399;
+            }
+            .el-dialog__headerbtn {
+                top: 16px;
+                font-size: 15px;
+                .el-dialog__close {
+                    color: #C35757;
+                }
+            }
+        }
+        .el-dialog__footer {
+            .el-button {
+                width: 100px;
+                height: 40px;
+                &.el-button--default {
+                    color: $dangerColor;
+                }
+                &.el-button--default.el-button--primary {
+                    color: #A3D0FD;
+                }
+                &:first-child {
+                    margin-left: 10px;
+                }
+            }
+        }
     }
 
 </style>

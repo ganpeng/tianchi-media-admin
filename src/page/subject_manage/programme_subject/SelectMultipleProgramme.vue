@@ -1,16 +1,30 @@
 <!--选择多个节目组件-->
 <template>
-    <div>
-        <div>
+    <div id="select-multiple-programme">
+        <div id="selected-tags">
             <div>
                 <span>已选{{localSelectedProgrammeList.length}}项</span>
-                <label @click="tagListVisible = false">收起</label>
-                <label @click="tagListVisible = true">展开</label>
+                <label
+                    @click="tagListVisible = false"
+                    v-if="tagListVisible && localSelectedProgrammeList.length !== 0">
+                    收起
+                    <i class="el-icon-arrow-up"></i>
+                </label>
+                <label
+                    @click="tagListVisible = true"
+                    v-if="!tagListVisible && localSelectedProgrammeList.length !== 0">
+                    展开
+                    <i class="el-icon-arrow-down"></i>
+                </label>
             </div>
-            <p v-if="tagListVisible">
-                <el-tag v-for="(item, index) in localSelectedProgrammeList" :key="index">
+            <p v-if="tagListVisible && localSelectedProgrammeList.length !== 0">
+                <el-tag
+                    v-for="(item, index) in localSelectedProgrammeList"
+                    :key="index"
+                    :disable-transitions="true"
+                    @close="cancelSelectedProgramme(item)"
+                    closable>
                     {{item.name}}
-                    <span @click="cancelSelectedProgramme(item,index)">X</span>
                 </el-tag>
             </p>
         </div>
@@ -38,7 +52,6 @@
             v-on:setSelectedProgrammeList="setSelectedProgrammeList">
         </programme-operate-table>
         <el-pagination
-            id="select-multiple-programme"
             @current-change="handleCurrentChange"
             :current-page="pageNum"
             :page-sizes="[5]"
@@ -104,9 +117,9 @@
                 this.localSelectedProgrammeList = programmeList;
             },
             // 取消选择某一个节目
-            cancelSelectedProgramme(programme, index) {
+            cancelSelectedProgramme(programme) {
+                console.log('取消节目');
                 this.$refs.programmeOperateTable.cancelSelectRow(programme);
-                this.localSelectedProgrammeList.splice(index, 1);
             },
             // 获取选择的节目列表
             getSelectedProgrammeList() {
@@ -118,7 +131,38 @@
 
 <style lang="scss" scoped>
 
+    #selected-tags {
+        div {
+            margin-top: -30px;
+            height: 45px;
+            border-bottom: 1px solid #3E495E;
+            span {
+                margin-right: 60px;
+                padding-left: 5px;
+                height: 45px;
+                line-height: 55px;
+                font-size: 14px;
+                color: #FFFFFF;
+            }
+            label {
+                font-size: 14px;
+                color: #1989FA;
+                cursor: pointer;
+                i {
+                    color: #3E495E;
+                }
+            }
+        }
+        p {
+            padding-top: 10px;
+            border-bottom: 1px solid #3E495E;
+            max-height: 264px;
+            overflow-y: scroll;
+        }
+    }
+
     .search-field-item {
+        margin-top: 24px;
         margin-left: 40px;
         margin-bottom: 20px;
         .el-input {
@@ -132,6 +176,26 @@
 <style lang="scss">
 
     #select-multiple-programme {
+        .el-tag {
+            margin-bottom: 10px;
+            margin-right: 10px;
+            background: #1989FA;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #FFFFFF;
+            .el-icon-close {
+                height: 20px;
+                width: 20px;
+                line-height: 20px;
+                background: #C0C4CC;
+            }
+            &:hover {
+                .el-icon-close {
+                    background: #C35757;
+                    color: #409EFF;
+                }
+            }
+        }
         .el-pagination__sizes {
             display: none;
         }
