@@ -14,6 +14,20 @@
     text-align: left;
 }
 
+//  统一处理必填项提示的小星号
+.el-form-item.is-required>.el-form-item__label {
+    &:after {
+        content: '*';
+        color: #f56c6c;
+        margin-right: 4px;
+        line-height: 18px;
+    }
+    &::before {
+        content: '';
+    }
+}
+
+
 //  表格样式
 .el-table {
     &.my-table-style {
@@ -201,6 +215,7 @@
 
 //  自定义form表单的样式
 .form-container {
+    overflow: hidden;
     margin-top: 20px;
 }
 
@@ -551,12 +566,20 @@
     display: block;
     color: #3AC26F;
     font-size: 14px;
+    &.inline {
+        display: inline-block;
+        margin-left: 8px;
+    }
 }
 
 .off-the-shelf {
     display: block;
     color: #6F7480;
     font-size: 14px;
+    &.inline {
+        display: inline-block;
+        margin-left: 8px;
+    }
 }
 
 
@@ -720,6 +743,7 @@
             font-size: 16px;
             line-height: 32px;
             color: #6F7480;
+            margin-top: 10px;
             .item-label {
                 display: inline-block;
                 width: 60px;
@@ -835,5 +859,14 @@
                 margin-left: 10px;
             }
         }
+    }
+}
+
+//  radio标签样式重写
+.el-radio {
+    padding: 0;
+    .el-radio__inner {
+        border: 1px solid #3E495E;
+        background-color: transparent;
     }
 }

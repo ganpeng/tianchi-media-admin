@@ -54,7 +54,7 @@
                             </draggable>
                         </div>
                         <div class="fixed-btn-container">
-                            <el-button class="btn-style-two" type="primary" @click="() => {}">保存</el-button>
+                            <el-button class="btn-style-two" type="primary" @click="saveProgrammeCategoryHandler">保存</el-button>
                         </div>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
                         </draggable>
                     </div>
                     <div class="fixed-btn-container">
-                        <el-button class="btn-style-two" type="primary" @click="() => {}">保存</el-button>
+                        <el-button class="btn-style-two" type="primary" @click="saveLiveCategoryHandler">保存</el-button>
                     </div>
                 </div>
                 <div v-if="activeTabIndex === 2" class="carousel-channel-content">
@@ -109,7 +109,7 @@
                         </draggable>
                     </div>
                     <div class="fixed-btn-container">
-                        <el-button class="btn-style-two" type="primary" @click="() => {}">保存</el-button>
+                        <el-button class="btn-style-two" type="primary" @click="saveCarouselCategoryHandler">保存</el-button>
                     </div>
                 </div>
             </div>
@@ -188,7 +188,10 @@ export default {
             getCarouselChannelCategory: 'category/getCarouselChannelCategory',
             getProgrammeCategory: 'category/getProgrammeCategory',
             getProgrammeTypeCount: 'programme/getProgrammeTypeCount',
-            getChannelCount: 'channel/getChannelCount'
+            getChannelCount: 'channel/getChannelCount',
+            saveChannelCategory: 'category/saveChannelCategory',
+            getChannelCategory: 'category/getChannelCategory',
+            saveProgrammeCategory: 'category/saveProgrammeCategory'
         }),
         changeTabHandler(index) {
             this.activeTabIndex = index;
@@ -203,10 +206,10 @@ export default {
                     this.getProgrammeCategory();
                     break;
                 case 1:
-                    this.getLiveChannelCategory();
+                    this.getChannelCategory();
                     break;
                 case 2:
-                    this.getCarouselChannelCategory();
+                    this.getChannelCategory();
                     break;
                 default:
                     this.getProgrammeCategory();
@@ -267,6 +270,17 @@ export default {
                 this.clearInputValue();
             }
         },
+        async saveProgrammeCategoryHandler() {
+            try {
+                let res = await this.saveProgrammeCategory();
+                if (res && res.code === 0) {
+                    this.$message.success('保存成功');
+                    this.getProgrammeCategory();
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
         //  节目类型管理部分结束
         //  直播类型管理开始
         addLiveCategoryHandler(name) {
@@ -304,6 +318,17 @@ export default {
                 if (err === 'cancel') {
                     this.$message.info('已取消删除');
                 }
+            }
+        },
+        async saveLiveCategoryHandler() {
+            try {
+                let res = await this.saveChannelCategory();
+                if (res && res.code === 0) {
+                    this.$message.success('保存成功');
+                    this.getChannelCategory();
+                }
+            } catch (err) {
+                console.log(err);
             }
         },
         //  直播类型管理结束
@@ -345,6 +370,17 @@ export default {
                 }
             }
         },
+        async saveCarouselCategoryHandler() {
+            try {
+                let res = await this.saveChannelCategory();
+                if (res && res.code === 0) {
+                    this.$message.success('保存成功');
+                    this.getChannelCategory();
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
         //  轮播类型管理结束
         addCategoryHandler(e) {
             let name = e.target.value;
@@ -377,6 +413,9 @@ export default {
     margin-top: 20px;
     cursor: pointer;
     text-align: left;
+    .el-tag {
+        font-size: 18px;
+    }
 }
 
 .type-input {
@@ -432,32 +471,6 @@ export default {
     .right-content {
         overflow: hidden;
         padding-left: 20px;
-        .type-list {
-            .type-item {
-                float: left;
-                padding: 0 10px;
-                min-width: 100px;
-                height: 30px;
-                line-height: 30px;
-                margin: 0 10px 10px 0;
-                border: 1px solid #f2f2f2;
-                border-radius: 5px;
-                cursor: pointer;
-            }
-        }
-    }
-}
-.live-channel-content, .carousel-channel-content {
-    .live-category-item {
-        float: left;
-        padding: 0 10px;
-        min-width: 100px;
-        height: 30px;
-        line-height: 30px;
-        margin: 0 10px 10px 0;
-        border: 1px solid #f2f2f2;
-        border-radius: 5px;
-        cursor: pointer;
     }
 }
 </style>

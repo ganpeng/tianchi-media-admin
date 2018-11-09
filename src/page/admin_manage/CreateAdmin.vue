@@ -21,6 +21,15 @@
                         <el-form-item label="手机" prop="mobile" required>
                             <el-input v-model="createInfo.mobile" placeholder="请填写手机号码"></el-input>
                         </el-form-item>
+                        <el-form-item label="状态">
+                            <input
+                                class="my-switch switch-anim"
+                                type="checkbox"
+                                :checked="createInfo.status === 'NORMAL'"
+                                @click.prevent="toggleAdminStatus"/>
+                            <i v-if="createInfo.status === 'NORMAL'" class="on-the-shelf inline">正常</i>
+                            <i v-else class="off-the-shelf inline">禁用</i>
+                        </el-form-item>
                     </el-form>
                 </el-col>
             </el-row>
@@ -73,7 +82,7 @@
                     telephone: '',
                     email: '',
                     mobile: '',
-                    imageUrl: ''
+                    status: 'NORMAL'
                 },
                 infoRules: {
                     name: [
@@ -117,6 +126,10 @@
             },
             goBack() {
                 this.$router.back();
+            },
+            toggleAdminStatus() {
+                let status = this.createInfo.status === 'FORBIDDEN' ? 'NORMAL' : 'FORBIDDEN';
+                this.createInfo.status = status;
             }
         }
     };

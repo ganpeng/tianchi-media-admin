@@ -11,6 +11,10 @@ const defaultState = {
 
 const state = _.cloneDeep(defaultState);
 
+function isCustomId(id) {
+    return _.startsWith(id, idPrefix);
+}
+
 const getters = {
     programmeCategory(state) {
         return state.programmeCategory;
@@ -22,9 +26,7 @@ const getters = {
         return state.carouselChannelCategory;
     },
     isCustomId() {
-        return (id) => {
-            return _.startsWith(id, idPrefix);
-        };
+        return isCustomId;
     },
     checkProgrammeCategoryIsExist(state) {
         return (name, index) => {
@@ -110,6 +112,20 @@ const mutations = {
 };
 
 const actions = {
+    //  获取所有频道类型
+    async getChannelCategory({commit}) {
+        try {
+            let res = await service.getChannelType({});
+            if (res && res.code === 0) {
+                let liveChannelCategory = res.data.filter((item) => item.category === 'LIVE');
+                let carouselChannelCategory = res.data.filter((item) => item.category === 'CAROUSEL');
+                commit('setLiveChannelCategory', {liveChannelCategory});
+                commit('setCarouselChannelCategory', {carouselChannelCategory});
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    },
     // 获取直播频道分类
     async getLiveChannelCategory({commit}) {
         try {
@@ -139,6 +155,40 @@ const actions = {
             if (res && res.code === 0) {
                 commit('setProgrammeCategory', {programmeCategory: res.data});
             }
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    //  保存频道类型
+    async saveChannelCategory({commit}) {
+        try {
+            let {liveChannelCategory, carouselChannelCategory} = state;
+            let channelTypeList = [...liveChannelCategory, ...carouselChannelCategory].map((category, index) => {
+                if (isCustomId(category.id)) {
+                    delete category.id;
+                }
+                category.sort = index;
+                return category;
+            });
+            let res = await service.putChannelType(channelTypeList);
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    //  保存节目类型
+    async saveProgrammeCategory({commit}) {
+        try {
+            let categoryList = _.cloneDeep(state.programmeCategory);
+            categoryList.forEach((item) => {
+                item.programmeTypeList.forEach((innerItem) => {
+                    if (/^category_/.test(innerItem.id)) {
+                        delete innerItem.id;
+                    }
+                });
+            });
+            let res = await service.updateProgrammeCategory({categoryList});
+            return res;
         } catch (err) {
             console.log(err);
         }

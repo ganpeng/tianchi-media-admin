@@ -47,7 +47,7 @@
                             </el-option>
                         </el-select>
                     </div>
-                    <div class="search-field-item">
+                    <!-- <div class="search-field-item">
                         <label class="search-field-item-label">时间</label>
                         <el-date-picker
                             :value="searchFields.dateRange"
@@ -60,7 +60,7 @@
                             start-placeholder="开始日期"
                             end-placeholder="结束日期">
                         </el-date-picker>
-                    </div>
+                    </div> -->
                     <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
                         <svg-icon
                             icon-class="clear_filter"
@@ -68,6 +68,37 @@
                         </svg-icon>
                         重置
                     </el-button>
+                    <span
+                        @click="toggleSearchField"
+                        class="el-dropdown-link">
+                        更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
+                </div>
+                <div v-show="searchFieldVisible" class="field-row">
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">开始时间</label>
+                        <el-date-picker
+                            :value="searchFields.releaseAtStart"
+                            type="date"
+                            clearable
+                            value-format="timestamp"
+                            style="width:180px;"
+                            @input="inputHandler($event, 'releaseAtStart')"
+                            placeholder="请选择开始时间">
+                        </el-date-picker>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">结束时间</label>
+                        <el-date-picker
+                            :value="searchFields.releaseAtEnd"
+                            type="date"
+                            clearable
+                            value-format="timestamp"
+                            style="width:180px;"
+                            @input="inputHandler($event, 'releaseAtEnd')"
+                            placeholder="请选择结束时间">
+                        </el-date-picker>
+                    </div>
                 </div>
             </div>
             <div class="seperator-line"></div>
@@ -78,7 +109,7 @@
                     <div class="float-right">
                         <el-button
                             class="btn-style-two contain-svg-icon"
-                            @click="showFileUploadDialog">
+                            @click="createVersion">
                             <svg-icon icon-class="add"></svg-icon>
                             添加
                         </el-button>
@@ -124,13 +155,6 @@
                             <a class="text-primary" :href="packageUrl(scope.row.fullPackageUri)">{{scope.row.version}}</a>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" width="120px" label="操作">
-                        <template slot-scope="scope">
-                            <div class="operator-btn-wrapper">
-                                <span class="btn-text" @click="displayVersion(scope.row.id)">详情</span>
-                            </div>
-                        </template>
-                    </el-table-column>
                 </el-table>
             </div>
         </div>
@@ -143,35 +167,17 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="pagination.total">
         </el-pagination>
-        <el-dialog
-            :title="title"
-            :visible.sync="versonFormDialogStatus"
-            :show-close="true"
-            :before-close="closeVersionFormDialog"
-            :close-on-click-modal="false"
-            :close-on-press-escape="false">
-                <version-form v-if="!display" ref="versionForm"></version-form>
-                <version-display v-if="display"></version-display>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="closeVersionFormDialog">关闭</el-button>
-                    <el-button v-if="!display" type="primary" @click="submitVersionHandler">确定</el-button>
-                </div>
-        </el-dialog>
     </div>
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
-    import VersionForm from './VersionForm';
-    import VersionDisplay from './VersionDisplay';
     import role from '@/util/config/role';
     export default {
         name: 'VersionList',
-        components: { VersionForm, VersionDisplay },
         data() {
             return {
-                display: false,
-                title: '新增版本',
-                versonFormDialogStatus: false,
+                //  toggle搜索区域
+                searchFieldVisible: true,
                 productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
                 forcedOptions: role.FORCED_OPTIONS
             };
@@ -212,6 +218,12 @@
                 postVersion: 'version/postVersion',
                 getVersionList: 'version/getVersionList'
             }),
+            createVersion() {
+                this.$router.push({name: 'CreateVersion'});
+            },
+            toggleSearchField() {
+                this.searchFieldVisible = !this.searchFieldVisible;
+            },
             hardwareType(hardwareType) {
                 return hardwareType ? (hardwareType === 'HARDWARE_3796' ? '3796' : '3798') : '------';
             },
@@ -236,28 +248,6 @@
             },
             inputHandler(value, key) {
                 this.updateSearchFields({key, value});
-            },
-            closeVersionFormDialog() {
-                this.title = '新增版本';
-                this.versonFormDialogStatus = false;
-                this.resetVersion();
-                if (!this.display) {
-                    this.$refs.versionForm.$refs.createVersion.resetFields();
-                    this.$refs.versionForm.file = {};
-                    this.$refs.versionForm.percent = 0;
-                }
-                this.display = false;
-            },
-            showFileUploadDialog() {
-                this.resetVersion();
-                this.versonFormDialogStatus = true;
-            },
-            displayVersion(id) {
-                this.display = true;
-                this.title = '显示版本';
-                this.showFileUploadDialog();
-                let version = this.list.find((version) => version.id === id);
-                this.setVersion({version});
             },
             submitVersionHandler() {
                 this.$refs.versionForm.$refs.createVersion.validate(value => {

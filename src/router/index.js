@@ -76,6 +76,11 @@ import ClientLogList from 'sysPage/client_log/ClientLogList';
 import Category from 'sysPage/category_manage/Category';
 import Search from 'sysPage/search_manage/Search';
 import PageLayout from 'sysPage/page_layout/PageLayout';
+import CreateDevice from 'sysPage/device_manage/CreateDevice';
+import EditDevice from 'sysPage/device_manage/EditDevice';
+import CreateLiveChannel from 'sysPage/channel_manage/CreateLiveChannel';
+import EditLiveChannel from 'sysPage/channel_manage/EditLiveChannel';
+import CreateVersion from 'sysPage/version_manage/CreateVersion';
 
 Vue.use(Router);
 
@@ -426,6 +431,16 @@ let router = new Router({
                     name: 'LiveChannelList',
                     component: LiveChannelList
                 },
+                {
+                    path: '/channel-manage/live/create',
+                    name: 'CreateLiveChannel',
+                    component: CreateLiveChannel
+                },
+                {
+                    path: '/channel-manage/live/edit/:id',
+                    name: 'EditLiveChannel',
+                    component: EditLiveChannel
+                },
                 //  直播频道管理-批量修改
                 {
                     path: '/channel-manage/live/import-edit',
@@ -479,11 +494,26 @@ let router = new Router({
                     name: 'VersionList',
                     component: VersionList
                 },
+                {
+                    path: '/manage-version/create',
+                    name: 'CreateVersion',
+                    component: CreateVersion
+                },
                 //  设备管理
                 {
                     path: '/manage-device/list',
                     name: 'DeviceList',
                     component: DeviceList
+                },
+                {
+                    path: '/manage-device/create',
+                    name: 'CreateDevice',
+                    component: CreateDevice
+                },
+                {
+                    path: '/manage-device/edit/:id',
+                    name: 'EditDevice',
+                    component: EditDevice
                 },
                 //  操作台管理
                 {

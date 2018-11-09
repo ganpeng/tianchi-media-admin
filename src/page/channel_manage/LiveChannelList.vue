@@ -153,7 +153,7 @@
                                     </el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
-                            <span class="btn-text" @click="_updateLiveChannel(scope.row.id)">编辑</span>
+                            <span class="btn-text" @click="editLiveChannel(scope.row.id)">编辑</span>
                             <span class="btn-text text-danger" @click="_deleteLiveChannel(scope.row.id)">删除</span>
                         </div>
                     </template>
@@ -402,8 +402,10 @@
                 });
             },
             createLiveChannel() {
-                this.liveChannelDialogVisible = true;
-                this.status = 0;
+                this.$router.push({name: 'CreateLiveChannel'});
+            },
+            editLiveChannel(id) {
+                this.$router.push({name: 'EditLiveChannel', params: {id}});
             },
             // 批量创建直播频道
             createChannelByImportExcel() {

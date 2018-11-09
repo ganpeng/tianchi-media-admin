@@ -135,14 +135,7 @@ const mutations = {
     },
     updateLiveChannel(state, payload) {
         let {key, value} = payload;
-        if (key === 'typeList') {
-            state.liveChannel[key] = state.channelTypeList.filter((type) => {
-                let index = value.findIndex((id) => { return id === type.id; });
-                return index > -1;
-            });
-        } else {
-            state.liveChannel[key] = value;
-        }
+        state.liveChannel[key] = value;
     },
     resetLiveChannel(state) {
         state.liveChannel = _.cloneDeep(defaultLiveChannel);
@@ -172,6 +165,17 @@ const mutations = {
         } else {
             state.carouselChannelTypeList = state.carouselChannelTypeList.filter((type) => type.id !== id);
         }
+    },
+    //  新增频道类型到当前频道的typeList
+    addLiveCategoryToList(state, payload) {
+        let {liveCategory} = payload;
+        state.liveChannel.typeList.push(liveCategory);
+        state.liveChannel.typeList = _.uniqBy(state.liveChannel.typeList, 'id');
+    },
+    //  从当前频道的typeList中删除频道类型
+    deleteLiveCategoryById(state, payload) {
+        let {id} = payload;
+        state.liveChannel.typeList = state.liveChannel.typeList.filter((item) => item.id !== id);
     }
 };
 
@@ -248,9 +252,8 @@ const actions = {
     /**
      * 根据id修改直播频道
      */
-    async updateChannelById() {
+    async updateChannelById({commit, state}, id) {
         try {
-            let {id} = state.liveChannel;
             let liveChannel = _.cloneDeep(state.liveChannel);
             let res = await service.updateChannelById(id, liveChannel);
             return res;

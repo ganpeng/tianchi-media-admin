@@ -312,10 +312,8 @@ export default {
     data() {
         return {
             //  toggle搜索区域
-            searchFieldVisible: false,
+            searchFieldVisible: true,
             //  选择数据
-            checkAll: false,
-            reverseAll: false,
             areaOptions: store.get('areaList'),
             fileUploadDialogVisible: false,
             fileList: [],
@@ -700,12 +698,6 @@ export default {
                     });
                 }
             });
-        },
-        handleCheckAllChange() {
-
-        },
-        handleReverseAllChange() {
-
         },
         toggleSearchField() {
             this.searchFieldVisible = !this.searchFieldVisible;

@@ -111,8 +111,8 @@ const actions = {
         try {
             let {searchFields} = state;
             let params = {
-                releaseAtStart: searchFields.dateRange[0],
-                releaseAtEnd: searchFields.dateRange[1],
+                releaseAtStart: searchFields.releaseAtStart,
+                releaseAtEnd: searchFields.releaseAtEnd,
                 forced: searchFields.forced !== '' ? searchFields.forced === 1 : searchFields.forced,
                 keyword: searchFields.keyword,
                 productType: searchFields.productType,

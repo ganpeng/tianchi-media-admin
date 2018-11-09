@@ -17,7 +17,8 @@ const defaultPagination = {
 const defaultDevice = {
     caNo: '',
     no: '',
-    hardWareId: ''
+    hardWareId: '',
+    status: 'NORMAL'
 };
 
 const state = {
@@ -118,6 +119,16 @@ const actions = {
             let res = await service.addDevice(device);
             return res;
         } catch (err) { }
+    },
+    async getDeviceById({commit, state}, id) {
+        try {
+            let res = await service.getDeviceById(id);
+            if (res && res.code === 0) {
+                commit('setDevice', {device: res.data});
+            }
+        } catch (err) {
+            console.log(err);
+        }
     },
     async updateDeviceById({commit, state}) {
         try {

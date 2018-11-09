@@ -76,7 +76,7 @@
                     <div class="float-right">
                         <el-button
                             class="btn-style-two contain-svg-icon"
-                            @click="addDeviceHandler">
+                            @click="createDevice">
                                 <svg-icon icon-class="add"></svg-icon>
                             添加
                         </el-button>
@@ -136,13 +136,13 @@
                                 :checked="scope.row.status === 'NORMAL'"
                                 @click.prevent="toggleStatusHandler(scope.row.id)"/>
                             <i v-if="scope.row.status === 'NORMAL'" class="on-the-shelf">正常</i>
-                            <i v-else class="off-the-shelf">禁止</i>
+                            <i v-else class="off-the-shelf">禁用</i>
                         </template>
                     </el-table-column>
                     <el-table-column align="center" width="200px" label="操作">
                         <template slot-scope="scope">
                             <div class="operator-btn-wrapper">
-                                <span class="btn-text" @click="updateDeviceHandler(scope.row.id)">编辑</span>
+                                <span class="btn-text" @click="editDevice(scope.row.id)">编辑</span>
                                 <span class="btn-text text-danger" @click="deleteDeviceHandler(scope.row.id)">删除</span>
                             </div>
                         </template>
@@ -159,47 +159,6 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="pagination.total">
         </el-pagination>
-        <el-dialog
-            :title="dialogTitle"
-            :visible.sync="deviceDialogVisible"
-            :before-close="hideDeviceDialog"
-            :show-close="true"
-            :close-on-click-modal="false"
-            :close-on-press-escape="false">
-            <el-form :model="device" :rules="deviceRules" ref="deviceForm" class="form-block" label-width="100px">
-                <el-form-item label="CA卡号" prop="caNo">
-                    <el-input
-                        :value="device.caNo"
-                        clearable
-                        placeholder="请输入设备CA卡号"
-                        @input="inputHandler($event, 'caNo')"
-                    ></el-input>
-                </el-form-item>
-                <el-form-item label="设备类型" prop="hardWareId">
-                    <el-select
-                        :value="device.hardWareId"
-                        clearable
-                        placeholder="请选择内容类型"
-                        @input="inputHandler($event, 'hardWareId')"
-                    >
-                        <el-option
-                            v-for="item in hardwareTypeOptions"
-                            :key="item.value"
-                            :label="item.name"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="设备状态">
-                    <i v-if="status === 0" class="status-normal">正常</i>
-                    <span v-else v-html="getStatus(device.status)"></span>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button size="medium" @click="hideDeviceDialog">关闭</el-button>
-                <el-button type="primary" size="medium" @click="deviceEnterHandler">确认</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 <script>
@@ -210,22 +169,11 @@
         components: {},
         data() {
             return {
-                value6: [],
                 status: 0, // 0 是创建，1 是编辑
-                deviceDialogVisible: false,
                 hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS,
-                dialogTitle: '',
                 visibleOptions: [
                     {value: 'NORMAL', name: '正常'}, {value: 'FORBIDDEN', name: '禁用'}
-                ],
-                deviceRules: {
-                    caNo: [
-                        { required: true, message: '请输入设备CA卡号' }
-                    ],
-                    hardWareId: [
-                        { required: true, message: '请选择设备类型' }
-                    ]
-                }
+                ]
             };
         },
         created() {
@@ -251,13 +199,6 @@
             getType() {
                 return (type) => {
                     return type ? (type === 'HARDWARE_3796' ? '3796' : '3798') : '------';
-                };
-            },
-            getStatus() {
-                return (status) => {
-                    let text = status === 'NORMAL' ? '正常' : '禁用';
-                    let className = status === 'NORMAL' ? 'status-normal' : 'status-abnormal';
-                    return `<i class="${className}">${text}</i>`;
                 };
             }
         },
@@ -290,61 +231,14 @@
             inputSearchFieldHandler(value, key) {
                 this.updateSearchFields({key, value});
             },
-            inputHandler(value, key) {
-                this.updateDevice({key, value});
-            },
-            addDeviceHandler() {
-                this.showDeviceDialog();
-                this.dialogTitle = '添加设备';
-                this.status = 0;
-            },
-            updateDeviceHandler(id) {
-                this.showDeviceDialog();
-                let device = this.list.find((device) => device.id === id);
-                this.setDevice({device});
-                this.setCurrentId({id});
-                this.dialogTitle = '编辑设备';
-                this.status = 1;
-            },
-            showDeviceDialog() {
-                this.deviceDialogVisible = true;
-                this.$nextTick(() => {
-                    this.$refs.deviceForm.clearValidate();
-                });
-            },
-            hideDeviceDialog() {
-                this.deviceDialogVisible = false;
-                this.resetDevice();
-            },
             searchHandler() {
                 this.getDeviceList();
             },
-            deviceEnterHandler() {
-                this.$refs.deviceForm.validate(valid => {
-                    if (valid) {
-                        if (this.status) {
-                            //  编辑
-                            this.updateDeviceById()
-                                .then((res) => {
-                                    if (res && res.code === 0) {
-                                        this.hideDeviceDialog();
-                                        this.getDeviceList();
-                                        this.$message.success('设备更新成功');
-                                    }
-                                });
-                        } else {
-                            //  新增
-                            this.addDevice()
-                                .then((res) => {
-                                    if (res && res.code === 0) {
-                                        this.hideDeviceDialog();
-                                        this.getDeviceList();
-                                        this.$message.success('设备添加成功');
-                                    }
-                                });
-                        }
-                    }
-                });
+            createDevice() {
+                this.$router.push({name: 'CreateDevice'});
+            },
+            editDevice(id) {
+                this.$router.push({name: 'EditDevice', params: {id}});
             },
             toggleStatusHandler(id) {
                 let _device = this.list.find((device) => device.id === id);

@@ -10,6 +10,13 @@ export const addDevice = (device) => {
 };
 
 /**
+ * 根据id获取设备信息
+ */
+export const getDeviceById = (id) => {
+    return service.get(`/v1/stb/${id}`);
+};
+
+/**
  * 根据id修改设备信息
  */
 export const updateDeviceById = (id, device) => {

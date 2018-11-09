@@ -22,6 +22,15 @@
                             <el-form-item label="电话" prop="telephone">
                                 <el-input v-model="editInfo.telephone" placeholder="请填写电话号码"></el-input>
                             </el-form-item>
+                            <el-form-item label="状态">
+                                <input
+                                    class="my-switch switch-anim"
+                                    type="checkbox"
+                                    :checked="editInfo.status === 'NORMAL'"
+                                    @click.prevent="toggleAdminStatus"/>
+                                <i v-if="editInfo.status === 'NORMAL'" class="on-the-shelf inline">正常</i>
+                                <i v-else class="off-the-shelf inline">禁用</i>
+                            </el-form-item>
                         </el-form>
                     </div>
                 </el-col>
@@ -140,8 +149,9 @@
             toAdminList() {
                 this.$router.push({name: 'AdminList'});
             },
-            reset() {
-                this.$refs['editInfo'].resetFields();
+            toggleAdminStatus() {
+                let status = this.editInfo.status === 'FORBIDDEN' ? 'NORMAL' : 'FORBIDDEN';
+                this.editInfo.status = status;
             }
         }
     };

@@ -1,110 +1,123 @@
 <template>
     <div class="search-container">
         <h2 class="content-title">搜索管理</h2>
+        <div class="seperator-line"></div>
+        <div class="btn-wrapper">
+            <el-button class="btn-style-two" type="primary" @click="toggleEditHandler">编辑</el-button>
+        </div>
+        <p class="tips"><i>*</i>每条不超过10个字</p>
         <ul class="search-list clearfix">
             <li v-for="(item, index) in list" :key="index" class="search-item">
-                <span class="index">{{index + 1}}</span>
-                <input v-if="item.edit" :value="item.temp" type="text" @change="searchItemChangeHandler($event, index)">
-                <span v-else class="search-name">{{item.name}}</span>
-                <button v-if="!item.edit" class="edit-btn" @click="searchItemEditHandler(index)">编辑</button>
-                <button v-else class="save-btn" @click="searchItemSaveHandler(index)">保存</button>
+                <div class="wrapper">
+                    <span class="index">{{index + 1}}</span>
+                    <input class="name-input" placeholder="请填写新的搜索关键字" v-if="isEdit" :value="item.temp" type="text" @change="searchItemChangeHandler($event, index)">
+                    <span v-else class="search-name">{{item.keyword}}</span>
+                </div>
             </li>
         </ul>
-        <search-person></search-person>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-two" type="primary" @click="saveSearchHandler">保存</el-button>
+        </div>
     </div>
 </template>
 <script>
 import _ from 'lodash';
-import SearchPerson from '../../components/custom_components/custom/SearchPerson';
 export default {
     name: 'Search',
-    components: {
-        SearchPerson
-    },
     data() {
         return {
-            list: [
-                {
-                    name: 'haha',
-                    temp: '',
-                    edit: false
-                },
-                {
-                    name: 'xixi',
-                    temp: '',
-                    edit: false
-                }
-            ]
+            list: [],
+            isEdit: false
         };
     },
     created() {
+        this.$service.getHotSearch();
         this.generatorList();
     },
     methods: {
         searchItemChangeHandler(e, index) {
-            this.list[index].temp = e.target.value;
-        },
-        searchItemEditHandler(index) {
-            this.list[index].edit = true;
-            this.list[index].temp = this.list[index].name;
-        },
-        searchItemSaveHandler(index) {
-            this.list[index].edit = false;
-            this.list[index].name = this.list[index].temp;
-            this.list[index].temp = '';
+            this.list[index].keyword = e.target.value;
         },
         generatorList() {
             let list = _.times(20, () => {
                 return {
-                    name: 'haha',
-                    temp: '',
-                    edit: false
+                    keyword: ''
                 };
             });
             this.list = list;
+        },
+        saveSearchHandler() {
+            let hotSearchList = this.list.map((item, index) => {
+                item.sort = index;
+                return item;
+            });
+
+            this.$service.postHotSearch(hotSearchList);
+        },
+        toggleEditHandler() {
+            this.isEdit = true;
         }
     }
 };
 </script>
 <style lang="scss" scoped>
+.btn-wrapper {
+    margin-top: 20px;
+    text-align: right;
+}
+.tips {
+    font-size: 12px;
+    color: #6F7480;
+    line-height: 16px;
+    text-align: left;
+    i {
+        color: $dangerColor;
+    }
+}
+
 .search-list {
-    width: 440px;
-    margin: 30px auto;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
     .search-item {
-        position: relative;
-        float: left;
         width: 200px;
-        height: 40px;;
-        line-height: 40px;
-        background: #fff;
-        color: #000;
-        margin-right: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #f5f5f5;
-        input, .search-name {
-            position: absolute;
-            top: 0;
-            left: 30px;
-            bottom: 0;
-            width: 140px;
-            border: none;
-            text-indent: 10px;
-        }
-        button {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 40px;
-            border: none;
-        }
-        .index {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 30px;
-            border-right: 1px solid #f5f5f5;
+        height: 34px;
+        line-height: 34px;
+        border: 1px solid #3E495E;
+        border-radius: 4px;
+        margin-right: 20px;
+        margin-bottom: 14px;
+        .wrapper {
+            display: flex;
+            align-items: center;
+            height: 32px;
+            .index {
+                width: 32px;
+                height: 32px;
+                line-height: 32px;
+                border-right: 1px solid #3E495E;
+            }
+            .search-name {
+                color: #fff;
+                flex: 1;
+                height: 32px;
+                line-height: 32px;
+                text-indent: 10px;
+                text-align: left;
+            }
+            .name-input {
+                color: #3E495E;
+                height: 32px;
+                line-height: 32px;
+                text-indent: 10px;
+                border: none;
+                outline: none;
+                &::-webkit-input-placeholder {
+                    font-size: 12px;
+                    color: #6F7480;;
+                }
+            }
         }
     }
 }
