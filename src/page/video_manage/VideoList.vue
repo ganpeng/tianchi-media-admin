@@ -64,6 +64,21 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item class="search">
+                    <el-select
+                        :value="searchFields.suffix"
+                        clearable
+                        placeholder="请选择视频后缀"
+                        @input="inputHandler($event, 'suffix')"
+                    >
+                        <el-option
+                            v-for="(item, index) in suffixOptions"
+                            :key="index"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item>
                     <el-date-picker
                         :value="searchFields.dateRange"
@@ -75,7 +90,7 @@
                         end-placeholder="结束日期">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item>GI
+                <el-form-item>
                     <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="searchHandler" plain>
                         搜索
                     </el-button>
@@ -96,7 +111,7 @@
                                @click="exportSelectedVideoHandler">批量导出
                     </el-button>
                     <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
-                               @click="exportSelectedTsVideo">批量导出ts视频文件
+                               @click="exportSelectedTsVideo">批量下载
                     </el-button>
                     <el-button class="delete-btn create-blue-btn" size="small" @click="exportVideoHandler">导出视频
                     </el-button>
@@ -126,6 +141,7 @@
         data() {
             return {
                 statusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
+                suffixOptions: role.VIDEO_SUFFIX_OPTIONS,
                 timer: null,
                 isDisabled: true
             };

@@ -360,6 +360,22 @@ export const VIDEO_TYPE_OPTIONS = [
     }
 ];
 
+//  视频后缀
+export const VIDEO_SUFFIX_OPTIONS = [
+    {
+        value: 'mpg',
+        label: 'mpg'
+    },
+    {
+        value: 'ts',
+        label: 'ts'
+    },
+    {
+        value: 'zip',
+        label: 'zip'
+    }
+];
+
 //  升级类型
 const PRODUCT_TYPE_OPTIONS = [
     {
@@ -488,5 +504,6 @@ export default {
     PRODUCT_TYPE_OPTIONS,
     FORCED_OPTIONS,
     RECOMMEND_OPTIONS,
-    HARDWARE_TYPE_OPTIONS
+    HARDWARE_TYPE_OPTIONS,
+    VIDEO_SUFFIX_OPTIONS
 };
