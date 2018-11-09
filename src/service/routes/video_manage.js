@@ -5,7 +5,7 @@ import service from '../config';
 /**
  * 获取所有视频的列表
  */
-export const getVideoList = ({ startedAt, endedAt, status, userId, name, key, m3u8For480P, m3u8For720P, m3u8For1080P, bitrate, frameRate, pageNum, pageSize, videoType }) => {
+export const getVideoList = ({startedAt, endedAt, status, userId, name, key, m3u8For480P, m3u8For720P, m3u8For1080P, bitrate, frameRate, pageNum, pageSize, videoType}) => {
     let params = {
         userId,
         name,
@@ -55,6 +55,15 @@ export const deleteVideoByIdList = (ids) => {
  */
 export const retryVideoByIdList = (ids) => {
     return service.patch('/v1/storage/video/retry', ids, {
+        baseURL: '/storage'
+    });
+};
+
+/**
+ * 根据id列表批量导出ts文件
+ */
+export const exportTsVideos = ({videoIdList}) => {
+    return service.post('/v1/storage/video/export', videoIdList, {
         baseURL: '/storage'
     });
 };

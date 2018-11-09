@@ -11,7 +11,7 @@
                 <el-dropdown>
                     <el-button
                         class="page-main-btn create-blue-btn contain-svg-icon"
-                        >
+                    >
                         <svg-icon icon-class="upload"></svg-icon>
                         上传视频<i class="el-icon-arrow-down el-icon--right"></i>
                     </el-button>
@@ -19,20 +19,25 @@
                         <el-dropdown-item>
                             <div class="wrapper">
                                 <label for="upload-input">选择文件</label>
-                                <input id="upload-input-file" class="upload-input" type="file" accept="video/*" ref="uploadInputFile" multiple>
+                                <input id="upload-input-file" class="upload-input" type="file"
+                                       accept="video/*,application/zip"
+                                       ref="uploadInputFile" multiple>
                             </div>
                         </el-dropdown-item>
                         <el-dropdown-item>
                             <div class="wrapper">
                                 <label for="upload-input">选择文件夹</label>
-                                <input id="upload-input-dir" class="upload-input" type="file" accet="video/*" ref="uploadInputDir" multiple directory webkitdirectory allowdirs>
+                                <input id="upload-input-dir" class="upload-input" type="file"
+                                       accept="video/*,application/zip"
+                                       ref="uploadInputDir" multiple directory webkitdirectory allowdirs>
                             </div>
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
         </el-col>
-        <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @keyup.enter.native="searchHandler" @submit.native.prevent>
+        <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left"
+                 @keyup.enter.native="searchHandler" @submit.native.prevent>
             <el-col :span="24">
                 <el-form-item class="search">
                     <el-input
@@ -70,9 +75,12 @@
                         end-placeholder="结束日期">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item>
-                    <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="searchHandler" plain>搜索</el-button>
-                    <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
+                <el-form-item>GI
+                    <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="searchHandler" plain>
+                        搜索
+                    </el-button>
+                    <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields"
+                               plain>
                         <svg-icon
                             icon-class="clear_filter"
                             class-name="svg-box">
@@ -81,10 +89,20 @@
                     </el-button>
                 </el-form-item>
                 <el-form-item class="float-right">
-                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small" @click="retrySelectedVideoHandler">批量重试</el-button>
-                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small" @click="exportSelectedVideoHandler">批量导出</el-button>
-                    <el-button class="delete-btn create-blue-btn" size="small" @click="exportVideoHandler">导出视频</el-button>
-                    <el-button class="delete-btn disabled-red-btn" size="small" :disabled="isDisabled" @click="deleteVideoList">批量删除</el-button>
+                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
+                               @click="retrySelectedVideoHandler">批量重试
+                    </el-button>
+                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
+                               @click="exportSelectedVideoHandler">批量导出
+                    </el-button>
+                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
+                               @click="exportSelectedTsVideo">批量导出ts视频文件
+                    </el-button>
+                    <el-button class="delete-btn create-blue-btn" size="small" @click="exportVideoHandler">导出视频
+                    </el-button>
+                    <el-button class="delete-btn disabled-red-btn" size="small" :disabled="isDisabled"
+                               @click="deleteVideoList">批量删除
+                    </el-button>
                 </el-form-item>
             </el-col>
         </el-form>
@@ -96,6 +114,7 @@
     import XLSX from 'xlsx';
     import VideoTable from './VideoTable';
     import role from '@/util/config/role';
+
     const FileSaver = require('file-saver');
     const Uppie = require('../../assets/js/uppie');
     const uppie = new Uppie();
@@ -191,6 +210,19 @@
                 let {status, transcodeStatus} = video;
                 return (status === 'INJECTING' && transcodeStatus === 'FAILED') || status === 'FAILED';
             },
+            // 导出ts视频文件
+            exportSelectedTsVideo() {
+                this.$message.success('正在请求下载视频文件，请稍等');
+                let videoIdList = [];
+                this.$refs.videoTable.selectedVideoList.map(video => {
+                    videoIdList.push(video.id);
+                });
+                this.$service.exportTsVideos({videoIdList: videoIdList}).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message.success('成功下载视频文件，请查看');
+                    }
+                });
+            },
             exportSelectedVideoHandler() {
                 let videoList = this.$refs.videoTable.selectedVideoList.map((video) => {
                     let obj = {};
@@ -251,7 +283,7 @@
             },
             uploadChangeHandler(e) {
                 let files = Array.from(e.target.files).filter((file) => {
-                    return /(.mpg|.ts)$/.test(file.name);
+                    return /(.mpg|.ts|.zip)$/.test(file.name);
                 });
                 if (files.length === 0) {
                     this.$message.warning('本次选择没有符合要求的文件');
@@ -318,19 +350,19 @@
                 });
 
                 sheetsData.forEach(function (item, index) {
-                    content[item.position] = { v: item.value };
+                    content[item.position] = {v: item.value};
                 });
                 // 设置区域,比如表格从A1到D10,SheetNames:标题
                 let coordinate = Object.keys(content);
                 let workBook = {
                     SheetNames: ['视频列表'],
                     Sheets: {
-                        '视频列表': Object.assign({}, content, { '!ref': coordinate[0] + ':' + coordinate[coordinate.length - 1] })
+                        '视频列表': Object.assign({}, content, {'!ref': coordinate[0] + ':' + coordinate[coordinate.length - 1]})
                     }
                 };
                 // 这里的数据是用来定义导出的格式类型
-                let excelData = XLSX.write(workBook, { bookType: 'xlsx', bookSST: false, type: 'binary' });
-                let blob = new Blob([this.string2ArrayBuffer(excelData)], { type: '' });
+                let excelData = XLSX.write(workBook, {bookType: 'xlsx', bookSST: false, type: 'binary'});
+                let blob = new Blob([this.string2ArrayBuffer(excelData)], {type: ''});
                 FileSaver.saveAs(blob, '导出视频列表.xlsx');
             },
             timeStampFormat(seconds) {
@@ -358,21 +390,21 @@
     };
 </script>
 <style scoped lang="less">
-.wrapper {
-    position: relative;
-    width: 80px;
-    height: 32px;
-    margin-right: 10px;
-    label, .upload-input {
-        position: absolute;
-        top: 0;
-        left: 0;
+    .wrapper {
+        position: relative;
         width: 80px;
         height: 32px;
+        margin-right: 10px;
+        label, .upload-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 32px;
+        }
+        .upload-input {
+            opacity: 0;
+            cursor: pointer;
+        }
     }
-    .upload-input {
-        opacity: 0;
-        cursor: pointer;
-    }
-}
 </style>
