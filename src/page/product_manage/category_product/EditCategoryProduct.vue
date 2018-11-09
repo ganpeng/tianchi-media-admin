@@ -4,7 +4,7 @@
         <custom-breadcrumb
             v-bind:breadcrumbList="[
             {name:'产品管理'},
-            {name:'编辑类型包'}]">
+            {name:'编辑类别包'}]">
         </custom-breadcrumb>
         <div class="block-box">
             <category-product-form

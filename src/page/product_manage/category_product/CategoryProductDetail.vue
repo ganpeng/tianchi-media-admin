@@ -15,7 +15,7 @@
                     <li><span>产品包名称</span><label>{{productInfo.name}}</label></li>
                     <li><span>产品包简介</span><label>{{productInfo.description}}</label></li>
                     <li>
-                        <span>包含类型</span>
+                        <span>包含类别</span>
                         <label>
                             <el-tag v-for="(item, index) in categoryList"
                                     :key="index"
@@ -72,7 +72,7 @@
                     if (value[1] && value[1].code === 0) {
                         this.productInfo = value[1].data;
                     }
-                    // 设置包含类型
+                    // 设置包含类别
                     if (this.productInfo.contentIdList) {
                         for (let i = 0; i < this.productInfo.contentIdList.length; i++) {
                             this.categoryOptions.map(category => {
