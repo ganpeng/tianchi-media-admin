@@ -52,7 +52,7 @@ export const deleteVideoByIdList = (ids) => {
 };
 
 /**
- * 根据id列表重新转吗视频
+ * 根据id列表重新转码视频
  */
 export const retryVideoByIdList = (ids) => {
     return service.patch('/v1/storage/video/retry', ids, {
@@ -65,6 +65,29 @@ export const retryVideoByIdList = (ids) => {
  */
 export const exportTsVideos = ({videoIdList}) => {
     return service.post('/v1/storage/video/export', videoIdList, {
+        baseURL: '/storage'
+    });
+};
+
+/**
+ * 获取所有时长不一致视频的列表
+ */
+export const getDurationDiffVideoList = ({durationDiffGt, durationDiffLt, keyword, startedAt, endedAt, pageNum, pageSize}) => {
+    let params = {
+        durationDiffGt,
+        durationDiffLt,
+        keyword,
+        startedAt,
+        endedAt,
+        pageNum: pageNum - 1,
+        pageSize
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/storage/video/duration-diff/page?${paramsStr}`, {
         baseURL: '/storage'
     });
 };

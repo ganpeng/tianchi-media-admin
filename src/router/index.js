@@ -54,6 +54,7 @@ import VolumeBarAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage
 import DialogAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/DialogAdvertGroupList';
 import DetailPageAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/DetailPageAdvertGroupList';
 import VideoList from 'sysPage/video_manage/VideoList';
+import DiffTimeVideoList from 'sysPage/video_manage/DiffTimeVideoList';
 import LiveChannelList from 'sysPage/channel_manage/LiveChannelList';
 import EditLiveChannelByImportExcel from 'sysPage/channel_manage/EditLiveChannelByImportExcel';
 import CarouselChannelList from 'sysPage/channel_manage/carousel_channel_manage/CarouselChannelList';
@@ -410,6 +411,12 @@ let router = new Router({
                     path: '/manage-video/list',
                     name: 'VideoList',
                     component: VideoList
+                },
+                //  视频管理-检查视频时长
+                {
+                    path: '/manage-video/diff-list',
+                    name: 'DiffTimeVideoList',
+                    component: DiffTimeVideoList
                 },
                 //  直播频道管理
                 {

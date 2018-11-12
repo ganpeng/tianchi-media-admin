@@ -18,7 +18,7 @@
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item>
                             <div class="wrapper">
-                                <label for="upload-input">选择文件</label>
+                                <label for="upload-input-file">选择文件</label>
                                 <input id="upload-input-file" class="upload-input" type="file"
                                        accept="video/*,application/zip"
                                        ref="uploadInputFile" multiple>
@@ -26,7 +26,7 @@
                         </el-dropdown-item>
                         <el-dropdown-item>
                             <div class="wrapper">
-                                <label for="upload-input">选择文件夹</label>
+                                <label for="upload-input-dir">选择文件夹</label>
                                 <input id="upload-input-dir" class="upload-input" type="file"
                                        accept="video/*,application/zip"
                                        ref="uploadInputDir" multiple directory webkitdirectory allowdirs>
@@ -113,10 +113,11 @@
                     <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
                                @click="exportSelectedTsVideo">批量下载
                     </el-button>
-                    <el-button class="delete-btn create-blue-btn" size="small" @click="exportVideoHandler">导出视频
-                    </el-button>
                     <el-button class="delete-btn disabled-red-btn" size="small" :disabled="isDisabled"
                                @click="deleteVideoList">批量删除
+                    </el-button>
+                    <el-button class="delete-btn create-blue-btn" size="small" @click="toDiffTime">
+                        检查时长
                     </el-button>
                 </el-form-item>
             </el-col>
@@ -399,8 +400,8 @@
                 }).join(', ');
                 return urlStr;
             },
-            exportVideoHandler() {
-                window.eventBus.$emit('startExportVideoExecel');
+            toDiffTime() {
+                this.$router.push({name: 'DiffTimeVideoList'});
             }
         }
     };

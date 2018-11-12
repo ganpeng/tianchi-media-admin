@@ -26,13 +26,13 @@
                         <el-dropdown-item>
                             <div class="wrapper">
                                 <input id="upload-input-file2" class="upload-input" accept="video/*,application/zip" type="file" ref="uploadInputFile" multiple>
-                                <label for="upload-input-file">选择文件</label>
+                                <label for="upload-input-file2">选择文件</label>
                             </div>
                         </el-dropdown-item>
                         <el-dropdown-item>
                             <div class="wrapper">
                                 <input id="upload-input-dir2" class="upload-input" type="file" accept="video/*,application/zip" ref="uploadInputDir" multiple directory webkitdirectory allowdirs>
-                                <label for="upload-input-dir">选择文件夹</label>
+                                <label for="upload-input-dir2">选择文件夹</label>
                             </div>
                         </el-dropdown-item>
                     </el-dropdown-menu>
