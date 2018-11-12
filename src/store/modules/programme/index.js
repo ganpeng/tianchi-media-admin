@@ -801,8 +801,22 @@ const mutations = {
     deleteSpecByName(state, payload) {
         let {spec} = payload;
         state.programme.specList = state.programme.specList.filter((_spec) => _spec !== spec);
-    }
+    },
     //  规格搜索结束
+    /**
+     * 节目中当前视频的相关操作开始
+     */
+    //  视频中figureList的增删改查
+    addFigureToList(state, payload) {
+        let {figure} = payload;
+        state.video.video.figureList.push(figure);
+        state.video.video.figureList = _.uniqBy(state.video.video.figureList, 'id');
+    },
+    deleteFigureById(state, payload) {
+        let {id} = payload;
+        state.video.video.figureList = state.video.video.figureList.filter((figure) => figure.id !== id);
+    }
+    //  视频中figureList的增删改查结束
 };
 
 /**

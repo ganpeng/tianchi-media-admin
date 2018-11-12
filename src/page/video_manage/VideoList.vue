@@ -1,11 +1,119 @@
 <!--视频列表组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'视频资源管理'},
-            {name:'视频列表'}]">
-        </custom-breadcrumb>
+    <div class="video-list-container">
+        <div class="table-container">
+            <h2 class="content-title">搜索筛选</h2>
+            <div class="search-field">
+                <div class="field-row">
+                    <div class="search-field-item">
+                        <el-input
+                            :value="searchFields.name"
+                            clearable
+                            class="border-input"
+                            @input="inputHandler($event, 'name')"
+                            placeholder="搜索你想要的信息">
+                        </el-input>
+                    </div>
+                    <el-button class="btn-style-one" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">开始时间</label>
+                        <el-date-picker
+                            :value="searchFields.startedAt"
+                            type="date"
+                            clearable
+                            style="width:180px;"
+                            value-format="timestamp"
+                            @input="inputHandler($event, 'startedAt')"
+                            placeholder="请选择开始时间">
+                        </el-date-picker>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">结束时间</label>
+                        <el-date-picker
+                            :value="searchFields.endedAt"
+                            type="date"
+                            clearable
+                            style="width:180px;"
+                            value-format="timestamp"
+                            @input="inputHandler($event, 'endedAt')"
+                            placeholder="请选择结束时间">
+                        </el-date-picker>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">状态</label>
+                        <el-select
+                            :value="searchFields.status"
+                            @change="inputHandler($event, 'status')"
+                            clearable
+                            placeholder="请选择状态">
+                            <el-option
+                                v-for="item in statusOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
+                        <svg-icon
+                            icon-class="clear_filter"
+                            class-name="svg-box">
+                        </svg-icon>
+                        重置
+                    </el-button>
+                </div>
+            </div>
+            <div class="seperator-line"></div>
+            <div class="table-field">
+                <h2 class="content-title">视频列表</h2>
+                <div class="table-operator-field clearfix">
+                    <div class="float-left">
+                        <el-dropdown
+                            trigger="click"
+                            v-show="isDisabled"
+                            class="my-dropdown disabled">
+                            <span class="el-dropdown-link">
+                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <el-dropdown
+                            trigger="click"
+                            v-show="!isDisabled"
+                            class="my-dropdown">
+                            <span class="el-dropdown-link">
+                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item>
+                                    <span @click="retrySelectedVideoHandler">批量重试</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span @click="exportSelectedVideoHandler">批量导出</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span @click="deleteVideoList">批量删除</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span @click="exportVideoHandler">导出视频</span>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <div class="float-right">
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="() => {}">
+                            <svg-icon icon-class="add"></svg-icon>
+                            上传
+                        </el-button>
+                    </div>
+                </div>
+                <video-table ref="videoTable"></video-table>
+            </div>
+        </div>
+
         <el-col :span="24">
             <div style="margin-bottom:20px;" class="float-right">
                 <el-dropdown>
@@ -32,63 +140,6 @@
                 </el-dropdown>
             </div>
         </el-col>
-        <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left" @keyup.enter.native="searchHandler" @submit.native.prevent>
-            <el-col :span="24">
-                <el-form-item class="search">
-                    <el-input
-                        :value="searchFields.name"
-                        placeholder="搜索你想要的信息"
-                        clearable
-                        @input="inputHandler($event, 'name')"
-                    >
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
-                </el-form-item>
-                <el-form-item class="search">
-                    <el-select
-                        :value="searchFields.status"
-                        clearable
-                        placeholder="请选择视频注入状态"
-                        @input="inputHandler($event, 'status')"
-                    >
-                        <el-option
-                            v-for="(item, index) in statusOptions"
-                            :key="index"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-date-picker
-                        :value="searchFields.dateRange"
-                        type="daterange"
-                        value-format="timestamp"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        @input="inputHandler($event, 'dateRange')"
-                        end-placeholder="结束日期">
-                    </el-date-picker>
-                </el-form-item>
-                <el-form-item>
-                    <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="searchHandler" plain>搜索</el-button>
-                    <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
-                        <svg-icon
-                            icon-class="clear_filter"
-                            class-name="svg-box">
-                        </svg-icon>
-                        清空筛选条件
-                    </el-button>
-                </el-form-item>
-                <el-form-item class="float-right">
-                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small" @click="retrySelectedVideoHandler">批量重试</el-button>
-                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small" @click="exportSelectedVideoHandler">批量导出</el-button>
-                    <el-button class="delete-btn create-blue-btn" size="small" @click="exportVideoHandler">导出视频</el-button>
-                    <el-button class="delete-btn disabled-red-btn" size="small" :disabled="isDisabled" @click="deleteVideoList">批量删除</el-button>
-                </el-form-item>
-            </el-col>
-        </el-form>
-        <video-table ref="videoTable"></video-table>
     </div>
 </template>
 <script>

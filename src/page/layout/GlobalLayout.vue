@@ -67,6 +67,20 @@ export default {
             minHeight: 400
         };
     },
+    mounted() {
+        let content = document.querySelector('.content');
+        content.addEventListener('scroll', (e) => {
+            let fixedBtnContainer = document.querySelector('.fixed-btn-container');
+            let isBottom = content.scrollHeight - content.scrollTop === content.clientHeight;
+            if (fixedBtnContainer) {
+                if (isBottom) {
+                    fixedBtnContainer.style.background = 'transparent';
+                } else {
+                    fixedBtnContainer.style.background = '#293550';
+                }
+            }
+        }, false);
+    },
     created() {
         let {active, activePath} = this.getActivePath();
         this.active = active;
@@ -106,6 +120,16 @@ export default {
         },
         logout() {
             this.$store.dispatch('user/logout', true);
+        },
+        bodyScrollHandler(e) {
+            console.log(this.checkIsBottom());
+            if (this.checkIsBottom()) {
+                console.log('aaaa');
+            }
+        },
+        checkIsBottom() {
+            let body = document.querySelector('body');
+            return body.scrollHeight - body.scrollTop === body.clientHeight;
         }
     }
 };

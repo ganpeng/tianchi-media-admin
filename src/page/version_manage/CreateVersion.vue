@@ -84,6 +84,14 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item ref="uploadItem" label="升级包">
+                        <el-button
+                            class="float-left file btn-style-four contain-svg-icon">
+                            <svg-icon
+                                icon-class="video"
+                                class-name="svg-box">
+                            </svg-icon>
+                            <input ref="versionUpload" type="file" accept=".zip, .apk" id="version-file-input">选择文件
+                        </el-button>
                         <!--
                         <div class="wrapper clearfix">
                             <div class="file float-left">
@@ -101,6 +109,12 @@
                         <span v-show="percent !== 0">{{percent}}%</span>
                         -->
                     </el-form-item>
+                    <el-form-item class="upload-info-container">
+                        <span class="uploading-info">
+                            <span class="file-name">{{file.name}}</span>
+                            <span class="file-percent" v-show="percent !== 0">{{percent}}%</span>
+                        </span>
+                    </el-form-item>
                 </el-form>
             </el-col>
         </div>
@@ -111,6 +125,7 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import role from '@/util/config/role';
 export default {
@@ -138,11 +153,17 @@ export default {
             },
             productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
             forcedOptions: role.FORCED_OPTIONS,
-            hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS
+            hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS,
+            percent: 0,
+            file: {}
         };
     },
     created() {
         this.resetVersion();
+        this.$nextTick(() => {
+            let uploadInputFile = document.querySelector('#version-file-input');
+            uploadInputFile.addEventListener('input', this.uploadChangeHandler);
+        });
     },
     computed: {
         ...mapGetters({
@@ -176,9 +197,72 @@ export default {
         },
         inputHandler(value, key) {
             this.updateVersion({key, value});
+        },
+        uploadChangeHandler(e) {
+            let files = Array.from(e.target.files).filter((file) => {
+                return /(.zip|.apk)$/.test(file.name);
+            });
+            if (files.length === 0) {
+                this.$message.warning('只能上传.zip或者.apk文件');
+                this.$refs.versionUpload.value = null;
+                return false;
+            }
+            this.uploadHandler(files[0]);
+            this.$refs.versionUpload.value = null;
+        },
+        uploadHandler(file) {
+            let formData = new FormData();
+            formData.append('file', file);
+            this.file = file;
+            this.$util.getUploadServer()
+                .then((baseUri) => {
+                    let url = `${baseUri}/v1/storage/file`;
+                    axios.post(`${url}`, formData, {
+                        headers: this.$util.getUploadHeaders(this.$store.state.user.token),
+                        onUploadProgress: (progressEvent) => {
+                            let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                            this.percent = percentCompleted;
+                        }
+                    }).then((res) => {
+                        this.uploadSuccessHandler(res.data);
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+                });
+        },
+        uploadSuccessHandler(res) {
+            if (res && res.code === 0 && res.data[0]) {
+                if (res.data[0].failCode === 0 || res.data[0].failCode === 3300) {
+                    this.updateVersion({key: 'fullPackageUri', value: res.data[0].file.uri});
+                    this.updateVersion({key: 'fullPackageMd5', value: res.data[0].file.key});
+                    this.$message({
+                        type: 'success',
+                        message: '文件上传成功'
+                    });
+                }
+            } else {
+                this.$message({
+                    type: 'error',
+                    message: res.data[0].failReason
+                });
+            }
         }
     }
 };
 </script>
 <style lang="scss" scoped>
+.upload-info-container {
+    line-height: 18px;
+}
+.uploading-info {
+    display: block;
+    background: #2A3040;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: #6F7480;
+    .file-percent {
+        margin-left: 10px;
+    }
+}
 </style>

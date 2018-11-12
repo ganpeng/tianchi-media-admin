@@ -2,6 +2,7 @@
     <div class="player-container">
         <el-dialog
             :title="getTitle"
+            class="my-dialog"
             :visible.sync="displayVideoDialogVisible"
             :show-close="true"
             :before-close="beforeCloseHandler"

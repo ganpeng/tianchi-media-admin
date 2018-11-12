@@ -2,6 +2,7 @@
 <template>
     <el-dialog
         :title="title"
+        class="my-dialog"
         :visible.sync="videoUploadDialogVisible"
         :show-close="true"
         @open="openDialogHandler"
@@ -11,6 +12,7 @@
         <!-- 选择视频的表格 -->
         <el-dialog
             title="选择视频"
+            class="my-dialog"
             width="80%"
             :visible.sync="selectVideoDialogVisible"
             :show-close="true"
@@ -24,14 +26,14 @@
                         <el-input
                             placeholder="搜索你想要的信息"
                             clearable
+                            class="border-input"
                             :value="videoListObj.searchFields.name"
                             @input="searchInputHandler($event, 'name')"
                         >
-                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
                         </el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="searchEnterHandler">搜索</el-button>
+                        <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">搜索</el-button>
                     </el-form-item>
                 </el-form>
                 <video-table :status="'SUCCESS'" :hasRadio="true"></video-table>
@@ -43,35 +45,31 @@
         </el-dialog>
         <el-form :model="video" :rules="uploadVideoRules" ref="uploadVideoForm" class="form-block" label-width="100px">
             <el-form-item v-if="!readonly" label="选择视频">
-                <el-button type="primary" @click="selectVideo">选择</el-button>
+                <el-button class="btn-style-two" type="primary" @click="selectVideo">选择</el-button>
             </el-form-item>
             <el-form-item label="视频ID">
-                <el-input :value="video.storageVideoId" disabled></el-input>
+                <span>{{video.storageVideoId}}</span>
             </el-form-item>
-            <el-form-item
-                label="视频文件名">
-                <el-input
-                    :disabled="true"
-                    :value="video.originName"
-                ></el-input>
+            <el-form-item label="视频文件名">
+                <span>{{video.originName}}</span>
             </el-form-item>
             <el-form-item label="视频时长">
-                <el-input
-                    :value="duration(video.takeTimeInSec)"
-                    :disabled="true"
-                ></el-input>
+                <span>{{duration(video.takeTimeInSec)}}</span>
             </el-form-item>
             <el-form-item label="视频清晰度">
-                <el-tag type="info">HD_480</el-tag>
-                <el-tag type="info">HD_720</el-tag>
-                <el-tag type="info">HD_1080</el-tag>
+                <div class="my-tags">
+                    <el-tag class="tag" type="info">HD_480</el-tag>
+                    <el-tag class="tag" type="info">HD_720</el-tag>
+                    <el-tag class="tag" type="info">HD_1080</el-tag>
+                </div>
             </el-form-item>
             <el-form-item
                 ref="name"
                 label="视频展示名"
                 prop="name">
+                <span v-if="readonly">{{video.name}}</span>
                 <el-input
-                    :disabled="readonly"
+                    v-else
                     :value="video.name"
                     auto-complete="off"
                     placeholder="请输入子集名称"
@@ -79,8 +77,9 @@
                 ></el-input>
             </el-form-item>
             <el-form-item label="视频简介" prop="description">
+                <span v-if="readonly">{{video.description}}</span>
                 <el-input
-                    :disabled="readonly"
+                    v-else
                     type="textarea"
                     :maxlength="50"
                     :autosize="{ minRows: 4, maxRows: 14}"
@@ -92,17 +91,27 @@
             </el-form-item>
             <el-form-item label="相关人物">
                 <label for="figureList"></label>
-                <person-select
-                    :disabled="readonly"
-                    :value="video.figureList"
-                    :searchResult="video.figureListResult"
-                    :changeSuccessHandler="figureListChangeHandler"
-                    :searchSuccessHandler="figureListSuccessHandler"
-                ></person-select>
+                <div class="my-tags">
+                    <draggable v-model="figureList">
+                        <el-tag
+                            :key="index"
+                            v-for="(person, index) in figureList"
+                            :closable="!readonly"
+                            :disable-transitions="false"
+                            @close="deleteFigureHandler(person.id)">
+                            {{person.name}}
+                        </el-tag>
+                    </draggable>
+                </div>
+                <search-person
+                    v-if="!readonly"
+                    :handleSelect="selectFigureHandler"
+                ></search-person>
             </el-form-item>
             <el-form-item label="内容类型" prop="type">
+                <span v-if="readonly">{{getVideoType(video.type)}}</span>
                 <el-select
-                    :disabled="readonly"
+                    v-else
                     :value="video.type"
                     placeholder="请选择内容类型"
                     @input="inputHandler($event, 'type')"
@@ -114,6 +123,48 @@
                         :value="item.value">
                     </el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item
+                v-if="video.type === 'FEATURE'"
+                :rules="(isTvPlay || isShow) ? [{ required: true, message: '请输入集数/期号' }, {pattern: /^\+?[1-9]\d*$/, message: '只能输入大于0的整数'}] : [{pattern: /^\+?[1-9]\d*$/, message: '只能输入大于0的整数'}]"
+                label="集数/期号" prop="sort">
+                <span v-if="readonly">{{video.sort}}</span>
+                <el-input
+                    v-else
+                    :value="video.sort"
+                    min="1"
+                    type="number"
+                    placeholder="请输入集数/期号"
+                    @input="inputHandler($event, 'sort')"
+                ></el-input>
+            </el-form-item>
+            <el-form-item
+                v-if="video.type !== 'FEATURE'&& !readonly"
+                label="关联正片" prop="parentId">
+                <el-select
+                    :value="video.parentId"
+                    placeholder="请选择要关联的正片"
+                    @change="inputHandler($event, 'parentId')"
+                >
+                    <el-option
+                        v-for="item in featureList"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id"
+                    >
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="是否付费" prop="free">
+                <span v-if="readonly">{{video.free ? '是' : '否'}}</span>
+                <el-radio-group
+                    v-else
+                    :value="video.free"
+                    @input="inputHandler($event, 'free')"
+                >
+                    <el-radio :label="true">是</el-radio>
+                    <el-radio :label="false">否</el-radio>
+                </el-radio-group>
             </el-form-item>
             <el-form-item label="视频封面图">
                 <div class="text-left clearfix">
@@ -139,47 +190,6 @@
                     </li>
                 </ul>
             </el-form-item>
-            <el-form-item
-                v-if="video.type === 'FEATURE'"
-                :rules="(isTvPlay || isShow) ? [{ required: true, message: '请输入集数/期号' }, {pattern: /^\+?[1-9]\d*$/, message: '只能输入大于0的整数'}] : [{pattern: /^\+?[1-9]\d*$/, message: '只能输入大于0的整数'}]"
-                label="集数/期号" prop="sort">
-                <el-input
-                    :disabled="readonly"
-                    :value="video.sort"
-                    min="1"
-                    type="number"
-                    placeholder="请输入集数/期号"
-                    @input="inputHandler($event, 'sort')"
-                ></el-input>
-            </el-form-item>
-            <el-form-item
-                v-if="video.type !== 'FEATURE'"
-                label="关联正片" prop="parentId">
-                <el-select
-                    :disabled="readonly"
-                    :value="video.parentId"
-                    placeholder="请选择要关联的正片"
-                    @change="inputHandler($event, 'parentId')"
-                >
-                    <el-option
-                        v-for="item in featureList"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id"
-                    >
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="是否付费" prop="free">
-                <el-radio-group
-                    :disabled="readonly"
-                    :value="video.free"
-                    @input="inputHandler($event, 'free')"
-                >
-                    <el-radio :label="true">是</el-radio>
-                    <el-radio :label="false">否</el-radio>
-                </el-radio-group>
-            </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button size="medium" @click="cancelHandler">取 消</el-button>
@@ -200,12 +210,15 @@
     </el-dialog>
 </template>
 <script>
+    import draggable from 'vuedraggable';
+    import _ from 'lodash';
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import role from '@/util/config/role';
     import dimension from '@/util/config/dimension';
     import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import VideoTable from '../video_manage/VideoTable';
-    import PersonSelect from './PersonSelect';
+
+    import SearchPerson from '../../components/custom_components/custom/SearchPerson';
 
     export default {
         props: {
@@ -221,7 +234,8 @@
         components: {
             UploadImage,
             VideoTable,
-            PersonSelect
+            SearchPerson,
+            draggable
         },
         data() {
             return {
@@ -269,6 +283,20 @@
                 return (seconds) => {
                     return this.$util.fromSecondsToTime(seconds);
                 };
+            },
+            getVideoType() {
+                return (type) => {
+                    let obj = this.videoType.find((item) => item.value === type);
+                    return _.get(obj, 'label');
+                };
+            },
+            figureList: {
+                get() {
+                    return this.video.figureList;
+                },
+                set(value) {
+                    this.updateVideo({key: 'figureList', value});
+                }
             }
         },
         created() {
@@ -288,9 +316,11 @@
                 setSelectedVideoId: 'video/setSelectedVideoId',
                 updateSearchFields: 'video/updateSearchFields',
                 // 更新人物
-                updateVideoPersonResult: 'programme/updateVideoPersonResult',
                 updateVideoPerson: 'programme/updateVideoPerson',
-                setList: 'video/setList'
+                setList: 'video/setList',
+                //  人物搜索
+                addFigureToList: 'programme/addFigureToList',
+                deleteFigureById: 'programme/deleteFigureById'
             }),
             ...mapActions({
                 updateProgrammeVideoById: 'programme/updateProgrammeVideoById',
@@ -307,7 +337,9 @@
             },
             openDialogHandler() {
                 //  当弹窗打开的时候，先清除表单遗留的校验信息
-                this.$refs.uploadVideoForm.clearValidate();
+                this.$nextTick(() => {
+                    this.$refs.uploadVideoForm.clearValidate();
+                });
             },
             cancelHandler() {
                 this.$emit('changeVideoDialogStatus', false);
@@ -432,14 +464,24 @@
                 let baseUri = window.localStorage.getItem('imageBaseUri');
                 return baseUri + uri;
             },
-            figureListChangeHandler(value) {
-                this.updateVideoPerson({key: 'figureList', idList: value});
+            //   视频关联人物的搜索部分开始
+            selectFigureHandler(figure) {
+                this.addFigureToList({figure});
             },
-            figureListSuccessHandler(list) {
-                this.updateVideoPersonResult({key: 'figureListResult', value: list});
+            deleteFigureHandler(id) {
+                this.deleteFigureById({id});
             }
+            //   视频关联人物的搜索部分结束
         }
     };
 </script>
 <style lang="less" scoped>
+.my-tags {
+    .tag {
+        cursor: default;
+        &:hover {
+            border-color: #2A3040;
+        }
+    }
+}
 </style>

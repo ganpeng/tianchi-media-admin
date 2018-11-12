@@ -2,6 +2,7 @@
 <template>
     <el-dialog
         title="新增人物"
+        class="my-dialog"
         :visible.sync="createPersonDialogVisible"
         :show-close="true"
         :before-close="beforeCloseHandler"

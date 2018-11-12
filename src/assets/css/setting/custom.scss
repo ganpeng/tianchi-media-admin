@@ -76,6 +76,9 @@
     .el-table__empty-block {
         background: #2a3040;
     }
+    .checked {
+        background: #000!important;
+    }
 }
 
 //  表格每一行hover之后改变背景色
@@ -256,6 +259,7 @@
     }
     .el-input__icon {
         color: #6F7480;
+        line-height: 32px;
     }
     .el-range-input {
         &::-webkit-input-placeholder {
@@ -868,5 +872,76 @@
     .el-radio__inner {
         border: 1px solid #3E495E;
         background-color: transparent;
+    }
+}
+
+//  自定义选择上传文件的按钮样式
+.file {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+}
+.file input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.file:hover {
+    background: #AADFFD;
+    border-color: #78C3F3;
+    color: #004974;
+    text-decoration: none;
+}
+
+//  弹窗的样式自定义
+.my-dialog {
+    .el-dialog {
+        border-radius: 8px;
+        background: #293550;
+        .el-dialog__header {
+            position: relative;
+            height: 50px;
+            line-height: 50px;
+            padding: 0;
+            background: #1F2D4D;
+            border-radius: 8px 8px 0px 0px;
+            .el-dialog__title {
+                font-size: 20px;
+                color: #909399;
+            }
+            .el-dialog__headerbtn {
+                top: 50%;
+                transform: translateY(-50%);
+                .el-dialog__close.el-icon-close {
+                    color: $closeBtnColor;
+                    font-size: 20px;
+                    &:hover {
+                        color: $closeBtnHoverColor;
+                    }
+                }
+            }
+        }
+        .dialog-footer {
+            .el-button {
+                width: 100px;
+                height: 40px;
+                &.el-button--default {
+                    color: $dangerColor;
+                }
+                &.el-button--default.el-button--primary {
+                    color: #A3D0FD;
+                }
+                &:first-child {
+                    margin-left: 10px;
+                }
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@
         <el-table
             ref="multipleTable"
             header-row-class-name="common-table-header"
+            :row-class-name="tableRowClassName"
             @select="selectHandler"
             @select-all="selectAllHandler"
             class="my-table-style" :data="video.list" border>
@@ -103,9 +104,11 @@
                     {{timeStampFormat(scope.row.updatedAt)}}
                 </template>
             </el-table-column>
-            <el-table-column v-if="!hasRadio" width="80px" align="center" fixed="right" label="操作">
+            <el-table-column v-if="!hasRadio" width="80px" align="center" label="操作">
                 <template slot-scope="scope">
-                    <el-button class="text-danger" type="text" @click="_deleteVideoById(scope.row.id)" size="small">删除</el-button>
+                    <div class="operator-btn-wrapper">
+                        <span class="btn-text text-danger" @click="_deleteVideoById(scope.row.id)">删除</span>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -217,6 +220,13 @@ export default {
             deleteVideoById: 'video/deleteVideoById',
             retryVideoByIdList: 'video/retryVideoByIdList'
         }),
+        //  动态的为符合条件的行添加class
+        tableRowClassName({row, rowIndex}) {
+            if (this.isDisabled(row.id) || row.id === this.video.selectedVideoId) {
+                return 'checked';
+            }
+            return '';
+        },
         cutStr(str) {
             return str.length > 40 ? str.substring(0, 40) + '...' : str;
         },
