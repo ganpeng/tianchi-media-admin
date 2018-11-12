@@ -242,18 +242,17 @@
             // 设置选择的节目,selectedProgrammes为所有选择的节目列表
             // 重新更新'ORIGIN'、'REMOVED'、'ADDED'列表
             setProgramme(selectedProgrammes, removedProgrammes) {
+                // 设置总的选择节目IdList
+                this.productInfo.contentIdList = [];
+                selectedProgrammes.map(programme => {
+                    this.productInfo.contentIdList.push(programme.id);
+                });
                 // 设置线上去除'REMOVED'列表，与originContentIdList对比
                 this.removedProgrammeList = [];
                 for (let m = 0; m < removedProgrammes.length; m++) {
                     for (let n = 0; n < this.originContentIdList.length; n++) {
                         if (removedProgrammes[m].id === this.originContentIdList[n]) {
                             this.removedProgrammeList.push(removedProgrammes[m]);
-                            // 从总的选择节目id列表中删除
-                            for (let k = 0; k < this.productInfo.contentIdList.length; k++) {
-                                if (this.productInfo.contentIdList[k] === removedProgrammes[m].id) {
-                                    this.productInfo.contentIdList.splice(k, 1);
-                                }
-                            }
                             break;
                         }
                     }
@@ -274,15 +273,6 @@
                                 }
                                 if (i === this.originContentIdList.length - 1) {
                                     this.addedProgrammeList.push(programme);
-                                    // 从总的选择节目id列表中增加
-                                    for (let k = 0; k < this.productInfo.contentIdList.length; k++) {
-                                        if (this.productInfo.contentIdList[k] === programme.id) {
-                                            break;
-                                        }
-                                        if (k === this.productInfo.contentIdList.length - 1) {
-                                            this.productInfo.contentIdList.push(programme.id);
-                                        }
-                                    }
                                 }
                             }
                         }
