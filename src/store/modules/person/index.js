@@ -18,7 +18,7 @@ const defaultPerson = {
     programmeList: [],
     updatedAt: '',
     weight: '',
-    avatarImage: {}
+    avatarImage: null
 };
 
 const defaultSearchFields = {
@@ -223,7 +223,19 @@ const mutations = {
     updateDuplicateSearchFields(state, payload) {
         let {key, value} = payload;
         state.duplicate.searchFields[key] = value;
+    },
+    //  人物角色的搜索以及增删改查开始
+    addMainRoleToList(state, payload) {
+        let {mainRole} = payload;
+        let value = _.get(mainRole, 'value');
+        state.currentPerson.mainRoleList.push(value);
+        state.currentPerson.mainRoleList = _.uniq(state.currentPerson.mainRoleList);
+    },
+    deleteMainRoleByValue(state, payload) {
+        let {value} = payload;
+        state.currentPerson.mainRoleList = state.currentPerson.mainRoleList.filter((item) => item !== value);
     }
+    //  人物角色的搜索以及增删改查结束
 };
 
 const actions = {

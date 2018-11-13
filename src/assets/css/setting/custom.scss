@@ -604,6 +604,7 @@
 
 //  上传按钮样式重写
 .uploader {
+    position: relative;
     label {
         display: flex;
         justify-content: center;

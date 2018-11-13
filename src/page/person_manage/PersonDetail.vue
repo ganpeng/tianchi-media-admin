@@ -22,6 +22,7 @@
     </div>
 </template>
 <script>
+    import _ from 'lodash';
     import { mapActions, mapGetters, mapMutations } from 'vuex';
     import PersonForm from './PersonForm';
     export default {
@@ -74,9 +75,7 @@
         },
         methods: {
             ...mapMutations({
-                setAvatarImage: 'person/setAvatarImage',
-                resetPerson: 'person/resetPerson',
-                setBackgroundImage: 'person/setBackgroundImage'
+                resetPerson: 'person/resetPerson'
             }),
             ...mapActions({
                 createPerson: 'person/createPerson',
@@ -84,10 +83,10 @@
                 getPersonById: 'person/getPersonById'
             }),
             // 新增人物
-            _createPerson() {
+             _createPerson() {
                 this.$refs.personForm.$refs['createPerson'].validate(valid => {
                     if (valid) {
-                        this.checkImageLength(() => {
+                        if (_.get(this.person.avatarImage, 'uri')) {
                             this.isLoading = true;
                             this.createPerson()
                                 .then((res) => {
@@ -96,7 +95,9 @@
                                 }).finally(() => {
                                     this.isLoading = false;
                                 });
-                        });
+                        } else {
+                            this.$message.error('请上传人物头像');
+                        }
                     } else {
                         return false;
                     }
@@ -106,7 +107,7 @@
             _updatePerson() {
                 this.$refs.personForm.$refs['createPerson'].validate(valid => {
                     if (valid) {
-                        this.checkImageLength(() => {
+                        if (_.get(this.person.avatarImage, 'uri')) {
                             this.isLoading = true;
                             this.updatePersonById()
                                 .then(() => {
@@ -115,25 +116,11 @@
                                 }).finally(() => {
                                     this.isLoading = false;
                                 });
-                        });
-                    } else {
-                        return false;
+                        } else {
+                            this.$message.error('请上传人物头像');
+                        }
                     }
                 });
-            },
-            checkImageLength(next) {
-                let {posterImageList} = this.person;
-                if (posterImageList.length <= 0) {
-                    this.$message.error('请上传人物头像');
-                    return false;
-                }
-                // 设置默认图
-                // this.setAvatarImage();
-                next();
-            },
-            // 重制表单
-            reset() {
-                this.$refs.personForm.$refs['createPerson'].resetFields();
             },
             goBack() {
                 this.$router.back();

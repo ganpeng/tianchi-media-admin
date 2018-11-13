@@ -69,83 +69,47 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="职业" prop="mainRoleList">
-                    <el-select
-                        multiple
-                        :disabled="readonly"
-                        :value="(person.mainRoleList ? person.mainRoleList : [])"
-                        placeholder="请选择职业"
-                        @input="inputHandler($event, 'mainRoleList')"
-                    >
-                        <el-option
-                            v-for="item in mainRoleoptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
+                    <div class="my-tags">
+                        <draggable v-model="mainRoleList">
+                            <el-tag
+                                :key="index"
+                                v-for="(item, index) in mainRoles(mainRoleList)"
+                                closable
+                                :disable-transitions="false"
+                                @close="deleteMainRoleHandler(item.value)">
+                                {{item.label}}
+                            </el-tag>
+                        </draggable>
+                    </div>
+                    <main-role-search
+                        :handleSelect="selectMainRoleHandler"
+                    ></main-role-search>
                 </el-form-item>
             </el-col>
             <el-col :span="24">
                 <el-form-item label="人物图片" required>
-                    <div class="uploader person-uploader">
-                        <label class="ui_button ui_button_primary" for="personUploader">
-                            <i class="el-icon-plus"></i>
-                        </label>
-                        <input type="file" id="personUploader">
+                    <div v-if="person.avatarImage" class="img-wrapper">
+                        <img :src="person.avatarImage.uri | fileUrl" width="100" height="100" alt="">
+                        <i @click="deleteAvatarImage" class="el-icon-error"></i>
                     </div>
-
-                    <!--
-                    <div class="text-left clearfix">
-                        <el-button
-                            class="float-left page-main-btn create-blue-btn contain-svg-icon"
-                            v-if="!readonly"
-                            @click="uploadImageHandler">
-                            <svg-icon
-                                icon-class="image"
-                                class-name="svg-box">
-                            </svg-icon>
-                            上传图片
-                        </el-button>
-                        <span class="text-info">人物的头像: 200*200,人物背景图: 1920*1080都必须上传</span>
-                    </div>
-                    <div class="wrapper">
-                        <thumbnail
-                            :removeSign="!readonly"
-                            :imageList="person.posterImageList"
-                            v-on:removeImage="_deletePosterImage">
-                        </thumbnail>
-                    </div>
-                    -->
+                    <single-image-uploader
+                        v-else
+                        :uploadSuccessHandler="uploadSuccessHandler"
+                        :allowResolutions="[{width: 200, height: 200}]"
+                    ></single-image-uploader>
                 </el-form-item>
             </el-col>
         </el-form>
-        <upload-image
-            :size='size'
-            title="上传人物图片"
-            ref="uploadImageDialog"
-            :successHandler="addPosterImage"
-            :imageUploadDialogVisible="imageUploadDialogVisible"
-            v-on:changeImageDialogStatus="closeImageDialog($event)"
-        >
-        </upload-image>
-        <preview-multiple-images :previewMultipleImages="previewImage"></preview-multiple-images>
     </div>
 </template>
 <script>
-
-/**
- *
- * 图片上传的逻辑，每种尺寸的图片必须且只能传一张, 如果都传了就不现实长传图片的按钮，传过的图片的尺寸，不能在尺寸列表中显示该尺寸， 图片支持删除
- *
- */
+import draggable from 'vuedraggable';
 import {mapGetters, mapMutations} from 'vuex';
 import store from 'store';
-import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
-import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
-import Thumbnail from '../../components/custom_components/custom/Thumbnail';
-import dimension from '@/util/config/dimension';
+import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 import role from '@/util/config/role';
 import {requiredValidator} from '@/util/formValidate';
+import mainRoleSearch from './mainRoleSearch';
 
 export default {
     name: 'PersonForm',
@@ -164,14 +128,31 @@ export default {
         }
     },
     components: {
-        UploadImage,
-        PreviewMultipleImages,
-        Thumbnail
+        SingleImageUploader,
+        draggable,
+        mainRoleSearch
     },
     computed: {
         ...mapGetters({
-            person: 'person/currentPerson'
-        })
+            person: 'person/currentPerson',
+            mainRoleLabel: 'person/mainRoleLabel'
+        }),
+        mainRoleList: {
+            get() {
+                return this.person.mainRoleList;
+            },
+            set(value) {
+                this.updateCurrentPerson({key: 'mainRoleList', value});
+            }
+        },
+        mainRoles() {
+            return (mainRoleList) => {
+                return mainRoleList.map((item) => {
+                    let obj = role.MAIN_ROLE_OPTIONS.find((mainRoleItem) => mainRoleItem.value === item);
+                    return obj;
+                });
+            };
+        }
     },
     data() {
         return {
@@ -191,70 +172,59 @@ export default {
                     { validator: requiredValidator('请输入人物职业') }
                 ]
             },
-            imageUploadDialogVisible: false,
             areaOptions: store.get('areaList'),
-            mainRoleoptions: role.MAIN_ROLE_OPTIONS,
-            size: dimension.PERSON_DIMENSION,
-            previewImage: {
-                display: false,
-                autoplay: false,
-                activeIndex: 0,
-                list: []
-            }
+            mainRoleoptions: role.MAIN_ROLE_OPTIONS
         };
     },
     methods: {
         ...mapMutations({
             updateCurrentPerson: 'person/updateCurrentPerson',
-            addPosterImage: 'person/addPosterImage',
-            deletePosterImage: 'person/deletePosterImage',
-            updateRecommend: 'person/updateRecommend'
+            addMainRoleToList: 'person/addMainRoleToList',
+            deleteMainRoleByValue: 'person/deleteMainRoleByValue'
         }),
-        uploadImageHandler() {
-            if (!this.readonly) {
-                this.imageUploadDialogVisible = true;
-            }
-        },
-        closeImageDialog(status) {
-            this.imageUploadDialogVisible = status;
-        },
         inputHandler(value, key) {
             this.updateCurrentPerson({key, value});
         },
-        inputRecommendHandler(value, key) {
-            this.updateRecommend({key, value});
+        uploadSuccessHandler(img) {
+            this.updateCurrentPerson({key: 'avatarImage', value: img});
         },
-        _deletePosterImage(index, id) {
-            this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'error'
-                }).then(() => {
-                    this.deletePosterImage({id});
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+        deleteAvatarImage() {
+            this.updateCurrentPerson({key: 'avatarImage', value: null});
         },
-        displayImage(index) {
-            this.previewImage.display = true;
-            this.previewImage.list = this.person.posterImageList;
-            this.previewImage.activeIndex = index;
+        selectMainRoleHandler(mainRole) {
+            this.addMainRoleToList({mainRole});
         },
-        appendImagePrefix(uri) {
-            let baseUri = window.localStorage.getItem('imageBaseUri');
-            return baseUri + uri;
+        deleteMainRoleHandler(value) {
+            this.deleteMainRoleByValue({value});
         }
     }
 };
 </script>
-<style lang="less" scoped>
-.text-info {
-    margin-left: 10px;
-}
-.wrapper {
-    margin-top: 20px;
+<style lang="scss" scoped>
+.img-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border: 1px solid #3E495E;
+    border-radius: 4px;
+    cursor: pointer;
+    img {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+    }
+    i {
+        display: none;
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        color: $closeBtnHoverColor;
+    }
+    &:hover {
+        opacity: 0.6;
+        i {
+            display: block;
+        }
+    }
 }
 </style>
