@@ -1,24 +1,91 @@
-//  广告图片尺寸
-export const ADVERT_DIMENSION = [
-    //  暂停广告
+/**
+ * @fileOverview Define the dimension of images
+ */
+
+/**
+ * 2.0人物专题封面尺寸
+ */
+export const FIGURE_SUBJECT_DIMENSION = [
     {
-        value: '800*500',
-        label: '暂停广告：800*500'
+        width: 560,
+        height: 600,
+        name: '专题A'
     },
-    // 音量/换台广告
     {
-        value: '435*220',
-        label: '音乐/换台广告：435*220'
+        width: 410,
+        height: 472,
+        name: '专题D'
     },
-    // 弹窗广告
     {
-        value: '500*250',
-        label: '弹窗广告：500*250'
+        width: 260,
+        height: 600,
+        name: '专题E'
+    }
+];
+
+/**
+ * 2.0节目专题封面尺寸
+ */
+export const PROGRAMME_SUBJECT_DIMENSION = [
+    {
+        width: 410,
+        height: 472,
+        name: '专题D'
     },
-    // 会员广告
     {
-        value: '316*146',
-        label: '会员广告：316*146'
+        width: 1160,
+        height: 600,
+        name: '专题B'
+    },
+    {
+        width: 1310,
+        height: 472,
+        name: '专题C'
+    },
+    {
+        width: 860,
+        height: 440,
+        name: '横版A'
+    },
+    {
+        width: 560,
+        height: 300,
+        name: '横版B'
+    },
+    {
+        width: 560,
+        height: 720,
+        name: '竖版A'
+    },
+    {
+        width: 1160,
+        height: 300,
+        name: '横版C'
+    },
+    {
+        width: 260,
+        height: 380,
+        name: '竖版B'
+    },
+    {
+        width: 996,
+        height: 472,
+        name: '横版D'
+    },
+    {
+        width: 342,
+        height: 472,
+        name: '竖版D'
+    },
+    {
+        width: 860,
+        height: 260,
+        name: '横版E'
+    },
+    {
+        width: 860,
+        height: 472,
+        name: '横版F'
     }
 ];
 
@@ -224,7 +291,8 @@ export const CHANNEL_LOGO_DIMENSION = [
 ];
 
 export default {
-    ADVERT_DIMENSION,
+    FIGURE_SUBJECT_DIMENSION,
+    PROGRAMME_SUBJECT_DIMENSION,
     PROGRAMME_DIMENSION,
     SUBJECT_BACKGROUND_IMAGE_DIMENSION,
     LAYOUT_IMAGE_DIMENSION,

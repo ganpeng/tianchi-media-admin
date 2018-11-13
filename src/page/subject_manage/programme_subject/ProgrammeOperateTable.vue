@@ -96,10 +96,35 @@
             <el-table-column
                 v-if="model === 'CANCEL'"
                 align="center"
+                width="126px"
+                label="排序">
+                <template slot-scope="scope">
+                    <div class="sort">
+                        <span @click="movePosition('UP',scope.row,scope.$index)">
+                            <svg-icon icon-class="move_up"></svg-icon>
+                            上移
+                        </span>
+                        <span @click="movePosition('TOP',scope.row,scope.$index)">
+                            置顶
+                            <svg-icon icon-class="move_top"></svg-icon></span>
+                        <span @click="movePosition('DOWN',scope.row,scope.$index)">
+                            <svg-icon icon-class="move_down"></svg-icon>
+                            下移
+                        </span>
+                        <span @click="movePosition('BOTTOM',scope.row,scope.$index)">
+                            置底
+                            <svg-icon icon-class="move_bottom"></svg-icon>
+                        </span>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column
+                v-if="model === 'CANCEL'"
+                align="center"
                 label="操作"
                 class="operate">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" class="remove-btn"
+                    <el-button type="text" size="small" class="cancel-link-btn"
                                @click="cancelLinkProgramme(scope.$index)">
                         取消关联
                     </el-button>
@@ -235,6 +260,53 @@
                     }
                 }
             },
+            // 对关联的节目进行排序
+            movePosition(model, programme, index) {
+                switch (model) {
+                    // 上移
+                    case 'UP':
+                        if (index === 0) {
+                            this.$message.warning('当前节目不能向上移动');
+                            return;
+                        }
+                        let moveUpItem = this.programmeList.splice(index, 1)[0];
+                        this.programmeList.splice(index - 1, 0, moveUpItem);
+                        this.$message.success('"' + programme.name + '"' + '已向上移动');
+                        break;
+                    // 下移
+                    case 'DOWN':
+                        if (index === this.programmeList.length - 1) {
+                            this.$message.warning('当前节目不能向下移动');
+                            return;
+                        }
+                        let moveDownItem = this.programmeList.splice(index, 1)[0];
+                        this.programmeList.splice(index + 1, 0, moveDownItem);
+                        this.$message.success('"' + programme.name + '"' + '已向下移动');
+                        break;
+                    // 置顶
+                    case 'TOP':
+                        if (index === 0) {
+                            this.$message.warning('当前节目已在顶部');
+                            return;
+                        }
+                        let moveTopItem = this.programmeList.splice(index, 1)[0];
+                        this.programmeList.splice(0, 0, moveTopItem);
+                        this.$message.success('"' + programme.name + '"' + '已置顶');
+                        break;
+                    // 置底
+                    case 'BOTTOM':
+                        if (index === this.programmeList.length - 1) {
+                            this.$message.warning('当前节目已在底部');
+                            return;
+                        }
+                        let moveBottomItem = this.programmeList.splice(index, 1)[0];
+                        this.programmeList.splice(this.programmeList.length, 0, moveBottomItem);
+                        this.$message.success('"' + programme.name + '"' + '已置底');
+                        break;
+                    default:
+                        break;
+                }
+            },
             // 取消模式下取消关联
             cancelLinkProgramme(index) {
                 this.$emit('cancelLinkProgramme', index);
@@ -254,6 +326,24 @@
         img {
             width: 70px;
             height: auto;
+        }
+        .sort {
+            span {
+                display: inline-block;
+                font-size: 14px;
+                color: #1989FA;
+                cursor: pointer;
+                &:first-child, &:nth-child(2) {
+                    margin-bottom: 20px;
+                }
+                &:first-child, &:nth-child(3) {
+                    margin-right: 8px;
+                }
+            }
+        }
+        .cancel-link-btn {
+            font-size: 14px;
+            color: #C35757;
         }
     }
 

@@ -12,20 +12,19 @@ import _ from 'lodash';
  * @param category The category of subject, such as 'PROGRAMME'、 'FIGURE'.
  * @param name The name of programme subject.
  * @param typeList An array of programme subject's types, such as TV_DRAMA、MOVIE、VARIETY_SHOW.
- * @param description The description of subject.
  * @param tagList Array of tags.
  * @param posterImageList The list of coverImages including id、uri、height、width attribute.
  */
-export const createSubject = ({category, name, programmeCategoryList, description, tagList, posterImageList, backgroundImage}) => {
+export const createSubject = ({category, name, programmeCategoryList, tagList, posterImageList, backgroundImage, subjectItemList}) => {
     return service.post('/v1/content/subject', {
         category,
         releaseStatus: 'RELEASED',
         name,
         programmeCategoryList,
-        description,
         tagList,
         posterImageList,
-        backgroundImage
+        backgroundImage,
+        subjectItemList
     });
 };
 

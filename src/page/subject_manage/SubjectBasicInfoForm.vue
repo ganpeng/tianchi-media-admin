@@ -23,6 +23,29 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="专题标签" prop="tagList">
+                <el-select
+                    v-model="subjectInfo.tagList"
+                    multiple
+                    filterable
+                    clearable
+                    placeholder="请选择专题标签">
+                    <el-option
+                        v-for="item in tagOptions"
+                        :key="item"
+                        :label="item"
+                        :value="item">
+                    </el-option>
+                </el-select>
+                <el-button
+                    type="primary"
+                    plain
+                    class="btn-style-two"
+                    icon="el-icon-plus"
+                    @click="addSubjectTag">
+                    添加标签
+                </el-button>
+            </el-form-item>
             <el-form-item label="状态" required>
                 <el-radio-group v-model="subjectInfo.visible">
                     <el-radio :label="true">上架</el-radio>
@@ -85,10 +108,6 @@
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import SelectMultipleProgramme from './programme_subject/SelectMultipleProgramme';
     import ProgrammeOperateTable from './programme_subject/ProgrammeOperateTable';
-    import {
-        PROGRAMME_DIMENSION as SUBJECT_DIMENSION,
-        SUBJECT_BACKGROUND_IMAGE_DIMENSION
-    } from '@/util/config/dimension';
 
     export default {
         name: 'CreateSubjectForm',
@@ -99,7 +118,18 @@
             ProgrammeOperateTable
         },
         /* status: 0代表创建节目专题，1代表创建人物专题，2代表编辑节目专题，3代表编辑人物专题 */
-        props: ['status', 'subjectInfo'],
+        props: {
+            status: {
+                type: String,
+                default: ''
+            },
+            subjectInfo: {
+                type: Object,
+                default: function () {
+                    return {};
+                }
+            }
+        },
         data() {
             let checkName = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
@@ -131,6 +161,7 @@
                     activeIndex: 0,
                     list: []
                 },
+                tagOptions: [],
                 infoRules: {
                     name: [
                         {validator: checkName, trigger: 'blur'}
@@ -148,7 +179,7 @@
         },
         computed: {
             size() {
-                return this.uploadImageMode === 'COVERIMAGE' ? SUBJECT_DIMENSION : SUBJECT_BACKGROUND_IMAGE_DIMENSION;
+                return '';
             }
         },
         mounted() {
@@ -176,6 +207,12 @@
             },
             // 初始化数据
             init() {
+                // 初始化专题标签列表
+                this.$service.getSubjectTagList().then(response => {
+                    if (response) {
+                        this.tagOptions = response.data;
+                    }
+                });
                 // 初始化专题类别
                 this.$service.getProgrammeCategory().then(response => {
                     if (response && response.code === 0) {
@@ -200,6 +237,36 @@
             initProgrammeCatagoryList() {
                 this.subjectInfo.programmeCategoryList.map(categoryItem => {
                     this.programmeCategoryList.push(categoryItem.id);
+                });
+            },
+            // 添加专题的标签
+            addSubjectTag() {
+                this.$prompt('请输入专题标签', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /\S/,
+                    inputErrorMessage: '专题标签不能为空'
+                }).then(({value}) => {
+                    let sign = true;
+                    this.tagOptions.map(tag => {
+                        if (tag === value) {
+                            sign = false;
+                        }
+                    });
+                    if (sign) {
+                        this.tagOptions.push(value);
+                        this.$message.success(value + '标签已添加');
+                    } else {
+                        this.$message({
+                            type: 'warning',
+                            message: value + '标签重复'
+                        });
+                    }
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消添加'
+                    });
                 });
             },
             appendImagePrefix(uri) {
@@ -271,8 +338,8 @@
                             this.subjectInfo.category = this.status === '0' ? 'PROGRAMME' : 'FIGURE';
                             this.$service.createSubject(this.subjectInfo).then(response => {
                                 if (response && response.code === 0) {
-                                    this.subjectId = response.data.id;
-                                    this.dialogVisible = true;
+                                    this.$message.success('成功创建专题');
+                                    this.toSubjectList();
                                 }
                             });
                         } else {
@@ -280,8 +347,8 @@
                             this.subjectInfo.id = this.$route.params.id;
                             this.$service.updateSubjectBasicInfo(this.subjectInfo).then(response => {
                                 if (response && response.code === 0) {
-                                    this.subjectId = response.data.id;
-                                    this.dialogVisible = true;
+                                    this.$message.success('成功更新专题');
+                                    this.toSubjectList();
                                 }
                             });
                         }
@@ -328,86 +395,7 @@
             width: 20px !important;
             height: 20px !important;
             fill: #1989FA;
-            // 图片的icon颜色设置
-            &.svg-icon-image, &.svg-icon-video {
-                fill: #A3D0FD;
-            }
         }
-
-        &:hover, &:focus {
-            background-color: #1989FA;
-            * {
-                color: #fff;
-            }
-            .svg-icon {
-                fill: #fff;
-            }
-        }
-        &.is-disabled {
-            background-color: transparent;
-            border-color: #a5d2ff;
-            span {
-                color: #a5d2ff;
-            }
-            &:hover {
-                color: #a5d2ff;
-                background-color: transparent;
-                border-color: #a5d2ff;
-                span {
-                    color: #a5d2ff;
-                }
-            }
-        }
-    }
-
-    .cover-image-block, .bg-box {
-        margin-bottom: 40px;
-        .el-button {
-            margin-bottom: 30px;
-        }
-    }
-
-    // 图片信息
-    .info {
-        &.background {
-            width: 40%;
-        }
-        .name {
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-        div {
-            display: flex;
-            justify-content: space-between;
-            height: 32px;
-        }
-        label {
-            font-size: 14px;
-            &.remove {
-                color: #409EFF;
-                cursor: pointer;
-            }
-        }
-    }
-
-    .background-image {
-        width: 40%;
-        padding-top: 23%;
-        height: 0px;
-        overflow: hidden;
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-    }
-
-    .image-box {
-        height: 150px;
-        width: 150px;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        cursor: zoom-in;
     }
 
     .operate {
