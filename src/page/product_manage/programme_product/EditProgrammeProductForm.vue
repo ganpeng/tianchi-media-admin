@@ -265,7 +265,6 @@
                     if (programme.name) {
                         if (this.originContentIdList.length === 0) {
                             this.addedProgrammeList.push(programme);
-                            this.productInfo.contentIdList.push(programme.id);
                         } else {
                             for (let i = 0; i < this.originContentIdList.length; i++) {
                                 if (programme.id === this.originContentIdList[i]) {
