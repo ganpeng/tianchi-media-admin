@@ -74,6 +74,7 @@
                     <span>视频资源管理</span>
                 </template>
                 <el-menu-item index="/manage-video/list">视频列表</el-menu-item>
+                <el-menu-item index="/manage-video/download-list">下载列表</el-menu-item>
             </el-submenu>
             <!--频道管理-->
             <el-submenu index="5">

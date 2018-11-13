@@ -43,6 +43,13 @@ export const deleteVideoById = (id) => {
 };
 
 /**
+ * 根据id删除对应服务器上的视频
+ */
+export const deleteSomeServerVideoById = ({host, port, id}) => {
+    return service.delete('http://' + host + ':' + port + `/v1/storage/video/export/${id}`);
+};
+
+/**
  * 根据id列表删除视频
  */
 export const deleteVideoByIdList = (ids) => {
@@ -88,6 +95,27 @@ export const getDurationDiffVideoList = ({durationDiffGt, durationDiffLt, keywor
     }));
 
     return service.get(`/v1/storage/video/duration-diff/page?${paramsStr}`, {
+        baseURL: '/storage'
+    });
+};
+
+/**
+ * 获取下载视频列表
+ */
+export const getDownloadVideoList = ({keyword, startedAt, endedAt, pageNum, pageSize}) => {
+    let params = {
+        keyword,
+        startedAt,
+        endedAt,
+        pageNum: pageNum - 1,
+        pageSize
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/storage/video/export/page?${paramsStr}`, {
         baseURL: '/storage'
     });
 };

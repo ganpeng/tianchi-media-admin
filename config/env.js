@@ -23,7 +23,7 @@ switch (npmEventName) {
     case 'dev:xiongbao':
         h5NginxProxyTarget = 'http://172.16.41.201:8100';
         break;
-        // wubinhong gateway
+    // wubinhong gateway
     case 'dev:wubinhong':
         h5NginxProxyTarget = 'http://172.16.41.200:8100';
         break;
@@ -37,7 +37,7 @@ switch (npmEventName) {
         h5NginxProxyTarget = 'http://admin.tianchiapi.com';
         break;
     case 'dev:lian':
-        h5NginxProxyTarget = 'http://10.0.3.210:8100';
+        h5NginxProxyTarget = 'http://10.0.3.147:8100';
         break;
     // default is dev url
     default:
