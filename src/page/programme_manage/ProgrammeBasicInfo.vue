@@ -31,20 +31,14 @@
                     <span v-for="(name, index) in getAreaName(programme.produceAreaList)" :key="index" class="address-tag">
                         {{name}}
                     </span>
-                    <span class="role-tag">
-                        haha
+                    <span v-for="(item) in programme.categoryList" :key="item.id" class="category-tag">
+                        {{item.name}}
+                    </span>
+                    <span v-for="(item) in programme.typeList" :key="item.id" class="type-tag">
+                        {{item.name}}
                     </span>
                 </div>
-                <div class="attributes">
-                    <div class="attribute-item">
-                        <label class="item-label">别名:</label>
-                        <span class="value">小张</span>
-                    </div>
-                    <div class="attribute-item">
-                        <label class="item-label">英文名:</label>
-                        <span class="value">xiaozhang</span>
-                    </div>
-                </div>
+                <p class="inner-name">{{programme.innerName}}</p>
                 <p class="description programme">
                     {{programme.description}}
                 </p>

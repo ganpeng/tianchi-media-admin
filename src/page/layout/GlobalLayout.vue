@@ -1,6 +1,6 @@
 <template>
     <div class="app-container">
-        <div class="header clearfix">
+        <div v-show="showHeaderAndAside" class="header clearfix">
             <div class="logo float-left">
                 <svg-icon
                     icon-class="logo_home"
@@ -26,7 +26,7 @@
                 <span class="float-left" @click="logout">&nbsp;退出</span>
             </div>
         </div>
-        <div class="aside">
+        <div v-show="showHeaderAndAside" class="aside">
             <ul class="aside-list">
                 <li v-if="index === active" v-for="(asides, index) in asideList" :key="index" class="aside-item">
                     <el-menu
@@ -48,7 +48,7 @@
                 </li>
             </ul>
         </div>
-        <div class="content">
+        <div :style="contentStyleStr()" class="content">
             <div class="content-wrapper" :style="`min-height: ${minHeight}px`">
                 <router-view></router-view>
             </div>
@@ -64,7 +64,10 @@ export default {
             asideList: role.ASIDE_LIST,
             active: 0,
             defaultActive: '',
-            minHeight: 400
+            minHeight: 400,
+            top: 60,
+            left: 200,
+            showHeaderAndAside: true
         };
     },
     mounted() {
@@ -85,8 +88,16 @@ export default {
         let {active, activePath} = this.getActivePath();
         this.active = active;
         this.defaultActive = activePath;
+
+        this.setMinHeight();
+        window.addEventListener('resize', this.setMinHeight, false);
+
+        this.hideHeaderAndAside();
     },
     methods: {
+        contentStyleStr() {
+            return `top: ${this.top}px;left: ${this.left}px;`;
+        },
         getActivePath() {
             let {path} = this.$route;
             if (path === '/home') {
@@ -115,21 +126,24 @@ export default {
             this.$router.push(newPath);
         },
         setMinHeight() {
-            let minHeight = window.innerHeight - 60 - 65;
+            let minHeight = window.innerHeight - 60;
             this.minHeight = minHeight;
         },
         logout() {
             this.$store.dispatch('user/logout', true);
         },
-        bodyScrollHandler(e) {
-            console.log(this.checkIsBottom());
-            if (this.checkIsBottom()) {
-                console.log('aaaa');
+        hideHeaderAndAside() {
+            let allowList = ['ProgrammeImport', 'PersonImport'];
+            let {name} = this.$route;
+            if (allowList.indexOf(name) > -1) {
+                this.top = 0;
+                this.left = 0;
+                this.showHeaderAndAside = false;
+            } else {
+                this.top = 60;
+                this.left = 200;
+                this.showHeaderAndAside = true;
             }
-        },
-        checkIsBottom() {
-            let body = document.querySelector('body');
-            return body.scrollHeight - body.scrollTop === body.clientHeight;
         }
     }
 };

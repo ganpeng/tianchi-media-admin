@@ -167,28 +167,12 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="视频封面图">
-                <div class="text-left clearfix">
-                    <el-button
-                        class="float-left page-main-btn create-blue-btn contain-svg-icon"
-                        v-if="!readonly"
-                        @click="uploadImageHandler">
-                        <svg-icon
-                            icon-class="image"
-                            class-name="svg-box">
-                        </svg-icon>
-                        上传图片
-                    </el-button>
-                </div>
-                <ul
-                    v-if="video.coverImage"
-                    class="cover-list">
-                    <li>
-                        <div
-                            class="image-box"
-                            :style="{'cursor': 'default','background-image': 'url(' + appendImagePrefix(video.coverImage.uri) + ')'}">
-                        </div>
-                    </li>
-                </ul>
+                <single-image-uploader
+                    :uri="video.coverImage ? video.coverImage.uri : ''"
+                    :deleteImage="deleteCoverImage"
+                    :uploadSuccessHandler="uploadSuccessHandler"
+                    :allowResolutions="[{width: 200, height: 200}]"
+                ></single-image-uploader>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -219,6 +203,7 @@
     import VideoTable from '../video_manage/VideoTable';
 
     import SearchPerson from '../../components/custom_components/custom/SearchPerson';
+    import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 
     export default {
         props: {
@@ -235,7 +220,8 @@
             UploadImage,
             VideoTable,
             SearchPerson,
-            draggable
+            draggable,
+            SingleImageUploader
         },
         data() {
             return {
@@ -470,8 +456,17 @@
             },
             deleteFigureHandler(id) {
                 this.deleteFigureById({id});
-            }
+            },
             //   视频关联人物的搜索部分结束
+            //  视频图片相关操作开始
+            uploadSuccessHandler(coverImage) {
+                this.setVideoCoverImage({coverImage});
+            },
+            deleteCoverImage() {
+                console.log('aaa');
+                this.setVideoCoverImage({coverImage: null});
+            }
+            //  视频图片相关操作开始
         }
     };
 </script>

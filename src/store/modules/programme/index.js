@@ -539,7 +539,7 @@ const mutations = {
         state.video.video[key] = value || null;
     },
     setVideoCoverImage(state, payload) {
-        state.video.video.coverImage = payload.posterImage;
+        state.video.video.coverImage = payload.coverImage;
     },
     resetVideoPagination(state) {
         state.video.pagination = _.cloneDeep(defaultVideoPagination);
@@ -631,6 +631,15 @@ const mutations = {
         });
         state.programme.coverImage = coverImage;
         state.programme.horizontalCoverImage = horizontalCoverImage;
+    },
+    addImageToPosterImageList(state, payload) {
+        let {image} = payload;
+        state.programme.posterImageList.push(image);
+        state.programme.posterImageList = _.uniqBy(state.programme.posterImageList, 'id');
+    },
+    deleteImageFromPosterImageListById(state, payload) {
+        let {id} = payload;
+        state.programme.posterImageList = state.programme.posterImageList.filter((image) => image.id !== id);
     },
     // 新加代码结束
     addPosterImage(state, payload) {

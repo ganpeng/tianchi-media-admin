@@ -259,5 +259,6 @@ export default {
 <style lang="scss" scoped>
 .info-value {
     text-align: left;
+    word-break: break-all;
 }
 </style>

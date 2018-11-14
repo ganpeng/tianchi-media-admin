@@ -88,12 +88,9 @@
             </el-col>
             <el-col :span="24">
                 <el-form-item label="人物图片" required>
-                    <div v-if="person.avatarImage" class="img-wrapper">
-                        <img :src="person.avatarImage.uri | fileUrl" width="100" height="100" alt="">
-                        <i @click="deleteAvatarImage" class="el-icon-error"></i>
-                    </div>
                     <single-image-uploader
-                        v-else
+                        :uri="person.avatarImage ? person.avatarImage.uri : ''"
+                        :deleteImage="deleteAvatarImage"
                         :uploadSuccessHandler="uploadSuccessHandler"
                         :allowResolutions="[{width: 200, height: 200}]"
                     ></single-image-uploader>

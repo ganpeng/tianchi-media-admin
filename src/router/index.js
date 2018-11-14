@@ -81,6 +81,8 @@ import EditDevice from 'sysPage/device_manage/EditDevice';
 import CreateLiveChannel from 'sysPage/channel_manage/CreateLiveChannel';
 import EditLiveChannel from 'sysPage/channel_manage/EditLiveChannel';
 import CreateVersion from 'sysPage/version_manage/CreateVersion';
+import ProgrammeImport from 'sysPage/programme_manage/ProgrammeImport';
+import PersonImport from 'sysPage/person_manage/PersonImport';
 
 Vue.use(Router);
 
@@ -321,6 +323,11 @@ let router = new Router({
                     name: 'DuplicateList',
                     component: DuplicateList
                 },
+                {
+                    path: '/person-manage/import',
+                    name: 'PersonImport',
+                    component: PersonImport
+                },
                 // 节目管理
                 // 新增节目
                 {
@@ -351,6 +358,12 @@ let router = new Router({
                     path: '/programme-manage/type',
                     name: 'ProgrammeTypeManage',
                     component: ProgrammeTypeManage
+                },
+                // 节目导入
+                {
+                    path: '/programme-manage/import',
+                    name: 'ProgrammeImport',
+                    component: ProgrammeImport
                 },
                 //  广告管理
                 // 广告资源列表

@@ -3,8 +3,8 @@
     <div class="program-container">
         <h2 class="content-title">{{getPageName}}</h2>
         <div class="seperator-line"></div>
+        <programme-basic-info v-if="status === 1"></programme-basic-info>
         <el-row>
-            <programme-basic-info v-if="status === 1"></programme-basic-info>
             <el-col :span="24" v-if="status !== 1">
                 <el-form :rules="rules" ref="createProgramForm" status-icon :model="programme" label-width="120px" class="form-block" @submit.native.prevent>
                     <el-col :span="12" style="border-right: 1px solid #252D3F;">
@@ -151,7 +151,7 @@
                                         </el-tag>
                                     </draggable>
                                 </div>
-                                 <search-person
+                                    <search-person
                                     :handleSelect="selectDirectorHandler"
                                 ></search-person>
                                 <el-button class="btn-style-two" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增</el-button>
@@ -170,7 +170,7 @@
                                         </el-tag>
                                     </draggable>
                                 </div>
-                                 <search-person
+                                    <search-person
                                     :handleSelect="selectScenaristHandler"
                                 ></search-person>
                                 <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增</el-button>
@@ -180,6 +180,7 @@
                                     :value="programme.copyrightRange"
                                     :disabled="readonly"
                                     type="daterange"
+                                    unlink-panels
                                     @input="inputHandler($event, 'copyrightRange')"
                                     range-separator="至"
                                     start-placeholder="开始日期"
@@ -360,74 +361,50 @@
                         <el-form-item label="节目海报">
                             <span class="little-tips">(240*350 六分位图必传)</span>
                         </el-form-item>
-                        <el-col :span="24" id="upload-image">
-                            <div class="text-left clearfix" style="padding-left:20px;">
-                                <el-button
-                                    class="float-left page-main-btn create-blue-btn contain-svg-icon"
-                                    v-if="!readonly"
-                                    @click="uploadImageHandler">
-                                    <svg-icon
-                                        icon-class="image"
-                                        class-name="svg-box">
-                                    </svg-icon>
-                                    添加节目图片
-                                </el-button>
-                            </div>
-                            <div class="image-list-wrapper">
-                                <thumbnail
-                                    :removeSign="!readonly"
-                                    :imageList="programme.posterImageList"
-                                    v-on:removeImage="_deletePosterImage">
-                                </thumbnail>
-                            </div>
-                        </el-col>
+                        <div class="wrapper clearfix">
+                            <multi-image-uploader
+                                :imageList="programme.posterImageList"
+                                :deleteImageHandler="deleteImageHandler"
+                                :imageUploadedHandler="imageUploadedHandler"
+                            ></multi-image-uploader>
+                        </div>
                     </el-col>
                 </el-form>
             </el-col>
         </el-row>
-        <el-row>
-            <div class="seperator-line"></div>
-            <el-col :span="24">
-                <div class="preview-sort clearfix">
-                    <h4 class="content-sub-title">
-                        节目视频
-                        <span class="count"></span>
-                        <span class="count">1个正片</span>
-                    </h4>
-                    <el-button
-                        class="float-left btn-style-four contain-svg-icon"
-                        v-if="!readonly" @click="showUploadDialog">
-                        <svg-icon
-                            icon-class="video"
-                            class-name="svg-box">
-                        </svg-icon>
-                        关联视频
-                    </el-button>
-                    <el-button
-                        class="float-left btn-style-four"
-                        v-if="!readonly && video.list.length > 1"
-                        type="primary"
-                        @click="showSortDialog"
-                        plain>视频排序</el-button>
-                </div>
-                <programme-table title="已添加视频列表" :status="status" :data-list="video.list"></programme-table>
-            </el-col>
-        </el-row>
+        <div class="seperator-line"></div>
+        <div class="programme-video-field">
+            <h4 class="content-sub-title">
+                节目视频
+                <span class="count"></span>
+                <span class="count">1个正片</span>
+            </h4>
+            <div class="preview-sort clearfix">
+                <el-button
+                    class="float-left btn-style-four contain-svg-icon"
+                    v-if="!readonly" @click="showUploadDialog">
+                    <svg-icon
+                        icon-class="video"
+                        class-name="svg-box">
+                    </svg-icon>
+                    关联视频
+                </el-button>
+                <el-button
+                    class="float-left btn-style-four"
+                    v-if="!readonly && video.list.length > 1"
+                    type="primary"
+                    @click="showSortDialog"
+                    plain>视频排序</el-button>
+            </div>
+            <programme-table title="已添加视频列表" :status="status" :data-list="video.list"></programme-table>
+        </div>
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" v-if="status === 0" type="primary" @click="_createProgramme">创建</el-button>
             <el-button class="btn-style-two" v-if="status === 2" type="primary" @click="_editProgramme">保存</el-button>
             <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
         </div>
-        <upload-image
-            title="上传节目图片"
-            :size="filterSize"
-            :successHandler="_addPosterImage"
-            :imageUploadDialogVisible="imageUploadDialogVisible"
-            v-on:changeImageDialogStatus="closeImageDialog($event)">
-        </upload-image>
         <create-person-dialog :createPersonDialogVisible="createPersonDialogVisible" v-on:changePersonDialogStatus="closePersonDialog($event)"></create-person-dialog>
         <upload-programme-video-dialog :videoStatus="0" :videoUploadDialogVisible="videoUploadDialogVisible" v-on:changeVideoDialogStatus="closeVideoDialog($event)"></upload-programme-video-dialog>
-        <preview-multiple-images :previewMultipleImages="previewImage"></preview-multiple-images>
         <sort-dialog
             v-if="sortDialogVisible"
             title="视频排序"
@@ -444,16 +421,13 @@
     import draggable from 'vuedraggable';
     import { mapMutations, mapGetters, mapActions } from 'vuex';
     import _ from 'lodash';
-    import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import CreatePersonDialog from './CreatePersonDialog';
     import ProgrammeTable from './ProgrammeTable';
-    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import SortDialog from 'sysComponents/custom_components/custom/SortDialog';
     import dimension from '@/util/config/dimension';
     import role from '@/util/config/role';
     import PersonSelect from './PersonSelect';
     import ProgrammeBasicInfo from './ProgrammeBasicInfo';
-    import Thumbnail from '../../components/custom_components/custom/Thumbnail';
     import {checkScore, checkCategory, checkPositiveInteger} from '@/util/formValidate';
     import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 
@@ -466,16 +440,14 @@
     import PlatFormSearch from './PlatFormSearch';
     import GradeSearch from './GradeSearch';
     import SpecSearch from './SpecSearch';
+    import MultiImageUploader from 'sysComponents/custom_components/custom/MultiImageUploader';
 
     export default {
         name: 'ProgrammeDetail',
         components: {
-            UploadImage,
-            Thumbnail,
             CreatePersonDialog,
             ProgrammeTable,
             UploadProgrammeVideoDialog,
-            PreviewMultipleImages,
             PersonSelect,
             SortDialog,
             ProgrammeBasicInfo,
@@ -487,7 +459,8 @@
             PlatFormSearch,
             GradeSearch,
             SpecSearch,
-            draggable
+            draggable,
+            MultiImageUploader
         },
         props: {
             status: { // status 有三种状态，0代表创建 "create", 1代表显示 "display", 2代表编辑 "edit"
@@ -718,7 +691,10 @@
                 deleteGradeByName: 'programme/deleteGradeByName',
                 //  新的规格搜索
                 addSpecToList: 'programme/addSpecToList',
-                deleteSpecByName: 'programme/deleteSpecByName'
+                deleteSpecByName: 'programme/deleteSpecByName',
+                //  海报上传成功之后添加到海报列表中
+                addImageToPosterImageList: 'programme/addImageToPosterImageList',
+                deleteImageFromPosterImageListById: 'programme/deleteImageFromPosterImageListById'
             }),
             ...mapActions({
                 // 新加
@@ -1180,6 +1156,13 @@
             setSortedList(list) {
                 this.setVideoList({list});
                 this.closeSortDialog();
+            },
+            //  图片上传成功之后每次的回调
+            imageUploadedHandler(image) {
+                this.addImageToPosterImageList({image});
+            },
+            deleteImageHandler(id) {
+                this.deleteImageFromPosterImageListById({id});
             }
         }
     };
@@ -1201,5 +1184,8 @@
 .little-tips {
     font-size: 12px;
     color: #909399;
+}
+.wrapper {
+    margin-left: 20px;
 }
 </style>

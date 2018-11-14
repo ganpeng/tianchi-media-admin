@@ -10,7 +10,8 @@
                         {{person.visible ? '已上架' : '已下架'}}
                     </span>
                 </div>
-                <img :src="person.posterImageList[0] ? person.posterImageList[0].uri : ''" alt="" width="200" height="200">
+                <img v-if="person.avatarImage" :src="person.avatarImage.uri | fileUrl" alt="" width="200" height="200">
+                <img v-else src="" alt="" width="200" height="200">
             </div>
             <div class="info-section">
                 <div class="title-wrapper">

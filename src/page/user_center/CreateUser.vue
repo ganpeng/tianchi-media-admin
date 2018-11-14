@@ -1,17 +1,17 @@
 <!--创建用户信息组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'用户管理'},
-            {name:'创建用户'}]">
-        </custom-breadcrumb>
-        <user-info-form
-            status="0">
-        </user-info-form>
+    <div class="create-user-container">
+        <h2 class="content-title">创建用户</h2>
+        <div class="seperator-line"></div>
+        <div class="form-container">
+            <el-col :span="8">
+                <user-info-form
+                    status="0">
+                </user-info-form>
+            </el-col>
+        </div>
     </div>
 </template>
-
 <script>
     import UserInfoForm from './UserInfoForm';
 

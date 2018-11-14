@@ -1,3 +1,16 @@
+import _ from 'lodash';
+
+function readBlobAsDataURL(obj) {
+    return new Promise((resolve, reject) => {
+        let fileRead = new FileReader();
+        fileRead.readAsDataURL(obj.file);
+        fileRead.onload = (e) => {
+            obj.dataUri = e.target.result;
+            resolve(obj);
+        };
+    });
+}
+
 function loadFile(file) {
     return new Promise((resolve, reject) => {
         let reader = new FileReader();
@@ -50,27 +63,38 @@ export function filterSizeMatchFiles(list, sizeList) {
         if (index > -1) {
             return item;
         }
-    }).map((item) => item.file);
+    });
 }
 
 export function filterFile(fileList, files) {
     let newFileList = [];
-    Array.from(files).forEach((file) => {
+    Array.from(files).forEach((ele) => {
         let index = fileList.findIndex((item) => {
-            return item.file.name === file.name;
+            return _.get(item, 'file.name') === _.get(ele, 'file.name');
         });
         if (index === -1) {
-            let obj = {
-                file,
-                data: {
-                    progress: 0,
-                    status: 1 // 0 成功, 1 等待, 2 失败 3 正在上传
-                }
+            let obj = _.cloneDeep(ele);
+            obj.data = {
+                progress: 0,
+                status: 1 // 0 成功, 1 等待, 2 失败 3 正在上传
             };
             newFileList.push(obj);
         }
     });
     return fileList.concat(newFileList);
+}
+
+export function getImageDemensionByName(fileList, name) {
+    let target = fileList.find((obj) => {
+        return _.get(obj, 'file.name') === name;
+    });
+    return target ? target.demension : {width: 100, height: 100};
+};
+
+export function readBlobAsDataURLFromList(images) {
+    return Promise.all(images.map((image) => {
+        return readBlobAsDataURL(image);
+    }));
 }
 
 export function uploadRequest(options) {

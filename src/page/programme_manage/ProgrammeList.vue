@@ -159,7 +159,7 @@
                         </el-button>
                         <el-button
                             class="btn-style-two contain-svg-icon"
-                            @click="showFileUploadDialog">
+                            @click="gotoProgrammeImportPage">
                             <svg-icon icon-class="upload"></svg-icon>
                             导入
                         </el-button>
@@ -701,9 +701,15 @@ export default {
         },
         toggleSearchField() {
             this.searchFieldVisible = !this.searchFieldVisible;
+        },
+        gotoProgrammeImportPage() {
+            let routeData = this.$router.resolve({
+                name: 'ProgrammeImport'
+            });
+            window.open(routeData.href, '_blank');
         }
     }
 };
 </script>
-<style lang="less" scoped>
+<style lang="scss" scoped>
 </style>

@@ -1,22 +1,62 @@
 <template>
     <div class="multi-image-uploader-container">
-        <div>
-            <input type="file" id="multi-image-uploader" multiple accept="image/*"> 上传
+        <div class="image-list-container">
+            <ul class="image-list">
+                <li :style="styleStr(image.uri)" v-for="(image) in imageList" :key="image.id" class="image-item">
+                    <i @click="deleteImageHandler(image.id)" class="el-icon-error"></i>
+                </li>
+                <li :style="styleStr(obj.dataUri)" v-for="(obj, index) in showFileList" :key="index" class="image-item">
+                    <el-progress :stroke-width="3" :show-text="false" class="progress-bar" v-show="obj.data.progress !== 0" :percentage="obj.data.progress"></el-progress>
+                </li>
+                <li v-show="!isUploading" :style="styleStr()" class="image-item">
+                    <div class="uploader"
+                        :style="styleStr()">
+                        <label class="ui_button ui_button_primary" for="multi-image-uploader">
+                            <i class="el-icon-plus"></i>
+                        </label>
+                        <input ref="multiImageUploader" type="file" id="multi-image-uploader" multiple accept="image/*">
+                    </div>
+                </li>
+            </ul>
         </div>
-        <ul>
-            <li class="image-item" v-for="(item, index) in showFileList" :key="index">
-                <span>{{index}} : {{item.data.progress}}</span>
-            </li>
-        </ul>
     </div>
 </template>
 <script>
-import {uploadRequest, promiseImageSize, filterFile, filterSizeMatchFiles} from '../../../util/upload';
+import {
+    uploadRequest,
+    promiseImageSize,
+    filterFile,
+    filterSizeMatchFiles,
+    getImageDemensionByName,
+    readBlobAsDataURLFromList
+} from '../../../util/upload';
 export default {
     name: 'MultiImageUploader',
+    props: {
+        imageList: {
+            type: Array,
+            default: () => []
+        },
+        deleteImageHandler: {
+            type: Function,
+            default: () => {}
+        },
+        dimension: {
+            type: Object,
+            default: () => {
+                return {
+                    width: 170,
+                    height: 100
+                };
+            }
+        },
+        imageUploadedHandler: {
+            type: Function,
+            default: () => {}
+        }
+    },
     data() {
         return {
-            imageList: [],
             fileList: [],
             count: 0,
             isUploading: false
@@ -25,7 +65,7 @@ export default {
     created() {
         this.$nextTick(() => {
             let testUpload = document.querySelector('#multi-image-uploader');
-            testUpload.addEventListener('change', this.uploadChangeHandler.bind(this));
+            testUpload.addEventListener('change', this.uploadChangeHandler.bind(this), false);
         });
     },
     computed: {
@@ -36,26 +76,33 @@ export default {
         }
     },
     methods: {
+        styleStr(dataUri) {
+            if (dataUri) {
+                return `width: ${this.dimension.width}px;height: ${this.dimension.height}px;background: url("${dataUri}") no-repeat; background-size: cover;`;
+            } else {
+                return `width: ${this.dimension.width}px;height: ${this.dimension.height}px;`;
+            }
+        },
         async uploadChangeHandler(e) {
             let images = await promiseImageSize(e.target.files);
-            let fileList = filterSizeMatchFiles(images, [{width: 807, height: 455}, {width: 200, height: 200}]);
+            let imagesWithDataUri = await readBlobAsDataURLFromList(images);
+            let fileList = filterSizeMatchFiles(imagesWithDataUri, [{width: 807, height: 455}, {width: 200, height: 200}]);
             if (fileList.length === 0) {
                 this.$message.error('本次选择图片不符合尺寸要求');
+                this.resetInputField();
                 return false;
             }
             let newFileList = filterFile(this.fileList, fileList);
             this.fileList = Array.from(newFileList);
-
             if (!this.isUploading) {
                 this.uploadHandler();
             }
         },
         async uploadHandler() {
             if (this.fileList[this.count] === undefined) {
-                this.isUploading = false;
+                this.resetInputField();
                 return false;
             }
-
             //  获取上传文件的服务器地址
             let baseUri = await this.$util.getUploadServer();
             // 构造上传的数据和配置项
@@ -72,7 +119,6 @@ export default {
                     this.updateProgress(Math.round(percent));
                 }
             };
-
             //  准备开始上传了
             this.updateStatus(3);
             this.isUploading = true;
@@ -82,13 +128,10 @@ export default {
                 //  上传成功 0 成功, 1 等待, 2 失败 3 正在上传
                 if (res && (res.code === 0)) {
                     if (res.data[0] && (res.data[0].failCode === 0 || res.data[0].failCode === 3300)) {
-                        let data = res.data[0].image;
-                        let obj = {};
-                        obj.id = data.id;
-                        obj.uri = data.uri;
-                        obj.name = data.fileName;
-                        this.imageList.push(obj);
-                        console.log(this.imageList);
+                        let {uri, originName, id} = res.data[0].image;
+                        let {width, height} = getImageDemensionByName(this.fileList, originName);
+                        let obj = {id, uri, width, height, name: originName};
+                        this.imageUploadedHandler(obj);
                     } else {
                         this.$message.error(res.data[0].failReason);
                     }
@@ -122,15 +165,49 @@ export default {
                 }
                 return item;
             });
+        },
+        resetInputField() {
+            this.$refs.multiImageUploader.value = null;
+            this.fileList = [];
+            this.count = 0;
+            this.isUploading = false;
         }
     }
 };
 </script>
-<style scoped>
-.image-item {
-    display: inline-block;
-    width: 60px;
-    height: 60px;
-    background: red;
+<style lang="scss" scoped>
+.multi-image-uploader-container {
+    float: left;
+    margin-right: 10px;
+    .image-list {
+        clear: both;
+        .image-item {
+            position: relative;
+            float: left;
+            border: 1px solid #3E495E;
+            border-radius: 4px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            .progress-bar {
+                position: absolute;
+                bottom: 0px;
+                width: 100%;
+            }
+            i.el-icon-error {
+                display: none;
+                position: absolute;
+                top: 4px;
+                right: 4px;
+                color: $closeBtnHoverColor;
+            }
+            &:hover {
+                opacity: 0.6;
+                i {
+                    display: block;
+                }
+            }
+        }
+    }
 }
 </style>

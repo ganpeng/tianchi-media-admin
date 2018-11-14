@@ -54,7 +54,7 @@
                         </el-button>
                         <el-button
                             class="btn-style-two contain-svg-icon"
-                            @click="showFileUploadDialog">
+                            @click="gotoPersonImportPage">
                             <svg-icon icon-class="upload"></svg-icon>
                             导入
                         </el-button>
@@ -364,6 +364,12 @@
                     });
                 }
                 this.closeFileUploadDialog();
+            },
+            gotoPersonImportPage() {
+                let routeData = this.$router.resolve({
+                    name: 'PersonImport'
+                });
+                window.open(routeData.href, '_blank');
             }
         }
     };
