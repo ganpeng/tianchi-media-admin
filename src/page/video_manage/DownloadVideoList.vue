@@ -12,14 +12,27 @@
                     <el-form-item>
                         <el-input v-model="listQueryParams.keyword" placeholder="请填写视频名称或编号"></el-input>
                     </el-form-item>
-                    <el-form-item label="下载时间">
+                    <el-form-item>
+                        <el-select
+                            v-model="listQueryParams.status"
+                            clearable
+                            placeholder="请选择视频下载状态">
+                            <el-option
+                                v-for="(item, index) in statusOptions"
+                                :key="index"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
                         <el-date-picker
                             v-model="createRangeTime"
                             type="daterange"
                             value-format="timestamp"
                             range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期">
+                            start-placeholder="下载开始日期"
+                            end-placeholder="下载结束日期">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item>
@@ -54,6 +67,21 @@
                             <div class="gan-tooltip" slot="content">{{scope.row.originName}}</div>
                             <span class="ellipsis-two">{{scope.row.originName}}</span>
                         </el-tooltip>
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" label="状态">
+                    <template slot-scope="scope">
+                        <i class="status-normal" v-if="scope.row.status === 'SUCCESS'">成功</i>
+                        <i class="status-mid" v-if="scope.row.status === 'INJECTING'">注入中</i>
+                        <i class="status-abnormal" v-if="scope.row.status === 'FAILED'">失败</i>
+                        <el-button
+                            v-if="scope.row.status === 'FAILED'"
+                            class="text-primary"
+                            type="text"
+                            @click="requestForDownloadVideo([scope.row.id])"
+                            size="small">
+                            重试
+                        </el-button>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" label="上传时间">
@@ -102,6 +130,12 @@
                 <el-button
                     :class="'disabled-red-btn ' + (multipleSelection.length === 0 ? 'is-disabled' : '')"
                     size="small"
+                    @click="retryDownloadBatchVideos">
+                    批量重试
+                </el-button>
+                <el-button
+                    :class="'disabled-red-btn ' + (multipleSelection.length === 0 ? 'is-disabled' : '')"
+                    size="small"
                     :disabled="removeDisabled"
                     @click="removeBatchVideos">
                     批量删除
@@ -121,6 +155,7 @@
             return {
                 listQueryParams: {
                     keyword: '',
+                    status: '',
                     startedAt: '',
                     endedAt: '',
                     pageNum: 1,
@@ -128,7 +163,12 @@
                 },
                 createRangeTime: [],
                 total: 0,
-                removeDisabled: false,
+                statusOptions: [
+                    {label: '成功', value: 'SUCCESS'},
+                    {label: '注入中', value: 'INJECTING'},
+                    {label: '失败', value: 'FAILED'}
+                ],
+                removeDisabled: true,
                 videoList: [],
                 multipleSelection: [],
                 exportQueryParams: {
@@ -142,6 +182,7 @@
             this.getDownloadVideoList();
         },
         methods: {
+            // 获取下载视频列表
             getDownloadVideoList() {
                 if (this.createRangeTime && this.createRangeTime.length === 2) {
                     this.listQueryParams.startedAt = this.createRangeTime[0];
@@ -167,6 +208,7 @@
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
+                this.removeDisabled = this.multipleSelection.length === 0;
             },
             clearFilters() {
                 this.listQueryParams.keyword = '';
@@ -213,6 +255,24 @@
                     });
                 });
             },
+            // 批量重试下载视频
+            retryDownloadBatchVideos() {
+                let videoIdList = [];
+                this.multipleSelection.map(video => {
+                    videoIdList.push(video.id);
+                });
+                this.requestForDownloadVideo(videoIdList);
+            },
+            // 请求重新下载视频
+            requestForDownloadVideo(idList) {
+                this.$message.success('正在请求下载视频文件，请稍等');
+                this.$service.exportTsVideos({videoIdList: idList, isRetry: true}).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message.success('开始重新下载视频文件，稍后可在当前页面查看');
+                        this.getDownloadVideoList();
+                    }
+                });
+            },
             // 批量删除视频
             removeBatchVideos() {
                 let that = this;
@@ -241,11 +301,15 @@
                     }
                     if (response && response.code === 0) {
                         this.$message.success('"' + video.originName + '"' + '删除成功');
+                        if (index === undefined) {
+                            this.getDownloadVideoList();
+                        }
                     }
-                    if (this.requestNo === this.multipleSelection.length) {
+                    if (index !== undefined && this.requestNo === this.multipleSelection.length) {
                         this.removeDisabled = false;
                         setTimeout(function () {
                             that.$message(that.multipleSelection.length + '个视频删除完成');
+                            that.getDownloadVideoList();
                         }, 1000);
                     }
                 });

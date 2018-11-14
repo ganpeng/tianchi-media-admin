@@ -70,8 +70,15 @@ export const retryVideoByIdList = (ids) => {
 /**
  * 根据id列表批量导出ts文件
  */
-export const exportTsVideos = ({videoIdList}) => {
-    return service.post('/v1/storage/video/export', videoIdList, {
+export const exportTsVideos = ({videoIdList, isRetry}) => {
+    let params = {
+        isRetry
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+    return service.post(`/v1/storage/video/export?${paramsStr}`, videoIdList, {
         baseURL: '/storage'
     });
 };
@@ -102,9 +109,10 @@ export const getDurationDiffVideoList = ({durationDiffGt, durationDiffLt, keywor
 /**
  * 获取下载视频列表
  */
-export const getDownloadVideoList = ({keyword, startedAt, endedAt, pageNum, pageSize}) => {
+export const getDownloadVideoList = ({keyword, status, startedAt, endedAt, pageNum, pageSize}) => {
     let params = {
         keyword,
+        status,
         startedAt,
         endedAt,
         pageNum: pageNum - 1,

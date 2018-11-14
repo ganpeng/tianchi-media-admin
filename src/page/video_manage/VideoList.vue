@@ -111,7 +111,7 @@
                                @click="exportSelectedVideoHandler">批量导出
                     </el-button>
                     <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
-                               @click="exportSelectedTsVideo">批量下载
+                               @click="downloadSelectedTsVideo">批量下载
                     </el-button>
                     <el-button class="delete-btn disabled-red-btn" size="small" :disabled="isDisabled"
                                @click="deleteVideoList">批量删除
@@ -227,16 +227,16 @@
                 let {status, transcodeStatus} = video;
                 return (status === 'INJECTING' && transcodeStatus === 'FAILED') || status === 'FAILED';
             },
-            // 导出ts视频文件
-            exportSelectedTsVideo() {
+            // 下载视频文件
+            downloadSelectedTsVideo() {
                 this.$message.success('正在请求下载视频文件，请稍等');
                 let videoIdList = [];
                 this.$refs.videoTable.selectedVideoList.map(video => {
                     videoIdList.push(video.id);
                 });
-                this.$service.exportTsVideos({videoIdList: videoIdList}).then(response => {
+                this.$service.exportTsVideos({videoIdList: videoIdList, isRetry: false}).then(response => {
                     if (response && response.code === 0) {
-                        this.$message.success('成功下载视频文件，请查看');
+                        this.$message.success('成功下载视频文件，稍后可到下载列表页面查看');
                     }
                 });
             },
