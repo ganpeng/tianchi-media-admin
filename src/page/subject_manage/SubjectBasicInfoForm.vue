@@ -52,13 +52,20 @@
                     <el-radio :label="false">下架</el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item label="专题封面图" class="cover-image-block">
-                <el-button
-                    class="create-blue-btn contain-svg-icon" @click="popUploadImage('COVERIMAGE')">
-                    <svg-icon icon-class="image"></svg-icon>
-                    添加专题封面
-                </el-button>
+            <!--设置节目专题封面图片-->
+            <el-form-item label="专题图片" class="cover-image-block">
+                <label> (1920*1080 背景图必传)</label>
                 <thumbnail
+                    :imageList="subjectInfo.posterImageList"
+                    v-on:removeImage="removePosterImage">
+                </thumbnail>
+            </el-form-item>
+            <!--设置人物专题封面图片-->
+            <el-form-item label="专题图片" class="cover-image-block">
+                <label> (260*600 专题E 必传)</label>
+                <thumbnail
+                    width="168px"
+                    height="180px"
                     :imageList="subjectInfo.posterImageList"
                     v-on:removeImage="removePosterImage">
                 </thumbnail>
@@ -273,10 +280,6 @@
                 let baseUri = window.localStorage.getItem('imageBaseUri');
                 return baseUri + uri;
             },
-            popUploadImage(mode) {
-                this.uploadImageMode = mode;
-                this.imageUploadDialogVisible = true;
-            },
             // 添加图片
             addPosterImage(newPosterImage) {
                 // 添加封面图片
@@ -297,7 +300,7 @@
             },
             // 删除封面图片
             removePosterImage(index) {
-                this.$confirm('此操作将删除该封面图片, 是否继续?', '提示', {
+                this.$confirm('此操作将删除该图片, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -395,6 +398,14 @@
             width: 20px !important;
             height: 20px !important;
             fill: #1989FA;
+        }
+    }
+
+    // 图片
+    .cover-image-block {
+        label {
+            font-size: 12px;
+            color: #6F7480;
         }
     }
 

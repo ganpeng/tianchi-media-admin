@@ -3,23 +3,129 @@
  */
 
 /**
+ * 2.0所有图片尺寸以及名称
+ */
+export const ALL_IMAGE_DIMENSIONS = [
+    {
+        width: 1920,
+        height: 1080,
+        styleName: '专题背景'
+    },
+    {
+        width: 560,
+        height: 600,
+        styleName: '专题A'
+    },
+    {
+        width: 1160,
+        height: 600,
+        styleName: '专题B'
+    },
+    {
+        width: 1310,
+        height: 472,
+        styleName: '专题C'
+    },
+    {
+        width: 410,
+        height: 472,
+        styleName: '专题D'
+    },
+    {
+        width: 260,
+        height: 600,
+        styleName: '专题E'
+    },
+    {
+        width: 860,
+        height: 440,
+        styleName: '横版A'
+    },
+    {
+        width: 560,
+        height: 300,
+        styleName: '横版B'
+    },
+    {
+        width: 1160,
+        height: 300,
+        styleName: '横版C'
+    },
+    {
+        width: 996,
+        height: 472,
+        styleName: '横版D'
+    },
+    {
+        width: 860,
+        height: 260,
+        styleName: '横版E'
+    },
+    {
+        width: 860,
+        height: 472,
+        styleName: '横版F'
+    },
+    {
+        width: 560,
+        height: 720,
+        styleName: '竖版A'
+    },
+    {
+        width: 260,
+        height: 380,
+        styleName: '竖版B'
+    },
+    {
+        width: 410,
+        height: 615,
+        styleName: '竖版C'
+    },
+    {
+        width: 342,
+        height: 472,
+        styleName: '竖版D'
+    },
+    {
+        width: 560,
+        height: 222,
+        styleName: '头条/分类'
+    },
+    {
+        width: 260,
+        height: 260,
+        styleName: '人物/频道'
+    },
+    {
+        width: 410,
+        height: 216,
+        styleName: '新闻/音乐'
+    },
+    {
+        width: 410,
+        height: 180,
+        styleName: '分类'
+    }
+];
+
+/**
  * 2.0人物专题封面尺寸
  */
 export const FIGURE_SUBJECT_DIMENSION = [
     {
         width: 560,
         height: 600,
-        name: '专题A'
+        styleName: '专题A'
     },
     {
         width: 410,
         height: 472,
-        name: '专题D'
+        styleName: '专题D'
     },
     {
         width: 260,
         height: 600,
-        name: '专题E'
+        styleName: '专题E'
     }
 ];
 
@@ -30,62 +136,67 @@ export const PROGRAMME_SUBJECT_DIMENSION = [
     {
         width: 410,
         height: 472,
-        name: '专题D'
+        styleName: '专题D'
     },
     {
         width: 1160,
         height: 600,
-        name: '专题B'
+        styleName: '专题B'
     },
     {
         width: 1310,
         height: 472,
-        name: '专题C'
+        styleName: '专题C'
     },
     {
         width: 860,
         height: 440,
-        name: '横版A'
+        styleName: '横版A'
     },
     {
         width: 560,
         height: 300,
-        name: '横版B'
+        styleName: '横版B'
     },
     {
         width: 560,
         height: 720,
-        name: '竖版A'
+        styleName: '竖版A'
     },
     {
         width: 1160,
         height: 300,
-        name: '横版C'
+        styleName: '横版C'
     },
     {
         width: 260,
         height: 380,
-        name: '竖版B'
+        styleName: '竖版B'
     },
     {
         width: 996,
         height: 472,
-        name: '横版D'
+        styleName: '横版D'
+    },
+    {
+        width: 410,
+        height: 615,
+        styleName: '竖版C'
     },
     {
         width: 342,
         height: 472,
-        name: '竖版D'
+        styleName: '竖版D'
     },
     {
         width: 860,
         height: 260,
-        name: '横版E'
+        styleName: '横版E'
     },
     {
         width: 860,
         height: 472,
-        name: '横版F'
+        styleName: '横版F'
     }
 ];
 
@@ -291,6 +402,7 @@ export const CHANNEL_LOGO_DIMENSION = [
 ];
 
 export default {
+    ALL_IMAGE_DIMENSIONS,
     FIGURE_SUBJECT_DIMENSION,
     PROGRAMME_SUBJECT_DIMENSION,
     PROGRAMME_DIMENSION,

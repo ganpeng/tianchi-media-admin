@@ -21,7 +21,12 @@
         },
         data() {
             return {
-                subjectInfo: {posterImageList: []}
+                subjectInfo: {
+                    posterImageList: [
+                        {width: 560, height: 600, uri: '/group6/M00/00/2D/CgEBK1uvQ8iAZArbAAAgmokEc3s29.webp'},
+                        {width: 240, height: 350, uri: '/group5/M00/00/2D/CgEBKVuvQ1-AcNERAAAn7p1gftA26.webp'}
+                    ]
+                }
             };
         },
         methods: {}
