@@ -10,7 +10,7 @@
             <h3 class="block-vice-title">节目包信息</h3>
             <el-card>
                 <ul>
-                    <li><span>产品包类别</span><label>类别包</label></li>
+                    <li><span>产品包类别</span><label>节目包</label></li>
                     <li><span>产品包名称</span><label>{{productInfo.name}}</label></li>
                     <li><span>产品包简介</span><label>{{productInfo.description}}</label></li>
                     <li>
