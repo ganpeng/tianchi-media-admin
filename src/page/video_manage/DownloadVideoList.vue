@@ -69,6 +69,11 @@
                         </el-tooltip>
                     </template>
                 </el-table-column>
+                <el-table-column align="center" label="服务器地址">
+                    <template slot-scope="scope">
+                        {{scope.row.host}}
+                    </template>
+                </el-table-column>
                 <el-table-column align="center" label="状态">
                     <template slot-scope="scope">
                         <i class="status-normal" v-if="scope.row.status === 'SUCCESS'">成功</i>
@@ -227,6 +232,7 @@
                                 let exportVideo = {};
                                 exportVideo['视频编号'] = video.id;
                                 exportVideo['视频文件名'] = video.originName;
+                                exportVideo['服务器地址'] = video.host;
                                 exportVideo['上传时间'] = this.$util.formatDate(new Date(video.uploadedAt), 'yyyy-MM-DD HH:mm:SS');
                                 exportVideo['下载时间'] = this.$util.formatDate(new Date(video.createdAt), 'yyyy-MM-DD HH:mm:SS');
                                 exportChannelData.push(exportVideo);
