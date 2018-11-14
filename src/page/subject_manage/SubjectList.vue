@@ -124,7 +124,7 @@
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="PROGRAMME">创建节目专题</el-dropdown-item>
-                    <el-dropdown-item command="PERSON">创建人物专题</el-dropdown-item>
+                    <el-dropdown-item command="FIGURE">创建人物专题</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
@@ -198,7 +198,7 @@
             // 查询专题详情
             checkSubjectDetail(item) {
                 this.$router.push({
-                    name: item.category === 'FIGURE' ? 'PersonSubjectDetail' : 'ProgrammeSubjectDetail',
+                    name: item.category === 'FIGURE' ? 'FigureSubjectDetail' : 'ProgrammeSubjectDetail',
                     params: {id: item.id}
                 });
             },
@@ -249,7 +249,7 @@
             // 编辑专题基本信息
             editBasicInfo(item) {
                 this.$router.push({
-                    name: item.category === 'FIGURE' ? 'EditPersonSubject' : 'EditProgrammeSubject',
+                    name: item.category === 'FIGURE' ? 'EditFigureSubject' : 'EditProgrammeSubject',
                     params: {id: item.id}
                 });
             },
@@ -262,7 +262,7 @@
             },
             // 创建专题
             createSubject(command) {
-                this.$router.push({name: command === 'PROGRAMME' ? 'CreateProgrammeSubject' : 'CreatePersonSubject'});
+                this.$router.push({name: command === 'PROGRAMME' ? 'CreateProgrammeSubject' : 'CreateFigureSubject'});
             }
         }
     };

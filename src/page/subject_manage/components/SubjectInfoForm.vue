@@ -40,10 +40,9 @@
                 <el-button
                     type="primary"
                     plain
-                    class="btn-style-two"
-                    icon="el-icon-plus"
+                    class="btn-style-two add-tag"
                     @click="addSubjectTag">
-                    添加标签
+                    添加
                 </el-button>
             </el-form-item>
             <el-form-item label="状态" required>
@@ -53,7 +52,10 @@
                 </el-radio-group>
             </el-form-item>
             <!--设置节目专题封面图片-->
-            <el-form-item label="专题图片" class="cover-image-block">
+            <el-form-item
+                label="专题图片"
+                class="cover-image-block"
+                v-if="status === 'CREATE_PROGRAMME' || status === 'EDIT_PROGRAMME'">
                 <label> (1920*1080 背景图必传)</label>
                 <thumbnail
                     :imageList="subjectInfo.posterImageList"
@@ -61,7 +63,10 @@
                 </thumbnail>
             </el-form-item>
             <!--设置人物专题封面图片-->
-            <el-form-item label="专题图片" class="cover-image-block">
+            <el-form-item
+                label="专题图片"
+                class="cover-image-block"
+                v-if="status === 'CREATE_FIGURE' || status === 'EDIT_FIGURE'">
                 <label> (260*600 专题E 必传)</label>
                 <thumbnail
                     width="168px"
@@ -72,7 +77,7 @@
             </el-form-item>
             <div class="content-sub-title">专题内节目
                 <el-button @click="linkProgramme" class="contain-svg-icon btn-style-two">
-                    <svg-icon icon-class="image"></svg-icon>
+                    <svg-icon icon-class="link_programme"></svg-icon>
                     关联节目
                 </el-button>
             </div>
@@ -113,18 +118,18 @@
 <script>
     import Thumbnail from 'sysComponents/custom_components/custom/Thumbnail';
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
-    import SelectMultipleProgramme from './programme_subject/SelectMultipleProgramme';
-    import ProgrammeOperateTable from './programme_subject/ProgrammeOperateTable';
+    import SelectMultipleProgramme from './SelectMultipleProgramme';
+    import ProgrammeOperateTable from './ProgrammeOperateTable';
 
     export default {
-        name: 'CreateSubjectForm',
+        name: 'SubjectInfoForm',
         components: {
             PreviewMultipleImages,
             Thumbnail,
             SelectMultipleProgramme,
             ProgrammeOperateTable
         },
-        /* status: 0代表创建节目专题，1代表创建人物专题，2代表编辑节目专题，3代表编辑人物专题 */
+        /* status: 'CREATE_PROGRAMME'代表创建节目专题，'CREATE_FIGURE'代表创建人物专题，'EDIT_PROGRAMME'代表编辑节目专题，'EDIT_FIGURE'代表编辑人物专题 */
         props: {
             status: {
                 type: String,
@@ -148,10 +153,6 @@
                 }
             };
             let checkProgrammeCategoryList = (rule, value, callback) => {
-                // 对于创建或者编辑人物专题，不存在当前字段，也不校验
-                if (this.status === '1' || this.status === '3') {
-                    return;
-                }
                 if (this.programmeCategoryList.length === 0) {
                     return callback(new Error('请选择节目专题类别'));
                 } else {
@@ -337,8 +338,8 @@
                 this.$refs['subjectInfo'].validate((valid) => {
                     if (valid) {
                         // 创建专题
-                        if (this.status === '0' || this.status === '1') {
-                            this.subjectInfo.category = this.status === '0' ? 'PROGRAMME' : 'FIGURE';
+                        if (this.status === 'CREATE_PROGRAMME' || this.status === 'CREATE_FIGURE') {
+                            this.subjectInfo.category = this.status === 'CREATE_PROGRAMME' ? 'PROGRAMME' : 'FIGURE';
                             this.$service.createSubject(this.subjectInfo).then(response => {
                                 if (response && response.code === 0) {
                                     this.$message.success('成功创建专题');
@@ -379,6 +380,10 @@
         .el-radio {
             padding: 0px;
         }
+    }
+
+    .add-tag {
+        margin-left: 20px;
     }
 
     .btn-style-two {

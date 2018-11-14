@@ -1,25 +1,26 @@
-<!--编辑人物专题基本信息组件-->
+<!--编辑节目专题信息组件-->
 <template>
     <div>
         <custom-breadcrumb
             v-bind:breadcrumbList="[
             {name:'专题管理'},
-            {name:'编辑基本信息'}]">
+            {name:'编辑节目专题信息'}]">
         </custom-breadcrumb>
         <div class="block-box">
             <subject-basic-info-form
+                ref="subjectbasicInfoForm"
                 :subjectInfo="subjectInfo"
-                status="3">
+                status="EDIT_PROGRAMME">
             </subject-basic-info-form>
         </div>
     </div>
 </template>
 
 <script>
-    import SubjectBasicInfoForm from '../SubjectBasicInfoForm';
+    import SubjectBasicInfoForm from './components/SubjectInfoForm';
 
     export default {
-        name: 'EditPersonSubjectBasicInfo',
+        name: 'EditProgrammeSubject',
         components: {
             SubjectBasicInfoForm
         },
@@ -36,6 +37,9 @@
                 this.$service.getSubjectDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         this.subjectInfo = response.data;
+                        this.$nextTick(function () {
+                            this.$refs.subjectbasicInfoForm.initProgrammeCatagoryList();
+                        });
                     }
                 });
             }

@@ -71,7 +71,14 @@
             ProgrammeOperateTable
         },
         // 当前外部选中的节目列表
-        props: ['selectedProgrammeList'],
+        props: {
+            selectedProgrammeList: {
+                type: Array,
+                default: function () {
+                    return [];
+                }
+            }
+        },
         data() {
             return {
                 // 本地选择节目列表

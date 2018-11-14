@@ -1,26 +1,26 @@
-<!--编辑节目专题基本信息组件-->
+<!--编辑人物专题信息组件-->
 <template>
     <div>
         <custom-breadcrumb
             v-bind:breadcrumbList="[
             {name:'专题管理'},
-            {name:'编辑基本信息'}]">
+            {name:'编辑人物专题信息'}]">
         </custom-breadcrumb>
         <div class="block-box">
             <subject-basic-info-form
                 ref="subjectbasicInfoForm"
                 :subjectInfo="subjectInfo"
-                status="2">
+                status="EDIT_FIGURE">
             </subject-basic-info-form>
         </div>
     </div>
 </template>
 
 <script>
-    import SubjectBasicInfoForm from '../SubjectBasicInfoForm';
+    import SubjectBasicInfoForm from './components/SubjectInfoForm';
 
     export default {
-        name: 'EditProgrammeSubjectBasicInfo',
+        name: 'EditFigureSubject',
         components: {
             SubjectBasicInfoForm
         },

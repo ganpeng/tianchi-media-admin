@@ -36,17 +36,17 @@ import AppendSingleSubject from 'sysPage/layout_manage/AppendSingleSubject';
 import ModelAppendShuffle from 'sysPage/layout_manage/ModelAppendShuffle';
 import ModelAppendProgrammeSubject from 'sysPage/layout_manage/ModelAppendProgrammeSubject';
 import ModelAppendPersonSubject from 'sysPage/layout_manage/ModelAppendPersonSubject';
-import CreateProgrammeSubject from 'sysPage/subject_manage/programme_subject/CreateProgrammeSubject';
-import CreatePersonSubject from 'sysPage/subject_manage/person_subject/CreatePersonSubject';
+// 专题模块
+import CreateProgrammeSubject from 'sysPage/subject_manage/CreateProgrammeSubject';
+import CreateFigureSubject from 'sysPage/subject_manage/CreateFigureSubject';
+import EditProgrammeSubject from 'sysPage/subject_manage/EditProgrammeSubject';
+import EditFigureSubject from 'sysPage/subject_manage/EditFigureSubject';
+import ProgrammeSubjectDetail from 'sysPage/subject_manage/ProgrammeSubjectDetail';
+import FigureSubjectDetail from 'sysPage/subject_manage/FigureSubjectDetail';
 import SubjectList from 'sysPage/subject_manage/SubjectList';
-import AdvertResourceList from 'sysPage/advert_manage/advert_resources_manage/AdvertResourceList';
-import PersonSubjectDetail from 'sysPage/subject_manage/person_subject/PersonSubjectDetail';
-import EditPersonSubject from 'sysPage/subject_manage/person_subject/EditPersonSubjectBasicInfo';
-import EditSubjectPersons from 'sysPage/subject_manage/person_subject/EditSubjectPersons';
-import ProgrammeSubjectDetail from 'sysPage/subject_manage/programme_subject/ProgrammeSubjectDetail';
+// 广告模块
 import StartingAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/StartingAdvertGroupList';
-import EditProgrammeSubject from 'sysPage/subject_manage/programme_subject/EditProgrammeSubjectBasicInfo';
-import EditSubjectProgrammes from 'sysPage/subject_manage/programme_subject/EditSubjectProgrammes';
+import AdvertResourceList from 'sysPage/advert_manage/advert_resources_manage/AdvertResourceList';
 import PreProgrammeAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/PreProgrammeAdvertGroupList';
 import ScreensaverAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/ScreensaverAdvertGroupList';
 import PauseAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/PauseAdvertGroupList';
@@ -253,21 +253,27 @@ let router = new Router({
                 },
                 // 内容管理-专题管理-新增人物专题
                 {
-                    path: '/subject-manage/person/create',
-                    name: 'CreatePersonSubject',
-                    component: CreatePersonSubject
+                    path: '/subject-manage/figure/create',
+                    name: 'CreateFigureSubject',
+                    component: CreateFigureSubject
                 },
-                // 内容管理-专题管理-专题列表
+                // 内容管理-专题管理-人物专题-编辑
                 {
-                    path: '/subject-manage/list',
-                    name: 'SubjectList',
-                    component: SubjectList
+                    path: '/subject-manage/figure/edit/:id',
+                    name: 'EditFigureSubject',
+                    component: EditFigureSubject
+                },
+                // 内容管理-专题管理-节目专题-编辑
+                {
+                    path: '/subject-manage/programme/edit/:id',
+                    name: 'EditProgrammeSubject',
+                    component: EditProgrammeSubject
                 },
                 // 内容管理-专题管理-人物专题-详情
                 {
-                    path: '/subject-manage/person/detail/:id',
-                    name: 'PersonSubjectDetail',
-                    component: PersonSubjectDetail
+                    path: '/subject-manage/figure/detail/:id',
+                    name: 'FigureSubjectDetail',
+                    component: FigureSubjectDetail
                 },
                 // 内容管理-专题管理-节目专题-详情
                 {
@@ -275,29 +281,11 @@ let router = new Router({
                     name: 'ProgrammeSubjectDetail',
                     component: ProgrammeSubjectDetail
                 },
-                // 内容管理-专题管理-人物专题-编辑基本信息
+                // 内容管理-专题管理-专题列表
                 {
-                    path: '/subject-manage/person/edit-basic/:id',
-                    name: 'EditPersonSubject',
-                    component: EditPersonSubject
-                },
-                // 内容管理-专题管理-节目专题-编辑基本信息
-                {
-                    path: '/subject-manage/programme/edit-basic/:id',
-                    name: 'EditProgrammeSubject',
-                    component: EditProgrammeSubject
-                },
-                // 内容管理-专题管理-人物专题-编辑内容
-                {
-                    path: '/subject-manage/person/edit-content/:id',
-                    name: 'EditSubjectPersons',
-                    component: EditSubjectPersons
-                },
-                // 内容管理-专题管理-节目专题-编辑内容
-                {
-                    path: '/subject-manage/programme/edit-content/:id',
-                    name: 'EditSubjectProgrammes',
-                    component: EditSubjectProgrammes
+                    path: '/subject-manage/list',
+                    name: 'SubjectList',
+                    component: SubjectList
                 },
                 // 人物管理-新增人物
                 {

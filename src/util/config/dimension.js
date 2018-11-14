@@ -33,7 +33,7 @@ export const ALL_IMAGE_DIMENSIONS = [
     },
     {
         width: 260,
-        height: 600,
+        height: 380,
         styleName: '专题E'
     },
     {
@@ -124,7 +124,7 @@ export const FIGURE_SUBJECT_DIMENSION = [
     },
     {
         width: 260,
-        height: 600,
+        height: 380,
         styleName: '专题E'
     }
 ];

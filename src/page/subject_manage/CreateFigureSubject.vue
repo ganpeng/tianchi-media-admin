@@ -1,21 +1,21 @@
-<!--创建节目专题组件-->
+<!--创建人物专题组件-->
 <template>
     <div>
-        <div class="content-title">添加节目专题</div>
+        <div class="content-title">添加人物专题</div>
         <div class="block-box">
             <subject-basic-info-form
                 :subjectInfo="subjectInfo"
-                status="0">
+                status="CREATE_FIGURE">
             </subject-basic-info-form>
         </div>
     </div>
 </template>
 
 <script>
-    import SubjectBasicInfoForm from '../SubjectBasicInfoForm';
+    import SubjectBasicInfoForm from './components/SubjectInfoForm';
 
     export default {
-        name: 'CreateProgrammeSubject',
+        name: 'CreateFigureSubject',
         components: {
             SubjectBasicInfoForm
         },

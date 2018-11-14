@@ -73,9 +73,6 @@
                 }
             }
         },
-        created() {
-            console.log(ALL_IMAGE_DIMENSIONS);
-        },
         methods: {
             appendImagePrefix(uri) {
                 let baseUri = window.localStorage.getItem('imageBaseUri');
