@@ -71,6 +71,19 @@ import VersionList from 'sysPage/version_manage/VersionList';
 import HotPerson from 'sysPage/person_manage/HotPerson';
 import PreviewProgrammeList from 'sysPage/channel_manage/PreviewProgrammeList';
 import DeviceList from 'sysPage/device_manage/DeviceList';
+import ProductList from 'sysPage/product_manage/ProductList';
+import CreateCategoryProduct from 'sysPage/product_manage/category_product/CreateCategoryProduct';
+import EditCategoryProduct from 'sysPage/product_manage/category_product/EditCategoryProduct';
+import CreateProgrammeProduct from 'sysPage/product_manage/programme_product/CreateProgrammeProduct';
+import EditProgrammeProduct from 'sysPage/product_manage/programme_product/EditProgrammeProduct';
+import CreateCarouselProduct from 'sysPage/product_manage/carousel_product/CreateCarouselProduct';
+import EditCarouselProduct from 'sysPage/product_manage/carousel_product/EditCarouselProduct';
+import CreateRecordProduct from 'sysPage/product_manage/record_product/CreateRecordProduct';
+import EditRecordProduct from 'sysPage/product_manage/record_product/EditRecordProduct';
+import CategoryProductDetail from 'sysPage/product_manage/category_product/CategoryProductDetail';
+import ProgrammeProductDetail from 'sysPage/product_manage/programme_product/ProgrammeProductDetail';
+import CarouselProductDetail from 'sysPage/product_manage/carousel_product/CarouselProductDetail';
+import RecordProductDetail from 'sysPage/product_manage/record_product/RecordProductDetail';
 import DuplicateList from 'sysPage/person_manage/DuplicateList';
 
 Vue.use(Router);
@@ -489,6 +502,84 @@ let router = new Router({
                     path: '/manage-device/list',
                     name: 'DeviceList',
                     component: DeviceList
+                },
+                //  产品管理-产品包列表
+                {
+                    path: '/product-manage/list',
+                    name: 'ProductList',
+                    component: ProductList
+                },
+                //  产品管理-创建类型包
+                {
+                    path: '/product-manage/create-category',
+                    name: 'CreateCategoryProduct',
+                    component: CreateCategoryProduct
+                },
+                //  产品管理-编辑类型包
+                {
+                    path: '/product-manage/edit-category/:id',
+                    name: 'EditCategoryProduct',
+                    component: EditCategoryProduct
+                },
+                //  产品管理-创建节目包
+                {
+                    path: '/product-manage/create-programme',
+                    name: 'CreateProgrammeProduct',
+                    component: CreateProgrammeProduct
+                },
+                //  产品管理-编辑节目包
+                {
+                    path: '/product-manage/edit-programme/:id',
+                    name: 'EditProgrammeProduct',
+                    component: EditProgrammeProduct
+                },
+                //  产品管理-创建轮播频道包
+                {
+                    path: '/product-manage/create-carousel',
+                    name: 'CreateCarouselProduct',
+                    component: CreateCarouselProduct
+                },
+                //  产品管理-编辑轮播频道包
+                {
+                    path: '/product-manage/edit-carousel/:id',
+                    name: 'EditCarouselProduct',
+                    component: EditCarouselProduct
+                },
+                //  产品管理-创建直播回看包
+                {
+                    path: '/product-manage/create-record',
+                    name: 'CreateRecordProduct',
+                    component: CreateRecordProduct
+                },
+                //  产品管理-编辑直播回看包
+                {
+                    path: '/product-manage/edit-record/:id',
+                    name: 'EditRecordProduct',
+                    component: EditRecordProduct
+                },
+                //  产品管理-类别包详情
+                {
+                    path: '/product-manage/detail-category/:id',
+                    name: 'CategoryProductDetail',
+                    component: CategoryProductDetail
+                },
+                //  产品管理-节目包详情
+                {
+                    path: '/product-manage/detail-programme/:id',
+                    name: 'ProgrammeProductDetail',
+                    component: ProgrammeProductDetail
+                },
+                //  产品管理-轮播频道包详情
+                {
+                    path: '/product-manage/detail-carousel/:id',
+                    name: 'CarouselProductDetail',
+                    component: CarouselProductDetail
+                },
+                //  产品管理-直播回看包详情
+                {
+                    path: '/product-manage/detail-record/:id',
+                    name: 'RecordProductDetail',
+                    component: RecordProductDetail
                 }
             ]
         },

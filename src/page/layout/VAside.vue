@@ -124,8 +124,23 @@
                 </template>
                 <el-menu-item index="/manage-device/list">设备列表</el-menu-item>
             </el-submenu>
-            <!--管理员管理-->
+            <!--产品管理-->
             <el-submenu index="9">
+                <template slot="title">
+                    <svg-icon
+                        icon-class="programme_manage"
+                        class-name="svg-box">
+                    </svg-icon>
+                    <span>产品管理</span>
+                </template>
+                <el-menu-item index="/product-manage/create-category">新增类别包</el-menu-item>
+                <el-menu-item index="/product-manage/create-programme">新增节目包</el-menu-item>
+                <el-menu-item index="/product-manage/create-carousel">新增轮播频道包</el-menu-item>
+                <el-menu-item index="/product-manage/create-record">新增直播回看包</el-menu-item>
+                <el-menu-item index="/product-manage/list">产品包列表</el-menu-item>
+            </el-submenu>
+            <!--管理员管理-->
+            <el-submenu index="10">
                 <template slot="title">
                     <svg-icon
                         icon-class="admin_manage"
@@ -143,7 +158,7 @@
                 </el-menu-item>
             </el-submenu>
             <!--用户管理-->
-            <el-submenu index="10">
+            <el-submenu index="11">
                 <template slot="title">
                     <svg-icon
                         icon-class="user_manage"
@@ -154,31 +169,6 @@
                 <el-menu-item index="/user-center/create">创建用户</el-menu-item>
                 <el-menu-item index="/user-center/list">用户列表</el-menu-item>
                 <el-menu-item index="/kits">小功能</el-menu-item>
-            </el-submenu>
-            <!--广告管理-->
-            <el-submenu v-if="false" index="11">
-                <template slot="title">
-                    <svg-icon
-                        icon-class="ad_manage"
-                        class-name="svg-box">
-                    </svg-icon>
-                    <span>广告管理</span>
-                </template>
-                <el-submenu index="10-1">
-                    <template slot="title">广告资源管理</template>
-                    <el-menu-item index="/advert-resource/list">广告资源列表</el-menu-item>
-                </el-submenu>
-                <el-submenu index="10-2">
-                    <template slot="title">广告投放管理</template>
-                    <el-menu-item index="/advert-launch/starting/list">开机广告列表</el-menu-item>
-                    <el-menu-item index="/advert-launch/preprogramme/list">节目前置广告列表</el-menu-item>
-                    <el-menu-item index="/advert-launch/screensaver/list">屏保广告列表</el-menu-item>
-                    <el-menu-item index="/advert-launch/pause/list">暂停广告列表</el-menu-item>
-                    <el-menu-item index="/advert-launch/live/list">直播换台广告列表</el-menu-item>
-                    <el-menu-item index="/advert-launch/volumebar/list">音量条广告列表</el-menu-item>
-                    <el-menu-item index="/advert-launch/dialog/list">弹窗广告列表</el-menu-item>
-                    <el-menu-item index="/advert-launch/detailpage/list">详情页广告列表</el-menu-item>
-                </el-submenu>
             </el-submenu>
             <!--个人中心-->
             <el-submenu index="12">
