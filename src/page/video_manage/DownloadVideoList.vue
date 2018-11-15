@@ -77,7 +77,7 @@
                 <el-table-column align="center" label="状态">
                     <template slot-scope="scope">
                         <i class="status-normal" v-if="scope.row.status === 'SUCCESS'">成功</i>
-                        <i class="status-mid" v-if="scope.row.status === 'INJECTING'">注入中</i>
+                        <i class="status-mid" v-if="scope.row.status === 'DOWNLOADING'">下载中</i>
                         <i class="status-abnormal" v-if="scope.row.status === 'FAILED'">失败</i>
                         <el-button
                             v-if="scope.row.status === 'FAILED'"
@@ -170,15 +170,15 @@
                 total: 0,
                 statusOptions: [
                     {label: '成功', value: 'SUCCESS'},
-                    {label: '注入中', value: 'INJECTING'},
+                    {label: '下载中', value: 'DOWNLOADING'},
                     {label: '失败', value: 'FAILED'}
                 ],
                 removeDisabled: true,
                 videoList: [],
                 multipleSelection: [],
                 exportQueryParams: {
-                    page: 1,
-                    size: 100000
+                    pageNum: 1,
+                    pageSize: 100000
                 },
                 requestNo: 0
             };
@@ -221,28 +221,26 @@
                 this.listQueryParams.endedAt = '';
                 this.createRangeTime = [];
             },
-            // 导出问题时长视频列表
+            // 导出下载视频列表
             exportAllList() {
                 this.$service.getDownloadVideoList(this.exportQueryParams).then(response => {
                     if (response && response.code === 0) {
-                        if (response && response.code === 0) {
-                            let exportChannelData = [];
-                            // 设置导出的数据
-                            response.data.list.map(video => {
-                                let exportVideo = {};
-                                exportVideo['视频编号'] = video.id;
-                                exportVideo['视频文件名'] = video.originName;
-                                exportVideo['服务器地址'] = video.host;
-                                exportVideo['上传时间'] = this.$util.formatDate(new Date(video.uploadedAt), 'yyyy-MM-DD HH:mm:SS');
-                                exportVideo['下载时间'] = this.$util.formatDate(new Date(video.createdAt), 'yyyy-MM-DD HH:mm:SS');
-                                exportChannelData.push(exportVideo);
-                            });
-                            let wb = XLSX.utils.book_new();
-                            let newWsName = '表1';
-                            let ws = XLSX.utils.json_to_sheet(exportChannelData);
-                            XLSX.utils.book_append_sheet(wb, ws, newWsName);
-                            XLSX.writeFile(wb, '视频下载列表_' + new Date() + '.xlsx');
-                        }
+                        let exportChannelData = [];
+                        // 设置导出的数据
+                        response.data.list.map(video => {
+                            let exportVideo = {};
+                            exportVideo['视频编号'] = video.id;
+                            exportVideo['视频文件名'] = video.originName;
+                            exportVideo['服务器地址'] = video.host;
+                            exportVideo['上传时间'] = this.$util.formatDate(new Date(video.uploadedAt), 'yyyy-MM-DD HH:mm:SS');
+                            exportVideo['下载时间'] = this.$util.formatDate(new Date(video.createdAt), 'yyyy-MM-DD HH:mm:SS');
+                            exportChannelData.push(exportVideo);
+                        });
+                        let wb = XLSX.utils.book_new();
+                        let newWsName = '表1';
+                        let ws = XLSX.utils.json_to_sheet(exportChannelData);
+                        XLSX.utils.book_append_sheet(wb, ws, newWsName);
+                        XLSX.writeFile(wb, '视频下载列表_' + new Date() + '.xlsx');
                     }
                 });
             },
