@@ -227,10 +227,10 @@
                 videoList: [],
                 multipleSelection: [],
                 exportQueryParams: {
-                    bitrate: 2,
-                    frameRate: -2,
-                    page: 1,
-                    size: 1000
+                    durationDiffGt: 2,
+                    durationDiffLt: -2,
+                    pageNum: 1,
+                    pageSize: 1000
                 },
                 url: '',
                 title: '',
