@@ -63,14 +63,6 @@
     }
 }
 
-// 表格的标题
-.table-title {
-    font-size: 18px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    text-align: left;
-}
-
 // 搜索框的样式
 .el-form {
     .create-account {
@@ -84,65 +76,6 @@
             width: 100%;
         }
     }
-}
-
-// 表格的通用样式
-.el-table {
-    position: relative;
-    margin: 30px 0px;
-    text-align: center;
-    border-radius: 4px !important;
-    .common-table-header {
-        div.cell {
-            color: #283841;
-            font-size: 14px;
-        }
-    }
-    .warning-row {
-        background: oldlace;
-    }
-    .success-row {
-        background: #f0f9eb;
-    }
-    .unselectable-row {
-        background: #f0f9eb;
-        .el-checkbox {
-            display: none;
-        }
-    }
-    //  专题列表行的样式
-    .subject-row {
-        height: 90px;
-    }
-    // 节目列表行的样式
-    .programme-row {
-        height: 120px;
-    }
-    // 人物列表行的样式
-    .figure-row {
-        height: 125px;
-    }
-    // 频道列表行的样式
-    .channel-row {
-        height: 90px;
-    }
-    // 视频列表行的样式（正常）
-    .video-row {
-        height: 72px;
-    }
-    // 视频列表行的样式(较大)
-    .video-larger-row {
-        height: 118px;
-    }
-    // 去除单选的label样式
-    .el-radio__label {
-        display: none;
-    }
-}
-
-// 表格下面分页右对齐
-.el-pagination {
-    text-align: right;
 }
 
 // 人物列表中的图片大小
@@ -246,21 +179,6 @@ li {
             font-size: 16px;
             font-weight: normal;
             cursor: auto;
-        }
-    }
-}
-
-/** 去除table组件中表头行中的全选多选框 */
-.table-header-row {
-    .el-checkbox {
-        display: none;
-    }
-}
-
-.video-table-container {
-    .table-header-row {
-        .el-checkbox {
-            display: block;
         }
     }
 }
@@ -426,10 +344,10 @@ li {
     }
 }
 
-/** 列表筛选参数样式 */
+/** 2.0列表筛选参数样式 */
 .filter-form {
     position: relative;
-    padding-top: 25px;
+    padding: 25px 20px 0px 20px;
     text-align: left;
     .el-form-item__label {
         font-size: 16px;
@@ -474,11 +392,6 @@ li {
     font-size: 12px;
 }
 
-//  表格圆角样式
-.el-table {
-    border-radius: 4px !important;
-}
-
 #label-font {
     label {
         font-size: 16px;
@@ -505,11 +418,6 @@ li {
     &.four {
         -webkit-line-clamp: 4;
     }
-}
-
-//  表格圆角样式
-.el-table {
-    border-radius: 4px !important;
 }
 
 #label-font {

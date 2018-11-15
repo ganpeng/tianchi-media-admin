@@ -1,11 +1,7 @@
 <!--人物专题详情组件-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'专题管理'},
-            {name:'人物专题详情'}]">
-        </custom-breadcrumb>
+        <div class="content-title">专题详情</div>
         <div class="text-left main-block">
             <div id="operate-list">
                 <el-button type="primary" class="page-main-btn" @click="editBasicInfo">编辑基本信息</el-button>

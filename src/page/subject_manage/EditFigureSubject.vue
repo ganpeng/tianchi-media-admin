@@ -1,11 +1,7 @@
 <!--编辑人物专题信息组件-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'专题管理'},
-            {name:'编辑人物专题信息'}]">
-        </custom-breadcrumb>
+        <div class="content-title">编辑人物专题</div>
         <div class="block-box">
             <subject-basic-info-form
                 ref="subjectbasicInfoForm"

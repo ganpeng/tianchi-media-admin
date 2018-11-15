@@ -36,13 +36,13 @@ export const createSubject = ({category, name, programmeCategoryList, tagList, p
  * @param pageNum The current page number.
  * @param pageSize The size of one page.
  */
-export const getSubjectList = ({name, category, programmeCategoryIdList, createdAtBegin, createdAtEnd, pageNum, pageSize}) => {
+export const getSubjectList = ({name, category, programmeCategoryId, createdAtBegin, createdAtEnd, pageNum, pageSize}) => {
     const params = {
         pageNum: pageNum - 1,
         pageSize,
         name,
         category,
-        programmeCategoryIdList,
+        programmeCategoryIdList: [programmeCategoryId],
         createdAtBegin,
         createdAtEnd
     };
