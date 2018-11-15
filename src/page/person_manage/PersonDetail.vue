@@ -49,6 +49,9 @@
                 }
             }
         },
+        mounted() {
+            this.$util.toggleFixedBtnContainer();
+        },
         computed: {
             ...mapGetters({
                 person: 'person/currentPerson'

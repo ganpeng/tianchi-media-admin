@@ -14,7 +14,6 @@
 </template>
 <script>
     import UserInfoForm from './UserInfoForm';
-
     export default {
         name: 'CreateUser',
         components: {
@@ -25,11 +24,5 @@
         }
     };
 </script>
-
 <style lang="scss" scoped>
-
-    .el-breadcrumb {
-        margin-bottom: 60px;
-    }
-
 </style>

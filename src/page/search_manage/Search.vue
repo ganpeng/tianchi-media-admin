@@ -34,6 +34,9 @@ export default {
         this.$service.getHotSearch();
         this.generatorList();
     },
+    mounted() {
+        this.$util.toggleFixedBtnContainer();
+    },
     methods: {
         searchItemChangeHandler(e, index) {
             this.list[index].keyword = e.target.value;

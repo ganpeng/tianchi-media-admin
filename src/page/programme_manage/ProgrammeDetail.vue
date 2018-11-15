@@ -366,6 +366,7 @@
                                 :imageList="programme.posterImageList"
                                 :deleteImageHandler="deleteImageHandler"
                                 :imageUploadedHandler="imageUploadedHandler"
+                                :allowResolutions="[{width: 200, height: 200}]"
                             ></multi-image-uploader>
                         </div>
                     </el-col>

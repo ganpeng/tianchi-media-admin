@@ -104,7 +104,7 @@
                     <div class="float-right">
                         <el-button
                             class="btn-style-two contain-svg-icon"
-                            @click="() => {}">
+                            @click="gotoVideoUploadPage">
                             <svg-icon icon-class="add"></svg-icon>
                             上传
                         </el-button>
@@ -113,33 +113,6 @@
                 <video-table ref="videoTable"></video-table>
             </div>
         </div>
-
-        <el-col :span="24">
-            <div style="margin-bottom:20px;" class="float-right">
-                <el-dropdown>
-                    <el-button
-                        class="page-main-btn create-blue-btn contain-svg-icon"
-                        >
-                        <svg-icon icon-class="upload"></svg-icon>
-                        上传视频<i class="el-icon-arrow-down el-icon--right"></i>
-                    </el-button>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>
-                            <div class="wrapper">
-                                <label for="upload-input">选择文件</label>
-                                <input id="upload-input-file" class="upload-input" type="file" accept="video/*" ref="uploadInputFile" multiple>
-                            </div>
-                        </el-dropdown-item>
-                        <el-dropdown-item>
-                            <div class="wrapper">
-                                <label for="upload-input">选择文件夹</label>
-                                <input id="upload-input-dir" class="upload-input" type="file" accet="video/*" ref="uploadInputDir" multiple directory webkitdirectory allowdirs>
-                            </div>
-                        </el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-            </div>
-        </el-col>
     </div>
 </template>
 <script>
@@ -148,8 +121,6 @@
     import VideoTable from './VideoTable';
     import role from '@/util/config/role';
     const FileSaver = require('file-saver');
-    const Uppie = require('../../assets/js/uppie');
-    const uppie = new Uppie();
     export default {
         name: 'VideoList',
         components: {
@@ -171,12 +142,7 @@
             })
         },
         created() {
-            window.eventBus.$on('clearInputValue', this.clearInputValue.bind(this));
             window.eventBus.$on('setDisabled', this.setDisabled.bind(this));
-            this.$nextTick(() => {
-                uppie(document.querySelector('#upload-input-file'), this.uploadChangeHandler.bind(this));
-                uppie(document.querySelector('#upload-input-dir'), this.uploadChangeHandler.bind(this));
-            });
             window.addEventListener('keyup', this.keyupHandler);
             this.timer = setInterval(() => {
                 this.getVideoList()
@@ -208,14 +174,6 @@
             },
             clearSearchFields() {
                 this.resetSearchFields();
-            },
-            clearInputValue() {
-                if (this.$refs.uploadInputFile && this.$refs.uploadInputFile.value) {
-                    this.$refs.uploadInputFile.value = null;
-                }
-                if (this.$refs.uploadInputDir && this.$refs.uploadInputDir.value) {
-                    this.$refs.uploadInputDir.value = null;
-                }
             },
             retrySelectedVideoHandler() {
                 let idList = this.$refs.videoTable.selectedVideoList.filter((video) => {
@@ -300,35 +258,6 @@
                         this.$refs.videoTable.checkedVideoList();
                     });
             },
-            uploadChangeHandler(e) {
-                let files = Array.from(e.target.files).filter((file) => {
-                    return /(.mpg|.ts)$/.test(file.name);
-                });
-                if (files.length === 0) {
-                    this.$message.warning('本次选择没有符合要求的文件');
-                }
-                let newFileList = [];
-                files.forEach((file) => {
-                    let index = this.uploadState.files.findIndex((item) => {
-                        return item.file.name === file.name;
-                    });
-                    if (index === -1) {
-                        let obj = {
-                            file,
-                            progress: {
-                                percent: 0,
-                                status: 'waiting',
-                                message: ''
-                            }
-                        };
-                        newFileList.push(obj);
-                    }
-                });
-                let newFiles = this.uploadState.files.concat(newFileList);
-                this.updateUploadState({key: 'files', value: newFiles});
-                window.eventBus.$emit('startUpload');
-                this.clearInputValue();
-            },
             //  导出部分代码
             getCharCol(n) {
                 let s = '';
@@ -404,6 +333,12 @@
             },
             exportVideoHandler() {
                 window.eventBus.$emit('startExportVideoExecel');
+            },
+            gotoVideoUploadPage() {
+                let routeData = this.$router.resolve({
+                    name: 'VideoImport'
+                });
+                window.open(routeData.href, '_blank');
             }
         }
     };

@@ -83,6 +83,8 @@ import EditLiveChannel from 'sysPage/channel_manage/EditLiveChannel';
 import CreateVersion from 'sysPage/version_manage/CreateVersion';
 import ProgrammeImport from 'sysPage/programme_manage/ProgrammeImport';
 import PersonImport from 'sysPage/person_manage/PersonImport';
+import LiveChannelImport from 'sysPage/channel_manage/LiveChannelImport';
+import VideoImport from 'sysPage/video_manage/VideoImport';
 
 Vue.use(Router);
 
@@ -426,6 +428,11 @@ let router = new Router({
                     name: 'VideoList',
                     component: VideoList
                 },
+                {
+                    path: '/manage-video/import',
+                    name: 'VideoImport',
+                    component: VideoImport
+                },
                 //  直播频道管理
                 {
                     path: '/channel-manage/live/list',
@@ -441,6 +448,11 @@ let router = new Router({
                     path: '/channel-manage/live/edit/:id',
                     name: 'EditLiveChannel',
                     component: EditLiveChannel
+                },
+                {
+                    path: '/channel-manage/live/import',
+                    name: 'LiveChannelImport',
+                    component: LiveChannelImport
                 },
                 //  直播频道管理-批量修改
                 {

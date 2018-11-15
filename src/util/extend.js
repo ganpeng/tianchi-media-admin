@@ -254,6 +254,18 @@ let util = {
         return new Promise((resolve) => {
             util.loopGetUploadServer(resolve);
         });
+    },
+    toggleFixedBtnContainer() {
+        let content = document.querySelector('.content');
+        let fixedBtnContainer = document.querySelector('.fixed-btn-container');
+        let isBottom = content.scrollHeight - content.scrollTop === content.clientHeight;
+        if (fixedBtnContainer) {
+            if (isBottom) {
+                fixedBtnContainer.style.background = 'transparent';
+            } else {
+                fixedBtnContainer.style.background = '#293550';
+            }
+        }
     }
 };
 

@@ -72,17 +72,7 @@ export default {
     },
     mounted() {
         let content = document.querySelector('.content');
-        content.addEventListener('scroll', (e) => {
-            let fixedBtnContainer = document.querySelector('.fixed-btn-container');
-            let isBottom = content.scrollHeight - content.scrollTop === content.clientHeight;
-            if (fixedBtnContainer) {
-                if (isBottom) {
-                    fixedBtnContainer.style.background = 'transparent';
-                } else {
-                    fixedBtnContainer.style.background = '#293550';
-                }
-            }
-        }, false);
+        content.addEventListener('scroll', this.toggleFixedBtnContainer.bind(this), false);
     },
     created() {
         let {active, activePath} = this.getActivePath();
@@ -133,7 +123,7 @@ export default {
             this.$store.dispatch('user/logout', true);
         },
         hideHeaderAndAside() {
-            let allowList = ['ProgrammeImport', 'PersonImport'];
+            let allowList = ['ProgrammeImport', 'PersonImport', 'LiveChannelImport', 'VideoImport'];
             let {name} = this.$route;
             if (allowList.indexOf(name) > -1) {
                 this.top = 0;
@@ -143,6 +133,18 @@ export default {
                 this.top = 60;
                 this.left = 200;
                 this.showHeaderAndAside = true;
+            }
+        },
+        toggleFixedBtnContainer() {
+            let content = document.querySelector('.content');
+            let fixedBtnContainer = document.querySelector('.fixed-btn-container');
+            let isBottom = content.scrollHeight - content.scrollTop === content.clientHeight;
+            if (fixedBtnContainer) {
+                if (isBottom) {
+                    fixedBtnContainer.style.background = 'transparent';
+                } else {
+                    fixedBtnContainer.style.background = '#293550';
+                }
             }
         }
     }

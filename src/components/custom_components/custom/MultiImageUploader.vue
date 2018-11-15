@@ -2,7 +2,7 @@
     <div class="multi-image-uploader-container">
         <div class="image-list-container">
             <ul class="image-list">
-                <li :style="styleStr(image.uri)" v-for="(image) in imageList" :key="image.id" class="image-item">
+                <li @click="displayImage(index)" :style="styleStr(image.uri)" v-for="(image, index) in imageList" :key="image.id" class="image-item">
                     <i @click="deleteImageHandler(image.id)" class="el-icon-error"></i>
                 </li>
                 <li :style="styleStr(obj.dataUri)" v-for="(obj, index) in showFileList" :key="index" class="image-item">
@@ -19,6 +19,9 @@
                 </li>
             </ul>
         </div>
+        <preview-multiple-images
+            :previewMultipleImages="previewImage">
+        </preview-multiple-images>
     </div>
 </template>
 <script>
@@ -30,8 +33,12 @@ import {
     getImageDemensionByName,
     readBlobAsDataURLFromList
 } from '../../../util/upload';
+import PreviewMultipleImages from './PreviewMultipleImages';
 export default {
     name: 'MultiImageUploader',
+    components: {
+        PreviewMultipleImages
+    },
     props: {
         imageList: {
             type: Array,
@@ -53,13 +60,23 @@ export default {
         imageUploadedHandler: {
             type: Function,
             default: () => {}
+        },
+        allowResolutions: {
+            type: Array,
+            default: () => []
         }
     },
     data() {
         return {
             fileList: [],
             count: 0,
-            isUploading: false
+            isUploading: false,
+            previewImage: {
+                display: false,
+                autoplay: false,
+                activeIndex: 0,
+                list: []
+            }
         };
     },
     created() {
@@ -86,7 +103,7 @@ export default {
         async uploadChangeHandler(e) {
             let images = await promiseImageSize(e.target.files);
             let imagesWithDataUri = await readBlobAsDataURLFromList(images);
-            let fileList = filterSizeMatchFiles(imagesWithDataUri, [{width: 807, height: 455}, {width: 200, height: 200}]);
+            let fileList = filterSizeMatchFiles(imagesWithDataUri, this.allowResolutions);
             if (fileList.length === 0) {
                 this.$message.error('本次选择图片不符合尺寸要求');
                 this.resetInputField();
@@ -171,6 +188,12 @@ export default {
             this.fileList = [];
             this.count = 0;
             this.isUploading = false;
+        },
+        // 放大预览图片
+        displayImage(index) {
+            this.previewImage.display = true;
+            this.previewImage.list = this.imageList;
+            this.previewImage.activeIndex = index;
         }
     }
 };

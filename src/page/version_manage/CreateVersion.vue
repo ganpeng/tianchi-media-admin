@@ -1,7 +1,7 @@
 <!-- 创建页面  -->
 <template>
     <div class="create-version-container">
-        <h2 class="content-title">添加设备</h2>
+        <h2 class="content-title">新增版本</h2>
         <div class="seperator-line"></div>
         <div class="form-container">
             <el-col :span="8">
@@ -92,22 +92,6 @@
                             </svg-icon>
                             <input ref="versionUpload" type="file" accept=".zip, .apk" id="version-file-input">选择文件
                         </el-button>
-                        <!--
-                        <div class="wrapper clearfix">
-                            <div class="file float-left">
-                                <input ref="versionUpload" type="file" accept=".zip, .apk" id="version-file-input">选择文件
-                            </div>
-                            <span class="float-left">{{file.name}}</span>
-                        </div>
-                        <el-progress
-                            v-show="percent !== 0"
-                            class="bar"
-                            :stroke-width="3"
-                            :percentage="percent"
-                            :status="percent !== 100 ? 'primary' : 'success'">
-                        </el-progress>
-                        <span v-show="percent !== 0">{{percent}}%</span>
-                        -->
                     </el-form-item>
                     <el-form-item class="upload-info-container">
                         <span class="uploading-info">
@@ -129,7 +113,7 @@ import axios from 'axios';
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import role from '@/util/config/role';
 export default {
-    name: 'CreateDevice',
+    name: 'CreateVersion',
     data() {
         let checkVersionCode = (rule, value, callback) => {
             let reg = /^\+?[1-9][0-9]*$/;
@@ -157,6 +141,9 @@ export default {
             percent: 0,
             file: {}
         };
+    },
+    mounted() {
+        this.$util.toggleFixedBtnContainer();
     },
     created() {
         this.resetVersion();

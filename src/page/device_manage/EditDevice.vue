@@ -18,6 +18,9 @@ export default {
     components: {
         DeviceForm
     },
+    mounted() {
+        this.$util.toggleFixedBtnContainer();
+    },
     created() {
         // let {id} = this.$route.params;
         // this.getDeviceById(id);

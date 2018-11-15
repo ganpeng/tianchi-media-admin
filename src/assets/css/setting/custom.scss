@@ -14,6 +14,23 @@
     text-align: left;
 }
 
+//  文字的不同提示颜色
+.text-primary {
+    color: $mainColor;
+}
+.text-success {
+    color: $successColor;
+}
+.text-warning {
+    color: #E6A23C;
+}
+.text-danger {
+    color: $dangerColor;
+}
+.text-info {
+    color: #909399;
+}
+
 //  统一处理必填项提示的小星号
 .el-form-item.is-required>.el-form-item__label {
     &:after {
@@ -97,6 +114,7 @@
 
 //  分页的样式修改
 .el-pagination {
+    text-align: right;
     .el-select {
         .el-input__inner {
             color: #6F7480;
@@ -469,6 +487,9 @@
             min-width: 80px;
             margin-left: 20px;
             cursor: pointer;
+            &.active {
+                color: $mainColor;
+            }
         }
     }
 }
@@ -635,6 +656,29 @@
         height: 100px;
     }
 }
+
+.btn-uploader {
+    position: relative;
+    label {
+        display: inline-block;
+        background: #1989FA;
+        border-radius: 20px;
+        min-width: 140px;
+        height: 40px;
+        line-height: 40px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #A3D0FD;
+        &:hover {
+            background: #0062C4;
+        }
+    }
+    input[type=file] {
+        position:absolute;
+        clip:rect(0 0 0 0);
+    }
+}
+
 
 // 节目和人物详情页面的公共样式
 .common-details {
@@ -960,6 +1004,102 @@
                 }
                 &:first-child {
                     margin-left: 10px;
+                }
+            }
+        }
+    }
+}
+
+//  导入页面的样式
+.import-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    font-size: 24px;
+    color: #6F7480;
+    .left {
+        flex: 1;
+        padding: 0 20px;
+        .header {
+            margin: 20px 0;
+            span {
+                font-size: 16px;
+                &:first-child {
+                    margin-left: 20px;
+                }
+            }
+        }
+        .info-field {
+            h3 {
+                font-size: 20px;
+                color: #6F7480;
+                margin: 20px 0;
+            }
+            .file-name {
+                width: 800px;
+                height: 40px;
+                margin: 0 auto;
+                line-height: 40px;
+                font-size: 14px;
+                color: #6F7480;
+                background: #2A3040;
+                border-radius: 8px;
+            }
+            .table-field {
+                width: 900px;
+                margin: 0 auto;
+            }
+            .btn-group {
+                margin-top: 100px;
+            }
+        }
+        .empty-upload {
+            display: inline-block;
+            margin: 160px auto;
+            margin-bottom: 0;
+            img {
+                display: block;
+                width: 368px;
+                height: 260px;
+            }
+            p {
+                font-size: 24px;
+                color: #293550;
+                margin: 20px 0;
+            }
+        }
+    }
+    .right {
+        position: relative;
+        width: 300px;
+        border-left: 1px solid #3E495E;
+        .inner-right {
+            margin-left: 20px;
+            .header {
+                margin: 20px 0;
+            }
+            .input-field {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                h5 {
+                    font-size: 14px;
+                    margin: 10px 0;
+                    color: #6F7480;
+                }
+                .uploader {
+                    width: 240px;
+                    height: 240px;
+                }
+                .upload-btn-wrapper {
+                    margin-top: 100px;
+                    .btn-uploader {
+                        margin-bottom: 10px;
+                    }
                 }
             }
         }

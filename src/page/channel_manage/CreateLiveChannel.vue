@@ -18,6 +18,9 @@ export default {
     components: {
         LiveChannelForm
     },
+    mounted() {
+        this.$util.toggleFixedBtnContainer();
+    },
     created() {
         //  清除已有的频道数据
         this.resetLiveChannel();

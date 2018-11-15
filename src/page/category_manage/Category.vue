@@ -136,6 +136,9 @@ export default {
     created() {
         this.fetchCategoryByIndex(this.activeTabIndex);
     },
+    mounted() {
+        this.$util.toggleFixedBtnContainer();
+    },
     computed: {
         ...mapGetters({
             programmeCategory: 'category/programmeCategory',

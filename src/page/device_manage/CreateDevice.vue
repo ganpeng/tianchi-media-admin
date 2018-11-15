@@ -18,6 +18,9 @@ export default {
     components: {
         DeviceForm
     },
+    mounted() {
+        this.$util.toggleFixedBtnContainer();
+    },
     created() {
         this.resetDevice();
     },

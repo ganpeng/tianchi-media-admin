@@ -88,6 +88,7 @@
         },
         mounted() {
             this.init();
+            this.$util.toggleFixedBtnContainer();
         },
         methods: {
             init() {

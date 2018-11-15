@@ -409,10 +409,10 @@
             },
             // 批量创建直播频道
             createChannelByImportExcel() {
-                this.$router.push({
-                    name: 'CreateChannelByImportExcel',
-                    params: {category: 'LIVE'}
+                let routeData = this.$router.resolve({
+                    name: 'LiveChannelImport'
                 });
+                window.open(routeData.href, '_blank');
             },
             searchHandler() {
                 this.getChannelList();
@@ -466,27 +466,6 @@
                 let minute = date.getMinutes();
                 let second = date.getSeconds();
                 return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-            },
-            uploadSuccessHandler(res, file, fileList) {
-                if (res && res.code === 0) {
-                    this.$message({
-                        type: 'success',
-                        message: '节目单导入成功'
-                    });
-                } else if (res && res.code === 3605) {
-                    let fileNameList = res.data.join(', ');
-                    let message = `${fileNameList}, 以上文件导入失败`;
-                    this.$message({
-                        type: 'error',
-                        message
-                    });
-                } else {
-                    this.$message({
-                        type: 'error',
-                        message: '节目单导入失败'
-                    });
-                }
-                this.closeFileUploadDialog();
             },
             uploadRequest(data) {
                 let that = this;

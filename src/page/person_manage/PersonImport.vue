@@ -21,20 +21,18 @@
                 <div class="input-field">
                     <h5>拖拽文件到此区域进行上传</h5>
                     <div class="uploader">
-                        <label class="ui_button ui_button_primary" for="person-import-uploader">
+                        <label class="ui_button ui_button_primary">
                             <i class="el-icon-plus"></i>
                         </label>
-                        <input name="file" ref="personImportUploader" class="el-upload__input" type="file" id="person-import-uploader" accept=".xlsx, .xls">
                     </div>
-                    <!--
-                    <el-button class="btn-style-four contain-svg-icon">
-                        <svg-icon
-                            icon-class="video"
-                            class-name="svg-box">
-                        </svg-icon>
-                        选择文件
-                    </el-button>
-                    -->
+                    <div class="upload-btn-wrapper">
+                        <div class="btn-uploader">
+                            <label class="ui_button ui_button_primary" for="person-import-uploader">
+                                选择文件
+                            </label>
+                            <input name="file" ref="personImportUploader" class="el-upload__input" type="file" id="person-import-uploader" accept=".xlsx, .xls">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -101,64 +99,4 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.import-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    font-size: 24px;
-    color: #6F7480;
-    .left {
-        flex: 1;
-        padding: 0 20px;
-        .header {
-            margin: 20px 0;
-        }
-        .info-field {
-            h3 {
-                font-size: 20px;
-                color: #6F7480;
-                margin: 20px 0;
-            }
-            .file-name {
-                width: 800px;
-                height: 40px;
-                margin: 0 auto;
-                line-height: 40px;
-                font-size: 14px;
-                color: #6F7480;
-                background: #2A3040;
-                border-radius: 8px;
-            }
-        }
-    }
-    .right {
-        position: relative;
-        width: 300px;
-        border-left: 1px solid #3E495E;
-        .inner-right {
-            margin-left: 20px;
-            .header {
-                margin: 20px 0;
-            }
-            .input-field {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                h5 {
-                    font-size: 14px;
-                    margin: 10px 0;
-                    color: #6F7480;
-                }
-                .uploader {
-                    width: 240px;
-                    height: 240px;
-                }
-            }
-        }
-    }
-}
 </style>

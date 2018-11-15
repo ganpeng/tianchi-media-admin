@@ -1,121 +1,87 @@
 <template>
-    <div v-if="uploadState.files.length > 0" class="upload-video-container">
-        <div v-if="uploadState.min" class="min-container">
-            <!-- <span class="upload-status">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{currentFileName}}</span> -->
-            <el-tooltip v-if="currentFileName.length > 32" class="item" effect="dark" :content="currentFileName" placement="top-start">
-                <span class="upload-status float-left">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{cutStr(currentFileName, 32)}}</span>
-            </el-tooltip>
-            <span v-else class="upload-status float-left">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{cutStr(currentFileName, 32)}}</span>
-            <div class="btn-wrapper-min float-right">
-                <span @click="toggleWindow(false)"><svg-icon class-name="max-min pointer" icon-class="max_larger"></svg-icon></span>
-                <span>
-                    <i @click="resetFiles" class="close-btn el-icon-close pointer"></i>
-                </span>
+    <div class="video-import-container import-container">
+        <div class="left">
+            <div class="header">
+                <h3>
+                    <span>正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{cutStr(currentFileName, 80)}}</span>
+                </h3>
             </div>
-        </div>
-        <div v-else class="max-container upload-wrapper">
-            <div class="upload-file">
-                <el-dropdown class="float-left">
-                    <el-button
-                        class="page-main-btn create-blue-btn contain-svg-icon"
-                        >
-                        <svg-icon icon-class="upload"></svg-icon>
-                        上传视频<i class="el-icon-arrow-down el-icon--right"></i>
-                    </el-button>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>
-                            <div class="wrapper">
-                                <input id="upload-input-file2" class="upload-input" accept="video/*, application/zip" type="file" ref="uploadInputFile" multiple>
-                                <label for="upload-input-file2">选择文件</label>
-                            </div>
-                        </el-dropdown-item>
-                        <el-dropdown-item>
-                            <div class="wrapper">
-                                <input id="upload-input-dir2" class="upload-input" type="file" accept="video/*" ref="uploadInputDir" multiple directory webkitdirectory allowdirs>
-                                <label for="upload-input-dir2">选择文件夹</label>
-                            </div>
-                        </el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <el-tooltip v-if="currentFileName.length > 32" class="item" effect="dark" :content="currentFileName" placement="top-start">
-                    <span class="max-status upload-status float-left">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{cutStr(currentFileName, 32)}}</span>
-                </el-tooltip>
-                <span v-else class="max-status upload-status float-left">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{cutStr(currentFileName, 32)}}</span>
-                <div class="btn-wrapper-max float-right">
-                    <span @click="toggleWindow(true)"><svg-icon class-name="max-min pointer" icon-class="min_smaller"></svg-icon></span>
-                    <span>
-                        <i @click="resetFiles" class="close-btn el-icon-close pointer"></i>
-                    </span>
-                </div>
-            </div>
-            <div class="table-wrapper">
-                <el-table
-                    :data="uploadState.files"
-                    :show-header="false"
-                    :empty-text="'暂无上传内容'"
-                    style="width: 100%">
-                    <el-table-column
-                        width="80"
-                        label="序号">
-                        <template slot-scope="scope">
-                            {{scope.$index + 1}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        width="300"
-                        align="left"
-                        label="文件名">
-                        <template slot-scope="scope">
-                            <el-tooltip class="item" effect="dark" :content="scope.row.file.name" placement="top-start">
-                                <span>{{cutStr(scope.row.file.name)}}</span>
+            <div class="seperator-line"></div>
+            <div class="info-field">
+                <ul class="file-upload-info-list">
+                    <li v-for="(item, index) in uploadState.files" :key="index" class="file-upload-info-item">
+                        <span class="index">{{index + 1}}</span>
+                        <div class="name">
+                            <el-tooltip class="item" effect="dark" :content="item.file.name" placement="top-start">
+                                <span>{{cutStr(item.file.name, 58)}}</span>
                             </el-tooltip>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        width="100"
-                        label="文件大小">
-                        <template slot-scope="scope">
-                            {{convertFileSize(scope.row.file.size)}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        width="180"
-                        label="上传进度">
-                        <template slot-scope="scope">
                             <el-progress
                                 class="bar"
+                                :show-text="false"
                                 :stroke-width="3"
-                                :percentage="scope.row.progress.percent"
-                                :status="scope.row.progress.percent !== 100 ? 'primary' : 'success'">
+                                :percentage="item.progress.percent"
+                                :color="progressBarColor(index)">
                             </el-progress>
-                            <span class="percent">
-                                <span>{{scope.row.progress.percent}}%</span>
-                                <span :class="uploadStatusColor(scope.$index)">{{(isChecking(scope.$index) ? '视频校验中, 请等待片刻' : uploadStatus(scope.$index))}}</span>
-                                <i v-if="scope.row.progress.status === 'uploading'" class="el-icon-loading"></i>
-                            </span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        label="操作">
-                        <template slot-scope="scope">
+                        </div>
+                        <span class="size">{{convertFileSize(item.file.size)}}</span>
+                        <span :class="['percent', uploadStatusColor(index)]">{{item.progress.percent}}%</span>
+                        <span :class="['status', uploadStatusColor(index)]">
+                            {{(isChecking(index) ? '视频校验中, 请等待片刻' : uploadStatus(index))}}
+                        </span>
+                        <span class="control">
                             <i
-                                v-if="!showDelete(scope.$index)"
-                                @click="cancelUpload(scope.$index)"
-                                class="delete-btn el-icon-close pointer"></i>
-                            <el-button type="text" v-if="showRetryBtn(scope.$index)" @click="retryUploadHandler(scope.$index)">重试</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
+                                v-if="!showDelete(index)"
+                                @click="cancelUpload(index)"
+                                class="text-danger delete-btn el-icon-close pointer"></i>
+                            <el-button type="text" v-if="showRetryBtn(index)" @click="retryUploadHandler(index)">重试</el-button>
+                        </span>
+                    </li>
+                </ul>
+                <div v-if="uploadState.files.length === 0" class="empty-upload">
+                    <img src="../../assets/img/empty_upload.png" alt="">
+                    <p>暂无上传内容</p>
+                </div>
+                <div class="btn-group">
+                    <el-button class="btn-style-three" @click="gotoList" plain>返回列表</el-button>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="inner-right">
+                <div class="header">
+                    <h3>批量导入区域</h3>
+                </div>
+                <div class="seperator-line"></div>
+                <div class="input-field">
+                    <h5>拖拽文件到此区域进行上传</h5>
+                    <div class="uploader">
+                        <label class="ui_button ui_button_primary" for="video-uploader-input">
+                            <i class="el-icon-plus"></i>
+                        </label>
+                    </div>
+                    <div class="upload-btn-wrapper">
+                        <div class="btn-uploader">
+                            <label class="ui_button ui_button_primary" for="upload-input-file2">
+                                选择文件
+                            </label>
+                            <input id="upload-input-file2" class="upload-input" accept="video/*, application/zip" type="file" ref="uploadInputFile" multiple>
+                        </div>
+                        <div class="btn-uploader">
+                            <label class="ui_button ui_button_primary" for="upload-input-dir2">
+                                选择文件夹
+                            </label>
+                            <input id="upload-input-dir2" class="upload-input" type="file" accept="video/*" ref="uploadInputDir" multiple directory webkitdirectory allowdirs>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex';
-import store from 'store';
-import axios from 'axios';
 export default {
-    name: 'UploadVideo',
+    name: 'VideoImport',
     data() {
         return {
             cancelFlag: 0 // 0 表示手动cancel， 1表示点击重试之后的cancel
@@ -133,6 +99,7 @@ export default {
                 }
             });
         });
+        //  如果有视频正在上传的话，组织浏览器刷新
         window.addEventListener('beforeunload', (e) => {
             if (that.uploadState.isUploading) {
                 e = e || window.event;
@@ -147,6 +114,14 @@ export default {
         ...mapGetters({
             uploadState: 'uploadVideo/uploadState'
         }),
+        successCount() {
+            return this.uploadState.files.filter((item) => item.progress.status === 'uploaded').length;
+        },
+        errorCount() {
+            return this.uploadState.files.filter((item) => {
+                return item.progress.status !== 'uploaded';
+            }).length;
+        },
         currentFileName() {
             let obj = this.uploadState.files[this.uploadState.count];
             return obj ? obj.file.name : '上传完成';
@@ -195,11 +170,11 @@ export default {
                 switch (status) {
                     // uploading checking canceld waiting uploaded error fail
                     //  exist 已存在， saveErr 保存失败, sizeErr, transErr 转码失败
+                    case 'checking':
                     case 'uploading':
-                        return 'text-success';
+                        return 'text-primary';
                     case 'canceled':
                     case 'waiting':
-                    case 'exist':
                         return 'text-info';
                     case 'uploaded':
                         return 'text-success';
@@ -207,10 +182,35 @@ export default {
                     case 'saveErr':
                     case 'transErr':
                         return 'text-danger';
-                    case 'checking':
-                        return 'text-success';
+                    case 'exist':
                     case 'sizeErr':
                         return 'text-warning';
+                    default:
+                        return '';
+                }
+            };
+        },
+        progressBarColor() {
+            return (index) => {
+                let status = this.uploadState.files[index].progress.status;
+                switch (status) {
+                    // uploading checking canceld waiting uploaded error fail
+                    //  exist 已存在， saveErr 保存失败, sizeErr, transErr 转码失败
+                    case 'checking':
+                    case 'uploading':
+                        return '#1989FA';
+                    case 'canceled':
+                    case 'waiting':
+                        return '#909399';
+                    case 'uploaded':
+                        return '#3AC26F';
+                    case 'error':
+                    case 'saveErr':
+                    case 'transErr':
+                        return '#C35757';
+                    case 'exist':
+                    case 'sizeErr':
+                        return '#E6A23C';
                     default:
                         return '';
                 }
@@ -303,65 +303,9 @@ export default {
             let newFiles = this.uploadState.files.concat(newFileList);
             this.updateUploadState({key: 'files', value: newFiles});
             window.eventBus.$emit('startUpload');
+
             this.$refs.uploadInputFile.value = null;
             this.$refs.uploadInputDir.value = null;
-        },
-        checkServerIsLiving(count) {
-            let that = this;
-            return new Promise((resolve, reject) => {
-                let servers = store.get('servers') || [];
-                let totalServers = servers.reduce((res, curr) => {
-                    let times = curr.weight;
-                    let currServers = [];
-                    for (let i = 0; i < times; i++) {
-                        currServers.push(`${curr.ip}:${curr.port}`);
-                    }
-                    return res.concat(currServers);
-                }, []);
-
-                let index = count % totalServers.length;
-                let baseUri = `http://${totalServers[index]}`;
-                let timer = null;
-
-                loopCheck();
-
-                function loopCheck() {
-                    if (index + 1 >= totalServers.length) {
-                        index = 0;
-                    } else {
-                        index = index + 1;
-                    }
-                    baseUri = `http://${totalServers[index]}`;
-
-                    that.checkServerAvailableRequest(baseUri)
-                        .then((res) => {
-                            if (res.status === 200) {
-                                if (res && res.data && res.data.code === 0) {
-                                    resolve(baseUri);
-                                    clearTimeout(timer);
-                                } else {
-                                    clearTimeout(timer);
-                                    timer = setTimeout(() => {
-                                        loopCheck();
-                                    }, 3000);
-                                }
-                            }
-                        }).catch(() => {
-                            clearTimeout(timer);
-                            timer = setTimeout(() => {
-                                loopCheck();
-                            }, 3000);
-                            that.$util.showNetworkErrorMessage();
-                        });
-                }
-            });
-        },
-        checkServerAvailableRequest(baseUri) {
-            let headers = this.$util.getUploadHeaders(this.$store.state.user.token);
-            return axios.get(`${baseUri}/v1/server/available`, {
-                headers,
-                timeout: 2000
-            });
         },
         uploadHandler() {
             let that = this;
@@ -495,9 +439,6 @@ export default {
                 }
             }
         },
-        toggleWindow(status) {
-            this.updateUploadState({key: 'min', value: status});
-        },
         cancelUpload(count) {
             let name = this.uploadState.files[count].file.name;
             if (count === this.uploadState.count && this.uploadState.xhr !== null) {
@@ -602,137 +543,55 @@ export default {
             } else {
                 return size + 'Byte';
             }
+        },
+        gotoList() {
+            this.$router.push({name: 'VideolList'});
         }
     }
 };
 </script>
-<style lang="less" scoped>
-.upload-video-container {
-    position:absolute;
-    bottom: 3px;
-    right: 20px;
-    width: 880px;
-    padding: 0 20px;
-    background: #fff;
-    z-index: 300;
-    border-radius: 8px;
-    box-shadow: #409EFF 0 0 5px;
-    .min-container {
-        height: 60px;
-        line-height: 60px;
-        overflow: hidden;
-        .upload-status {
-            float: left;
-            width: 80%;
+<style lang="scss" scoped>
+.video-import-container {
+    overflow: hidden;
+    .file-upload-info-list {
+        width: 100%;
+        height: 800px;
+        overflow-y: scroll;
+        font-size: 16px;
+        color: #6F7480;
+        .file-upload-info-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 20px 0;
             text-align: left;
+            .index {
+                width: 60px;
+                text-align: center;
+            }
+            .name {
+                width: 700px;
+                font-size: 14px;
+            }
+            .size {
+                width: 80px;
+                font-size: 16px;
+                text-align: center;
+            }
+            .percent {
+                text-align: center;
+                width: 80px;
+            }
+            .status {
+                width: 250px;
+                text-align: center;
+            }
+            .control {
+                width: 30px;
+                text-align: center;
+            }
         }
     }
-    .upload-btn {
-        margin-right: 10px;
-    }
-}
-.table-wrapper {
-    height: 500px;
-    overflow-y: scroll;
-}
-.upload-file {
-    padding: 20px 0;
-    border-bottom: 1px solid #409EFF;
-    overflow: hidden;
-    .clear-btn {
-        float: left;
-    }
-}
-.wrapper {
-    position: relative;
-    width: 80px;
-    height: 32px;
-    margin-right: 10px;
-    label, .upload-input {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 80px;
-        height: 32px;
-    }
-    .upload-input {
-        opacity: 0;
-        cursor: pointer;
-    }
-}
-.progress-bar {
-    display: flex;
-    .bar {
-        flex: 1;
-    }
-    .percent {
-        display: inline-block;
-        width: 220px;
-        height: 14px;
-        line-height: 14px;
-        text-align: left;
-    }
-    .delete-btn {
-        margin-right: 10px;
-        cursor: pointer;
-    }
 }
 
-.pause-btn {
-    color: #409EFF;
-    border-color: #409EFF;
-    background-color: transparent;
-    &:hover,
-    &:focus {
-        color: #409EFF;
-        border-color: #409EFF;
-        background-color: transparent;
-    }
-    span {
-        color: #409EFF;
-    }
-}
-.delete-btn {
-    color: #000;
-    border-color: #F56C6C;
-    background-color: transparent;
-    font-size: 18px;
-    &:hover,
-    &:focus {
-        color: #F56C6C;
-        border-color: #F56C6C;
-        background-color: transparent;
-    }
-}
-.close-btn {
-    color: #D8D8D8;
-    font-size: 18px;
-    margin-left: 6px;
-    &:hover {
-        color: #F56C6C;
-    }
-}
-
-.max-min {
-    fill: #D8D8D8;
-    &:hover {
-        fill:#1989FA;
-    }
-}
-.btn-wrapper-max {
-    height: 38px;
-    line-height: 38px;
-}
-
-.btn-wrapper-min {
-    height: 60px;
-    line-height: 60px;
-}
-
-.max-status {
-    width: 500px;
-    line-height: 38px;
-    text-align: left;
-    margin-left: 10px;
-}
 </style>

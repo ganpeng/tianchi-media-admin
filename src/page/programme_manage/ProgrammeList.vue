@@ -69,7 +69,7 @@
                     </el-button>
                     <span
                         @click="toggleSearchField"
-                        class="el-dropdown-link">
+                        :class="['el-dropdown-link', searchFieldVisible ? 'active' : '']">
                         更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                 </div>

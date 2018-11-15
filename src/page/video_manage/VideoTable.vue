@@ -91,7 +91,7 @@
             <el-table-column align="center" label="注入状态">
                 <template slot-scope="scope">
                     <span v-html="getStatus(scope.row)"></span>
-                    <el-button v-if="needRetry(scope.row)" class="text-primary" type="text" @click="retrySingleVideo(scope.row.id)" size="small">重试</el-button>
+                    <span v-if="needRetry(scope.row)" class="btn-text text-primary" @click="retrySingleVideo(scope.row.id)">重试</span>
                 </template>
             </el-table-column>
             <el-table-column align="center" label="上传日期">
