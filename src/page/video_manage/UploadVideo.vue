@@ -114,8 +114,6 @@
 import {mapGetters, mapMutations} from 'vuex';
 import store from 'store';
 import axios from 'axios';
-const Uppie = require('../../assets/js/uppie');
-const uppie = new Uppie();
 export default {
     name: 'UploadVideo',
     data() {
@@ -127,10 +125,13 @@ export default {
         let that = this;
         window.eventBus.$on('startUpload', that.uploadHandler);
         this.$nextTick(() => {
-            let uploadInputFile = document.querySelector('#upload-input-file2');
-            let uploadInputDir = document.querySelector('#upload-input-dir2');
-            uploadInputFile && uppie(uploadInputFile, this.uploadChangeHandler.bind(this));
-            uploadInputDir && uppie(uploadInputDir, this.uploadChangeHandler.bind(this));
+            let body = document.querySelector('body');
+            body.addEventListener('input', (e) => {
+                let id = e.target.getAttribute('id');
+                if (id === 'upload-input-file2' || id === 'upload-input-dir2') {
+                    that.uploadChangeHandler(e);
+                }
+            });
         });
         window.addEventListener('beforeunload', (e) => {
             if (that.uploadState.isUploading) {
