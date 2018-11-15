@@ -21,6 +21,7 @@ import EditAdmin from 'sysPage/admin_manage/EditAdmin';
 import ErrorLayout from 'sysPage/error/ErrorLayout';
 import ErrorNotFound from 'sysPage/error/404';
 import NavBarSetting from 'sysPage/nav_bar_manage/NavBarSetting';
+import CreateNavBar from 'sysPage/nav_bar_manage/CreateNavBarForm';
 import NavBarLayoutSetting from 'sysPage/nav_bar_manage/NavBarLayoutSetting';
 import PersonList from 'sysPage/person_manage/PersonList';
 import CreatePerson from 'sysPage/person_manage/CreatePerson';
@@ -196,6 +197,12 @@ let router = new Router({
                     path: '/nav-bar-manage/setting',
                     name: 'NavBarSetting',
                     component: NavBarSetting
+                },
+                // 内容管理-栏目管理-新增
+                {
+                    path: '/nav-bar-manage/create',
+                    name: 'CreateNavBar',
+                    component: CreateNavBar
                 },
                 // 内容管理-栏目管理-布局设置
                 {

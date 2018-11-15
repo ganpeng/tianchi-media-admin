@@ -140,7 +140,7 @@
         },
         data() {
             return {
-                cornerMarkDialogVisible: true
+                cornerMarkDialogVisible: false
             };
         },
         mounted() {
@@ -282,7 +282,6 @@
                     }
                 }
             }
-
         }
         /*左下角*/
         .bottom-left-block {
