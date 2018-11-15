@@ -526,7 +526,7 @@ const ASIDE_LIST = [
         },
         {
             text: '角标管理',
-            uri: '/corner-manage/list',
+            uri: '/corner-mark-manage/index',
             icon: 'el-icon-setting'
         },
         {

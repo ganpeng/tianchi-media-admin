@@ -83,6 +83,8 @@ import EditLiveChannel from 'sysPage/channel_manage/EditLiveChannel';
 import CreateVersion from 'sysPage/version_manage/CreateVersion';
 import ProgrammeImport from 'sysPage/programme_manage/ProgrammeImport';
 import PersonImport from 'sysPage/person_manage/PersonImport';
+// 角标管理
+import CornerMarkIndex from 'sysPage/corner_mark_manage/CornerMarkIndex';
 import LiveChannelImport from 'sysPage/channel_manage/LiveChannelImport';
 import VideoImport from 'sysPage/video_manage/VideoImport';
 
@@ -549,6 +551,12 @@ let router = new Router({
                     path: '/search-manage',
                     name: 'Search',
                     component: Search
+                },
+                //  角标管理
+                {
+                    path: '/corner-mark-manage/index',
+                    name: 'CornerMarkIndex',
+                    component: CornerMarkIndex
                 },
                 //  页面布局
                 {

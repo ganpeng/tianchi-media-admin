@@ -53,25 +53,4 @@
 
 <style lang="scss" scoped>
 
-    .main-block {
-        position: relative;
-        padding-top: 80px;
-    }
-
-    #programme-list {
-        margin-bottom: 200px;
-        .el-table {
-            margin-top: 0px;
-            width: 908px;
-        }
-        img {
-            width: 70px;
-        }
-    }
-
-    #operate-list {
-        position: absolute;
-        right: 0px;
-        top: 10px;
-    }
 </style>
