@@ -1,68 +1,36 @@
 <!--我的信息组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'个人中心'},
-            {name:'我的信息'}]">
-        </custom-breadcrumb>
-        <el-card id="info-box">
-            <div class="avatar-box">
-                <el-card>
-                    <img src="~assets/img/avatar_square_default.png">
-                </el-card>
-                <label>账号创建于{{info.createdAt | formatDate('yyyy年MM月DD日')}}</label>
+    <div class="my-info-container">
+        <h2 class="content-title">个人中心</h2>
+        <div class="seperator-line"></div>
+        <div class="common-details">
+            <div class="poster-section person">
+                <div class="visible-wrapper">
+                </div>
+                <img src="" alt="" width="200" height="200">
             </div>
-            <div class="info">
-                <div>
-                    <label>
-                        <svg-icon
-                            icon-class="personal_center"
-                            class-name="svg-box">
-                        </svg-icon>
-                        我</label>
-                    <span>{{info.name}}</span>
-                </div>
-                <div>
-                    <label>
-                        <svg-icon
-                            icon-class="email"
-                            class-name="svg-box">
-                        </svg-icon>
-                        邮箱</label>
-                    <span>{{info.email}}</span>
-                </div>
-                <div class="box">
-                    <div>
-                        <label>
-                            <svg-icon
-                                icon-class="mobile"
-                                class-name="svg-box">
-                            </svg-icon>
-                            手机</label>
-                        <span>{{info.mobile}}</span>
+            <div class="info-section">
+                <div class="title-wrapper">
+                    <span class="title">{{info.name ? info.name : '我'}}</span>
+                    <div class="date">
+                        <span class="create-date">
+                            创建于{{info.createdAt | formatDate('yyyy-MM-DD')}}
+                        </span>
                     </div>
-                    <template v-if="info.telephone">
-                        <img src="~assets/img/angle-line.png">
-                        <div>
-                            <label>
-                                <svg-icon
-                                    icon-class="telephone"
-                                    class-name="svg-box">
-                                </svg-icon>
-                                电话</label>
-                            <span>{{info.telephone ? info.telephone : ''}}</span>
-                        </div>
-                    </template>
+                </div>
+                <div class="seperator-line"></div>
+                <div class="attributes">
+                    <div class="attribute-item">
+                        <label class="item-label">邮箱:</label>
+                        <span class="value">{{info.email | padEmpty}}</span>
+                    </div>
+                    <div class="attribute-item">
+                        <label class="item-label">手机号:</label>
+                        <span class="value">{{info.mobile | padEmpty}}</span>
+                    </div>
                 </div>
             </div>
-            <div @click="toInfoSetting" class="edit-icon-box">
-                <svg-icon
-                    icon-class="edit"
-                    class-name="svg-box">
-                </svg-icon>
-            </div>
-        </el-card>
+        </div>
     </div>
 </template>
 

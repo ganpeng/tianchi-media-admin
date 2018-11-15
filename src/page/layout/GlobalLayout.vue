@@ -8,22 +8,20 @@
                 </svg-icon>
             </div>
             <ul class="nav-list clearfix float-left">
-                <li v-for="(item, index) in navList" :key="index"
+                <li v-if="index !== navList.length - 1" v-for="(item, index) in navList" :key="index"
                     :class="['nav-item', active === index ? 'active' : '']"
                     @click="changeActive(index)"
                 >
                     {{item}}
                 </li>
             </ul>
-            <div class="user-info float-right clearfix">
-                <div class="avatar-box float-left">
-                    <svg-icon
-                        icon-class="avatar_default"
-                        class-name="avatar_default">
-                    </svg-icon>
-                </div>
-                <label class="float-left">您好，小盆友</label>
-                <span class="float-left" @click="logout">&nbsp;退出</span>
+            <div @click="changeActive(navList.length - 1)" class="user-info float-right clearfix">
+                <svg-icon
+                    icon-class="avatar_default"
+                    class-name="avatar_default">
+                </svg-icon>
+                <label>您好，小盆友</label>
+                <span class="logout" @click="logout">&nbsp;退出</span>
             </div>
         </div>
         <div v-show="showHeaderAndAside" class="aside">
@@ -101,6 +99,8 @@ export default {
                 for (let j = 0; j < this.asideList[i].length; j++) {
                     let {uri} = this.asideList[i][j];
                     if (leftPart === uri.split('/')[1]) {
+                        console.log(leftPart);
+                        console.log(uri.split('/')[1]);
                         active = i;
                         activePath = uri;
                         break;
@@ -183,14 +183,44 @@ export default {
             }
         }
         .user-info {
+            position: relative;
+            align-items: center;
+            width: 160px;
+            height: 60px;
             line-height: $headerHeight;
             margin-right: 20px;
+            cursor: pointer;
             .avatar_default {
+                position: absolute;
+                top: 50%;
+                left: 0;
+                transform: translateY(-50%);
                 width: 40px;
                 height: 40px;
-                margin: 10px 10px 0 0;
+                z-index: 10;
             }
-            span {
+            label {
+                position: absolute;
+                top: 50%;
+                left: 0;
+                transform: translateY(-50%);
+                width: 120px;
+                height: 40px;
+                line-height: 40px;
+                border-radius: 20px;
+                background: $mainColor;
+                font-size: 14px;
+                color: #fff;
+                text-align: center;
+                text-indent: 40px;
+                cursor: pointer;
+            }
+            .logout {
+                position: absolute;
+                top: 50%;
+                right: 0;
+                transform: translateY(-50%);
+                color: #fff;
                 cursor: pointer;
             }
         }

@@ -464,7 +464,7 @@ const RECOMMEND_OPTIONS = [
     }
 ];
 
-const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员'];
+const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '个人中心'];
 const ASIDE_LIST = [
     [
         {
@@ -558,6 +558,18 @@ const ASIDE_LIST = [
         {
             text: '管理员',
             uri: '/manage-admin/list',
+            icon: 'el-icon-document'
+        }
+    ],
+    [
+        {
+            text: '基本信息',
+            uri: '/my-info',
+            icon: 'el-icon-document'
+        },
+        {
+            text: '修改密码',
+            uri: '/modify-password',
             icon: 'el-icon-document'
         }
     ]

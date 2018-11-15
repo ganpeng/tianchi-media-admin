@@ -1,50 +1,50 @@
 <!--个人中心更改密码组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'个人中心'},
-            {name:'修改密码'}]">
-        </custom-breadcrumb>
-        <el-form
-            :model="passwordForm"
-            status-icon
-            :rules="passwordRules"
-            ref="passwordForm"
-            label-width="100px">
-            <el-form-item label="原密码" prop="password" required>
-                <el-input
-                    v-model="passwordForm.password"
-                    placeholder="请输入原密码"
-                    clearable>
-                </el-input>
-            </el-form-item>
-            <el-form-item label="新密码" prop="newPassword" required>
-                <el-input type="password"
-                          v-model="passwordForm.newPassword"
-                          auto-complete="off"
-                          placeholder="请输入6-20位新密码，必须包含数字、字母和特殊字符"
-                          clearable>
-                </el-input>
-            </el-form-item>
-            <el-form-item label="确认新密码" prop="checkPassword" required>
-                <el-input type="password"
-                          v-model="passwordForm.checkPassword"
-                          auto-complete="off"
-                          placeholder="请重新输入新密码"
-                          clearable>
-                </el-input>
-            </el-form-item>
-        </el-form>
-        <div class="operate-item">
-            <el-button type="primary" @click="submitForm" class="page-main-btn">保存</el-button>
-            <el-button type="primary" plain @click="resetForm" class="page-main-btn">重置</el-button>
+    <div class="modify-password-container">
+        <h2 class="content-title">修改密码</h2>
+        <div class="seperator-line"></div>
+        <div class="form-container">
+            <el-row>
+                <el-col :span="8">
+                    <el-form
+                        :model="passwordForm"
+                        status-icon
+                        :rules="passwordRules"
+                        ref="passwordForm"
+                        label-width="110px">
+                        <el-form-item label="原密码" prop="password" required>
+                            <el-input
+                                v-model="passwordForm.password"
+                                placeholder="请输入原密码"
+                                clearable>
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="新密码" prop="newPassword" required>
+                            <el-input type="password"
+                                    v-model="passwordForm.newPassword"
+                                    auto-complete="off"
+                                    placeholder="请输入6-20位新密码，必须包含数字、字母和特殊字符"
+                                    clearable>
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="确认新密码" prop="checkPassword" required>
+                            <el-input type="password"
+                                    v-model="passwordForm.checkPassword"
+                                    auto-complete="off"
+                                    placeholder="请重新输入新密码"
+                                    clearable>
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+            </el-row>
+        </div>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-two" type="primary" @click="submitForm">保存</el-button>
         </div>
     </div>
 </template>
-
 <script>
-
     export default {
         name: 'ModifyPassword',
         data() {
@@ -123,17 +123,5 @@
         }
     };
 </script>
-
 <style lang="scss" scoped>
-
-    .el-form {
-        margin-top: 80px;
-        max-width: 600px;
-    }
-
-    .operate-item {
-        margin: 200px 0px 80px 0px;
-        max-width: 600px;
-    }
-
 </style>

@@ -125,19 +125,19 @@ let router = new Router({
                 },
                 // 个人中心-我的信息
                 {
-                    path: '/personal-center/my-info',
+                    path: '/my-info',
                     name: 'MyInfo',
                     component: MyInfo
                 },
                 // 个人中心-信息设置页面
                 {
-                    path: '/personal-center/info-setting',
+                    path: '/info-setting',
                     name: 'InfoSetting',
                     component: InfoSetting
                 },
                 // 个人中心-修改密码页面
                 {
-                    path: '/personal-center/modify-password',
+                    path: '/modify-password',
                     name: 'ModifyPassword',
                     component: ModifyPassword
                 },
