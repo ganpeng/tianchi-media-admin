@@ -394,8 +394,11 @@
                     class="float-left btn-style-four"
                     v-if="!readonly && video.list.length > 1"
                     type="primary"
-                    @click="showSortDialog"
-                    plain>视频排序</el-button>
+                    @click="showSortDialog">
+                    <svg-icon icon-class="sort">
+                    </svg-icon>
+                    视频排序
+                </el-button>
             </div>
             <programme-table title="已添加视频列表" :status="status" :data-list="video.list"></programme-table>
         </div>

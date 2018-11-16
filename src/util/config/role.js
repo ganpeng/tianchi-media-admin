@@ -470,107 +470,107 @@ const ASIDE_LIST = [
         {
             text: '操控台',
             uri: '/worktop-manage',
-            icon: 'el-icon-menu'
+            icon: 'aside_console'
         },
         {
             text: '客户端日志',
             uri: '/clientlog/list',
-            icon: 'el-icon-document'
+            icon: 'aside_clientlog'
         }
     ],
     [
         {
             text: '节目管理',
             uri: '/programme-manage/list',
-            icon: 'el-icon-setting'
+            icon: 'aside_programme'
         },
         {
             text: '视频管理',
             uri: '/manage-video/list',
-            icon: 'el-icon-document'
+            icon: 'aside_video'
         },
         {
             text: '专题管理',
             uri: '/subject-manage/list',
-            icon: 'el-icon-menu'
+            icon: 'aside_subject'
         },
         {
             text: '人物管理',
             uri: '/person-manage/list',
-            icon: 'el-icon-setting'
+            icon: 'aside_person'
         },
         {
             text: '栏目管理',
             uri: '/nav-bar-manage/setting',
-            icon: 'el-icon-setting'
+            icon: 'aside_column'
         },
         {
             text: '页面布局',
             uri: '/page-layout',
-            icon: 'el-icon-setting'
+            icon: 'aside_layout'
         },
         {
             text: '直播频道',
             uri: '/channel-manage/live/list',
-            icon: 'el-icon-setting'
+            icon: 'shortcut_live_channel'
         },
         {
             text: '轮播频道',
             uri: '/channel-manage/carousel/list',
-            icon: 'el-icon-setting'
+            icon: 'shortcut_carousel_channel'
         },
         {
             text: '类型管理',
             uri: '/category-manage',
-            icon: 'el-icon-setting'
+            icon: 'aside_category'
         },
         {
             text: '角标管理',
             uri: '/corner-mark-manage/index',
-            icon: 'el-icon-setting'
+            icon: 'aside_mark'
         },
         {
             text: '搜索管理',
             uri: '/search-manage',
-            icon: 'el-icon-setting'
+            icon: 'search'
         }
     ],
     [
         {
             text: '用户管理',
             uri: '/user-center/list',
-            icon: 'el-icon-setting'
+            icon: 'aside_user'
         }
     ],
     [
         {
             text: '版本管理',
             uri: '/manage-version/list',
-            icon: 'el-icon-setting'
+            icon: 'shortcut_version'
         },
         {
             text: '设备管理',
             uri: '/manage-device/list',
-            icon: 'el-icon-menu'
+            icon: 'aside_device'
         }
     ],
     [
         {
             text: '管理员',
             uri: '/manage-admin/list',
-            icon: 'el-icon-document'
+            icon: 'aside_admin'
         }
     ],
     [
         {
             text: '基本信息',
             uri: '/my-info',
-            icon: 'el-icon-document'
+            icon: 'basic_info'
         },
         {
             text: '修改密码',
             uri: '/modify-password',
-            icon: 'el-icon-document'
+            icon: 'modify_password'
         }
     ]
 ];

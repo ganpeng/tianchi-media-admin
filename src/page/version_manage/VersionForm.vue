@@ -81,7 +81,9 @@
             <el-form-item ref="uploadItem" label="升级包">
                 <div class="wrapper clearfix">
                     <div class="file float-left">
-                        <input ref="versionUpload" type="file" accept=".zip, .apk" id="version-file-input">选择文件
+                        <input ref="versionUpload" type="file" accept=".zip, .apk" id="version-file-input">
+                        <svg-icon icon-class="file"></svg-icon>
+                        选择文件
                     </div>
                     <span class="float-left">{{file.name}}</span>
                 </div>

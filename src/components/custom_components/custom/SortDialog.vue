@@ -3,6 +3,7 @@
     <el-dialog :title="title"
                visible
                width="80%"
+               class="my-dialog"
                v-on:close="closeDialog">
         <ul id="sort-list">
             <li v-for="(item, index) in sourceList"

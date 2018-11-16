@@ -14,7 +14,10 @@
                             class="border-input">
                         </el-input>
                     </div>
-                    <el-button class="btn-style-one" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                    <el-button class="btn-style-one" @click="searchHandler" type="primary">
+                        <svg-icon icon-class="search"></svg-icon>
+                        搜索
+                    </el-button>
                     <div class="search-field-item">
                         <label class="search-field-item-label">类型</label>
                         <el-select
@@ -60,10 +63,7 @@
                         </el-date-picker>
                     </div>
                     <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
-                        <svg-icon
-                            icon-class="clear_filter"
-                            class-name="svg-box">
-                        </svg-icon>
+                        <svg-icon icon-class="reset"></svg-icon>
                         重置
                     </el-button>
                 </div>

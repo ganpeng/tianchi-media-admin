@@ -16,7 +16,10 @@
                     >
                     </el-input>
                 </div>
-                <el-button class="btn-style-one" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                <el-button class="btn-style-one" @click="searchHandler" type="primary">
+                    <svg-icon icon-class="search"></svg-icon>
+                    搜索
+                </el-button>
                 <div class="search-field-item">
                     <label class="search-field-item-label">类型</label>
                     <el-select
@@ -52,10 +55,7 @@
                     </el-select>
                 </div>
                 <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
-                    <svg-icon
-                        icon-class="clear_filter"
-                        class-name="svg-box">
-                    </svg-icon>
+                    <svg-icon icon-class="reset"></svg-icon>
                     重置
                 </el-button>
             </div>
@@ -75,19 +75,20 @@
                     <el-button
                         class="btn-style-two contain-svg-icon"
                         @click="createChannelByImportExcel">
-                            <svg-icon icon-class="upload"></svg-icon>
+                            <svg-icon icon-class="import"></svg-icon>
                         导入
                     </el-button>
                     <el-button
                         class="btn-style-two contain-svg-icon"
                         @click="editChannelByImportExcel">
-                            <svg-icon icon-class="upload"></svg-icon>
+                            <svg-icon icon-class="export"></svg-icon>
                         修改
                     </el-button>
                     <el-button
                         class="btn-style-two contain-svg-icon"
-                        @click="showFileUploadDialog">
-                            <svg-icon icon-class="upload"></svg-icon>节目单
+                        @click="gotoBlankPage(ProgrammeImport)">
+                            <svg-icon icon-class="import"></svg-icon>
+                            节目单
                     </el-button>
                 </div>
             </div>
@@ -584,6 +585,10 @@
                             upload();
                         });
                 }
+            },
+            gotoBlankPage(name) {
+                let routeData = this.$router.resolve({ name });
+                window.open(routeData.href, '_blank');
             }
         }
     };

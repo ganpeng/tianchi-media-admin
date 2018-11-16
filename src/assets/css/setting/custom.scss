@@ -178,28 +178,32 @@
     &.btn-style-one {
         height: 34px;
         line-height: 34px;
-        color: #A3D0FD;
+        color: $btnText;
         border: 1px solid #64A4E5;
         background: transparent;
         &:hover {
             background: #4987C6;
             border: 1px solid #4987C6;
-            color: #A3D0FD;
+        }
+        .svg-icon {
+            fill: $btnText;
         }
     }
     //  按钮样式二
     &.btn-style-two {
         height: 40px;
         line-height: 40px;
-        color: #A3D0FD;
-        background: #1989FA;
+        color: $btnText;
+        background: $mainBtn;
         border: none;
         &.big {
             width: 130px;
         }
         &:hover {
-            color: #A3D0FD;
-            background: #0062C4;
+            background: $mainBtnHover;
+        }
+        .svg-icon {
+            fill: $btnText;
         }
     }
     //  按钮样式三
@@ -218,12 +222,14 @@
         width: 130px;
         height: 34px;
         line-height: 34px;
-        color: #A3D0FD;
-        background: #1989FA;
+        color: $btnText;
+        background: $mainBtn;
         border: none;
         &:hover {
-            color: #A3D0FD;
-            background: #0062C4;
+            background: $mainBtnHover;
+        }
+        .svg-icon {
+            fill: $btnText;
         }
     }
 }

@@ -84,12 +84,8 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item ref="uploadItem" label="升级包">
-                        <el-button
-                            class="float-left file btn-style-four contain-svg-icon">
-                            <svg-icon
-                                icon-class="video"
-                                class-name="svg-box">
-                            </svg-icon>
+                        <el-button class="float-left file btn-style-four">
+                            <svg-icon icon-class="file"></svg-icon>
                             <input ref="versionUpload" type="file" accept=".zip, .apk" id="version-file-input">选择文件
                         </el-button>
                     </el-form-item>

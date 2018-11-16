@@ -14,7 +14,10 @@
                             placeholder="搜索你想要的信息">
                         </el-input>
                     </div>
-                    <el-button class="btn-style-one" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                    <el-button class="btn-style-one" @click="searchHandler" type="primary" plain>
+                        <svg-icon icon-class="search"></svg-icon>
+                        搜索
+                    </el-button>
                     <div class="search-field-item">
                         <label class="search-field-item-label">状态</label>
                         <el-select
@@ -61,10 +64,7 @@
                         </el-select>
                     </div>
                     <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
-                        <svg-icon
-                            icon-class="clear_filter"
-                            class-name="svg-box">
-                        </svg-icon>
+                        <svg-icon icon-class="reset"></svg-icon>
                         重置
                     </el-button>
                     <span
@@ -160,13 +160,13 @@
                         <el-button
                             class="btn-style-two contain-svg-icon"
                             @click="gotoProgrammeImportPage">
-                            <svg-icon icon-class="upload"></svg-icon>
+                            <svg-icon icon-class="import"></svg-icon>
                             导入
                         </el-button>
                         <el-button
                             class="btn-style-two contain-svg-icon"
                             @click="showFileUploadDialog">
-                            <svg-icon icon-class="upload"></svg-icon>
+                            <svg-icon icon-class="export"></svg-icon>
                             导出
                         </el-button>
                     </div>
@@ -312,7 +312,7 @@ export default {
     data() {
         return {
             //  toggle搜索区域
-            searchFieldVisible: true,
+            searchFieldVisible: false,
             //  选择数据
             areaOptions: store.get('areaList'),
             fileUploadDialogVisible: false,

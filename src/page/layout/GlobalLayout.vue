@@ -1,12 +1,6 @@
 <template>
     <div class="app-container">
         <div v-show="showHeaderAndAside" class="header clearfix">
-            <div class="logo float-left">
-                <svg-icon
-                    icon-class="logo_home"
-                    class-name="logo-home">
-                </svg-icon>
-            </div>
             <ul class="nav-list clearfix float-left">
                 <li v-if="index !== navList.length - 1" v-for="(item, index) in navList" :key="index"
                     :class="['nav-item', active === index ? 'active' : '']"
@@ -15,16 +9,22 @@
                     {{item}}
                 </li>
             </ul>
-            <div @click="changeActive(navList.length - 1)" class="user-info float-right clearfix">
+            <div :class="[active === navList.length - 1 ? 'active' : '']" @click="changeActive(navList.length - 1)" class="user-info float-right clearfix">
                 <svg-icon
-                    icon-class="avatar_default"
-                    class-name="avatar_default">
+                    icon-class="avatar_icon">
                 </svg-icon>
                 <label>您好，小盆友</label>
-                <span class="logout" @click="logout">&nbsp;退出</span>
+                <div class="logout" @click="logout">
+                    <svg-icon
+                        icon-class="logout"
+                    ></svg-icon>
+                </div>
             </div>
         </div>
         <div v-show="showHeaderAndAside" class="aside">
+            <div class="logo">
+                <svg-icon icon-class="aside_logo"></svg-icon>
+            </div>
             <ul class="aside-list">
                 <li v-if="index === active" v-for="(asides, index) in asideList" :key="index" class="aside-item">
                     <el-menu
@@ -39,7 +39,9 @@
                                 :key="innerIndex"
                                 :index="item.uri"
                             >
-                                <i :class="item.icon"></i>
+                                <svg-icon
+                                    :icon-class="item.icon"
+                                ></svg-icon>
                                 <span slot="title">{{item.text}}</span>
                             </el-menu-item>
                     </el-menu>
@@ -99,8 +101,6 @@ export default {
                 for (let j = 0; j < this.asideList[i].length; j++) {
                     let {uri} = this.asideList[i][j];
                     if (leftPart === uri.split('/')[1]) {
-                        console.log(leftPart);
-                        console.log(uri.split('/')[1]);
                         active = i;
                         activePath = uri;
                         break;
@@ -158,15 +158,12 @@ export default {
     .header {
         position: absolute;
         top: 0;
-        left: 0;
+        left: 200px;
         right: 0;
         height: $headerHeight;
         background: $headerBg;
-        color: #585e6a;
-        .logo, .logo-home {
-            width: 200px;
-            height: $headerHeight;
-        }
+        color: $navText;
+
         .nav-list {
             line-height: $headerHeight;
             padding-left: 50px;
@@ -175,7 +172,10 @@ export default {
                 padding: 0 12px;
                 cursor: pointer;
                 font-size: 20px;
-                color: #6F7480;
+                color: $navText;
+                &:hover {
+                    background: $headerNavHoverBg;
+                }
                 &.active {
                     color: #fff;
                     background: $mainColor;
@@ -185,12 +185,12 @@ export default {
         .user-info {
             position: relative;
             align-items: center;
-            width: 160px;
+            width: 154px;
             height: 60px;
             line-height: $headerHeight;
             margin-right: 20px;
             cursor: pointer;
-            .avatar_default {
+            >.svg-icon {
                 position: absolute;
                 top: 50%;
                 left: 0;
@@ -208,30 +208,65 @@ export default {
                 height: 40px;
                 line-height: 40px;
                 border-radius: 20px;
-                background: $mainColor;
+                background: #252D3F;
                 font-size: 14px;
-                color: #fff;
+                color: $navText;
                 text-align: center;
                 text-indent: 40px;
                 cursor: pointer;
+                &:hover {
+                    background: $headerNavHoverBg;
+                    color: #fff;
+                }
+            }
+            &.active {
+                label {
+                    background: $mainColor;
+                    color: #fff;
+                }
             }
             .logout {
                 position: absolute;
                 top: 50%;
                 right: 0;
+                width: 24px;
+                height: 24px;
                 transform: translateY(-50%);
                 color: #fff;
+                line-height: 60px;
                 cursor: pointer;
+                .svg-icon {
+                    position: absolute;
+                    left: 0;
+                    fill: $navText;
+                    width: 24px;
+                    height: 24px;
+                    &:hover {
+                        fill: $mainColor;
+                    }
+                }
             }
         }
     }
     .aside {
         position: absolute;
-        top: $headerHeight;
+        top: 0;
         left: 0px;
         bottom: 0px;
         width: 200px;
-        background-image: linear-gradient(-90deg, #152036 0%, #252F46 100%);
+        background-image: linear-gradient(90deg, #152036 0%, #252F46 100%);
+        .logo {
+            width: 200px;
+            height: 110px;
+            .svg-icon {
+                position: absolute;
+                left: 50%;
+                top: 60px;
+                transform: translate(-50%, -40px);
+                width: 160px;
+                height: 38px;
+            }
+        }
     }
     .content {
         position: absolute;
@@ -252,10 +287,16 @@ export default {
 .aside-list {
     .el-menu-item {
         font-size: 20px;
-        color: #6F7480;
+        color: $navText;
+        .svg-icon {
+            fill: $navText;
+        }
         &.is-active {
             background: #0A1730!important;
             border-left: 4px solid $mainColor;
+            .svg-icon {
+                fill: $headerNavActiveText;
+            }
         }
     }
 }

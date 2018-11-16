@@ -5,7 +5,7 @@
                  :rules="infoRules"
                  status-icon
                  ref="userInfo"
-                 label-width="90px"
+                 label-width="100px"
                  class="form-block">
             <el-form-item label="姓名" prop="name" required>
                 <el-input v-model="userInfo.name" placeholder="请输入姓名"></el-input>

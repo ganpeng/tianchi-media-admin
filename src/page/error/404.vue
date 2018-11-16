@@ -1,10 +1,7 @@
-// 404页面
 <template>
-    <div>
-        404 error, not found
+    <div class="error-page-container">
     </div>
 </template>
-
 <script>
     export default {
         name: 'ErrorNotFound',
@@ -14,11 +11,16 @@
         methods: {}
     };
 </script>
-
 <style scoped lang="less">
-    div {
-        text-align: center;
-        font-size: 24px;
-        line-height: 160px;
-    }
+.error-page-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../../assets/img/404.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 100% 100%;
+}
 </style>

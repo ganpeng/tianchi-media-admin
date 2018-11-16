@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="22px" viewBox="0 0 30 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>类型管理</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Design" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g id="02-02内容管理-节目列表-更多筛选" transform="translate(-30.000000, -544.000000)" fill-rule="nonzero">
+            <g id="类型管理" transform="translate(30.000000, 544.000000)">
+                <rect id="Rectangle" x="0" y="0" width="10.5" height="4.47457627" rx="2.23728814"></rect>
+                <rect id="Rectangle-Copy-24" x="9" y="6.33898305" width="8.25" height="3.72881356" rx="1.86440678"></rect>
+                <rect id="Rectangle-Copy-26" x="9" y="12.3050847" width="13.5" height="3.72881356" rx="1.86440678"></rect>
+                <rect id="Rectangle-Copy-27" x="9" y="18.2711864" width="9.75" height="3.72881356" rx="1.86440678"></rect>
+                <rect id="Rectangle-Copy-28" x="21" y="18.2711864" width="7.125" height="3.72881356" rx="1.86440678"></rect>
+                <rect id="Rectangle-Copy-25" x="19.5" y="6.33898305" width="10.5" height="3.72881356" rx="1.86440678"></rect>
+                <rect id="Rectangle" x="4.5" y="3.72881356" width="1" height="16.779661" rx="0.5"></rect>
+                <rect id="Rectangle" x="4.5" y="19.7627119" width="6.375" height="1" rx="0.5"></rect>
+                <rect id="Rectangle-Copy-29" x="4.5" y="13.7966102" width="6.375" height="1" rx="0.5"></rect>
+                <rect id="Rectangle-Copy-30" x="4.5" y="7.83050847" width="6.375" height="1" rx="0.5"></rect>
+                <rect id="Rectangle-Copy-31" x="15" y="7.83050847" width="6.375" height="1" rx="0.5"></rect>
+                <rect id="Rectangle-Copy-32" x="18" y="19.7627119" width="3.75" height="1" rx="0.5"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

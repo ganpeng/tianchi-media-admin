@@ -11,7 +11,10 @@
                         placeholder="搜索你想要的信息">
                     </el-input>
                 </div>
-                <el-button class="btn-style-one" @click="getUserList" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                <el-button class="btn-style-one" @click="getUserList" type="primary">
+                    <svg-icon icon-class="search"></svg-icon>
+                    搜索
+                </el-button>
                 <div class="search-field-item">
                     <label class="search-field-item-label">开始时间</label>
                     <el-date-picker
@@ -31,10 +34,7 @@
                     </el-date-picker>
                 </div>
                 <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
-                    <svg-icon
-                        icon-class="clear_filter"
-                        class-name="svg-box">
-                    </svg-icon>
+                    <svg-icon icon-class="reset"></svg-icon>
                     重置
                 </el-button>
                 <span
@@ -128,7 +128,7 @@
                 cityDisabled: true,
                 countyDisabled: true,
                 streetDisabled: true,
-                searchFieldVisible: true
+                searchFieldVisible: false
             };
         },
         mounted() {

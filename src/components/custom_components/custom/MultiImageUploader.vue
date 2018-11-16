@@ -2,8 +2,12 @@
     <div class="multi-image-uploader-container">
         <div class="image-list-container">
             <ul class="image-list">
-                <li @click="displayImage(index)" :style="styleStr(image.uri)" v-for="(image, index) in imageList" :key="image.id" class="image-item">
-                    <i @click="deleteImageHandler(image.id)" class="el-icon-error"></i>
+                <li @click.stop="displayImage(index)" v-for="(image, index) in imageList" :key="image.id" class="image-item">
+                    <div :style="styleStr(image.uri)" class="bg-field">
+                        <div class="mask"></div>
+                    </div>
+                    <i @click.stop="deleteImageHandler(image.id)" class="el-icon-error"></i>
+                    <p class="dimension-info">{{image.width}}*{{image.height}}</p>
                 </li>
                 <li :style="styleStr(obj.dataUri)" v-for="(obj, index) in showFileList" :key="index" class="image-item">
                     <el-progress :stroke-width="3" :show-text="false" class="progress-bar" v-show="obj.data.progress !== 0" :percentage="obj.data.progress"></el-progress>
@@ -95,7 +99,7 @@ export default {
     methods: {
         styleStr(dataUri) {
             if (dataUri) {
-                return `width: ${this.dimension.width}px;height: ${this.dimension.height}px;background: url("${dataUri}") no-repeat; background-size: cover;`;
+                return `width: ${this.dimension.width}px;height: ${this.dimension.height}px;background: url("${dataUri}") no-repeat; background-size: cover; background-position: center;`;
             } else {
                 return `width: ${this.dimension.width}px;height: ${this.dimension.height}px;`;
             }
@@ -207,11 +211,19 @@ export default {
         .image-item {
             position: relative;
             float: left;
-            border: 1px solid #3E495E;
-            border-radius: 4px;
-            margin-right: 10px;
+            margin-right: 30px;
             margin-bottom: 10px;
-            cursor: pointer;
+            cursor: zoom-in;
+            .bg-field {
+                position: relative;
+                border: 1px solid #3E495E;
+                border-radius: 4px;
+            }
+            .dimension-info {
+                margin-top: 10px;
+                color: #A8ABB3;
+                text-align: center;
+            }
             .progress-bar {
                 position: absolute;
                 bottom: 0px;
@@ -222,10 +234,24 @@ export default {
                 position: absolute;
                 top: 4px;
                 right: 4px;
+                font-size: 18px;
                 color: $closeBtnHoverColor;
+                cursor: pointer;
+                z-index: 1000000;
+            }
+            .mask {
+                display: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(#000, 0.6);
             }
             &:hover {
-                opacity: 0.6;
+                .mask {
+                    display: block;
+                }
                 i {
                     display: block;
                 }

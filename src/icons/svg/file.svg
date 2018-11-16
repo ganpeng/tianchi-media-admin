@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="60px" viewBox="0 0 50 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>Shape</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Design" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g id="UI-库" transform="translate(-655.000000, -5190.000000)" fill-rule="nonzero">
+            <path d="M683.040283,5190 L683.040283,5203.98413 C683.040283,5208.40241 686.622005,5211.98413 691.040283,5211.98413 L705,5211.98413 L705,5242 C705,5246.41828 701.418278,5250 697,5250 L663,5250 C658.581722,5250 655,5246.41828 655,5242 L655,5198 C655,5193.58172 658.581722,5190 663,5190 L683.040283,5190 Z M685.001221,5190 L704.999756,5210 L691,5210 C687.686292,5210 685,5207.31371 685,5204 L685,5190 L685.001221,5190 Z" id="Shape"></path>
+        </g>
+    </g>
+</svg>

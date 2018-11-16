@@ -14,7 +14,10 @@
                             placeholder="搜索你想要的信息">
                         </el-input>
                     </div>
-                    <el-button class="btn-style-one" @click="getVersionList" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                    <el-button class="btn-style-one" @click="getVersionList" type="primary">
+                        <svg-icon icon-class="search"></svg-icon>
+                        搜索
+                    </el-button>
                     <div class="search-field-item">
                         <label class="search-field-item-label">类型</label>
                         <el-select
@@ -62,10 +65,7 @@
                         </el-date-picker>
                     </div> -->
                     <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
-                        <svg-icon
-                            icon-class="clear_filter"
-                            class-name="svg-box">
-                        </svg-icon>
+                        <svg-icon icon-class="reset"></svg-icon>
                         重置
                     </el-button>
                     <span
@@ -177,7 +177,7 @@
         data() {
             return {
                 //  toggle搜索区域
-                searchFieldVisible: true,
+                searchFieldVisible: false,
                 productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
                 forcedOptions: role.FORCED_OPTIONS
             };
