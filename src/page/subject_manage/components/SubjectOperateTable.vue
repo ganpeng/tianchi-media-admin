@@ -33,7 +33,7 @@
             prop="itemCount"
             label="内容数量">
             <template slot-scope="scope">
-                <label>{{scope.row.subjectItemList === null ? 0 : scope.row.subjectItemList.length}}</label>
+                <label>{{scope.row.itemCount}}</label>
             </template>
         </el-table-column>
         <el-table-column

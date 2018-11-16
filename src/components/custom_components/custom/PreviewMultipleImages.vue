@@ -82,12 +82,14 @@
         top: 0px;
         width: 100%;
         height: 64px;
+        text-align: center;
         font-size: 20px;
         color: #fff;
         line-height: 64px;
     }
 
     .image-box {
+        text-align: center;
         width: 100%;
         overflow-x: scroll;
     }

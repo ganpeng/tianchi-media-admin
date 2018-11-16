@@ -134,6 +134,11 @@ export const FIGURE_SUBJECT_DIMENSION = [
  */
 export const PROGRAMME_SUBJECT_DIMENSION = [
     {
+        width: 1920,
+        height: 1080,
+        styleName: '专题背景'
+    },
+    {
         width: 410,
         height: 472,
         styleName: '专题D'

@@ -2,23 +2,21 @@
 <template>
     <div>
         <div class="content-title">编辑节目专题</div>
-        <div class="block-box">
-            <subject-basic-info-form
-                ref="subjectbasicInfoForm"
-                :subjectInfo="subjectInfo"
-                status="EDIT_PROGRAMME">
-            </subject-basic-info-form>
-        </div>
+        <subject-info-form
+            ref="subjectInfoForm"
+            :subjectInfo="subjectInfo"
+            status="EDIT_PROGRAMME">
+        </subject-info-form>
     </div>
 </template>
 
 <script>
-    import SubjectBasicInfoForm from './components/SubjectInfoForm';
+    import SubjectInfoForm from './components/SubjectInfoForm';
 
     export default {
         name: 'EditProgrammeSubject',
         components: {
-            SubjectBasicInfoForm
+            SubjectInfoForm
         },
         data() {
             return {
@@ -34,7 +32,7 @@
                     if (response && response.code === 0) {
                         this.subjectInfo = response.data;
                         this.$nextTick(function () {
-                            this.$refs.subjectbasicInfoForm.initProgrammeCatagoryList();
+                            this.$refs.subjectInfoForm.initProgrammeCatagoryList();
                         });
                     }
                 });
@@ -45,13 +43,4 @@
 
 <style lang="less" scoped>
 
-    .subject-name {
-        font-style: italic;
-        font-weight: bold;
-        font-size: 16px;
-    }
-
-    .block-box {
-        margin-top: 50px;
-    }
 </style>

@@ -1,6 +1,6 @@
-<!--专题基本信息表单组件-->
+<!--专题信息表单组件-->
 <template>
-    <div class="text-left">
+    <div>
         <div class="content-sub-title">专题基本信息</div>
         <el-form
             :model="subjectInfo"
@@ -14,7 +14,7 @@
             </el-form-item>
             <el-form-item label="内容分类" prop="programmeCategoryList" required>
                 <el-select v-model="programmeCategoryList" @change="setProgrammeCategoryList" multiple
-                           placeholder="请选择内容分类">
+                           placeholder="请选择专题内容分类">
                     <el-option
                         v-for="item in programmeCategoryListOptions"
                         :key="item.id"
@@ -45,7 +45,7 @@
                     添加
                 </el-button>
             </el-form-item>
-            <el-form-item label="状态" required>
+            <el-form-item label="状态" prop="visible" required>
                 <el-radio-group v-model="subjectInfo.visible">
                     <el-radio :label="true">上架</el-radio>
                     <el-radio :label="false">下架</el-radio>
@@ -54,47 +54,52 @@
             <!--设置节目专题封面图片-->
             <el-form-item
                 label="专题图片"
-                class="cover-image-block"
+                required
+                prop="posterImageList"
+                class="image-setting-box"
                 v-if="status === 'CREATE_PROGRAMME' || status === 'EDIT_PROGRAMME'">
                 <label> (1920*1080 背景图必传)</label>
-                <thumbnail
+                <multi-image-uploader
                     :imageList="subjectInfo.posterImageList"
-                    v-on:removeImage="removePosterImage">
-                </thumbnail>
+                    :deleteImageHandler="removePosterImage"
+                    :imageUploadedHandler="imageUploadedHandler"
+                    :allowResolutions="programmeAllowResolutions">
+                </multi-image-uploader>
             </el-form-item>
             <!--设置人物专题封面图片-->
             <el-form-item
                 label="专题图片"
-                class="cover-image-block"
+                required
+                prop="posterImageList"
+                class="image-setting-box"
                 v-if="status === 'CREATE_FIGURE' || status === 'EDIT_FIGURE'">
-                <label> (260*600 专题E 必传)</label>
-                <thumbnail
-                    width="168px"
-                    height="180px"
+                <label> (260*380 专题E 必传)</label>
+                <multi-image-uploader
                     :imageList="subjectInfo.posterImageList"
-                    v-on:removeImage="removePosterImage">
-                </thumbnail>
+                    :dimension="{width:'168',height:'180'}"
+                    :deleteImageHandler="removePosterImage"
+                    :imageUploadedHandler="imageUploadedHandler"
+                    :allowResolutions="figureAllowResolutions">
+                </multi-image-uploader>
             </el-form-item>
-            <div class="content-sub-title">专题内节目
-                <el-button @click="linkProgramme" class="contain-svg-icon btn-style-two">
+            <!--专题关联节目-->
+            <div class="content-sub-title subject-programme-list">专题内节目
+                <el-button @click="selectProgrammeVisible = true" class="contain-svg-icon btn-style-two">
                     <svg-icon icon-class="link_programme"></svg-icon>
                     关联节目
                 </el-button>
             </div>
             <programme-operate-table
-                v-if="selectedProgrammeList.length !== 0"
+                v-if="subjectInfo.subjectItemList && subjectInfo.subjectItemList.length !== 0"
                 model="CANCEL"
                 v-on:cancelLinkProgramme="cancelLinkProgramme"
-                :programmeList="selectedProgrammeList">
+                :programmeList="subjectInfo.subjectItemList">
             </programme-operate-table>
             <div class="operate">
                 <el-button type="primary" @click="operateSubject" class="btn-style-two">保存</el-button>
                 <el-button @click="toSubjectList" class="btn-style-three">返回列表页</el-button>
             </div>
         </el-form>
-        <preview-multiple-images
-            :previewMultipleImages="previewImage">
-        </preview-multiple-images>
         <el-dialog
             title="关联节目"
             :visible.sync="selectProgrammeVisible"
@@ -105,10 +110,10 @@
             <select-multiple-programme
                 v-if="selectProgrammeVisible"
                 ref="selectMultipleProgramme"
-                :selectedProgrammeList="selectedProgrammeList">
+                :selectedProgrammeList="subjectInfo.subjectItemList">
             </select-multiple-programme>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="cancelSelectProgramme">取消</el-button>
+                <el-button @click="selectProgrammeVisible = false">取消</el-button>
                 <el-button type="primary" @click="confirmLinkProgramme">确定</el-button>
             </span>
         </el-dialog>
@@ -116,18 +121,21 @@
 </template>
 
 <script>
-    import Thumbnail from 'sysComponents/custom_components/custom/Thumbnail';
-    import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import SelectMultipleProgramme from './SelectMultipleProgramme';
     import ProgrammeOperateTable from './ProgrammeOperateTable';
+    import MultiImageUploader from 'sysComponents/custom_components/custom/MultiImageUploader';
+    import {
+        PROGRAMME_SUBJECT_DIMENSION,
+        FIGURE_SUBJECT_DIMENSION
+    } from '@/util/config/dimension';
+    import _ from 'lodash';
 
     export default {
         name: 'SubjectInfoForm',
         components: {
-            PreviewMultipleImages,
-            Thumbnail,
             SelectMultipleProgramme,
-            ProgrammeOperateTable
+            ProgrammeOperateTable,
+            MultiImageUploader
         },
         /* status: 'CREATE_PROGRAMME'代表创建节目专题，'CREATE_FIGURE'代表创建人物专题，'EDIT_PROGRAMME'代表编辑节目专题，'EDIT_FIGURE'代表编辑人物专题 */
         props: {
@@ -154,21 +162,44 @@
             };
             let checkProgrammeCategoryList = (rule, value, callback) => {
                 if (this.programmeCategoryList.length === 0) {
-                    return callback(new Error('请选择节目专题类别'));
+                    return callback(new Error('请选择专题内容分类'));
                 } else {
                     callback();
                 }
             };
+            let checkVisible = (rule, value, callback) => {
+                if (value === '' || value === undefined) {
+                    return callback(new Error('请选择专题状态'));
+                } else {
+                    callback();
+                }
+            };
+            let checkPosterImageList = (rule, value, callback) => {
+                if (this.subjectInfo.posterImageList.length === 0) {
+                    return callback(new Error('请添加图片'));
+                }
+                if (this.status === 'CREATE_PROGRAMME' || this.status === 'EDIT_PROGRAMME') {
+                    this.subjectInfo.posterImageList.map(posterImage => {
+                        if (posterImage.width.toString() === '1920' && posterImage.height.toString() === '1080') {
+                            callback();
+                        }
+                    });
+                    return callback(new Error('请上传1920*1080背景图'));
+                }
+                if (this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE') {
+                    this.subjectInfo.posterImageList.map(posterImage => {
+                        if (posterImage.width.toString() === '260' && posterImage.height.toString() === '380') {
+                            callback();
+                        }
+                    });
+                    return callback(new Error('请上传260*380专题E图'));
+                }
+            };
             return {
-                uploadImageMode: 'COVERIMAGE',
+                programmeAllowResolutions: PROGRAMME_SUBJECT_DIMENSION,
+                figureAllowResolutions: FIGURE_SUBJECT_DIMENSION,
                 programmeCategoryList: [],
                 programmeCategoryListOptions: [],
-                previewImage: {
-                    display: false,
-                    autoplay: false,
-                    activeIndex: 0,
-                    list: []
-                },
                 tagOptions: [],
                 infoRules: {
                     name: [
@@ -176,44 +207,21 @@
                     ],
                     programmeCategoryList: [
                         {validator: checkProgrammeCategoryList, trigger: 'change'}
+                    ],
+                    visible: [
+                        {validator: checkVisible, trigger: 'change'}
+                    ],
+                    posterImageList: [
+                        {validator: checkPosterImageList, trigger: 'blur'}
                     ]
                 },
-                // 关联节目弹框
-                selectProgrammeVisible: false,
-                subjectId: '',
-                // 已选择的节目列表
-                selectedProgrammeList: []
+                selectProgrammeVisible: false
             };
-        },
-        computed: {
-            size() {
-                return '';
-            }
         },
         mounted() {
             this.init();
         },
         methods: {
-            // 关联节目
-            linkProgramme() {
-                this.selectProgrammeVisible = true;
-            },
-            // 确认关联节目
-            confirmLinkProgramme() {
-                this.selectedProgrammeList = this.$refs.selectMultipleProgramme.getSelectedProgrammeList();
-                this.selectProgrammeVisible = false;
-                this.$message.success('成功关联节目');
-            },
-            // 选择节目取消
-            cancelSelectProgramme() {
-                this.selectProgrammeVisible = false;
-            },
-            // 已关联的节目取消节目关联
-            cancelLinkProgramme(index) {
-                let cancelLinkProgramme = this.selectedProgrammeList.splice(index, 1)[0];
-                this.$message.success('"' + cancelLinkProgramme.name + '"' + '成功取消关联');
-            },
-            // 初始化数据
             init() {
                 // 初始化专题标签列表
                 this.$service.getSubjectTagList().then(response => {
@@ -226,6 +234,12 @@
                     if (response && response.code === 0) {
                         this.programmeCategoryListOptions = response.data;
                     }
+                });
+            },
+            // 初始化节目专题类别
+            initProgrammeCatagoryList() {
+                this.subjectInfo.programmeCategoryList.map(categoryItem => {
+                    this.programmeCategoryList.push(categoryItem.id);
                 });
             },
             setProgrammeCategoryList() {
@@ -241,11 +255,16 @@
                     });
                 });
             },
-            // 初始化节目专题类别
-            initProgrammeCatagoryList() {
-                this.subjectInfo.programmeCategoryList.map(categoryItem => {
-                    this.programmeCategoryList.push(categoryItem.id);
-                });
+            // 确认关联节目
+            confirmLinkProgramme() {
+                this.subjectInfo.subjectItemList = this.$refs.selectMultipleProgramme.getSelectedProgrammeList();
+                this.selectProgrammeVisible = false;
+                this.$message.success('成功关联节目');
+            },
+            // 已关联的节目取消节目关联
+            cancelLinkProgramme(index) {
+                let cancelLinkProgramme = this.subjectInfo.subjectItemList.splice(index, 1)[0];
+                this.$message.success('"' + cancelLinkProgramme.name + '"' + '成功取消关联');
             },
             // 添加专题的标签
             addSubjectTag() {
@@ -265,10 +284,7 @@
                         this.tagOptions.push(value);
                         this.$message.success(value + '标签已添加');
                     } else {
-                        this.$message({
-                            type: 'warning',
-                            message: value + '标签重复'
-                        });
+                        this.$message.warning(value + '标签重复');
                     }
                 }).catch(() => {
                     this.$message({
@@ -277,27 +293,10 @@
                     });
                 });
             },
-            appendImagePrefix(uri) {
-                let baseUri = window.localStorage.getItem('imageBaseUri');
-                return baseUri + uri;
-            },
-            // 添加图片
-            addPosterImage(newPosterImage) {
-                // 添加封面图片
-                if (this.uploadImageMode === 'COVERIMAGE') {
-                    for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
-                        if (newPosterImage.posterImage.id === this.subjectInfo.posterImageList[i].id) {
-                            this.$message('该图片已经添加到当前专题中');
-                            return;
-                        }
-                    }
-                    this.subjectInfo.posterImageList.push(newPosterImage.posterImage);
-                    return;
-                }
-                // 添加背景图片
-                if (this.uploadImageMode === 'BACKGROUNDIMAGE') {
-                    this.subjectInfo.backgroundImage = newPosterImage.posterImage;
-                }
+            // 成功上传图片
+            imageUploadedHandler(image) {
+                this.subjectInfo.posterImageList.push(image);
+                this.subjectInfo.posterImageList = _.uniqBy(this.subjectInfo.posterImageList, 'id');
             },
             // 删除封面图片
             removePosterImage(index) {
@@ -307,25 +306,7 @@
                     type: 'warning'
                 }).then(() => {
                     this.subjectInfo.posterImageList.splice(index, 1);
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
-            },
-            // 删除背景图片
-            removeBackgroundImage() {
-                this.$confirm('此操作将删除该背景图片, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.subjectInfo.backgroundImage = {};
+                    this.$message.success('图片删除成功!');
                 }).catch(() => {
                     this.$message({
                         type: 'info',
@@ -337,6 +318,10 @@
             operateSubject() {
                 this.$refs['subjectInfo'].validate((valid) => {
                     if (valid) {
+                        if (!this.subjectInfo.subjectItemList || this.subjectInfo.subjectItemList.length === 0) {
+                            this.$message.warning('请关联相关节目');
+                            return;
+                        }
                         // 创建专题
                         if (this.status === 'CREATE_PROGRAMME' || this.status === 'CREATE_FIGURE') {
                             this.subjectInfo.category = this.status === 'CREATE_PROGRAMME' ? 'PROGRAMME' : 'FIGURE';
@@ -347,9 +332,7 @@
                                 }
                             });
                         } else {
-                            // 更新专题
-                            this.subjectInfo.id = this.$route.params.id;
-                            this.$service.updateSubjectBasicInfo(this.subjectInfo).then(response => {
+                            this.$service.updateSubjectInfo(this.subjectInfo).then(response => {
                                 if (response && response.code === 0) {
                                     this.$message.success('成功更新专题');
                                     this.toSubjectList();
@@ -360,12 +343,6 @@
                         return false;
                     }
                 });
-            },
-            // 放大预览图片
-            displayImage(index) {
-                this.previewImage.display = true;
-                this.previewImage.list = this.subjectInfo.posterImageList;
-                this.previewImage.activeIndex = index;
             },
             toSubjectList() {
                 this.$router.push({name: 'SubjectList'});
@@ -386,6 +363,17 @@
         margin-left: 20px;
     }
 
+    .image-setting-box {
+        .multi-image-uploader-container {
+            float: none;
+        }
+    }
+
+    .subject-programme-list {
+        padding: 20px 0px;
+        border-top: 1px solid #252D3F;
+    }
+
     .btn-style-two {
         &.contain-svg-icon {
             padding: 4px 12px;
@@ -403,14 +391,6 @@
             width: 20px !important;
             height: 20px !important;
             fill: #1989FA;
-        }
-    }
-
-    // 图片
-    .cover-image-block {
-        label {
-            font-size: 12px;
-            color: #6F7480;
         }
     }
 

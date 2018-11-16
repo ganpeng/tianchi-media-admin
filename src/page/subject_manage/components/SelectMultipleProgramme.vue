@@ -1,6 +1,6 @@
 <!--选择多个节目组件-->
 <template>
-    <div id="select-multiple-programme">
+    <div id="select-multiple-programme" class="text-left">
         <div id="selected-tags">
             <div>
                 <span>已选{{localSelectedProgrammeList.length}}项</span>
