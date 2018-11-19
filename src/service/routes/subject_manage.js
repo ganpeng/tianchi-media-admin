@@ -42,9 +42,9 @@ export const getSubjectList = ({name, category, programmeCategoryId, createdAtBe
         pageSize,
         name,
         category,
-        programmeCategoryIdList: [programmeCategoryId],
-        createdAtBegin,
-        createdAtEnd
+        programmeCategoryIdList: programmeCategoryId,
+        createdAtBegin: createdAtBegin ? new Date(createdAtBegin).getTime() : '',
+        createdAtEnd: createdAtEnd ? new Date(createdAtEnd).getTime() : ''
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
@@ -85,11 +85,19 @@ export const getSubjectDetail = (id) => {
 };
 
 /**
- * 删除专题
+ * 删除单个专题
  * @param id The id of subject.
  */
 export const deleteSubject = (id) => {
     return service.delete(util.format('/v1/content/subject/{0}', id));
+};
+
+/**
+ * 批量删除专题
+ * @param idList The idList of subject.
+ */
+export const batchDeleteSubject = ({idList}) => {
+    return service.delete('/v1/content/subject', idList);
 };
 
 /**

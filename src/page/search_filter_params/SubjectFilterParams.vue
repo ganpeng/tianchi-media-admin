@@ -22,7 +22,11 @@
                     </el-button>
                 </el-form-item>
                 <el-form-item label="状态">
-                    <el-select v-model="listQueryParams.visible" clearable placeholder="全部">
+                    <el-select
+                        v-model="listQueryParams.visible"
+                        @change="getSubjectList"
+                        clearable
+                        placeholder="全部">
                         <el-option
                             v-for="item in visibleOptions"
                             :key="item.value"
@@ -32,7 +36,11 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="类型">
-                    <el-select v-model="listQueryParams.category" clearable placeholder="全部">
+                    <el-select
+                        v-model="listQueryParams.category"
+                        @change="getSubjectList"
+                        clearable
+                        placeholder="全部">
                         <el-option
                             v-for="item in categoryOptions"
                             :key="item.value"
@@ -42,8 +50,11 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="分类">
-                    <el-select v-model="listQueryParams.programmeCategoryId" multiple clearable
-                               placeholder="全部">
+                    <el-select
+                        v-model="listQueryParams.programmeCategoryId"
+                        @change="getSubjectList"
+                        clearable
+                        placeholder="全部">
                         <el-option
                             v-for="item in programmeCategoryOptions"
                             :key="item.id"
@@ -63,10 +74,11 @@
                     </el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="text"
-                               @click="moreFilters = !moreFilters"
-                               class="more-filters"
-                               :class="{active:moreFilters}">
+                    <el-button
+                        type="text"
+                        @click="moreFilters = !moreFilters"
+                        class="more-filters"
+                        :class="{active:moreFilters}">
                         更多筛选
                         <i class="el-icon-arrow-up" v-if="moreFilters"></i>
                         <i class="el-icon-arrow-down" v-else></i>
@@ -77,6 +89,8 @@
                 <el-form-item label="开始时间">
                     <el-date-picker
                         v-model="listQueryParams.createdAtBegin"
+                        @change="getSubjectList"
+                        clearable
                         type="date"
                         placeholder="请选择开始时间">
                     </el-date-picker>
@@ -84,6 +98,8 @@
                 <el-form-item label="结束时间">
                     <el-date-picker
                         v-model="listQueryParams.createdAtEnd"
+                        @change="getSubjectList"
+                        clearable
                         type="date"
                         placeholder="请选择结束时间">
                     </el-date-picker>
@@ -97,17 +113,11 @@
 
     export default {
         name: 'SubjectFilterParams',
-        props: {
-            mode: {
-                type: String,
-                default: ''
-            }
-        },
         data() {
             return {
                 listQueryParams: {
                     category: '',
-                    programmeCategoryId: [],
+                    programmeCategoryId: '',
                     createdAtBegin: '',
                     createdAtEnd: '',
                     name: ''
@@ -142,9 +152,6 @@
                 this.listQueryParams.name = params.name ? params.name : '';
             },
             init() {
-                if (this.mode) {
-                    this.listQueryParams.category = this.mode;
-                }
                 this.$service.getProgrammeCategory().then(response => {
                     if (response && response.code === 0) {
                         this.programmeCategoryOptions = response.data;
@@ -156,12 +163,9 @@
             },
             clearFilters() {
                 for (let key in this.listQueryParams) {
-                    if (Array.isArray(this.listQueryParams[key])) {
-                        this.listQueryParams[key] = [];
-                    } else {
-                        this.listQueryParams[key] = '';
-                    }
+                    this.listQueryParams[key] = '';
                 }
+                this.getSubjectList();
             }
         }
     };

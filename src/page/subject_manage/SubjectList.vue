@@ -129,27 +129,6 @@
                 this.listQueryParams.pageNum = pageNum;
                 this.getSubjectList();
             },
-            // 设置专题的上下架
-            setSubjectVisible(item) {
-                this.$confirm('此操作将' + (item.visible ? '下架该专题' : '上架该专题') + ', 是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }
-                ).then(() => {
-                    this.$service.setSubjectVisible(item.id).then(response => {
-                        if (response && response.code === 0) {
-                            this.$message.success(item.name + '专题' + (item.visible ? '下架成功' : '上架成功'));
-                            item.visible = !item.visible;
-                        }
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消' + (item.visible ? '下架' : '上架' + item.name + '专题')
-                    });
-                });
-            },
             // 创建专题
             createSubject(command) {
                 this.$router.push({name: command === 'PROGRAMME' ? 'CreateProgrammeSubject' : 'CreateFigureSubject'});
@@ -177,27 +156,6 @@
                 margin-left: 5px;
             }
         }
-    }
-
-    .el-table {
-        margin-top: 0px;
-    }
-
-    .el-pagination {
-        margin-bottom: 50px;
-    }
-
-    #edit-dropdown {
-        cursor: pointer;
-        .el-dropdown-link {
-            color: $baseBlue;
-            font-size: 12px;
-        }
-    }
-
-    .detail-btn {
-        padding-left: 12px;
-        margin-right: 12px;
     }
 
 </style>

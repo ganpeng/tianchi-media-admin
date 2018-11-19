@@ -61,7 +61,14 @@
             min-width="140px"
             label="状态">
             <template slot-scope="scope">
-                {{scope.row.visible ? '已上架' : '已下架'}}
+                <input
+                    class="my-switch switch-anim"
+                    type="checkbox"
+                    v-model="scope.row.visible"
+                    :checked="scope.row.visible"
+                    @click.prevent="updateSubjectStatus(scope.row)"/>
+                <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                <i v-else class="off-the-shelf">已下架</i>
             </template>
         </el-table-column>
         <el-table-column
@@ -104,49 +111,36 @@
             };
         },
         methods: {
-            // 勾选专题
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
-            },
-            // 批量上架
-            batchShelve() {
-
-            },
-            // 批量下架
-            batchUnShelve() {
-
-            },
-            // 批量删除
-            batchRemove() {
-
-            },
-            // 查看某一个专题详情
-            toSubjectDetail(subject) {
-                this.$router.push({
-                    name: subject.category === 'FIGURE' ? 'FigureSubjectDetail' : 'ProgrammeSubjectDetail',
-                    params: {id: subject.id}
-                });
-            },
-            // 编辑某一个专题
-            editSubject(subject) {
-                this.$router.push({
-                    name: subject.category === 'FIGURE' ? 'EditFigureSubject' : 'EditProgrammeSubject',
-                    params: {id: subject.id}
-                });
-            },
-            // 删除某一个专题
-            removeSubject(subject) {
-                this.$confirm('此操作将删除当前专题, 是否继续?', '提示', {
+            // 更改专题状态
+            updateSubjectStatus(item) {
+                this.$confirm('此操作将' + (item.visible ? '下架' : '上架') + item.name + '专题, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$service.deleteSubject(subject.id).then(response => {
+                    this.$service.setSubjectVisible(item.id).then(response => {
                         if (response && response.code === 0) {
-                            this.$message({
-                                type: 'success',
-                                message: '"' + subject.name + '"' + '专题删除成功!'
-                            });
+                            this.$message.success('"' + item.name + '"专题' + (item.visible ? '下架成功' : '上架成功'));
+                            item.visible = !item.visible;
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消' + (item.visible ? '下架' : '上架') + '专题'
+                    });
+                });
+            },
+            // 删除单个专题
+            removeSubject(item) {
+                this.$confirm('此操作将删除' + item.name + '专题, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$service.deleteSubject(item.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('"' + item.name + '"' + '专题删除成功!');
                             this.$emit('getSubjectList');
                         }
                     });
@@ -155,6 +149,55 @@
                         type: 'info',
                         message: '已取消删除'
                     });
+                });
+            },
+            // 勾选专题
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            // 批量上架
+            batchShelve() {
+            },
+            // 批量下架
+            batchUnShelve() {
+
+            },
+            // 批量删除专题
+            batchRemove() {
+                this.$confirm('此操作将批量删除专题, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let subjectIdList = [];
+                    this.multipleSelection.map(subject => {
+                        subjectIdList.push(subject.id);
+                    });
+                    this.$service.batchDeleteSubject({idList: subjectIdList}).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('专题批量删除成功!');
+                            this.$emit('getSubjectList');
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            // 查看专题详情
+            toSubjectDetail(item) {
+                this.$router.push({
+                    name: item.category === 'FIGURE' ? 'FigureSubjectDetail' : 'ProgrammeSubjectDetail',
+                    params: {id: item.id}
+                });
+            },
+            // 编辑某一个专题
+            editSubject(item) {
+                this.$router.push({
+                    name: item.category === 'FIGURE' ? 'EditFigureSubject' : 'EditProgrammeSubject',
+                    params: {id: item.id}
                 });
             }
         }
