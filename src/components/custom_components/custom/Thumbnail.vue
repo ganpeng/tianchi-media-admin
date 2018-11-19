@@ -67,7 +67,7 @@
             // 获取图片的样式名称
             getImageStyleName: function (image) {
                 for (let i = 0; i < ALL_IMAGE_DIMENSIONS.length; i++) {
-                    if (image.width === ALL_IMAGE_DIMENSIONS[i].width && image.height === ALL_IMAGE_DIMENSIONS[i].height) {
+                    if (image.width === ALL_IMAGE_DIMENSIONS[i].width.toString() && image.height === ALL_IMAGE_DIMENSIONS[i].height.toString()) {
                         return ALL_IMAGE_DIMENSIONS[i].styleName;
                     }
                 }
@@ -156,6 +156,7 @@
                 }
             }
             p {
+                margin-top: 9px;
                 label, span {
                     margin: 10px 0px;
                     height: 14px;
