@@ -4,8 +4,9 @@ import service from '../config';
 
 /**
  * 获取角标的列表
+ * @param markType The type of mark,such as 'SCORE', 'EPISODES_NUMBER', 'LICENCE', 'COPYRIGHT_RESERVED', 'CUSTOM', 'PLATFORM'.
  */
-export const getVideoList = ({markType}) => {
+export const getCornerMarkList = ({markType}) => {
     let params = {
         markType
     };
@@ -18,17 +19,17 @@ export const getVideoList = ({markType}) => {
 };
 
 /**
- * 添加运营角标
+ * 添加角标
  */
-export const createCustomCornerMark = ({id, caption, imageUri}) => {
-    return service.post('/v1/storage/video/retry', {id, caption, imageUri, markType: 'CUSTOM'});
+export const createCornerMark = ({markType, caption, imageUri}) => {
+    return service.post('/v1/content/mark', {markType, caption, imageUri});
 };
 
 /**
- * 编辑运营角标
+ * 编辑角标
  */
-export const updateCustomCornerMark = ({id, caption, imageUri}) => {
-    return service.post('/v1/storage/video/retry', {id, caption, imageUri, markType: 'CUSTOM'});
+export const updateCornerMark = ({id, markType, caption, imageUri}) => {
+    return service.put('/v1/content/mark', {id, markType, caption, imageUri});
 };
 
 /**

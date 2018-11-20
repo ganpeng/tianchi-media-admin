@@ -33,7 +33,7 @@ export const ALL_IMAGE_DIMENSIONS = [
     },
     {
         width: 260,
-        height: 380,
+        height: 600,
         styleName: '专题E'
     },
     {
@@ -124,7 +124,7 @@ export const FIGURE_SUBJECT_DIMENSION = [
     },
     {
         width: 260,
-        height: 380,
+        height: 600,
         styleName: '专题E'
     }
 ];
@@ -202,6 +202,22 @@ export const PROGRAMME_SUBJECT_DIMENSION = [
         width: 860,
         height: 472,
         styleName: '横版F'
+    }
+];
+
+/**
+ * 2.0运营角标尺寸
+ */
+export const CORNER_MARK_DIMENSION = [
+    {
+        width: 125,
+        height: 99,
+        styleName: '大角标'
+    },
+    {
+        width: 76,
+        height: 46,
+        styleName: '小角标'
     }
 ];
 
@@ -410,6 +426,7 @@ export default {
     ALL_IMAGE_DIMENSIONS,
     FIGURE_SUBJECT_DIMENSION,
     PROGRAMME_SUBJECT_DIMENSION,
+    CORNER_MARK_DIMENSION,
     PROGRAMME_DIMENSION,
     SUBJECT_BACKGROUND_IMAGE_DIMENSION,
     LAYOUT_IMAGE_DIMENSION,

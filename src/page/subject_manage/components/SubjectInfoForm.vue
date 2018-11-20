@@ -73,7 +73,7 @@
                 prop="posterImageList"
                 class="image-setting-box"
                 v-if="status === 'CREATE_FIGURE' || status === 'EDIT_FIGURE'">
-                <label> (260*380 专题E 必传)</label>
+                <label> (260*600 专题E 必传)</label>
                 <multi-image-uploader
                     :imageList="subjectInfo.posterImageList"
                     :dimension="{width:'168',height:'180'}"
@@ -200,18 +200,18 @@
                     // 有且只有一个
                     let i = 0;
                     this.subjectInfo.posterImageList.map(posterImage => {
-                        if (posterImage.width.toString() === '260' && posterImage.height.toString() === '380') {
+                        if (posterImage.width.toString() === '260' && posterImage.height.toString() === '600') {
                             i++;
                         }
                     });
                     switch (i) {
                         case 0:
-                            return callback(new Error('请上传260*380专题E图'));
+                            return callback(new Error('请上传260*600专题E图'));
                         case 1:
                             callback();
                             break;
                         default:
-                            return callback(new Error('260*380专题E图有且只能有一张'));
+                            return callback(new Error('260*600专题E图有且只能有一张'));
                     }
                 }
             };

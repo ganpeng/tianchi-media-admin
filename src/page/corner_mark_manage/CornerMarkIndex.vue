@@ -27,77 +27,17 @@
                 <el-col :span="18" class="top-right-block corner-block">
                     <label class="corner-title top-right-title">右上角</label>
                     <ul>
-                        <li>
+                        <li v-for="(item, index) in customCornerMarkList" :key="index">
                             <div>
-                                <label>最新-大</label>
-                                <i class="el-icon-circle-close"></i>
+                                <label>{{item.caption}}</label>
+                                <i class="el-icon-circle-close" @click="removeCornerMark(item, index)"></i>
                             </div>
                             <p>
-                                <img src=""/>
-                                <i>编辑</i>
+                                <img :src="item.imageUri" :alt="item.caption"/>
+                                <i @click="openEditDialog(item)">编辑</i>
                             </p>
                         </li>
-                        <li>
-                            <div>
-                                <label>最新-大</label>
-                                <i class="el-icon-circle-close"></i>
-                            </div>
-                            <p>
-                                <img src=""/>
-                                <i>编辑</i>
-                            </p>
-                        </li>
-                        <li>
-                            <div>
-                                <label>最新-大</label>
-                                <i class="el-icon-circle-close"></i>
-                            </div>
-                            <p>
-                                <img src=""/>
-                                <i>编辑</i>
-                            </p>
-                        </li>
-                        <li>
-                            <div>
-                                <label>最新-大</label>
-                                <i class="el-icon-circle-close"></i>
-                            </div>
-                            <p>
-                                <img src=""/>
-                                <i>编辑</i>
-                            </p>
-                        </li>
-                        <li>
-                            <div>
-                                <label>最新-大</label>
-                                <i class="el-icon-circle-close"></i>
-                            </div>
-                            <p>
-                                <img src=""/>
-                                <i>编辑</i>
-                            </p>
-                        </li>
-                        <li>
-                            <div>
-                                <label>最新-大</label>
-                                <i class="el-icon-circle-close"></i>
-                            </div>
-                            <p>
-                                <img class="little" src=""/>
-                                <i @click="editCustomCornerMark">编辑</i>
-                            </p>
-                        </li>
-                        <li>
-                            <div>
-                                <label>最新-大</label>
-                                <i class="el-icon-circle-close"></i>
-                            </div>
-                            <p>
-                                <img class="little" src=""/>
-                                <i @click="editCustomCornerMark">编辑</i>
-                            </p>
-                        </li>
-                        <li class="upload-box" @click="cornerMarkDialogVisible = true">
+                        <li class="upload-box" @click="openCreateDialog">
                             <i class="el-icon-plus"></i>
                         </li>
                     </ul>
@@ -115,13 +55,17 @@
             </el-row>
         </div>
         <el-dialog
-            title="创建角标"
+            :title="dialogTitle"
             :visible.sync="cornerMarkDialogVisible"
             :close-on-click-modal=false
             custom-class="normal-dialog"
             top="13vh"
             width="60%">
-            <custom-corner-mark-form></custom-corner-mark-form>
+            <custom-corner-mark-form
+                v-if="cornerMarkDialogVisible"
+                ref="customCornerMarkForm"
+                v-on:successHandler="successHandler">
+            </custom-corner-mark-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="cornerMarkDialogVisible = false">取消</el-button>
                 <el-button type="primary" @click="confirmCornerMarkForm">确定</el-button>
@@ -140,22 +84,59 @@
         },
         data() {
             return {
-                cornerMarkDialogVisible: false
+                customCornerMarkList: [],
+                cornerMarkDialogVisible: false,
+                dialogTitle: '创建角标'
             };
         },
         mounted() {
-            this.init();
+            this.getCornerMarkList();
         },
         methods: {
-            // 获取角标列表
-            init() {
+            getCornerMarkList() {
+                this.$service.getCornerMarkList({markType: 'CUSTOM'}).then(response => {
+                    if (response && response.code === 0) {
+                        this.customCornerMarkList = response.data;
+                    }
+                });
             },
-            // 确定创建角标
-            confirmCornerMarkForm() {
-            },
-            // 编辑角标
-            editCustomCornerMark() {
+            openCreateDialog() {
+                this.dialogTitle = '创建角标';
                 this.cornerMarkDialogVisible = true;
+            },
+            openEditDialog(item) {
+                this.dialogTitle = '编辑角标';
+                this.cornerMarkDialogVisible = true;
+                this.$nextTick(function () {
+                    this.$refs.customCornerMarkForm.initCornerMark(item);
+                });
+            },
+            // 确定角标信息
+            confirmCornerMarkForm() {
+                this.$refs.customCornerMarkForm.confirmCornerMark();
+            },
+            successHandler() {
+                this.cornerMarkDialogVisible = false;
+                this.getCornerMarkList();
+            },
+            removeCornerMark(item) {
+                this.$confirm('此操作将删除角标, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$service.deleteCornerMarkById({id: item.id}).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('角标删除成功');
+                            this.getCornerMarkList();
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             }
         }
     };
@@ -257,6 +238,9 @@
                             font-size: 16px;
                             color: #C0C4CC;
                             cursor: pointer;
+                            &:hover {
+                                color: #C35757;
+                            }
                         }
                     }
                     P {

@@ -81,9 +81,9 @@
                 this.$service.getSubjectDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         this.subjectInfo = response.data;
-                        // 设置人物专题唯一的260*380的专题E封面
+                        // 设置人物专题唯一的260*600的专题E封面
                         for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
-                            if (this.subjectInfo.posterImageList[i].width.toString() === '260' && this.subjectInfo.posterImageList[i].height.toString() === '380') {
+                            if (this.subjectInfo.posterImageList[i].width.toString() === '260' && this.subjectInfo.posterImageList[i].height.toString() === '600') {
                                 this.uniquePosterImage = this.subjectInfo.posterImageList[i];
                                 this.subjectInfo.posterImageList.splice(i, 1);
                             }
