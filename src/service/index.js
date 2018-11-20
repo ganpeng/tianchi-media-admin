@@ -18,12 +18,13 @@ import * as channelRoutes from './routes/channel_manage';
 import * as versionRoutes from './routes/version_manage';
 import * as deviceRoutes from './routes/device_manage';
 import * as hotSearchRoutes from './routes/hot_search';
+import * as pageLayoutRoutes from './routes/page_layout_manage';
 
 /**
  * The object including all service functions.
  * notice.Each module function should have a unique name. Otherwise，they will override each other.
  * @type {Object}
  */
-let service = Object.assign({}, deviceRoutes, adminRoutes, userRoutes, authorizeRoutes, personRoutes, naviBarRoutes, programmeRoutes, uploadRoutes, liveChannelLayoutRoutes, programmeVideoRoutes, subjectRoutes, layoutRoutes, videoRoutes, channelRoutes, versionRoutes, hotSearchRoutes);
+let service = Object.assign({}, deviceRoutes, adminRoutes, userRoutes, authorizeRoutes, personRoutes, naviBarRoutes, programmeRoutes, uploadRoutes, liveChannelLayoutRoutes, programmeVideoRoutes, subjectRoutes, layoutRoutes, videoRoutes, channelRoutes, versionRoutes, hotSearchRoutes, pageLayoutRoutes);
 
 export default service;

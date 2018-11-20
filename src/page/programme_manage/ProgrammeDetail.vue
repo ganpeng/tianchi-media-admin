@@ -5,7 +5,7 @@
         <div class="seperator-line"></div>
         <programme-basic-info v-if="status === 1"></programme-basic-info>
         <el-row>
-            <el-col :span="24" v-if="status !== 1">
+            <el-col :span="24" v-if="status !== 1" style="margin: 20px 0;">
                 <el-form :rules="rules" ref="createProgramForm" status-icon :model="programme" label-width="120px" class="form-block" @submit.native.prevent>
                     <el-col :span="12" style="border-right: 1px solid #252D3F;">
                         <h2 class="content-sub-title">节目基本信息</h2>
@@ -358,8 +358,89 @@
                         </el-col>
                     </el-col>
                     <el-col :span="12">
+                        <h2 class="content-sub-title">&nbsp;</h2>
+                        <el-form-item label="节目角标">
+                            <div class="mark-container">
+                                <div class="mark-item">
+                                    <el-checkbox v-model="checked">
+                                        左上角：播放平台
+                                    </el-checkbox>
+                                </div>
+                                <div class="mark-item">
+                                    <el-checkbox v-model="checked">
+                                        右上角：
+                                    </el-checkbox>
+                                    <!--  此处需要增加一个选择框 -->
+                                </div>
+                                <div class="mark-item">
+                                    <el-checkbox v-model="checked">
+                                        左下角：更新
+                                    </el-checkbox>
+                                </div>
+                                <div class="mark-item">
+                                    <el-checkbox v-model="checked">
+                                        右下角：评分
+                                    </el-checkbox>
+                                </div>
+                            </div>
+                        </el-form-item>
+                        <el-form-item label="节目状态">
+                            <el-radio  @input="inputHandler(true, 'visible')" :value="programme.visible" :label="true">是</el-radio>
+                            <el-radio  @input="inputHandler(false, 'visible')" :value="programme.visible" :label="false">否</el-radio>
+                        </el-form-item>
+                        <el-form-item label="定时上架">
+                            <div class="on-off-the-shelf">
+                                <el-date-picker
+                                    class="on-off-the-shelf-date"
+                                    v-model="value1"
+                                    type="date"
+                                    placeholder="选择日期">
+                                </el-date-picker>
+                                <el-time-select
+                                    class="on-off-the-shelf-time"
+                                    v-model="value1"
+                                    :picker-options="{
+                                        start: '08:30',
+                                        step: '00:15',
+                                        end: '18:30'
+                                    }"
+                                    placeholder="选择时间">
+                                </el-time-select>
+                                <el-button class="btn-style-two" type="primary" @click="() => {}">开启</el-button>
+                            </div>
+                        </el-form-item>
+                        <el-form-item label="定时下架">
+                            <div class="on-off-the-shelf">
+                                <el-date-picker
+                                    class="on-off-the-shelf-date"
+                                    v-model="value1"
+                                    type="date"
+                                    placeholder="选择日期">
+                                </el-date-picker>
+                                <el-time-select
+                                    class="on-off-the-shelf-time"
+                                    v-model="value1"
+                                    :picker-options="{
+                                        start: '08:30',
+                                        step: '00:15',
+                                        end: '18:30'
+                                    }"
+                                    placeholder="选择时间">
+                                </el-time-select>
+                                <el-button class="btn-style-two" type="primary" @click="() => {}">开启</el-button>
+                            </div>
+                        </el-form-item>
+                        <el-form-item label="更新规则">
+                            <el-col :span="18">
+                                <el-input
+                                    :disabled="readonly"
+                                    @input="inputHandler($event, 'name')"
+                                    :value="programme.name">
+                                </el-input>
+                            </el-col>
+                        </el-form-item>
                         <el-form-item label="节目海报">
-                            <span class="little-tips">(240*350 六分位图必传)</span>
+                            <p class="little-tips">(230*450)六分位图必传</p>
                         </el-form-item>
                         <div class="wrapper clearfix">
                             <multi-image-uploader
@@ -480,11 +561,9 @@
             return {
                 sortMessage: '',
                 isLoading: false,
-                imageUploadDialogVisible: false,
                 videoUploadDialogVisible: false,
                 createPersonDialogVisible: false,
                 sortDialogVisible: false,
-                specOptions: role.SPEC,
                 subjectOptions: role.SUBJECT,
                 size: dimension.PROGRAMME_DIMENSION,
                 previewImage: {
@@ -634,31 +713,6 @@
                     default:
                         return '';
                 }
-            },
-            filterSize() {
-                const {posterImageList} = this.programme;
-                let sizeOneIndex = posterImageList.findIndex((img) => {
-                    return parseInt(img.width) === 240 && parseInt(img.height) === 350;
-                });
-                let sizeTwoIndex = posterImageList.findIndex((img) => {
-                    return parseInt(img.width) === 807 && parseInt(img.height) === 455;
-                });
-                let size = [];
-
-                for (let i = 0; i < this.size.length; i++) {
-                    let value = this.size[i].value;
-                    let [width, height] = value.split('*');
-                    if (
-                        (parseInt(width) === 240 && parseInt(height) === 350 && sizeOneIndex >= 0) ||
-                        (parseInt(width) === 807 && parseInt(height) === 455 && sizeTwoIndex >= 0)
-                    ) {
-                        continue;
-                    } else {
-                        size.push(this.size[i]);
-                    }
-                }
-
-                return size;
             }
         },
         methods: {
@@ -668,7 +722,6 @@
                 updateProgramme: 'programme/updateProgramme',
                 deleteTempList: 'programme/deleteTempList',
                 resetProgramme: 'programme/resetProgramme',
-                addPosterImage: 'programme/addPosterImage',
                 deletePosterImage: 'programme/deletePosterImage',
                 setCoverImage: 'programme/setCoverImage',
                 setVideoList: 'programme/setVideoList',
@@ -786,33 +839,6 @@
                 this.deleteSpecByName({spec});
             },
             //  规格搜索结束
-            _addPosterImage({posterImage}) {
-                const {posterImageList} = this.programme;
-                let sizeOneImages = posterImageList.filter((img) => {
-                    return parseInt(img.width) === 240 && parseInt(img.height) === 350;
-                });
-
-                let sizeTwoImages = posterImageList.filter((img) => {
-                    return parseInt(img.width) === 807 && parseInt(img.height) === 455;
-                });
-                if (parseInt(posterImage.width) === 240) {
-                    if (sizeOneImages.length > 0) {
-                        let errorMessage = '推荐位六分位图只能上传一张';
-                        this.$message.error(errorMessage);
-                        throw new Error(errorMessage);
-                    }
-                }
-
-                if (parseInt(posterImage.width) === 807) {
-                    if (sizeTwoImages.length > 0) {
-                        let errorMessage = '横版海报图必须上传且只能上传一张';
-                        this.$message.error(errorMessage);
-                        throw new Error(errorMessage);
-                    }
-                }
-
-                this.addPosterImage({posterImage});
-            },
             _createProgramme() {
                 this.$refs.createProgramForm.validate(value => {
                     if (value) {
@@ -988,9 +1014,6 @@
             closeSortDialog() {
                 this.sortDialogVisible = false;
             },
-            closeImageDialog(status) {
-                this.imageUploadDialogVisible = status;
-            },
             closePersonDialog(status) {
                 this.createPersonDialogVisible = status;
             },
@@ -1013,11 +1036,6 @@
                 if (key === 'categoryList') {
                     this.updateProgramme({key: 'typeList', value: []});
                     this.getDict(value);
-                }
-            },
-            uploadImageHandler() {
-                if (!this.readonly) {
-                    this.imageUploadDialogVisible = true;
                 }
             },
             _deletePosterImage(index, id) {
@@ -1145,10 +1163,6 @@
                 }
                 next();
             },
-            appendImagePrefix(uri) {
-                let baseUri = window.localStorage.getItem('imageBaseUri');
-                return baseUri + uri;
-            },
             getVideoListName(list) {
                 return list.map((id) => {
                     return this.video.tempList.find((video) => video.storageVideoId === id);
@@ -1191,5 +1205,26 @@
 }
 .wrapper {
     margin-left: 20px;
+}
+.mark-container {
+    display: flex;
+    flex-wrap: wrap;
+    .mark-item {
+        font-size: 16px;
+        color: #A8ABB3;
+        width: 45%;
+        .el-checkbox {
+            padding: 0;
+        }
+    }
+}
+.el-checkbox__input.is-checked+.el-checkbox__label {
+    color: #fff!important;
+}
+.on-off-the-shelf {
+    display: flex;
+    .on-off-the-shelf-time {
+        margin: 0 10px;
+    }
 }
 </style>

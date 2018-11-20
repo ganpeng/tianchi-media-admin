@@ -131,8 +131,5 @@
         }
     };
 </script>
-<style lang="less" scoped>
-.btn-wrapper {
-    margin-right: 10px;
-}
+<style lang="scss" scoped>
 </style>

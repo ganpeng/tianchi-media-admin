@@ -628,6 +628,7 @@ router.beforeEach((to, from, next) => {
     } else {
         next({name: 'ErrorNotFound'});
     }
+    next();
 });
 
 export default router;

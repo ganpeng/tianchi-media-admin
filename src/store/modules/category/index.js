@@ -6,7 +6,8 @@ const idPrefix = 'category_';
 const defaultState = {
     programmeCategory: [],
     liveChannelCategory: [],
-    carouselChannelCategory: []
+    carouselChannelCategory: [],
+    categoryGroupList: []
 };
 
 const state = _.cloneDeep(defaultState);
@@ -24,6 +25,9 @@ const getters = {
     },
     carouselChannelCategory(state) {
         return state.carouselChannelCategory;
+    },
+    categoryGroupList(state) {
+        return state.categoryGroupList;
     },
     isCustomId() {
         return isCustomId;
@@ -57,6 +61,9 @@ const mutations = {
     },
     setCarouselChannelCategory(state, payload) {
         state.carouselChannelCategory = payload.carouselChannelCategory;
+    },
+    setCategoryGroupList(state, payload) {
+        state.categoryGroupList = payload.categoryGroupList;
     },
     updateCategory(state, payload) {
         let {key, value} = payload;
@@ -108,6 +115,19 @@ const mutations = {
     deleteCarouselCategory(state, payload) {
         let {id} = payload;
         state.carouselChannelCategory = state.carouselChannelCategory.filter((category) => category.id !== id);
+    },
+    //  类型组的相关操作
+    addCategoryGroupToList(state, payload) {
+        let {categoryGroup} = payload;
+        state.categoryGroupList.push(categoryGroup);
+    },
+    deleteCategoryGroupByIndex(state, payload) {
+        let {index} = payload;
+        state.categoryGroupList = state.categoryGroupList.filter((item, _index) => _index !== index);
+    },
+    updateCategoryGroupList(state, payload) {
+        let {index, categoryGroup} = payload;
+        state.categoryGroupList[index] = categoryGroup;
     }
 };
 
@@ -188,6 +208,26 @@ const actions = {
                 });
             });
             let res = await service.updateProgrammeCategory({categoryList});
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    //  根据id获取类型组的列表
+    async getProgrammeTypeGroupListById({commit}, id) {
+        try {
+            let res = await service.getProgrammeTypeGroupListById(id);
+            if (res && res.code === 0) {
+                commit('setCategoryGroupList', {categoryGroupList: res.data});
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    //  根据id保存类型组的列表
+    async postProgrammeTypeGroupListById({commit, state}, id) {
+        try {
+            let res = await service.postProgrammeTypeGroupListById(id, state.categoryGroupList);
             return res;
         } catch (err) {
             console.log(err);

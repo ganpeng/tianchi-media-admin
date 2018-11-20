@@ -7,11 +7,19 @@
         </div>
         <p class="tips"><i>*</i>每条不超过10个字</p>
         <ul class="search-list clearfix">
-            <li v-for="(item, index) in list" :key="index" class="search-item">
+            <li v-for="(item, index) in list" :key="index" :class="['search-item', item.focus ? 'is-active' : '']">
                 <div class="wrapper">
                     <span class="index">{{index + 1}}</span>
-                    <input class="name-input" placeholder="请填写新的搜索关键字" v-if="isEdit" :value="item.temp" type="text" @change="searchItemChangeHandler($event, index)">
-                    <span v-else class="search-name">{{item.keyword}}</span>
+                    <input
+                        class="name-input"
+                        placeholder="请填写新的搜索关键字"
+                        v-if="isEdit"
+                        :value="item.name"
+                        type="text"
+                        maxlength="10"
+                        @input="searchItemChangeHandler($event, index)"
+                        @focus="searchItemFocusHandler(index)">
+                    <span v-else class="search-name">{{item.name}}</span>
                 </div>
             </li>
         </ul>
@@ -21,7 +29,6 @@
     </div>
 </template>
 <script>
-import _ from 'lodash';
 export default {
     name: 'Search',
     data() {
@@ -31,34 +38,60 @@ export default {
         };
     },
     created() {
-        this.$service.getHotSearch();
-        this.generatorList();
+        this.$service.getHotSearch()
+            .then((res) => {
+                if (res && res.code === 0) {
+                    this.list = res.data;
+                }
+            });
     },
     mounted() {
         this.$util.toggleFixedBtnContainer();
     },
     methods: {
         searchItemChangeHandler(e, index) {
-            this.list[index].keyword = e.target.value;
-        },
-        generatorList() {
-            let list = _.times(20, () => {
-                return {
-                    keyword: ''
-                };
+            let _index = this.list.findIndex((item) => {
+                return item.name === e.target.value;
             });
-            this.list = list;
+            if (_index >= 0) {
+                this.$message.error(`${e.target.value}已经存在`);
+                return false;
+            } else {
+                this.list[index].name = e.target.value;
+            }
         },
-        saveSearchHandler() {
-            let hotSearchList = this.list.map((item, index) => {
-                item.sort = index;
-                return item;
-            });
-
-            this.$service.postHotSearch(hotSearchList);
+        async saveSearchHandler() {
+            try {
+                let emptyIndex = this.list.findIndex((item) => item.name === '');
+                if (emptyIndex >= 0) {
+                    this.$message.error('热搜关键字不能为空');
+                    return false;
+                }
+                let hotSearchList = this.list.map((item, index) => {
+                    item.sort = index;
+                    return item;
+                });
+                let res = await this.$service.postHotSearch(hotSearchList);
+                if (res && res.code === 0) {
+                    this.$message.success('保存成功');
+                }
+            } catch (err) {
+                console.log(err);
+            }
         },
         toggleEditHandler() {
             this.isEdit = true;
+        },
+        searchItemFocusHandler(e, index) {
+            this.list = this.list.map((item, _index) => {
+                if (_index === index) {
+                    item.focus = true;
+                    item.name = e.target.value;
+                } else {
+                    item.focus = false;
+                }
+                return item;
+            });
         }
     }
 };
@@ -91,6 +124,9 @@ export default {
         border-radius: 4px;
         margin-right: 20px;
         margin-bottom: 14px;
+        &.is-active {
+            border-color: $mainColor;
+        }
         .wrapper {
             display: flex;
             align-items: center;
@@ -110,7 +146,8 @@ export default {
                 text-align: left;
             }
             .name-input {
-                color: #3E495E;
+                // color: #3E495E;
+                color: #fff;
                 height: 32px;
                 line-height: 32px;
                 text-indent: 10px;

@@ -120,3 +120,17 @@ export const batchSetChannel = ({idList, visible}) => {
 
     return service.patch(`/v1/live/channel/visible?${paramsStr}`);
 };
+
+/**
+ * 根据id获取类型组列表
+ */
+export const getProgrammeTypeGroupListById = (id) => {
+    return service.get(`/v1/content/programme-type-group/list?categoryId=${id}`);
+};
+
+/**
+ *  根据id保存节目组列表
+ */
+export const postProgrammeTypeGroupListById = (categoryId, programmeTypeGroupList) => {
+    return service.post(`/v1/content/programme-type-group?categoryId=${categoryId}`, programmeTypeGroupList);
+};

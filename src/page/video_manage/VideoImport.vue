@@ -62,12 +62,14 @@
                     <div class="upload-btn-wrapper">
                         <div class="btn-uploader">
                             <label class="ui_button ui_button_primary" for="upload-input-file2">
+                                <svg-icon icon-class="video"></svg-icon>
                                 选择文件
                             </label>
                             <input id="upload-input-file2" class="upload-input" accept="video/*, application/zip" type="file" ref="uploadInputFile" multiple>
                         </div>
                         <div class="btn-uploader">
                             <label class="ui_button ui_button_primary" for="upload-input-dir2">
+                                <svg-icon icon-class="directory"></svg-icon>
                                 选择文件夹
                             </label>
                             <input id="upload-input-dir2" class="upload-input" type="file" accept="video/*" ref="uploadInputDir" multiple directory webkitdirectory allowdirs>

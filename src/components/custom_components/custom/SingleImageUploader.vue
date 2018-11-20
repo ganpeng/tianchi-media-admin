@@ -1,15 +1,16 @@
 <template>
     <div class="single-image-uploader-container">
-        <div v-show="uri" class="img-wrapper">
-            <img :style="styleStr" :src="uri" alt="">
-            <i @click="deleteImage" class="el-icon-error"></i>
-        </div>
-        <div v-show="!uri" class="uploader" :style="styleStr">
-            <label class="ui_button ui_button_primary" for="single-image-uploader">
-                <i class="el-icon-plus"></i>
-            </label>
-            <input name="file" ref="singleImageUploader" :disabled="isUploading" class="el-upload__input" type="file" id="single-image-uploader" accept="image/*">
-            <!-- <el-progress :stroke-width="3" :show-text="false" class="progress-bar" v-show="progress !== 0" :percentage="progress"></el-progress> -->
+        <div class="wrapper">
+            <div v-show="uri" class="img-wrapper">
+                <img :style="styleStr" :src="uri" alt="">
+                <i @click="deleteImage" class="el-icon-error"></i>
+            </div>
+            <div class="uploader" :style="styleStr">
+                <label class="ui_button ui_button_primary" for="single-image-uploader">
+                    <i class="el-icon-plus"></i>
+                </label>
+                <input name="file" ref="singleImageUploader" :disabled="isUploading" class="el-upload__input" type="file" id="single-image-uploader" accept="image/*">
+            </div>
         </div>
     </div>
 </template>
@@ -113,10 +114,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.wrapper {
+    display: flex;
+}
 .img-wrapper {
     position: relative;
     width: 100px;
     height: 100px;
+    margin-right: 10px;
     border: 1px solid #3E495E;
     border-radius: 4px;
     cursor: pointer;

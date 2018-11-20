@@ -43,7 +43,7 @@
                                     {{type.name}}
                                 </el-tag>
                                 <el-input
-                                    :v-model="value"
+                                    v-model="value"
                                     clearable
                                     class="type-input"
                                     ref="programmeCategoryInput"
@@ -53,8 +53,109 @@
                                 ></el-input>
                             </draggable>
                         </div>
+                        <h3 class="content-sub-title">类型组</h3>
+                        <div class="seperator-line"></div>
+                        <draggable element="ul" class="category-group-list" v-model="getCategoryGroupList">
+                            <li v-for="(item, index) in getCategoryGroupList" :key="item.name" class="category-group-item">
+                                <div class="header">
+                                    {{item.name}}
+                                </div>
+                                <div class="content">
+                                    <div class="type-list-tags">
+                                        <span v-for="(id) in item.programmeTypeList" :key="id">
+                                            {{getTypeNameById(id)}}
+                                        </span>
+                                    </div>
+                                    <div class="year-area-tags">
+                                        <span class="year-tag" v-for="(name, index) in item.dateRangeList" :key="name + index">
+                                            {{name}}
+                                        </span>
+                                        <span class="area-tag" v-for="(obj, index) in areaLabel(item.produceAreaList)" :key="index">
+                                            <svg-icon icon-class="location"></svg-icon>
+                                            {{obj.name}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="btn-text edit-btn" @click="editCategoryGroupByIndex(index)">编辑</span>
+                                <i @click="deleteCategoryGroupByIndexHandler(index)" class="el-icon-circle-close-outline delete-btn"></i>
+                            </li>
+                            <li key="alsdjflsdjf" sort="false" class="category-group-item" @click="addCategoryGroup">
+                                <svg-icon icon-class="plus"></svg-icon>
+                            </li>
+                        </draggable>
                         <div class="fixed-btn-container">
                             <el-button class="btn-style-two" type="primary" @click="saveProgrammeCategoryHandler">保存</el-button>
+                        </div>
+                        <div v-if="categoryGroupDialog" class="add-edit-category-group-dialog form-container">
+                            <h4 class="header">新建</h4>
+                            <i class="el-icon-close" @click="hideCategoryGroupDialog"></i>
+                            <div class="category-group-form">
+                                <div class="form-item">
+                                    <label class="label" for="">名称</label>
+                                    <div class="form-item-field">
+                                        <el-input
+                                            v-model="categoryGroup.name"
+                                            placeholder="请输入类型组名称"
+                                            clearable
+                                        ></el-input>
+                                    </div>
+                                </div>
+                                <div class="form-item">
+                                    <label class="label" for="">类型</label>
+                                    <div class="form-item-field">
+                                        <el-checkbox-group
+                                            class="field-group"
+                                            v-model="categoryGroup.programmeTypeList"
+                                        >
+                                            <el-checkbox
+                                                v-for="(item) in activeProgrammeCategoryList"
+                                                :key="item.id"
+                                                :label="item.id"
+                                                >
+                                                    {{item.name}}
+                                            </el-checkbox>
+                                        </el-checkbox-group>
+                                    </div>
+                                </div>
+                                <div class="form-item">
+                                    <label class="label" for="">年代</label>
+                                    <div class="form-item-field">
+                                        <el-checkbox-group
+                                            class="field-group"
+                                            v-model="categoryGroup.dateRangeList"
+                                        >
+                                            <el-checkbox label="2018">2018</el-checkbox>
+                                            <el-checkbox label="2017">2017</el-checkbox>
+                                            <el-checkbox label="2016">2016</el-checkbox>
+                                            <el-checkbox label="2011-2015">2011-2015</el-checkbox>
+                                            <el-checkbox label="2000-2010">2000-2010</el-checkbox>
+                                            <el-checkbox label="90年代">90年代</el-checkbox>
+                                            <el-checkbox label="80年代">80年代</el-checkbox>
+                                            <el-checkbox label="70年代">70年代</el-checkbox>
+                                            <el-checkbox label="更早">更早</el-checkbox>
+                                        </el-checkbox-group>
+                                    </div>
+                                </div>
+                                <div class="form-item">
+                                    <label class="label" for="">地区</label>
+                                    <div class="form-item-field">
+                                        <div class="my-tags">
+                                            <el-tag
+                                                :key="index"
+                                                v-for="(area, index) in areaLabel(categoryGroup.produceAreaList)"
+                                                closable
+                                                :disable-transitions="false"
+                                                @close="deleteAreaHandler(area.code)">
+                                                {{area.name}}
+                                            </el-tag>
+                                        </div>
+                                        <area-search
+                                            :handleSelect="selectAreaHandler"
+                                        ></area-search>
+                                    </div>
+                                </div>
+                            </div>
+                            <el-button class="btn-style-two" type="primary" @click="saveCategoryGroupHandler">确定</el-button>
                         </div>
                     </div>
                 </div>
@@ -120,13 +221,25 @@
 import _ from 'lodash';
 import draggable from 'vuedraggable';
 import {mapGetters, mapMutations, mapActions} from 'vuex';
+import AreaSearch from '../programme_manage/AreaSearch';
 export default {
     name: 'Category',
     components: {
-        draggable
+        draggable,
+        AreaSearch
     },
     data() {
         return {
+            //  类型组变量
+            categoryGroupDialog: false,
+            index: null,
+            categoryGroup: {
+                name: '',
+                programmeTypeList: [],
+                dateRangeList: [],
+                produceAreaList: []
+            },
+            //  类型组变量结束
             value: '',
             activeTabIndex: 0,
             programmeCategoryActiveIndex: 0,
@@ -144,10 +257,13 @@ export default {
             programmeCategory: 'category/programmeCategory',
             liveChannelCategory: 'category/liveChannelCategory',
             carouselChannelCategory: 'category/carouselChannelCategory',
+            categoryGroupList: 'category/categoryGroupList',
             isCustomId: 'category/isCustomId',
             checkProgrammeCategoryIsExist: 'category/checkProgrammeCategoryIsExist',
             checkLiveCategoryIsExist: 'category/checkLiveCategoryIsExist',
-            checkCarouselCategoryIsExist: 'category/checkCarouselCategoryIsExist'
+            checkCarouselCategoryIsExist: 'category/checkCarouselCategoryIsExist',
+            //  区域搜索
+            areaLabel: 'programme/areaLabel'
         }),
         activeProgrammeCategoryList: {
             get() {
@@ -173,6 +289,25 @@ export default {
             set(value) {
                 this.updateCategory({key: 'carouselChannelCategory', value});
             }
+        },
+        getCategoryGroupList: {
+            get() {
+                return this.categoryGroupList;
+            },
+            set(value) {
+                this.setCategoryGroupList({categoryGroupList: value});
+            }
+        },
+        getTypeNameById() {
+            return (id) => {
+                let obj = this.programmeCategory[this.programmeCategoryActiveIndex];
+                let activeProgrammeCategoryList = _.get(obj, 'programmeTypeList');
+                let type = activeProgrammeCategoryList.find((item) => item.id === id);
+                return _.get(type, 'name') || '';
+            };
+        },
+        getUniqueKey() {
+            return _.uniqueId('category_');
         }
     },
     methods: {
@@ -184,7 +319,12 @@ export default {
             addCarouselCategory: 'category/addCarouselCategory',
             addLiveCategory: 'category/addLiveCategory',
             deleteLiveCategory: 'category/deleteLiveCategory',
-            deleteCarouselCategory: 'category/deleteCarouselCategory'
+            deleteCarouselCategory: 'category/deleteCarouselCategory',
+            // 类型组
+            setCategoryGroupList: 'category/setCategoryGroupList',
+            addCategoryGroupToList: 'category/addCategoryGroupToList',
+            deleteCategoryGroupByIndex: 'category/deleteCategoryGroupByIndex',
+            updateCategoryGroupList: 'category/updateCategoryGroupList'
         }),
         ...mapActions({
             getLiveChannelCategory: 'category/getLiveChannelCategory',
@@ -194,7 +334,9 @@ export default {
             getChannelCount: 'channel/getChannelCount',
             saveChannelCategory: 'category/saveChannelCategory',
             getChannelCategory: 'category/getChannelCategory',
-            saveProgrammeCategory: 'category/saveProgrammeCategory'
+            saveProgrammeCategory: 'category/saveProgrammeCategory',
+            getProgrammeTypeGroupListById: 'category/getProgrammeTypeGroupListById',
+            postProgrammeTypeGroupListById: 'category/postProgrammeTypeGroupListById'
         }),
         changeTabHandler(index) {
             this.activeTabIndex = index;
@@ -202,11 +344,14 @@ export default {
         },
         changeProgrammeCategoryTabHandler(index) {
             this.programmeCategoryActiveIndex = index;
+            let obj = this.programmeCategory[this.programmeCategoryActiveIndex];
+            let id = _.get(obj, 'id');
+            this.getProgrammeTypeGroupListById(id);
         },
         fetchCategoryByIndex(index) {
             switch (index) {
                 case 0:
-                    this.getProgrammeCategory();
+                    this.getProgrammeCategoryAndProgrammeCategoryGroup();
                     break;
                 case 1:
                     this.getChannelCategory();
@@ -217,6 +362,14 @@ export default {
                 default:
                     this.getProgrammeCategory();
             }
+        },
+        getProgrammeCategoryAndProgrammeCategoryGroup() {
+            this.getProgrammeCategory()
+                .then(() => {
+                    let obj = this.programmeCategory[this.programmeCategoryActiveIndex];
+                    let id = _.get(obj, 'id');
+                    this.getProgrammeTypeGroupListById(id);
+                });
         },
         clearInputValue() {
             let $programmeCategoryInput = this.$refs.programmeCategoryInput;
@@ -277,8 +430,18 @@ export default {
             try {
                 let res = await this.saveProgrammeCategory();
                 if (res && res.code === 0) {
-                    this.$message.success('保存成功');
+                    // 重新赋值类型别表
+                    this.$message.success('类型保存成功');
                     this.getProgrammeCategory();
+
+                    let obj = this.programmeCategory[this.programmeCategoryActiveIndex];
+                    let activeProgrammeCategoryId = _.get(obj, 'id');
+                    if (activeProgrammeCategoryId) {
+                        let res2 = await this.postProgrammeTypeGroupListById(activeProgrammeCategoryId);
+                        if (res2 && res2.code === 0) {
+                            this.$message.success('类型组保存成功');
+                        }
+                    }
                 }
             } catch (err) {
                 console.log(err);
@@ -402,6 +565,51 @@ export default {
                         throw new Error('选项卡索引越界');
                 }
             }
+        },
+        //  保存节目类型组
+        addCategoryGroup() {
+            this.resetCategoryGroup();
+            this.showCategoryGroupDialog();
+        },
+        editCategoryGroupByIndex(index) {
+            let categoryGroup = this.categoryGroupList[index];
+            this.categoryGroup = _.cloneDeep(categoryGroup);
+            this.index = index;
+            this.showCategoryGroupDialog();
+        },
+        showCategoryGroupDialog() {
+            this.categoryGroupDialog = true;
+        },
+        hideCategoryGroupDialog() {
+            this.categoryGroupDialog = false;
+            this.index = null;
+        },
+        saveCategoryGroupHandler() {
+            let categoryGroup = _.cloneDeep(this.categoryGroup);
+            if (this.index !== null) {
+                this.updateCategoryGroupList({index: this.index, categoryGroup});
+            } else {
+                this.addCategoryGroupToList({categoryGroup});
+            }
+            this.hideCategoryGroupDialog();
+        },
+        deleteCategoryGroupByIndexHandler(index) {
+            this.deleteCategoryGroupByIndex({index});
+        },
+        resetCategoryGroup() {
+            this.categoryGroup = {
+                name: '',
+                programmeTypeList: [],
+                dateRangeList: [],
+                produceAreaList: []
+            };
+        },
+        deleteAreaHandler(code) {
+            this.categoryGroup.produceAreaList = this.categoryGroup.produceAreaList.filter((_code) => _code !== code);
+        },
+        selectAreaHandler(area) {
+            this.categoryGroup.produceAreaList.push(area.code);
+            this.categoryGroup.produceAreaList = _.uniq(this.categoryGroup.produceAreaList);
         }
     }
 };
@@ -413,6 +621,7 @@ export default {
 .my-tags {
     display: flex;;
     justify-content: start;
+    flex-wrap: wrap;
     margin-top: 20px;
     cursor: pointer;
     text-align: left;
@@ -474,6 +683,181 @@ export default {
     .right-content {
         overflow: hidden;
         padding-left: 20px;
+    }
+}
+.category-group-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    .category-group-item {
+        position: relative;
+        min-width: 200px;
+        height: 110px;
+        background: #2A3040;
+        border-radius: 4px;
+        padding: 0 10px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        &:last-child {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 110px;
+            min-width: 110px;
+            border: 1px solid #3E495E;
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+            .svg-icon {
+                fill: #3E495E;
+                width: 20px;
+                height: 20px;
+            }
+        }
+        .header {
+            height: 30px;
+            line-height: 30px;
+            font-size: 18px;
+            color: #A8ABB3;
+            text-align: left;
+            border-bottom: 1px solid #3E495E;
+        }
+        .content {
+            .type-list-tags {
+                text-align: left;
+                margin-top: 10px;
+                span {
+                    display: inline-block;
+                    background: #637497;
+                    border-radius: 4px;
+                    padding: 2px 5px;
+                    color: #fff;
+                    font-size: 12px;
+                    transform: scale(0.8);
+                }
+            }
+            .year-area-tags {
+                text-align: left;
+                margin-top: 10px;
+                .area-tag {
+                    display: inline-block;
+                    background: #8AA4AF;
+                    border-radius: 4px;
+                    padding: 2px 5px;
+                    color: #fff;
+                    font-size: 12px;
+                    transform: scale(0.8);
+                    .svg-icon {
+                        fill: #fff;
+                    }
+                }
+                .year-tag {
+                    display: inline-block;
+                    background: #485777;
+                    border-radius: 4px;
+                    padding: 2px 5px;
+                    color: #fff;
+                    font-size: 12px;
+                    transform: scale(0.8);
+                }
+            }
+        }
+        .edit-btn {
+            position: absolute;
+            right: 40px;
+            top: 5px;
+            font-size: 14px;
+            color: #1989FA;
+            cursor: pointer;
+        }
+        .delete-btn {
+            position: absolute;
+            right: 10px;
+            top: 5px;
+            font-size: 14px;
+            line-height: 20px;
+            background: transparent;
+            color: #C0C4CC;
+            cursor: pointer;
+            &:hover {
+                color: $dangerColor;
+            }
+        }
+    }
+}
+.add-edit-category-group-dialog {
+    position: absolute;
+    bottom: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    background: rgba(65,74,93,0.90);
+    box-shadow: 2px 4px 10px 0;
+    border-radius: 4px;
+    padding-bottom: 20px;
+    .header {
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        font-size: 18px;
+        color: #FFF;
+    }
+    i {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 18px;
+        color: $dangerColor;
+        cursor: pointer;
+        &:hover {
+            color: $dangerHoverColor;
+        }
+    }
+    .category-group-form {
+        .form-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            font-size: 14px;
+            color: #A3D0FD;
+            margin-bottom: 20px;
+            .label {
+                width: 80px;
+            }
+            .form-item-field,
+            .field-group {
+                display: flex;
+                flex: 1;
+                flex-wrap: wrap;
+            }
+            .el-input {
+                width: 50%;
+                border: 1px solid #A3D0FD;
+                border-radius: 4px;
+                .el-input_inner {
+                    border: none;
+                }
+            }
+            .el-checkbox {
+                padding: 0;
+                margin-right: 20px;
+                margin-bottom: 10px;
+            }
+            .el-checkbox+.el-checkbox {
+                margin-left: 0;
+            }
+            &:last-child {
+                .form-item-field {
+                    text-align: left;
+                    display: block;
+                    .my-tags {
+                        margin-top: 0;
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+        }
     }
 }
 </style>
