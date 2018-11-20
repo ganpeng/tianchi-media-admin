@@ -89,7 +89,7 @@
                 <el-form-item label="开始时间">
                     <el-date-picker
                         v-model="listQueryParams.createdAtBegin"
-                        @change="getSubjectList"
+                        @change="getSubjectList('BEGIN')"
                         clearable
                         type="date"
                         placeholder="请选择开始时间">
@@ -99,6 +99,7 @@
                     <el-date-picker
                         v-model="listQueryParams.createdAtEnd"
                         @change="getSubjectList"
+                        :disabled="!listQueryParams.createdAtBegin"
                         clearable
                         type="date"
                         placeholder="请选择结束时间">
@@ -158,7 +159,10 @@
                     }
                 });
             },
-            getSubjectList() {
+            getSubjectList(command) {
+                if (command === 'BEGIN' && !this.listQueryParams.createdAtBegin) {
+                    this.listQueryParams.createdAtEnd = '';
+                }
                 this.$emit('getSubjectList', this.listQueryParams);
             },
             clearFilters() {

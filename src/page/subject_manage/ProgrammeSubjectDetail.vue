@@ -12,7 +12,7 @@
             </div>
             <div class="subject-time">
                 <div>创建于{{subjectInfo.createdAt | formatDate('yyyy.MM.DD')}}</div>
-                <div>创建于{{subjectInfo.updatedAt | formatDate('yyyy.MM.DD')}}</div>
+                <div>更新于{{subjectInfo.updatedAt | formatDate('yyyy.MM.DD')}}</div>
             </div>
         </div>
         <!--相关信息-->
@@ -159,19 +159,21 @@
 
     // 相关信息
     .about-subject {
+        position: relative;
         padding-bottom: 12px;
         border-bottom: 1px solid #252D3F;
         text-align: left;
         overflow: hidden;
         img {
-            float: left;
-            margin-left: 20px;
-            margin-right: 35px;
+            position: absolute;
+            top: 0px;
+            left: 20px;
             height: 216px;
             width: 384px;
         }
         div {
-            float: left;
+            margin-left: 443px;
+            height: 230px;
             border-top: 1px solid #252D3F;
             ul {
                 margin-top: 10px;
@@ -209,6 +211,9 @@
         padding-bottom: 12px;
         border-top: 1px solid #252D3F;
         border-bottom: 1px solid #252D3F;
+        .thumbnail {
+            margin-left: 20px;
+        }
     }
 
     // 专题内容

@@ -15,13 +15,14 @@ import _ from 'lodash';
  * @param tagList Array of tags.
  * @param posterImageList The list of coverImages including id、uri、height、width attribute.
  */
-export const createSubject = ({category, name, programmeCategoryList, tagList, posterImageList, subjectItemList, visible}) => {
+export const createSubject = ({category, name, programmeCategoryList, tagList, backgroundImage, posterImageList, subjectItemList, visible}) => {
     return service.post('/v1/content/subject', {
         category,
         releaseStatus: 'RELEASED',
         name,
         programmeCategoryList,
         tagList,
+        backgroundImage,
         posterImageList,
         subjectItemList,
         visible
@@ -64,12 +65,13 @@ export const getSubjectTagList = () => {
 /**
  * 修改专题信息
  */
-export const updateSubjectInfo = ({id, name, programmeCategoryList, tagList, posterImageList, subjectItemList, visible}) => {
+export const updateSubjectInfo = ({id, name, programmeCategoryList, tagList, backgroundImage, posterImageList, subjectItemList, visible}) => {
     return service.patch(util.format('/v1/content/subject/{0}', id), {
         id,
         name,
         programmeCategoryList,
         tagList,
+        backgroundImage,
         posterImageList,
         subjectItemList,
         visible

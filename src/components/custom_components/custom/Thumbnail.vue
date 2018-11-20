@@ -1,6 +1,6 @@
 <!--缩略图组件-->
 <template>
-    <div class="text-center">
+    <div class="text-center thumbnail">
         <ul id="image-list">
             <li v-for="(item,index) in imageList" :key="index">
                 <div

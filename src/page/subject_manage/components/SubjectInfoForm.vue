@@ -179,20 +179,40 @@
                     return callback(new Error('请添加图片'));
                 }
                 if (this.status === 'CREATE_PROGRAMME' || this.status === 'EDIT_PROGRAMME') {
+                    // 有且只有一个背景图
+                    let m = 0;
                     this.subjectInfo.posterImageList.map(posterImage => {
                         if (posterImage.width.toString() === '1920' && posterImage.height.toString() === '1080') {
-                            callback();
+                            m++;
                         }
                     });
-                    return callback(new Error('请上传1920*1080背景图'));
+                    switch (m) {
+                        case 0:
+                            return callback(new Error('请上传1920*1080专题背景图'));
+                        case 1:
+                            callback();
+                            break;
+                        default:
+                            return callback(new Error('1920*1080专题背景图有且只能有一张'));
+                    }
                 }
                 if (this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE') {
+                    // 有且只有一个
+                    let i = 0;
                     this.subjectInfo.posterImageList.map(posterImage => {
                         if (posterImage.width.toString() === '260' && posterImage.height.toString() === '380') {
-                            callback();
+                            i++;
                         }
                     });
-                    return callback(new Error('请上传260*380专题E图'));
+                    switch (i) {
+                        case 0:
+                            return callback(new Error('请上传260*380专题E图'));
+                        case 1:
+                            callback();
+                            break;
+                        default:
+                            return callback(new Error('260*380专题E图有且只能有一张'));
+                    }
                 }
             };
             return {
@@ -299,7 +319,13 @@
                 this.subjectInfo.posterImageList = _.uniqBy(this.subjectInfo.posterImageList, 'id');
             },
             // 删除封面图片
-            removePosterImage(index) {
+            removePosterImage(imageId) {
+                let index;
+                for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
+                    if (this.subjectInfo.posterImageList[i].id === imageId) {
+                        index = i;
+                    }
+                }
                 this.$confirm('此操作将删除该图片, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -321,6 +347,14 @@
                         if (!this.subjectInfo.subjectItemList || this.subjectInfo.subjectItemList.length === 0) {
                             this.$message.warning('请关联相关节目');
                             return;
+                        }
+                        // 设置节目专题的背景图片
+                        if (this.status === 'CREATE_PROGRAMME' || this.status === 'EDIT_PROGRAMME') {
+                            this.subjectInfo.posterImageList.map(image => {
+                                if (image.width.toString() === '1920' && image.height.toString() === '1080') {
+                                    this.subjectInfo.backgroundImage = image;
+                                }
+                            });
                         }
                         // 创建专题
                         if (this.status === 'CREATE_PROGRAMME' || this.status === 'CREATE_FIGURE') {
