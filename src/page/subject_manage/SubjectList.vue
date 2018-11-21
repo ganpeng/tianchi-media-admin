@@ -2,63 +2,61 @@
 <template>
     <div>
         <div class="content-title">搜索筛选</div>
-        <div>
-            <subject-filter-params
-                ref="subjectFilterParams"
-                v-on:getSubjectList="getSubjectList">
-            </subject-filter-params>
-            <div class="content-title">专题列表</div>
-            <div class="table-operator-field clearfix">
-                <div class="float-left">
-                    <el-dropdown
-                        trigger="hover"
-                        class="my-dropdown">
+        <subject-filter-params
+            ref="subjectFilterParams"
+            v-on:getSubjectList="getSubjectList">
+        </subject-filter-params>
+        <div class="content-title">专题列表</div>
+        <div class="table-operator-field clearfix">
+            <div class="float-left">
+                <el-dropdown
+                    trigger="hover"
+                    class="my-dropdown">
                             <span class="el-dropdown-link">
                                 批量操作<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item>
-                                <span @click="batchShelve">批量上架</span>
-                            </el-dropdown-item>
-                            <el-dropdown-item>
-                                <span @click="batchUnShelve">批量下架</span>
-                            </el-dropdown-item>
-                            <el-dropdown-item>
-                                <span @click="batchRemove">批量删除</span>
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </div>
-                <div class="float-right">
-                    <el-dropdown
-                        @command="createSubject($event)" placement="bottom">
-                        <el-button class="btn-style-two contain-svg-icon">
-                            <svg-icon icon-class="add"></svg-icon>
-                            添加
-                            <svg-icon icon-class="arrow_down"></svg-icon>
-                        </el-button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="PROGRAMME">节目专题</el-dropdown-item>
-                            <el-dropdown-item command="FIGURE">人物专题</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </div>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>
+                            <span @click="batchShelve">批量上架</span>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <span @click="batchUnShelve">批量下架</span>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <span @click="batchRemove">批量删除</span>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
             </div>
-            <subject-operate-table
-                ref="subjectOperateTable"
-                :subjectList="subjectList"
-                v-on:getSubjectList="getSubjectList">
-            </subject-operate-table>
-            <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="listQueryParams.pageNum"
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="listQueryParams.pageSize"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="total">
-            </el-pagination>
+            <div class="float-right">
+                <el-dropdown
+                    @command="createSubject($event)" placement="bottom">
+                    <el-button class="btn-style-two contain-svg-icon">
+                        <svg-icon icon-class="add"></svg-icon>
+                        添加
+                        <svg-icon icon-class="arrow_down"></svg-icon>
+                    </el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="PROGRAMME">节目专题</el-dropdown-item>
+                        <el-dropdown-item command="FIGURE">人物专题</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </div>
         </div>
+        <subject-operate-table
+            ref="subjectOperateTable"
+            :subjectList="subjectList"
+            v-on:getSubjectList="getSubjectList">
+        </subject-operate-table>
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="listQueryParams.pageNum"
+            :page-sizes="[10, 20, 30, 50]"
+            :page-size="listQueryParams.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total">
+        </el-pagination>
     </div>
 </template>
 

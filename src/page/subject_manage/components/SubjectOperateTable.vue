@@ -82,8 +82,7 @@
         <el-table-column
             align="center"
             label="操作"
-            width="110px"
-            fixed="right">
+            width="110px">
             <template slot-scope="scope">
                 <div class="operator-btn-wrapper">
                     <span class="btn-text" @click="editSubject(scope.row)">编辑</span>
