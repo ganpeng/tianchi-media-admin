@@ -18,6 +18,13 @@ export const getPageLayoutByNavbarId = (id) => {
 };
 
 /**
+ * 根据navbar的id保存该栏目下的布局
+ */
+export const savePageLayoutByNavbarId = (id, layoutBlockVoList) => {
+    return service.post(`/v1/content/layout-block?navBarId=${id}`, layoutBlockVoList);
+};
+
+/**
  * 根据navbar的id保存栏目布局
  */
 export const postPageLayoutByNavbarId = (id, layoutBlockVoList) => {
@@ -30,6 +37,20 @@ export const postPageLayoutByNavbarId = (id, layoutBlockVoList) => {
 export const getPersonSubjectList = (params) => {
     const _params = {
         category: 'FIGURE',
+        ...params
+    };
+    let paramsStr = qs.stringify(_.pickBy(_params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+    return service.get(`/v1/content/subject/page?${paramsStr}`);
+};
+
+/**
+ * 获取人物专题列表
+ */
+export const getProgrammeSubjectList = (params) => {
+    const _params = {
+        category: 'PROGRAMME',
         ...params
     };
     let paramsStr = qs.stringify(_.pickBy(_params, (item) => {

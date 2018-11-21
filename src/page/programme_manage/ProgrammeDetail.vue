@@ -102,6 +102,22 @@
                                     :handleSelect="selectTypeHandler"
                                 ></type-search>
                             </el-form-item>
+                            <el-form-item label="版式类型" prop="programmeTemplate">
+                                <el-select
+                                    :disabled="readonly"
+                                    :value="programme.programmeTemplate"
+                                    clearable
+                                    placeholder="请选择"
+                                    @input="inputHandler($event, 'programmeTemplate')"
+                                >
+                                    <el-option
+                                        v-for="item in programmeTemplateOptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
                             <el-form-item label="关键字" prop="tagList">
                                 <div id="tag-sort" class="my-tags">
                                     <draggable v-model="tagList">
@@ -362,23 +378,23 @@
                         <el-form-item label="节目角标">
                             <div class="mark-container">
                                 <div class="mark-item">
-                                    <el-checkbox v-model="checked">
+                                    <el-checkbox @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
                                         左上角：播放平台
                                     </el-checkbox>
                                 </div>
                                 <div class="mark-item">
-                                    <el-checkbox v-model="checked">
+                                    <el-checkbox @change="markChangeHandler($event, 'rightTop')" :disabled="rightTopDisabled">
                                         右上角：
                                     </el-checkbox>
                                     <!--  此处需要增加一个选择框 -->
                                 </div>
                                 <div class="mark-item">
-                                    <el-checkbox v-model="checked">
+                                    <el-checkbox @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
                                         左下角：更新
                                     </el-checkbox>
                                 </div>
                                 <div class="mark-item">
-                                    <el-checkbox v-model="checked">
+                                    <el-checkbox @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
                                         右下角：评分
                                     </el-checkbox>
                                 </div>
@@ -388,6 +404,7 @@
                             <el-radio  @input="inputHandler(true, 'visible')" :value="programme.visible" :label="true">是</el-radio>
                             <el-radio  @input="inputHandler(false, 'visible')" :value="programme.visible" :label="false">否</el-radio>
                         </el-form-item>
+                        <!--  定时上下架功能暂时注释
                         <el-form-item label="定时上架">
                             <div class="on-off-the-shelf">
                                 <el-date-picker
@@ -430,6 +447,7 @@
                                 <el-button class="btn-style-two" type="primary" @click="() => {}">开启</el-button>
                             </div>
                         </el-form-item>
+                        -->
                         <el-form-item label="更新规则">
                             <el-col :span="18">
                                 <el-input
@@ -579,6 +597,24 @@
                     contestList: '赛事',
                     platformList: '播放平台'
                 },
+                programmeTemplateOptions: [
+                    {
+                        label: '电影',
+                        value: 'MOVIE'
+                    },
+                    {
+                        label: '电视剧',
+                        value: 'TV_DRAMA'
+                    },
+                    {
+                        label: '新闻',
+                        value: 'NEWS'
+                    },
+                    {
+                        label: '综艺',
+                        value: 'TV_SHOW'
+                    }
+                ],
                 rules: {
                     name: [
                         { required: true, message: '请输入节目名称' }
@@ -595,6 +631,9 @@
                     ],
                     typeList: [
                         { required: true, message: '请选择节目类型' }
+                    ],
+                    programmeTemplate: [
+                        { required: true, message: '请选择版式类型' }
                     ]
                 }
             };
@@ -713,6 +752,18 @@
                     default:
                         return '';
                 }
+            },
+            leftTopDisabled() {
+                return this.programme.platformList.length === 0;
+            },
+            rightTopDisabled() {
+                return false;
+            },
+            leftBottomDisabled() {
+                return !this.programme.totalSets;
+            },
+            rightBottomDisabled() {
+                return !this.programme.score;
             }
         },
         methods: {
@@ -749,6 +800,8 @@
                 //  新的规格搜索
                 addSpecToList: 'programme/addSpecToList',
                 deleteSpecByName: 'programme/deleteSpecByName',
+                //  角标的操作
+                updateProgrammeMark: 'programme/updateProgrammeMark',
                 //  海报上传成功之后添加到海报列表中
                 addImageToPosterImageList: 'programme/addImageToPosterImageList',
                 deleteImageFromPosterImageListById: 'programme/deleteImageFromPosterImageListById'
@@ -1181,6 +1234,9 @@
             },
             deleteImageHandler(id) {
                 this.deleteImageFromPosterImageListById({id});
+            },
+            markChangeHandler(checked, key) {
+                this.updateProgrammeMark({checked, key});
             }
         }
     };

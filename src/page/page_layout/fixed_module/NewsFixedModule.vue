@@ -6,7 +6,7 @@
         <div class="top-field">
             <div class="wrapper">
                 <div :style="styleBgImageStr(0)" class="top-left-field">
-                    <el-button v-if="isEdit" class="btn-style-two">
+                    <el-button v-if="isEdit" @click="selectProgramme(0)" class="btn-style-two">
                         选择节目
                     </el-button>
                 </div>
@@ -16,14 +16,14 @@
                     <div class="top-right-top-field">
                         <div class="wrapper">
                             <div :style="styleBgImageStr(1)" class="top-right-top-left-field">
-                                <el-button v-if="isEdit" class="btn-style-two">
+                                <el-button v-if="isEdit" @click="selectProgramme(1)" class="btn-style-two">
                                     选择节目
                                 </el-button>
                             </div>
                         </div>
                         <div class="wrapper">
                             <div :style="styleBgImageStr(2)" class="top-right-top-right-field">
-                                <el-button v-if="isEdit" class="btn-style-two">
+                                <el-button v-if="isEdit" @click="selectProgramme(2)" class="btn-style-two">
                                     选择节目
                                 </el-button>
                             </div>
@@ -32,14 +32,14 @@
                     <div class="top-right-bottom-field">
                         <div class="wrapper">
                             <div :style="styleBgImageStr(3)" class="top-right-bottom-left-field">
-                                <el-button v-if="isEdit" class="btn-style-two">
+                                <el-button v-if="isEdit" @click="selectProgramme(3)" class="btn-style-two">
                                     选择节目
                                 </el-button>
                             </div>
                         </div>
                         <div class="wrapper">
                             <div :style="styleBgImageStr(4)" class="top-right-bottom-right-field">
-                                <el-button v-if="isEdit" class="btn-style-two">
+                                <el-button v-if="isEdit" @click="selectProgramme(4)" class="btn-style-two">
                                     选择节目
                                 </el-button>
                             </div>
@@ -51,40 +51,51 @@
         <div class="bottom-field">
             <div class="wrapper">
                 <div :style="styleBgImageStr(5)" class="bottom-field-item">
-                    <el-button v-if="isEdit" class="btn-style-two">
+                    <el-button v-if="isEdit" @click="selectFilter(5)" class="btn-style-two">
                         选择筛选
                     </el-button>
                 </div>
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(6)" class="bottom-field-item">
-                    <el-button v-if="isEdit" class="btn-style-two">
+                    <el-button v-if="isEdit" @click="selectFilter(6)" class="btn-style-two">
                         选择筛选
                     </el-button>
                 </div>
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(7)" class="bottom-field-item">
-                    <el-button v-if="isEdit" class="btn-style-two">
+                    <el-button v-if="isEdit" @click="selectFilter(7)" class="btn-style-two">
                         选择筛选
                     </el-button>
                 </div>
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(8)" class="bottom-field-item">
-                    <el-button v-if="isEdit" class="btn-style-two">
+                    <el-button v-if="isEdit" @click="selectFilter(8)" class="btn-style-two">
                         选择筛选
                     </el-button>
                 </div>
             </div>
         </div>
+        <div v-if="isEdit" class="fixed-btn-container">
+            <el-button class="btn-style-two" type="primary" @click="saveHandler">保存</el-button>
+        </div>
+        <edit-programme :squareIndex="squareIndex" ref="selectProgrammeDialog"></edit-programme>
+        <edit-filter :squareIndex="squareIndex" ref="selectFilterDialog"></edit-filter>
     </div>
 </template>
 <script>
-import {mapGetters} from 'vuex';
+import {mapGetters, mapMutations} from 'vuex';
+import EditProgramme from '../add_edit_module/EditProgramme';
+import EditFilter from '../add_edit_module/EditFilter';
 import _ from 'lodash';
 export default {
     name: 'NewsFixedModule',
+    components: {
+        EditProgramme,
+        EditFilter
+    },
     props: {
         isEdit: {
             type: Boolean,
@@ -93,31 +104,48 @@ export default {
     },
     computed: {
         ...mapGetters({
-            pageLayoutList: 'pageLayout/pageLayoutList'
+            layout: 'pageLayout/layout'
         }),
-        fixedLayoutItems() {
-            return (this.pageLayoutList[0] &&
-                    this.pageLayoutList[0].layoutItemMultiList) || [];
+        getImageUriByKeyAndIndex() {
+            return (key, squareIndex) => {
+                let {navbarId} = this.$route.params;
+                let uri = _.get(this.layout, `${navbarId}.data.0.layoutItemMultiList.${squareIndex}.${key}.uri`);
+                return uri;
+            };
         },
         styleBgImageStr() {
-            return (index) => {
-                let items = (this.pageLayoutList[0] &&
-                    this.pageLayoutList[0].layoutItemMultiList) || [];
-                let uri = items[index] ? _.get(items[index], 'coverImage.uri') : '';
-                return `background-image: url(${uri})`;
+            return (squareIndex) => {
+                let bgStr = `background-image: url(${this.getImageUriByKeyAndIndex('coverImage', squareIndex)})`;
+                return bgStr;
             };
         }
     },
     data() {
-        return {};
-    },
-    created() {
-        console.log(this.isEdit);
+        return {
+            squareIndex: 0
+        };
     },
     methods: {
+        ...mapMutations({
+            saveLayoutToStore: 'pageLayout/saveLayoutToStore'
+        }),
         editFixedModuleHandler() {
             let {navbarId} = this.$route.params;
-            this.$router.push({ name: 'EditFixedModule', params: {navbarId} });
+            this.$router.push({ name: 'EditFixedModule', params: {navbarId, index: 0} });
+        },
+        selectProgramme(squareIndex) {
+            this.squareIndex = squareIndex;
+            this.$refs.selectProgrammeDialog.showDialog();
+        },
+        selectFilter(squareIndex) {
+            this.squareIndex = squareIndex;
+            this.$refs.selectFilterDialog.showDialog();
+        },
+        saveHandler() {
+            let {navbarId} = this.$route.params;
+            this.saveLayoutToStore();
+            this.$message.success('保存成功');
+            this.$router.push({ name: 'PageLayout', params: {navbarId} });
         }
     }
 };

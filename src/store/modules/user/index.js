@@ -4,6 +4,7 @@ import router from '../../../router';
 import Cookies from 'js-cookie';
 import wsCache from '../../../util/webStorage';
 import store from '../../index';
+import init from '@/util/init';
 
 const state = {
     name: '',
@@ -64,6 +65,9 @@ const actions = {
                                 wsCache.localStorage.set('servers', res.data);
                             }
                         });
+
+                    //  登录成功后初始化页面布局的数据结构
+                    init();
                 }
                 resolve(res);
             }).catch(err => {

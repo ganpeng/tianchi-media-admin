@@ -575,7 +575,7 @@ let router = new Router({
                     component: PageLayout
                 },
                 {
-                    path: '/page-layout/:navbarId/edit-fixed',
+                    path: '/page-layout/:navbarId/edit-fixed/:index',
                     name: 'EditFixedModule',
                     component: EditFixedModule
                 }

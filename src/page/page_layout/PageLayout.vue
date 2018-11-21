@@ -17,6 +17,10 @@
                 :layoutTemplate="layoutTemplate"
             ></fixed-layout>
         </div>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-two" @click="saveLayoutHandler">保存</el-button>
+            <el-button class="btn-style-three" @click="clearLayoutHandler">清除修改</el-button>
+        </div>
     </div>
 </template>
 <script>
@@ -40,12 +44,12 @@ export default {
             if (res && res.code === 0) {
                 let {id, layoutTemplate} = res.data[0];
                 if (parseInt(navbarId) === 0) {
+                    this.$router.push({ name: 'PageLayout', params: {navbarId: id} });
                     this.activeId = id;
                 } else {
                     this.activeId = navbarId;
                 }
                 this.layoutTemplate = layoutTemplate;
-                this.getPageLayoutByNavbarId(this.activeId);
             }
         } catch (err) {
             console.log(err);
@@ -59,13 +63,24 @@ export default {
     methods: {
         ...mapActions({
             getNavbarList: 'pageLayout/getNavbarList',
-            getPageLayoutByNavbarId: 'pageLayout/getPageLayoutByNavbarId'
+            savePageLayoutByNavbarId: 'pageLayout/savePageLayoutByNavbarId'
         }),
         columnsTabChangeHandler(id, layoutTemplate) {
             this.activeId = id;
             this.layoutTemplate = layoutTemplate;
             this.$router.push({ name: 'PageLayout', params: {navbarId: id} });
-            this.getPageLayoutByNavbarId(this.activeId);
+        },
+        async saveLayoutHandler() {
+            try {
+                let res = await this.savePageLayoutByNavbarId(this.activeId);
+                if (res && res.code === 0) {
+                    this.$message.success('保存成功');
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        clearLayoutHandler() {
         }
     }
 };

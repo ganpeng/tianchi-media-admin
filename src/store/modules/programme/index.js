@@ -53,12 +53,15 @@ const defaultProgramme = {
     horizontalCoverImage: {},
     // 节目类别
     categoryList: [],
+    //  节目版式
+    programmeTemplate: '',
     // 年级
     gradeList: [],
     // 规格
     specList: [],
     // 科目
     subject: '',
+    cornerMark: { },
     // 赛事
     contest: '',
     // 播放平台
@@ -824,8 +827,21 @@ const mutations = {
     deleteFigureById(state, payload) {
         let {id} = payload;
         state.video.video.figureList = state.video.video.figureList.filter((figure) => figure.id !== id);
-    }
+    },
     //  视频中figureList的增删改查结束
+    updateProgrammeMark(state, payload) {
+        let {key, checked} = payload;
+        if (checked) {
+            state.programme.cornerMark[key] = {
+                caption: '',
+                id: '',
+                imageUri: '',
+                markType: ''
+            };
+        } else {
+            delete state.programme.cornerMark[key];
+        }
+    }
 };
 
 /**
@@ -951,6 +967,33 @@ const actions = {
                     produceAreaList: [state.searchFields.produceAreaList],
                     categoryIdList: [state.searchFields.categoryIdList],
                     programmeTypeIdList: [state.searchFields.programmeTypeIdList]
+                });
+                let params = Object.assign({}, searchFields, {
+                    pageSize: state.pagination.pageSize,
+                    pageNum: state.pagination.pageNum - 1
+                });
+                let res = await service.getProgrammeList(params);
+                if (res && res.code === 0) {
+                    let {pageNum, pageSize, total, list} = res.data;
+                    commit('setProgrammeList', {list});
+                    commit('setProgrammePagination', {pageSize, pageNum: pageNum + 1, total});
+                }
+                isLoading = false;
+                return res;
+            }
+        } catch (err) {
+            isLoading = false;
+        }
+    },
+    /**
+     * 获取特定类型的节目列表
+     */
+    async getProgrammeListByNews({commit, state}) {
+        try {
+            if (!isLoading) {
+                isLoading = true;
+                let searchFields = Object.assign({}, state.searchFields, {
+                    programmeCategoryIdList: state.global.categoryList.filter((item) => item.signCode === 'NEWS').map((item) => item.id)
                 });
                 let params = Object.assign({}, searchFields, {
                     pageSize: state.pagination.pageSize,

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import store from 'store';
 import service from '../../../service';
 
 //  推荐专题（背景渲染） SUBJECT,
@@ -98,14 +99,22 @@ const defaultPersonSubject = {
     pagination: _.cloneDeep(defaultPagination)
 };
 
+const defaultProgrammeSubject = {
+    name: '', //  搜索的关键字
+    list: [],
+    pagination: _.cloneDeep(defaultPagination)
+};
+
 const defaultState = {
     navbarList: [],
     //  每个栏目的布局
     pageLayoutList: [],
+    layout: store.get('layoutStore'),
     personModule: _.cloneDeep(defaultPersonModule),
     personSubjectModule: _.cloneDeep(defaultPersonSubjectModule),
     //  获取列表的相应接口
-    personSubject: _.cloneDeep(defaultPersonSubject)
+    personSubject: _.cloneDeep(defaultPersonSubject),
+    programmeSubject: _.cloneDeep(defaultProgrammeSubject)
 };
 
 const state = _.cloneDeep(defaultState);
@@ -113,6 +122,19 @@ const state = _.cloneDeep(defaultState);
 const getters = {
     navbarList(state) {
         return state.navbarList;
+    },
+    getLayoutTemplateByNavbarId(state) {
+        return (id) => {
+            return state.layout[id].layoutTemplate;
+        };
+    },
+    getLayoutListByNavbarId(state) {
+        return (id) => {
+            return state.layout[id].data;
+        };
+    },
+    layout() {
+        return state.layout;
     },
     pageLayoutList(state) {
         return state.pageLayoutList;
@@ -123,8 +145,13 @@ const getters = {
     personSubjectModule(state) {
         return state.personSubjectModule;
     },
+    //  人物专题列表
     personSubject(state) {
         return state.personSubject;
+    },
+    //  节目专题列表
+    programmeSubject(state) {
+        return state.programmeSubject;
     }
 };
 
@@ -137,6 +164,23 @@ const mutations = {
         let {pageLayoutList} = payload;
         state.pageLayoutList = pageLayoutList;
     },
+
+    //  layout相关的操作开始
+    updateLayoutItemByIndex(state, payload) {
+        let {index, navbarId, squareIndex, key, value} = payload;
+        _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}[${key}]`, value);
+    },
+    setLayoutItemByIndex(state, payload) {
+        let {index, navbarId, squareIndex, layoutItem} = payload;
+        _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}`, layoutItem);
+    },
+    updateLayout(state) {
+        state.layout = store.get('layoutStore');
+    },
+    saveLayoutToStore(state) {
+        store.set('layoutStore', state.layout);
+    },
+    //  layout相关的操作结束
     //  人物模块相关操作
     resetPersonModule(state) {
         state.personModule = _.cloneDeep(defaultPersonModule);
@@ -184,6 +228,36 @@ const mutations = {
             return personSubject;
         });
     },
+    //  节目专题的相关操作
+    resetProgrammeSubject(state) {
+        state.programmeSubject = _.cloneDeep(defaultProgrammeSubject);
+    },
+    updateProgrammeSubject(state, payload) {
+        let {key, value} = payload;
+        state.programmeSubject[key] = value;
+    },
+    setProgrammeSubjectPagination(state, payload) {
+        state.programmeSubject.pagination.pageSize = payload.pageSize;
+        state.programmeSubject.pagination.pageNum = payload.pageNum;
+        state.programmeSubject.pagination.total = payload.total;
+    },
+    updateProgrammeSubjectPagination(state, payload) {
+        let {key, value} = payload;
+        state.programmeSubject.pagination[key] = value;
+    },
+    addImageToProgrammeSubjectListById(state, payload) {
+        let {id, image} = payload;
+        state.programmeSubject.list = state.programmeSubject.list.map((programmeSubject) => {
+            if (programmeSubject.id === id) {
+                programmeSubject.posterImageList = programmeSubject.posterImageList.filter((item) => {
+                    return parseInt(item.width) !== 260 && parseInt(item.height) !== 600;
+                });
+                programmeSubject.posterImageList.push(image);
+                programmeSubject.posterImageList = _.uniqBy(programmeSubject.posterImageList, 'id');
+            }
+            return programmeSubject;
+        });
+    },
     //  人物专题模块相关操作
     resetPersonSubjectModule(state) {
         state.personSubjectModule = _.cloneDeep(defaultPersonSubjectModule);
@@ -222,6 +296,15 @@ const actions = {
             console.log(err);
         }
     },
+    async savePageLayoutByNavbarId({commit, state}, id) {
+        try {
+            let {data} = state.layout[id];
+            let res = await service.savePageLayoutByNavbarId(id, data);
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    },
     //  获取人物专题列表
     async getPersonSubjectList({commit, state}) {
         try {
@@ -238,10 +321,35 @@ const actions = {
             console.log(err);
         }
     },
-    //  根据专题的id更新专题
+    async getProgrammeSubjectList({commit, state}) {
+        try {
+            let {name, pagination: {pageSize, pageNum}} = state.programmeSubject;
+            let params = Object.assign({}, { name, pageSize, pageNum: pageNum - 1 });
+            let res = await service.getProgrammeSubjectList(params);
+            if (res && res.code === 0) {
+                let {pageNum, pageSize, total, list} = res.data;
+                commit('updateProgrammeSubject', {key: 'list', value: list});
+                commit('setProgrammeSubjectPagination', {pageSize, pageNum: pageNum + 1, total});
+            }
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    //  根据人物专题的id更新人物专题
     async updateSubjectById({commit, state}, id) {
         try {
             let subject = state.personSubject.list.find((personSubject) => personSubject.id === id);
+            let res = await service.updateSubjectById(id, subject);
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    //  根据节目专题的ID更新节目专题
+    async updateProgrammeSubjectById({commit, state}, id) {
+        try {
+            let subject = state.programmeSubject.list.find((programmeSubject) => programmeSubject.id === id);
             let res = await service.updateSubjectById(id, subject);
             return res;
         } catch (err) {

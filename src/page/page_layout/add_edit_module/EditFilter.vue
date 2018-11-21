@@ -1,158 +1,170 @@
-<!--内容管理-栏目管理-设置混排内的筛选组件-->
+<!-- 设置筛选 -->
 <template>
     <div class="text-center">
-        <h3 class="text-left">1.请设置筛选条件：</h3>
-        <el-select v-model="categorySignCode" clearable placeholder="请选择栏目类别" @change="setCategory">
-            <el-option
-                v-for="item in categoryOptions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.signCode">
-            </el-option>
-        </el-select>
-        <el-form :inline="true" class="text-left filters">
-            <el-form-item :label="item.name" v-for="(item, index) in classDictionary[categorySignCode]" :key="index">
-                <!--二级分类-->
-                <el-select v-if="item.type === 'CLASS'"
-                           v-model="selectValue.typeId" clearable placeholder='请选择二级分类'>
-                    <el-option
-                        v-for="item in typeOptions"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                    </el-option>
-                </el-select>
-                <!--地区-->
-                <el-select v-if="item.type === 'AREA'"
-                           v-model="selectValue.areaGroup" clearable placeholder='请选择相应地区'>
-                    <el-option
-                        v-for="item in areaOptions"
-                        :key="item"
-                        :label="item"
-                        :value="item">
-                    </el-option>
-                </el-select>
-                <!--时间-->
-                <el-select v-if="item.type === 'TIME'"
-                           v-model="selectValue.time" clearable placeholder='请选择相应时间'>
-                    <el-option
-                        v-for="item in timeOptions"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.name">
-                    </el-option>
-                </el-select>
-                <!--节目规格-->
-                <el-select v-if="item.type === 'SPEC'"
-                           v-model="selectValue.spec" clearable placeholder='请选择节目规格'>
-                    <el-option
-                        v-for="item in specOptions"
-                        :key="item"
-                        :label="item"
-                        :value="item">
-                    </el-option>
-                </el-select>
-                <!--网站-->
-                <el-select v-if="item.type === 'PLATFORM'"
-                           v-model="selectValue.platform" clearable placeholder='请选择网站'>
-                    <el-option
-                        v-for="item in platformOptions"
-                        :key="item.value"
-                        :label="item.value"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-                <!--出品方-->
-                <el-select v-if="item.type === 'ANNOUNCER'"
-                           v-model="selectValue.announcer" clearable placeholder='请选择出品方'>
-                    <el-option
-                        v-for="item in announcerOptions"
-                        :key="item.value"
-                        :label="item.value"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-                <!--赛事-->
-                <el-select v-if="item.type === 'CONTEST'"
-                           v-model="selectValue.contest" clearable placeholder='请选择赛事'>
-                    <el-option
-                        v-for="item in contestOptions"
-                        :key="item.value"
-                        :label="item.value"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-                <!--人物-->
-                <el-select v-if="item.type === 'FIGURE'"
-                           v-model="selectValue.figure" clearable placeholder='请选择人物'>
-                    <el-option
-                        v-for="item in figureOptions"
-                        :key="item.value"
-                        :label="item.value"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-                <!--年级-->
-                <el-select v-if="item.type === 'GRADE'"
-                           v-model="selectValue.grade" clearable placeholder='请选择年级'>
-                    <el-option
-                        v-for="item in gradeOptions"
-                        :key="item"
-                        :label="item"
-                        :value="item">
-                    </el-option>
-                </el-select>
-                <!--科目-->
-                <el-select v-if="item.type === 'SUBJECT'"
-                           v-model="selectValue.subject" clearable placeholder='请选择科目'>
-                    <el-option
-                        v-for="item in subjectOptions"
-                        :key="item"
-                        :label="item"
-                        :value="item">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-        </el-form>
-        <h3 class="text-left">2.请设置筛选项推荐图片：</h3>
-        <div v-if="coverImage && coverImage.uri"
-             :style="{ 'background-image': 'url(' + appendImagePrefix(coverImage.uri) + ')'}"
-             class="image-box">
-        </div>
-        <div class="add-box">
-            <el-button class="create-blue-btn contain-svg-icon" @click="imageUploadDialogVisible = true">
-                <svg-icon icon-class="image"></svg-icon>
-                添加图片
-            </el-button>
-        </div>
-        <div class="text-right">
-            <el-button type="primary" @click="complete">确 定</el-button>
-        </div>
-        <upload-image
-            :size='size'
-            title="上传筛选推荐项封面图片"
-            :successHandler="addPosterImage"
-            :imageUploadDialogVisible="imageUploadDialogVisible"
-            v-on:changeImageDialogStatus="closeImageDialog($event)">
-        </upload-image>
+        <el-dialog
+            title="设置为节目"
+            class="my-dialog"
+            width="80%"
+            :visible.sync="dialogVisible"
+            :show-close="true"
+            :before-close="closeDialog"
+            @open="dialogOpenHandler"
+            :close-on-click-modal="false"
+            :close-on-press-escape="false"
+            :append-to-body="true">
+            <el-form :inline="false" class="text-left filters" label-width="180px">
+                <el-form-item label="1.设置筛选条件">
+                    <el-select v-model="categorySignCode" clearable placeholder="请选择栏目类别" @change="setCategory">
+                        <el-option
+                            v-for="item in categoryOptions"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.signCode">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item :label="item.name" v-for="(item) in classDictionary[categorySignCode]" :key="item.name">
+                    <!--二级分类-->
+                    <el-select v-if="item.type === 'CLASS'"
+                            v-model="selectValue.typeId" clearable placeholder='请选择二级分类'>
+                        <el-option
+                            v-for="item in typeOptions"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                        </el-option>
+                    </el-select>
+                    <!--地区-->
+                    <el-select v-if="item.type === 'AREA'"
+                            v-model="selectValue.areaGroup" clearable placeholder='请选择相应地区'>
+                        <el-option
+                            v-for="item in areaOptions"
+                            :key="item"
+                            :label="item"
+                            :value="item">
+                        </el-option>
+                    </el-select>
+                    <!--时间-->
+                    <el-select v-if="item.type === 'TIME'"
+                            v-model="selectValue.time" clearable placeholder='请选择相应时间'>
+                        <el-option
+                            v-for="item in timeOptions"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.name">
+                        </el-option>
+                    </el-select>
+                    <!--节目规格-->
+                    <el-select v-if="item.type === 'SPEC'"
+                            v-model="selectValue.spec" clearable placeholder='请选择节目规格'>
+                        <el-option
+                            v-for="item in specOptions"
+                            :key="item"
+                            :label="item"
+                            :value="item">
+                        </el-option>
+                    </el-select>
+                    <!--网站-->
+                    <el-select v-if="item.type === 'PLATFORM'"
+                            v-model="selectValue.platform" clearable placeholder='请选择网站'>
+                        <el-option
+                            v-for="item in platformOptions"
+                            :key="item.value"
+                            :label="item.value"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <!--出品方-->
+                    <el-select v-if="item.type === 'ANNOUNCER'"
+                            v-model="selectValue.announcer" clearable placeholder='请选择出品方'>
+                        <el-option
+                            v-for="item in announcerOptions"
+                            :key="item.value"
+                            :label="item.value"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <!--赛事-->
+                    <el-select v-if="item.type === 'CONTEST'"
+                            v-model="selectValue.contest" clearable placeholder='请选择赛事'>
+                        <el-option
+                            v-for="item in contestOptions"
+                            :key="item.value"
+                            :label="item.value"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <!--人物-->
+                    <el-select v-if="item.type === 'FIGURE'"
+                            v-model="selectValue.figure" clearable placeholder='请选择人物'>
+                        <el-option
+                            v-for="item in figureOptions"
+                            :key="item.value"
+                            :label="item.value"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <!--年级-->
+                    <el-select v-if="item.type === 'GRADE'"
+                            v-model="selectValue.grade" clearable placeholder='请选择年级'>
+                        <el-option
+                            v-for="item in gradeOptions"
+                            :key="item"
+                            :label="item"
+                            :value="item">
+                        </el-option>
+                    </el-select>
+                    <!--科目-->
+                    <el-select v-if="item.type === 'SUBJECT'"
+                            v-model="selectValue.subject" clearable placeholder='请选择科目'>
+                        <el-option
+                            v-for="item in subjectOptions"
+                            :key="item"
+                            :label="item"
+                            :value="item">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="2.设置筛选项推荐图片">
+                    <single-image-uploader
+                        id="programmeImageUploaderThree"
+                        :uri="getImageByKey('coverImage') || ''"
+                        :uploadSuccessHandler="addPosterImage"
+                        :dimension="{width: 260, height: 260}"
+                        :allowResolutions="[{width: 260, height: 260}]"
+                    ></single-image-uploader>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer text-right margin-top-l">
+                <!-- <el-button @click="closeDialog">取 消</el-button> -->
+                <el-button  type="primary" @click="complete">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
+    import _ from 'lodash';
+    import {mapGetters, mapMutations} from 'vuex';
     import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import dict from '@/util/config/dictionary';
     import CATALOGUE_CONFIG_MAP from '@/util/config/catalogue';
+    import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 
     export default {
-        name: 'SetItemFilter',
+        name: 'EditFilter',
         /** imageSpec 当前选择的节目中适合当前板式的图片集合
          *  originState 需要回填的筛选项的信息
          * */
-        props: ['imageSpec', 'originState'],
+        props: ['imageSpec', 'squareIndex'],
         components: {
-            UploadImage
+            UploadImage,
+            SingleImageUploader
         },
         data() {
             return {
+                //  弹框相关
+                dialogVisible: false,
+                //  弹框相关结束
                 categorySignCode: '',
                 categoryOptions: [],
                 selectValue: {
@@ -201,11 +213,30 @@
             };
         },
         mounted() {
-            this.init();
+            // this.init();
+        },
+        computed: {
+            ...mapGetters({
+                layout: 'pageLayout/layout'
+            }),
+            getImageByKey() {
+                return (key) => {
+                    let {navbarId, index} = this.$route.params;
+                    return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.${key}.uri`);
+                };
+            }
         },
         methods: {
+            ...mapMutations({
+                updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
+                setLayoutItemByIndex: 'pageLayout/setLayoutItemByIndex'
+            }),
+            getOriginState() {
+                let {navbarId, index} = this.$route.params;
+                return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}`);
+            },
             init() {
-                this.initImageSize();
+                // this.initImageSize();
                 this.initTime();
                 this.initArea();
                 this.initSpec();
@@ -213,12 +244,15 @@
                 this.initGrade();
                 this.initSubject();
                 // 回填相应的数据
-                if (this.originState && this.originState.coverImage) {
-                    this.coverImage = this.originState.coverImage;
-                    this.categorySignCode = this.originState.layoutItemType.replace('_PROGRAMME_CATEGORY', '');
-                    let params = JSON.parse(this.originState.params);
-                    for (let key in params) {
-                        this.selectValue[key] = params[key];
+                // console.log(this.getOriginState);
+                if (this.getOriginState() && this.getOriginState().coverImage) {
+                    this.coverImage = this.getOriginState().coverImage;
+                    this.categorySignCode = this.getOriginState().layoutItemType.replace('_PROGRAMME_CATEGORY', '');
+                    if (this.getOriginState().params) {
+                        let params = JSON.parse(this.getOriginState().params);
+                        for (let key in params) {
+                            this.selectValue[key] = params[key];
+                        }
                     }
                 }
                 this.$service.getProgrammeCategory().then(response => {
@@ -376,15 +410,24 @@
                 this.imageUploadDialogVisible = status;
             },
             // 添加封面图片
-            addPosterImage(coverImage) {
-                this.coverImage = coverImage.posterImage;
+            addPosterImage(image) {
+                // this.coverImage = coverImage.posterImage;
+                let {navbarId, index} = this.$route.params;
+                this.coverImage = image;
+                this.updateLayoutItemByIndex({
+                    index,
+                    navbarId,
+                    squareIndex: this.squareIndex,
+                    key: 'coverImage',
+                    value: image
+                });
             },
             complete() {
                 // 检测推荐筛选项的封面
                 if (!this.coverImage.id) {
                     this.$message({
                         message: '请设置推荐筛选项的封面',
-                        type: 'warning'
+                        type: 'error'
                     });
                     return;
                 }
@@ -424,49 +467,75 @@
                     layoutItemType: this.categorySignCode + '_PROGRAMME_CATEGORY',
                     coverImage: this.coverImage
                 };
-                this.$emit('setShuffleItem', filterItem);
+                let {navbarId, index} = this.$route.params;
+                this.setLayoutItemByIndex({
+                    index,
+                    navbarId,
+                    squareIndex: this.squareIndex,
+                    layoutItem: filterItem
+                });
+                // this.$emit('setShuffleItem', filterItem);
                 this.$message({
                     message: '成功设置混排模块的筛选项',
                     type: 'success'
                 });
+                this.closeDialog();
+            },
+            //  弹出框相关的操作
+            dialogOpenHandler() {
+                this.init();
+            },
+            showDialog() {
+                this.dialogVisible = true;
+            },
+            closeDialog() {
+                this.dialogVisible = false;
+                this.categorySignCode = '';
+                this.categoryOptions = [];
+                this.selectValue = {
+                    // 二级分类
+                    typeId: '',
+                    // 地区
+                    areaGroup: '',
+                    // 时间
+                    time: '',
+                    // 节目规格
+                    spec: '',
+                    // 网站
+                    platform: '',
+                    // 出品方
+                    announcer: '',
+                    // 赛事
+                    contest: '',
+                    // 人物
+                    figure: '',
+                    // 年级
+                    grade: '',
+                    // 科目
+                    subject: ''
+                };
+                this.typeOptions = [];
+                this.areaOptions = [];
+                this.timeOptions = [];
+                this.specOptions = [];
+                this.platformOptions = [];
+                // 包含网视、网络综艺、卫视综艺的频道
+                this.platformObject = {
+                    NETWORK: [],
+                    TV_SHOW_NETWORK: [],
+                    TV_SHOW_SATELLITE: []
+                };
+                this.announcerOptions = [];
+                this.contestOptions = [];
+                this.figureOptions = [];
+                this.gradeOptions = [];
+                this.subjectOptions = [];
+                this.classDictionary = dict.CLASS_FILTER_DICTIONARY;
+                this.size = [];
+                this.imageUploadDialogVisible = false;
+                this.coverImage = {};
+                this.entertainmentList = [];
             }
         }
     };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
-
-    h3 {
-        margin-top: 30px;
-        margin-bottom: 30px;
-        font-size: 18px;
-    }
-
-    .image-box {
-        height: 150px;
-        width: 500px;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-
-    .filters {
-        margin-top: 30px;
-    }
-
-    img {
-        display: block;
-        max-height: 180px;
-        max-width: 300px;
-    }
-
-    label {
-        text-align: center;
-        font-size: 16px;
-    }
-
-    .add-box {
-        margin-bottom: 30px;
-    }
-</style>

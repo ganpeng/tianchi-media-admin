@@ -585,6 +585,14 @@ const LAYOUT_TEMPLATE_LIST = [
         value: 'SUBJECT'
     },
     {
+        text: '节目专题',
+        value: 'PROGRAMME_SUBJECT'
+    },
+    {
+        text: '人物专题',
+        value: 'FIGURE_SUBJECT'
+    },
+    {
         text: '页面',
         value: 'LINK'
     },

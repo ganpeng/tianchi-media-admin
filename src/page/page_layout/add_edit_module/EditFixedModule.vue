@@ -4,13 +4,12 @@
         <div class="seperator-line"></div>
         <fixed-layout
             :isEdit="true"
-            :layoutTemplate="layoutTemplate"
+            :layoutTemplate="getLayoutTemplateByNavbarId(navbarId)"
         ></fixed-layout>
     </div>
 </template>
 <script>
 import {mapGetters, mapActions} from 'vuex';
-import _ from 'lodash';
 import FixedLayout from '../FixedLayout';
 export default {
     name: 'EditFixedModule',
@@ -18,23 +17,21 @@ export default {
         FixedLayout
     },
     data() {
-        return {};
+        return {
+            navbarId: this.$route.params.navbarId
+        };
     },
     created() {
-        let {navbarId} = this.$route.params;
-        this.getPageLayoutByNavbarId(navbarId);
+        this.getNavbarList();
     },
     computed: {
         ...mapGetters({
-            pageLayoutList: 'pageLayout/pageLayoutList'
-        }),
-        layoutTemplate() {
-            return this.pageLayoutList[0] ? _.get(this.pageLayoutList[0], 'layoutTemplate') : '';
-        }
+            getLayoutTemplateByNavbarId: 'pageLayout/getLayoutTemplateByNavbarId'
+        })
     },
     methods: {
         ...mapActions({
-            getPageLayoutByNavbarId: 'pageLayout/getPageLayoutByNavbarId'
+            getNavbarList: 'pageLayout/getNavbarList'
         })
     }
 };
