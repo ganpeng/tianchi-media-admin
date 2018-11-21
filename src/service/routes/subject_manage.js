@@ -33,19 +33,19 @@ export const createSubject = ({category, name, programmeCategoryList, tagList, b
  * 获取专题列表
  * @param name The name of subject.
  * @param category Including 'FIGURE' and 'PROGRAMME'.
- * @param subjectType Including 'TV_DRAMA'、 'MOVIE' and 'VARIETY_SHOW'.
  * @param pageNum The current page number.
  * @param pageSize The size of one page.
  */
-export const getSubjectList = ({name, category, programmeCategoryId, createdAtBegin, createdAtEnd, pageNum, pageSize}) => {
+export const getSubjectList = ({keyword, category, programmeCategoryId, createdAtBegin, createdAtEnd, pageNum, pageSize, visible}) => {
     const params = {
         pageNum: pageNum - 1,
         pageSize,
-        name,
+        keyword,
         category,
         programmeCategoryIdList: programmeCategoryId,
         createdAtBegin: createdAtBegin ? new Date(createdAtBegin).getTime() : '',
-        createdAtEnd: createdAtEnd ? new Date(createdAtEnd).getTime() : ''
+        createdAtEnd: createdAtEnd ? new Date(createdAtEnd).getTime() : '',
+        visible
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
@@ -108,4 +108,13 @@ export const batchDeleteSubject = ({idList}) => {
  */
 export const setSubjectVisible = (id) => {
     return service.patch(util.format('/v1/content/subject/{0}/visible', id));
+};
+
+/**
+ * 批量上下架专题
+ * @param idList The idList of subject.
+ * @param visible The visible of subject.
+ */
+export const batchUpdateSubjectStatus = ({idList, visible}) => {
+    return service.patch('/v1/content/subject/visible', {idList, visible});
 };

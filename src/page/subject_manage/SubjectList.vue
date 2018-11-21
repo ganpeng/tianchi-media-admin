@@ -111,11 +111,11 @@
             },
             // 批量上架
             batchShelve() {
-                this.$refs.subjectOperateTable.batchShelve();
+                this.$refs.subjectOperateTable.batchUpdateStatus(true);
             },
             // 批量下架
             batchUnShelve() {
-                this.$refs.subjectOperateTable.batchUnShelve();
+                this.$refs.subjectOperateTable.batchUpdateStatus(false);
             },
             // 批量删除
             batchRemove() {

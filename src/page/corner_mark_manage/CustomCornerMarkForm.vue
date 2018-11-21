@@ -13,11 +13,12 @@
         <el-form-item label="角标名称" prop="caption" required>
             <el-input v-model="cornerMarkInfo.caption" placeholder="请填写角标名称"></el-input>
         </el-form-item>
-        <el-form-item label="角标图片" prop="imageUri" required>
+        <el-form-item label="角标图片" prop="image" required>
             <label> (大角标125*99，小角标76*46)</label>
             <div>
-                <div class="image-box" v-if="cornerMarkInfo.imageUri">
-                    <img :src="cornerMarkInfo.imageUri">
+                <div class="image-box" v-if="cornerMarkInfo.image && cornerMarkInfo.image.uri">
+                    <img :src="cornerMarkInfo.image ? cornerMarkInfo.image.uri : '' | imageUrl"
+                         :class="{little:cornerMarkInfo.image.width.toString() === '76'}">
                 </div>
                 <single-image-uploader
                     :allowResolutions="allowResolutions"
@@ -47,8 +48,8 @@
                     callback();
                 }
             };
-            let checkImageUri = (rule, value, callback) => {
-                if (this.$util.isEmpty(value)) {
+            let checkImage = (rule, value, callback) => {
+                if (this.$util.isEmpty(this.cornerMarkInfo.image.uri)) {
                     return callback(new Error('请上传角标图片'));
                 } else {
                     callback();
@@ -59,15 +60,21 @@
                 cornerMarkInfo: {
                     id: '',
                     caption: '',
-                    imageUri: '',
+                    image: {
+                        id: '',
+                        name: '',
+                        uri: '',
+                        width: '',
+                        height: ''
+                    },
                     markType: 'CUSTOM'
                 },
                 infoRules: {
                     caption: [
                         {validator: checkCaption, trigger: 'blur'}
                     ],
-                    imageUri: [
-                        {validator: checkImageUri, trigger: 'change'}
+                    image: [
+                        {validator: checkImage, trigger: 'change'}
                     ]
                 },
                 allowResolutions: CORNER_MARK_DIMENSION
@@ -76,12 +83,14 @@
         methods: {
             initCornerMark(cornerMark) {
                 this.cornerMarkInfo.caption = cornerMark.caption;
-                this.cornerMarkInfo.imageUri = cornerMark.imageUri;
+                this.cornerMarkInfo.image.uri = cornerMark.image.uri;
+                this.cornerMarkInfo.image.width = cornerMark.image.width;
+                this.cornerMarkInfo.image.height = cornerMark.image.height;
                 this.cornerMarkInfo.id = cornerMark.id;
                 this.mode = 'EDIT';
             },
             uploadSuccessHandler(image) {
-                this.cornerMarkInfo.imageUri = image.uri;
+                this.cornerMarkInfo.image = image;
             },
             confirmCornerMark() {
                 this.$refs['subjectInfo'].validate((valid) => {
@@ -134,6 +143,10 @@
                 margin: auto;
                 height: 60px;
                 width: 60px;
+                &.little {
+                    width: 38px;
+                    height: 23px;
+                }
             }
         }
         .single-image-uploader-container {

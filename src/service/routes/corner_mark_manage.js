@@ -21,15 +21,15 @@ export const getCornerMarkList = ({markType}) => {
 /**
  * 添加角标
  */
-export const createCornerMark = ({markType, caption, imageUri}) => {
-    return service.post('/v1/content/mark', {markType, caption, imageUri});
+export const createCornerMark = ({markType, caption, image}) => {
+    return service.post('/v1/content/mark', {markType, caption, image});
 };
 
 /**
  * 编辑角标
  */
-export const updateCornerMark = ({id, markType, caption, imageUri}) => {
-    return service.put('/v1/content/mark', {id, markType, caption, imageUri});
+export const updateCornerMark = ({id, markType, caption, image}) => {
+    return service.put('/v1/content/mark', {id, markType, caption, image});
 };
 
 /**

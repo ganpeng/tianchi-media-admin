@@ -33,7 +33,8 @@
                                 <i class="el-icon-circle-close" @click="removeCornerMark(item, index)"></i>
                             </div>
                             <p>
-                                <img :src="item.imageUri" :alt="item.caption"/>
+                                <img :src="item.image ? item.image.uri :''" :alt="item.caption"
+                                     :class="{little:item.image.width === '76'}"/>
                                 <i @click="openEditDialog(item)">编辑</i>
                             </p>
                         </li>

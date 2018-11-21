@@ -5,7 +5,7 @@
             <el-form :inline="true" class="filter-form">
                 <el-form-item>
                     <el-input
-                        v-model="listQueryParams.name"
+                        v-model="listQueryParams.keyword"
                         clearable
                         class="border-input"
                         placeholder="专题名称等">
@@ -121,7 +121,7 @@
                     programmeCategoryId: '',
                     createdAtBegin: '',
                     createdAtEnd: '',
-                    name: ''
+                    keyword: ''
                 },
                 programmeCategoryOptions: [],
                 visibleOptions: [{
@@ -150,7 +150,7 @@
                 this.listQueryParams.programmeCategoryId = params.programmeCategoryId ? params.programmeCategoryId : '';
                 this.listQueryParams.createdAtBegin = params.createdAtBegin ? params.createdAtBegin : '';
                 this.listQueryParams.createdAtEnd = params.createdAtEnd ? params.createdAtEnd : '';
-                this.listQueryParams.name = params.name ? params.name : '';
+                this.listQueryParams.keyword = params.keyword ? params.keyword : '';
             },
             init() {
                 this.$service.getProgrammeCategory().then(response => {

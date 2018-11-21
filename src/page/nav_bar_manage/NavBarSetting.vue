@@ -5,42 +5,18 @@
         <ul class="preview-list">
             <li><label>新闻</label></li>
             <li><label>新闻</label></li>
-            <li><label>新闻</label></li>
-            <li><label>新闻</label></li>
-            <li><label>新闻</label></li>
-            <li><label>新闻</label></li>
-            <li><label>新闻</label></li>
-            <li><label>新闻</label></li>
         </ul>
-        <div class="content-title">
-            栏目调整
-            <el-button class="btn-style-two operate-edit">退出编辑</el-button>
-        </div>
+        <div class="content-title">栏目调整</div>
         <ul class="operate-list">
-            <li>
+            <li v-for="(item, index) in navBarList" :key="index">
                 <div>
-                    <label>新闻</label>
-                    <i class="el-icon-circle-close"></i>
+                    <label>{{item.name}}</label>
+                    <i class="el-icon-circle-close" @click="removeNavBar(item, index)"></i>
                 </div>
                 <p>
-                    <img src=""/>
-                    <el-switch
-                        active-color="#13ce66"
-                        inactive-color="#ff4949">
-                    </el-switch>
-                </p>
-            </li>
-            <li>
-                <div>
-                    <label>新闻</label>
-                    <i class="el-icon-circle-close"></i>
-                </div>
-                <p>
-                    <img src=""/>
-                    <el-switch
-                        active-color="#13ce66"
-                        inactive-color="#ff4949">
-                    </el-switch>
+                    <input class="my-switch switch-anim"
+                           type="checkbox"
+                           v-model="scope.row.visible"/>
                 </p>
             </li>
             <li class="upload-box" @click="createNavBar">
@@ -55,13 +31,30 @@
     export default {
         name: 'NavBarSetting',
         data() {
-            return {};
+            return {
+                navBarList: []
+            };
         },
         mounted() {
-            this.init();
+            this.getNavBarList();
         },
         methods: {
-            init() {
+            getNavBarList() {
+            },
+            removeNavBar(item, index) {
+                this.$confirm('此操作将删除角标, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.navBarList.splice(index, 1);
+                    this.$message.success('栏目在本地已删除，可点击保存按钮生效');
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             updateNavBarSetting() {
 
@@ -75,6 +68,7 @@
 
 <style lang="scss" scoped>
 
+    // 预览
     ul.preview-list {
         padding: 15px 0px;
         margin-bottom: 30px;
@@ -89,10 +83,7 @@
         }
     }
 
-    .operate-edit {
-        float: right;
-    }
-
+    // 栏目调整
     ul.operate-list {
         overflow: hidden;
         li {
@@ -105,11 +96,11 @@
             border-radius: 4px;
             /*上传框*/
             &.upload-box {
-                height: 100px;
+                height: 80px;
                 border: 1px solid #3E495E;
                 border-radius: 4px;
                 background: #252D3F;
-                line-height: 100px;
+                line-height: 80px;
                 cursor: pointer;
                 i {
                     font-size: 24px;
@@ -131,27 +122,16 @@
                     font-size: 16px;
                     color: #C0C4CC;
                     cursor: pointer;
+                    &:hover {
+                        color: #C35757;
+                    }
                 }
             }
             P {
-                height: 65px;
-                img {
-                    margin-top: 8px;
-                    width: 63px;
-                    height: 50px;
-                    &.little {
-                        margin-top: 21px;
-                        width: 38px;
-                        height: 23px;
-                    }
-                }
-                i {
-                    display: inline-block;
-                    margin-top: 23px;
-                    margin-left: 10px;
-                    font-size: 14px;
-                    color: #1989FA;
-                    cursor: pointer;
+                height: 45px;
+                .my-switch {
+                    float: right;
+                    margin-top: 15px;
                 }
             }
         }

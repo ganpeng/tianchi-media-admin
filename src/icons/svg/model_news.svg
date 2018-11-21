@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="370px" height="159px" viewBox="0 0 370 159" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
+    <title>新闻类版式</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="07-03栏目管理-添加栏目" transform="translate(-350.000000, -330.000000)" fill-rule="nonzero">
+            <g id="新闻类版式" transform="translate(350.000000, 330.000000)">
+                <rect id="Rectangle" stroke="#3E495E" stroke-width="0.5" x="0.25" y="0.75" width="369.5" height="157.5" rx="4"></rect>
+                <rect id="Rectangle-Copy" fill="#2A3040" x="190" y="10" width="82" height="43" rx="4"></rect>
+                <rect id="Rectangle-Copy" fill="#2A3040" x="280" y="10" width="82" height="43" rx="4"></rect>
+                <rect id="Rectangle-Copy" fill="#2A3040" x="190" y="61" width="82" height="43" rx="4"></rect>
+                <rect id="Rectangle-Copy" fill="#2A3040" x="190" y="112" width="82" height="36" rx="4"></rect>
+                <rect id="Rectangle-Copy" fill="#2A3040" x="280" y="112" width="82" height="36" rx="4"></rect>
+                <rect id="Rectangle-Copy" fill="#2A3040" x="10" y="112" width="82" height="36" rx="4"></rect>
+                <rect id="Rectangle-Copy" fill="#2A3040" x="100" y="112" width="82" height="36" rx="4"></rect>
+                <rect id="Rectangle-Copy" fill="#2A3040" x="280" y="61" width="82" height="43" rx="4"></rect>
+                <rect id="Rectangle" fill="#2A3040" x="10" y="10" width="172" height="94" rx="4"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

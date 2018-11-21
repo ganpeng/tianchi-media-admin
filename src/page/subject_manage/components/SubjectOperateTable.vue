@@ -155,12 +155,29 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            // 批量上架
-            batchShelve() {
-            },
-            // 批量下架
-            batchUnShelve() {
-
+            // 批量上下架
+            batchUpdateStatus(visible) {
+                this.$confirm('此操作将批量' + (visible ? '上架' : '下架') + '专题, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let idList = [];
+                    this.multipleSelection.map(subject => {
+                        idList.push(subject.id);
+                    });
+                    this.$service.batchUpdateSubjectStatus({idList, visible}).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('专题批量' + (visible ? '上架' : '下架') + '成功!');
+                            this.$emit('getSubjectList');
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消批量' + (visible ? '上架' : '下架')
+                    });
+                });
             },
             // 批量删除专题
             batchRemove() {
