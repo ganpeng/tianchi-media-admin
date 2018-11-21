@@ -79,3 +79,10 @@ export const getDuplicateList = ({pageNum, pageSize, name}) => {
         params: {pageNum, pageSize, name}
     });
 };
+
+/**
+ * 检查人物的别名是否存在
+ */
+export const checkAliasIsExist = (alias) => {
+    return service.get(`/v1/content/figure/duplicate/alias?alias=${alias}`);
+};

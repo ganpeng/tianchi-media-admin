@@ -1,0 +1,63 @@
+<template>
+    <div class="fixed-layout-container">
+        <recommend-fixed-module
+            :isEdit="isEdit"
+            v-if="layoutTemplate === 'FS_0'"
+        ></recommend-fixed-module>
+        <teleplay-fixed-module
+            :isEdit="isEdit"
+            v-if="layoutTemplate === 'FS_1'"
+        ></teleplay-fixed-module>
+        <movie-fixed-module
+            :isEdit="isEdit"
+            v-if="layoutTemplate === 'FS_2'"
+        ></movie-fixed-module>
+        <news-fixed-module
+            :isEdit="isEdit"
+            v-if="layoutTemplate === 'FS_3'"
+        ></news-fixed-module>
+        <category-fixed-module
+            :isEdit="isEdit"
+            v-if="layoutTemplate === 'FS_4'"
+        ></category-fixed-module>
+        <child-fixed-module
+            :isEdit="isEdit"
+            v-if="layoutTemplate === 'FS_5'"
+        ></child-fixed-module>
+    </div>
+</template>
+<script>
+import ChildFixedModule from './fixed_module/ChildFixedModule';
+import MovieFixedModule from './fixed_module/MovieFixedModule';
+import NewsFixedModule from './fixed_module/NewsFixedModule';
+import RecommendFixedModule from './fixed_module/RecommendFixedModule';
+import TeleplayFixedModule from './fixed_module/TeleplayFixedModule';
+import CategoryFixedModule from './fixed_module/CategoryFixedModule';
+export default {
+    name: 'FixedLayout',
+    components: {
+        ChildFixedModule,
+        MovieFixedModule,
+        NewsFixedModule,
+        RecommendFixedModule,
+        TeleplayFixedModule,
+        CategoryFixedModule
+    },
+    props: {
+        layoutTemplate: {
+            type: String,
+            required: true
+        },
+        isEdit: {
+            type: Boolean,
+            default: false
+        }
+    },
+    data() {
+        return {};
+    },
+    methods: {}
+};
+</script>
+<style lang="scss" scoped>
+</style>

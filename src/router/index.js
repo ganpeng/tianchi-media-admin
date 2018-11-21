@@ -89,6 +89,9 @@ import CornerMarkIndex from 'sysPage/corner_mark_manage/CornerMarkIndex';
 import LiveChannelImport from 'sysPage/channel_manage/LiveChannelImport';
 import VideoImport from 'sysPage/video_manage/VideoImport';
 
+//  页面布局
+import EditFixedModule from 'sysPage/page_layout/add_edit_module/EditFixedModule';
+
 Vue.use(Router);
 
 // 定义不需要token与权限的页面名称集合
@@ -567,9 +570,14 @@ let router = new Router({
                 },
                 //  页面布局
                 {
-                    path: '/page-layout',
+                    path: '/page-layout/:navbarId',
                     name: 'PageLayout',
                     component: PageLayout
+                },
+                {
+                    path: '/page-layout/:navbarId/edit-fixed',
+                    name: 'EditFixedModule',
+                    component: EditFixedModule
                 }
             ]
         },

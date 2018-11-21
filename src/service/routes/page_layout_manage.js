@@ -1,3 +1,5 @@
+import qs from 'querystring';
+import _ from 'lodash';
 import service from '../config';
 
 /**
@@ -20,4 +22,25 @@ export const getPageLayoutByNavbarId = (id) => {
  */
 export const postPageLayoutByNavbarId = (id, layoutBlockVoList) => {
     return service.post(`/v1/content/layout-block?navBarId=${id}`, layoutBlockVoList);
+};
+
+/**
+ * 获取人物专题列表
+ */
+export const getPersonSubjectList = (params) => {
+    const _params = {
+        category: 'FIGURE',
+        ...params
+    };
+    let paramsStr = qs.stringify(_.pickBy(_params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+    return service.get(`/v1/content/subject/page?${paramsStr}`);
+};
+
+/**
+ * 根据专题的id修改专题
+ */
+export const updateSubjectById = (id, subject) => {
+    return service.patch(`/v1/content/subject/${id}`, subject);
 };

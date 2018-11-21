@@ -157,6 +157,9 @@ export default {
                 name: [
                     { required: true, message: '请输入人物名称' }
                 ],
+                alias: [
+                    { required: true, message: '请输入人物别名' }
+                ],
                 description: [
                     { required: true, message: '请输入人物简介' }
                 ],
@@ -181,6 +184,9 @@ export default {
         }),
         inputHandler(value, key) {
             this.updateCurrentPerson({key, value});
+            if (key === 'name') {
+                this.updateCurrentPerson({key: 'alias', value});
+            }
         },
         uploadSuccessHandler(img) {
             this.updateCurrentPerson({key: 'avatarImage', value: img});

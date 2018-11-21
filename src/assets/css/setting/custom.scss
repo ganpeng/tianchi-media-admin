@@ -885,6 +885,48 @@
     }
 }
 
+.my-tags-two-container {
+    .header {
+        display: flex;
+        align-items: center;
+        height: 40px;
+        .count {
+            color: #fff;
+            font-size: 14px;
+            margin-right: 20px;
+        }
+        .el-dropdown-link {
+            font-size: 12px;
+            color: #6F7480;
+            min-width: 80px;
+            margin-left: 20px;
+            cursor: pointer;
+            &.active {
+                color: $mainColor;
+            }
+        }
+    }
+    .my-tags-two {
+        margin: 10px 0;
+        .el-tag {
+            background: #1989FA;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #FFF;
+            border: none;
+            margin-right: 10px;
+            .el-tag__close.el-icon-close {
+                color: #1989FA;
+                background: #C0C4CC;
+                &:hover {
+                    background: $dangerColor;
+                }
+            }
+        }
+    }
+}
+
+
 //  消息提示盒子样式重写
 .el-message-box {
     width: 500px;
@@ -1109,6 +1151,65 @@
                     .btn-uploader {
                         margin-bottom: 10px;
                     }
+                }
+            }
+        }
+    }
+}
+
+//  自定义小提示样式
+.my-tool-tips {
+    font-size: 12px;
+    color: #6F7480;
+    margin-left: 10px;
+}
+
+//   自定义多步骤条
+.my-steps {
+    &.el-steps {
+        width: 60%;
+        .el-step__head {
+            .el-step__line {
+                background: #637497;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            .el-step__icon {
+                width: 50px;
+                height: 50px;
+                .el-step__icon-inner {
+                    font-size: 16px;
+                }
+            }
+            &.is-wait {
+                .el-step__icon {
+                    background-color: #637497;
+                    border: none;
+                    .el-step__icon-inner {
+                        color: #A3D0FD;
+                    }
+                }
+            }
+            &.is-success {
+                .el-step__line {
+                    background: $successColor;
+                }
+                .el-step__icon {
+                    background-color: $successColor;
+                    border: none;
+                    .el-step__icon-inner {
+                        color: #fff;
+                    }
+                }
+            }
+        }
+        .el-step__main {
+            .el-step__title {
+                &.is-success {
+                    color: $successColor;
+                }
+                &.is-process {
+                    color: #fff;
                 }
             }
         }

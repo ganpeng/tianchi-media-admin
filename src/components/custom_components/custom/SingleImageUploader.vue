@@ -1,15 +1,18 @@
 <template>
     <div class="single-image-uploader-container">
         <div class="wrapper">
-            <div v-show="uri" class="img-wrapper">
+            <div :style="styleStr" v-show="uri" class="img-wrapper">
                 <img :style="styleStr" :src="uri" alt="">
                 <i @click="deleteImage" class="el-icon-error"></i>
             </div>
-            <div class="uploader" :style="styleStr">
-                <label class="ui_button ui_button_primary" for="single-image-uploader">
-                    <i class="el-icon-plus"></i>
-                </label>
-                <input name="file" ref="singleImageUploader" :disabled="isUploading" class="el-upload__input" type="file" id="single-image-uploader" accept="image/*">
+            <div class="uploader-wrapper">
+                <div class="uploader" :style="styleStr">
+                    <label class="ui_button ui_button_primary" :for="id">
+                        <i class="el-icon-plus"></i>
+                    </label>
+                    <input name="file" ref="singleImageUploader" :disabled="isUploading" class="el-upload__input" type="file" :id="id" accept="image/*">
+                </div>
+                <p class="image-dimension">{{allowResolutions[0].width}}*{{allowResolutions[0].height}}</p>
             </div>
         </div>
     </div>
@@ -19,6 +22,10 @@ import {uploadRequest, promiseImageSize, filterSizeMatchFiles} from '../../../ut
 export default {
     name: 'SingleImageUploader',
     props: {
+        id: {
+            type: String,
+            default: 'single-image-uploader'
+        },
         dimension: {
             type: Object,
             default: () => {
@@ -53,7 +60,7 @@ export default {
     },
     created() {
         this.$nextTick(() => {
-            let testUpload = document.querySelector('#single-image-uploader');
+            let testUpload = document.querySelector(`#${this.id}`);
             testUpload.addEventListener('change', this.uploadChangeHandler.bind(this));
         });
     },
@@ -119,8 +126,8 @@ export default {
 }
 .img-wrapper {
     position: relative;
-    width: 100px;
-    height: 100px;
+    // width: 100px;
+    // height: 100px;
     margin-right: 10px;
     border: 1px solid #3E495E;
     border-radius: 4px;
@@ -146,5 +153,12 @@ export default {
     position: absolute;
     bottom: 0px;
     width: 100%;
+}
+.image-dimension {
+    font-size: 12px;
+    height: 22px;
+    line-height: 22px;
+    color: #6F7480;
+    text-align: center;
 }
 </style>

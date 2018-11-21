@@ -343,6 +343,15 @@ const actions = {
         } catch (err) {
             console.log(err);
         }
+    },
+    async checkAliasIsExist({commit, state}) {
+        try {
+            let {alias} = state.currentPerson;
+            let res = await service.checkAliasIsExist(alias);
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
     }
 };
 

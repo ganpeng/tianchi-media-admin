@@ -83,7 +83,8 @@
             ...mapActions({
                 createPerson: 'person/createPerson',
                 updatePersonById: 'person/updatePersonById',
-                getPersonById: 'person/getPersonById'
+                getPersonById: 'person/getPersonById',
+                checkAliasIsExist: 'person/checkAliasIsExist'
             }),
             // 新增人物
              _createPerson() {
@@ -91,12 +92,21 @@
                     if (valid) {
                         if (_.get(this.person.avatarImage, 'uri')) {
                             this.isLoading = true;
-                            this.createPerson()
-                                .then((res) => {
-                                    this.$message.success('创建人物成功');
-                                    this.$router.push({ name: 'PersonList' });
-                                }).finally(() => {
-                                    this.isLoading = false;
+                            this.checkAliasIsExist()
+                                .then((result) => {
+                                    if (result && result.code === 0) {
+                                        if (!result.data) {
+                                            this.createPerson()
+                                                .then((res) => {
+                                                    this.$message.success('创建人物成功');
+                                                    this.$router.push({ name: 'PersonList' });
+                                                }).finally(() => {
+                                                    this.isLoading = false;
+                                                });
+                                        } else {
+                                            this.$message.error(`人物别名${this.person.alias}已存在`);
+                                        }
+                                    }
                                 });
                         } else {
                             this.$message.error('请上传人物头像');
@@ -112,12 +122,21 @@
                     if (valid) {
                         if (_.get(this.person.avatarImage, 'uri')) {
                             this.isLoading = true;
-                            this.updatePersonById()
-                                .then(() => {
-                                    this.$message.success('编辑人物成功');
-                                    this.$router.back();
-                                }).finally(() => {
-                                    this.isLoading = false;
+                            this.checkAliasIsExist()
+                                .then((result) => {
+                                    if (result && result.code === 0) {
+                                        if (!result.data) {
+                                            this.updatePersonById()
+                                                .then(() => {
+                                                    this.$message.success('编辑人物成功');
+                                                    this.$router.back();
+                                                }).finally(() => {
+                                                    this.isLoading = false;
+                                                });
+                                        } else {
+                                            this.$message.error(`人物别名${this.person.alias}已存在`);
+                                        }
+                                    }
                                 });
                         } else {
                             this.$message.error('请上传人物头像');
