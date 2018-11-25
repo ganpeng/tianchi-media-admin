@@ -1,56 +1,69 @@
 <!--轮播频道编辑页面-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'频道管理'},
-            {name:'编辑轮播频道'}]">
-        </custom-breadcrumb>
+        <div class="content-title">添加轮播频道</div>
+        <div class="seperator-line"></div>
         <!--基本信息-->
-        <div class="vice-block">
-            <h3 class="block-vice-title">频道基本信息</h3>
-            <el-form :model="channelInfo" :rules="infoRules" status-icon ref="channelInfo"
-                     label-width="100px"
-                     class="form-block">
-                <el-form-item label="名称" prop="innerName" required>
-                    <el-input v-model="channelInfo.innerName" placeholder="请填写20个字以内的名称"></el-input>
-                </el-form-item>
-                <el-form-item label="编号" prop="no" required>
-                    <el-input v-model="channelInfo.no" type="number" placeholder="请填写频道编号数字，例如'001'"></el-input>
-                </el-form-item>
-                <el-form-item label="类别" prop="typeIdList" required>
-                    <el-select v-model="channelInfo.typeIdList" multiple placeholder="请选择频道类别">
-                        <el-option
-                            v-for="item in typeOptions"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="组播地址" prop="multicastIp" required>
-                    <el-input v-model="channelInfo.multicastIp" placeholder="请填写组播地址"></el-input>
-                </el-form-item>
-                <el-form-item label="端口号" prop="multicastPort" required>
-                    <el-input v-model="channelInfo.multicastPort" type="number" placeholder="请填写端口号"></el-input>
-                </el-form-item>
-                <el-form-item label="tsId" prop="tsId">
-                    <el-input v-model="channelInfo.tsId" type="number" placeholder="请填写tsId"></el-input>
-                </el-form-item>
-                <el-form-item label="serviceId" prop="serviceId">
-                    <el-input v-model="channelInfo.serviceId" type="number" placeholder="请填写serviceId"></el-input>
-                </el-form-item>
-                <el-form-item label="所属服务器" prop="pushServer" required>
-                    <el-input v-model="channelInfo.pushServer" placeholder="请填写所属服务器的IP地址"></el-input>
-                </el-form-item>
-                <el-form-item label="状态：" prop="visible">
-                    <label>
-                        <i class="status-normal" v-if="channelInfo.visible">正常</i>
-                        <i class="status-abnormal" v-else>禁播</i>
-                    </label>
-                </el-form-item>
-            </el-form>
-        </div>
+        <el-form
+            ref="channelInfo"
+            :model="channelInfo"
+            :rules="infoRules"
+            status-icon
+            label-width="100px"
+            class="form-block">
+            <el-form-item label="频道名称" prop="name" required>
+                <el-input v-model="channelInfo.name" placeholder="请填写20个字以内的频道名称"></el-input>
+            </el-form-item>
+            <el-form-item label="内部名称" prop="innerName" required>
+                <el-input v-model="channelInfo.innerName" placeholder="请填写20个字以内的内部名称"></el-input>
+            </el-form-item>
+            <el-form-item label="频道编号" prop="no" required>
+                <el-input v-model="channelInfo.no" type="number" placeholder="请填写频道编号数字，例如'001'"></el-input>
+            </el-form-item>
+            <el-form-item label="频道类别" prop="typeIdList" required>
+                <el-select v-model="channelInfo.typeIdList" multiple placeholder="请选择频道类别">
+                    <el-option
+                        v-for="item in typeOptions"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="组播地址" prop="multicastIp" required>
+                <el-input v-model="channelInfo.multicastIp" placeholder="请填写组播地址"></el-input>
+            </el-form-item>
+            <el-form-item label="端口号" prop="multicastPort" required>
+                <el-input v-model="channelInfo.multicastPort" type="number" placeholder="请填写端口号"></el-input>
+            </el-form-item>
+            <el-form-item label="tsID" prop="tsId">
+                <el-input v-model="channelInfo.tsId" type="number" placeholder="请填写tsId"></el-input>
+            </el-form-item>
+            <el-form-item label="serviceID" prop="serviceId">
+                <el-input v-model="channelInfo.serviceId" type="number" placeholder="请填写serviceId"></el-input>
+            </el-form-item>
+            <el-form-item label="所属服务器" prop="pushServer" required>
+                <el-input v-model="channelInfo.pushServer" placeholder="请填写所属服务器的IP地址"></el-input>
+            </el-form-item>
+            <el-form-item label="状态" prop="visible" required>
+                <el-radio-group v-model="channelInfo.visible">
+                    <el-radio :label="true">正常</el-radio>
+                    <el-radio :label="false">禁播</el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item label="频道图" prop="logoUri" required>
+                <label>(260*260 频道图)</label>
+                <div>
+                    <div class="image-box" v-if="channelInfo.logoUri">
+                        <img :src="channelInfo.logoUri | imageUrl">
+                    </div>
+                    <single-image-uploader
+                        :allowResolutions="allowResolutions"
+                        :uploadSuccessHandler="uploadSuccessHandler">
+                    </single-image-uploader>
+                </div>
+            </el-form-item>
+        </el-form>
         <!--频道封面-->
         <div class="vice-block text-left">
             <h3 class="block-vice-title">频道封面</h3>
@@ -392,6 +405,7 @@
 <script>
     import Vue from 'vue';
     import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
+    import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
     import SelectMultipleVideo from './SelectMultipleVideo';
     import SortDialog from 'sysComponents/custom_components/custom/SortDialog';
     import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
@@ -405,14 +419,24 @@
             DisplayVideoDialog,
             SelectMultipleVideo,
             SortDialog,
-            UploadImage
+            UploadImage,
+            SingleImageUploader
         },
         data() {
-            let checkInnerName = (rule, value, callback) => {
+            let checkName = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('频道名称不能为空'));
                 } else if (this.$util.trim(value).length > 20) {
                     return callback(new Error('频道名称不能超过20个字'));
+                } else {
+                    callback();
+                }
+            };
+            let checkInnerName = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('内部名称不能为空'));
+                } else if (this.$util.trim(value).length > 20) {
+                    return callback(new Error('内部名称不能超过20个字'));
                 } else {
                     callback();
                 }
@@ -482,6 +506,7 @@
                 }
             };
             return {
+                allowResolutions: CHANNEL_LOGO_DIMENSION,
                 activeNames: ['1'],
                 originNameParams: {
                     prefix: '',
@@ -513,6 +538,9 @@
                     visible: false
                 },
                 infoRules: {
+                    name: [
+                        {validator: checkName, trigger: 'blur'}
+                    ],
                     innerName: [
                         {validator: checkInnerName, trigger: 'blur'}
                     ],

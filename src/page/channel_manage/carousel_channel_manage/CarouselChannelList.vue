@@ -28,22 +28,22 @@
                 </div>
                 <div class="float-right">
                     <el-button
-                        class="create-blue-btn contain-svg-icon"
+                        class="btn-style-two contain-svg-icon"
                         @click="createChannelDialogVisible = true">
                         <svg-icon icon-class="add"></svg-icon>
-                        新增频道
+                        添加
                     </el-button>
                     <el-button
-                        class="create-blue-btn contain-svg-icon"
+                        class="btn-style-two contain-svg-icon"
                         @click="createChannelByImportExcel">
-                        <svg-icon icon-class="upload"></svg-icon>
-                        批量导入频道
+                        <svg-icon icon-class="import"></svg-icon>
+                        导入
                     </el-button>
                     <el-button
-                        class="create-blue-btn contain-svg-icon"
+                        class="btn-style-two contain-svg-icon"
                         @click="editChannelByImportExcel">
-                        <svg-icon icon-class="edit"></svg-icon>
-                        批量修改频道
+                        <svg-icon icon-class="export"></svg-icon>
+                        修改
                     </el-button>
                 </div>
             </div>
@@ -97,8 +97,7 @@
                 },
                 pageNum: 1,
                 total: 0,
-                channelList: [],
-                multipleSelection: []
+                channelList: []
             };
         },
         mounted() {
@@ -127,7 +126,6 @@
                     if (response && response.code === 0) {
                         this.channelList = response.data.list;
                         this.total = response.data.total;
-                        this.multipleSelection = [];
                     }
                 });
             },

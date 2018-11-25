@@ -141,6 +141,7 @@
                         if (response && response.code === 0) {
                             this.$message.success('"' + item.name + '"' + '专题删除成功!');
                             this.$emit('getSubjectList');
+                            this.multipleSelection = [];
                         }
                     });
                 }).catch(() => {
@@ -169,6 +170,7 @@
                         if (response && response.code === 0) {
                             this.$message.success('专题批量' + (visible ? '上架' : '下架') + '成功!');
                             this.$emit('getSubjectList');
+                            this.multipleSelection = [];
                         }
                     });
                 }).catch(() => {
@@ -193,6 +195,7 @@
                         if (response && response.code === 0) {
                             this.$message.success('专题批量删除成功!');
                             this.$emit('getSubjectList');
+                            this.multipleSelection = [];
                         }
                     });
                 }).catch(() => {

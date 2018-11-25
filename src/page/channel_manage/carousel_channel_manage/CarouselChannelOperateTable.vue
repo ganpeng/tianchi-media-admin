@@ -11,28 +11,39 @@
         <el-table-column
             type="selection"
             align="center"
-            width="55">
+            width="60">
         </el-table-column>
         <el-table-column
             prop="no"
-            width="80px"
+            width="60px"
             align="center"
             label="编号">
         </el-table-column>
         <el-table-column
-            prop="innerName"
-            width="200px"
+            prop="name"
+            min-width="140px"
             align="center"
             label="名称">
             <template slot-scope="scope">
                 <span @click="toChannelDetail(scope.row)" class="ellipsis four name">
-                    {{scope.row.innerName}}
+                    {{scope.row.name}}
+                </span>
+            </template>
+        </el-table-column>
+        <el-table-column
+            prop="innerName"
+            min-width="140px"
+            align="center"
+            label="别名">
+            <template slot-scope="scope">
+                <span @click="toChannelDetail(scope.row)" class="ellipsis four name">
+                {{scope.row.innerName}}
                 </span>
             </template>
         </el-table-column>
         <el-table-column
             align="center"
-            width="120px"
+            min-width="140px"
             label="类别">
             <template slot-scope="scope">
                 <label>{{scope.row.typeList | jsonJoin('name')}}</label>
@@ -40,20 +51,22 @@
         </el-table-column>
         <el-table-column
             align="center"
+            min-width="120px"
             prop="multicastIp"
             label="组播地址">
         </el-table-column>
         <el-table-column
             align="center"
-            width="80px"
+            min-width="80px"
             prop="multicastPort"
             label="端口号">
         </el-table-column>
         <!--tsId-->
         <el-table-column
             align="center"
+            min-width="110px"
             prop="tsId"
-            label="tsId">
+            label="tsID">
             <template slot-scope="scope">
                 <label>{{scope.row.tsId ? scope.row.tsId : '------'}}</label>
             </template>
@@ -61,14 +74,16 @@
         <!--serviceId-->
         <el-table-column
             align="center"
+            min-width="120px"
             prop="serviceId"
-            label="serviceId">
+            label="serviceID">
             <template slot-scope="scope">
                 <label>{{scope.row.serviceId ? scope.row.serviceId : '------'}}</label>
             </template>
         </el-table-column>
         <el-table-column
             align="center"
+            min-width="180px"
             prop="pushServer"
             label="所属服务器">
             <template slot-scope="scope">
@@ -77,7 +92,7 @@
         </el-table-column>
         <el-table-column
             align="center"
-            width="80px"
+            min-width="100px"
             label="状态">
             <template slot-scope="scope">
                 <input
@@ -92,7 +107,7 @@
         </el-table-column>
         <el-table-column
             align="center"
-            width="100px"
+            width="110px"
             label="操作"
             class="operate">
             <template slot-scope="scope">
@@ -191,6 +206,7 @@
                                 message: '成功删除' + channelInfo.innerName + '频道!'
                             });
                             this.$emit('getChannelList');
+                            this.multipleSelection = [];
                         }
                     });
                 }).catch(() => {
@@ -221,6 +237,7 @@
                         this.$message.success('批量' + (visible ? '恢复' : '禁播') + '成功');
                         // 刷新页面数据
                         this.$emit('getChannelList');
+                        this.multipleSelection = [];
                         // 下架失败，设置提醒信息
                     } else if (response && response.code === 3604) {
                         let message = '';

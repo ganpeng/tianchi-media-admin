@@ -414,11 +414,14 @@ export const VIDEO_COVER_DIMENSION = [
     }
 ];
 
-//  直播频道logo图
+//  2.0直播频道logo图
 export const CHANNEL_LOGO_DIMENSION = [
     {
         value: '240*134',
-        label: 'Logo：240*134'
+        label: 'Logo：240*134',
+        width: 260,
+        height: 260,
+        styleName: '频道图'
     }
 ];
 
