@@ -1,22 +1,33 @@
-<!--栏目管理-->
+<!--2.0栏目管理-->
 <template>
     <div>
         <div class="content-title">栏目预览</div>
         <ul class="preview-list">
-            <li><label>新闻</label></li>
-            <li><label>新闻</label></li>
+            <li v-for="(item, index) in previewNavBarList" :key="index" v-if="item.visible">
+                <label v-if="item.name">{{item.name}}</label>
+                <label v-else><img :src="item.image.uri | imageUrl"></label>
+            </li>
         </ul>
         <div class="content-title">栏目调整</div>
-        <ul class="operate-list">
-            <li v-for="(item, index) in navBarList" :key="index">
+        <ul class="operate-list" id="operate-list">
+            <li v-for="(item, index) in navBarList"
+                :key="index"
+                :data-id="item.id"
+                :class="{'invisible-item':!item.visible}">
                 <div>
-                    <label>{{item.name}}</label>
-                    <i class="el-icon-circle-close" @click="removeNavBar(item, index)"></i>
+                    <label v-if="item.name">{{item.name}}</label>
+                    <label v-else><img :src="item.image.uri | imageUrl"></label>
+                    <i class="el-icon-circle-close"
+                       @click="removeNavBar(item, index)"
+                       v-if="item.type === 'CUSTOM'">
+                    </i>
                 </div>
                 <p>
-                    <input class="my-switch switch-anim"
-                           type="checkbox"
-                           v-model="scope.row.visible"/>
+                    <input
+                        v-if="item.type === 'CUSTOM'"
+                        class="my-switch switch-anim"
+                        type="checkbox"
+                        v-model="item.visible"/>
                 </p>
             </li>
             <li class="upload-box" @click="createNavBar">
@@ -32,22 +43,42 @@
         name: 'NavBarSetting',
         data() {
             return {
-                navBarList: []
+                navBarList: [],
+                previewNavBarList: []
             };
         },
         mounted() {
-            this.getNavBarList();
+            this.init();
         },
         methods: {
+            init() {
+                let that = this;
+                this.getNavBarList();
+                this.$dragula([document.getElementById('operate-list')], {
+                    moves: function (el) {
+                        return true;
+                    },
+                    direction: 'horizontal'
+                }).on('drop', function () {
+                    that.preview();
+                });
+            },
             getNavBarList() {
+                this.$service.getNavBarList().then(response => {
+                    if (response && response.code === 0) {
+                        this.navBarList = response.data;
+                        this.previewNavBarList = response.data.slice(0);
+                    }
+                });
             },
             removeNavBar(item, index) {
-                this.$confirm('此操作将删除角标, 是否继续?', '提示', {
+                this.$confirm('删除栏目后该栏目将不会在客户端中展示，可能会造成用户无法观看等问题，是否确认删除？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
                     this.navBarList.splice(index, 1);
+                    this.previewNavBarList.splice(index, 1);
                     this.$message.success('栏目在本地已删除，可点击保存按钮生效');
                 }).catch(() => {
                     this.$message({
@@ -57,10 +88,28 @@
                 });
             },
             updateNavBarSetting() {
-
+                this.$service.setNavBarList(this.previewNavBarList).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message.success('成功更新栏目列表');
+                        this.getNavBarList();
+                    }
+                });
             },
             createNavBar() {
                 this.$router.push({name: 'CreateNavBar'});
+            },
+            // 预览栏目调整情况
+            preview() {
+                let nodes = this.$el.querySelectorAll('#operate-list li');
+                let array = [];
+                for (let i = 0; i < nodes.length; i++) {
+                    for (let k = 0; k < this.navBarList.length; k++) {
+                        if (nodes[i].getAttribute('data-id') === this.navBarList[k].id) {
+                            array.push(this.navBarList[k]);
+                        }
+                    }
+                }
+                this.previewNavBarList = array;
             }
         }
     };
@@ -78,13 +127,23 @@
         li {
             float: left;
             margin-right: 28px;
-            font-size: 20px;
-            color: #637497;
+            /*名称或图片*/
+            label {
+                display: inline-block;
+                font-size: 20px;
+                color: #637497;
+                img {
+                    margin-top: 5px;
+                    width: 44px;
+                    height: 20px;
+                }
+            }
         }
     }
 
     // 栏目调整
     ul.operate-list {
+        margin-left: 20px;
         overflow: hidden;
         li {
             float: left;
@@ -94,6 +153,23 @@
             width: 150px;
             background: #2E384D;
             border-radius: 4px;
+            cursor: grab;
+            border: 1px solid #2E384D;
+            &.invisible-item {
+                label {
+                    color: #3E495E;
+                    img {
+                        -webkit-filter: opacity(.3);
+                        filter: opacity(.3);
+                    }
+                }
+            }
+            &:hover {
+                border: 1px solid #1989FA;
+                i {
+                    visibility: visible;
+                }
+            }
             /*上传框*/
             &.upload-box {
                 height: 80px;
@@ -108,20 +184,37 @@
                 }
             }
             div {
+                position: relative;
                 height: 35px;
                 line-height: 35px;
                 border-bottom: 1px solid #3E495E;
+                /*名称或图片*/
                 label {
-                    display: inline-block;
+                    display: -webkit-box;
                     width: 86px;
                     text-align: left;
                     font-size: 18px;
                     color: #A8ABB3;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    -ms-text-overflow: ellipsis;
+                    text-overflow: ellipsis;
+                    -webkit-line-clamp: 1;
+                    img {
+                        margin-top: 6px;
+                        width: 44px;
+                        height: 20px;
+                    }
                 }
+                /*删除按钮*/
                 i {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
                     font-size: 16px;
                     color: #C0C4CC;
                     cursor: pointer;
+                    visibility: hidden;
                     &:hover {
                         color: #C35757;
                     }
@@ -138,7 +231,74 @@
     }
 
     .update-btn {
-        margin-top: 200px;
+        margin-top: 240px;
+    }
+
+    /*
+    * 设置拖拽效果样式
+    */
+
+    .gu-mirror {
+        cursor: grabbing;
+        cursor: -moz-grabbing;
+        cursor: -webkit-grabbing;
+        background: #293550;
+        border: 1px solid #637497;
+        box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
+        border-radius: 4px;
+        transition: opacity 0.4s ease-in-out;
+        display: flex;
+        margin-right: 75px;
+        margin-bottom: 20px;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        flex-shrink: 0;
+        flex-grow: 0;
+        height: 90px;
+        width: 160px;
+        cursor: grab;
+        div {
+            position: relative;
+            height: 35px;
+            line-height: 35px;
+            border-bottom: 1px solid #3E495E;
+            /*名称或图片*/
+            label {
+                display: -webkit-box;
+                width: 86px;
+                text-align: left;
+                font-size: 18px;
+                color: #A8ABB3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                -ms-text-overflow: ellipsis;
+                text-overflow: ellipsis;
+                -webkit-line-clamp: 1;
+                img {
+                    margin-top: 6px;
+                    width: 44px;
+                    height: 20px;
+                }
+            }
+        }
+        P {
+            position: relative;
+            height: 45px;
+            width: 100%;
+            .my-switch {
+                position: absolute;
+                bottom: 13px;
+                right: 10px;
+            }
+        }
+    }
+
+    .container > div {
+        cursor: move;
+        cursor: grab;
+        cursor: -moz-grab;
+        cursor: -webkit-grab;
     }
 
 </style>
