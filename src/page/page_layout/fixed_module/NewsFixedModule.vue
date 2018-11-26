@@ -6,8 +6,8 @@
         <div class="top-field">
             <div class="wrapper">
                 <div :style="styleBgImageStr(0)" class="top-left-field">
-                    <el-button v-if="isEdit" @click="selectProgramme(0)" class="btn-style-two">
-                        选择节目
+                    <el-button v-if="isEdit" @click="selectProgrammeVideo(0)" class="btn-style-two">
+                        选择视频
                     </el-button>
                 </div>
             </div>
@@ -16,15 +16,15 @@
                     <div class="top-right-top-field">
                         <div class="wrapper">
                             <div :style="styleBgImageStr(1)" class="top-right-top-left-field">
-                                <el-button v-if="isEdit" @click="selectProgramme(1)" class="btn-style-two">
-                                    选择节目
+                                <el-button v-if="isEdit" @click="selectProgrammeVideo(1)" class="btn-style-two">
+                                    选择视频
                                 </el-button>
                             </div>
                         </div>
                         <div class="wrapper">
                             <div :style="styleBgImageStr(2)" class="top-right-top-right-field">
-                                <el-button v-if="isEdit" @click="selectProgramme(2)" class="btn-style-two">
-                                    选择节目
+                                <el-button v-if="isEdit" @click="selectProgrammeVideo(2)" class="btn-style-two">
+                                    选择视频
                                 </el-button>
                             </div>
                         </div>
@@ -32,15 +32,15 @@
                     <div class="top-right-bottom-field">
                         <div class="wrapper">
                             <div :style="styleBgImageStr(3)" class="top-right-bottom-left-field">
-                                <el-button v-if="isEdit" @click="selectProgramme(3)" class="btn-style-two">
-                                    选择节目
+                                <el-button v-if="isEdit" @click="selectProgrammeVideo(3)" class="btn-style-two">
+                                    选择视频
                                 </el-button>
                             </div>
                         </div>
                         <div class="wrapper">
                             <div :style="styleBgImageStr(4)" class="top-right-bottom-right-field">
-                                <el-button v-if="isEdit" @click="selectProgramme(4)" class="btn-style-two">
-                                    选择节目
+                                <el-button v-if="isEdit" @click="selectProgrammeVideo(4)" class="btn-style-two">
+                                    选择视频
                                 </el-button>
                             </div>
                         </div>
@@ -81,20 +81,23 @@
         <div v-if="isEdit" class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="saveHandler">保存</el-button>
         </div>
-        <edit-programme :squareIndex="squareIndex" ref="selectProgrammeDialog"></edit-programme>
-        <edit-filter :squareIndex="squareIndex" ref="selectFilterDialog"></edit-filter>
+        <edit-programme :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeDialog"></edit-programme>
+        <edit-filter :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectFilterDialog"></edit-filter>
+        <edit-programme-video :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeVideoDialog"></edit-programme-video>
     </div>
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex';
 import EditProgramme from '../add_edit_module/EditProgramme';
 import EditFilter from '../add_edit_module/EditFilter';
+import EditProgrammeVideo from '../add_edit_module/EditProgrammeVideo';
 import _ from 'lodash';
 export default {
     name: 'NewsFixedModule',
     components: {
         EditProgramme,
-        EditFilter
+        EditFilter,
+        EditProgrammeVideo
     },
     props: {
         isEdit: {
@@ -122,7 +125,8 @@ export default {
     },
     data() {
         return {
-            squareIndex: 0
+            squareIndex: 0,
+            allowResolutions: []
         };
     },
     methods: {
@@ -135,10 +139,17 @@ export default {
         },
         selectProgramme(squareIndex) {
             this.squareIndex = squareIndex;
+            this.setAllowResolutions(this.squareIndex);
             this.$refs.selectProgrammeDialog.showDialog();
+        },
+        selectProgrammeVideo(squareIndex) {
+            this.squareIndex = squareIndex;
+            this.setAllowResolutions(this.squareIndex);
+            this.$refs.selectProgrammeVideoDialog.showDialog();
         },
         selectFilter(squareIndex) {
             this.squareIndex = squareIndex;
+            this.setAllowResolutions(this.squareIndex);
             this.$refs.selectFilterDialog.showDialog();
         },
         saveHandler() {
@@ -146,16 +157,38 @@ export default {
             this.saveLayoutToStore();
             this.$message.success('保存成功');
             this.$router.push({ name: 'PageLayout', params: {navbarId} });
+        },
+        setAllowResolutions(squareIndex) {
+            switch (squareIndex) {
+                case 0:
+                    this.allowResolutions = [{width: 860, height: 472}];
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                    this.allowResolutions = [{width: 410, height: 216}];
+                    break;
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                    this.allowResolutions = [{width: 410, height: 180}];
+                    break;
+                default:
+                    throw new Error('未知的索引');
+            }
         }
     }
 };
 </script>
 <style lang="scss" scoped>
 @mixin paddingBg($paddingNum) {
+    position: relative;
     height: 0;
     padding-bottom: $paddingNum;
     background-color: #2A3040;
-    background-size: contain;
+    background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center center;
     border-radius: 8px;

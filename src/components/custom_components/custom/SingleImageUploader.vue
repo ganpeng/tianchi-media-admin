@@ -66,7 +66,11 @@ export default {
     },
     computed: {
         styleStr() {
-            return `width:${this.dimension.width}px;height:${this.dimension.height}px;`;
+            if (this.allowResolutions[0]) {
+                return `width:${this.allowResolutions[0].width * 0.3}px;height:${this.allowResolutions[0].height * 0.3}px;`;
+            } else {
+                return `width:${this.dimension.width}px;height:${this.dimension.height}px;`;
+            }
         }
     },
     methods: {

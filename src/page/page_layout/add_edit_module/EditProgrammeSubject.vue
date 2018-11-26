@@ -84,20 +84,18 @@
                         <el-col :span="24">
                             <el-form-item label="非焦点图" required>
                                 <single-image-uploader
-                                    id="programmeImageUploaderOne"
+                                    id="programmeSubjectImageUploaderOne"
                                     :uri="getImageByKey('coverImage') || ''"
                                     :uploadSuccessHandler="uploadProgrammeCoverImageSuccessHandler"
-                                    :dimension="{width: 260, height: 260}"
-                                    :allowResolutions="[{width: 260, height: 260}]"
+                                    :allowResolutions="allowResolutions"
                                 ></single-image-uploader>
                             </el-form-item>
                             <el-form-item label="焦点图">
                                 <single-image-uploader
-                                    id="programmeImageUploaderTwo"
+                                    id="programmeSubjectImageUploaderTwo"
                                     :uri="getImageByKey('coverImageBackground') || ''"
                                     :uploadSuccessHandler="uploadProgrammeBgImageSuccessHandler"
-                                    :dimension="{width: 260, height: 260}"
-                                    :allowResolutions="[{width: 260, height: 260}]"
+                                    :allowResolutions="allowResolutions"
                                 ></single-image-uploader>
                             </el-form-item>
                         </el-col>
@@ -141,6 +139,10 @@ export default {
         squareIndex: {
             type: Number,
             default: 0
+        },
+        allowResolutions: {
+            type: Array,
+            default: () => []
         }
     },
     components: {

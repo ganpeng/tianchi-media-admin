@@ -130,8 +130,7 @@
                         id="programmeImageUploaderThree"
                         :uri="getImageByKey('coverImage') || ''"
                         :uploadSuccessHandler="addPosterImage"
-                        :dimension="{width: 260, height: 260}"
-                        :allowResolutions="[{width: 260, height: 260}]"
+                        :allowResolutions="allowResolutions"
                     ></single-image-uploader>
                 </el-form-item>
             </el-form>
@@ -145,19 +144,23 @@
 <script>
     import _ from 'lodash';
     import {mapGetters, mapMutations} from 'vuex';
-    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import dict from '@/util/config/dictionary';
     import CATALOGUE_CONFIG_MAP from '@/util/config/catalogue';
     import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 
     export default {
         name: 'EditFilter',
-        /** imageSpec 当前选择的节目中适合当前板式的图片集合
-         *  originState 需要回填的筛选项的信息
-         * */
-        props: ['imageSpec', 'squareIndex'],
+        props: {
+            squareIndex: {
+                type: Number,
+                default: 0
+            },
+            allowResolutions: {
+                type: Array,
+                default: () => []
+            }
+        },
         components: {
-            UploadImage,
             SingleImageUploader
         },
         data() {
@@ -236,7 +239,6 @@
                 return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}`);
             },
             init() {
-                // this.initImageSize();
                 this.initTime();
                 this.initArea();
                 this.initSpec();
@@ -287,13 +289,6 @@
                             });
                         }
                     }
-                });
-            },
-            initImageSize() {
-                let spec = this.imageSpec.width + '*' + this.imageSpec.height;
-                this.size.push({
-                    value: spec,
-                    label: '当前尺寸：' + spec
                 });
             },
             // 当前年份往前一共三年以及'更早'

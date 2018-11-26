@@ -26,6 +26,19 @@ import service from '../service/index';
         FS_6, //  分类展示模块
  *
  */
+/**
+ *  renderType 的枚举
+    PROGRAMME, // 节目
+    CATALOGUE  // a
+    PROGRAMME_CATEGORY, // 节目类别
+    PROGRAMME_TYPE, // 节目分类
+    PROGRAMME_SUBJECT, // 节目专题
+    FIGURE_SUBJECT, // 人物专题
+    CHANNEL, // 频道
+    SHUFFLE, // 混排
+    FIGURE, // 人物模块
+    SPECIAL, // 特别模块
+ */
 
 export const defaultLayoutItem = {
     cornerMark: {},
@@ -49,22 +62,24 @@ export const defaultLayoutItem = {
 };
 
 function initLayoutItemByLayoutItemType(layoutItemType) {
-    return Object.assign({}, defaultLayoutItem, {layoutItemType: layoutItemType || ''});
+    return Object.assign({}, defaultLayoutItem, {layoutItemType: layoutItemType || 'PROGRAMME'});
 }
 
 function initFixedModuleData(layoutTemplate) {
     switch (layoutTemplate) {
-        case 'FS_3':
-            return _.times(9, () => _.cloneDeep(initLayoutItemByLayoutItemType('')));
         case 'FS_0':
             return _.times(6, () => _.cloneDeep(initLayoutItemByLayoutItemType('')));
         case 'FS_1':
             return _.times(6, () => _.cloneDeep(initLayoutItemByLayoutItemType('')));
         case 'FS_2':
             return _.times(7, () => _.cloneDeep(initLayoutItemByLayoutItemType('')));
-        case 'FS_6':
-            return _.times(6, () => _.cloneDeep(initLayoutItemByLayoutItemType('')));
+        case 'FS_3':
+            return _.times(9, () => _.cloneDeep(initLayoutItemByLayoutItemType('')));
         case 'FS_4':
+            return _.times(6, () => _.cloneDeep(initLayoutItemByLayoutItemType('')));
+        case 'FS_5':
+            return _.times(2, () => _.cloneDeep(initLayoutItemByLayoutItemType('')));
+        case 'FS_6':
             return _.times(6, () => _.cloneDeep(initLayoutItemByLayoutItemType('')));
         default:
             throw new Error(`类型${layoutTemplate}不存在`);
@@ -81,7 +96,7 @@ function checkLayoutStoreById(navbar, index) {
             layoutTemplate,
             navBarId: id,
             navBarName: name,
-            renderType: '',
+            renderType: 'SHUFFLE',
             subjectId: '',
             title: '',
             layoutItemMultiList: initFixedModuleData(layoutTemplate)

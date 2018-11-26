@@ -16,14 +16,14 @@
             :isEdit="isEdit"
             v-if="layoutTemplate === 'FS_3'"
         ></news-fixed-module>
-        <category-fixed-module
-            :isEdit="isEdit"
-            v-if="layoutTemplate === 'FS_4'"
-        ></category-fixed-module>
         <child-fixed-module
             :isEdit="isEdit"
             v-if="layoutTemplate === 'FS_5'"
         ></child-fixed-module>
+        <category-fixed-module
+            :isEdit="isEdit"
+            v-if="layoutTemplate === 'FS_6'"
+        ></category-fixed-module>
     </div>
 </template>
 <script>

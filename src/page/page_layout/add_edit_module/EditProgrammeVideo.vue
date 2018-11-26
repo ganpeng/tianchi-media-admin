@@ -1,8 +1,8 @@
-<!--  设置为节目的弹窗 -->
+<!--  设置为节目内视频的弹窗 -->
 <template>
-    <div class="edit-programme-container">
+    <div class="edit-programme-video-container">
         <el-dialog
-            title="设置为节目"
+            title="设置为节目内视频"
             class="my-dialog"
             width="80%"
             :visible.sync="dialogVisible"
@@ -15,9 +15,9 @@
             <div class="person-dialog-container">
                 <el-steps class="my-steps" :active="active" finish-status="success">
                     <el-step title="选择节目"></el-step>
+                    <el-step title="选择视频"></el-step>
                     <el-step title="选择图片"></el-step>
                     <el-step title="设置角标"></el-step>
-                    <el-step title="设置展示方式"></el-step>
                 </el-steps>
                 <div class="seperator-line"></div>
                 <div v-show="active === 0" class="step-one">
@@ -42,7 +42,7 @@
                         header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
                         <el-table-column  align="center" label="选择">
                             <template slot-scope="scope">
-                                <el-radio :value="getSquareProgrammeId" :label="scope.row.id" @input="setProgrammeSubjectHandler(scope.row)">&nbsp;</el-radio>
+                                <el-radio :value="getSquareProgrammeId" :label="scope.row.id" @input="setProgrammeHandler(scope.row)">&nbsp;</el-radio>
                             </template>
                         </el-table-column>
                         <el-table-column prop="code" align="center" width="120px" label="节目编号">
@@ -108,7 +108,133 @@
                         :total="programmePagination.total">
                     </el-pagination>
                 </div>
-                <div v-show="active === 1" class="step-two">
+                <div v-show="active === 1" class="step-three">
+                    <el-table
+                        class="my-table-style"
+                        :data="video.list"
+                        border
+                        :row-class-name="videoTableRowClassName"
+                        header-row-class-name="common-table-header"
+                        style="width: 100%">
+                        <el-table-column  align="center" label="选择">
+                            <template slot-scope="scope">
+                                <el-radio :value="getSquareProgrammeVideoId" :label="scope.row.id" @input="setProgrammeVideoHandler(scope.row)">&nbsp;</el-radio>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="storageVideoId"
+                            label="视频ID"
+                            align="center"
+                            width="120px">
+                                <template slot-scope="scope">
+                                    {{scope.row.storageVideoId | padEmpty}}
+                                </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="originName"
+                            label="文件名"
+                            align="center"
+                            width="180">
+                                <template slot-scope="scope">
+                                    <span class="ellipsis two">
+                                        {{scope.row.originName | padEmpty}}
+                                    </span>
+                                </template>
+                        </el-table-column>
+                        <el-table-column
+                            align="center"
+                            width="180"
+                            label="预览">
+                            <template slot-scope="scope">
+                                <div class="btn-icon-container">
+                                    <el-button
+                                        v-if="scope.row.m3u8For4K"
+                                        type="text"
+                                        size="small"
+                                        @click="displayVideoPlayer(scope.row.m3u8For4K, scope.row.originName)"
+                                        >4K</el-button>
+                                        <svg-icon
+                                            v-if="scope.row.m3u8For4K"
+                                            icon-class="copy_btn"
+                                            class-name="copy-btn pointer"
+                                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
+                                        </svg-icon>
+                                </div>
+                                <div class="btn-icon-container">
+                                    <el-button
+                                        v-if="scope.row.m3u8For1080P"
+                                        type="text"
+                                        size="small"
+                                        @click="displayVideoPlayer(scope.row.m3u8For1080P, scope.row.originName)"
+                                        >1080</el-button>
+                                        <svg-icon
+                                            v-if="scope.row.m3u8For1080P"
+                                            icon-class="copy_btn"
+                                            class-name="copy-btn pointer"
+                                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
+                                        </svg-icon>
+                                </div>
+                                <div class="btn-icon-container">
+                                    <el-button
+                                        v-if="scope.row.m3u8For720P"
+                                        type="text"
+                                        size="small"
+                                        @click="displayVideoPlayer(scope.row.m3u8For720P, scope.row.originName)"
+                                        >720</el-button>
+                                        <svg-icon
+                                            v-if="scope.row.m3u8For720P"
+                                            icon-class="copy_btn"
+                                            class-name="copy-btn pointer"
+                                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
+                                        </svg-icon>
+                                </div>
+                                <div class="btn-icon-container">
+                                    <el-button
+                                        v-if="scope.row.m3u8For480P"
+                                        type="text"
+                                        size="small"
+                                        @click="displayVideoPlayer(scope.row.m3u8For480P, scope.row.originName)"
+                                        >480</el-button>
+                                        <svg-icon
+                                            v-if="scope.row.m3u8For480P"
+                                            icon-class="copy_btn"
+                                            class-name="copy-btn pointer"
+                                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For480P)">
+                                        </svg-icon>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="type"
+                            align="center"
+                            min-width="80px"
+                            label="内容类型">
+                                <template slot-scope="scope">
+                                    {{getVideoType(scope.row.type) | padEmpty}}
+                                </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="duration"
+                            align="center"
+                            width="100"
+                            label="时长">
+                            <template slot-scope="scope">
+                                {{duration(scope.row.takeTimeInSec) | padEmpty}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="duration"
+                            align="center"
+                            min-width="80px"
+                            label="上下架">
+                            <template slot-scope="scope">
+                                <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                                <i v-else class="off-the-shelf">已下架</i>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+                <div v-show="active === 2" class="step-two">
                     <el-form class="my-el-form" status-icon label-width="120px" @submit.native.prevent>
                         <el-col :span="24">
                             <el-form-item label="非焦点图" required>
@@ -130,7 +256,7 @@
                         </el-col>
                     </el-form>
                 </div>
-                <div v-show="active === 2" class="step-three">
+                <div v-show="active === 3" class="step-three">
                     <el-form status-icon label-width="120px" class="my-el-form" @submit.native.prevent>
                         <el-col :span="12">
                             <el-form-item label="节目角标">
@@ -161,16 +287,6 @@
                         </el-col>
                     </el-form>
                 </div>
-                <div v-show="active === 3" class="step-three">
-                    <el-form status-icon label-width="120px" class="my-el-form" @submit.native.prevent>
-                        <el-col :span="12">
-                            <el-form-item label="节目展示方式">
-                                    <el-radio @input="setSquareProgrammeLayoutItemType('PROGRAMME')" :value="getSquareProgrammeLayoutItemType" label="PROGRAMME">进入节目详情页</el-radio>
-                                    <el-radio @input="setSquareProgrammeLayoutItemType('PROGRAMME_LIST')" :value="getSquareProgrammeLayoutItemType" label="PROGRAMME_LIST">进入节目列表页</el-radio>
-                            </el-form-item>
-                        </el-col>
-                    </el-form>
-                </div>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
                     <el-button @click="closeDialog">取 消</el-button>
                     <el-button v-show="active > 0" class="btn-style-three" @click="prevBtnClickHandler">上一步</el-button>
@@ -180,13 +296,22 @@
             </div>
         </el-dialog>
         <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
+        <display-video-dialog
+            :url="url"
+            :title="videoTitle"
+            :displayVideoDialogVisible="displayVideoDialogVisible"
+            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
+        </display-video-dialog>
     </div>
 </template>
 <script>
 import {mapGetters, mapActions, mapMutations} from 'vuex';
 import _ from 'lodash';
+import role from '@/util/config/role';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
+import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
+const ClipboardJS = require('clipboard');
 export default {
     name: 'EditProgramme',
     props: {
@@ -201,7 +326,8 @@ export default {
     },
     components: {
         PreviewSingleImage,
-        SingleImageUploader
+        SingleImageUploader,
+        DisplayVideoDialog
     },
     data() {
         return {
@@ -213,7 +339,12 @@ export default {
                 title: '',
                 display: false,
                 uri: ''
-            }
+            },
+            //  视频弹窗相关的属性
+            displayVideoDialogVisible: false,
+            url: '',
+            videoTitle: '',
+            videoObj: {}
         };
     },
     computed: {
@@ -223,6 +354,7 @@ export default {
             categoryListString: 'programme/categoryListString',
             typeList: 'programme/typeList',
             getChiefActor: 'programme/getChiefActor',
+            video: 'programme/video',
             layout: 'pageLayout/layout'
         }),
         checkIsChecked() {
@@ -257,9 +389,34 @@ export default {
             let {navbarId, index} = this.$route.params;
             return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.id`);
         },
+        getSquareProgrammeVideoId() {
+            let {navbarId, index} = this.$route.params;
+            let params = _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.params`);
+            if (params) {
+                return JSON.parse(params).id;
+            }
+            return false;
+        },
         getSquareProgrammeLayoutItemType() {
             let {navbarId, index} = this.$route.params;
             return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.layoutItemType`);
+        },
+        //  视频相关的getter
+        duration() {
+            return (seconds) => {
+                return this.$util.fromSecondsToTime(seconds);
+            };
+        },
+        getVideoType() {
+            return (key) => {
+                return role.VIDEO_TYPE_OBJ[key];
+            };
+        },
+        getVideoUrl() {
+            return (uri) => {
+                let baseUri = window.localStorage.getItem('videoBaseUri');
+                return `${baseUri}${uri}`;
+            };
         }
     },
     methods: {
@@ -270,7 +427,8 @@ export default {
         ...mapActions({
             getProgrammeList: 'programme/getProgrammeList',
             getProgrammeListByNews: 'programme/getProgrammeListByNews',
-            getProgrammeCategory: 'programme/getProgrammeCategory'
+            getProgrammeCategory: 'programme/getProgrammeCategory',
+            getProgrammeVideoListById: 'programme/getProgrammeVideoListById'
         }),
         //  弹窗的操作
         async showDialog(category) {
@@ -315,11 +473,19 @@ export default {
                 if (this.active === 0) {
                     if (this.getSquareProgrammeId) {
                         this.active++;
+                        this.getProgrammeVideoListById(this.getSquareProgrammeId);
                     } else {
                         this.$message.error('请选择节目');
                         return false;
                     }
                 } else if (this.active === 1) {
+                    if (this.getSquareProgrammeVideoId) {
+                        this.active++;
+                    } else {
+                        this.$message.error('请选择视频');
+                        return false;
+                    }
+                } else if (this.active === 2) {
                     if (this.getImageByKey('coverImage')) {
                         this.active++;
                     } else {
@@ -333,15 +499,23 @@ export default {
         },
         //  节目列表搜索
         searchInputHandler() {},
-        setProgrammeSubjectHandler(programme) {
+        setProgrammeHandler(programme) {
             let {navbarId, index} = this.$route.params;
             let {id, name} = programme;
             this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
             this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
             this.programme = programme;
+            this.getProgrammeVideoListById(id);
+        },
+        setProgrammeVideoHandler(video) {
+            let {navbarId, index} = this.$route.params;
+            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'params', value: JSON.stringify(video) });
         },
         tableRowClassName({row, rowIndex}) {
             return row.id === this.getSquareProgrammeId ? 'checked' : '';
+        },
+        videoTableRowClassName({row, rowIndex}) {
+            return row.id === this.getSquareProgrammeVideoId ? 'checked' : '';
         },
         searchEnterHandler() {},
         //  查看图片
@@ -383,13 +557,30 @@ export default {
         //  最后一步的确认处理函数
         enterHandler() {
             let {navbarId, index} = this.$route.params;
-            if (this.getSquareProgrammeLayoutItemType) {
-                this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'PROGRAMME' });
-                this.closeDialog();
-            } else {
-                this.$message.error('请选择节目展示方式');
-                return false;
-            }
+            // 设置layoutItemType为PROGRAMME_VIDEO
+            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'PROGRAMME_VIDEO' });
+            this.closeDialog();
+        },
+        //  视频列表相关的方法
+        displayVideoPlayer(url, name) {
+            this.displayVideoDialogVisible = true;
+            let baseUri = window.localStorage.getItem('videoBaseUri');
+            this.url = `${baseUri}${url}`;
+            this.videoTitle = name;
+        },
+        initClipboard() {
+            let that = this;
+            let clipboard = new ClipboardJS('.copy-btn');
+            clipboard.on('success', function(e) {
+                that.$message.success('视频链接复制成功');
+                e.clearSelection();
+            });
+            clipboard.on('error', function(e) {
+                that.$message.error('视频链接复制失败');
+            });
+        },
+        closeDisplayVideoDialog() {
+            this.displayVideoDialogVisible = false;
         }
     }
 };

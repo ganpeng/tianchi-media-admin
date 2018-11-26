@@ -106,8 +106,8 @@
         <div v-if="isEdit" class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="saveHandler">保存</el-button>
         </div>
-        <edit-programme :squareIndex="squareIndex" ref="selectProgrammeDialog"></edit-programme>
-        <edit-programme-subject :squareIndex="squareIndex" ref="selectProgrammeSubjectDialog"></edit-programme-subject>
+        <edit-programme :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeDialog"></edit-programme>
+        <edit-programme-subject :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeSubjectDialog"></edit-programme-subject>
     </div>
 </template>
 <script>
@@ -147,7 +147,8 @@ export default {
     },
     data() {
         return {
-            squareIndex: 0
+            squareIndex: 0,
+            allowResolutions: []
         };
     },
     methods: {
@@ -161,6 +162,7 @@ export default {
         selectChannel() {},
         selectProgramme(squareIndex) {
             this.squareIndex = squareIndex;
+            this.setAllowResolutions(this.squareIndex);
             if (this.squareIndex === 0) {
                 this.$refs.selectProgrammeDialog.showDialog('NEWS');
             } else {
@@ -169,6 +171,7 @@ export default {
         },
         selectProgrammeSubject(squareIndex) {
             this.squareIndex = squareIndex;
+            this.setAllowResolutions(this.squareIndex);
             this.$refs.selectProgrammeSubjectDialog.showDialog();
         },
         selectFilter(squareIndex) {
@@ -180,15 +183,37 @@ export default {
             this.saveLayoutToStore();
             this.$message.success('保存成功');
             this.$router.push({ name: 'PageLayout', params: {navbarId} });
+        },
+        setAllowResolutions(squareIndex) {
+            switch (squareIndex) {
+                case 0:
+                    this.allowResolutions = [{width: 560, height: 222}];
+                    break;
+                case 1:
+                case 2:
+                    this.allowResolutions = [{width: 860, height: 440}];
+                    break;
+                case 3:
+                case 4:
+                case 5:
+                    this.allowResolutions = [{width: 560, height: 300}];
+                    break;
+                default:
+                    throw new Error('未知的索引');
+            }
         }
     }
 };
 </script>
 <style lang="scss" scoped>
 @mixin paddingBg($paddingNum) {
+    position: relative;
     height: 0;
     padding-bottom: $paddingNum;
-    background: #2A3040;
+    background-color: #2A3040;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
     border-radius: 8px;
 }
 .recommend-fixed-module-container {
