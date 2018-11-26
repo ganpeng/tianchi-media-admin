@@ -170,8 +170,19 @@
                 <el-menu-item index="/user-center/list">用户列表</el-menu-item>
                 <el-menu-item index="/kits">小功能</el-menu-item>
             </el-submenu>
-            <!--个人中心-->
+            <!--站点管理-->
             <el-submenu index="12">
+                <template slot="title">
+                    <svg-icon
+                        icon-class="programme_manage"
+                        class-name="svg-box">
+                    </svg-icon>
+                    <span>站点管理</span>
+                </template>
+                <el-menu-item index="/site-manage/list">站点列表</el-menu-item>
+            </el-submenu>
+            <!--个人中心-->
+            <el-submenu index="13">
                 <template slot="title">
                     <svg-icon
                         icon-class="personal_center"
