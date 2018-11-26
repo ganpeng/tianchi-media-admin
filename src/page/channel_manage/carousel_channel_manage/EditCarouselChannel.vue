@@ -54,9 +54,7 @@
             <el-form-item label="频道图" prop="logoUri" required>
                 <label>(260*260 频道图)</label>
                 <div>
-                    <div class="image-box" v-if="channelInfo.logoUri">
-                        <img :src="channelInfo.logoUri | imageUrl">
-                    </div>
+                    <img v-if="channelInfo.logoUri" :src="channelInfo.logoUri | imageUrl" class="logo-image">
                     <single-image-uploader
                         :allowResolutions="allowResolutions"
                         :uploadSuccessHandler="uploadSuccessHandler">
@@ -64,19 +62,6 @@
                 </div>
             </el-form-item>
         </el-form>
-        <!--频道封面-->
-        <div class="vice-block text-left">
-            <h3 class="block-vice-title">频道封面</h3>
-            <el-button
-                class="create-blue-btn contain-svg-icon"
-                @click="imageUploadDialogVisible = true">
-                <svg-icon icon-class="image"></svg-icon>
-                添加频道封面
-            </el-button>
-            <div v-if="channelInfo.logoUri" class="image-box">
-                <img :src="channelInfo.logoUri | imageUrl">
-            </div>
-        </div>
         <div class="vice-block text-left">
             <h3 class="block-vice-title">频道节目信息</h3>
             <el-card>
@@ -525,7 +510,8 @@
                     typeIdList: [],
                     multicastIp: '',
                     pushServer: '',
-                    visible: ''
+                    visible: '',
+                    logoUri: ''
                 },
                 sectionList: [{name: ''}],
                 typeOptions: [],
@@ -583,6 +569,9 @@
             this.init();
         },
         methods: {
+            uploadSuccessHandler(image) {
+                this.channelInfo.logoUri = image.uri;
+            },
             // 根据视频展示名在文字的最后添加'-'
             insertShortLine() {
                 for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
@@ -1004,12 +993,19 @@
         margin-top: 30px;
     }
 
-    .update-box {
-        margin: 120px 0px 80px 0px;
+    .logo-image {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
     }
 
-    .image-box {
-        margin-top: 20px;
+    .single-image-uploader-container {
+        display: inline-block;
+        margin-left: 30px;
+    }
+
+    .update-box {
+        margin: 120px 0px 80px 0px;
     }
 
     .copy-btn {
