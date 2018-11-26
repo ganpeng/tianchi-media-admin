@@ -2,7 +2,7 @@
 <template>
     <div class="text-center">
         <el-dialog
-            title="设置为节目"
+            title="设置为筛选"
             class="my-dialog"
             width="80%"
             :visible.sync="dialogVisible"
@@ -147,7 +147,6 @@
     import dict from '@/util/config/dictionary';
     import CATALOGUE_CONFIG_MAP from '@/util/config/catalogue';
     import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
-
     export default {
         name: 'EditFilter',
         props: {
@@ -214,9 +213,6 @@
                 coverImage: {},
                 entertainmentList: []
             };
-        },
-        mounted() {
-            // this.init();
         },
         computed: {
             ...mapGetters({

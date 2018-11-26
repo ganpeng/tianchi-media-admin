@@ -13,6 +13,13 @@
                                 选择
                             </el-button>
                         </div>
+                        <div class="channel">
+                            <img :src="channel.logoUri" alt="">
+                            <div class="text-info">
+                                <p class="title">当前直播频道</p>
+                                <p class="name">{{channel.name}}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="right-field-wrapper">
@@ -108,6 +115,7 @@
         </div>
         <edit-programme :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeDialog"></edit-programme>
         <edit-programme-subject :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeSubjectDialog"></edit-programme-subject>
+        <edit-channel ref="selectChannelDialog"></edit-channel>
     </div>
 </template>
 <script>
@@ -115,17 +123,26 @@ import _ from 'lodash';
 import {mapGetters, mapMutations} from 'vuex';
 import EditProgramme from '../add_edit_module/EditProgramme';
 import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
+import EditChannel from '../add_edit_module/EditChannel';
 export default {
     name: 'RecommendFixedModule',
     components: {
         EditProgramme,
-        EditProgrammeSubject
+        EditProgrammeSubject,
+        EditChannel
     },
     props: {
         isEdit: {
             type: Boolean,
             default: false
         }
+    },
+    data() {
+        return {
+            squareIndex: 0,
+            allowResolutions: [],
+            channel: {}
+        };
     },
     computed: {
         ...mapGetters({
@@ -145,11 +162,15 @@ export default {
             };
         }
     },
-    data() {
-        return {
-            squareIndex: 0,
-            allowResolutions: []
-        };
+    created() {
+        let {navbarId} = this.$route.params;
+        this.$service.getChannelLayout({navBarId: navbarId})
+            .then((res) => {
+                if (res && res.code === 0) {
+                    let obj = res.data.list[0];
+                    this.channel = obj && obj.channel ? obj.channel : {};
+                }
+            });
     },
     methods: {
         ...mapMutations({
@@ -159,7 +180,9 @@ export default {
             let {navbarId} = this.$route.params;
             this.$router.push({ name: 'EditFixedModule', params: {navbarId, index: 0} });
         },
-        selectChannel() {},
+        selectChannel() {
+            this.$refs.selectChannelDialog.showDialog();
+        },
         selectProgramme(squareIndex) {
             this.squareIndex = squareIndex;
             this.setAllowResolutions(this.squareIndex);
@@ -216,6 +239,28 @@ export default {
     background-position: center center;
     border-radius: 8px;
 }
+
+@mixin btnWrapper() {
+    .btn-wrapper {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        .el-button {
+            &:last-child {
+                padding: 0 10px;
+                margin-top: 10px;
+            }
+        }
+    }
+    &:hover {
+        .btn-wrapper {
+            display: block;
+        }
+    }
+}
+
 .recommend-fixed-module-container {
     .btn-field {
         margin: 40px 0 10px 0;
@@ -227,18 +272,37 @@ export default {
                 width: 66.0535%;
                 margin-right: 2%;
                 .left-field {
-                    position: relative;
                     @include paddingBg(56%);
-                    .btn-wrapper {
+                    @include btnWrapper();
+                    //  频道样式
+                    .channel {
                         position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        .text {
-                            font-size: 24px;
-                            color: #6F7480;
-                            height: 46px;
-                            line-height: 46px;
+                        display: flex;
+                        top: 20px;
+                        left: 20px;
+                        img {
+                            display: block;
+                            width: 200px;
+                            height: 200px;
+                            margin-right: 30px;
+                        }
+                        .text-info {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            .title {
+                                font-size: 16px;
+                                color: #6F7480;
+                                text-decoration: underline;
+                            }
+                            .name {
+                                border: 1px solid #1989FA;
+                                border-radius: 8px;
+                                font-size: 22px;
+                                color: #1989FA;
+                                padding: 6px 10px;
+                                margin-top: 20px;
+                            }
                         }
                     }
                 }
@@ -252,20 +316,8 @@ export default {
                     @include paddingBg(69.5538%);
                 }
                 .right-bottom-field {
-                    position: relative;
                     @include paddingBg(39.7368%);
-                    .btn-wrapper {
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        .el-button {
-                            &:last-child {
-                                padding: 0 10px;
-                                margin-top: 10px;
-                            }
-                        }
-                    }
+                    @include btnWrapper();
                 }
             }
         }
@@ -281,20 +333,8 @@ export default {
                 }
                 .top-left-field,
                 .top-right-field {
-                    position: relative;
                     @include paddingBg(50.94%);
-                    .btn-wrapper {
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        .el-button {
-                            &:last-child {
-                                padding: 0 10px;
-                                margin-top: 10px;
-                            }
-                        }
-                    }
+                    @include btnWrapper();
                 }
             }
         }
@@ -308,20 +348,8 @@ export default {
                 .bottom-left-field,
                 .bottom-middle-field,
                 .bottom-right-field {
-                    position: relative;
                     @include paddingBg(53.54%);
-                    .btn-wrapper {
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        .el-button {
-                            &:last-child {
-                                padding: 0 10px;
-                                margin-top: 10px;
-                            }
-                        }
-                    }
+                    @include btnWrapper();
                 }
             }
         }

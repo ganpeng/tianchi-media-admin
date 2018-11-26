@@ -29,27 +29,28 @@
         </div>
         <div class="content-field">
             <div class="wrapper">
-                <div class="field"></div>
+                <div :style="styleBgImageStr(0)" class="field"></div>
             </div>
             <div class="wrapper">
-                <div class="field"></div>
+                <div :style="styleBgImageStr(1)" class="field"></div>
             </div>
             <div class="wrapper">
-                <div class="field"></div>
+                <div :style="styleBgImageStr(2)" class="field"></div>
             </div>
             <div class="wrapper">
-                <div class="field"></div>
+                <div :style="styleBgImageStr(3)" class="field"></div>
             </div>
             <div class="wrapper">
-                <div class="field"></div>
+                <div :style="styleBgImageStr(4)" class="field"></div>
             </div>
             <div class="wrapper">
-                <div class="field"></div>
+                <div :style="styleBgImageStr(5)" class="field"></div>
             </div>
         </div>
     </div>
 </template>
 <script>
+import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
 export default {
     name: 'Mixeds6',
@@ -67,33 +68,67 @@ export default {
         return {};
     },
     computed: {
+        ...mapGetters({
+            layout: 'pageLayout/layout',
+            getNavbarNameById: 'pageLayout/getNavbarNameById'
+        }),
         getIconImageUri() {
             return (obj) => {
                 return _.get(obj, 'iconImage.uri');
             };
+        },
+        getImageUriByKeyAndIndex() {
+            return (key, squareIndex) => {
+                let {navbarId} = this.$route.params;
+                let uri = _.get(this.layout, `${navbarId}.data.${this.index}.layoutItemMultiList.${squareIndex}.${key}.uri`);
+                return uri;
+            };
+        },
+        styleBgImageStr() {
+            return (squareIndex) => {
+                let bgStr = `background-image: url(${this.getImageUriByKeyAndIndex('coverImage', squareIndex)})`;
+                return bgStr;
+            };
         }
     },
     methods: {
+        ...mapMutations({
+            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
+            saveLayoutToStore: 'pageLayout/saveLayoutToStore',
+            insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex'
+        }),
         addLayout(type) {
             let {navbarId} = this.$route.params;
             switch (type) {
                 case 'SHUFFLE':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: 'end'} });
+                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: this.index, operator: 'add'} });
                     break;
                 case 'FIGURE':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: 'end'} });
+                    let layoutData = {
+                        layoutTemplate: 'LT_F_6',
+                        navBarId: navbarId,
+                        navBarName: this.getNavbarNameById(navbarId),
+                        subjectId: '',
+                        iconImage: {},
+                        title: '',
+                        renderType: 'FIGURE',
+                        layoutItemMultiList: []
+                    };
+                    this.insertLayoutDataByIndex({navbarId, index: this.index, layoutData});
+                    this.saveLayoutToStore();
+                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: this.index, operator: 'add'} });
                     break;
                 case 'SPECIAL':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: 'end'} });
+                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: this.index, operator: 'add'} });
                     break;
                 case 'FIGURE_SUBJECT':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: 'end'} });
+                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: this.index, operator: 'add'} });
                     break;
                 case 'PROGRAMME':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: 'end'} });
+                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: this.index, operator: 'add'} });
                     break;
                 case 'PROGRAMME_SUBJECT':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: 'end'} });
+                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: this.index, operator: 'add'} });
                     break;
                 default:
                     throw new Error('类型错误');
@@ -101,13 +136,12 @@ export default {
         },
         editHandler() {
             let {navbarId} = this.$route.params;
-            console.log(this.index);
-            console.log(navbarId);
+            this.$router.push({ name: 'PersonModule', params: {navbarId, index: this.index, operator: 'edit'} });
         },
         deleteHandler() {
             let {navbarId} = this.$route.params;
-            console.log(this.index);
-            console.log(navbarId);
+            this.deleteLayoutDataByIndex({navbarId, index: this.index});
+            this.saveLayoutToStore();
         }
     }
 };
@@ -127,8 +161,10 @@ export default {
         display: flex;
         .wrapper {
             flex: 1;
+            border-radius: 50%;
             .field {
                 @include paddingBg(100%);
+                border-radius: 50%;
             }
         }
         .wrapper + .wrapper {

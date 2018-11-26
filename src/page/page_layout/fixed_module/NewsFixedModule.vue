@@ -83,7 +83,7 @@
         </div>
         <edit-programme :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeDialog"></edit-programme>
         <edit-filter :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectFilterDialog"></edit-filter>
-        <edit-programme-video :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeVideoDialog"></edit-programme-video>
+        <edit-programme-video :squareIndex="squareIndex" :layoutItemType="layoutItemType" :allowResolutions="allowResolutions" ref="selectProgrammeVideoDialog"></edit-programme-video>
     </div>
 </template>
 <script>
@@ -126,6 +126,7 @@ export default {
     data() {
         return {
             squareIndex: 0,
+            layoutItemType: '',
             allowResolutions: []
         };
     },
@@ -144,8 +145,9 @@ export default {
         },
         selectProgrammeVideo(squareIndex) {
             this.squareIndex = squareIndex;
+            this.layoutItemType = 'PROGRAMME_LIST';
             this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectProgrammeVideoDialog.showDialog();
+            this.$refs.selectProgrammeVideoDialog.showDialog('NEWS');
         },
         selectFilter(squareIndex) {
             this.squareIndex = squareIndex;
@@ -193,6 +195,17 @@ export default {
     background-position: center center;
     border-radius: 8px;
 }
+@mixin toggleBtn() {
+    .el-button {
+        display: none;
+    }
+    &:hover {
+        .el-button {
+            display: block;
+        }
+    }
+}
+
 .news-fixed-module {
     margin-top: 20px;
     .btn-field {
@@ -209,6 +222,7 @@ export default {
             .top-left-field {
                 position: relative;
                 @include paddingBg(50.998%);
+                @include toggleBtn();
             }
             .top-right-field {
                 display: flex;
@@ -230,6 +244,7 @@ export default {
                         .top-right-bottom-right-field {
                             position: relative;
                             @include paddingBg(48.6748%);
+                            @include toggleBtn();
                         }
                     }
                 }
@@ -243,6 +258,7 @@ export default {
             .bottom-field-item {
                 position: relative;
                 @include paddingBg(44.03292%);
+                @include toggleBtn();
             }
         }
         .wrapper + .wrapper {

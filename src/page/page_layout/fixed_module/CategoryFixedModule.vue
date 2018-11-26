@@ -144,18 +144,17 @@ export default {
     border-radius: 8px;
 }
 
-@mixin btnWrapper() {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+@mixin toggleBtn() {
     .el-button {
-        &:last-child {
-            padding: 0 10px;
-            margin-top: 10px;
+        display: none;
+    }
+    &:hover {
+        .el-button {
+            display: block;
         }
     }
 }
+
 .category-fixed-module {
     margin-top: 20px;
     .btn-field {
@@ -179,6 +178,7 @@ export default {
                     left: 50%;
                     transform: translate(-50%, -50%);
                 }
+                @include toggleBtn();
             }
         }
     }
@@ -199,6 +199,7 @@ export default {
                     left: 50%;
                     transform: translate(-50%, -50%);
                 }
+                @include toggleBtn();
             }
         }
     }

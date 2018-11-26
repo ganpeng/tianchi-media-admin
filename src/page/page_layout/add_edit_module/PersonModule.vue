@@ -3,21 +3,21 @@
         <h2 class="content-title">新增人物模块</h2>
         <div class="seperator-line"></div>
         <div class="form-container">
-            <el-form :model="personModule" status-icon ref="createPerson"
+            <el-form :model="layoutData" status-icon ref="createPerson"
                     label-width="120px"
                     @submit.native.prevent
                     class="form-block">
                 <el-col :span="8">
-                    <el-form-item label="人物模块名称" prop="name" required>
+                    <el-form-item label="人物模块名称" prop="title" required>
                         <el-input
-                            :value="personModule.name"
-                            @input="inputHandler($event, 'name')"
+                            :value="layoutData.title"
+                            @input="inputHandler($event, 'title')"
                             placeholder="请输入人物姓名"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="名称icon">
                         <single-image-uploader
-                            :uri="personModule.icon ? personModule.icon.uri : ''"
+                            :uri="layoutData.iconImage ? layoutData.iconImage.uri : ''"
                             :uploadSuccessHandler="uploadSuccessHandler"
                             :dimension="{width: 40, height: 40}"
                             :allowResolutions="[{width: 200, height: 200}]"
@@ -30,7 +30,19 @@
                 </el-col>
                 <el-col :span="24">
                     <el-form-item label=" ">
-                        <person-sortable-list></person-sortable-list>
+                        <div class="sortable-list-container">
+                            <draggable element="ul" class="sortable-list" v-model="personList">
+                                <li v-for="(person) in personList" :key="person.id" class="sortable-item">
+                                    <div :style="styleStr(person)" class="img-wrapper">
+                                        <div class="mask"></div>
+                                        <!-- <span @click="deleteHandler(person.id)" class="delete-btn">
+                                            <svg-icon icon-class="bg_delete"></svg-icon>
+                                        </span> -->
+                                    </div>
+                                    <p class="name">{{person.name}}</p>
+                                </li>
+                            </draggable>
+                        </div>
                     </el-form-item>
                 </el-col>
             </el-form>
@@ -45,13 +57,14 @@
             :visible.sync="selectPersonDialogVisible"
             :show-close="true"
             :before-close="closeSelectPersonDialog"
+            @open="dialogOpenHandler"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
             :append-to-body="true">
             <div class="person-dialog-container">
                 <div class="my-tags-two-container">
                     <div class="header">
-                        <span class="count">已选{{personModule.personList.length}}项</span>
+                        <span class="count">已选{{layoutData.layoutItemMultiList.length}}项</span>
                         <span
                             @click="toggleTagsField"
                             :class="['el-dropdown-link', tagsFieldVisible ? 'active' : '']">
@@ -62,7 +75,7 @@
                     <div v-show="tagsFieldVisible" class="my-tags-two">
                         <el-tag
                             :key="index"
-                            v-for="(person, index) in personModule.personList"
+                            v-for="(person, index) in layoutData.layoutItemMultiList"
                             closable
                             :disable-transitions="false"
                             @close="deletePersonHandler(person.id)">
@@ -162,20 +175,24 @@
 </template>
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex';
+import _ from 'lodash';
+import draggable from 'vuedraggable';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
-import PersonSortableList from './PersonSortableList';
 export default {
     name: 'PersonModule',
     components: {
         SingleImageUploader,
         PreviewSingleImage,
-        PersonSortableList
+        draggable
     },
     data() {
         return {
+            navbarId: '', //  缓存navbarId
+            index: '', //  缓存的index
             selectPersonDialogVisible: false,
             tagsFieldVisible: false,
+            saveFlag: false, // 判断页面跳转之前如果没有点保存按钮的话，就删除新增的这个layoutItem
             previewImage: {
                 title: '',
                 display: false,
@@ -183,49 +200,81 @@ export default {
             }
         };
     },
+    beforeRouteLeave(to, from, next) {
+        if (!this.saveFlag) {
+            this.deleteLayoutDataByIndex({navbarId: this.navbarId, index: this.index});
+            this.saveLayoutToStore();
+        }
+        next();
+    },
     created() {
-        this.resetPersonModule();
-        this.resetPerson();
-        this.getPersonList({isProgramme: false});
+        let {navbarId, index} = this.$route.params;
+        this.navbarId = navbarId;
+        this.index = index;
     },
     computed: {
         ...mapGetters({
-            personModule: 'pageLayout/personModule',
             searchFields: 'person/searchFields',
             list: 'person/list',
             mainRoleLabel: 'person/mainRoleLabel',
-            pagination: 'person/pagination'
+            pagination: 'person/pagination',
+            getNavbarNameById: 'pageLayout/getNavbarNameById',
+            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId'
         }),
+        layoutData() {
+            let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
+            return layoutData;
+        },
         checkIsChecked() {
             return (row) => {
-                let index = this.personModule.personList.findIndex((person) => person.id === row.id);
+                let index = this.layoutData.layoutItemMultiList.findIndex((person) => person.id === row.id);
                 return index >= 0;
             };
         },
         disabled() {
             return (row) => {
-                let index = this.personModule.personList.findIndex((person) => person.id === row.id);
-                return index < 0 && this.personModule.personList.length > 5;
+                let index = this.layoutData.layoutItemMultiList.findIndex((person) => person.id === row.id);
+                return index < 0 && this.layoutData.layoutItemMultiList.length > 5;
             };
+        },
+        getImageUri() {
+            return (person) => {
+                return _.get(person, 'coverImage.uri');
+            };
+        },
+        styleStr() {
+            return (person) => {
+                return `background:url(${this.getImageUri(person)}) center center no-repeat;background-size: contain;`;
+            };
+        },
+        personList: {
+            get() {
+                return this.layoutData.layoutItemMultiList;
+            },
+            set(value) {
+                this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'layoutItemMultiList', value});
+            }
         }
     },
     methods: {
         ...mapMutations({
-            resetPersonModule: 'pageLayout/resetPersonModule',
-            updatePersonModule: 'pageLayout/updatePersonModule',
             updatePagination: 'person/updatePagination',
             resetPerson: 'person/resetPerson',
             updateSearchFields: 'person/updateSearchFields',
-            //  人物模块中人物的添加删除
-            addPersonToPersonlistOfPersonModule: 'pageLayout/addPersonToPersonlistOfPersonModule',
-            deletePersonFromPersonListOfPersonModule: 'pageLayout/deletePersonFromPersonListOfPersonModule'
-            //  人物模块中人物的添加删除结束
+            appendLayoutItem: 'pageLayout/appendLayoutItem',
+            saveLayoutToStore: 'pageLayout/saveLayoutToStore',
+            // 新加api
+            insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex',
+            updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey',
+            addLayoutItemByIndex: 'pageLayout/addLayoutItemByIndex',
+            deleteLayoutItembyId: 'pageLayout/deleteLayoutItembyId',
+            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex'
         }),
         ...mapActions({
             getPersonList: 'person/getPersonList'
         }),
         inputHandler(value, key) {
-            this.updatePersonModule({key, value});
+            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key, value});
         },
         handlePaginationChange(value, key) {
             this.updatePagination({value, key});
@@ -247,20 +296,33 @@ export default {
         },
         //  动态的为符合条件的行添加class
         tableRowClassName({row, rowIndex}) {
-            let index = this.personModule.personList.findIndex((person) => person.id === row.id);
+            let index = this.layoutData.layoutItemMultiList.findIndex((person) => person.id === row.id);
             return index >= 0 ? 'checked' : '';
         },
         checkHandler(value, person) {
-            if (this.personModule.personList.length > 5 && value) {
+            if (this.layoutData.layoutItemMultiList.length > 5 && value) {
                 return false;
             }
             if (value) {
-                this.addPersonToPersonlistOfPersonModule({person});
+                let layoutItem = {
+                    id: person.id,
+                    name: person.name,
+                    desc: person.desc,
+                    coverImage: person.avatarImage,
+                    layoutItemType: 'FIGURE',
+                    params: ''
+                };
+                this.addLayoutItemByIndex({navbarId: this.navbarId, index: this.index, layoutItem});
             } else {
-                this.deletePersonFromPersonListOfPersonModule({id: person.id});
+                this.deleteLayoutItembyId({navbarId: this.navbarId, index: this.index, id: person.id});
             }
         },
-        saveHandler() { },
+        saveHandler() {
+            this.saveLayoutToStore();
+            this.saveFlag = true;
+            this.$message.success('保存成功');
+            this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+        },
         //  弹窗控制方法
         showSelectPersonDialog() {
             this.selectPersonDialogVisible = true;
@@ -268,6 +330,10 @@ export default {
         closeSelectPersonDialog() {
             this.resetPerson();
             this.selectPersonDialogVisible = false;
+        },
+        dialogOpenHandler() {
+            this.resetPerson();
+            this.getPersonList({isProgramme: false});
         },
         //  搜索人物的事件处理函数
         searchInputHandler(value, key) {
@@ -278,20 +344,25 @@ export default {
             this.showSelectPersonDialog();
         },
         selectPersonEnterHandler() {
-            this.closeSelectPersonDialog();
+            if (this.layoutData.layoutItemMultiList.length === 6) {
+                this.closeSelectPersonDialog();
+            } else {
+                this.$message.error('必须选择6个人物');
+                return false;
+            }
         },
         searchEnterHandler() {
             this.getPersonList({isProgramme: false});
         },
         deletePersonHandler(id) {
-            this.deletePersonFromPersonListOfPersonModule({id});
+            this.deleteLayoutItembyId({navbarId: this.navbarId, index: this.index, id});
         },
         toggleTagsField() {
             this.tagsFieldVisible = !this.tagsFieldVisible;
         },
         //  长传icon的成功回调函数
         uploadSuccessHandler(image) {
-            this.updatePersonModule({key: 'icon', value: image});
+            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: image});
         }
     }
 };
@@ -299,5 +370,63 @@ export default {
 <style lang="scss" scoped>
 .searchForm {
     margin-top: 20px;
+}
+.sortable-list-container {
+    .sortable-list {
+        display: flex;
+        .sortable-item {
+            position: relative;
+            width: 80px;
+            margin-right: 10px;
+            cursor: pointer;
+            .img-wrapper {
+                position: relative;
+                width: 80px;
+                height: 80px;
+                border: 1px solid #3E495E;
+                border-radius: 4px;
+                .mask {
+                    display: none;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0, 0, 0, 0.6);
+                }
+                .delete-btn {
+                    display: none;
+                    position: absolute;
+                    top: 5px;
+                    right: 5px;
+                    z-index: 1000;
+                    .svg-icon {
+                        width: 22px;
+                        height: 22px;
+                        fill: $dangerColor;
+                        &:hover {
+                            fill: $dangerHoverColor;
+                        }
+                    }
+                }
+                &:hover {
+                    .mask, .delete-btn {
+                        display: block;
+                    }
+                }
+                img {
+                    display: block;
+                    width: 80px;
+                    height: 80px;
+                }
+            }
+            .name {
+                font-size: 12px;
+                line-height: 18px;
+                color: #6F7480;
+                text-align: center;
+            }
+        }
+    }
 }
 </style>

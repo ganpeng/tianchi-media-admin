@@ -123,14 +123,32 @@ const getters = {
     navbarList(state) {
         return state.navbarList;
     },
+    getNavbarNameById(state) {
+        return (id) => {
+            let navbar = _.get(state.layout, `${id}.name`);
+            return navbar;
+        };
+    },
     getLayoutTemplateByNavbarId(state) {
         return (id) => {
             return state.layout[id].layoutTemplate;
         };
     },
-    getLayoutListByNavbarId(state) {
+    getLayoutDataByNavbarId(state) {
+        return (navbarId, index) => {
+            return _.get(state.layout, `${navbarId}.data.${index}`);
+        };
+    },
+    getLayoutRenderTypeByNavbarId(state) {
         return (id) => {
-            return state.layout[id].data;
+            return state.layout[id].renderType;
+        };
+    },
+    getNotFixedListByNavbarId(state) {
+        return (id) => {
+            return state.layout[id].data.filter((item, index) => {
+                return index > 0;
+            });
         };
     },
     layout() {
@@ -169,6 +187,38 @@ const mutations = {
     updateLayoutItemByIndex(state, payload) {
         let {index, navbarId, squareIndex, key, value} = payload;
         _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}[${key}]`, value);
+    },
+    addLayoutItemByIndex(state, payload) {
+        let {index, navbarId, layoutItem} = payload;
+        state.layout[navbarId].data[index].layoutItemMultiList.push(layoutItem);
+    },
+    deleteLayoutItembyIndex(state, payload) {
+        let {index, navbarId, squareIndex} = payload;
+        state.layout[navbarId].data[index].layoutItemMultiList = state.layout[navbarId].data[index].layoutItemMultiList.filter((item, _index) => _index !== squareIndex);
+    },
+    deleteLayoutItembyId(state, payload) {
+        let {index, navbarId, id} = payload;
+        state.layout[navbarId].data[index].layoutItemMultiList = state.layout[navbarId].data[index].layoutItemMultiList.filter((item) => item.id !== id);
+    },
+    updateLayoutDataByKey(state, payload) {
+        let {navbarId, index, key, value} = payload;
+        _.set(state.layout, `${navbarId}.data.${index}.${key}`, value);
+    },
+    insertLayoutDataByIndex(state, payload) {
+        let {navbarId, index, layoutData} = payload;
+        state.layout[navbarId].data.splice(index, 0, layoutData);
+    },
+    deleteLayoutDataByIndex(state, payload) {
+        let {navbarId, index} = payload;
+        state.layout[navbarId].data = state.layout[navbarId].data.filter((item, _index) => _index !== index);
+    },
+    appendLayoutItem(state, payload) {
+        let {navbarId, layoutItem} = payload;
+        state.layout[navbarId].data.push(layoutItem);
+    },
+    setLayoutDataByIndex(state, payload) {
+        let {index, navbarId, dataItem} = payload;
+        _.set(state.layout, `${navbarId}.data.${index}`, dataItem);
     },
     setLayoutItemByIndex(state, payload) {
         let {index, navbarId, squareIndex, layoutItem} = payload;

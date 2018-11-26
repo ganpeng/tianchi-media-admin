@@ -1,6 +1,6 @@
 <template>
     <div class="child-fixed-module">
-        <div class="btn-field text-right">
+        <div v-if="!isEdit" class="btn-field text-right">
             <el-button @click="editFixedModuleHandler" class="btn-style-two">编辑</el-button>
         </div>
         <div class="content-field">
@@ -138,6 +138,7 @@ export default {
     border-radius: 8px;
 }
 @mixin btnWrapper() {
+    display: none;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -150,6 +151,7 @@ export default {
     }
 }
 .child-fixed-module {
+    margin-top: 20px;
     .btn-field {
         margin: 40px 0 10px 0;
     }
@@ -166,20 +168,23 @@ export default {
             }
             .left-field {
                 @include paddingBg(100%);
-                .btn-wrapper {
-                    @include btnWrapper();
-                }
             }
             .middle-field {
                 @include paddingBg(63%);
-                .btn-wrapper {
-                    @include btnWrapper();
-                }
             }
             .right-field {
                 @include paddingBg(100%);
+            }
+            .left-field,
+            .middle-field,
+            .right-field {
                 .btn-wrapper {
                     @include btnWrapper();
+                }
+                &:hover {
+                    .btn-wrapper {
+                        display: block;
+                    }
                 }
             }
         }

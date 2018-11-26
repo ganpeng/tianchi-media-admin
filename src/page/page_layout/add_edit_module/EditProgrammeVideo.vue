@@ -13,100 +13,232 @@
             :close-on-press-escape="false"
             :append-to-body="true">
             <div class="person-dialog-container">
-                <el-steps class="my-steps" :active="active" finish-status="success">
-                    <el-step title="选择节目"></el-step>
-                    <el-step title="选择视频"></el-step>
-                    <el-step title="选择图片"></el-step>
-                    <el-step title="设置角标"></el-step>
-                </el-steps>
-                <div class="seperator-line"></div>
+                <div class="step-container">
+                    <el-steps v-if="showExist" class="my-steps" :active="active" finish-status="success">
+                        <el-step title="选择视频"></el-step>
+                        <el-step title="选择图片"></el-step>
+                    </el-steps>
+                    <el-steps v-else class="my-steps" :active="active" finish-status="success">
+                        <el-step title="选择节目"></el-step>
+                        <el-step title="选择视频"></el-step>
+                        <el-step title="选择图片"></el-step>
+                    </el-steps>
+                    <div class="seperator-line"></div>
+                </div>
                 <div v-show="active === 0" class="step-one">
-                    <el-form class="my-el-form" :inline="true" @submit.native.prevent>
-                        <el-form-item>
-                            <el-input
-                                placeholder="搜索你想要的信息"
-                                clearable
-                                class="border-input"
-                                :value="''"
-                                @input="searchInputHandler($event, 'name')"
-                            >
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">搜索</el-button>
-                        </el-form-item>
-                    </el-form>
-                    <el-table
-                        :row-class-name="tableRowClassName"
-                        ref="multipleTable"
-                        header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
-                        <el-table-column  align="center" label="选择">
-                            <template slot-scope="scope">
-                                <el-radio :value="getSquareProgrammeId" :label="scope.row.id" @input="setProgrammeHandler(scope.row)">&nbsp;</el-radio>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="code" align="center" width="120px" label="节目编号">
-                            <template slot-scope="scope">
-                                {{scope.row.code | padEmpty}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="name" align="center" min-width="100px" label="节目名称">
-                            <template slot-scope="scope">
-                                {{scope.row.name | padEmpty}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="节目图片" width="100px" align="center" >
-                            <template slot-scope="scope">
-                                <img style="width:70px;height:auto;" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="featureVideoCount" width="100px" align="center" label="正片数量">
-                            <template slot-scope="scope">
-                                {{scope.row.featureVideoCount | padEmpty}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column align="center" width="100px" label="分类">
-                            <template slot-scope="scope">
-                                <span class="ellipsis four">
-                                    {{categoryListString(scope.row.categoryList) | padEmpty}}
-                                </span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column align="center" min-width="100px" label="类型">
-                            <template slot-scope="scope">
-                                <span class="ellipsis four">
-                                    {{typeList(scope.row.id) | padEmpty}}
-                                </span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column align="center" min-width="100px" label="演员">
-                            <template slot-scope="scope">
-                                <span class="ellipsis four">
-                                    {{getChiefActor(scope.row.id) | padEmpty}}
-                                </span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
-                            <template slot-scope="scope">
-                                <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
-                                <i v-else class="off-the-shelf">已下架</i>
-                            </template>
-                        </el-table-column>
-                        <el-table-column align="center" min-width="100px" label="更新时间">
-                            <template slot-scope="scope">
-                                {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <el-pagination
-                        @size-change="handlePaginationChange($event, 'pageSize')"
-                        @current-change="handlePaginationChange($event, 'pageNum')"
-                        :current-page="programmePagination.pageNum"
-                        :page-sizes="[5, 10, 20, 30, 50]"
-                        :page-size="programmePagination.pageSize"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="programmePagination.total">
-                    </el-pagination>
+                    <div v-if="showExist" class="exist-video-wrapper">
+                        <p class="table-title">当前已选节目内包含的视频</p>
+                        <el-table
+                            class="my-table-style"
+                            :data="getSquareProgrammeVideo"
+                            border
+                            :row-class-name="videoTableRowClassName"
+                            header-row-class-name="common-table-header"
+                            style="width: 100%">
+                            <el-table-column
+                                prop="storageVideoId"
+                                label="视频ID"
+                                align="center"
+                                width="120px">
+                                    <template slot-scope="scope">
+                                        {{scope.row.storageVideoId | padEmpty}}
+                                    </template>
+                            </el-table-column>
+                            <el-table-column
+                                prop="originName"
+                                label="文件名"
+                                align="center"
+                                width="180">
+                                    <template slot-scope="scope">
+                                        <span class="ellipsis two">
+                                            {{scope.row.originName | padEmpty}}
+                                        </span>
+                                    </template>
+                            </el-table-column>
+                            <el-table-column
+                                align="center"
+                                width="180"
+                                label="预览">
+                                <template slot-scope="scope">
+                                    <div class="btn-icon-container">
+                                        <el-button
+                                            v-if="scope.row.m3u8For4K"
+                                            type="text"
+                                            size="small"
+                                            @click="displayVideoPlayer(scope.row.m3u8For4K, scope.row.originName)"
+                                            >4K</el-button>
+                                            <svg-icon
+                                                v-if="scope.row.m3u8For4K"
+                                                icon-class="copy_btn"
+                                                class-name="copy-btn pointer"
+                                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
+                                            </svg-icon>
+                                    </div>
+                                    <div class="btn-icon-container">
+                                        <el-button
+                                            v-if="scope.row.m3u8For1080P"
+                                            type="text"
+                                            size="small"
+                                            @click="displayVideoPlayer(scope.row.m3u8For1080P, scope.row.originName)"
+                                            >1080</el-button>
+                                            <svg-icon
+                                                v-if="scope.row.m3u8For1080P"
+                                                icon-class="copy_btn"
+                                                class-name="copy-btn pointer"
+                                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
+                                            </svg-icon>
+                                    </div>
+                                    <div class="btn-icon-container">
+                                        <el-button
+                                            v-if="scope.row.m3u8For720P"
+                                            type="text"
+                                            size="small"
+                                            @click="displayVideoPlayer(scope.row.m3u8For720P, scope.row.originName)"
+                                            >720</el-button>
+                                            <svg-icon
+                                                v-if="scope.row.m3u8For720P"
+                                                icon-class="copy_btn"
+                                                class-name="copy-btn pointer"
+                                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
+                                            </svg-icon>
+                                    </div>
+                                    <div class="btn-icon-container">
+                                        <el-button
+                                            v-if="scope.row.m3u8For480P"
+                                            type="text"
+                                            size="small"
+                                            @click="displayVideoPlayer(scope.row.m3u8For480P, scope.row.originName)"
+                                            >480</el-button>
+                                            <svg-icon
+                                                v-if="scope.row.m3u8For480P"
+                                                icon-class="copy_btn"
+                                                class-name="copy-btn pointer"
+                                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For480P)">
+                                            </svg-icon>
+                                    </div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                prop="type"
+                                align="center"
+                                min-width="80px"
+                                label="内容类型">
+                                    <template slot-scope="scope">
+                                        {{getVideoType(scope.row.type) | padEmpty}}
+                                    </template>
+                            </el-table-column>
+                            <el-table-column
+                                prop="duration"
+                                align="center"
+                                width="100"
+                                label="时长">
+                                <template slot-scope="scope">
+                                    {{duration(scope.row.takeTimeInSec) | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                prop="duration"
+                                align="center"
+                                min-width="80px"
+                                label="上下架">
+                                <template slot-scope="scope">
+                                    <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                                    <i v-else class="off-the-shelf">已下架</i>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <div class="btn-wrapper text-center">
+                            <el-button @click="changeProgrammeHandler" class="btn-style-two">更换节目</el-button>
+                        </div>
+                    </div>
+                    <div v-else class="step-one-wrapper">
+                        <el-form class="my-el-form" :inline="true" @submit.native.prevent>
+                            <el-form-item>
+                                <el-input
+                                    placeholder="搜索你想要的信息"
+                                    clearable
+                                    class="border-input"
+                                    :value="''"
+                                    @input="searchInputHandler($event, 'name')"
+                                >
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">搜索</el-button>
+                            </el-form-item>
+                        </el-form>
+                        <el-table
+                            :row-class-name="tableRowClassName"
+                            ref="multipleTable"
+                            header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
+                            <el-table-column  align="center" label="选择">
+                                <template slot-scope="scope">
+                                    <el-radio :value="getSquareProgrammeId" :label="scope.row.id" @input="setProgrammeHandler(scope.row)">&nbsp;</el-radio>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="code" align="center" width="120px" label="节目编号">
+                                <template slot-scope="scope">
+                                    {{scope.row.code | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="name" align="center" min-width="100px" label="节目名称">
+                                <template slot-scope="scope">
+                                    {{scope.row.name | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="节目图片" width="100px" align="center" >
+                                <template slot-scope="scope">
+                                    <img style="width:70px;height:auto;" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="featureVideoCount" width="100px" align="center" label="正片数量">
+                                <template slot-scope="scope">
+                                    {{scope.row.featureVideoCount | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" width="100px" label="分类">
+                                <template slot-scope="scope">
+                                    <span class="ellipsis four">
+                                        {{categoryListString(scope.row.categoryList) | padEmpty}}
+                                    </span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" min-width="100px" label="类型">
+                                <template slot-scope="scope">
+                                    <span class="ellipsis four">
+                                        {{typeList(scope.row.id) | padEmpty}}
+                                    </span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" min-width="100px" label="演员">
+                                <template slot-scope="scope">
+                                    <span class="ellipsis four">
+                                        {{getChiefActor(scope.row.id) | padEmpty}}
+                                    </span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
+                                <template slot-scope="scope">
+                                    <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                                    <i v-else class="off-the-shelf">已下架</i>
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" min-width="100px" label="更新时间">
+                                <template slot-scope="scope">
+                                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <el-pagination
+                            @size-change="handlePaginationChange($event, 'pageSize')"
+                            @current-change="handlePaginationChange($event, 'pageNum')"
+                            :current-page="programmePagination.pageNum"
+                            :page-sizes="[5, 10, 20, 30, 50]"
+                            :page-size="programmePagination.pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="programmePagination.total">
+                        </el-pagination>
+                    </div>
                 </div>
                 <div v-show="active === 1" class="step-three">
                     <el-table
@@ -256,42 +388,11 @@
                         </el-col>
                     </el-form>
                 </div>
-                <div v-show="active === 3" class="step-three">
-                    <el-form status-icon label-width="120px" class="my-el-form" @submit.native.prevent>
-                        <el-col :span="12">
-                            <el-form-item label="节目角标">
-                                <div class="mark-container">
-                                    <div class="mark-item">
-                                        <el-checkbox @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
-                                            左上角：播放平台
-                                        </el-checkbox>
-                                    </div>
-                                    <div class="mark-item">
-                                        <el-checkbox @change="markChangeHandler($event, 'rightTop')" :disabled="rightTopDisabled">
-                                            右上角：
-                                        </el-checkbox>
-                                        <!--  此处需要增加一个选择框 -->
-                                    </div>
-                                    <div class="mark-item">
-                                        <el-checkbox @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
-                                            左下角：更新
-                                        </el-checkbox>
-                                    </div>
-                                    <div class="mark-item">
-                                        <el-checkbox @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
-                                            右下角：评分
-                                        </el-checkbox>
-                                    </div>
-                                </div>
-                            </el-form-item>
-                        </el-col>
-                    </el-form>
-                </div>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
                     <el-button @click="closeDialog">取 消</el-button>
                     <el-button v-show="active > 0" class="btn-style-three" @click="prevBtnClickHandler">上一步</el-button>
-                    <el-button v-show="active < 3" class="btn-style-three" @click="nextBtnClickHandler">下一步</el-button>
-                    <el-button v-show="active === 3" type="primary" @click="enterHandler">确 定</el-button>
+                    <el-button v-show="active < 2" class="btn-style-three" @click="nextBtnClickHandler">下一步</el-button>
+                    <el-button v-show="active === 2" type="primary" @click="enterHandler">确 定</el-button>
                 </div>
             </div>
         </el-dialog>
@@ -319,6 +420,10 @@ export default {
             type: Number,
             default: 0
         },
+        layoutItemType: {
+            type: String,
+            default: 'PROGRAMME_VIDEO'
+        },
         allowResolutions: {
             type: Array,
             default: () => []
@@ -340,12 +445,18 @@ export default {
                 display: false,
                 uri: ''
             },
+            showExist: false,
             //  视频弹窗相关的属性
             displayVideoDialogVisible: false,
             url: '',
             videoTitle: '',
             videoObj: {}
         };
+    },
+    created() {
+        if (this.getSquareProgrammeVideoId) {
+            this.showExist = true;
+        }
     },
     computed: {
         ...mapGetters({
@@ -357,37 +468,23 @@ export default {
             video: 'programme/video',
             layout: 'pageLayout/layout'
         }),
-        checkIsChecked() {
-            return (row) => {
-                return true;
-            };
-        },
-        isDisabled() {
-            return (row) => {
-                return false;
-            };
-        },
         getImageByKey() {
             return (key) => {
                 let {navbarId, index} = this.$route.params;
                 return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.${key}.uri`);
             };
         },
-        leftTopDisabled() {
-            return _.get(this.programme, 'platformList.length') === 0;
-        },
-        rightTopDisabled() {
-            return false;
-        },
-        leftBottomDisabled() {
-            return !(this.programme && this.programme.totalSets);
-        },
-        rightBottomDisabled() {
-            return !(this.programme && this.programme.score);
-        },
         getSquareProgrammeId() {
             let {navbarId, index} = this.$route.params;
             return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.id`);
+        },
+        getSquareProgrammeVideo() {
+            let {navbarId, index} = this.$route.params;
+            let params = _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.params`);
+            if (params) {
+                return [JSON.parse(params)];
+            }
+            return [];
         },
         getSquareProgrammeVideoId() {
             let {navbarId, index} = this.$route.params;
@@ -465,15 +562,23 @@ export default {
         //  上下步的处理方法
         prevBtnClickHandler() {
             if (this.active > 0) {
-                this.active--;
+                if (this.showExist) {
+                    this.active = 0;
+                } else {
+                    this.active--;
+                }
             }
         },
         nextBtnClickHandler() {
             if (this.active < 3) {
                 if (this.active === 0) {
                     if (this.getSquareProgrammeId) {
-                        this.active++;
-                        this.getProgrammeVideoListById(this.getSquareProgrammeId);
+                        if (this.showExist) {
+                            this.active = 2;
+                        } else {
+                            this.active++;
+                            this.getProgrammeVideoListById(this.getSquareProgrammeId);
+                        }
                     } else {
                         this.$message.error('请选择节目');
                         return false;
@@ -496,6 +601,10 @@ export default {
                     this.active++;
                 }
             }
+        },
+        changeProgrammeHandler() {
+            this.showExist = false;
+            this.active = 0;
         },
         //  节目列表搜索
         searchInputHandler() {},
@@ -549,16 +658,12 @@ export default {
         markChangeHandler() {
             // this.updateProgrammeMark({checked, key});
         },
-        //  节目展示的相关操作
-        setSquareProgrammeLayoutItemType(layoutItemType) {
-            let {navbarId, index} = this.$route.params;
-            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: layoutItemType });
-        },
         //  最后一步的确认处理函数
         enterHandler() {
             let {navbarId, index} = this.$route.params;
             // 设置layoutItemType为PROGRAMME_VIDEO
-            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'PROGRAMME_VIDEO' });
+            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: this.layoutItemType });
+            this.showExist = true;
             this.closeDialog();
         },
         //  视频列表相关的方法

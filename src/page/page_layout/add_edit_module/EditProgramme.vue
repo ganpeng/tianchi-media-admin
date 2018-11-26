@@ -21,92 +21,165 @@
                 </el-steps>
                 <div class="seperator-line"></div>
                 <div v-show="active === 0" class="step-one">
-                    <el-form class="my-el-form" :inline="true" @submit.native.prevent>
-                        <el-form-item>
-                            <el-input
-                                placeholder="搜索你想要的信息"
-                                clearable
-                                class="border-input"
-                                :value="''"
-                                @input="searchInputHandler($event, 'name')"
-                            >
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">搜索</el-button>
-                        </el-form-item>
-                    </el-form>
-                    <el-table
-                        :row-class-name="tableRowClassName"
-                        ref="multipleTable"
-                        header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
-                        <el-table-column  align="center" label="选择">
-                            <template slot-scope="scope">
-                                <el-radio :value="getSquareProgrammeId" :label="scope.row.id" @input="setProgrammeSubjectHandler(scope.row)">&nbsp;</el-radio>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="code" align="center" width="120px" label="节目编号">
-                            <template slot-scope="scope">
-                                {{scope.row.code | padEmpty}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="name" align="center" min-width="100px" label="节目名称">
-                            <template slot-scope="scope">
-                                {{scope.row.name | padEmpty}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="节目图片" width="100px" align="center" >
-                            <template slot-scope="scope">
-                                <img style="width:70px;height:auto;" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="featureVideoCount" width="100px" align="center" label="正片数量">
-                            <template slot-scope="scope">
-                                {{scope.row.featureVideoCount | padEmpty}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column align="center" width="100px" label="分类">
-                            <template slot-scope="scope">
-                                <span class="ellipsis four">
-                                    {{categoryListString(scope.row.categoryList) | padEmpty}}
-                                </span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column align="center" min-width="100px" label="类型">
-                            <template slot-scope="scope">
-                                <span class="ellipsis four">
-                                    {{typeList(scope.row.id) | padEmpty}}
-                                </span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column align="center" min-width="100px" label="演员">
-                            <template slot-scope="scope">
-                                <span class="ellipsis four">
-                                    {{getChiefActor(scope.row.id) | padEmpty}}
-                                </span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
-                            <template slot-scope="scope">
-                                <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
-                                <i v-else class="off-the-shelf">已下架</i>
-                            </template>
-                        </el-table-column>
-                        <el-table-column align="center" min-width="100px" label="更新时间">
-                            <template slot-scope="scope">
-                                {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <el-pagination
-                        @size-change="handlePaginationChange($event, 'pageSize')"
-                        @current-change="handlePaginationChange($event, 'pageNum')"
-                        :current-page="programmePagination.pageNum"
-                        :page-sizes="[5, 10, 20, 30, 50]"
-                        :page-size="programmePagination.pageSize"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="programmePagination.total">
-                    </el-pagination>
+                    <div v-if="showExist">
+                        <p class="table-title">已选择的节目</p>
+                        <el-table
+                            :row-class-name="tableRowClassName"
+                            ref="multipleTable"
+                            header-row-class-name="common-table-header" class="my-table-style" :data="checkedProgrammeList" border>
+                            <!--
+                            <el-table-column  align="center" label="选择">
+                                <template slot-scope="scope">
+                                    <el-radio :value="getSquareProgrammeId" :label="scope.row.id" @input="setProgrammeSubjectHandler(scope.row)">&nbsp;</el-radio>
+                                </template>
+                            </el-table-column>
+                            -->
+                            <el-table-column prop="code" align="center" width="120px" label="节目编号">
+                                <template slot-scope="scope">
+                                    {{scope.row.code | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="name" align="center" min-width="100px" label="节目名称">
+                                <template slot-scope="scope">
+                                    {{scope.row.name | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="节目图片" width="100px" align="center" >
+                                <template slot-scope="scope">
+                                    <img style="width:70px;height:auto;" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="featureVideoCount" width="100px" align="center" label="正片数量">
+                                <template slot-scope="scope">
+                                    {{scope.row.featureVideoCount | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" width="100px" label="分类">
+                                <template slot-scope="scope">
+                                    <span class="ellipsis four">
+                                        {{categoryListString(scope.row.categoryList) | padEmpty}}
+                                    </span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" min-width="100px" label="类型">
+                                <template slot-scope="scope">
+                                    <span class="ellipsis four">
+                                        {{typeList(scope.row.id) | padEmpty}}
+                                    </span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" min-width="100px" label="演员">
+                                <template slot-scope="scope">
+                                    <span class="ellipsis four">
+                                        {{getChiefActor(scope.row.id) | padEmpty}}
+                                    </span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
+                                <template slot-scope="scope">
+                                    <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                                    <i v-else class="off-the-shelf">已下架</i>
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" min-width="100px" label="更新时间">
+                                <template slot-scope="scope">
+                                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <div class="btn-wrapper text-center">
+                            <el-button @click="changeProgrammeHandler" class="btn-style-two">更换节目</el-button>
+                        </div>
+                    </div>
+                    <div v-else class="step-one-wrapper">
+                        <el-form class="my-el-form" :inline="true" @submit.native.prevent>
+                            <el-form-item>
+                                <el-input
+                                    placeholder="搜索你想要的信息"
+                                    clearable
+                                    class="border-input"
+                                    :value="''"
+                                    @input="searchInputHandler($event, 'name')"
+                                >
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">搜索</el-button>
+                            </el-form-item>
+                        </el-form>
+                        <el-table
+                            :row-class-name="tableRowClassName"
+                            ref="multipleTable"
+                            header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
+                            <el-table-column  align="center" label="选择">
+                                <template slot-scope="scope">
+                                    <el-radio :value="getSquareProgrammeId" :label="scope.row.id" @input="setProgrammeSubjectHandler(scope.row)">&nbsp;</el-radio>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="code" align="center" width="120px" label="节目编号">
+                                <template slot-scope="scope">
+                                    {{scope.row.code | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="name" align="center" min-width="100px" label="节目名称">
+                                <template slot-scope="scope">
+                                    {{scope.row.name | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="节目图片" width="100px" align="center" >
+                                <template slot-scope="scope">
+                                    <img style="width:70px;height:auto;" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="featureVideoCount" width="100px" align="center" label="正片数量">
+                                <template slot-scope="scope">
+                                    {{scope.row.featureVideoCount | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" width="100px" label="分类">
+                                <template slot-scope="scope">
+                                    <span class="ellipsis four">
+                                        {{categoryListString(scope.row.categoryList) | padEmpty}}
+                                    </span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" min-width="100px" label="类型">
+                                <template slot-scope="scope">
+                                    <span class="ellipsis four">
+                                        {{typeList(scope.row.id) | padEmpty}}
+                                    </span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" min-width="100px" label="演员">
+                                <template slot-scope="scope">
+                                    <span class="ellipsis four">
+                                        {{getChiefActor(scope.row.id) | padEmpty}}
+                                    </span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
+                                <template slot-scope="scope">
+                                    <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                                    <i v-else class="off-the-shelf">已下架</i>
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" min-width="100px" label="更新时间">
+                                <template slot-scope="scope">
+                                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <el-pagination
+                            @size-change="handlePaginationChange($event, 'pageSize')"
+                            @current-change="handlePaginationChange($event, 'pageNum')"
+                            :current-page="programmePagination.pageNum"
+                            :page-sizes="[5, 10, 20, 30, 50]"
+                            :page-size="programmePagination.pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="programmePagination.total">
+                        </el-pagination>
+                    </div>
+
                 </div>
                 <div v-show="active === 1" class="step-two">
                     <el-form class="my-el-form" status-icon label-width="120px" @submit.native.prevent>
@@ -207,6 +280,7 @@ export default {
         return {
             active: 0,
             dialogVisible: false,
+            showExist: false,
             programme: {},
             layoutItem: {},
             previewImage: {
@@ -225,16 +299,6 @@ export default {
             getChiefActor: 'programme/getChiefActor',
             layout: 'pageLayout/layout'
         }),
-        checkIsChecked() {
-            return (row) => {
-                return true;
-            };
-        },
-        isDisabled() {
-            return (row) => {
-                return false;
-            };
-        },
         getImageByKey() {
             return (key) => {
                 let {navbarId, index} = this.$route.params;
@@ -260,6 +324,13 @@ export default {
         getSquareProgrammeLayoutItemType() {
             let {navbarId, index} = this.$route.params;
             return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.layoutItemType`);
+        },
+        checkedProgrammeList() {
+            if (this.getSquareProgrammeId && !_.isEmpty(this.programme)) {
+                return [this.programme];
+            } else {
+                return [];
+            }
         }
     },
     methods: {
@@ -296,8 +367,22 @@ export default {
                 uri: ''
             };
         },
-        dialogOpenHandler() {
-            // let {navbarId} = this.$route.params;
+        async dialogOpenHandler() {
+            try {
+                if (this.getSquareProgrammeId) {
+                    await this.getProgrammeCategory();
+                    let res = await this.$service.getProgrammeInfo({id: this.getSquareProgrammeId});
+                    if (res && res.code === 0) {
+                        this.programme = res.data;
+                        this.showExist = true;
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        changeProgrammeHandler() {
+            this.showExist = false;
         },
         // 弹窗的操作结束
         handlePaginationChange(value, key) {

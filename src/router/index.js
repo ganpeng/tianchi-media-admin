@@ -92,6 +92,8 @@ import VideoImport from 'sysPage/video_manage/VideoImport';
 
 //  页面布局
 import EditFixedModule from 'sysPage/page_layout/add_edit_module/EditFixedModule';
+import PersonModule from 'sysPage/page_layout/add_edit_module/PersonModule';
+import EditSpecialModule from 'sysPage/page_layout/add_edit_module/EditSpecialModule';
 
 Vue.use(Router);
 
@@ -585,6 +587,36 @@ let router = new Router({
                     path: '/page-layout/:navbarId/edit-fixed/:index',
                     name: 'EditFixedModule',
                     component: EditFixedModule
+                },
+                /**
+                 *
+                    FIGURE
+                    SPECIAL
+                    FIGURE_SUBJECT
+                    PROGRAMME
+                    FIGURE_SUBJECT'
+                 */
+                {
+                    path: '/page-layout/:navbarId/add/shuffle/:index'
+                },
+                {
+                    path: '/page-layout/:navbarId/:operator/figure/:index',
+                    name: 'PersonModule',
+                    component: PersonModule
+                },
+                {
+                    path: '/page-layout/:navbarId/add/special/:index',
+                    name: 'EditSpecialModule',
+                    component: EditSpecialModule
+                },
+                {
+                    path: '/page-layout/:navbarId/add/figure_subject/:index'
+                },
+                {
+                    path: '/page-layout/:navbarId/add/programme_subject/:index'
+                },
+                {
+                    path: '/page-layout/:navbarId/add/programme/:index'
                 }
             ]
         },

@@ -98,6 +98,14 @@
     }
 }
 
+//  表格上面的文字描述
+.table-title {
+    font-size: 18px;
+    color: #A8ABB3;
+    height: 40px;
+    line-height: 40px;
+}
+
 //  表格每一行hover之后改变背景色
 .el-table--enable-row-hover .el-table__body tr:hover>td{
     background-color: #333A4C!important;
@@ -230,6 +238,55 @@
         }
         .svg-icon {
             fill: $btnText;
+        }
+    }
+    //  按钮样式五
+    &.btn-style-five {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        width: 60px;
+        height: 40px;
+        line-height: 40px;
+        color: $btnText;
+        background: $mainBtn;
+        border: none;
+        min-width: 0;
+        &:hover {
+            background: $mainBtnHover;
+        }
+        span {
+            display: inherit;
+        }
+        .svg-icon {
+            fill: $btnText;
+            width: 28px;
+            height: 28px;
+        }
+    }
+    //  按钮样式六
+    &.btn-style-six {
+        padding: 4px 10px;
+        height: 34px;
+        line-height: 26px;
+        color: $btnText;
+        background: $mainBtn;
+        border: none;
+        &:hover {
+            background: $mainBtnHover;
+        }
+        .svg-icon {
+            fill: $btnText;
+        }
+    }
+}
+
+.delete-btn {
+    &.one {
+        cursor: pointer;
+        .svg-icon {
+            width: 40px;
+            height: 40px;
         }
     }
 }
@@ -1212,6 +1269,30 @@
                     color: #fff;
                 }
             }
+        }
+    }
+}
+
+.layout-square-header {
+    display: flex;
+    justify-content: space-between;
+    .left {
+        display: flex;
+        .icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .title {
+            font-size: 24px;
+            line-height: 40px;
+            color: #fff;
+        }
+    }
+    .right {
+        display: flex;
+        .el-button:nth-child(2) {
+            margin: 0 10px;
         }
     }
 }

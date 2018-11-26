@@ -148,15 +148,10 @@ export default {
             this.setAllowResolutions(this.squareIndex);
             this.$refs.selectProgrammeDialog.showDialog();
         },
-        selectProgrammeVideo(squareIndex) {
+        selectProgrammeSubject(squareIndex) {
             this.squareIndex = squareIndex;
             this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectProgrammeVideoDialog.showDialog();
-        },
-        selectFilter(squareIndex) {
-            this.squareIndex = squareIndex;
-            this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectFilterDialog.showDialog();
+            this.$refs.selectProgrammeSubjectDialog.showDialog();
         },
         saveHandler() {
             let {navbarId} = this.$route.params;
@@ -198,14 +193,22 @@ export default {
 }
 
 @mixin btnWrapper() {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    .el-button {
-        &:last-child {
-            padding: 0 10px;
-            margin-top: 10px;
+    .btn-wrapper {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        .el-button {
+            &:last-child {
+                padding: 0 10px;
+                margin-top: 10px;
+            }
+        }
+    }
+    &:hover {
+        .btn-wrapper {
+            display: block;
         }
     }
 }
@@ -229,21 +232,15 @@ export default {
                 }
                 .left-field {
                     @include paddingBg(138.4236%);
-                    .btn-wrapper {
-                        @include btnWrapper()
-                    }
+                    @include btnWrapper()
                 }
                 .middle-field {
                     @include paddingBg(46.6662%);
-                    .btn-wrapper {
-                        @include btnWrapper()
-                    }
+                    @include btnWrapper()
                 }
                 .right-field {
                     @include paddingBg(138.4236%);
-                    .btn-wrapper {
-                        @include btnWrapper()
-                    }
+                    @include btnWrapper()
                 }
             }
         }
@@ -255,9 +252,7 @@ export default {
                 .bottom-middle-field,
                 .bottom-right-field {
                     @include paddingBg(53.4534%);
-                    .btn-wrapper {
-                        @include btnWrapper();
-                    }
+                    @include btnWrapper();
                 }
 
             }

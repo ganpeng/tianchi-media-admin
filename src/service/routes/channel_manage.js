@@ -134,3 +134,10 @@ export const getProgrammeTypeGroupListById = (id) => {
 export const postProgrammeTypeGroupListById = (categoryId, programmeTypeGroupList) => {
     return service.post(`/v1/content/programme-type-group?categoryId=${categoryId}`, programmeTypeGroupList);
 };
+
+/**
+ * 根据关键字搜索直播频道
+ */
+export const searchLiveChannelList = (keyword) => {
+    return service.get(`/v1/live/channel/page?keyword=${keyword}&pageNum=0&pageSize=999&category=LIVE`);
+};

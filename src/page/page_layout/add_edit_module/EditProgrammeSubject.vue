@@ -20,64 +20,101 @@
                 </el-steps>
                 <div class="seperator-line"></div>
                 <div v-show="active === 0" class="step-one">
-                    <el-form class="my-el-form" :inline="true" @submit.native.prevent>
-                        <el-form-item>
-                            <el-input
-                                placeholder="搜索你想要的信息"
-                                clearable
-                                class="border-input"
-                                :value="''"
-                                @input="searchInputHandler($event, 'name')"
-                            >
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">搜索</el-button>
-                        </el-form-item>
-                    </el-form>
-                    <el-table
-                        :row-class-name="tableRowClassName"
-                        :header-row-class-name='"common-table-header"' class="my-table-style" :data="programmeSubject.list" border>
-                        <el-table-column align="center" width="60px" label="选择">
-                            <template slot-scope="scope">
-                                <el-radio :value="getSquareProgrammeId" :label="scope.row.id" @input="setProgrammeSubjectHandler(scope.row)">&nbsp;</el-radio>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="id" align="center" width="120px" label="编号">
-                            <template slot-scope="scope">
-                                {{scope.row.id | padEmpty}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="name" align="center" label="专题名称">
-                            <template slot-scope="scope">
-                                    {{scope.row.name | padEmpty}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="name" align="center" label="内容数量">
-                            <template slot-scope="scope">
-                                    {{scope.row.itemCount | padEmpty}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="name" align="center" label="内容类型">
-                            <template slot-scope="scope">
-                                    {{scope.row.programmeCategoryList.map((item) => item.name).join(', ') | padEmpty}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column align="center" label="更新时间">
-                            <template slot-scope="scope">
-                                {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <el-pagination
-                        @size-change="handlePaginationChange($event, 'pageSize')"
-                        @current-change="handlePaginationChange($event, 'pageNum')"
-                        :current-page="programmeSubject.pagination.pageNum"
-                        :page-sizes="[5, 10, 20, 30, 50]"
-                        :page-size="programmeSubject.pagination.pageSize"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="programmeSubject.pagination.total">
-                    </el-pagination>
+                    <div v-if="showExist">
+                        <p class="table-title">已选择的节目专题</p>
+                        <el-table
+                            :row-class-name="tableRowClassName"
+                            :header-row-class-name='"common-table-header"' class="my-table-style" :data="checkedProgrammeSubjectList" border>
+                            <el-table-column prop="id" align="center" width="120px" label="编号">
+                                <template slot-scope="scope">
+                                    {{scope.row.id | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="name" align="center" label="专题名称">
+                                <template slot-scope="scope">
+                                        {{scope.row.name | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="name" align="center" label="内容数量">
+                                <template slot-scope="scope">
+                                        {{scope.row.itemCount | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="name" align="center" label="内容类型">
+                                <template slot-scope="scope">
+                                        {{scope.row.programmeCategoryList.map((item) => item.name).join(', ') | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" label="更新时间">
+                                <template slot-scope="scope">
+                                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <div class="btn-wrapper text-center">
+                            <el-button @click="changeProgrammeHandler" class="btn-style-two">更换专题</el-button>
+                        </div>
+                    </div>
+                    <div v-else class="step-one-wrapper">
+                        <el-form class="my-el-form" :inline="true" @submit.native.prevent>
+                            <el-form-item>
+                                <el-input
+                                    placeholder="搜索你想要的信息"
+                                    clearable
+                                    class="border-input"
+                                    :value="''"
+                                    @input="searchInputHandler($event, 'name')"
+                                >
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">搜索</el-button>
+                            </el-form-item>
+                        </el-form>
+                        <el-table
+                            :row-class-name="tableRowClassName"
+                            :header-row-class-name='"common-table-header"' class="my-table-style" :data="programmeSubject.list" border>
+                            <el-table-column align="center" width="60px" label="选择">
+                                <template slot-scope="scope">
+                                    <el-radio :value="getSquareProgrammeSubjectId" :label="scope.row.id" @input="setProgrammeSubjectHandler(scope.row)">&nbsp;</el-radio>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="id" align="center" width="120px" label="编号">
+                                <template slot-scope="scope">
+                                    {{scope.row.id | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="name" align="center" label="专题名称">
+                                <template slot-scope="scope">
+                                        {{scope.row.name | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="name" align="center" label="内容数量">
+                                <template slot-scope="scope">
+                                        {{scope.row.itemCount | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="name" align="center" label="内容类型">
+                                <template slot-scope="scope">
+                                        {{scope.row.programmeCategoryList.map((item) => item.name).join(', ') | padEmpty}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" label="更新时间">
+                                <template slot-scope="scope">
+                                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <el-pagination
+                            @size-change="handlePaginationChange($event, 'pageSize')"
+                            @current-change="handlePaginationChange($event, 'pageNum')"
+                            :current-page="programmeSubject.pagination.pageNum"
+                            :page-sizes="[5, 10, 20, 30, 50]"
+                            :page-size="programmeSubject.pagination.pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="programmeSubject.pagination.total">
+                        </el-pagination>
+                    </div>
                 </div>
                 <div v-show="active === 1" class="step-two">
                     <el-form class="my-el-form" status-icon label-width="120px" @submit.native.prevent>
@@ -151,6 +188,7 @@ export default {
     },
     data() {
         return {
+            showExist: false,
             active: 0,
             dialogVisible: false,
             programmeSubjectData: {},
@@ -186,13 +224,20 @@ export default {
         rightTopDisabled() {
             return false;
         },
-        getSquareProgrammeId() {
+        getSquareProgrammeSubjectId() {
             let {navbarId, index} = this.$route.params;
             return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.id`);
         },
         getSquareProgrammeLayoutItemType() {
             let {navbarId, index} = this.$route.params;
             return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.layoutItemType`);
+        },
+        checkedProgrammeSubjectList() {
+            if (this.getSquareProgrammeSubjectId && !_.isEmpty(this.programmeSubjectData)) {
+                return [this.programmeSubjectData];
+            } else {
+                return [];
+            }
         }
     },
     methods: {
@@ -229,9 +274,22 @@ export default {
                 uri: ''
             };
         },
-        dialogOpenHandler() {
+        async dialogOpenHandler() {
             // let {navbarId} = this.$route.params;
-            console.log(this.getSquareProgrammeId);
+            try {
+                if (this.getSquareProgrammeSubjectId) {
+                    let res = await this.$service.getSubjectById(this.getSquareProgrammeSubjectId);
+                    if (res && res.code === 0) {
+                        this.programmeSubjectData = res.data;
+                        this.showExist = true;
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        changeProgrammeHandler() {
+            this.showExist = false;
         },
         // 弹窗的操作结束
         handlePaginationChange(value, key) {
@@ -247,7 +305,7 @@ export default {
         nextBtnClickHandler() {
             if (this.active < 3) {
                 if (this.active === 0) {
-                    if (this.getSquareProgrammeId) {
+                    if (this.getSquareProgrammeSubjectId) {
                         this.active++;
                     } else {
                         this.$message.error('请选择节目');
@@ -275,7 +333,7 @@ export default {
             this.programmeSubjectData = programmeSubjectData;
         },
         tableRowClassName({row, rowIndex}) {
-            return row.id === this.getSquareProgrammeId ? 'checked' : '';
+            return row.id === this.getSquareProgrammeSubjectId ? 'checked' : '';
         },
         searchEnterHandler() {},
         //  查看图片

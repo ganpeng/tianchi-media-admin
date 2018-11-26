@@ -46,7 +46,7 @@ export const getPersonSubjectList = (params) => {
 };
 
 /**
- * 获取人物专题列表
+ * 获取节目专题列表
  */
 export const getProgrammeSubjectList = (params) => {
     const _params = {
@@ -57,6 +57,13 @@ export const getProgrammeSubjectList = (params) => {
         return item !== '' && item !== undefined;
     }));
     return service.get(`/v1/content/subject/page?${paramsStr}`);
+};
+
+/**
+ * 根据专题的id获取专题
+ */
+export const getSubjectById = (id) => {
+    return service.get(`/v1/content/subject/${id}`);
 };
 
 /**

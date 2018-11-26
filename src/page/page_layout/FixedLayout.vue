@@ -27,6 +27,7 @@
     </div>
 </template>
 <script>
+import {mapGetters, mapMutations, mapActions} from 'vuex';
 import ChildFixedModule from './fixed_module/ChildFixedModule';
 import MovieFixedModule from './fixed_module/MovieFixedModule';
 import NewsFixedModule from './fixed_module/NewsFixedModule';
@@ -56,7 +57,20 @@ export default {
     data() {
         return {};
     },
-    methods: {}
+    computed: {
+        ...mapGetters({
+            layout: 'pageLayout/layout'
+        })
+    },
+    methods: {
+        ...mapMutations({
+            setLayoutDataByIndex: 'pageLayout/setLayoutDataByIndex',
+            saveLayoutToStore: 'pageLayout/saveLayoutToStore'
+        }),
+        ...mapActions({
+            getPageLayoutByNavbarId: 'pageLayout/getPageLayoutByNavbarId'
+        })
+    }
 };
 </script>
 <style lang="scss" scoped>
