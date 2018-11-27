@@ -110,7 +110,11 @@
             };
         },
         methods: {
-            // 更改专题状态
+            // 勾选专题
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            // 更改单个专题状态
             updateSubjectStatus(item) {
                 this.$confirm('此操作将' + (item.visible ? '下架' : '上架') + item.name + '专题, 是否继续?', '提示', {
                     confirmButtonText: '确定',
@@ -130,8 +134,12 @@
                     });
                 });
             },
-            // 删除单个专题
+            // 删除单个专题,只有下架的专题才能删除
             removeSubject(item) {
+                if (item.visible) {
+                    this.$message.warning('当前专题处于上架状态，请下架之后再进行删除操作');
+                    return;
+                }
                 this.$confirm('此操作将删除' + item.name + '专题, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -151,11 +159,7 @@
                     });
                 });
             },
-            // 勾选专题
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
-            },
-            // 批量上下架
+            // 批量上下架，已上架的可以继续上架
             batchUpdateStatus(visible) {
                 this.$confirm('此操作将批量' + (visible ? '上架' : '下架') + '专题, 是否继续?', '提示', {
                     confirmButtonText: '确定',
@@ -180,8 +184,14 @@
                     });
                 });
             },
-            // 批量删除专题
+            // 批量删除专题，只有已下架的专题才能删除
             batchRemove() {
+                for (let i = 0; i < this.multipleSelection.length; i++) {
+                    if (this.multipleSelection[i].visible) {
+                        this.$message.warning('当前选中的专题中含有已上架的专题，暂时不能批量下架');
+                        return;
+                    }
+                }
                 this.$confirm('此操作将批量删除专题, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

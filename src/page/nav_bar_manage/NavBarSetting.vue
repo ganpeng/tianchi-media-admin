@@ -64,7 +64,7 @@
                 });
             },
             getNavBarList() {
-                this.$service.getNavBarList().then(response => {
+                this.$service.getNavbarList().then(response => {
                     if (response && response.code === 0) {
                         this.navBarList = response.data;
                         this.previewNavBarList = response.data.slice(0);
@@ -91,7 +91,6 @@
                 this.$service.setNavBarList(this.previewNavBarList).then(response => {
                     if (response && response.code === 0) {
                         this.$message.success('成功更新栏目列表');
-                        this.getNavBarList();
                     }
                 });
             },

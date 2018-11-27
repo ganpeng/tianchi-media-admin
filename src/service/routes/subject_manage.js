@@ -99,7 +99,7 @@ export const deleteSubject = (id) => {
  * @param idList The idList of subject.
  */
 export const batchDeleteSubject = ({idList}) => {
-    return service.delete('/v1/content/subject', idList);
+    return service.delete('/v1/content/subject', {data: idList});
 };
 
 /**
@@ -116,5 +116,5 @@ export const setSubjectVisible = (id) => {
  * @param visible The visible of subject.
  */
 export const batchUpdateSubjectStatus = ({idList, visible}) => {
-    return service.patch('/v1/content/subject/visible', {idList, visible});
+    return service.patch(util.format('/v1/content/subject/visible?visible={0}', visible), idList);
 };
