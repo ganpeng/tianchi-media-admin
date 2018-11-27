@@ -9,14 +9,14 @@
             label-width="120px"
             required
             prop="name">
-            <el-input v-model="siteInfo.name" placeholder="请填写站点名称，15字以内"></el-input>
+            <el-input v-model="siteInfo.name" placeholder="请填写站点名称，15字以内" clearable></el-input>
         </el-form-item>
         <el-form-item
             label="站点token"
             label-width="120px"
             required
             prop="token">
-            <el-input v-model="siteInfo.token" placeholder="点击按钮获取该站点安全访问token" readonly></el-input>
+            <el-input v-model="siteInfo.token" placeholder="点击按钮获取该站点安全访问token" readonly clearable></el-input>
             <el-button
                 v-if="mode==='CREATE_SITE'"
                 type="primary"

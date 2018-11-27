@@ -179,6 +179,7 @@
                     </svg-icon>
                     <span>站点管理</span>
                 </template>
+                <el-menu-item index="/site-manage/config">站点配置</el-menu-item>
                 <el-menu-item index="/site-manage/list">站点列表</el-menu-item>
             </el-submenu>
             <!--个人中心-->
