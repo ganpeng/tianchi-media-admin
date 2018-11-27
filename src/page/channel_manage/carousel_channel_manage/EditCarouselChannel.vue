@@ -62,211 +62,237 @@
                 </div>
             </el-form-item>
         </el-form>
-        <div class="vice-block text-left">
-            <h3 class="block-vice-title">频道节目信息</h3>
-            <el-card>
+        <div class="seperator-line"></div>
+        <!--频道视频信息-->
+        <div class="text-left">
+            <h3 class="content-sub-title">频道视频信息</h3>
+            <ul>
+                <li>
+                    <span>当前播放：</span>
+                    <label class="on-play">
+                        {{channelInfo.currentProgramme ? channelInfo.currentProgramme : '暂无当前播放节目'}}
+                    </label>
+                </li>
+                <li>
+                    <span>播放时段：</span>
+                    <label class="duration">{{channelInfo.duration}}</label></li>
+                <li>
+                    <span>视频个数：</span>
+                    <label class="count">
+                        {{currentSelectedVideoList ? currentSelectedVideoList.length : 0}}个
+                    </label>
+                </li>
+            </ul>
+        </div>
+        <div class="seperator-line"></div>
+        <!--频道内视频-->
+        <div class="content-sub-title">频道内视频
+            <el-button @click="popAppendVideoDialogue(0)" class="contain-svg-icon btn-style-two">
+                <svg-icon icon-class="link_programme"></svg-icon>
+                关联视频
+            </el-button>
+        </div>
+        <el-table
+            header-row-class-name="common-table-header"
+            :data="currentSelectedVideoList"
+            row-class-name=video-larger-row
+            border
+            style="width: 100%">
+            <el-table-column
+                width="60px"
+                align="center"
+                label="顺序">
+                <template slot-scope="scope">
+                    {{scope.$index + 1}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                width="120px"
+                align="center"
+                prop="code"
+                label="ID">
+            </el-table-column>
+            <el-table-column
+                prop="originName"
+                width="210px"
+                align="center"
+                label="文件名">
+            </el-table-column>
+            <el-table-column
+                prop="name"
+                min-width="360px"
+                align="center"
+                label="展示名">
+                <template slot-scope="scope">
+                    <el-input v-model="scope.row.name"></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column
+                prop="link"
+                align="center"
+                width="90px"
+                label="预览">
+                <template slot-scope="scope">
+                    <div class="btn-icon-container">
+                        <el-button
+                            v-if="scope.row.m3u8For4K"
+                            type="text"
+                            size="small"
+                            @click="displayVideo(scope.row.m3u8For4K,scope.row.originName)">
+                            4K
+                        </el-button>
+                        <svg-icon
+                            v-if="scope.row.m3u8For4K"
+                            icon-class="copy_btn"
+                            class-name="copy-btn"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
+                        </svg-icon>
+                    </div>
+                    <div class="btn-icon-container">
+                        <el-button
+                            v-if="scope.row.m3u8For1080P"
+                            type="text"
+                            size="small"
+                            @click="displayVideo(scope.row.m3u8For1080P,scope.row.originName)">
+                            1080
+                        </el-button>
+                        <svg-icon
+                            v-if="scope.row.m3u8For1080P"
+                            icon-class="copy_btn"
+                            class-name="copy-btn"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
+                        </svg-icon>
+                    </div>
+                    <div class="btn-icon-container">
+                        <el-button
+                            v-if="scope.row.m3u8For720P"
+                            type="text"
+                            size="small"
+                            @click="displayVideo(scope.row.m3u8For720P,scope.row.originName)">
+                            720
+                        </el-button>
+                        <svg-icon
+                            v-if="scope.row.m3u8For720P"
+                            icon-class="copy_btn"
+                            class-name="copy-btn"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
+                        </svg-icon>
+                    </div>
+                    <div class="btn-icon-container">
+                        <el-button
+                            v-if="scope.row.m3u8For480P"
+                            type="text"
+                            size="small"
+                            @click="displayVideo(scope.row.m3u8For480P,scope.row.originName)">
+                            480
+                        </el-button>
+                        <svg-icon
+                            v-if="scope.row.m3u8For480P"
+                            icon-class="copy_btn"
+                            class-name="copy-btn"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For480P)">
+                        </svg-icon>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column
+                prop="takeTimeInSec"
+                width="90px"
+                align="center"
+                label="时长">
+                <template slot-scope="scope">
+                    {{scope.row.takeTimeInSec | fromSecondsToTime}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                width="60px"
+                align="center"
+                label="状态">
+                <template slot-scope="scope">
+                    <input
+                        class="my-switch switch-anim"
+                        type="checkbox"
+                        v-model="scope.row.visible"
+                        :checked="scope.row.visible"
+                        @click.prevent="updateVideoStatus(scope.row)"/>
+                    <i v-if="scope.row.visible" class="on-the-shelf">正常</i>
+                    <i v-else class="off-the-shelf">禁播</i>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                label="排序"
+                width="126px"
+                class="operate">
+                <template slot-scope="scope">
+                    <div class="sort">
+                        <span @click="movePosition('UP',scope.row,scope.$index)">
+                            <svg-icon icon-class="move_up"></svg-icon>
+                            上移
+                        </span>
+                        <span @click="movePosition('TOP',scope.row,scope.$index)">
+                            置顶
+                            <svg-icon icon-class="move_top"></svg-icon></span>
+                        <span @click="movePosition('DOWN',scope.row,scope.$index)">
+                            <svg-icon icon-class="move_down"></svg-icon>
+                            下移
+                        </span>
+                        <span @click="movePosition('BOTTOM',scope.row,scope.$index)">
+                            置底
+                            <svg-icon icon-class="move_bottom"></svg-icon>
+                        </span>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                label="操作"
+                width="110px"
+                class="operate">
+                <template slot-scope="scope">
+                    <div class="operator-btn-wrapper">
+                        <span class="btn-text" @click="popAppendVideoDialogue(scope.$index + 1)">添加</span>
+                        <span class="btn-text text-danger" @click="removeConfirm(scope.$index,scope.row)">删除</span>
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
+        <!--排序工具-->
+        <div id="sort-tool">
+            <div class="sort-header">
+                <label>排序工具</label>
+                <i class="el-icon-arrow-right"></i>
+                <i class="el-icon-arrow-down"></i>
+            </div>
+            <div class="sort-body">
                 <ul>
-                    <li>
-                        <span>当前播放</span>
-                        <label class="on-play">
-                            {{channelInfo.currentProgramme ? channelInfo.currentProgramme : '暂无当前播放节目'}}
-                        </label>
-                    </li>
-                    <li><span>播放时段</span><label>{{channelInfo.duration}}</label></li>
-                    <li>
-                        <span>视频个数</span>
-                        <label>
-                            {{currentSelectedVideoList ? currentSelectedVideoList.length : ''}}个
-                        </label>
+                    <li v-for="(item, index) in sectionList" :key="index">
+                        <el-input v-model="item.name" placeholder="请填写'部'的名称"></el-input>
+                        <span @click="addSection">
+                        <svg-icon icon-class="add"></svg-icon>
+                    </span>
+                        <span @click="removeSection(index)" v-if="sectionList.length !== 1">
+                        <svg-icon icon-class="remove"></svg-icon>
+                    </span>
                     </li>
                 </ul>
-            </el-card>
-            <div class="text-left" v-if="currentSelectedVideoList.length === 0">
-                <el-button
-                    class="add-video create-blue-btn contain-svg-icon"
-                    @click="popAppendVideoDialogue(0)">
-                    <svg-icon icon-class="video"></svg-icon>
-                    点击添加视频
-                </el-button>
+                <div class="sort-operate">
+                    <el-tooltip content="根据填写的部的名称列表，例如'还珠格格2'，以及视频的展示名称，例如'还珠格格2-02'进行自动排序" placement="top"
+                                effect="light">
+                        <el-button type="primary" plain class="btn-style-two" @click="autoSort">自动排序</el-button>
+                    </el-tooltip>
+                    <el-tooltip content="拖动排序功能" placement="top" effect="light">
+                        <el-button type="text" @click="sortVideoList">视频拖动排序</el-button>
+                    </el-tooltip>
+                    <el-tooltip content="反转当前视频列表功能" placement="top" effect="light">
+                        <el-button type="text" @click="revertVideoList">反转列表</el-button>
+                    </el-tooltip>
+                </div>
             </div>
-            <el-table
-                header-row-class-name="common-table-header"
-                :data="currentSelectedVideoList"
-                row-class-name=video-larger-row
-                border
-                style="width: 100%">
-                <el-table-column
-                    width="50px"
-                    align="center"
-                    label="播放顺序">
-                    <template slot-scope="scope">
-                        {{scope.$index + 1}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    width="120px"
-                    align="center"
-                    prop="code"
-                    label="视频编号">
-                </el-table-column>
-                <el-table-column
-                    prop="originName"
-                    width="200px"
-                    align="center"
-                    label="视频文件名">
-                </el-table-column>
-                <el-table-column
-                    prop="name"
-                    align="center"
-                    label="视频展示名">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.name"></el-input>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="link"
-                    align="center"
-                    width="160px"
-                    label="预览视频">
-                    <template slot-scope="scope">
-                        <div class="btn-icon-container">
-                            <el-button
-                                v-if="scope.row.m3u8For4K"
-                                type="text"
-                                size="small"
-                                @click="displayVideo(scope.row.m3u8For4K,scope.row.originName)"
-                            >4K
-                            </el-button>
-                            <svg-icon
-                                v-if="scope.row.m3u8For4K"
-                                icon-class="copy_btn"
-                                class-name="copy-btn"
-                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
-                            </svg-icon>
-                        </div>
-                        <div class="btn-icon-container">
-                            <el-button
-                                v-if="scope.row.m3u8For1080P"
-                                type="text"
-                                size="small"
-                                @click="displayVideo(scope.row.m3u8For1080P,scope.row.originName)"
-                            >1080
-                            </el-button>
-                            <svg-icon
-                                v-if="scope.row.m3u8For1080P"
-                                icon-class="copy_btn"
-                                class-name="copy-btn"
-                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
-                            </svg-icon>
-                        </div>
-                        <div class="btn-icon-container">
-                            <el-button
-                                v-if="scope.row.m3u8For720P"
-                                type="text"
-                                size="small"
-                                @click="displayVideo(scope.row.m3u8For720P,scope.row.originName)"
-                            >720
-                            </el-button>
-                            <svg-icon
-                                v-if="scope.row.m3u8For720P"
-                                icon-class="copy_btn"
-                                class-name="copy-btn"
-                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
-                            </svg-icon>
-                        </div>
-                        <div class="btn-icon-container">
-                            <el-button
-                                v-if="scope.row.m3u8For480P"
-                                type="text"
-                                size="small"
-                                @click="displayVideo(scope.row.m3u8For480P,scope.row.originName)"
-                            >480
-                            </el-button>
-                            <svg-icon
-                                v-if="scope.row.m3u8For480P"
-                                icon-class="copy_btn"
-                                class-name="copy-btn"
-                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For480P)">
-                            </svg-icon>
-                        </div>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="takeTimeInSec"
-                    width="120px"
-                    align="center"
-                    label="视频时长">
-                    <template slot-scope="scope">
-                        {{scope.row.takeTimeInSec | fromSecondsToTime}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    width="100px"
-                    align="center"
-                    label="视频状态">
-                    <template slot-scope="scope">
-                        <i class="status-normal" v-if="scope.row.visible">正常</i>
-                        <i class="status-abnormal" v-else>禁播</i>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center"
-                                 label="操作"
-                                 width="200px"
-                                 class="operate">
-                    <template slot-scope="scope">
-                        <el-button v-if="scope.row.visible" type="danger" size="mini" plain
-                                   @click="disabledConfirm(scope.row)">
-                            禁播
-                        </el-button>
-                        <el-button v-else type="success" size="mini" plain
-                                   @click="recoverConfirm(scope.row)">
-                            恢复
-                        </el-button>
-                        <el-button type="danger" size="mini" plain
-                                   @click="removeConfirm(scope.$index,scope.row)">删除
-                        </el-button>
-                        <el-button type="text" size="small" @click="popAppendVideoDialogue(scope.$index)">上方添加视频
-                        </el-button>
-                        <el-button type="text" size="small" @click="popAppendVideoDialogue(scope.$index + 1)">下方添加视频
-                        </el-button>
-                        <el-button type="text" size="small" @click="moveUpVideo(scope.$index)">
-                            上移
-                        </el-button>
-                        <el-button type="text" size="small" @click="moveDownVideo(scope.$index)">
-                            下移
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
+        </div>
+        <div class="text-left">
             <el-collapse id="channel-setting" v-model="activeNames">
-                <el-collapse-item title="排序" name="1">
-                    <el-card id="auto-sort">
-                        <div slot="header" class="clearfix">
-                            <div v-for="(item, index) in sectionList" :key="index">
-                                <el-input v-model="item.name" placeholder="请填写部的名称"></el-input>
-                                <el-button type="primary" plain @click="removeSection(index)"
-                                           v-if="sectionList.length !== 1">
-                                    删除
-                                </el-button>
-                            </div>
-                            <el-tooltip content="填写部的名称，例如'还珠格格'、'还珠格格2'、'新还珠格格'等" placement="top" effect="light">
-                                <el-button type="primary" plain @click="addSection">添加部的名称</el-button>
-                            </el-tooltip>
-                            <div class="text-center">
-                                <el-tooltip content="根据填写的部的名称列表，例如'还珠格格2'，以及视频的展示名称，例如'还珠格格2-02'进行自动排序" placement="top"
-                                            effect="light">
-                                    <el-button type="primary" plain @click="autoSort">自动排序</el-button>
-                                </el-tooltip>
-                            </div>
-                        </div>
-                        <el-tooltip content="拖动排序功能" placement="top" effect="light">
-                            <el-button type="primary" plain @click="sortVideoList">视频拖动排序</el-button>
-                        </el-tooltip>
-                        <el-tooltip content="反转当前视频列表功能" placement="top" effect="light">
-                            <el-button type="primary" plain @click="revertVideoList">反转列表</el-button>
-                        </el-tooltip>
-                    </el-card>
-                </el-collapse-item>
+                <!--设置展示名称-->
                 <el-collapse-item title="设置展示名称" name="2">
                     <el-card id="fill-display-name">
                         <div slot="header" class="clearfix">
@@ -341,7 +367,6 @@
                     </el-card>
                 </el-collapse-item>
             </el-collapse>
-            <!--填写视频展示名称-->
         </div>
         <display-video-dialog
             :url="previewVideoInfo.url"
@@ -349,9 +374,9 @@
             :displayVideoDialogVisible="previewVideoInfo.visible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
-        <div class="text-center update-box">
-            <el-button type="primary" @click="updateInfo" class="page-main-btn">保存</el-button>
-            <el-button @click="toChannelList" class="page-main-btn">返回列表页</el-button>
+        <div class="operate">
+            <el-button type="primary" @click="updateInfo" class="btn-style-two">保存</el-button>
+            <el-button @click="toChannelList" class="btn-style-three">返回列表页</el-button>
         </div>
         <el-dialog
             title="选择相应的视频"
@@ -569,6 +594,53 @@
             this.init();
         },
         methods: {
+            // 对关联的视频进行排序
+            movePosition(model, video, index) {
+                switch (model) {
+                    // 上移
+                    case 'UP':
+                        if (index === 0) {
+                            this.$message.warning('当前视频不能向上移动');
+                            return;
+                        }
+                        let moveUpItem = this.currentSelectedVideoList.splice(index, 1)[0];
+                        this.currentSelectedVideoList.splice(index - 1, 0, moveUpItem);
+                        this.$message.success('"' + video.name + '"' + '已向上移动');
+                        break;
+                    // 下移
+                    case 'DOWN':
+                        if (index === this.currentSelectedVideoList.length - 1) {
+                            this.$message.warning('当前视频不能向下移动');
+                            return;
+                        }
+                        let moveDownItem = this.currentSelectedVideoList.splice(index, 1)[0];
+                        this.currentSelectedVideoList.splice(index + 1, 0, moveDownItem);
+                        this.$message.success('"' + video.name + '"' + '已向下移动');
+                        break;
+                    // 置顶
+                    case 'TOP':
+                        if (index === 0) {
+                            this.$message.warning('当前视频已在顶部');
+                            return;
+                        }
+                        let moveTopItem = this.currentSelectedVideoList.splice(index, 1)[0];
+                        this.currentSelectedVideoList.splice(0, 0, moveTopItem);
+                        this.$message.success('"' + video.name + '"' + '已置顶');
+                        break;
+                    // 置底
+                    case 'BOTTOM':
+                        if (index === this.currentSelectedVideoList.length - 1) {
+                            this.$message.warning('当前视频已在底部');
+                            return;
+                        }
+                        let moveBottomItem = this.currentSelectedVideoList.splice(index, 1)[0];
+                        this.currentSelectedVideoList.splice(this.currentSelectedVideoList.length, 0, moveBottomItem);
+                        this.$message.success('"' + video.name + '"' + '已置底');
+                        break;
+                    default:
+                        break;
+                }
+            },
             uploadSuccessHandler(image) {
                 this.channelInfo.logoUri = image.uri;
             },
@@ -660,24 +732,6 @@
             popAppendVideoDialogue(index) {
                 this.currentVideoIndex = index;
                 this.selectDialogVisible = true;
-            },
-            // 视频上移
-            moveUpVideo(index) {
-                if (index === 0) {
-                    this.$message('当前视频不能向上移动');
-                    return;
-                }
-                let moveItem = this.currentSelectedVideoList.splice(index, 1)[0];
-                this.currentSelectedVideoList.splice(index - 1, 0, moveItem);
-            },
-            // 视频下移
-            moveDownVideo(index) {
-                if (index === this.currentSelectedVideoList.length - 1) {
-                    this.$message('当前视频不能向下移动');
-                    return;
-                }
-                let moveItem = this.currentSelectedVideoList.splice(index, 1)[0];
-                this.currentSelectedVideoList.splice(index + 1, 0, moveItem);
             },
             // 添加相应的视频
             appendVideo(selectedVideoList) {
@@ -821,41 +875,19 @@
             closeDisplayVideoDialog(status) {
                 this.previewVideoInfo.visible = status;
             },
-            // 禁播视频,当前正在播放视频可以禁播-2018.08.09
-            disabledConfirm(videoItem) {
-                this.$confirm('是否确认禁播视频，此操作将在点击保存时生效，请知晓。', '提示', {
+            // 禁播、恢复视频,当前正在播放视频可以禁播-2018.08.09
+            updateVideoStatus(videoItem) {
+                this.$confirm('是否确认' + (videoItem.visible ? '禁播' : '恢复') + '视频，此操作将在点击保存时生效，请知晓。', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    videoItem.visible = false;
-                    this.$message({
-                        type: 'success',
-                        message: '禁播成功!'
-                    });
+                    videoItem.visible = !videoItem.visible;
+                    this.$message.success((videoItem.visible ? '禁播' : '恢复') + '视频成功!');
                 }).catch(() => {
                     this.$message({
                         type: 'info',
-                        message: '已取消禁播'
-                    });
-                });
-            },
-            // 恢复视频播放
-            recoverConfirm(videoItem) {
-                this.$confirm('是否确认恢复视频，此操作将在点击保存时生效，请知晓。', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    videoItem.visible = true;
-                    this.$message({
-                        type: 'success',
-                        message: '恢复成功!'
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消恢复'
+                        message: '已取消' + (videoItem.visible ? '禁播' : '恢复')
                     });
                 });
             },
@@ -948,73 +980,144 @@
 
 <style lang="scss" scoped>
 
-    .el-input, .el-select {
-        width: 600px;
-    }
-
-    .el-card {
-        display: inline-block;
-        padding-right: 50px;
-        ul {
-            li {
-                display: flex;
-                margin-bottom: 10px;
-                min-height: 32px;
-                flex-direction: row;
-                justify-content: left;
-                align-items: center;
-                > span {
-                    margin-right: 80px;
-                    width: 120px;
-                    text-align: right;
-                    flex-shrink: 0;
-                    font-size: $largerFontSize;
-                    color: $baseGray;
+    /*排序工具*/
+    #sort-tool {
+        margin-top: 40px;
+        margin-bottom: 20px;
+        background: #2A3040;
+        border-radius: 8px;
+        .sort-header {
+            height: 50px;
+            line-height: 50px;
+            overflow: hidden;
+            label {
+                float: left;
+                padding-left: 10px;
+                font-size: 18px;
+                color: #A8ABB3;
+            }
+            i {
+                float: right;
+                padding-right: 5px;
+                margin-top: 20px;
+                font-size: 14px;
+                color: #3E495E;
+                cursor: pointer;
+            }
+        }
+        .sort-body {
+            border-top: 1px solid #3E495E;
+            .el-input {
+                margin-right: 20px;
+                width: 300px;
+            }
+            ul {
+                padding-left: 20px;
+                margin-top: 20px;
+                text-align: left;
+                li {
+                    margin-bottom: 20px;
+                    span {
+                        margin-right: 15px;
+                        width: auto;
+                        cursor: pointer;
+                    }
                 }
-                label {
-                    min-width: 380px;
-                    font-size: $normalFontSize;
-                    color: #909399;
-                    flex-shrink: 0;
-                    line-height: 2;
-                    text-align: left;
-                    &.on-play {
-                        color: $baseBlue;
-                    }
-                    .el-tag {
-                        margin-right: 10px;
-                    }
+            }
+            .sort-operate {
+                padding-top: 5px;
+                padding-left: 20px;
+                padding-bottom: 16px;
+                text-align: left;
+                .el-tooltip {
+                    margin-right: 50px;
                 }
             }
         }
     }
 
-    .add-video {
-        margin-top: 30px;
+    .el-input, .el-select {
+        width: 600px;
     }
 
-    .logo-image {
-        display: inline-block;
-        width: 100px;
-        height: 100px;
+    /*频道基本信息*/
+    .el-form {
+        margin-top: 20px;
+        .logo-image {
+            display: inline-block;
+            width: 78px;
+            height: 78px;
+        }
+        .single-image-uploader-container {
+            display: inline-block;
+            margin-left: 30px;
+        }
     }
 
-    .single-image-uploader-container {
-        display: inline-block;
-        margin-left: 30px;
+    /*频道节目信息*/
+    ul {
+        padding-left: 40px;
+        li {
+            margin-bottom: 18px;
+            span {
+                display: inline-block;
+                margin-right: 10px;
+                width: 80px;
+                height: 22px;
+                font-size: 16px;
+                color: #A8ABB3;
+            }
+            label {
+                &.on-play {
+                    padding: 6px 8px;
+                    font-size: 12px;
+                    color: #FFFFFF;
+                    background: #0062C4;
+                    border-radius: 4px;
+                }
+                &.duration {
+                    font-size: 12px;
+                    color: #A8ABB3;
+                    line-height: 17px;
+                }
+                &.count {
+                    font-size: 16px;
+                    color: #A8ABB3;
+                }
+            }
+        }
     }
 
-    .update-box {
-        margin: 120px 0px 80px 0px;
-    }
-
-    .copy-btn {
-        cursor: pointer;
-    }
-
+    /*频道内关联的视频*/
     .el-table {
         .el-input {
             width: 100%;
+        }
+        .sort {
+            span {
+                display: inline-block;
+                font-size: 14px;
+                color: #1989FA;
+                cursor: pointer;
+                &:first-child, &:nth-child(2) {
+                    margin-bottom: 20px;
+                }
+                &:first-child, &:nth-child(3) {
+                    margin-right: 8px;
+                }
+            }
+        }
+        .copy-btn {
+            cursor: pointer;
+        }
+    }
+
+    /*保存按钮*/
+    .operate {
+        margin-top: 200px;
+        margin-bottom: 80px;
+        .el-button:nth-child(2) {
+            margin-left: 40px;
         }
     }
 

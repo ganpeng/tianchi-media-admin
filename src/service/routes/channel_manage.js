@@ -37,7 +37,7 @@ export const getChannelCount = (id) => {
 };
 
 /**
- * 批量新增频道
+ * 新增频道
  */
 export const createChannels = (channelList) => {
     return service.post('/v1/live/channel', channelList);
