@@ -1,60 +1,80 @@
 <!--导入excel统一新建频道组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'频道管理'},
-            {name: currentChannelCategory + '频道批量创建'}]">
-        </custom-breadcrumb>
-        <div class="import-container">
-            <upload-excel-component
-                :on-success='handleSuccess'
-                :before-upload="beforeUpload">
-            </upload-excel-component>
-            <el-table
-                :data="channelList"
-                header-row-class-name="common-table-header"
-                border
-                highlight-current-row
-                style="width: 100%;margin-top:20px;">
-                <el-table-column
-                    align="center"
-                    width="60px"
-                    label="序号">
-                    <template slot-scope="scope">
-                        <label>{{scope.$index + 1}}</label>
+    <div class="import-page-container">
+        <div class="content-title">{{currentChannelCategory}}频道批量创建</div>
+        <div class="seperator-line"></div>
+        <div class="container">
+            <!--左侧-->
+            <div class="left-container">
+                <!--上传状态-->
+                <div class="upload-status">
+                    <i>上传状态</i>
+                    <label>
+                        共{{channelList.length}}条，已进行{{finishNo}}条，成功
+                        <span class="success-info">{{finishNo - failNo}}</span>条,失败
+                        <span class="fail-info">{{failNo}}</span>条
+                    </label>
+                </div>
+                <!--主要信息-->
+                <div class="main-info">
+                    <div class="list-none"></div>
+                    <template>
+                        <div class="info-header">已选文件</div>
+                        <div class="file-title">
+                            <label>直播频道第二批信息表</label>
+                            <i class="el-icon-close"></i>
+                        </div>
+                        <el-table
+                            :data="channelList"
+                            header-row-class-name="common-table-header"
+                            border
+                            highlight-current-row
+                            style="width: 100%;margin-top:20px;">
+                            <el-table-column
+                                align="center"
+                                width="60px"
+                                label="序号">
+                                <template slot-scope="scope">
+                                    <label>{{scope.$index + 1}}</label>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                align="center"
+                                v-for='item of tableHeader'
+                                :prop="item"
+                                :label="item"
+                                :key='item'>
+                            </el-table-column>
+                            <el-table-column
+                                align="center"
+                                prop="message"
+                                label="提示信息">
+                            </el-table-column>
+                        </el-table>
+                        <div class="operate-item">
+                            <el-button
+                                v-if="channelList.length !== 0"
+                                :disabled="createDisabled"
+                                type="primary"
+                                @click="createChannels"
+                                class="btn-style-two">
+                                保存
+                            </el-button>
+                            <el-button @click="toChannelList" class="btn-style-three">返回列表</el-button>
+                        </div>
                     </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    v-for='item of tableHeader'
-                    :prop="item"
-                    :label="item"
-                    :key='item'>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    prop="message"
-                    label="提示信息">
-                </el-table-column>
-            </el-table>
-            <div class="text-left">
-                <label class="tips">{{tips}}</label>
+                </div>
             </div>
-            <el-button
-                v-if="channelList.length !== 0"
-                :disabled="createDisabled"
-                @click="createChannels"
-                type="primary"
-                class="page-main-btn">
-                创建{{currentChannelCategory}}频道
-            </el-button>
-            <el-button
-                class="page-main-btn"
-                @click="toChannelList">
-                返回{{currentChannelCategory}}频道列表页
-            </el-button>
-            <div class="operate-item">
+            <div class="right-container">
+                <div class="title">批量导入区域</div>
+                <div class="upload">
+                    <upload-excel-component
+                        :on-success='handleSuccess'
+                        :before-upload="beforeUpload">
+                    </upload-excel-component>
+                </div>
+            </div>
+            <div class="operate-item" v-if="false">
                 <el-button class="create-blue-btn" @click="exportTemplate">导出{{currentChannelCategory}}频道模板</el-button>
             </div>
         </div>
@@ -290,7 +310,7 @@
                         this.failNo++;
                         this.channelList[index].message = '第' + (index + 1) + '个:频道创建失败：' + response.message;
                     }
-                    this.tips = '提示：当前一共有' + this.channelList.length + '个' + this.currentChannelCategory + '频道，已经进行了' + this.finishNo + '个，失败' + this.failNo + '个';
+                    this.tips = '共' + this.channelList.length + '条' + this.currentChannelCategory + '频道，进行了' + this.finishNo + '条，失败' + this.failNo + '个';
                     this.$set(this.channelList, index, this.channelList[index]);
                     if (this.finishNo === this.channelList.length) {
                         this.createDisabled = false;
@@ -391,18 +411,96 @@
 
 <style lang="scss" scoped>
 
-    .create-btn {
-        margin: 120px 20px 80px 0px;
+    .import-page-container {
     }
 
-    .import-container {
-        position: relative;
+    .container {
+        .left-container {
+            margin-right: 300px;
+            .upload-status {
+                margin: 0px 20px;
+                height: 80px;
+                line-height: 80px;
+                text-align: center;
+                border-bottom: 1px solid #3E495E;
+                i {
+                    margin-right: 22px;
+                    font-size: 24px;
+                    color: #A8ABB3;
+                }
+                label {
+                    font-size: 16px;
+                    color: #A8ABB3;
+                    .success-info {
+                        color: #3AC26F;
+                    }
+                    .fail-info {
+                        color: #C35757;
+                    }
+                }
+            }
+            .main-info {
+                .info-header {
+                    height: 70px;
+                    line-height: 70px;
+                    font-size: 20px;
+                    color: #A8ABB3;
+                    text-align: center;
+                }
+                .file-title {
+                    position: relative;
+                    margin: 0px auto;
+                    width: 800px;
+                    height: 40px;
+                    line-height: 40px;
+                    background: #2A3040;
+                    border-radius: 8px;
+                    label {
+                        font-size: 14px;
+                        color: #A8ABB3;
+                        text-align: center;
+                    }
+                    i {
+                        position: absolute;
+                        top: 10px;
+                        right: 30px;
+                        font-size: 20px;
+                        color: #C35757;
+                    }
+                }
+            }
+        }
+        .right-container {
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 153px;
+            right: 0px;
+            height: 100%;
+            width: 300px;
+            border-left: 1px solid #3E495E;
+            .title {
+                flex-grow: 0;
+                margin-left: 20px;
+                margin-right: 40px;
+                height: 80px;
+                text-align: center;
+                line-height: 80px;
+                font-size: 24px;
+                color: #A8ABB3;
+                border-bottom: 1px solid #3E495E;
+            }
+            .upload {
+                margin-left: 20px;
+                .upload-excel {
+                    margin-top: 140px;
+                }
+            }
+        }
     }
 
     .operate-item {
-        position: absolute;
-        top: 10px;
-        right: 10px;
+        margin-top: 200px;
     }
 
 </style>
