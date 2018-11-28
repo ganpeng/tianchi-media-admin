@@ -1,16 +1,18 @@
 <!--列表拖动排序组件-->
 <template>
-    <el-dialog :title="title"
-               visible
-               width="80%"
-               class="my-dialog"
-               v-on:close="closeDialog">
+    <el-dialog
+        :title="title"
+        visible
+        width="80%"
+        class="my-dialog"
+        v-on:close="closeDialog">
         <ul id="sort-list">
             <li v-for="(item, index) in sourceList"
                 :key="index"
                 :data-id="item[uniqueKey]">
                 <el-tooltip :content="item[displayKey]" placement="bottom" effect="light">
-                    <el-button>{{index + 1}}.{{item[displayKey].slice(0,8)}}</el-button>
+                    <el-button type="primary" class="btn-style-six">{{index + 1}}.{{item[displayKey].slice(0,8)}}
+                    </el-button>
                 </el-tooltip>
             </li>
         </ul>

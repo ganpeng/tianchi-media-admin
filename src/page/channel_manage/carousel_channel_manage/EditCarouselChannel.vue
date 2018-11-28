@@ -259,27 +259,27 @@
         </el-table>
         <!--排序工具-->
         <div id="sort-tool">
-            <div class="sort-header">
+            <div class="sort-header" @click="sortToolVisible = !sortToolVisible">
                 <label>排序工具</label>
-                <i class="el-icon-arrow-right"></i>
-                <i class="el-icon-arrow-down"></i>
+                <i class="el-icon-arrow-down" v-if="sortToolVisible"></i>
+                <i class="el-icon-arrow-right" v-else></i>
             </div>
-            <div class="sort-body">
+            <div class="sort-body" v-if="sortToolVisible">
                 <ul>
                     <li v-for="(item, index) in sectionList" :key="index">
                         <el-input v-model="item.name" placeholder="请填写'部'的名称"></el-input>
-                        <span @click="addSection">
-                        <svg-icon icon-class="add"></svg-icon>
-                    </span>
                         <span @click="removeSection(index)" v-if="sectionList.length !== 1">
-                        <svg-icon icon-class="remove"></svg-icon>
-                    </span>
+                            <svg-icon icon-class="remove"></svg-icon>
+                        </span>
+                        <span @click="addSection" v-show="index === sectionList.length - 1">
+                            <svg-icon icon-class="add"></svg-icon>
+                        </span>
                     </li>
                 </ul>
                 <div class="sort-operate">
                     <el-tooltip content="根据填写的部的名称列表，例如'还珠格格2'，以及视频的展示名称，例如'还珠格格2-02'进行自动排序" placement="top"
                                 effect="light">
-                        <el-button type="primary" plain class="btn-style-two" @click="autoSort">自动排序</el-button>
+                        <el-button type="primary" plain class="btn-style-four" @click="autoSort">自动排序</el-button>
                     </el-tooltip>
                     <el-tooltip content="拖动排序功能" placement="top" effect="light">
                         <el-button type="text" @click="sortVideoList">视频拖动排序</el-button>
@@ -290,83 +290,88 @@
                 </div>
             </div>
         </div>
-        <div class="text-left">
-            <el-collapse id="channel-setting" v-model="activeNames">
-                <!--设置展示名称-->
-                <el-collapse-item title="设置展示名称" name="2">
-                    <el-card id="fill-display-name">
-                        <div slot="header" class="clearfix">
-                            <div>
-                                <label>删除原始文件名称第一部分：</label>
-                                <el-input
-                                    v-model="originNameParams.prefix"
-                                    placeholder="请填写前缀等需要删除的连续文字，例如'（高清）'等">
-                                </el-input>
-                            </div>
-                            <div>
-                                <label>删除原始文件名称第二部分：</label>
-                                <el-input
-                                    v-model="originNameParams.midWords"
-                                    placeholder="请填写中间等需要删除的连续文字，例如'（高清）'等">
-                                </el-input>
-                            </div>
-                            <div>
-                                <label>删除原始文件名称第三部分：</label>
-                                <el-input
-                                    v-model="originNameParams.suffix"
-                                    placeholder="请填写后缀等需要删除的连续文字，例如'.mpg'等">
-                                </el-input>
-                            </div>
-                            <div class="text-center">
-                                <el-tooltip
-                                    content="根据填写的视频文件名称需要删除的部分，对视频原始文件名称进行截取删除操作，并填写到展示名称处"
-                                    placement="top"
-                                    effect="light">
-                                    <el-button type="primary" plain @click="setDisplayNameFromOriginName">填写展示名称
-                                    </el-button>
-                                </el-tooltip>
-                            </div>
-                        </div>
-                        <div slot="header" class="clearfix">
-                            <h3 class="block-vice-title">根据视频展示名对视频展示名称进行设置：</h3>
-                            <div>
-                                <label>被替换视频展示名部分：</label>
-                                <el-input
-                                    v-model="displayNameParams.words"
-                                    placeholder="请填写需要被替换的连续文字，例如'（高清）'等">
-                                </el-input>
-                            </div>
-                            <div>
-                                <label>替换为视频展示名部分：</label>
-                                <el-input
-                                    v-model="displayNameParams.replacer"
-                                    placeholder="请填写需要替换为的连续文字，例如'-'等">
-                                </el-input>
-                            </div>
-                            <div class="text-center">
-                                <el-tooltip
-                                    content="根据填写的展示名称需要删除的部分，对视频展示名进行截取删除操作，并填回到展示名称处"
-                                    placement="top"
-                                    effect="light">
-                                    <el-button type="primary" plain @click="setDisplayNameFromSelf">填写展示名称</el-button>
-                                </el-tooltip>
-                            </div>
-                        </div>
-                        <el-tooltip
-                            content="分割原始文件名'&&'，自动填写展示名称，例如原始文件名称为'（高清）新还珠格格（收录）01&&新还珠格格-01.mpg'"
-                            placement="top"
-                            effect="light">
-                            <el-button type="primary" plain @click="setVideoNameList">设置展示名称</el-button>
-                        </el-tooltip>
-                        <el-tooltip content="删除当前视频中的展示名称中的最后面的数字" placement="top" effect="light">
-                            <el-button type="primary" plain @click="removeDisplayNameNo">删除展示名称后面的数字</el-button>
-                        </el-tooltip>
-                        <el-tooltip content="在展示名称的文字最后插入'-'，例如'天龙八部01'改为'天龙八部-01'" placement="top" effect="light">
-                            <el-button type="primary" plain @click="insertShortLine">插入'-'</el-button>
-                        </el-tooltip>
-                    </el-card>
-                </el-collapse-item>
-            </el-collapse>
+        <!--设置展示名称-->
+        <div id="display-name-setting">
+            <div class="display-name-header" @click="displayNameSettingVisible = !displayNameSettingVisible">
+                <label>设置展示名称</label>
+                <i class="el-icon-arrow-down" v-if="displayNameSettingVisible"></i>
+                <i class="el-icon-arrow-right" v-else></i>
+            </div>
+            <div class="display-name-body" v-if="displayNameSettingVisible">
+                <div class="replace-other-setting">
+                    <ul>
+                        <li>
+                            <label>删除原始文件名称第一部分：</label>
+                            <el-input
+                                v-model="originNameParams.prefix"
+                                placeholder="请填写前缀等需要删除的连续文字，例如'（高清）'等">
+                            </el-input>
+                        </li>
+                        <li>
+                            <label>删除原始文件名称第二部分：</label>
+                            <el-input
+                                v-model="originNameParams.midWords"
+                                placeholder="请填写中间等需要删除的连续文字，例如'（高清）'等">
+                            </el-input>
+                        </li>
+                        <li>
+                            <label>删除原始文件名称第三部分：</label>
+                            <el-input
+                                v-model="originNameParams.suffix"
+                                placeholder="请填写后缀等需要删除的连续文字，例如'.mpg'等">
+                            </el-input>
+                        </li>
+                    </ul>
+                    <el-tooltip
+                        content="根据填写的视频文件名称需要删除的部分，对视频原始文件名称进行截取删除操作，并填写到展示名称处"
+                        placement="top"
+                        effect="light">
+                        <el-button type="primary" plain class="btn-style-four" @click="setDisplayNameFromOriginName">
+                            填写展示名称
+                        </el-button>
+                    </el-tooltip>
+                </div>
+                <div class="replace-self-setting">
+                    <span>根据视频展示名对视频展示名称进行设置：</span>
+                    <ul>
+                        <li>
+                            <label>被替换视频展示名部分：</label>
+                            <el-input
+                                v-model="displayNameParams.words"
+                                placeholder="请填写需要被替换的连续文字，例如'（高清）'等">
+                            </el-input>
+                        </li>
+                        <li>
+                            <label>替换为视频展示名部分：</label>
+                            <el-input
+                                v-model="displayNameParams.replacer"
+                                placeholder="请填写需要替换为的连续文字，例如'-'等">
+                            </el-input>
+                        </li>
+                    </ul>
+                    <el-tooltip
+                        content="根据填写的展示名称需要删除的部分，对视频展示名进行截取删除操作，并填回到展示名称处"
+                        placement="top"
+                        effect="light">
+                        <el-button type="primary" plain class="btn-style-four" @click="setDisplayNameFromSelf">填写展示名称
+                        </el-button>
+                    </el-tooltip>
+                </div>
+                <div class="display-name-operate">
+                    <el-tooltip
+                        content="分割原始文件名'&&'，自动填写展示名称，例如原始文件名称为'（高清）新还珠格格（收录）01&&新还珠格格-01.mpg'"
+                        placement="top"
+                        effect="light">
+                        <el-button type="text" @click="setVideoNameList">设置展示名称</el-button>
+                    </el-tooltip>
+                    <el-tooltip content="删除当前视频中的展示名称中的最后面的数字" placement="top" effect="light">
+                        <el-button type="text" @click="removeDisplayNameNo">删除展示名称后面的数字</el-button>
+                    </el-tooltip>
+                    <el-tooltip content="在展示名称的文字最后插入'-'，例如'天龙八部01'改为'天龙八部-01'" placement="top" effect="light">
+                        <el-button type="text" @click="insertShortLine">插入'-'</el-button>
+                    </el-tooltip>
+                </div>
+            </div>
         </div>
         <display-video-dialog
             :url="previewVideoInfo.url"
@@ -382,7 +387,7 @@
             title="选择相应的视频"
             :close-on-click-modal=false
             :visible.sync="selectDialogVisible"
-            center
+            custom-class="normal-dialog"
             width="80%">
             <select-multiple-video
                 v-if="selectDialogVisible"
@@ -402,13 +407,6 @@
             v-on:closeDialog="sortDialogVisible = false"
             v-on:setSortedList="setSortedList">
         </sort-dialog>
-        <upload-image
-            :size='size'
-            title="上传频道封面图片"
-            :successHandler="setChannelLogo"
-            :imageUploadDialogVisible="imageUploadDialogVisible"
-            v-on:changeImageDialogStatus="closeImageDialog($event)">
-        </upload-image>
     </div>
 </template>
 
@@ -418,7 +416,6 @@
     import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
     import SelectMultipleVideo from './SelectMultipleVideo';
     import SortDialog from 'sysComponents/custom_components/custom/SortDialog';
-    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import {CHANNEL_LOGO_DIMENSION} from '@/util/config/dimension';
 
     const ClipboardJS = require('clipboard');
@@ -429,7 +426,6 @@
             DisplayVideoDialog,
             SelectMultipleVideo,
             SortDialog,
-            UploadImage,
             SingleImageUploader
         },
         data() {
@@ -516,8 +512,9 @@
                 }
             };
             return {
+                displayNameSettingVisible: false,
+                sortToolVisible: true,
                 allowResolutions: CHANNEL_LOGO_DIMENSION,
-                activeNames: ['1'],
                 originNameParams: {
                     prefix: '',
                     midWords: '',
@@ -527,8 +524,6 @@
                     words: '',
                     replacer: ''
                 },
-                size: CHANNEL_LOGO_DIMENSION,
-                imageUploadDialogVisible: false,
                 sortDialogVisible: false,
                 selectDialogVisible: false,
                 channelInfo: {
@@ -719,14 +714,6 @@
                 clipboard.on('error', function (e) {
                     that.$message.error('视频链接复制失败');
                 });
-            },
-            // 设置频道封面的uri
-            setChannelLogo(newPosterImage) {
-                this.channelInfo.logoUri = newPosterImage.posterImage.uri;
-            },
-            // 关闭上传图片对话框
-            closeImageDialog(status) {
-                this.imageUploadDialogVisible = status;
             },
             // 打开视频列表，设置当前点击的某一行视频
             popAppendVideoDialogue(index) {
@@ -980,6 +967,90 @@
 
 <style lang="scss" scoped>
 
+    /*设置展示名称*/
+    #display-name-setting {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        background: #2A3040;
+        border-radius: 8px;
+        .display-name-header {
+            height: 50px;
+            line-height: 50px;
+            overflow: hidden;
+            cursor: pointer;
+            label {
+                float: left;
+                padding-left: 10px;
+                font-size: 18px;
+                color: #A8ABB3;
+            }
+            i {
+                float: right;
+                padding-right: 5px;
+                margin-top: 20px;
+                font-size: 14px;
+                color: #3E495E;
+                cursor: pointer;
+            }
+        }
+        .display-name-body {
+            border-top: 1px solid #3E495E;
+            .el-input {
+                margin-right: 20px;
+                width: 300px;
+            }
+            .replace-other-setting {
+                text-align: left;
+                ul {
+                    padding-left: 20px;
+                    margin-top: 20px;
+                    text-align: left;
+                    li {
+                        margin-bottom: 20px;
+                        label {
+                            color: #fff;
+                        }
+                    }
+                }
+                .el-tooltip {
+                    margin-left: 160px;
+                }
+            }
+            .replace-self-setting {
+                margin-top: 40px;
+                text-align: left;
+                span {
+                    padding-left: 20px;
+                    font-size: 16px;
+                    color: #A8ABB3;
+                }
+                ul {
+                    padding-left: 20px;
+                    margin-top: 20px;
+                    text-align: left;
+                    li {
+                        margin-bottom: 20px;
+                        label {
+                            color: #fff;
+                        }
+                    }
+                }
+                .el-tooltip {
+                    margin-left: 160px;
+                }
+            }
+            .display-name-operate {
+                margin-top: 40px;
+                padding-left: 20px;
+                padding-bottom: 20px;
+                text-align: left;
+                .el-tooltip {
+                    margin-right: 50px;
+                }
+            }
+        }
+    }
+
     /*排序工具*/
     #sort-tool {
         margin-top: 40px;
@@ -990,6 +1061,7 @@
             height: 50px;
             line-height: 50px;
             overflow: hidden;
+            cursor: pointer;
             label {
                 float: left;
                 padding-left: 10px;
@@ -1027,7 +1099,7 @@
             .sort-operate {
                 padding-top: 5px;
                 padding-left: 20px;
-                padding-bottom: 16px;
+                padding-bottom: 20px;
                 text-align: left;
                 .el-tooltip {
                     margin-right: 50px;
@@ -1121,31 +1193,52 @@
         }
     }
 
-    #auto-sort, #fill-display-name {
-        width: 100%;
-        .el-button {
-            margin-bottom: 30px;
-            margin-right: 50px;
-        }
-        .el-input {
-            margin-bottom: 20px;
-        }
+    .svg-icon-remove {
+        fill: #1989FA;
     }
 
 </style>
 
+<!--全局el-dialog样式-->
 <style lang="scss">
-    #channel-setting {
-        width: 100%;
-        .el-collapse-item__header {
-            padding-left: 20px;
-            font-size: 16px;
+
+    .normal-dialog {
+        background: #293550;
+        border: 0 solid #637497;
+        box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
+        border-radius: 8px;
+        .el-dialog__header {
+            padding: 0px;
+            height: 50px;
+            line-height: 55px;
+            background: #1F2D4D;
+            .el-dialog__title {
+                font-size: 20px;
+                color: #909399;
+            }
+            .el-dialog__headerbtn {
+                top: 16px;
+                font-size: 15px;
+                .el-dialog__close {
+                    color: #C35757;
+                }
+            }
         }
-        .el-collapse-item__content {
-            padding-bottom: 0px;
-        }
-        .el-collapse-item__wrap {
-            background: $stillGray;
+        .el-dialog__footer {
+            .el-button {
+                width: 100px;
+                height: 40px;
+                &.el-button--default {
+                    color: $dangerColor;
+                }
+                &.el-button--default.el-button--primary {
+                    color: #A3D0FD;
+                }
+                &:first-child {
+                    margin-left: 10px;
+                }
+            }
         }
     }
+
 </style>

@@ -1,19 +1,21 @@
 <template>
     <div class="video-table-container text-center" @keyup.enter="getVideoList">
-        <el-form :inline="true" class="text-left">
-            <el-form-item>
-                <el-input
-                    v-model="queryParams.name"
-                    placeholder="搜索你想要的信息"
-                    clearable>
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-                <el-input v-show="false"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" plain icon="el-icon-search" @click="getVideoList">搜索</el-button>
-            </el-form-item>
-        </el-form>
+        <div class="search-field-item">
+            <el-input
+                v-model="queryParams.name"
+                clearable
+                class="border-input"
+                placeholder="搜索你想要的信息">
+            </el-input>
+            <el-button
+                class="btn-style-one"
+                @click="getVideoList"
+                icon="el-icon-search"
+                type="primary"
+                plain>
+                搜索
+            </el-button>
+        </div>
         <el-table
             ref="selectMultipleVideoTable"
             :data="videoList"
@@ -118,7 +120,7 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
         </el-pagination>
-        <div slot="footer" class="dialog-footer text-right">
+        <div slot="footer" class="dialog-footer">
             <el-button @click="closeSelectVideoDialog">取 消</el-button>
             <el-button type="primary" @click="appendVideo">确 定</el-button>
         </div>
@@ -138,7 +140,14 @@
         components: {
             DisplayVideoDialog
         },
-        props: ['currentSelectedVideoList'],
+        props: {
+            currentSelectedVideoList: {
+                type: Array,
+                default: function () {
+                    return [];
+                }
+            }
+        },
         data() {
             return {
                 queryParams: {
@@ -307,14 +316,36 @@
         }
     };
 </script>
+
 <style lang="scss" scoped>
 
-    .el-input {
-        width: 400px;
+    .search-field-item {
+        text-align: left;
+        margin-top: 24px;
+        margin-left: 40px;
+        margin-bottom: 20px;
+        .el-input {
+            margin-right: 20px;
+            width: 180px;
+        }
     }
 
     .dialog-footer {
-        margin-top: 50px;
+        margin-top: 20px;
+        text-align: right;
+        .el-button {
+            width: 100px;
+            height: 40px;
+            &.el-button--default {
+                color: $dangerColor;
+            }
+            &.el-button--default.el-button--primary {
+                color: #A3D0FD;
+            }
+            &:first-child {
+                margin-left: 10px;
+            }
+        }
     }
 
 </style>
