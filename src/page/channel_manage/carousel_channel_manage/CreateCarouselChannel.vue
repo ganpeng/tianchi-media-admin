@@ -1,9 +1,9 @@
-<!--编辑轮播频道的组件-->
+<!--新建轮播频道的组件-->
 <template>
     <div>
-        <div class="content-title">编辑轮播频道</div>
+        <div class="content-title">添加轮播频道</div>
         <carousel-channel-form
-            status="EDIT_CHANNEL">
+            status="CREATE_CHANNEL">
         </carousel-channel-form>
     </div>
 </template>
@@ -12,7 +12,7 @@
     import CarouselChannelForm from './CarouselChannelForm';
 
     export default {
-        name: 'EditCarouselChannel',
+        name: 'CreateCarouselChannel',
         components: {
             CarouselChannelForm
         },

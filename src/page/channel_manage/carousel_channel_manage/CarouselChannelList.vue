@@ -29,7 +29,7 @@
                 <div class="float-right">
                     <el-button
                         class="btn-style-two contain-svg-icon"
-                        @click="createChannelDialogVisible = true">
+                        @click="createCarouselChannel">
                         <svg-icon icon-class="add"></svg-icon>
                         添加
                     </el-button>
@@ -62,21 +62,11 @@
                 :total="total">
             </el-pagination>
         </div>
-        <el-dialog
-            title="新增轮播频道"
-            :close-on-click-modal=false
-            :visible.sync="createChannelDialogVisible"
-            width="50%">
-            <create-channel
-                v-if="createChannelDialogVisible"
-                v-on:closeDialog="closeDialog">
-            </create-channel>
-        </el-dialog>
     </div>
 </template>
 
 <script>
-    import CreateChannel from './CreateChannel';
+    import CreateChannel from './CreateCarouselChannel';
     import ChannelFilterParams from '../../search_filter_params/ChannelFilterParams';
     import CarouselChannelOperateTable from './CarouselChannelOperateTable';
     import wsCache from '@/util/webStorage';
@@ -90,7 +80,6 @@
         },
         data() {
             return {
-                createChannelDialogVisible: false,
                 listQueryParams: {
                     pageNum: 0,
                     pageSize: 10
@@ -148,14 +137,14 @@
                     name: 'EditChannelByImportExcel'
                 });
             },
-            // 关闭创建频道对话框
-            closeDialog() {
-                this.createChannelDialogVisible = false;
-                this.getChannelList();
-            },
             // 批量恢复或者禁播
             batchSetStatus(visible) {
                 this.$refs.channelOperateTable.batchUpdateStatus(visible);
+            },
+            createCarouselChannel() {
+                this.$router.push({
+                    name: 'CreateCarouselChannel'
+                });
             }
         }
     };
