@@ -69,26 +69,26 @@
                     <el-button
                         class="btn-style-two contain-svg-icon"
                         @click="createLiveChannel">
-                            <svg-icon icon-class="add"></svg-icon>
+                        <svg-icon icon-class="add"></svg-icon>
                         添加
                     </el-button>
                     <el-button
                         class="btn-style-two contain-svg-icon"
                         @click="createChannelByImportExcel">
-                            <svg-icon icon-class="import"></svg-icon>
+                        <svg-icon icon-class="import"></svg-icon>
                         导入
                     </el-button>
                     <el-button
                         class="btn-style-two contain-svg-icon"
                         @click="editChannelByImportExcel">
-                            <svg-icon icon-class="export"></svg-icon>
+                        <svg-icon icon-class="export"></svg-icon>
                         修改
                     </el-button>
                     <el-button
                         class="btn-style-two contain-svg-icon"
-                        @click="gotoBlankPage(ProgrammeImport)">
-                            <svg-icon icon-class="import"></svg-icon>
-                            节目单
+                        @click="gotoBlankPage('LiveChannelImport')">
+                        <svg-icon icon-class="import"></svg-icon>
+                        节目单
                     </el-button>
                 </div>
             </div>
@@ -128,12 +128,12 @@
                 </el-table-column>
                 <el-table-column prop="videoPid" align="center" width="100px" label="videoPid">
                     <template slot-scope="scope">
-                            {{scope.row.videoPid | padEmpty}}
+                        {{scope.row.videoPid | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="audioPid" align="center" width="100px" label="audioPid">
                     <template slot-scope="scope">
-                            {{scope.row.audioPid | padEmpty}}
+                        {{scope.row.audioPid | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column align="center" label="操作">
@@ -227,6 +227,7 @@
 <script>
     import {mapGetters, mapActions, mapMutations} from 'vuex';
     import LiveChannelDialog from './LiveChannelDialog';
+
     const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
     const x2js = new X2JS();
     export default {
@@ -337,7 +338,7 @@
                                 this.openDownloadDialog(blob, `${name}.xml`);
                             } else {
                                 if (res.data.length > 0) {
-                                    this.$router.push({ name: 'PreviewProgrammeList', params: { id } });
+                                    this.$router.push({name: 'PreviewProgrammeList', params: {id}});
                                 } else {
                                     this.$message.error('当前频道下没有节目单');
                                     return false;
@@ -411,7 +412,8 @@
             // 批量创建直播频道
             createChannelByImportExcel() {
                 let routeData = this.$router.resolve({
-                    name: 'LiveChannelImport'
+                    name: 'CreateChannelByImportExcel',
+                    params: {category: 'LIVE'}
                 });
                 window.open(routeData.href, '_blank');
             },
@@ -536,6 +538,7 @@
                     that.isUploading = true;
                     upload();
                 }
+
                 function upload() {
                     if (typeof that.files[that.count] === 'undefined') {
                         that.isUploading = false;
@@ -572,69 +575,73 @@
                             that.count = that.count + 1;
                             upload();
                         }).catch(() => {
-                            that.files = that.files.map((obj, index) => {
-                                if (index === that.count) {
-                                    obj.message = `<span class="text-danger">文件导入失败</span>`;
-                                    obj.status = 'error';
-                                    return obj;
-                                } else {
-                                    return obj;
-                                }
-                            });
-                            that.count = that.count + 1;
-                            upload();
+                        that.files = that.files.map((obj, index) => {
+                            if (index === that.count) {
+                                obj.message = `<span class="text-danger">文件导入失败</span>`;
+                                obj.status = 'error';
+                                return obj;
+                            } else {
+                                return obj;
+                            }
                         });
+                        that.count = that.count + 1;
+                        upload();
+                    });
                 }
             },
             gotoBlankPage(name) {
-                let routeData = this.$router.resolve({ name });
+                let routeData = this.$router.resolve({name});
                 window.open(routeData.href, '_blank');
             }
         }
     };
 </script>
 <style scoped lang="scss">
-.my-dropdown {
-    border: none;
-    color: $mainColor;
-    width: 70px;
-    height: 18px;
-    line-height: 18px;
-    font-size: 14px;
-}
-.yes {
-    color: $successColor;
-}
-.no {
-    color: $dangerColor;
-}
+    .my-dropdown {
+        border: none;
+        color: $mainColor;
+        width: 70px;
+        height: 18px;
+        line-height: 18px;
+        font-size: 14px;
+    }
 
-.table-wrapper {
-    height: 500px;
-    overflow-y: scroll;
-}
-.file {
-    position: relative;
-    display: inline-block;
-    background: #409EFF;
-    border: 1px solid #409EFF;
-    border-radius: 3px;
-    font-size: 12px;
-    line-height: 34px;
-    padding: 0px 15px;
-    overflow: hidden;
-    color: #fff;
-    text-decoration: none;
-    text-indent: 0;
-}
-.file input {
-    position: absolute;
-    font-size: 100px;
-    right: 0;
-    top: 0;
-    width: 80px;
-    height: 34px;
-    opacity: 0;
-    cursor: pointer;
-}
+    .yes {
+        color: $successColor;
+    }
+
+    .no {
+        color: $dangerColor;
+    }
+
+    .table-wrapper {
+        height: 500px;
+        overflow-y: scroll;
+    }
+
+    .file {
+        position: relative;
+        display: inline-block;
+        background: #409EFF;
+        border: 1px solid #409EFF;
+        border-radius: 3px;
+        font-size: 12px;
+        line-height: 34px;
+        padding: 0px 15px;
+        overflow: hidden;
+        color: #fff;
+        text-decoration: none;
+        text-indent: 0;
+    }
+
+    .file input {
+        position: absolute;
+        font-size: 100px;
+        right: 0;
+        top: 0;
+        width: 80px;
+        height: 34px;
+        opacity: 0;
+        cursor: pointer;
+    }
 </style>

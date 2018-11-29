@@ -1,35 +1,38 @@
 <!--导入excel统一新建频道组件-->
 <template>
     <div class="import-page-container">
-        <div class="content-title">{{currentChannelCategory}}频道批量创建</div>
-        <div class="seperator-line"></div>
         <div class="container">
             <!--左侧-->
             <div class="left-container">
                 <!--上传状态-->
                 <div class="upload-status">
-                    <i>上传状态</i>
-                    <label>
-                        共{{channelList.length}}条，已进行{{finishNo}}条，成功
-                        <span class="success-info">{{finishNo - failNo}}</span>条,失败
-                        <span class="fail-info">{{failNo}}</span>条
-                    </label>
+                    <div>
+                        <el-button
+                            class="btn-style-six contain-svg-icon"
+                            @click="exportTemplate">
+                            <svg-icon icon-class="import"></svg-icon>
+                            导出模板
+                        </el-button>
+                        <i>导入{{currentChannelCategory }}频道</i>
+                        <label>
+                            共{{channelList.length}}条，已进行{{finishNo}}条，成功
+                            <span class="success-info">{{finishNo - failNo}}</span>条,失败
+                            <span class="fail-info">{{failNo}}</span>条
+                        </label>
+                    </div>
                 </div>
                 <!--主要信息-->
                 <div class="main-info">
-                    <div class="list-none"></div>
-                    <template>
+                    <div class="list-none" v-if="channelList.length === 0">
+                        <img src="../../../assets/img/empty_upload.png">
+                        <label>暂无上传中的文件</label>
+                    </div>
+                    <template v-else>
                         <div class="info-header">已选文件</div>
-                        <div class="file-title">
-                            <label>直播频道第二批信息表</label>
-                            <i class="el-icon-close"></i>
-                        </div>
                         <el-table
                             :data="channelList"
                             header-row-class-name="common-table-header"
-                            border
-                            highlight-current-row
-                            style="width: 100%;margin-top:20px;">
+                            border>
                             <el-table-column
                                 align="center"
                                 width="60px"
@@ -73,9 +76,6 @@
                         :before-upload="beforeUpload">
                     </upload-excel-component>
                 </div>
-            </div>
-            <div class="operate-item" v-if="false">
-                <el-button class="create-blue-btn" @click="exportTemplate">导出{{currentChannelCategory}}频道模板</el-button>
             </div>
         </div>
     </div>
@@ -133,7 +133,7 @@
                         pushServer: '所属服务器\n' +
                         '（必填）',
                         logoUri: '频道封面链接\n' +
-                        ' 240*134' +
+                        ' 260*260' +
                         '（必填）\n',
                         '备注说明': '1 封面图片不为空即可，可以等频道建好后补充；\n' +
                         '3 导入时请先删除该文本示例数据。'
@@ -173,6 +173,7 @@
                     }];
                 } else {
                     wsData = [{
+                        name: '频道名称（20字以内，用于TV端展示）（必填）',
                         innerName: '频道名称（20字以内）\n（必填）',
                         no: '频道编号\n' +
                         '（必填）',
@@ -187,12 +188,13 @@
                         pushServer: '所属服务器\n' +
                         '（必填）',
                         logoUri: '频道封面链接\n' +
-                        ' 240*134' +
+                        ' 260*260' +
                         '（必填）\n',
                         '备注说明': '1 封面图片不为空即可，可以等频道建好后补充；\n' +
                         '2 导入或新建的频道默认为禁播状态；\n' +
                         '3 导入时请先删除该文本示例数据。'
                     }, {
+                        name: '新片速递',
                         innerName: '新片速递',
                         no: '814',
                         type: '体育',
@@ -204,6 +206,7 @@
                         logoUri: '/image',
                         '备注说明': ''
                     }, {
+                        name: '射雕英雄传剧场',
                         innerName: '射雕英雄传剧场',
                         no: '813',
                         type: '娱乐/体育',
@@ -321,13 +324,10 @@
             // 验证频道信息
             validateChannel(channel, index) {
                 let message = '';
-                // 只有直播频道含有展示名称
-                if (this.$route.params.category === 'LIVE') {
-                    if (this.$util.isEmpty(channel.name)) {
-                        message = message + '频道展示名称不能为空;';
-                    } else if (this.$util.trim(channel.name).length > 20) {
-                        message = message + '频道展示名称不能超过20个字;';
-                    }
+                if (this.$util.isEmpty(channel.name)) {
+                    message = message + '频道展示名称不能为空;';
+                } else if (this.$util.trim(channel.name).length > 20) {
+                    message = message + '频道展示名称不能超过20个字;';
                 }
                 // 验证名称
                 if (this.$util.isEmpty(channel.innerName)) {
@@ -412,95 +412,104 @@
 <style lang="scss" scoped>
 
     .import-page-container {
+        background: #1A2233;
+        height: 100%;
     }
 
-    .container {
-        .left-container {
-            margin-right: 300px;
-            .upload-status {
-                margin: 0px 20px;
-                height: 80px;
-                line-height: 80px;
-                text-align: center;
+    .left-container {
+        padding-top: 80px;
+        margin-right: 300px;
+        .upload-status {
+            padding-left: 300px;
+            position: fixed;
+            top: 0px;
+            right: 300px;
+            width: 100%;
+            z-index: 200;
+            height: 80px;
+            line-height: 80px;
+            text-align: center;
+            background: #1A2233;
+            > div {
+                margin-left: 20px;
+                margin-right: 20px;
                 border-bottom: 1px solid #3E495E;
-                i {
-                    margin-right: 22px;
-                    font-size: 24px;
-                    color: #A8ABB3;
-                }
-                label {
-                    font-size: 16px;
-                    color: #A8ABB3;
-                    .success-info {
-                        color: #3AC26F;
-                    }
-                    .fail-info {
-                        color: #C35757;
-                    }
-                }
             }
-            .main-info {
-                .info-header {
-                    height: 70px;
-                    line-height: 70px;
-                    font-size: 20px;
-                    color: #A8ABB3;
-                    text-align: center;
+            .el-button {
+                margin-right: 20px;
+            }
+            i {
+                margin-right: 22px;
+                font-size: 24px;
+                color: #A8ABB3;
+            }
+            label {
+                font-size: 16px;
+                color: #A8ABB3;
+                .success-info {
+                    color: #3AC26F;
                 }
-                .file-title {
-                    position: relative;
-                    margin: 0px auto;
-                    width: 800px;
-                    height: 40px;
-                    line-height: 40px;
-                    background: #2A3040;
-                    border-radius: 8px;
-                    label {
-                        font-size: 14px;
-                        color: #A8ABB3;
-                        text-align: center;
-                    }
-                    i {
-                        position: absolute;
-                        top: 10px;
-                        right: 30px;
-                        font-size: 20px;
-                        color: #C35757;
-                    }
+                .fail-info {
+                    color: #C35757;
                 }
             }
         }
-        .right-container {
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 153px;
-            right: 0px;
-            height: 100%;
-            width: 300px;
-            border-left: 1px solid #3E495E;
-            .title {
-                flex-grow: 0;
-                margin-left: 20px;
-                margin-right: 40px;
-                height: 80px;
-                text-align: center;
-                line-height: 80px;
+        .main-info {
+            padding: 0px 20px;
+            background: #1A2233;
+            .list-none {
                 font-size: 24px;
-                color: #A8ABB3;
-                border-bottom: 1px solid #3E495E;
-            }
-            .upload {
-                margin-left: 20px;
-                .upload-excel {
-                    margin-top: 140px;
+                color: #293550;
+                text-align: center;
+                img {
+                    display: block;
+                    width: 368px;
+                    margin: 200px auto 20px auto;
                 }
+            }
+            .info-header {
+                height: 70px;
+                line-height: 70px;
+                font-size: 20px;
+                color: #A8ABB3;
+                text-align: center;
+            }
+        }
+    }
+
+    .right-container {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        display: flex;
+        z-index: 300;
+        flex-direction: column;
+        height: 100%;
+        width: 300px;
+        border-left: 1px solid #3E495E;
+        background: #1A2233;
+        .title {
+            flex-grow: 0;
+            margin-left: 20px;
+            margin-right: 40px;
+            height: 80px;
+            text-align: center;
+            line-height: 80px;
+            font-size: 24px;
+            color: #A8ABB3;
+            border-bottom: 1px solid #3E495E;
+        }
+        .upload {
+            margin-left: 20px;
+            .upload-excel {
+                margin-top: 140px;
             }
         }
     }
 
     .operate-item {
         margin-top: 200px;
+        padding-bottom: 70px;
     }
 
 </style>

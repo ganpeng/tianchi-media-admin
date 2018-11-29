@@ -111,6 +111,12 @@ let router = new Router({
             name: 'Login',
             component: Login
         },
+        // 轮播频道-批量创建轮播频道
+        {
+            path: '/channel-manage/carousel/import-create/:category',
+            name: 'CreateChannelByImportExcel',
+            component: CreateChannelByImportExcel
+        },
         // 网站内容结构
         {
             path: '/layout',
@@ -486,12 +492,6 @@ let router = new Router({
                     name: 'CarouselChannelList',
                     component: CarouselChannelList
                 },
-                // 轮播频道-批量创建轮播频道
-                {
-                    path: '/channel-manage/carousel/import-create/:category',
-                    name: 'CreateChannelByImportExcel',
-                    component: CreateChannelByImportExcel
-                },
                 // 轮播频道-创建单个轮播频道
                 {
                     path: '/channel-manage/carousel/create',
@@ -590,11 +590,11 @@ let router = new Router({
                 },
                 /**
                  *
-                    FIGURE
-                    SPECIAL
-                    FIGURE_SUBJECT
-                    PROGRAMME
-                    FIGURE_SUBJECT'
+                 FIGURE
+                 SPECIAL
+                 FIGURE_SUBJECT
+                 PROGRAMME
+                 FIGURE_SUBJECT'
                  */
                 {
                     path: '/page-layout/:navbarId/add/shuffle/:index'

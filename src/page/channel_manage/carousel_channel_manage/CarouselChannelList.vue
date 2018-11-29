@@ -127,10 +127,11 @@
                 this.getChannelList();
             },
             createChannelByImportExcel() {
-                this.$router.push({
+                let routeData = this.$router.resolve({
                     name: 'CreateChannelByImportExcel',
                     params: {category: 'CAROUSEL'}
                 });
+                window.open(routeData.href, '_blank');
             },
             editChannelByImportExcel() {
                 this.$router.push({
