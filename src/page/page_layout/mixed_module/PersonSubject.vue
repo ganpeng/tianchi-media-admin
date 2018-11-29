@@ -1,5 +1,5 @@
 <template>
-    <div class="mixeds6-container">
+    <div class="special-container">
         <div class="header layout-square-header">
             <div class="left">
                 <img class="icon" :src="getIconImageUri(item)" />
@@ -28,24 +28,12 @@
             </div>
         </div>
         <div class="content-field">
-            <div class="wrapper">
-                <div :style="styleBgImageStr(0)" class="field"></div>
-            </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(1)" class="field"></div>
-            </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(2)" class="field"></div>
-            </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(3)" class="field"></div>
-            </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(4)" class="field"></div>
-            </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(5)" class="field"></div>
-            </div>
+            <div :style="styleBgImageStr(0)" class="field"></div>
+            <div :style="styleBgImageStr(1)" class="field"></div>
+            <div :style="styleBgImageStr(2)" class="field"></div>
+            <div :style="styleBgImageStr(3)" class="field"></div>
+            <div :style="styleBgImageStr(4)" class="field"></div>
+            <div :style="styleBgImageStr(5)" class="field"></div>
         </div>
     </div>
 </template>
@@ -53,7 +41,7 @@
 import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
 export default {
-    name: 'Mixeds6',
+    name: 'Special',
     props: {
         item: {
             type: Object,
@@ -103,7 +91,7 @@ export default {
         },
         editHandler() {
             let {navbarId} = this.$route.params;
-            this.$router.push({ name: 'PersonModule', params: {navbarId, index: this.index, operator: 'edit'} });
+            this.$router.push({ name: 'PersonSubjectModule', params: {navbarId, index: this.index, operator: 'edit'} });
         },
         deleteHandler() {
             let {navbarId} = this.$route.params;
@@ -115,26 +103,27 @@ export default {
 </script>
 <style lang="scss" scoped>
 @mixin paddingBg($paddingNum) {
+    position: relative;
     height: 0;
     padding-bottom: $paddingNum;
-    background: #2A3040;
+    background-color: #2A3040;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
     border-radius: 8px;
 }
-.mixeds6-container {
+.special-container {
+    margin-top: 20px;
     .header {
         margin: 40px 0 10px 0;
     }
     .content-field {
         display: flex;
-        .wrapper {
+        .field {
             flex: 1;
-            border-radius: 50%;
-            .field {
-                @include paddingBg(100%);
-                border-radius: 50%;
-            }
+            @include paddingBg(34.0909%);
         }
-        .wrapper + .wrapper {
+        .field + .field {
             margin-left: 2%;
         }
     }

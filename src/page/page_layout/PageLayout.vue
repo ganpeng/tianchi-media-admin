@@ -167,40 +167,7 @@ export default {
         addLayout(type) {
             let {navbarId} = this.$route.params;
             let index = this.layout[navbarId].data.length;
-            switch (type) {
-                case 'SHUFFLE':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index, operator: 'add'} });
-                    break;
-                case 'FIGURE':
-                    let layoutData = {
-                        layoutTemplate: 'LT_F_6',
-                        navBarId: navbarId,
-                        navBarName: this.getNavbarNameById(navbarId),
-                        subjectId: '',
-                        iconImage: {},
-                        title: '',
-                        renderType: 'FIGURE',
-                        layoutItemMultiList: []
-                    };
-                    this.insertLayoutDataByIndex({navbarId, index, layoutData});
-                    this.saveLayoutToStore();
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index, operator: 'add'} });
-                    break;
-                case 'SPECIAL':
-                    this.$router.push({ name: 'EditSpecialModule', params: {navbarId, index, operator: 'add'} });
-                    break;
-                case 'FIGURE_SUBJECT':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index, operator: 'add'} });
-                    break;
-                case 'PROGRAMME':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index, operator: 'add'} });
-                    break;
-                case 'PROGRAMME_SUBJECT':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index, operator: 'add'} });
-                    break;
-                default:
-                    throw new Error('类型错误');
-            }
+            this.$util.layoutCommand({navbarId, index, type, router: this.$router});
         }
     }
 };

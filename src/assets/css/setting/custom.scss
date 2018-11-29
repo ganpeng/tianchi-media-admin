@@ -689,6 +689,9 @@
         &.text-danger {
             color: #C35757;
         }
+        &.text-normal {
+            color: $successColor;
+        }
     }
 }
 

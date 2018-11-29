@@ -104,8 +104,8 @@
     </div>
 </template>
 <script>
-import _ from 'lodash';
 import {mapGetters, mapMutations, mapActions} from 'vuex';
+import _ from 'lodash';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 export default {
     name: 'PersonSubjectDialog',
@@ -113,43 +113,47 @@ export default {
         SingleImageUploader
     },
     props: {
+        squareIndex: {
+            type: Number,
+            required: true
+        },
         allowResolutions: {
             type: Array,
             default: () => [{width: 560, height: 600}]
-        },
-        successhandler: {
-            type: Function,
-            default: () => {}
         }
     },
     data() {
         return {
-            layoutItem: {
-                coverImage: {},
-                id: '',
-                name: '',
-                layoutItemType: ''
-            },
+            navbarId: '',
+            index: '',
             dialogVisible: false,
             active: 0
         };
     },
+    created() {
+        let {navbarId, index} = this.$route.params;
+        this.navbarId = navbarId;
+        this.index = index;
+    },
     computed: {
         ...mapGetters({
-            personSubjectModule: 'pageLayout/personSubjectModule',
-            personSubject: 'pageLayout/personSubject'
-        })
+            personSubject: 'pageLayout/personSubject',
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
+            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId'
+        }),
+        layoutItem() {
+            let layoutItem = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
+            return layoutItem;
+        }
     },
     methods: {
         ...mapMutations({
             resetPersonSubject: 'pageLayout/resetPersonSubject',
             updatePersonSubject: 'pageLayout/updatePersonSubject',
-            updatePersonSubjectModule: 'pageLayout/updatePersonSubjectModule',
             updatePersonSubjectPagination: 'pageLayout/updatePersonSubjectPagination',
             addImageToPersonSubjectListById: 'pageLayout/addImageToPersonSubjectListById',
-            //  人物模块中人物的添加删除
-            updateLayoutItemMultiListByIndex: 'pageLayout/updateLayoutItemMultiListByIndex'
             //  人物模块中人物的添加删除结束
+            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex'
         }),
         ...mapActions({
             getPersonSubjectList: 'pageLayout/getPersonSubjectList',
@@ -164,19 +168,13 @@ export default {
             return this.layoutItem.id === row.id ? 'checked' : '';
         },
         //  弹窗控制方法
-        showDialog(index) {
+        showDialog() {
             this.getPersonSubjectList();
             this.dialogVisible = true;
         },
         closeDialog() {
             this.dialogVisible = false;
             this.active = 0;
-            this.layoutItem = {
-                coverImage: {},
-                id: '',
-                name: '',
-                layoutItemType: ''
-            };
         },
         //  搜索人物的事件处理函数
         searchInputHandler(value, key) {
@@ -185,8 +183,7 @@ export default {
         async enterSuccessHandler() {
             try {
                 if (_.get(this.layoutItem, 'coverImage.id')) {
-                    this.layoutItem.layoutItemType = 'FIGURE_SUBJECT';
-                    this.successhandler(this.layoutItem);
+                    this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'FIGURE_SUBJECT' });
                     this.closeDialog();
                 } else {
                     this.$message.error('请设置推荐位海报');
@@ -216,11 +213,12 @@ export default {
             }
         },
         setPersonSubjectHandler(personSubject) {
-            this.layoutItem.id = personSubject.id;
-            this.layoutItem.name = personSubject.name;
+            let {id, name} = personSubject;
+            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
+            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
         },
         uploadPersonSubjectImageSuccessHandler(image) {
-            this.layoutItem.coverImage = image;
+            this.updateLayoutItemByIndex({ navbarId: this.navbarId, index: this.index, squareIndex: this.squareIndex, key: 'coverImage', value: image });
         }
     }
 };

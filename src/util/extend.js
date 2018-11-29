@@ -3,6 +3,7 @@ import _ from 'lodash';
 import constants from './constants';
 import {Message} from 'element-ui';
 import service from '../service/index';
+import vuexStore from '../store/index';
 
 let timer = null;
 
@@ -265,6 +266,81 @@ let util = {
             } else {
                 fixedBtnContainer.style.background = '#293550';
             }
+        }
+    },
+    layoutCommand({navbarId, index, type, router}) {
+        let defaultLayoutItem = {
+            desc: '',
+            id: '',
+            layoutItemType: '',
+            name: '',
+            params: '',
+            coverImage: {},
+            coverImageBackground: {},
+            cornerMark: {
+                leftTop: {},
+                leftBottom: {},
+                rightTop: {},
+                rightBottom: {}
+            }
+        };
+        switch (type) {
+            case 'SHUFFLE':
+                router.push({ name: 'PersonModule', params: {navbarId, index, operator: 'add'} });
+                break;
+            case 'FIGURE':
+                let layoutData = {
+                    layoutTemplate: 'LT_F_6',
+                    navBarId: navbarId,
+                    navBarName: vuexStore.getters['pageLayout/getNavbarNameById'](navbarId),
+                    subjectId: '',
+                    iconImage: {},
+                    title: '',
+                    renderType: 'FIGURE',
+                    layoutItemMultiList: _.times(6, () => _.cloneDeep(defaultLayoutItem))
+                };
+                vuexStore.commit('pageLayout/insertLayoutDataByIndex', {navbarId, index, layoutData});
+                vuexStore.commit('pageLayout/saveLayoutToStore');
+                router.push({ name: 'PersonModule', params: {navbarId, index, operator: 'add'} });
+                break;
+            case 'SPECIAL':
+                let specialLayoutData = {
+                    layoutTemplate: 'LT_SP_2',
+                    navBarId: navbarId,
+                    navBarName: vuexStore.getters['pageLayout/getNavbarNameById'](navbarId),
+                    subjectId: '',
+                    iconImage: {},
+                    title: '',
+                    renderType: 'SPECIAL',
+                    layoutItemMultiList: _.times(2, () => _.cloneDeep(defaultLayoutItem))
+                };
+                vuexStore.commit('pageLayout/insertLayoutDataByIndex', {navbarId, index, layoutData: specialLayoutData});
+                vuexStore.commit('pageLayout/saveLayoutToStore');
+                router.push({ name: 'EditSpecialModule', params: {navbarId, index, operator: 'add'} });
+                break;
+            case 'FIGURE_SUBJECT':
+                let personSubjectLayoutData = {
+                    layoutTemplate: 'LT_FS_6',
+                    navBarId: navbarId,
+                    navBarName: vuexStore.getters['pageLayout/getNavbarNameById'](navbarId),
+                    subjectId: '',
+                    iconImage: {},
+                    title: '',
+                    renderType: 'FIGURE_SUBJECT',
+                    layoutItemMultiList: _.times(6, () => _.cloneDeep(defaultLayoutItem))
+                };
+                vuexStore.commit('pageLayout/insertLayoutDataByIndex', {navbarId, index, layoutData: personSubjectLayoutData});
+                vuexStore.commit('pageLayout/saveLayoutToStore');
+                router.push({ name: 'PersonSubjectModule', params: {navbarId, index, operator: 'add'} });
+                break;
+            case 'PROGRAMME':
+                router.push({ name: 'PersonModule', params: {navbarId, index, operator: 'add'} });
+                break;
+            case 'PROGRAMME_SUBJECT':
+                router.push({ name: 'PersonModule', params: {navbarId, index, operator: 'add'} });
+                break;
+            default:
+                throw new Error('类型错误');
         }
     }
 };

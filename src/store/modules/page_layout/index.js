@@ -49,25 +49,21 @@ function initLayoutItemByLayoutItemType(layoutItemType) {
     return Object.assign({}, defaultLayoutItem, {layoutItemType});
 }
 
-const defaultLayoutItem = {
-    cornerMark: {},
-    coverImage: {
-        height: '',
-        name: '',
-        uri: '',
-        width: ''
-    },
-    coverImageBackground: {
-        height: '',
-        name: '',
-        uri: '',
-        width: ''
-    },
+let defaultLayoutItem = {
     desc: '',
-    layoutItemType: '',
     id: '',
+    layoutItemType: '',
+    programmeTemplate: '',
     name: '',
-    params: ''
+    params: '',
+    coverImage: {},
+    coverImageBackground: {},
+    cornerMark: {
+        leftTop: {},
+        leftBottom: {},
+        rightTop: {},
+        rightBottom: {}
+    }
 };
 
 const defaultPersonModule = {
@@ -139,6 +135,12 @@ const getters = {
             return _.get(state.layout, `${navbarId}.data.${index}`);
         };
     },
+    getLayoutItemByNavbarId(state) {
+        return (navbarId, index, squareIndex) => {
+            let obj = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}`);
+            return !_.isEmpty(obj) ? obj : {};
+        };
+    },
     getLayoutRenderTypeByNavbarId(state) {
         return (id) => {
             return state.layout[id].renderType;
@@ -183,10 +185,10 @@ const mutations = {
         state.pageLayoutList = pageLayoutList;
     },
 
-    //  layout相关的操作开始
+    //  layout相关的操作开始, 重新定义的增删改查方法开始
     updateLayoutItemByIndex(state, payload) {
         let {index, navbarId, squareIndex, key, value} = payload;
-        _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}[${key}]`, value);
+        _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.${key}`, value);
     },
     addLayoutItemByIndex(state, payload) {
         let {index, navbarId, layoutItem} = payload;
@@ -212,6 +214,11 @@ const mutations = {
         let {navbarId, index} = payload;
         state.layout[navbarId].data = state.layout[navbarId].data.filter((item, _index) => _index !== index);
     },
+    setLayoutItemByIndex(state, payload) {
+        let {index, navbarId, squareIndex, layoutItem} = payload;
+        _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}`, layoutItem);
+    },
+    //  重新定义的增删改查方法结束
     appendLayoutItem(state, payload) {
         let {navbarId, layoutItem} = payload;
         state.layout[navbarId].data.push(layoutItem);
@@ -219,10 +226,6 @@ const mutations = {
     setLayoutDataByIndex(state, payload) {
         let {index, navbarId, dataItem} = payload;
         _.set(state.layout, `${navbarId}.data.${index}`, dataItem);
-    },
-    setLayoutItemByIndex(state, payload) {
-        let {index, navbarId, squareIndex, layoutItem} = payload;
-        _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}`, layoutItem);
     },
     updateLayout(state) {
         state.layout = store.get('layoutStore');

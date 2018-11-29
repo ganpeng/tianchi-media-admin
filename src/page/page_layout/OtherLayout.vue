@@ -5,21 +5,29 @@
             :index="index"
             v-if="layoutTemplate === 'LT_F_6'"
         ></person>
-        <!-- <mixeds6
+        <special
             :item="item"
             :index="index"
-            v-if="renderType === 'FIGURE' && layoutTemplate === 'FIGURE'"
-        ></mixeds6> -->
+            v-if="layoutTemplate === 'LT_SP_2'"
+        ></special>
+        <person-subject
+            :item="item"
+            :index="index"
+            v-if="layoutTemplate === 'LT_FS_6'"
+        ></person-subject>
     </div>
 </template>
 <script>
 // import Mixeds6 from './mixed_module/Mixeds6';
 import Person from './mixed_module/Person';
+import Special from './mixed_module/Special';
+import PersonSubject from './mixed_module/PersonSubject';
 export default {
     name: 'OtherLayout',
     components: {
-        // Mixeds6,
-        Person
+        Special,
+        Person,
+        PersonSubject
     },
     props: {
         item: {

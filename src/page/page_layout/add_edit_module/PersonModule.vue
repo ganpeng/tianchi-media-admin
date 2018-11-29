@@ -19,7 +19,6 @@
                         <single-image-uploader
                             :uri="layoutData.iconImage ? layoutData.iconImage.uri : ''"
                             :uploadSuccessHandler="uploadSuccessHandler"
-                            :dimension="{width: 40, height: 40}"
                             :allowResolutions="[{width: 200, height: 200}]"
                         ></single-image-uploader>
                     </el-form-item>
@@ -201,7 +200,8 @@ export default {
         };
     },
     beforeRouteLeave(to, from, next) {
-        if (!this.saveFlag) {
+        let {operator} = from.params;
+        if (!this.saveFlag && operator === 'add') {
             this.deleteLayoutDataByIndex({navbarId: this.navbarId, index: this.index});
             this.saveLayoutToStore();
         }

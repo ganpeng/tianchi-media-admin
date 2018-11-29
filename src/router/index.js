@@ -94,6 +94,7 @@ import VideoImport from 'sysPage/video_manage/VideoImport';
 import EditFixedModule from 'sysPage/page_layout/add_edit_module/EditFixedModule';
 import PersonModule from 'sysPage/page_layout/add_edit_module/PersonModule';
 import EditSpecialModule from 'sysPage/page_layout/add_edit_module/EditSpecialModule';
+import PersonSubjectModule from 'sysPage/page_layout/add_edit_module/PersonSubjectModule';
 
 Vue.use(Router);
 
@@ -597,17 +598,19 @@ let router = new Router({
                  FIGURE_SUBJECT'
                  */
                 {
-                    path: '/page-layout/:navbarId/add/shuffle/:index'
-                },
-                {
                     path: '/page-layout/:navbarId/:operator/figure/:index',
                     name: 'PersonModule',
                     component: PersonModule
                 },
                 {
-                    path: '/page-layout/:navbarId/add/special/:index',
+                    path: '/page-layout/:navbarId/:operator/special/:index',
                     name: 'EditSpecialModule',
                     component: EditSpecialModule
+                },
+                {
+                    path: '/page-layout/:navbarId/:operator/figure_subject/:index',
+                    name: 'PersonSubjectModule',
+                    component: PersonSubjectModule
                 },
                 {
                     path: '/page-layout/:navbarId/add/figure_subject/:index'

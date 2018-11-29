@@ -39,11 +39,107 @@ import service from '../service/index';
     FIGURE, // 人物模块
     SPECIAL, // 特别模块
  */
+let defaultLayoutItem = {
+    desc: '',
+    id: '',
+    layoutItemType: '',
+    name: '',
+    params: '',
+    coverImage: {},
+    coverImageBackground: {},
+    cornerMark: {
+        leftTop: {},
+        leftBottom: {},
+        rightTop: {},
+        rightBottom: {}
+    }
+};
+
+let defaultLayoutData = {
+    iconImage: {},
+    layoutItemMultiList: [],
+    layoutTemplate: '',
+    navBarId: '',
+    navBarName: '',
+    renderType: 'SHUFFLE',
+    subjectId: '',
+    title: ''
+};
 
 function getPagelayoutList(navbarList) {
     return Promise.all(navbarList.map((navbar) => {
         return service.getPageLayoutByNavbarId(navbar.id);
     }));
+}
+
+function initLayoutItemByLayoutItemType({layoutTemplate, navBarId, navBarName}) {
+    switch (layoutTemplate) {
+        case 'FS_0':
+            return [Object.assign({}, _.cloneDeep(defaultLayoutData), {
+                layoutItemMultiList: _.times(6, () => _.cloneDeep(defaultLayoutItem)),
+                layoutTemplate,
+                navBarId,
+                navBarName
+            })];
+        case 'FS_1':
+            return [Object.assign({}, _.cloneDeep(defaultLayoutData), {
+                layoutItemMultiList: _.times(6, () => _.cloneDeep(defaultLayoutItem)),
+                layoutTemplate,
+                navBarId,
+                navBarName
+            })];
+        case 'FS_2':
+            return [Object.assign({}, _.cloneDeep(defaultLayoutData), {
+                layoutItemMultiList: _.times(7, () => _.cloneDeep(defaultLayoutItem)),
+                layoutTemplate,
+                navBarId,
+                navBarName
+            })];
+        case 'FS_3':
+            return [Object.assign({}, _.cloneDeep(defaultLayoutData), {
+                layoutItemMultiList: _.times(9, () => _.cloneDeep(defaultLayoutItem)),
+                layoutTemplate,
+                navBarId,
+                navBarName
+            })];
+        case 'FS_4':
+            return [Object.assign({}, _.cloneDeep(defaultLayoutData), {
+                layoutItemMultiList: _.times(6, () => _.cloneDeep(defaultLayoutItem)),
+                layoutTemplate,
+                navBarId,
+                navBarName
+            })];
+        case 'FS_5':
+            return [Object.assign({}, _.cloneDeep(defaultLayoutData), {
+                layoutItemMultiList: _.times(2, () => _.cloneDeep(defaultLayoutItem)),
+                layoutTemplate,
+                navBarId,
+                navBarName
+            })];
+        case 'FS_6':
+            return [Object.assign({}, _.cloneDeep(defaultLayoutData), {
+                layoutItemMultiList: _.times(6, () => _.cloneDeep(defaultLayoutItem)),
+                layoutTemplate,
+                navBarId,
+                navBarName
+            })];
+        case 'FS_7':
+            return [Object.assign({}, _.cloneDeep(defaultLayoutData), {
+                layoutItemMultiList: _.times(9, () => _.cloneDeep(defaultLayoutItem)),
+                layoutTemplate,
+                navBarId,
+                navBarName
+            })];
+        case 'FS_8':
+            return [Object.assign({}, _.cloneDeep(defaultLayoutData), {
+                layoutItemMultiList: _.times(6, () => _.cloneDeep(defaultLayoutItem)),
+                layoutTemplate,
+                navBarId,
+                navBarName
+            })];
+        default:
+            throw new Error('类型不存在');
+    }
 }
 
 export default async function init() {
@@ -63,7 +159,13 @@ export default async function init() {
                             name: curr.name,
                             signCode: curr.signCode,
                             changed: false,
-                            data: pagelayoutList[index].data
+                            data: (pagelayoutList[index].data.length > 0
+                                    ? pagelayoutList[index].data
+                                    : initLayoutItemByLayoutItemType({
+                                        layoutTemplate: curr.layoutTemplate,
+                                        navBarId: curr.id,
+                                        navBarName: curr.name
+                                    }))
                         };
                         return res;
                     }, {});

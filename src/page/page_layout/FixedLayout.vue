@@ -16,6 +16,10 @@
             :isEdit="isEdit"
             v-if="layoutTemplate === 'FS_3'"
         ></news-fixed-module>
+        <subject-fixed-module
+            :isEdit="isEdit"
+            v-if="layoutTemplate === 'FS_4'"
+        ></subject-fixed-module>
         <child-fixed-module
             :isEdit="isEdit"
             v-if="layoutTemplate === 'FS_5'"
@@ -24,6 +28,10 @@
             :isEdit="isEdit"
             v-if="layoutTemplate === 'FS_6'"
         ></category-fixed-module>
+        <party-fixed-module
+            :isEdit="isEdit"
+            v-if="layoutTemplate === 'FS_7'"
+        ></party-fixed-module>
     </div>
 </template>
 <script>
@@ -34,6 +42,8 @@ import NewsFixedModule from './fixed_module/NewsFixedModule';
 import RecommendFixedModule from './fixed_module/RecommendFixedModule';
 import TeleplayFixedModule from './fixed_module/TeleplayFixedModule';
 import CategoryFixedModule from './fixed_module/CategoryFixedModule';
+import SubjectFixedModule from './fixed_module/SubjectFixedModule';
+import PartyFixedModule from './fixed_module/PartyFixedModule';
 export default {
     name: 'FixedLayout',
     components: {
@@ -42,7 +52,9 @@ export default {
         NewsFixedModule,
         RecommendFixedModule,
         TeleplayFixedModule,
-        CategoryFixedModule
+        CategoryFixedModule,
+        SubjectFixedModule,
+        PartyFixedModule
     },
     props: {
         layoutTemplate: {

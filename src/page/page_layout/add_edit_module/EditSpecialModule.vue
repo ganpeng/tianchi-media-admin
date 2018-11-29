@@ -3,21 +3,21 @@
         <h2 class="content-title">新增特殊模块</h2>
         <div class="seperator-line"></div>
         <div class="form-container">
-            <el-form :model="specialModule" status-icon ref="createPerson"
+            <el-form :model="layoutData" status-icon ref="createPerson"
                     label-width="120px"
                     @submit.native.prevent
                     class="form-block">
                 <el-col :span="8">
                     <el-form-item label="模块名称" prop="title" required>
                         <el-input
-                            :value="specialModule.title"
+                            :value="layoutData.title"
                             @input="inputHandler($event, 'title')"
                             placeholder="请输入模块名称"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="名称icon">
                         <single-image-uploader
-                            :uri="specialModule.iconImage ? specialModule.iconImage.uri : ''"
+                            :uri="layoutData.iconImage ? layoutData.iconImage.uri : ''"
                             :uploadSuccessHandler="iconImageuploadSuccessHandler"
                             :allowResolutions="[{width: 200, height: 200}]"
                         ></single-image-uploader>
@@ -27,10 +27,10 @@
                     <el-col :span="12">
                         <el-form-item label="添加模块内容" required>
                             <div class="special-square-contianer">
-                                <div @click="selectPersonSubject" class="left-field">
+                                <div :style="styleBgImageStr(0)" @click="selectPersonSubject" class="left-field">
 
                                 </div>
-                                <div class="right-field">
+                                <div :style="styleBgImageStr(1)" @click="selectProgramme" class="right-field">
 
                                 </div>
                             </div>
@@ -44,45 +44,98 @@
         </div>
         <person-subject-dialog
             :allowResolutions="allowResolutions"
-            :successhandler="PersonSubjectSuccesshandler"
-            :layoutItemMultiList="layoutItemMultiList"
+            :squareIndex="0"
             ref="personSubjectDialog"
         ></person-subject-dialog>
+        <edit-programme
+            :squareIndex="1"
+            :allowResolutions="allowResolutions"
+            ref="selectProgrammeDialog">
+        </edit-programme>
     </div>
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex';
+import _ from 'lodash';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 import PersonSubjectDialog from './PersonSubjectDialog';
+import EditProgramme from './EditProgramme';
 export default {
     name: 'EditSpecialModule',
     components: {
         SingleImageUploader,
-        PersonSubjectDialog
+        PersonSubjectDialog,
+        EditProgramme
     },
     data() {
         return {
-            allowResolutions: [],
-            specialModule: {
-                title: '',
-                iconImage: {},
-                layoutItemMultiList: []
-            }
+            navbarId: '',
+            index: '',
+            saveFlag: false, // 判断页面跳转之前如果没有点保存按钮的话，就删除新增的这个layoutItem
+            allowResolutions: []
         };
     },
+    beforeRouteLeave(to, from, next) {
+        let {operator} = from.params;
+        if (!this.saveFlag && operator === 'add') {
+            this.deleteLayoutDataByIndex({navbarId: this.navbarId, index: this.index});
+            this.saveLayoutToStore();
+        }
+        next();
+    },
+    created() {
+        let {navbarId, index} = this.$route.params;
+        this.navbarId = navbarId;
+        this.index = index;
+    },
     computed: {
-        ...mapGetters({})
+        ...mapGetters({
+            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+        }),
+        layoutData() {
+            let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
+            return layoutData;
+        },
+        layoutItem() {
+            return (squareIndex) => {
+                return this.getLayoutItemByNavbarId(this.navbarId, this.index, squareIndex);
+            };
+        },
+        styleBgImageStr() {
+            return (squareIndex) => {
+                let uri = _.get(this.layoutItem(squareIndex), 'coverImage.uri');
+                let bgStr = `background-image: url(${uri})`;
+                return bgStr;
+            };
+        }
     },
     methods: {
-        ...mapMutations({}),
-        iconImageuploadSuccessHandler() {},
-        saveHandler() {},
+        ...mapMutations({
+            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
+            saveLayoutToStore: 'pageLayout/saveLayoutToStore',
+            updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey',
+            setLayoutItemByIndex: 'pageLayout/setLayoutItemByIndex'
+        }),
+        inputHandler(value, key) {
+            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key, value});
+        },
+        iconImageuploadSuccessHandler(image) {
+            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: image});
+        },
+        saveHandler() {
+            this.saveLayoutToStore();
+            this.saveFlag = true;
+            this.$message.success('保存成功');
+            this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+        },
         selectPersonSubject() {
             this.allowResolutions = [{width: 560, height: 600}];
             this.$refs.personSubjectDialog.showDialog();
         },
-        PersonSubjectSuccesshandler(layoutItem) {
-            this.specialModule.layoutItemMultiList[0] = layoutItem;
+        selectProgramme() {
+            this.allowResolutions = [{width: 1160, height: 600}];
+            this.$refs.selectProgrammeDialog.showDialog();
         }
     }
 };
