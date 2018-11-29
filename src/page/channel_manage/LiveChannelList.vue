@@ -319,9 +319,10 @@
                     });
             },
             editChannelByImportExcel() {
-                this.$router.push({
+                let routeData = this.$router.resolve({
                     name: 'EditLiveChannelByImportExcel'
                 });
+                window.open(routeData.href, '_blank');
             },
             previewChannelPage(id, name, flag) {
                 this.getChannelPageById(id)

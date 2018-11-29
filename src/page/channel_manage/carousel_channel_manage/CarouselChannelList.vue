@@ -134,9 +134,10 @@
                 window.open(routeData.href, '_blank');
             },
             editChannelByImportExcel() {
-                this.$router.push({
+                let routeData = this.$router.resolve({
                     name: 'EditChannelByImportExcel'
                 });
+                window.open(routeData.href, '_blank');
             },
             // 批量恢复或者禁播
             batchSetStatus(visible) {

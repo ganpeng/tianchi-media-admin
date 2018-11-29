@@ -118,6 +118,18 @@ let router = new Router({
             name: 'CreateChannelByImportExcel',
             component: CreateChannelByImportExcel
         },
+        // 轮播频道-批量修改轮播频道
+        {
+            path: '/channel-manage/carousel/import-edit',
+            name: 'EditChannelByImportExcel',
+            component: EditChannelByImportExcel
+        },
+        //  直播频道管理-批量修改
+        {
+            path: '/channel-manage/live/import-edit',
+            name: 'EditLiveChannelByImportExcel',
+            component: EditLiveChannelByImportExcel
+        },
         // 网站内容结构
         {
             path: '/layout',
@@ -476,12 +488,6 @@ let router = new Router({
                     name: 'LiveChannelImport',
                     component: LiveChannelImport
                 },
-                //  直播频道管理-批量修改
-                {
-                    path: '/channel-manage/live/import-edit',
-                    name: 'EditLiveChannelByImportExcel',
-                    component: EditLiveChannelByImportExcel
-                },
                 {
                     path: '/channel-manage/live/preview/:id',
                     name: 'PreviewProgrammeList',
@@ -498,12 +504,6 @@ let router = new Router({
                     path: '/channel-manage/carousel/create',
                     name: 'CreateCarouselChannel',
                     component: CreateCarouselChannel
-                },
-                // 轮播频道-批量修改轮播频道
-                {
-                    path: '/channel-manage/carousel/import-edit',
-                    name: 'EditChannelByImportExcel',
-                    component: EditChannelByImportExcel
                 },
                 // 轮播频道详情
                 {
