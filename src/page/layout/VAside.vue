@@ -179,8 +179,14 @@
                     </svg-icon>
                     <span>站点管理</span>
                 </template>
-                <el-menu-item index="/site-manage/config">站点配置</el-menu-item>
-                <el-menu-item index="/site-manage/list">站点列表</el-menu-item>
+                <!--站点配置只在子站点中存在-->
+                <el-menu-item
+                    index="/site-manage/config"
+                    v-if="!$wsCache.localStorage.get('siteInfo').siteMasterEnable">
+                    站点配置
+                </el-menu-item>
+                <!--站点列表只在中心站点中存在-->
+                <el-menu-item index="/site-manage/list" v-else>站点列表</el-menu-item>
             </el-submenu>
             <!--个人中心-->
             <el-submenu index="13">

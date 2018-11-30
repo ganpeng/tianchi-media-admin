@@ -119,20 +119,15 @@
                     pageSize: 10
                 },
                 total: 0,
-                siteList: [
-                    {
-                        name: '北京站',
-                        token: 'GTHNBN68hIKn89t54HKLV',
-                        createdAt: '34647567686787'
-                    }
-                ]
+                siteList: []
             };
         },
         mounted() {
+            this.getSiteList();
         },
         methods: {
             getSiteList() {
-                this.$service.getSiteList(this.listQueryParams).then(response => {
+                this.$service.getChildSiteList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.siteList = response.data.list;
                         this.total = response.data.total;

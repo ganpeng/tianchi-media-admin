@@ -93,7 +93,16 @@
         methods: {
             // 初始化站点名称
             init() {
-
+                this.$service.getSiteInfo().then(response => {
+                    if (response && response.code === 0) {
+                        if (!response.data.siteName) {
+                            this.siteName = '站点未配置';
+                        } else {
+                            this.siteName = response.data.siteName;
+                        }
+                        this.$wsCache.localStorage.set('siteInfo', response.data);
+                    }
+                });
             },
             // 登录
             submitForm() {

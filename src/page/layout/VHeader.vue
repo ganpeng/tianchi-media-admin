@@ -44,6 +44,7 @@
         methods: {
             init() {
                 this.name = Cookies.get('name');
+                this.siteName = this.$wsCache.localStorage.get('siteInfo').siteName;
                 // 初始化站点名称
             },
             // 切换侧边栏

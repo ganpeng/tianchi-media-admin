@@ -2,21 +2,21 @@
 <template>
     <el-form
         class="text-left"
-        ref="siteInfo"
-        :model="siteInfo">
+        ref="site"
+        :model="site">
         <el-form-item
             label="站点名称"
             label-width="120px"
             required
             prop="name">
-            <el-input v-model="siteInfo.name" placeholder="请填写站点名称，15字以内" clearable></el-input>
+            <el-input v-model="site.name" placeholder="请填写站点名称，15字以内" clearable></el-input>
         </el-form-item>
         <el-form-item
             label="站点token"
             label-width="120px"
             required
             prop="token">
-            <el-input v-model="siteInfo.token" placeholder="点击按钮获取该站点安全访问token" readonly clearable></el-input>
+            <el-input v-model="site.token" placeholder="点击按钮获取该站点安全访问token" readonly clearable></el-input>
             <el-button
                 v-if="mode==='CREATE_SITE'"
                 type="primary"
@@ -64,7 +64,7 @@
                 }
             };
             return {
-                siteInfo: {
+                site: {
                     name: '',
                     token: ''
                 },
@@ -84,8 +84,8 @@
         methods: {
             init() {
                 if (this.originSiteInfo.name) {
-                    this.siteInfo.name = this.originSiteInfo.name;
-                    this.siteInfo.token = this.originSiteInfo.token;
+                    this.site.name = this.originSiteInfo.name;
+                    this.site.token = this.originSiteInfo.token;
                 }
             },
             getSiteToken() {
@@ -93,11 +93,11 @@
             },
             // 创建或更新站点
             operateSite() {
-                this.$refs['siteInfo'].validate((valid) => {
+                this.$refs['site'].validate((valid) => {
                     if (valid) {
                         // 创建
                         if (this.mode === 'CREATE_SITE') {
-                            this.$service.createSite(this.siteInfo).then(response => {
+                            this.$service.createChildSite(this.site).then(response => {
                                 if (response && response.code === 0) {
                                     this.$message.success('成功创建站点');
                                     this.setDialogVisible(false);
@@ -106,7 +106,7 @@
                             });
                         } else {
                             // 更新
-                            this.$service.updateSiteInfo(this.siteInfo).then(response => {
+                            this.$service.updateSiteInfo(this.site).then(response => {
                                 if (response && response.code === 0) {
                                     this.$message.success('成功更新站点');
                                     this.setDialogVisible(false);
