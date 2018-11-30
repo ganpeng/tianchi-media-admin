@@ -2,24 +2,30 @@
     <el-container id="container">
         <el-main>
             <div class="form-box" @keyup.enter="submitForm">
-                <h3>用户登录</h3>
+                <h3>登录</h3>
+                <div class="site-name">暂未设置</div>
                 <el-form
+                    ref="login"
                     :model="formData"
                     status-icon
-                    :rules="rules"
-                    ref="login">
+                    :rules="rules">
                     <el-form-item prop="name" class="name">
-                        <md-input
-                            icon="personal_center"
-                            v-model="formData.name">用户名
-                        </md-input>
+                        <el-input
+                            v-model="formData.name"
+                            clearable
+                            class="border-input"
+                            placeholder="用户名">
+                            <svg-icon icon-class="personal_center" slot="prefix"></svg-icon>
+                        </el-input>
                     </el-form-item>
                     <el-form-item prop="password" class="password">
-                        <md-input
-                            icon="password"
-                            type="password"
-                            v-model="formData.password">密码
-                        </md-input>
+                        <el-input
+                            v-model="formData.password"
+                            clearable
+                            class="border-input"
+                            placeholder="密码">
+                            <svg-icon icon-class="password" slot="prefix"></svg-icon>
+                        </el-input>
                     </el-form-item>
                     <el-form-item class="password-relate">
                         <el-checkbox label="记住密码" name="type" v-model="memory"></el-checkbox>
@@ -30,26 +36,22 @@
                     </el-form-item>
                 </el-form>
             </div>
-            <svg-icon
-                icon-class="login_logo_words"
-                class-name="login-logo">
-            </svg-icon>
+            <!--<svg-icon-->
+            <!--icon-class="login_logo_words"-->
+            <!--class-name="login-logo">-->
+            <!--</svg-icon>-->
         </el-main>
-        <v-footer></v-footer>
+        <svg-icon
+            icon-class="login_bg"
+            class-name="login-bg">
+        </svg-icon>
     </el-container>
 </template>
 
 <script>
 
-    import MdInput from 'sysComponents/custom_components/custom/MdInput';
-    import VFooter from '../layout/VFooter';
-
     export default {
         name: 'Login',
-        components: {
-            MdInput,
-            VFooter
-        },
         data() {
             let validateAccount = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
@@ -110,8 +112,8 @@
     };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+
     .el-container {
         display: flex;
         flex-direction: column;
@@ -119,16 +121,30 @@
     }
 
     h3 {
-        margin: 20px 0px;
-        color: $loginFontColor;
+        margin-bottom: 25px;
+        margin-top: 20px;
+        font-size: 20px;
+        color: #FFFFFF;
         text-align: center;
+        line-height: 20px;
+    }
+
+    .site-name {
+        display: inline-block;
+        margin-bottom: 35px;
+        padding: 5px 14px;
+        font-size: 20px;
+        color: #637497;
+        text-align: center;
+        line-height: 20px;
+        background: #191D26;
+        border-radius: 10px;
     }
 
     .el-main {
         position: relative;
         min-width: 800px;
-        background: url("../../assets/img/login_bg.png") no-repeat $generalBgColor;
-        background-size: cover;
+        background: #1A2233;
         .login-logo {
             position: absolute;
             left: 60px;
@@ -142,35 +158,64 @@
             top: 20%;
             width: 420px;
             height: 420px;
-            background: rgba(255, 255, 255, 0.80);
-            box-shadow: 1px 2px 10px 0 rgba(185, 185, 185, 0.50);
-            border-radius: 4px;
+            background: rgba(41, 53, 80, 0.98);
+            border: 0 solid #637497;
+            box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
+            border-radius: 8px;
+            z-index: 400;
         }
         .el-form {
             margin: 0px 50px;
             input {
+                padding-left: 130px;
+            }
+            input {
                 background-color: transparent;
+            }
+            .svg-icon-personal_center {
+                height: 20px !important;
+                width: 20px !important;
+            }
+            .svg-icon-password {
+                margin-left: 5px;
+                height: 20px !important;
+                width: 10px !important;
             }
             .login-box {
                 margin-top: 40px;
                 .el-button {
                     width: 100%;
+                    height: 40px;
                     font-size: $normalFontSize;
                 }
             }
             .el-checkbox {
                 float: left;
                 padding: 5px 0px 0px 0px;
+                font-size: 14px;
+                color: #6F7480;
             }
             label {
                 float: right;
                 padding-right: 5px;
                 cursor: pointer;
-                font-size: $normalFontSize;
+                font-size: 14px;
+                color: #6F7480;
                 &:hover {
                     color: #409EFF;
                 }
             }
         }
+    }
+
+    .login-bg {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        bottom: 0px;
+        left: -400px;
+        height: 100% !important;
+        width: 100% !important;
+        z-index: 200;
     }
 </style>
