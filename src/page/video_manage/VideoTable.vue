@@ -101,6 +101,24 @@
                     </el-button>
                 </template>
             </el-table-column>
+            <!--子站上传状态-->
+            <el-table-column align="center" label="上传状态">
+                <template slot-scope="scope">
+                    成功
+                </template>
+            </el-table-column>
+            <!--视频来源-->
+            <el-table-column align="center" label="视频来源">
+                <template slot-scope="scope">
+                    <span>中心平台</span>
+                </template>
+            </el-table-column>
+            <!--共享站点-->
+            <el-table-column align="center" label="共享站点">
+                <template slot-scope="scope">
+                    <span @click="checkShareSiteList(scope.row)" class="check-share-site">查看</span>
+                </template>
+            </el-table-column>
             <el-table-column align="center" label="上传日期">
                 <template slot-scope="scope">
                     {{timeStampFormat(scope.row.createdAt)}}
@@ -111,8 +129,22 @@
                     {{timeStampFormat(scope.row.updatedAt)}}
                 </template>
             </el-table-column>
-            <el-table-column v-if="!hasRadio" width="80px" align="center" fixed="right" label="操作">
+            <el-table-column v-if="!hasRadio" width="130px" align="center" fixed="right" label="操作">
                 <template slot-scope="scope">
+                    <el-button
+                        class="text-primary"
+                        type="text"
+                        @click="uploadVideoToMainSite(scope.row)"
+                        size="small">
+                        上传主站
+                    </el-button>
+                    <el-button
+                        class="text-primary"
+                        type="text"
+                        @click="setSingleVideoShareSite(scope.row)"
+                        size="small">
+                        共享设置
+                    </el-button>
                     <el-button class="text-danger" type="text" @click="_deleteVideoById(scope.row.id)" size="small">删除
                     </el-button>
                 </template>
@@ -133,6 +165,57 @@
             :displayVideoDialogVisible="displayVideoDialogVisible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
+        <el-dialog
+            title="共享站点"
+            :visible.sync="shareSiteVisible"
+            :close-on-click-modal="false"
+            custom-class="share-site"
+            width="40%">
+            <div class="batch-share-body" v-if="shareSiteVisible">
+                <ul>
+                    <li>
+                        <el-tag type="info">北京站</el-tag>
+                    </li>
+                    <li>
+                        <el-tag type="info">北京站</el-tag>
+                    </li>
+                    <li>
+                        <el-tag type="info">北京站</el-tag>
+                    </li>
+                    <li>
+                        <el-tag type="info">北京站</el-tag>
+                    </li>
+                    <li>
+                        <el-tag type="info">北京站</el-tag>
+                    </li>
+                </ul>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="shareSiteVisible = false">确定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog
+            title="视频共享站点设置"
+            :visible.sync="shareSiteSettingVisible"
+            :close-on-click-modal="false"
+            custom-class="share-site-setting"
+            width="40%">
+            <div class="share-body" v-if="shareSiteSettingVisible">
+                <div>视频可以被以下站点共享:</div>
+                <el-select v-model="videoShareSiteList" multiple placeholder="请选择共享站点">
+                    <el-option
+                        v-for="item in shareSiteOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="shareSiteSettingVisible = false">取 消</el-button>
+                <el-button type="primary" @click="confirmVideoShareSite">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -153,6 +236,12 @@
             status: {
                 type: String,
                 default: ''
+            },
+            shareSiteOptions: {
+                type: Array,
+                default: function () {
+                    return [];
+                }
             }
         },
         data() {
@@ -160,7 +249,10 @@
                 displayVideoDialogVisible: false,
                 url: '',
                 title: '',
-                selectedVideoList: []
+                selectedVideoList: [],
+                shareSiteVisible: false,
+                shareSiteSettingVisible: false,
+                videoShareSiteList: []
             };
         },
         created() {
@@ -227,6 +319,22 @@
                 deleteVideoById: 'video/deleteVideoById',
                 retryVideoByIdList: 'video/retryVideoByIdList'
             }),
+            // 展示共享站点
+            checkShareSiteList() {
+                this.shareSiteVisible = true;
+            },
+            // 设置单个视频分享站点
+            setSingleVideoShareSite() {
+                this.shareSiteSettingVisible = true;
+            },
+            // 确定设置单个视频分享站点
+            confirmVideoShareSite() {
+
+            },
+            // 子站上传主站
+            uploadVideoToMainSite() {
+
+            },
             cutStr(str) {
                 return str.length > 40 ? str.substring(0, 40) + '...' : str;
             },
@@ -349,12 +457,49 @@
         }
     };
 </script>
-<style lang="less" scoped>
+<style lang="scss" scoped>
+
     .gan-tooltip {
         width: 300px;
     }
 
     .el-radio__label {
         padding-left: 0;
+    }
+
+    .check-share-site {
+        color: $baseBlue;
+        cursor: pointer;
+    }
+
+    /*展示分享站点*/
+    .share-site {
+        ul {
+            text-align: left;
+            li {
+                display: inline-block;
+                margin-bottom: 10px;
+                .el-tag {
+                    border: none;
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+
+    /*设置共享站点*/
+    .share-site-setting {
+        .share-body {
+            text-align: left;
+            margin-bottom: 40px;
+            div {
+                text-align: left;
+                font-size: 18px;
+            }
+            .el-select {
+                margin-top: 20px;
+                width: 80%;
+            }
+        }
     }
 </style>

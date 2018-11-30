@@ -10,8 +10,7 @@
             <div style="margin-bottom:20px;" class="float-right">
                 <el-dropdown>
                     <el-button
-                        class="page-main-btn create-blue-btn contain-svg-icon"
-                    >
+                        class="page-main-btn create-blue-btn contain-svg-icon">
                         <svg-icon icon-class="upload"></svg-icon>
                         上传视频<i class="el-icon-arrow-down el-icon--right"></i>
                     </el-button>
@@ -44,8 +43,7 @@
                         :value="searchFields.name"
                         placeholder="搜索你想要的信息"
                         clearable
-                        @input="inputHandler($event, 'name')"
-                    >
+                        @input="inputHandler($event, 'name')">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                 </el-form-item>
@@ -54,8 +52,7 @@
                         :value="searchFields.status"
                         clearable
                         placeholder="请选择视频注入状态"
-                        @input="inputHandler($event, 'status')"
-                    >
+                        @input="inputHandler($event, 'status')">
                         <el-option
                             v-for="(item, index) in statusOptions"
                             :key="index"
@@ -69,10 +66,37 @@
                         :value="searchFields.suffix"
                         clearable
                         placeholder="请选择视频后缀"
-                        @input="inputHandler($event, 'suffix')"
-                    >
+                        @input="inputHandler($event, 'suffix')">
                         <el-option
                             v-for="(item, index) in suffixOptions"
+                            :key="index"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item class="search">
+                    <el-select
+                        :value="searchFields.source"
+                        clearable
+                        placeholder="请选择视频来源"
+                        @input="inputHandler($event, 'source')">
+                        <el-option
+                            v-for="(item, index) in sourceOptions"
+                            :key="index"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item class="search">
+                    <el-select
+                        :value="searchFields.shareSite"
+                        clearable
+                        placeholder="请选择共享站点"
+                        @input="inputHandler($event, 'source')">
+                        <el-option
+                            v-for="(item, index) in shareSiteOptions"
                             :key="index"
                             :label="item.label"
                             :value="item.value">
@@ -116,13 +140,42 @@
                     <el-button class="delete-btn disabled-red-btn" size="small" :disabled="isDisabled"
                                @click="deleteVideoList">批量删除
                     </el-button>
+                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
+                               @click="setShareSite">
+                        共享设置
+                    </el-button>
                     <el-button class="delete-btn create-blue-btn" size="small" @click="toDiffTime">
                         检查时长
                     </el-button>
                 </el-form-item>
             </el-col>
         </el-form>
-        <video-table ref="videoTable"></video-table>
+        <video-table
+            ref="videoTable"
+            :shareSiteOptions="shareSiteOptions">
+        </video-table>
+        <el-dialog
+            title="站点共享设置"
+            :visible.sync="batchShareDialogVisible"
+            :close-on-click-modal="false"
+            custom-class="batch-share-site"
+            width="40%">
+            <div class="batch-share-body" v-if="batchShareDialogVisible">
+                <div>{{$refs.videoTable.selectedVideoList.length}}个视频可以被以下站点共享:</div>
+                <el-select v-model="batchShareSiteList" multiple placeholder="请选择共享站点">
+                    <el-option
+                        v-for="item in shareSiteOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="batchShareDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="batchShareVideo">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -143,8 +196,12 @@
             return {
                 statusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
                 suffixOptions: role.VIDEO_SUFFIX_OPTIONS,
+                sourceOptions: role.VIDEO_SUFFIX_OPTIONS,
+                shareSiteOptions: role.VIDEO_SUFFIX_OPTIONS,
                 timer: null,
-                isDisabled: true
+                isDisabled: true,
+                batchShareDialogVisible: false,
+                batchShareSiteList: []
             };
         },
         computed: {
@@ -156,19 +213,7 @@
             })
         },
         created() {
-            window.eventBus.$on('clearInputValue', this.clearInputValue.bind(this));
-            window.eventBus.$on('setDisabled', this.setDisabled.bind(this));
-            this.$nextTick(() => {
-                uppie(document.querySelector('#upload-input-file'), this.uploadChangeHandler.bind(this));
-                uppie(document.querySelector('#upload-input-dir'), this.uploadChangeHandler.bind(this));
-            });
-            window.addEventListener('keyup', this.keyupHandler);
-            this.timer = setInterval(() => {
-                this.getVideoList()
-                    .then(() => {
-                        this.$refs.videoTable.checkedVideoList();
-                    });
-            }, 1000 * 10);
+            this.init();
         },
         beforeRouteLeave(to, from, next) {
             clearInterval(this.timer);
@@ -188,11 +233,34 @@
                 getVideoList: 'video/getVideoList',
                 retryVideoByIdList: 'video/retryVideoByIdList'
             }),
+            init() {
+                window.eventBus.$on('clearInputValue', this.clearInputValue.bind(this));
+                window.eventBus.$on('setDisabled', this.setDisabled.bind(this));
+                this.$nextTick(() => {
+                    uppie(document.querySelector('#upload-input-file'), this.uploadChangeHandler.bind(this));
+                    uppie(document.querySelector('#upload-input-dir'), this.uploadChangeHandler.bind(this));
+                });
+                window.addEventListener('keyup', this.keyupHandler);
+                this.timer = setInterval(() => {
+                    this.getVideoList()
+                        .then(() => {
+                            this.$refs.videoTable.checkedVideoList();
+                        });
+                }, 1000 * 10);
+                // 初始化视频来源和共享站点的列表
+            },
             setDisabled(value) {
                 this.isDisabled = value;
             },
             clearSearchFields() {
                 this.resetSearchFields();
+            },
+            // 设置视频共享站点
+            setShareSite() {
+                this.batchShareDialogVisible = true;
+            },
+            batchShareVideo() {
+
             },
             clearInputValue() {
                 if (this.$refs.uploadInputFile && this.$refs.uploadInputFile.value) {
@@ -422,6 +490,22 @@
         .upload-input {
             opacity: 0;
             cursor: pointer;
+        }
+    }
+
+    /*批量共享视频*/
+    .batch-share-site {
+        .batch-share-body {
+            text-align: left;
+            margin-bottom: 40px;
+            div {
+                text-align: left;
+                font-size: 18px;
+            }
+            .el-select {
+                margin-top: 20px;
+                width: 80%;
+            }
         }
     }
 </style>
