@@ -371,7 +371,7 @@
                         <el-col :span="24">
                             <el-form-item label="非焦点图" required>
                                 <single-image-uploader
-                                    id="programmeImageUploaderOne"
+                                    id="programmeVideoImageUploaderOne"
                                     :uri="getImageByKey('coverImage') || ''"
                                     :uploadSuccessHandler="uploadProgrammeCoverImageSuccessHandler"
                                     :allowResolutions="allowResolutions"
@@ -379,7 +379,7 @@
                             </el-form-item>
                             <el-form-item label="焦点图">
                                 <single-image-uploader
-                                    id="programmeImageUploaderTwo"
+                                    id="programmeVideoImageUploaderTwo"
                                     :uri="getImageByKey('coverImageBackground') || ''"
                                     :uploadSuccessHandler="uploadProgrammeBgImageSuccessHandler"
                                     :allowResolutions="allowResolutions"

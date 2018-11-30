@@ -103,10 +103,12 @@ export default {
             if (navbarId === 0) {
                 return [];
             } else {
-                if (this.layout[navbarId].data) {
+                if (this.layout[navbarId] && this.layout[navbarId].data) {
                     return this.layout[navbarId].data.filter((item, index) => {
                         return index > 0;
                     });
+                } else {
+                    return [];
                 }
             }
         },

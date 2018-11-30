@@ -1,9 +1,9 @@
 <template>
     <div class="mixeds6-container">
-        <div class="header layout-square-header">
+        <div v-if="!isEdit" class="header layout-square-header">
             <div class="left">
-                <img class="icon" :src="getIconImageUri(item)" />
-                <span class="title">{{item.title}}</span>
+                <img class="icon" />
+                <span class="title"></span>
             </div>
             <div class="right">
                 <el-dropdown
@@ -50,73 +50,33 @@
     </div>
 </template>
 <script>
-import _ from 'lodash';
 export default {
     name: 'Mixeds6',
     props: {
-        item: {
-            type: Object,
-            default: () => {}
-        },
-        index: {
-            type: Number,
-            default: 0
+        isEdit: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
         return {};
     },
-    computed: {
-        getIconImageUri() {
-            return (obj) => {
-                return _.get(obj, 'iconImage.uri');
-            };
-        }
-    },
+    computed: {},
     methods: {
-        addLayout(type) {
-            let {navbarId} = this.$route.params;
-            switch (type) {
-                case 'SHUFFLE':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: 'end'} });
-                    break;
-                case 'FIGURE':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: 'end'} });
-                    break;
-                case 'SPECIAL':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: 'end'} });
-                    break;
-                case 'FIGURE_SUBJECT':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: 'end'} });
-                    break;
-                case 'PROGRAMME':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: 'end'} });
-                    break;
-                case 'PROGRAMME_SUBJECT':
-                    this.$router.push({ name: 'PersonModule', params: {navbarId, index: 'end'} });
-                    break;
-                default:
-                    throw new Error('类型错误');
-            }
-        },
-        editHandler() {
-            let {navbarId} = this.$route.params;
-            console.log(this.index);
-            console.log(navbarId);
-        },
-        deleteHandler() {
-            let {navbarId} = this.$route.params;
-            console.log(this.index);
-            console.log(navbarId);
-        }
+        editHandler() {},
+        deleteHandler() {}
     }
 };
 </script>
 <style lang="scss" scoped>
 @mixin paddingBg($paddingNum) {
+    position: relative;
     height: 0;
     padding-bottom: $paddingNum;
-    background: #2A3040;
+    background-color: #2A3040;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
     border-radius: 8px;
 }
 .mixeds6-container {

@@ -89,6 +89,14 @@
                     <el-radio  @input="inputHandler(true, 'record')" :value="liveChannel.record" :label="true">是</el-radio>
                     <el-radio  @input="inputHandler(false, 'record')" :value="liveChannel.record" :label="false">否</el-radio>
                 </el-form-item>
+                <el-form-item label="频道图片" prop="logoUri">
+                    <single-image-uploader
+                        :uri="liveChannel.logoUri ? liveChannel.logoUri : ''"
+                        :deleteImage="deleteLogoUri"
+                        :uploadSuccessHandler="uploadSuccessHandler"
+                        :allowResolutions="[{width: 260, height: 260}]"
+                    ></single-image-uploader>
+                </el-form-item>
             </el-form>
         </el-col>
     </div>
@@ -98,11 +106,13 @@ import draggable from 'vuedraggable';
 import {mapGetters, mapMutations} from 'vuex';
 import {checkIP, checkPort, checkChannelNo, checkIp} from '@/util/formValidate';
 import ChannelTypeSearch from './ChannelTypeSearch';
+import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 export default {
     name: 'LiveChannelForm',
     components: {
         draggable,
-        ChannelTypeSearch
+        ChannelTypeSearch,
+        SingleImageUploader
     },
     data() {
         return {
@@ -172,6 +182,12 @@ export default {
         },
         deleteLiveCategoryHandler(id) {
             this.deleteLiveCategoryById({id});
+        },
+        deleteLogoUri() {
+            this.updateLiveChannel({key: 'logoUri', value: ''});
+        },
+        uploadSuccessHandler(image) {
+            this.updateLiveChannel({key: 'logoUri', value: image.uri});
         }
     }
 };

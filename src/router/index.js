@@ -95,6 +95,7 @@ import EditFixedModule from 'sysPage/page_layout/add_edit_module/EditFixedModule
 import PersonModule from 'sysPage/page_layout/add_edit_module/PersonModule';
 import EditSpecialModule from 'sysPage/page_layout/add_edit_module/EditSpecialModule';
 import PersonSubjectModule from 'sysPage/page_layout/add_edit_module/PersonSubjectModule';
+import ShuffleModule from 'sysPage/page_layout/add_edit_module/ShuffleModule';
 
 Vue.use(Router);
 
@@ -613,7 +614,9 @@ let router = new Router({
                     component: PersonSubjectModule
                 },
                 {
-                    path: '/page-layout/:navbarId/add/figure_subject/:index'
+                    path: '/page-layout/:navbarId/:operator/shuffle/:index',
+                    name: 'ShuffleModule',
+                    component: ShuffleModule
                 },
                 {
                     path: '/page-layout/:navbarId/add/programme_subject/:index'

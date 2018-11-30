@@ -297,6 +297,23 @@
     }
 }
 
+.my-add-cycle {
+    &.el-button {
+        width: 30px;
+        height: 30px;
+        border-radius: 30px;
+        min-width: 0;
+        background-color: $mainBtn;
+        border: none;
+        .svg-icon {
+            fill: #fff;
+        }
+        &:hover {
+            background-color: $mainBtnHover;
+        }
+    }
+}
+
 //  自定义form表单的样式
 .form-container {
     overflow: hidden;

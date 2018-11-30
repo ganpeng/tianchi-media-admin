@@ -115,9 +115,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 @mixin paddingBg($paddingNum) {
+    position: relative;
     height: 0;
     padding-bottom: $paddingNum;
-    background: #2A3040;
+    background-color: #2A3040;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
     border-radius: 8px;
 }
 .mixeds6-container {

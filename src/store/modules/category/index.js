@@ -183,7 +183,7 @@ const actions = {
     async saveChannelCategory({commit}) {
         try {
             let {liveChannelCategory, carouselChannelCategory} = state;
-            let channelTypeList = [...liveChannelCategory, ...carouselChannelCategory].map((category, index) => {
+            let channelTypeList = _.cloneDeep([...liveChannelCategory, ...carouselChannelCategory]).map((category, index) => {
                 if (isCustomId(category.id)) {
                     delete category.id;
                 }

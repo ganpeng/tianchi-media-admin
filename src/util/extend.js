@@ -286,7 +286,19 @@ let util = {
         };
         switch (type) {
             case 'SHUFFLE':
-                router.push({ name: 'PersonModule', params: {navbarId, index, operator: 'add'} });
+                let shuffleLayoutData = {
+                    layoutTemplate: '',
+                    navBarId: navbarId,
+                    navBarName: vuexStore.getters['pageLayout/getNavbarNameById'](navbarId),
+                    subjectId: '',
+                    iconImage: {},
+                    title: '',
+                    renderType: 'SHUFFLE',
+                    layoutItemMultiList: []
+                };
+                vuexStore.commit('pageLayout/insertLayoutDataByIndex', {navbarId, index, layoutData: shuffleLayoutData});
+                vuexStore.commit('pageLayout/saveLayoutToStore');
+                router.push({ name: 'ShuffleModule', params: {navbarId, index, operator: 'add'} });
                 break;
             case 'FIGURE':
                 let layoutData = {
