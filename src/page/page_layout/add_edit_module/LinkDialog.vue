@@ -82,13 +82,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
             getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
         }),
-        layoutData() {
-            let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
-            return layoutData;
-        },
         getHref() {
             let params = _.get(this.layoutItem, 'params');
             if (params) {

@@ -2,8 +2,8 @@
     <div class="mixed23-container">
         <div v-if="!isEdit" class="header layout-square-header">
             <div class="left">
-                <img class="icon" />
-                <span class="title"></span>
+                <img class="icon" :src="getIconImageUri(item)"/>
+                <span class="title">{{item.title}}</span>
             </div>
             <div class="right">
                 <el-dropdown
@@ -30,36 +30,191 @@
         <div class="content-field">
             <div class="top-field">
                 <div class="wrapper">
-                    <div class="top-left-field"></div>
+                    <div :style="styleBgImageStr(0)" class="top-left-field">
+                        <shuffle-btn
+                            v-if="isEdit"
+                            :addShuffleLayout="addShuffleLayout(0)"
+                        ></shuffle-btn>
+                    </div>
                 </div>
                 <div class="wrapper">
-                    <div class="top-middle-field"></div>
+                    <div :style="styleBgImageStr(1)" class="top-middle-field">
+                        <shuffle-btn
+                            v-if="isEdit"
+                            :addShuffleLayout="addShuffleLayout(1)"
+                        ></shuffle-btn>
+                    </div>
                 </div>
                 <div class="wrapper">
-                    <div class="top-right-field"></div>
+                    <div :style="styleBgImageStr(2)" class="top-right-field">
+                        <shuffle-btn
+                            v-if="isEdit"
+                            :addShuffleLayout="addShuffleLayout(2)"
+                        ></shuffle-btn>
+                    </div>
                 </div>
             </div>
             <div class="bottom-field">
                 <div class="wrapper">
-                    <div class="bottom-left-field"></div>
+                    <div :style="styleBgImageStr(3)" class="bottom-left-field">
+                        <shuffle-btn
+                            v-if="isEdit"
+                            :addShuffleLayout="addShuffleLayout(3)"
+                        ></shuffle-btn>
+                    </div>
                 </div>
                 <div class="wrapper">
-                    <div class="bottom-right-field"></div>
+                    <div :style="styleBgImageStr(4)" class="bottom-right-field">
+                        <shuffle-btn
+                            v-if="isEdit"
+                            :addShuffleLayout="addShuffleLayout(4)"
+                        ></shuffle-btn>
+                    </div>
                 </div>
             </div>
         </div>
+        <edit-programme
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectProgrammeDialog">
+        </edit-programme>
+        <edit-programme-subject
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectProgrammeSubjectDialog">
+        </edit-programme-subject>
+        <edit-programme-video
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectProgrammeVideoDialog">
+        </edit-programme-video>
+        <link-dialog
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectLinkDialog">
+        ></link-dialog>
     </div>
 </template>
 <script>
+import {mapGetters} from 'vuex';
+import _ from 'lodash';
+import ShuffleBtn from './ShuffleBtn';
+import EditProgramme from '../add_edit_module/EditProgramme';
+import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
+import EditProgrammeVideo from '../add_edit_module/EditProgrammeVideo';
+import LinkDialog from '../add_edit_module/LinkDialog';
 export default {
     name: 'Mixed32',
+    components: {
+        ShuffleBtn,
+        EditProgramme,
+        EditProgrammeSubject,
+        EditProgrammeVideo,
+        LinkDialog
+    },
     props: {
+        item: {
+            type: Object,
+            default: () => {}
+        },
+        index: {
+            type: Number,
+            default: 0
+        },
         isEdit: {
             type: Boolean,
             default: false
         }
     },
-    methods: {}
+    data() {
+        return {
+            navbarId: '',
+            squareIndex: 0,
+            layoutItemType: '',
+            allowResolutions: []
+        };
+    },
+    created() {
+        let {navbarId} = this.$route.params;
+        this.navbarId = navbarId;
+    },
+    computed: {
+        ...mapGetters({
+            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+        }),
+        getIconImageUri() {
+            return (obj) => {
+                return _.get(obj, 'iconImage.uri');
+            };
+        },
+        layoutItem() {
+            return (squareIndex) => {
+                return this.getLayoutItemByNavbarId(this.navbarId, this.index, squareIndex);
+            };
+        },
+        styleBgImageStr() {
+            return (squareIndex) => {
+                let uri = _.get(this.layoutItem(squareIndex), 'coverImage.uri');
+                let bgStr = `background-image: url(${uri})`;
+                return bgStr;
+            };
+        }
+    },
+    methods: {
+        addShuffleLayout(squareIndex) {
+            return (layoutItemType) => {
+                this.squareIndex = squareIndex;
+                this.layoutItemType = layoutItemType;
+                switch (squareIndex) {
+                    case 0:
+                    case 1:
+                    case 2:
+                        this.allowResolutions = [{width: 560, height: 300}];
+                        break;
+                    case 3:
+                        this.allowResolutions = [{width: 1160, height: 300}];
+                        break;
+                    case 4:
+                        this.allowResolutions = [{width: 560, height: 300}];
+                        break;
+                    default:
+                        throw new Error('squarIndex索引错误');
+                }
+                switch (layoutItemType) {
+                    case 'PROGRAMME':
+                        this.$refs.selectProgrammeDialog.showDialog();
+                        break;
+                    case 'PROGRAMME_VIDEO':
+                        this.$refs.selectProgrammeVideoDialog.showDialog();
+                        break;
+                    case 'PROGRAMME_SUBJECT':
+                        this.$refs.selectProgrammeSubjectDialog.showDialog();
+                        break;
+                    case 'LINK':
+                        this.$refs.selectLinkDialog.showDialog();
+                        break;
+                    case 'CHANNEL':
+                        break;
+                    default:
+                        throw new Error('layoutItemType类型错误');
+                }
+            };
+        },
+        addLayout(type) {
+            let {navbarId} = this.$route.params;
+            this.$util.layoutCommand({navbarId, index: this.index, type, router: this.$router});
+        },
+        editHandler() {
+            let {navbarId} = this.$route.params;
+            this.$router.push({ name: 'ShuffleModule', params: {navbarId, index: this.index, operator: 'edit'} });
+        },
+        deleteHandler() {
+            let {navbarId} = this.$route.params;
+            this.deleteLayoutDataByIndex({navbarId, index: this.index});
+            this.saveLayoutToStore();
+        }
+    }
 };
 </script>
 <style lang="scss" scoped>
@@ -96,14 +251,19 @@ export default {
         .bottom-field {
             display: flex;
             .wrapper {
-                flex: 1;
                 &:first-child {
+                    flex: 1;
                     margin-right: 2%;
                 }
+                &:last-child {
+                    width: 32%;
+                }
             }
-            .bottom-left-field,
+            .bottom-left-field {
+                @include paddingBg(25.8620%);
+            }
             .bottom-right-field {
-                @include paddingBg(30.2325%);
+                @include paddingBg(53.5714%);
             }
         }
     }

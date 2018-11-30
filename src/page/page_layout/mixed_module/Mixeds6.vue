@@ -2,8 +2,8 @@
     <div class="mixeds6-container">
         <div v-if="!isEdit" class="header layout-square-header">
             <div class="left">
-                <img class="icon" />
-                <span class="title"></span>
+                <img class="icon" :src="getIconImageUri(item)"/>
+                <span class="title">{{item.title}}</span>
             </div>
             <div class="right">
                 <el-dropdown
@@ -29,42 +29,166 @@
         </div>
         <div class="content-field">
             <div class="wrapper">
-                <div class="field"></div>
+                <div :style="styleBgImageStr(0)" class="field">
+                    <shuffle-btn
+                        v-if="isEdit"
+                        :onlyChannel="true"
+                        :addShuffleLayout="addShuffleLayout(0)"
+                    ></shuffle-btn>
+                </div>
             </div>
             <div class="wrapper">
-                <div class="field"></div>
+                <div :style="styleBgImageStr(1)" class="field">
+                    <shuffle-btn
+                        v-if="isEdit"
+                        :onlyChannel="true"
+                        :addShuffleLayout="addShuffleLayout(1)"
+                    ></shuffle-btn>
+                </div>
             </div>
             <div class="wrapper">
-                <div class="field"></div>
+                <div :style="styleBgImageStr(2)" class="field">
+                    <shuffle-btn
+                        v-if="isEdit"
+                        :onlyChannel="true"
+                        :addShuffleLayout="addShuffleLayout(2)"
+                    ></shuffle-btn>
+                </div>
             </div>
             <div class="wrapper">
-                <div class="field"></div>
+                <div :style="styleBgImageStr(3)" class="field">
+                    <shuffle-btn
+                        v-if="isEdit"
+                        :onlyChannel="true"
+                        :addShuffleLayout="addShuffleLayout(3)"
+                    ></shuffle-btn>
+                </div>
             </div>
             <div class="wrapper">
-                <div class="field"></div>
+                <div :style="styleBgImageStr(4)" class="field">
+                    <shuffle-btn
+                        v-if="isEdit"
+                        :onlyChannel="true"
+                        :addShuffleLayout="addShuffleLayout(4)"
+                    ></shuffle-btn>
+                </div>
             </div>
             <div class="wrapper">
-                <div class="field"></div>
+                <div :style="styleBgImageStr(5)" class="field">
+                    <shuffle-btn
+                        v-if="isEdit"
+                        :onlyChannel="true"
+                        :addShuffleLayout="addShuffleLayout(5)"
+                    ></shuffle-btn>
+                </div>
             </div>
         </div>
+        <channel-dialog
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectChannelDialog">
+        ></channel-dialog>
     </div>
 </template>
 <script>
+import {mapGetters} from 'vuex';
+import _ from 'lodash';
+import ShuffleBtn from './ShuffleBtn';
+import ChannelDialog from '../add_edit_module/ChannelDialog';
 export default {
     name: 'Mixeds6',
+    components: {
+        ShuffleBtn,
+        ChannelDialog
+    },
     props: {
+        item: {
+            type: Object,
+            default: () => {}
+        },
+        index: {
+            type: Number,
+            default: 0
+        },
         isEdit: {
             type: Boolean,
             default: false
         }
     },
     data() {
-        return {};
+        return {
+            navbarId: '',
+            squareIndex: 0,
+            layoutItemType: '',
+            allowResolutions: [{width: 260, height: 260}]
+        };
     },
-    computed: {},
+    created() {
+        let {navbarId} = this.$route.params;
+        this.navbarId = navbarId;
+    },
+    computed: {
+        ...mapGetters({
+            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+        }),
+        getIconImageUri() {
+            return (obj) => {
+                return _.get(obj, 'iconImage.uri');
+            };
+        },
+        layoutItem() {
+            return (squareIndex) => {
+                return this.getLayoutItemByNavbarId(this.navbarId, this.index, squareIndex);
+            };
+        },
+        styleBgImageStr() {
+            return (squareIndex) => {
+                let uri = _.get(this.layoutItem(squareIndex), 'coverImage.uri');
+                let bgStr = `background-image: url(${uri})`;
+                return bgStr;
+            };
+        }
+    },
     methods: {
-        editHandler() {},
-        deleteHandler() {}
+        addShuffleLayout(squareIndex) {
+            return (layoutItemType) => {
+                this.squareIndex = squareIndex;
+                this.layoutItemType = layoutItemType;
+                switch (layoutItemType) {
+                    case 'PROGRAMME':
+                        this.$refs.selectProgrammeDialog.showDialog();
+                        break;
+                    case 'PROGRAMME_VIDEO':
+                        this.$refs.selectProgrammeVideoDialog.showDialog();
+                        break;
+                    case 'PROGRAMME_SUBJECT':
+                        this.$refs.selectProgrammeSubjectDialog.showDialog();
+                        break;
+                    case 'LINK':
+                        this.$refs.selectLinkDialog.showDialog();
+                        break;
+                    case 'CHANNEL':
+                        this.$refs.selectChannelDialog.showDialog();
+                        break;
+                    default:
+                        throw new Error('类型错误');
+                }
+            };
+        },
+        addLayout(type) {
+            let {navbarId} = this.$route.params;
+            this.$util.layoutCommand({navbarId, index: this.index, type, router: this.$router});
+        },
+        editHandler() {
+            let {navbarId} = this.$route.params;
+            this.$router.push({ name: 'ShuffleModule', params: {navbarId, index: this.index, operator: 'edit'} });
+        },
+        deleteHandler() {
+            let {navbarId} = this.$route.params;
+            this.deleteLayoutDataByIndex({navbarId, index: this.index});
+            this.saveLayoutToStore();
+        }
     }
 };
 </script>

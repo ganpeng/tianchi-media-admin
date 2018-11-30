@@ -2,8 +2,8 @@
     <div class="mixed33-container">
         <div v-if="!isEdit" class="header layout-square-header">
             <div class="left">
-                <img class="icon" />
-                <span class="title"></span>
+                <img class="icon" :src="getIconImageUri(item)"/>
+                <span class="title">{{item.title}}</span>
             </div>
             <div class="right">
                 <el-dropdown
@@ -30,40 +30,183 @@
         <div class="content-field">
             <div class="top-field">
                 <div class="wrapper">
-                    <div class="top-left-field"></div>
+                    <div :style="styleBgImageStr(0)" class="top-left-field">
+                        <el-dropdown
+                            v-if="isEdit"
+                            class="my-el-dropdown"
+                            @command="addShuffleLayout($event, 0)" placement="bottom">
+                            <el-button class="my-add-cycle">
+                                <svg-icon icon-class="add"></svg-icon>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="CHANNEL">筛选</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
                 </div>
                 <div class="wrapper">
-                    <div class="top-middle-field"></div>
+                    <div :style="styleBgImageStr(1)" class="top-middle-field">
+                        <el-dropdown
+                            v-if="isEdit"
+                            class="my-el-dropdown"
+                            @command="addShuffleLayout($event, 1)" placement="bottom">
+                            <el-button class="my-add-cycle">
+                                <svg-icon icon-class="add"></svg-icon>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="CHANNEL">筛选</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
                 </div>
                 <div class="wrapper">
-                    <div class="top-right-field"></div>
+                    <div :style="styleBgImageStr(2)" class="top-right-field">
+                        <el-dropdown
+                            v-if="isEdit"
+                            class="my-el-dropdown"
+                            @command="addShuffleLayout($event, 2)" placement="bottom">
+                            <el-button class="my-add-cycle">
+                                <svg-icon icon-class="add"></svg-icon>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="CHANNEL">筛选</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
                 </div>
             </div>
             <div class="bottom-field">
                 <div class="wrapper">
-                    <div class="bottom-left-field"></div>
+                    <div :style="styleBgImageStr(3)" class="bottom-left-field">
+                        <el-dropdown
+                            v-if="isEdit"
+                            class="my-el-dropdown"
+                            @command="addShuffleLayout($event, 3)" placement="bottom">
+                            <el-button class="my-add-cycle">
+                                <svg-icon icon-class="add"></svg-icon>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="CHANNEL">筛选</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
                 </div>
                 <div class="wrapper">
-                    <div class="bottom-middle-field"></div>
+                    <div :style="styleBgImageStr(4)" class="bottom-middle-field">
+                        <el-dropdown
+                            v-if="isEdit"
+                            class="my-el-dropdown"
+                            @command="addShuffleLayout($event, 4)" placement="bottom">
+                            <el-button class="my-add-cycle">
+                                <svg-icon icon-class="add"></svg-icon>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="CHANNEL">筛选</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
                 </div>
                 <div class="wrapper">
-                    <div class="bottom-right-field"></div>
+                    <div :style="styleBgImageStr(5)" class="bottom-right-field">
+                        <el-dropdown
+                            v-if="isEdit"
+                            class="my-el-dropdown"
+                            @command="addShuffleLayout($event, 5)" placement="bottom">
+                            <el-button class="my-add-cycle">
+                                <svg-icon icon-class="add"></svg-icon>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="CHANNEL">筛选</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
                 </div>
             </div>
         </div>
+        <edit-filter
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectFilterDialog">
+        ></edit-filter>
     </div>
 </template>
 <script>
+import {mapGetters} from 'vuex';
+import _ from 'lodash';
+import ShuffleBtn from './ShuffleBtn';
+import EditFilter from '../add_edit_module/EditFilter';
 export default {
     name: 'Mixed33',
+    components: {
+        ShuffleBtn,
+        EditFilter
+    },
     props: {
+        item: {
+            type: Object,
+            default: () => {}
+        },
+        index: {
+            type: Number,
+            default: 0
+        },
         isEdit: {
             type: Boolean,
             default: false
         }
     },
     data() {
-        return {};
+        return {
+            navbarId: '',
+            squareIndex: 0,
+            allowResolutions: [{width: 560, height: 222}]
+        };
+    },
+    created() {
+        let {navbarId} = this.$route.params;
+        this.navbarId = navbarId;
+    },
+    computed: {
+        ...mapGetters({
+            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+        }),
+        getIconImageUri() {
+            return (obj) => {
+                return _.get(obj, 'iconImage.uri');
+            };
+        },
+        layoutItem() {
+            return (squareIndex) => {
+                return this.getLayoutItemByNavbarId(this.navbarId, this.index, squareIndex);
+            };
+        },
+        styleBgImageStr() {
+            return (squareIndex) => {
+                let uri = _.get(this.layoutItem(squareIndex), 'coverImage.uri');
+                let bgStr = `background-image: url(${uri})`;
+                return bgStr;
+            };
+        }
+    },
+    methods: {
+        addShuffleLayout(layoutItemType, squareIndex) {
+            this.squareIndex = squareIndex;
+            this.$refs.selectFilterDialog.showDialog();
+        },
+        addLayout(type) {
+            let {navbarId} = this.$route.params;
+            this.$util.layoutCommand({navbarId, index: this.index, type, router: this.$router});
+        },
+        editHandler() {
+            let {navbarId} = this.$route.params;
+            this.$router.push({ name: 'ShuffleModule', params: {navbarId, index: this.index, operator: 'edit'} });
+        },
+        deleteHandler() {
+            let {navbarId} = this.$route.params;
+            this.deleteLayoutDataByIndex({navbarId, index: this.index});
+            this.saveLayoutToStore();
+        }
     }
 };
 </script>
@@ -111,6 +254,11 @@ export default {
             .wrapper + .wrapper {
                 margin-left: 2%;
             }
+        }
+        .my-el-dropdown {
+            position: absolute;
+            top: 2px;
+            right: 10px;
         }
     }
 }
