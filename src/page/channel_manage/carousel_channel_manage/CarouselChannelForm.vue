@@ -92,6 +92,7 @@
             </el-button>
         </div>
         <el-table
+            v-if="currentSelectedVideoList.length !== 0"
             header-row-class-name="common-table-header"
             :data="currentSelectedVideoList"
             row-class-name=video-larger-row
@@ -257,7 +258,7 @@
             </el-table-column>
         </el-table>
         <!--排序工具-->
-        <div id="sort-tool">
+        <div id="sort-tool" v-if="currentSelectedVideoList.length !== 0">
             <div class="sort-header" @click="sortToolVisible = !sortToolVisible">
                 <label>排序工具</label>
                 <i class="el-icon-arrow-down" v-if="sortToolVisible"></i>
@@ -290,7 +291,7 @@
             </div>
         </div>
         <!--设置展示名称-->
-        <div id="display-name-setting">
+        <div id="display-name-setting" v-if="currentSelectedVideoList.length !== 0">
             <div class="display-name-header" @click="displayNameSettingVisible = !displayNameSettingVisible">
                 <label>设置展示名称</label>
                 <i class="el-icon-arrow-down" v-if="displayNameSettingVisible"></i>
@@ -378,9 +379,9 @@
             :displayVideoDialogVisible="previewVideoInfo.visible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
-        <div class="operate">
+        <div class="operate-block">
             <el-button type="primary" @click="saveChannelInfo" class="btn-style-two">保存</el-button>
-            <el-button @click="toChannelList" class="btn-style-three">返回列表页</el-button>
+            <el-button type="primary" plain @click="toChannelList" class="btn-style-three">返回列表</el-button>
         </div>
         <el-dialog
             title="选择相应的视频"
@@ -1217,11 +1218,21 @@
         }
     }
 
-    /*保存按钮*/
-    .operate {
-        margin-top: 200px;
-        margin-bottom: 80px;
-        .el-button:nth-child(2) {
+    // 操作
+    .operate-block {
+        position: fixed;
+        bottom: 10px;
+        left: 0px;
+        right: 0px;
+        margin: auto;
+        width: 500px;
+        height: 80px;
+        line-height: 90px;
+        background: #293550;
+        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.20);
+        border-radius: 8px;
+        z-index: 600;
+        .el-button:last-child {
             margin-left: 40px;
         }
     }

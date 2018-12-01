@@ -1,5 +1,5 @@
 <template>
-    <div class="video-table-container text-center" @keyup.enter="getVideoList">
+    <div id="select-multiple-video" class="video-table-container text-center" @keyup.enter="getVideoList">
         <div class="search-field-item">
             <el-input
                 v-model="queryParams.name"
@@ -155,7 +155,7 @@
                     videoType: '',
                     name: '',
                     pageNum: 0,
-                    pageSize: 10
+                    pageSize: 5
                 },
                 pageNum: 1,
                 total: 0,
@@ -345,6 +345,20 @@
             &:first-child {
                 margin-left: 10px;
             }
+        }
+    }
+
+    .el-table {
+        margin: 10px 0px !important;
+    }
+
+</style>
+
+<style lang="scss">
+
+    #select-multiple-video {
+        .el-pagination__sizes {
+            display: none;
         }
     }
 

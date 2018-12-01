@@ -144,9 +144,10 @@
                 this.$refs.channelOperateTable.batchUpdateStatus(visible);
             },
             createCarouselChannel() {
-                this.$router.push({
+                let routeData = this.$router.resolve({
                     name: 'CreateCarouselChannel'
                 });
+                window.open(routeData.href, '_blank');
             }
         }
     };
@@ -156,6 +157,7 @@
 
     .el-pagination {
         margin-bottom: 126px;
+        margin-top: 10px;
     }
 
 </style>
