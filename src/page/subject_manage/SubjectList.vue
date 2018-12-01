@@ -129,7 +129,10 @@
             },
             // 创建专题
             createSubject(command) {
-                this.$router.push({name: command === 'PROGRAMME' ? 'CreateProgrammeSubject' : 'CreateFigureSubject'});
+                let routeData = this.$router.resolve({
+                    name: command === 'PROGRAMME' ? 'CreateProgrammeSubject' : 'CreateFigureSubject'
+                });
+                window.open(routeData.href, '_blank');
             }
         }
     };

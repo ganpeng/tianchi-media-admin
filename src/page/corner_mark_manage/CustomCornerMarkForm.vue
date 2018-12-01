@@ -129,23 +129,17 @@
             color: #6F7480;
         }
         .image-box {
-            position: relative;
             float: left;
             margin-right: 20px;
-            width: 100px;
-            height: 100px;
+            width: 37.5px;
+            height: 29.7px;
             img {
-                position: absolute;
-                top: 0px;
-                left: 0px;
-                bottom: 0px;
-                right: 0px;
-                margin: auto;
-                height: 60px;
-                width: 60px;
+                height: 100%;
+                width: 100%;
                 &.little {
-                    width: 38px;
-                    height: 23px;
+                    margin-top: 3px;
+                    width: 100%;
+                    height: 76%;
                 }
             }
         }

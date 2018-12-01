@@ -236,7 +236,6 @@
     /*
     * 设置拖拽效果样式
     */
-
     .gu-mirror {
         cursor: grabbing;
         cursor: -moz-grabbing;
@@ -260,6 +259,7 @@
         div {
             position: relative;
             height: 35px;
+            width: 128px;
             line-height: 35px;
             border-bottom: 1px solid #3E495E;
             /*名称或图片*/

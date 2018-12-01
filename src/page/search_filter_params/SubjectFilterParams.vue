@@ -88,21 +88,13 @@
             <el-form :inline="true" class="more-filter-box filter-form" v-if="moreFilters">
                 <el-form-item label="开始时间">
                     <el-date-picker
-                        v-model="listQueryParams.createdAtBegin"
-                        @change="getSubjectList('BEGIN')"
-                        clearable
-                        type="date"
-                        placeholder="请选择开始时间">
-                    </el-date-picker>
-                </el-form-item>
-                <el-form-item label="结束时间">
-                    <el-date-picker
-                        v-model="listQueryParams.createdAtEnd"
+                        v-model="createRangeTime"
+                        type="daterange"
                         @change="getSubjectList"
-                        :disabled="!listQueryParams.createdAtBegin"
-                        clearable
-                        type="date"
-                        placeholder="请选择结束时间">
+                        value-format="timestamp"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
                     </el-date-picker>
                 </el-form-item>
             </el-form>
@@ -123,6 +115,7 @@
                     createdAtEnd: '',
                     keyword: ''
                 },
+                createRangeTime: [],
                 programmeCategoryOptions: [],
                 visibleOptions: [{
                     value: true,
@@ -150,6 +143,7 @@
                 this.listQueryParams.programmeCategoryId = params.programmeCategoryId ? params.programmeCategoryId : '';
                 this.listQueryParams.createdAtBegin = params.createdAtBegin ? params.createdAtBegin : '';
                 this.listQueryParams.createdAtEnd = params.createdAtEnd ? params.createdAtEnd : '';
+                this.createRangeTime = params.createdAtBegin ? [params.createdAtBegin, params.createdAtEnd] : [];
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
             },
             init() {
@@ -159,16 +153,25 @@
                     }
                 });
             },
-            getSubjectList(command) {
-                if (command === 'BEGIN' && !this.listQueryParams.createdAtBegin) {
+            getSubjectList() {
+                if (this.createRangeTime && this.createRangeTime.length === 2) {
+                    this.listQueryParams.createdAtBegin = this.createRangeTime[0];
+                    this.listQueryParams.createdAtEnd = this.createRangeTime[1];
+                } else {
+                    this.listQueryParams.createdAtBegin = '';
                     this.listQueryParams.createdAtEnd = '';
                 }
                 this.$emit('getSubjectList', this.listQueryParams);
             },
             clearFilters() {
                 for (let key in this.listQueryParams) {
-                    this.listQueryParams[key] = '';
+                    if (Array.isArray(this.listQueryParams[key])) {
+                        this.listQueryParams[key] = [];
+                    } else {
+                        this.listQueryParams[key] = '';
+                    }
                 }
+                this.createRangeTime = [];
                 this.getSubjectList();
             }
         }

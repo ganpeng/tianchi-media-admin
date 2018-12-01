@@ -238,10 +238,14 @@
         margin: auto;
         width: 500px;
         height: 80px;
-        line-height: 80px;
+        line-height: 90px;
         background: #293550;
         box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.20);
         border-radius: 8px;
+        z-index: 600;
+        .el-button:last-child {
+            margin-left: 40px;
+        }
     }
 
 </style>

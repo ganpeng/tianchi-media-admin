@@ -79,9 +79,9 @@
                 </el-radio-group>
             </el-form-item>
         </el-form>
-        <div class="operate">
-            <el-button type="primary" @click="createNavBar" class="btn-style-two">保存</el-button>
-            <el-button @click="toNavBarSetting" class="btn-style-three">返回</el-button>
+        <div class="operate-block">
+            <el-button type="primary" class="btn-style-two" @click="createNavBar">保存</el-button>
+            <el-button type="primary" plain class="btn-style-three" @click="toNavBarSetting">返回</el-button>
         </div>
     </div>
 </template>
@@ -280,10 +280,21 @@
         }
     }
 
-    .operate {
-        margin-top: 200px;
-        margin-bottom: 80px;
-        .el-button:nth-child(2) {
+    // 操作
+    .operate-block {
+        position: fixed;
+        bottom: 10px;
+        left: 0px;
+        right: 0px;
+        margin: auto;
+        width: 500px;
+        height: 80px;
+        line-height: 90px;
+        background: #293550;
+        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.20);
+        border-radius: 8px;
+        z-index: 600;
+        .el-button:last-child {
             margin-left: 40px;
         }
     }
