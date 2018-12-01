@@ -480,6 +480,7 @@ const RECOMMEND_OPTIONS = [
     }
 ];
 
+const defaultLayoutNavbarId = '5bf42d08b778252f2343eafc';
 const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '个人中心'];
 const ASIDE_LIST = [
     [
@@ -522,17 +523,17 @@ const ASIDE_LIST = [
         },
         {
             text: '页面布局',
-            uri: '/page-layout/0',
+            uri: `/page-layout/${defaultLayoutNavbarId}`,
             icon: 'aside_layout'
         },
         {
             text: '直播频道',
-            uri: '/channel-manage/live/list',
+            uri: '/channel-live/list',
             icon: 'shortcut_live_channel'
         },
         {
             text: '轮播频道',
-            uri: '/channel-manage/carousel/list',
+            uri: '/channel-carousel/list',
             icon: 'shortcut_carousel_channel'
         },
         {

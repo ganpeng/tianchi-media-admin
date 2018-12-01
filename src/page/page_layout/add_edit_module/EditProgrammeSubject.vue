@@ -303,7 +303,7 @@ export default {
             }
         },
         nextBtnClickHandler() {
-            if (this.active < 3) {
+            if (this.active < 2) {
                 if (this.active === 0) {
                     if (this.getSquareProgrammeSubjectId) {
                         this.active++;
@@ -370,13 +370,8 @@ export default {
         //  最后一步的确认处理函数
         enterHandler() {
             let {navbarId, index} = this.$route.params;
-            if (this.getSquareProgrammeLayoutItemType) {
-                this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'PROGRAMME_SUBJECT' });
-                this.closeDialog();
-            } else {
-                this.$message.error('请选择节目展示方式');
-                return false;
-            }
+            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'PROGRAMME_SUBJECT' });
+            this.closeDialog();
         }
     }
 };

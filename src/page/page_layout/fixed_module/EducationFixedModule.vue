@@ -33,6 +33,45 @@
         </div>
         <div class="bottom-field">
             <div class="wrapper">
+                <div :style="styleBgImageStr(2)" class="bottom-field-item">
+                    <div v-if="isEdit" class="btn-wrapper">
+                        <el-button @click="selectProgramme(2)" class="btn-style-two">
+                            选择节目
+                        </el-button>
+                        <br />
+                        <el-button @click="selectProgrammeSubject(2)" class="btn-style-two">
+                            选择节目专题
+                        </el-button>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper">
+                <div :style="styleBgImageStr(3)" class="bottom-field-item">
+                    <div v-if="isEdit" class="btn-wrapper">
+                        <el-button @click="selectProgramme(3)" class="btn-style-two">
+                            选择节目
+                        </el-button>
+                        <br />
+                        <el-button @click="selectProgrammeSubject(3)" class="btn-style-two">
+                            选择节目专题
+                        </el-button>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper">
+                <div :style="styleBgImageStr(4)" class="bottom-field-item">
+                    <div v-if="isEdit" class="btn-wrapper">
+                        <el-button @click="selectProgramme(4)" class="btn-style-two">
+                            选择节目
+                        </el-button>
+                        <br />
+                        <el-button @click="selectProgrammeSubject(4)" class="btn-style-two">
+                            选择节目专题
+                        </el-button>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper">
                 <div :style="styleBgImageStr(5)" class="bottom-field-item">
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(5)" class="btn-style-two">
@@ -40,45 +79,6 @@
                         </el-button>
                         <br />
                         <el-button @click="selectProgrammeSubject(5)" class="btn-style-two">
-                            选择节目专题
-                        </el-button>
-                    </div>
-                </div>
-            </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(6)" class="bottom-field-item">
-                    <div v-if="isEdit" class="btn-wrapper">
-                        <el-button @click="selectProgramme(6)" class="btn-style-two">
-                            选择节目
-                        </el-button>
-                        <br />
-                        <el-button @click="selectProgrammeSubject(6)" class="btn-style-two">
-                            选择节目专题
-                        </el-button>
-                    </div>
-                </div>
-            </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(7)" class="bottom-field-item">
-                    <div v-if="isEdit" class="btn-wrapper">
-                        <el-button @click="selectProgramme(7)" class="btn-style-two">
-                            选择节目
-                        </el-button>
-                        <br />
-                        <el-button @click="selectProgrammeSubject(7)" class="btn-style-two">
-                            选择节目专题
-                        </el-button>
-                    </div>
-                </div>
-            </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(8)" class="bottom-field-item">
-                    <div v-if="isEdit" class="btn-wrapper">
-                        <el-button @click="selectProgramme(8)" class="btn-style-two">
-                            选择节目
-                        </el-button>
-                        <br />
-                        <el-button @click="selectProgrammeSubject(8)" class="btn-style-two">
                             选择节目专题
                         </el-button>
                     </div>
@@ -161,19 +161,14 @@ export default {
         setAllowResolutions(squareIndex) {
             switch (squareIndex) {
                 case 0:
+                case 1:
                     this.allowResolutions = [{width: 860, height: 472}];
                     break;
-                case 1:
                 case 2:
                 case 3:
                 case 4:
-                    this.allowResolutions = [{width: 410, height: 216}];
-                    break;
                 case 5:
-                case 6:
-                case 7:
-                case 8:
-                    this.allowResolutions = [{width: 410, height: 180}];
+                    this.allowResolutions = [{width: 410, height: 216}];
                     break;
                 default:
                     throw new Error('未知的索引');
@@ -193,12 +188,23 @@ export default {
     background-position: center center;
     border-radius: 8px;
 }
-@mixin toggleBtn() {
-    .el-button {
+
+@mixin btnWrapper() {
+    .btn-wrapper {
         display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        .el-button {
+            &:last-child {
+                padding: 0 10px;
+                margin-top: 10px;
+            }
+        }
     }
     &:hover {
-        .el-button {
+        .btn-wrapper {
             display: block;
         }
     }
@@ -217,35 +223,10 @@ export default {
             &:first-child {
                 margin-right: 2%;
             }
-            .top-left-field {
-                position: relative;
-                @include paddingBg(50.998%);
-                @include toggleBtn();
-            }
+            .top-left-field,
             .top-right-field {
-                display: flex;
-                flex-direction: column;
-                .top-right-top-field {
-                    margin-bottom: 4%;
-                }
-                .top-right-top-field,
-                .top-right-bottom-field {
-                    display: flex;
-                    .wrapper {
-                        flex: 1;
-                        &:first-child {
-                            margin-right: 4%;
-                        }
-                        .top-right-top-left-field,
-                        .top-right-top-right-field,
-                        .top-right-bottom-left-field,
-                        .top-right-bottom-right-field {
-                            position: relative;
-                            @include paddingBg(48.6748%);
-                            @include toggleBtn();
-                        }
-                    }
-                }
+                @include paddingBg(54.8837%);
+                @include btnWrapper();
             }
         }
     }
@@ -254,21 +235,12 @@ export default {
         .wrapper {
             flex: 1;
             .bottom-field-item {
-                position: relative;
-                @include paddingBg(48.6748%);
-                @include toggleBtn();
+                @include paddingBg(52.6829%);
+                @include btnWrapper();
             }
         }
         .wrapper + .wrapper {
             margin-left: 2%;
-        }
-    }
-    .wrapper {
-        .btn-style-two {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
         }
     }
 }

@@ -141,6 +141,12 @@ const getters = {
             return !_.isEmpty(obj) ? obj : {};
         };
     },
+    getLayoutItemCornerMark(state) {
+        return (navbarId, index, squareIndex) => {
+            let obj = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.cornerMark`);
+            return !_.isEmpty(obj) ? obj : {};
+        };
+    },
     getLayoutRenderTypeByNavbarId(state) {
         return (id) => {
             return state.layout[id].renderType;
@@ -217,6 +223,15 @@ const mutations = {
     setLayoutItemByIndex(state, payload) {
         let {index, navbarId, squareIndex, layoutItem} = payload;
         _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}`, layoutItem);
+    },
+    updateLayoutItemCornerMarkByIndex(state, payload) {
+        let {index, navbarId, squareIndex, key, value} = payload;
+        _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.cornerMark.${key}`, value);
+    },
+    updateSortedList(state, payload) {
+        let {navbarId, list} = payload;
+        let firstData = _.get(state.layout, `${navbarId}.data.0`);
+        _.set(state.layout, `${navbarId}.data`, [firstData, ...list]);
     },
     //  重新定义的增删改查方法结束
     appendLayoutItem(state, payload) {
@@ -404,6 +419,15 @@ const actions = {
         try {
             let subject = state.programmeSubject.list.find((programmeSubject) => programmeSubject.id === id);
             let res = await service.updateSubjectById(id, subject);
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    //  获取右上角的标签列表
+    async getCustomMarkList({commit, state}) {
+        try {
+            let res = await service.getCustomMarkList();
             return res;
         } catch (err) {
             console.log(err);

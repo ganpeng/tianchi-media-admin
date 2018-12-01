@@ -28,10 +28,10 @@
                         <el-form-item label="添加模块内容" required>
                             <div class="special-square-contianer">
                                 <div :style="styleBgImageStr(0)" @click="selectPersonSubject" class="left-field">
-
+                                    <span class="square-text">人物专题</span>
                                 </div>
                                 <div :style="styleBgImageStr(1)" @click="selectProgramme" class="right-field">
-
+                                    <span class="square-text">节目</span>
                                 </div>
                             </div>
                         </el-form-item>
@@ -157,12 +157,29 @@ export default {
         width: 32.0733%;
         height: 100px;
         margin-right: 1.4891%;
+        cursor: pointer;
+        border: 1px solid #2A3040;
         @include paddingBg(34.3642%);
+        &:hover {
+            border-color: $mainColor;
+        }
     }
     .right-field {
         width: 66.4375%;
         height: 100px;
+        cursor: pointer;
+        border: 1px solid #2A3040;
         @include paddingBg(34.3642%);
+        &:hover {
+            border-color: $mainColor;
+        }
+    }
+    .square-text {
+        position: absolute;
+        left: 50%;
+        bottom: -30px;
+        transform: translateX(-50%);
+        color: #A8ABB3;
     }
 }
 </style>

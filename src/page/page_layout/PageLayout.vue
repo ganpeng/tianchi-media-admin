@@ -44,13 +44,37 @@
                 <el-button class="btn-style-two" @click="saveLayoutHandler">保存</el-button>
                 <el-button class="btn-style-three" @click="clearLayoutHandler">清除修改</el-button>
             </div>
-            <el-button class="my-add-cycle">
+            <el-button @click="showSortViewHandler" class="my-add-cycle">
                 <svg-icon icon-class="sort"></svg-icon>
             </el-button>
+        </div>
+        <div v-if="sortView" class="layout-sort">
+            <div class="header">
+                模块排序
+            </div>
+            <span @click="closeSortViewHandler" class="delete-btn one close-sort-view-btn">
+                <svg-icon icon-class="delete_btn"></svg-icon>
+            </span>
+            <div class="layout-sort-list-wrapper">
+                <draggable element="ul" class="sortable-list" v-model="layoutList">
+                    <li v-for="(item, index) in layoutList" :key="index" class="sortable-item">
+                        <span class="index">{{index + 1}}</span>
+                        <p class="title">{{item.title}}</p>
+                    </li>
+                </draggable>
+            </div>
+            <div class="save-sort">
+                <el-button
+                    @click="sortedSaveHandler"
+                    class="btn-style-two">
+                    确定
+                </el-button>
+            </div>
         </div>
     </div>
 </template>
 <script>
+import draggable from 'vuedraggable';
 import {mapGetters, mapActions, mapMutations} from 'vuex';
 import _ from 'lodash';
 import FixedLayout from './FixedLayout';
@@ -59,12 +83,14 @@ export default {
     name: 'PageLayout',
     components: {
         FixedLayout,
-        OtherLayout
+        OtherLayout,
+        draggable
     },
     data() {
         return {
             activeId: '',
-            layoutTemplate: ''
+            layoutTemplate: '',
+            sortView: false
         };
     },
     async created() {
@@ -129,13 +155,24 @@ export default {
                     return '';
                 }
             };
+        },
+        layoutList: {
+            get() {
+                let {navbarId} = this.$route.params;
+                return _.get(this.layout, `${navbarId}`).data.filter((item, index) => index > 0);
+            },
+            set(list) {
+                let {navbarId} = this.$route.params;
+                this.updateSortedList({navbarId, list});
+            }
         }
     },
     methods: {
         ...mapMutations({
             insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex',
             updateLayout: 'pageLayout/updateLayout',
-            saveLayoutToStore: 'pageLayout/saveLayoutToStore'
+            saveLayoutToStore: 'pageLayout/saveLayoutToStore',
+            updateSortedList: 'pageLayout/updateSortedList'
         }),
         ...mapActions({
             getNavbarList: 'pageLayout/getNavbarList',
@@ -170,6 +207,16 @@ export default {
             let {navbarId} = this.$route.params;
             let index = this.layout[navbarId].data.length;
             this.$util.layoutCommand({navbarId, index, type, router: this.$router});
+        },
+        sortedSaveHandler() {
+            this.saveLayoutToStore();
+            this.$message.success('模块排序保存成功');
+        },
+        closeSortViewHandler() {
+            this.sortView = false;
+        },
+        showSortViewHandler() {
+            this.sortView = true;
         }
     }
 };
@@ -217,5 +264,73 @@ export default {
 .fixed-btn-container {
     display: flex;
     justify-content: space-around;
+}
+
+.page-layout-container {
+    position: relative;
+    .layout-sort {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        top: 60px;
+        width: 280px;
+        background: linear-gradient(-90deg, rgba(51,68,99,0.90) 0%, rgba(22,28,40,0.90) 100%);
+        .header {
+            height: 102px;
+            line-height: 102px;
+            color: #fff;
+            font-size: 24px;
+        }
+        .layout-sort-list-wrapper {
+            position: absolute;
+            top: 102px;
+            bottom: 80px;
+            left: 0;
+            right: 0;
+            overflow-y: scroll;
+        }
+        .sortable-item {
+            display: flex;
+            height: 30px;;
+            line-height: 30px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            .index {
+                display: inline-block;
+                color: #fff;
+                width: 50px;
+            }
+            .title {
+                flex: 1;
+                background: #2A3040;
+                border: 1px solid #637497;
+                border-radius: 4px;
+                margin-right: 20px;
+                font-size: 14px;
+                color: #fff;
+                &:hover {
+                    border: 1px solid #0062C4;
+                    background: #0062C4;
+                }
+            }
+        }
+        .save-sort {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            padding: 0 20px;
+            .el-button {
+                width: 100%;
+            }
+        }
+        .close-sort-view-btn {
+            position: absolute;
+            right: 10px;
+            top: 32px;
+            .svg-icon {
+            }
+        }
+    }
 }
 </style>

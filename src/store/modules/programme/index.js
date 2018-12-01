@@ -404,39 +404,39 @@ const getters = {
     typeList(state) {
         return (id) => {
             let programme = getProgrammeById(id);
-            let allTypeList = programme.categoryList.reduce((prev, curr) => {
+            let allTypeList = programme ? programme.categoryList.reduce((prev, curr) => {
                 let obj = state.global.categoryList.find((item) => item.id === curr.id);
                 if (obj) {
                     return prev.concat(obj.programmeTypeList);
                 } else {
                     return prev.concat([]);
                 }
-            }, []);
-            let typeList = programme.typeList.filter((item) => {
+            }, []) : [];
+            let typeList = programme ? programme.typeList.filter((item) => {
                 let findIndex = allTypeList.findIndex((ele) => ele.id === item.id);
                 return findIndex > -1;
-            });
+            }) : [];
             return typeList.map((item) => item.name).join(', ');
         };
     },
     getDirector(state) {
         return (id) => {
             let programme = getProgrammeById(id);
-            let director = programme.figureListMap['DIRECTOR'] ? programme.figureListMap['DIRECTOR'] : [];
+            let director = programme && programme.figureListMap['DIRECTOR'] ? programme.figureListMap['DIRECTOR'] : [];
             return director.map((item) => item.name).join(', ');
         };
     },
     getChiefActor(state) {
         return (id) => {
             let programme = getProgrammeById(id);
-            let chiefActor = programme.figureListMap['CHIEF_ACTOR'] ? programme.figureListMap['CHIEF_ACTOR'] : [];
+            let chiefActor = programme && programme.figureListMap['CHIEF_ACTOR'] ? programme.figureListMap['CHIEF_ACTOR'] : [];
             return chiefActor.map((item) => item.name).join(', ');
         };
     },
     getScenarist(state) {
         return (id) => {
             let programme = getProgrammeById(id);
-            let scenarist = programme.figureListMap['SCENARIST'] ? programme.figureListMap['SCENARIST'] : [];
+            let scenarist = programme && programme.figureListMap['SCENARIST'] ? programme.figureListMap['SCENARIST'] : [];
             return scenarist.map((item) => item.name).join(', ');
         };
     },

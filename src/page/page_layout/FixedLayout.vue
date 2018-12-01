@@ -32,6 +32,10 @@
             :isEdit="isEdit"
             v-if="layoutTemplate === 'FS_7'"
         ></party-fixed-module>
+        <education-fixed-module
+            :isEdit="isEdit"
+            v-if="layoutTemplate === 'FS_8'"
+        ></education-fixed-module>
     </div>
 </template>
 <script>
@@ -44,6 +48,7 @@ import TeleplayFixedModule from './fixed_module/TeleplayFixedModule';
 import CategoryFixedModule from './fixed_module/CategoryFixedModule';
 import SubjectFixedModule from './fixed_module/SubjectFixedModule';
 import PartyFixedModule from './fixed_module/PartyFixedModule';
+import EducationFixedModule from './fixed_module/EducationFixedModule';
 export default {
     name: 'FixedLayout',
     components: {
@@ -54,7 +59,8 @@ export default {
         TeleplayFixedModule,
         CategoryFixedModule,
         SubjectFixedModule,
-        PartyFixedModule
+        PartyFixedModule,
+        EducationFixedModule
     },
     props: {
         layoutTemplate: {

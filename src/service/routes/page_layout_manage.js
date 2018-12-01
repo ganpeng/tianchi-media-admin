@@ -72,3 +72,10 @@ export const getSubjectById = (id) => {
 export const updateSubjectById = (id, subject) => {
     return service.patch(`/v1/content/subject/${id}`, subject);
 };
+
+/**
+ * 获取右上角的标签列表
+ */
+export const getCustomMarkList = () => {
+    return service.get('/v1/content/mark/list?markType=CUSTOM');
+};

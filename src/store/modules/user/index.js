@@ -11,7 +11,11 @@ const state = {
     token: ''
 };
 
-const getters = {};
+const getters = {
+    name(state) {
+        return state.name;
+    }
+};
 
 const mutations = {
     setName(state, data) {

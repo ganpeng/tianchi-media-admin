@@ -57,7 +57,7 @@
                             <el-table-column align="center" width="100px" label="分类">
                                 <template slot-scope="scope">
                                     <span class="ellipsis four">
-                                        {{categoryListString(scope.row.categoryList) | padEmpty}}
+                                        {{categoryListString(scope.row.categoryList || []) | padEmpty}}
                                     </span>
                                 </template>
                             </el-table-column>
@@ -205,27 +205,37 @@
                 </div>
                 <div v-show="active === 2" class="step-three">
                     <el-form status-icon label-width="120px" class="my-el-form" @submit.native.prevent>
-                        <el-col :span="12">
+                        <el-col :span="14">
                             <el-form-item label="节目角标">
                                 <div class="mark-container">
                                     <div class="mark-item">
-                                        <el-checkbox @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
+                                        <el-checkbox :checked="leftTopChecked" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
                                             左上角：播放平台
                                         </el-checkbox>
                                     </div>
                                     <div class="mark-item">
-                                        <el-checkbox @change="markChangeHandler($event, 'rightTop')" :disabled="rightTopDisabled">
                                             右上角：
-                                        </el-checkbox>
-                                        <!--  此处需要增加一个选择框 -->
+                                        <el-select
+                                            @input="customMarkSelectHandler"
+                                            :value="rightTop"
+                                            value-key="id"
+                                            clearable
+                                            placeholder="请选择">
+                                            <el-option
+                                                v-for="item in customMarkOptions"
+                                                :key="item.id"
+                                                :label="item.caption"
+                                                :value="item">
+                                            </el-option>
+                                        </el-select>
                                     </div>
                                     <div class="mark-item">
-                                        <el-checkbox @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
+                                        <el-checkbox :checked="leftBottomChecked" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
                                             左下角：更新
                                         </el-checkbox>
                                     </div>
                                     <div class="mark-item">
-                                        <el-checkbox @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
+                                        <el-checkbox :checked="rightBottomChecked" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
                                             右下角：评分
                                         </el-checkbox>
                                     </div>
@@ -278,17 +288,25 @@ export default {
     },
     data() {
         return {
+            navbarId: '',
+            index: 0,
             active: 0,
             dialogVisible: false,
             showExist: false,
             programme: {},
             layoutItem: {},
+            customMarkOptions: [],
             previewImage: {
                 title: '',
                 display: false,
                 uri: ''
             }
         };
+    },
+    created() {
+        let {navbarId, index} = this.$route.params;
+        this.navbarId = navbarId;
+        this.index = parseInt(index);
     },
     computed: {
         ...mapGetters({
@@ -297,33 +315,56 @@ export default {
             categoryListString: 'programme/categoryListString',
             typeList: 'programme/typeList',
             getChiefActor: 'programme/getChiefActor',
-            layout: 'pageLayout/layout'
+            layout: 'pageLayout/layout',
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
         }),
         getImageByKey() {
             return (key) => {
-                let {navbarId, index} = this.$route.params;
-                return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.${key}.uri`);
+                return _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.${key}.uri`);
             };
+        },
+        rightTop() {
+            let {rightTop} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
+            return _.isEmpty(rightTop) ? {} : rightTop;
         },
         leftTopDisabled() {
             return _.get(this.programme, 'platformList.length') === 0;
         },
-        rightTopDisabled() {
-            return false;
-        },
         leftBottomDisabled() {
-            return !(this.programme && this.programme.totalSets);
+            return !(this.programme && this.programme.featureVideoCount);
         },
         rightBottomDisabled() {
             return !(this.programme && this.programme.score);
         },
+        leftTopChecked() {
+            let {leftTop} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
+            if (_.isEmpty(leftTop) || !_.get(leftTop, 'caption')) {
+                return false;
+            } else {
+                return true;
+            }
+        },
+        leftBottomChecked() {
+            let {leftBottom} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
+            if (_.isEmpty(leftBottom) || !_.get(leftBottom, 'caption')) {
+                return false;
+            } else {
+                return true;
+            }
+        },
+        rightBottomChecked() {
+            let {rightBottom} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
+            if (_.isEmpty(rightBottom) || !_.get(rightBottom, 'caption')) {
+                return false;
+            } else {
+                return true;
+            }
+        },
         getSquareProgrammeId() {
-            let {navbarId, index} = this.$route.params;
-            return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.id`);
+            return _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.id`);
         },
         getSquareProgrammeLayoutItemType() {
-            let {navbarId, index} = this.$route.params;
-            return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.layoutItemType`);
+            return _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.layoutItemType`);
         },
         checkedProgrammeList() {
             if (this.getSquareProgrammeId && !_.isEmpty(this.programme)) {
@@ -336,12 +377,14 @@ export default {
     methods: {
         ...mapMutations({
             updateProgrammePagination: 'programme/updateProgrammePagination',
-            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex'
+            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
+            updateLayoutItemCornerMarkByIndex: 'pageLayout/updateLayoutItemCornerMarkByIndex'
         }),
         ...mapActions({
             getProgrammeList: 'programme/getProgrammeList',
             getProgrammeListByNews: 'programme/getProgrammeListByNews',
-            getProgrammeCategory: 'programme/getProgrammeCategory'
+            getProgrammeCategory: 'programme/getProgrammeCategory',
+            getCustomMarkList: 'pageLayout/getCustomMarkList'
         }),
         //  弹窗的操作
         async showDialog(category) {
@@ -359,6 +402,8 @@ export default {
         },
         closeDialog() {
             this.dialogVisible = false;
+            this.navbarId = '';
+            this.index = 0;
             this.active = 0;
             this.programme = {};
             this.previewImage = {
@@ -375,6 +420,10 @@ export default {
                     if (res && res.code === 0) {
                         this.programme = res.data;
                         this.showExist = true;
+                    }
+                    let markRes = await this.getCustomMarkList();
+                    if (markRes && markRes.code === 0) {
+                        this.customMarkOptions = markRes.data;
                     }
                 }
             } catch (err) {
@@ -419,10 +468,13 @@ export default {
         //  节目列表搜索
         searchInputHandler() {},
         setProgrammeSubjectHandler(programme) {
-            let {navbarId, index} = this.$route.params;
-            let {id, name} = programme;
-            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
-            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
+            let {id, name, desc, programmeTemplate} = programme;
+            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
+            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
+            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'desc', value: desc });
+            if (programmeTemplate) {
+                this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'programmeTemplate', value: programmeTemplate });
+            }
             this.programme = programme;
         },
         tableRowClassName({row, rowIndex}) {
@@ -437,28 +489,69 @@ export default {
         },
         //  图片上传成功之后的毁掉
         uploadProgrammeCoverImageSuccessHandler(image) {
-            let {navbarId, index} = this.$route.params;
             this.updateLayoutItemByIndex({
-                navbarId,
-                index,
+                navbarId: this.navbarId,
+                index: this.index,
                 squareIndex: this.squareIndex,
                 key: 'coverImage',
                 value: image
             });
         },
         uploadProgrammeBgImageSuccessHandler(image) {
-            let {navbarId, index} = this.$route.params;
             this.updateLayoutItemByIndex({
-                navbarId,
-                index,
+                navbarId: this.navbarId,
+                index: this.index,
                 squareIndex: this.squareIndex,
                 key: 'coverImageBackground',
                 value: image
             });
         },
         //  角标的相关操作
-        markChangeHandler() {
-            // this.updateProgrammeMark({checked, key});
+        markChangeHandler(value, key) {
+            console.log(value);
+            console.log(key);
+            let {score, featureVideoCount, platformList} = this.programme;
+            switch (key) {
+                case 'leftTop':
+                    this.updateLayoutItemCornerMarkByIndex({
+                        navbarId: this.navbarId,
+                        index: this.index,
+                        squareIndex: this.squareIndex,
+                        key: 'leftTop',
+                        value: value ? {caption: platformList[0]} : {}
+                    });
+                    break;
+                case 'leftBottom':
+                    this.updateLayoutItemCornerMarkByIndex({
+                        navbarId: this.navbarId,
+                        index: this.index,
+                        squareIndex: this.squareIndex,
+                        key: 'leftBottom',
+                        value: value ? {caption: featureVideoCount} : {}
+                    });
+                    break;
+                case 'rightBottom':
+                    this.updateLayoutItemCornerMarkByIndex({
+                        navbarId: this.navbarId,
+                        index: this.index,
+                        squareIndex: this.squareIndex,
+                        key: 'rightBottom',
+                        value: value ? {caption: score} : {}
+                    });
+                    break;
+                default:
+                    throw new Error('角标key不存在');
+            }
+        },
+        customMarkSelectHandler(mark) {
+            let {navbarId, index} = this.$route.params;
+            this.updateLayoutItemCornerMarkByIndex({
+                navbarId,
+                index,
+                squareIndex: this.squareIndex,
+                key: 'rightTop',
+                value: _.isEmpty(mark) ? {} : mark
+            });
         },
         //  节目展示的相关操作
         setSquareProgrammeLayoutItemType(layoutItemType) {
@@ -489,7 +582,7 @@ export default {
         .mark-item {
             font-size: 16px;
             color: #A8ABB3;
-            width: 45%;
+            width: 40%;
             .el-checkbox {
                 padding: 0;
             }

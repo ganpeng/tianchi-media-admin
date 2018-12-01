@@ -498,57 +498,57 @@ let router = new Router({
                     },
                     //  直播频道管理
                     {
-                        path: '/channel-manage/live/list',
+                        path: '/channel-live/list',
                         name: 'LiveChannelList',
                         component: LiveChannelList
                     },
                     {
-                        path: '/channel-manage/live/create',
+                        path: '/channel-live/create',
                         name: 'CreateLiveChannel',
                         component: CreateLiveChannel
                     },
                     {
-                        path: '/channel-manage/live/edit/:id',
+                        path: '/channel-live/edit/:id',
                         name: 'EditLiveChannel',
                         component: EditLiveChannel
                     },
                     {
-                        path: '/channel-manage/live/import',
+                        path: '/channel-live/import',
                         name: 'LiveChannelImport',
                         component: LiveChannelImport
                     },
                     {
-                        path: '/channel-manage/live/preview/:id',
+                        path: '/channel-live/preview/:id',
                         name: 'PreviewProgrammeList',
                         component: PreviewProgrammeList
                     },
                     // 轮播频道列表
                     {
-                        path: '/channel-manage/carousel/list',
+                        path: '/channel-carousel/list',
                         name: 'CarouselChannelList',
                         component: CarouselChannelList
                     },
                     // 轮播频道-创建单个轮播频道
                     {
-                        path: '/channel-manage/carousel/create',
+                        path: '/channel-carousel/create',
                         name: 'CreateCarouselChannel',
                         component: CreateCarouselChannel
                     },
                     // 轮播频道详情
                     {
-                        path: '/channel-manage/carousel/detail/:id',
+                        path: '/channel-carousel/detail/:id',
                         name: 'CarouselChannelDetail',
                         component: CarouselChannelDetail
                     },
                     // 编辑轮播频道
                     {
-                        path: '/channel-manage/carousel/edit/:id',
+                        path: '/channel-carousel/edit/:id',
                         name: 'EditCarouselChannel',
                         component: EditCarouselChannel
                     },
                     //  频道类别管理
                     {
-                        path: '/channel-manage/category',
+                        path: '/channel-category',
                         name: 'ChannelCategory',
                         component: ChannelCategory
                     },

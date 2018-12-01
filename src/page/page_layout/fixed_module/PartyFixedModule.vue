@@ -214,13 +214,11 @@ export default {
                 case 2:
                 case 3:
                 case 4:
-                    this.allowResolutions = [{width: 410, height: 216}];
-                    break;
                 case 5:
                 case 6:
                 case 7:
                 case 8:
-                    this.allowResolutions = [{width: 410, height: 180}];
+                    this.allowResolutions = [{width: 410, height: 216}];
                     break;
                 default:
                     throw new Error('未知的索引');
@@ -240,12 +238,23 @@ export default {
     background-position: center center;
     border-radius: 8px;
 }
-@mixin toggleBtn() {
-    .el-button {
+
+@mixin btnWrapper() {
+    .btn-wrapper {
         display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        .el-button {
+            &:last-child {
+                padding: 0 10px;
+                margin-top: 10px;
+            }
+        }
     }
     &:hover {
-        .el-button {
+        .btn-wrapper {
             display: block;
         }
     }
@@ -267,7 +276,7 @@ export default {
             .top-left-field {
                 position: relative;
                 @include paddingBg(50.998%);
-                @include toggleBtn();
+                @include btnWrapper();
             }
             .top-right-field {
                 display: flex;
@@ -289,7 +298,7 @@ export default {
                         .top-right-bottom-right-field {
                             position: relative;
                             @include paddingBg(48.6748%);
-                            @include toggleBtn();
+                            @include btnWrapper();
                         }
                     }
                 }
@@ -303,19 +312,11 @@ export default {
             .bottom-field-item {
                 position: relative;
                 @include paddingBg(48.6748%);
-                @include toggleBtn();
+                @include btnWrapper();
             }
         }
         .wrapper + .wrapper {
             margin-left: 2%;
-        }
-    }
-    .wrapper {
-        .btn-style-two {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
         }
     }
 }
