@@ -8,6 +8,7 @@ let isLoading = false; // 解决重复调用列表接口的问题
 const defaultSearchFields = {
     name: '',
     status: '',
+    suffix: '',
     videoType: null,
     dateRange: [],
     startedAt: '',
@@ -115,7 +116,10 @@ const actions = {
             if (!isLoading) {
                 isLoading = true;
                 let {pageNum, pageSize} = state.pagination;
-                let params = Object.assign({}, {pageNum: pageNum > 0 ? pageNum - 1 : 0, pageSize}, {...state.searchFields});
+                let params = Object.assign({}, {
+                    pageNum: pageNum > 0 ? pageNum - 1 : 0,
+                    pageSize
+                }, {...state.searchFields});
                 delete params.dateRange;
                 let result = await service.getVideoList(params);
                 if (result && result.code === 0) {
@@ -144,7 +148,8 @@ const actions = {
         try {
             let result = await service.deleteVideoById(id);
             return result;
-        } catch (err) {}
+        } catch (err) {
+        }
     },
     async checkVideoMd5({commit, state}, key) {
         try {
@@ -162,7 +167,8 @@ const actions = {
             if (res && res.code === 0) {
                 commit('setServers', {servers: res.data});
             }
-        } catch (err) { }
+        } catch (err) {
+        }
     },
     async retryVideoByIdList({commit, state}, ids) {
         try {

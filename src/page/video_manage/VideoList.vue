@@ -43,6 +43,21 @@
                         </el-date-picker>
                     </div>
                     <div class="search-field-item">
+                        <label class="search-field-item-label">后缀</label>
+                        <el-select
+                            :value="searchFields.suffix"
+                            clearable
+                            placeholder="请选择视频后缀"
+                            @input="inputHandler($event, 'suffix')">
+                            <el-option
+                                v-for="(item, index) in suffixOptions"
+                                :key="index"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="search-field-item">
                         <label class="search-field-item-label">状态</label>
                         <el-select
                             :value="searchFields.status"
@@ -58,8 +73,7 @@
                         </el-select>
                     </div>
                     <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
-                        <svg-icon icon-class="reset">
-                        </svg-icon>
+                        <svg-icon icon-class="reset"></svg-icon>
                         重置
                     </el-button>
                 </div>
@@ -71,17 +85,6 @@
                     <div class="float-left">
                         <el-dropdown
                             trigger="click"
-                            v-show="isDisabled"
-                            class="my-dropdown disabled">
-                            <span class="el-dropdown-link">
-                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                        <el-dropdown
-                            trigger="click"
-                            v-show="!isDisabled"
                             class="my-dropdown">
                             <span class="el-dropdown-link">
                                 批量操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -97,7 +100,7 @@
                                     <span @click="deleteVideoList">批量删除</span>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
-                                    <span @click="exportVideoHandler">导出视频</span>
+                                    <span @click="downloadSelectedTsVideo">批量下载</span>
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
@@ -108,6 +111,12 @@
                             @click="gotoVideoUploadPage">
                             <svg-icon icon-class="add"></svg-icon>
                             上传
+                        </el-button>
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="toDiffTime">
+                            <svg-icon icon-class="add"></svg-icon>
+                            检查时长
                         </el-button>
                     </div>
                 </div>
@@ -121,6 +130,7 @@
     import XLSX from 'xlsx';
     import VideoTable from './VideoTable';
     import role from '@/util/config/role';
+
     const FileSaver = require('file-saver');
     export default {
         name: 'VideoList',
@@ -130,6 +140,7 @@
         data() {
             return {
                 statusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
+                suffixOptions: role.VIDEO_SUFFIX_OPTIONS,
                 timer: null,
                 isDisabled: true
             };
@@ -201,6 +212,19 @@
                 let {status, transcodeStatus} = video;
                 return (status === 'INJECTING' && transcodeStatus === 'FAILED') || status === 'FAILED';
             },
+            // 下载视频文件
+            downloadSelectedTsVideo() {
+                this.$message.success('正在请求下载视频文件，请稍等');
+                let videoIdList = [];
+                this.$refs.videoTable.selectedVideoList.map(video => {
+                    videoIdList.push(video.id);
+                });
+                this.$service.exportTsVideos({videoIdList: videoIdList, isRetry: false}).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message.success('成功下载视频文件，稍后可到下载列表页面查看');
+                    }
+                });
+            },
             exportSelectedVideoHandler() {
                 let videoList = this.$refs.videoTable.selectedVideoList.map((video) => {
                     let obj = {};
@@ -259,6 +283,35 @@
                         this.$refs.videoTable.checkedVideoList();
                     });
             },
+            uploadChangeHandler(e) {
+                let files = Array.from(e.target.files).filter((file) => {
+                    return /(.mpg|.ts|.zip)$/.test(file.name);
+                });
+                if (files.length === 0) {
+                    this.$message.warning('本次选择没有符合要求的文件');
+                }
+                let newFileList = [];
+                files.forEach((file) => {
+                    let index = this.uploadState.files.findIndex((item) => {
+                        return item.file.name === file.name;
+                    });
+                    if (index === -1) {
+                        let obj = {
+                            file,
+                            progress: {
+                                percent: 0,
+                                status: 'waiting',
+                                message: ''
+                            }
+                        };
+                        newFileList.push(obj);
+                    }
+                });
+                let newFiles = this.uploadState.files.concat(newFileList);
+                this.updateUploadState({key: 'files', value: newFiles});
+                window.eventBus.$emit('startUpload');
+                this.clearInputValue();
+            },
             //  导出部分代码
             getCharCol(n) {
                 let s = '';
@@ -299,19 +352,19 @@
                 });
 
                 sheetsData.forEach(function (item, index) {
-                    content[item.position] = { v: item.value };
+                    content[item.position] = {v: item.value};
                 });
                 // 设置区域,比如表格从A1到D10,SheetNames:标题
                 let coordinate = Object.keys(content);
                 let workBook = {
                     SheetNames: ['视频列表'],
                     Sheets: {
-                        '视频列表': Object.assign({}, content, { '!ref': coordinate[0] + ':' + coordinate[coordinate.length - 1] })
+                        '视频列表': Object.assign({}, content, {'!ref': coordinate[0] + ':' + coordinate[coordinate.length - 1]})
                     }
                 };
                 // 这里的数据是用来定义导出的格式类型
-                let excelData = XLSX.write(workBook, { bookType: 'xlsx', bookSST: false, type: 'binary' });
-                let blob = new Blob([this.string2ArrayBuffer(excelData)], { type: '' });
+                let excelData = XLSX.write(workBook, {bookType: 'xlsx', bookSST: false, type: 'binary'});
+                let blob = new Blob([this.string2ArrayBuffer(excelData)], {type: ''});
                 FileSaver.saveAs(blob, '导出视频列表.xlsx');
             },
             timeStampFormat(seconds) {
@@ -332,34 +385,37 @@
                 }).join(', ');
                 return urlStr;
             },
-            exportVideoHandler() {
-                window.eventBus.$emit('startExportVideoExecel');
-            },
             gotoVideoUploadPage() {
                 let routeData = this.$router.resolve({
                     name: 'VideoImport'
                 });
                 window.open(routeData.href, '_blank');
+            },
+            toDiffTime() {
+                this.$router.push({name: 'DiffTimeVideoList'});
             }
         }
-    };
+    }
+    ;
 </script>
 <style scoped lang="less">
-.wrapper {
-    position: relative;
-    width: 80px;
-    height: 32px;
-    margin-right: 10px;
-    label, .upload-input {
-        position: absolute;
-        top: 0;
-        left: 0;
+
+    .wrapper {
+        position: relative;
         width: 80px;
         height: 32px;
+        margin-right: 10px;
+        label, .upload-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 32px;
+        }
+        .upload-input {
+            opacity: 0;
+            cursor: pointer;
+        }
     }
-    .upload-input {
-        opacity: 0;
-        cursor: pointer;
-    }
-}
+
 </style>

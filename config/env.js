@@ -23,7 +23,7 @@ switch (npmEventName) {
     case 'dev:xiongbao':
         h5NginxProxyTarget = 'http://172.16.41.201:8100';
         break;
-        // wubinhong gateway
+    // wubinhong gateway
     case 'dev:wubinhong':
         h5NginxProxyTarget = 'http://172.16.41.200:8100';
         break;

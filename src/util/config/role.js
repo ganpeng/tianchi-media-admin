@@ -360,6 +360,22 @@ export const VIDEO_TYPE_OPTIONS = [
     }
 ];
 
+//  视频后缀
+export const VIDEO_SUFFIX_OPTIONS = [
+    {
+        value: 'mpg',
+        label: 'mpg'
+    },
+    {
+        value: 'ts',
+        label: 'ts'
+    },
+    {
+        value: 'zip',
+        label: 'zip'
+    }
+];
+
 //  升级类型
 const PRODUCT_TYPE_OPTIONS = [
     {
@@ -533,6 +549,11 @@ const ASIDE_LIST = [
             text: '搜索管理',
             uri: '/search-manage',
             icon: 'search'
+        },
+        {
+            text: '产品管理',
+            uri: '/product-manage/list',
+            icon: 'search'
         }
     ],
     [
@@ -671,9 +692,9 @@ export default {
     FORCED_OPTIONS,
     RECOMMEND_OPTIONS,
     HARDWARE_TYPE_OPTIONS,
-
     //  页面样式布局相关
     NAV_LIST,
     ASIDE_LIST,
-    LAYOUT_TEMPLATE_LIST
+    LAYOUT_TEMPLATE_LIST,
+    VIDEO_SUFFIX_OPTIONS
 };
