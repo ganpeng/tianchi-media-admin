@@ -84,22 +84,25 @@
                         <el-option
                             v-for="(item, index) in sourceOptions"
                             :key="index"
-                            :label="item.label"
-                            :value="item.value">
+                            :label="item.name"
+                            :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item class="search">
+                <!--只有主站点才有共享站点搜索-->
+                <el-form-item
+                    v-if="$wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                    class="search">
                     <el-select
                         :value="searchFields.shareSite"
                         clearable
                         placeholder="请选择共享站点"
-                        @input="inputHandler($event, 'source')">
+                        @input="inputHandler($event, 'shareSite')">
                         <el-option
                             v-for="(item, index) in shareSiteOptions"
                             :key="index"
-                            :label="item.label"
-                            :value="item.value">
+                            :label="item.name"
+                            :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -137,12 +140,22 @@
                     <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
                                @click="downloadSelectedTsVideo">批量下载
                     </el-button>
-                    <el-button class="delete-btn disabled-red-btn" size="small" :disabled="isDisabled"
-                               @click="deleteVideoList">批量删除
-                    </el-button>
+                    <!--只有主站存在共享设置-->
                     <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
                                @click="setShareSite">
                         共享设置
+                    </el-button>
+                    <!--只有子站可以上传主站、拉取视频-->
+                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
+                               @click="batchUploadToMaster">
+                        上传主站
+                    </el-button>
+                    <el-button class="delete-btn create-blue-btn" size="small"
+                               @click="selectMasterVideoDialogVisible = true">
+                        拉取视频
+                    </el-button>
+                    <el-button class="delete-btn disabled-red-btn" size="small" :disabled="isDisabled"
+                               @click="deleteVideoList">批量删除
                     </el-button>
                     <el-button class="delete-btn create-blue-btn" size="small" @click="toDiffTime">
                         检查时长
@@ -162,12 +175,12 @@
             width="40%">
             <div class="batch-share-body" v-if="batchShareDialogVisible">
                 <div>{{$refs.videoTable.selectedVideoList.length}}个视频可以被以下站点共享:</div>
-                <el-select v-model="batchShareSiteList" multiple placeholder="请选择共享站点">
+                <el-select v-model="siteIdList" multiple clearable placeholder="请选择共享站点">
                     <el-option
-                        v-for="item in shareSiteOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        v-for="(item, index) in shareSiteOptions"
+                        :key="index"
+                        :label="item.name"
+                        :value="item.id">
                     </el-option>
                 </el-select>
             </div>
@@ -176,11 +189,25 @@
                 <el-button type="primary" @click="batchShareVideo">确 定</el-button>
             </span>
         </el-dialog>
+        <!--拉取选择的主站视频列表-->
+        <el-dialog
+            title="选择主站的视频"
+            :close-on-click-modal=false
+            :visible.sync="selectMasterVideoDialogVisible"
+            center
+            width="80%">
+            <select-multiple-master-video
+                v-if="selectMasterVideoDialogVisible"
+                v-on:appendVideo="pullVideoFromMaster"
+                v-on:closeSelectVideoDialog="selectMasterVideoDialogVisible = false">
+            </select-multiple-master-video>
+        </el-dialog>
     </div>
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import XLSX from 'xlsx';
+    import SelectMultipleMasterVideo from './SelectMultipleMasterVideo';
     import VideoTable from './VideoTable';
     import role from '@/util/config/role';
 
@@ -190,18 +217,21 @@
     export default {
         name: 'VideoList',
         components: {
-            VideoTable
+            VideoTable,
+            SelectMultipleMasterVideo
         },
         data() {
             return {
+                selectMasterVideoDialogVisible: false,
                 statusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
                 suffixOptions: role.VIDEO_SUFFIX_OPTIONS,
-                sourceOptions: role.VIDEO_SUFFIX_OPTIONS,
-                shareSiteOptions: role.VIDEO_SUFFIX_OPTIONS,
+                sourceOptions: [],
+                shareSiteOptions: [],
                 timer: null,
                 isDisabled: true,
                 batchShareDialogVisible: false,
-                batchShareSiteList: []
+                // 多个视频进行多个站点共享设置的共享站点Id列表
+                siteIdList: []
             };
         },
         computed: {
@@ -242,12 +272,23 @@
                 });
                 window.addEventListener('keyup', this.keyupHandler);
                 this.timer = setInterval(() => {
-                    this.getVideoList()
-                        .then(() => {
+                    this.getVideoList().then(() => {
+                        if (this.$refs.videoTable) {
                             this.$refs.videoTable.checkedVideoList();
-                        });
+                        }
+                    });
                 }, 1000 * 10);
                 // 初始化视频来源和共享站点的列表
+                this.$service.getAllSiteList().then(response => {
+                    if (response && response.code === 0) {
+                        this.shareSiteOptions = response.data;
+                    }
+                });
+                this.$service.getAllVideoSourceList().then(response => {
+                    if (response && response.code === 0) {
+                        this.sourceOptions = response.data;
+                    }
+                });
             },
             setDisabled(value) {
                 this.isDisabled = value;
@@ -259,7 +300,32 @@
             setShareSite() {
                 this.batchShareDialogVisible = true;
             },
+            // 设置多个视频进行多个站点的共享
             batchShareVideo() {
+                let videoIdList = [];
+                this.$refs.videoTable.selectedVideoList.map(video => {
+                    videoIdList.push(video.id);
+                });
+                this.$service.setBatchVideoToBatchSite({
+                    siteIdList: this.siteIdList,
+                    videoIdList: videoIdList
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message.success('成功设置视频共享站点');
+                        this.siteIdList = [];
+                        this.batchShareDialogVisible = false;
+                    }
+                });
+            },
+            // 批量将本地视频上传至主站
+            batchUploadToMaster() {
+                let videoIdList = [];
+                this.$refs.videoTable.selectedVideoList.map(video => {
+                    videoIdList.push(video.id);
+                });
+            },
+            // 拉取主站的视频到子站
+            pullVideoFromMaster(selectedVideoList) {
 
             },
             clearInputValue() {

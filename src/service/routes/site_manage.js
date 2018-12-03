@@ -8,7 +8,7 @@ import qs from 'querystring';
 import _ from 'lodash';
 
 /**
- * 获取本站点站点名称
+ * 获取本站点站点信息
  */
 export const getSiteInfo = () => {
     return service.get('/v1/sys/system-config/site');
@@ -25,15 +25,15 @@ export const setSiteToken = ({siteToken}) => {
 /**
  * 添加子站点
  */
-export const createChildSite = ({site}) => {
-    return service.post('/v1/sys/site', {site});
+export const createChildSite = ({name}) => {
+    return service.post('/v1/sys/site', {name});
 };
 
 /**
  * 修改子站点
  */
-export const setChildSite = ({site}) => {
-    return service.put('/v1/sys/site', {site});
+export const updateChildSite = ({id, name, token}) => {
+    return service.put('/v1/sys/site', {id, name, token});
 };
 
 /**
@@ -73,14 +73,31 @@ export const getChildSiteList = ({keyword, pageNum, pageSize}) => {
 /**
  * 获取全部站点
  */
-export const getAllSiteList = ({idList}) => {
-    const params = {
-        idList
-    };
+export const getAllSiteList = () => {
+    return service.get(`/v1/sys/site/list`);
+};
 
-    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
-        return item !== '' && item !== undefined;
-    }));
+/**
+ * 获取全部视频来源
+ */
+export const getAllVideoSourceList = () => {
+    return service.get(`/v1/sys/site/list`);
+};
 
-    return service.get(`/v1/sys/site?${paramsStr}`);
+/**
+ * 单个视频进行多个共享站点设置
+ */
+export const setSingleVideoToBatchSite = ({id, idList}) => {
+    return service.patch(util.format('/v1/storage/video/share-site?id={0}', id), idList, {
+        baseURL: '/storage'
+    });
+};
+
+/**
+ * 多个视频进行多个共享站点设置
+ */
+export const setBatchVideoToBatchSite = ({siteIdList, videoIdList}) => {
+    return service.patch('/v1/storage/video/share-site/batch', {siteIdList, videoIdList}, {
+        baseURL: '/storage'
+    });
 };

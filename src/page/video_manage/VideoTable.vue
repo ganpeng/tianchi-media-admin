@@ -202,12 +202,12 @@
             width="40%">
             <div class="share-body" v-if="shareSiteSettingVisible">
                 <div>视频可以被以下站点共享:</div>
-                <el-select v-model="videoShareSiteList" multiple placeholder="请选择共享站点">
+                <el-select v-model="videoShareSiteIdList" multiple placeholder="请选择共享站点">
                     <el-option
-                        v-for="item in shareSiteOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        v-for="(item,index) in shareSiteOptions"
+                        :key="index"
+                        :label="item.name"
+                        :value="item.id">
                     </el-option>
                 </el-select>
             </div>
@@ -250,9 +250,12 @@
                 url: '',
                 title: '',
                 selectedVideoList: [],
+                // 展示共享站点
                 shareSiteVisible: false,
+                // 设置共享站点
                 shareSiteSettingVisible: false,
-                videoShareSiteList: []
+                videoShareSiteIdList: [],
+                currentVideo: {}
             };
         },
         created() {
@@ -324,12 +327,22 @@
                 this.shareSiteVisible = true;
             },
             // 设置单个视频分享站点
-            setSingleVideoShareSite() {
+            setSingleVideoShareSite(item) {
                 this.shareSiteSettingVisible = true;
+                this.currentVideo = item;
             },
             // 确定设置单个视频分享站点
             confirmVideoShareSite() {
-
+                this.$service.setSingleVideoToBatchSite({
+                    id: this.currentVideo.id,
+                    idList: this.videoShareSiteIdList
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message.success('成功设置视频的共享站点');
+                        this.videoShareSiteIdList = [];
+                        this.shareSiteSettingVisible = false;
+                    }
+                });
             },
             // 子站上传主站
             uploadVideoToMainSite() {

@@ -11,20 +11,6 @@
             prop="name">
             <el-input v-model="site.name" placeholder="请填写站点名称，15字以内" clearable></el-input>
         </el-form-item>
-        <el-form-item
-            label="站点token"
-            label-width="120px"
-            required
-            prop="token">
-            <el-input v-model="site.token" placeholder="点击按钮获取该站点安全访问token" readonly clearable></el-input>
-            <el-button
-                v-if="mode==='CREATE_SITE'"
-                type="primary"
-                @click="getSiteToken"
-                class="token-btn">
-                点击生成token
-            </el-button>
-        </el-form-item>
     </el-form>
 </template>
 
@@ -56,24 +42,14 @@
                     callback();
                 }
             };
-            let checkToken = (rule, value, callback) => {
-                if (this.$util.isEmpty(value)) {
-                    return callback(new Error('站点token不能为空'));
-                } else {
-                    callback();
-                }
-            };
             return {
                 site: {
-                    name: '',
-                    token: ''
+                    id: '',
+                    name: ''
                 },
                 infoRules: {
                     name: [
                         {validator: checkName, trigger: 'blur'}
-                    ],
-                    token: [
-                        {validator: checkToken, trigger: 'blur'}
                     ]
                 }
             };
@@ -84,12 +60,9 @@
         methods: {
             init() {
                 if (this.originSiteInfo.name) {
+                    this.site.id = this.originSiteInfo.id;
                     this.site.name = this.originSiteInfo.name;
-                    this.site.token = this.originSiteInfo.token;
                 }
-            },
-            getSiteToken() {
-
             },
             // 创建或更新站点
             operateSite() {
@@ -97,7 +70,7 @@
                     if (valid) {
                         // 创建
                         if (this.mode === 'CREATE_SITE') {
-                            this.$service.createChildSite(this.site).then(response => {
+                            this.$service.createChildSite({name: this.site.name}).then(response => {
                                 if (response && response.code === 0) {
                                     this.$message.success('成功创建站点');
                                     this.setDialogVisible(false);
@@ -106,7 +79,7 @@
                             });
                         } else {
                             // 更新
-                            this.$service.updateSiteInfo(this.site).then(response => {
+                            this.$service.updateChildSite(this.site).then(response => {
                                 if (response && response.code === 0) {
                                     this.$message.success('成功更新站点');
                                     this.setDialogVisible(false);
@@ -127,9 +100,5 @@
 </script>
 
 <style lang="scss" scoped>
-
-    .token-btn {
-        margin-top: 20px;
-    }
 
 </style>

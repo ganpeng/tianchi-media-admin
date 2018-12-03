@@ -332,19 +332,43 @@ export const VIDEO_TRANSFER_STATUS = {
     FAILED: '转码失败'
 };
 
-// 视频注入的状态
+// 视频的状态
 export const VIDEO_UPLOAD_STATUS_OPTIONS = [
     {
         value: 'INJECTING',
         label: '注入中'
     },
     {
+        value: 'SUCCESS',
+        label: '注入成功'
+    },
+    {
         value: 'FAILED',
-        label: '失败'
+        label: '注入失败'
+    },
+    {
+        value: 'INJECTING',
+        label: '拉取中'
     },
     {
         value: 'SUCCESS',
-        label: '成功'
+        label: '拉取成功'
+    },
+    {
+        value: 'FAILED',
+        label: '拉取失败'
+    },
+    {
+        value: 'INJECTING',
+        label: '上传中'
+    },
+    {
+        value: 'SUCCESS',
+        label: '上传成功'
+    },
+    {
+        value: 'FAILED',
+        label: '上传失败'
     }
 ];
 

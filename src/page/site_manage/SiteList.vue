@@ -155,7 +155,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$service.deleteSite(item.id).then(response => {
+                    this.$service.deleteChildSite({id: item.id}).then(response => {
                         if (response && response.code === 0) {
                             this.$message({
                                 type: 'success',

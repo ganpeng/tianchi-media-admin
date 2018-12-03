@@ -9,6 +9,8 @@ const defaultSearchFields = {
     name: '',
     status: '',
     suffix: '',
+    source: '',
+    shareSite: '',
     videoType: null,
     dateRange: [],
     startedAt: '',
