@@ -90,20 +90,20 @@
         <div v-if="isEdit" class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="saveHandler">保存</el-button>
         </div>
-        <edit-programme :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeDialog"></edit-programme>
         <edit-programme-subject :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeSubjectDialog"></edit-programme-subject>
+        <programme-without4-step-dialog :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeDialog"></programme-without4-step-dialog>
     </div>
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
-import EditProgramme from '../add_edit_module/EditProgramme';
 import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
+import ProgrammeWithout4StepDialog from '../add_edit_module/ProgrammeWithout4StepDialog';
 export default {
     name: 'SubjectFixedModule',
     components: {
-        EditProgramme,
-        EditProgrammeSubject
+        EditProgrammeSubject,
+        ProgrammeWithout4StepDialog
     },
     props: {
         isEdit: {

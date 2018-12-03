@@ -152,7 +152,7 @@
     </div>
 </template>
 <script>
-import {mapGetters} from 'vuex';
+import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
 import ShuffleBtn from './ShuffleBtn';
 import EditProgramme from '../add_edit_module/EditProgramme';
@@ -218,6 +218,11 @@ export default {
         }
     },
     methods: {
+        ...mapMutations({
+            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
+            saveLayoutToStore: 'pageLayout/saveLayoutToStore',
+            insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex'
+        }),
         addShuffleLayout(squareIndex) {
             return (layoutItemType) => {
                 this.squareIndex = squareIndex;

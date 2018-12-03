@@ -135,6 +135,12 @@ const getters = {
             return _.get(state.layout, `${navbarId}.data.${index}`);
         };
     },
+    getLayoutItemMultiList(state) {
+        return (navbarId, index) => {
+            let layoutItemMultiList = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList`);
+            return layoutItemMultiList;
+        };
+    },
     getLayoutItemByNavbarId(state) {
         return (navbarId, index, squareIndex) => {
             let obj = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}`);
@@ -157,6 +163,25 @@ const getters = {
             return state.layout[id].data.filter((item, index) => {
                 return index > 0;
             });
+        };
+    },
+    selectAll(state) {
+        return (navbarId, index) => {
+            let layoutTemplate = _.get(state.layout, `${navbarId}.data.${index}.layoutTemplate`);
+            let layoutItemMultiList = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList`);
+            let allFlag = false;
+            if (layoutTemplate === 'LT_SN') {
+                allFlag = !(layoutItemMultiList.length > 0 && _.every(layoutItemMultiList, (item) => _.get(item, 'coverImage.uri')));
+            } else {
+                allFlag = _.some(layoutItemMultiList, (item) => {
+                    if (item.layoutItemType === 'LINK') {
+                        return !_.get(item, 'coverImage.uri');
+                    } else {
+                        return !item.id || !_.get(item, 'coverImage.uri');
+                    }
+                });
+            }
+            return allFlag;
         };
     },
     layout() {

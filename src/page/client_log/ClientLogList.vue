@@ -57,7 +57,7 @@
                     -->
                     <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
                         <svg-icon
-                            icon-class="clear_filter"
+                            icon-class="reset"
                             class-name="svg-box">
                         </svg-icon>
                         重置

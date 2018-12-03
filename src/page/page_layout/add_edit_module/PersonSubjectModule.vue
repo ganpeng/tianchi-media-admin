@@ -3,12 +3,15 @@
         <h2 class="content-title">新增人物专题模块</h2>
         <div class="seperator-line"></div>
         <div class="form-container">
-            <el-form :model="layoutData" status-icon ref="createPerson"
+            <el-form :model="layoutData"
+                    :rules="inputRules"
+                    status-icon
+                    ref="personSubjectModuleForm"
                     label-width="120px"
                     @submit.native.prevent
                     class="form-block">
                 <el-col :span="8">
-                    <el-form-item label="人物模块名称" prop="title" required>
+                    <el-form-item label="人物模块名称" prop="title">
                         <el-input
                             :value="layoutData.title"
                             @input="inputHandler($event, 'title')"
@@ -67,7 +70,12 @@ export default {
             index: '',
             saveFlag: false, // 判断页面跳转之前如果没有点保存按钮的话，就删除新增的这个layoutItem
             allowResolutions: [],
-            squareIndex: 0
+            squareIndex: 0,
+            inputRules: {
+                title: [
+                    { required: true, message: '请输入专题模块名称' }
+                ]
+            }
         };
     },
     beforeRouteLeave(to, from, next) {
@@ -86,7 +94,8 @@ export default {
     computed: {
         ...mapGetters({
             getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
+            selectAll: 'pageLayout/selectAll'
         }),
         layoutData() {
             let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
@@ -117,11 +126,22 @@ export default {
         iconImageuploadSuccessHandler(image) {
             this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: image});
         },
-        saveHandler() {
-            this.saveLayoutToStore();
-            this.saveFlag = true;
-            this.$message.success('保存成功');
-            this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+        async saveHandler() {
+            try {
+                let valid = await this.$refs.personSubjectModuleForm.validate();
+                if (valid) {
+                    if (!this.selectAll(this.navbarId, this.index)) {
+                        this.saveLayoutToStore();
+                        this.saveFlag = true;
+                        this.$message.success('保存成功');
+                        this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                    } else {
+                        this.$message.error('专题色块必须全部选择');
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
         },
         selectPersonSubject(squareIndex) {
             this.allowResolutions = [{width: 260, height: 600}];

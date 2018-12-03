@@ -63,6 +63,12 @@
             :isEdit="false"
             v-if="layoutTemplate === 'LT_2_3'"
         ></mixed23>
+        <mixedsn
+            :item="item"
+            :index="index"
+            :isEdit="false"
+            v-if="layoutTemplate === 'LT_SN'"
+        ></mixedsn>
     </div>
 </template>
 <script>
@@ -78,6 +84,7 @@ import Mixed32 from './mixed_module/Mixed32';
 import Mixed114 from './mixed_module/Mixed114';
 import Mixed33 from './mixed_module/Mixed33';
 import Mixed23 from './mixed_module/Mixed23';
+import Mixedsn from './mixed_module/Mixedsn';
 export default {
     name: 'OtherLayout',
     components: {
@@ -91,7 +98,8 @@ export default {
         Mixed32,
         Mixed114,
         Mixed33,
-        Mixed23
+        Mixed23,
+        Mixedsn
     },
     props: {
         item: {

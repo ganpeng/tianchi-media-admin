@@ -27,13 +27,6 @@
                             :row-class-name="tableRowClassName"
                             ref="multipleTable"
                             header-row-class-name="common-table-header" class="my-table-style" :data="checkedProgrammeList" border>
-                            <!--
-                            <el-table-column  align="center" label="选择">
-                                <template slot-scope="scope">
-                                    <el-radio :value="getSquareProgrammeId" :label="scope.row.id" @input="setProgrammeSubjectHandler(scope.row)">&nbsp;</el-radio>
-                                </template>
-                            </el-table-column>
-                            -->
                             <el-table-column prop="code" align="center" width="120px" label="节目编号">
                                 <template slot-scope="scope">
                                     {{scope.row.code | padEmpty}}
@@ -271,7 +264,7 @@ import _ from 'lodash';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 export default {
-    name: 'EditProgramme',
+    name: 'ProgrammeWith4StepDialog',
     props: {
         squareIndex: {
             type: Number,
@@ -467,8 +460,6 @@ export default {
         searchInputHandler() {},
         setProgrammeSubjectHandler(programme) {
             let {id, name, desc, programmeTemplate} = programme;
-            console.log(id);
-            console.log(name);
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'desc', value: desc });
@@ -508,6 +499,8 @@ export default {
         },
         //  角标的相关操作
         markChangeHandler(value, key) {
+            console.log(value);
+            console.log(key);
             let {score, featureVideoCount, platformList} = this.programme;
             switch (key) {
                 case 'leftTop':

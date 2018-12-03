@@ -131,7 +131,7 @@
     </div>
 </template>
 <script>
-import {mapGetters} from 'vuex';
+import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
 import ShuffleBtn from './ShuffleBtn';
 import EditFilter from '../add_edit_module/EditFilter';
@@ -190,6 +190,11 @@ export default {
         }
     },
     methods: {
+        ...mapMutations({
+            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
+            saveLayoutToStore: 'pageLayout/saveLayoutToStore',
+            insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex'
+        }),
         addShuffleLayout(layoutItemType, squareIndex) {
             this.squareIndex = squareIndex;
             this.$refs.selectFilterDialog.showDialog();

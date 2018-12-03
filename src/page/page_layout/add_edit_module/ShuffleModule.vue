@@ -3,12 +3,15 @@
         <h2 class="content-title">新增混排模块</h2>
         <div class="seperator-line"></div>
         <div class="form-container">
-            <el-form :model="layoutData" status-icon ref="createPerson"
+            <el-form :model="layoutData"
+                    :rules="inputRules"
+                    status-icon
+                    ref="shuffleModuleForm"
                     label-width="120px"
                     @submit.native.prevent
                     class="form-block">
                 <el-col :span="8">
-                    <el-form-item label="模块名称" prop="title" required>
+                    <el-form-item label="模块名称" prop="title">
                         <el-input
                             :value="layoutData.title"
                             @input="inputHandler($event, 'title')"
@@ -25,7 +28,7 @@
                 </el-col>
                 <el-col :span="24">
                     <el-col :span="12">
-                        <el-form-item label="模块板式" prop="layoutTemplate" required>
+                        <el-form-item label="模块板式" prop="layoutTemplate">
                             <el-select
                                 :value="layoutData.layoutTemplate"
                                 @input="templateInputHandler($event)"
@@ -85,6 +88,11 @@
                                 :index="index"
                                 v-if="layoutData.layoutTemplate === 'LT_S6'"
                             ></mixeds6>
+                            <mixedsn
+                                :isEdit="true"
+                                :index="index"
+                                v-if="layoutData.layoutTemplate === 'LT_SN'"
+                            ></mixedsn>
                         </el-form-item>
                     </el-col>
                 </el-col>
@@ -121,6 +129,7 @@ import Mixed32 from '../mixed_module/Mixed32';
 import Mixed33 from '../mixed_module/Mixed33';
 import Mixed66 from '../mixed_module/Mixed66';
 import Mixeds6 from '../mixed_module/Mixeds6';
+import Mixedsn from '../mixed_module/Mixedsn';
 
 const shuffleOptions = [
     {
@@ -191,7 +200,8 @@ export default {
         Mixed114,
         Mixed22,
         Mixed4,
-        Mixed23
+        Mixed23,
+        Mixedsn
     },
     data() {
         return {
@@ -199,7 +209,15 @@ export default {
             index: 0,
             saveFlag: false, // 判断页面跳转之前如果没有点保存按钮的话，就删除新增的这个layoutItem
             allowResolutions: [],
-            shuffleOptions
+            shuffleOptions,
+            inputRules: {
+                title: [
+                    { required: true, message: '请输入混排模块名称' }
+                ],
+                layoutTemplate: [
+                    { required: true, message: '请选择混排模块板式' }
+                ]
+            }
         };
     },
     beforeRouteLeave(to, from, next) {
@@ -218,7 +236,8 @@ export default {
     computed: {
         ...mapGetters({
             getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
+            selectAll: 'pageLayout/selectAll'
         }),
         layoutData() {
             let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
@@ -254,11 +273,22 @@ export default {
         iconImageuploadSuccessHandler(image) {
             this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: image});
         },
-        saveHandler() {
-            this.saveLayoutToStore();
-            this.saveFlag = true;
-            this.$message.success('保存成功');
-            this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+        async saveHandler() {
+            try {
+                let valid = await this.$refs.shuffleModuleForm.validate();
+                if (valid) {
+                    if (!this.selectAll(this.navbarId, this.index)) {
+                        this.saveLayoutToStore();
+                        this.saveFlag = true;
+                        this.$message.success('保存成功');
+                        this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                    } else {
+                        this.$message.error('专题色块必须全部选择');
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
         },
         selectPersonSubject() {
             this.allowResolutions = [{width: 560, height: 600}];
@@ -339,7 +369,7 @@ export default {
                         navbarId: this.navbarId,
                         index: this.index,
                         key: 'layoutItemMultiList',
-                        value: _.times(5, () => _.cloneDeep(defaultLayoutItem))
+                        value: []
                     });
                     break;
                 default:

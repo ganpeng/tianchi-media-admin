@@ -1,5 +1,5 @@
 <template>
-    <div class="mixeds6-container">
+    <div class="mixedsn-container">
         <div v-if="!isEdit" class="header layout-square-header">
             <div class="left">
                 <img class="icon" :src="getIconImageUri(item)"/>
@@ -28,78 +28,43 @@
             </div>
         </div>
         <div class="content-field">
-            <div class="wrapper">
-                <div :style="styleBgImageStr(0)" class="field">
-                    <shuffle-btn
-                        v-if="isEdit"
-                        :onlyChannel="true"
-                        :addShuffleLayout="addShuffleLayout(0)"
-                    ></shuffle-btn>
+            <div v-for="(item, index) in getLayoutItemMultiList(navbarId, index)" :key="index" class="wrapper">
+                <div :style="styleBgImageStr(index)" class="field">
+                    <div v-if="isEdit" class="shuffle-btn-container">
+                        <el-dropdown
+                            @command="editFilterLayout($event, index)" placement="bottom">
+                            <el-button class="my-add-cycle">
+                                <svg-icon icon-class="add"></svg-icon>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="PROGRAMME">筛选</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
                 </div>
             </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(1)" class="field">
-                    <shuffle-btn
-                        v-if="isEdit"
-                        :onlyChannel="true"
-                        :addShuffleLayout="addShuffleLayout(1)"
-                    ></shuffle-btn>
-                </div>
-            </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(2)" class="field">
-                    <shuffle-btn
-                        v-if="isEdit"
-                        :onlyChannel="true"
-                        :addShuffleLayout="addShuffleLayout(2)"
-                    ></shuffle-btn>
-                </div>
-            </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(3)" class="field">
-                    <shuffle-btn
-                        v-if="isEdit"
-                        :onlyChannel="true"
-                        :addShuffleLayout="addShuffleLayout(3)"
-                    ></shuffle-btn>
-                </div>
-            </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(4)" class="field">
-                    <shuffle-btn
-                        v-if="isEdit"
-                        :onlyChannel="true"
-                        :addShuffleLayout="addShuffleLayout(4)"
-                    ></shuffle-btn>
-                </div>
-            </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(5)" class="field">
-                    <shuffle-btn
-                        v-if="isEdit"
-                        :onlyChannel="true"
-                        :addShuffleLayout="addShuffleLayout(5)"
-                    ></shuffle-btn>
+            <div v-if="isEdit" @click="addFilterLayout" key="999" class="wrapper">
+                <div class="field">
+                    <i class="el-icon-plus"></i>
                 </div>
             </div>
         </div>
-        <channel-dialog
+        <edit-filter
+            :isAdd="isAdd"
             :squareIndex="squareIndex"
             :allowResolutions="allowResolutions"
-            ref="selectChannelDialog">
-        ></channel-dialog>
+            ref="selectFilterDialog">
+        </edit-filter>
     </div>
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
-import ShuffleBtn from './ShuffleBtn';
-import ChannelDialog from '../add_edit_module/ChannelDialog';
+import EditFilter from '../add_edit_module/EditFilter';
 export default {
-    name: 'Mixeds6',
+    name: 'Mixedsn',
     components: {
-        ShuffleBtn,
-        ChannelDialog
+        EditFilter
     },
     props: {
         item: {
@@ -117,9 +82,9 @@ export default {
     },
     data() {
         return {
+            isAdd: false,
             navbarId: '',
             squareIndex: 0,
-            layoutItemType: '',
             allowResolutions: [{width: 260, height: 260}]
         };
     },
@@ -130,7 +95,8 @@ export default {
     computed: {
         ...mapGetters({
             getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
+            getLayoutItemMultiList: 'pageLayout/getLayoutItemMultiList'
         }),
         getIconImageUri() {
             return (obj) => {
@@ -156,34 +122,18 @@ export default {
             saveLayoutToStore: 'pageLayout/saveLayoutToStore',
             insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex'
         }),
-        addShuffleLayout(squareIndex) {
-            return (layoutItemType) => {
-                this.squareIndex = squareIndex;
-                this.layoutItemType = layoutItemType;
-                switch (layoutItemType) {
-                    case 'PROGRAMME':
-                        this.$refs.selectProgrammeDialog.showDialog();
-                        break;
-                    case 'PROGRAMME_VIDEO':
-                        this.$refs.selectProgrammeVideoDialog.showDialog();
-                        break;
-                    case 'PROGRAMME_SUBJECT':
-                        this.$refs.selectProgrammeSubjectDialog.showDialog();
-                        break;
-                    case 'LINK':
-                        this.$refs.selectLinkDialog.showDialog();
-                        break;
-                    case 'CHANNEL':
-                        this.$refs.selectChannelDialog.showDialog();
-                        break;
-                    default:
-                        throw new Error('类型错误');
-                }
-            };
+        editFilterLayout(command, squareIndex) {
+            this.isAdd = false;
+            this.squareIndex = squareIndex;
+            this.$refs.selectFilterDialog.showDialog();
         },
         addLayout(type) {
             let {navbarId} = this.$route.params;
             this.$util.layoutCommand({navbarId, index: this.index, type, router: this.$router});
+        },
+        addFilterLayout() {
+            this.isAdd = true;
+            this.$refs.selectFilterDialog.showDialog();
         },
         editHandler() {
             let {navbarId} = this.$route.params;
@@ -208,20 +158,42 @@ export default {
     background-position: center center;
     border-radius: 8px;
 }
-.mixeds6-container {
+.mixedsn-container {
     .header {
         margin: 40px 0 10px 0;
     }
     .content-field {
         display: flex;
+        flex-wrap: wrap;
         .wrapper {
-            flex: 1;
+            width: 15%;
+            // flex: 0.166666;
+            cursor: pointer;
+            margin-bottom: 2%;
             .field {
                 @include paddingBg(100%);
+            }
+            i {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 20px;
+                color: #3E495E;
+            }
+            .shuffle-btn-container {
+                position: absolute;
+                right: 10px;
+                top: 2px;
             }
         }
         .wrapper + .wrapper {
             margin-left: 2%;
+        }
+        .wrapper {
+            &:nth-of-type(6n + 1) {
+                margin-left: 0;
+            }
         }
     }
 }

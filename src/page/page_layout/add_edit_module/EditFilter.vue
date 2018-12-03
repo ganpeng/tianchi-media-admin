@@ -126,9 +126,10 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="2.设置筛选项推荐图片">
+                        <!-- :uri="getImageByKey('coverImage') || ''" -->
                     <single-image-uploader
                         id="programmeImageUploaderThree"
-                        :uri="getImageByKey('coverImage') || ''"
+                        :uri="coverImage.uri || ''"
                         :uploadSuccessHandler="addPosterImage"
                         :allowResolutions="allowResolutions"
                     ></single-image-uploader>
@@ -150,6 +151,10 @@
     export default {
         name: 'EditFilter',
         props: {
+            isAdd: {
+                type: Boolean,
+                default: false
+            },
             squareIndex: {
                 type: Number,
                 default: 0
@@ -225,14 +230,24 @@
                 };
             }
         },
+        created() {
+            let {navbarId, index} = this.$route.params;
+            this.navbarId = navbarId;
+            this.index = index;
+        },
         methods: {
             ...mapMutations({
                 updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
-                setLayoutItemByIndex: 'pageLayout/setLayoutItemByIndex'
+                setLayoutItemByIndex: 'pageLayout/setLayoutItemByIndex',
+                addLayoutItemByIndex: 'pageLayout/addLayoutItemByIndex'
             }),
             getOriginState() {
                 let {navbarId, index} = this.$route.params;
-                return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}`);
+                if (this.isAdd) {
+                    return {};
+                } else {
+                    return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}`);
+                }
             },
             init() {
                 this.initTime();
@@ -405,13 +420,15 @@
                 // this.coverImage = coverImage.posterImage;
                 let {navbarId, index} = this.$route.params;
                 this.coverImage = image;
-                this.updateLayoutItemByIndex({
-                    index,
-                    navbarId,
-                    squareIndex: this.squareIndex,
-                    key: 'coverImage',
-                    value: image
-                });
+                if (!this.isAdd) {
+                    this.updateLayoutItemByIndex({
+                        index,
+                        navbarId,
+                        squareIndex: this.squareIndex,
+                        key: 'coverImage',
+                        value: image
+                    });
+                }
             },
             complete() {
                 // 检测推荐筛选项的封面
@@ -459,13 +476,22 @@
                     coverImage: this.coverImage
                 };
                 let {navbarId, index} = this.$route.params;
-                this.setLayoutItemByIndex({
-                    index,
-                    navbarId,
-                    squareIndex: this.squareIndex,
-                    layoutItem: filterItem
-                });
-                // this.$emit('setShuffleItem', filterItem);
+
+                if (this.isAdd) {
+                    this.addLayoutItemByIndex({
+                        index,
+                        navbarId,
+                        squareIndex: this.squareIndex,
+                        layoutItem: filterItem
+                    });
+                } else {
+                    this.setLayoutItemByIndex({
+                        index,
+                        navbarId,
+                        squareIndex: this.squareIndex,
+                        layoutItem: filterItem
+                    });
+                }
                 this.$message({
                     message: '成功设置混排模块的筛选项',
                     type: 'success'

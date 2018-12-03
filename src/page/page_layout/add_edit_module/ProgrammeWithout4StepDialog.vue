@@ -17,7 +17,6 @@
                     <el-step title="选择节目"></el-step>
                     <el-step title="选择图片"></el-step>
                     <el-step title="设置角标"></el-step>
-                    <el-step title="设置展示方式"></el-step>
                 </el-steps>
                 <div class="seperator-line"></div>
                 <div v-show="active === 0" class="step-one">
@@ -27,13 +26,6 @@
                             :row-class-name="tableRowClassName"
                             ref="multipleTable"
                             header-row-class-name="common-table-header" class="my-table-style" :data="checkedProgrammeList" border>
-                            <!--
-                            <el-table-column  align="center" label="选择">
-                                <template slot-scope="scope">
-                                    <el-radio :value="getSquareProgrammeId" :label="scope.row.id" @input="setProgrammeSubjectHandler(scope.row)">&nbsp;</el-radio>
-                                </template>
-                            </el-table-column>
-                            -->
                             <el-table-column prop="code" align="center" width="120px" label="节目编号">
                                 <template slot-scope="scope">
                                     {{scope.row.code | padEmpty}}
@@ -244,21 +236,11 @@
                         </el-col>
                     </el-form>
                 </div>
-                <div v-show="active === 3" class="step-three">
-                    <el-form status-icon label-width="120px" class="my-el-form" @submit.native.prevent>
-                        <el-col :span="12">
-                            <el-form-item label="节目展示方式">
-                                    <el-radio @input="setSquareProgrammeLayoutItemType('PROGRAMME')" :value="getSquareProgrammeLayoutItemType" label="PROGRAMME">进入节目详情页</el-radio>
-                                    <el-radio @input="setSquareProgrammeLayoutItemType('PROGRAMME_LIST')" :value="getSquareProgrammeLayoutItemType" label="PROGRAMME_LIST">进入节目列表页</el-radio>
-                            </el-form-item>
-                        </el-col>
-                    </el-form>
-                </div>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
                     <el-button @click="closeDialog">取 消</el-button>
                     <el-button v-show="active > 0" class="btn-style-three" @click="prevBtnClickHandler">上一步</el-button>
-                    <el-button v-show="active < 3" class="btn-style-three" @click="nextBtnClickHandler">下一步</el-button>
-                    <el-button v-show="active === 3" type="primary" @click="enterHandler">确 定</el-button>
+                    <el-button v-show="active < 2" class="btn-style-three" @click="nextBtnClickHandler">下一步</el-button>
+                    <el-button v-show="active === 2" type="primary" @click="enterHandler">确 定</el-button>
                 </div>
             </div>
         </el-dialog>
@@ -418,6 +400,8 @@ export default {
                     if (res && res.code === 0) {
                         this.programme = res.data;
                         this.showExist = true;
+                    } else {
+                        this.showExist = false;
                     }
                     let markRes = await this.getCustomMarkList();
                     if (markRes && markRes.code === 0) {
@@ -467,8 +451,6 @@ export default {
         searchInputHandler() {},
         setProgrammeSubjectHandler(programme) {
             let {id, name, desc, programmeTemplate} = programme;
-            console.log(id);
-            console.log(name);
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'desc', value: desc });
@@ -559,13 +541,8 @@ export default {
         //  最后一步的确认处理函数
         enterHandler() {
             let {navbarId, index} = this.$route.params;
-            if (this.getSquareProgrammeLayoutItemType) {
-                this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'PROGRAMME' });
-                this.closeDialog();
-            } else {
-                this.$message.error('请选择节目展示方式');
-                return false;
-            }
+            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'PROGRAMME' });
+            this.closeDialog();
         }
     }
 };

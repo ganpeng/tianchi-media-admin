@@ -309,7 +309,8 @@ let util = {
                     iconImage: {},
                     title: '',
                     renderType: 'FIGURE',
-                    layoutItemMultiList: _.times(6, () => _.cloneDeep(defaultLayoutItem))
+                    // layoutItemMultiList: _.times(6, () => _.cloneDeep(defaultLayoutItem))
+                    layoutItemMultiList: []
                 };
                 vuexStore.commit('pageLayout/insertLayoutDataByIndex', {navbarId, index, layoutData});
                 vuexStore.commit('pageLayout/saveLayoutToStore');

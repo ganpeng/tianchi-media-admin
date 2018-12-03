@@ -37,11 +37,11 @@
                 <div class="attributes">
                     <div class="attribute-item">
                         <label class="item-label">别名:</label>
-                        <span class="value">小张</span>
+                        <span class="value">{{person.alias}}</span>
                     </div>
                     <div class="attribute-item">
                         <label class="item-label">英文名:</label>
-                        <span class="value">xiaozhang</span>
+                        <span class="value">{{person.englishName}}</span>
                     </div>
                 </div>
                 <p class="description">

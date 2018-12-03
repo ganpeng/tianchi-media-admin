@@ -113,7 +113,7 @@
         <div v-if="isEdit" class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="saveHandler">保存</el-button>
         </div>
-        <edit-programme :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeDialog"></edit-programme>
+        <programme-without4-step-dialog :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeDialog"></programme-without4-step-dialog>
         <edit-programme-subject :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeSubjectDialog"></edit-programme-subject>
         <edit-channel ref="selectChannelDialog"></edit-channel>
     </div>
@@ -121,15 +121,15 @@
 <script>
 import _ from 'lodash';
 import {mapGetters, mapMutations} from 'vuex';
-import EditProgramme from '../add_edit_module/EditProgramme';
 import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
 import EditChannel from '../add_edit_module/EditChannel';
+import ProgrammeWithout4StepDialog from '../add_edit_module/ProgrammeWithout4StepDialog';
 export default {
     name: 'RecommendFixedModule',
     components: {
-        EditProgramme,
         EditProgrammeSubject,
-        EditChannel
+        EditChannel,
+        ProgrammeWithout4StepDialog
     },
     props: {
         isEdit: {

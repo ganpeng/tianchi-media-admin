@@ -3,7 +3,10 @@
         <h2 class="content-title">新增人物模块</h2>
         <div class="seperator-line"></div>
         <div class="form-container">
-            <el-form :model="layoutData" status-icon ref="createPerson"
+            <el-form :model="layoutData"
+                    :rules="inputRules"
+                    status-icon
+                    ref="personModuleForm"
                     label-width="120px"
                     @submit.native.prevent
                     class="form-block">
@@ -30,8 +33,8 @@
                 <el-col :span="24">
                     <el-form-item label=" ">
                         <div class="sortable-list-container">
-                            <draggable element="ul" class="sortable-list" v-model="personList">
-                                <li v-for="(person) in personList" :key="person.id" class="sortable-item">
+                            <draggable v-if="personList.length ===6" element="ul" class="sortable-list" v-model="personList">
+                                <li v-for="(person, index) in personList" :key="index" class="sortable-item">
                                     <div :style="styleStr(person)" class="img-wrapper">
                                         <div class="mask"></div>
                                         <!-- <span @click="deleteHandler(person.id)" class="delete-btn">
@@ -41,6 +44,13 @@
                                     <p class="name">{{person.name}}</p>
                                 </li>
                             </draggable>
+                            <ul v-else class="sortable-empty-list sortable-list">
+                                <li v-for="(item, index) in [1, 2, 3, 4, 5, 6]" :key="index" class="sortable-item">
+                                    <div class="img-wrapper">
+                                        <div class="mask"></div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </el-form-item>
                 </el-col>
@@ -176,6 +186,7 @@
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
 import draggable from 'vuedraggable';
+import store from 'store';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 export default {
@@ -192,10 +203,16 @@ export default {
             selectPersonDialogVisible: false,
             tagsFieldVisible: false,
             saveFlag: false, // 判断页面跳转之前如果没有点保存按钮的话，就删除新增的这个layoutItem
+            areaOptions: store.get('areaList'),
             previewImage: {
                 title: '',
                 display: false,
                 uri: ''
+            },
+            inputRules: {
+                title: [
+                    { required: true, message: '请输入人物模块名称' }
+                ]
             }
         };
     },
@@ -244,7 +261,7 @@ export default {
         },
         styleStr() {
             return (person) => {
-                return `background:url(${this.getImageUri(person)}) center center no-repeat;background-size: contain;`;
+                return `background-image:url(${this.getImageUri(person)});`;
             };
         },
         personList: {
@@ -252,6 +269,7 @@ export default {
                 return this.layoutData.layoutItemMultiList;
             },
             set(value) {
+                console.log(value);
                 this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'layoutItemMultiList', value});
             }
         }
@@ -317,11 +335,18 @@ export default {
                 this.deleteLayoutItembyId({navbarId: this.navbarId, index: this.index, id: person.id});
             }
         },
-        saveHandler() {
-            this.saveLayoutToStore();
-            this.saveFlag = true;
-            this.$message.success('保存成功');
-            this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+        async saveHandler() {
+            try {
+                let valid = await this.$refs.personModuleForm.validate();
+                if (valid) {
+                    this.saveLayoutToStore();
+                    this.saveFlag = true;
+                    this.$message.success('保存成功');
+                    this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                }
+            } catch (err) {
+                console.log(err);
+            }
         },
         //  弹窗控制方法
         showSelectPersonDialog() {
@@ -385,6 +410,9 @@ export default {
                 height: 80px;
                 border: 1px solid #3E495E;
                 border-radius: 4px;
+                background-size: 100% 100%;
+                background-repeat: no-repeat;
+                background-position: center center;
                 .mask {
                     display: none;
                     position: absolute;
