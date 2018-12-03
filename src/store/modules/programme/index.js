@@ -74,6 +74,8 @@ const defaultProgramme = {
     visible: null,
     // 节目描述
     description: '',
+    // 节目规则
+    updateRule: '',
     // 发行时间
     announceAt: '',
     // 状态 ENUM('NORMAL', 'DELETE') DEFAULT 'NORMAL'
@@ -959,7 +961,7 @@ const actions = {
     /**
      * 获取节目列表
      */
-    async getProgrammeList({commit, state}) {
+    async getProgrammeList({commit, state}, keyword) {
         try {
             if (!isLoading) {
                 isLoading = true;
@@ -968,10 +970,19 @@ const actions = {
                     categoryIdList: [state.searchFields.categoryIdList],
                     programmeTypeIdList: [state.searchFields.programmeTypeIdList]
                 });
-                let params = Object.assign({}, searchFields, {
-                    pageSize: state.pagination.pageSize,
-                    pageNum: state.pagination.pageNum - 1
-                });
+                let params = {};
+                if (keyword) {
+                    params = Object.assign({}, searchFields, {
+                        pageSize: state.pagination.pageSize,
+                        pageNum: state.pagination.pageNum - 1,
+                        keyword
+                    });
+                } else {
+                    params = Object.assign({}, searchFields, {
+                        pageSize: state.pagination.pageSize,
+                        pageNum: state.pagination.pageNum - 1
+                    });
+                }
                 let res = await service.getProgrammeList(params);
                 if (res && res.code === 0) {
                     let {pageNum, pageSize, total, list} = res.data;

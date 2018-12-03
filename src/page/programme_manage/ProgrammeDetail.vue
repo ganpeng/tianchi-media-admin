@@ -383,9 +383,25 @@
                                     </el-checkbox>
                                 </div>
                                 <div class="mark-item">
+                                    右上角：
+                                    <el-select
+                                        @input="customMarkSelectHandler"
+                                        :value="rightTop"
+                                        value-key="id"
+                                        clearable
+                                        placeholder="请选择">
+                                        <el-option
+                                            v-for="item in customMarkOptions"
+                                            :key="item.id"
+                                            :label="item.caption"
+                                            :value="item">
+                                        </el-option>
+                                    </el-select>
+                                    <!--
                                     <el-checkbox @change="markChangeHandler($event, 'rightTop')" :disabled="rightTopDisabled">
                                         右上角：
                                     </el-checkbox>
+                                    -->
                                     <!--  此处需要增加一个选择框 -->
                                 </div>
                                 <div class="mark-item">
@@ -404,56 +420,12 @@
                             <el-radio  @input="inputHandler(true, 'visible')" :value="programme.visible" :label="true">是</el-radio>
                             <el-radio  @input="inputHandler(false, 'visible')" :value="programme.visible" :label="false">否</el-radio>
                         </el-form-item>
-                        <!--  定时上下架功能暂时注释
-                        <el-form-item label="定时上架">
-                            <div class="on-off-the-shelf">
-                                <el-date-picker
-                                    class="on-off-the-shelf-date"
-                                    v-model="value1"
-                                    type="date"
-                                    placeholder="选择日期">
-                                </el-date-picker>
-                                <el-time-select
-                                    class="on-off-the-shelf-time"
-                                    v-model="value1"
-                                    :picker-options="{
-                                        start: '08:30',
-                                        step: '00:15',
-                                        end: '18:30'
-                                    }"
-                                    placeholder="选择时间">
-                                </el-time-select>
-                                <el-button class="btn-style-two" type="primary" @click="() => {}">开启</el-button>
-                            </div>
-                        </el-form-item>
-                        <el-form-item label="定时下架">
-                            <div class="on-off-the-shelf">
-                                <el-date-picker
-                                    class="on-off-the-shelf-date"
-                                    v-model="value1"
-                                    type="date"
-                                    placeholder="选择日期">
-                                </el-date-picker>
-                                <el-time-select
-                                    class="on-off-the-shelf-time"
-                                    v-model="value1"
-                                    :picker-options="{
-                                        start: '08:30',
-                                        step: '00:15',
-                                        end: '18:30'
-                                    }"
-                                    placeholder="选择时间">
-                                </el-time-select>
-                                <el-button class="btn-style-two" type="primary" @click="() => {}">开启</el-button>
-                            </div>
-                        </el-form-item>
-                        -->
                         <el-form-item label="更新规则">
                             <el-col :span="18">
                                 <el-input
                                     :disabled="readonly"
-                                    @input="inputHandler($event, 'name')"
-                                    :value="programme.name">
+                                    @input="inputHandler($event, 'updateRule')"
+                                    :value="programme.updateRule">
                                 </el-input>
                             </el-col>
                         </el-form-item>
@@ -574,6 +546,12 @@
             this.resetProgramme();
             this.getProgrammeTagList();
             this.getProgrammeCategory();
+            this.$service.getCustomMarkList()
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        this.customMarkOptions = res.data;
+                    }
+                });
         },
         data() {
             return {
@@ -584,6 +562,7 @@
                 sortDialogVisible: false,
                 subjectOptions: role.SUBJECT,
                 size: dimension.PROGRAMME_DIMENSION,
+                customMarkOptions: [],
                 previewImage: {
                     display: false,
                     autoplay: false,
@@ -764,6 +743,9 @@
             },
             rightBottomDisabled() {
                 return !this.programme.score;
+            },
+            rightTop() {
+                return _.get(this.programme, 'cornerMark.rightTop');
             }
         },
         methods: {
@@ -1237,6 +1219,13 @@
             },
             markChangeHandler(checked, key) {
                 this.updateProgrammeMark({checked, key});
+            },
+            customMarkSelectHandler(rightTop) {
+                let cornerMark = Object.assign({}, _.cloneDeep(this.programme.cornerMark), {rightTop});
+                if (_.isEmpty(rightTop)) {
+                    delete cornerMark.rightTop;
+                }
+                this.updateProgramme({key: 'cornerMark', value: cornerMark});
             }
         }
     };

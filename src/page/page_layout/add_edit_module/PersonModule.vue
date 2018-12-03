@@ -339,6 +339,10 @@ export default {
             try {
                 let valid = await this.$refs.personModuleForm.validate();
                 if (valid) {
+                    // let navbarName = this.getNavbarNameById(this.navbarId);
+                    // if (navbarName === '儿童') {
+                    //     this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'layoutTemplate', value: 'LT_KID_6'});
+                    // }
                     this.saveLayoutToStore();
                     this.saveFlag = true;
                     this.$message.success('保存成功');

@@ -98,8 +98,7 @@
                                     placeholder="搜索你想要的信息"
                                     clearable
                                     class="border-input"
-                                    :value="''"
-                                    @input="searchInputHandler($event, 'name')"
+                                    v-model="keyword"
                                 >
                                 </el-input>
                             </el-form-item>
@@ -293,6 +292,7 @@ export default {
             active: 0,
             dialogVisible: false,
             showExist: false,
+            keyword: '',
             programme: {},
             layoutItem: {},
             customMarkOptions: [],
@@ -376,6 +376,7 @@ export default {
     },
     methods: {
         ...mapMutations({
+            resetProgrammePagination: 'programme/resetProgrammePagination',
             updateProgrammePagination: 'programme/updateProgrammePagination',
             updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
             updateLayoutItemCornerMarkByIndex: 'pageLayout/updateLayoutItemCornerMarkByIndex'
@@ -401,8 +402,10 @@ export default {
             }
         },
         closeDialog() {
+            this.resetProgrammePagination();
             this.dialogVisible = false;
             this.active = 0;
+            this.keyword = '';
             this.programme = {};
             this.previewImage = {
                 title: '',
@@ -464,11 +467,11 @@ export default {
             }
         },
         //  节目列表搜索
-        searchInputHandler() {},
+        searchInputHandler() {
+
+        },
         setProgrammeSubjectHandler(programme) {
             let {id, name, desc, programmeTemplate} = programme;
-            console.log(id);
-            console.log(name);
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'desc', value: desc });
@@ -480,7 +483,11 @@ export default {
         tableRowClassName({row, rowIndex}) {
             return row.id === this.getSquareProgrammeId ? 'checked' : '';
         },
-        searchEnterHandler() {},
+        searchEnterHandler() {
+            if (this.keyword) {
+                this.getProgrammeList(this.keyword);
+            }
+        },
         //  查看图片
         displayImage(image) {
             this.previewImage.title = image.name;
@@ -558,9 +565,7 @@ export default {
         },
         //  最后一步的确认处理函数
         enterHandler() {
-            let {navbarId, index} = this.$route.params;
             if (this.getSquareProgrammeLayoutItemType) {
-                this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'PROGRAMME' });
                 this.closeDialog();
             } else {
                 this.$message.error('请选择节目展示方式');

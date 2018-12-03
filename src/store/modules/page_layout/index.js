@@ -215,7 +215,6 @@ const mutations = {
         let {pageLayoutList} = payload;
         state.pageLayoutList = pageLayoutList;
     },
-
     //  layout相关的操作开始, 重新定义的增删改查方法开始
     updateLayoutItemByIndex(state, payload) {
         let {index, navbarId, squareIndex, key, value} = payload;
