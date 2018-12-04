@@ -4,7 +4,7 @@
         <el-form :inline="true" class="text-left">
             <el-form-item>
                 <el-input
-                    v-model="listQueryParams.name"
+                    v-model="listQueryParams.keyword"
                     placeholder="搜索你想要的信息"
                     clearable>
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
@@ -125,7 +125,7 @@
         <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="pageNum"
+            :current-page="listQueryParams.pageNum"
             :page-sizes="[10, 20, 50,100,200]"
             :page-size="listQueryParams.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
@@ -133,7 +133,7 @@
         </el-pagination>
         <div slot="footer" class="dialog-footer text-right">
             <el-button @click="closeSelectVideoDialog">取 消</el-button>
-            <el-button type="primary" @click="appendVideo">确 定</el-button>
+            <el-button type="primary" @click="pullVideoFromMaster">确 定</el-button>
         </div>
         <display-video-dialog
             :url="previewVideoInfo.url"
@@ -155,12 +155,11 @@
         data() {
             return {
                 listQueryParams: {
-                    name: '',
+                    keyword: '',
                     suffix: '',
-                    pageNum: 0,
+                    pageNum: 1,
                     pageSize: 10
                 },
-                pageNum: 1,
                 total: 0,
                 suffixOptions: role.VIDEO_SUFFIX_OPTIONS,
                 previewVideoInfo: {
@@ -202,7 +201,7 @@
         methods: {
             // 获取视频的列表
             getVideoList() {
-                this.$service.getVideoList(this.listQueryParams).then(response => {
+                this.$service.getMasterVideoList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.videoList = response.data.list;
                         this.total = response.data.total;
@@ -267,9 +266,9 @@
                 }
                 return 'CANCEL';
             },
-            // 添加视频
-            appendVideo() {
-                this.$emit('appendVideo', this.selectedMultipleVideo);
+            // 从主站拉取视频到本地
+            pullVideoFromMaster() {
+                this.$emit('pullVideoFromMaster', this.selectedMultipleVideo);
                 this.$emit('closeSelectVideoDialog');
             },
             handleSizeChange(pageSize) {

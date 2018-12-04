@@ -18,7 +18,7 @@ export const getSiteInfo = () => {
  * 设置站点token
  * @param siteToken The token of site.
  */
-export const setSiteToken = ({siteToken}) => {
+export const configSiteToken = ({siteToken}) => {
     return service.patch(util.format('/v1/sys/system-config/site-token?siteToken={0}', siteToken));
 };
 
@@ -74,14 +74,14 @@ export const getChildSiteList = ({keyword, pageNum, pageSize}) => {
  * 获取全部站点
  */
 export const getAllSiteList = () => {
-    return service.get(`/v1/sys/site/list`);
+    return service.get(`/v1/sys/site/list?includeMasterSite=false`);
 };
 
 /**
  * 获取全部视频来源
  */
 export const getAllVideoSourceList = () => {
-    return service.get(`/v1/sys/site/list`);
+    return service.get(`/v1/sys/site/list?includeMasterSite=true`);
 };
 
 /**

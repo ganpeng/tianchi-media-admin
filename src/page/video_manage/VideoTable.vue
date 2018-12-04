@@ -101,20 +101,36 @@
                     </el-button>
                 </template>
             </el-table-column>
-            <!--子站上传状态-->
-            <el-table-column align="center" label="上传状态">
+            <!--子站上传状态（子站）-->
+            <el-table-column
+                v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                align="center"
+                label="上传状态">
                 <template slot-scope="scope">
-                    成功
+                    <span>{{scope.row.uploadStatus | getUploadStatus}}</span>
                 </template>
             </el-table-column>
-            <!--视频来源-->
+            <!--子站拉取状态（子站）-->
+            <el-table-column
+                v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                align="center"
+                label="拉取状态">
+                <template slot-scope="scope">
+                    <span>{{scope.row.downloadStatus | getDownloadStatus}}</span>
+                </template>
+            </el-table-column>
+            <!--视频来源(主站、子站)-->
             <el-table-column align="center" label="视频来源">
                 <template slot-scope="scope">
-                    <span>中心平台</span>
+                    <span v-if="!scope.row.origin || scope.row.origin.length === 0">---</span>
+                    <span v-else>{{scope.row.origin | jsonJoin('name')}}</span>
                 </template>
             </el-table-column>
-            <!--共享站点-->
-            <el-table-column align="center" label="共享站点">
+            <!--共享站点（主站）-->
+            <el-table-column
+                v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                align="center"
+                label="共享站点">
                 <template slot-scope="scope">
                     <span @click="checkShareSiteList(scope.row)" class="check-share-site">查看</span>
                 </template>
@@ -131,14 +147,27 @@
             </el-table-column>
             <el-table-column v-if="!hasRadio" width="130px" align="center" fixed="right" label="操作">
                 <template slot-scope="scope">
+                    <!--上传主站（子站）-->
                     <el-button
+                        v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable && !scope.row.downloadStatus"
                         class="text-primary"
                         type="text"
-                        @click="uploadVideoToMainSite(scope.row)"
+                        @click="pushVideoToMainSite(scope.row)"
                         size="small">
                         上传主站
                     </el-button>
+                    <!--拉取主站视频（子站）-->
                     <el-button
+                        v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable && scope.row.downloadStatus"
+                        class="text-primary"
+                        type="text"
+                        @click="pullVideoFromMainSite(scope.row)"
+                        size="small">
+                        拉取
+                    </el-button>
+                    <!--共享设置（主站）-->
+                    <el-button
+                        v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
                         class="text-primary"
                         type="text"
                         @click="setSingleVideoShareSite(scope.row)"
@@ -173,20 +202,8 @@
             width="40%">
             <div class="batch-share-body" v-if="shareSiteVisible">
                 <ul>
-                    <li>
-                        <el-tag type="info">北京站</el-tag>
-                    </li>
-                    <li>
-                        <el-tag type="info">北京站</el-tag>
-                    </li>
-                    <li>
-                        <el-tag type="info">北京站</el-tag>
-                    </li>
-                    <li>
-                        <el-tag type="info">北京站</el-tag>
-                    </li>
-                    <li>
-                        <el-tag type="info">北京站</el-tag>
+                    <li v-for="(item, index) in currentVideo.shareSiteList" :key="index">
+                        <el-tag type="info">{{item.name}}</el-tag>
                     </li>
                 </ul>
             </div>
@@ -241,6 +258,32 @@
                 type: Array,
                 default: function () {
                     return [];
+                }
+            }
+        },
+        filters: {
+            getUploadStatus(uploadStatus) {
+                switch (uploadStatus) {
+                    case 'ON_GOING':
+                        return '上传中';
+                    case 'SUCCESS':
+                        return '上传成功';
+                    case 'FAILED':
+                        return '上传失败';
+                    default:
+                        return '---';
+                }
+            },
+            getDownloadStatus(downloadStatus) {
+                switch (downloadStatus) {
+                    case 'ON_GOING':
+                        return '拉取中';
+                    case 'SUCCESS':
+                        return '拉取成功';
+                    case 'FAILED':
+                        return '拉取失败';
+                    default:
+                        return '---';
                 }
             }
         },
@@ -322,16 +365,17 @@
                 deleteVideoById: 'video/deleteVideoById',
                 retryVideoByIdList: 'video/retryVideoByIdList'
             }),
-            // 展示共享站点
-            checkShareSiteList() {
+            // 展示共享站点（只存在于主站）
+            checkShareSiteList(item) {
                 this.shareSiteVisible = true;
+                this.currentVideo = item;
             },
-            // 设置单个视频分享站点
+            // 设置单个视频分享站点（只存在于主站）
             setSingleVideoShareSite(item) {
                 this.shareSiteSettingVisible = true;
                 this.currentVideo = item;
             },
-            // 确定设置单个视频分享站点
+            // 确定设置单个视频分享站点(只存在于主站)
             confirmVideoShareSite() {
                 this.$service.setSingleVideoToBatchSite({
                     id: this.currentVideo.id,
@@ -344,9 +388,34 @@
                     }
                 });
             },
-            // 子站上传主站
-            uploadVideoToMainSite() {
-
+            // 拉取主站的视频到子站（只有在当前视频是以前拉取过的且失败的才能重新拉取）
+            pullVideoFromMainSite(item) {
+                if (item.downloadStatus === 'FAILED') {
+                    let videoIdList = [item.id];
+                    this.$service.batchPullVideoFromMaster({videoIdList}).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('所选视频拉取成功，请关注其状态');
+                        }
+                    });
+                } else {
+                    this.$message.warning('当前视频的拉取状态不允许进行再次拉取');
+                }
+            },
+            // 子站上传主站（只存在于子站）
+            pushVideoToMainSite(item) {
+                if (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) {
+                    if (!item.uploadStatus || item.uploadStatus === 'FAILED') {
+                        this.$service.batchPushVideoToMaster({videoIdList: [item.id]}).then(response => {
+                            if (response && response.code === 0) {
+                                this.$message.success('成功上传视频到主站');
+                            }
+                        });
+                    } else {
+                        this.$message.warning('当前视频上传状态不允许继续上传');
+                    }
+                } else {
+                    this.$message.warning('请您先配置站点');
+                }
             },
             cutStr(str) {
                 return str.length > 40 ? str.substring(0, 40) + '...' : str;

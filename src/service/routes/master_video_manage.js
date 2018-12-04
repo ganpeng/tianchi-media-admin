@@ -3,30 +3,43 @@
  */
 
 import service from '../config';
-import util from '../../util/extend';
 import qs from 'querystring';
 import _ from 'lodash';
 
 /**
- * 子站上传单个视频到主站
+ * 子站批量上传视频到主站
  */
-export const uploadSingleVideoToMaster = ({videoId}) => {
-    return service.put(util.format('/v1/storage/master/video?videoId={0}', videoId));
+export const batchPushVideoToMaster = ({videoIdList}) => {
+    return service.put('/v1/storage/master/video/push', {videoIdList}, {
+        baseURL: '/storage'
+    });
 };
 
 /**
- * 获取主站共享的视频列表
+ * 子站从主站批量拉取视频
  */
-export const getMasterVideoList = ({keyword, pageNum, pageSize}) => {
+export const batchPullVideoFromMaster = ({videoIdList}) => {
+    return service.put('/v1/storage/master/video/pull', {videoIdList}, {
+        baseURL: '/storage'
+    });
+};
+
+/**
+ * 获取主站可在子站共享的视频列表
+ */
+export const getMasterVideoList = ({keyword, suffix, pageNum, pageSize}) => {
     const params = {
+        keyword,
+        suffix,
         pageNum: pageNum - 1,
-        pageSize,
-        keyword
+        pageSize
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
         return item !== '' && item !== undefined;
     }));
 
-    return service.get(`/v1/storage/master/video/page?${paramsStr}`);
+    return service.get(`/v1/storage/master/video/page?${paramsStr}`, {
+        baseURL: '/storage'
+    });
 };

@@ -171,7 +171,7 @@
                 <el-menu-item index="/kits">小功能</el-menu-item>
             </el-submenu>
             <!--站点管理-->
-            <el-submenu index="12">
+            <el-submenu index="12" v-if="$wsCache.localStorage.get('siteInfo')">
                 <template slot="title">
                     <svg-icon
                         icon-class="programme_manage"
@@ -182,11 +182,15 @@
                 <!--站点配置只在子站点中存在-->
                 <el-menu-item
                     index="/site-manage/config"
-                    v-if="!$wsCache.localStorage.get('siteInfo').siteMasterEnable">
+                    v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable">
                     站点配置
                 </el-menu-item>
                 <!--站点列表只在中心站点中存在-->
-                <el-menu-item index="/site-manage/list" v-else>站点列表</el-menu-item>
+                <el-menu-item
+                    index="/site-manage/list"
+                    v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable">
+                    站点列表
+                </el-menu-item>
             </el-submenu>
             <!--个人中心-->
             <el-submenu index="13">

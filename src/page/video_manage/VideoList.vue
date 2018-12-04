@@ -77,32 +77,32 @@
                 </el-form-item>
                 <el-form-item class="search">
                     <el-select
-                        :value="searchFields.source"
+                        :value="searchFields.originSiteToken"
                         clearable
                         placeholder="请选择视频来源"
-                        @input="inputHandler($event, 'source')">
+                        @input="inputHandler($event, 'originSiteToken')">
                         <el-option
                             v-for="(item, index) in sourceOptions"
                             :key="index"
                             :label="item.name"
-                            :value="item.id">
+                            :value="item.token">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <!--只有主站点才有共享站点搜索-->
+                <!--共享站点搜索（主站）-->
                 <el-form-item
-                    v-if="$wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                    v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
                     class="search">
                     <el-select
-                        :value="searchFields.shareSite"
+                        :value="searchFields.shareSiteToken"
                         clearable
                         placeholder="请选择共享站点"
-                        @input="inputHandler($event, 'shareSite')">
+                        @input="inputHandler($event, 'shareSiteToken')">
                         <el-option
                             v-for="(item, index) in shareSiteOptions"
                             :key="index"
                             :label="item.name"
-                            :value="item.id">
+                            :value="item.token">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -140,18 +140,25 @@
                     <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
                                @click="downloadSelectedTsVideo">批量下载
                     </el-button>
-                    <!--只有主站存在共享设置-->
-                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
-                               @click="setShareSite">
+                    <!--共享设置（主站）-->
+                    <el-button
+                        v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                        class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
+                        @click="setShareSite">
                         共享设置
                     </el-button>
-                    <!--只有子站可以上传主站、拉取视频-->
-                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
-                               @click="batchUploadToMaster">
+                    <!--上传主站（子站）-->
+                    <el-button
+                        v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                        class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
+                        @click="batchPushToMaster">
                         上传主站
                     </el-button>
-                    <el-button class="delete-btn create-blue-btn" size="small"
-                               @click="selectMasterVideoDialogVisible = true">
+                    <!--拉取视频（配置完成的子站）-->
+                    <el-button
+                        v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                        class="delete-btn create-blue-btn" size="small"
+                        @click="openPullVideoDialog">
                         拉取视频
                     </el-button>
                     <el-button class="delete-btn disabled-red-btn" size="small" :disabled="isDisabled"
@@ -198,7 +205,7 @@
             width="80%">
             <select-multiple-master-video
                 v-if="selectMasterVideoDialogVisible"
-                v-on:appendVideo="pullVideoFromMaster"
+                v-on:pullVideoFromMaster="pullVideoFromMaster"
                 v-on:closeSelectVideoDialog="selectMasterVideoDialogVisible = false">
             </select-multiple-master-video>
         </el-dialog>
@@ -296,6 +303,13 @@
             clearSearchFields() {
                 this.resetSearchFields();
             },
+            openPullVideoDialog() {
+                if (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) {
+                    this.selectMasterVideoDialogVisible = true;
+                } else {
+                    this.$message.warning('请您先配置站点');
+                }
+            },
             // 设置视频共享站点
             setShareSite() {
                 this.batchShareDialogVisible = true;
@@ -317,16 +331,33 @@
                     }
                 });
             },
-            // 批量将本地视频上传至主站
-            batchUploadToMaster() {
+            // 批量将本地视频上传至主站(只存在于子站)
+            batchPushToMaster() {
+                if (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) {
+                    let videoIdList = [];
+                    this.$refs.videoTable.selectedVideoList.map(video => {
+                        videoIdList.push(video.id);
+                    });
+                    this.$service.batchPushVideoToMaster({videoIdList}).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('成功上传视频到主站');
+                        }
+                    });
+                } else {
+                    this.$message.warning('请您先配置站点');
+                }
+            },
+            // 拉取主站的视频到子站(只存在于子站)
+            pullVideoFromMaster(videoList) {
                 let videoIdList = [];
-                this.$refs.videoTable.selectedVideoList.map(video => {
+                videoList.map(video => {
                     videoIdList.push(video.id);
                 });
-            },
-            // 拉取主站的视频到子站
-            pullVideoFromMaster(selectedVideoList) {
-
+                this.$service.batchPullVideoFromMaster({videoIdList}).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message.success('所选视频拉取成功，请关注其状态');
+                    }
+                });
             },
             clearInputValue() {
                 if (this.$refs.uploadInputFile && this.$refs.uploadInputFile.value) {

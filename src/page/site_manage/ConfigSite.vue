@@ -9,18 +9,24 @@
         <el-form
             class="text-left"
             ref="siteInfo"
+            :rules="infoRules"
             :model="siteInfo">
             <el-form-item
                 label="站点名称"
                 label-width="120px"
                 prop="name">
-                <label>{{siteInfo.name}}</label>
+                <label>{{siteInfo.siteName}}</label>
             </el-form-item>
             <el-form-item
                 label="站点token配置"
                 label-width="120px"
+                required
                 prop="token">
-                <el-input v-model="siteInfo.token" readonly></el-input>
+                <el-input
+                    v-model="siteInfo.token"
+                    placeholder="请填写子站token进行配置"
+                    @blur="getSiteNameByToken">
+                </el-input>
             </el-form-item>
         </el-form>
         <div class="operate">
@@ -34,10 +40,22 @@
     export default {
         name: 'ConfigSite',
         data() {
+            let checkToken = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('站点token不能为空'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 siteInfo: {
-                    name: '北京站',
-                    token: 'GIJIHBFHFLJF7856656FTDRT'
+                    siteName: '',
+                    token: ''
+                },
+                infoRules: {
+                    token: [
+                        {validator: checkToken, trigger: 'blur'}
+                    ]
                 }
             };
         },
@@ -46,10 +64,23 @@
         },
         methods: {
             init() {
+                this.siteInfo.siteName = (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) ? this.$wsCache.localStorage.get('siteInfo').siteName : '站点未配置,请输入token进行配置';
+                this.siteInfo.token = (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) ? this.$wsCache.localStorage.get('siteInfo').token : '';
+            },
+            getSiteNameByToken() {
+
             },
             configSite() {
                 this.$refs['siteInfo'].validate((valid) => {
                     if (valid) {
+                        this.$service.configSiteToken({siteToken: this.siteInfo.token}).then(response => {
+                            if (response && response.code === 0) {
+                                this.$message.success('成功配置站点');
+                                // 保存到localStorage
+                                this.$wsCache.localStorage.set('siteInfo', response.data);
+                                window.reload();
+                            }
+                        });
                     } else {
                         return false;
                     }
