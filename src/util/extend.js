@@ -346,11 +346,20 @@ let util = {
                 vuexStore.commit('pageLayout/saveLayoutToStore');
                 router.push({ name: 'PersonSubjectModule', params: {navbarId, index, operator: 'add'} });
                 break;
-            case 'PROGRAMME':
-                router.push({ name: 'PersonModule', params: {navbarId, index, operator: 'add'} });
-                break;
             case 'PROGRAMME_SUBJECT':
-                router.push({ name: 'PersonModule', params: {navbarId, index, operator: 'add'} });
+                let programmeSubjectLayoutData = {
+                    layoutTemplate: '',
+                    navBarId: navbarId,
+                    navBarName: vuexStore.getters['pageLayout/getNavbarNameById'](navbarId),
+                    subjectId: '',
+                    iconImage: {},
+                    title: '',
+                    renderType: 'PROGRAMME_SUBJECT',
+                    layoutItemMultiList: []
+                };
+                vuexStore.commit('pageLayout/insertLayoutDataByIndex', {navbarId, index, layoutData: programmeSubjectLayoutData});
+                vuexStore.commit('pageLayout/saveLayoutToStore');
+                router.push({ name: 'ProgrammeSubjectModule', params: {navbarId, index, operator: 'add'} });
                 break;
             default:
                 throw new Error('类型错误');

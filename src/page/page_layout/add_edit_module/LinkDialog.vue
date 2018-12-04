@@ -6,7 +6,7 @@
             :visible.sync="dialogVisible"
             :show-close="true"
             :before-close="closeDialog"
-            @open="showDialog"
+            @open="dialogOpenHandler"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
             :append-to-body="true">
@@ -14,17 +14,19 @@
                 <div class="step-one">
                     <el-form
                         class="searchForm clearfix"
-                        :model="layoutItem"
                         :inline="false"
+                        :model="form"
+                        :rules="inputRules"
                         label-width="120px"
+                        ref="linkForm"
                         @submit.native.prevent>
                         <el-col :span="8">
-                            <el-form-item label="网页地址" required>
+                            <el-form-item
+                                label="网页地址" prop="link">
                                 <el-input
                                     placeholder="请输入网页地址"
                                     clearable
-                                    :value="getHref"
-                                    @input="linkInputHandler($event)"
+                                    v-model="form.link"
                                 >
                                 </el-input>
                             </el-form-item>
@@ -72,7 +74,22 @@ export default {
         return {
             navbarId: '',
             index: 0,
-            dialogVisible: false
+            dialogVisible: false,
+            form: {
+                link: ''
+            },
+            inputRules: {
+                link: [
+                    {
+                        required: true,
+                        message: '请输入网页地址'
+                    },
+                    {
+                        pattern: /^http:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/, // eslint-disable-line
+                        message: '请输入正确的网址'
+                    }
+                ]
+            }
         };
     },
     created() {
@@ -108,21 +125,27 @@ export default {
         showDialog() {
             this.dialogVisible = true;
         },
+        dialogOpenHandler() {
+            this.form.link = this.getHref;
+        },
         closeDialog() {
             this.dialogVisible = false;
         },
         linkInputHandler(href) {
-            let obj = {href};
-            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'params', value: JSON.stringify(obj) });
         },
         async enterSuccessHandler() {
             try {
-                if (_.get(this.layoutItem, 'coverImage.id')) {
-                    this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'LINK' });
-                    this.closeDialog();
-                } else {
-                    this.$message.error('请设置网页封面图');
-                    return false;
+                let valid = await this.$refs.linkForm.validate();
+                if (valid) {
+                    if (_.get(this.layoutItem, 'coverImage.id')) {
+                        let obj = {href: this.form.link};
+                        this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'params', value: JSON.stringify(obj) });
+                        this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'LINK' });
+                        this.closeDialog();
+                    } else {
+                        this.$message.error('请设置网页封面图');
+                        return false;
+                    }
                 }
             } catch (err) {
                 console.log(err);

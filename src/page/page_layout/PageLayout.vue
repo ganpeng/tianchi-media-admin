@@ -33,7 +33,7 @@
                     <svg-icon icon-class="add"></svg-icon>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="PROGRAMME">节目专题</el-dropdown-item>
+                    <el-dropdown-item command="PROGRAMME_SUBJECT">节目专题</el-dropdown-item>
                     <el-dropdown-item command="FIGURE_SUBJECT">人物专题</el-dropdown-item>
                     <el-dropdown-item command="FIGURE">人物模块</el-dropdown-item>
                     <el-dropdown-item command="SPECIAL">特别模块</el-dropdown-item>

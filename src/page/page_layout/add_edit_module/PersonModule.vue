@@ -236,7 +236,8 @@ export default {
             mainRoleLabel: 'person/mainRoleLabel',
             pagination: 'person/pagination',
             getNavbarNameById: 'pageLayout/getNavbarNameById',
-            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId'
+            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
+            getNavbarSignCodeById: 'pageLayout/getNavbarSignCodeById'
         }),
         layoutData() {
             let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
@@ -339,10 +340,10 @@ export default {
             try {
                 let valid = await this.$refs.personModuleForm.validate();
                 if (valid) {
-                    // let navbarName = this.getNavbarNameById(this.navbarId);
-                    // if (navbarName === '儿童') {
-                    //     this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'layoutTemplate', value: 'LT_KID_6'});
-                    // }
+                    let signCode = this.getNavbarSignCodeById(this.navbarId);
+                    if (signCode === 'CHILD') {
+                        this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'layoutTemplate', value: 'LT_KID_6'});
+                    }
                     this.saveLayoutToStore();
                     this.saveFlag = true;
                     this.$message.success('保存成功');

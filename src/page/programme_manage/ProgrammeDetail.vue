@@ -378,7 +378,7 @@
                         <el-form-item label="节目角标">
                             <div class="mark-container">
                                 <div class="mark-item">
-                                    <el-checkbox @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
+                                    <el-checkbox :checked="leftTopChecked" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
                                         左上角：播放平台
                                     </el-checkbox>
                                 </div>
@@ -397,12 +397,6 @@
                                             :value="item">
                                         </el-option>
                                     </el-select>
-                                    <!--
-                                    <el-checkbox @change="markChangeHandler($event, 'rightTop')" :disabled="rightTopDisabled">
-                                        右上角：
-                                    </el-checkbox>
-                                    -->
-                                    <!--  此处需要增加一个选择框 -->
                                 </div>
                                 <div class="mark-item">
                                     <el-checkbox @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
@@ -735,14 +729,18 @@
             leftTopDisabled() {
                 return this.programme.platformList.length === 0;
             },
-            rightTopDisabled() {
-                return false;
-            },
             leftBottomDisabled() {
                 return !this.programme.totalSets;
             },
             rightBottomDisabled() {
                 return !this.programme.score;
+            },
+            leftTopChecked() {
+                let leftTop = _.get(this.programme, 'cornerMark.leftTop.caption');
+                let isChecked = _.isEmpty(leftTop);
+                console.log(leftTop);
+                console.log(isChecked);
+                return isChecked;
             },
             rightTop() {
                 return _.get(this.programme, 'cornerMark.rightTop');

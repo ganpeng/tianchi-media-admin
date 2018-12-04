@@ -28,12 +28,99 @@
                 </el-col>
                 <el-col :span="24">
                     <el-form-item label="选择专题" prop="layoutTemplate">
+                        <el-button class="btn-style-two" @click="showDialog">节目专题</el-button>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="24">
+                    <el-col :span="12">
+                        <el-form-item label="模块板式" prop="layoutTemplate">
+                            <el-select
+                                :value="layoutData.layoutTemplate"
+                                @input="templateInputHandler($event)"
+                                clearable
+                                placeholder="请选择模块板式">
+                                <el-option
+                                    v-for="item in shuffleOptions"
+                                    :key="item.value"
+                                    :label="item.name"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label=" ">
+                            <ps-template114
+                                :isEdit="true"
+                                :index="index"
+                                :programmeList="programmeList"
+                                v-if="layoutData.layoutTemplate === 'LT_1_1_4'"
+                            ></ps-template114>
+                            <ps-template23
+                                :isEdit="true"
+                                :index="index"
+                                :programmeList="programmeList"
+                                v-if="layoutData.layoutTemplate === 'LT_2_3'"
+                            ></ps-template23>
+                            <ps-template26
+                                :isEdit="true"
+                                :index="index"
+                                :programmeList="programmeList"
+                                v-if="layoutData.layoutTemplate === 'LT_2_6'"
+                            ></ps-template26>
+                            <ps-template32
+                                :isEdit="true"
+                                :index="index"
+                                :programmeList="programmeList"
+                                v-if="layoutData.layoutTemplate === 'LT_3_2'"
+                            ></ps-template32>
+                            <ps-template66
+                                :isEdit="true"
+                                :index="index"
+                                :programmeList="programmeList"
+                                v-if="layoutData.layoutTemplate === 'LT_6_6'"
+                            ></ps-template66>
+                        </el-form-item>
+                    </el-col>
+                </el-col>
+            </el-form>
+        </div>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-two" type="primary" @click="saveHandler">保存</el-button>
+        </div>
+        <el-dialog
+            title="选择节目专题"
+            class="my-dialog"
+            width="80%"
+            :visible.sync="dialogVisible"
+            :show-close="true"
+            :before-close="closeDialog"
+            @open="dialogOpenHandler"
+            :close-on-click-modal="false"
+            :close-on-press-escape="false"
+            :append-to-body="true">
+            <div class="person-dialog-container">
+                <div class="step-one">
+                    <div class="step-one-wrapper">
+                        <el-form class="my-el-form" :inline="true" @submit.native.prevent>
+                            <el-form-item>
+                                <el-input
+                                    placeholder="搜索你想要的信息"
+                                    clearable
+                                    class="border-input"
+                                    :value="''"
+                                    @input="searchInputHandler($event, 'name')"
+                                >
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" class="btn-style-one" @click="searchHandler">搜索</el-button>
+                            </el-form-item>
+                        </el-form>
                         <el-table
                             :row-class-name="tableRowClassName"
                             :header-row-class-name='"common-table-header"' class="my-table-style" :data="programmeSubject.list" border>
                             <el-table-column align="center" width="60px" label="选择">
                                 <template slot-scope="scope">
-                                    <el-radio :value="getSquareProgrammeSubjectId" :label="scope.row.id" @input="setProgrammeSubjectHandler(scope.row)">&nbsp;</el-radio>
+                                    <el-radio :value="subjectId" :label="scope.row.id" @input="setProgrammeSubjectHandler(scope.row)">&nbsp;</el-radio>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="id" align="center" width="120px" label="编号">
@@ -71,149 +158,51 @@
                             layout="total, sizes, prev, pager, next, jumper"
                             :total="programmeSubject.pagination.total">
                         </el-pagination>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="24">
-                    <el-col :span="12">
-                        <el-form-item label="模块板式" prop="layoutTemplate">
-                            <el-select
-                                :value="layoutData.layoutTemplate"
-                                @input="templateInputHandler($event)"
-                                clearable
-                                placeholder="请选择模块板式">
-                                <el-option
-                                    v-for="item in shuffleOptions"
-                                    :key="item.value"
-                                    :label="item.name"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label=" ">
-                            <mixed114
-                                :isEdit="true"
-                                :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_1_1_4'"
-                            ></mixed114>
-                            <mixed22
-                                :isEdit="true"
-                                :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_SN'"
-                            ></mixed22>
-                            <mixed23
-                                :isEdit="true"
-                                :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_2_3'"
-                            ></mixed23>
-                            <mixed26
-                                :isEdit="true"
-                                :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_2_6'"
-                            ></mixed26>
-                            <mixed32
-                                :isEdit="true"
-                                :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_3_2'"
-                            ></mixed32>
-                            <mixed33
-                                :isEdit="true"
-                                :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_3_3'"
-                            ></mixed33>
-                            <mixed4
-                                :isEdit="true"
-                                :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_4'"
-                            ></mixed4>
-                            <mixed66
-                                :isEdit="true"
-                                :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_6_6'"
-                            ></mixed66>
-                            <mixeds6
-                                :isEdit="true"
-                                :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_S6'"
-                            ></mixeds6>
-                            <mixedsn
-                                :isEdit="true"
-                                :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_SN'"
-                            ></mixedsn>
-                        </el-form-item>
-                    </el-col>
-                </el-col>
-            </el-form>
-        </div>
-        <div class="fixed-btn-container">
-            <el-button class="btn-style-two" type="primary" @click="saveHandler">保存</el-button>
-        </div>
-        <person-subject-dialog
-            :allowResolutions="allowResolutions"
-            :squareIndex="0"
-            ref="personSubjectDialog"
-        ></person-subject-dialog>
-        <edit-programme
-            :squareIndex="1"
-            :allowResolutions="allowResolutions"
-            ref="selectProgrammeDialog">
-        </edit-programme>
+                    </div>
+                </div>
+                <div slot="footer" class="dialog-footer text-right margin-top-l">
+                    <el-button @click="closeDialog">取 消</el-button>
+                    <el-button type="primary" @click="enterHandler">确 定</el-button>
+                </div>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
-import {mapGetters, mapMutations} from 'vuex';
+import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
-import PersonSubjectDialog from './PersonSubjectDialog';
-import EditProgramme from './EditProgramme';
-
-import Mixed114 from '../mixed_module/Mixed114';
-import Mixed4 from '../mixed_module/Mixed4';
-import Mixed22 from '../mixed_module/Mixed22';
-import Mixed23 from '../mixed_module/Mixed23';
-import Mixed26 from '../mixed_module/Mixed26';
-import Mixed32 from '../mixed_module/Mixed32';
-import Mixed33 from '../mixed_module/Mixed33';
-import Mixed66 from '../mixed_module/Mixed66';
-import Mixeds6 from '../mixed_module/Mixeds6';
-import Mixedsn from '../mixed_module/Mixedsn';
+import PsTemplate114 from '../programme_subject_module/PsTemplate114';
+import PsTemplate23 from '../programme_subject_module/PsTemplate23';
+import PsTemplate26 from '../programme_subject_module/PsTemplate26';
+import PsTemplate32 from '../programme_subject_module/PsTemplate32';
+import PsTemplate66 from '../programme_subject_module/PsTemplate66';
 
 const shuffleOptions = [
     {
         value: 'LT_2_3',
-        name: '2+3'
+        name: '2+3',
+        itemCount: 5
     },
     {
         value: 'LT_2_6',
-        name: '2+6'
+        name: '2+6',
+        itemCount: 8
     },
     {
         value: 'LT_3_2',
-        name: '3+2'
-    },
-    {
-        value: 'LT_3_3',
-        name: '3+3'
+        name: '3+2',
+        itemCount: 5
     },
     {
         value: 'LT_6_6',
-        name: '6+6'
+        name: '6+6',
+        itemCount: 12
     },
     {
         value: 'LT_1_1_4',
-        name: '1+1+4'
-    },
-    {
-        value: 'LT_4',
-        name: '4'
-    },
-    {
-        value: 'LT_S6',
-        name: 's6'
-    },
-    {
-        value: 'LT_SN',
-        name: 'sn'
+        name: '1+1+4',
+        itemCount: 6
     }
 ];
 
@@ -237,18 +226,11 @@ export default {
     name: 'ShuffleModule',
     components: {
         SingleImageUploader,
-        PersonSubjectDialog,
-        EditProgramme,
-        Mixed26,
-        Mixed32,
-        Mixed33,
-        Mixed66,
-        Mixeds6,
-        Mixed114,
-        Mixed22,
-        Mixed4,
-        Mixed23,
-        Mixedsn
+        PsTemplate114,
+        PsTemplate26,
+        PsTemplate23,
+        PsTemplate32,
+        PsTemplate66
     },
     data() {
         return {
@@ -256,7 +238,10 @@ export default {
             index: 0,
             saveFlag: false, // 判断页面跳转之前如果没有点保存按钮的话，就删除新增的这个layoutItem
             allowResolutions: [],
-            shuffleOptions,
+            //  节目专题弹窗相关
+            dialogVisible: false,
+            programmeSubjectData: {},
+            shuffleOptions: [],
             inputRules: {
                 title: [
                     { required: true, message: '请输入混排模块名称' }
@@ -275,15 +260,27 @@ export default {
         }
         next();
     },
-    created() {
-        let {navbarId, index} = this.$route.params;
-        this.navbarId = navbarId;
-        this.index = parseInt(index);
+    async created() {
+        try {
+            let {navbarId, index} = this.$route.params;
+            this.navbarId = navbarId;
+            this.index = parseInt(index);
+            if (this.subjectId) {
+                let res = await this.$service.getSubjectById(this.subjectId);
+                if (res && res.code === 0) {
+                    this.programmeSubjectData = res.data;
+                }
+            }
+        } catch (err) {
+            console.log(err);
+        }
     },
     computed: {
         ...mapGetters({
             getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
             getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
+            getLayoutDataAttrByKey: 'pageLayout/getLayoutDataAttrByKey',
+            programmeSubject: 'pageLayout/programmeSubject',
             selectAll: 'pageLayout/selectAll'
         }),
         layoutData() {
@@ -301,6 +298,12 @@ export default {
                 let bgStr = `background-image: url(${uri})`;
                 return bgStr;
             };
+        },
+        subjectId() {
+            return this.getLayoutDataAttrByKey(this.navbarId, this.index, 'subjectId');
+        },
+        programmeList() {
+            return _.get(this.programmeSubjectData, 'subjectItemList') || [];
         }
     },
     methods: {
@@ -309,6 +312,9 @@ export default {
             saveLayoutToStore: 'pageLayout/saveLayoutToStore',
             updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey',
             setLayoutItemByIndex: 'pageLayout/setLayoutItemByIndex'
+        }),
+        ...mapActions({
+            getProgrammeSubjectList: 'pageLayout/getProgrammeSubjectList'
         }),
         inputHandler(value, key) {
             this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key, value});
@@ -345,6 +351,55 @@ export default {
             this.allowResolutions = [{width: 1160, height: 600}];
             this.$refs.selectProgrammeDialog.showDialog();
         },
+        //  节目专题的相关操作开始
+        async dialogOpenHandler() {
+            try {
+                if (this.subjectId) {
+                    let res = await this.$service.getSubjectById(this.subjectId);
+                    if (res && res.code === 0) {
+                        this.programmeSubjectData = res.data;
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        //  弹窗的操作
+        showDialog() {
+            this.dialogVisible = true;
+            this.getProgrammeSubjectList();
+        },
+        closeDialog() {
+            this.dialogVisible = false;
+        },
+        enterHandler() {
+            this.closeDialog();
+        },
+        searchHandler() {
+
+        },
+        tableRowClassName({row, rowIndex}) {
+            return row.id === this.subjectId ? 'checked' : '';
+        },
+        setProgrammeSubjectHandler(programmeSubjectData) {
+            this.updateLayoutDataByKey({
+                navbarId: this.navbarId,
+                index: this.index,
+                key: 'subjectId',
+                value: programmeSubjectData.id
+            });
+            this.programmeSubjectData = programmeSubjectData;
+            this.setTemplateOptions();
+        },
+        setTemplateOptions() {
+            let templateOptions = [];
+            if (this.subjectId) {
+                let itemCount = _.get(this.programmeSubjectData, 'itemCount');
+                templateOptions = shuffleOptions.filter((item) => parseInt(itemCount) >= parseInt(item.itemCount));
+            }
+            this.shuffleOptions = templateOptions;
+        },
+        //  节目专题的相关操作结束
         setLayoutItemMultiList(value) {
             switch (value) {
                 case 'LT_2_3':

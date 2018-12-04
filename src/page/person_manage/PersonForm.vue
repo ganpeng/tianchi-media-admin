@@ -92,7 +92,7 @@
                         :uri="person.avatarImage ? person.avatarImage.uri : ''"
                         :deleteImage="deleteAvatarImage"
                         :uploadSuccessHandler="uploadSuccessHandler"
-                        :allowResolutions="[{width: 200, height: 200}]"
+                        :allowResolutions="[{width: 260, height: 260}, {width: 260, height: 280}]"
                     ></single-image-uploader>
                 </el-form-item>
             </el-col>

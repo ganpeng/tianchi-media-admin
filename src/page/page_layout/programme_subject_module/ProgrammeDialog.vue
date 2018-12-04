@@ -17,92 +17,14 @@
                     <el-step title="选择节目"></el-step>
                     <el-step title="选择图片"></el-step>
                     <el-step title="设置角标"></el-step>
-                    <el-step title="设置展示方式"></el-step>
                 </el-steps>
                 <div class="seperator-line"></div>
                 <div v-show="active === 0" class="step-one">
-                    <div v-if="showExist">
-                        <p class="table-title">已选择的节目</p>
+                    <div class="step-one-wrapper">
                         <el-table
                             :row-class-name="tableRowClassName"
                             ref="multipleTable"
-                            header-row-class-name="common-table-header" class="my-table-style" :data="checkedProgrammeList" border>
-                            <el-table-column prop="code" align="center" width="120px" label="节目编号">
-                                <template slot-scope="scope">
-                                    {{scope.row.code | padEmpty}}
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="name" align="center" min-width="100px" label="节目名称">
-                                <template slot-scope="scope">
-                                    {{scope.row.name | padEmpty}}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="节目图片" width="100px" align="center" >
-                                <template slot-scope="scope">
-                                    <img style="width:70px;height:auto;" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="featureVideoCount" width="100px" align="center" label="正片数量">
-                                <template slot-scope="scope">
-                                    {{scope.row.featureVideoCount | padEmpty}}
-                                </template>
-                            </el-table-column>
-                            <el-table-column align="center" width="100px" label="分类">
-                                <template slot-scope="scope">
-                                    <span class="ellipsis four">
-                                        {{categoryListString(scope.row.categoryList || []) | padEmpty}}
-                                    </span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column align="center" min-width="100px" label="类型">
-                                <template slot-scope="scope">
-                                    <span class="ellipsis four">
-                                        {{typeList(scope.row.id) | padEmpty}}
-                                    </span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column align="center" min-width="100px" label="演员">
-                                <template slot-scope="scope">
-                                    <span class="ellipsis four">
-                                        {{getChiefActor(scope.row.id) | padEmpty}}
-                                    </span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
-                                <template slot-scope="scope">
-                                    <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
-                                    <i v-else class="off-the-shelf">已下架</i>
-                                </template>
-                            </el-table-column>
-                            <el-table-column align="center" min-width="100px" label="更新时间">
-                                <template slot-scope="scope">
-                                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <div class="btn-wrapper text-center">
-                            <el-button @click="changeProgrammeHandler" class="btn-style-two">更换节目</el-button>
-                        </div>
-                    </div>
-                    <div v-else class="step-one-wrapper">
-                        <el-form class="my-el-form" :inline="true" @submit.native.prevent>
-                            <el-form-item>
-                                <el-input
-                                    placeholder="搜索你想要的信息"
-                                    clearable
-                                    class="border-input"
-                                    v-model="keyword"
-                                >
-                                </el-input>
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">搜索</el-button>
-                            </el-form-item>
-                        </el-form>
-                        <el-table
-                            :row-class-name="tableRowClassName"
-                            ref="multipleTable"
-                            header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
+                            header-row-class-name="common-table-header" class="my-table-style" :data="programmeList" border>
                             <el-table-column  align="center" label="选择">
                                 <template slot-scope="scope">
                                     <el-radio :value="getSquareProgrammeId" :label="scope.row.id" @input="setProgrammeSubjectHandler(scope.row)">&nbsp;</el-radio>
@@ -118,30 +40,6 @@
                                     {{scope.row.name | padEmpty}}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="节目图片" width="100px" align="center" >
-                                <template slot-scope="scope">
-                                    <img style="width:70px;height:auto;" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="featureVideoCount" width="100px" align="center" label="正片数量">
-                                <template slot-scope="scope">
-                                    {{scope.row.featureVideoCount | padEmpty}}
-                                </template>
-                            </el-table-column>
-                            <el-table-column align="center" width="100px" label="分类">
-                                <template slot-scope="scope">
-                                    <span class="ellipsis four">
-                                        {{categoryListString(scope.row.categoryList) | padEmpty}}
-                                    </span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column align="center" min-width="100px" label="类型">
-                                <template slot-scope="scope">
-                                    <span class="ellipsis four">
-                                        {{typeList(scope.row.id) | padEmpty}}
-                                    </span>
-                                </template>
-                            </el-table-column>
                             <el-table-column align="center" min-width="100px" label="演员">
                                 <template slot-scope="scope">
                                     <span class="ellipsis four">
@@ -149,36 +47,15 @@
                                     </span>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
-                                <template slot-scope="scope">
-                                    <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
-                                    <i v-else class="off-the-shelf">已下架</i>
-                                </template>
-                            </el-table-column>
-                            <el-table-column align="center" min-width="100px" label="更新时间">
-                                <template slot-scope="scope">
-                                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
-                                </template>
-                            </el-table-column>
                         </el-table>
-                        <el-pagination
-                            @size-change="handlePaginationChange($event, 'pageSize')"
-                            @current-change="handlePaginationChange($event, 'pageNum')"
-                            :current-page="programmePagination.pageNum"
-                            :page-sizes="[5, 10, 20, 30, 50]"
-                            :page-size="programmePagination.pageSize"
-                            layout="total, sizes, prev, pager, next, jumper"
-                            :total="programmePagination.total">
-                        </el-pagination>
                     </div>
-
                 </div>
                 <div v-show="active === 1" class="step-two">
                     <el-form class="my-el-form" status-icon label-width="120px" @submit.native.prevent>
                         <el-col :span="24">
                             <el-form-item label="非焦点图" required>
                                 <single-image-uploader
-                                    id="programmeImageUploaderOne"
+                                    id="programmeSubjectImageUploaderOne"
                                     :uri="getImageByKey('coverImage') || ''"
                                     :uploadSuccessHandler="uploadProgrammeCoverImageSuccessHandler"
                                     :allowResolutions="allowResolutions"
@@ -186,7 +63,7 @@
                             </el-form-item>
                             <el-form-item label="焦点图">
                                 <single-image-uploader
-                                    id="programmeImageUploaderTwo"
+                                    id="programmeSubjectImageUploaderTwo"
                                     :uri="getImageByKey('coverImageBackground') || ''"
                                     :uploadSuccessHandler="uploadProgrammeBgImageSuccessHandler"
                                     :allowResolutions="allowResolutions"
@@ -236,34 +113,22 @@
                         </el-col>
                     </el-form>
                 </div>
-                <div v-show="active === 3" class="step-three">
-                    <el-form status-icon label-width="120px" class="my-el-form" @submit.native.prevent>
-                        <el-col :span="12">
-                            <el-form-item label="节目展示方式">
-                                    <el-radio @input="setSquareProgrammeLayoutItemType('PROGRAMME')" :value="getSquareProgrammeLayoutItemType" label="PROGRAMME">进入节目详情页</el-radio>
-                                    <el-radio @input="setSquareProgrammeLayoutItemType('PROGRAMME_LIST')" :value="getSquareProgrammeLayoutItemType" label="PROGRAMME_LIST">进入节目列表页</el-radio>
-                            </el-form-item>
-                        </el-col>
-                    </el-form>
-                </div>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
                     <el-button @click="closeDialog">取 消</el-button>
                     <el-button v-show="active > 0" class="btn-style-three" @click="prevBtnClickHandler">上一步</el-button>
-                    <el-button v-show="active < 3" class="btn-style-three" @click="nextBtnClickHandler">下一步</el-button>
-                    <el-button v-show="active === 3" type="primary" @click="enterHandler">确 定</el-button>
+                    <el-button v-show="active < 2" class="btn-style-three" @click="nextBtnClickHandler">下一步</el-button>
+                    <el-button v-show="active === 2" type="primary" @click="enterHandler">确 定</el-button>
                 </div>
             </div>
         </el-dialog>
-        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
     </div>
 </template>
 <script>
 import {mapGetters, mapActions, mapMutations} from 'vuex';
 import _ from 'lodash';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
-import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 export default {
-    name: 'EditProgramme',
+    name: 'ProgrammeDialog',
     props: {
         squareIndex: {
             type: Number,
@@ -272,10 +137,13 @@ export default {
         allowResolutions: {
             type: Array,
             default: () => []
+        },
+        programmeList: {
+            type: Array,
+            default: () => []
         }
     },
     components: {
-        PreviewSingleImage,
         SingleImageUploader
     },
     data() {
@@ -284,16 +152,8 @@ export default {
             index: 0,
             active: 0,
             dialogVisible: false,
-            showExist: false,
-            keyword: '',
             programme: {},
-            layoutItem: {},
-            customMarkOptions: [],
-            previewImage: {
-                title: '',
-                display: false,
-                uri: ''
-            }
+            customMarkOptions: []
         };
     },
     created() {
@@ -303,10 +163,6 @@ export default {
     },
     computed: {
         ...mapGetters({
-            list: 'programme/programmeList',
-            programmePagination: 'programme/programmePagination',
-            categoryListString: 'programme/categoryListString',
-            typeList: 'programme/typeList',
             getChiefActor: 'programme/getChiefActor',
             layout: 'pageLayout/layout',
             getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
@@ -354,84 +210,39 @@ export default {
             }
         },
         getSquareProgrammeId() {
-            return _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.id`);
-        },
-        getSquareProgrammeLayoutItemType() {
-            return _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.layoutItemType`);
-        },
-        checkedProgrammeList() {
-            if (this.getSquareProgrammeId && !_.isEmpty(this.programme)) {
-                return [this.programme];
-            } else {
-                return [];
-            }
+            let id = _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.id`);
+            return id;
         }
     },
     methods: {
         ...mapMutations({
-            resetProgrammePagination: 'programme/resetProgrammePagination',
             updateProgrammePagination: 'programme/updateProgrammePagination',
             updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
             updateLayoutItemCornerMarkByIndex: 'pageLayout/updateLayoutItemCornerMarkByIndex'
         }),
         ...mapActions({
-            getProgrammeList: 'programme/getProgrammeList',
-            getProgrammeListByNews: 'programme/getProgrammeListByNews',
-            getProgrammeCategory: 'programme/getProgrammeCategory',
             getCustomMarkList: 'pageLayout/getCustomMarkList'
         }),
         //  弹窗的操作
-        async showDialog(category) {
-            try {
-                this.dialogVisible = true;
-                await this.getProgrammeCategory();
-                if (category) {
-                    await this.getProgrammeListByNews();
-                } else {
-                    await this.getProgrammeList();
-                }
-            } catch (err) {
-                console.log(err);
-            }
+        showDialog(category) {
+            this.dialogVisible = true;
         },
         closeDialog() {
-            this.resetProgrammePagination();
             this.dialogVisible = false;
             this.active = 0;
-            this.keyword = '';
             this.programme = {};
-            this.previewImage = {
-                title: '',
-                display: false,
-                uri: ''
-            };
         },
         async dialogOpenHandler() {
             try {
-                if (this.getSquareProgrammeId) {
-                    await this.getProgrammeCategory();
-                    let res = await this.$service.getProgrammeInfo({id: this.getSquareProgrammeId});
-                    if (res && res.code === 0) {
-                        this.programme = res.data;
-                        this.showExist = true;
-                    }
-                    let markRes = await this.getCustomMarkList();
-                    if (markRes && markRes.code === 0) {
-                        this.customMarkOptions = markRes.data;
-                    }
+                let res = await this.getCustomMarkList();
+                if (res && res.code === 0) {
+                    this.customMarkOptions = res.data;
                 }
             } catch (err) {
                 console.log(err);
             }
         },
-        changeProgrammeHandler() {
-            this.showExist = false;
-        },
         // 弹窗的操作结束
-        handlePaginationChange(value, key) {
-            this.updateProgrammePagination({key, value});
-            this.getProgrammeList();
-        },
         //  上下步的处理方法
         prevBtnClickHandler() {
             if (this.active > 0) {
@@ -459,10 +270,6 @@ export default {
                 }
             }
         },
-        //  节目列表搜索
-        searchInputHandler() {
-
-        },
         setProgrammeSubjectHandler(programme) {
             let {id, name, desc, programmeTemplate} = programme;
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
@@ -475,17 +282,6 @@ export default {
         },
         tableRowClassName({row, rowIndex}) {
             return row.id === this.getSquareProgrammeId ? 'checked' : '';
-        },
-        searchEnterHandler() {
-            if (this.keyword) {
-                this.getProgrammeList(this.keyword);
-            }
-        },
-        //  查看图片
-        displayImage(image) {
-            this.previewImage.title = image.name;
-            this.previewImage.display = true;
-            this.previewImage.uri = image.uri;
         },
         //  图片上传成功之后的毁掉
         uploadProgrammeCoverImageSuccessHandler(image) {
@@ -516,7 +312,7 @@ export default {
                         index: this.index,
                         squareIndex: this.squareIndex,
                         key: 'leftTop',
-                        value: value ? {caption: platformList[0]} : {}
+                        value: value ? {caption: _.get(platformList, '0')} : {}
                     });
                     break;
                 case 'leftBottom':
@@ -551,19 +347,11 @@ export default {
                 value: _.isEmpty(mark) ? {} : mark
             });
         },
-        //  节目展示的相关操作
-        setSquareProgrammeLayoutItemType(layoutItemType) {
-            let {navbarId, index} = this.$route.params;
-            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: layoutItemType });
-        },
         //  最后一步的确认处理函数
         enterHandler() {
-            if (this.getSquareProgrammeLayoutItemType) {
-                this.closeDialog();
-            } else {
-                this.$message.error('请选择节目展示方式');
-                return false;
-            }
+            let {navbarId, index} = this.$route.params;
+            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'PROGRAMME' });
+            this.closeDialog();
         }
     }
 };

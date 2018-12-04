@@ -127,7 +127,12 @@ const getters = {
     },
     getLayoutTemplateByNavbarId(state) {
         return (id) => {
-            return state.layout[id].layoutTemplate;
+            return _.get(state.layout, `${id}.layoutTemplate`);
+        };
+    },
+    getNavbarSignCodeById(state) {
+        return (id) => {
+            return _.get(state.layout, `${id}.signCode`);
         };
     },
     getLayoutDataByNavbarId(state) {
@@ -153,6 +158,11 @@ const getters = {
             return !_.isEmpty(obj) ? obj : {};
         };
     },
+    getLayoutDataAttrByKey(state) {
+        return (navbarId, index, key) => {
+            return _.get(state.layout, `${navbarId}.data.${index}.${key}`);
+        };
+    },
     getLayoutRenderTypeByNavbarId(state) {
         return (id) => {
             return state.layout[id].renderType;
@@ -168,7 +178,7 @@ const getters = {
     selectAll(state) {
         return (navbarId, index) => {
             let layoutTemplate = _.get(state.layout, `${navbarId}.data.${index}.layoutTemplate`);
-            let layoutItemMultiList = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList`);
+            let layoutItemMultiList = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList`).filter((item) => item.layoutItemType !== 'ALL');
             let allFlag = false;
             if (layoutTemplate === 'LT_SN') {
                 allFlag = !(layoutItemMultiList.length > 0 && _.every(layoutItemMultiList, (item) => _.get(item, 'coverImage.uri')));

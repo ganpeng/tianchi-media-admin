@@ -833,12 +833,27 @@ const mutations = {
     //  视频中figureList的增删改查结束
     updateProgrammeMark(state, payload) {
         let {key, checked} = payload;
+        let markType = '';
+        console.log(key);
+        switch (key) {
+            case 'leftTop':
+                markType = 'PLATFORM';
+                break;
+            case 'leftBottom':
+                markType = 'EPISODES_NUMBER';
+                break;
+            case 'rightBottom':
+                markType = 'SCORE';
+                break;
+            default:
+                throw new Error('角标的key不存在');
+        }
+        console.log(markType);
         if (checked) {
             state.programme.cornerMark[key] = {
                 caption: '',
-                id: '',
                 imageUri: '',
-                markType: ''
+                markType
             };
         } else {
             delete state.programme.cornerMark[key];

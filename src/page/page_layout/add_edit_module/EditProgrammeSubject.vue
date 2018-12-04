@@ -275,7 +275,6 @@ export default {
             };
         },
         async dialogOpenHandler() {
-            // let {navbarId} = this.$route.params;
             try {
                 if (this.getSquareProgrammeSubjectId) {
                     let res = await this.$service.getSubjectById(this.getSquareProgrammeSubjectId);
