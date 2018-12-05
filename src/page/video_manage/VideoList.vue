@@ -278,13 +278,13 @@
                     uppie(document.querySelector('#upload-input-dir'), this.uploadChangeHandler.bind(this));
                 });
                 window.addEventListener('keyup', this.keyupHandler);
-                this.timer = setInterval(() => {
-                    this.getVideoList().then(() => {
-                        if (this.$refs.videoTable) {
-                            this.$refs.videoTable.checkedVideoList();
-                        }
-                    });
-                }, 1000 * 10);
+                // this.timer = setInterval(() => {
+                //     this.getVideoList().then(() => {
+                //         if (this.$refs.videoTable) {
+                //             this.$refs.videoTable.checkedVideoList();
+                //         }
+                //     });
+                // }, 1000 * 10);
                 // 初始化视频来源和共享站点的列表
                 this.$service.getAllSiteList().then(response => {
                     if (response && response.code === 0) {

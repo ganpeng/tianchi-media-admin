@@ -10,7 +10,7 @@ import _ from 'lodash';
  * 子站批量上传视频到主站
  */
 export const batchPushVideoToMaster = ({videoIdList}) => {
-    return service.put('/v1/storage/master/video/push', {videoIdList}, {
+    return service.put('/v1/storage/master/video/push', videoIdList, {
         baseURL: '/storage'
     });
 };
@@ -19,7 +19,7 @@ export const batchPushVideoToMaster = ({videoIdList}) => {
  * 子站从主站批量拉取视频
  */
 export const batchPullVideoFromMaster = ({videoIdList}) => {
-    return service.put('/v1/storage/master/video/pull', {videoIdList}, {
+    return service.put('/v1/storage/master/video/pull', videoIdList, {
         baseURL: '/storage'
     });
 };

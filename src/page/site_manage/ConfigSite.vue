@@ -21,9 +21,9 @@
                 label="站点token配置"
                 label-width="120px"
                 required
-                prop="token">
+                prop="siteToken">
                 <el-input
-                    v-model="siteInfo.token"
+                    v-model="siteInfo.siteToken"
                     placeholder="请填写子站token进行配置"
                     @blur="getSiteNameByToken">
                 </el-input>
@@ -40,7 +40,7 @@
     export default {
         name: 'ConfigSite',
         data() {
-            let checkToken = (rule, value, callback) => {
+            let checkSiteToken = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('站点token不能为空'));
                 } else {
@@ -50,11 +50,11 @@
             return {
                 siteInfo: {
                     siteName: '',
-                    token: ''
+                    siteToken: ''
                 },
                 infoRules: {
                     token: [
-                        {validator: checkToken, trigger: 'blur'}
+                        {validator: checkSiteToken, trigger: 'blur'}
                     ]
                 }
             };
@@ -65,7 +65,7 @@
         methods: {
             init() {
                 this.siteInfo.siteName = (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) ? this.$wsCache.localStorage.get('siteInfo').siteName : '站点未配置,请输入token进行配置';
-                this.siteInfo.token = (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) ? this.$wsCache.localStorage.get('siteInfo').token : '';
+                this.siteInfo.siteToken = (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) ? this.$wsCache.localStorage.get('siteInfo').siteToken : '';
             },
             getSiteNameByToken() {
 
@@ -73,12 +73,12 @@
             configSite() {
                 this.$refs['siteInfo'].validate((valid) => {
                     if (valid) {
-                        this.$service.configSiteToken({siteToken: this.siteInfo.token}).then(response => {
+                        this.$service.configSiteToken({siteToken: this.siteInfo.siteToken}).then(response => {
                             if (response && response.code === 0) {
                                 this.$message.success('成功配置站点');
                                 // 保存到localStorage
                                 this.$wsCache.localStorage.set('siteInfo', response.data);
-                                window.reload();
+                                window.location.reload();
                             }
                         });
                     } else {

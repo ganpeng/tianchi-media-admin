@@ -10,7 +10,14 @@
             <div @keyup.enter="getSiteList" class="text-left">
                 <el-form :inline="true" class="filter-form">
                     <el-form-item>
-                        <el-input v-model="listQueryParams.keyword" placeholder="请填写站点名称、token等"></el-input>
+                        <el-input
+                            v-model="listQueryParams.keyword"
+                            placeholder="请填写站点名称、token等"
+                            clearable>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-input v-show="false"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" plain icon="el-icon-search" @click="getSiteList">搜索</el-button>
@@ -22,6 +29,14 @@
                     border
                     row-class-name=subject-row
                     style="width: 100%">
+                    <el-table-column
+                        align="center"
+                        width="60px"
+                        label="序号">
+                        <template slot-scope="scope">
+                            {{scope.$index + 1}}
+                        </template>
+                    </el-table-column>
                     <el-table-column
                         align="center"
                         width="200px"

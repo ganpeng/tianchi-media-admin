@@ -108,6 +108,13 @@
                 label="上传状态">
                 <template slot-scope="scope">
                     <span>{{scope.row.uploadStatus | getUploadStatus}}</span>
+                    <label v-if="scope.row.uploadStatus === 'ON_GOING'">{{scope.row | getPushPercent}}</label>
+                    <el-button
+                        v-if="scope.row.uploadStatus === 'FAILED'"
+                        type="text"
+                        @click="pushVideoToMainSite(scope.row)">
+                        重新上传
+                    </el-button>
                 </template>
             </el-table-column>
             <!--子站拉取状态（子站）-->
@@ -117,6 +124,13 @@
                 label="拉取状态">
                 <template slot-scope="scope">
                     <span>{{scope.row.downloadStatus | getDownloadStatus}}</span>
+                    <label v-if="scope.row.downloadStatus === 'ON_GOING'">{{scope.row | getDownloadPercent}}</label>
+                    <el-button
+                        v-if="scope.row.downloadStatus === 'FAILED'"
+                        type="text"
+                        @click="pullVideoFromMainSite(scope.row)">
+                        重新拉取
+                    </el-button>
                 </template>
             </el-table-column>
             <!--视频来源(主站、子站)-->
@@ -149,7 +163,7 @@
                 <template slot-scope="scope">
                     <!--上传主站（子站）-->
                     <el-button
-                        v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable && !scope.row.downloadStatus"
+                        v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
                         class="text-primary"
                         type="text"
                         @click="pushVideoToMainSite(scope.row)"
@@ -158,7 +172,7 @@
                     </el-button>
                     <!--拉取主站视频（子站）-->
                     <el-button
-                        v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable && scope.row.downloadStatus"
+                        v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
                         class="text-primary"
                         type="text"
                         @click="pullVideoFromMainSite(scope.row)"
@@ -285,6 +299,14 @@
                     default:
                         return '---';
                 }
+            },
+            // 计算子站拉取主站视频的进度百分比
+            getDownloadPercent(video) {
+                return (video.downloadedSplitCount / video.totalSplitCount).toFixed(2) * 100 + '%';
+            },
+            // 计算子站上传主站视频的进度百分比
+            getPushPercent(video) {
+                return (video.uploadedSplitCount / video.totalSplitCount).toFixed(2) * 100 + '%';
             }
         },
         data() {
@@ -374,12 +396,18 @@
             setSingleVideoShareSite(item) {
                 this.shareSiteSettingVisible = true;
                 this.currentVideo = item;
+                this.videoShareSiteIdList = [];
+                if (this.currentVideo.shareSiteList) {
+                    this.currentVideo.shareSiteList.map(site => {
+                        this.videoShareSiteIdList.push(site.id);
+                    });
+                }
             },
             // 确定设置单个视频分享站点(只存在于主站)
             confirmVideoShareSite() {
                 this.$service.setSingleVideoToBatchSite({
-                    id: this.currentVideo.id,
-                    idList: this.videoShareSiteIdList
+                    videoId: this.currentVideo.id,
+                    siteIdList: this.videoShareSiteIdList
                 }).then(response => {
                     if (response && response.code === 0) {
                         this.$message.success('成功设置视频的共享站点');

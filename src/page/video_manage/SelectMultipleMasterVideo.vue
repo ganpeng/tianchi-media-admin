@@ -276,7 +276,7 @@
                 this.getVideoList();
             },
             handleCurrentChange(pageNum) {
-                this.listQueryParams.pageNum = pageNum - 1;
+                this.listQueryParams.pageNum = pageNum;
                 this.getVideoList();
             },
             closeDisplayVideoDialog(status) {

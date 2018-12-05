@@ -87,8 +87,8 @@ export const getAllVideoSourceList = () => {
 /**
  * 单个视频进行多个共享站点设置
  */
-export const setSingleVideoToBatchSite = ({id, idList}) => {
-    return service.patch(util.format('/v1/storage/video/share-site?id={0}', id), idList, {
+export const setSingleVideoToBatchSite = ({videoId, siteIdList}) => {
+    return service.patch(util.format('/v1/storage/video/share-site?videoId={0}', videoId), siteIdList, {
         baseURL: '/storage'
     });
 };
