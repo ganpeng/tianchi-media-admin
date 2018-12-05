@@ -90,13 +90,13 @@ const defaultPagination = {
 };
 
 const defaultPersonSubject = {
-    name: '', //  搜索的关键字
+    keyword: '', //  搜索的关键字
     list: [],
     pagination: _.cloneDeep(defaultPagination)
 };
 
 const defaultProgrammeSubject = {
-    name: '', //  搜索的关键字
+    keyword: '', //  搜索的关键字
     list: [],
     pagination: _.cloneDeep(defaultPagination)
 };
@@ -410,8 +410,8 @@ const actions = {
     //  获取人物专题列表
     async getPersonSubjectList({commit, state}) {
         try {
-            let {name, pagination: {pageSize, pageNum}} = state.personSubject;
-            let params = Object.assign({}, { name, pageSize, pageNum: pageNum - 1 });
+            let {keyword, pagination: {pageSize, pageNum}} = state.personSubject;
+            let params = Object.assign({}, { keyword, pageSize, pageNum: pageNum - 1 });
             let res = await service.getPersonSubjectList(params);
             if (res && res.code === 0) {
                 let {pageNum, pageSize, total, list} = res.data;
@@ -425,8 +425,8 @@ const actions = {
     },
     async getProgrammeSubjectList({commit, state}) {
         try {
-            let {name, pagination: {pageSize, pageNum}} = state.programmeSubject;
-            let params = Object.assign({}, { name, pageSize, pageNum: pageNum - 1 });
+            let {keyword, pagination: {pageSize, pageNum}} = state.programmeSubject;
+            let params = Object.assign({}, { keyword, pageSize, pageNum: pageNum - 1 });
             let res = await service.getProgrammeSubjectList(params);
             if (res && res.code === 0) {
                 let {pageNum, pageSize, total, list} = res.data;

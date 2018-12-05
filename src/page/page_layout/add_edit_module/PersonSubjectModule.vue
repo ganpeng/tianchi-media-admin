@@ -11,11 +11,11 @@
                     @submit.native.prevent
                     class="form-block">
                 <el-col :span="8">
-                    <el-form-item label="人物模块名称" prop="title">
+                    <el-form-item label="人物专题名称" prop="title">
                         <el-input
                             :value="layoutData.title"
                             @input="inputHandler($event, 'title')"
-                            placeholder="请输入人物姓名"
+                            placeholder="请输入人物专题名称"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="名称icon">
@@ -162,17 +162,17 @@ export default {
     background-position: center center;
     border-radius: 8px;
 }
-.searchForm {
-    margin-top: 20px;
-}
-.step-two {
-    margin-top: 20px;
-}
+
 .person-subject-square-container {
     display: flex;
     .field {
         flex: 1;
+        cursor: pointer;
+        border: 1px solid #2A3040;
         @include paddingBg(34.0909%);
+        &:hover {
+            border-color: $mainColor;
+        }
     }
     .field + .field {
         margin-left: 2%;

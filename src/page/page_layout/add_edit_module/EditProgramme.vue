@@ -415,10 +415,10 @@ export default {
                         this.programme = res.data;
                         this.showExist = true;
                     }
-                    let markRes = await this.getCustomMarkList();
-                    if (markRes && markRes.code === 0) {
-                        this.customMarkOptions = markRes.data;
-                    }
+                }
+                let markRes = await this.getCustomMarkList();
+                if (markRes && markRes.code === 0) {
+                    this.customMarkOptions = markRes.data;
                 }
             } catch (err) {
                 console.log(err);

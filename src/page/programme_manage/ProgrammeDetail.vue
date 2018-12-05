@@ -738,8 +738,6 @@
             leftTopChecked() {
                 let leftTop = _.get(this.programme, 'cornerMark.leftTop.caption');
                 let isChecked = _.isEmpty(leftTop);
-                console.log(leftTop);
-                console.log(isChecked);
                 return isChecked;
             },
             rightTop() {

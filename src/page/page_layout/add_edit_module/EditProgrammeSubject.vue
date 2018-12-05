@@ -62,8 +62,8 @@
                                     placeholder="搜索你想要的信息"
                                     clearable
                                     class="border-input"
-                                    :value="''"
-                                    @input="searchInputHandler($event, 'name')"
+                                    :value="programmeSubject.keyword"
+                                    @input="searchInputHandler($event, 'keyword')"
                                 >
                                 </el-input>
                             </el-form-item>
@@ -140,14 +140,23 @@
                 </div>
                 <div v-show="active === 2" class="step-three">
                     <el-form status-icon label-width="120px" class="my-el-form" @submit.native.prevent>
-                        <el-col :span="12">
-                            <el-form-item label="节目角标">
+                        <el-col :span="14">
+                            <el-form-item label="右上角角标">
                                 <div class="mark-container">
                                     <div class="mark-item">
-                                        <el-checkbox @change="markChangeHandler($event, 'rightTop')" :disabled="rightTopDisabled">
-                                            右上角：
-                                        </el-checkbox>
-                                        <!--  此处需要增加一个选择框 -->
+                                        <el-select
+                                            @input="customMarkSelectHandler"
+                                            :value="rightTop"
+                                            value-key="id"
+                                            clearable
+                                            placeholder="请选择">
+                                            <el-option
+                                                v-for="item in customMarkOptions"
+                                                :key="item.id"
+                                                :label="item.caption"
+                                                :value="item">
+                                            </el-option>
+                                        </el-select>
                                     </div>
                                 </div>
                             </el-form-item>
@@ -162,14 +171,12 @@
                 </div>
             </div>
         </el-dialog>
-        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
     </div>
 </template>
 <script>
 import {mapGetters, mapActions, mapMutations} from 'vuex';
 import _ from 'lodash';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
-import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 export default {
     name: 'EditProgrammeSubject',
     props: {
@@ -183,54 +190,41 @@ export default {
         }
     },
     components: {
-        PreviewSingleImage,
         SingleImageUploader
     },
     data() {
         return {
+            navbarId: '',
+            index: '',
             showExist: false,
             active: 0,
             dialogVisible: false,
             programmeSubjectData: {},
-            layoutItem: {},
-            previewImage: {
-                title: '',
-                display: false,
-                uri: ''
-            }
+            customMarkOptions: []
         };
+    },
+    created() {
+        let {navbarId, index} = this.$route.params;
+        this.navbarId = navbarId;
+        this.index = parseInt(index);
     },
     computed: {
         ...mapGetters({
             programmeSubject: 'pageLayout/programmeSubject',
-            layout: 'pageLayout/layout'
+            layout: 'pageLayout/layout',
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
         }),
-        checkIsChecked() {
-            return (row) => {
-                return true;
-            };
-        },
-        isDisabled() {
-            return (row) => {
-                return false;
-            };
+        rightTop() {
+            let {rightTop} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
+            return _.isEmpty(rightTop) ? {} : rightTop;
         },
         getImageByKey() {
             return (key) => {
-                let {navbarId, index} = this.$route.params;
-                return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.${key}.uri`);
+                return _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.${key}.uri`);
             };
         },
-        rightTopDisabled() {
-            return false;
-        },
         getSquareProgrammeSubjectId() {
-            let {navbarId, index} = this.$route.params;
-            return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.id`);
-        },
-        getSquareProgrammeLayoutItemType() {
-            let {navbarId, index} = this.$route.params;
-            return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.layoutItemType`);
+            return _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.id`);
         },
         checkedProgrammeSubjectList() {
             if (this.getSquareProgrammeSubjectId && !_.isEmpty(this.programmeSubjectData)) {
@@ -242,22 +236,16 @@ export default {
     },
     methods: {
         ...mapMutations({
-            updateProgrammePagination: 'programme/updateProgrammePagination',
             updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
             resetProgrammeSubject: 'pageLayout/resetProgrammeSubject',
-            resetProgrammeSubjectModule: 'pageLayout/resetProgrammeSubjectModule',
             updateProgrammeSubject: 'pageLayout/updateProgrammeSubject',
-            updateProgrammeSubjectModule: 'pageLayout/updateProgrammeSubjectModule',
             updateProgrammeSubjectPagination: 'pageLayout/updateProgrammeSubjectPagination',
-            addImageToProgrammeSubjectListById: 'pageLayout/addImageToProgrammeSubjectListById',
-            //  人物模块中人物的添加删除
-            updateLayoutItemMultiListByIndex: 'pageLayout/updateLayoutItemMultiListByIndex'
-            //  人物模块中人物的添加删除结束
+            updateLayoutItemCornerMarkByIndex: 'pageLayout/updateLayoutItemCornerMarkByIndex'
 
         }),
         ...mapActions({
             getProgrammeSubjectList: 'pageLayout/getProgrammeSubjectList',
-            updateProgrammeSubjectById: 'pageLayout/updateProgrammeSubjectById'
+            getCustomMarkList: 'pageLayout/getCustomMarkList'
         }),
         //  弹窗的操作
         showDialog() {
@@ -265,14 +253,11 @@ export default {
             this.getProgrammeSubjectList();
         },
         closeDialog() {
+            this.resetProgrammeSubject();
             this.dialogVisible = false;
             this.active = 0;
+            this.showExist = false;
             this.programmeSubjectData = {};
-            this.previewImage = {
-                title: '',
-                display: false,
-                uri: ''
-            };
         },
         async dialogOpenHandler() {
             try {
@@ -282,6 +267,10 @@ export default {
                         this.programmeSubjectData = res.data;
                         this.showExist = true;
                     }
+                }
+                let markRes = await this.getCustomMarkList();
+                if (markRes && markRes.code === 0) {
+                    this.customMarkOptions = markRes.data;
                 }
             } catch (err) {
                 console.log(err);
@@ -323,53 +312,53 @@ export default {
             }
         },
         //  节目列表搜索
-        searchInputHandler() {},
+        searchInputHandler(value, key) {
+            this.updateProgrammeSubject({key, value});
+        },
+        searchEnterHandler() {
+            this.getProgrammeSubjectList();
+        },
         setProgrammeSubjectHandler(programmeSubjectData) {
-            let {navbarId, index} = this.$route.params;
             let {id, name} = programmeSubjectData;
-            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
-            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
+            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
+            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
             this.programmeSubjectData = programmeSubjectData;
         },
         tableRowClassName({row, rowIndex}) {
             return row.id === this.getSquareProgrammeSubjectId ? 'checked' : '';
         },
-        searchEnterHandler() {},
-        //  查看图片
-        displayImage(image) {
-            this.previewImage.title = image.name;
-            this.previewImage.display = true;
-            this.previewImage.uri = image.uri;
-        },
         //  图片上传成功之后的毁掉
         uploadProgrammeCoverImageSuccessHandler(image) {
-            let {navbarId, index} = this.$route.params;
             this.updateLayoutItemByIndex({
-                navbarId,
-                index,
+                navbarId: this.navbarId,
+                index: this.index,
                 squareIndex: this.squareIndex,
                 key: 'coverImage',
                 value: image
             });
         },
         uploadProgrammeBgImageSuccessHandler(image) {
-            let {navbarId, index} = this.$route.params;
             this.updateLayoutItemByIndex({
-                navbarId,
-                index,
+                navbarId: this.navbarId,
+                index: this.index,
                 squareIndex: this.squareIndex,
                 key: 'coverImageBackground',
                 value: image
             });
         },
         //  角标的相关操作
-        markChangeHandler() {
-            // this.updateProgrammeMark({checked, key});
+        customMarkSelectHandler(mark) {
+            this.updateLayoutItemCornerMarkByIndex({
+                navbarId: this.navbarId,
+                index: this.index,
+                squareIndex: this.squareIndex,
+                key: 'rightTop',
+                value: _.isEmpty(mark) ? {} : mark
+            });
         },
         //  最后一步的确认处理函数
         enterHandler() {
-            let {navbarId, index} = this.$route.params;
-            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'PROGRAMME_SUBJECT' });
+            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'PROGRAMME_SUBJECT' });
             this.closeDialog();
         }
     }
@@ -379,20 +368,5 @@ export default {
 .my-el-form {
     overflow: hidden;
     margin-top: 20px;
-    .mark-container {
-        display: flex;
-        flex-wrap: wrap;
-        .mark-item {
-            font-size: 16px;
-            color: #A8ABB3;
-            width: 45%;
-            .el-checkbox {
-                padding: 0;
-            }
-        }
-    }
-    .el-checkbox__input.is-checked+.el-checkbox__label {
-        color: #fff!important;
-    }
 }
 </style>

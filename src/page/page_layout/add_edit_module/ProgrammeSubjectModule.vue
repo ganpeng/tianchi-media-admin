@@ -29,6 +29,38 @@
                 <el-col :span="24">
                     <el-form-item label="选择专题" prop="layoutTemplate">
                         <el-button class="btn-style-two" @click="showDialog">节目专题</el-button>
+                        <div class="selected-table">
+                            <p class="table-title">已选择的节目专题</p>
+                            <el-table
+                                :row-class-name="tableRowClassName"
+                                :header-row-class-name='"common-table-header"' class="my-table-style" :data="checkedProgrammeSubjectList" border>
+                                <el-table-column prop="id" align="center" width="120px" label="编号">
+                                    <template slot-scope="scope">
+                                        {{scope.row.id | padEmpty}}
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="name" align="center" label="专题名称">
+                                    <template slot-scope="scope">
+                                            {{scope.row.name | padEmpty}}
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="name" align="center" label="内容数量">
+                                    <template slot-scope="scope">
+                                            {{scope.row.itemCount | padEmpty}}
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="name" align="center" label="内容类型">
+                                    <template slot-scope="scope">
+                                            {{scope.row.programmeCategoryList.map((item) => item.name).join(', ') | padEmpty}}
+                                    </template>
+                                </el-table-column>
+                                <el-table-column align="center" label="更新时间">
+                                    <template slot-scope="scope">
+                                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </div>
                     </el-form-item>
                 </el-col>
                 <el-col :span="24">
@@ -106,13 +138,13 @@
                                     placeholder="搜索你想要的信息"
                                     clearable
                                     class="border-input"
-                                    :value="''"
-                                    @input="searchInputHandler($event, 'name')"
+                                    :value="programmeSubject.keyword"
+                                    @input="searchInputHandler($event, 'keyword')"
                                 >
                                 </el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" class="btn-style-one" @click="searchHandler">搜索</el-button>
+                                <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">搜索</el-button>
                             </el-form-item>
                         </el-form>
                         <el-table
@@ -304,10 +336,19 @@ export default {
         },
         programmeList() {
             return _.get(this.programmeSubjectData, 'subjectItemList') || [];
+        },
+        checkedProgrammeSubjectList() {
+            if (this.subjectId && !_.isEmpty(this.programmeSubjectData)) {
+                return [this.programmeSubjectData];
+            } else {
+                return [];
+            }
         }
     },
     methods: {
         ...mapMutations({
+            updateProgrammeSubjectPagination: 'pageLayout/updateProgrammeSubjectPagination',
+            updateProgrammeSubject: 'pageLayout/updateProgrammeSubject',
             deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
             saveLayoutToStore: 'pageLayout/saveLayoutToStore',
             updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey',
@@ -343,14 +384,6 @@ export default {
                 console.log(err);
             }
         },
-        selectPersonSubject() {
-            this.allowResolutions = [{width: 560, height: 600}];
-            this.$refs.personSubjectDialog.showDialog();
-        },
-        selectProgramme() {
-            this.allowResolutions = [{width: 1160, height: 600}];
-            this.$refs.selectProgrammeDialog.showDialog();
-        },
         //  节目专题的相关操作开始
         async dialogOpenHandler() {
             try {
@@ -375,8 +408,16 @@ export default {
         enterHandler() {
             this.closeDialog();
         },
-        searchHandler() {
-
+        //  节目列表搜索
+        searchInputHandler(value, key) {
+            this.updateProgrammeSubject({key, value});
+        },
+        searchEnterHandler() {
+            this.getProgrammeSubjectList();
+        },
+        handlePaginationChange(value, key) {
+            this.updateProgrammeSubjectPagination({key, value});
+            this.getProgrammeSubjectList();
         },
         tableRowClassName({row, rowIndex}) {
             return row.id === this.subjectId ? 'checked' : '';

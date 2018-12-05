@@ -44,6 +44,10 @@
     }
 }
 
+//  表格每一行hover之后改变背景色
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+    background-color: #333A4C!important;
+}
 
 //  表格样式
 .el-table {
@@ -104,11 +108,6 @@
     color: #A8ABB3;
     height: 40px;
     line-height: 40px;
-}
-
-//  表格每一行hover之后改变背景色
-.el-table--enable-row-hover .el-table__body tr:hover>td{
-    background-color: #333A4C!important;
 }
 
 .el-table--border {
