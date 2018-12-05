@@ -54,42 +54,6 @@
                 label="视频名称">
             </el-table-column>
             <el-table-column
-                prop="link"
-                align="center"
-                width="150px"
-                label="预览视频">
-                <template slot-scope="scope">
-                    <el-button
-                        v-if="scope.row.m3u8For4K"
-                        type="text"
-                        size="small"
-                        @click="displayVideo(scope.row.m3u8For4K,scope.row.originName)"
-                    >4K
-                    </el-button>
-                    <el-button
-                        v-if="scope.row.m3u8For1080P"
-                        type="text"
-                        size="small"
-                        @click="displayVideo(scope.row.m3u8For1080P,scope.row.originName)"
-                    >1080
-                    </el-button>
-                    <el-button
-                        v-if="scope.row.m3u8For720P"
-                        type="text"
-                        size="small"
-                        @click="displayVideo(scope.row.m3u8For720P,scope.row.originName)"
-                    >720
-                    </el-button>
-                    <el-button
-                        v-if="scope.row.m3u8For480P"
-                        type="text"
-                        size="small"
-                        @click="displayVideo(scope.row.m3u8For480P,scope.row.originName)"
-                    >480
-                    </el-button>
-                </template>
-            </el-table-column>
-            <el-table-column
                 prop="takeTimeInSec"
                 align="center"
                 label="视频时长">
@@ -113,14 +77,6 @@
                     {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                 </template>
             </el-table-column>
-            <el-table-column
-                align="center"
-                width="220px"
-                label="视频用途">
-                <template slot-scope="scope">
-                    {{scope.row.videoType | switchVideoType}}
-                </template>
-            </el-table-column>
         </el-table>
         <el-pagination
             @size-change="handleSizeChange"
@@ -135,23 +91,13 @@
             <el-button @click="closeSelectVideoDialog">取 消</el-button>
             <el-button type="primary" @click="pullVideoFromMaster">确 定</el-button>
         </div>
-        <display-video-dialog
-            :url="previewVideoInfo.url"
-            :title="previewVideoInfo.title"
-            :displayVideoDialogVisible="previewVideoInfo.visible"
-            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
-        </display-video-dialog>
     </div>
 </template>
 <script>
-    import DisplayVideoDialog from '../video_manage/DisplayVideoDialog';
     import role from '@/util/config/role';
 
     export default {
         name: 'SelectMultipleMasterVideo',
-        components: {
-            DisplayVideoDialog
-        },
         data() {
             return {
                 listQueryParams: {
@@ -162,11 +108,6 @@
                 },
                 total: 0,
                 suffixOptions: role.VIDEO_SUFFIX_OPTIONS,
-                previewVideoInfo: {
-                    url: '',
-                    title: '',
-                    visible: false
-                },
                 videoList: [],
                 selectedMultipleVideo: []
             };
@@ -181,17 +122,7 @@
                     case 'INJECTING':
                         return '注入中';
                     default:
-                        return '------';
-                }
-            },
-            switchVideoType(videoType) {
-                switch (videoType) {
-                    case 'VOD':
-                        return '点播';
-                    case 'CAROUSEL':
-                        return '轮播';
-                    default:
-                        return '------';
+                        return '---';
                 }
             }
         },
@@ -278,15 +209,6 @@
             handleCurrentChange(pageNum) {
                 this.listQueryParams.pageNum = pageNum;
                 this.getVideoList();
-            },
-            closeDisplayVideoDialog(status) {
-                this.previewVideoInfo.visible = status;
-            },
-            displayVideo(url, title) {
-                let baseUri = window.localStorage.getItem('videoBaseUri');
-                this.previewVideoInfo.url = `${baseUri}${url}`;
-                this.previewVideoInfo.title = title;
-                this.previewVideoInfo.visible = true;
             },
             closeSelectVideoDialog() {
                 this.$emit('closeSelectVideoDialog');

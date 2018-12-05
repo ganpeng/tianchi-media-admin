@@ -93,17 +93,22 @@
                     {{duration(scope.row.takeTimeInSec)}}
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="注入状态">
+            <!--注入状态-->
+            <el-table-column
+                align="center"
+                label="注入状态">
                 <template slot-scope="scope">
-                    <span v-html="getStatus(scope.row)"></span>
-                    <el-button v-if="needRetry(scope.row)" class="text-primary" type="text"
-                               @click="retrySingleVideo(scope.row.id)" size="small">重试
-                    </el-button>
+                    <template v-if="scope.row.status">
+                        <span v-html="getStatus(scope.row)"></span>
+                        <el-button v-if="needRetry(scope.row)" class="text-primary" type="text"
+                                   @click="retrySingleVideo(scope.row.id)" size="small">重试
+                        </el-button>
+                    </template>
+                    <span v-else>---</span>
                 </template>
             </el-table-column>
             <!--子站上传状态（子站）-->
             <el-table-column
-                v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
                 align="center"
                 label="上传状态">
                 <template slot-scope="scope">
@@ -113,7 +118,7 @@
                         v-if="scope.row.uploadStatus === 'FAILED'"
                         type="text"
                         @click="pushVideoToMainSite(scope.row)">
-                        重新上传
+                        重试
                     </el-button>
                 </template>
             </el-table-column>
@@ -129,7 +134,7 @@
                         v-if="scope.row.downloadStatus === 'FAILED'"
                         type="text"
                         @click="pullVideoFromMainSite(scope.row)">
-                        重新拉取
+                        重试
                     </el-button>
                 </template>
             </el-table-column>
@@ -164,20 +169,12 @@
                     <!--上传主站（子站）-->
                     <el-button
                         v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
-                        class="text-primary"
+                        :disabled="scope.row.uploadStatus === 'ON_GOING' || scope.row.uploadStatus === 'SUCCESS' || scope.row.downloadStatus === 'ON_GOING'"
+                        class="text-primary upload-btn"
                         type="text"
                         @click="pushVideoToMainSite(scope.row)"
                         size="small">
                         上传主站
-                    </el-button>
-                    <!--拉取主站视频（子站）-->
-                    <el-button
-                        v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
-                        class="text-primary"
-                        type="text"
-                        @click="pullVideoFromMainSite(scope.row)"
-                        size="small">
-                        拉取
                     </el-button>
                     <!--共享设置（主站）-->
                     <el-button
@@ -188,7 +185,13 @@
                         size="small">
                         共享设置
                     </el-button>
-                    <el-button class="text-danger" type="text" @click="_deleteVideoById(scope.row.id)" size="small">删除
+                    <!--在拉取中和下载中状态的视频不能删除-->
+                    <el-button
+                        :disabled="scope.row.uploadStatus === 'ON_GOING' || scope.row.downloadStatus === 'ON_GOING'"
+                        class="text-danger"
+                        type="text"
+                        @click="_deleteVideoById(scope.row.id)" size="small">
+                        删除
                     </el-button>
                 </template>
             </el-table-column>
@@ -302,11 +305,11 @@
             },
             // 计算子站拉取主站视频的进度百分比
             getDownloadPercent(video) {
-                return (video.downloadedSplitCount / video.totalSplitCount).toFixed(2) * 100 + '%';
+                return (video.downloadedSplitCount * 100 / video.totalSplitCount).toFixed(0) + '%';
             },
             // 计算子站上传主站视频的进度百分比
             getPushPercent(video) {
-                return (video.uploadedSplitCount / video.totalSplitCount).toFixed(2) * 100 + '%';
+                return (video.uploadedSplitCount * 100 / video.totalSplitCount).toFixed(0) + '%';
             }
         },
         data() {
@@ -421,8 +424,20 @@
                 if (item.downloadStatus === 'FAILED') {
                     let videoIdList = [item.id];
                     this.$service.batchPullVideoFromMaster({videoIdList}).then(response => {
-                        if (response && response.code === 0) {
-                            this.$message.success('所选视频拉取成功，请关注其状态');
+                        if (response && response.code === 0 && response.data.length === 0) {
+                            this.$message.success('成功拉取视频到本站，请关注其状态更改');
+                            this.$refs.videoTable.checkedVideoList();
+                        } else if (response && response.code === 0 && response.data.length !== 0) {
+                            // 批量上传存在有特殊情况说明
+                            let message = '当前上传视频含有如下问题：';
+                            response.data.map(video => {
+                                message = message + '[' + video.originName + ']视频问题：' + video.failReason + ';';
+                            });
+                            this.$message({
+                                type: 'error',
+                                message: message,
+                                duration: 5000
+                            });
                         }
                     });
                 } else {
@@ -434,8 +449,19 @@
                 if (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) {
                     if (!item.uploadStatus || item.uploadStatus === 'FAILED') {
                         this.$service.batchPushVideoToMaster({videoIdList: [item.id]}).then(response => {
-                            if (response && response.code === 0) {
-                                this.$message.success('成功上传视频到主站');
+                            if (response && response.code === 0 && response.data.length === 0) {
+                                this.$message.success('成功上传视频到主站，请关注其状态更改');
+                            } else if (response && response.code === 0 && response.data.length !== 0) {
+                                // 批量上传存在有特殊情况说明
+                                let message = '当前上传视频含有如下问题：';
+                                response.data.map(video => {
+                                    message = message + '[' + video.originName + ']视频问题：' + video.failReason + ';';
+                                });
+                                this.$message({
+                                    type: 'error',
+                                    message: message,
+                                    duration: 5000
+                                });
                             }
                         });
                     } else {
@@ -609,6 +635,16 @@
             .el-select {
                 margin-top: 20px;
                 width: 80%;
+            }
+        }
+    }
+</style>
+
+<style lang="scss">
+    .upload-btn {
+        &.is-disabled {
+            span {
+                color: #c0c4cc !important;
             }
         }
     }

@@ -47,6 +47,7 @@
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                 </el-form-item>
+                <!--注入状态-->
                 <el-form-item class="search">
                     <el-select
                         :value="searchFields.status"
@@ -55,6 +56,38 @@
                         @input="inputHandler($event, 'status')">
                         <el-option
                             v-for="(item, index) in statusOptions"
+                            :key="index"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <!--拉取状态（子站）-->
+                <el-form-item
+                    v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                    class="search">
+                    <el-select
+                        :value="searchFields.downloadStatus"
+                        clearable
+                        placeholder="请选择视频拉取状态"
+                        @input="inputHandler($event, 'downloadStatus')">
+                        <el-option
+                            v-for="(item, index) in downloadStatusOptions"
+                            :key="index"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <!--上传状态-->
+                <el-form-item class="search">
+                    <el-select
+                        :value="searchFields.uploadStatus"
+                        clearable
+                        placeholder="请选择视频上传状态"
+                        @input="inputHandler($event, 'uploadStatus')">
+                        <el-option
+                            v-for="(item, index) in uploadStatusOptions"
                             :key="index"
                             :label="item.label"
                             :value="item.value">
@@ -230,7 +263,9 @@
         data() {
             return {
                 selectMasterVideoDialogVisible: false,
-                statusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
+                statusOptions: role.VIDEO_INJECTING_STATUS_OPTIONS,
+                downloadStatusOptions: role.VIDEO_DOWNLOAD_STATUS_OPTIONS,
+                uploadStatusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
                 suffixOptions: role.VIDEO_SUFFIX_OPTIONS,
                 sourceOptions: [],
                 shareSiteOptions: [],
@@ -278,13 +313,13 @@
                     uppie(document.querySelector('#upload-input-dir'), this.uploadChangeHandler.bind(this));
                 });
                 window.addEventListener('keyup', this.keyupHandler);
-                // this.timer = setInterval(() => {
-                //     this.getVideoList().then(() => {
-                //         if (this.$refs.videoTable) {
-                //             this.$refs.videoTable.checkedVideoList();
-                //         }
-                //     });
-                // }, 1000 * 10);
+                this.timer = setInterval(() => {
+                    this.getVideoList().then(() => {
+                        if (this.$refs.videoTable) {
+                            this.$refs.videoTable.checkedVideoList();
+                        }
+                    });
+                }, 1000 * 10);
                 // 初始化视频来源和共享站点的列表
                 this.$service.getAllSiteList().then(response => {
                     if (response && response.code === 0) {
@@ -340,7 +375,20 @@
                     });
                     this.$service.batchPushVideoToMaster({videoIdList}).then(response => {
                         if (response && response.code === 0) {
-                            this.$message.success('成功上传视频到主站');
+                            if (response && response.code === 0 && response.data.length === 0) {
+                                this.$message.success('成功上传视频到主站，请关注其状态更改');
+                            } else if (response && response.code === 0 && response.data.length !== 0) {
+                                // 批量上传存在有特殊情况说明
+                                let message = '当前上传视频含有如下问题：';
+                                response.data.map(video => {
+                                    message = message + '[' + video.originName + ']视频问题：' + video.failReason + ';';
+                                });
+                                this.$message({
+                                    type: 'error',
+                                    message: message,
+                                    duration: 5000
+                                });
+                            }
                         }
                     });
                 } else {
@@ -354,8 +402,19 @@
                     videoIdList.push(video.id);
                 });
                 this.$service.batchPullVideoFromMaster({videoIdList}).then(response => {
-                    if (response && response.code === 0) {
-                        this.$message.success('所选视频拉取成功，请关注其状态');
+                    if (response && response.code === 0 && response.data.length === 0) {
+                        this.$message.success('成功拉取视频到本站，请关注其状态更改');
+                    } else if (response && response.code === 0 && response.data.length !== 0) {
+                        // 批量上传存在有特殊情况说明
+                        let message = '当前上传视频含有如下问题：';
+                        response.data.map(video => {
+                            message = message + '[' + video.originName + ']视频问题：' + video.failReason + ';';
+                        });
+                        this.$message({
+                            type: 'error',
+                            message: message,
+                            duration: 5000
+                        });
                     }
                 });
             },
