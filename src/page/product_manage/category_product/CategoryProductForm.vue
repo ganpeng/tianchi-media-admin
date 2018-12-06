@@ -1,14 +1,15 @@
 <!--类别产品包表单组件-->
 <template>
-    <div class="text-left">
-        <el-form :model="productInfo"
-                 :rules="infoRules"
-                 status-icon
-                 ref="productInfo"
-                 label-width="120px"
-                 class="form-block fill-form">
+    <div class="text-left category-container">
+        <el-form
+            :model="productInfo"
+            :rules="infoRules"
+            status-icon
+            ref="productInfo"
+            label-width="120px"
+            class="form-block fill-form">
             <el-form-item label="类型" prop="category">
-                类别包
+                <label class="category-name">类别包</label>
             </el-form-item>
             <el-form-item label="名称" prop="name" required>
                 <el-input v-model="productInfo.name" placeholder="请填写30个字以内的名称"></el-input>
@@ -36,24 +37,16 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <div class="operate">
-                <el-button type="primary" @click="operateProduct" class="page-main-btn">
-                    {{this.status === '0' ? '创建' : '保存'}}
-                </el-button>
-                <el-button @click="reset"
-                           v-if="this.status === '0' || this.status === '1' "
-                           class="page-main-btn"
-                           type="primary"
-                           plain>
-                    重置
-                </el-button>
-                <el-button @click="toProductList" class="page-main-btn">返回列表页</el-button>
+            <div class="operate-block text-center">
+                <el-button type="primary" @click="operateProduct" class="btn-style-two">保存</el-button>
+                <el-button type="primary" plain @click="toProductList" class="btn-style-three">返回列表</el-button>
             </div>
         </el-form>
     </div>
 </template>
 
 <script>
+
     export default {
         name: 'CategoryProductForm',
         // status为1代表编辑，0代表创建
@@ -155,9 +148,6 @@
                     }
                 });
             },
-            reset() {
-                this.$refs['productInfo'].resetFields();
-            },
             toProductList() {
                 this.$router.push({name: 'ProductList'});
             }
@@ -167,9 +157,31 @@
 
 <style lang="scss" scoped>
 
-    .operate {
-        margin-top: 200px;
-        margin-bottom: 80px;
+    .category-container {
+        margin-top: 30px;
+    }
+
+    .category-name {
+        color: #fff;
+    }
+
+    // 操作
+    .operate-block {
+        position: fixed;
+        bottom: 10px;
+        left: 0px;
+        right: 0px;
+        margin: auto;
+        width: 500px;
+        height: 80px;
+        line-height: 90px;
+        background: #293550;
+        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.20);
+        border-radius: 8px;
+        z-index: 600;
+        .el-button:last-child {
+            margin-left: 40px;
+        }
     }
 
 </style>

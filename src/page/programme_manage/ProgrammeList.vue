@@ -165,7 +165,7 @@
                         </el-button>
                         <el-button
                             class="btn-style-two contain-svg-icon"
-                            @click="showFileUploadDialog">
+                            @click="exportSelectedProgrammeExcel">
                             <svg-icon icon-class="export"></svg-icon>
                             导出
                         </el-button>
@@ -175,7 +175,8 @@
                     ref="multipleTable"
                     @select="selectHandler"
                     @select-all="selectAllHandler"
-                    row-class-name="programme-row" header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
+                    row-class-name="programme-row" header-row-class-name="common-table-header" class="my-table-style"
+                    :data="list" border>
                     <el-table-column type="selection" align="center"></el-table-column>
                     <el-table-column prop="code" align="center" width="120px" label="节目编号">
                         <template slot-scope="scope">
@@ -191,9 +192,11 @@
                             </span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="节目图片" width="100px" align="center" >
+                    <el-table-column label="节目图片" width="100px" align="center">
                         <template slot-scope="scope">
-                            <img style="width:70px;height:auto;" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
+                            <img style="width:70px;height:auto;"
+                                 @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer"
+                                 :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
                         </template>
                     </el-table-column>
                     <el-table-column prop="featureVideoCount" width="100px" align="center" label="正片数量">
@@ -289,8 +292,8 @@
                 :file-list="fileList"
                 :on-success="uploadSuccessHandler"
                 :with-credentials="true">
-                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-                    <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
+                <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
+                <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
             </el-upload>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="closeFileUploadDialog">关闭</el-button>
@@ -299,163 +302,177 @@
     </div>
 </template>
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
-import store from 'store';
-import _ from 'lodash';
-import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
+    import {mapGetters, mapActions, mapMutations} from 'vuex';
+    import store from 'store';
+    import _ from 'lodash';
+    import XLSX from 'xlsx';
+    import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 
-export default {
-    name: 'ProgrammeList',
-    components: {
-        PreviewSingleImage
-    },
-    data() {
-        return {
-            //  toggle搜索区域
-            searchFieldVisible: false,
-            //  选择数据
-            areaOptions: store.get('areaList'),
-            fileUploadDialogVisible: false,
-            fileList: [],
-            selectedVideoList: [],
-            uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
-            visibleOptions: [
-                {
-                    value: true,
-                    label: '已上架'
-                },
-                {
-                    value: false,
-                    label: '已下架'
+    export default {
+        name: 'ProgrammeList',
+        components: {
+            PreviewSingleImage
+        },
+        data() {
+            return {
+                //  toggle搜索区域
+                searchFieldVisible: false,
+                //  选择数据
+                areaOptions: store.get('areaList'),
+                fileUploadDialogVisible: false,
+                fileList: [],
+                selectedVideoList: [],
+                uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
+                visibleOptions: [
+                    {
+                        value: true,
+                        label: '已上架'
+                    },
+                    {
+                        value: false,
+                        label: '已下架'
+                    }
+                ],
+                previewImage: {
+                    title: '',
+                    display: false,
+                    uri: ''
                 }
-            ],
-            previewImage: {
-                title: '',
-                display: false,
-                uri: ''
+            };
+        },
+        created() {
+            this.getProgrammeList()
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        this.checkedVideoList();
+                    }
+                });
+            this.getProgrammeCategory();
+            window.addEventListener('keyup', this.keyupHandler);
+        },
+        beforeDestroy() {
+            window.removeEventListener('keyup', this.keyupHandler);
+        },
+        computed: {
+            ...mapGetters({
+                programmePagination: 'programme/programmePagination',
+                programmeSearchFields: 'programme/programmeSearchFields',
+                programmeTypeOptions: 'programme/programmeTypeOptions',
+                global: 'programme/global',
+                list: 'programme/programmeList',
+                typeList: 'programme/typeList',
+                categoryListString: 'programme/categoryListString',
+                getDirector: 'programme/getDirector',
+                getChiefActor: 'programme/getChiefActor',
+                getScenarist: 'programme/getScenarist',
+                areaLabel: 'programme/areaLabel'
+            }),
+            isDisabled() {
+                return this.selectedVideoList.length === 0;
             }
-        };
-    },
-    created() {
-        this.getProgrammeList()
-            .then((res) => {
-                if (res && res.code === 0) {
-                    this.checkedVideoList();
+        },
+        beforeRouteLeave(to, from, next) {
+            let {name} = to;
+            if (name !== 'DisplayProgramme' && name !== 'EditProgramme') {
+                this.resetProgrammeSearchFields();
+                this.resetProgrammePagination();
+            }
+            next();
+        },
+        methods: {
+            ...mapMutations({
+                updateProgrammePagination: 'programme/updateProgrammePagination',
+                updateProgrammeSearchFields: 'programme/updateProgrammeSearchFields',
+                resetProgrammeSearchFields: 'programme/resetProgrammeSearchFields',
+                resetProgrammePagination: 'programme/resetProgrammePagination'
+            }),
+            ...mapActions({
+                getProgrammeList: 'programme/getProgrammeList',
+                getProgrammeCategory: 'programme/getProgrammeCategory',
+                deleteProgramme: 'programme/deleteProgramme',
+                realDeleteProgramme: 'programme/realDeleteProgramme',
+                upLowerFrameProgramme: 'programme/upLowerFrameProgramme',
+                batchDeleteProgrammes: 'programme/batchDeleteProgrammes'
+            }),
+            keyupHandler(e) {
+                if (e.keyCode === 13) {
+                    this.getProgrammeList()
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                this.checkedVideoList();
+                            }
+                        });
                 }
-            });
-        this.getProgrammeCategory();
-        window.addEventListener('keyup', this.keyupHandler);
-    },
-    beforeDestroy() {
-        window.removeEventListener('keyup', this.keyupHandler);
-    },
-    computed: {
-        ...mapGetters({
-            programmePagination: 'programme/programmePagination',
-            programmeSearchFields: 'programme/programmeSearchFields',
-            programmeTypeOptions: 'programme/programmeTypeOptions',
-            global: 'programme/global',
-            list: 'programme/programmeList',
-            typeList: 'programme/typeList',
-            categoryListString: 'programme/categoryListString',
-            getDirector: 'programme/getDirector',
-            getChiefActor: 'programme/getChiefActor',
-            getScenarist: 'programme/getScenarist',
-            areaLabel: 'programme/areaLabel'
-        }),
-        isDisabled() {
-            return this.selectedVideoList.length === 0;
-        }
-    },
-    beforeRouteLeave(to, from, next) {
-        let {name} = to;
-        if (name !== 'DisplayProgramme' && name !== 'EditProgramme') {
-            this.resetProgrammeSearchFields();
-            this.resetProgrammePagination();
-        }
-        next();
-    },
-    methods: {
-        ...mapMutations({
-            updateProgrammePagination: 'programme/updateProgrammePagination',
-            updateProgrammeSearchFields: 'programme/updateProgrammeSearchFields',
-            resetProgrammeSearchFields: 'programme/resetProgrammeSearchFields',
-            resetProgrammePagination: 'programme/resetProgrammePagination'
-        }),
-        ...mapActions({
-            getProgrammeList: 'programme/getProgrammeList',
-            getProgrammeCategory: 'programme/getProgrammeCategory',
-            deleteProgramme: 'programme/deleteProgramme',
-            realDeleteProgramme: 'programme/realDeleteProgramme',
-            upLowerFrameProgramme: 'programme/upLowerFrameProgramme',
-            batchDeleteProgrammes: 'programme/batchDeleteProgrammes'
-        }),
-        keyupHandler(e) {
-            if (e.keyCode === 13) {
+            },
+            createProgramme() {
+                this.$router.push({name: 'CreateProgramme'});
+            },
+            clearSearchFields() {
+                this.resetProgrammeSearchFields();
+            },
+            editProgramme(id) {
+                this.$router.push({name: 'EditProgramme', params: {id}});
+            },
+            displayProgramme(id) {
+                this.$router.push({name: 'DisplayProgramme', params: {id}});
+            },
+            inputHandler(value, key) {
+                this.updateProgrammeSearchFields({key, value});
+                if (key === 'programmeCategoryIdList') {
+                    this.updateProgrammeSearchFields({key: 'programmeTypeIdList', value: ''});
+                }
+            },
+            searchHandler() {
                 this.getProgrammeList()
                     .then((res) => {
                         if (res && res.code === 0) {
                             this.checkedVideoList();
                         }
                     });
-            }
-        },
-        createProgramme() {
-            this.$router.push({ name: 'CreateProgramme' });
-        },
-        clearSearchFields() {
-            this.resetProgrammeSearchFields();
-        },
-        editProgramme(id) {
-            this.$router.push({ name: 'EditProgramme', params: { id } });
-        },
-        displayProgramme(id) {
-            this.$router.push({ name: 'DisplayProgramme', params: { id } });
-        },
-        inputHandler(value, key) {
-            this.updateProgrammeSearchFields({key, value});
-            if (key === 'programmeCategoryIdList') {
-                this.updateProgrammeSearchFields({key: 'programmeTypeIdList', value: ''});
-            }
-        },
-        searchHandler() {
-            this.getProgrammeList()
-                .then((res) => {
-                    if (res && res.code === 0) {
-                        this.checkedVideoList();
-                    }
-                });
-        },
-        displayImage(image) {
-            this.previewImage.title = image.name;
-            this.previewImage.display = true;
-            this.previewImage.uri = image.uri;
-        },
-        handlePaginationChange(value, key) {
-            this.updateProgrammePagination({key, value});
-            if (key === 'pageSize') {
-                window.localStorage.setItem('programmePageSize', value);
-            }
-            this.getProgrammeList()
-                .then((res) => {
-                    if (res && res.code === 0) {
-                        this.checkedVideoList();
-                    }
-                });
-        },
-        showFileUploadDialog() {
-            this.fileUploadDialogVisible = true;
-        },
-        closeFileUploadDialog() {
-            this.fileUploadDialogVisible = false;
-            this.fileList = [];
-        },
-        submitUpload() {
-            this.$refs.upload.submit();
-        },
-        lowerFrameProgramme(programme) {
-            let {id, visible} = programme;
-            this.$confirm(`您确定要${visible ? '下架节目' : '上架节目'}吗, 是否继续?`, '提示', {
+            },
+            // 导出选择的节目
+            exportSelectedProgrammeExcel() {
+                if (!this.selectedVideoList || this.selectedVideoList.length === 0) {
+                    this.$message.warning('请选择节目');
+                    return;
+                }
+                let wb = XLSX.utils.book_new();
+                let wsData = this.selectedVideoList;
+                let ws = XLSX.utils.json_to_sheet(wsData);
+                /* Add the worksheet to the workbook */
+                XLSX.utils.book_append_sheet(wb, ws, '表1');
+                XLSX.writeFile(wb, '节目导出表_' + new Date() + '.xlsx');
+            },
+            displayImage(image) {
+                this.previewImage.title = image.name;
+                this.previewImage.display = true;
+                this.previewImage.uri = image.uri;
+            },
+            handlePaginationChange(value, key) {
+                this.updateProgrammePagination({key, value});
+                if (key === 'pageSize') {
+                    window.localStorage.setItem('programmePageSize', value);
+                }
+                this.getProgrammeList()
+                    .then((res) => {
+                        if (res && res.code === 0) {
+                            this.checkedVideoList();
+                        }
+                    });
+            },
+            showFileUploadDialog() {
+                this.fileUploadDialogVisible = true;
+            },
+            closeFileUploadDialog() {
+                this.fileUploadDialogVisible = false;
+                this.fileList = [];
+            },
+            submitUpload() {
+                this.$refs.upload.submit();
+            },
+            lowerFrameProgramme(programme) {
+                let {id, visible} = programme;
+                this.$confirm(`您确定要${visible ? '下架节目' : '上架节目'}吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'error'
@@ -480,28 +497,28 @@ export default {
                         message: '已取消删除'
                     });
                 });
-        },
-        lowerFrameProgrammeErrorHandler(res) {
-            let {code, data, message} = res;
-            let msg = '';
-            switch (code) {
-                case 3110:
-                    msg = data.map((item) => {
-                        return item ? `"${item}"` : '';
-                    }).join(',');
-                    return `节目包含在如下${msg}专题中`;
-                case 3111:
-                    msg = data.map((item) => {
-                        return item ? `"${item}"` : '';
-                    }).join(',');
-                    return `节目包含在如下${msg}推荐位`;
-                default:
-                    return message;
-            }
-        },
-        multUpFrameProgrammeHandler() {
-            let idList = this.selectedVideoList.map((item) => item.id);
-            this.$confirm(`您确定要上架选中的节目吗?`, '提示', {
+            },
+            lowerFrameProgrammeErrorHandler(res) {
+                let {code, data, message} = res;
+                let msg = '';
+                switch (code) {
+                    case 3110:
+                        msg = data.map((item) => {
+                            return item ? `"${item}"` : '';
+                        }).join(',');
+                        return `节目包含在如下${msg}专题中`;
+                    case 3111:
+                        msg = data.map((item) => {
+                            return item ? `"${item}"` : '';
+                        }).join(',');
+                        return `节目包含在如下${msg}推荐位`;
+                    default:
+                        return message;
+                }
+            },
+            multUpFrameProgrammeHandler() {
+                let idList = this.selectedVideoList.map((item) => item.id);
+                this.$confirm(`您确定要上架选中的节目吗?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'error'
@@ -536,10 +553,10 @@ export default {
                         message: '已取消删除'
                     });
                 });
-        },
-        multLowerFrameProgrammeHandler() {
-            let idList = this.selectedVideoList.map((item) => item.id);
-            this.$confirm(`您确定要下架选中的节目吗?`, '提示', {
+            },
+            multLowerFrameProgrammeHandler() {
+                let idList = this.selectedVideoList.map((item) => item.id);
+                this.$confirm(`您确定要下架选中的节目吗?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'error'
@@ -574,21 +591,21 @@ export default {
                         message: '已取消删除'
                     });
                 });
-            this.upLowerFrameProgramme({idList, visible: false})
-                .then((res) => {
-                    if (res && res.code === 0) {
-                        this.getProgrammeList()
-                            .then((result) => {
-                                if (result && result.code === 0) {
-                                    this.checkedVideoList();
-                                }
-                            });
-                    }
-                });
-        },
-        batchDeletProgrammeHandler() {
-            let idList = this.selectedVideoList.map((item) => item.id);
-            this.$confirm(`您确定要删除选中的节目吗?`, '提示', {
+                this.upLowerFrameProgramme({idList, visible: false})
+                    .then((res) => {
+                        if (res && res.code === 0) {
+                            this.getProgrammeList()
+                                .then((result) => {
+                                    if (result && result.code === 0) {
+                                        this.checkedVideoList();
+                                    }
+                                });
+                        }
+                    });
+            },
+            batchDeletProgrammeHandler() {
+                let idList = this.selectedVideoList.map((item) => item.id);
+                this.$confirm(`您确定要删除选中的节目吗?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'error'
@@ -613,9 +630,9 @@ export default {
                         message: '已取消删除'
                     });
                 });
-        },
-        _realDeleteProgramme(id) {
-            this.$confirm(`您确定要删除该节目吗, 是否继续?`, '提示', {
+            },
+            _realDeleteProgramme(id) {
+                this.$confirm(`您确定要删除该节目吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'error'
@@ -623,11 +640,11 @@ export default {
                     this.realDeleteProgramme(id)
                         .then((res) => {
                             if (res && res.code === 0) {
-                                this.$message.success({ message: '节目删除成功' });
-                                this.$router.push({ name: 'ProgrammeList' });
+                                this.$message.success({message: '节目删除成功'});
+                                this.$router.push({name: 'ProgrammeList'});
                             } else {
                                 let message = res.message || '节目删除失败';
-                                this.$message.error({ message });
+                                this.$message.error({message});
                             }
                         });
                 }).catch(() => {
@@ -636,80 +653,80 @@ export default {
                         message: '已取消删除'
                     });
                 });
-        },
-        uploadSuccessHandler(res, file, fileList) {
-            if (res && res.code === 0) {
-                this.$message({
-                    type: 'success',
-                    message: '节目导入成功'
-                });
-            } else if (res && res.code === 3119) {
-                this.$message({
-                    type: 'error',
-                    message: '节目视频导入失败'
-                });
-            } else if (res && res.code === 3117) {
-                this.$message({
-                    type: 'error',
-                    message: '节目导入部分成功'
-                });
-            } else {
-                this.$message({
-                    type: 'error',
-                    message: '节目导入失败'
-                });
-            }
-            this.closeFileUploadDialog();
-            this.getProgrammeList()
-                .then((res) => {
-                    if (res && res.code === 0) {
-                        this.checkedVideoList();
-                    }
-                });
-        },
-        selectHandler(list, row) {
-            let isSelected = list.findIndex((item) => item.id === row.id) >= 0;
-            if (isSelected) {
-                this.selectedVideoList.push(row);
-            } else {
-                this.selectedVideoList = this.selectedVideoList.filter((item) => item.id !== row.id);
-            }
-        },
-        selectAllHandler(list) {
-            if (list.length > 0) {
-                this.selectedVideoList = _.uniqBy(this.selectedVideoList.concat(list), 'id');
-            } else {
-                this.selectedVideoList = this.selectedVideoList.filter((item) => {
-                    let index = this.list.findIndex((programme) => {
-                        return programme.id === item.id;
+            },
+            uploadSuccessHandler(res, file, fileList) {
+                if (res && res.code === 0) {
+                    this.$message({
+                        type: 'success',
+                        message: '节目导入成功'
                     });
-                    return index < 0;
-                });
-            }
-        },
-        checkedVideoList() {
-            this.selectedVideoList.forEach((item) => {
-                let programme = this.list.find((programme) => {
-                    return item.code === programme.code;
-                });
-                if (programme) {
-                    this.$nextTick(() => {
-                        this.$refs.multipleTable.toggleRowSelection(programme, true);
+                } else if (res && res.code === 3119) {
+                    this.$message({
+                        type: 'error',
+                        message: '节目视频导入失败'
+                    });
+                } else if (res && res.code === 3117) {
+                    this.$message({
+                        type: 'error',
+                        message: '节目导入部分成功'
+                    });
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: '节目导入失败'
                     });
                 }
-            });
-        },
-        toggleSearchField() {
-            this.searchFieldVisible = !this.searchFieldVisible;
-        },
-        gotoProgrammeImportPage() {
-            let routeData = this.$router.resolve({
-                name: 'ProgrammeImport'
-            });
-            window.open(routeData.href, '_blank');
+                this.closeFileUploadDialog();
+                this.getProgrammeList()
+                    .then((res) => {
+                        if (res && res.code === 0) {
+                            this.checkedVideoList();
+                        }
+                    });
+            },
+            selectHandler(list, row) {
+                let isSelected = list.findIndex((item) => item.id === row.id) >= 0;
+                if (isSelected) {
+                    this.selectedVideoList.push(row);
+                } else {
+                    this.selectedVideoList = this.selectedVideoList.filter((item) => item.id !== row.id);
+                }
+            },
+            selectAllHandler(list) {
+                if (list.length > 0) {
+                    this.selectedVideoList = _.uniqBy(this.selectedVideoList.concat(list), 'id');
+                } else {
+                    this.selectedVideoList = this.selectedVideoList.filter((item) => {
+                        let index = this.list.findIndex((programme) => {
+                            return programme.id === item.id;
+                        });
+                        return index < 0;
+                    });
+                }
+            },
+            checkedVideoList() {
+                this.selectedVideoList.forEach((item) => {
+                    let programme = this.list.find((programme) => {
+                        return item.code === programme.code;
+                    });
+                    if (programme) {
+                        this.$nextTick(() => {
+                            this.$refs.multipleTable.toggleRowSelection(programme, true);
+                        });
+                    }
+                });
+            },
+            toggleSearchField() {
+                this.searchFieldVisible = !this.searchFieldVisible;
+            },
+            gotoProgrammeImportPage() {
+                let routeData = this.$router.resolve({
+                    name: 'ProgrammeImport'
+                });
+                window.open(routeData.href, '_blank');
+            }
         }
-    }
-};
+    };
 </script>
 <style lang="scss" scoped>
 </style>

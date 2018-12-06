@@ -1,22 +1,42 @@
 <!--产品管理-产品包列表（包含类别包、节目包、轮播频道包、直播回看包）组件-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'产品管理'},
-            {name:'产品包列表'}]">
-        </custom-breadcrumb>
-        <div class="block-box">
-            <div @keyup.enter="getProductList" class="text-left">
-                <el-form :inline="true" class="filter-form">
-                    <el-form-item>
-                        <el-input v-model="listQueryParams.keyword" placeholder="填写产品包编号、名称"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" plain icon="el-icon-search" @click="getProductList">搜索</el-button>
-                    </el-form-item>
-                    <el-form-item label="产品包类型">
-                        <el-select v-model="listQueryParams.productCategory" clearable placeholder="请选择产品包类型">
+        <div class="table-container">
+            <h2 class="content-title">搜索筛选</h2>
+            <div class="search-field">
+                <div class="field-row" @keyup.enter="getProductList">
+                    <div class="search-field-item">
+                        <el-input
+                            v-model="listQueryParams.keyword"
+                            @change="getProductList"
+                            clearable
+                            class="border-input"
+                            placeholder="填写产品包编号、名称">
+                        </el-input>
+                    </div>
+                    <el-button class="btn-style-one" @click="getProductList" type="primary">
+                        <svg-icon icon-class="search"></svg-icon>
+                        搜索
+                    </el-button>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">时间</label>
+                        <el-date-picker
+                            v-model="createRangeTime"
+                            @change="getProductList"
+                            type="daterange"
+                            value-format="timestamp"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">类型</label>
+                        <el-select
+                            v-model="listQueryParams.productCategory"
+                            @change="getProductList"
+                            clearable
+                            placeholder="请选择产品包类型">
                             <el-option
                                 v-for="item in categoryOptions"
                                 :key="item.value"
@@ -24,123 +44,118 @@
                                 :value="item.value">
                             </el-option>
                         </el-select>
-                    </el-form-item>
-                    <el-form-item label="创建时间">
-                        <el-date-picker
-                            v-model="createRangeTime"
-                            type="daterange"
-                            value-format="timestamp"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" plain icon="el-icon-search" @click="getProductList">筛选</el-button>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" plain class="clear-filter" @click="clearFilters">
-                            <svg-icon
-                                icon-class="clear_filter">
-                            </svg-icon>
-                            清空筛选条件
-                        </el-button>
-                    </el-form-item>
-                </el-form>
+                    </div>
+                    <el-button class="btn-style-one" type="primary" @click="clearFilters" plain>
+                        <svg-icon icon-class="reset"></svg-icon>
+                        重置
+                    </el-button>
+                </div>
             </div>
-            <el-table
-                header-row-class-name="common-table-header"
-                :data="productList"
-                border
-                @sort-change=sortProductList
-                row-class-name=product-row
-                style="width: 100%">
-                <el-table-column
-                    align="center"
-                    prop="aaaCode"
-                    width="120px"
-                    sortable='custom'
-                    label="编号">
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    prop="name"
-                    label="名称">
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    prop="category"
-                    label="类型">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.category | getCategoryName}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    prop="updatedAt"
-                    sortable="custom"
-                    label="更新时间">
-                    <template slot-scope="scope">
-                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:mm')}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    prop="createdAt"
-                    sortable="custom"
-                    label="创建时间">
-                    <template slot-scope="scope">
-                        {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm')}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    label="状态">
-                    <template slot-scope="scope">
-                        <i class="status-normal" v-if="scope.row.visible">已上架</i>
-                        <i class="status-abnormal" v-else>已下架</i>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center"
-                                 label="操作"
-                                 width="120px"
-                                 fixed="right"
-                                 class="operate">
-                    <template slot-scope="scope">
-                        <el-button type="text" size="small" class="detail-btn" @click="checkProductDetail(scope.row)">
-                            查看
-                        </el-button>
-                        <el-button type="text" size="small" class="detail-btn" @click="editProductInfo(scope.row)">
-                            编辑
-                        </el-button>
-                        <el-button type="text" size="small" @click="setProductVisible(scope.row)">
-                            {{scope.row.visible ? '下架' : '上架'}}
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="listQueryParams.pageNum"
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="listQueryParams.pageSize"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="totalAmount">
-            </el-pagination>
-            <el-dropdown @command="createProduct" class="create-item">
-                <el-button class="create-blue-btn contain-svg-icon">
-                    <svg-icon icon-class="add"></svg-icon>
-                    创建产品包<i class="el-icon-arrow-down el-icon--right"></i>
-                </el-button>
-                <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="PROGRAMME_CATEGORY">创建类别包</el-dropdown-item>
-                    <el-dropdown-item command="PROGRAMME">创建节目包</el-dropdown-item>
-                    <el-dropdown-item command="CAROUSEL">创建轮播频道包</el-dropdown-item>
-                    <el-dropdown-item command="RECORD">创建直播回看包</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
+            <div class="seperator-line"></div>
+            <div class="table-field">
+                <h2 class="content-title">产品列表</h2>
+                <div class="table-operator-field clearfix">
+                    <div class="float-left">
+                    </div>
+                    <div class="float-right">
+                        <el-dropdown
+                            @command="createProduct($event)" placement="bottom">
+                            <el-button class="btn-style-two contain-svg-icon">
+                                <svg-icon icon-class="add"></svg-icon>
+                                添加
+                                <svg-icon icon-class="arrow_down"></svg-icon>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="PROGRAMME_CATEGORY">创建类别包</el-dropdown-item>
+                                <el-dropdown-item command="PROGRAMME">创建节目包</el-dropdown-item>
+                                <el-dropdown-item command="CAROUSEL">创建轮播频道包</el-dropdown-item>
+                                <el-dropdown-item command="RECORD">创建直播回看包</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                </div>
+            </div>
         </div>
+        <el-table
+            header-row-class-name="common-table-header"
+            :data="productList"
+            border
+            @sort-change=sortProductList
+            row-class-name=product-row
+            style="width: 100%">
+            <el-table-column
+                align="center"
+                prop="aaaCode"
+                width="120px"
+                sortable='custom'
+                label="编号">
+            </el-table-column>
+            <el-table-column
+                align="center"
+                prop="name"
+                label="名称">
+            </el-table-column>
+            <el-table-column
+                align="center"
+                prop="category"
+                label="类型">
+                <template slot-scope="scope">
+                    <label>{{scope.row.category | getCategoryName}}</label>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                prop="updatedAt"
+                sortable="custom"
+                label="更新时间">
+                <template slot-scope="scope">
+                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:mm')}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                prop="createdAt"
+                sortable="custom"
+                label="创建时间">
+                <template slot-scope="scope">
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm')}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                label="状态">
+                <template slot-scope="scope">
+                    <i class="status-normal" v-if="scope.row.visible">已上架</i>
+                    <i class="status-abnormal" v-else>已下架</i>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                label="操作"
+                width="120px"
+                class="operate">
+                <template slot-scope="scope">
+                    <el-button type="text" size="small" class="detail-btn" @click="checkProductDetail(scope.row)">
+                        查看
+                    </el-button>
+                    <el-button type="text" size="small" class="detail-btn" @click="editProductInfo(scope.row)">
+                        编辑
+                    </el-button>
+                    <el-button type="text" size="small" @click="setProductVisible(scope.row)">
+                        {{scope.row.visible ? '下架' : '上架'}}
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="listQueryParams.pageNum"
+            :page-sizes="[10, 20, 30, 50]"
+            :page-size="listQueryParams.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="totalAmount">
+        </el-pagination>
     </div>
 </template>
 
@@ -248,6 +263,7 @@
                 this.listQueryParams.createdAtStart = '';
                 this.listQueryParams.createdAtEnd = '';
                 this.createRangeTime = [];
+                this.getProductList();
             },
             handleSizeChange(pageSize) {
                 this.listQueryParams.pageSize = pageSize;
@@ -324,30 +340,8 @@
 
 <style lang="scss" scoped>
 
-    .block-box {
-        position: relative;
-        padding-top: 55px;
-    }
-
-    .create-item {
-        position: absolute;
-        right: 0px;
-        top: 10px;
-    }
-
-    .el-table {
-        margin-top: 0px;
-    }
-
     .el-pagination {
-        margin-bottom: 50px;
+        margin-top: 10px;
     }
 
-    #edit-dropdown {
-        cursor: pointer;
-        .el-dropdown-link {
-            color: $baseBlue;
-            font-size: 12px;
-        }
-    }
 </style>

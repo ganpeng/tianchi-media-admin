@@ -1,20 +1,40 @@
 <!--视频资源管理-下载列表-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'视频资源管理'},
-            {name:'下载列表'}]">
-        </custom-breadcrumb>
-        <div class="block-box">
-            <div @keyup.enter="getDownloadVideoList" class="text-left">
-                <el-form :inline="true" class="filter-form">
-                    <el-form-item>
-                        <el-input v-model="listQueryParams.keyword" placeholder="请填写视频名称或编号"></el-input>
-                    </el-form-item>
-                    <el-form-item>
+        <div class="table-container">
+            <h2 class="content-title">搜索筛选</h2>
+            <div class="search-field">
+                <div class="field-row" @keyup.enter="getDownloadVideoList">
+                    <div class="search-field-item">
+                        <el-input
+                            v-model="listQueryParams.keyword"
+                            @change="getDownloadVideoList"
+                            clearable
+                            class="border-input"
+                            placeholder="请填写视频名称或编号">
+                        </el-input>
+                    </div>
+                    <el-button class="btn-style-one" @click="getDownloadVideoList" type="primary">
+                        <svg-icon icon-class="search"></svg-icon>
+                        搜索
+                    </el-button>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">下载时间</label>
+                        <el-date-picker
+                            v-model="createRangeTime"
+                            type="daterange"
+                            @change="getDownloadVideoList"
+                            value-format="timestamp"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">状态</label>
                         <el-select
                             v-model="listQueryParams.status"
+                            @change="getDownloadVideoList"
                             clearable
                             placeholder="请选择视频下载状态">
                             <el-option
@@ -24,31 +44,56 @@
                                 :value="item.value">
                             </el-option>
                         </el-select>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-date-picker
-                            v-model="createRangeTime"
-                            type="daterange"
-                            value-format="timestamp"
-                            range-separator="至"
-                            start-placeholder="下载开始日期"
-                            end-placeholder="下载结束日期">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" plain icon="el-icon-search" @click="getDownloadVideoList">搜索
-                        </el-button>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" plain class="clear-filter" @click="clearFilters">
-                            <svg-icon
-                                icon-class="clear_filter">
-                            </svg-icon>
-                            清空筛选条件
-                        </el-button>
-                    </el-form-item>
-                </el-form>
+                    </div>
+                    <el-button
+                        class="btn-style-one"
+                        type="primary"
+                        @click="clearFilters"
+                        plain>
+                        <svg-icon icon-class="reset"></svg-icon>
+                        重置
+                    </el-button>
+                </div>
             </div>
+            <div class="seperator-line"></div>
+            <div class="table-field">
+                <h2 class="content-title">下载视频列表</h2>
+                <div class="table-operator-field clearfix">
+                    <div class="float-left">
+                        <el-dropdown
+                            trigger="click"
+                            class="my-dropdown">
+                            <span class="el-dropdown-link">
+                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item>
+                                    <span @click="retryDownloadBatchVideos">批量重试</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span @click="removeBatchVideos">批量删除</span>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <div class="float-right">
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="exportAllList">
+                            <svg-icon icon-class="add"></svg-icon>
+                            导出
+                        </el-button>
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="toVideoList">
+                            <svg-icon icon-class="add"></svg-icon>
+                            返回
+                        </el-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="block-box">
             <el-table
                 header-row-class-name="common-table-header"
                 class="my-table-style"
@@ -100,7 +145,6 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    fixed="right"
                     align="center"
                     width="100px"
                     label="操作"
@@ -125,28 +169,6 @@
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="total">
             </el-pagination>
-            <div class="visible-item">
-                <el-button
-                    class="create-blue-btn"
-                    size="small"
-                    @click="exportAllList">
-                    全部导出
-                </el-button>
-                <el-button
-                    :class="'disabled-red-btn ' + (multipleSelection.length === 0 ? 'is-disabled' : '')"
-                    size="small"
-                    @click="retryDownloadBatchVideos">
-                    批量重试
-                </el-button>
-                <el-button
-                    :class="'disabled-red-btn ' + (multipleSelection.length === 0 ? 'is-disabled' : '')"
-                    size="small"
-                    :disabled="removeDisabled"
-                    @click="removeBatchVideos">
-                    批量删除
-                </el-button>
-            </div>
-            <el-button class="create-blue-btn back-list" @click="toVideoList">返回视频列表</el-button>
         </div>
     </div>
 </template>
@@ -220,6 +242,7 @@
                 this.listQueryParams.startedAt = '';
                 this.listQueryParams.endedAt = '';
                 this.createRangeTime = [];
+                this.getDownloadVideoList();
             },
             // 导出下载视频列表
             exportAllList() {
@@ -326,30 +349,5 @@
 </script>
 
 <style lang="scss" scoped>
-
-    .block-box {
-        position: relative;
-        padding-top: 55px;
-    }
-
-    .back-list {
-        position: absolute;
-        right: 0px;
-        top: 10px;
-    }
-
-    .el-table {
-        margin-top: 0px;
-    }
-
-    .el-pagination {
-        margin-bottom: 50px;
-    }
-
-    .visible-item {
-        position: absolute;
-        right: 0px;
-        top: 85px;
-    }
 
 </style>

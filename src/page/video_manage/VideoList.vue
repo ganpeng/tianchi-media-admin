@@ -118,6 +118,12 @@
                             <svg-icon icon-class="add"></svg-icon>
                             检查时长
                         </el-button>
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="toDownloadVideoList">
+                            <svg-icon icon-class="add"></svg-icon>
+                            下载列表
+                        </el-button>
                     </div>
                 </div>
                 <video-table ref="videoTable"></video-table>
@@ -393,6 +399,9 @@
             },
             toDiffTime() {
                 this.$router.push({name: 'DiffTimeVideoList'});
+            },
+            toDownloadVideoList() {
+                this.$router.push({name: 'DownloadVideoList'});
             }
         }
     }
