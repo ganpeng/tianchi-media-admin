@@ -53,23 +53,21 @@
             </div>
             <div class="seperator-line"></div>
             <div class="table-field">
-                <h2 class="content-title">产品列表</h2>
+                <h2 class="content-title">产品包列表</h2>
                 <div class="table-operator-field clearfix">
-                    <div class="float-left">
-                    </div>
+                    <div class="float-left"></div>
                     <div class="float-right">
-                        <el-dropdown
-                            @command="createProduct($event)" placement="bottom">
+                        <el-dropdown @command="createProduct($event)" placement="bottom">
                             <el-button class="btn-style-two contain-svg-icon">
                                 <svg-icon icon-class="add"></svg-icon>
                                 添加
                                 <svg-icon icon-class="arrow_down"></svg-icon>
                             </el-button>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="PROGRAMME_CATEGORY">创建类别包</el-dropdown-item>
-                                <el-dropdown-item command="PROGRAMME">创建节目包</el-dropdown-item>
-                                <el-dropdown-item command="CAROUSEL">创建轮播频道包</el-dropdown-item>
-                                <el-dropdown-item command="RECORD">创建直播回看包</el-dropdown-item>
+                                <el-dropdown-item command="PROGRAMME_CATEGORY">类别包</el-dropdown-item>
+                                <el-dropdown-item command="PROGRAMME">节目包</el-dropdown-item>
+                                <el-dropdown-item command="CAROUSEL">轮播频道包</el-dropdown-item>
+                                <el-dropdown-item command="RECORD">直播回看包</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>

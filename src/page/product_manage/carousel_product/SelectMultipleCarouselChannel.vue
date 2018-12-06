@@ -80,8 +80,8 @@
                 width="80px"
                 label="状态">
                 <template slot-scope="scope">
-                    <i class="status-normal" v-if="scope.row.visible">正常</i>
-                    <i class="status-abnormal" v-else>禁播</i>
+                    <i class="text-normal" v-if="scope.row.visible">正常</i>
+                    <i class="text-danger" v-else>禁播</i>
                 </template>
             </el-table-column>
         </el-table>
@@ -94,7 +94,12 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
         </el-pagination>
-        <el-button type="primary" plain class="apppend-Channel" @click="appendChannel" size="small">添加所选轮播频道
+        <el-button
+            type="primary"
+            class="btn-style-two"
+            @click="appendChannel"
+            size="small">
+            添加
         </el-button>
     </div>
 </template>
@@ -247,13 +252,7 @@
 
     .el-table {
         margin-top: 0px;
-        img {
-            width: 70px;
-            height: auto;
-        }
+        margin-bottom: 10px;
     }
 
-    .apppend-Channel {
-        margin-top: 30px;
-    }
 </style>

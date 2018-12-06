@@ -1,50 +1,70 @@
 <!--直播频道列表搜索参数设置组件-->
 <template>
-    <div @keyup.enter="getChannelList">
-        <el-form :inline="true" class="text-left">
-            <el-form-item label="频道类别">
-                <el-select v-model="listQueryParams.typeIdList" clearable multiple placeholder="请选择频道类别">
-                    <el-option
-                        v-for="item in typeOptions"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="录制状态">
-                <el-select v-model="listQueryParams.record" clearable placeholder="请选择频道状态">
-                    <el-option
-                        v-for="item in recordOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="关键字">
-                <el-input v-model="listQueryParams.keyword" placeholder="请填写频道名称或编号" clearable>
-                </el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" plain icon="el-icon-search" @click="getChannelList">搜索</el-button>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" plain class="clear-filter" @click="clearFilters">
-                    <svg-icon
-                        icon-class="clear_filter">
-                    </svg-icon>
-                    清空筛选条件
-                </el-button>
-            </el-form-item>
-        </el-form>
+    <div class="channel-search-container">
+        <div @keyup.enter="getChannelList" class="filters-container">
+            <el-form :inline="true" class="text-left">
+                <el-form-item>
+                    <el-input
+                        v-model="listQueryParams.keyword"
+                        placeholder="频道名称、编号等"
+                        class="border-input"
+                        clearable>
+                    </el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button
+                        class="btn-style-one"
+                        @click="getChannelList"
+                        icon="el-icon-search"
+                        type="primary"
+                        plain>
+                        搜索
+                    </el-button>
+                </el-form-item>
+                <el-form-item label="频道类别">
+                    <el-select
+                        v-model="listQueryParams.typeIdList"
+                        clearable
+                        multiple
+                        placeholder="全部">
+                        <el-option
+                            v-for="item in typeOptions"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="录制状态">
+                    <el-select v-model="listQueryParams.record" clearable
+                               placeholder="全部">
+                        <el-option
+                            v-for="item in recordOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button
+                        class="btn-style-one"
+                        @click="clearFilters"
+                        type="primary"
+                        plain>
+                        <svg-icon icon-class="reset"></svg-icon>
+                        重置
+                    </el-button>
+                </el-form-item>
+            </el-form>
+        </div>
     </div>
 </template>
 
 <script>
 
     export default {
-        name: 'ChannelFilterParams',
+        name: 'LiveChannelFilterParams',
         data() {
             return {
                 listQueryParams: {
@@ -95,6 +115,7 @@
                     }
                 }
                 this.listQueryParams.category = 'LIVE';
+                this.getChannelList();
             }
         }
     };
@@ -102,8 +123,19 @@
 
 <style lang="scss" scoped>
 
-    .el-form {
-        margin-right: 210px;
+    .channel-search-container {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #252D3F;
+        .filters-container {
+            padding-left: 20px;
+            padding-top: 24px;
+            background: #2A3040;
+            border-radius: 8px;
+        }
+    }
+
+    .svg-icon {
+        margin-right: 10px;
     }
 
 </style>

@@ -1,16 +1,11 @@
 <!--创建轮播频道包组件-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'产品管理'},
-            {name:'创建轮播频道包'}]">
-        </custom-breadcrumb>
-        <div class="block-box">
-            <carousel-product-form
-                status="0">
-            </carousel-product-form>
-        </div>
+        <div class="content-title">添加轮播频道包</div>
+        <div class="seperator-line"></div>
+        <carousel-product-form
+            status="0">
+        </carousel-product-form>
     </div>
 </template>
 
@@ -31,7 +26,4 @@
 
 <style lang="less" scoped>
 
-    .block-box {
-        margin-top: 50px;
-    }
 </style>

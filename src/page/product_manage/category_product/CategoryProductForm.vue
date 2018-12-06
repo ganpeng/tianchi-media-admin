@@ -1,6 +1,6 @@
 <!--类别产品包表单组件-->
 <template>
-    <div class="text-left category-container">
+    <div class="text-left product-container">
         <el-form
             :model="productInfo"
             :rules="infoRules"
@@ -9,7 +9,7 @@
             label-width="120px"
             class="form-block fill-form">
             <el-form-item label="类型" prop="category">
-                <label class="category-name">类别包</label>
+                <label class="product-category">类别包</label>
             </el-form-item>
             <el-form-item label="名称" prop="name" required>
                 <el-input v-model="productInfo.name" placeholder="请填写30个字以内的名称"></el-input>
@@ -157,11 +157,11 @@
 
 <style lang="scss" scoped>
 
-    .category-container {
+    .product-container {
         margin-top: 30px;
     }
 
-    .category-name {
+    .product-category {
         color: #fff;
     }
 
