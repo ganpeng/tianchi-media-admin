@@ -335,22 +335,22 @@
                 } else if (!this.isChannelTypeExist(channel.type)) {
                     message = message + '频道类别不存在;';
                 }
-                // 只有直播频道含有回看服务以及回看Ip、回看port
+                // 只有直播频道含有回看服务以及录制Ip、录制端口
                 if (this.$route.params.category === 'LIVE') {
                     if (channel.transcribe !== '是' && channel.transcribe !== '否') {
                         message = message + '请正确填写是否回看服务;';
                     }
-                    // 回看IP
+                    // 录制IP
                     if (this.$util.isEmpty(channel.recordIp)) {
-                        message = message + '回看IP不能为空;';
+                        message = message + '录制IP不能为空;';
                     } else if (!this.$util.isMulticastIPAddress(channel.recordIp)) {
-                        message = message + '请填写正确的回看IP;';
+                        message = message + '请填写正确的录制IP;';
                     }
-                    // 回看端口号
+                    // 录制端口号
                     if (this.$util.isEmpty(channel.recordPort)) {
-                        message = message + '回看端口号不能为空;';
+                        message = message + '录制端口号不能为空;';
                     } else if (!this.$util.isPort(channel.recordPort)) {
-                        message = message + '请填写正确的回看端口号;';
+                        message = message + '请填写正确的录制端口号;';
                     }
                 }
                 // 组播地址

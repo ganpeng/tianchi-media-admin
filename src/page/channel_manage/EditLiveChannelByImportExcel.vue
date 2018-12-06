@@ -261,17 +261,17 @@
                 if (channel.transcribe !== '是' && channel.transcribe !== '否') {
                     message = message + '请正确填写是否回看服务;';
                 }
-                // 回看IP
+                // 录制IP
                 if (this.$util.isEmpty(channel.recordIp)) {
-                    message = message + '回看IP不能为空;';
+                    message = message + '录制IP不能为空;';
                 } else if (!this.$util.isMulticastIPAddress(channel.recordIp)) {
-                    message = message + '请填写正确的回看IP;';
+                    message = message + '请填写正确的录制IP;';
                 }
-                // 回看端口号
+                // 录制端口号
                 if (this.$util.isEmpty(channel.recordPort)) {
-                    message = message + '回看端口号不能为空;';
+                    message = message + '录制端口号不能为空;';
                 } else if (!this.$util.isPort(channel.recordPort)) {
-                    message = message + '请填写正确的回看端口号;';
+                    message = message + '请填写正确的录制端口号;';
                 }
                 if (message) {
                     this.channelList[index].message = '第' + (index + 1) + '个:' + message;

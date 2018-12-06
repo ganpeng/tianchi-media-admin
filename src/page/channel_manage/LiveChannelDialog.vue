@@ -218,11 +218,11 @@
                         {required: true, message: '请选择是否录制直播回看'}
                     ],
                     recordIp: [
-                        {required: true, message: '请输入回看IP'},
+                        {required: true, message: '请输入录制IP'},
                         {validator: checkIP}
                     ],
                     recordPort: [
-                        {required: true, message: '请输入回看端口'},
+                        {required: true, message: '请输入录制端口'},
                         {validator: checkPort}
                     ],
                     typeList: [
