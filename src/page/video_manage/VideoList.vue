@@ -19,7 +19,18 @@
                         搜索
                     </el-button>
                     <div class="search-field-item">
-                        <label class="search-field-item-label">开始时间</label>
+                        <label class="search-field-item-label">时间</label>
+                        <el-date-picker
+                            :value="searchFields.dateRange"
+                            type="daterange"
+                            @input="inputHandler($event, 'dateRange')"
+                            value-format="timestamp"
+                            :unlink-panels="true"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                        <!--
                         <el-date-picker
                             :value="searchFields.startedAt"
                             type="date"
@@ -29,7 +40,9 @@
                             @input="inputHandler($event, 'startedAt')"
                             placeholder="请选择开始时间">
                         </el-date-picker>
+                        -->
                     </div>
+                    <!--
                     <div class="search-field-item">
                         <label class="search-field-item-label">结束时间</label>
                         <el-date-picker
@@ -42,6 +55,7 @@
                             placeholder="请选择结束时间">
                         </el-date-picker>
                     </div>
+                    -->
                     <div class="search-field-item">
                         <label class="search-field-item-label">后缀</label>
                         <el-select

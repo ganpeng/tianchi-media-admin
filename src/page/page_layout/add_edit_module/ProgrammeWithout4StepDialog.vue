@@ -90,10 +90,8 @@
                                     placeholder="搜索你想要的信息"
                                     clearable
                                     class="border-input"
-                                    :value="''"
-                                    @input="searchInputHandler($event, 'name')"
-                                >
-                                </el-input>
+                                    v-model="keyword"
+                                ></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">搜索</el-button>
@@ -275,6 +273,7 @@ export default {
             active: 0,
             dialogVisible: false,
             showExist: false,
+            keyword: '',
             programme: {},
             layoutItem: {},
             customMarkOptions: [],
@@ -358,6 +357,7 @@ export default {
     },
     methods: {
         ...mapMutations({
+            resetProgrammePagination: 'programme/resetProgrammePagination',
             updateProgrammePagination: 'programme/updateProgrammePagination',
             updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
             updateLayoutItemCornerMarkByIndex: 'pageLayout/updateLayoutItemCornerMarkByIndex'
@@ -383,8 +383,10 @@ export default {
             }
         },
         closeDialog() {
+            this.resetProgrammePagination();
             this.dialogVisible = false;
             this.active = 0;
+            this.keyword = '';
             this.programme = {};
             this.previewImage = {
                 title: '',
@@ -462,7 +464,13 @@ export default {
         tableRowClassName({row, rowIndex}) {
             return row.id === this.getSquareProgrammeId ? 'checked' : '';
         },
-        searchEnterHandler() {},
+        searchEnterHandler() {
+            if (this.keyword) {
+                this.getProgrammeList(this.keyword);
+            } else {
+                this.getProgrammeList();
+            }
+        },
         //  查看图片
         displayImage(image) {
             this.previewImage.title = image.name;

@@ -270,7 +270,6 @@ export default {
                 return this.layoutData.layoutItemMultiList;
             },
             set(value) {
-                console.log(value);
                 this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'layoutItemMultiList', value});
             }
         }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="530px" height="221px" viewBox="0 0 530 221" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>搜索输入框 copy</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="03-新增混排模块版式" transform="translate(-70.000000, -110.000000)" fill="#2A3040" fill-rule="nonzero" stroke="#3E495E" stroke-width="0.5">
+            <g id="搜索输入框-copy" transform="translate(71.000000, 111.000000)">
+                <rect x="-0.25" y="-0.25" width="168.5" height="219.5" rx="4"></rect>
+                <rect id="搜索输入框-copy-2" x="179.75" y="-0.25" width="348.5" height="90.5" rx="4"></rect>
+                <rect id="搜索输入框-copy-2" x="179.75" y="101.75" width="78.5" height="117.5" rx="4"></rect>
+                <rect id="搜索输入框-copy-4" x="359.75" y="101.75" width="78.5" height="117.5" rx="4"></rect>
+                <rect id="搜索输入框-copy-3" x="269.75" y="101.75" width="78.5" height="117.5" rx="4"></rect>
+                <rect id="搜索输入框-copy-5" x="449.75" y="101.75" width="78.5" height="117.5" rx="4"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

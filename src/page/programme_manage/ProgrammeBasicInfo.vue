@@ -14,8 +14,9 @@
                 <div class="title-wrapper">
                     <div class="left-side">
                         <span class="title">{{programme.name}}</span>
-                        <span class="release-at">[{{programme.releaseAt | formatDate('yyyy.MM.DD')}}]</span>
+                        <span v-if="programme.releaseAt" class="release-at">[{{programme.releaseAt | formatDate('yyyy.MM.DD')}}]</span>
                         <span class="score">{{programme.score}}</span>
+                        <span v-if="isTvPlay && programme.totalSets" class="total-sets">{{programme.totalSets}}集</span>
                     </div>
                     <div class="date">
                         <span class="create-date">
@@ -34,8 +35,14 @@
                     <span v-for="(item) in programme.categoryList" :key="item.id" class="category-tag">
                         {{item.name}}
                     </span>
-                    <span v-for="(item) in programme.typeList" :key="item.id" class="type-tag">
+                    <span v-for="(item) in programme.typeList" :key="item.id" class="category-tag">
                         {{item.name}}
+                    </span>
+                    <span v-for="(item, index) in programme.tagList" :key="`${index}_tag`" class="type-tag">
+                        {{item}}
+                    </span>
+                    <span v-for="(item, index) in programme.specList" :key="`${index}_spec`" class="spec-tag">
+                        {{item}}
                     </span>
                 </div>
                 <p class="inner-name">{{programme.innerName}}</p>
@@ -80,6 +87,7 @@
                                 {{programme.platformList.join(', ')}}
                             </span>
                         </div>
+                        <!--
                         <div class="attribute-item">
                             <label class="label">定时上架</label>
                             <span class="value">2018.10.31 00:00:00</span>
@@ -88,12 +96,34 @@
                             <label class="label">定时下架</label>
                             <span class="value">2018.10.31 00:00:00</span>
                         </div>
+                        -->
                     </div>
                 </div>
                 <div class="right-side">
+                    <div class="attribute-item mark">
+                        <label class="label">角标</label>
+                        <div class="mark-container">
+                            <div class="left-top">
+                                左上角
+                                <span>{{getMark('leftTop')}}</span>
+                            </div>
+                            <div class="right-top">
+                                右上角
+                                <span>{{getMark('rightTop')}}</span>
+                            </div>
+                            <div class="left-bottom">
+                                左下角
+                                <span>{{getMark('leftBottom')}}</span>
+                            </div>
+                            <div class="right-bottom">
+                                右下角
+                                <span>{{getMark('rightBottom')}}</span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="attribute-item play-count">
                         <label class="label">播放量</label>
-                        <span class="value">{{programme.playCountBasic}}</span>
+                        <span class="value">{{programme.playCountDisplay}}</span>
                     </div>
                 </div>
             </div>
@@ -135,6 +165,11 @@
                 isSports: 'programme/isSports',
                 getAllRoleList: 'programme/getAllRoleList'
             }),
+            getMark() {
+                return (position) => {
+                    return _.get(this.programme, `cornerMark.${position}.caption`);
+                };
+            },
             getYear() {
                 return (timeStamp) => {
                     return timeStamp ? new Date(timeStamp).getFullYear() : '';
@@ -185,6 +220,32 @@
                 .value {
                     font-size: 36px;
                     color: #637497;
+                }
+            }
+            .mark {
+                display: flex;
+                .mark-container {
+                    width: 420px;
+                    display: flex;
+                    flex-wrap: wrap;
+                    .left-top,
+                    .right-top,
+                    .left-bottom,
+                    .right-bottom {
+                        width: 210px;
+                    }
+                }
+            }
+            .attribute-item {
+                font-size: 16px;
+                line-height: 32px;
+                color: #6F7480;
+                text-align: left;
+                .label {
+                    display: inline-block;
+                    width: 100px;
+                    text-align: right;
+                    margin-right: 20px;
                 }
             }
         }

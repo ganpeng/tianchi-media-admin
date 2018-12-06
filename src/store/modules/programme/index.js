@@ -186,6 +186,7 @@ const defaultProgrammeVideo = {
 const defaultProgrammeSearchFields = {
     keyword: '',
     visible: '',
+    releaseAtDateRange: [],
     releaseAtStart: '', // 开始的发行日期
     releaseAtEnd: '', //  结束的发行日期
     produceAreaList: '',
@@ -482,6 +483,10 @@ const mutations = {
     updateProgrammeSearchFields(state, payload) {
         let {key, value} = payload;
         state.searchFields[key] = value;
+        if (key === 'releaseAtDateRange') {
+            state.searchFields.releaseAtStart = state.searchFields.releaseAtDateRange ? state.searchFields.releaseAtDateRange[0] : '';
+            state.searchFields.releaseAtEnd = state.searchFields.releaseAtDateRange ? state.searchFields.releaseAtDateRange[1] : '';
+        }
     },
     resetProgrammeSearchFields(state) {
         state.searchFields = _.cloneDeep(defaultProgrammeSearchFields);

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="170px" height="80px" viewBox="0 0 170 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>搜索输入框 copy 45</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="03-新增混排模块版式" transform="translate(-720.000000, -753.000000)" fill-rule="nonzero">
+            <g id="搜索输入框-copy-45" transform="translate(721.000000, 754.000000)">
+                <rect stroke="#3E495E" stroke-width="0.5" fill="#2A3040" x="-0.25" y="-0.25" width="78.5" height="78.5" rx="4"></rect>
+                <rect id="搜索输入框-copy-46" stroke="#3E495E" stroke-width="1" x="90" y="0" width="78" height="78" rx="4"></rect>
+                <path d="M129.916667,38 L138,38 C138.552285,38 139,38.4477153 139,39 C139,39.5522847 138.552285,40 138,40 L129.916667,40 L129.916667,48 C129.916667,48.5522847 129.468951,49 128.916667,49 C128.364382,49 127.916667,48.5522847 127.916667,48 L127.916667,40 L120,40 C119.447715,40 119,39.5522847 119,39 C119,38.4477153 119.447715,38 120,38 L127.916667,38 L127.916667,30 C127.916667,29.4477153 128.364382,29 128.916667,29 C129.468951,29 129.916667,29.4477153 129.916667,30 L129.916667,38 Z" id="新建icon-copy" fill="#3E495E"></path>
+            </g>
+        </g>
+    </g>
+</svg>

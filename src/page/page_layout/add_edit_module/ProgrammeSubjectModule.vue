@@ -301,6 +301,7 @@ export default {
                 let res = await this.$service.getSubjectById(this.subjectId);
                 if (res && res.code === 0) {
                     this.programmeSubjectData = res.data;
+                    this.setTemplateOptions();
                 }
             }
         } catch (err) {

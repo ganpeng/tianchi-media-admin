@@ -259,6 +259,9 @@
             },
             inputHandler(value, key) {
                 this.updateSearchFields({key, value});
+                if (key !== 'name') {
+                    this.getPersonList({isProgramme: false});
+                }
             },
             _lowerFramePerson(person) {
                 let {id, visible} = person;

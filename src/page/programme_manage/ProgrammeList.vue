@@ -75,7 +75,18 @@
                 </div>
                 <div v-show="searchFieldVisible" class="field-row">
                     <div class="search-field-item">
-                        <label class="search-field-item-label">开始时间</label>
+                        <label class="search-field-item-label">发行日期</label>
+                        <el-date-picker
+                            :value="programmeSearchFields.releaseAtDateRange"
+                            type="daterange"
+                            @input="inputHandler($event, 'releaseAtDateRange')"
+                            value-format="timestamp"
+                            :unlink-panels="true"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                        <!--
                         <el-date-picker
                             :value="programmeSearchFields.releaseAtStart"
                             type="date"
@@ -84,7 +95,9 @@
                             @input="inputHandler($event, 'releaseAtStart')"
                             placeholder="请选择开始时间">
                         </el-date-picker>
+                        -->
                     </div>
+                    <!--
                     <div class="search-field-item">
                         <label class="search-field-item-label">结束时间</label>
                         <el-date-picker
@@ -96,6 +109,7 @@
                             placeholder="请选择结束时间">
                         </el-date-picker>
                     </div>
+                    -->
                     <div class="search-field-item">
                         <label class="search-field-item-label">地区</label>
                         <el-select
@@ -420,6 +434,9 @@
                 this.updateProgrammeSearchFields({key, value});
                 if (key === 'programmeCategoryIdList') {
                     this.updateProgrammeSearchFields({key: 'programmeTypeIdList', value: ''});
+                }
+                if (key !== 'keyword') {
+                    this.getProgrammeList();
                 }
             },
             searchHandler() {
