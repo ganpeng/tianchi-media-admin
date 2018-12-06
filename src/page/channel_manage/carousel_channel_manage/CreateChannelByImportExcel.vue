@@ -106,6 +106,10 @@
                         type: '频道类别（请确保类别已建好）\n' +
                         '（必填）',
                         transcribe: '提供回看服务（必选）',
+                        recordIp: '录制组播地址（非必填）如果此流为清流，则此字段不用填写。\n' +
+                        '如果该频道不录制，此字段也不用填写',
+                        recordPort: '录制端口（非必填）如果此流为清流，则此字段不用填写。\n' +
+                        '如果该频道不录制，此字段也不用填写',
                         multicastIp: '组播地址\n' +
                         '（必填）',
                         multicastPort: '组播端口\n' +
@@ -123,6 +127,8 @@
                         no: '814',
                         type: '体育',
                         transcribe: '是',
+                        recordIp: '232.1.1.2',
+                        recordPort: '1234',
                         multicastIp: '232.1.1.2',
                         multicastPort: '1234',
                         pushServer: '192.168.0.2',
@@ -134,6 +140,8 @@
                         no: '813',
                         type: '娱乐/体育',
                         transcribe: '否',
+                        recordIp: '232.1.1.3',
+                        recordPort: '1234',
                         multicastIp: '232.1.1.3',
                         multicastPort: '1234',
                         pushServer: '192.168.0.3',
@@ -327,10 +335,26 @@
                 } else if (!this.isChannelTypeExist(channel.type)) {
                     message = message + '频道类别不存在;';
                 }
-                // 只有直播频道含有回看服务
+                // 只有直播频道含有回看服务以及回看Ip、回看port
                 if (this.$route.params.category === 'LIVE') {
                     if (channel.transcribe !== '是' && channel.transcribe !== '否') {
                         message = message + '请正确填写是否回看服务;';
+                    }
+                    // 当回看服务为'否'时，recordIp和recordPort不可填写
+                    if (channel.transcribe === '否' && (channel.recordIp || channel.recordPort)) {
+                        message = message + '当前回看服务为否，不能填写回看Ip和回看Port;';
+                    }
+                    // 当回看服务为'是'时，recordIp和recordPort同时存在或者同时不存在
+                    if (channel.transcribe === '是' && !((channel.recordIp && channel.recordPort) || (!channel.recordIp && !channel.recordPort))) {
+                        message = message + '当前回看服务为是，请统一填写回看Ip和回看Port;';
+                    }
+                    // 回看IP
+                    if (channel.transcribe === '是' && channel.recordIp && !this.$util.isMulticastIPAddress(channel.recordIp)) {
+                        message = message + '请填写正确的回看Ip;';
+                    }
+                    // 回看Port
+                    if (channel.transcribe === '是' && channel.recordPort && !this.$util.isPort(channel.recordPort)) {
+                        message = message + '请填写正确的回看端口;';
                     }
                 }
                 // 组播地址

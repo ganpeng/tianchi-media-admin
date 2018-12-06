@@ -110,6 +110,8 @@
                                 no: channel.no,
                                 type: type.slice(1),
                                 transcribe: channel.record ? '是' : '否',
+                                recordIp: channel.recordIp,
+                                recordPort: channel.recordPort,
                                 multicastIp: channel.multicastIp,
                                 multicastPort: channel.multicastPort,
                                 pushServer: channel.pushServer
@@ -258,6 +260,22 @@
                 // }
                 if (channel.transcribe !== '是' && channel.transcribe !== '否') {
                     message = message + '请正确填写是否回看服务;';
+                }
+                // 当回看服务为'否'时，recordIp和recordPort不可填写
+                if (channel.transcribe === '否' && (channel.recordIp || channel.recordPort)) {
+                    message = message + '当前回看服务为否，不能填写回看Ip和回看Port;';
+                }
+                // 当回看服务为'是'时，recordIp和recordPort同时存在或者同时不存在
+                if (channel.transcribe === '是' && !((channel.recordIp && channel.recordPort) || (!channel.recordIp && !channel.recordPort))) {
+                    message = message + '当前回看服务为是，请统一填写回看Ip和回看Port;';
+                }
+                // 回看IP
+                if (channel.transcribe === '是' && channel.recordIp && !this.$util.isMulticastIPAddress(channel.recordIp)) {
+                    message = message + '请填写正确的回看Ip;';
+                }
+                // 回看Port
+                if (channel.transcribe === '是' && channel.recordPort && !this.$util.isPort(channel.recordPort)) {
+                    message = message + '请填写正确的回看端口;';
                 }
                 if (message) {
                     this.channelList[index].message = '第' + (index + 1) + '个:' + message;

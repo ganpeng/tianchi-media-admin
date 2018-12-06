@@ -41,8 +41,7 @@
                         :value="searchFields.keyword"
                         placeholder="支持频道名称，编号搜索"
                         @input="inputHandler($event, 'keyword')"
-                        clearable
-                    >
+                        clearable>
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                 </el-form-item>
@@ -51,8 +50,7 @@
                         :value="searchFields.typeIdList"
                         multiple
                         placeholder="请选择频道类型"
-                        @input="inputHandler($event, 'typeIdList')"
-                    >
+                        @input="inputHandler($event, 'typeIdList')">
                         <el-option
                             v-for="(item, index) in liveChannelTypeList"
                             :key="index"
@@ -66,8 +64,7 @@
                         :value="searchFields.record"
                         clearable
                         placeholder="请选择是否录制回看"
-                        @input="inputHandler($event, 'record')"
-                    >
+                        @input="inputHandler($event, 'record')">
                         <el-option
                             v-for="(item, index) in recordOptinos"
                             :key="index"
@@ -77,8 +74,11 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="searchHandler" plain>搜索</el-button>
-                    <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
+                    <el-button class="page-main-btn" type="primary" icon="el-icon-search" @click="searchHandler" plain>
+                        搜索
+                    </el-button>
+                    <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields"
+                               plain>
                         <svg-icon
                             icon-class="clear_filter"
                             class-name="svg-box">
@@ -117,25 +117,39 @@
             <el-table-column prop="pushServer" align="center" label="所属服务器"></el-table-column>
             <el-table-column align="center" label="是否录制回看">
                 <template slot-scope="scope">
-                        {{scope.row.record ? '是' : '否'}}
+                    {{scope.row.record ? '是' : '否'}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="录制IP">
+                <template slot-scope="scope">
+                    {{scope.row.recordIp}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="录制端口">
+                <template slot-scope="scope">
+                    {{scope.row.recordPort}}
                 </template>
             </el-table-column>
             <el-table-column prop="videoPid" align="center" label="videoPid">
                 <template slot-scope="scope">
-                        {{scope.row.videoPid | padEmpty}}
+                    {{scope.row.videoPid | padEmpty}}
                 </template>
             </el-table-column>
             <el-table-column prop="audioPid" align="center" label="audioPid">
                 <template slot-scope="scope">
-                        {{scope.row.audioPid | padEmpty}}
+                    {{scope.row.audioPid | padEmpty}}
                 </template>
             </el-table-column>
             <el-table-column align="center" width="300px" fixed="right" label="操作">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="previewChannelPage(scope.row.id, scope.row.name, true)">节目单下载</el-button>
+                    <el-button type="text" size="small" @click="previewChannelPage(scope.row.id, scope.row.name, true)">
+                        节目单下载
+                    </el-button>
                     <el-button type="text" size="small" @click="previewChannelPage(scope.row.id)">节目单预览</el-button>
                     <el-button type="text" size="small" @click="_updateLiveChannel(scope.row.id)">编辑</el-button>
-                    <el-button class="text-danger" type="text" size="small" @click="_deleteLiveChannel(scope.row.id)">删除</el-button>
+                    <el-button class="text-danger" type="text" size="small" @click="_deleteLiveChannel(scope.row.id)">
+                        删除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -205,6 +219,7 @@
 <script>
     import {mapGetters, mapActions, mapMutations} from 'vuex';
     import LiveChannelDialog from './LiveChannelDialog';
+
     const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
     const x2js = new X2JS();
     export default {
@@ -315,7 +330,7 @@
                                 this.openDownloadDialog(blob, `${name}.xml`);
                             } else {
                                 if (res.data.length > 0) {
-                                    this.$router.push({ name: 'PreviewProgrammeList', params: { id } });
+                                    this.$router.push({name: 'PreviewProgrammeList', params: {id}});
                                 } else {
                                     this.$message.error('当前频道下没有节目单');
                                     return false;
@@ -533,6 +548,7 @@
                     that.isUploading = true;
                     upload();
                 }
+
                 function upload() {
                     if (typeof that.files[that.count] === 'undefined') {
                         that.isUploading = false;
@@ -569,50 +585,52 @@
                             that.count = that.count + 1;
                             upload();
                         }).catch(() => {
-                            that.files = that.files.map((obj, index) => {
-                                if (index === that.count) {
-                                    obj.message = `<span class="text-danger">文件导入失败</span>`;
-                                    obj.status = 'error';
-                                    return obj;
-                                } else {
-                                    return obj;
-                                }
-                            });
-                            that.count = that.count + 1;
-                            upload();
+                        that.files = that.files.map((obj, index) => {
+                            if (index === that.count) {
+                                obj.message = `<span class="text-danger">文件导入失败</span>`;
+                                obj.status = 'error';
+                                return obj;
+                            } else {
+                                return obj;
+                            }
                         });
+                        that.count = that.count + 1;
+                        upload();
+                    });
                 }
             }
         }
     };
 </script>
 <style scoped lang="less">
-.table-wrapper {
-    height: 500px;
-    overflow-y: scroll;
-}
-.file {
-    position: relative;
-    display: inline-block;
-    background: #409EFF;
-    border: 1px solid #409EFF;
-    border-radius: 3px;
-    font-size: 12px;
-    line-height: 34px;
-    padding: 0px 15px;
-    overflow: hidden;
-    color: #fff;
-    text-decoration: none;
-    text-indent: 0;
-}
-.file input {
-    position: absolute;
-    font-size: 100px;
-    right: 0;
-    top: 0;
-    width: 80px;
-    height: 34px;
-    opacity: 0;
-    cursor: pointer;
-}
+    .table-wrapper {
+        height: 500px;
+        overflow-y: scroll;
+    }
+
+    .file {
+        position: relative;
+        display: inline-block;
+        background: #409EFF;
+        border: 1px solid #409EFF;
+        border-radius: 3px;
+        font-size: 12px;
+        line-height: 34px;
+        padding: 0px 15px;
+        overflow: hidden;
+        color: #fff;
+        text-decoration: none;
+        text-indent: 0;
+    }
+
+    .file input {
+        position: absolute;
+        font-size: 100px;
+        right: 0;
+        top: 0;
+        width: 80px;
+        height: 34px;
+        opacity: 0;
+        cursor: pointer;
+    }
 </style>

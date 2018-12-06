@@ -43,6 +43,8 @@ let defaultLiveChannel = {
     releaseStatus: '', // 直播频道的发布状态
     status: '', // 直播频道状态`
     record: '', // 是否支持直播回看
+    recordIp: '', // 回看Ip
+    recordPort: '', // 回看端口
     audioPid: '',
     videoPid: '',
     //  直播频道的类型列表
@@ -137,11 +139,18 @@ const mutations = {
         let {key, value} = payload;
         if (key === 'typeList') {
             state.liveChannel[key] = state.channelTypeList.filter((type) => {
-                let index = value.findIndex((id) => { return id === type.id; });
+                let index = value.findIndex((id) => {
+                    return id === type.id;
+                });
                 return index > -1;
             });
         } else {
             state.liveChannel[key] = value;
+            // 如果设置录制为false，则清除录制IP和录制port
+            if (key === 'record' && value === false) {
+                state.liveChannel.recordIp = '';
+                state.liveChannel.recordPort = '';
+            }
         }
     },
     resetLiveChannel(state) {
@@ -158,7 +167,7 @@ const mutations = {
     },
     addChannelCategory(state, payload) {
         let {name, data: {category}} = payload;
-        let channelCategory = { name, category, id: _.uniqueId('category_') };
+        let channelCategory = {name, category, id: _.uniqueId('category_')};
         if (category === 'LIVE') {
             state.liveChannelTypeList.push(channelCategory);
         } else {
@@ -189,7 +198,8 @@ const actions = {
                 commit('setLiveChannelTypeList', {list: liveChannelTypeList});
                 commit('setCarouselChannelTypeList', {list: carouselChannelTypeList});
             }
-        } catch (err) { }
+        } catch (err) {
+        }
     },
     /**
      * 保存频道分类
@@ -206,7 +216,8 @@ const actions = {
             if (res && res.code === 0) {
                 return res;
             }
-        } catch (err) { }
+        } catch (err) {
+        }
     },
     /**
      *  查看某中类别下频道的计数
@@ -217,7 +228,8 @@ const actions = {
             if (res && res.code === 0) {
                 return res.data === 0;
             }
-        } catch (err) {}
+        } catch (err) {
+        }
     },
     /**
      * 批量新增直播频道
@@ -231,7 +243,8 @@ const actions = {
             delete liveChannel.visible;
             let res = await service.createChannels(liveChannel);
             return res;
-        } catch (err) { }
+        } catch (err) {
+        }
     },
     /**
      *  根据频道的id获取频道信息
@@ -243,7 +256,8 @@ const actions = {
                 commit('setLiveChannel', {liveChannel: Object.assign({record: null}, res.data)});
                 return res;
             }
-        } catch (err) {}
+        } catch (err) {
+        }
     },
     /**
      * 根据id修改直播频道
@@ -254,7 +268,8 @@ const actions = {
             let liveChannel = _.cloneDeep(state.liveChannel);
             let res = await service.updateChannelById(id, liveChannel);
             return res;
-        } catch (err) { }
+        } catch (err) {
+        }
     },
     /**
      * 根据id删除直播频道
@@ -265,7 +280,8 @@ const actions = {
             if (res && res.code === 0) {
                 return res;
             }
-        } catch (err) { }
+        } catch (err) {
+        }
     },
     /**
      * 获取频道的列表
@@ -279,7 +295,8 @@ const actions = {
                 commit('setList', {list});
                 commit('setPagination', {pageNum: pageNum + 1, pageSize, total});
             }
-        } catch (err) { }
+        } catch (err) {
+        }
     },
     /**
      * 获取节目单
@@ -288,7 +305,8 @@ const actions = {
         try {
             let res = await service.getChannelPageById(id);
             return res;
-        } catch (err) { }
+        } catch (err) {
+        }
     }
 };
 
