@@ -146,11 +146,6 @@ const mutations = {
             });
         } else {
             state.liveChannel[key] = value;
-            // 如果设置录制为false，则清除录制IP和录制port
-            if (key === 'record' && value === false) {
-                state.liveChannel.recordIp = '';
-                state.liveChannel.recordPort = '';
-            }
         }
     },
     resetLiveChannel(state) {

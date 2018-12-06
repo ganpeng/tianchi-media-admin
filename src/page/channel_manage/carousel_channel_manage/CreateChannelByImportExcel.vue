@@ -340,21 +340,17 @@
                     if (channel.transcribe !== '是' && channel.transcribe !== '否') {
                         message = message + '请正确填写是否回看服务;';
                     }
-                    // 当回看服务为'否'时，recordIp和recordPort不可填写
-                    if (channel.transcribe === '否' && (channel.recordIp || channel.recordPort)) {
-                        message = message + '当前回看服务为否，不能填写回看Ip和回看Port;';
-                    }
-                    // 当回看服务为'是'时，recordIp和recordPort同时存在或者同时不存在
-                    if (channel.transcribe === '是' && !((channel.recordIp && channel.recordPort) || (!channel.recordIp && !channel.recordPort))) {
-                        message = message + '当前回看服务为是，请统一填写回看Ip和回看Port;';
-                    }
                     // 回看IP
-                    if (channel.transcribe === '是' && channel.recordIp && !this.$util.isMulticastIPAddress(channel.recordIp)) {
-                        message = message + '请填写正确的回看Ip;';
+                    if (this.$util.isEmpty(channel.recordIp)) {
+                        message = message + '回看IP不能为空;';
+                    } else if (!this.$util.isMulticastIPAddress(channel.recordIp)) {
+                        message = message + '请填写正确的回看IP;';
                     }
-                    // 回看Port
-                    if (channel.transcribe === '是' && channel.recordPort && !this.$util.isPort(channel.recordPort)) {
-                        message = message + '请填写正确的回看端口;';
+                    // 回看端口号
+                    if (this.$util.isEmpty(channel.recordPort)) {
+                        message = message + '回看端口号不能为空;';
+                    } else if (!this.$util.isPort(channel.recordPort)) {
+                        message = message + '请填写正确的回看端口号;';
                     }
                 }
                 // 组播地址

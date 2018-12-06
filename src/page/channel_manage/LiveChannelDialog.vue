@@ -34,8 +34,7 @@
                     :disabled="readonly">
                 </el-input>
             </el-form-item>
-            <el-form-item
-                label="直播频道展示编号" prop="no">
+            <el-form-item label="直播频道展示编号" prop="no">
                 <el-input
                     type="number"
                     :value="liveChannel.no"
@@ -108,19 +107,17 @@
                           :label="false">否
                 </el-radio>
             </el-form-item>
-            <!--非必填-->
-            <el-form-item label="录制IP" prop="recordIp">
+            <el-form-item label="录制IP" prop="recordIp" required>
                 <el-input
-                    :disabled="readonly || !liveChannel.record"
+                    :disabled="readonly"
                     placeholder="请输入录制IP"
                     :value="liveChannel.recordIp"
                     @input="inputHandler($event, 'recordIp')">
                 </el-input>
             </el-form-item>
-            <!--非必填-->
-            <el-form-item label="录制端口" prop="recordPort">
+            <el-form-item label="录制端口" prop="recordPort" required>
                 <el-input
-                    :disabled="readonly || !liveChannel.record"
+                    :disabled="readonly"
                     type="number"
                     placeholder="请输入录制端口"
                     :value="liveChannel.recordPort"
@@ -189,15 +186,6 @@
         },
         components: {UploadImage},
         data() {
-            let checkRecordPort = (rule, value, callback) => {
-                if (this.liveChannel.record && !((this.liveChannel.recordIp && this.liveChannel.recordPort) || (!this.liveChannel.recordIp && !this.liveChannel.recordPort))) {
-                    return callback(new Error('当前回看录制为是，请统一填写回看Ip和回看端口'));
-                } else if (!this.$util.isEmpty(value) && !this.$util.isPort(value)) {
-                    return callback(new Error('请填写正确的端口号'));
-                } else {
-                    callback();
-                }
-            };
             return {
                 isLoading: false,
                 imageUploadDialogVisible: false,
@@ -230,10 +218,12 @@
                         {required: true, message: '请选择是否录制直播回看'}
                     ],
                     recordIp: [
+                        {required: true, message: '请输入回看IP'},
                         {validator: checkIP}
                     ],
                     recordPort: [
-                        {validator: checkRecordPort}
+                        {required: true, message: '请输入回看端口'},
+                        {validator: checkPort}
                     ],
                     typeList: [
                         {required: true, message: '请选择直播频道类别'}
