@@ -27,7 +27,7 @@
                     header-row-class-name="common-table-header"
                     :data="siteList"
                     border
-                    row-class-name=subject-row
+                    row-class-name=site-row
                     style="width: 100%">
                     <el-table-column
                         align="center"

@@ -8,7 +8,12 @@
             </hamburger>
         </div>
         <div class="info">
-            <el-button type="text" class="site-name">{{siteName ? siteName:'站点未配置'}}</el-button>
+            <el-button
+                type="text"
+                class="site-name"
+                @click="toConfigSite">
+                {{siteName ? siteName:'站点未配置，点击配置'}}
+            </el-button>
             <div class="avatar-box">
                 <svg-icon
                     icon-class="avatar_default"
@@ -44,8 +49,13 @@
         methods: {
             init() {
                 this.name = Cookies.get('name');
-                this.siteName = this.$wsCache.localStorage.get('siteInfo') ? this.$wsCache.localStorage.get('siteInfo').siteName : '';
                 // 初始化站点名称
+                this.$service.getSiteInfo().then(response => {
+                    if (response && response.code === 0) {
+                        this.siteName = response.data.siteName;
+                        this.$wsCache.localStorage.set('siteInfo', response.data);
+                    }
+                });
             },
             // 切换侧边栏
             toggleAside() {
@@ -54,6 +64,11 @@
             },
             logout() {
                 this.$store.dispatch('user/logout', true);
+            },
+            toConfigSite() {
+                if (!this.siteName) {
+                    this.$router.push({name: 'ConfigSite'});
+                }
             }
         }
     };

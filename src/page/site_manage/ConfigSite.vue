@@ -24,8 +24,7 @@
                 prop="siteToken">
                 <el-input
                     v-model="siteInfo.siteToken"
-                    placeholder="请填写子站token进行配置"
-                    @blur="getSiteNameByToken">
+                    placeholder="请填写子站token进行配置">
                 </el-input>
             </el-form-item>
         </el-form>
@@ -67,18 +66,17 @@
                 this.siteInfo.siteName = (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) ? this.$wsCache.localStorage.get('siteInfo').siteName : '站点未配置,请输入token进行配置';
                 this.siteInfo.siteToken = (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) ? this.$wsCache.localStorage.get('siteInfo').siteToken : '';
             },
-            getSiteNameByToken() {
-
-            },
             configSite() {
                 this.$refs['siteInfo'].validate((valid) => {
                     if (valid) {
                         this.$service.configSiteToken({siteToken: this.siteInfo.siteToken}).then(response => {
                             if (response && response.code === 0) {
-                                this.$message.success('成功配置站点');
+                                this.$message.success('成功配置站点，将重新更新页面以更新配置');
                                 // 保存到localStorage
                                 this.$wsCache.localStorage.set('siteInfo', response.data);
-                                window.location.reload();
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 1000);
                             }
                         });
                     } else {
