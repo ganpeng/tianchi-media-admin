@@ -5,6 +5,8 @@ const defaultSearchFields = {
     no: '',
     hardWareId: '',
     status: '',
+    registeredAtStart: '',
+    registeredAtEnd: '',
     registeredAt: []
 };
 
@@ -69,6 +71,10 @@ const mutations = {
     updateSearchFields(state, payload) {
         let {key, value} = payload;
         state.searchFields[key] = value;
+        if (key === 'registeredAt') {
+            state.searchFields.registeredAtStart = state.searchFields.registeredAt ? state.searchFields.registeredAt[0] : '';
+            state.searchFields.registeredAtEnd = state.searchFields.registeredAt ? state.searchFields.registeredAt[1] : '';
+        }
     },
     resetSearchFields(state) {
         state.searchFields = _.cloneDeep(defaultSearchFields);
@@ -99,8 +105,7 @@ const actions = {
     async getDeviceList({commit, state}) {
         try {
             let {pageNum, pageSize} = state.pagination;
-            let {registeredAt, no, hardWareId, status} = state.searchFields;
-            let [registeredAtStart, registeredAtEnd] = registeredAt;
+            let {no, hardWareId, status, registeredAtStart, registeredAtEnd} = state.searchFields;
             let params = Object.assign({},
                 {pageNum: pageNum - 1, pageSize}, {
                     no, hardWareId, status, registeredAtStart, registeredAtEnd
@@ -111,7 +116,9 @@ const actions = {
                 commit('setList', {list});
                 commit('setPagination', { pageNum: pageNum + 1, pageSize, total });
             }
-        } catch (err) {}
+        } catch (err) {
+            console.log(err);
+        }
     },
     async addDevice({commit, state}) {
         try {

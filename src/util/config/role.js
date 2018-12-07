@@ -628,6 +628,85 @@ const LAYOUT_TEMPLATE_LIST = [
     }
 ];
 
+const PROGRAMME_ALLOW_PICTURE_DIMENSIONS = [
+    {
+        width: 260,
+        height: 380
+    },
+    {
+        width: 240,
+        height: 350
+    },
+    {
+        width: 738,
+        height: 472
+    },
+    {
+        width: 472,
+        height: 472
+    },
+    {
+        width: 342,
+        height: 472
+    },
+    {
+        width: 996,
+        height: 472
+    },
+    {
+        width: 860,
+        height: 472
+    },
+    {
+        width: 1310,
+        height: 472
+    },
+    {
+        width: 560,
+        height: 720
+    },
+    {
+        width: 560,
+        height: 600
+    },
+    {
+        width: 560,
+        height: 222
+    },
+    {
+        width: 560,
+        height: 300
+    },
+    {
+        width: 410,
+        height: 216
+    },
+    {
+        width: 410,
+        height: 472
+    },
+    {
+        width: 410,
+        height: 615
+    },
+    {
+        width: 860,
+        height: 440
+    },
+    {
+        width: 860,
+        height: 260
+    },
+    {
+        width: 1160,
+        height: 300
+    },
+    {
+        width: 1160,
+        height: 600
+    }
+];
+
 //  推荐专题（背景渲染） SUBJECT,
 // 推荐节目PROGRAMME PROGRAMME,
 //  节目列表页面 PROGRAMME_LIST,
@@ -697,5 +776,6 @@ export default {
     NAV_LIST,
     ASIDE_LIST,
     LAYOUT_TEMPLATE_LIST,
-    VIDEO_SUFFIX_OPTIONS
+    VIDEO_SUFFIX_OPTIONS,
+    PROGRAMME_ALLOW_PICTURE_DIMENSIONS
 };

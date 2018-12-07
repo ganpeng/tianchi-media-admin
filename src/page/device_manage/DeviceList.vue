@@ -55,6 +55,7 @@
                         <el-date-picker
                             :value="searchFields.registeredAt"
                             type="daterange"
+                            :unlink-panels="true"
                             value-format="timestamp"
                             range-separator="至"
                             start-placeholder="开始日期"
@@ -230,6 +231,9 @@
             },
             inputSearchFieldHandler(value, key) {
                 this.updateSearchFields({key, value});
+                if (key !== 'no') {
+                    this.getDeviceList();
+                }
             },
             searchHandler() {
                 this.getDeviceList();

@@ -634,13 +634,9 @@ const mutations = {
     // 节目图片
     setCoverImage(state) {
         let coverImage = state.programme.posterImageList.find((img) => {
-            return parseInt(img.width) === 240 && parseInt(img.height) === 350;
-        });
-        let horizontalCoverImage = state.programme.posterImageList.find((img) => {
-            return parseInt(img.width) === 807 && parseInt(img.height) === 455;
+            return parseInt(img.width) === 260 && parseInt(img.height) === 380;
         });
         state.programme.coverImage = coverImage;
-        state.programme.horizontalCoverImage = horizontalCoverImage;
     },
     addImageToPosterImageList(state, payload) {
         let {image} = payload;
@@ -839,7 +835,6 @@ const mutations = {
     updateProgrammeMark(state, payload) {
         let {key, checked} = payload;
         let markType = '';
-        console.log(key);
         switch (key) {
             case 'leftTop':
                 markType = 'PLATFORM';
@@ -853,7 +848,6 @@ const mutations = {
             default:
                 throw new Error('角标的key不存在');
         }
-        console.log(markType);
         if (checked) {
             state.programme.cornerMark[key] = {
                 caption: '',

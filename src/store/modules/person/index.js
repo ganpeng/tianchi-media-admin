@@ -264,6 +264,7 @@ const actions = {
             if (res && res.code === 0) {
                 commit('setCurrentPerson', {currentPerson: res.data});
             }
+            return res;
         } catch (err) {
         }
     },

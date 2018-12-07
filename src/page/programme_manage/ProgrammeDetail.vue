@@ -378,7 +378,10 @@
                         <el-form-item label="节目角标">
                             <div class="mark-container">
                                 <div class="mark-item">
-                                    <el-checkbox :checked="leftTopChecked" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
+                                    <el-checkbox v-if="markChecked('leftTop')" :checked="true" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
+                                        左上角：播放平台
+                                    </el-checkbox>
+                                    <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
                                         左上角：播放平台
                                     </el-checkbox>
                                 </div>
@@ -399,12 +402,18 @@
                                     </el-select>
                                 </div>
                                 <div class="mark-item">
-                                    <el-checkbox @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
+                                    <el-checkbox v-if="markChecked('leftBottom')" :checked="true" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
+                                        左下角：更新
+                                    </el-checkbox>
+                                    <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
                                         左下角：更新
                                     </el-checkbox>
                                 </div>
                                 <div class="mark-item">
-                                    <el-checkbox @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
+                                    <el-checkbox v-if="markChecked('rightBottom')" :checked="true" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
+                                        右下角：评分
+                                    </el-checkbox>
+                                    <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
                                         右下角：评分
                                     </el-checkbox>
                                 </div>
@@ -424,14 +433,14 @@
                             </el-col>
                         </el-form-item>
                         <el-form-item label="节目海报">
-                            <p class="little-tips">(230*450)六分位图必传</p>
+                            <p class="little-tips">(260*380)六分位图必传</p>
                         </el-form-item>
                         <div class="wrapper clearfix">
                             <multi-image-uploader
                                 :imageList="programme.posterImageList"
                                 :deleteImageHandler="deleteImageHandler"
                                 :imageUploadedHandler="imageUploadedHandler"
-                                :allowResolutions="[{width: 200, height: 200}]"
+                                :allowResolutions="allowResolutions"
                             ></multi-image-uploader>
                         </div>
                     </el-col>
@@ -557,6 +566,7 @@
                 subjectOptions: role.SUBJECT,
                 size: dimension.PROGRAMME_DIMENSION,
                 customMarkOptions: [],
+                allowResolutions: role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS,
                 previewImage: {
                     display: false,
                     autoplay: false,
@@ -735,10 +745,12 @@
             rightBottomDisabled() {
                 return !this.programme.score;
             },
-            leftTopChecked() {
-                let leftTop = _.get(this.programme, 'cornerMark.leftTop.caption');
-                let isChecked = _.isEmpty(leftTop);
-                return isChecked;
+            markChecked() {
+                return (position) => {
+                    let mark = _.get(this.programme, `cornerMark.${position}`);
+                    let isChecked = !_.isEmpty(mark);
+                    return isChecked;
+                };
             },
             rightTop() {
                 return _.get(this.programme, 'cornerMark.rightTop');
@@ -1057,7 +1069,7 @@
                 this.videoUploadDialogVisible = status;
             },
             gotoProgramTypePage() {
-                this.$router.push({name: 'ProgrammeTypeManage'});
+                this.$router.push({name: 'Category'});
             },
             goBack() {
                 this.$router.push({name: 'ProgrammeList'});
@@ -1164,25 +1176,17 @@
             },
             checkImage(next) {
                 const {posterImageList} = this.programme;
-                if (posterImageList && posterImageList.length < 2) {
-                    this.$message({type: 'error', message: '推荐位六分位图和横版海报图必须上传且只能上传一张'});
-                    return false;
-                }
-
-                let sizeOne = posterImageList.findIndex((img) => {
-                    return parseInt(img.width) === 240 && parseInt(img.height) === 350;
-                });
-                let sizeTwo = posterImageList.findIndex((img) => {
-                    return parseInt(img.width) === 807 && parseInt(img.height) === 455;
-                });
-
-                if (sizeOne < 0) {
+                if (posterImageList && posterImageList.length < 1) {
                     this.$message({type: 'error', message: '推荐位六分位图必须上传且只能上传一张'});
                     return false;
                 }
 
-                if (sizeTwo < 0) {
-                    this.$message({type: 'error', message: '横版海报图必须上传且只能上传一张'});
+                let sizeOne = posterImageList.findIndex((img) => {
+                    return parseInt(img.width) === 260 && parseInt(img.height) === 380;
+                });
+
+                if (sizeOne < 0) {
+                    this.$message({type: 'error', message: '推荐位六分位图必须上传且只能上传一张'});
                     return false;
                 }
 
@@ -1251,8 +1255,10 @@
     display: flex;
     flex-wrap: wrap;
     .mark-item {
-        font-size: 16px;
-        color: #A8ABB3;
+        font-size: 14px;
+        color: #c0c4cc;
+        font-weight: 500;
+        // color: #A8ABB3;
         width: 45%;
         .el-checkbox {
             padding: 0;

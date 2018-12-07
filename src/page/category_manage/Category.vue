@@ -1,6 +1,6 @@
 <!-- 类型管理页面 -->
 <template>
-    <div class="category-container">
+    <div id="category" class="category-container">
         <div class="tab-container">
             <ul class="tab-list clearfix">
                 <li
@@ -55,34 +55,36 @@
                         </div>
                         <h3 class="content-sub-title">类型组</h3>
                         <div class="seperator-line"></div>
-                        <draggable element="ul" class="category-group-list" v-model="getCategoryGroupList">
-                            <li v-for="(item, index) in getCategoryGroupList" :key="item.name" class="category-group-item">
-                                <div class="header">
-                                    {{item.name}}
-                                </div>
-                                <div class="content">
-                                    <div class="type-list-tags">
-                                        <span v-for="(id) in item.programmeTypeList" :key="id">
-                                            {{getTypeNameById(id)}}
-                                        </span>
+                        <div class="category-group-list-wrapper">
+                            <draggable element="ul" class="category-group-list" v-model="getCategoryGroupList">
+                                <li v-for="(item, index) in getCategoryGroupList" :key="item.name" class="category-group-item">
+                                    <div class="header">
+                                        {{item.name}}
                                     </div>
-                                    <div class="year-area-tags">
-                                        <span class="year-tag" v-for="(name, index) in item.dateRangeList" :key="name + index">
-                                            {{name}}
-                                        </span>
-                                        <span class="area-tag" v-for="(obj, index) in areaLabel(item.produceAreaList)" :key="index">
-                                            <svg-icon icon-class="location"></svg-icon>
-                                            {{obj.name}}
-                                        </span>
+                                    <div class="content">
+                                        <div class="type-list-tags">
+                                            <span v-for="(id) in item.programmeTypeList" :key="id">
+                                                {{getTypeNameById(id)}}
+                                            </span>
+                                        </div>
+                                        <div class="year-area-tags">
+                                            <span class="year-tag" v-for="(name, index) in item.dateRangeList" :key="name + index">
+                                                {{name}}
+                                            </span>
+                                            <span class="area-tag" v-for="(obj, index) in areaLabel(item.produceAreaList)" :key="index">
+                                                <svg-icon icon-class="location"></svg-icon>
+                                                {{obj.name}}
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                                <span class="btn-text edit-btn" @click="editCategoryGroupByIndex(index)">编辑</span>
-                                <i @click="deleteCategoryGroupByIndexHandler(index)" class="el-icon-circle-close-outline delete-btn"></i>
-                            </li>
-                            <li key="alsdjflsdjf" sort="false" class="category-group-item" @click="addCategoryGroup">
+                                    <span class="btn-text edit-btn" @click="editCategoryGroupByIndex(index)">编辑</span>
+                                    <i @click="deleteCategoryGroupByIndexHandler(index)" class="el-icon-circle-close-outline delete-btn"></i>
+                                </li>
+                            </draggable>
+                            <div class="add-category-group-item" @click="addCategoryGroup">
                                 <svg-icon icon-class="plus"></svg-icon>
-                            </li>
-                        </draggable>
+                            </div>
+                        </div>
                         <div class="fixed-btn-container">
                             <el-button class="btn-style-two" type="primary" @click="saveProgrammeCategoryHandler">保存</el-button>
                         </div>
@@ -150,6 +152,7 @@
                                             </el-tag>
                                         </div>
                                         <area-search
+                                            class="area-search"
                                             :handleSelect="selectAreaHandler"
                                         ></area-search>
                                     </div>
@@ -586,6 +589,10 @@ export default {
         },
         saveCategoryGroupHandler() {
             let categoryGroup = _.cloneDeep(this.categoryGroup);
+            if (!_.get(categoryGroup, 'name')) {
+                this.$message.error('请输入类型组名称');
+                return false;
+            }
             if (this.index !== null) {
                 this.updateCategoryGroupList({index: this.index, categoryGroup});
             } else {
@@ -685,6 +692,27 @@ export default {
         padding-left: 20px;
     }
 }
+.category-group-list-wrapper {
+    display: flex;
+    min-height: 140px;
+    .add-category-group-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 110px;
+        min-width: 110px;
+        border: 1px solid #3E495E;
+        border-radius: 4px;
+        background: transparent;
+        margin: 20px 0 10px 0;
+        cursor: pointer;
+        .svg-icon {
+            fill: #3E495E;
+            width: 20px;
+            height: 20px;
+        }
+    }
+}
 .category-group-list {
     display: flex;
     flex-wrap: wrap;
@@ -700,20 +728,7 @@ export default {
         margin-bottom: 10px;
         cursor: pointer;
         &:last-child {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 110px;
-            min-width: 110px;
-            border: 1px solid #3E495E;
-            border-radius: 4px;
-            background: transparent;
-            cursor: pointer;
-            .svg-icon {
-                fill: #3E495E;
-                width: 20px;
-                height: 20px;
-            }
+
         }
         .header {
             height: 30px;
@@ -833,11 +848,6 @@ export default {
             }
             .el-input {
                 width: 50%;
-                border: 1px solid #A3D0FD;
-                border-radius: 4px;
-                .el-input_inner {
-                    border: none;
-                }
             }
             .el-checkbox {
                 padding: 0;
@@ -857,6 +867,15 @@ export default {
                     }
                 }
             }
+        }
+    }
+}
+</style>
+<style lang="scss">
+#category {
+    .el-input {
+        input.el-input__inner {
+            border-color: #A3D0FD;
         }
     }
 }

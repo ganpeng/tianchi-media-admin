@@ -37,16 +37,22 @@
         },
         data() {
             return {
-                isLoading: false
+                isLoading: false,
+                alias: ''
             };
         },
-        created() {
-            let {id} = this.$route.params;
-            this.resetPerson();
-            if (this.status === 1 || this.status === 2) {
+        async created() {
+            try {
+                let {id} = this.$route.params;
+                this.resetPerson();
                 if (id) {
-                    this.getPersonById(id);
+                    let res = await this.getPersonById(id);
+                    if (res && res.code === 0) {
+                        this.alias = res.data.alias;
+                    }
                 }
+            } catch (err) {
+                console.log(err);
             }
         },
         mounted() {
@@ -87,7 +93,7 @@
                 checkAliasIsExist: 'person/checkAliasIsExist'
             }),
             // 新增人物
-             _createPerson() {
+            _createPerson() {
                 this.$refs.personForm.$refs['createPerson'].validate(valid => {
                     if (valid) {
                         if (_.get(this.person.avatarImage, 'uri')) {
@@ -122,22 +128,32 @@
                     if (valid) {
                         if (_.get(this.person.avatarImage, 'uri')) {
                             this.isLoading = true;
-                            this.checkAliasIsExist()
-                                .then((result) => {
-                                    if (result && result.code === 0) {
-                                        if (!result.data) {
-                                            this.updatePersonById()
-                                                .then(() => {
-                                                    this.$message.success('编辑人物成功');
-                                                    this.$router.back();
-                                                }).finally(() => {
-                                                    this.isLoading = false;
-                                                });
-                                        } else {
-                                            this.$message.error(`人物别名${this.person.alias}已存在`);
+                            if (this.alias === this.person.alias) {
+                                this.updatePersonById()
+                                    .then(() => {
+                                        this.$message.success('编辑人物成功');
+                                        this.$router.back();
+                                    }).finally(() => {
+                                        this.isLoading = false;
+                                    });
+                            } else {
+                                this.checkAliasIsExist()
+                                    .then((result) => {
+                                        if (result && result.code === 0) {
+                                            if (!result.data) {
+                                                this.updatePersonById()
+                                                    .then(() => {
+                                                        this.$message.success('编辑人物成功');
+                                                        this.$router.back();
+                                                    }).finally(() => {
+                                                        this.isLoading = false;
+                                                    });
+                                            } else {
+                                                this.$message.error(`人物别名${this.person.alias}已存在`);
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                            }
                         } else {
                             this.$message.error('请上传人物头像');
                         }

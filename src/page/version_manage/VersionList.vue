@@ -50,20 +50,7 @@
                             </el-option>
                         </el-select>
                     </div>
-                    <!-- <div class="search-field-item">
-                        <label class="search-field-item-label">时间</label>
-                        <el-date-picker
-                            :value="searchFields.dateRange"
-                            type="daterange"
-                            align="right"
-                            unlink-panels
-                            value-format="timestamp"
-                            @input="inputHandler($event, 'dateRange')"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期">
-                        </el-date-picker>
-                    </div> -->
+
                     <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
                         <svg-icon icon-class="reset"></svg-icon>
                         重置
@@ -76,6 +63,20 @@
                 </div>
                 <div v-show="searchFieldVisible" class="field-row">
                     <div class="search-field-item">
+                        <label class="search-field-item-label">时间</label>
+                        <el-date-picker
+                            :value="searchFields.dateRange"
+                            type="daterange"
+                            align="right"
+                            unlink-panels
+                            value-format="timestamp"
+                            @input="inputHandler($event, 'dateRange')"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </div>
+                    <!-- <div class="search-field-item">
                         <label class="search-field-item-label">开始时间</label>
                         <el-date-picker
                             :value="searchFields.releaseAtStart"
@@ -98,7 +99,7 @@
                             @input="inputHandler($event, 'releaseAtEnd')"
                             placeholder="请选择结束时间">
                         </el-date-picker>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="seperator-line"></div>
@@ -248,6 +249,9 @@
             },
             inputHandler(value, key) {
                 this.updateSearchFields({key, value});
+                if (key !== 'keyword') {
+                    this.getVersionList();
+                }
             },
             submitVersionHandler() {
                 this.$refs.versionForm.$refs.createVersion.validate(value => {
