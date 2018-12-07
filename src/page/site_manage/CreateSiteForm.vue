@@ -3,6 +3,7 @@
     <el-form
         class="text-left"
         ref="site"
+        :rules="infoRules"
         :model="site">
         <el-form-item
             label="站点名称"

@@ -199,6 +199,10 @@
             },
             // 从主站拉取视频到本地
             pullVideoFromMaster() {
+                if (!this.selectedMultipleVideo || this.selectedMultipleVideo.length === 0) {
+                    this.$message.warning('请选择相应的视频');
+                    return;
+                }
                 this.$emit('pullVideoFromMaster', this.selectedMultipleVideo);
                 this.$emit('closeSelectVideoDialog');
             },
