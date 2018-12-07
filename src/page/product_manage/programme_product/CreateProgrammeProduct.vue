@@ -1,15 +1,10 @@
 <!--创建节目包组件-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'产品管理'},
-            {name:'创建节目包'}]">
-        </custom-breadcrumb>
-        <div class="block-box">
-            <create-programme-product-form>
-            </create-programme-product-form>
-        </div>
+        <div class="content-title">添加节目包</div>
+        <div class="seperator-line"></div>
+        <create-programme-product-form>
+        </create-programme-product-form>
     </div>
 </template>
 
@@ -30,7 +25,4 @@
 
 <style lang="less" scoped>
 
-    .block-box {
-        margin-top: 50px;
-    }
 </style>

@@ -4,7 +4,7 @@
         <div class="content-title">添加轮播频道包</div>
         <div class="seperator-line"></div>
         <carousel-product-form
-            status="0">
+            status="CREATE_PRODUCT">
         </carousel-product-form>
     </div>
 </template>

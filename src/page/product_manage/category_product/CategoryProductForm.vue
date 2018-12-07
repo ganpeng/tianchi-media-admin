@@ -37,11 +37,17 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <div class="operate-block text-center">
-                <el-button type="primary" @click="operateProduct" class="btn-style-two">保存</el-button>
-                <el-button type="primary" plain @click="toProductList" class="btn-style-three">返回列表</el-button>
-            </div>
+            <el-form-item label="状态" prop="visible" required>
+                <el-radio-group v-model="productInfo.visible">
+                    <el-radio :label="true">上架</el-radio>
+                    <el-radio :label="false">下架</el-radio>
+                </el-radio-group>
+            </el-form-item>
         </el-form>
+        <div class="operate-block text-center">
+            <el-button type="primary" @click="operateProduct" class="btn-style-two">保存</el-button>
+            <el-button type="primary" plain @click="toProductList" class="btn-style-three">返回列表</el-button>
+        </div>
     </div>
 </template>
 
@@ -49,7 +55,7 @@
 
     export default {
         name: 'CategoryProductForm',
-        // status为1代表编辑，0代表创建
+        // status为'EDIT_PRODUCT'代表编辑，'CREATE_PRODUCT'代表创建
         props: {
             status: {
                 type: String,
@@ -80,6 +86,13 @@
                     callback();
                 }
             };
+            let checkVisible = (rule, value, callback) => {
+                if (value === '' || value === undefined) {
+                    return callback(new Error('请选择产品包状态'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 productInfo: {
                     id: '',
@@ -98,6 +111,9 @@
                     ],
                     contentIdList: [
                         {validator: checkTargetIdList, trigger: 'change'}
+                    ],
+                    visible: [
+                        {validator: checkVisible, trigger: 'change'}
                     ]
                 }
             };
@@ -114,9 +130,12 @@
                         this.categoryOptions = response.data;
                     }
                 });
-                if (this.status === '1') {
+                if (this.status === 'EDIT_PRODUCT') {
                     this.$service.getProductInfo({id: this.$route.params.id}).then(response => {
                         if (response && response.code === 0) {
+                            if (!response.data.contentIdList) {
+                                response.data.contentIdList = [];
+                            }
                             this.productInfo = response.data;
                         }
                     });
@@ -127,7 +146,7 @@
                 this.$refs['productInfo'].validate((valid) => {
                     if (valid) {
                         // 创建产品包
-                        if (this.status === '0') {
+                        if (this.status === 'CREATE_PRODUCT') {
                             this.$service.createProduct(this.productInfo).then(response => {
                                 if (response && response.code === 0) {
                                     this.$message.success('成功创建类别包');

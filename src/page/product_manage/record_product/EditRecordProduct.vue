@@ -4,7 +4,7 @@
         <div class="content-title">编辑直播回看包</div>
         <div class="seperator-line"></div>
         <record-product-form
-            status="1">
+            status="EDIT_PRODUCT">
         </record-product-form>
     </div>
 </template>

@@ -4,7 +4,7 @@
         <div class="content-title">添加类别包</div>
         <div class="seperator-line"></div>
         <category-product-form
-            status="0">
+            status="CREATE_PRODUCT">
         </category-product-form>
     </div>
 </template>

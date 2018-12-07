@@ -125,7 +125,6 @@
             },
             // 取消选择某一个节目
             cancelSelectedProgramme(programme) {
-                console.log('取消节目');
                 this.$refs.programmeOperateTable.cancelSelectRow(programme);
             },
             // 获取选择的节目列表

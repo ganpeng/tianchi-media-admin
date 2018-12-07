@@ -4,7 +4,7 @@
         <div class="content-title">添加直播回看包</div>
         <div class="seperator-line"></div>
         <record-product-form
-            status="0">
+            status="CREATE_PRODUCT">
         </record-product-form>
     </div>
 </template>

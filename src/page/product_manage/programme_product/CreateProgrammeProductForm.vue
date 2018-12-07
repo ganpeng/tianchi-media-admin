@@ -1,14 +1,15 @@
 <!--节目包表单组件-->
 <template>
-    <div class="text-left">
-        <el-form :model="productInfo"
-                 :rules="infoRules"
-                 status-icon
-                 ref="productInfo"
-                 label-width="120px"
-                 class="form-block fill-form">
+    <div class="text-left product-container">
+        <el-form
+            :model="productInfo"
+            :rules="infoRules"
+            status-icon
+            ref="productInfo"
+            label-width="120px"
+            class="form-block fill-form">
             <el-form-item label="类型" prop="category">
-                节目包
+                <label class="product-category">节目包</label>
             </el-form-item>
             <el-form-item label="名称" prop="name" required>
                 <el-input v-model="productInfo.name" placeholder="请填写30个字以内的名称"></el-input>
@@ -22,34 +23,41 @@
                 </el-input>
             </el-form-item>
         </el-form>
-        <div class="block-box text-left">
-            <div class="block-title">添加节目</div>
+        <div class="seperator-line"></div>
+        <!--已选节目-->
+        <h3 class="content-sub-title">已选节目
+            <el-button @click="selectProgrammeVisible = true" class="contain-svg-icon btn-style-two">
+                <svg-icon icon-class="link_programme"></svg-icon>
+                关联节目
+            </el-button>
+        </h3>
+        <programme-product-operate-table
+            v-if="selectedProgrammeList.length !== 0"
+            v-on:removeSelectRow="removeProgramme"
+            :programmeList="selectedProgrammeList"
+            model="ADDED">
+        </programme-product-operate-table>
+        <div class="operate-block text-center">
+            <el-button type="primary" @click="operateProduct" class="btn-style-two">保存</el-button>
+            <el-button type="primary" plain @click="toProductList" class="btn-style-three">返回列表</el-button>
+        </div>
+        <el-dialog
+            title="关联节目"
+            :visible.sync="selectProgrammeVisible"
+            :close-on-click-modal=false
+            custom-class="normal-dialog"
+            top="13vh"
+            width="80%">
             <select-multiple-programme
-                :selectedProgrammeList="selectedProgrammeList"
+                v-if="selectProgrammeVisible"
                 ref="selectMultipleProgramme"
-                v-on:setProgramme="setProgramme">
+                :selectedProgrammeList="selectedProgrammeList">
             </select-multiple-programme>
-            <div class="vice-block">
-                <h3 class="block-vice-title">已选节目</h3>
-                <programme-product-operate-table
-                    v-on:removeSelectRow="removeProgramme"
-                    :programmeList="selectedProgrammeList"
-                    model="ADDED">
-                </programme-product-operate-table>
-            </div>
-        </div>
-        <div class="operate">
-            <el-button type="primary" @click="operateProduct" class="page-main-btn">
-                创建
-            </el-button>
-            <el-button @click="reset"
-                       class="page-main-btn"
-                       type="primary"
-                       plain>
-                重置
-            </el-button>
-            <el-button @click="toProductList" class="page-main-btn">返回列表页</el-button>
-        </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="selectProgrammeVisible = false">取消</el-button>
+                <el-button type="primary" @click="confirmLinkProgramme">确定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -81,6 +89,7 @@
                 }
             };
             return {
+                selectProgrammeVisible: false,
                 productInfo: {
                     id: '',
                     category: 'PROGRAMME',
@@ -99,16 +108,7 @@
                 }
             };
         },
-        mounted() {
-            this.init();
-        },
         methods: {
-            // 初始化数据
-            init() {
-                this.$nextTick(function () {
-                    this.$refs.selectMultipleProgramme.init();
-                });
-            },
             // 创建产品包
             operateProduct() {
                 this.$refs['productInfo'].validate((valid) => {
@@ -130,17 +130,15 @@
                     }
                 });
             },
+            // 确认关联节目
+            confirmLinkProgramme() {
+                this.selectedProgrammeList = this.$refs.selectMultipleProgramme.getSelectedProgrammeList();
+                this.selectProgrammeVisible = false;
+                this.$message.success('成功关联节目');
+            },
             // 取消关联的节目
             removeProgramme(model, programme) {
-                this.$refs.selectMultipleProgramme.cancelSelectRow(programme);
                 this.$message.success('"' + programme.name + '"' + '成功取消关联');
-            },
-            // 设置选择的节目
-            setProgramme(selectedProgrammes) {
-                this.selectedProgrammeList = [];
-                for (let i = 0; i < selectedProgrammes.length; i++) {
-                    this.selectedProgrammeList.push(selectedProgrammes[i]);
-                }
             },
             reset() {
                 this.$refs['productInfo'].resetFields();
@@ -154,19 +152,90 @@
 
 <style lang="scss" scoped>
 
-    .operate {
-        margin-top: 200px;
-        margin-bottom: 80px;
-        text-align: center;
+    .el-form {
+        margin-bottom: 40px;
+    }
+
+    .product-container {
+        margin-top: 30px;
+    }
+
+    .select-line {
+        margin-top: 30px;
+    }
+
+    // 操作
+    .operate-block {
+        position: fixed;
+        bottom: 10px;
+        left: 0px;
+        right: 0px;
+        margin: auto;
+        width: 500px;
+        height: 80px;
+        line-height: 90px;
+        background: #293550;
+        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.20);
+        border-radius: 8px;
+        z-index: 600;
+        .el-button:last-child {
+            margin-left: 40px;
+        }
+    }
+
+    .product-category {
+        color: #fff;
     }
 
     .el-table {
-        margin: 0px;
+        margin-bottom: 80px;
         .remove-btn {
-            color: $baseRed;
+            font-size: 14px;
+            color: #C35757;
         }
-        img {
-            width: 70px;
+    }
+
+</style>
+
+<!--全局el-dialog样式-->
+<style lang="scss">
+
+    .normal-dialog {
+        background: #293550;
+        border: 0 solid #637497;
+        box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
+        border-radius: 8px;
+        .el-dialog__header {
+            padding: 0px;
+            height: 50px;
+            line-height: 55px;
+            background: #1F2D4D;
+            .el-dialog__title {
+                font-size: 20px;
+                color: #909399;
+            }
+            .el-dialog__headerbtn {
+                top: 16px;
+                font-size: 15px;
+                .el-dialog__close {
+                    color: #C35757;
+                }
+            }
+        }
+        .el-dialog__footer {
+            .el-button {
+                width: 100px;
+                height: 40px;
+                &.el-button--default {
+                    color: $dangerColor;
+                }
+                &.el-button--default.el-button--primary {
+                    color: #A3D0FD;
+                }
+                &:first-child {
+                    margin-left: 10px;
+                }
+            }
         }
     }
 

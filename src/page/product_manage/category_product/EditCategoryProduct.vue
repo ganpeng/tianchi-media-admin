@@ -4,7 +4,7 @@
         <div class="content-title">编辑类别包</div>
         <div class="seperator-line"></div>
         <category-product-form
-            status="1">
+            status="EDIT_PRODUCT">
         </category-product-form>
     </div>
 </template>

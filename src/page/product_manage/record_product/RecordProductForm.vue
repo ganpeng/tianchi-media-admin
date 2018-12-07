@@ -1,12 +1,13 @@
 <!--直播回看包表单组件-->
 <template>
     <div class="text-left product-container">
-        <el-form :model="productInfo"
-                 :rules="infoRules"
-                 status-icon
-                 ref="productInfo"
-                 label-width="120px"
-                 class="form-block fill-form">
+        <el-form
+            :model="productInfo"
+            :rules="infoRules"
+            status-icon
+            ref="productInfo"
+            label-width="120px"
+            class="form-block fill-form">
             <el-form-item label="类型" prop="category">
                 <label class="product-category">直播回看包</label>
             </el-form-item>
@@ -20,6 +21,12 @@
                     type="textarea"
                     :rows="4">
                 </el-input>
+            </el-form-item>
+            <el-form-item label="状态" prop="visible" required>
+                <el-radio-group v-model="productInfo.visible">
+                    <el-radio :label="true">上架</el-radio>
+                    <el-radio :label="false">下架</el-radio>
+                </el-radio-group>
             </el-form-item>
         </el-form>
         <div class="seperator-line"></div>
@@ -121,7 +128,7 @@
 
     export default {
         name: 'RecordProductForm',
-        // status为1代表编辑，0代表创建
+        // status为'EDIT_PRODUCT'代表编辑，'CREATE_PRODUCT'代表创建
         props: {
             status: {
                 type: String,
@@ -148,6 +155,13 @@
                     callback();
                 }
             };
+            let checkVisible = (rule, value, callback) => {
+                if (value === '' || value === undefined) {
+                    return callback(new Error('请选择产品包状态'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 productInfo: {
                     id: '',
@@ -163,6 +177,9 @@
                     ],
                     description: [
                         {validator: checkDescription, trigger: 'blur'}
+                    ],
+                    visible: [
+                        {validator: checkVisible, trigger: 'change'}
                     ]
                 }
             };
@@ -182,12 +199,12 @@
         methods: {
             // 初始化数据
             init() {
-                if (this.status === '0') {
+                if (this.status === 'CREATE_PRODUCT') {
                     this.$nextTick(function () {
                         this.$refs.selectMultipleChannel.init();
                     });
                 }
-                if (this.status === '1') {
+                if (this.status === 'EDIT_PRODUCT') {
                     // 获取基本信息
                     this.$service.getProductInfo({id: this.$route.params.id}).then(response => {
                         if (response && response.code === 0) {
@@ -219,7 +236,7 @@
                             this.productInfo.contentIdList.push(channel.id);
                         });
                         // 创建产品包
-                        if (this.status === '0') {
+                        if (this.status === 'CREATE_PRODUCT') {
                             this.$service.createProduct(this.productInfo).then(response => {
                                 if (response && response.code === 0) {
                                     this.$message.success('成功创建直播回看包');

@@ -92,6 +92,11 @@
                 align="center"
                 prop="name"
                 label="名称">
+                <template slot-scope="scope">
+                    <span @click="checkProductDetail(scope.row)" class="ellipsis four name">
+                        {{scope.row.name}}
+                    </span>
+                </template>
             </el-table-column>
             <el-table-column
                 align="center"
@@ -121,10 +126,17 @@
             </el-table-column>
             <el-table-column
                 align="center"
+                min-width="140px"
                 label="状态">
                 <template slot-scope="scope">
-                    <i class="status-normal" v-if="scope.row.visible">已上架</i>
-                    <i class="status-abnormal" v-else>已下架</i>
+                    <input
+                        class="my-switch switch-anim"
+                        type="checkbox"
+                        v-model="scope.row.visible"
+                        :checked="scope.row.visible"
+                        @click.prevent="updateProductStatus(scope.row)"/>
+                    <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                    <i v-else class="off-the-shelf">已下架</i>
                 </template>
             </el-table-column>
             <el-table-column
@@ -133,15 +145,9 @@
                 width="120px"
                 class="operate">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" class="detail-btn" @click="checkProductDetail(scope.row)">
-                        查看
-                    </el-button>
-                    <el-button type="text" size="small" class="detail-btn" @click="editProductInfo(scope.row)">
-                        编辑
-                    </el-button>
-                    <el-button type="text" size="small" @click="setProductVisible(scope.row)">
-                        {{scope.row.visible ? '下架' : '上架'}}
-                    </el-button>
+                    <div class="operator-btn-wrapper">
+                        <span class="btn-text" @click="editProductInfo(scope.row)">编辑</span>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -293,7 +299,7 @@
                 this.$router.push({name: routeName, params: {id: item.id}});
             },
             // 设置产品包的上下架
-            setProductVisible(item) {
+            updateProductStatus(item) {
                 this.$confirm('此操作将' + (item.visible ? '下架该产品包' : '上架该产品包') + ', 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',

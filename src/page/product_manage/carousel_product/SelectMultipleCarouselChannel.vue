@@ -25,10 +25,16 @@
                 label="编号">
             </el-table-column>
             <el-table-column
-                prop="innerName"
+                prop="name"
                 width="200px"
                 align="center"
                 label="名称">
+            </el-table-column>
+            <el-table-column
+                prop="innerName"
+                width="200px"
+                align="center"
+                label="别名">
             </el-table-column>
             <el-table-column
                 align="center"

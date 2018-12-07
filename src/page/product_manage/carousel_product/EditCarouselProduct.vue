@@ -4,7 +4,7 @@
         <div class="content-title">编辑轮播频道包</div>
         <div class="seperator-line"></div>
         <carousel-product-form
-            status="1">
+            status="EDIT_PRODUCT">
         </carousel-product-form>
     </div>
 </template>
