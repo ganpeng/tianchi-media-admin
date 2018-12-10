@@ -257,8 +257,7 @@ export default {
         },
         deleteHandler() {
             let {navbarId} = this.$route.params;
-            this.deleteLayoutDataByIndex({navbarId, index: this.index});
-            this.saveLayoutToStore();
+            this.$util.deleteLayoutItemHandler({navbarId, index: this.index});
         }
     }
 };

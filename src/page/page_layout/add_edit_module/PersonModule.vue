@@ -22,7 +22,7 @@
                         <single-image-uploader
                             :uri="layoutData.iconImage ? layoutData.iconImage.uri : ''"
                             :uploadSuccessHandler="uploadSuccessHandler"
-                            :allowResolutions="[{width: 200, height: 200}]"
+                            :allowResolutions="[{width: 82, height: 82}]"
                         ></single-image-uploader>
                     </el-form-item>
                     <el-form-item label="选择人物" required>

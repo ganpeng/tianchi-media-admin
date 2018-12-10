@@ -1,0 +1,95 @@
+<template>
+    <div class="select-image-container">
+        <div class="wrapper">
+            <div v-for="(image, index) in images" :key="index" :style="styleStr" class="img-wrapper">
+                <img :style="styleStr" :src="image.uri" alt="">
+                <p class="image-dimension">{{allowResolutions[0].width}}*{{allowResolutions[0].height}}</p>
+                <el-radio :name="name" @input="changeImageHandler(image)" :value="id" :label="image.id">&nbsp;</el-radio>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+export default {
+    name: 'SelectImage',
+    props: {
+        images: {
+            type: Array,
+            default: () => []
+        },
+        id: {
+            type: String,
+            default: ''
+        },
+        name: {
+            type: String,
+            required: true
+        },
+        allowResolutions: {
+            type: Array,
+            default: () => []
+        },
+        changeImageHandler: {
+            type: Function,
+            default: () => {}
+        }
+    },
+    computed: {
+        styleStr() {
+            if (this.allowResolutions[0]) {
+                return `width:${this.allowResolutions[0].width * 0.3}px;height:${this.allowResolutions[0].height * 0.3}px;`;
+            } else {
+                return '';
+            }
+        }
+    },
+    data() {
+        return {
+            value: ''
+        };
+    },
+    methods: {
+        changeValue(id) {
+            this.value = id;
+        }
+    }
+};
+</script>
+<style lang="scss" scoped>
+.wrapper {
+    display: flex;
+    .img-wrapper {
+        position: relative;
+        margin-right: 10px;
+        border: 1px solid #3E495E;
+        border-radius: 4px;
+        cursor: pointer;
+        text-align: center;
+        margin-bottom: 60px;
+        img {
+            display: inline-block;
+        }
+        i {
+            display: none;
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            color: $closeBtnHoverColor;
+        }
+        &:hover {
+            opacity: 0.6;
+            i {
+                display: block;
+            }
+        }
+    }
+    .image-dimension {
+        font-size: 12px;
+        height: 22px;
+        line-height: 22px;
+        color: #6F7480;
+        text-align: center;
+    }
+}
+
+</style>

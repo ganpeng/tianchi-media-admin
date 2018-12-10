@@ -7,7 +7,7 @@
             <el-form-item label="版本名称" prop="version">
                 <el-input
                     :value="version.version"
-                    :maxlength="11"
+                    :maxlength="10"
                     @input="inputHandler($event, 'version')"
                     placeholder="请输入版本号，最长10个字符"
                 ></el-input>

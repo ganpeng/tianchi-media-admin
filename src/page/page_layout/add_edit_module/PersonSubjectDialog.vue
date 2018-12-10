@@ -120,18 +120,28 @@
                             @submit.native.prevent>
                         <el-col :span="24">
                             <el-form-item label="专题封面图" required>
-                                <single-image-uploader
-                                    id="personSubjectImageUploader"
-                                    :uri="layoutItem.coverImage ? layoutItem.coverImage.uri : ''"
-                                    :uploadSuccessHandler="uploadPersonSubjectImageSuccessHandler"
-                                    :allowResolutions="allowResolutions"
-                                ></single-image-uploader>
+                                <div class="image-container">
+                                    <select-image
+                                        name="personSubjectCoverImage"
+                                        :images="matchedProgrammeList"
+                                        :id="getImageIdByKey('coverImage') || ''"
+                                        :allowResolutions="allowResolutions"
+                                        :changeImageHandler="changeCoverImageHandler"
+                                    ></select-image>
+                                    <single-image-uploader
+                                        id="personSubjectImageUploader"
+                                        :showImage="false"
+                                        :uri="layoutItem.coverImage ? layoutItem.coverImage.uri : ''"
+                                        :uploadSuccessHandler="uploadPersonSubjectCoverImageSuccessHandler"
+                                        :allowResolutions="allowResolutions"
+                                    ></single-image-uploader>
+                                </div>
                             </el-form-item>
                         </el-col>
                     </el-form>
                 </div>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
-                    <el-button @click="closeDialog">取 消</el-button>
+                    <el-button @click="cancelHanlder">取 消</el-button>
                     <el-button v-show="active > 0" class="btn-style-three" @click="prevBtnClickHandler">上一步</el-button>
                     <el-button v-show="active < 1" class="btn-style-three" @click="nextBtnClickHandler">下一步</el-button>
                     <el-button v-show="active === 1" type="primary" @click="enterSuccessHandler">确 定</el-button>
@@ -144,10 +154,12 @@
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
+import SelectImage from './SelectImage';
 export default {
     name: 'PersonSubjectDialog',
     components: {
-        SingleImageUploader
+        SingleImageUploader,
+        SelectImage
     },
     props: {
         squareIndex: {
@@ -184,6 +196,11 @@ export default {
             let layoutItem = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
             return layoutItem;
         },
+        getImageIdByKey() {
+            return (key) => {
+                return _.get(this.layoutItem, `${key}.id`);
+            };
+        },
         checkedPersonSubjectList() {
             let id = _.get(this.layoutItem, 'id');
             if (id && !_.isEmpty(this.personSubjectData)) {
@@ -191,6 +208,15 @@ export default {
             } else {
                 return [];
             }
+        },
+        matchedProgrammeList() {
+            let posterImageList = _.get(this.personSubjectData, 'posterImageList') || [];
+            let matchedProgrammeList = posterImageList.filter((image) => {
+                let width = _.get(this.allowResolutions, '0.width');
+                let height = _.get(this.allowResolutions, '0.height');
+                return parseInt(image.width) === parseInt(width) && parseInt(image.height) === parseInt(height);
+            });
+            return matchedProgrammeList;
         }
     },
     methods: {
@@ -200,7 +226,8 @@ export default {
             updatePersonSubjectPagination: 'pageLayout/updatePersonSubjectPagination',
             addImageToPersonSubjectListById: 'pageLayout/addImageToPersonSubjectListById',
             //  人物模块中人物的添加删除结束
-            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex'
+            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
+            cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex'
         }),
         ...mapActions({
             getPersonSubjectList: 'pageLayout/getPersonSubjectList',
@@ -287,9 +314,36 @@ export default {
             let {id, name} = personSubject;
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
+            this.personSubjectData = _.cloneDeep(personSubject);
         },
-        uploadPersonSubjectImageSuccessHandler(image) {
-            this.updateLayoutItemByIndex({ navbarId: this.navbarId, index: this.index, squareIndex: this.squareIndex, key: 'coverImage', value: image });
+        changeCoverImageHandler(image) {
+            this.updateLayoutItemByIndex({
+                navbarId: this.navbarId,
+                index: this.index,
+                squareIndex: this.squareIndex,
+                key: 'coverImage',
+                value: image
+            });
+        },
+        async uploadPersonSubjectCoverImageSuccessHandler(image) {
+            try {
+                let {id, posterImageList} = this.personSubjectData;
+                let clonePosterImageList = _.cloneDeep(posterImageList);
+                clonePosterImageList.push(image);
+                clonePosterImageList = _.uniqBy(clonePosterImageList, 'id');
+                let res = await this.$service.updateSubjectById(id, {
+                    posterImageList: clonePosterImageList
+                });
+                if (res && res.code === 0) {
+                    this.personSubjectData.posterImageList = _.cloneDeep(res.data.posterImageList);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        cancelHanlder() {
+            this.cancelLayoutItemByIndex({navbarId: this.navbarId, index: this.index, squareIndex: this.squareIndex});
+            this.closeDialog();
         }
     }
 };

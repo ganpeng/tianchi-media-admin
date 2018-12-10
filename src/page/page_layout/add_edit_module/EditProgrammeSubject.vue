@@ -120,20 +120,40 @@
                     <el-form class="my-el-form" status-icon label-width="120px" @submit.native.prevent>
                         <el-col :span="24">
                             <el-form-item label="非焦点图" required>
-                                <single-image-uploader
-                                    id="programmeSubjectImageUploaderOne"
-                                    :uri="getImageByKey('coverImage') || ''"
-                                    :uploadSuccessHandler="uploadProgrammeCoverImageSuccessHandler"
-                                    :allowResolutions="allowResolutions"
-                                ></single-image-uploader>
+                                <div class="image-container">
+                                    <select-image
+                                        name="programmeSubjectCoverImage"
+                                        :images="matchedProgrammeList"
+                                        :id="getImageIdByKey('coverImage') || ''"
+                                        :allowResolutions="allowResolutions"
+                                        :changeImageHandler="changeCoverImageHandler"
+                                    ></select-image>
+                                    <single-image-uploader
+                                        id="programmeSubjectImageUploaderOne"
+                                        :showImage="false"
+                                        :uri="getImageByKey('coverImage') || ''"
+                                        :uploadSuccessHandler="uploadProgrammeCoverImageSuccessHandler"
+                                        :allowResolutions="allowResolutions"
+                                    ></single-image-uploader>
+                                </div>
                             </el-form-item>
                             <el-form-item label="焦点图">
-                                <single-image-uploader
-                                    id="programmeSubjectImageUploaderTwo"
-                                    :uri="getImageByKey('coverImageBackground') || ''"
-                                    :uploadSuccessHandler="uploadProgrammeBgImageSuccessHandler"
-                                    :allowResolutions="allowResolutions"
-                                ></single-image-uploader>
+                                <div class="image-container">
+                                    <select-image
+                                        name="programmeSubjectBgImage"
+                                        :images="matchedProgrammeList"
+                                        :id="getImageIdByKey('coverImageBackground') || ''"
+                                        :allowResolutions="allowResolutions"
+                                        :changeImageHandler="changeBgImageHandler"
+                                    ></select-image>
+                                    <single-image-uploader
+                                        id="programmeSubjectImageUploaderTwo"
+                                        :showImage="false"
+                                        :uri="getImageByKey('coverImageBackground') || ''"
+                                        :uploadSuccessHandler="uploadProgrammeBgImageSuccessHandler"
+                                        :allowResolutions="allowResolutions"
+                                    ></single-image-uploader>
+                                </div>
                             </el-form-item>
                         </el-col>
                     </el-form>
@@ -164,7 +184,7 @@
                     </el-form>
                 </div>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
-                    <el-button @click="closeDialog">取 消</el-button>
+                    <el-button @click="cancelHanlder">取 消</el-button>
                     <el-button v-show="active > 0" class="btn-style-three" @click="prevBtnClickHandler">上一步</el-button>
                     <el-button v-show="active < 2" class="btn-style-three" @click="nextBtnClickHandler">下一步</el-button>
                     <el-button v-show="active === 2" type="primary" @click="enterHandler">确 定</el-button>
@@ -177,6 +197,7 @@
 import {mapGetters, mapActions, mapMutations} from 'vuex';
 import _ from 'lodash';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
+import SelectImage from './SelectImage';
 export default {
     name: 'EditProgrammeSubject',
     props: {
@@ -190,7 +211,8 @@ export default {
         }
     },
     components: {
-        SingleImageUploader
+        SingleImageUploader,
+        SelectImage
     },
     data() {
         return {
@@ -212,8 +234,18 @@ export default {
         ...mapGetters({
             programmeSubject: 'pageLayout/programmeSubject',
             layout: 'pageLayout/layout',
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
             getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
         }),
+        layoutItem() {
+            let layoutItem = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
+            return layoutItem;
+        },
+        getImageIdByKey() {
+            return (key) => {
+                return _.get(this.layoutItem, `${key}.id`);
+            };
+        },
         rightTop() {
             let {rightTop} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
             return _.isEmpty(rightTop) ? {} : rightTop;
@@ -232,6 +264,15 @@ export default {
             } else {
                 return [];
             }
+        },
+        matchedProgrammeList() {
+            let posterProgrammeList = _.get(this.programmeSubjectData, 'posterImageList') || [];
+            let matchedProgrammeList = posterProgrammeList.filter((image) => {
+                let width = _.get(this.allowResolutions, '0.width');
+                let height = _.get(this.allowResolutions, '0.height');
+                return parseInt(image.width) === parseInt(width) && parseInt(image.height) === parseInt(height);
+            });
+            return matchedProgrammeList;
         }
     },
     methods: {
@@ -239,9 +280,9 @@ export default {
             updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
             resetProgrammeSubject: 'pageLayout/resetProgrammeSubject',
             updateProgrammeSubject: 'pageLayout/updateProgrammeSubject',
+            cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex',
             updateProgrammeSubjectPagination: 'pageLayout/updateProgrammeSubjectPagination',
             updateLayoutItemCornerMarkByIndex: 'pageLayout/updateLayoutItemCornerMarkByIndex'
-
         }),
         ...mapActions({
             getProgrammeSubjectList: 'pageLayout/getProgrammeSubjectList',
@@ -328,7 +369,26 @@ export default {
             return row.id === this.getSquareProgrammeSubjectId ? 'checked' : '';
         },
         //  图片上传成功之后的毁掉
-        uploadProgrammeCoverImageSuccessHandler(image) {
+        async uploadProgrammeCoverImageSuccessHandler(image) {
+            try {
+                let {id, posterImageList} = this.programmeSubjectData;
+                let clonePosterImageList = _.cloneDeep(posterImageList);
+                clonePosterImageList.push(image);
+                clonePosterImageList = _.uniqBy(clonePosterImageList, 'id');
+                let res = await this.$service.updateSubjectById(id, {
+                    posterImageList: clonePosterImageList
+                });
+                if (res && res.code === 0) {
+                    this.programmeSubjectData.posterImageList = _.cloneDeep(res.data.posterImageList);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        uploadProgrammeBgImageSuccessHandler(image) {
+            this.uploadProgrammeCoverImageSuccessHandler(image);
+        },
+        changeCoverImageHandler(image) {
             this.updateLayoutItemByIndex({
                 navbarId: this.navbarId,
                 index: this.index,
@@ -337,7 +397,7 @@ export default {
                 value: image
             });
         },
-        uploadProgrammeBgImageSuccessHandler(image) {
+        changeBgImageHandler(image) {
             this.updateLayoutItemByIndex({
                 navbarId: this.navbarId,
                 index: this.index,
@@ -359,6 +419,10 @@ export default {
         //  最后一步的确认处理函数
         enterHandler() {
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'PROGRAMME_SUBJECT' });
+            this.closeDialog();
+        },
+        cancelHanlder() {
+            this.cancelLayoutItemByIndex({navbarId: this.navbarId, index: this.index, squareIndex: this.squareIndex});
             this.closeDialog();
         }
     }

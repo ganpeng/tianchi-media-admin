@@ -23,7 +23,7 @@
                             id="personSubjectIconUploader"
                             :uri="layoutData.iconImage ? layoutData.iconImage.uri : ''"
                             :uploadSuccessHandler="iconImageuploadSuccessHandler"
-                            :allowResolutions="[{width: 200, height: 200}]"
+                            :allowResolutions="[{width: 82, height: 82}]"
                         ></single-image-uploader>
                     </el-form-item>
                 </el-col>

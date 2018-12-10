@@ -198,6 +198,11 @@
 .el-tag {
     border: none;
 }
+.title-wrapper {
+    .score {
+        margin-left: 10px;
+    }
+}
 .other-info {
     margin-left: 20px;
     margin-bottom: 10px;
@@ -260,9 +265,6 @@
                     width: 100px;
                     text-align: right;
                     margin-right: 20px;
-                }
-                .value {
-
                 }
             }
         }

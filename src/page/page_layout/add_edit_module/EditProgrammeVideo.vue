@@ -370,26 +370,46 @@
                     <el-form class="my-el-form" status-icon label-width="120px" @submit.native.prevent>
                         <el-col :span="24">
                             <el-form-item label="非焦点图" required>
-                                <single-image-uploader
-                                    id="programmeVideoImageUploaderOne"
-                                    :uri="getImageByKey('coverImage') || ''"
-                                    :uploadSuccessHandler="uploadProgrammeCoverImageSuccessHandler"
-                                    :allowResolutions="allowResolutions"
-                                ></single-image-uploader>
+                                <div class="image-container">
+                                    <select-image
+                                        name="programmeVideoCoverImage"
+                                        :images="matchedProgrammeList"
+                                        :id="getImageIdByKey('coverImage') || ''"
+                                        :allowResolutions="allowResolutions"
+                                        :changeImageHandler="changeCoverImageHandler"
+                                    ></select-image>
+                                    <single-image-uploader
+                                        id="programmeVideoImageUploaderOne"
+                                        :showImage="false"
+                                        :uri="getImageByKey('coverImage') || ''"
+                                        :uploadSuccessHandler="uploadProgrammeCoverImageSuccessHandler"
+                                        :allowResolutions="allowResolutions"
+                                    ></single-image-uploader>
+                                </div>
                             </el-form-item>
                             <el-form-item label="焦点图">
-                                <single-image-uploader
-                                    id="programmeVideoImageUploaderTwo"
-                                    :uri="getImageByKey('coverImageBackground') || ''"
-                                    :uploadSuccessHandler="uploadProgrammeBgImageSuccessHandler"
-                                    :allowResolutions="allowResolutions"
-                                ></single-image-uploader>
+                                <div class="image-container">
+                                    <select-image
+                                        name="programmeVideoBgImage"
+                                        :images="matchedProgrammeList"
+                                        :id="getImageIdByKey('coverImageBackground') || ''"
+                                        :allowResolutions="allowResolutions"
+                                        :changeImageHandler="changeBgImageHandler"
+                                    ></select-image>
+                                    <single-image-uploader
+                                        id="programmeVideoImageUploaderTwo"
+                                        :showImage="false"
+                                        :uri="getImageByKey('coverImageBackground') || ''"
+                                        :uploadSuccessHandler="uploadProgrammeBgImageSuccessHandler"
+                                        :allowResolutions="allowResolutions"
+                                    ></single-image-uploader>
+                                </div>
                             </el-form-item>
                         </el-col>
                     </el-form>
                 </div>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
-                    <el-button @click="closeDialog">取 消</el-button>
+                    <el-button @click="cancelHanlder">取 消</el-button>
                     <el-button v-show="active > 0" class="btn-style-three" @click="prevBtnClickHandler">上一步</el-button>
                     <el-button v-show="active < 2" class="btn-style-three" @click="nextBtnClickHandler">下一步</el-button>
                     <el-button v-show="active === 2" type="primary" @click="enterHandler">确 定</el-button>
@@ -412,6 +432,7 @@ import role from '@/util/config/role';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
+import SelectImage from './SelectImage';
 const ClipboardJS = require('clipboard');
 export default {
     name: 'EditProgramme',
@@ -432,14 +453,16 @@ export default {
     components: {
         PreviewSingleImage,
         SingleImageUploader,
-        DisplayVideoDialog
+        DisplayVideoDialog,
+        SelectImage
     },
     data() {
         return {
             active: 0,
             dialogVisible: false,
+            navbarId: '',
+            index: 0,
             programme: {},
-            layoutItem: {},
             previewImage: {
                 title: '',
                 display: false,
@@ -454,9 +477,9 @@ export default {
         };
     },
     created() {
-        if (this.getSquareProgrammeVideoId) {
-            this.showExist = true;
-        }
+        let {navbarId, index} = this.$route.params;
+        this.navbarId = navbarId;
+        this.index = parseInt(index);
     },
     computed: {
         ...mapGetters({
@@ -466,8 +489,18 @@ export default {
             typeList: 'programme/typeList',
             getChiefActor: 'programme/getChiefActor',
             video: 'programme/video',
-            layout: 'pageLayout/layout'
+            layout: 'pageLayout/layout',
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
         }),
+        layoutItem() {
+            let layoutItem = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
+            return layoutItem;
+        },
+        getImageIdByKey() {
+            return (key) => {
+                return _.get(this.layoutItem, `${key}.id`);
+            };
+        },
         getImageByKey() {
             return (key) => {
                 let {navbarId, index} = this.$route.params;
@@ -514,12 +547,22 @@ export default {
                 let baseUri = window.localStorage.getItem('videoBaseUri');
                 return `${baseUri}${uri}`;
             };
+        },
+        matchedProgrammeList() {
+            let posterProgrammeList = _.get(this.programme, 'posterImageList') || [];
+            let matchedProgrammeList = posterProgrammeList.filter((image) => {
+                let width = _.get(this.allowResolutions, '0.width');
+                let height = _.get(this.allowResolutions, '0.height');
+                return parseInt(image.width) === parseInt(width) && parseInt(image.height) === parseInt(height);
+            });
+            return matchedProgrammeList;
         }
     },
     methods: {
         ...mapMutations({
             updateProgrammePagination: 'programme/updateProgrammePagination',
-            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex'
+            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
+            cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex'
         }),
         ...mapActions({
             getProgrammeList: 'programme/getProgrammeList',
@@ -551,8 +594,19 @@ export default {
                 uri: ''
             };
         },
-        dialogOpenHandler() {
-            // let {navbarId} = this.$route.params;
+        async dialogOpenHandler() {
+            try {
+                if (this.getSquareProgrammeVideoId) {
+                    await this.getProgrammeCategory();
+                    let res = await this.$service.getProgrammeInfo({id: this.getSquareProgrammeId});
+                    if (res && res.code === 0) {
+                        this.programme = res.data;
+                        this.showExist = true;
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
         },
         // 弹窗的操作结束
         handlePaginationChange(value, key) {
@@ -606,19 +660,19 @@ export default {
             this.showExist = false;
             this.active = 0;
         },
-        //  节目列表搜索
-        searchInputHandler() {},
         setProgrammeHandler(programme) {
-            let {navbarId, index} = this.$route.params;
-            let {id, name} = programme;
-            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
-            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
+            let {id, name, desc, programmeTemplate} = programme;
+            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
+            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
+            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'desc', value: desc });
+            if (programmeTemplate) {
+                this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'programmeTemplate', value: programmeTemplate });
+            }
             this.programme = programme;
             this.getProgrammeVideoListById(id);
         },
         setProgrammeVideoHandler(video) {
-            let {navbarId, index} = this.$route.params;
-            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'params', value: JSON.stringify(video) });
+            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'params', value: JSON.stringify(video) });
         },
         tableRowClassName({row, rowIndex}) {
             return row.id === this.getSquareProgrammeId ? 'checked' : '';
@@ -634,36 +688,59 @@ export default {
             this.previewImage.uri = image.uri;
         },
         //  图片上传成功之后的毁掉
-        uploadProgrammeCoverImageSuccessHandler(image) {
-            let {navbarId, index} = this.$route.params;
+        async uploadProgrammeCoverImageSuccessHandler(image) {
+            try {
+                let {id, posterImageList} = this.programme;
+                let clonePosterImageList = _.cloneDeep(posterImageList);
+                clonePosterImageList.push(image);
+                clonePosterImageList = _.uniqBy(clonePosterImageList, 'id');
+                let res = await this.$service.updatePartProgrammeInfo({
+                    id,
+                    programme: {posterImageList: clonePosterImageList}
+                });
+                if (res && res.code === 0) {
+                    this.programme.posterImageList = _.cloneDeep(clonePosterImageList);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        uploadProgrammeBgImageSuccessHandler(image) {
+            this.uploadProgrammeCoverImageSuccessHandler(image);
+        },
+        changeCoverImageHandler(image) {
             this.updateLayoutItemByIndex({
-                navbarId,
-                index,
+                navbarId: this.navbarId,
+                index: this.index,
                 squareIndex: this.squareIndex,
                 key: 'coverImage',
                 value: image
             });
         },
-        uploadProgrammeBgImageSuccessHandler(image) {
-            let {navbarId, index} = this.$route.params;
+        changeBgImageHandler(image) {
             this.updateLayoutItemByIndex({
-                navbarId,
-                index,
+                navbarId: this.navbarId,
+                index: this.index,
                 squareIndex: this.squareIndex,
                 key: 'coverImageBackground',
                 value: image
             });
         },
-        //  角标的相关操作
-        markChangeHandler() {
-            // this.updateProgrammeMark({checked, key});
-        },
         //  最后一步的确认处理函数
         enterHandler() {
-            let {navbarId, index} = this.$route.params;
             // 设置layoutItemType为PROGRAMME_VIDEO
-            this.updateLayoutItemByIndex({ index, navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: this.layoutItemType });
-            this.showExist = true;
+            console.log(this.programme);
+            if (this.getImageByKey('coverImage')) {
+                this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: this.layoutItemType });
+                this.showExist = true;
+                this.closeDialog();
+            } else {
+                this.$message.error('请选择非焦点图');
+                return false;
+            }
+        },
+        cancelHanlder() {
+            this.cancelLayoutItemByIndex({navbarId: this.navbarId, index: this.index, squareIndex: this.squareIndex});
             this.closeDialog();
         },
         //  视频列表相关的方法

@@ -267,6 +267,16 @@ const mutations = {
         let firstData = _.get(state.layout, `${navbarId}.data.0`);
         _.set(state.layout, `${navbarId}.data`, [firstData, ...list]);
     },
+    cancelLayoutItemByIndex(state, payload) {
+        let {index, navbarId, squareIndex} = payload;
+        let storeLayout = store.get('layoutStore');
+        let layoutItem = _.get(storeLayout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}`);
+        if (layoutItem) {
+            Object.keys(layoutItem).forEach((key) => {
+                _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.${key}`, layoutItem[key]);
+            });
+        }
+    },
     //  重新定义的增删改查方法结束
     appendLayoutItem(state, payload) {
         let {navbarId, layoutItem} = payload;

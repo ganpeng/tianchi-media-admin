@@ -1,7 +1,7 @@
 import store from 'store';
 import _ from 'lodash';
 import constants from './constants';
-import {Message} from 'element-ui';
+import {Message, MessageBox} from 'element-ui';
 import service from '../service/index';
 import vuexStore from '../store/index';
 
@@ -364,6 +364,21 @@ let util = {
             default:
                 throw new Error('类型错误');
         }
+    },
+    deleteLayoutItemHandler({navbarId, index}) {
+        MessageBox.confirm('您确定要删除该板式吗？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'error'
+        }).then(() => {
+            vuexStore.commit('pageLayout/deleteLayoutDataByIndex', {navbarId, index});
+            vuexStore.commit('pageLayout/saveLayoutToStore');
+        }).catch(() => {
+            Message({
+                message: '已取消删除',
+                type: 'info'
+            });
+        });
     }
 };
 

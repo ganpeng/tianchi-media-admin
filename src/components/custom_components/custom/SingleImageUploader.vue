@@ -1,7 +1,7 @@
 <template>
     <div class="single-image-uploader-container">
         <div class="wrapper">
-            <div :style="styleStr" v-show="uri" class="img-wrapper">
+            <div v-if="showImage" :style="styleStr" v-show="uri" class="img-wrapper">
                 <img :style="styleStr" :src="uri" alt="">
                 <i @click="deleteImage" class="el-icon-error"></i>
             </div>
@@ -34,6 +34,10 @@ export default {
                     height: 100
                 };
             }
+        },
+        showImage: {
+            type: Boolean,
+            default: true
         },
         uri: {
             type: String,
@@ -152,11 +156,6 @@ export default {
             display: block;
         }
     }
-}
-.el-progress.progress-bar.el-progress--line {
-    position: absolute;
-    bottom: 0px;
-    width: 100%;
 }
 .image-dimension {
     font-size: 12px;
