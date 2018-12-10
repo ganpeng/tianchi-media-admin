@@ -1,14 +1,15 @@
 <!--编辑节目包表单组件-->
 <template>
-    <div class="text-left">
-        <el-form :model="productInfo"
-                 :rules="infoRules"
-                 status-icon
-                 ref="productInfo"
-                 label-width="120px"
-                 class="form-block fill-form">
+    <div class="text-left product-container">
+        <el-form
+            :model="productInfo"
+            :rules="infoRules"
+            status-icon
+            ref="productInfo"
+            label-width="120px"
+            class="form-block fill-form">
             <el-form-item label="类型" prop="category">
-                节目包
+                <label class="product-category">节目包</label>
             </el-form-item>
             <el-form-item label="名称" prop="name" required>
                 <el-input v-model="productInfo.name" placeholder="请填写30个字以内的名称"></el-input>
@@ -22,74 +23,72 @@
                 </el-input>
             </el-form-item>
         </el-form>
-        <div class="block-box text-left">
-            <div class="block-title">添加节目</div>
-            <select-multiple-programme
+        <div class="seperator-line"></div>
+        <!--添加节目-->
+        <div class="table-block">
+            <div class="content-sub-title">添加节目</div>
+            <product-select-multiple-programme
                 :selectedProgrammeList="selectedProgrammeList"
                 ref="selectMultipleProgramme"
                 v-on:setProgramme="setProgramme">
-            </select-multiple-programme>
-            <!--线上关联节目列表-->
-            <div class="vice-block">
-                <h3 class="block-vice-title">线上关联节目列表</h3>
-                <programme-product-operate-table
-                    v-on:removeSelectRow="removeProgramme"
-                    v-on:recoverSelectRow="recoverSelectRow"
-                    :programmeList="onlineProgrammeList"
-                    model="ORIGIN">
-                </programme-product-operate-table>
-                <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="listQueryParams.pageNum"
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="listQueryParams.pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="totalAmount">
-                </el-pagination>
-            </div>
-            <!--本次编辑取消关联节目-->
-            <div class="vice-block">
-                <h3 class="block-vice-title">本次编辑取消关联节目</h3>
-                <programme-product-operate-table
-                    v-on:recoverSelectRow="recoverSelectRow"
-                    :programmeList="removedProgrammeList"
-                    model="REMOVED">
-                </programme-product-operate-table>
-            </div>
-            <!--除线上关联节目外，本次编辑新增节目-->
-            <div class="vice-block">
-                <h3 class="block-vice-title">本次编辑新增节目</h3>
-                <programme-product-operate-table
-                    v-on:removeSelectRow="removeProgramme"
-                    :programmeList="addedProgrammeList"
-                    model="ADDED">
-                </programme-product-operate-table>
-            </div>
+            </product-select-multiple-programme>
         </div>
-        <div class="operate">
-            <el-button type="primary" @click="operateProduct" class="page-main-btn">
-                保存
-            </el-button>
-            <el-button @click="reset"
-                       class="page-main-btn"
-                       type="primary"
-                       plain>
-                重置
-            </el-button>
-            <el-button @click="toProductList" class="page-main-btn">返回列表页</el-button>
+        <div class="seperator-line"></div>
+        <!--线上关联节目列表-->
+        <div class="table-block">
+            <h3 class="content-sub-title">线上关联节目列表</h3>
+            <programme-product-operate-table
+                v-on:removeSelectRow="removeProgramme"
+                v-on:recoverSelectRow="recoverSelectRow"
+                :programmeList="onlineProgrammeList"
+                model="ORIGIN">
+            </programme-product-operate-table>
+            <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="listQueryParams.pageNum"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="listQueryParams.pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="totalAmount">
+            </el-pagination>
+        </div>
+        <div class="seperator-line"></div>
+        <!--本次编辑取消关联节目-->
+        <div class="table-block">
+            <h3 class="content-sub-title">本次编辑取消关联节目</h3>
+            <programme-product-operate-table
+                v-on:recoverSelectRow="recoverSelectRow"
+                :programmeList="removedProgrammeList"
+                model="REMOVED">
+            </programme-product-operate-table>
+        </div>
+        <div class="seperator-line"></div>
+        <!--除线上关联节目外，本次编辑新增节目-->
+        <div class="table-block">
+            <h3 class="content-sub-title">本次编辑新增节目</h3>
+            <programme-product-operate-table
+                v-on:removeSelectRow="removeProgramme"
+                :programmeList="addedProgrammeList"
+                model="ADDED">
+            </programme-product-operate-table>
+        </div>
+        <!--操作-->
+        <div class="operate-block text-center">
+            <el-button type="primary" @click="operateProduct" class="btn-style-two">保存</el-button>
+            <el-button type="primary" plain @click="toProductList" class="btn-style-three">返回列表</el-button>
         </div>
     </div>
 </template>
 
 <script>
-    import SelectMultipleProgramme from '../../subject_manage/components/SelectMultipleProgramme';
+    import ProductSelectMultipleProgramme from './ProductSelectMultipleProgramme';
     import ProgrammeProductOperateTable from './ProgrammeProductOperateTable';
 
     export default {
         name: 'EditProgrammeProductForm',
         components: {
-            SelectMultipleProgramme,
+            ProductSelectMultipleProgramme,
             ProgrammeProductOperateTable
         },
         data() {
@@ -282,9 +281,6 @@
                     this.selectedProgrammeList.push(selectedProgrammes[i]);
                 }
             },
-            reset() {
-                this.$refs['productInfo'].resetFields();
-            },
             toProductList() {
                 this.$router.push({name: 'ProductList'});
             }
@@ -294,20 +290,47 @@
 
 <style lang="scss" scoped>
 
-    .operate {
-        margin-top: 200px;
-        margin-bottom: 80px;
-        text-align: center;
+    .el-form {
+        margin-bottom: 40px;
     }
 
-    .el-table {
-        margin: 0px;
-        .remove-btn {
-            color: $baseRed;
+    .product-container {
+        margin-top: 30px;
+    }
+
+    .select-line {
+        margin-top: 30px;
+    }
+
+    // 操作
+    .operate-block {
+        position: fixed;
+        bottom: 10px;
+        left: 0px;
+        right: 0px;
+        margin: auto;
+        width: 500px;
+        height: 80px;
+        line-height: 90px;
+        background: #293550;
+        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.20);
+        border-radius: 8px;
+        z-index: 600;
+        .el-button:last-child {
+            margin-left: 40px;
         }
-        img {
-            width: 70px;
-        }
+    }
+
+    .product-category {
+        color: #fff;
+    }
+
+    .el-pagination {
+        margin-top: 10px;
+    }
+
+    .table-block {
+        margin-bottom: 40px;
     }
 
 </style>

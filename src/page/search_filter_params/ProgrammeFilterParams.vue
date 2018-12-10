@@ -2,6 +2,71 @@
 <template>
     <div @keyup.enter="getProgrammeList" class="text-left">
         <el-form :inline="true">
+            <el-form-item>
+                <el-input
+                    v-model="listQueryParams.keyword"
+                    placeholder="频道名称、编号等"
+                    class="border-input"
+                    clearable>
+                </el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button
+                    class="btn-style-one"
+                    @click="getProgrammeList"
+                    icon="el-icon-search"
+                    type="primary"
+                    plain>
+                    搜索
+                </el-button>
+            </el-form-item>
+            <el-form-item label="分类">
+                <el-select v-model="listQueryParams.programmeCategoryIdList"
+                           clearable
+                           multiple
+                           placeholder="请选择分类"
+                           @change="setCategory">
+                    <el-option
+                        v-for="item in categoryOptions"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="类型" v-if="listQueryParams.programmeCategoryIdList">
+                <el-select v-model="listQueryParams.programmeTypeIdList"
+                           multiple clearable placeholder="请选择类型">
+                    <el-option
+                        v-for="item in typeOptions"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="状态">
+                <el-select v-model="listQueryParams.visible" placeholder="请选择节目状态">
+                    <el-option
+                        v-for="item in statusOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button
+                    class="btn-style-one"
+                    @click="clearFilters"
+                    type="primary"
+                    plain>
+                    <svg-icon icon-class="reset"></svg-icon>
+                    重置
+                </el-button>
+            </el-form-item>
+        </el-form>
+        <el-form :inline="true">
             <el-form-item label="上映开始时间">
                 <el-date-picker
                     v-model="listQueryParams.releaseAtStart"
@@ -31,66 +96,6 @@
                         :value="item.code">
                     </el-option>
                 </el-select>
-            </el-form-item>
-            <el-form-item label="分类">
-                <el-select v-model="listQueryParams.programmeCategoryIdList"
-                           clearable
-                           multiple
-                           placeholder="请选择分类"
-                           @change="setCategory">
-                    <el-option
-                        v-for="item in categoryOptions"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-        </el-form>
-        <el-form :inline="true">
-            <el-form-item label="类型" v-if="listQueryParams.programmeCategoryIdList">
-                <el-select v-model="listQueryParams.programmeTypeIdList"
-                           multiple clearable placeholder="请选择类型">
-                    <el-option
-                        v-for="item in typeOptions"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="状态">
-                <el-select v-model="listQueryParams.visible" placeholder="请选择节目状态">
-                    <el-option
-                        v-for="item in statusOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item>
-                <el-input
-                    v-model="listQueryParams.keyword"
-                    clearable
-                    placeholder="请输入关键字">
-                </el-input>
-                <el-input v-show="false"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" plain icon="el-icon-search" @click="getProgrammeList">搜索</el-button>
-            </el-form-item>
-            <el-form-item>
-                <el-button
-                    type="primary"
-                    plain
-                    class="clear-filter"
-                    @click="clearSearchFields">
-                    <svg-icon
-                        icon-class="clear_filter">
-                    </svg-icon>
-                    清空筛选条件
-                </el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -165,7 +170,7 @@
                 this.$emit('getProgrammeList', this.listQueryParams);
             },
             // 清空搜索条件
-            clearSearchFields() {
+            clearFilters() {
                 for (let key in this.listQueryParams) {
                     if (Array.isArray(this.listQueryParams[key])) {
                         this.listQueryParams[key] = [];
@@ -173,6 +178,7 @@
                         this.listQueryParams[key] = '';
                     }
                 }
+                this.getProgrammeList();
             }
         }
     };
