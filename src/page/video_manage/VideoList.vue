@@ -376,7 +376,7 @@
                     this.$service.batchPushVideoToMaster({videoIdList}).then(response => {
                         if (response && response.code === 0) {
                             if (response && response.code === 0 && response.data.length === 0) {
-                                this.$message.success('成功上传视频到主站，请关注其状态更改');
+                                this.$message.success('正在上传视频到主站，请关注其状态更改');
                             } else if (response && response.code === 0 && response.data.length !== 0) {
                                 // 批量上传存在有特殊情况说明
                                 let message = '当前上传视频含有如下问题：';
@@ -403,7 +403,7 @@
                 });
                 this.$service.batchPullVideoFromMaster({videoIdList}).then(response => {
                     if (response && response.code === 0 && response.data.length === 0) {
-                        this.$message.success('成功拉取视频到本站，请关注其状态更改');
+                        this.$message.success('正在拉取视频到本站，请关注其状态更改');
                     } else if (response && response.code === 0 && response.data.length !== 0) {
                         // 批量上传存在有特殊情况说明
                         let message = '当前上传视频含有如下问题：';
