@@ -149,8 +149,8 @@ export default {
         navbarStyle() {
             return (navbar) => {
                 if (navbar.image) {
-                    let {uri, width, height} = _.get(navbar, 'image');
-                    return `width: ${width}px;height: ${height}px;background: url(${uri}) no-repeat center center;`;
+                    let {uri, width} = _.get(navbar, 'image');
+                    return `width: ${width}px;background: url(${uri}) no-repeat center center;`;
                 } else {
                     return '';
                 }
@@ -245,18 +245,21 @@ export default {
             float: left;
             padding: 0 20px;
             text-align: center;
-            margin: 10px 0;
+            // margin: 10px 0;
             margin-right: 10px;
-            height: 42px;
-            line-height: 42px;
+            height: 62px;
+            line-height: 62px;
             font-size: 24px;
             color: #6F7480;
             cursor: pointer;
+            border-bottom: 2px solid transparent;
             &.active {
                 color: #fff;
+                border-bottom-color: $mainColor;
             }
             &:hover {
                 color: #fff;
+                border-bottom-color: $mainColor;
             }
         }
     }

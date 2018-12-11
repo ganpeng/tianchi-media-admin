@@ -21,6 +21,7 @@
 </template>
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
+import _ from 'lodash';
 import PersonForm from '../person_manage/PersonForm';
 export default {
     components: {
@@ -75,8 +76,8 @@ export default {
             this.$refs.personForm.$refs['createPerson'].clearValidate();
         },
         checkImageLength(next) {
-            let {posterImageList} = this.person;
-            if (posterImageList.length <= 0) {
+            let {avatarImage} = this.person;
+            if (_.isEmpty(avatarImage)) {
                 this.$message.error('请上传图片');
                 return false;
             } else {
