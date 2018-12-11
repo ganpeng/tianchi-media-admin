@@ -21,6 +21,7 @@
                     <el-form-item label="名称icon">
                         <single-image-uploader
                             id="personSubjectIconUploader"
+                            :deleteImage="deleteIconImage"
                             :uri="layoutData.iconImage ? layoutData.iconImage.uri : ''"
                             :uploadSuccessHandler="iconImageuploadSuccessHandler"
                             :allowResolutions="[{width: 82, height: 82}]"
@@ -46,23 +47,23 @@
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="saveHandler">保存</el-button>
         </div>
-        <person-subject-dialog
+        <one-step-person-subject-dialog
             :allowResolutions="allowResolutions"
             :squareIndex="squareIndex"
             ref="personSubjectDialog"
-        ></person-subject-dialog>
+        ></one-step-person-subject-dialog>
     </div>
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
-import PersonSubjectDialog from './PersonSubjectDialog';
+import OneStepPersonSubjectDialog from './OneStepPersonSubjectDialog';
 export default {
     name: 'PersonSubjectModule',
     components: {
         SingleImageUploader,
-        PersonSubjectDialog
+        OneStepPersonSubjectDialog
     },
     data() {
         return {
@@ -126,12 +127,15 @@ export default {
         iconImageuploadSuccessHandler(image) {
             this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: image});
         },
+        deleteIconImage() {
+            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: null});
+        },
         async saveHandler() {
             try {
                 let valid = await this.$refs.personSubjectModuleForm.validate();
                 if (valid) {
                     if (!this.selectAll(this.navbarId, this.index)) {
-                        this.saveLayoutToStore();
+                        this.saveLayoutToStore(this.navbarId);
                         this.saveFlag = true;
                         this.$message.success('保存成功');
                         this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });

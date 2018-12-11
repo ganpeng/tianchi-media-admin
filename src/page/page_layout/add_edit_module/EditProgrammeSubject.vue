@@ -141,6 +141,8 @@
                                 <div class="image-container">
                                     <select-image
                                         name="programmeSubjectBgImage"
+                                        :showDeleteImageBtn="true"
+                                        :deleteImage="deleteBgImageHandler"
                                         :images="matchedProgrammeList"
                                         :id="getImageIdByKey('coverImageBackground') || ''"
                                         :allowResolutions="allowResolutions"
@@ -404,6 +406,15 @@ export default {
                 squareIndex: this.squareIndex,
                 key: 'coverImageBackground',
                 value: image
+            });
+        },
+        deleteBgImageHandler() {
+            this.updateLayoutItemByIndex({
+                navbarId: this.navbarId,
+                index: this.index,
+                squareIndex: this.squareIndex,
+                key: 'coverImageBackground',
+                value: null
             });
         },
         //  角标的相关操作

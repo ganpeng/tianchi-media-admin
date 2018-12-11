@@ -19,6 +19,7 @@
 </template>
 <script>
 import {uploadRequest, promiseImageSize, filterSizeMatchFiles} from '../../../util/upload';
+import _ from 'lodash';
 export default {
     name: 'SingleImageUploader',
     props: {
@@ -70,8 +71,14 @@ export default {
     },
     computed: {
         styleStr() {
-            if (this.allowResolutions[0]) {
-                return `width:${this.allowResolutions[0].width * 0.3}px;height:${this.allowResolutions[0].height * 0.3}px;`;
+            let width = _.get(this.allowResolutions, '0.width');
+            let height = _.get(this.allowResolutions, '0.height');
+            if (width && height) {
+                if (width <= 82 || height <= 82) {
+                    return `width:${width * 0.8}px;height:${height * 0.8}px;`;
+                } else {
+                    return `width:${width * 0.3}px;height:${height * 0.3}px;`;
+                }
             } else {
                 return `width:${this.dimension.width}px;height:${this.dimension.height}px;`;
             }

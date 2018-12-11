@@ -482,7 +482,7 @@ const RECOMMEND_OPTIONS = [
 
 const defaultLayoutNavbarId = '5bf42d08b778252f2343eafe';
 
-const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '个人中心', '产品管理', ''];
+const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', ''];
 
 const ASIDE_LIST = [
     [
@@ -582,6 +582,13 @@ const ASIDE_LIST = [
     ],
     [
         {
+            text: '产品管理',
+            uri: '/product-manage/list',
+            icon: 'aside_product'
+        }
+    ],
+    [
+        {
             text: '基本信息',
             uri: '/my-info',
             icon: 'basic_info'
@@ -590,13 +597,6 @@ const ASIDE_LIST = [
             text: '修改密码',
             uri: '/modify-password',
             icon: 'modify_password'
-        }
-    ],
-    [
-        {
-            text: '产品管理',
-            uri: '/product-manage/list',
-            icon: 'aside_product'
         }
     ]
 ];

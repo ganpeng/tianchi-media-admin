@@ -4,7 +4,8 @@
             <div v-for="(image, index) in images" :key="index" :style="styleStr" class="img-wrapper">
                 <img :style="styleStr" :src="image.uri" alt="">
                 <p class="image-dimension">{{allowResolutions[0].width}}*{{allowResolutions[0].height}}</p>
-                <el-radio :name="name" @input="changeImageHandler(image)" :value="id" :label="image.id">&nbsp;</el-radio>
+                <el-radio :name="name" @change="changeImageHandler(image)" :value="id" :label="image.id">&nbsp;</el-radio>
+                <i v-if="id === image.id && showDeleteImageBtn" @click="deleteImage" class="el-icon-error"></i>
             </div>
         </div>
     </div>
@@ -25,11 +26,19 @@ export default {
             type: String,
             required: true
         },
+        showDeleteImageBtn: {
+            type: Boolean,
+            default: false
+        },
         allowResolutions: {
             type: Array,
             default: () => []
         },
         changeImageHandler: {
+            type: Function,
+            default: () => {}
+        },
+        deleteImage: {
             type: Function,
             default: () => {}
         }

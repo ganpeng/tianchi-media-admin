@@ -21,6 +21,7 @@
                     <el-form-item label="名称icon">
                         <single-image-uploader
                             :uri="layoutData.iconImage ? layoutData.iconImage.uri : ''"
+                            :deleteImage="deleteIconImage"
                             :uploadSuccessHandler="uploadSuccessHandler"
                             :allowResolutions="[{width: 82, height: 82}]"
                         ></single-image-uploader>
@@ -343,7 +344,7 @@ export default {
                     if (signCode === 'CHILD') {
                         this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'layoutTemplate', value: 'LT_KID_6'});
                     }
-                    this.saveLayoutToStore();
+                    this.saveLayoutToStore(this.navbarId);
                     this.saveFlag = true;
                     this.$message.success('保存成功');
                     this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
@@ -392,6 +393,9 @@ export default {
         //  长传icon的成功回调函数
         uploadSuccessHandler(image) {
             this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: image});
+        },
+        deleteIconImage() {
+            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: null});
         }
     }
 };

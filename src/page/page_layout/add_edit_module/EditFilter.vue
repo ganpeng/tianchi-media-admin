@@ -13,7 +13,7 @@
             :close-on-press-escape="false"
             :append-to-body="true">
             <el-form :inline="false" class="text-left filters" label-width="180px">
-                <el-form-item label="1.设置筛选条件">
+                <el-form-item label="筛选条件">
                     <el-select v-model="categorySignCode" clearable placeholder="请选择栏目类别" @change="setCategory">
                         <el-option
                             v-for="item in categoryOptions"
@@ -125,12 +125,19 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="2.设置筛选项推荐图片">
-                        <!-- :uri="getImageByKey('coverImage') || ''" -->
+                <el-form-item label="非焦点图" required>
                     <single-image-uploader
-                        id="programmeImageUploaderThree"
+                        id="filterImageUploaderOne"
                         :uri="coverImage.uri || ''"
                         :uploadSuccessHandler="addPosterImage"
+                        :allowResolutions="allowResolutions"
+                    ></single-image-uploader>
+                </el-form-item>
+                <el-form-item label="焦点图">
+                    <single-image-uploader
+                        id="filterImageUploaderTwo"
+                        :uri="coverImageBackground.uri || ''"
+                        :uploadSuccessHandler="addBgPosterImage"
                         :allowResolutions="allowResolutions"
                     ></single-image-uploader>
                 </el-form-item>
@@ -216,6 +223,7 @@
                 size: [],
                 imageUploadDialogVisible: false,
                 coverImage: {},
+                coverImageBackground: {},
                 entertainmentList: []
             };
         },
@@ -268,6 +276,11 @@
                         }
                     }
                 }
+
+                if (this.getOriginState() && this.getOriginState().coverImageBackground) {
+                    this.coverImageBackground = this.getOriginState().coverImageBackground;
+                }
+
                 this.$service.getProgrammeCategory().then(response => {
                     if (response && response.code === 0) {
                         this.categoryOptions = response.data;
@@ -430,6 +443,19 @@
                     });
                 }
             },
+            addBgPosterImage(image) {
+                let {navbarId, index} = this.$route.params;
+                this.coverImageBackground = image;
+                if (!this.isAdd) {
+                    this.updateLayoutItemByIndex({
+                        index,
+                        navbarId,
+                        squareIndex: this.squareIndex,
+                        key: 'coverImageBackground',
+                        value: image
+                    });
+                }
+            },
             complete() {
                 // 检测推荐筛选项的封面
                 if (!this.coverImage.id) {
@@ -473,7 +499,8 @@
                     name: '',
                     params: JSON.stringify(params),
                     layoutItemType: this.categorySignCode + '_PROGRAMME_CATEGORY',
-                    coverImage: this.coverImage
+                    coverImage: this.coverImage,
+                    coverImageBackground: this.coverImageBackground
                 };
                 let {navbarId, index} = this.$route.params;
 
@@ -551,6 +578,7 @@
                 this.size = [];
                 this.imageUploadDialogVisible = false;
                 this.coverImage = {};
+                this.coverImageBackground = {};
                 this.entertainmentList = [];
             }
         }

@@ -42,7 +42,7 @@
             </el-dropdown>
             <div class="center-btn">
                 <el-button class="btn-style-two" @click="saveLayoutHandler">保存</el-button>
-                <el-button class="btn-style-three" @click="clearLayoutHandler">清除修改</el-button>
+                <el-button v-if="getLayoutChangedByNavbarId" class="btn-style-three" @click="clearLayoutHandler">清除修改</el-button>
             </div>
             <el-button @click="showSortViewHandler" class="my-add-cycle">
                 <svg-icon icon-class="sort"></svg-icon>
@@ -138,6 +138,10 @@ export default {
                 }
             }
         },
+        getLayoutChangedByNavbarId() {
+            let {navbarId} = this.$route.params;
+            return this.layout[navbarId].changed;
+        },
         getLayoutRenderTypeByNavbarId() {
             let {navbarId} = this.$route.params;
             return this.layout[navbarId].renderType;
@@ -172,10 +176,12 @@ export default {
             insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex',
             updateLayout: 'pageLayout/updateLayout',
             saveLayoutToStore: 'pageLayout/saveLayoutToStore',
+            toggleChangedByNavbarId: 'pageLayout/toggleChangedByNavbarId',
             updateSortedList: 'pageLayout/updateSortedList'
         }),
         ...mapActions({
             getNavbarList: 'pageLayout/getNavbarList',
+            getPageLayoutByNavbarId: 'pageLayout/getPageLayoutByNavbarId',
             savePageLayoutByNavbarId: 'pageLayout/savePageLayoutByNavbarId'
         }),
         setNavBarWidth() {
@@ -202,7 +208,20 @@ export default {
                 console.log(err);
             }
         },
-        clearLayoutHandler() {},
+        async clearLayoutHandler() {
+            try {
+                let {navbarId} = this.$route.params;
+                let res = await this.getPageLayoutByNavbarId(navbarId);
+                if (res && res.code === 0) {
+                    this.toggleChangedByNavbarId({
+                        navbarId,
+                        data: res.data
+                    });
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
         addLayout(type) {
             let {navbarId} = this.$route.params;
             let index = this.layout[navbarId].data.length;

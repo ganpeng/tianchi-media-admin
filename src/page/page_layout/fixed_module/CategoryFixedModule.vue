@@ -74,7 +74,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            layout: 'pageLayout/layout'
+            layout: 'pageLayout/layout',
+            selectAll: 'pageLayout/selectAll'
         }),
         getImageUriByKeyAndIndex() {
             return (key, squareIndex) => {
@@ -111,9 +112,13 @@ export default {
         },
         saveHandler() {
             let {navbarId} = this.$route.params;
-            this.saveLayoutToStore();
-            this.$message.success('保存成功');
-            this.$router.push({ name: 'PageLayout', params: {navbarId} });
+            if (!this.selectAll(navbarId, 0)) {
+                this.saveLayoutToStore(navbarId);
+                this.$message.success('保存成功');
+                this.$router.push({ name: 'PageLayout', params: {navbarId} });
+            } else {
+                this.$message.error('色块必须全部选择');
+            }
         },
         setAllowResolutions(squareIndex) {
             switch (squareIndex) {

@@ -279,6 +279,12 @@ const mutations = {
             });
         }
     },
+    toggleChangedByNavbarId(state, payload) {
+        let {navbarId, data} = payload;
+        _.set(state.layout, `${navbarId}.data`, data);
+        _.set(state.layout, `${navbarId}.changed`, false);
+        store.set('layoutStore', state.layout);
+    },
     //  重新定义的增删改查方法结束
     appendLayoutItem(state, payload) {
         let {navbarId, layoutItem} = payload;
@@ -291,7 +297,8 @@ const mutations = {
     updateLayout(state) {
         state.layout = store.get('layoutStore');
     },
-    saveLayoutToStore(state) {
+    saveLayoutToStore(state, navbarId) {
+        _.set(state.layout, `${navbarId}.changed`, true);
         store.set('layoutStore', state.layout);
     },
     //  layout相关的操作结束

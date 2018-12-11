@@ -18,6 +18,7 @@
                     <el-form-item label="名称icon">
                         <single-image-uploader
                             :uri="layoutData.iconImage ? layoutData.iconImage.uri : ''"
+                            :deleteImage="deleteIconImage"
                             :uploadSuccessHandler="iconImageuploadSuccessHandler"
                             :allowResolutions="[{width: 82, height: 82}]"
                         ></single-image-uploader>
@@ -124,12 +125,15 @@ export default {
         iconImageuploadSuccessHandler(image) {
             this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: image});
         },
+        deleteIconImage() {
+            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: null});
+        },
         async saveHandler() {
             try {
                 let valid = await this.$refs.specialModuleForm.validate();
                 if (valid) {
                     if (!this.selectAll(this.navbarId, this.index)) {
-                        this.saveLayoutToStore();
+                        this.saveLayoutToStore(this.navbarId);
                         this.saveFlag = true;
                         this.$message.success('保存成功');
                         this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
