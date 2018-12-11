@@ -110,15 +110,15 @@
                 </el-form-item>
                 <el-form-item class="search">
                     <el-select
-                        :value="searchFields.originSiteToken"
+                        :value="searchFields.originSiteId"
                         clearable
                         placeholder="请选择视频来源"
-                        @input="inputHandler($event, 'originSiteToken')">
+                        @input="inputHandler($event, 'originSiteId')">
                         <el-option
                             v-for="(item, index) in sourceOptions"
                             :key="index"
                             :label="item.name"
-                            :value="item.token">
+                            :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -127,15 +127,15 @@
                     v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
                     class="search">
                     <el-select
-                        :value="searchFields.shareSiteToken"
+                        :value="searchFields.shareSiteId"
                         clearable
                         placeholder="请选择共享站点"
-                        @input="inputHandler($event, 'shareSiteToken')">
+                        @input="inputHandler($event, 'shareSiteId')">
                         <el-option
                             v-for="(item, index) in shareSiteOptions"
                             :key="index"
                             :label="item.name"
-                            :value="item.token">
+                            :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>

@@ -151,7 +151,13 @@
                 align="center"
                 label="共享站点">
                 <template slot-scope="scope">
-                    <span @click="checkShareSiteList(scope.row)" class="check-share-site">查看</span>
+                    <!--注入中、注入失败、上传中、上传失败不可查看共享站点-->
+                    <el-button
+                        type="text"
+                        :disabled="scope.row.uploadStatus === 'ON_GOING' || scope.row.uploadStatus === 'FAILED' || scope.row.status === 'INJECTING' || scope.row.status === 'FAILED'"
+                        @click="checkShareSiteList(scope.row)">
+                        查看
+                    </el-button>
                 </template>
             </el-table-column>
             <el-table-column align="center" label="上传日期">
@@ -177,9 +183,10 @@
                         上传主站
                     </el-button>
                     <!--共享设置（主站）-->
+                    <!--注入中、注入失败、上传中、上传失败不可设置共享站点-->
                     <el-button
                         v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
-                        class="text-primary"
+                        :disabled="scope.row.uploadStatus === 'ON_GOING' || scope.row.uploadStatus === 'FAILED' || scope.row.status === 'INJECTING' || scope.row.status === 'FAILED'"
                         type="text"
                         @click="setSingleVideoShareSite(scope.row)"
                         size="small">
@@ -305,11 +312,19 @@
             },
             // 计算子站拉取主站视频的进度百分比
             getDownloadPercent(video) {
-                return (video.downloadedSplitCount * 100 / video.totalSplitCount).toFixed(0) + '%';
+                if (!video.downloadedSplitCount || !video.totalSplitCount) {
+                    return '0%';
+                } else {
+                    return (video.downloadedSplitCount * 100 / video.totalSplitCount).toFixed(0) + '%';
+                }
             },
             // 计算子站上传主站视频的进度百分比
             getPushPercent(video) {
-                return (video.uploadedSplitCount * 100 / video.totalSplitCount).toFixed(0) + '%';
+                if (!video.uploadedSplitCount || !video.totalSplitCount) {
+                    return '0%';
+                } else {
+                    return (video.uploadedSplitCount * 100 / video.totalSplitCount).toFixed(0) + '%';
+                }
             }
         },
         data() {
@@ -601,11 +616,6 @@
 
     .el-radio__label {
         padding-left: 0;
-    }
-
-    .check-share-site {
-        color: $baseBlue;
-        cursor: pointer;
     }
 
     /*展示分享站点*/
