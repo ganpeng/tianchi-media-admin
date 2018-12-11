@@ -161,6 +161,10 @@
             },
             // 批量上下架，已上架的可以继续上架
             batchUpdateStatus(visible) {
+                if (!this.multipleSelection || this.multipleSelection.length === 0) {
+                    this.$message.warning('请先选择专题');
+                    return;
+                }
                 this.$confirm('此操作将批量' + (visible ? '上架' : '下架') + '专题, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -186,6 +190,10 @@
             },
             // 批量删除专题，只有已下架的专题才能删除
             batchRemove() {
+                if (!this.multipleSelection || this.multipleSelection.length === 0) {
+                    this.$message.warning('请先选择专题');
+                    return;
+                }
                 for (let i = 0; i < this.multipleSelection.length; i++) {
                     if (this.multipleSelection[i].visible) {
                         this.$message.warning('当前选中的专题中含有已上架的专题，暂时不能批量下架');

@@ -30,32 +30,7 @@
                             start-placeholder="开始日期"
                             end-placeholder="结束日期">
                         </el-date-picker>
-                        <!--
-                        <el-date-picker
-                            :value="searchFields.startedAt"
-                            type="date"
-                            clearable
-                            style="width:180px;"
-                            value-format="timestamp"
-                            @input="inputHandler($event, 'startedAt')"
-                            placeholder="请选择开始时间">
-                        </el-date-picker>
-                        -->
                     </div>
-                    <!--
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">结束时间</label>
-                        <el-date-picker
-                            :value="searchFields.endedAt"
-                            type="date"
-                            clearable
-                            style="width:180px;"
-                            value-format="timestamp"
-                            @input="inputHandler($event, 'endedAt')"
-                            placeholder="请选择结束时间">
-                        </el-date-picker>
-                    </div>
-                    -->
                     <div class="search-field-item">
                         <label class="search-field-item-label">后缀</label>
                         <el-select
@@ -206,6 +181,7 @@
             },
             clearSearchFields() {
                 this.resetSearchFields();
+                this.searchHandler();
             },
             retrySelectedVideoHandler() {
                 let idList = this.$refs.videoTable.selectedVideoList.filter((video) => {

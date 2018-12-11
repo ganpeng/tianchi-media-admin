@@ -222,7 +222,8 @@
             },
             // 批量上下架
             batchUpdateStatus(visible) {
-                if (this.multipleSelection.length === 0) {
+                if (!this.multipleSelection || this.multipleSelection.length === 0) {
+                    this.$message.warning('请先选择频道');
                     return;
                 }
                 let idList = [];

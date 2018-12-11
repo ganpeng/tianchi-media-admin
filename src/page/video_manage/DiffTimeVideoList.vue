@@ -58,14 +58,8 @@
                         <el-button
                             class="btn-style-two contain-svg-icon"
                             @click="exportAllList">
-                            <svg-icon icon-class="add"></svg-icon>
+                            <svg-icon icon-class="export"></svg-icon>
                             全部导出
-                        </el-button>
-                        <el-button
-                            class="btn-style-two contain-svg-icon"
-                            @click="toVideoList">
-                            <svg-icon icon-class="add"></svg-icon>
-                            返回
                         </el-button>
                     </div>
                 </div>
@@ -384,15 +378,11 @@
                             }
                         });
                     }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消批量删除'
-                        });
+                        this.$message.info('已取消批量删除');
                     });
+                } else {
+                    this.$message.warning('请先选择视频');
                 }
-            },
-            toVideoList() {
-                this.$router.push({name: 'VideoList'});
             }
         }
     };

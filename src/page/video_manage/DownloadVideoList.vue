@@ -83,12 +83,6 @@
                             <svg-icon icon-class="add"></svg-icon>
                             导出
                         </el-button>
-                        <el-button
-                            class="btn-style-two contain-svg-icon"
-                            @click="toVideoList">
-                            <svg-icon icon-class="add"></svg-icon>
-                            返回
-                        </el-button>
                     </div>
                 </div>
             </div>
@@ -191,8 +185,8 @@
                 createRangeTime: [],
                 total: 0,
                 statusOptions: [
-                    {label: '成功', value: 'SUCCESS'},
                     {label: '下载中', value: 'DOWNLOADING'},
+                    {label: '成功', value: 'SUCCESS'},
                     {label: '失败', value: 'FAILED'}
                 ],
                 removeDisabled: true,
@@ -284,6 +278,10 @@
             },
             // 批量重试下载视频
             retryDownloadBatchVideos() {
+                if (!this.multipleSelection || this.multipleSelection.length === 0) {
+                    this.$message.warning('请先选择视频');
+                    return;
+                }
                 let videoIdList = [];
                 this.multipleSelection.map(video => {
                     videoIdList.push(video.id);
@@ -302,6 +300,10 @@
             },
             // 批量删除视频
             removeBatchVideos() {
+                if (!this.multipleSelection || this.multipleSelection.length === 0) {
+                    this.$message.warning('请先选择视频');
+                    return;
+                }
                 let that = this;
                 this.requestNo = 0;
                 this.removeDisabled = true;
@@ -340,9 +342,6 @@
                         }, 1000);
                     }
                 });
-            },
-            toVideoList() {
-                this.$router.push({name: 'VideoList'});
             }
         }
     };

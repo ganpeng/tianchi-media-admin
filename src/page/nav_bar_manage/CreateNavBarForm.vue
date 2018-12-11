@@ -23,7 +23,7 @@
                                     <i v-else class="el-icon-plus"></i>
                                 </div>
                                 <p>
-                                    <label>42*100-500</label>
+                                    <label>100-500 * 42</label>
                                     <span>落焦图</span>
                                 </p>
                             </div>
@@ -33,7 +33,7 @@
                                     <i v-else class="el-icon-plus"></i>
                                 </div>
                                 <p>
-                                    <label>42*100-500</label>
+                                    <label>100-500 * 42</label>
                                     <span>非落焦图</span>
                                 </p>
                             </div>
@@ -75,6 +75,9 @@
                     </el-radio>
                     <el-radio label="FS_4">专题板式类
                         <svg-icon icon-class="model_subject"></svg-icon>
+                    </el-radio>
+                    <el-radio label="FS_5">儿童板式（只适用于儿童栏目）
+                        <svg-icon icon-class="model_child"></svg-icon>
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
@@ -270,6 +273,10 @@
             }
             .el-radio:nth-child(4) {
                 margin-top: 26px;
+            }
+            .el-radio:nth-child(5) {
+                margin-top: 26px;
+                margin-left: 0px;
             }
         }
         .svg-icon {

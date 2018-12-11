@@ -56,7 +56,7 @@
                 this.getNavBarList();
                 this.$dragula([document.getElementById('operate-list')], {
                     moves: function (el) {
-                        return true;
+                        return !el.classList.contains('upload-box');
                     },
                     direction: 'horizontal'
                 }).on('drop', function () {

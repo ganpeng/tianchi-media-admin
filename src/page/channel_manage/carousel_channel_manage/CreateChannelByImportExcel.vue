@@ -10,7 +10,7 @@
                         <el-button
                             class="btn-style-six contain-svg-icon"
                             @click="exportTemplate">
-                            <svg-icon icon-class="import"></svg-icon>
+                            <svg-icon icon-class="export"></svg-icon>
                             导出模板
                         </el-button>
                         <i>导入{{currentChannelCategory }}频道</i>

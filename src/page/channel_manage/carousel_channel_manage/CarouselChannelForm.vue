@@ -960,11 +960,6 @@
                                     if (response && response.code === 0) {
                                         this.$message('成功创建频道');
                                         this.toChannelList();
-                                    } else {
-                                        this.$message({
-                                            message: response.message,
-                                            type: 'warning'
-                                        });
                                     }
                                 });
                                 break;
@@ -976,11 +971,6 @@
                                     if (response && response.code === 0) {
                                         this.$message.success('保存频道信息成功');
                                         this.toChannelList();
-                                    } else {
-                                        this.$message({
-                                            message: response.message,
-                                            type: 'warning'
-                                        });
                                     }
                                 });
                                 break;
