@@ -236,6 +236,7 @@
                 this.listQueryParams.startedAt = '';
                 this.listQueryParams.endedAt = '';
                 this.createRangeTime = [];
+                this.listQueryParams.status = '';
                 this.getDownloadVideoList();
             },
             // 导出下载视频列表

@@ -6,6 +6,19 @@ import service from '../config';
  * 获取所有视频的列表
  */
 export const getVideoList = ({startedAt, endedAt, status, suffix, userId, name, key, m3u8For480P, m3u8For720P, m3u8For1080P, bitrate, frameRate, pageNum, pageSize, videoType}) => {
+    // 注入中状态包括多种状态，因此改为Array形式
+    let statusList = [];
+    switch (status) {
+        case 'SUCCESS':
+        case 'FAILED':
+            statusList = [status];
+            break;
+        case 'INJECTING':
+            statusList = ['UPLOAD_COMPLETED', 'SPLIT_TASK_SUBMITTED', 'SPLIT_TASK_ON_QUEUE', 'SPLIT_TASK_ON_PENDING', 'SPLIT_TASK_ON_PROCESS', 'SPLIT_TASK_SUCCESS'];
+            break;
+        default:
+            break;
+    }
     let params = {
         userId,
         name,
@@ -15,7 +28,7 @@ export const getVideoList = ({startedAt, endedAt, status, suffix, userId, name, 
         m3u8For1080P,
         bitrate,
         frameRate,
-        status,
+        statusList,
         suffix,
         pageNum,
         pageSize,

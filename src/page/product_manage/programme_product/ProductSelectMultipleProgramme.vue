@@ -329,6 +329,10 @@
     .el-table {
         margin-top: 0px;
         margin-bottom: 10px;
+        img {
+            width: 70px;
+            height: auto;
+        }
     }
 
 </style>
