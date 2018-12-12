@@ -25,6 +25,7 @@
                 <div class="right-field-wrapper">
                     <div class="right-top-field"></div>
                     <div :style="styleBgImageStr(0)" class="right-bottom-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 0)"></corner-mark>
                         <div v-if="isEdit" class="btn-wrapper">
                             <el-button @click="selectProgramme(0)" class="btn-style-two">
                                 选择新闻节目
@@ -42,6 +43,7 @@
                 <div class="top-field">
                     <div class="wrapper">
                         <div :style="styleBgImageStr(1)" class="top-left-field">
+                            <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 1)"></corner-mark>
                             <div v-if="isEdit" class="btn-wrapper">
                                 <el-button @click="selectProgramme(1)" class="btn-style-two">
                                     选择节目
@@ -55,6 +57,7 @@
                     </div>
                     <div class="wrapper">
                         <div :style="styleBgImageStr(2)" class="top-right-field">
+                            <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 2)"></corner-mark>
                             <div v-if="isEdit" class="btn-wrapper">
                                 <el-button @click="selectProgramme(2)" class="btn-style-two">
                                     选择节目
@@ -70,6 +73,7 @@
                 <div class="bottom-field">
                     <div class="wrapper">
                         <div :style="styleBgImageStr(3)" class="bottom-left-field">
+                            <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 3)"></corner-mark>
                             <div v-if="isEdit" class="btn-wrapper">
                                 <el-button @click="selectProgramme(3)" class="btn-style-two">
                                     选择节目
@@ -83,6 +87,7 @@
                     </div>
                     <div class="wrapper">
                         <div :style="styleBgImageStr(4)" class="bottom-middle-field">
+                            <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 4)"></corner-mark>
                             <div v-if="isEdit" class="btn-wrapper">
                                 <el-button @click="selectProgramme(4)" class="btn-style-two">
                                     选择节目
@@ -96,6 +101,7 @@
                     </div>
                     <div class="wrapper">
                         <div :style="styleBgImageStr(5)" class="bottom-right-field">
+                            <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 5)"></corner-mark>
                             <div v-if="isEdit" class="btn-wrapper">
                                 <el-button @click="selectProgramme(5)" class="btn-style-two">
                                     选择节目
@@ -124,12 +130,14 @@ import {mapGetters, mapMutations} from 'vuex';
 import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
 import EditChannel from '../add_edit_module/EditChannel';
 import ProgrammeWithout4StepDialog from '../add_edit_module/ProgrammeWithout4StepDialog';
+import CornerMark from '../CornerMark';
 export default {
     name: 'RecommendFixedModule',
     components: {
         EditProgrammeSubject,
         EditChannel,
-        ProgrammeWithout4StepDialog
+        ProgrammeWithout4StepDialog,
+        CornerMark
     },
     props: {
         isEdit: {
@@ -139,6 +147,7 @@ export default {
     },
     data() {
         return {
+            navbarId: '',
             squareIndex: 0,
             allowResolutions: [],
             channel: {}
@@ -147,7 +156,8 @@ export default {
     computed: {
         ...mapGetters({
             layout: 'pageLayout/layout',
-            selectAll: 'pageLayout/selectAll'
+            selectAll: 'pageLayout/selectAll',
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
         }),
         getImageUriByKeyAndIndex() {
             return (key, squareIndex) => {
@@ -165,6 +175,7 @@ export default {
     },
     created() {
         let {navbarId} = this.$route.params;
+        this.navbarId = navbarId;
         this.$service.getChannelLayout({navBarId: navbarId})
             .then((res) => {
                 if (res && res.code === 0) {

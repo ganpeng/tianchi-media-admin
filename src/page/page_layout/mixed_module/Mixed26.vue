@@ -31,6 +31,7 @@
             <div class="top-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(0)" class="top-left-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(0)"
@@ -39,6 +40,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(1)" class="top-right-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(1)"
@@ -49,6 +51,7 @@
             <div class="bottom-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(2)" class="bottom-1-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 2)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(2)"
@@ -57,6 +60,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(3)" class="bottom-2-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 3)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(3)"
@@ -65,6 +69,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(4)" class="bottom-3-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 4)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(4)"
@@ -73,6 +78,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(5)" class="bottom-4-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 5)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(5)"
@@ -81,6 +87,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(6)" class="bottom-5-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 6)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(6)"
@@ -89,6 +96,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(7)" class="bottom-6-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 7)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(7)"
@@ -127,6 +135,7 @@ import EditProgramme from '../add_edit_module/EditProgramme';
 import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
 import EditProgrammeVideo from '../add_edit_module/EditProgrammeVideo';
 import LinkDialog from '../add_edit_module/LinkDialog';
+import CornerMark from '../CornerMark';
 export default {
     name: 'Mixed26',
     components: {
@@ -134,7 +143,8 @@ export default {
         EditProgramme,
         EditProgrammeSubject,
         EditProgrammeVideo,
-        LinkDialog
+        LinkDialog,
+        CornerMark
     },
     props: {
         item: {
@@ -165,7 +175,8 @@ export default {
     computed: {
         ...mapGetters({
             getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
         }),
         getIconImageUri() {
             return (obj) => {

@@ -65,7 +65,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="24">
-                    <el-col :span="12">
+                    <el-col :span="24">
                         <el-form-item label="模块板式" prop="layoutTemplate">
                             <el-select
                                 :value="layoutData.layoutTemplate"

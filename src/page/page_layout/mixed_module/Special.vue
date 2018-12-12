@@ -31,6 +31,7 @@
             <div :style="styleBgImageStr(0)" class="left-field">
             </div>
             <div :style="styleBgImageStr(1)" class="right-field">
+                <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
             </div>
         </div>
     </div>
@@ -38,8 +39,12 @@
 <script>
 import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
+import CornerMark from '../CornerMark';
 export default {
     name: 'Special',
+    components: {
+        CornerMark
+    },
     props: {
         item: {
             type: Object,
@@ -51,12 +56,19 @@ export default {
         }
     },
     data() {
-        return {};
+        return {
+            navbarId: ''
+        };
+    },
+    created() {
+        let {navbarId} = this.$route.params;
+        this.navbarId = navbarId;
     },
     computed: {
         ...mapGetters({
             layout: 'pageLayout/layout',
-            getNavbarNameById: 'pageLayout/getNavbarNameById'
+            getNavbarNameById: 'pageLayout/getNavbarNameById',
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
         }),
         getIconImageUri() {
             return (obj) => {

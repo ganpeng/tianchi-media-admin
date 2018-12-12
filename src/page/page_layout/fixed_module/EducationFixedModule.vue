@@ -6,6 +6,7 @@
         <div class="top-field">
             <div class="wrapper">
                 <div :style="styleBgImageStr(0)" class="top-left-field">
+                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 0)"></corner-mark>
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(0)" class="btn-style-two">
                             选择节目
@@ -19,6 +20,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(1)" class="top-right-field">
+                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 1)"></corner-mark>
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(1)" class="btn-style-two">
                             选择节目
@@ -34,6 +36,7 @@
         <div class="bottom-field">
             <div class="wrapper">
                 <div :style="styleBgImageStr(2)" class="bottom-field-item">
+                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 2)"></corner-mark>
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(2)" class="btn-style-two">
                             选择节目
@@ -47,6 +50,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(3)" class="bottom-field-item">
+                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 3)"></corner-mark>
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(3)" class="btn-style-two">
                             选择节目
@@ -60,6 +64,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(4)" class="bottom-field-item">
+                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 4)"></corner-mark>
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(4)" class="btn-style-two">
                             选择节目
@@ -73,6 +78,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(5)" class="bottom-field-item">
+                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 5)"></corner-mark>
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(5)" class="btn-style-two">
                             选择节目
@@ -94,14 +100,16 @@
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex';
+import _ from 'lodash';
 import ProgrammeWithout4StepDialog from '../add_edit_module/ProgrammeWithout4StepDialog';
 import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
-import _ from 'lodash';
+import CornerMark from '../CornerMark';
 export default {
-    name: 'PartyFixedModule',
+    name: 'EducationFixedModule',
     components: {
         ProgrammeWithout4StepDialog,
-        EditProgrammeSubject
+        EditProgrammeSubject,
+        CornerMark
     },
     props: {
         isEdit: {
@@ -109,10 +117,23 @@ export default {
             default: false
         }
     },
+    data() {
+        return {
+            squareIndex: 0,
+            navbarId: '',
+            layoutItemType: '',
+            allowResolutions: []
+        };
+    },
+    created() {
+        let {navbarId} = this.$route.params;
+        this.navbarId = navbarId;
+    },
     computed: {
         ...mapGetters({
             layout: 'pageLayout/layout',
-            selectAll: 'pageLayout/selectAll'
+            selectAll: 'pageLayout/selectAll',
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
         }),
         getImageUriByKeyAndIndex() {
             return (key, squareIndex) => {
@@ -127,13 +148,6 @@ export default {
                 return bgStr;
             };
         }
-    },
-    data() {
-        return {
-            squareIndex: 0,
-            layoutItemType: '',
-            allowResolutions: []
-        };
     },
     methods: {
         ...mapMutations({

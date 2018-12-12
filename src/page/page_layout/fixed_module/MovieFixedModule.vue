@@ -6,7 +6,9 @@
         <div class="content-field">
             <div class="top-field">
                 <div class="wrapper">
-                    <div :style="styleBgImageStr(movieActiveIndex)" class="top-left-field"></div>
+                    <div :style="styleBgImageStr(movieActiveIndex)" class="top-left-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, movieActiveIndex)"></corner-mark>
+                    </div>
                 </div>
                 <div class="wrapper">
                     <div class="top-middle-field">
@@ -58,6 +60,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(4)" class="top-right-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 4)"></corner-mark>
                         <div v-if="isEdit" class="btn-wrapper">
                             <el-button @click="selectProgramme(4)" class="btn-style-two">
                                 选择节目
@@ -73,6 +76,7 @@
             <div class="bottom-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(5)" class="bottom-left-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 5)"></corner-mark>
                         <div v-if="isEdit" class="btn-wrapper">
                             <el-button @click="selectProgramme(5)" class="btn-style-two">
                                 选择节目
@@ -86,6 +90,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(6)" class="bottom-right-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 6)"></corner-mark>
                         <div v-if="isEdit" class="btn-wrapper">
                             <el-button @click="selectProgramme(6)" class="btn-style-two">
                                 选择节目
@@ -111,11 +116,13 @@ import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
 import ProgrammeWithout4StepDialog from '../add_edit_module/ProgrammeWithout4StepDialog';
 import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
+import CornerMark from '../CornerMark';
 export default {
     name: 'MovieFixedModule',
     components: {
         ProgrammeWithout4StepDialog,
-        EditProgrammeSubject
+        EditProgrammeSubject,
+        CornerMark
     },
     props: {
         isEdit: {
@@ -127,13 +134,19 @@ export default {
         return {
             movieActiveIndex: 0,
             squareIndex: 0,
+            navbarId: '',
             allowResolutions: []
         };
+    },
+    created() {
+        let {navbarId} = this.$route.params;
+        this.navbarId = navbarId;
     },
     computed: {
         ...mapGetters({
             layout: 'pageLayout/layout',
-            selectAll: 'pageLayout/selectAll'
+            selectAll: 'pageLayout/selectAll',
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
         }),
         getImageUriByKeyAndIndex() {
             return (key, squareIndex) => {

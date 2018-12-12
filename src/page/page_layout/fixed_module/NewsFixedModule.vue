@@ -105,6 +105,18 @@ export default {
             default: false
         }
     },
+    data() {
+        return {
+            squareIndex: 0,
+            navbarId: '',
+            layoutItemType: '',
+            allowResolutions: []
+        };
+    },
+    created() {
+        let {navbarId} = this.$route.params;
+        this.navbarId = navbarId;
+    },
     computed: {
         ...mapGetters({
             layout: 'pageLayout/layout',
@@ -123,13 +135,6 @@ export default {
                 return bgStr;
             };
         }
-    },
-    data() {
-        return {
-            squareIndex: 0,
-            layoutItemType: '',
-            allowResolutions: []
-        };
     },
     methods: {
         ...mapMutations({

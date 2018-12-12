@@ -7,6 +7,7 @@
             <div class="top-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(0)" class="left-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 0)"></corner-mark>
                         <div v-if="isEdit" class="btn-wrapper">
                             <el-button @click="selectProgramme(0)" class="btn-style-two">
                                 选择节目
@@ -20,6 +21,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(1)" class="right-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 1)"></corner-mark>
                         <div v-if="isEdit" class="btn-wrapper">
                             <el-button @click="selectProgramme(1)" class="btn-style-two">
                                 选择节目
@@ -35,6 +37,7 @@
             <div class="bottom-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(2)" class="bottom-left-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 2)"></corner-mark>
                         <div v-if="isEdit" class="btn-wrapper">
                             <el-button @click="selectProgramme(2)" class="btn-style-two">
                                 选择节目
@@ -48,6 +51,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(3)" class="bottom-middle-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 3)"></corner-mark>
                         <div v-if="isEdit" class="btn-wrapper">
                             <el-button @click="selectProgramme(3)" class="btn-style-two">
                                 选择节目
@@ -61,6 +65,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(4)" class="bottom-right-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 4)"></corner-mark>
                         <div v-if="isEdit" class="btn-wrapper">
                             <el-button @click="selectProgramme(4)" class="btn-style-two">
                                 选择节目
@@ -74,6 +79,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(5)" class="bottom-right-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 5)"></corner-mark>
                         <div v-if="isEdit" class="btn-wrapper">
                             <el-button @click="selectProgramme(5)" class="btn-style-two">
                                 选择节目
@@ -99,11 +105,13 @@ import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
 import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
 import ProgrammeWithout4StepDialog from '../add_edit_module/ProgrammeWithout4StepDialog';
+import CornerMark from '../CornerMark';
 export default {
     name: 'SubjectFixedModule',
     components: {
         EditProgrammeSubject,
-        ProgrammeWithout4StepDialog
+        ProgrammeWithout4StepDialog,
+        CornerMark
     },
     props: {
         isEdit: {
@@ -114,13 +122,19 @@ export default {
     data() {
         return {
             squareIndex: 0,
+            navbarId: '',
             allowResolutions: []
         };
+    },
+    created() {
+        let {navbarId} = this.$route.params;
+        this.navbarId = navbarId;
     },
     computed: {
         ...mapGetters({
             layout: 'pageLayout/layout',
-            selectAll: 'pageLayout/selectAll'
+            selectAll: 'pageLayout/selectAll',
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
         }),
         getImageUriByKeyAndIndex() {
             return (key, squareIndex) => {

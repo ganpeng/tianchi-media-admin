@@ -301,6 +301,12 @@ const mutations = {
         _.set(state.layout, `${navbarId}.changed`, true);
         store.set('layoutStore', state.layout);
     },
+    saveLayoutToRemoteServer(state, payload) {
+        let {navbarId, data} = payload;
+        _.set(state.layout, `${navbarId}.changed`, false);
+        _.set(state.layout, `${navbarId}.data`, data);
+        store.set('layoutStore', state.layout);
+    },
     //  layout相关的操作结束
     //  人物模块相关操作
     resetPersonModule(state) {

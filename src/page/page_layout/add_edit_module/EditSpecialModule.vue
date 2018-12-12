@@ -32,6 +32,7 @@
                                     <span class="square-text">人物专题</span>
                                 </div>
                                 <div :style="styleBgImageStr(1)" @click="selectProgramme" class="right-field">
+                                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
                                     <span class="square-text">节目</span>
                                 </div>
                             </div>
@@ -61,12 +62,14 @@ import _ from 'lodash';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 import PersonSubjectDialog from './PersonSubjectDialog';
 import EditProgramme from './EditProgramme';
+import CornerMark from '../CornerMark';
 export default {
     name: 'EditSpecialModule',
     components: {
         SingleImageUploader,
         PersonSubjectDialog,
-        EditProgramme
+        EditProgramme,
+        CornerMark
     },
     data() {
         return {
@@ -93,7 +96,8 @@ export default {
         ...mapGetters({
             getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
             getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
-            selectAll: 'pageLayout/selectAll'
+            selectAll: 'pageLayout/selectAll',
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
         }),
         layoutData() {
             let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);

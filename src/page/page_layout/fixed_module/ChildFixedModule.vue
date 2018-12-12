@@ -9,6 +9,7 @@
             </div>
             <div class="wrapper middle-wrapper">
                 <div :style="styleBgImageStr(0)" class="middle-field">
+                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 0)"></corner-mark>
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(0)" class="btn-style-two">
                             选择节目
@@ -22,6 +23,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(1)" class="right-field">
+                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 1)"></corner-mark>
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(1)" class="btn-style-two">
                             选择节目
@@ -46,11 +48,13 @@ import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
 import ProgrammeWithout4StepDialog from '../add_edit_module/ProgrammeWithout4StepDialog';
 import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
+import CornerMark from '../CornerMark';
 export default {
     name: 'ChildFixedModule',
     components: {
         ProgrammeWithout4StepDialog,
-        EditProgrammeSubject
+        EditProgrammeSubject,
+        CornerMark
     },
     props: {
         isEdit: {
@@ -61,13 +65,19 @@ export default {
     data() {
         return {
             squareIndex: 0,
+            navbarId: '',
             allowResolutions: []
         };
+    },
+    created() {
+        let {navbarId} = this.$route.params;
+        this.navbarId = navbarId;
     },
     computed: {
         ...mapGetters({
             layout: 'pageLayout/layout',
-            selectAll: 'pageLayout/selectAll'
+            selectAll: 'pageLayout/selectAll',
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
         }),
         getImageUriByKeyAndIndex() {
             return (key, squareIndex) => {

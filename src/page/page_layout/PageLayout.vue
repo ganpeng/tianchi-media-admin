@@ -176,6 +176,7 @@ export default {
             insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex',
             updateLayout: 'pageLayout/updateLayout',
             saveLayoutToStore: 'pageLayout/saveLayoutToStore',
+            saveLayoutToRemoteServer: 'pageLayout/saveLayoutToRemoteServer',
             toggleChangedByNavbarId: 'pageLayout/toggleChangedByNavbarId',
             updateSortedList: 'pageLayout/updateSortedList'
         }),
@@ -200,8 +201,12 @@ export default {
         },
         async saveLayoutHandler() {
             try {
+                let {navbarId} = this.$route.params;
                 let res = await this.savePageLayoutByNavbarId(this.activeId);
                 if (res && res.code === 0) {
+                    if (navbarId) {
+                        this.saveLayoutToRemoteServer({navbarId, data: res.data});
+                    }
                     this.$message.success('保存成功');
                 }
             } catch (err) {
@@ -228,7 +233,8 @@ export default {
             this.$util.layoutCommand({navbarId, index, type, router: this.$router});
         },
         sortedSaveHandler() {
-            this.saveLayoutToStore();
+            let {navbarId} = this.$route.params;
+            this.saveLayoutToStore(navbarId);
             this.$message.success('模块排序保存成功');
         },
         closeSortViewHandler() {
