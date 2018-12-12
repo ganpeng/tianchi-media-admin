@@ -142,7 +142,7 @@
             <el-table-column align="center" label="视频来源">
                 <template slot-scope="scope">
                     <span v-if="!scope.row.origin || scope.row.origin.length === 0">---</span>
-                    <span v-else>{{scope.row.origin | jsonJoin('name')}}</span>
+                    <span v-else>{{scope.row.origin.name}}</span>
                 </template>
             </el-table-column>
             <!--共享站点（主站）-->
@@ -160,12 +160,18 @@
                     </el-button>
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="上传日期">
+            <el-table-column
+                align="center"
+                width="160px"
+                label="上传日期">
                 <template slot-scope="scope">
                     {{timeStampFormat(scope.row.createdAt)}}
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="更新日期">
+            <el-table-column
+                align="center"
+                width="160px"
+                label="更新日期">
                 <template slot-scope="scope">
                     {{timeStampFormat(scope.row.updatedAt)}}
                 </template>
@@ -173,9 +179,10 @@
             <el-table-column v-if="!hasRadio" width="130px" align="center" fixed="right" label="操作">
                 <template slot-scope="scope">
                     <!--上传主站（子站）-->
+                    <!--（注入成功或者拉取成功）而且（非上传中、非上传成功）的视频上传主站可点击-->
                     <el-button
                         v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
-                        :disabled="scope.row.uploadStatus === 'ON_GOING' || scope.row.uploadStatus === 'SUCCESS' || scope.row.downloadStatus === 'ON_GOING'"
+                        :disabled="!((scope.row.status === 'SUCCESS' || scope.row.downloadStatus === 'SUCCESS') && !(scope.row.uploadStatus === 'ON_GOING' || scope.row.uploadStatus === 'SUCCESS'))"
                         class="text-primary upload-btn"
                         type="text"
                         @click="pushVideoToMainSite(scope.row)"
@@ -186,7 +193,7 @@
                     <!--注入中、注入失败、上传中、上传失败不可设置共享站点-->
                     <el-button
                         v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
-                        :disabled="scope.row.uploadStatus === 'ON_GOING' || scope.row.uploadStatus === 'FAILED' || scope.row.status === 'INJECTING' || scope.row.status === 'FAILED'"
+                        :disabled="!(scope.row.status === 'SUCCESS' || scope.row.uploadStatus === 'SUCCESS')"
                         type="text"
                         @click="setSingleVideoShareSite(scope.row)"
                         size="small">

@@ -164,42 +164,71 @@
                     </el-button>
                 </el-form-item>
                 <el-form-item class="float-right">
-                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
-                               @click="retrySelectedVideoHandler">批量重试
-                    </el-button>
-                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
-                               @click="exportSelectedVideoHandler">批量导出
-                    </el-button>
-                    <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
-                               @click="downloadSelectedTsVideo">批量下载
-                    </el-button>
+                    <el-tooltip class="item" effect="dark" content="进行注入失败文件的批量重试"
+                                placement="top">
+                        <el-button
+                            class="delete-btn create-blue-btn"
+                            :disabled="isDisabled"
+                            size="small"
+                            @click="retrySelectedVideoHandler">
+                            批量重试
+                        </el-button>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="dark" content="导出所选视频的信息表格" placement="top">
+                        <el-button
+                            class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
+                            @click="exportSelectedVideoHandler">
+                            批量导出
+                        </el-button>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="dark" content="下载所选视频的压缩文件" placement="top">
+                        <el-button
+                            class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
+                            @click="downloadSelectedTsVideo">
+                            批量下载
+                        </el-button>
+                    </el-tooltip>
                     <!--共享设置（主站）-->
-                    <el-button
-                        v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
-                        class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
-                        @click="setShareSite">
-                        共享设置
-                    </el-button>
+                    <el-tooltip class="item" effect="dark" content="设置所选视频的共享站点" placement="top">
+                        <el-button
+                            v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                            class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
+                            @click="setShareSite">
+                            共享设置
+                        </el-button>
+                    </el-tooltip>
                     <!--上传主站（子站）-->
-                    <el-button
-                        v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
-                        class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
-                        @click="batchPushToMaster">
-                        上传主站
-                    </el-button>
+                    <el-tooltip class="item" effect="dark" content="将所选视频上传到主站" placement="top">
+                        <el-button
+                            v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                            class="delete-btn create-blue-btn" :disabled="isDisabled" size="small"
+                            @click="batchPushToMaster">
+                            上传主站
+                        </el-button>
+                    </el-tooltip>
                     <!--拉取视频（配置完成的子站）-->
-                    <el-button
-                        v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
-                        class="delete-btn create-blue-btn" size="small"
-                        @click="openPullVideoDialog">
-                        拉取视频
-                    </el-button>
-                    <el-button class="delete-btn disabled-red-btn" size="small" :disabled="isDisabled"
-                               @click="deleteVideoList">批量删除
-                    </el-button>
-                    <el-button class="delete-btn create-blue-btn" size="small" @click="toDiffTime">
-                        检查时长
-                    </el-button>
+                    <el-tooltip class="item" effect="dark" content="从主站下载视频" placement="top">
+                        <el-button
+                            v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                            class="delete-btn create-blue-btn" size="small"
+                            @click="openPullVideoDialog">
+                            拉取视频
+                        </el-button>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="dark" content="删除所选的文件" placement="top">
+                        <el-button
+                            class="delete-btn disabled-red-btn" size="small" :disabled="isDisabled"
+                            @click="deleteVideoList">
+                            批量删除
+                        </el-button>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="dark" content="导出视频中转码前后的时长相差多余两秒的视频" placement="top">
+                        <el-button
+                            class="delete-btn create-blue-btn" size="small"
+                            @click="toDiffTime">
+                            检查时长
+                        </el-button>
+                    </el-tooltip>
                 </el-form-item>
             </el-col>
         </el-form>
@@ -345,8 +374,16 @@
                     this.$message.warning('请您先配置站点');
                 }
             },
-            // 设置视频共享站点
+            // 批量设置视频共享站点
             setShareSite() {
+                // 对选择的视频列表进行检测，注入成功、上传成功的视频可以设置共享
+                let videoList = this.$refs.videoTable.selectedVideoList;
+                for (let i = 0; i < videoList.length; i++) {
+                    if (!(videoList[i].status === 'SUCCESS' || videoList[i].uploadStatus === 'SUCCESS')) {
+                        this.$message.warning('共享站点设置操作只有注入成功、上传成功的视频才可进行共享设置');
+                        return;
+                    }
+                }
                 this.batchShareDialogVisible = true;
             },
             // 设置多个视频进行多个站点的共享
@@ -366,8 +403,16 @@
                     }
                 });
             },
-            // 批量将本地视频上传至主站(只存在于子站)
+            // 批量上传主站——将本地视频上传至主站(只存在于子站)
             batchPushToMaster() {
+                // 对选择的视频列表进行检测，（注入成功或拉取成功）且（非上传中、非上传成功）的视频可以上传主站
+                let videoList = this.$refs.videoTable.selectedVideoList;
+                for (let i = 0; i < videoList.length; i++) {
+                    if (!((videoList[i].status === 'SUCCESS' || videoList[i].downloadStatus === 'SUCCESS') && !(videoList[i].uploadStatus === 'ON_GOING' || videoList[i].uploadStatus === 'SUCCESS'))) {
+                        this.$message.warning('批量上传主站操作仅支持注入成功或者拉取成功且没被上传过或上传失败的视频');
+                        return;
+                    }
+                }
                 if (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) {
                     let videoIdList = [];
                     this.$refs.videoTable.selectedVideoList.map(video => {
@@ -426,7 +471,16 @@
                     this.$refs.uploadInputDir.value = null;
                 }
             },
+            // 批量重试
             retrySelectedVideoHandler() {
+                // 对选择的视频列表进行检测，注入失败的视频才能进行批量重试
+                let videoList = this.$refs.videoTable.selectedVideoList;
+                for (let i = 0; i < videoList.length; i++) {
+                    if (videoList[i].status !== 'FAILED') {
+                        this.$message.warning('批量删除操作仅支持注入失败的视频');
+                        return;
+                    }
+                }
                 let idList = this.$refs.videoTable.selectedVideoList.filter((video) => {
                     return this.needRetry(video);
                 }).map((item) => item.id);
@@ -451,8 +505,21 @@
                 let {status, transcodeStatus} = video;
                 return (status === 'INJECTING' && transcodeStatus === 'FAILED') || status === 'FAILED';
             },
-            // 下载视频文件
+            // 批量下载视频文件
             downloadSelectedTsVideo() {
+                // 对选择的视频列表进行检测，注入成功或拉取成功或上传成功的视频文件才能批量下载
+                let videoList = this.$refs.videoTable.selectedVideoList;
+                for (let i = 0; i < videoList.length; i++) {
+                    if (!(videoList[i].status === 'SUCCESS' || videoList[i].downloadStatus === 'SUCCESS' || videoList[i].uploadStatus === 'SUCCESS')) {
+                        // 主站
+                        if (this.$wsCache.localStorage.get('siteInfo').siteMasterEnable) {
+                            this.$message.warning('批量下载操作仅支持注入成功、上传成功的视频');
+                        } else {
+                            this.$message.warning('批量下载操作仅支持注入成功、拉取成功的视频');
+                        }
+                        return;
+                    }
+                }
                 this.$message.success('正在请求下载视频文件，请稍等');
                 let videoIdList = [];
                 this.$refs.videoTable.selectedVideoList.map(video => {
@@ -476,7 +543,21 @@
                 });
                 this.downloadExl(videoList);
             },
+            // 批量删除视频
             deleteVideoList() {
+                // 对选择的视频列表进行检测，在拉取中和下载中状态的视频不能删除
+                let videoList = this.$refs.videoTable.selectedVideoList;
+                for (let i = 0; i < videoList.length; i++) {
+                    if (videoList[i].uploadStatus === 'ON_GOING' || videoList[i].downloadStatus === 'ON_GOING') {
+                        // 主站
+                        if (this.$wsCache.localStorage.get('siteInfo').siteMasterEnable) {
+                            this.$message.warning('上传中的视频不能被删除');
+                        } else {
+                            this.$message.warning('上传中和拉取中的视频不能被删除');
+                        }
+                        return;
+                    }
+                }
                 let idList = this.$refs.videoTable.selectedVideoList.map((item) => {
                     return item.id;
                 });
