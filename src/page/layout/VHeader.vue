@@ -8,6 +8,12 @@
             </hamburger>
         </div>
         <div class="info">
+            <el-button
+                type="text"
+                class="site-name"
+                @click="toConfigSite">
+                {{siteName ? siteName:'站点未配置，点击配置'}}
+            </el-button>
             <div class="avatar-box">
                 <svg-icon
                     icon-class="avatar_default"
@@ -32,14 +38,25 @@
         },
         data() {
             return {
+                siteName: '',
                 isActive: true,
                 name: ''
             };
         },
         created() {
-            this.name = Cookies.get('name');
+            this.init();
         },
         methods: {
+            init() {
+                this.name = Cookies.get('name');
+                // 初始化站点名称
+                this.$service.getSiteInfo().then(response => {
+                    if (response && response.code === 0) {
+                        this.siteName = response.data.siteName;
+                        this.$wsCache.localStorage.set('siteInfo', response.data);
+                    }
+                });
+            },
             // 切换侧边栏
             toggleAside() {
                 this.isActive = !this.isActive;
@@ -47,6 +64,11 @@
             },
             logout() {
                 this.$store.dispatch('user/logout', true);
+            },
+            toConfigSite() {
+                if (!this.siteName) {
+                    this.$router.push({name: 'ConfigSite'});
+                }
             }
         }
     };
@@ -97,6 +119,10 @@
     .avatar_default {
         width: 45px !important;
         height: 45px !important;
+    }
+
+    .site-name {
+        margin-right: 20px;
     }
 
 </style>

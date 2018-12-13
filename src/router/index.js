@@ -85,6 +85,8 @@ import ProgrammeProductDetail from 'sysPage/product_manage/programme_product/Pro
 import CarouselProductDetail from 'sysPage/product_manage/carousel_product/CarouselProductDetail';
 import RecordProductDetail from 'sysPage/product_manage/record_product/RecordProductDetail';
 import DuplicateList from 'sysPage/person_manage/DuplicateList';
+import SiteList from 'sysPage/site_manage/SiteList';
+import ConfigSite from 'sysPage/site_manage/ConfigSite';
 
 Vue.use(Router);
 
@@ -580,6 +582,18 @@ let router = new Router({
                     path: '/product-manage/detail-record/:id',
                     name: 'RecordProductDetail',
                     component: RecordProductDetail
+                },
+                //  站点管理-配置站点
+                {
+                    path: '/site-manage/config',
+                    name: 'ConfigSite',
+                    component: ConfigSite
+                },
+                //  站点管理-站点列表
+                {
+                    path: '/site-manage/list',
+                    name: 'SiteList',
+                    component: SiteList
                 }
             ]
         },

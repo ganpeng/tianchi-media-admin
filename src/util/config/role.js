@@ -332,19 +332,51 @@ export const VIDEO_TRANSFER_STATUS = {
     FAILED: '转码失败'
 };
 
-// 视频注入的状态
-export const VIDEO_UPLOAD_STATUS_OPTIONS = [
+// 视频的注入状态
+export const VIDEO_INJECTING_STATUS_OPTIONS = [
     {
         value: 'INJECTING',
         label: '注入中'
     },
     {
+        value: 'SUCCESS',
+        label: '注入成功'
+    },
+    {
         value: 'FAILED',
-        label: '失败'
+        label: '注入失败'
+    }
+];
+
+// 视频的子站拉取主站状态
+export const VIDEO_DOWNLOAD_STATUS_OPTIONS = [
+    {
+        value: 'ON_GOING',
+        label: '拉取中'
     },
     {
         value: 'SUCCESS',
-        label: '成功'
+        label: '拉取成功'
+    },
+    {
+        value: 'FAILED',
+        label: '拉取失败'
+    }
+];
+
+// 视频的子站向主站上传状态
+export const VIDEO_UPLOAD_STATUS_OPTIONS = [
+    {
+        value: 'ON_GOING',
+        label: '上传中'
+    },
+    {
+        value: 'SUCCESS',
+        label: '上传成功'
+    },
+    {
+        value: 'FAILED',
+        label: '上传失败'
     }
 ];
 
@@ -500,7 +532,9 @@ export default {
     PLATFORM,
     ANNOUNCER,
     VIDEO_TYPE_OPTIONS,
+    VIDEO_INJECTING_STATUS_OPTIONS,
     VIDEO_UPLOAD_STATUS_OPTIONS,
+    VIDEO_DOWNLOAD_STATUS_OPTIONS,
     PRODUCT_TYPE_OPTIONS,
     FORCED_OPTIONS,
     RECOMMEND_OPTIONS,

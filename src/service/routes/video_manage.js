@@ -5,8 +5,10 @@ import service from '../config';
 /**
  * 获取所有视频的列表
  */
-export const getVideoList = ({startedAt, endedAt, status, suffix, userId, name, key, m3u8For480P, m3u8For720P, m3u8For1080P, bitrate, frameRate, pageNum, pageSize, videoType}) => {
+export const getVideoList = ({originSiteId, shareSiteId, startedAt, endedAt, status, uploadStatus, downloadStatus, suffix, userId, name, key, m3u8For480P, m3u8For720P, m3u8For1080P, bitrate, frameRate, pageNum, pageSize, videoType}) => {
     let params = {
+        originSiteId,
+        shareSiteId,
         userId,
         name,
         key,
@@ -16,6 +18,8 @@ export const getVideoList = ({startedAt, endedAt, status, suffix, userId, name, 
         bitrate,
         frameRate,
         status,
+        downloadStatus,
+        uploadStatus,
         suffix,
         pageNum,
         pageSize,
