@@ -12,7 +12,15 @@
                 </div>
                 <div class="wrapper">
                     <div class="top-middle-field">
-                        <div @click.stop="changeMovieActiveIndex(0)" class="top-middle-field-item">
+                        <div @click.stop="changeMovieActiveIndex(0)" :class="['top-middle-field-item', movieActiveIndex === 0 ? 'active' : '']">
+                            <div class="movie-text-info">
+                                <p class="movie-name">
+                                    {{getLayoutItemValueByKey('name', 0)}}
+                                </p>
+                                <p class="movie-desc">
+                                    {{getLayoutItemValueByKey('desc', 0)}}
+                                </p>
+                            </div>
                             <div v-if="isEdit" class="btn-wrapper">
                                 <el-button @click.stop="selectProgramme(0)" class="btn-style-two">
                                     选择节目
@@ -23,7 +31,15 @@
                                 </el-button>
                             </div>
                         </div>
-                        <div @click.stop="changeMovieActiveIndex(1)" class="top-middle-field-item">
+                        <div @click.stop="changeMovieActiveIndex(1)" :class="['top-middle-field-item', movieActiveIndex === 1 ? 'active' : '']">
+                            <div class="movie-text-info">
+                                <p class="movie-name">
+                                    {{getLayoutItemValueByKey('name', 1)}}
+                                </p>
+                                <p class="movie-desc">
+                                    {{getLayoutItemValueByKey('desc', 1)}}
+                                </p>
+                            </div>
                             <div v-if="isEdit" class="btn-wrapper">
                                 <el-button @click.stop="selectProgramme(1)" class="btn-style-two">
                                     选择节目
@@ -34,7 +50,15 @@
                                 </el-button>
                             </div>
                         </div>
-                        <div @click.stop="changeMovieActiveIndex(2)" class="top-middle-field-item">
+                        <div @click.stop="changeMovieActiveIndex(2)" :class="['top-middle-field-item', movieActiveIndex === 2 ? 'active' : '']">
+                            <div class="movie-text-info">
+                                <p class="movie-name">
+                                    {{getLayoutItemValueByKey('name', 2)}}
+                                </p>
+                                <p class="movie-desc">
+                                    {{getLayoutItemValueByKey('desc', 2)}}
+                                </p>
+                            </div>
                             <div v-if="isEdit" class="btn-wrapper">
                                 <el-button @click.stop="selectProgramme(2)" class="btn-style-two">
                                     选择节目
@@ -45,7 +69,15 @@
                                 </el-button>
                             </div>
                         </div>
-                        <div @click.stop="changeMovieActiveIndex(3)" class="top-middle-field-item">
+                        <div @click.stop="changeMovieActiveIndex(3)" :class="['top-middle-field-item', movieActiveIndex === 3 ? 'active' : '']">
+                            <div class="movie-text-info">
+                                <p class="movie-name">
+                                    {{getLayoutItemValueByKey('name', 3)}}
+                                </p>
+                                <p class="movie-desc">
+                                    {{getLayoutItemValueByKey('desc', 3)}}
+                                </p>
+                            </div>
                             <div v-if="isEdit" class="btn-wrapper">
                                 <el-button @click.stop="selectProgramme(3)" class="btn-style-two">
                                     选择节目
@@ -153,6 +185,11 @@ export default {
                 let {navbarId} = this.$route.params;
                 let uri = _.get(this.layout, `${navbarId}.data.0.layoutItemMultiList.${squareIndex}.${key}.uri`);
                 return uri;
+            };
+        },
+        getLayoutItemValueByKey() {
+            return (key, squareIndex) => {
+                return _.get(this.layout, `${this.navbarId}.data.0.layoutItemMultiList.${squareIndex}.${key}`);
             };
         },
         styleBgImageStr() {
@@ -277,15 +314,20 @@ export default {
                     height: 100%;
                     .top-middle-field-item {
                         @include paddingBg(32%);
+                        cursor: pointer;
                         .btn-wrapper {
                             display: none;
                             @include btnWrapper();
                         }
                         &:hover {
-                            border: 1px solid #1989FA;
+                            background-color: $mainColor;
+                            // border: 1px solid #1989FA;
                             .btn-wrapper {
                                 display: block;
                             }
+                        }
+                        &.active {
+                            background-color: $mainColor;
                         }
                     }
                 }
@@ -296,11 +338,33 @@ export default {
                         @include btnWrapper();
                     }
                     &:hover {
-                        border: 1px solid #1989FA;
+                        // border: 1px solid #1989FA;
                         .btn-wrapper {
                             display: block;
                         }
                     }
+                }
+            }
+            .movie-text-info {
+                position: absolute;
+                top: 50%;
+                left: 20px;
+                text-align: left;
+                width: 90%;
+                transform: translateY(-50%);
+                .movie-name {
+                    color: #fff;
+                    font-size: 30px;
+                    text-overflow:ellipsis;
+                    overflow:hidden;
+                    white-space:nowrap;
+                }
+                .movie-desc {
+                    color: #f1f1f1;
+                    font-size: 24px;
+                    text-overflow:ellipsis;
+                    overflow:hidden;
+                    white-space:nowrap;
                 }
             }
         }
@@ -319,7 +383,7 @@ export default {
                         @include btnWrapper();
                     }
                     &:hover {
-                        border: 1px solid #1989FA;
+                        // border: 1px solid #1989FA;
                         .btn-wrapper {
                             display: block;
                         }

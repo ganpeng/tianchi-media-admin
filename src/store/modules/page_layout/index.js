@@ -182,7 +182,7 @@ const getters = {
             let allFlag = false;
             if (layoutTemplate === 'LT_SN') {
                 allFlag = !(layoutItemMultiList.length > 0 && _.every(layoutItemMultiList, (item) => _.get(item, 'coverImage.uri')));
-            } else if (layoutTemplate === 'LT_3_3') {
+            } else if (layoutTemplate === 'LT_3_3' || layoutTemplate === 'FS_6' || layoutTemplate === 'FS_3') {
                 allFlag = !_.every(layoutItemMultiList, (item) => _.get(item, 'coverImage.uri'));
             } else {
                 allFlag = _.some(layoutItemMultiList, (item) => {

@@ -223,7 +223,10 @@
                             <el-form-item label="节目角标">
                                 <div class="mark-container">
                                     <div class="mark-item">
-                                        <el-checkbox :checked="leftTopChecked" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
+                                        <el-checkbox v-if="markCheckedByKey('leftTop')" :checked="true" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
+                                            左上角：播放平台
+                                        </el-checkbox>
+                                        <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
                                             左上角：播放平台
                                         </el-checkbox>
                                     </div>
@@ -244,12 +247,18 @@
                                         </el-select>
                                     </div>
                                     <div class="mark-item">
-                                        <el-checkbox :checked="leftBottomChecked" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
+                                        <el-checkbox v-if="markCheckedByKey('leftBottom')" :checked="true" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
+                                            左下角：更新
+                                        </el-checkbox>
+                                        <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
                                             左下角：更新
                                         </el-checkbox>
                                     </div>
                                     <div class="mark-item">
-                                        <el-checkbox :checked="rightBottomChecked" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
+                                        <el-checkbox v-if="markCheckedByKey('rightBottom')" :checked="true" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
+                                            右下角：评分
+                                        </el-checkbox>
+                                        <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
                                             右下角：评分
                                         </el-checkbox>
                                     </div>
@@ -362,29 +371,12 @@ export default {
         rightBottomDisabled() {
             return !(this.programme && this.programme.score);
         },
-        leftTopChecked() {
-            let {leftTop} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
-            if (_.isEmpty(leftTop) || !_.get(leftTop, 'caption')) {
-                return false;
-            } else {
-                return true;
-            }
-        },
-        leftBottomChecked() {
-            let {leftBottom} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
-            if (_.isEmpty(leftBottom) || !_.get(leftBottom, 'caption')) {
-                return false;
-            } else {
-                return true;
-            }
-        },
-        rightBottomChecked() {
-            let {rightBottom} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
-            if (_.isEmpty(rightBottom) || !_.get(rightBottom, 'caption')) {
-                return false;
-            } else {
-                return true;
-            }
+        markCheckedByKey() {
+            return (key) => {
+                let cornerMark = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
+                let mark = _.get(cornerMark, `${key}.caption`);
+                return !!mark;
+            };
         },
         getSquareProgrammeId() {
             return _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.id`);

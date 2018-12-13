@@ -54,7 +54,7 @@
                             </div>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="24">
+                    <el-col :span="24" style="margin-bottom: 180px;">
                         <el-form-item label=" ">
                             <mixed114
                                 :isEdit="true"
@@ -452,6 +452,7 @@ export default {
         background: #414A5D;
         padding: 20px;
         border-radius: 8px;
+        z-index: 1000;
         h4 {
             height: 12px;
             line-height: 12px;

@@ -220,7 +220,10 @@
                             <el-form-item label="节目角标">
                                 <div class="mark-container">
                                     <div class="mark-item">
-                                        <el-checkbox :checked="leftTopChecked" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
+                                        <el-checkbox v-if="markCheckedByKey('leftTop')" :checked="true" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
+                                            左上角：播放平台
+                                        </el-checkbox>
+                                        <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
                                             左上角：播放平台
                                         </el-checkbox>
                                     </div>
@@ -241,12 +244,18 @@
                                         </el-select>
                                     </div>
                                     <div class="mark-item">
-                                        <el-checkbox :checked="leftBottomChecked" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
+                                        <el-checkbox v-if="markCheckedByKey('leftBottom')" :checked="true" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
+                                            左下角：更新
+                                        </el-checkbox>
+                                        <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
                                             左下角：更新
                                         </el-checkbox>
                                     </div>
                                     <div class="mark-item">
-                                        <el-checkbox :checked="rightBottomChecked" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
+                                        <el-checkbox v-if="markCheckedByKey('rightBottom')" :checked="true" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
+                                            右下角：评分
+                                        </el-checkbox>
+                                        <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
                                             右下角：评分
                                         </el-checkbox>
                                     </div>
@@ -344,40 +353,25 @@ export default {
             return _.get(this.programme, 'platformList.length') === 0;
         },
         leftBottomDisabled() {
-            return !(this.programme && this.programme.featureVideoCount);
+            let {leftBottomMarkCaption} = this.programme;
+            if (leftBottomMarkCaption) {
+                return !(this.programme && this.programme.leftBottomMarkCaption);
+            } else {
+                return !(this.programme && this.programme.featureVideoCount);
+            }
         },
         rightBottomDisabled() {
             return !(this.programme && this.programme.score);
         },
-        leftTopChecked() {
-            let {leftTop} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
-            if (_.isEmpty(leftTop) || !_.get(leftTop, 'caption')) {
-                return false;
-            } else {
-                return true;
-            }
-        },
-        leftBottomChecked() {
-            let {leftBottom} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
-            if (_.isEmpty(leftBottom) || !_.get(leftBottom, 'caption')) {
-                return false;
-            } else {
-                return true;
-            }
-        },
-        rightBottomChecked() {
-            let {rightBottom} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
-            if (_.isEmpty(rightBottom) || !_.get(rightBottom, 'caption')) {
-                return false;
-            } else {
-                return true;
-            }
+        markCheckedByKey() {
+            return (key) => {
+                let cornerMark = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
+                let mark = _.get(cornerMark, `${key}.caption`);
+                return !!mark;
+            };
         },
         getSquareProgrammeId() {
             return _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.id`);
-        },
-        getSquareProgrammeLayoutItemType() {
-            return _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.layoutItemType`);
         },
         checkedProgrammeList() {
             if (this.getSquareProgrammeId && !_.isEmpty(this.programme)) {
@@ -494,7 +488,6 @@ export default {
         setProgrammeSubjectHandler(programme) {
             let {id, name, desc, programmeTemplate} = programme;
             if (id === this.getSquareProgrammeId) {
-                console.log('aaaa');
                 return false;
             }
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
@@ -577,7 +570,7 @@ export default {
         },
         //  角标的相关操作
         markChangeHandler(value, key) {
-            let {score, featureVideoCount, platformList} = this.programme;
+            let {score, featureVideoCount, platformList, leftBottomMarkCaption} = this.programme;
             switch (key) {
                 case 'leftTop':
                     this.updateLayoutItemCornerMarkByIndex({
@@ -594,7 +587,7 @@ export default {
                         index: this.index,
                         squareIndex: this.squareIndex,
                         key: 'leftBottom',
-                        value: value ? {caption: featureVideoCount} : {}
+                        value: value ? {caption: featureVideoCount || leftBottomMarkCaption} : {}
                     });
                     break;
                 case 'rightBottom':
