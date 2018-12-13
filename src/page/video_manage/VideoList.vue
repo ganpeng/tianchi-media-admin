@@ -409,7 +409,7 @@
                 let videoList = this.$refs.videoTable.selectedVideoList;
                 for (let i = 0; i < videoList.length; i++) {
                     if (!((videoList[i].status === 'SUCCESS' || videoList[i].downloadStatus === 'SUCCESS') && !(videoList[i].uploadStatus === 'ON_GOING' || videoList[i].uploadStatus === 'SUCCESS'))) {
-                        this.$message.warning('批量上传主站操作仅支持注入成功或者拉取成功且没被上传过或上传失败的视频');
+                        this.$message.warning('批量上传主站仅支持注入/拉取成功且未上传成功的视频');
                         return;
                     }
                 }
