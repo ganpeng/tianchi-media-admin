@@ -37,7 +37,7 @@
                             v-for="(item, innerIndex) in asides"
                             :key="innerIndex"
                             :index="item.uri"
-                            @click="menuChangeHandler(item.uri)">
+                            @click="menuChangeHandler(item)">
                             <svg-icon
                                 :icon-class="item.icon">
                             </svg-icon>
@@ -55,14 +55,15 @@
     </div>
 </template>
 <script>
-    import {mapGetters} from 'vuex';
+    import {mapGetters, mapActions} from 'vuex';
+    import _ from 'lodash';
     import role from '@/util/config/role';
-
     export default {
         data() {
             return {
                 navList: role.NAV_LIST,
                 asideList: role.ASIDE_LIST,
+                layoutId: '',
                 active: 0,
                 defaultActive: '',
                 minHeight: 400,
@@ -75,15 +76,21 @@
             let content = document.querySelector('.content');
             content.addEventListener('scroll', this.toggleFixedBtnContainer.bind(this), false);
         },
-        created() {
-            let {active, activePath} = this.getActivePath();
-            this.active = active;
-            this.defaultActive = activePath;
-
-            this.setMinHeight();
-            window.addEventListener('resize', this.setMinHeight, false);
-
-            this.hideHeaderAndAside();
+        async created() {
+            try {
+                let {active, activePath} = this.getActivePath();
+                this.active = active;
+                this.defaultActive = activePath;
+                this.setMinHeight();
+                window.addEventListener('resize', this.setMinHeight, false);
+                this.hideHeaderAndAside();
+                let res = await this.getNavbarList();
+                if (res && res.code === 0) {
+                    this.layoutId = _.get(res.data, '2.id');
+                }
+            } catch (err) {
+                console.log(err);
+            }
         },
         computed: {
             ...mapGetters({
@@ -91,6 +98,9 @@
             })
         },
         methods: {
+            ...mapActions({
+                getNavbarList: 'pageLayout/getNavbarList'
+            }),
             contentStyleStr() {
                 return `top: ${this.top}px;left: ${this.left}px;`;
             },
@@ -153,7 +163,11 @@
                     }
                 }
             },
-            menuChangeHandler(path) {
+            menuChangeHandler(pathObj) {
+                let path = _.get(pathObj, 'uri');
+                if (path === '/page-layout') {
+                    path = `${path}/${this.layoutId}`;
+                }
                 this.$router.push({path});
             }
         }

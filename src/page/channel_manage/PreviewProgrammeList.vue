@@ -1,17 +1,9 @@
 <!--视频列表组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'频道管理'},
-            {name:'直播频道管理'},
-            {name:'直播频道列表-节目单预览'}]">
-        </custom-breadcrumb>
-        <div class="text-right">
-            <el-button class="page-main-btn" @click="goBack" plain>返回列表页</el-button>
-        </div>
+    <div class="preview-channel-programme-list-container">
+        <h2 class="content-title">{{channelName}}</h2>
+        <div class="seperator-line"></div>
         <div class="content">
-            <div class="block-title">{{channelName}}</div>
             <el-row>
                 <el-col class="float-left" :span="11">
                     <el-collapse id="prevContainer" @change="prevHandleChange" accordion>
@@ -38,15 +30,19 @@
                             </template>
                             <ul class="item-list">
                                 <li v-for="(ele, index) in item" :key="index" class="item-li">
-                                    <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
-                                    <span class="url">{{ele.playUri}}</span>
+                                    <div class="wrapper">
+                                        <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
+                                        <span class="url">{{ele.playUri}}</span>
+                                    </div>
                                 </li>
                             </ul>
                         </el-collapse-item>
                     </el-collapse>
                 </el-col>
             </el-row>
-            <el-button class="page-margin-btn page-main-btn" @click="goBack" plain>返回列表页</el-button>
+        </div>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-three" @click="goBack" plain>返回列表页</el-button>
         </div>
     </div>
 </template>
@@ -118,8 +114,8 @@
                         prevArrowList[i].style.color = '#1989FA';
                         prevTitleList[i].style.color = '#1989FA';
                     } else {
-                        prevArrowList[i].style.color = '#303133';
-                        prevTitleList[i].style.color = '#303133';
+                        prevArrowList[i].style.color = '#A8ABB3';
+                        prevTitleList[i].style.color = '#A8ABB3';
                     }
                 }
             },
@@ -131,8 +127,8 @@
                         afterArrowList[i].style.color = '#1989FA';
                         afterTitleList[i].style.color = '#1989FA';
                     } else {
-                        afterArrowList[i].style.color = '#303133';
-                        afterTitleList[i].style.color = '#303133';
+                        afterArrowList[i].style.color = '#A8ABB3';
+                        afterTitleList[i].style.color = '#A8ABB3';
                     }
                 }
             },
@@ -156,11 +152,8 @@
     };
 </script>
 <style scoped lang="less">
-.item-li {
-    padding: 0 20px 0 20px;
-    .wrapper {
-        border-top: 1px solid #ebeef5;
-    }
+.content {
+    margin-top: 20px;
 }
 .title, .time-name, .url {
     display: block;
@@ -168,7 +161,7 @@
 }
 .title {
     font-size: 18px;
-    color: #303133;
+    color: #A8ABB3;
     padding-left: 20px;
 }
 .time-name {
@@ -180,5 +173,45 @@
     font-size: 12px;
     line-height: 20px;
     color: #8C8C8C;
+}
+</style>
+<style lang="scss">
+#prevContainer,
+#afterContainer {
+    border-top: none;
+    border-bottom: none;
+    border-radius: 8px;
+    overflow: hidden;
+    .item-list {
+        background: #2A3040;
+        .item-li {
+            padding: 0 20px 0 20px;
+            .wrapper {
+                border-bottom: 1px solid #3E495E;
+            }
+            &:last-child {
+                .wrapper {
+                    border-bottom: none;
+                }
+            }
+        }
+    }
+    .el-collapse-item {
+        border-bottom: 1px solid #3E495E;
+        &:last-child {
+            border-bottom: none;
+        }
+        .el-collapse-item__header {
+            background: #2A3040;
+            border: none;
+        }
+    }
+}
+
+.el-collapse-item__content {
+    padding-bottom: 0;
+}
+.el-collapse-item__wrap {
+    border-bottom: none;
 }
 </style>

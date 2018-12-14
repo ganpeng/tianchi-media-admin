@@ -80,10 +80,10 @@
                                     <span class="btn-text edit-btn" @click="editCategoryGroupByIndex(index)">编辑</span>
                                     <i @click="deleteCategoryGroupByIndexHandler(index)" class="el-icon-circle-close-outline delete-btn"></i>
                                 </li>
+                                <li key="hahahaha" slot="footer" class="add-category-group-item" @click="addCategoryGroup">
+                                    <svg-icon icon-class="plus"></svg-icon>
+                                </li>
                             </draggable>
-                            <div class="add-category-group-item" @click="addCategoryGroup">
-                                <svg-icon icon-class="plus"></svg-icon>
-                            </div>
                         </div>
                         <div class="fixed-btn-container">
                             <el-button class="btn-style-two" type="primary" @click="saveProgrammeCategoryHandler">保存</el-button>
@@ -704,7 +704,7 @@ export default {
         border: 1px solid #3E495E;
         border-radius: 4px;
         background: transparent;
-        margin: 20px 0 10px 0;
+        margin: 0 0 10px 0;
         cursor: pointer;
         .svg-icon {
             fill: #3E495E;

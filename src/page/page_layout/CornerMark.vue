@@ -1,7 +1,8 @@
 <template>
     <div class="mark-container">
         <div class="left-top-field">
-            {{getCornerMarkByKey('leftTop')}}
+            <img :src="getCornerMarkByKey('leftTop') | setPlatformImage" alt="">
+            <!-- {{getCornerMarkByKey('leftTop')}} -->
         </div>
         <div v-if="getCornerMarkByKey('leftBottom')" class="left-bottom-field">
             更新至{{getCornerMarkByKey('leftBottom')}}集

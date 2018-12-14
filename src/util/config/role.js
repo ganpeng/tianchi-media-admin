@@ -480,7 +480,7 @@ const RECOMMEND_OPTIONS = [
     }
 ];
 
-const defaultLayoutNavbarId = '5bf42d08b778252f2343eafe';
+// const defaultLayoutNavbarId = '5bf42d08b778252f2343eafe';
 
 const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', ''];
 
@@ -525,7 +525,7 @@ const ASIDE_LIST = [
         },
         {
             text: '页面布局',
-            uri: `/page-layout/${defaultLayoutNavbarId}`,
+            uri: `/page-layout`,
             icon: 'aside_layout'
         },
         {

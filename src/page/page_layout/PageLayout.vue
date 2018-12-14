@@ -98,16 +98,9 @@ export default {
             let {navbarId} = this.$route.params;
             let res = await this.getNavbarList();
             if (res && res.code === 0) {
-                if (parseInt(navbarId) === 0) {
-                    let {id, layoutTemplate} = res.data[0];
-                    this.$router.push({ name: 'PageLayout', params: {navbarId: id} });
-                    this.activeId = id;
-                    this.layoutTemplate = layoutTemplate;
-                } else {
-                    let navbar = this.navbarList.find((navbar) => navbar.id === navbarId);
-                    this.activeId = navbarId;
-                    this.layoutTemplate = navbar ? navbar.layoutTemplate : '';
-                }
+                let navbar = this.navbarList.find((navbar) => navbar.id === navbarId);
+                this.activeId = navbarId;
+                this.layoutTemplate = navbar ? navbar.layoutTemplate : '';
                 //  重新跟新本地数据到vuex中
                 this.updateLayout();
                 this.$nextTick(() => {

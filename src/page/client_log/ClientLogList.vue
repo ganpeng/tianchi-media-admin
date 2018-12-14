@@ -15,46 +15,18 @@
                     </div>
                     <el-button class="btn-style-one" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
                     <div class="search-field-item">
-                        <label class="search-field-item-label">开始时间</label>
+                        <label class="search-field-item-label">发行日期</label>
                         <el-date-picker
-                            :value="searchFields.startedAt"
-                            type="date"
-                            clearable
-                            style="width:180px;"
+                            :value="searchFields.dateRange"
+                            type="daterange"
+                            @input="inputHandler($event, 'dateRange')"
                             value-format="timestamp"
-                            @input="inputHandler($event, 'startedAt')"
-                            placeholder="请选择开始时间">
+                            :unlink-panels="true"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
                         </el-date-picker>
                     </div>
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">结束时间</label>
-                        <el-date-picker
-                            :value="searchFields.endedAt"
-                            type="date"
-                            clearable
-                            style="width:180px;"
-                            value-format="timestamp"
-                            @input="inputHandler($event, 'endedAt')"
-                            placeholder="请选择结束时间">
-                        </el-date-picker>
-                    </div>
-                    <!--
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">状态</label>
-                        <el-select
-                            :value="searchFields.errorType"
-                            @change="inputHandler($event, 'errorType')"
-                            clearable
-                            placeholder="请选择状态">
-                            <el-option
-                                v-for="item in visibleOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    -->
                     <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
                         <svg-icon
                             icon-class="reset"

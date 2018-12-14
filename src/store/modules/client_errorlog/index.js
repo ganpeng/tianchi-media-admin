@@ -4,6 +4,7 @@ const defaultSearchFields = {
     keyword: '',
     errorType: '',
     apkVersion: '',
+    dateRange: [],
     startedAt: undefined,
     endedAt: undefined
 };
@@ -54,6 +55,10 @@ const mutations = {
     updateSearchFields(state, payload) {
         let {key, value} = payload;
         state.searchFields[key] = value;
+        if (key === 'dateRange') {
+            state.searchFields.startedAt = state.searchFields.dateRange ? state.searchFields.dateRange[0] : '';
+            state.searchFields.endedAt = state.searchFields.dateRange ? state.searchFields.dateRange[1] : '';
+        }
     },
     resetSearchFields(state) {
         state.searchFields = _.cloneDeep(defaultSearchFields);

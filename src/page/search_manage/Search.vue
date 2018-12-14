@@ -3,7 +3,9 @@
         <h2 class="content-title">搜索管理</h2>
         <div class="seperator-line"></div>
         <div class="btn-wrapper">
-            <el-button class="btn-style-two" type="primary" @click="toggleEditHandler">编辑</el-button>
+            <el-button class="btn-style-two" type="primary" @click="toggleEditHandler">
+                {{isEdit ? '完成' : '编辑'}}
+            </el-button>
         </div>
         <p class="tips"><i>*</i>每条不超过10个字</p>
         <ul class="search-list clearfix">
@@ -74,13 +76,14 @@ export default {
                 let res = await this.$service.postHotSearch(hotSearchList);
                 if (res && res.code === 0) {
                     this.$message.success('保存成功');
+                    this.isEdit = false;
                 }
             } catch (err) {
                 console.log(err);
             }
         },
         toggleEditHandler() {
-            this.isEdit = true;
+            this.isEdit = !this.isEdit;
         },
         searchItemFocusHandler(e, index) {
             this.list = this.list.map((item, _index) => {

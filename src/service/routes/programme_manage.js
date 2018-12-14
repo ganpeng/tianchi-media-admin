@@ -170,14 +170,13 @@ export const realDeleteProgramme = (id) => {
 
 export const upLowerFrameProgramme = (idList, visible) => {
     const params = {
-        idList,
         visible
     };
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
         return item !== '' && item !== undefined;
     }));
 
-    return service.patch(`/v1/content/programme/visible?${paramsStr}`);
+    return service.patch(`/v1/content/programme/visible?${paramsStr}`, idList);
 };
 
 /**
