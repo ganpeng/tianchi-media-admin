@@ -623,14 +623,14 @@ const ASIDE_LIST = [
         {
             text: '站点列表',
             uri: '/site-manage/list',
-            icon: 'aside_product'
+            icon: 'site_list'
         }
     ],
     [
         {
             text: '站点配置',
             uri: '/config-manage/site',
-            icon: 'aside_product'
+            icon: 'site_config'
         }
     ],
     [

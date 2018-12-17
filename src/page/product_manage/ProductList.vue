@@ -2,13 +2,12 @@
 <template>
     <div>
         <div class="table-container">
-            <h2 class="content-title">搜索筛选</h2>
+            <div class="content-title">搜索筛选</div>
             <div class="search-field">
                 <div class="field-row" @keyup.enter="getProductList">
                     <div class="search-field-item">
                         <el-input
                             v-model="listQueryParams.keyword"
-                            @change="getProductList"
                             clearable
                             class="border-input"
                             placeholder="填写产品包编号、名称">
