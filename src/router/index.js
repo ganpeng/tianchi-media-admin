@@ -112,6 +112,8 @@ import EditSpecialModule from 'sysPage/page_layout/add_edit_module/EditSpecialMo
 import PersonSubjectModule from 'sysPage/page_layout/add_edit_module/PersonSubjectModule';
 import ShuffleModule from 'sysPage/page_layout/add_edit_module/ShuffleModule';
 import ProgrammeSubjectModule from 'sysPage/page_layout/add_edit_module/ProgrammeSubjectModule';
+import SiteList from 'sysPage/site_manage/SiteList';
+import ConfigSite from 'sysPage/site_manage/ConfigSite';
 
 Vue.use(Router);
 
@@ -120,640 +122,651 @@ const whitePagesList = ['Login'];
 
 // 定义路由
 let router = new Router({
-        mode: 'history',
-        routes: [
-            // 登录页面
-            {
-                path: '/',
-                alias: '/login',
-                name: 'Login',
-                component: Login
-            },
-            // 轮播频道-批量创建轮播频道
-            {
-                path: '/channel-manage/carousel/import-create/:category',
-                name: 'CreateChannelByImportExcel',
-                component: CreateChannelByImportExcel
-            },
-            // 轮播频道-批量修改轮播频道
-            {
-                path: '/channel-manage/carousel/import-edit',
-                name: 'EditChannelByImportExcel',
-                component: EditChannelByImportExcel
-            },
-            //  直播频道管理-批量修改
-            {
-                path: '/channel-manage/live/import-edit',
-                name: 'EditLiveChannelByImportExcel',
-                component: EditLiveChannelByImportExcel
-            },
-            // 网站内容结构
-            {
-                path: '/layout',
-                name: 'GlobalLayout',
-                component: GlobalLayout,
-                // path: '/layout',
-                // name: 'Layout',
-                // component: Layout,
-                // 首页
-                children: [
-                    {
-                        path: '/home',
-                        name: 'Home',
-                        component: Home
-                    },
-                    // 项目小工具，上线时会删除
-                    {
-                        path: '/kits',
-                        name: 'Kits',
-                        component: Kits
-                    },
-                    // 个人中心-我的信息
-                    {
-                        path: '/my-info',
-                        name: 'MyInfo',
-                        component: MyInfo
-                    },
-                    // 个人中心-信息设置页面
-                    {
-                        path: '/info-setting',
-                        name: 'InfoSetting',
-                        component: InfoSetting
-                    },
-                    // 个人中心-修改密码页面
-                    {
-                        path: '/modify-password',
-                        name: 'ModifyPassword',
-                        component: ModifyPassword
-                    },
-                    // 管理员中心——管理员列表页面
-                    {
-                        path: '/manage-admin/list',
-                        name: 'AdminList',
-                        component: AdminList
-                    },
-                    // 管理员管理——创建管理员页面
-                    {
-                        path: '/manage-admin/create',
-                        name: 'CreateAdmin',
-                        component: CreateAdmin
-                    },
-                    // 管理员管理——管理员详情
-                    {
-                        path: '/manage-admin/detail/:id',
-                        name: 'AdminDetail',
-                        component: AdminDetail
-                    },
-                    // 管理员管理——管理员信息编辑
-                    {
-                        path: '/manage-admin/edit/:id',
-                        name: 'EditAdmin',
-                        component: EditAdmin
-                    },
-                    // 用户中心-用户列表页面
-                    {
-                        path: '/user-center/list',
-                        name: 'UserList',
-                        component: UserList
-                    },
-                    // 用户中心-用户创建页面
-                    {
-                        path: '/user-center/create',
-                        name: 'CreateUser',
-                        component: CreateUser
-                    },
-                    // 用户中心-用户编辑页面
-                    {
-                        path: '/user-center/edit/:id',
-                        name: 'EditUserInfo',
-                        component: EditUserInfo
-                    },
-                    // 用户中心-用户详情页面
-                    {
-                        path: '/user-center/detail/:id',
-                        name: 'UserDetailInfo',
-                        component: UserDetailInfo
-                    },
-                    // 内容管理-栏目管理-栏目项设置
-                    {
-                        path: '/nav-bar-manage/setting',
-                        name: 'NavBarSetting',
-                        component: NavBarSetting
-                    },
-                    // 内容管理-栏目管理-新增
-                    {
-                        path: '/nav-bar-manage/create',
-                        name: 'CreateNavBar',
-                        component: CreateNavBar
-                    },
-                    // 内容管理-栏目管理-布局设置
-                    {
-                        path: '/nav-bar-manage/layout-setting/:navBarSignCode/:navBarId',
-                        name: 'NavBarLayoutSetting',
-                        component: NavBarLayoutSetting
-                    },
-                    // 内容管理-栏目管理-节目选择设置
-                    {
-                        path: '/layout-manage/programme/:navBarId/:navBarSignCode/:model/:row/:index/:imageSpec',
-                        name: 'AppendProgramme',
-                        component: AppendProgramme
-                    },
-                    // 内容管理-栏目管理-单个推荐位选择专题
-                    {
-                        path: '/layout-manage/append-single-subject/:navBarId/:navBarSignCode/:model/:row/:index/:imageSpec',
-                        name: 'AppendSingleSubject',
-                        component: AppendSingleSubject
-                    },
-                    // 内容管理-栏目管理-混排模块
-                    {
-                        path: '/layout-manage/model-append-shuffle/:navBarId/:navBarSignCode/:model/:operate',
-                        name: 'ModelAppendShuffle',
-                        component: ModelAppendShuffle
-                    },
-                    // 内容管理-栏目管理-模块推荐位选择节目专题
-                    {
-                        path: '/layout-manage/model-append-programme-subject/:navBarId/:navBarSignCode/:model/:operate',
-                        name: 'ModelAppendProgrammeSubject',
-                        component: ModelAppendProgrammeSubject
-                    },
-                    // 内容管理-栏目管理-模块推荐位选择人物专题
-                    {
-                        path: '/layout-manage/model-append-person-subject/:navBarId/:navBarSignCode/:model/:operate',
-                        name: 'ModelAppendPersonSubject',
-                        component: ModelAppendPersonSubject
-                    },
-                    // 内容管理-栏目管理-单个频道设置
-                    {
-                        path: '/layout-manage/append-channel/:navBarId/:navBarSignCode/:model/:row/:index/:imageSpec',
-                        name: 'AppendChannel',
-                        component: AppendChannel
-                    },
-                    // 内容管理-栏目管理-单个频道设置
-                    {
-                        path: '/layout-manage/append-view-channel/:navBarId/:navBarSignCode',
-                        name: 'AppendViewChannel',
-                        component: AppendViewChannel
-                    },
-                    // 内容管理-栏目管理-模块频道管理
-                    {
-                        path: '/layout-manage/model-append-channel/:navBarId/:navBarSignCode/:model/:operate',
-                        name: 'ModelAppendChannel',
-                        component: ModelAppendChannel
-                    },
-                    // 内容管理-专题管理-新增节目专题
-                    {
-                        path: '/subject-manage/programme/create',
-                        name: 'CreateProgrammeSubject',
-                        component: CreateProgrammeSubject
-                    },
-                    // 内容管理-专题管理-新增人物专题
-                    {
-                        path: '/subject-manage/figure/create',
-                        name: 'CreateFigureSubject',
-                        component: CreateFigureSubject
-                    },
-                    // 内容管理-专题管理-人物专题-编辑
-                    {
-                        path: '/subject-manage/figure/edit/:id',
-                        name: 'EditFigureSubject',
-                        component: EditFigureSubject
-                    },
-                    // 内容管理-专题管理-节目专题-编辑
-                    {
-                        path: '/subject-manage/programme/edit/:id',
-                        name: 'EditProgrammeSubject',
-                        component: EditProgrammeSubject
-                    },
-                    // 内容管理-专题管理-人物专题-详情
-                    {
-                        path: '/subject-manage/figure/detail/:id',
-                        name: 'FigureSubjectDetail',
-                        component: FigureSubjectDetail
-                    },
-                    // 内容管理-专题管理-节目专题-详情
-                    {
-                        path: '/subject-manage/programme/detail/:id',
-                        name: 'ProgrammeSubjectDetail',
-                        component: ProgrammeSubjectDetail
-                    },
-                    // 内容管理-专题管理-专题列表
-                    {
-                        path: '/subject-manage/list',
-                        name: 'SubjectList',
-                        component: SubjectList
-                    },
-                    // 人物管理-新增人物
-                    {
-                        path: '/person-manage/create',
-                        name: 'CreatePerson',
-                        component: CreatePerson
-                    },
-                    // 人物管理-编辑人物
-                    {
-                        path: '/person-manage/edit/:id',
-                        name: 'EditPerson',
-                        component: EditPerson
-                    },
-                    // 人物管理-人物详情
-                    {
-                        path: '/person-manage/display/:id',
-                        name: 'DisplayPerson',
-                        component: DisplayPerson
-                    },
-                    // 人物管理-人物列表
-                    {
-                        path: '/person-manage/list',
-                        name: 'PersonList',
-                        component: PersonList
-                    },
-                    {
-                        path: '/person-manage/hot',
-                        name: 'HotPerson',
-                        component: HotPerson
-                    },
-                    {
-                        path: '/person-manage/duplicate',
-                        name: 'DuplicateList',
-                        component: DuplicateList
-                    },
-                    {
-                        path: '/person-manage/import',
-                        name: 'PersonImport',
-                        component: PersonImport
-                    },
-                    // 节目管理
-                    // 新增节目
-                    {
-                        path: '/programme-manage/create',
-                        name: 'CreateProgramme',
-                        component: CreateProgramme
-                    },
-                    // 节目管理-编辑节目
-                    {
-                        path: '/programme-manage/edit/:id',
-                        name: 'EditProgramme',
-                        component: EditProgramme
-                    },
-                    // 节目管理-节目详情
-                    {
-                        path: '/programme-manage/display/:id',
-                        name: 'DisplayProgramme',
-                        component: DisplayProgramme
-                    },
-                    // 节目管理-节目列表
-                    {
-                        path: '/programme-manage/list',
-                        name: 'ProgrammeList',
-                        component: ProgrammeList
-                    },
-                    // 节目类别管理
-                    {
-                        path: '/programme-manage/type',
-                        name: 'ProgrammeTypeManage',
-                        component: ProgrammeTypeManage
-                    },
-                    // 节目导入
-                    {
-                        path: '/programme-manage/import',
-                        name: 'ProgrammeImport',
-                        component: ProgrammeImport
-                    },
-                    //  广告管理
-                    // 广告资源列表
-                    {
-                        path: '/advert-resource/list',
-                        name: 'AdvertResourceList',
-                        component: AdvertResourceList
-                    },
-                    // 开机广告列表
-                    {
-                        path: '/advert-launch/starting/list',
-                        name: 'StartingAdvertGroupList',
-                        component: StartingAdvertGroupList
-                    },
-                    //  前置节目广告列表
-                    {
-                        path: '/advert-launch/preprogramme/list',
-                        name: 'PreProgrammeAdvertGroupList',
-                        component: PreProgrammeAdvertGroupList
-                    },
-                    //  屏保广告列表
-                    {
-                        path: '/advert-launch/screensaver/list',
-                        name: 'ScreensaverrammeAdvertGroupList',
-                        component: ScreensaverAdvertGroupList
-                    },
-                    //  暂停广告列表
-                    {
-                        path: '/advert-launch/pause/list',
-                        name: 'PauseAdvertGroupList',
-                        component: PauseAdvertGroupList
-                    },
-                    //  直播换台广告列表
-                    {
-                        path: '/advert-launch/live/list',
-                        name: 'LiveAdvertGroupList',
-                        component: LiveAdvertGroupList
-                    },
-                    //  音量条广告列表
-                    {
-                        path: '/advert-launch/volumebar/list',
-                        name: 'VolumeBarAdvertGroupList',
-                        component: VolumeBarAdvertGroupList
-                    },
-                    //  弹窗广告列表
-                    {
-                        path: '/advert-launch/dialog/list',
-                        name: 'DialogAdvertGroupList',
-                        component: DialogAdvertGroupList
-                    },
-                    //  详情页广告列表
-                    {
-                        path: '/advert-launch/detailpage/list',
-                        name: 'DetailPageAdvertList',
-                        component: DetailPageAdvertGroupList
-                    },
-                    // 视频管理
-                    {
-                        path: '/manage-video/list',
-                        name: 'VideoList',
-                        component: VideoList
-                    },
-                    // 视频导入
-                    {
-                        path: '/manage-video/import',
-                        name: 'VideoImport',
-                        component: VideoImport
-                    },
-                    //  视频下载列表
-                    {
-                        path: '/manage-video/download-list',
-                        name: 'DownloadVideoList',
-                        component: DownloadVideoList
-                    },
-                    //  视频管理-检查视频时长
-                    {
-                        path: '/manage-video/diff-list',
-                        name: 'DiffTimeVideoList',
-                        component: DiffTimeVideoList
-                    },
-                    //  直播频道管理
-                    {
-                        path: '/channel-live/list',
-                        name: 'LiveChannelList',
-                        component: LiveChannelList
-                    },
-                    {
-                        path: '/channel-live/create',
-                        name: 'CreateLiveChannel',
-                        component: CreateLiveChannel
-                    },
-                    {
-                        path: '/channel-live/edit/:id',
-                        name: 'EditLiveChannel',
-                        component: EditLiveChannel
-                    },
-                    {
-                        path: '/channel-live/import',
-                        name: 'LiveChannelImport',
-                        component: LiveChannelImport
-                    },
-                    {
-                        path: '/channel-live/preview/:id',
-                        name: 'PreviewProgrammeList',
-                        component: PreviewProgrammeList
-                    },
-                    // 轮播频道列表
-                    {
-                        path: '/channel-carousel/list',
-                        name: 'CarouselChannelList',
-                        component: CarouselChannelList
-                    },
-                    // 轮播频道-创建单个轮播频道
-                    {
-                        path: '/channel-carousel/create',
-                        name: 'CreateCarouselChannel',
-                        component: CreateCarouselChannel
-                    },
-                    // 轮播频道详情
-                    {
-                        path: '/channel-carousel/detail/:id',
-                        name: 'CarouselChannelDetail',
-                        component: CarouselChannelDetail
-                    },
-                    // 编辑轮播频道
-                    {
-                        path: '/channel-carousel/edit/:id',
-                        name: 'EditCarouselChannel',
-                        component: EditCarouselChannel
-                    },
-                    //  频道类别管理
-                    {
-                        path: '/channel-category',
-                        name: 'ChannelCategory',
-                        component: ChannelCategory
-                    },
-                    //  版本管理
-                    {
-                        path: '/manage-version/list',
-                        name: 'VersionList',
-                        component: VersionList
-                    },
-                    {
-                        path: '/manage-version/create',
-                        name: 'CreateVersion',
-                        component: CreateVersion
-                    },
-                    //  设备管理
-                    {
-                        path: '/manage-device/list',
-                        name: 'DeviceList',
-                        component: DeviceList
-                    },
-                    {
-                        path: '/manage-device/create',
-                        name: 'CreateDevice',
-                        component: CreateDevice
-                    },
-                    {
-                        path: '/manage-device/edit/:id',
-                        name: 'EditDevice',
-                        component: EditDevice
-                    },
-                    //  操作台管理
-                    {
-                        path: '/worktop-manage',
-                        name: 'Worktop',
-                        component: Worktop
-                    },
-                    //  客户端日志管理
-                    {
-                        path: '/clientlog/list',
-                        name: 'ClientLogList',
-                        component: ClientLogList
-                    },
-                    {
-                        path: '/category-manage',
-                        name: 'Category',
-                        component: Category
-                    },
-                    {
-                        path: '/search-manage',
-                        name: 'Search',
-                        component: Search
-                    },
-                    //  角标管理
-                    {
-                        path: '/corner-mark-manage/index',
-                        name: 'CornerMarkIndex',
-                        component: CornerMarkIndex
-                    },
-                    //  页面布局
-                    {
-                        path: '/page-layout/:navbarId',
-                        name: 'PageLayout',
-                        component: PageLayout
-                    },
-                    {
-                        path: '/page-layout/:navbarId/edit-fixed/:index',
-                        name: 'EditFixedModule',
-                        component: EditFixedModule
-                    },
-                    /**
-                     *
-                     FIGURE
-                     SPECIAL
-                     FIGURE_SUBJECT
-                     PROGRAMME
-                     FIGURE_SUBJECT'
-                     */
-                    {
-                        path: '/page-layout/:navbarId/:operator/figure/:index',
-                        name: 'PersonModule',
-                        component: PersonModule
-                    },
-                    {
-                        path: '/page-layout/:navbarId/:operator/special/:index',
-                        name: 'EditSpecialModule',
-                        component: EditSpecialModule
-                    },
-                    {
-                        path: '/page-layout/:navbarId/:operator/figure_subject/:index',
-                        name: 'PersonSubjectModule',
-                        component: PersonSubjectModule
-                    },
-                    {
-                        path: '/page-layout/:navbarId/:operator/shuffle/:index',
-                        name: 'ShuffleModule',
-                        component: ShuffleModule
-                    },
-                    {
-                        path: '/page-layout/:navbarId/:operator/programme_subject/:index',
-                        name: 'ProgrammeSubjectModule',
-                        component: ProgrammeSubjectModule
-                    },
-                    {
-                        path: '/page-layout/:navbarId/add/programme/:index'
-                    },
-                    //  产品管理-产品包列表
-                    {
-                        path: '/product-manage/list',
-                        name: 'ProductList',
-                        component: ProductList
-                    },
-                    //  产品管理-创建类型包
-                    {
-                        path: '/product-manage/create-category',
-                        name: 'CreateCategoryProduct',
-                        component: CreateCategoryProduct
-                    },
-                    //  产品管理-编辑类型包
-                    {
-                        path: '/product-manage/edit-category/:id',
-                        name: 'EditCategoryProduct',
-                        component: EditCategoryProduct
-                    },
-                    //  产品管理-创建节目包
-                    {
-                        path: '/product-manage/create-programme',
-                        name: 'CreateProgrammeProduct',
-                        component: CreateProgrammeProduct
-                    },
-                    //  产品管理-编辑节目包
-                    {
-                        path: '/product-manage/edit-programme/:id',
-                        name: 'EditProgrammeProduct',
-                        component: EditProgrammeProduct
-                    },
-                    //  产品管理-创建轮播频道包
-                    {
-                        path: '/product-manage/create-carousel',
-                        name: 'CreateCarouselProduct',
-                        component: CreateCarouselProduct
-                    },
-                    //  产品管理-编辑轮播频道包
-                    {
-                        path: '/product-manage/edit-carousel/:id',
-                        name: 'EditCarouselProduct',
-                        component: EditCarouselProduct
-                    },
-                    //  产品管理-创建直播回看包
-                    {
-                        path: '/product-manage/create-record',
-                        name: 'CreateRecordProduct',
-                        component: CreateRecordProduct
-                    },
-                    //  产品管理-编辑直播回看包
-                    {
-                        path: '/product-manage/edit-record/:id',
-                        name: 'EditRecordProduct',
-                        component: EditRecordProduct
-                    },
-                    //  产品管理-类别包详情
-                    {
-                        path: '/product-manage/detail-category/:id',
-                        name: 'CategoryProductDetail',
-                        component: CategoryProductDetail
-                    },
-                    //  产品管理-节目包详情
-                    {
-                        path: '/product-manage/detail-programme/:id',
-                        name: 'ProgrammeProductDetail',
-                        component: ProgrammeProductDetail
-                    },
-                    //  产品管理-轮播频道包详情
-                    {
-                        path: '/product-manage/detail-carousel/:id',
-                        name: 'CarouselProductDetail',
-                        component: CarouselProductDetail
-                    },
-                    //  产品管理-直播回看包详情
-                    {
-                        path: '/product-manage/detail-record/:id',
-                        name: 'RecordProductDetail',
-                        component: RecordProductDetail
+    mode: 'history',
+    routes: [
+        // 登录页面
+        {
+            path: '/',
+            alias: '/login',
+            name: 'Login',
+            component: Login
+        },
+        // 轮播频道-批量创建轮播频道
+        {
+            path: '/channel-manage/carousel/import-create/:category',
+            name: 'CreateChannelByImportExcel',
+            component: CreateChannelByImportExcel
+        },
+        // 轮播频道-批量修改轮播频道
+        {
+            path: '/channel-manage/carousel/import-edit',
+            name: 'EditChannelByImportExcel',
+            component: EditChannelByImportExcel
+        },
+        //  直播频道管理-批量修改
+        {
+            path: '/channel-manage/live/import-edit',
+            name: 'EditLiveChannelByImportExcel',
+            component: EditLiveChannelByImportExcel
+        },
+        // 网站内容结构
+        {
+            path: '/layout',
+            name: 'GlobalLayout',
+            component: GlobalLayout,
+            // path: '/layout',
+            // name: 'Layout',
+            // component: Layout,
+            // 首页
+            children: [
+                {
+                    path: '/home',
+                    name: 'Home',
+                    component: Home
+                },
+                // 项目小工具，上线时会删除
+                {
+                    path: '/kits',
+                    name: 'Kits',
+                    component: Kits
+                },
+                // 个人中心-我的信息
+                {
+                    path: '/my-info',
+                    name: 'MyInfo',
+                    component: MyInfo
+                },
+                // 个人中心-信息设置页面
+                {
+                    path: '/info-setting',
+                    name: 'InfoSetting',
+                    component: InfoSetting
+                },
+                // 个人中心-修改密码页面
+                {
+                    path: '/modify-password',
+                    name: 'ModifyPassword',
+                    component: ModifyPassword
+                },
+                // 管理员中心——管理员列表页面
+                {
+                    path: '/manage-admin/list',
+                    name: 'AdminList',
+                    component: AdminList
+                },
+                // 管理员管理——创建管理员页面
+                {
+                    path: '/manage-admin/create',
+                    name: 'CreateAdmin',
+                    component: CreateAdmin
+                },
+                // 管理员管理——管理员详情
+                {
+                    path: '/manage-admin/detail/:id',
+                    name: 'AdminDetail',
+                    component: AdminDetail
+                },
+                // 管理员管理——管理员信息编辑
+                {
+                    path: '/manage-admin/edit/:id',
+                    name: 'EditAdmin',
+                    component: EditAdmin
+                },
+                // 用户中心-用户列表页面
+                {
+                    path: '/user-center/list',
+                    name: 'UserList',
+                    component: UserList
+                },
+                // 用户中心-用户创建页面
+                {
+                    path: '/user-center/create',
+                    name: 'CreateUser',
+                    component: CreateUser
+                },
+                // 用户中心-用户编辑页面
+                {
+                    path: '/user-center/edit/:id',
+                    name: 'EditUserInfo',
+                    component: EditUserInfo
+                },
+                // 用户中心-用户详情页面
+                {
+                    path: '/user-center/detail/:id',
+                    name: 'UserDetailInfo',
+                    component: UserDetailInfo
+                },
+                // 内容管理-栏目管理-栏目项设置
+                {
+                    path: '/nav-bar-manage/setting',
+                    name: 'NavBarSetting',
+                    component: NavBarSetting
+                },
+                // 内容管理-栏目管理-新增
+                {
+                    path: '/nav-bar-manage/create',
+                    name: 'CreateNavBar',
+                    component: CreateNavBar
+                },
+                // 内容管理-栏目管理-布局设置
+                {
+                    path: '/nav-bar-manage/layout-setting/:navBarSignCode/:navBarId',
+                    name: 'NavBarLayoutSetting',
+                    component: NavBarLayoutSetting
+                },
+                // 内容管理-栏目管理-节目选择设置
+                {
+                    path: '/layout-manage/programme/:navBarId/:navBarSignCode/:model/:row/:index/:imageSpec',
+                    name: 'AppendProgramme',
+                    component: AppendProgramme
+                },
+                // 内容管理-栏目管理-单个推荐位选择专题
+                {
+                    path: '/layout-manage/append-single-subject/:navBarId/:navBarSignCode/:model/:row/:index/:imageSpec',
+                    name: 'AppendSingleSubject',
+                    component: AppendSingleSubject
+                },
+                // 内容管理-栏目管理-混排模块
+                {
+                    path: '/layout-manage/model-append-shuffle/:navBarId/:navBarSignCode/:model/:operate',
+                    name: 'ModelAppendShuffle',
+                    component: ModelAppendShuffle
+                },
+                // 内容管理-栏目管理-模块推荐位选择节目专题
+                {
+                    path: '/layout-manage/model-append-programme-subject/:navBarId/:navBarSignCode/:model/:operate',
+                    name: 'ModelAppendProgrammeSubject',
+                    component: ModelAppendProgrammeSubject
+                },
+                // 内容管理-栏目管理-模块推荐位选择人物专题
+                {
+                    path: '/layout-manage/model-append-person-subject/:navBarId/:navBarSignCode/:model/:operate',
+                    name: 'ModelAppendPersonSubject',
+                    component: ModelAppendPersonSubject
+                },
+                // 内容管理-栏目管理-单个频道设置
+                {
+                    path: '/layout-manage/append-channel/:navBarId/:navBarSignCode/:model/:row/:index/:imageSpec',
+                    name: 'AppendChannel',
+                    component: AppendChannel
+                },
+                // 内容管理-栏目管理-单个频道设置
+                {
+                    path: '/layout-manage/append-view-channel/:navBarId/:navBarSignCode',
+                    name: 'AppendViewChannel',
+                    component: AppendViewChannel
+                },
+                // 内容管理-栏目管理-模块频道管理
+                {
+                    path: '/layout-manage/model-append-channel/:navBarId/:navBarSignCode/:model/:operate',
+                    name: 'ModelAppendChannel',
+                    component: ModelAppendChannel
+                },
+                // 内容管理-专题管理-新增节目专题
+                {
+                    path: '/subject-manage/programme/create',
+                    name: 'CreateProgrammeSubject',
+                    component: CreateProgrammeSubject
+                },
+                // 内容管理-专题管理-新增人物专题
+                {
+                    path: '/subject-manage/figure/create',
+                    name: 'CreateFigureSubject',
+                    component: CreateFigureSubject
+                },
+                // 内容管理-专题管理-人物专题-编辑
+                {
+                    path: '/subject-manage/figure/edit/:id',
+                    name: 'EditFigureSubject',
+                    component: EditFigureSubject
+                },
+                // 内容管理-专题管理-节目专题-编辑
+                {
+                    path: '/subject-manage/programme/edit/:id',
+                    name: 'EditProgrammeSubject',
+                    component: EditProgrammeSubject
+                },
+                // 内容管理-专题管理-人物专题-详情
+                {
+                    path: '/subject-manage/figure/detail/:id',
+                    name: 'FigureSubjectDetail',
+                    component: FigureSubjectDetail
+                },
+                // 内容管理-专题管理-节目专题-详情
+                {
+                    path: '/subject-manage/programme/detail/:id',
+                    name: 'ProgrammeSubjectDetail',
+                    component: ProgrammeSubjectDetail
+                },
+                // 内容管理-专题管理-专题列表
+                {
+                    path: '/subject-manage/list',
+                    name: 'SubjectList',
+                    component: SubjectList
+                },
+                // 人物管理-新增人物
+                {
+                    path: '/person-manage/create',
+                    name: 'CreatePerson',
+                    component: CreatePerson
+                },
+                // 人物管理-编辑人物
+                {
+                    path: '/person-manage/edit/:id',
+                    name: 'EditPerson',
+                    component: EditPerson
+                },
+                // 人物管理-人物详情
+                {
+                    path: '/person-manage/display/:id',
+                    name: 'DisplayPerson',
+                    component: DisplayPerson
+                },
+                // 人物管理-人物列表
+                {
+                    path: '/person-manage/list',
+                    name: 'PersonList',
+                    component: PersonList
+                },
+                {
+                    path: '/person-manage/hot',
+                    name: 'HotPerson',
+                    component: HotPerson
+                },
+                {
+                    path: '/person-manage/duplicate',
+                    name: 'DuplicateList',
+                    component: DuplicateList
+                },
+                {
+                    path: '/person-manage/import',
+                    name: 'PersonImport',
+                    component: PersonImport
+                },
+                // 节目管理
+                // 新增节目
+                {
+                    path: '/programme-manage/create',
+                    name: 'CreateProgramme',
+                    component: CreateProgramme
+                },
+                // 节目管理-编辑节目
+                {
+                    path: '/programme-manage/edit/:id',
+                    name: 'EditProgramme',
+                    component: EditProgramme
+                },
+                // 节目管理-节目详情
+                {
+                    path: '/programme-manage/display/:id',
+                    name: 'DisplayProgramme',
+                    component: DisplayProgramme
+                },
+                // 节目管理-节目列表
+                {
+                    path: '/programme-manage/list',
+                    name: 'ProgrammeList',
+                    component: ProgrammeList
+                },
+                // 节目类别管理
+                {
+                    path: '/programme-manage/type',
+                    name: 'ProgrammeTypeManage',
+                    component: ProgrammeTypeManage
+                },
+                // 节目导入
+                {
+                    path: '/programme-manage/import',
+                    name: 'ProgrammeImport',
+                    component: ProgrammeImport
+                },
+                //  广告管理
+                // 广告资源列表
+                {
+                    path: '/advert-resource/list',
+                    name: 'AdvertResourceList',
+                    component: AdvertResourceList
+                },
+                // 开机广告列表
+                {
+                    path: '/advert-launch/starting/list',
+                    name: 'StartingAdvertGroupList',
+                    component: StartingAdvertGroupList
+                },
+                //  前置节目广告列表
+                {
+                    path: '/advert-launch/preprogramme/list',
+                    name: 'PreProgrammeAdvertGroupList',
+                    component: PreProgrammeAdvertGroupList
+                },
+                //  屏保广告列表
+                {
+                    path: '/advert-launch/screensaver/list',
+                    name: 'ScreensaverrammeAdvertGroupList',
+                    component: ScreensaverAdvertGroupList
+                },
+                //  暂停广告列表
+                {
+                    path: '/advert-launch/pause/list',
+                    name: 'PauseAdvertGroupList',
+                    component: PauseAdvertGroupList
+                },
+                //  直播换台广告列表
+                {
+                    path: '/advert-launch/live/list',
+                    name: 'LiveAdvertGroupList',
+                    component: LiveAdvertGroupList
+                },
+                //  音量条广告列表
+                {
+                    path: '/advert-launch/volumebar/list',
+                    name: 'VolumeBarAdvertGroupList',
+                    component: VolumeBarAdvertGroupList
+                },
+                //  弹窗广告列表
+                {
+                    path: '/advert-launch/dialog/list',
+                    name: 'DialogAdvertGroupList',
+                    component: DialogAdvertGroupList
+                },
+                //  详情页广告列表
+                {
+                    path: '/advert-launch/detailpage/list',
+                    name: 'DetailPageAdvertList',
+                    component: DetailPageAdvertGroupList
+                },
+                // 视频管理
+                {
+                    path: '/manage-video/list',
+                    name: 'VideoList',
+                    component: VideoList
+                },
+                // 视频导入
+                {
+                    path: '/manage-video/import',
+                    name: 'VideoImport',
+                    component: VideoImport
+                },
+                //  视频下载列表
+                {
+                    path: '/manage-video/download-list',
+                    name: 'DownloadVideoList',
+                    component: DownloadVideoList
+                },
+                //  视频管理-检查视频时长
+                {
+                    path: '/manage-video/diff-list',
+                    name: 'DiffTimeVideoList',
+                    component: DiffTimeVideoList
+                },
+                //  直播频道管理
+                {
+                    path: '/channel-live/list',
+                    name: 'LiveChannelList',
+                    component: LiveChannelList
+                },
+                {
+                    path: '/channel-live/create',
+                    name: 'CreateLiveChannel',
+                    component: CreateLiveChannel
+                },
+                {
+                    path: '/channel-live/edit/:id',
+                    name: 'EditLiveChannel',
+                    component: EditLiveChannel
+                },
+                {
+                    path: '/channel-live/import',
+                    name: 'LiveChannelImport',
+                    component: LiveChannelImport
+                },
+                {
+                    path: '/channel-live/preview/:id',
+                    name: 'PreviewProgrammeList',
+                    component: PreviewProgrammeList
+                },
+                // 轮播频道列表
+                {
+                    path: '/channel-carousel/list',
+                    name: 'CarouselChannelList',
+                    component: CarouselChannelList
+                },
+                // 轮播频道-创建单个轮播频道
+                {
+                    path: '/channel-carousel/create',
+                    name: 'CreateCarouselChannel',
+                    component: CreateCarouselChannel
+                },
+                // 轮播频道详情
+                {
+                    path: '/channel-carousel/detail/:id',
+                    name: 'CarouselChannelDetail',
+                    component: CarouselChannelDetail
+                },
+                // 编辑轮播频道
+                {
+                    path: '/channel-carousel/edit/:id',
+                    name: 'EditCarouselChannel',
+                    component: EditCarouselChannel
+                },
+                //  频道类别管理
+                {
+                    path: '/channel-category',
+                    name: 'ChannelCategory',
+                    component: ChannelCategory
+                },
+                //  版本管理
+                {
+                    path: '/manage-version/list',
+                    name: 'VersionList',
+                    component: VersionList
+                },
+                {
+                    path: '/manage-version/create',
+                    name: 'CreateVersion',
+                    component: CreateVersion
+                },
+                //  设备管理
+                {
+                    path: '/manage-device/list',
+                    name: 'DeviceList',
+                    component: DeviceList
+                },
+                {
+                    path: '/manage-device/create',
+                    name: 'CreateDevice',
+                    component: CreateDevice
+                },
+                {
+                    path: '/manage-device/edit/:id',
+                    name: 'EditDevice',
+                    component: EditDevice
+                },
+                //  操作台管理
+                {
+                    path: '/worktop-manage',
+                    name: 'Worktop',
+                    component: Worktop
+                },
+                //  客户端日志管理
+                {
+                    path: '/clientlog/list',
+                    name: 'ClientLogList',
+                    component: ClientLogList
+                },
+                {
+                    path: '/category-manage',
+                    name: 'Category',
+                    component: Category
+                },
+                {
+                    path: '/search-manage',
+                    name: 'Search',
+                    component: Search
+                },
+                //  角标管理
+                {
+                    path: '/corner-mark-manage/index',
+                    name: 'CornerMarkIndex',
+                    component: CornerMarkIndex
+                },
+                //  页面布局
+                {
+                    path: '/page-layout/:navbarId',
+                    name: 'PageLayout',
+                    component: PageLayout
+                },
+                {
+                    path: '/page-layout/:navbarId/edit-fixed/:index',
+                    name: 'EditFixedModule',
+                    component: EditFixedModule
+                },
+                /**
+                 *
+                 FIGURE
+                 SPECIAL
+                 FIGURE_SUBJECT
+                 PROGRAMME
+                 FIGURE_SUBJECT'
+                 */
+                {
+                    path: '/page-layout/:navbarId/:operator/figure/:index',
+                    name: 'PersonModule',
+                    component: PersonModule
+                },
+                {
+                    path: '/page-layout/:navbarId/:operator/special/:index',
+                    name: 'EditSpecialModule',
+                    component: EditSpecialModule
+                },
+                {
+                    path: '/page-layout/:navbarId/:operator/figure_subject/:index',
+                    name: 'PersonSubjectModule',
+                    component: PersonSubjectModule
+                },
+                {
+                    path: '/page-layout/:navbarId/:operator/shuffle/:index',
+                    name: 'ShuffleModule',
+                    component: ShuffleModule
+                },
+                {
+                    path: '/page-layout/:navbarId/:operator/programme_subject/:index',
+                    name: 'ProgrammeSubjectModule',
+                    component: ProgrammeSubjectModule
+                },
+                {
+                    path: '/page-layout/:navbarId/add/programme/:index'
+                },
+                //  产品管理-产品包列表
+                {
+                    path: '/product-manage/list',
+                    name: 'ProductList',
+                    component: ProductList
+                },
+                //  产品管理-创建类型包
+                {
+                    path: '/product-manage/create-category',
+                    name: 'CreateCategoryProduct',
+                    component: CreateCategoryProduct
+                },
+                //  产品管理-编辑类型包
+                {
+                    path: '/product-manage/edit-category/:id',
+                    name: 'EditCategoryProduct',
+                    component: EditCategoryProduct
+                },
+                //  产品管理-创建节目包
+                {
+                    path: '/product-manage/create-programme',
+                    name: 'CreateProgrammeProduct',
+                    component: CreateProgrammeProduct
+                },
+                //  产品管理-编辑节目包
+                {
+                    path: '/product-manage/edit-programme/:id',
+                    name: 'EditProgrammeProduct',
+                    component: EditProgrammeProduct
+                },
+                //  产品管理-创建轮播频道包
+                {
+                    path: '/product-manage/create-carousel',
+                    name: 'CreateCarouselProduct',
+                    component: CreateCarouselProduct
+                },
+                //  产品管理-编辑轮播频道包
+                {
+                    path: '/product-manage/edit-carousel/:id',
+                    name: 'EditCarouselProduct',
+                    component: EditCarouselProduct
+                },
+                //  产品管理-创建直播回看包
+                {
+                    path: '/product-manage/create-record',
+                    name: 'CreateRecordProduct',
+                    component: CreateRecordProduct
+                },
+                //  产品管理-编辑直播回看包
+                {
+                    path: '/product-manage/edit-record/:id',
+                    name: 'EditRecordProduct',
+                    component: EditRecordProduct
+                },
+                //  产品管理-类别包详情
+                {
+                    path: '/product-manage/detail-category/:id',
+                    name: 'CategoryProductDetail',
+                    component: CategoryProductDetail
+                },
+                //  产品管理-节目包详情
+                {
+                    path: '/product-manage/detail-programme/:id',
+                    name: 'ProgrammeProductDetail',
+                    component: ProgrammeProductDetail
+                },
+                //  产品管理-轮播频道包详情
+                {
+                    path: '/product-manage/detail-carousel/:id',
+                    name: 'CarouselProductDetail',
+                    component: CarouselProductDetail
+                },
+                //  产品管理-直播回看包详情
+                {
+                    path: '/product-manage/detail-record/:id',
+                    name: 'RecordProductDetail',
+                    component: RecordProductDetail
+                },
+                //  站点管理-配置站点
+                {
+                    path: '/config-manage/site',
+                    name: 'ConfigSite',
+                    component: ConfigSite
+                },
+                //  站点管理-站点列表
+                {
+                    path: '/site-manage/list',
+                    name: 'SiteList',
+                    component: SiteList
+                }
+            ]
+        },
+        // 错误页面布局
+        {
+            path: '/error-layout',
+            name: 'ErrorLayout',
+            component:
+            ErrorLayout,
+            // 404页面
+            children:
+                [
+                    {
+                        path: '/error/404',
+                        name: 'ErrorNotFound',
+                        component: ErrorNotFound
                     }
                 ]
-            },
-            // 错误页面布局
-            {
-                path: '/error-layout',
-                name: 'ErrorLayout',
-                component:
-                ErrorLayout,
-                // 404页面
-                children:
-                    [
-                        {
-                            path: '/error/404',
-                            name: 'ErrorNotFound',
-                            component: ErrorNotFound
-                        }
-                    ]
-            }
-        ]
-    })
-;
+        }
+    ]
+});
 
 /**
  * 关于路由的方法集合

@@ -94,37 +94,127 @@
                     {{duration(scope.row.takeTimeInSec)}}
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="注入状态">
+            <!--注入状态-->
+            <el-table-column
+                align="center"
+                label="注入状态">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.status === 'SUCCESS'" class="status-normal">成功</span>
-                    <span v-if="scope.row.status === 'FAILED'" class="status-abnormal">失败</span>
-                    <span
-                        class="status-mid"
-                        v-if="scope.row.status && scope.row.status !== 'FAILED' && scope.row.status !== 'SUCCESS'">
-                        {{scope.row | parseStatus}}
-                    </span>
-                    <span v-if="needRetry(scope.row)"
-                          class="btn-text text-primary"
-                          @click="retrySingleVideo(scope.row.id)">
-                          重试
-                    </span>
+                    <template v-if="scope.row.status">
+                        <span v-if="scope.row.status === 'SUCCESS'" class="status-normal">成功</span>
+                        <span v-if="scope.row.status === 'FAILED'" class="status-abnormal">失败</span>
+                        <span class="status-mid"
+                              v-if="scope.row.status && scope.row.status !== 'FAILED' && scope.row.status !== 'SUCCESS'">
+                            {{scope.row | parseStatus}}
+                        </span>
+                        <span v-if="needRetry(scope.row)"
+                              class="btn-text text-primary"
+                              @click="retrySingleVideo(scope.row.id)">
+                            重试
+                        </span>
+                    </template>
+                    <span v-else>---</span>
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="上传日期">
+            <!--子站上传状态（子站）-->
+            <el-table-column
+                align="center"
+                label="上传状态">
+                <template slot-scope="scope">
+                    <span>{{scope.row.uploadStatus | getUploadStatus}}</span>
+                    <label v-if="scope.row.uploadStatus === 'ON_GOING'">{{scope.row | getPushPercent}}</label>
+                    <el-button
+                        v-if="scope.row.uploadStatus === 'FAILED'"
+                        type="text"
+                        @click="pushVideoToMainSite(scope.row)">
+                        重试
+                    </el-button>
+                </template>
+            </el-table-column>
+            <!--子站拉取状态（子站）-->
+            <el-table-column
+                v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                align="center"
+                label="拉取状态">
+                <template slot-scope="scope">
+                    <span>{{scope.row.downloadStatus | getDownloadStatus}}</span>
+                    <label v-if="scope.row.downloadStatus === 'ON_GOING'">{{scope.row | getDownloadPercent}}</label>
+                    <el-button
+                        v-if="scope.row.downloadStatus === 'FAILED'"
+                        type="text"
+                        @click="pullVideoFromMainSite(scope.row)">
+                        重试
+                    </el-button>
+                </template>
+            </el-table-column>
+            <!--视频来源(主站、子站)-->
+            <el-table-column align="center" label="视频来源">
+                <template slot-scope="scope">
+                    <span v-if="!scope.row.origin || scope.row.origin.length === 0">---</span>
+                    <span v-else>{{scope.row.origin.name}}</span>
+                </template>
+            </el-table-column>
+            <!--共享站点（主站）-->
+            <el-table-column
+                v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                align="center"
+                label="共享站点">
+                <template slot-scope="scope">
+                    <!--注入中、注入失败、上传中、上传失败不可查看共享站点-->
+                    <el-button
+                        type="text"
+                        :disabled="scope.row.uploadStatus === 'ON_GOING' || scope.row.uploadStatus === 'FAILED' || scope.row.status === 'INJECTING' || scope.row.status === 'FAILED'"
+                        @click="checkShareSiteList(scope.row)">
+                        查看
+                    </el-button>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                width="160px"
+                label="上传日期">
                 <template slot-scope="scope">
                     {{timeStampFormat(scope.row.createdAt)}}
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="更新日期">
+            <el-table-column
+                align="center"
+                width="160px"
+                label="更新日期">
                 <template slot-scope="scope">
                     {{timeStampFormat(scope.row.updatedAt)}}
                 </template>
             </el-table-column>
-            <el-table-column v-if="!hasRadio" width="80px" align="center" label="操作">
+            <el-table-column v-if="!hasRadio" width="130px" align="center" label="操作">
                 <template slot-scope="scope">
-                    <div class="operator-btn-wrapper">
-                        <span class="btn-text text-danger" @click="_deleteVideoById(scope.row.id)">删除</span>
-                    </div>
+                    <!--上传主站（子站）-->
+                    <!--（注入成功或者拉取成功）而且（非上传中、非上传成功）的视频上传主站可点击-->
+                    <el-button
+                        v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                        :disabled="!((scope.row.status === 'SUCCESS' || scope.row.downloadStatus === 'SUCCESS') && !(scope.row.uploadStatus === 'ON_GOING' || scope.row.uploadStatus === 'SUCCESS'))"
+                        class="text-primary upload-btn"
+                        type="text"
+                        @click="pushVideoToMainSite(scope.row)"
+                        size="small">
+                        上传主站
+                    </el-button>
+                    <!--共享设置（主站）-->
+                    <!--注入中、注入失败、上传中、上传失败不可设置共享站点-->
+                    <el-button
+                        v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                        :disabled="!(scope.row.status === 'SUCCESS' || scope.row.uploadStatus === 'SUCCESS')"
+                        type="text"
+                        @click="setSingleVideoShareSite(scope.row)"
+                        size="small">
+                        共享设置
+                    </el-button>
+                    <!--在拉取中和下载中状态的视频不能删除-->
+                    <el-button
+                        :disabled="scope.row.uploadStatus === 'ON_GOING' || scope.row.downloadStatus === 'ON_GOING'"
+                        class="text-danger"
+                        type="text"
+                        @click="_deleteVideoById(scope.row.id)" size="small">
+                        删除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -143,6 +233,45 @@
             :displayVideoDialogVisible="displayVideoDialogVisible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
+        <el-dialog
+            title="共享站点"
+            :visible.sync="shareSiteVisible"
+            :close-on-click-modal="false"
+            custom-class="share-site"
+            width="40%">
+            <div class="batch-share-body" v-if="shareSiteVisible">
+                <ul>
+                    <li v-for="(item, index) in currentVideo.shareSiteList" :key="index">
+                        <el-tag type="info">{{item.name}}</el-tag>
+                    </li>
+                </ul>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="shareSiteVisible = false">确定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog
+            title="视频共享站点设置"
+            :visible.sync="shareSiteSettingVisible"
+            :close-on-click-modal="false"
+            custom-class="share-site-setting"
+            width="40%">
+            <div class="share-body" v-if="shareSiteSettingVisible">
+                <div>视频可以被以下站点共享:</div>
+                <el-select v-model="videoShareSiteIdList" multiple placeholder="请选择共享站点">
+                    <el-option
+                        v-for="(item,index) in shareSiteOptions"
+                        :key="index"
+                        :label="item.name"
+                        :value="item.id">
+                    </el-option>
+                </el-select>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="shareSiteSettingVisible = false">取 消</el-button>
+                <el-button type="primary" @click="confirmVideoShareSite">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -163,6 +292,12 @@
             status: {
                 type: String,
                 default: ''
+            },
+            shareSiteOptions: {
+                type: Array,
+                default: function () {
+                    return [];
+                }
             }
         },
         data() {
@@ -170,7 +305,13 @@
                 displayVideoDialogVisible: false,
                 url: '',
                 title: '',
-                selectedVideoList: []
+                selectedVideoList: [],
+                // 展示共享站点
+                shareSiteVisible: false,
+                // 设置共享站点
+                shareSiteSettingVisible: false,
+                videoShareSiteIdList: [],
+                currentVideo: {}
             };
         },
         filters: {
@@ -194,6 +335,46 @@
                         return '注入失败';
                     default:
                         return video.status;
+                }
+            },
+            getUploadStatus(uploadStatus) {
+                switch (uploadStatus) {
+                    case 'ON_GOING':
+                        return '上传中';
+                    case 'SUCCESS':
+                        return '上传成功';
+                    case 'FAILED':
+                        return '上传失败';
+                    default:
+                        return '---';
+                }
+            },
+            getDownloadStatus(downloadStatus) {
+                switch (downloadStatus) {
+                    case 'ON_GOING':
+                        return '拉取中';
+                    case 'SUCCESS':
+                        return '拉取成功';
+                    case 'FAILED':
+                        return '拉取失败';
+                    default:
+                        return '---';
+                }
+            },
+            // 计算子站拉取主站视频的进度百分比
+            getDownloadPercent(video) {
+                if (!video.downloadedSplitCount || !video.totalSplitCount) {
+                    return '0%';
+                } else {
+                    return (video.downloadedSplitCount * 100 / video.totalSplitCount).toFixed(0) + '%';
+                }
+            },
+            // 计算子站上传主站视频的进度百分比
+            getPushPercent(video) {
+                if (!video.uploadedSplitCount || !video.totalSplitCount) {
+                    return '0%';
+                } else {
+                    return (video.uploadedSplitCount * 100 / video.totalSplitCount).toFixed(0) + '%';
                 }
             }
         },
@@ -267,6 +448,87 @@
                     return 'checked';
                 }
                 return '';
+            },
+            // 展示共享站点（只存在于主站）
+            checkShareSiteList(item) {
+                this.shareSiteVisible = true;
+                this.currentVideo = item;
+            },
+            // 设置单个视频分享站点（只存在于主站）
+            setSingleVideoShareSite(item) {
+                this.shareSiteSettingVisible = true;
+                this.currentVideo = item;
+                this.videoShareSiteIdList = [];
+                if (this.currentVideo.shareSiteList) {
+                    this.currentVideo.shareSiteList.map(site => {
+                        this.videoShareSiteIdList.push(site.id);
+                    });
+                }
+            },
+            // 确定设置单个视频分享站点(只存在于主站)
+            confirmVideoShareSite() {
+                this.$service.setSingleVideoToBatchSite({
+                    videoId: this.currentVideo.id,
+                    siteIdList: this.videoShareSiteIdList
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message.success('成功设置视频的共享站点');
+                        this.videoShareSiteIdList = [];
+                        this.shareSiteSettingVisible = false;
+                    }
+                });
+            },
+            // 拉取主站的视频到子站（只有在当前视频是以前拉取过的且失败的才能重新拉取）
+            pullVideoFromMainSite(item) {
+                if (item.downloadStatus === 'FAILED') {
+                    let videoIdList = [item.id];
+                    this.$service.batchPullVideoFromMaster({videoIdList}).then(response => {
+                        if (response && response.code === 0 && response.data.length === 0) {
+                            this.$message.success('正在拉取视频到本站，请关注其状态更改');
+                            this.$refs.videoTable.checkedVideoList();
+                        } else if (response && response.code === 0 && response.data.length !== 0) {
+                            // 批量上传存在有特殊情况说明
+                            let message = '当前上传视频含有如下问题：';
+                            response.data.map(video => {
+                                message = message + '[' + video.originName + ']视频问题：' + video.failReason + ';';
+                            });
+                            this.$message({
+                                type: 'error',
+                                message: message,
+                                duration: 5000
+                            });
+                        }
+                    });
+                } else {
+                    this.$message.warning('当前视频的拉取状态不允许进行再次拉取');
+                }
+            },
+            // 子站上传主站（只存在于子站）
+            pushVideoToMainSite(item) {
+                if (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) {
+                    if (!item.uploadStatus || item.uploadStatus === 'FAILED') {
+                        this.$service.batchPushVideoToMaster({videoIdList: [item.id]}).then(response => {
+                            if (response && response.code === 0 && response.data.length === 0) {
+                                this.$message.success('正在上传视频到主站，请关注其状态更改');
+                            } else if (response && response.code === 0 && response.data.length !== 0) {
+                                // 批量上传存在有特殊情况说明
+                                let message = '当前上传视频含有如下问题：';
+                                response.data.map(video => {
+                                    message = message + '[' + video.originName + ']视频问题：' + video.failReason + ';';
+                                });
+                                this.$message({
+                                    type: 'error',
+                                    message: message,
+                                    duration: 5000
+                                });
+                            }
+                        });
+                    } else {
+                        this.$message.warning('当前视频上传状态不允许继续上传');
+                    }
+                } else {
+                    this.$message.warning('请您先配置站点');
+                }
             },
             cutStr(str) {
                 return str.length > 40 ? str.substring(0, 40) + '...' : str;
@@ -389,7 +651,9 @@
         }
     };
 </script>
+
 <style lang="less" scoped>
+
     .gan-tooltip {
         width: 300px;
     }
@@ -397,4 +661,47 @@
     .el-radio__label {
         padding-left: 0;
     }
+
+    /*展示分享站点*/
+    .share-site {
+        ul {
+            text-align: left;
+            li {
+                display: inline-block;
+                margin-bottom: 10px;
+                .el-tag {
+                    border: none;
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+
+    /*设置共享站点*/
+    .share-site-setting {
+        .share-body {
+            text-align: left;
+            margin-bottom: 40px;
+            div {
+                text-align: left;
+                font-size: 18px;
+            }
+            .el-select {
+                margin-top: 20px;
+                width: 80%;
+            }
+        }
+    }
+</style>
+
+<style lang="scss">
+
+    .upload-btn {
+        &.is-disabled {
+            span {
+                color: #c0c4cc !important;
+            }
+        }
+    }
+
 </style>

@@ -8,7 +8,11 @@ let isLoading = false; // 解决重复调用列表接口的问题
 const defaultSearchFields = {
     name: '',
     status: '',
+    downloadStatus: '',
+    uploadStatus: '',
     suffix: '',
+    originSiteId: '',
+    shareSiteId: '',
     videoType: null,
     dateRange: [],
     startedAt: '',

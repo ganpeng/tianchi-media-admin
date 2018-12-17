@@ -130,6 +130,8 @@
                                 no: channel.no,
                                 type: type.slice(1),
                                 transcribe: channel.record ? '是' : '否',
+                                recordIp: channel.recordIp,
+                                recordPort: channel.recordPort,
                                 multicastIp: channel.multicastIp,
                                 multicastPort: channel.multicastPort,
                                 pushServer: channel.pushServer
@@ -266,9 +268,9 @@
                 }
                 // 端口号
                 if (this.$util.isEmpty(channel.multicastPort)) {
-                    message = message + '端口号不能为空;';
+                    message = message + '组播端口号不能为空;';
                 } else if (!this.$util.isPort(channel.multicastPort)) {
-                    message = message + '请填写正确的端口号;';
+                    message = message + '请填写正确的组播端口号;';
                 }
                 // 所属服务器，去掉直播频道的pushServer服务器
                 // if (this.$util.isEmpty(channel.pushServer)) {
@@ -278,6 +280,18 @@
                 // }
                 if (channel.transcribe !== '是' && channel.transcribe !== '否') {
                     message = message + '请正确填写是否回看服务;';
+                }
+                // 录制IP
+                if (this.$util.isEmpty(channel.recordIp)) {
+                    message = message + '录制IP不能为空;';
+                } else if (!this.$util.isMulticastIPAddress(channel.recordIp)) {
+                    message = message + '请填写正确的录制IP;';
+                }
+                // 录制端口号
+                if (this.$util.isEmpty(channel.recordPort)) {
+                    message = message + '录制端口号不能为空;';
+                } else if (!this.$util.isPort(channel.recordPort)) {
+                    message = message + '请填写正确的录制端口号;';
                 }
                 if (message) {
                     this.channelList[index].message = '第' + (index + 1) + '个:' + message;

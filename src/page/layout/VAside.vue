@@ -170,8 +170,42 @@
                 <el-menu-item index="/user-center/list">用户列表</el-menu-item>
                 <el-menu-item index="/kits">小功能</el-menu-item>
             </el-submenu>
+            <!--站点管理（主站）-->
+            <el-submenu
+                index="12"
+                v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable">
+                <template slot="title">
+                    <svg-icon
+                        icon-class="programme_manage"
+                        class-name="svg-box">
+                    </svg-icon>
+                    <span>站点管理</span>
+                </template>
+                <!--站点列表只在中心站点中存在-->
+                <el-menu-item
+                    index="/site-manage/list">
+                    站点列表
+                </el-menu-item>
+            </el-submenu>
+            <!--配置中心（子站）-->
+            <el-submenu
+                index="13"
+                v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable">
+                <template slot="title">
+                    <svg-icon
+                        icon-class="programme_manage"
+                        class-name="svg-box">
+                    </svg-icon>
+                    <span>配置中心</span>
+                </template>
+                <!--站点配置只在子站点中存在-->
+                <el-menu-item
+                    index="/site-manage/config">
+                    站点配置
+                </el-menu-item>
+            </el-submenu>
             <!--个人中心-->
-            <el-submenu index="12">
+            <el-submenu index="14">
                 <template slot="title">
                     <svg-icon
                         icon-class="personal_center"

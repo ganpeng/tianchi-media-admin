@@ -3,7 +3,7 @@
         <el-main>
             <div class="form-box" @keyup.enter="submitForm">
                 <h3>登录</h3>
-                <div class="site-name">暂未设置</div>
+                <div class="site-name">{{siteName ? siteName:'站点未配置'}}</div>
                 <el-form
                     ref="login"
                     :model="formData"
@@ -36,10 +36,6 @@
                     </el-form-item>
                 </el-form>
             </div>
-            <!--<svg-icon-->
-            <!--icon-class="login_logo_words"-->
-            <!--class-name="login-logo">-->
-            <!--</svg-icon>-->
         </el-main>
         <svg-icon
             icon-class="login_bg"
@@ -72,6 +68,7 @@
                 }
             };
             return {
+                siteName: '',
                 formData: {
                     name: '',
                     password: ''
@@ -87,7 +84,19 @@
                 }
             };
         },
+        mounted() {
+            this.init();
+        },
         methods: {
+            // 初始化站点名称
+            init() {
+                this.$service.getSiteInfo().then(response => {
+                    if (response && response.code === 0) {
+                        this.siteName = response.data.siteName;
+                        this.$wsCache.localStorage.set('siteInfo', response.data);
+                    }
+                });
+            },
             // 登录
             submitForm() {
                 this.$refs.login.validate((valid) => {
@@ -139,6 +148,11 @@
         line-height: 20px;
         background: #191D26;
         border-radius: 10px;
+    }
+
+    .site-name {
+        padding: 0px;
+        cursor: auto;
     }
 
     .el-main {

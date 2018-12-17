@@ -107,6 +107,7 @@
                         .then((res) => {
                             if (res && res.code === 0) {
                                 this.typeList = res.data;
+                                this.setOptionsStatus();
                             }
                         });
                 } else {

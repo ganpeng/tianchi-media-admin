@@ -1,7 +1,7 @@
 <template>
     <div class="app-container">
         <div v-show="showHeaderAndAside" class="header clearfix">
-            <ul class="nav-list clearfix float-left">
+            <ul class="nav-list clearfix float-left" :class="{'is-center-site' :isCenterSite}">
                 <li v-if="index !== navList.length - 1" v-for="(item, index) in navList" :key="index"
                     :class="['nav-item', active === index ? 'active' : '']"
                     @click="changeActive(index)">
@@ -19,6 +19,14 @@
                         icon-class="logout">
                     </svg-icon>
                 </div>
+            </div>
+            <div class="float-right">
+                <el-button
+                    type="text"
+                    class="site-name"
+                    @click="toConfigSite">
+                    {{siteName ? siteName:'站点未配置，点击配置'}}
+                </el-button>
             </div>
         </div>
         <div v-show="showHeaderAndAside" class="aside">
@@ -58,6 +66,7 @@
     import {mapGetters, mapActions} from 'vuex';
     import _ from 'lodash';
     import role from '@/util/config/role';
+
     export default {
         data() {
             return {
@@ -69,8 +78,15 @@
                 minHeight: 400,
                 top: 60,
                 left: 200,
-                showHeaderAndAside: true
+                showHeaderAndAside: true,
+                isCenterSite: !!(this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteMasterEnable),
+                siteName: ''
             };
+        },
+        computed: {
+            ...mapGetters({
+                name: 'user/name'
+            })
         },
         mounted() {
             let content = document.querySelector('.content');
@@ -91,16 +107,21 @@
             } catch (err) {
                 console.log(err);
             }
-        },
-        computed: {
-            ...mapGetters({
-                name: 'user/name'
-            })
+            this.initSiteInfo();
         },
         methods: {
             ...mapActions({
                 getNavbarList: 'pageLayout/getNavbarList'
             }),
+            initSiteInfo() {
+                // 初始化站点名称
+                this.$service.getSiteInfo().then(response => {
+                    if (response && response.code === 0) {
+                        this.siteName = response.data.siteName;
+                        this.$wsCache.localStorage.set('siteInfo', response.data);
+                    }
+                });
+            },
             contentStyleStr() {
                 return `top: ${this.top}px;left: ${this.left}px;`;
             },
@@ -169,11 +190,18 @@
                     path = `${path}/${this.layoutId}`;
                 }
                 this.$router.push({path});
+            },
+            toConfigSite() {
+                if (!this.siteName) {
+                    this.$router.push({name: 'ConfigSite'});
+                }
             }
         }
     };
 </script>
+
 <style lang="scss" scoped>
+
     .app-container {
         position: relative;
         width: 100%;
@@ -190,6 +218,23 @@
             .nav-list {
                 line-height: $headerHeight;
                 padding-left: 50px;
+                /*设置站点管理和配置中心的隐藏和展示*/
+                &.is-center-site {
+                    li:last-child {
+                        display: none;
+                    }
+                    li:nth-child(7) {
+                        display: inline-block;
+                    }
+                }
+                &:not(.is-center-site) {
+                    li:last-child {
+                        display: inline-block;
+                    }
+                    li:nth-child(7) {
+                        display: none;
+                    }
+                }
                 .nav-item {
                     float: left;
                     padding: 0 12px;
@@ -325,4 +370,10 @@
             }
         }
     }
+
+    .site-name {
+        margin-top: 20px;
+        margin-right: 20px;
+    }
+
 </style>

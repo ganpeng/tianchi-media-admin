@@ -126,6 +126,10 @@
                         type: '频道类别（请确保类别已建好）\n' +
                         '（必填）',
                         transcribe: '提供回看服务（必选）',
+                        recordIp: '录制组播地址（必填）如果此流为清流，则此字段不用填写。\n' +
+                        '如果该频道不录制，此字段也不用填写',
+                        recordPort: '录制端口（必填）如果此流为清流，则此字段不用填写。\n' +
+                        '如果该频道不录制，此字段也不用填写',
                         multicastIp: '组播地址\n' +
                         '（必填）',
                         multicastPort: '组播端口\n' +
@@ -143,6 +147,8 @@
                         no: '814',
                         type: '体育',
                         transcribe: '是',
+                        recordIp: '232.1.1.2',
+                        recordPort: '1234',
                         multicastIp: '232.1.1.2',
                         multicastPort: '1234',
                         pushServer: '192.168.0.2',
@@ -154,6 +160,8 @@
                         no: '813',
                         type: '娱乐/体育',
                         transcribe: '否',
+                        recordIp: '232.1.1.3',
+                        recordPort: '1234',
                         multicastIp: '232.1.1.3',
                         multicastPort: '1234',
                         pushServer: '192.168.0.3',
@@ -347,10 +355,22 @@
                 } else if (!this.isChannelTypeExist(channel.type)) {
                     message = message + '频道类别不存在;';
                 }
-                // 只有直播频道含有回看服务
+                // 只有直播频道含有回看服务以及录制Ip、录制端口
                 if (this.$route.params.category === 'LIVE') {
                     if (channel.transcribe !== '是' && channel.transcribe !== '否') {
                         message = message + '请正确填写是否回看服务;';
+                    }
+                    // 录制IP
+                    if (this.$util.isEmpty(channel.recordIp)) {
+                        message = message + '录制IP不能为空;';
+                    } else if (!this.$util.isMulticastIPAddress(channel.recordIp)) {
+                        message = message + '请填写正确的录制IP;';
+                    }
+                    // 录制端口号
+                    if (this.$util.isEmpty(channel.recordPort)) {
+                        message = message + '录制端口号不能为空;';
+                    } else if (!this.$util.isPort(channel.recordPort)) {
+                        message = message + '请填写正确的录制端口号;';
                     }
                 }
                 // 组播地址
