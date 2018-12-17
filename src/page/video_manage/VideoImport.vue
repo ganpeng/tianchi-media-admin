@@ -54,7 +54,7 @@
                 <div class="seperator-line"></div>
                 <div class="input-field">
                     <h5>拖拽文件到此区域进行上传</h5>
-                    <div class="uploader">
+                    <div id="video-drag-container" class="uploader">
                         <label class="ui_button ui_button_primary" for="video-uploader-input">
                             <i class="el-icon-plus"></i>
                         </label>
@@ -94,11 +94,35 @@ export default {
         window.eventBus.$on('startUpload', that.uploadHandler);
         this.$nextTick(() => {
             let body = document.querySelector('body');
+            let dragContainer = document.querySelector('#video-drag-container');
+
             body.addEventListener('input', (e) => {
                 let id = e.target.getAttribute('id');
                 if (id === 'upload-input-file2' || id === 'upload-input-dir2') {
-                    that.uploadChangeHandler(e);
+                    let files = e.target.files;
+                    that.uploadChangeHandler(files);
                 }
+            });
+
+            dragContainer.addEventListener('drop', (evt) => {
+                evt.stopPropagation();
+                evt.preventDefault();
+
+                const dt = evt.dataTransfer;
+                const files = dt.files;
+                const item = dt.items[0];
+                if (item.webkitGetAsEntry().isDirectory) {
+                    this.$message.error('只能拖拽上传文件，不支持文件夹');
+                    return false;
+                }
+                if (files.length > 0) {
+                    this.uploadChangeHandler(files);
+                }
+            });
+
+            dragContainer.addEventListener('dragover', function (evt) {
+                evt.stopPropagation();
+                evt.preventDefault();
             });
         });
         //  如果有视频正在上传的话，组织浏览器刷新
@@ -278,8 +302,11 @@ export default {
                 this.$message.success('上传列表已清空');
             }
         },
-        uploadChangeHandler(e) {
-            let files = Array.from(e.target.files).filter((file) => {
+        uploadChangeHandler(inputFiles) {
+            // let files = Array.from(e.target.files).filter((file) => {
+            //     return /(.mpg|.ts|.zip)$/.test(file.name);
+            // });
+            let files = Array.from(inputFiles).filter((file) => {
                 return /(.mpg|.ts|.zip)$/.test(file.name);
             });
             if (files.length === 0) {

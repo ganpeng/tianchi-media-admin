@@ -9,6 +9,7 @@
                 <h3>以选文件</h3>
                 <p class="file-name">
                     {{this.file ? this.file.name : ''}}
+                    <span style="margin-left: 20px;" :class="[success ? 'text-success' : 'text-danger']">{{this.importStatus}}</span>
                 </p>
             </div>
         </div>
@@ -20,7 +21,7 @@
                 <div class="seperator-line"></div>
                 <div class="input-field">
                     <h5>拖拽文件到此区域进行上传</h5>
-                    <div class="uploader">
+                    <div id="person-drag-container" class="uploader">
                         <label class="ui_button ui_button_primary">
                             <i class="el-icon-plus"></i>
                         </label>
@@ -46,20 +47,47 @@ export default {
         return {
             progress: 0,
             importStatus: '',
-            file: null
+            file: null,
+            success: false
         };
     },
     created() {
         this.$nextTick(() => {
-            let testUpload = document.querySelector('#programme-import-uploader');
-            testUpload.addEventListener('change', this.uploadChangeHandler.bind(this));
+            let testUpload = document.querySelector('#person-import-uploader');
+            let dragContainer = document.querySelector('#person-drag-container');
+
+            testUpload.addEventListener('change', (e) => {
+                let file = e.target.files[0];
+                this.uploadChangeHandler(file);
+            });
+
+            dragContainer.addEventListener('drop', (evt) => {
+                evt.stopPropagation();
+                evt.preventDefault();
+
+                const dt = evt.dataTransfer;
+                const files = dt.files;
+                const item = dt.items[0];
+                if (item.webkitGetAsEntry().isDirectory) {
+                    this.$message.error('只能拖拽上传文件，不支持文件夹');
+                    return false;
+                }
+
+                if (files.length > 0) {
+                    this.uploadChangeHandler(files[0]);
+                }
+            });
+
+            dragContainer.addEventListener('dragover', function (evt) {
+                evt.stopPropagation();
+                evt.preventDefault();
+            });
         });
     },
     methods: {
-        async uploadChangeHandler(e) {
+        async uploadChangeHandler(file) {
             try {
                 if (!this.isUploading) {
-                    let file = e.target.files[0];
                     this.file = file;
                     let formData = new FormData();
                     formData.append('file', file);
@@ -83,15 +111,18 @@ export default {
             } catch (err) {
                 console.log(err);
                 this.isUploading = false;
+                this.success = false;
                 this.$refs.programmeImportUploader.value = null;
             }
         },
         uploadSuccessHandler(res) {
             if (res && res.code === 0) {
                 this.importStatus = '人物导入成功';
+                this.success = true;
                 this.$message.success('人物导入成功');
             } else {
                 this.importStatus = res.message;
+                this.success = false;
                 this.$message.error(res.message);
             }
         }

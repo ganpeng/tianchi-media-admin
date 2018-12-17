@@ -95,6 +95,9 @@ export default {
     },
     async created() {
         try {
+            let func = _.over([ Math.max, Math.min ]);
+            console.log(func(1, 2, 3, 4));
+
             let {navbarId} = this.$route.params;
             let res = await this.getNavbarList();
             if (res && res.code === 0) {
@@ -263,7 +266,6 @@ export default {
             float: left;
             padding: 0 20px;
             text-align: center;
-            // margin: 10px 0;
             margin-right: 10px;
             height: 62px;
             line-height: 62px;

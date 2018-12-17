@@ -36,6 +36,9 @@ export default {
                 };
             }
         },
+        allowFileList: {
+            type: () => {}
+        },
         showImage: {
             type: Boolean,
             default: true
@@ -88,7 +91,12 @@ export default {
         async uploadChangeHandler(e) {
             let baseUri = await this.$util.getUploadServer();
             let images = await promiseImageSize(e.target.files);
-            let fileList = filterSizeMatchFiles(images, this.allowResolutions);
+            let fileList = [];
+            if (this.allowFileList) {
+                fileList = this.allowFileList();
+            } else {
+                fileList = filterSizeMatchFiles(images, this.allowResolutions);
+            }
             if (fileList.length === 0) {
                 this.$message.error('本次选择图片不符合尺寸要求');
                 this.$refs.singleImageUploader.value = null;

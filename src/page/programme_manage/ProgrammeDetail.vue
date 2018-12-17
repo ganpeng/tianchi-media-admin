@@ -1181,8 +1181,10 @@
                     return false;
                 }
 
+                //  260 * 380 或者 230 * 450 必须传一张
                 let sizeOne = posterImageList.findIndex((img) => {
-                    return parseInt(img.width) === 260 && parseInt(img.height) === 380;
+                    return (parseInt(img.width) === 260 && parseInt(img.height) === 380) ||
+                           (parseInt(img.width) === 240 && parseInt(img.height) === 350);
                 });
 
                 if (sizeOne < 0) {

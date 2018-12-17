@@ -60,7 +60,7 @@ export default {
                 },
                 {
                     title: `<span style=${style}>新建</span>轮播频道`,
-                    name: 'CreateChannel',
+                    name: 'CreateCarouselChannel',
                     iconClass: 'shortcut_carousel_channel'
                 },
                 {
