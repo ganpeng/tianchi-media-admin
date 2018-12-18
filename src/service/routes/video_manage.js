@@ -15,7 +15,7 @@ export const getVideoList = ({originSiteId, shareSiteId, startedAt, endedAt, sta
             statusList = [status];
             break;
         case 'INJECTING':
-            statusList = ['UPLOAD_COMPLETED', 'SPLIT_TASK_SUBMITTED', 'SPLIT_TASK_ON_QUEUE', 'SPLIT_TASK_ON_PENDING', 'SPLIT_TASK_ON_PROCESS', 'SPLIT_TASK_SUCCESS'];
+            statusList = ['UPLOAD_COMPLETED', 'SPLIT_TASK_SUBMITTED', 'SPLIT_TASK_ON_QUEUE', 'SPLIT_TASK_ON_PENDING', 'SPLIT_TASK_ON_PROCESS', 'SPLIT_TASK_SUCCESS', 'PROCESSING'];
             break;
         default:
             break;

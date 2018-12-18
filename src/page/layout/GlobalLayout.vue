@@ -219,22 +219,22 @@
                 line-height: $headerHeight;
                 padding-left: 50px;
                 /*设置站点管理和配置中心的隐藏和展示*/
-                /*&.is-center-site {*/
-                /*li:last-child {*/
-                /*display: none;*/
-                /*}*/
-                /*li:nth-child(7) {*/
-                /*display: inline-block;*/
-                /*}*/
-                /*}*/
-                /*&:not(.is-center-site) {*/
-                /*li:last-child {*/
-                /*display: inline-block;*/
-                /*}*/
-                /*li:nth-child(7) {*/
-                /*display: none;*/
-                /*}*/
-                /*}*/
+                &.is-center-site {
+                    li:last-child {
+                        display: none;
+                    }
+                    li:nth-child(7) {
+                        display: inline-block;
+                    }
+                }
+                &:not(.is-center-site) {
+                    li:last-child {
+                        display: inline-block;
+                    }
+                    li:nth-child(7) {
+                        display: none;
+                    }
+                }
                 .nav-item {
                     float: left;
                     padding: 0 12px;

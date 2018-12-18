@@ -333,6 +333,8 @@
                         return '注入成功';
                     case 'FAILED':
                         return '注入失败';
+                    case 'PROCESSING':
+                        return '监控处理中';
                     default:
                         return video.status;
                 }

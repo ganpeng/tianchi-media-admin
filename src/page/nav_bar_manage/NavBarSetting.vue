@@ -34,7 +34,9 @@
                 <i class="el-icon-plus"></i>
             </li>
         </ul>
-        <el-button class="btn-style-two update-btn" @click="updateNavBarSetting">保存</el-button>
+        <div class="operate-block text-center">
+            <el-button type="primary" @click="updateNavBarSetting" class="btn-style-two">保存</el-button>
+        </div>
     </div>
 </template>
 
@@ -229,8 +231,20 @@
         }
     }
 
-    .update-btn {
-        margin-top: 240px;
+    // 操作
+    .operate-block {
+        position: fixed;
+        bottom: 10px;
+        left: 0px;
+        right: 0px;
+        margin: auto;
+        width: 500px;
+        height: 80px;
+        line-height: 90px;
+        background: #293550;
+        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.20);
+        border-radius: 8px;
+        z-index: 600;
     }
 
     /*
