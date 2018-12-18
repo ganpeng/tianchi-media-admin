@@ -116,8 +116,10 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="multicastIp" width="150px" align="center" label="IP"></el-table-column>
+                <el-table-column prop="multicastIp" width="120px" align="center" label="IP"></el-table-column>
                 <el-table-column prop="multicastPort" width="100px" align="center" label="端口"></el-table-column>
+                <el-table-column prop="recordIp" width="120px" align="center" label="录制IP"></el-table-column>
+                <el-table-column prop="recordPort" width="100px" align="center" label="录制端口"></el-table-column>
                 <el-table-column prop="pushServer" align="center" width="120px" label="服务器"></el-table-column>
                 <el-table-column align="center" width="60px" label="回看">
                     <template slot-scope="scope">
@@ -136,7 +138,7 @@
                         {{scope.row.audioPid | padEmpty}}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="操作">
+                <el-table-column width="180px" align="center" label="操作">
                     <template slot-scope="scope">
                         <div class="operator-btn-wrapper">
                             <el-dropdown

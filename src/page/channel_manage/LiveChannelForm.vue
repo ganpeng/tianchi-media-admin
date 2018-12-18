@@ -35,6 +35,14 @@
                     >
                     </el-input>
                 </el-form-item>
+                <el-form-item label="所属服务器" prop="pushServer">
+                    <el-input
+                        placeholder="请输入所属服务器地址"
+                        :value="liveChannel.pushServer"
+                        @input="inputHandler($event, 'pushServer')"
+                    >
+                    </el-input>
+                </el-form-item>
                 <el-form-item label="频道端口" prop="multicastPort">
                     <el-input
                         type="number"
@@ -44,11 +52,20 @@
                     >
                     </el-input>
                 </el-form-item>
-                <el-form-item label="所属服务器" prop="pushServer">
+                <el-form-item label="录制IP" prop="recordIp">
                     <el-input
-                        placeholder="请输入所属服务器地址"
-                        :value="liveChannel.pushServer"
-                        @input="inputHandler($event, 'pushServer')"
+                        placeholder="请输入录制IP"
+                        :value="liveChannel.recordIp"
+                        @input="inputHandler($event, 'recordIp')"
+                    >
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="录制端口" prop="recordPort">
+                    <el-input
+                        type="number"
+                        placeholder="请输入录制端口"
+                        :value="liveChannel.recordPort"
+                        @input="inputHandler($event, 'recordPort')"
                     >
                     </el-input>
                 </el-form-item>
@@ -134,6 +151,14 @@ export default {
                 multicastPort: [
                     { required: true, message: '请输入直播频道端口' },
                     { validator: checkPort }
+                ],
+                recordIp: [
+                    {required: true, message: '请输入录制IP'},
+                    {validator: checkIP}
+                ],
+                recordPort: [
+                    {required: true, message: '请输入录制端口'},
+                    {validator: checkPort}
                 ],
                 pushServer: [
                     { required: true, message: '请输入所属服务器地址' },
