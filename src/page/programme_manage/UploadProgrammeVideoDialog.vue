@@ -125,7 +125,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item
-                v-if="video.type === 'FEATURE'"
+                v-if="video.type === 'FEATURE' || video.type === 'PRE_SHOW'"
                 :rules="(isTvPlay || isShow) ? [{ required: true, message: '请输入集数/期号' }, {pattern: /^\+?[1-9]\d*$/, message: '只能输入大于0的整数'}] : [{pattern: /^\+?[1-9]\d*$/, message: '只能输入大于0的整数'}]"
                 label="集数/期号" prop="sort">
                 <span v-if="readonly">{{video.sort}}</span>
@@ -463,7 +463,6 @@
                 this.setVideoCoverImage({coverImage});
             },
             deleteCoverImage() {
-                console.log('aaa');
                 this.setVideoCoverImage({coverImage: null});
             }
             //  视频图片相关操作开始

@@ -95,32 +95,32 @@
             <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
                 <el-table-column prop="code" align="center" width="120px" label="编号"></el-table-column>
                 <el-table-column prop="no" align="center" width="120px" label="展示编号"></el-table-column>
-                <el-table-column prop="innerName" align="center" width="120px" label="名称">
+                <el-table-column prop="innerName" align="center" min-width="120px" label="名称">
                     <template slot-scope="scope">
                         <span class="ellipsis two">
                             {{scope.row.innerName}}
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="name" align="center" width="120px" label="展示名">
+                <el-table-column prop="name" align="center" min-width="120px" label="展示名">
                     <template slot-scope="scope">
                         <span class="ellipsis two">
                             {{scope.row.name}}
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="type" width="120px" align="center" label="类别">
+                <el-table-column prop="type" min-width="120px" align="center" label="类别">
                     <template slot-scope="scope">
                         <span class="ellipsis two">
                             {{typeName(scope.row.id)}}
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="multicastIp" width="120px" align="center" label="IP"></el-table-column>
+                <el-table-column prop="multicastIp" min-width="120px" align="center" label="IP"></el-table-column>
                 <el-table-column prop="multicastPort" width="100px" align="center" label="端口"></el-table-column>
-                <el-table-column prop="recordIp" width="120px" align="center" label="录制IP"></el-table-column>
+                <el-table-column prop="recordIp" min-width="120px" align="center" label="录制IP"></el-table-column>
                 <el-table-column prop="recordPort" width="100px" align="center" label="录制端口"></el-table-column>
-                <el-table-column prop="pushServer" align="center" width="120px" label="服务器"></el-table-column>
+                <el-table-column prop="pushServer" align="center" min-width="120px" label="服务器"></el-table-column>
                 <el-table-column align="center" width="60px" label="回看">
                     <template slot-scope="scope">
                         <span :class="[scope.row.record ? 'yes' : 'no']">

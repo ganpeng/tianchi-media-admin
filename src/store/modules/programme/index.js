@@ -351,6 +351,9 @@ const getters = {
     },
     checkSortIsExist(state) {
         let sort = state.video.video.sort;
+        if (state.video.video.type !== 'FEATURE') { // 如果不是正片的话就跳过判断
+            return false;
+        }
         let featureList = state.video.featureList;
         let list = state.video.list;
         let index = featureList.findIndex((video) => parseInt(video.sort) === parseInt(sort));
