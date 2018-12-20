@@ -38,12 +38,12 @@
                                 </p>
                             </div>
                             <div class="upload-box">
-                                <multi-image-uploader
-                                    ref="multiImageUploader"
-                                    :dimension="{width:'100',height:'42'}"
-                                    :imageUploadedHandler="imageUploadedHandler"
-                                    :allowResolutions="allowResolutions">
-                                </multi-image-uploader>
+                                <single-image-uploader
+                                    ref="singleImageUploader"
+                                    :uploadSuccessHandler="uploadSuccessHandler"
+                                    :allowResolutions="allowResolutions"
+                                    :allowFileList="getAllowFileList">
+                                </single-image-uploader>
                             </div>
                         </div>
                     </el-radio>
@@ -90,12 +90,12 @@
 </template>
 
 <script>
-    import MultiImageUploader from 'sysComponents/custom_components/custom/MultiImageUploader';
+    import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 
     export default {
         name: 'CreateNavNarForm',
         components: {
-            MultiImageUploader
+            SingleImageUploader
         },
         data() {
             let checkType = (rule, value, callback) => {
@@ -155,9 +155,16 @@
             },
             uploadImage(mode) {
                 this.uploadMode = mode;
-                this.$refs.multiImageUploader.$refs.multiImageUploader.click();
+                this.$refs.singleImageUploader.$refs.singleImageUploader.click();
             },
-            imageUploadedHandler(image) {
+            // 过滤上传的图片
+            getAllowFileList(images) {
+                if (images[0].demension.height === 42 && images[0].demension.width <= 500 && images[0].demension.width >= 100) {
+                    return images;
+                }
+                return [];
+            },
+            uploadSuccessHandler(image) {
                 switch (this.uploadMode) {
                     case 'FOCUS':
                         this.navBarInfo.focalImage = image;
@@ -234,7 +241,7 @@
                 &:first-child {
                     margin-right: 30px;
                 }
-                .multi-image-uploader-container {
+                .single-image-uploader-container {
                     display: none;
                 }
                 div {
@@ -245,6 +252,10 @@
                     border-radius: 4px;
                     text-align: center;
                     cursor: pointer;
+                    overflow: hidden;
+                    img {
+                        height: 42px;
+                    }
                     i {
                         font-size: 20px;
                         color: #3E495E;

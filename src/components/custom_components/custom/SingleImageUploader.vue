@@ -10,7 +10,8 @@
                     <label class="ui_button ui_button_primary" :for="id">
                         <i class="el-icon-plus"></i>
                     </label>
-                    <input name="file" ref="singleImageUploader" :disabled="isUploading" class="el-upload__input" type="file" :id="id" accept="image/*">
+                    <input name="file" ref="singleImageUploader" :disabled="isUploading" class="el-upload__input"
+                           type="file" :id="id" accept="image/*">
                 </div>
                 <p class="image-dimension">{{allowResolutions[0].width}}*{{allowResolutions[0].height}}</p>
             </div>
@@ -18,165 +19,170 @@
     </div>
 </template>
 <script>
-import {uploadRequest, promiseImageSize, filterSizeMatchFiles} from '../../../util/upload';
-import _ from 'lodash';
-export default {
-    name: 'SingleImageUploader',
-    props: {
-        id: {
-            type: String,
-            default: 'single-image-uploader'
-        },
-        dimension: {
-            type: Object,
-            default: () => {
-                return {
-                    width: 100,
-                    height: 100
-                };
-            }
-        },
-        allowFileList: {
-            type: () => {}
-        },
-        showImage: {
-            type: Boolean,
-            default: true
-        },
-        uri: {
-            type: String,
-            default: ''
-        },
-        allowResolutions: {
-            type: Array,
-            default: () => []
-        },
-        uploadSuccessHandler: {
-            type: Function,
-            default: () => {}
-        },
-        deleteImage: {
-            type: Function,
-            default: () => {}
-        }
-    },
-    data() {
-        return {
-            progress: 0,
-            isUploading: false
-        };
-    },
-    created() {
-        this.$nextTick(() => {
-            let testUpload = document.querySelector(`#${this.id}`);
-            testUpload.addEventListener('change', this.uploadChangeHandler.bind(this));
-        });
-    },
-    computed: {
-        styleStr() {
-            let width = _.get(this.allowResolutions, '0.width');
-            let height = _.get(this.allowResolutions, '0.height');
-            if (width && height) {
-                if (width <= 82 || height <= 82) {
-                    return `width:${width * 0.8}px;height:${height * 0.8}px;`;
-                } else {
-                    return `width:${width * 0.3}px;height:${height * 0.3}px;`;
+    import {uploadRequest, promiseImageSize, filterSizeMatchFiles} from '../../../util/upload';
+    import _ from 'lodash';
+
+    export default {
+        name: 'SingleImageUploader',
+        props: {
+            id: {
+                type: String,
+                default: 'single-image-uploader'
+            },
+            dimension: {
+                type: Object,
+                default: () => {
+                    return {
+                        width: 100,
+                        height: 100
+                    };
                 }
-            } else {
-                return `width:${this.dimension.width}px;height:${this.dimension.height}px;`;
+            },
+            allowFileList: {
+                type: Function
+            },
+            showImage: {
+                type: Boolean,
+                default: true
+            },
+            uri: {
+                type: String,
+                default: ''
+            },
+            allowResolutions: {
+                type: Array,
+                default: () => []
+            },
+            uploadSuccessHandler: {
+                type: Function,
+                default: () => {
+                }
+            },
+            deleteImage: {
+                type: Function,
+                default: () => {
+                }
             }
-        }
-    },
-    methods: {
-        async uploadChangeHandler(e) {
-            let baseUri = await this.$util.getUploadServer();
-            let images = await promiseImageSize(e.target.files);
-            let fileList = [];
-            if (this.allowFileList) {
-                fileList = this.allowFileList();
-            } else {
-                fileList = filterSizeMatchFiles(images, this.allowResolutions);
+        },
+        data() {
+            return {
+                progress: 0,
+                isUploading: false
+            };
+        },
+        created() {
+            this.$nextTick(() => {
+                let testUpload = document.querySelector(`#${this.id}`);
+                testUpload.addEventListener('change', this.uploadChangeHandler.bind(this));
+            });
+        },
+        computed: {
+            styleStr() {
+                let width = _.get(this.allowResolutions, '0.width');
+                let height = _.get(this.allowResolutions, '0.height');
+                if (width && height) {
+                    if (width <= 82 || height <= 82) {
+                        return `width:${width * 0.8}px;height:${height * 0.8}px;`;
+                    } else {
+                        return `width:${width * 0.3}px;height:${height * 0.3}px;`;
+                    }
+                } else {
+                    return `width:${this.dimension.width}px;height:${this.dimension.height}px;`;
+                }
             }
-            if (fileList.length === 0) {
-                this.$message.error('本次选择图片不符合尺寸要求');
-                this.$refs.singleImageUploader.value = null;
-                return false;
-            } else {
-                if (!this.isUploading) {
-                    try {
-                        let {file, demension} = fileList[0];
-                        let formData = new FormData();
-                        formData.append('file', file);
-                        let headers = this.$util.getUploadHeaders(this.$store.state.user.token);
-                        let options = {
-                            formData,
-                            headers,
-                            uri: `${baseUri}/v1/storage/image`,
-                            progressHandler: (event) => {
-                                let percent = event.loaded / event.total * 100;
-                                this.progress = Math.round(percent);
+        },
+        methods: {
+            async uploadChangeHandler(e) {
+                let baseUri = await this.$util.getUploadServer();
+                let images = await promiseImageSize(e.target.files);
+                let fileList = [];
+                if (this.allowFileList) {
+                    fileList = this.allowFileList(images);
+                } else {
+                    fileList = filterSizeMatchFiles(images, this.allowResolutions);
+                }
+                if (fileList.length === 0) {
+                    this.$message.error('本次选择图片不符合尺寸要求');
+                    this.$refs.singleImageUploader.value = null;
+                    return false;
+                } else {
+                    if (!this.isUploading) {
+                        try {
+                            let {file, demension} = fileList[0];
+                            let formData = new FormData();
+                            formData.append('file', file);
+                            let headers = this.$util.getUploadHeaders(this.$store.state.user.token);
+                            let options = {
+                                formData,
+                                headers,
+                                uri: `${baseUri}/v1/storage/image`,
+                                progressHandler: (event) => {
+                                    let percent = event.loaded / event.total * 100;
+                                    this.progress = Math.round(percent);
+                                }
+                            };
+                            this.isUploading = true;
+                            let data = await uploadRequest(options);
+                            let res = JSON.parse(data);
+                            if (res && res.code === 0) {
+                                if (res.data[0].failCode === 0 || res.data[0].failCode === 3300) {
+                                    let {width, height} = demension;
+                                    let {id, uri, originName} = res.data[0].image;
+                                    let image = {id, width, height, uri, name: originName};
+                                    this.uploadSuccessHandler(image);
+                                } else {
+                                    this.$message.error(res.data[0].failReason);
+                                }
                             }
-                        };
-                        this.isUploading = true;
-                        let data = await uploadRequest(options);
-                        let res = JSON.parse(data);
-                        if (res && res.code === 0) {
-                            if (res.data[0].failCode === 0 || res.data[0].failCode === 3300) {
-                                let {width, height} = demension;
-                                let {id, uri, originName} = res.data[0].image;
-                                let image = { id, width, height, uri, name: originName };
-                                this.uploadSuccessHandler(image);
-                            } else {
-                                this.$message.error(res.data[0].failReason);
-                            }
+                            this.isUploading = false;
+                            this.$refs.singleImageUploader.value = null;
+                        } catch (err) {
+                            console.log(err);
+                            this.isUploading = false;
+                            this.$refs.singleImageUploader.value = null;
                         }
-                        this.isUploading = false;
-                        this.$refs.singleImageUploader.value = null;
-                    } catch (err) {
-                        console.log(err);
-                        this.isUploading = false;
-                        this.$refs.singleImageUploader.value = null;
                     }
                 }
             }
         }
-    }
-};
+    };
 </script>
 <style lang="scss" scoped>
-.wrapper {
-    display: flex;
-}
-.img-wrapper {
-    position: relative;
-    // width: 100px;
-    // height: 100px;
-    margin-right: 10px;
-    border: 1px solid #3E495E;
-    border-radius: 4px;
-    cursor: pointer;
-    img {
-        display: inline-block;
+    .wrapper {
+        display: flex;
     }
-    i {
-        display: none;
-        position: absolute;
-        top: 4px;
-        right: 4px;
-        color: $closeBtnHoverColor;
-    }
-    &:hover {
-        opacity: 0.6;
+
+    .img-wrapper {
+        position: relative;
+        // width: 100px;
+        // height: 100px;
+        margin-right: 10px;
+        border: 1px solid #3E495E;
+        border-radius: 4px;
+        cursor: pointer;
+        img {
+            display: inline-block;
+        }
         i {
-            display: block;
+            display: none;
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            color: $closeBtnHoverColor;
+        }
+        &:hover {
+            opacity: 0.6;
+            i {
+                display: block;
+            }
         }
     }
-}
-.image-dimension {
-    font-size: 12px;
-    height: 22px;
-    line-height: 22px;
-    color: #6F7480;
-    text-align: center;
-}
+
+    .image-dimension {
+        font-size: 12px;
+        height: 22px;
+        line-height: 22px;
+        color: #6F7480;
+        text-align: center;
+    }
 </style>
