@@ -87,7 +87,7 @@
                     <el-button
                         class="btn-style-two contain-svg-icon"
                         @click="gotoBlankPage('LiveChannelImport')">
-                        <svg-icon icon-class="import"></svg-icon>
+                        <svg-icon icon-class="import_pp"></svg-icon>
                         节目单
                     </el-button>
                 </div>

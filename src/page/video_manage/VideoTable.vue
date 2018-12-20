@@ -639,6 +639,7 @@
                     });
             },
             checkedVideoList() {
+                console.log(this.selectedVideoList);
                 this.selectedVideoList.forEach((item) => {
                     let video = this.video.list.find((video) => {
                         return item.code === video.code;

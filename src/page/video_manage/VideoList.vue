@@ -301,6 +301,7 @@
         created() {
             window.eventBus.$on('setDisabled', this.setDisabled.bind(this));
             window.addEventListener('keyup', this.keyupHandler);
+            this.resetProgramme();
             this.timer = setInterval(() => {
                 this.getVideoList()
                     .then(() => {
@@ -320,7 +321,8 @@
             ...mapMutations({
                 updateSearchFields: 'video/updateSearchFields',
                 resetSearchFields: 'video/resetSearchFields',
-                updateUploadState: 'uploadVideo/updateUploadState'
+                updateUploadState: 'uploadVideo/updateUploadState',
+                resetProgramme: 'programme/resetProgramme'
             }),
             ...mapActions({
                 getVideoList: 'video/getVideoList',
