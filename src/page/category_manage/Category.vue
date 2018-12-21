@@ -78,7 +78,7 @@
                                         </div>
                                     </div>
                                     <span class="btn-text edit-btn" @click="editCategoryGroupByIndex(index)">编辑</span>
-                                    <i @click="deleteCategoryGroupByIndexHandler(index)" class="el-icon-circle-close-outline delete-btn"></i>
+                                    <i @click="deleteCategoryGroupByIndexHandler(index)" class="el-icon-error delete-btn"></i>
                                 </li>
                                 <li key="hahahaha" slot="footer" class="add-category-group-item" @click="addCategoryGroup">
                                     <svg-icon icon-class="plus"></svg-icon>
@@ -89,7 +89,7 @@
                             <el-button class="btn-style-two" type="primary" @click="saveProgrammeCategoryHandler">保存</el-button>
                         </div>
                         <div v-if="categoryGroupDialog" class="add-edit-category-group-dialog form-container">
-                            <h4 class="header">新建</h4>
+                            <h4 class="header">{{categoryGroupTitle}}</h4>
                             <i class="el-icon-close" @click="hideCategoryGroupDialog"></i>
                             <div class="category-group-form">
                                 <div class="form-item">
@@ -235,6 +235,7 @@ export default {
         return {
             //  类型组变量
             categoryGroupDialog: false,
+            categoryGroupTitle: '新建',
             index: null,
             categoryGroup: {
                 name: '',
@@ -582,6 +583,11 @@ export default {
         },
         showCategoryGroupDialog() {
             this.categoryGroupDialog = true;
+            if (this.index) {
+                this.categoryGroupTitle = '编辑';
+            } else {
+                this.categoryGroupTitle = '新建';
+            }
         },
         hideCategoryGroupDialog() {
             this.categoryGroupDialog = false;

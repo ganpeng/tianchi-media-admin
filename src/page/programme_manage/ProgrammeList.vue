@@ -86,30 +86,7 @@
                             start-placeholder="开始日期"
                             end-placeholder="结束日期">
                         </el-date-picker>
-                        <!--
-                        <el-date-picker
-                            :value="programmeSearchFields.releaseAtStart"
-                            type="date"
-                            clearable
-                            style="width:180px;"
-                            @input="inputHandler($event, 'releaseAtStart')"
-                            placeholder="请选择开始时间">
-                        </el-date-picker>
-                        -->
                     </div>
-                    <!--
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">结束时间</label>
-                        <el-date-picker
-                            :value="programmeSearchFields.releaseAtEnd"
-                            type="date"
-                            clearable
-                            style="width:180px;"
-                            @input="inputHandler($event, 'releaseAtEnd')"
-                            placeholder="请选择结束时间">
-                        </el-date-picker>
-                    </div>
-                    -->
                     <div class="search-field-item">
                         <label class="search-field-item-label">地区</label>
                         <el-select
@@ -287,32 +264,7 @@
                 :total="programmePagination.total">
             </el-pagination>
         </div>
-        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
-        <el-dialog
-            title="上传节目表格"
-            :visible.sync="fileUploadDialogVisible"
-            :headers="uploadHeaders"
-            :show-close="true"
-            :before-close="closeFileUploadDialog"
-            :close-on-click-modal="false"
-            :close-on-press-escape="false">
-            <el-upload
-                class="upload-demo"
-                ref="upload"
-                :headers="uploadHeaders"
-                accept=".xlsx, .xls"
-                action="/admin/v1/content/programme/import"
-                :auto-upload="false"
-                :file-list="fileList"
-                :on-success="uploadSuccessHandler"
-                :with-credentials="true">
-                <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-                <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
-            </el-upload>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="closeFileUploadDialog">关闭</el-button>
-            </div>
-        </el-dialog>
+        <preview-single-image :singleImage="previewImage"></preview-single-image>
     </div>
 </template>
 <script>
@@ -476,16 +428,6 @@
                             this.checkedVideoList();
                         }
                     });
-            },
-            showFileUploadDialog() {
-                this.fileUploadDialogVisible = true;
-            },
-            closeFileUploadDialog() {
-                this.fileUploadDialogVisible = false;
-                this.fileList = [];
-            },
-            submitUpload() {
-                this.$refs.upload.submit();
             },
             lowerFrameProgramme(programme) {
                 let {id, visible} = programme;
@@ -670,36 +612,6 @@
                         message: '已取消删除'
                     });
                 });
-            },
-            uploadSuccessHandler(res, file, fileList) {
-                if (res && res.code === 0) {
-                    this.$message({
-                        type: 'success',
-                        message: '节目导入成功'
-                    });
-                } else if (res && res.code === 3119) {
-                    this.$message({
-                        type: 'error',
-                        message: '节目视频导入失败'
-                    });
-                } else if (res && res.code === 3117) {
-                    this.$message({
-                        type: 'error',
-                        message: '节目导入部分成功'
-                    });
-                } else {
-                    this.$message({
-                        type: 'error',
-                        message: '节目导入失败'
-                    });
-                }
-                this.closeFileUploadDialog();
-                this.getProgrammeList()
-                    .then((res) => {
-                        if (res && res.code === 0) {
-                            this.checkedVideoList();
-                        }
-                    });
             },
             selectHandler(list, row) {
                 let isSelected = list.findIndex((item) => item.id === row.id) >= 0;

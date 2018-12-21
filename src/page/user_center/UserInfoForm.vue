@@ -2,11 +2,11 @@
 <template>
     <div class="text-left">
         <el-form :model="userInfo"
-                 :rules="infoRules"
-                 status-icon
-                 ref="userInfo"
-                 label-width="100px"
-                 class="form-block">
+                :rules="infoRules"
+                status-icon
+                ref="userInfo"
+                label-width="100px"
+                class="form-block my-form">
             <el-form-item label="姓名" prop="name" required>
                 <el-input v-model="userInfo.name" placeholder="请输入姓名"></el-input>
             </el-form-item>
@@ -19,10 +19,10 @@
                 </el-button>
             </el-form-item>
             <el-form-item :label="'设备ID' + (index + 1)"
-                          props="stbList"
-                          v-for="(item, index) in userInfo.stbList"
-                          :key="index"
-                          required>
+                        props="stbList"
+                        v-for="(item, index) in userInfo.stbList"
+                        :key="index"
+                        required>
                 <el-input v-model="item.no" placeholder="请输入设备ID"></el-input>
                 <el-button class="btn-style-two" v-if="userInfo.stbList.length > 1" plain @click="removeDevice(index)">删除设备</el-button>
             </el-form-item>
@@ -31,8 +31,8 @@
             </el-form-item>
             <el-form-item label="省份" prop="province" required>
                 <el-select v-model="userInfo.province"
-                           @change="selectDistrict('PROVINCE')"
-                           placeholder="请选择省份">
+                        @change="selectDistrict('PROVINCE')"
+                        placeholder="请选择省份">
                     <el-option
                         v-for="item in provinceOptions"
                         :key="item.code"
@@ -464,7 +464,4 @@
     };
 </script>
 <style lang="scss" scoped>
-    .el-input, .el-select {
-        width: 100%;
-    }
 </style>

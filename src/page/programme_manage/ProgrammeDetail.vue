@@ -6,7 +6,7 @@
         <programme-basic-info v-if="status === 1"></programme-basic-info>
         <el-row>
             <el-col :span="24" v-if="status !== 1" style="margin: 20px 0;">
-                <el-form :rules="rules" ref="createProgramForm" status-icon :model="programme" label-width="120px" class="form-block" @submit.native.prevent>
+                <el-form :rules="rules" ref="createProgramForm" status-icon :model="programme" label-width="120px" class="form-block my-form" @submit.native.prevent>
                     <el-col :span="12" style="border-right: 1px solid #252D3F;">
                         <h2 class="content-sub-title">节目基本信息</h2>
                         <el-col :span="18">
@@ -1260,10 +1260,12 @@
         font-size: 14px;
         color: #c0c4cc;
         font-weight: 500;
-        // color: #A8ABB3;
         width: 45%;
         .el-checkbox {
             padding: 0;
+        }
+        .el-select {
+            width: 160px;
         }
     }
 }
@@ -1276,4 +1278,7 @@
         margin: 0 10px;
     }
 }
+</style>
+<style lang="scss" scoped>
+
 </style>

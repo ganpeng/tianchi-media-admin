@@ -14,6 +14,10 @@ export default {
         handleSelect: {
             type: Function,
             default: () => {}
+        },
+        isCarousel: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -24,13 +28,24 @@ export default {
     },
     methods: {
         querySearchAsync(name, cb) {
-            this.$service.searchLiveChannelList(name)
-                .then((res) => {
-                    if (res && res.code === 0) {
-                        let {list} = res.data;
-                        cb(list);
-                    }
-                });
+            console.log(this.isCarousel);
+            if (this.isCarousel) {
+                this.$service.searchCarouselChannelList(name)
+                    .then((res) => {
+                        if (res && res.code === 0) {
+                            let {list} = res.data;
+                            cb(list);
+                        }
+                    });
+            } else {
+                this.$service.searchLiveChannelList(name)
+                    .then((res) => {
+                        if (res && res.code === 0) {
+                            let {list} = res.data;
+                            cb(list);
+                        }
+                    });
+            }
         },
         selectHandler(channel) {
             this.handleSelect(channel);

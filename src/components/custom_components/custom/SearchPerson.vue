@@ -2,6 +2,7 @@
     <el-autocomplete
         v-model="qs"
         :fetch-suggestions="querySearchAsync"
+        :trigger-on-focus="false"
         placeholder="请输入内容"
         @select="selectHandler"
     ></el-autocomplete>

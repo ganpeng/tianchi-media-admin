@@ -21,7 +21,7 @@
             :close-on-press-escape="false"
             :append-to-body="true">
             <div class="video-list">
-                <el-form :inline="true" @submit.native.prevent>
+                <el-form :inline="true" class="my-form" @submit.native.prevent>
                     <el-form-item class="search">
                         <el-input
                             placeholder="搜索你想要的信息"

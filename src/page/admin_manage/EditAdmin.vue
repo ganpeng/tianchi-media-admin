@@ -9,7 +9,7 @@
                     <div class="grid-content bg-purple">
                         <el-form :model="editInfo" :rules="infoRules" status-icon ref="editInfo"
                                 label-width="100px"
-                                class="form-block">
+                                class="form-block my-form">
                             <el-form-item label="姓名" prop="name" required>
                                 <el-input v-model="editInfo.name" placeholder="请填写姓名"></el-input>
                             </el-form-item>

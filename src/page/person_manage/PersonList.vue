@@ -83,7 +83,7 @@
                     </el-table-column>
                     <el-table-column label="照片" width="120px" align="center" >
                         <template slot-scope="scope">
-                            <img v-if="scope.row.avatarImage" @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="100px" height="100px" class="pointer" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">
+                            <img v-if="scope.row.avatarImage" @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="100px" height="100px" class="person-image pointer" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">
                             <span v-else>------</span>
                         </template>
                     </el-table-column>
@@ -380,5 +380,11 @@
 <style scoped lang="less">
 .btn-style-one {
     margin-left: 10px;
+}
+.person-image {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #3E495E;
+    border-radius: 8px;
 }
 </style>

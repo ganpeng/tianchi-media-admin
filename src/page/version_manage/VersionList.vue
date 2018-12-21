@@ -76,30 +76,6 @@
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </div>
-                    <!-- <div class="search-field-item">
-                        <label class="search-field-item-label">开始时间</label>
-                        <el-date-picker
-                            :value="searchFields.releaseAtStart"
-                            type="date"
-                            clearable
-                            value-format="timestamp"
-                            style="width:180px;"
-                            @input="inputHandler($event, 'releaseAtStart')"
-                            placeholder="请选择开始时间">
-                        </el-date-picker>
-                    </div>
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">结束时间</label>
-                        <el-date-picker
-                            :value="searchFields.releaseAtEnd"
-                            type="date"
-                            clearable
-                            value-format="timestamp"
-                            style="width:180px;"
-                            @input="inputHandler($event, 'releaseAtEnd')"
-                            placeholder="请选择结束时间">
-                        </el-date-picker>
-                    </div> -->
                 </div>
             </div>
             <div class="seperator-line"></div>
@@ -153,7 +129,7 @@
                     </el-table-column>
                     <el-table-column align="center" width="120px" label="升级包下载">
                         <template slot-scope="scope">
-                            <a class="text-primary" :href="packageUrl(scope.row.fullPackageUri)">{{scope.row.version}}</a>
+                            <a v-if="scope.row.fullPackageUri" class="text-primary" :href="packageUrl(scope.row.fullPackageUri)">{{scope.row.version}}</a>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -276,5 +252,8 @@
         }
     };
 </script>
-<style scoped lang="less">
+<style scoped lang="scss">
+a.text-primary {
+    color: #1989FA;
+}
 </style>

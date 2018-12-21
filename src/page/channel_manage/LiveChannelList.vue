@@ -172,71 +172,15 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="pagination.total">
         </el-pagination>
-        <live-channel-dialog
-            :status="status"
-            ref="liveChannelDialog"
-            :liveChannelDialogVisible="liveChannelDialogVisible"
-            v-on:changeLiveChannelDialogStatus="closeLiveChannelDialog">
-        </live-channel-dialog>
-        <el-dialog
-            title="上传节目单表格"
-            :visible.sync="fileUploadDialogVisible"
-            :show-close="true"
-            :before-close="closeFileUploadDialog"
-            :close-on-click-modal="false"
-            @open="dialogOpenHandler"
-            :close-on-press-escape="false">
-            <div class="file">
-                <input id="upload-file" accept="application/xml" type="file" multiple ref="uploadXml">选择文件
-            </div>
-            <div class="table-wrapper">
-                <el-table
-                    :data="files"
-                    :show-header="false"
-                    :empty-text="'暂无上传内容'"
-                    style="width: 100%">
-                    <el-table-column
-                        width="140"
-                        align="center"
-                        label="序号">
-                        <template slot-scope="scope">
-                            {{scope.$index + 1}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        align="left"
-                        label="文件名">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.file.name}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        width="200"
-                        align="left"
-                        label="上传状态">
-                        <template slot-scope="scope">
-                            <span v-html="scope.row.message"></span>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button size="medium" @click="closeFileUploadDialog">关闭</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 <script>
     import {mapGetters, mapActions, mapMutations} from 'vuex';
-    import LiveChannelDialog from './LiveChannelDialog';
 
     const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
     const x2js = new X2JS();
     export default {
         name: 'LiveChannelList',
-        components: {
-            LiveChannelDialog
-        },
         data() {
             return {
                 //  节目单上传变量
@@ -300,25 +244,12 @@
                     this.searchHandler();
                 }
             },
-            showLiveChannelDialog() {
-                this.liveChannelDialogVisible = true;
-            },
-            closeLiveChannelDialog() {
-                this.liveChannelDialogVisible = false;
-            },
             handlePaginationChange(value, key) {
                 this.updatePagination({value, key});
                 if (key === 'pageSize') {
                     window.localStorage.setItem('channelPageSize', value);
                 }
                 this.getChannelList();
-            },
-            _updateLiveChannel(id) {
-                this.getLiveChannelById(id)
-                    .then((res) => {
-                        this.liveChannelDialogVisible = true;
-                        this.status = 1;
-                    });
             },
             editChannelByImportExcel() {
                 let routeData = this.$router.resolve({
@@ -426,46 +357,6 @@
             searchHandler() {
                 this.getChannelList();
             },
-            //  上传节目单
-            dialogOpenHandler() {
-                this.$nextTick(() => {
-                    let uploadInputFile = document.querySelector('#upload-file');
-                    uploadInputFile.addEventListener('input', this.uploadChangeHandler);
-                });
-            },
-            showFileUploadDialog() {
-                this.fileUploadDialogVisible = true;
-                this.fileList = [];
-            },
-            closeFileUploadDialog() {
-                if (this.isUploading) {
-                    this.$confirm('此操作将删除该频道, 是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'error'
-                    }).then(() => {
-                        this.fileUploadDialogVisible = false;
-                        this.isUploading = false;
-                        this.files = [];
-                        this.count = 0;
-                        this.$refs.uploadXml.value = null;
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                    });
-                } else {
-                    this.fileUploadDialogVisible = false;
-                    this.isUploading = false;
-                    this.files = [];
-                    this.count = 0;
-                    this.$refs.uploadXml.value = null;
-                }
-            },
-            submitUpload() {
-                this.$refs.upload.submit();
-            },
             timeStampFormat(seconds) {
                 let date = new Date(seconds);
                 let year = date.getFullYear();
@@ -475,125 +366,6 @@
                 let minute = date.getMinutes();
                 let second = date.getSeconds();
                 return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-            },
-            uploadRequest(data) {
-                let that = this;
-                return new Promise((resolve, reject) => {
-                    let url = `/admin/v1/live/channel-programme/list`;
-                    let xhr = new XMLHttpRequest();
-                    xhr.open('post', url);
-                    let headers = that.$util.getUploadHeaders(that.$store.state.user.token);
-                    for (let key in headers) {
-                        xhr.setRequestHeader(key, headers[key]);
-                    }
-                    xhr.onload = (evt) => {
-                        resolve(evt.target.responseText);
-                    };
-                    xhr.onerror = (err) => {
-                        if (window.navigator.onLine) {
-                            this.$message({
-                                message: '服务器连接失败，请稍后重试',
-                                type: 'error'
-                            });
-                        } else {
-                            this.$message({
-                                message: '网络连接失败，请检查您的网络连接情况',
-                                type: 'error'
-                            });
-                        }
-                        reject(err);
-                    };
-                    xhr.onabort = () => {
-                        reject(new Error('canceled_flag')); // eslint-disable-line
-                    };
-                    xhr.upload.onprogress = (evt) => {
-                        // let percent = evt.loaded / evt.total * 100;
-                    };
-                    xhr.send(data);
-                });
-            },
-            uploadChangeHandler(e) {
-                let files = Array.from(e.target.files).filter((file) => {
-                    return /(.xml)$/.test(file.name);
-                });
-                if (files.length === 0) {
-                    this.$message.warning('本次选择没有符合要求的文件');
-                }
-                let newFileList = [];
-                files.forEach((file) => {
-                    let index = this.files.findIndex((item) => {
-                        return item.file.name === file.name;
-                    });
-                    if (index === -1) {
-                        let obj = {
-                            file,
-                            status: 'waiting', // waiting 等待， uploading 上传中， success 成功， error 失败
-                            message: '等待上传' // 等待上传，上传中，上传成功， 上传失败
-                        };
-                        newFileList.push(obj);
-                    }
-                });
-                let newFiles = this.files.concat(newFileList);
-                this.files = newFiles;
-                this.uploadHandler();
-                this.$refs.uploadXml.value = null;
-            },
-            uploadHandler() {
-                let that = this;
-                if (!that.isUploading) {
-                    that.isUploading = true;
-                    upload();
-                }
-
-                function upload() {
-                    if (typeof that.files[that.count] === 'undefined') {
-                        that.isUploading = false;
-                        return false;
-                    }
-                    let formData = new FormData();
-                    let file = that.files[that.count].file;
-                    formData.append('files', file);
-                    that.uploadRequest(formData)
-                        .then((res) => {
-                            let result = JSON.parse(res);
-                            if (result && result.code === 0) {
-                                that.files = that.files.map((obj, index) => {
-                                    if (index === that.count) {
-                                        obj.message = '导入成功';
-                                        obj.status = 'success';
-                                        return obj;
-                                    } else {
-                                        return obj;
-                                    }
-                                });
-                            } else {
-                                let message = result.message ? result.message : `文件导入失败`;
-                                that.files = that.files.map((obj, index) => {
-                                    if (index === that.count) {
-                                        obj.message = `<span class="text-danger">${message}</span>`;
-                                        obj.status = 'error';
-                                        return obj;
-                                    } else {
-                                        return obj;
-                                    }
-                                });
-                            }
-                            that.count = that.count + 1;
-                            upload();
-                        }).catch(() => {
-                        that.files = that.files.map((obj, index) => {
-                            if (index === that.count) {
-                                obj.message = `<span class="text-danger">文件导入失败</span>`;
-                                obj.status = 'error';
-                                return obj;
-                            } else {
-                                return obj;
-                            }
-                        });
-                        that.count = that.count + 1;
-                        upload();
-                    });
-                }
             },
             gotoBlankPage(name) {
                 let routeData = this.$router.resolve({name});
@@ -610,6 +382,9 @@
         height: 18px;
         line-height: 18px;
         font-size: 14px;
+    }
+    .el-dropdown-link {
+        color: $mainColor;
     }
 
     .yes {

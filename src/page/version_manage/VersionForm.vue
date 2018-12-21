@@ -3,7 +3,7 @@
         <el-form :model="version" :rules="infoRules" status-icon ref="createVersion"
                 label-width="100px"
                 @submit.native.prevent
-                class="form-block">
+                class="form-block my-form">
             <el-form-item label="版本名称" prop="version">
                 <el-input
                     :value="version.version"

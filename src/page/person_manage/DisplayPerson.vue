@@ -7,7 +7,7 @@
             <div class="poster-section person">
                 <div class="visible-wrapper">
                     <span :class="['visible', person.visible ? 'is-visible' : 'dis-visible']">
-                        {{person.visible ? '已上架' : '已下架'}}
+                        {{person.visible ? '上架' : '下架'}}
                     </span>
                 </div>
                 <img v-if="person.avatarImage" :src="person.avatarImage.uri | fileUrl" alt="" width="200" height="200">

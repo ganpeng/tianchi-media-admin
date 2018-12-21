@@ -34,6 +34,7 @@
                         <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
+                            :hasChannel="true"
                             :addShuffleLayout="addShuffleLayout(0)"
                         ></shuffle-btn>
                     </div>
@@ -43,6 +44,7 @@
                         <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
+                            :hasChannel="true"
                             :addShuffleLayout="addShuffleLayout(1)"
                         ></shuffle-btn>
                     </div>
@@ -54,6 +56,7 @@
                         <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 2)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
+                            :hasChannel="true"
                             :addShuffleLayout="addShuffleLayout(2)"
                         ></shuffle-btn>
                     </div>
@@ -63,6 +66,7 @@
                         <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 3)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
+                            :hasChannel="true"
                             :addShuffleLayout="addShuffleLayout(3)"
                         ></shuffle-btn>
                     </div>
@@ -72,6 +76,7 @@
                         <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 4)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
+                            :hasChannel="true"
                             :addShuffleLayout="addShuffleLayout(4)"
                         ></shuffle-btn>
                     </div>
@@ -81,6 +86,7 @@
                         <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 5)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
+                            :hasChannel="true"
                             :addShuffleLayout="addShuffleLayout(5)"
                         ></shuffle-btn>
                     </div>
@@ -90,6 +96,7 @@
                         <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 6)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
+                            :hasChannel="true"
                             :addShuffleLayout="addShuffleLayout(6)"
                         ></shuffle-btn>
                     </div>
@@ -99,6 +106,7 @@
                         <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 7)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
+                            :hasChannel="true"
                             :addShuffleLayout="addShuffleLayout(7)"
                         ></shuffle-btn>
                     </div>
@@ -125,6 +133,11 @@
             :allowResolutions="allowResolutions"
             ref="selectLinkDialog">
         ></link-dialog>
+        <channel-dialog
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectChannelDialog">
+        ></channel-dialog>
     </div>
 </template>
 <script>
@@ -135,6 +148,7 @@ import EditProgramme from '../add_edit_module/EditProgramme';
 import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
 import EditProgrammeVideo from '../add_edit_module/EditProgrammeVideo';
 import LinkDialog from '../add_edit_module/LinkDialog';
+import ChannelDialog from '../add_edit_module/ChannelDialog';
 import CornerMark from '../CornerMark';
 export default {
     name: 'Mixed26',
@@ -144,6 +158,7 @@ export default {
         EditProgrammeSubject,
         EditProgrammeVideo,
         LinkDialog,
+        ChannelDialog,
         CornerMark
     },
     props: {
@@ -236,6 +251,7 @@ export default {
                         this.$refs.selectLinkDialog.showDialog();
                         break;
                     case 'CHANNEL':
+                        this.$refs.selectChannelDialog.showDialog();
                         break;
                     default:
                         throw new Error('layoutItemType类型错误');

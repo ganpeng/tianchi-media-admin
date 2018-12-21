@@ -4,7 +4,7 @@
         <el-form :model="person" :rules="infoRules" status-icon ref="createPerson"
                 label-width="100px"
                 @submit.native.prevent
-                class="form-block">
+                class="form-block my-form">
             <el-col :span="isDialog ? 24 : 8">
                 <el-form-item label="人物姓名" prop="name">
                     <el-input

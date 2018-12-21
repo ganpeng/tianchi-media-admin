@@ -8,7 +8,7 @@
                 <el-col :span="8">
                     <el-form :model="createInfo" :rules="infoRules" status-icon ref="createInfo"
                                 label-width="100px"
-                                class="form-block">
+                                class="form-block my-form">
                         <el-form-item label="姓名" prop="name" required>
                             <el-input v-model="createInfo.name" placeholder="请填写姓名"></el-input>
                         </el-form-item>

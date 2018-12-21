@@ -2,7 +2,7 @@
 <template>
     <div class="device-form-container form-container">
         <el-col :span="8">
-            <el-form :model="device" :rules="deviceRules" ref="deviceForm" class="form-block" label-width="100px">
+            <el-form :model="device" :rules="deviceRules" ref="deviceForm" class="form-block my-form" label-width="100px">
                 <el-form-item label="CA卡号" prop="caNo">
                     <el-input
                         :value="device.caNo"

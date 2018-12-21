@@ -20,6 +20,7 @@
                             </el-tag>
                         </div>
                         <channel-search
+                            :isCarousel="true"
                             :handleSelect="selectChannelHandler"
                         ></channel-search>
                     </el-form-item>
@@ -75,7 +76,6 @@ export default {
     },
     computed: {
         ...mapGetters({
-
             getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
         }),
         layoutItem() {

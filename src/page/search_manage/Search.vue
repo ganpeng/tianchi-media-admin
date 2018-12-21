@@ -9,7 +9,7 @@
         </div>
         <p class="tips"><i>*</i>每条不超过10个字</p>
         <ul class="search-list clearfix">
-            <li v-for="(item, index) in list" :key="index" :class="['search-item', item.focus ? 'is-active' : '']">
+            <li v-for="(item, index) in list" :key="index" :class="['search-item', isEdit && item.focus ? 'is-active' : '']">
                 <div class="wrapper">
                     <span class="index">{{index + 1}}</span>
                     <input
@@ -20,7 +20,7 @@
                         type="text"
                         maxlength="10"
                         @input="searchItemChangeHandler($event, index)"
-                        @focus="searchItemFocusHandler(index)">
+                        @focus="searchItemFocusHandler($event, index)">
                     <span v-else class="search-name">{{item.name}}</span>
                 </div>
             </li>
@@ -84,6 +84,10 @@ export default {
         },
         toggleEditHandler() {
             this.isEdit = !this.isEdit;
+            this.list = this.list.map((item) => {
+                item.focus = false;
+                return item;
+            });
         },
         searchItemFocusHandler(e, index) {
             this.list = this.list.map((item, _index) => {
@@ -138,6 +142,7 @@ export default {
                 width: 32px;
                 height: 32px;
                 line-height: 32px;
+                color: #6F7480;
                 border-right: 1px solid #3E495E;
             }
             .search-name {
@@ -149,8 +154,7 @@ export default {
                 text-align: left;
             }
             .name-input {
-                // color: #3E495E;
-                color: #fff;
+                color:#6F7480;
                 height: 32px;
                 line-height: 32px;
                 text-indent: 10px;
@@ -161,6 +165,15 @@ export default {
                     color: #6F7480;;
                 }
             }
+        }
+    }
+}
+</style>
+<style lang="scss">
+.search-list {
+    .search-item {
+        &.is-active {
+            border-color: $mainColor;
         }
     }
 }

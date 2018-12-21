@@ -108,26 +108,32 @@
             },
             prevHandleChange(activeName) {
                 let prevArrowList = document.querySelectorAll('#prevContainer .el-collapse-item__arrow.el-icon-arrow-right');
+                let prevItemHeader = document.querySelectorAll('#prevContainer .el-collapse-item__header');
                 let prevTitleList = document.querySelectorAll('#prevContainer .title');
                 for (let i = 0; i < prevArrowList.length; i++) {
                     if (activeName === i) {
                         prevArrowList[i].style.color = '#1989FA';
+                        prevItemHeader[i].style.borderBottom = '1px solid #3E495E';
                         prevTitleList[i].style.color = '#1989FA';
                     } else {
                         prevArrowList[i].style.color = '#A8ABB3';
+                        prevItemHeader[i].style.borderBottom = 'none';
                         prevTitleList[i].style.color = '#A8ABB3';
                     }
                 }
             },
             afterHandleChange(activeName) {
                 let afterArrowList = document.querySelectorAll('#afterContainer .el-collapse-item__arrow.el-icon-arrow-right');
+                let afterItemHeader = document.querySelectorAll('#afterContainer .el-collapse-item__header');
                 let afterTitleList = document.querySelectorAll('#afterContainer .title');
                 for (let i = 0; i < afterArrowList.length; i++) {
                     if (activeName === i) {
                         afterArrowList[i].style.color = '#1989FA';
+                        afterItemHeader[i].style.borderBottom = '1px solid #3E495E';
                         afterTitleList[i].style.color = '#1989FA';
                     } else {
                         afterArrowList[i].style.color = '#A8ABB3';
+                        afterItemHeader[i].style.borderBottom = 'none';
                         afterTitleList[i].style.color = '#A8ABB3';
                     }
                 }
@@ -167,12 +173,12 @@
 .time-name {
     font-size: 14px;
     line-height: 30px;
-    color: #606060;
+    color: #A8ABB3;
 }
 .url {
     font-size: 12px;
     line-height: 20px;
-    color: #8C8C8C;
+    color: #6F7480;
 }
 </style>
 <style lang="scss">
@@ -204,6 +210,9 @@
         .el-collapse-item__header {
             background: #2A3040;
             border: none;
+            .el-collapse-item__arrow {
+                color: rgb(168, 171, 179);
+            }
         }
     }
 }

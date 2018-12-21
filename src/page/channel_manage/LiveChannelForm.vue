@@ -2,7 +2,7 @@
 <template>
     <div class="live-channel-form-container form-container">
         <el-col :span="8">
-            <el-form :model="liveChannel" :rules="inputRules" ref="liveChannelForm" @submit.native.prevent class="form-block" label-width="120px">
+            <el-form :model="liveChannel" :rules="inputRules" ref="liveChannelForm" @submit.native.prevent class="form-block my-form" label-width="120px">
                 <el-form-item label="频道名称" prop="innerName">
                     <el-input
                         :value="liveChannel.innerName"

@@ -97,8 +97,8 @@ export default {
             let dragContainer = document.querySelector('#live-channel-drag-container');
 
             testUpload.addEventListener('change', (e) => {
-                let file = e.target.files[0];
-                this.uploadChangeHandler(file);
+                let files = e.target.files;
+                this.uploadChangeHandler(files);
             });
 
             dragContainer.addEventListener('drop', (evt) => {
@@ -122,7 +122,6 @@ export default {
                 evt.stopPropagation();
                 evt.preventDefault();
             });
-            // testUpload.addEventListener('change', this.uploadChangeHandler.bind(this));
         });
     },
     computed: {
@@ -135,9 +134,6 @@ export default {
     },
     methods: {
         uploadChangeHandler(inputFiles) {
-            // let files = Array.from(e.target.files).filter((file) => {
-            //     return /(.xml)$/.test(file.name);
-            // });
             let files = Array.from(inputFiles).filter((file) => {
                 return /(.xml)$/.test(file.name);
             });

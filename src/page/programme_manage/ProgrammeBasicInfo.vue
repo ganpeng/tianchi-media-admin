@@ -5,7 +5,7 @@
             <div class="poster-section programme">
                 <div class="visible-wrapper">
                     <span :class="['visible', programme.visible ? 'is-visible' : 'dis-visible']">
-                        {{programme.visible ? '已上架' : '已下架'}}
+                        {{programme.visible ? '上架' : '下架'}}
                     </span>
                 </div>
                 <img :src="programme.posterImageList[0] ? programme.posterImageList[0].uri : ''" alt="" width="200" height="200">
