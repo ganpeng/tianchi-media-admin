@@ -71,8 +71,7 @@
                             <el-button
                                 class="btn-style-one"
                                 @click="clearSearchFields"
-                                type="primary"
-                                plain>
+                                type="primary">
                                 <svg-icon icon-class="reset"></svg-icon>
                                 重置
                             </el-button>
@@ -140,6 +139,7 @@
                         </el-form-item>
                         <el-form-item label="时间">
                             <el-date-picker
+                                prefix-icon="0"
                                 :value="searchFields.dateRange"
                                 type="daterange"
                                 @input="inputHandler($event, 'dateRange')"
@@ -220,6 +220,39 @@
                     </div>
                 </div>
                 <video-table ref="videoTable" :shareSiteOptions="shareSiteOptions"></video-table>
+                <div class="text-left table-dropdow-box">
+                    <el-dropdown
+                        trigger="click"
+                        class="my-dropdown">
+                            <span class="el-dropdown-link">
+                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>
+                                <span @click="retrySelectedVideoHandler">批量重试</span>
+                            </el-dropdown-item>
+                            <el-dropdown-item>
+                                <span @click="exportSelectedVideoHandler">批量导出</span>
+                            </el-dropdown-item>
+                            <el-dropdown-item>
+                                <span @click="deleteVideoList">批量删除</span>
+                            </el-dropdown-item>
+                            <el-dropdown-item>
+                                <span @click="downloadSelectedTsVideo">批量下载</span>
+                            </el-dropdown-item>
+                            <!--共享设置（主站）-->
+                            <el-dropdown-item
+                                v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable">
+                                <span @click="setShareSite">共享设置</span>
+                            </el-dropdown-item>
+                            <!--上传主站（子站）-->
+                            <el-dropdown-item
+                                v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable">
+                                <span @click="batchPushToMaster">上传主站</span>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
             </div>
         </div>
         <el-dialog
@@ -739,4 +772,5 @@
             }
         }
     }
+
 </style>

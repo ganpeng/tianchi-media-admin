@@ -1,5 +1,5 @@
 <template>
-    <el-container id="container">
+    <el-container id="login-container">
         <el-main>
             <div class="form-box" @keyup.enter="submitForm">
                 <h3>登录</h3>
@@ -40,6 +40,10 @@
         <svg-icon
             icon-class="login_bg"
             class-name="login-bg">
+        </svg-icon>
+        <svg-icon
+            icon-class="login_footer_info"
+            class-name="login-footer-info">
         </svg-icon>
     </el-container>
 </template>
@@ -150,11 +154,6 @@
         border-radius: 10px;
     }
 
-    .site-name {
-        padding: 0px;
-        cursor: auto;
-    }
-
     .el-main {
         position: relative;
         min-width: 800px;
@@ -173,7 +172,7 @@
             width: 420px;
             height: 420px;
             background: rgba(41, 53, 80, 0.98);
-            border: 0 solid #637497;
+            border: 1px solid #637497;
             box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
             border-radius: 8px;
             z-index: 400;
@@ -181,19 +180,16 @@
         .el-form {
             margin: 0px 50px;
             input {
-                padding-left: 130px;
-            }
-            input {
                 background-color: transparent;
             }
             .svg-icon-personal_center {
-                height: 20px !important;
-                width: 20px !important;
+                height: 30px !important;
+                width: 30px !important;
             }
             .svg-icon-password {
-                margin-left: 5px;
-                height: 20px !important;
-                width: 10px !important;
+                margin-left: 7px;
+                height: 30px !important;
+                width: 15px !important;
             }
             .login-box {
                 margin-top: 40px;
@@ -232,4 +228,24 @@
         width: 100% !important;
         z-index: 200;
     }
+
+    .login-footer-info {
+        position: absolute;
+        right: 21px;
+        bottom: 18px;
+        z-index: 400;
+        width: 275px !important;
+        height: 127px !important;
+    }
+
+</style>
+
+<style lang="scss">
+
+    #login-container {
+        .el-input__inner {
+            padding-left: 50px !important;
+        }
+    }
+
 </style>

@@ -15,9 +15,8 @@
                     <el-button
                         class="btn-style-one"
                         @click="getSubjectList"
-                        icon="el-icon-search"
-                        type="primary"
-                        plain>
+                        type="primary">
+                        <svg-icon icon-class="search"></svg-icon>
                         搜索
                     </el-button>
                 </el-form-item>
@@ -67,8 +66,7 @@
                     <el-button
                         class="btn-style-one"
                         @click="clearFilters"
-                        type="primary"
-                        plain>
+                        type="primary">
                         <svg-icon icon-class="reset"></svg-icon>
                         重置
                     </el-button>
@@ -88,6 +86,7 @@
             <el-form :inline="true" class="more-filter-box filter-form" v-if="moreFilters">
                 <el-form-item label="开始时间">
                     <el-date-picker
+                        prefix-icon="0"
                         v-model="createRangeTime"
                         type="daterange"
                         @change="getSubjectList"

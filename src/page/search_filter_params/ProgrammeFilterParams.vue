@@ -14,9 +14,8 @@
                 <el-button
                     class="btn-style-one"
                     @click="getProgrammeList"
-                    icon="el-icon-search"
-                    type="primary"
-                    plain>
+                    type="primary">
+                    <svg-icon icon-class="search"></svg-icon>
                     搜索
                 </el-button>
             </el-form-item>
@@ -59,8 +58,7 @@
                 <el-button
                     class="btn-style-one"
                     @click="clearFilters"
-                    type="primary"
-                    plain>
+                    type="primary">
                     <svg-icon icon-class="reset"></svg-icon>
                     重置
                 </el-button>
@@ -69,6 +67,7 @@
         <el-form :inline="true">
             <el-form-item label="上映开始时间">
                 <el-date-picker
+                    prefix-icon="0"
                     v-model="listQueryParams.releaseAtStart"
                     type="year"
                     clearable
@@ -77,6 +76,7 @@
             </el-form-item>
             <el-form-item label="上映结束时间">
                 <el-date-picker
+                    prefix-icon="0"
                     v-model="listQueryParams.releaseAtEnd"
                     type="year"
                     clearable

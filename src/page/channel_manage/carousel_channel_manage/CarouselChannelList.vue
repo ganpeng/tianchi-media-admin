@@ -61,6 +61,23 @@
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="total">
             </el-pagination>
+            <div class="text-left table-dropdow-box">
+                <el-dropdown
+                    trigger="hover"
+                    class="my-dropdown">
+                    <span class="el-dropdown-link">
+                        批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>
+                            <span @click="batchSetStatus(true)">批量恢复</span>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <span @click="batchSetStatus(false)">批量禁播</span>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </div>
         </div>
     </div>
 </template>
@@ -156,7 +173,6 @@
 <style lang="scss" scoped>
 
     .el-pagination {
-        margin-bottom: 126px;
         margin-top: 10px;
     }
 
