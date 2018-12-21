@@ -17,7 +17,7 @@
                 :loading="loading"
                 type="primary"
                 plain
-                class="btn-style-two"
+                class="btn-style-six"
                 @click="handleUpload">
                 <svg-icon icon-class="file"></svg-icon>
                 选择文件
@@ -179,6 +179,14 @@
         .operate {
             width: 240px;
             text-align: center;
+            .el-button {
+                padding: 0px 17px;
+            }
+            .svg-icon {
+                height: 18px !important;
+                width: 18px !important;
+                margin-right: 15px;
+            }
         }
     }
 

@@ -2,7 +2,7 @@
 <template>
     <div class="channel-search-container">
         <div @keyup.enter="getChannelList" class="filters-container">
-            <el-form :inline="true" class="text-left">
+            <el-form :inline="true" class="text-left filter-form">
                 <el-form-item>
                     <el-input
                         v-model="listQueryParams.keyword"
@@ -121,15 +121,12 @@
         padding-bottom: 20px;
         border-bottom: 1px solid #252D3F;
         .filters-container {
-            padding-left: 20px;
-            padding-top: 24px;
             background: #2A3040;
             border-radius: 8px;
         }
-    }
-
-    .svg-icon {
-        margin-right: 10px;
+        .svg-icon {
+            margin-right: 10px;
+        }
     }
 
 </style>

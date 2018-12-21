@@ -1,7 +1,7 @@
 <!--导入excel统一新建频道组件-->
 <template>
     <div class="import-page-container">
-        <div class="container">
+        <div id="container">
             <!--左侧-->
             <div class="left-container">
                 <!--上传状态-->
@@ -25,7 +25,6 @@
                 <div class="main-info">
                     <div class="list-none" v-if="channelList.length === 0">
                         <img src="../../../assets/img/empty_upload.png">
-                        <label>暂无上传中的文件</label>
                     </div>
                     <template v-else>
                         <div class="info-header">已选文件</div>
@@ -63,7 +62,13 @@
                                 class="btn-style-two">
                                 保存
                             </el-button>
-                            <el-button @click="toChannelList" class="btn-style-three">返回列表</el-button>
+                            <el-button
+                                @click="toChannelList"
+                                type="primary"
+                                plain
+                                class="btn-style-three">
+                                返回列表
+                            </el-button>
                         </div>
                     </template>
                 </div>
@@ -433,12 +438,18 @@
 
     .import-page-container {
         background: #1A2233;
-        height: 100%;
+        min-height: 100%;
+        #container {
+            height: 100%;
+        }
     }
 
     .left-container {
+        position: relative;
         padding-top: 80px;
+        padding-bottom: 80px;
         margin-right: 300px;
+        height: 100%;
         .upload-status {
             padding-left: 300px;
             position: fixed;
@@ -475,16 +486,29 @@
             }
         }
         .main-info {
+            position: relative;
+            height: 100%;
             padding: 0px 20px;
             background: #1A2233;
             .list-none {
+                position: absolute;
+                left: 0px;
+                right: 0px;
+                bottom: 0px;
+                top: 0px;
+                margin: auto;
                 font-size: 24px;
                 color: #293550;
                 text-align: center;
                 img {
                     display: block;
                     width: 368px;
-                    margin: 200px auto 20px auto;
+                    position: absolute;
+                    left: 0px;
+                    right: 0px;
+                    bottom: 0px;
+                    top: 0px;
+                    margin: auto;
                 }
             }
             .info-header {
@@ -530,6 +554,9 @@
     .operate-item {
         margin-top: 200px;
         padding-bottom: 70px;
+        .el-button:last-child {
+            margin-left: 40px;
+        }
     }
 
 </style>
