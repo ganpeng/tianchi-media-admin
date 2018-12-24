@@ -1,7 +1,9 @@
 <template>
     <div class="movie-fixed-module-container">
         <div v-if="!isEdit" class="btn-field text-right">
-            <el-button @click="editFixedModuleHandler" class="btn-style-two">编辑</el-button>
+            <el-button @click="editFixedModuleHandler" class="btn-style-five">
+                <svg-icon icon-class="edit"></svg-icon>
+            </el-button>
         </div>
         <div class="content-field">
             <div class="top-field">
@@ -286,6 +288,8 @@ export default {
 .movie-fixed-module-container {
     margin-top: 20px;
     .btn-field {
+        display: flex;
+        justify-content: flex-end;
         margin: 40px 0 10px 0;
     }
     .content-field {

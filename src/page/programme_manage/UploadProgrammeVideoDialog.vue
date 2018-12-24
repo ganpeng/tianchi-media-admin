@@ -43,7 +43,7 @@
                 </div>
             </div>
         </el-dialog>
-        <el-form :model="video" :rules="uploadVideoRules" ref="uploadVideoForm" class="form-block" label-width="100px">
+        <el-form :model="video" :rules="uploadVideoRules" ref="uploadVideoForm" class="form-block my-form" label-width="100px">
             <el-form-item v-if="!readonly" label="选择视频">
                 <el-button class="btn-style-two" type="primary" @click="selectVideo">选择</el-button>
             </el-form-item>
@@ -58,9 +58,10 @@
             </el-form-item>
             <el-form-item label="视频清晰度">
                 <div class="my-tags">
-                    <el-tag class="tag" type="info">HD_480</el-tag>
-                    <el-tag class="tag" type="info">HD_720</el-tag>
-                    <el-tag class="tag" type="info">HD_1080</el-tag>
+                    <el-tag v-if="video.m3u8For480P" class="tag" type="info">HD_480</el-tag>
+                    <el-tag v-if="video.m3u8For720P" class="tag" type="info">HD_720</el-tag>
+                    <el-tag v-if="video.m3u8For1080P" class="tag" type="info">HD_1080</el-tag>
+                    <el-tag v-if="video.m3u8For4K" class="tag" type="info">HD_4K</el-tag>
                 </div>
             </el-form-item>
             <el-form-item

@@ -217,7 +217,7 @@
 
             .nav-list {
                 line-height: $headerHeight;
-                padding-left: 50px;
+                padding-left: 60px;
                 /*设置站点管理和配置中心的隐藏和展示*/
                 &.is-center-site {
                     li:last-child {
@@ -237,7 +237,9 @@
                 }
                 .nav-item {
                     float: left;
-                    padding: 0 12px;
+                    min-width: 110px;
+                    text-align: center;
+                    // padding: 0 12px;
                     cursor: pointer;
                     font-size: 20px;
                     color: $navText;
@@ -246,7 +248,7 @@
                     }
                     &.active {
                         color: #fff;
-                        background: $mainColor;
+                        background: #0062C4;
                     }
                 }
             }
@@ -289,7 +291,7 @@
                 }
                 &.active {
                     label {
-                        background: $mainColor;
+                        background: #0062C4;
                         color: #fff;
                     }
                 }
@@ -356,10 +358,19 @@
 
     .aside-list {
         .el-menu-item {
+            height: 50px;
+            line-height: 50px;
             font-size: 20px;
             color: $navText;
+            padding-left: 30px!important;
+            text-align: left;
+            border-left: 4px solid transparent;
             .svg-icon {
                 fill: $navText;
+                margin-right: 20px;
+            }
+            &:hover {
+                background: #0A1730 !important;
             }
             &.is-active {
                 background: #0A1730 !important;

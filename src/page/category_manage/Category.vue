@@ -32,7 +32,7 @@
                     <div class="right-content">
                         <h3 class="content-sub-title">类型</h3>
                         <div class="seperator-line"></div>
-                        <div class="my-tags">
+                        <div class="my-tags big">
                             <draggable v-model="activeProgrammeCategoryList">
                                 <el-tag
                                     :key="index"
@@ -141,7 +141,7 @@
                                 <div class="form-item">
                                     <label class="label" for="">地区</label>
                                     <div class="form-item-field">
-                                        <div class="my-tags">
+                                        <div class="my-tags big">
                                             <el-tag
                                                 :key="index"
                                                 v-for="(area, index) in areaLabel(categoryGroup.produceAreaList)"
@@ -165,7 +165,7 @@
                 <div v-if="activeTabIndex === 1" class="live-channel-content">
                     <h3 class="content-sub-title">类型</h3>
                     <div class="seperator-line"></div>
-                    <div class="my-tags">
+                    <div class="my-tags big">
                         <draggable v-model="liveChannelCategoryList">
                             <el-tag
                                 :key="index"
@@ -192,7 +192,7 @@
                 <div v-if="activeTabIndex === 2" class="carousel-channel-content">
                     <h3 class="content-sub-title">类型</h3>
                     <div class="seperator-line"></div>
-                    <div class="my-tags">
+                    <div class="my-tags big">
                         <draggable v-model="carouselChannelCategoryList">
                             <el-tag
                                 :key="index"

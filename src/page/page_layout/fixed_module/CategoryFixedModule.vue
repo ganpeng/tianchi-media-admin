@@ -1,7 +1,9 @@
 <template>
     <div class="category-fixed-module">
         <div v-if="!isEdit" class="btn-field text-right">
-            <el-button @click="editFixedModuleHandler" class="btn-style-two">编辑</el-button>
+            <el-button @click="editFixedModuleHandler" class="btn-style-five">
+                <svg-icon icon-class="edit"></svg-icon>
+            </el-button>
         </div>
         <div class="content-field">
             <div class="top-field">
@@ -164,6 +166,8 @@ export default {
     margin-top: 20px;
     .btn-field {
         margin: 40px 0 10px 0;
+        display: flex;
+        justify-content: flex-end;
     }
     .top-field {
         display: flex;

@@ -459,7 +459,7 @@
                     class="float-left btn-style-four contain-svg-icon"
                     v-if="!readonly" @click="showUploadDialog">
                     <svg-icon
-                        icon-class="video"
+                        icon-class="connect_video"
                         class-name="svg-box">
                     </svg-icon>
                     关联视频

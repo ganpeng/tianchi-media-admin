@@ -2,7 +2,9 @@
     <div class="recommend-fixed-module-container">
         <div class="module-row-one">
             <div class="btn-field text-right">
-                <el-button v-if="!isEdit" @click="editFixedModuleHandler" class="btn-style-two">编辑</el-button>
+                <el-button @click="editFixedModuleHandler" class="btn-style-five">
+                    <svg-icon icon-class="edit"></svg-icon>
+                </el-button>
             </div>
             <div class="content-field">
                 <div class="left-field-wrapper">
@@ -19,6 +21,9 @@
                                 <p class="title">当前直播频道</p>
                                 <p class="name">{{channel.name}}</p>
                             </div>
+                        </div>
+                        <div class="live">
+                            <svg-icon icon-class="live"></svg-icon>
                         </div>
                     </div>
                 </div>
@@ -279,6 +284,8 @@ export default {
 
 .recommend-fixed-module-container {
     .btn-field {
+        display: flex;
+        justify-content: flex-end;
         margin: 40px 0 10px 0;
     }
     .module-row-one {
@@ -290,6 +297,15 @@ export default {
                 .left-field {
                     @include paddingBg(56%);
                     @include btnWrapper();
+                    .live {
+                        position: absolute;
+                        bottom: 30px;
+                        right: 30px;
+                        .svg-icon {
+                            width: 120px;
+                            height: 66px;
+                        }
+                    }
                     //  频道样式
                     .channel {
                         position: absolute;
@@ -301,6 +317,7 @@ export default {
                             width: 200px;
                             height: 200px;
                             margin-right: 30px;
+                            border-radius: 8px;
                         }
                         .text-info {
                             display: flex;
@@ -308,8 +325,9 @@ export default {
                             justify-content: center;
                             .title {
                                 font-size: 16px;
+                                line-height: 22px;
                                 color: #6F7480;
-                                text-decoration: underline;
+                                border-bottom: 1px solid #6F7480;
                             }
                             .name {
                                 border: 1px solid #1989FA;
@@ -330,6 +348,7 @@ export default {
                 justify-content: space-between;
                 .right-top-field {
                     @include paddingBg(69.5538%);
+                    background-image: url('../../../assets/img/watch_history.png');
                 }
                 .right-bottom-field {
                     @include paddingBg(39.7368%);
