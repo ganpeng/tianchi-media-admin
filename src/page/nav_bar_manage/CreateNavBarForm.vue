@@ -12,10 +12,14 @@
             class="form-block fill-form">
             <el-form-item label="栏目标题类型" prop="type" class="title-type" required>
                 <el-radio-group v-model="navBarInfo.type">
-                    <el-radio :label="0">文字
-                        <el-input v-model="navBarInfo.name" placeholder="请输入栏目标题，10字以内"></el-input>
+                    <el-radio label="WORDS">文字
+                        <el-input
+                            v-model="navBarInfo.name"
+                            :readonly="navBarInfo.type === 'IMAGES' || !navBarInfo.type"
+                            placeholder="请输入栏目标题，10字以内">
+                        </el-input>
                     </el-radio>
-                    <el-radio :label="1">图片
+                    <el-radio label="IMAGES">图片
                         <div class="image-box">
                             <div class="upload-box">
                                 <div @click="uploadImage('FOCUS')">
@@ -180,7 +184,7 @@
                 this.$refs['navBarInfo'].validate((valid) => {
                     if (valid) {
                         // 清空对应的数据
-                        if (this.navBarInfo.type.toString() === '0') {
+                        if (this.navBarInfo.type.toString() === 'WORDS') {
                             this.navBarInfo.image = {};
                             this.navBarInfo.focalImage = {};
                         } else {

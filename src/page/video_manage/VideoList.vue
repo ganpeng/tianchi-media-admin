@@ -160,11 +160,13 @@
                     <div class="float-left">
                         <el-dropdown
                             trigger="click"
-                            class="my-dropdown">
+                            class="my-dropdown" :class="{'is-disabled':isDisabled}">
                             <span class="el-dropdown-link">
-                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                                批量操作
+                                <i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
-                            <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-menu
+                                slot="dropdown">
                                 <el-dropdown-item>
                                     <span @click="retrySelectedVideoHandler">批量重试</span>
                                 </el-dropdown-item>
@@ -194,7 +196,7 @@
                         <el-button
                             class="btn-style-two contain-svg-icon"
                             @click="goToVideoUploadPage">
-                            <svg-icon icon-class="add"></svg-icon>
+                            <svg-icon icon-class="import_pp"></svg-icon>
                             上传
                         </el-button>
                         <el-button
@@ -222,8 +224,8 @@
                 <video-table ref="videoTable" :shareSiteOptions="shareSiteOptions"></video-table>
                 <div class="text-left table-dropdow-box">
                     <el-dropdown
-                        trigger="click"
-                        class="my-dropdown">
+                        class="my-dropdown" :class="{'is-disabled':isDisabled}"
+                        trigger="click">
                             <span class="el-dropdown-link">
                                 批量操作<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
@@ -770,6 +772,13 @@
                 margin-top: 20px;
                 width: 80%;
             }
+        }
+    }
+
+    .el-dropdown {
+        &.is-disabled {
+            opacity: 0.3;
+            pointer-events: none;
         }
     }
 

@@ -7,13 +7,13 @@
             <div class="poster-section person">
                 <div class="visible-wrapper">
                 </div>
-                <img src="" alt="" width="200" height="200">
+                <svg-icon icon-class="person_avatar"></svg-icon>
             </div>
             <div class="info-section">
                 <div class="title-wrapper">
                     <span class="title">{{info.name ? info.name : '我'}}</span>
                     <div class="date">
-                        <span class="create-date">
+                        <span id="create-date">
                             创建于{{info.createdAt | formatDate('yyyy-MM-DD')}}
                         </span>
                     </div>
@@ -132,6 +132,16 @@
                 fill: $baseBlue;
             }
         }
+    }
+
+    #create-date {
+        height: 44px;
+        line-height: 44px;
+    }
+
+    .svg-icon-person_avatar {
+        width: 200px !important;
+        height: 200px !important;
     }
 
 </style>

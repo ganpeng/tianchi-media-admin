@@ -162,7 +162,6 @@ const actions = {
                 return result;
             }
         } catch (err) {
-            console.log(err);
         }
     },
     async getServers({commit, state}) {
@@ -179,7 +178,6 @@ const actions = {
             let res = await service.retryVideoByIdList(ids);
             return res;
         } catch (err) {
-            console.log(err);
         }
     }
 };

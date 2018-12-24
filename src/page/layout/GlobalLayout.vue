@@ -306,11 +306,11 @@
                     .svg-icon {
                         position: absolute;
                         left: 0;
-                        fill: $navText;
+                        fill: #6F7480;
                         width: 24px;
                         height: 24px;
                         &:hover {
-                            fill: $mainColor;
+                            fill: #C35757;
                         }
                     }
                 }

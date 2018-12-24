@@ -21,25 +21,25 @@
                         </el-form-item>
                         <el-form-item label="新密码" prop="newPassword" required>
                             <el-input type="password"
-                                    v-model="passwordForm.newPassword"
-                                    auto-complete="off"
-                                    placeholder="请输入6-20位新密码，必须包含数字、字母和特殊字符"
-                                    clearable>
+                                      v-model="passwordForm.newPassword"
+                                      auto-complete="off"
+                                      placeholder="请输入6-20位新密码，必须包含数字、字母和特殊字符"
+                                      clearable>
                             </el-input>
                         </el-form-item>
                         <el-form-item label="确认新密码" prop="checkPassword" required>
                             <el-input type="password"
-                                    v-model="passwordForm.checkPassword"
-                                    auto-complete="off"
-                                    placeholder="请重新输入新密码"
-                                    clearable>
+                                      v-model="passwordForm.checkPassword"
+                                      auto-complete="off"
+                                      placeholder="请重新输入新密码"
+                                      clearable>
                             </el-input>
                         </el-form-item>
                     </el-form>
                 </el-col>
             </el-row>
         </div>
-        <div class="fixed-btn-container">
+        <div class="operate-item">
             <el-button class="btn-style-two" type="primary" @click="submitForm">保存</el-button>
         </div>
     </div>
@@ -123,5 +123,15 @@
         }
     };
 </script>
+
 <style lang="scss" scoped>
+
+    .operate-item {
+        position: fixed;
+        bottom: 45px;
+        width: 100%;
+        left: 0px;
+        text-align: center;
+    }
+
 </style>

@@ -23,11 +23,10 @@
                     </i>
                 </div>
                 <p>
-                    <input
-                        v-if="item.type === 'CUSTOM'"
-                        class="my-switch switch-anim"
-                        type="checkbox"
-                        v-model="item.visible"/>
+                    <input v-if="item.type === 'CUSTOM'"
+                           class="my-switch switch-anim"
+                           type="checkbox"
+                           v-model="item.visible"/>
                 </p>
             </li>
             <li class="upload-box" @click="createNavBar">
@@ -176,12 +175,18 @@
                 height: 80px;
                 border: 1px solid #3E495E;
                 border-radius: 4px;
-                background: #252D3F;
+                background: transparent;
                 line-height: 80px;
                 cursor: pointer;
                 i {
                     font-size: 24px;
                     color: #3E495E;
+                }
+                &:hover {
+                    border-color: #1989FA;
+                    i {
+                        color: #1989FA;
+                    }
                 }
             }
             div {
@@ -195,7 +200,7 @@
                     width: 86px;
                     text-align: left;
                     font-size: 18px;
-                    color: #A8ABB3;
+                    color: #fff;
                     -webkit-box-orient: vertical;
                     overflow: hidden;
                     -ms-text-overflow: ellipsis;
@@ -211,7 +216,7 @@
                 i {
                     position: absolute;
                     top: 10px;
-                    right: 10px;
+                    right: 0px;
                     font-size: 16px;
                     color: #C0C4CC;
                     cursor: pointer;
