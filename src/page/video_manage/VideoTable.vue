@@ -8,7 +8,8 @@
             @select="selectHandler"
             @select-all="selectAllHandler"
             class="my-table-style" :data="video.list" border>
-            <el-table-column v-if="!hasRadio" type="selection" align="center"></el-table-column>
+            <el-table-column v-if="!hasRadio" type="selection" align="center">
+            </el-table-column>
             <el-table-column v-if="hasRadio" width="60px" align="center" label="选择">
                 <template slot-scope="scope">
                     <el-radio :disabled="isDisabled(scope.row.id)" :value="video.selectedVideoId" :label="scope.row.id"
@@ -16,7 +17,8 @@
                     </el-radio>
                 </template>
             </el-table-column>
-            <el-table-column prop="id" align="center" width="118" label="编号"></el-table-column>
+            <el-table-column prop="id" align="center" width="118" label="编号">
+            </el-table-column>
             <el-table-column width="420px" prop="originName" align="center" label="视频名称">
                 <template slot-scope="scope">
                     <el-tooltip effect="dark" placement="top">
@@ -327,14 +329,10 @@
                         return '转码任务分配中';
                     case 'SPLIT_TASK_ON_PROCESS':
                         return '转码任务转码中' + video.transcodeProgress + '%';
-                    case 'SPLIT_TASK_SUCCESS':
-                        return '转码任务成功';
                     case 'SUCCESS':
                         return '注入成功';
                     case 'FAILED':
                         return '注入失败';
-                    case 'PROCESSING':
-                        return '监控处理中';
                     default:
                         return video.status;
                 }

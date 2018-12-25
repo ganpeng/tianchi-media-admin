@@ -179,14 +179,6 @@
         .operate {
             width: 240px;
             text-align: center;
-            .el-button {
-                padding: 0px 17px;
-            }
-            .svg-icon {
-                height: 18px !important;
-                width: 18px !important;
-                margin-right: 15px;
-            }
         }
     }
 

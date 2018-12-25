@@ -1,16 +1,15 @@
 <!--个人中心信息设置组件-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'个人中心'},
-            {name:'编辑信息'}]">
-        </custom-breadcrumb>
+        <h2 class="content-title">编辑信息</h2>
+        <div class="seperator-line"></div>
         <div class="main-container">
-            <el-form :model="updateInfo"
-                     :rules="infoRules"
-                     ref="updateInfo"
-                     label-width="100px">
+            <el-form
+                :model="updateInfo"
+                :rules="infoRules"
+                ref="updateInfo"
+                class="form-block"
+                label-width="100px">
                 <el-form-item label="用户名" prop="name">
                     <label class="value">{{updateInfo.name}}</label>
                 </el-form-item>
@@ -38,8 +37,8 @@
                 <label>上传头像</label>
             </div>
         </div>
-        <div class="btn-box">
-            <el-button type="primary" @click="updateForm" class="page-main-btn">保存</el-button>
+        <div class="operate-block text-center">
+            <el-button type="primary" @click="updateForm" class="btn-style-two">保存</el-button>
         </div>
     </div>
 </template>
@@ -147,6 +146,7 @@
 
     .main-container {
         display: flex;
+        margin-top: 20px;
         justify-content: space-between;
         max-width: 1200px;
         align-items: center;
@@ -155,11 +155,10 @@
     .el-form {
         width: 600px;
         .el-form-item {
-            width: 400px;
             text-align: left;
             .value {
                 font-size: $normalFontSize;
-                color: #909399;
+                color: #fff;
             }
         }
     }
@@ -173,8 +172,8 @@
             cursor: pointer;
             overflow: hidden;
             &:hover {
-                border-color: #409EFF;
-                color: $baseBlue;
+                border-color: #1989FA;
+                color: #1989FA;
             }
         }
         .avatar-uploader-icon {
@@ -197,9 +196,20 @@
         }
     }
 
-    .btn-box {
-        max-width: 1200px;
-        margin: 300px 0px 80px 0px;
+    // 操作
+    .operate-block {
+        position: fixed;
+        bottom: 10px;
+        left: 0px;
+        right: 0px;
+        margin: auto;
+        width: 500px;
+        height: 80px;
+        line-height: 90px;
+        background: #293550;
+        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.20);
+        border-radius: 8px;
+        z-index: 600;
     }
 
 </style>

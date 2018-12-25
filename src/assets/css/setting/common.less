@@ -36,44 +36,17 @@
     filter: alpha(opacity=20);
 }
 
-// 大标题的样式
-.block-title {
-    padding: 30px 0 20px 20px;
-    line-height: 2;
-    text-align: left;
-    font-size: @blockTitleFontSize;
-}
-
-// 二级标题样式
-.block-vice-title {
-    text-align: left;
-    padding: 15px 20px;
-}
-
-// 页面二级模块样式
-.vice-block {
-    margin-top: 30px;
-}
-
-// 使form表单中的每个item左对齐
+// 2.0 使form表单中的每个item左对齐
 .form-block {
     text-align: left;
-    .operate {
-        text-align: center;
+    .el-input, .el-textarea, .el-select {
+        width: 300px !important;
     }
-}
-
-// 搜索框的样式
-.el-form {
-    .create-account {
-        float: right;
-    }
-    .el-tag {
-        cursor: pointer;
-        a {
-            display: block;
-            height: 100%;
-            width: 100%;
+    .el-input, .el-select {
+        height: 34px !important;
+        input {
+            height: 34px;
+            line-height: 34px;
         }
     }
 }
@@ -319,13 +292,6 @@ li {
                 color: #fbc4c4;
             }
         }
-    }
-}
-
-/** 页面表单中的尺寸样式 */
-.fill-form {
-    .el-input, .el-textarea, .el-select {
-        width: 600px;
     }
 }
 

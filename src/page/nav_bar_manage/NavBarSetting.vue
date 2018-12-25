@@ -134,7 +134,6 @@
                 color: #637497;
                 img {
                     margin-top: 5px;
-                    width: 44px;
                     height: 20px;
                 }
             }
@@ -197,7 +196,7 @@
                 /*名称或图片*/
                 label {
                     display: -webkit-box;
-                    width: 86px;
+                    width: 102px;
                     text-align: left;
                     font-size: 18px;
                     color: #fff;
@@ -208,7 +207,6 @@
                     -webkit-line-clamp: 1;
                     img {
                         margin-top: 6px;
-                        width: 44px;
                         height: 20px;
                     }
                 }

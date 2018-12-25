@@ -86,8 +86,12 @@
         </div>
         <!--频道内节目-->
         <div class="content-sub-title">频道内节目
-            <el-button @click="popAppendVideoDialogue(0)" class="contain-svg-icon btn-style-two">
-                <svg-icon icon-class="link_programme"></svg-icon>
+            <el-button
+                type="primary"
+                plain
+                class="btn-style-six"
+                @click="popAppendVideoDialogue(0)">
+                <svg-icon icon-class="video"></svg-icon>
                 关联视频
             </el-button>
         </div>

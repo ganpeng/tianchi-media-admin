@@ -160,7 +160,8 @@
                     <div class="float-left">
                         <el-dropdown
                             trigger="click"
-                            class="my-dropdown" :class="{'is-disabled':isDisabled}">
+                            class="my-dropdown"
+                            :class="{'is-disabled':isDisabled}">
                             <span class="el-dropdown-link">
                                 批量操作
                                 <i class="el-icon-arrow-down el-icon--right"></i>

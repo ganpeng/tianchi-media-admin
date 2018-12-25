@@ -10,6 +10,7 @@
                 <svg-icon icon-class="person_avatar"></svg-icon>
             </div>
             <div class="info-section">
+                <el-button type="primary" class="btn-style-two edit-btn" @click="editInfo">编辑</el-button>
                 <div class="title-wrapper">
                     <span class="title">{{info.name ? info.name : '我'}}</span>
                     <div class="date">
@@ -55,7 +56,7 @@
                     }
                 });
             },
-            toInfoSetting() {
+            editInfo() {
                 this.$router.push({name: 'InfoSetting'});
             }
         }
@@ -64,73 +65,12 @@
 
 <style lang="scss" scoped>
 
-    #info-box {
+    .info-section {
         position: relative;
-        padding: 20px;
-        margin-top: 100px;
-        width: 600px;
-        height: 300px;
-        overflow: visible;
-        .avatar-box {
+        .edit-btn {
             position: absolute;
-            left: 20px;
-            top: -40px;
-            .el-card {
-                margin-bottom: 26px;
-                width: 150px;
-                height: 150px;
-                background: $dynamicGray;
-            }
-            label {
-                font-size: $smallestFontSize;
-                color: #B8C7CE;
-            }
-        }
-        .info {
-            position: absolute;
-            left: 200px;
-            top: 50px;
-            height: 200px;
-            width: 350px;
-            overflow: hidden;
-            div:not(.box) {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                margin-bottom: 25px;
-            }
-            div.box {
-                display: flex;
-                flex-direction: row;
-                justify-content: left;
-            }
-            label {
-                text-align: left;
-                margin-bottom: 12px;
-                color: #9B9B9B;
-                font-size: $normalFontSize;
-            }
-            span {
-                text-align: left;
-                font-size: 20px;
-                color: $baseAsideColor;
-            }
-            .svg-box {
-                fill: $dynamicGray;
-            }
-        }
-        .edit-icon-box {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            height: 30px;
-            width: 30px;
-            cursor: pointer;
-            .svg-box {
-                height: 30px !important;
-                width: 30px !important;
-                fill: $baseBlue;
-            }
+            top: 60px;
+            right: 0px;
         }
     }
 

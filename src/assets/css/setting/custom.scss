@@ -272,7 +272,7 @@
     }
     //  按钮样式六
     &.btn-style-six {
-        padding: 4px 10px;
+        padding: 0px 17px;
         height: 34px;
         line-height: 26px;
         color: $btnText;
@@ -282,6 +282,9 @@
             background: $mainBtnHover;
         }
         .svg-icon {
+            height: 18px !important;
+            width: 18px !important;
+            margin-right: 15px;
             fill: $btnText;
         }
     }
