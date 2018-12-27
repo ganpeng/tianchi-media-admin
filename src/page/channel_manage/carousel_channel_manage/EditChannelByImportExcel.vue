@@ -320,11 +320,11 @@
             padding: 0px 20px;
             background: #1A2233;
             .list-none {
-                position: absolute;
+                position: fixed;
                 left: 0px;
-                right: 0px;
+                right: 300px;
                 bottom: 0px;
-                top: 0px;
+                top: 42px;
                 margin: auto;
                 font-size: 24px;
                 color: #293550;

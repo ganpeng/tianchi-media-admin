@@ -25,7 +25,6 @@
                 <div class="main-info">
                     <div class="list-none" v-if="channelList.length === 0">
                         <img src="../../assets/img/empty_upload.png">
-                        <label>暂无上传中的文件</label>
                     </div>
                     <template v-else>
                         <div class="info-header">已选文件</div>
@@ -370,13 +369,24 @@
             padding: 0px 20px;
             background: #1A2233;
             .list-none {
+                position: fixed;
+                left: 0px;
+                right: 300px;
+                bottom: 0px;
+                top: 42px;
+                margin: auto;
                 font-size: 24px;
                 color: #293550;
                 text-align: center;
                 img {
                     display: block;
                     width: 368px;
-                    margin: 200px auto 20px auto;
+                    position: absolute;
+                    left: 0px;
+                    right: 0px;
+                    bottom: 0px;
+                    top: 0px;
+                    margin: auto;
                 }
             }
             .info-header {
@@ -422,5 +432,8 @@
     .operate-item {
         margin-top: 200px;
         padding-bottom: 70px;
+        .el-button:last-child {
+            margin-left: 40px;
+        }
     }
 </style>

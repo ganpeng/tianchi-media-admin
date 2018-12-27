@@ -86,9 +86,9 @@
                 </el-radio-group>
             </el-form-item>
         </el-form>
-        <div class="operate-block">
-            <el-button type="primary" class="btn-style-two" @click="createNavBar">保存</el-button>
-            <el-button type="primary" plain class="btn-style-three" @click="toNavBarSetting">返回</el-button>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-two" type="primary" @click="createNavBar">保存</el-button>
+            <el-button class="btn-style-three" @click="toNavBarSetting" plain>返回</el-button>
         </div>
     </div>
 </template>
@@ -105,11 +105,11 @@
             let checkType = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('请选择栏目标题类型'));
-                } else if (value === 0 && this.$util.isEmpty(this.navBarInfo.name)) {
+                } else if (value === 'WORDS' && this.$util.isEmpty(this.navBarInfo.name)) {
                     return callback(new Error('请选择填写栏目名称'));
-                } else if (value === 0 && this.navBarInfo.name.length > 10) {
+                } else if (value === 'WORDS' && this.navBarInfo.name.length > 10) {
                     return callback(new Error('栏目名称应在10字以内'));
-                } else if (value === 1 && !(this.navBarInfo.focalImage.uri && this.navBarInfo.image.uri)) {
+                } else if (value === 'IMAGES' && !(this.navBarInfo.focalImage.uri && this.navBarInfo.image.uri)) {
                     return callback(new Error('请上传对应的图片'));
                 } else {
                     callback();
@@ -151,6 +151,7 @@
         },
         methods: {
             init() {
+                this.$util.toggleFixedBtnContainer();
                 this.$service.getProgrammeCategory().then(response => {
                     if (response && response.code === 0) {
                         this.programmeCategoryListOptions = response.data;

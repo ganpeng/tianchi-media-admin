@@ -65,9 +65,9 @@
         padding: 6px;
         font-size: 16px;
         cursor: pointer;
-        color: #fff;
+        color: #C35757;
         &:hover {
-            color: $baseRed;
+            color: #D0021B;
         }
     }
 

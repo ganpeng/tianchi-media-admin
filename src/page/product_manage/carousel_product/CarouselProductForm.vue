@@ -138,9 +138,9 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="operate-block text-center">
-            <el-button type="primary" @click="operateProduct" class="btn-style-two">保存</el-button>
-            <el-button type="primary" plain @click="toProductList" class="btn-style-three">返回列表</el-button>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-two" type="primary" @click="operateProduct">保存</el-button>
+            <el-button class="btn-style-three" @click="toProductList" plain>返回列表</el-button>
         </div>
     </div>
 </template>
@@ -212,6 +212,7 @@
         methods: {
             // 初始化数据
             init() {
+                this.$util.toggleFixedBtnContainer();
                 if (this.status === 'CREATE_PRODUCT') {
                     this.$nextTick(function () {
                         this.$refs.selectMultipleChannel.init();
@@ -301,25 +302,6 @@
 
     .select-line {
         margin-top: 30px;
-    }
-
-    // 操作
-    .operate-block {
-        position: fixed;
-        bottom: 10px;
-        left: 0px;
-        right: 0px;
-        margin: auto;
-        width: 500px;
-        height: 80px;
-        line-height: 90px;
-        background: #293550;
-        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.20);
-        border-radius: 8px;
-        z-index: 600;
-        .el-button:last-child {
-            margin-left: 40px;
-        }
     }
 
     .product-category {

@@ -145,7 +145,7 @@
     .site-name {
         display: inline-block;
         margin-bottom: 35px;
-        padding: 5px 14px;
+        padding: 5px 12px;
         font-size: 20px;
         color: #637497;
         text-align: center;
@@ -172,7 +172,7 @@
             width: 420px;
             height: 420px;
             background: rgba(41, 53, 80, 0.98);
-            border: 1px solid #637497;
+            border: 0.5px solid #637497;
             box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
             border-radius: 8px;
             z-index: 400;
@@ -197,6 +197,8 @@
                     width: 100%;
                     height: 40px;
                     font-size: $normalFontSize;
+                    background: #0062C4;
+                    border: none;
                 }
             }
             .el-checkbox {

@@ -383,9 +383,9 @@
             :displayVideoDialogVisible="previewVideoInfo.visible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
-        <div class="operate-block">
-            <el-button type="primary" @click="saveChannelInfo" class="btn-style-two">保存</el-button>
-            <el-button type="primary" plain @click="toChannelList" class="btn-style-three">返回列表</el-button>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-two" type="primary" @click="saveChannelInfo">保存</el-button>
+            <el-button class="btn-style-three" @click="toChannelList" plain>返回列表</el-button>
         </div>
         <el-dialog
             title="选择相应的视频"
@@ -697,6 +697,7 @@
                 });
             },
             init() {
+                this.$util.toggleFixedBtnContainer();
                 this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
                     if (response && response.code === 0) {
                         this.typeOptions = response.data;

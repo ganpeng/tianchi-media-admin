@@ -96,9 +96,9 @@
                 :programmeList="subjectInfo.subjectItemList">
             </programme-operate-table>
         </el-form>
-        <div class="operate-block">
-            <el-button type="primary" @click="operateSubject" class="btn-style-two">保存</el-button>
-            <el-button type="primary" plain @click="toSubjectList" class="btn-style-three">返回列表</el-button>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-two" type="primary" @click="operateSubject">保存</el-button>
+            <el-button class="btn-style-three" @click="toSubjectList" plain>返回列表</el-button>
         </div>
         <el-dialog
             title="关联节目"
@@ -243,6 +243,7 @@
         },
         methods: {
             init() {
+                this.$util.toggleFixedBtnContainer();
                 // 初始化专题标签列表
                 this.$service.getSubjectTagList().then(response => {
                     if (response) {
@@ -425,25 +426,6 @@
             width: 20px !important;
             height: 20px !important;
             fill: #1989FA;
-        }
-    }
-
-    // 操作
-    .operate-block {
-        position: fixed;
-        bottom: 10px;
-        left: 0px;
-        right: 0px;
-        margin: auto;
-        width: 500px;
-        height: 80px;
-        line-height: 90px;
-        background: #293550;
-        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.20);
-        border-radius: 8px;
-        z-index: 600;
-        .el-button:last-child {
-            margin-left: 40px;
         }
     }
 

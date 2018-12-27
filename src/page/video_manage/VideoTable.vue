@@ -327,6 +327,8 @@
                         return '转码任务排队中';
                     case 'SPLIT_TASK_ON_PENDING':
                         return '转码任务分配中';
+                    case 'SPLIT_TASK_SUCCESS':
+                        return '切片正在入库';
                     case 'SPLIT_TASK_ON_PROCESS':
                         return '转码任务转码中' + video.transcodeProgress + '%';
                     case 'SUCCESS':

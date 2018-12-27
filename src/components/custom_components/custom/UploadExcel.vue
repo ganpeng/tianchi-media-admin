@@ -167,10 +167,11 @@
             margin-bottom: 50px;
             height: 240px;
             width: 240px;
-            line-height: 240px;
+            line-height: 260px;
             border: 1px solid #3E495E;
             border-radius: 8px;
             i {
+                display: inline;
                 font-size: 50px;
                 color: #3E495E;
             }
