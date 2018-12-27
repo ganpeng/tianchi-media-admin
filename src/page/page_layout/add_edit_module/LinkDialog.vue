@@ -45,7 +45,7 @@
                 </div>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
                     <el-button @click="closeDialog">取 消</el-button>
-                    <el-button type="primary" @click="enterSuccessHandler">确 定</el-button>
+                    <el-button type="primary" class="btn-style-two" @click="enterSuccessHandler">确 定</el-button>
                 </div>
             </div>
         </el-dialog>

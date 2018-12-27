@@ -2,6 +2,7 @@ import store from 'store';
 import 'babel-polyfill';
 import _ from 'lodash';
 import service from '../service/index';
+import vuexStore from '../store/index';
 
 /**
         LT_R_1, // 右上角推荐位
@@ -142,6 +143,28 @@ function initLayoutItemByLayoutItemType({layoutTemplate, navBarId, navBarName}) 
     }
 }
 
+export async function initNavbarLayout(navbarId) {
+    //  初始化页面布局的本地存储数据结构
+    try {
+        let navbarListRes = await service.getNavbarList();
+        if (navbarListRes && navbarListRes.code === 0) {
+            let navbarList = navbarListRes.data;
+            let navbar = navbarList.find((navbar) => navbar.id === navbarId);
+            let index = navbarList.findIndex((navbar) => navbar.id === navbarId);
+            if (index >= 0) {
+                let data = initLayoutItemByLayoutItemType({
+                    layoutTemplate: navbar.layoutTemplate,
+                    navBarId: navbar.id,
+                    navBarName: navbar.name
+                });
+                vuexStore.commit('pageLayout/setLayoutItemByNavbar', {navbar, index, data});
+            }
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 export default async function init() {
     //  初始化页面布局的本地存储数据结构
     try {
@@ -170,6 +193,7 @@ export default async function init() {
                         return res;
                     }, {});
                     store.set('layoutStore', layout);
+                    vuexStore.commit('pageLayout/updateLayout');
                 }
             }
         }

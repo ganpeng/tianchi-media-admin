@@ -452,7 +452,7 @@
             <h4 class="content-sub-title">
                 节目视频
                 <span class="count"></span>
-                <span class="count">1个正片</span>
+                <span class="count">{{programme.featureVideoCount}}个正片</span>
             </h4>
             <div class="preview-sort clearfix">
                 <el-button
@@ -555,6 +555,7 @@
                         this.customMarkOptions = res.data;
                     }
                 });
+            this.$util.toggleFixedBtnContainer();
         },
         data() {
             return {

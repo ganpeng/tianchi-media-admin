@@ -263,8 +263,10 @@ let util = {
         if (fixedBtnContainer) {
             if (isBottom) {
                 fixedBtnContainer.style.background = 'transparent';
+                fixedBtnContainer.style.boxShadow = 'none';
             } else {
                 fixedBtnContainer.style.background = '#293550';
+                fixedBtnContainer.style.boxShadow = 'none';
             }
         }
     },

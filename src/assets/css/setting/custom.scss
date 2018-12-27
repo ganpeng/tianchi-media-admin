@@ -106,6 +106,54 @@
     }
 }
 
+.el-dialog {
+    .el-table {
+        &.my-table-style {
+            .el-table__header {
+                height: 60px;
+                tr, th {
+                    background: #212A3E;
+                }
+                th {
+                    border: 1px solid #3E495E;
+                    .cell {
+                        font-size: 18px;
+                        color: #909399;
+                    }
+                }
+            }
+            .el-table__body {
+                tr {
+                    background: #191D26;
+                    &:hover {
+                        background: #2A3040;
+                    }
+                }
+                td {
+                    font-size: 14px;
+                    color: #909399;
+                    border: 1px solid #343d4f;
+                    span.name {
+                        &:hover {
+                            color: $mainColor;
+                            text-decoration: underline;
+                            cursor: pointer;
+                        }
+                    }
+                    .el-radio__inner::after {
+                        background-color: #191D26;
+                    }
+                }
+                img {
+                    border: 1px solid #3E495E;
+                    border-radius: 8px;
+                }
+            }
+        }
+    }
+}
+
+
 //  表格上面的文字描述
 .table-title {
     font-size: 18px;
@@ -321,6 +369,10 @@
             background-color: $mainBtnHover;
         }
     }
+    &.disabled {
+        cursor: not-allowed;
+        opacity: 0.3;
+    }
 }
 
 //  自定义form表单的样式
@@ -384,9 +436,11 @@
 
 //  弹出框的小箭头的样式重写
 .el-popper[x-placement^=bottom] .popper__arrow {
+    display: none;
     border-bottom-color: rgba(65,74,93,0.90);
 }
 .el-popper[x-placement^=bottom] .popper__arrow::after {
+    display: none;
     border-bottom-color: rgba(65,74,93,0.90);
 }
 
@@ -480,9 +534,10 @@
 //  下拉选择框样式重写
 .el-select-dropdown.el-popper {
     background: rgba(65,74,93,0.90);
-    border: 0 solid #637497;
+    border: 1px solid #637497;
     box-shadow: 2px 4px 10px 0 rgba(0,0,0,0.30);
     border-radius: 4px 0px 0px 0px 4px 4px 4px;
+    overflow: hidden;
     .el-select-dropdown__wrap.el-scrollbar__wrap {
         border: none;
         border-radius: 4px 0px 0px 0px 4px 4px 4px;
@@ -541,7 +596,7 @@
     .field-row {
         display: flex;
         align-items: center;
-        padding: 20px 10px;
+        padding: 23px 10px;
         &:first-child {
             border-top-left-radius: 8px;
             border-top-right-radius: 8px;
@@ -626,10 +681,11 @@
 }
 
 .el-dropdown-menu.el-popper {
-    border: 0 solid #637497;
+    border: 1px solid #637497;
     background: rgba(65,74,93,0.90);
     box-shadow: 2px 4px 10px 0 rgba(0,0,0,0.30);
     border-radius: 4px 0px 0px 0px 4px 4px 4px;
+    overflow: hidden;
     li {
         color: #D8D8D8;
         font-size: 12px;
@@ -836,6 +892,7 @@
                 background: #2A3040;
                 border: 1px solid #3E495E;
                 border-radius: 8px;
+                box-shadow: 0 0 10px #000;
             }
         }
     }
@@ -888,10 +945,11 @@
                 border-radius: 4px;
                 font-size: 12px;
                 color: #fff;
-                padding: 3px 6px;
+                height: 20px;
+                line-height: 20px;
+                padding: 0px 6px;
                 border-radius: 4px;
-                margin-right: 6px;
-                transform: scale(0.8);
+                margin-right: 10px;
             }
             .address-tag {
                 background: #8AA4AF;
@@ -984,7 +1042,8 @@
         }
         .el-tag__close.el-icon-close {
             color: #2A3040;
-            background: #C0C4CC;
+            background: #6F7480;
+            // background: #C0C4CC;
             &:hover {
                 background: $dangerColor;
             }
@@ -1160,6 +1219,9 @@
             .el-button {
                 width: 100px;
                 height: 40px;
+                span {
+                    font-weight: 400;
+                }
                 &.el-button--default {
                     color: $dangerColor;
                 }
@@ -1387,6 +1449,12 @@
     }
     .el-textarea {
         width: 300px;
+    }
+    .el-form-item__content {
+        line-height: 34px;
+    }
+    .el-input--prefix .el-input__inner {
+        padding-left: 15px;
     }
 }
 

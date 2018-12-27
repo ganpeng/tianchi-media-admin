@@ -77,7 +77,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-            layout: 'pageLayout/layout'
+            // layout: 'pageLayout/layout'
         })
     },
     methods: {

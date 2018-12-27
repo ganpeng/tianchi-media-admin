@@ -202,6 +202,11 @@
     .score {
         margin-left: 10px;
     }
+    .total-sets {
+        margin-left: 20px;
+        font-size: 16px;
+        color: #A8ABB3;
+    }
 }
 .other-info {
     margin-left: 20px;

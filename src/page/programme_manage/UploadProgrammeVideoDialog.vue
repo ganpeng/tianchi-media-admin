@@ -158,14 +158,18 @@
             </el-form-item>
             <el-form-item label="是否付费" prop="free">
                 <span v-if="readonly">{{video.free ? '是' : '否'}}</span>
-                <el-radio-group
+                <span v-else>
+                    <el-radio @input="inputHandler(true, 'free')" :value="video.free" :label="true">是</el-radio>
+                    <el-radio @input="inputHandler(false, 'free')" :value="video.free" :label="false">否</el-radio>
+                </span>
+                <!-- <el-radio-group
                     v-else
                     :value="video.free"
                     @input="inputHandler($event, 'free')"
                 >
                     <el-radio :label="true">是</el-radio>
                     <el-radio :label="false">否</el-radio>
-                </el-radio-group>
+                </el-radio-group> -->
             </el-form-item>
             <el-form-item label="视频封面图">
                 <single-image-uploader

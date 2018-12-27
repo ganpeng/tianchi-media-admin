@@ -7,7 +7,7 @@
             width="80%"
             :visible.sync="dialogVisible"
             :show-close="true"
-            :before-close="closeDialog"
+            :before-close="cancelHanlder"
             @open="dialogOpenHandler"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
@@ -268,11 +268,11 @@
                     <el-button @click="cancelHanlder">取 消</el-button>
                     <el-button v-show="active > 0" class="btn-style-three prev-btn" @click="prevBtnClickHandler">上一步</el-button>
                     <el-button v-show="active < 2" class="btn-style-three next-btn" @click="nextBtnClickHandler">下一步</el-button>
-                    <el-button v-show="active === 2" type="primary" @click="enterHandler">确 定</el-button>
+                    <el-button v-show="active === 2" type="primary" class="btn-style-two" @click="enterHandler">确 定</el-button>
                 </div>
             </div>
         </el-dialog>
-        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
+        <preview-single-image :singleImage="previewImage"></preview-single-image>
     </div>
 </template>
 <script>

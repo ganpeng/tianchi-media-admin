@@ -105,7 +105,7 @@ const defaultState = {
     navbarList: [],
     //  每个栏目的布局
     pageLayoutList: [],
-    layout: store.get('layoutStore'),
+    layout: store.get('layoutStore') || {},
     personModule: _.cloneDeep(defaultPersonModule),
     personSubjectModule: _.cloneDeep(defaultPersonSubjectModule),
     //  获取列表的相应接口
@@ -228,6 +228,19 @@ const mutations = {
         state.pageLayoutList = pageLayoutList;
     },
     //  layout相关的操作开始, 重新定义的增删改查方法开始
+    setLayoutItemByNavbar(state, payload) {
+        let {navbar, data, index} = payload;
+        let obj = {
+            changed: false,
+            data,
+            id: navbar.id,
+            index,
+            layoutTemplate: navbar.layoutTemplate,
+            name: navbar.name,
+            signCode: navbar.signCode
+        };
+        _.set(state.layout, `${navbar.id}`, _.cloneDeep(obj));
+    },
     updateLayoutItemByIndex(state, payload) {
         let {index, navbarId, squareIndex, key, value} = payload;
         _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.${key}`, value);
@@ -276,6 +289,11 @@ const mutations = {
         if (layoutItem) {
             Object.keys(layoutItem).forEach((key) => {
                 _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.${key}`, layoutItem[key]);
+            });
+        } else {
+            let _defaultLayoutItem = _.cloneDeep(defaultLayoutItem);
+            Object.keys(_defaultLayoutItem).forEach((key) => {
+                _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.${key}`, _defaultLayoutItem[key]);
             });
         }
     },

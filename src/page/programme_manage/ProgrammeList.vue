@@ -14,7 +14,7 @@
                             placeholder="搜索你想要的信息">
                         </el-input>
                     </div>
-                    <el-button class="btn-style-one" @click="searchHandler" type="primary" plain>
+                    <el-button class="btn-style-one" @click="searchHandler">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
                     </el-button>
@@ -63,7 +63,7 @@
                             </el-option>
                         </el-select>
                     </div>
-                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
+                    <el-button class="btn-style-one" @click="clearSearchFields">
                         <svg-icon icon-class="reset"></svg-icon>
                         重置
                     </el-button>

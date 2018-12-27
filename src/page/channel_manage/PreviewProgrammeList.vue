@@ -42,7 +42,7 @@
             </el-row>
         </div>
         <div class="fixed-btn-container">
-            <el-button class="btn-style-three" @click="goBack" plain>返回列表页</el-button>
+            <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
         </div>
     </div>
 </template>

@@ -9,7 +9,7 @@
                     ref="personModuleForm"
                     label-width="120px"
                     @submit.native.prevent
-                    class="form-block">
+                    class="form-block my-form">
                 <el-col :span="8">
                     <el-form-item label="人物模块名称" prop="title" required>
                         <el-input

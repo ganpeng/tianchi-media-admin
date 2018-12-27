@@ -7,7 +7,8 @@
         </div>
         <div class="content-field">
             <div class="wrapper">
-                <div class="left-field"></div>
+                <div class="left-field">
+                </div>
             </div>
             <div class="wrapper middle-wrapper">
                 <div :style="styleBgImageStr(0)" class="middle-field">
@@ -187,12 +188,17 @@ export default {
             }
             .left-field {
                 @include paddingBg(100%);
+                border-radius: 30px;
+                background-image: url('../../../assets/img/children_history.png');
+                background-size: contain;
             }
             .middle-field {
                 @include paddingBg(63%);
+                border-radius: 30px;
             }
             .right-field {
                 @include paddingBg(100%);
+                border-radius: 30px;
             }
             .left-field,
             .middle-field,

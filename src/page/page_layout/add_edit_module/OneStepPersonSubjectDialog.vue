@@ -6,7 +6,7 @@
             width="80%"
             :visible.sync="dialogVisible"
             :show-close="true"
-            :before-close="closeDialog"
+            :before-close="cancelHanlder"
             @open="dialogOpenHandler"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
@@ -110,7 +110,7 @@
                 </div>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
                     <el-button @click="cancelHanlder">取 消</el-button>
-                    <el-button type="primary" @click="enterSuccessHandler">确 定</el-button>
+                    <el-button type="primary" class="btn-style-two" @click="enterSuccessHandler">确 定</el-button>
                 </div>
             </div>
         </el-dialog>

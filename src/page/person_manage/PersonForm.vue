@@ -47,7 +47,9 @@
                         :value="person.birthday"
                         :disabled="readonly"
                         type="date"
-                        placeholder="年/月/日"
+                        default-value="2000-1-1"
+                        placeholder="请选择出生日期"
+                        prefix-icon="''"
                         @input="inputHandler($event, 'birthday')"
                     ></el-date-picker>
                 </el-form-item>

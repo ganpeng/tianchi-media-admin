@@ -141,7 +141,7 @@
                                 <div class="form-item">
                                     <label class="label" for="">地区</label>
                                     <div class="form-item-field">
-                                        <div class="my-tags big">
+                                        <div class="my-tags">
                                             <el-tag
                                                 :key="index"
                                                 v-for="(area, index) in areaLabel(categoryGroup.produceAreaList)"
@@ -444,6 +444,7 @@ export default {
                         let res2 = await this.postProgrammeTypeGroupListById(activeProgrammeCategoryId);
                         if (res2 && res2.code === 0) {
                             this.$message.success('类型组保存成功');
+                            this.gotoBlankPage();
                         }
                     }
                 }
@@ -536,7 +537,7 @@ export default {
                 }
             } catch (err) {
                 if (err === 'cancel') {
-                    this.$message.info('已取消删除');
+                    // this.$message.info('已取消删除');
                 }
             }
         },
@@ -623,6 +624,10 @@ export default {
         selectAreaHandler(area) {
             this.categoryGroup.produceAreaList.push(area.code);
             this.categoryGroup.produceAreaList = _.uniq(this.categoryGroup.produceAreaList);
+        },
+        gotoBlankPage() {
+            let routeData = this.$router.resolve({name: 'CreateProgramme'});
+            window.open(routeData.href, '_blank');
         }
     }
 };
@@ -638,8 +643,13 @@ export default {
     margin-top: 20px;
     cursor: pointer;
     text-align: left;
+    > div {
+        display: flex;
+        flex-wrap: wrap;
+    }
     .el-tag {
         font-size: 18px;
+        margin-top: 20px;
     }
 }
 
@@ -659,7 +669,8 @@ export default {
         color: #6F7480;
         cursor: pointer;
         border-bottom: 2px solid transparent;
-        &.active {
+        &.active,
+        &:hover {
             color: #fff;
             border-bottom: 2px solid $mainColor;
         }
@@ -676,8 +687,8 @@ export default {
                 width: 120px;
                 .category-tab-item {
                     width: 120px;
-                    height: 40px;
-                    line-height: 40px;
+                    height: 50px;
+                    line-height: 50px;
                     font-size: 18px;
                     color: #6F7480;
                     cursor: pointer;
@@ -685,7 +696,8 @@ export default {
                     &:last-child {
                         border-bottom: 1px solid #252D3F;
                     }
-                    &.active {
+                    &.active,
+                    &:hover {
                         color: #fff;
                         border-bottom: 1px solid $mainColor;
                     }
@@ -752,7 +764,7 @@ export default {
                     display: inline-block;
                     background: #637497;
                     border-radius: 4px;
-                    padding: 2px 5px;
+                    padding: 4px 5px;
                     color: #fff;
                     font-size: 12px;
                     transform: scale(0.8);
@@ -765,7 +777,7 @@ export default {
                     display: inline-block;
                     background: #8AA4AF;
                     border-radius: 4px;
-                    padding: 2px 5px;
+                    padding: 4px 5px;
                     color: #fff;
                     font-size: 12px;
                     transform: scale(0.8);
@@ -777,7 +789,7 @@ export default {
                     display: inline-block;
                     background: #485777;
                     border-radius: 4px;
-                    padding: 2px 5px;
+                    padding: 4px 5px;
                     color: #fff;
                     font-size: 12px;
                     transform: scale(0.8);
@@ -796,10 +808,10 @@ export default {
             position: absolute;
             right: 10px;
             top: 5px;
-            font-size: 14px;
+            font-size: 16px;
             line-height: 20px;
             background: transparent;
-            color: #C0C4CC;
+            color: #6F7480;
             cursor: pointer;
             &:hover {
                 color: $dangerColor;
@@ -813,8 +825,8 @@ export default {
     left: 50%;
     transform: translateX(-50%);
     width: 500px;
-    background: rgba(65,74,93,0.90);
-    box-shadow: 2px 4px 10px 0;
+    background: rgba(65,74,93,1);
+    box-shadow: 2px 4px 10px 0 rgba(0,0,0,0.30);
     border-radius: 4px;
     padding-bottom: 20px;
     .header {
@@ -879,9 +891,36 @@ export default {
 </style>
 <style lang="scss">
 #category {
-    .el-input {
+    .type-input {
+        margin-top: 20px;
         input.el-input__inner {
-            border-color: #A3D0FD;
+            height: 34px;
+            line-height: 34px;
+        }
+    }
+    .add-edit-category-group-dialog {
+        .el-input {
+            input.el-input__inner {
+                height: 34px;
+                line-height: 34px;
+                border-color: #A3D0FD;
+            }
+        }
+    }
+    .el-checkbox {
+        color: #A3D0FD;
+        &.is-checked {
+            color: #A3D0FD;
+        }
+        .el-checkbox__input {
+            span.el-checkbox__inner {
+                border: 1px solid #A3D0FD;
+            }
+            &.is-checked {
+                span.el-checkbox__inner {
+                    border: 1px solid #1989FA;
+                }
+            }
         }
     }
 }

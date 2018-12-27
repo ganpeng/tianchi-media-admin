@@ -81,7 +81,7 @@
                     <el-button
                         class="btn-style-two contain-svg-icon"
                         @click="editChannelByImportExcel">
-                        <svg-icon icon-class="export"></svg-icon>
+                        <svg-icon icon-class="edit"></svg-icon>
                         修改
                     </el-button>
                     <el-button
@@ -238,6 +238,7 @@
             }),
             clearSearchFields() {
                 this.resetSearchFields();
+                this.getChannelList();
             },
             keyupHandler(e) {
                 if (e.keyCode === 13) {

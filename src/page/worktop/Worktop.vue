@@ -6,7 +6,7 @@
                 @command="gotoBlankPage"
                 class="float-right" placement="bottom">
                 <el-button class="btn-style-two contain-svg-icon">
-                    <svg-icon icon-class="add"></svg-icon>
+                    <svg-icon icon-class="import"></svg-icon>
                     批量导入
                     <svg-icon icon-class="arrow_down"></svg-icon>
                 </el-button>

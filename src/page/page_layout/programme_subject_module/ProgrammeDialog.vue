@@ -7,7 +7,7 @@
             width="80%"
             :visible.sync="dialogVisible"
             :show-close="true"
-            :before-close="closeDialog"
+            :before-close="cancelHanlder"
             @open="dialogOpenHandler"
             :close-on-click-modal="false"
             :close-on-press-escape="false"

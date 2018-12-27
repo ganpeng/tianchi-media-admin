@@ -146,7 +146,7 @@ export default {
                 border-right: 1px solid #3E495E;
             }
             .search-name {
-                color: #fff;
+                color:#6F7480;
                 flex: 1;
                 height: 32px;
                 line-height: 32px;
@@ -154,7 +154,7 @@ export default {
                 text-align: left;
             }
             .name-input {
-                color:#6F7480;
+                color: #fff;
                 height: 32px;
                 line-height: 32px;
                 text-indent: 10px;

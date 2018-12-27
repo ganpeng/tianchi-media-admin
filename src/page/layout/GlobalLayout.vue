@@ -13,7 +13,7 @@
                 <svg-icon
                     icon-class="avatar_icon">
                 </svg-icon>
-                <label>你好，{{name}}</label>
+                <label>{{name}}</label>
                 <div class="logout" @click="logout">
                     <svg-icon
                         icon-class="logout">
@@ -255,7 +255,8 @@
             .user-info {
                 position: relative;
                 align-items: center;
-                width: 154px;
+                // width: 154px;
+                width: 184px;
                 height: 60px;
                 line-height: $headerHeight;
                 margin-right: 20px;
@@ -274,7 +275,7 @@
                     top: 50%;
                     left: 0;
                     transform: translateY(-50%);
-                    width: 120px;
+                    width: 140px;
                     height: 40px;
                     line-height: 40px;
                     border-radius: 20px;
