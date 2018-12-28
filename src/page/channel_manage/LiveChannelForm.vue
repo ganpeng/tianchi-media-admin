@@ -103,8 +103,8 @@
                     ></channel-type-search>
                 </el-form-item>
                 <el-form-item label="回看" prop="record">
-                    <el-radio  @input="inputHandler(true, 'record')" :value="liveChannel.record" :label="true">是</el-radio>
-                    <el-radio  @input="inputHandler(false, 'record')" :value="liveChannel.record" :label="false">否</el-radio>
+                    <el-radio @input="inputHandler(true, 'record')" :value="liveChannel.record" :label="true">是</el-radio>
+                    <el-radio @input="inputHandler(false, 'record')" :value="liveChannel.record" :label="false">否</el-radio>
                 </el-form-item>
                 <el-form-item label="频道图片" prop="logoUri">
                     <single-image-uploader

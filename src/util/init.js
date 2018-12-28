@@ -168,10 +168,10 @@ export async function initNavbarLayout(navbarId) {
 export default async function init() {
     //  初始化页面布局的本地存储数据结构
     try {
-        if (!store.get('layoutStore')) {
-            let navbarListRes = await service.getNavbarList();
-            if (navbarListRes && navbarListRes.code === 0) {
-                let navbarList = navbarListRes.data;
+        let navbarListRes = await service.getNavbarList();
+        if (navbarListRes && navbarListRes.code === 0) {
+            let navbarList = navbarListRes.data;
+            if (!store.get('layoutStore')) {
                 let pagelayoutList = await getPagelayoutList(navbarList);
                 if (_.isArray(pagelayoutList)) {
                     let layout = navbarList.reduce((res, curr, index) => {
@@ -193,6 +193,36 @@ export default async function init() {
                         return res;
                     }, {});
                     store.set('layoutStore', layout);
+                    vuexStore.commit('pageLayout/updateLayout');
+                }
+            } else {
+                let _layout = store.get('layoutStore');
+                let _existKeys = Object.keys(_layout);
+                let _notExistNavbarList = navbarList.filter((navbar) => {
+                    let _index = _existKeys.findIndex((id) => id === navbar.id);
+                    return _index === -1;
+                });
+                let pagelayoutList = await getPagelayoutList(_notExistNavbarList);
+                if (_.isArray(pagelayoutList)) {
+                    let layout = _notExistNavbarList.reduce((res, curr, index) => {
+                        res[curr.id] = {
+                            id: curr.id,
+                            index,
+                            layoutTemplate: curr.layoutTemplate,
+                            name: curr.name,
+                            signCode: curr.signCode,
+                            changed: false,
+                            data: (pagelayoutList[index].data.length > 0
+                                    ? pagelayoutList[index].data
+                                    : initLayoutItemByLayoutItemType({
+                                        layoutTemplate: curr.layoutTemplate,
+                                        navBarId: curr.id,
+                                        navBarName: curr.name
+                                    }))
+                        };
+                        return res;
+                    }, {});
+                    store.set('layoutStore', {..._layout, ...layout});
                     vuexStore.commit('pageLayout/updateLayout');
                 }
             }

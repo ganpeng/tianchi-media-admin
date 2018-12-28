@@ -17,7 +17,6 @@ import 'sysComponents/custom_components/global/install';
 import './icons';
 import dragula from 'dragula';
 import wsCache from '@/util/webStorage';
-import init from '@/util/init';
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
@@ -28,7 +27,6 @@ Vue.prototype.$wsCache = wsCache;
 window.Hls = require('hls.js');
 
 window.eventBus = new Vue(); // 注册全局事件对象
-init(); // 初始化页面布局本地数据结构
 
 /* eslint-disable no-new */
 new Vue({

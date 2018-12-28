@@ -2,7 +2,7 @@
     <div class="mixeds6-container">
         <div class="header layout-square-header">
             <div class="left">
-                <img class="icon" :src="getIconImageUri(item)" />
+                <img v-if="getIconImageUri(item)" class="icon" :src="getIconImageUri(item)"/>
                 <span class="title">{{item.title}}</span>
             </div>
             <div class="right">

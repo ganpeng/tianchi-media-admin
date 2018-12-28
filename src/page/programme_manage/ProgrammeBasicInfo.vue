@@ -52,7 +52,7 @@
                 <ul class="person-posters">
                     <li v-for="(person, index) in getAllRoleList" :key="index" class="poster">
                         <img :src="person.avatarUri" alt="" width="80" height="80">
-                        <span class="person-name">{{person.name}}</span>
+                        <span class="person-name my-ellipsis">{{person.name}}</span>
                     </li>
                 </ul>
             </div>
@@ -87,16 +87,6 @@
                                 {{programme.platformList.join(', ')}}
                             </span>
                         </div>
-                        <!--
-                        <div class="attribute-item">
-                            <label class="label">定时上架</label>
-                            <span class="value">2018.10.31 00:00:00</span>
-                        </div>
-                        <div class="attribute-item">
-                            <label class="label">定时下架</label>
-                            <span class="value">2018.10.31 00:00:00</span>
-                        </div>
-                        -->
                     </div>
                 </div>
                 <div class="right-side">
@@ -133,7 +123,7 @@
             <h4 class="content-sub-title">其他海报</h4>
                 <thumbnail
                     :removeSign="false"
-                    :imageList="programme.posterImageList">
+                    :imageList="imageList">
                 </thumbnail>
         </div>
     </div>
@@ -165,6 +155,11 @@
                 isSports: 'programme/isSports',
                 getAllRoleList: 'programme/getAllRoleList'
             }),
+            imageList() {
+                return this.programme.posterImageList.filter((image) => {
+                    return parseInt(image.width) !== 260 && parseInt(image.height) !== 380;
+                });
+            },
             getMark() {
                 return (position) => {
                     return _.get(this.programme, `cornerMark.${position}.caption`);
@@ -274,5 +269,8 @@
             }
         }
     }
+}
+.other-poster {
+    margin-bottom: 10px;
 }
 </style>

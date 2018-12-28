@@ -65,7 +65,6 @@
             readonly() {
                 return this.status === 1;
             },
-
             isEdit() {
                 return this.status === 2;
             },

@@ -54,7 +54,7 @@
                         </el-option>
                     </el-select>
                 </div>
-                <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
+                <el-button class="btn-style-one" type="primary" @click="clearSearchFields">
                     <svg-icon icon-class="reset"></svg-icon>
                     重置
                 </el-button>
@@ -342,7 +342,8 @@
                 });
             },
             createLiveChannel() {
-                this.$router.push({name: 'CreateLiveChannel'});
+                let routeData = this.$router.resolve({name: 'CreateLiveChannel'});
+                window.open(routeData.href, '_blank');
             },
             editLiveChannel(id) {
                 this.$router.push({name: 'EditLiveChannel', params: {id}});

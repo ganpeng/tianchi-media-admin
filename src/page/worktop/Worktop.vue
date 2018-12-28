@@ -51,7 +51,7 @@ export default {
                 {
                     title: `<span style=${style}>新建</span>节目专题`,
                     name: 'CreateProgrammeSubject',
-                    iconClass: 'shortcut_subject'
+                    iconClass: 'shortcut_programme_subject'
                 },
                 {
                     title: `<span style=${style}>新建</span>直播频道`,

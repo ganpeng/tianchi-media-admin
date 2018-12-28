@@ -3,7 +3,7 @@
         v-model="qs"
         :fetch-suggestions="querySearchAsync"
         :trigger-on-focus="false"
-        placeholder="请输入内容"
+        placeholder="请选择人物"
         @select="selectHandler"
     ></el-autocomplete>
 </template>

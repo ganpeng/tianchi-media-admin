@@ -34,7 +34,7 @@
                             </el-option>
                         </el-select>
                     </div>
-                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
+                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields">
                         <svg-icon icon-class="reset"></svg-icon>
                         重置
                     </el-button>
@@ -79,6 +79,11 @@
                                 class="ellipsis three name">
                                 {{scope.row.name | padEmpty}}
                             </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="alias" align="center" label="别名">
+                        <template slot-scope="scope">
+                            {{scope.row.alias | padEmpty}}
                         </template>
                     </el-table-column>
                     <el-table-column label="照片" width="120px" align="center" >
@@ -225,6 +230,7 @@
             }),
             clearSearchFields() {
                 this.resetSearchFields();
+                this.getPersonList({isProgramme: false});
             },
             keyupHandler(e) {
                 if (e.keyCode === 13) {
@@ -232,7 +238,10 @@
                 }
             },
             createPerson() {
-                this.$router.push({ name: 'CreatePerson' });
+                let routeData = this.$router.resolve({
+                    name: 'CreatePerson'
+                });
+                window.open(routeData.href, '_blank');
             },
             areaLabel(code) {
                 let reg = /^\d+(\.\d+)?$/;

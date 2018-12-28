@@ -86,7 +86,7 @@ import {mapGetters, mapActions, mapMutations} from 'vuex';
 import _ from 'lodash';
 import FixedLayout from './FixedLayout';
 import OtherLayout from './OtherLayout';
-import {initNavbarLayout} from '../../util/init';
+import init from '../../util/init';
 
 export default {
     name: 'PageLayout',
@@ -101,6 +101,9 @@ export default {
             layoutTemplate: '',
             sortView: false
         };
+    },
+    async mounted() {
+        init();
     },
     async created() {
         try {
@@ -143,17 +146,14 @@ export default {
         getLayoutChangedByNavbarId() {
             let {navbarId} = this.$route.params;
             return _.get(this.layout, `${navbarId}.changed`);
-            // return this.layout[navbarId].changed;
         },
         getLayoutRenderTypeByNavbarId() {
             let {navbarId} = this.$route.params;
             return _.get(this.layout, `${navbarId}.renderType`);
-            // return this.layout[navbarId].renderType;
         },
         getLayoutTemplateByNavbarId() {
             let {navbarId} = this.$route.params;
             return _.get(this.layout, `${navbarId}.layoutTemplate`);
-            // return this.layout[navbarId].layoutTemplate;
         },
         navbarStyle() {
             return (navbar) => {
@@ -175,7 +175,6 @@ export default {
                 } else {
                     return [];
                 }
-                // return _.get(this.layout, `${navbarId}`).data.filter((item, index) => index > 0);
             },
             set(list) {
                 let {navbarId} = this.$route.params;
@@ -209,9 +208,6 @@ export default {
         async columnsTabChangeHandler(id, layoutTemplate) {
             this.activeId = id;
             this.layoutTemplate = layoutTemplate;
-            if (!_.get(this.layout, `${this.activeId}`)) {
-                initNavbarLayout(this.activeId);
-            }
             this.$router.push({ name: 'PageLayout', params: {navbarId: id} });
         },
         async saveLayoutHandler() {

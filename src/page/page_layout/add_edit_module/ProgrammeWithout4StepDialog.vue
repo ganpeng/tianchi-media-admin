@@ -371,7 +371,8 @@ export default {
             };
         },
         getSquareProgrammeId() {
-            return _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.id`);
+            let id = _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.id`);
+            return id;
         },
         checkedProgrammeList() {
             if (this.getSquareProgrammeId && !_.isEmpty(this.programme)) {
@@ -496,7 +497,6 @@ export default {
             if (programmeTemplate) {
                 this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'programmeTemplate', value: programmeTemplate });
             }
-
             //  清除封面图和角标
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'coverImage', value: {} });
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'coverImageBackground', value: {} });

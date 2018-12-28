@@ -6,7 +6,7 @@
         <programme-basic-info v-if="status === 1"></programme-basic-info>
         <el-row>
             <el-col :span="24" v-if="status !== 1" style="margin: 20px 0;">
-                <el-form :rules="rules" ref="createProgramForm" status-icon :model="programme" label-width="120px" class="form-block my-form" @submit.native.prevent>
+                <el-form :rules="rules" ref="createProgramForm" status-icon :model="programme" label-width="120px" class="my-form" @submit.native.prevent>
                     <el-col :span="12" style="border-right: 1px solid #252D3F;">
                         <h2 class="content-sub-title">节目基本信息</h2>
                         <el-col :span="18">
@@ -26,6 +26,7 @@
                             </el-form-item>
                             <el-form-item label="节目看点" prop="desc">
                                 <el-input
+                                    :maxlength="9"
                                     :value="programme.desc"
                                     :disabled="readonly"
                                     @input="inputHandler($event, 'desc')"
@@ -47,7 +48,7 @@
                                     :value="programme.releaseAt"
                                     @input="inputHandler($event, 'releaseAt')"
                                     type="date"
-                                    placeholder="选择年">
+                                    placeholder="请选择上映时间">
                                 </el-date-picker>
                             </el-form-item>
                             <el-form-item label="所属地区" prop="produceAreaList">
@@ -83,7 +84,7 @@
                                 <category-search
                                     :handleSelect="selectCategoryHandler"
                                 ></category-search>
-                                <el-button class="btn-style-two" v-if="!readonly" type="primary" @click="gotoProgramTypePage" plain>新增</el-button>
+                                <el-button class="btn-style-four min" v-if="!readonly" type="primary" @click="gotoProgramTypePage" plain>新增</el-button>
                             </el-form-item>
                             <el-form-item label="节目类型" prop="typeList">
                                 <div id="type-sort" class="my-tags">
@@ -132,7 +133,7 @@
                                     </draggable>
                                 </div>
                                 <tag-search :handleSelect="selectTagHandler"></tag-search>
-                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addprogrammeTagHandler">新增</el-button>
+                                <el-button class="btn-style-four min" v-if="!readonly" type="primary" @click="addprogrammeTagHandler">新增</el-button>
                             </el-form-item>
                             <el-form-item label="节目主演">
                                 <label for="leadActor"></label>
@@ -151,7 +152,7 @@
                                 <search-person
                                     :handleSelect="selectChiefActorHandler"
                                 ></search-person>
-                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增</el-button>
+                                <el-button class="btn-style-four min" v-if="!readonly" type="primary" @click="createPersonDialogVisible = true">新增</el-button>
                             </el-form-item>
                             <el-form-item label="节目导演">
                                 <label for="director"></label>
@@ -170,7 +171,7 @@
                                     <search-person
                                     :handleSelect="selectDirectorHandler"
                                 ></search-person>
-                                <el-button class="btn-style-two" v-if="!readonly" type="primary" icon="el-icon-plus" plain @click="createPersonDialogVisible = true">新增</el-button>
+                                <el-button class="btn-style-four min" v-if="!readonly" type="primary" @click="createPersonDialogVisible = true">新增</el-button>
                             </el-form-item>
                             <el-form-item label="节目编剧">
                                 <label for="scenarist"></label>
@@ -189,7 +190,7 @@
                                     <search-person
                                     :handleSelect="selectScenaristHandler"
                                 ></search-person>
-                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="createPersonDialogVisible = true">新增</el-button>
+                                <el-button class="btn-style-four min" v-if="!readonly" type="primary" @click="createPersonDialogVisible = true">新增</el-button>
                             </el-form-item>
                             <el-form-item label="版权起始日期" prop="copyrightRange">
                                 <el-date-picker
@@ -219,7 +220,7 @@
                                         :value="item.value">
                                     </el-option>
                                 </el-select>
-                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addSelectItemHandler('licenceList')">新增</el-button>
+                                <el-button class="btn-style-four min" v-if="!readonly" type="primary" @click="addSelectItemHandler('licenceList')">新增</el-button>
                             </el-form-item>
                             <el-form-item label="版权方" prop="copyrightReserved">
                                 <el-select
@@ -237,7 +238,7 @@
                                         :value="item.value">
                                     </el-option>
                                 </el-select>
-                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addSelectItemHandler('copyrightReserverList')">新增</el-button>
+                                <el-button class="btn-style-four min" v-if="!readonly" type="primary" @click="addSelectItemHandler('copyrightReserverList')">新增</el-button>
                             </el-form-item>
                             <el-form-item label="发行方" prop="announcer">
                                 <el-select
@@ -255,7 +256,7 @@
                                         :value="item.value">
                                     </el-option>
                                 </el-select>
-                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addSelectItemHandler('announcerList')">新增</el-button>
+                                <el-button class="btn-style-four min" v-if="!readonly" type="primary" @click="addSelectItemHandler('announcerList')">新增</el-button>
                             </el-form-item>
                             <el-form-item v-if="isMovie" label="规格" prop="specList">
                                 <div class="my-tags">
@@ -326,7 +327,7 @@
                                         :value="item.value">
                                     </el-option>
                                 </el-select>
-                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addSelectItemHandler('contestList')">新增</el-button>
+                                <el-button class="btn-style-four min" v-if="!readonly" type="primary" @click="addSelectItemHandler('contestList')">新增</el-button>
                             </el-form-item>
                             <el-form-item label="播放平台">
                                 <div id="platform-sort" class="my-tags">
@@ -344,7 +345,7 @@
                                 <plat-form-search
                                     :handleSelect="selectPlatformHandler"
                                 ></plat-form-search>
-                                <el-button class="btn-style-two" v-if="!readonly" type="primary" plain @click="addSelectItemHandler('platformList')">新增</el-button>
+                                <el-button class="btn-style-four min" v-if="!readonly" type="primary" @click="addSelectItemHandler('platformList')">新增</el-button>
                             </el-form-item>
                             <el-form-item
                                 :rules="isTvPlay ? [{ required: true, message: '请输入总集数' }, {validator: checkPositiveInteger}] : [{validator: checkPositiveInteger}]"
@@ -420,13 +421,14 @@
                             </div>
                         </el-form-item>
                         <el-form-item label="节目状态">
-                            <el-radio  @input="inputHandler(true, 'visible')" :value="programme.visible" :label="true">是</el-radio>
-                            <el-radio  @input="inputHandler(false, 'visible')" :value="programme.visible" :label="false">否</el-radio>
+                            <el-radio  @input="inputHandler(true, 'visible')" :value="programme.visible" :label="true">上架</el-radio>
+                            <el-radio  @input="inputHandler(false, 'visible')" :value="programme.visible" :label="false">下架</el-radio>
                         </el-form-item>
                         <el-form-item label="更新规则">
                             <el-col :span="18">
                                 <el-input
                                     :disabled="readonly"
+                                    :maxlength="40"
                                     @input="inputHandler($event, 'updateRule')"
                                     :value="programme.updateRule">
                                 </el-input>
@@ -479,6 +481,7 @@
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" v-if="status === 0" type="primary" @click="_createProgramme">创建</el-button>
             <el-button class="btn-style-two" v-if="status === 2" type="primary" @click="_editProgramme">保存</el-button>
+            <el-button class="btn-style-two" v-if="status === 1" type="primary" @click="editProgramme">编辑</el-button>
             <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
         </div>
         <create-person-dialog :createPersonDialogVisible="createPersonDialogVisible" v-on:changePersonDialogStatus="closePersonDialog($event)"></create-person-dialog>
@@ -605,6 +608,12 @@
                     ],
                     innerName: [
                         { required: true, message: '请输入内部节目名称' }
+                    ],
+                    desc: [
+                        { required: true, message: '请输入节目看点' }
+                    ],
+                    description: [
+                        { required: true, message: '请输入节目简介' }
                     ],
                     score: [
                         { validator: checkScore }
@@ -926,6 +935,10 @@
                         return false;
                     }
                 });
+            },
+            editProgramme() {
+                let {id} = this.$route.params;
+                this.$router.push({name: 'EditProgramme', params: {id}});
             },
             _editProgramme() {
                 let {id} = this.$route.params;
@@ -1252,7 +1265,7 @@
     color: #909399;
 }
 .wrapper {
-    margin-left: 20px;
+    margin-left: 42px;
 }
 .mark-container {
     display: flex;

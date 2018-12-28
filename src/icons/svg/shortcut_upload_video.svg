@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="56px" height="72px" viewBox="0 0 56 72" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
-    <title>Path 4</title>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
+    <title>上传视频 80</title>
     <desc>Created with Sketch.</desc>
-    <g id="Design" stroke="none" stroke-width="1" fill-rule="evenodd">
-        <g id="01首页-操控台-copy" transform="translate(-280.000000, -474.000000)" fill-rule="nonzero">
-            <path d="M280,479.342585 L280,540.657415 C280,543.418838 282.238576,545.657415 285,545.657415 C285.987125,545.657415 286.952163,545.365224 287.773501,544.817666 L333.759623,514.160251 C336.057266,512.628489 336.678136,509.524142 335.146373,507.226499 C334.780199,506.677238 334.308884,506.205923 333.759623,505.839749 L287.773501,475.182334 C285.475858,473.650572 282.371511,474.271441 280.839749,476.569084 C280.29219,477.390422 280,478.355461 280,479.342585 Z" id="Path-4"></path>
+    <g id="上传视频-80" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g fill-rule="nonzero">
+            <rect id="Rectangle" fill-opacity="0" x="0" y="0.649298312" width="80" height="79.0123457"></rect>
+            <path d="M15,9.87706802 C15,8.90212982 15.2921901,7.94900541 15.8397485,7.13780779 C17.3715108,4.86853031 20.4758575,4.25532603 22.773501,5.76817768 L68.7596228,36.0471056 C69.3088842,36.4087592 69.780199,36.8742553 70.1463733,37.4167357 C71.6781356,39.6860132 71.0572662,42.7520347 68.7596228,44.2648863 L22.773501,74.5438142 C21.9521634,75.0846127 20.9871249,75.3731955 20,75.3731955 C17.2385763,75.3731955 15,73.162256 15,70.4349239 L15,9.87706802 Z" id="Path-4"></path>
         </g>
     </g>
 </svg>

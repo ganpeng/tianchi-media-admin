@@ -2,7 +2,7 @@
     <div class="mixed33-container">
         <div v-if="!isEdit" class="header layout-square-header">
             <div class="left">
-                <img class="icon" />
+                <img v-if="getIconImageUri(item)" class="icon" :src="getIconImageUri(item)"/>
                 <span class="title"></span>
             </div>
             <div class="right">

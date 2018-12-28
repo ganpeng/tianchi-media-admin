@@ -35,12 +35,9 @@
                     <el-form-item label=" ">
                         <div class="sortable-list-container">
                             <draggable v-if="personList.length ===6" element="ul" class="sortable-list" v-model="personList">
-                                <li v-for="(person, index) in personList" :key="index" class="sortable-item">
+                                <li @click="selectPersonClickHandler" v-for="(person, index) in personList" :key="index" class="sortable-item">
                                     <div :style="styleStr(person)" class="img-wrapper">
                                         <div class="mask"></div>
-                                        <!-- <span @click="deleteHandler(person.id)" class="delete-btn">
-                                            <svg-icon icon-class="bg_delete"></svg-icon>
-                                        </span> -->
                                     </div>
                                     <p class="name">{{person.name}}</p>
                                 </li>
@@ -252,6 +249,9 @@ export default {
         },
         disabled() {
             return (row) => {
+                if (!_.get(row, 'avatarImage.uri')) {
+                    return true;
+                }
                 let index = this.layoutData.layoutItemMultiList.findIndex((person) => person.id === row.id);
                 return index < 0 && this.layoutData.layoutItemMultiList.length > 5;
             };
@@ -297,7 +297,7 @@ export default {
         },
         handlePaginationChange(value, key) {
             this.updatePagination({value, key});
-            this.getPersonList({isProgramme: false});
+            this.getPersonList({isProgramme: false, params: {visible: true}});
         },
         areaLabel(code) {
             let reg = /^\d+(\.\d+)?$/;
@@ -363,7 +363,7 @@ export default {
         },
         dialogOpenHandler() {
             this.resetPerson();
-            this.getPersonList({isProgramme: false});
+            this.getPersonList({isProgramme: false, params: {visible: true}});
         },
         //  搜索人物的事件处理函数
         searchInputHandler(value, key) {
@@ -382,7 +382,7 @@ export default {
             }
         },
         searchEnterHandler() {
-            this.getPersonList({isProgramme: false});
+            this.getPersonList({isProgramme: false, params: {visible: true}});
         },
         deletePersonHandler(id) {
             this.deleteLayoutItembyId({navbarId: this.navbarId, index: this.index, id});
@@ -429,6 +429,7 @@ export default {
                     right: 0;
                     bottom: 0;
                     background: rgba(0, 0, 0, 0.6);
+                    border-radius: 4px;
                 }
                 .delete-btn {
                     display: none;

@@ -50,7 +50,8 @@
             </div>
         </div>
         <div class="fixed-btn-container">
-            <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
+            <el-button class="btn-style-two" @click="editPerson">编辑</el-button>
+            <el-button class="btn-style-three" @click="goBack">返回列表</el-button>
         </div>
         <preview-multiple-images :previewMultipleImages="previewImage"></preview-multiple-images>
     </div>
@@ -111,6 +112,10 @@
                 } else {
                     return code;
                 }
+            },
+            editPerson() {
+                let {id} = this.$route.params;
+                this.$router.push({ name: 'EditPerson', params: { id } });
             },
             goBack() {
                 this.$router.back();

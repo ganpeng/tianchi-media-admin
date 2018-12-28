@@ -355,10 +355,11 @@ const getters = {
             return false;
         }
         let featureList = state.video.featureList;
-        let list = state.video.list;
+        // let list = state.video.list;
         let index = featureList.findIndex((video) => parseInt(video.sort) === parseInt(sort));
-        let otherIndex = list.findIndex((video) => parseInt(video.sort) === parseInt(sort));
-        return index > -1 || otherIndex > -1;
+        return index > -1;
+        // let otherIndex = list.findIndex((video) => parseInt(video.sort) === parseInt(sort));
+        // return index > -1 || otherIndex > -1;
     },
     checkSortIsLargeThanTotalSets(state) {
         let sort = state.video.video.sort;
@@ -1231,7 +1232,9 @@ const actions = {
             let res = await service.getProgrammeVideoInfo({id});
             if (res && res.code === 0) {
                 commit('setCurrentVideo', {currentVideo: res.data});
-                commit('setCacheSort', {sort: res.data.sort});
+                if (res.data.type === 'FEATURE') {
+                    commit('setCacheSort', {sort: res.data.sort});
+                }
             }
         } catch (err) {
         }

@@ -371,10 +371,19 @@
                 }
             },
             createProgramme() {
-                this.$router.push({name: 'CreateProgramme'});
+                let routeData = this.$router.resolve({
+                    name: 'CreateProgramme'
+                });
+                window.open(routeData.href, '_blank');
             },
             clearSearchFields() {
                 this.resetProgrammeSearchFields();
+                this.getProgrammeList()
+                    .then((res) => {
+                        if (res && res.code === 0) {
+                            this.checkedVideoList();
+                        }
+                    });
             },
             editProgramme(id) {
                 this.$router.push({name: 'EditProgramme', params: {id}});

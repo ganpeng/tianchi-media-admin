@@ -87,6 +87,10 @@
                         :handleSelect="selectMainRoleHandler"
                     ></main-role-search>
                 </el-form-item>
+                <el-form-item label="人物状态" prop="visible">
+                    <el-radio @input="inputHandler(true, 'visible')" :value="person.visible" :label="true">上架</el-radio>
+                    <el-radio @input="inputHandler(false, 'visible')" :value="person.visible" :label="false">下架</el-radio>
+                </el-form-item>
             </el-col>
             <el-col :span="24">
                 <el-form-item label="人物图片" required>
@@ -172,6 +176,9 @@ export default {
                 mainRoleList: [
                     { required: true, message: '请输入人物职业' },
                     { validator: requiredValidator('请输入人物职业') }
+                ],
+                visible: [
+                    { required: true, message: '请选择人物状态' }
                 ]
             },
             areaOptions: store.get('areaList'),

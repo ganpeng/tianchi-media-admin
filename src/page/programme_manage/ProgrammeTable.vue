@@ -28,17 +28,6 @@
                             </span>
                         </template>
                 </el-table-column>
-                <!--
-                <el-table-column
-                    label="是否有封面图"
-                    align="center"
-                    width="120">
-                        <template slot-scope="scope">
-                            {{scope.row.coverImage ? '是' : '否'}}
-                        </template>
-                </el-table-column>
-                -->
-                <!--
                 <el-table-column
                     prop="name"
                     label="展示名"
@@ -50,7 +39,6 @@
                             </span>
                         </template>
                 </el-table-column>
-                -->
                 <el-table-column
                     prop="sort"
                     width="100"
@@ -311,7 +299,10 @@ export default {
             if (this.isUnsavedVideo(id)) {
                 let video = this.video.list.find((video) => video.id === id);
                 this.setCurrentVideo({currentVideo: video});
-                this.setCacheSort({sort: video.sort});
+                console.log(video.type);
+                if (video.type === 'FEATURE') {
+                    this.setCacheSort({sort: video.sort});
+                }
                 this.videoUploadDialogVisible = true;
                 this.videoStatus = 1;
             } else {
@@ -326,7 +317,9 @@ export default {
             if (this.isUnsavedVideo(id)) {
                 let video = this.video.list.find((video) => video.id === id);
                 this.setCurrentVideo({currentVideo: video});
-                this.setCacheSort({sort: video.sort});
+                if (video.type === 'FEATURE') {
+                    this.setCacheSort({sort: video.sort});
+                }
                 this.videoUploadDialogVisible = true;
                 this.videoStatus = 2;
             } else {
