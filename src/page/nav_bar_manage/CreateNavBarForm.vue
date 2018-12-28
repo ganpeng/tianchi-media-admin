@@ -11,47 +11,51 @@
             label-width="120px"
             class="form-block fill-form">
             <el-form-item label="栏目标题类型" prop="type" class="title-type" required>
-                <el-radio-group v-model="navBarInfo.type">
-                    <el-radio label="WORDS">文字
-                        <el-input
-                            v-model="navBarInfo.name"
-                            :readonly="navBarInfo.type === 'IMAGES' || !navBarInfo.type"
-                            placeholder="请输入栏目标题，10字以内">
-                        </el-input>
-                    </el-radio>
-                    <el-radio label="IMAGES">图片
-                        <div class="image-box">
-                            <div class="upload-box">
-                                <div @click="uploadImage('FOCUS')">
-                                    <img v-if="navBarInfo.focalImage.uri" :src="navBarInfo.focalImage.uri | imageUrl">
-                                    <i v-else class="el-icon-plus"></i>
-                                </div>
-                                <p>
-                                    <label>100-500 * 42</label>
-                                    <span>落焦图</span>
-                                </p>
-                            </div>
-                            <div class="upload-box">
-                                <div @click="uploadImage('NONE_FOCUS')">
-                                    <img v-if="navBarInfo.image.uri" :src="navBarInfo.image.uri | imageUrl">
-                                    <i v-else class="el-icon-plus"></i>
-                                </div>
-                                <p>
-                                    <label>100-500 * 42</label>
-                                    <span>非落焦图</span>
-                                </p>
-                            </div>
-                            <div class="upload-box">
-                                <single-image-uploader
-                                    ref="singleImageUploader"
-                                    :uploadSuccessHandler="uploadSuccessHandler"
-                                    :allowResolutions="allowResolutions"
-                                    :allowFileList="getAllowFileList">
-                                </single-image-uploader>
-                            </div>
-                        </div>
-                    </el-radio>
+                <el-radio-group v-model="navBarInfo.type" @change="pickNavBarInfoType">
+                    <el-radio label="WORDS">文字</el-radio>
+                    <el-radio label="IMAGES">图片</el-radio>
                 </el-radio-group>
+            </el-form-item>
+            <!--栏目标题-->
+            <el-form-item prop="name" class="words-box" label-width="0px" ref="wordsInfo">
+                <el-input
+                    v-model="navBarInfo.name"
+                    :disabled="navBarInfo.type === 'IMAGES' || !navBarInfo.type"
+                    placeholder="请输入栏目标题，10字以内">
+                </el-input>
+            </el-form-item>
+            <!--栏目图片-->
+            <el-form-item prop="uri" class="image-box" label-width="0px" ref="imageInfo">
+                <div class="upload-box">
+                    <div @click="uploadImage('FOCUS')"
+                         :class="{disabled:navBarInfo.type === 'WORDS' || !navBarInfo.type}">
+                        <img v-if="navBarInfo.focalImage.uri" :src="navBarInfo.focalImage.uri | imageUrl">
+                        <i v-else class="el-icon-plus"></i>
+                    </div>
+                    <p>
+                        <label>100-500 * 42</label>
+                        <span>落焦图</span>
+                    </p>
+                </div>
+                <div class="upload-box">
+                    <div @click="uploadImage('NONE_FOCUS')"
+                         :class="{disabled:navBarInfo.type === 'WORDS' || !navBarInfo.type}">
+                        <img v-if="navBarInfo.image.uri" :src="navBarInfo.image.uri | imageUrl">
+                        <i v-else class="el-icon-plus"></i>
+                    </div>
+                    <p>
+                        <label>100-500 * 42</label>
+                        <span>非落焦图</span>
+                    </p>
+                </div>
+                <div class="upload-box">
+                    <single-image-uploader
+                        ref="singleImageUploader"
+                        :uploadSuccessHandler="uploadSuccessHandler"
+                        :allowResolutions="allowResolutions"
+                        :allowFileList="getAllowFileList">
+                    </single-image-uploader>
+                </div>
             </el-form-item>
             <el-form-item label="栏目分类" prop="signCode">
                 <el-select
@@ -102,14 +106,33 @@
             SingleImageUploader
         },
         data() {
+            // 检测类型
             let checkType = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('请选择栏目标题类型'));
-                } else if (value === 'WORDS' && this.$util.isEmpty(this.navBarInfo.name)) {
+                } else {
+                    callback();
+                }
+            };
+            // 检测栏目标题
+            let checkName = (rule, value, callback) => {
+                if (this.navBarInfo.type === 'WORDS' && this.$util.isEmpty(this.navBarInfo.name)) {
                     return callback(new Error('请选择填写栏目名称'));
-                } else if (value === 'WORDS' && this.navBarInfo.name.length > 10) {
+                } else if (this.navBarInfo.type === 'WORDS' && this.navBarInfo.name.length > 10) {
                     return callback(new Error('栏目名称应在10字以内'));
-                } else if (value === 'IMAGES' && !(this.navBarInfo.focalImage.uri && this.navBarInfo.image.uri)) {
+                } else if (this.navBarInfo.type === '' && this.$util.isEmpty(this.navBarInfo.name)) {
+                    return '';
+                } else if (this.navBarInfo.type === 'IMAGES' && this.navBarInfo.name.length > 10) {
+                    return callback(new Error('栏目名称应在10字以内'));
+                } else if (this.navBarInfo.type === 'IMAGES' && this.$util.isEmpty(this.navBarInfo.name)) {
+                    return callback(new Error('请选择填写栏目名称'));
+                } else {
+                    callback();
+                }
+            };
+            // 检测标题图片
+            let checkImageUri = (rule, value, callback) => {
+                if (this.navBarInfo.type === 'IMAGES' && !(this.navBarInfo.focalImage.uri && this.navBarInfo.image.uri)) {
                     return callback(new Error('请上传对应的图片'));
                 } else {
                     callback();
@@ -140,6 +163,12 @@
                     type: [
                         {validator: checkType, trigger: 'change'}
                     ],
+                    name: [
+                        {validator: checkName, trigger: 'blur'}
+                    ],
+                    uri: [
+                        {validator: checkImageUri, trigger: 'change'}
+                    ],
                     layoutTemplate: [
                         {validator: checkLayoutTemplate, trigger: 'change'}
                     ]
@@ -157,6 +186,16 @@
                         this.programmeCategoryListOptions = response.data;
                     }
                 });
+            },
+            pickNavBarInfoType() {
+                if (this.navBarInfo.type === 'WORDS') {
+                    this.navBarInfo.focalImage = {};
+                    this.navBarInfo.image = {};
+                    this.$refs['imageInfo'].clearValidate();
+                } else {
+                    this.navBarInfo.name = '';
+                    this.$refs['wordsInfo'].clearValidate();
+                }
             },
             uploadImage(mode) {
                 this.uploadMode = mode;
@@ -181,26 +220,65 @@
                         break;
                 }
             },
-            createNavBar() {
-                this.$refs['navBarInfo'].validate((valid) => {
-                    if (valid) {
-                        // 清空对应的数据
-                        if (this.navBarInfo.type.toString() === 'WORDS') {
-                            this.navBarInfo.image = {};
-                            this.navBarInfo.focalImage = {};
-                        } else {
-                            this.navBarInfo.name = '';
-                        }
-                        this.$service.createNavBar(this.navBarInfo).then(response => {
-                            if (response && response.code === 0) {
-                                this.$message.success('成功创建栏目');
-                                this.toNavBarSetting();
-                            }
-                        });
-                    } else {
-                        return false;
+            saveNavBarInfo() {
+                // 清空对应的数据
+                if (this.navBarInfo.type.toString() === 'WORDS') {
+                    this.navBarInfo.image = {};
+                    this.navBarInfo.focalImage = {};
+                } else {
+                    this.navBarInfo.name = '';
+                }
+                this.$service.createNavBar(this.navBarInfo).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message.success('成功创建栏目');
+                        this.toNavBarSetting();
                     }
                 });
+            },
+            createNavBar() {
+                let that = this;
+                // layoutTemplate
+                // 栏目标题类型是文字模式
+                if (this.navBarInfo.type.toString() === '') {
+                    this.$refs['navBarInfo'].validateField('type');
+                    this.$refs['navBarInfo'].validateField('layoutTemplate');
+                } else if (this.navBarInfo.type.toString() === 'WORDS') {
+                    let wordsCount = 0;
+                    this.$refs['navBarInfo'].validateField('name', function (validate) {
+                        if (!validate) {
+                            wordsCount++;
+                            if (wordsCount === 2) {
+                                that.saveNavBarInfo();
+                            }
+                        }
+                    });
+                    this.$refs['navBarInfo'].validateField('layoutTemplate', function (validate) {
+                        if (!validate) {
+                            wordsCount++;
+                            if (wordsCount === 2) {
+                                that.saveNavBarInfo();
+                            }
+                        }
+                    });
+                } else if (this.navBarInfo.type.toString() === 'IMAGES') {
+                    let imagesCount = 0;
+                    this.$refs['navBarInfo'].validateField('uri', function (validate) {
+                        if (!validate) {
+                            imagesCount++;
+                            if (imagesCount === 2) {
+                                that.saveNavBarInfo();
+                            }
+                        }
+                    });
+                    this.$refs['navBarInfo'].validateField('layoutTemplate', function (validate) {
+                        if (!validate) {
+                            imagesCount++;
+                            if (imagesCount === 2) {
+                                that.saveNavBarInfo();
+                            }
+                        }
+                    });
+                }
             },
             toNavBarSetting() {
                 this.$router.push({name: 'NavBarSetting'});
@@ -212,34 +290,32 @@
 <style lang="scss" scoped>
 
     .el-form {
+        position: relative;
         margin-top: 25px;
         .el-form-item {
             padding-bottom: 10px;
         }
-        /*标题类型*/
-        .title-type {
-            .el-radio-group {
-                width: 1200px;
-            }
-            .el-radio {
-                display: block;
-                margin-left: 0px;
-                overflow: hidden;
-                &:last-child {
-                    position: relative;
-                    margin-top: 25px;
-                    height: 88px;
-                }
-            }
+        /* 标题名称框 */
+        .words-box {
+            position: absolute;
+            left: 84px;
+            top: 0px;
+            margin-left: 120px;
             .el-input {
-                margin-left: 20px;
                 width: 300px;
             }
-            .image-box {
-                position: absolute;
-                display: inline-block;
-                margin-left: 24px;
+            .info-error {
+                color: red;
+                height: 30px;
+                line-height: 30px;
             }
+        }
+        /* 图片上传框 */
+        .image-box {
+            position: absolute;
+            left: 82px;
+            top: 62px;
+            margin-left: 120px;
             /*上传框*/
             .upload-box {
                 display: inline-block;
@@ -253,7 +329,7 @@
                     width: 100px;
                     height: 42px;
                     border: 1px solid #3E495E;
-                    line-height: 42px;
+                    line-height: 44px;
                     border-radius: 4px;
                     text-align: center;
                     cursor: pointer;
@@ -265,6 +341,16 @@
                         font-size: 20px;
                         color: #3E495E;
                     }
+                    &:hover {
+                        border-color: #1989FA;
+                        i {
+                            color: #1989FA;
+                        }
+                    }
+                    &.disabled {
+                        pointer-events: none;
+                        cursor: not-allowed;
+                    }
                 }
                 p {
                     margin-top: 7px;
@@ -274,6 +360,23 @@
                         font-size: 12px;
                         line-height: 17px;
                     }
+                }
+            }
+        }
+        /*标题类型*/
+        .title-type {
+            position: relative;
+            margin-bottom: 40px;
+            .el-radio-group {
+                margin-top: 14px;
+                margin-bottom: 60px;
+                width: 60px;
+            }
+            .el-radio {
+                display: block;
+                margin-left: 0px;
+                &:first-child {
+                    margin-bottom: 34px;
                 }
             }
         }
@@ -300,25 +403,6 @@
             margin-top: 10px;
             width: 370px !important;
             height: 158px !important;
-        }
-    }
-
-    // 操作
-    .operate-block {
-        position: fixed;
-        bottom: 10px;
-        left: 0px;
-        right: 0px;
-        margin: auto;
-        width: 500px;
-        height: 80px;
-        line-height: 90px;
-        background: #293550;
-        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.20);
-        border-radius: 8px;
-        z-index: 600;
-        .el-button:last-child {
-            margin-left: 40px;
         }
     }
 

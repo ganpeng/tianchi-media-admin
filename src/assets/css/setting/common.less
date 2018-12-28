@@ -301,6 +301,32 @@ li {
     }
 }
 
+// 2.0多选下拉框样式
+.el-select {
+    .el-select__tags {
+        .el-tag {
+            background: #2A3040;
+            border-radius: 4px;
+            &:hover {
+                border: 1px solid #1989FA;
+            }
+            .el-icon-close {
+                height: 16px;
+                width: 16px;
+                line-height: 16px;
+                background: #6F7480;
+                color: #2A3040;
+            }
+            &:hover {
+                .el-icon-close {
+                    background: #C35757;
+                    color: #2A3040;
+                }
+            }
+        }
+    }
+}
+
 // 2.0多选框样式
 .el-checkbox__input {
     span.el-checkbox__inner {
