@@ -22,6 +22,7 @@
                         <el-input
                             v-model="formData.password"
                             clearable
+                            type="password"
                             class="border-input"
                             placeholder="密码">
                             <svg-icon icon-class="password" slot="prefix"></svg-icon>

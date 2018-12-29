@@ -29,7 +29,7 @@
             </el-table-column>
             <el-table-column prop="link" align="center" label="预览视频">
                 <template slot-scope="scope">
-                    <div class="btn-icon-container">
+                    <div class="btn-icon-container preview-link">
                         <el-button
                             v-if="scope.row.m3u8For4K"
                             type="text"
@@ -44,7 +44,7 @@
                             :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
                         </svg-icon>
                     </div>
-                    <div class="btn-icon-container">
+                    <div class="btn-icon-container preview-link">
                         <el-button
                             v-if="scope.row.m3u8For1080P"
                             type="text"
@@ -59,7 +59,7 @@
                             :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
                         </svg-icon>
                     </div>
-                    <div class="btn-icon-container">
+                    <div class="btn-icon-container preview-link">
                         <el-button
                             v-if="scope.row.m3u8For720P"
                             type="text"
@@ -74,7 +74,7 @@
                             :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
                         </svg-icon>
                     </div>
-                    <div class="btn-icon-container">
+                    <div class="btn-icon-container preview-link">
                         <el-button
                             v-if="scope.row.m3u8For480P"
                             type="text"
@@ -104,13 +104,23 @@
                     <template v-if="scope.row.status">
                         <span v-if="scope.row.status === 'SUCCESS'" class="status-normal">成功</span>
                         <span v-if="scope.row.status === 'FAILED'" class="status-abnormal">失败</span>
-                        <span class="status-mid"
-                              v-if="scope.row.status && scope.row.status !== 'FAILED' && scope.row.status !== 'SUCCESS'">
+                        <span v-if="scope.row.status === 'DELETING'" class="status-deleting">删除中</span>
+                        <!--任务中包含：'切片正在入库'、'转码任务转码中'-->
+                        <span
+                            v-if="scope.row.status === 'SPLIT_TASK_SUCCESS' || scope.row.status === 'SPLIT_TASK_ON_PROCESS'"
+                            class="status-on-going">
                             {{scope.row | parseStatus}}
                         </span>
-                        <span v-if="needRetry(scope.row)"
-                              class="btn-text text-primary"
-                              @click="retrySingleVideo(scope.row.id)">
+                        <!--转码任务初始化中包含：'原文件上传成功'、'转码任务已提交'、'转码任务排队中'、'转码任务分配中'-->
+                        <span
+                            v-if="scope.row.status === 'UPLOAD_COMPLETED' || scope.row.status === 'SPLIT_TASK_SUBMITTED' || scope.row.status === 'SPLIT_TASK_ON_QUEUE' || scope.row.status === 'SPLIT_TASK_ON_PENDING'"
+                            class="status-initiating">
+                            {{scope.row | parseStatus}}
+                        </span>
+                        <span
+                            v-if="needRetry(scope.row)"
+                            class="retry-text-btn"
+                            @click="retrySingleVideo(scope.row.id)">
                             重试
                         </span>
                     </template>
@@ -122,14 +132,22 @@
                 align="center"
                 label="上传状态">
                 <template slot-scope="scope">
-                    <span>{{scope.row.uploadStatus | getUploadStatus}}</span>
-                    <label v-if="scope.row.uploadStatus === 'ON_GOING'">{{scope.row | getPushPercent}}</label>
-                    <el-button
-                        v-if="scope.row.uploadStatus === 'FAILED'"
-                        type="text"
-                        @click="pushVideoToMainSite(scope.row)">
+                    <template v-if="scope.row.uploadStatus">
+                        <span v-if="scope.row.uploadStatus === 'SUCCESS'" class="status-normal">成功</span>
+                        <span v-if="scope.row.uploadStatus === 'FAILED'" class="status-abnormal">失败</span>
+                        <span
+                            v-if="scope.row.uploadStatus === 'ON_GOING'"
+                            class="status-on-going">
+                            上传中 {{scope.row | getPushPercent}}
+                        </span>
+                        <span
+                            v-if="scope.row.uploadStatus === 'FAILED'"
+                            class="retry-text-btn"
+                            @click="pushVideoToMainSite(scope.row)">
                         重试
-                    </el-button>
+                    </span>
+                    </template>
+                    <span v-else>---</span>
                 </template>
             </el-table-column>
             <!--子站拉取状态（子站）-->
@@ -138,14 +156,22 @@
                 align="center"
                 label="拉取状态">
                 <template slot-scope="scope">
-                    <span>{{scope.row.downloadStatus | getDownloadStatus}}</span>
-                    <label v-if="scope.row.downloadStatus === 'ON_GOING'">{{scope.row | getDownloadPercent}}</label>
-                    <el-button
-                        v-if="scope.row.downloadStatus === 'FAILED'"
-                        type="text"
-                        @click="pullVideoFromMainSite(scope.row)">
-                        重试
-                    </el-button>
+                    <template v-if="scope.row.downloadStatus">
+                        <span v-if="scope.row.downloadStatus === 'SUCCESS'" class="status-normal">成功</span>
+                        <span v-if="scope.row.downloadStatus === 'FAILED'" class="status-abnormal">失败</span>
+                        <span
+                            v-if="scope.row.downloadStatus === 'ON_GOING'"
+                            class="status-on-going">
+                            上传中 {{scope.row | getDownloadPercent}}
+                        </span>
+                        <span
+                            v-if="scope.row.downloadStatus === 'FAILED'"
+                            class="retry-text-btn"
+                            @click="pullVideoFromMainSite(scope.row)">
+                            重试
+                        </span>
+                    </template>
+                    <span v-else>---</span>
                 </template>
             </el-table-column>
             <!--视频来源(主站、子站)-->
@@ -188,35 +214,33 @@
             </el-table-column>
             <el-table-column v-if="!hasRadio" width="130px" align="center" label="操作">
                 <template slot-scope="scope">
-                    <!--上传主站（子站）-->
-                    <!--（注入成功或者拉取成功）而且（非上传中、非上传成功）的视频上传主站可点击-->
-                    <el-button
-                        v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
-                        :disabled="!((scope.row.status === 'SUCCESS' || scope.row.downloadStatus === 'SUCCESS') && !(scope.row.uploadStatus === 'ON_GOING' || scope.row.uploadStatus === 'SUCCESS'))"
-                        class="text-primary upload-btn"
-                        type="text"
-                        @click="pushVideoToMainSite(scope.row)"
-                        size="small">
-                        上传主站
-                    </el-button>
-                    <!--共享设置（主站）-->
-                    <!--注入中、注入失败、上传中、上传失败不可设置共享站点-->
-                    <el-button
-                        v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
-                        :disabled="!(scope.row.status === 'SUCCESS' || scope.row.uploadStatus === 'SUCCESS')"
-                        type="text"
-                        @click="setSingleVideoShareSite(scope.row)"
-                        size="small">
-                        共享设置
-                    </el-button>
-                    <!--在拉取中和下载中状态的视频不能删除-->
-                    <el-button
-                        :disabled="scope.row.uploadStatus === 'ON_GOING' || scope.row.downloadStatus === 'ON_GOING'"
-                        class="text-danger"
-                        type="text"
-                        @click="_deleteVideoById(scope.row.id)" size="small">
-                        删除
-                    </el-button>
+                    <div class="operator-btn-wrapper">
+                        <!--上传主站（子站）-->
+                        <!--（注入成功或者拉取成功）而且（非上传中、非上传成功）的视频上传主站可点击-->
+                        <span
+                            v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                            :disabled="!((scope.row.status === 'SUCCESS' || scope.row.downloadStatus === 'SUCCESS') && !(scope.row.uploadStatus === 'ON_GOING' || scope.row.uploadStatus === 'SUCCESS'))"
+                            class="btn-text"
+                            @click="pushVideoToMainSite(scope.row)">
+                            上传主站
+                        </span>
+                        <!--共享设置（主站）-->
+                        <!--注入中、注入失败、上传中、上传失败不可设置共享站点-->
+                        <span
+                            v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                            :disabled="!(scope.row.status === 'SUCCESS' || scope.row.uploadStatus === 'SUCCESS')"
+                            class="btn-text"
+                            @click="setSingleVideoShareSite(scope.row)">
+                            共享设置
+                        </span>
+                        <!--在拉取中和下载中状态的视频不能删除-->
+                        <span
+                            :disabled="scope.row.uploadStatus === 'ON_GOING' || scope.row.downloadStatus === 'ON_GOING'"
+                            class="btn-text text-danger"
+                            @click="_deleteVideoById(scope.row.id)">
+                            删除
+                        </span>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -239,7 +263,7 @@
             title="共享站点"
             :visible.sync="shareSiteVisible"
             :close-on-click-modal="false"
-            custom-class="share-site"
+            custom-class="normal-dialog share-site"
             width="40%">
             <div class="batch-share-body" v-if="shareSiteVisible">
                 <ul>
@@ -256,7 +280,7 @@
             title="视频共享站点设置"
             :visible.sync="shareSiteSettingVisible"
             :close-on-click-modal="false"
-            custom-class="share-site-setting"
+            custom-class="normal-dialog share-site-setting"
             width="40%">
             <div class="share-body" v-if="shareSiteSettingVisible">
                 <div>视频可以被以下站点共享:</div>
@@ -327,14 +351,16 @@
                         return '转码任务排队中';
                     case 'SPLIT_TASK_ON_PENDING':
                         return '转码任务分配中';
+                    case 'SPLIT_TASK_ON_PROCESS':
+                        return '转码任务转码中' + ' ' + video.transcodeProgress + '%';
                     case 'SPLIT_TASK_SUCCESS':
                         return '切片正在入库';
-                    case 'SPLIT_TASK_ON_PROCESS':
-                        return '转码任务转码中' + video.transcodeProgress + '%';
                     case 'SUCCESS':
                         return '注入成功';
                     case 'FAILED':
                         return '注入失败';
+                    case 'DELETING':
+                        return '删除中';
                     default:
                         return video.status;
                 }
@@ -663,6 +689,12 @@
 
     .el-radio__label {
         padding-left: 0;
+    }
+
+    .preview-link {
+        .el-button {
+            font-size: 14px;
+        }
     }
 
     /*展示分享站点*/

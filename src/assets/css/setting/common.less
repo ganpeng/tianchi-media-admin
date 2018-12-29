@@ -258,6 +258,12 @@ li {
     }
 }
 
+// 2.0 input去除chrome自动填充背景色
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px rgb(41, 53, 80) inset;
+    color: #A3D0FD !important;
+}
+
 /** 2.0列表筛选参数样式 */
 .filter-form {
     position: relative;
@@ -362,39 +368,62 @@ li {
 /* 非正常状态 */
 .status-abnormal {
     display: inline-block;
-    padding: 0 10px;
-    line-height: 22px;
+    padding: 1px 13px;
+    line-height: 24px;
     background: #F6CCD1;
-    border-radius: 14px;
+    border-radius: 8px;
     font-size: 12px;
-    color: rgba(208, 2, 27, 0.80);
+    color: #C35757;
     text-align: center;
 }
 
 /* 正常状态 */
 .status-normal {
     display: inline-block;
-    padding: 0 10px;
-    line-height: 22px;
+    padding: 1px 13px;
+    line-height: 24px;
     background: #B8E986;
-    border-radius: 14px;
+    border-radius: 8px;
+    letter-spacing: 0;
+    font-size: 12px;
     color: #417505;
+    text-align: center;
+}
+
+/* 进行中状态 */
+.status-on-going {
+    display: inline-block;
+    padding: 1px 8px;
+    line-height: 24px;
+    background: #A3D0FD;
+    border-radius: 8px;
+    color: #1989FA;
     letter-spacing: 0;
     text-align: center;
     font-size: 12px;
 }
 
-/* 中间状态 */
-.status-mid {
+/* 初始化状态 */
+.status-initiating {
     display: inline-block;
-    padding: 0 10px;
-    line-height: 22px;
-    background: #A3D0FD;
-    border-radius: 14px;
+    padding: 1px 8px;
+    line-height: 24px;
+    background: rgba(163, 208, 253, 0.20);
+    border-radius: 8px;
+    font-size: 12px;
     color: #1989FA;
     letter-spacing: 0;
     text-align: center;
+}
+
+// 2.0状态重试按钮
+.retry-text-btn {
+    padding: 2px 4px;
+    margin-left: 14px;
     font-size: 12px;
+    color: #1989FA;
+    text-align: center;
+    cursor: pointer;
 }
 
 #label-font {

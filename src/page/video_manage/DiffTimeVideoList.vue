@@ -102,7 +102,7 @@
             </el-table-column>
             <el-table-column prop="link" align="center" label="预览视频">
                 <template slot-scope="scope">
-                    <div class="btn-icon-container">
+                    <div class="btn-icon-container preview-link">
                         <el-button
                             v-if="scope.row.m3u8For4K"
                             type="text"
@@ -117,7 +117,7 @@
                             :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
                         </svg-icon>
                     </div>
-                    <div class="btn-icon-container">
+                    <div class="btn-icon-container preview-link">
                         <el-button
                             v-if="scope.row.m3u8For1080P"
                             type="text"
@@ -132,7 +132,7 @@
                             :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
                         </svg-icon>
                     </div>
-                    <div class="btn-icon-container">
+                    <div class="btn-icon-container preview-link">
                         <el-button
                             v-if="scope.row.m3u8For720P"
                             type="text"
@@ -147,7 +147,7 @@
                             :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
                         </svg-icon>
                     </div>
-                    <div class="btn-icon-container">
+                    <div class="btn-icon-container preview-link">
                         <el-button
                             v-if="scope.row.m3u8For480P"
                             type="text"
@@ -166,7 +166,7 @@
             </el-table-column>
             <el-table-column align="center" label="注入状态">
                 <template slot-scope="scope">
-                    <span>成功</span>
+                    <span class="status-normal">成功</span>
                 </template>
             </el-table-column>
             <el-table-column align="center" label="上传日期">
@@ -185,13 +185,9 @@
                 label="操作"
                 class="operate">
                 <template slot-scope="scope">
-                    <el-button
-                        class="remove-btn"
-                        type="text"
-                        size="small"
-                        @click="removeVideo(scope.row)">
-                        删除
-                    </el-button>
+                    <div class="operator-btn-wrapper">
+                        <span class="btn-text text-danger" @click="removeVideo(scope.row)">删除</span>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -389,5 +385,11 @@
 </script>
 
 <style lang="scss" scoped>
+
+    .preview-link {
+        .el-button {
+            font-size: 14px;
+        }
+    }
 
 </style>

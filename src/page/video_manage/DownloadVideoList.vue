@@ -115,17 +115,18 @@
                 </el-table-column>
                 <el-table-column align="center" label="状态">
                     <template slot-scope="scope">
-                        <i class="status-normal" v-if="scope.row.status === 'SUCCESS'">成功</i>
-                        <i class="status-mid" v-if="scope.row.status === 'DOWNLOADING'">下载中</i>
-                        <i class="status-abnormal" v-if="scope.row.status === 'FAILED'">失败</i>
-                        <el-button
-                            v-if="scope.row.status === 'FAILED'"
-                            class="text-primary"
-                            type="text"
-                            @click="requestForDownloadVideo([scope.row.id])"
-                            size="small">
-                            重试
-                        </el-button>
+                        <template v-if="scope.row.status">
+                            <span v-if="scope.row.status === 'SUCCESS'" class="status-normal">成功</span>
+                            <span v-if="scope.row.status === 'FAILED'" class="status-abnormal">失败</span>
+                            <span v-if="scope.row.status === 'DOWNLOADING'" class="status-on-going">下载中</span>
+                            <span
+                                v-if="scope.row.status === 'FAILED'"
+                                class="retry-text-btn"
+                                @click="requestForDownloadVideo([scope.row.id])">
+                                重试
+                           </span>
+                        </template>
+                        <span v-else>---</span>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" label="上传时间">
@@ -144,13 +145,9 @@
                     label="操作"
                     class="operate">
                     <template slot-scope="scope">
-                        <el-button
-                            class="remove-btn"
-                            type="text"
-                            size="small"
-                            @click="removeVideo(scope.row)">
-                            删除
-                        </el-button>
+                        <div class="operator-btn-wrapper">
+                            <span class="btn-text text-danger" @click="removeVideo(scope.row)">删除</span>
+                        </div>
                     </template>
                 </el-table-column>
             </el-table>

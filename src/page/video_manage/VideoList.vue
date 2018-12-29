@@ -262,7 +262,7 @@
             title="站点共享设置"
             :visible.sync="batchShareDialogVisible"
             :close-on-click-modal="false"
-            custom-class="batch-share-site"
+            custom-class="normal-dialog batch-share-site"
             width="40%">
             <div class="batch-share-body" v-if="batchShareDialogVisible">
                 <div>{{$refs.videoTable.selectedVideoList.length}}个视频可以被以下站点共享:</div>
@@ -285,6 +285,7 @@
             title="选择主站的视频"
             :close-on-click-modal=false
             :visible.sync="selectMasterVideoDialogVisible"
+            custom-class="normal-dialog"
             center
             width="80%">
             <select-multiple-master-video
@@ -780,6 +781,50 @@
         &.is-disabled {
             opacity: 0.3;
             pointer-events: none;
+        }
+    }
+
+</style>
+
+<!--全局el-dialog样式-->
+<style lang="scss">
+
+    .normal-dialog {
+        background: #293550;
+        border: 0 solid #637497;
+        box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
+        border-radius: 8px;
+        .el-dialog__header {
+            padding: 0px;
+            height: 50px;
+            line-height: 55px;
+            background: #1F2D4D;
+            .el-dialog__title {
+                font-size: 20px;
+                color: #909399;
+            }
+            .el-dialog__headerbtn {
+                top: 16px;
+                font-size: 15px;
+                .el-dialog__close {
+                    color: #C35757;
+                }
+            }
+        }
+        .el-dialog__footer {
+            .el-button {
+                width: 100px;
+                height: 40px;
+                &.el-button--default {
+                    color: $dangerColor;
+                }
+                &.el-button--default.el-button--primary {
+                    color: #A3D0FD;
+                }
+                &:first-child {
+                    margin-left: 10px;
+                }
+            }
         }
     }
 
