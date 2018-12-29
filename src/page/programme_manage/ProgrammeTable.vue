@@ -29,6 +29,17 @@
                         </template>
                 </el-table-column>
                 <el-table-column
+                    label="封面图"
+                    align="center"
+                    width="123">
+                    <template slot-scope="scope">
+                        <img v-if="scope.row.coverImage && scope.row.coverImage.uri" style="width:103px;height:auto;"
+                            @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer"
+                            :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
+                        <span v-else>无</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
                     prop="name"
                     label="展示名"
                     align="center"
@@ -61,6 +72,7 @@
                 -->
                 <el-table-column
                     align="center"
+                    min-width="100px"
                     label="关联正片">
                         <template slot-scope="scope">
                             <span class="ellipsis two">
@@ -70,7 +82,7 @@
                 </el-table-column>
                 <el-table-column
                     align="center"
-                    width="180"
+                    min-width="180"
                     label="预览">
                     <template slot-scope="scope">
                         <div class="btn-icon-container">
@@ -134,7 +146,7 @@
                 <el-table-column
                     prop="type"
                     align="center"
-                    min-width="80px"
+                    min-width="100px"
                     label="内容类型">
                         <template slot-scope="scope">
                             {{getVideoType(scope.row.type) | padEmpty}}
@@ -195,7 +207,7 @@
             :displayVideoDialogVisible="displayVideoDialogVisible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
-        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
+        <preview-single-image :singleImage="previewImage"></preview-single-image>
     </div>
 </template>
 <script>
@@ -337,29 +349,10 @@ export default {
                     type: 'error'
                 }).then(() => {
                     this.deleteProgrammeVideoById(id);
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
                 });
         },
         closeVideoDialog(status) {
             this.videoUploadDialogVisible = status;
-        },
-        deleteUnsavedVideo(uid) {
-            this.$confirm('此操作将永久删除该视频, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'error'
-            }).then(() => {
-                this.deleteVideoFromTempList({uid});
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });
-            });
         },
         realDeleteVideo(id) {
             this.$confirm('此操作将永久删除该视频, 是否继续?', '提示', {
@@ -370,17 +363,13 @@ export default {
                 if (this.isUnsavedVideo(id)) {
                     this.deleteVideoFromList({id});
                 } else {
-                    this.realDeleteProgrammeVideoById(id)
-                        .then((res) => {
-                            this.deleteVideoFromList({id});
-                            this.getFeatureVideoList({id: this.$route.params.id, pageSize: 99999});
-                        });
+                    this.deleteVideoFromList({id});
+                    // this.realDeleteProgrammeVideoById(id)
+                    //     .then((res) => {
+                    //         this.deleteVideoFromList({id});
+                    //         this.getFeatureVideoList({id: this.$route.params.id, pageSize: 99999});
+                    //     });
                 }
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });
             });
         },
         closeDisplayVideoDialog(status) {

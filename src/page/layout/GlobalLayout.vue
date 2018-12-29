@@ -8,12 +8,12 @@
                     {{item}}
                 </li>
             </ul>
-            <div :class="[active === navList.length - 1 ? 'active' : '']" @click="changeActive(navList.length - 1)"
+            <div :class="[active === navList.length - 1 ? 'active' : '']"
                  class="user-info float-right clearfix">
                 <svg-icon
                     icon-class="avatar_icon">
                 </svg-icon>
-                <label>{{name}}</label>
+                <label @click="changeActive(navList.length - 1)">{{name}}</label>
                 <div class="logout" @click="logout">
                     <svg-icon
                         icon-class="logout">
@@ -99,7 +99,7 @@
                 this.defaultActive = activePath;
                 this.setMinHeight();
                 window.addEventListener('resize', this.setMinHeight, false);
-                this.hideHeaderAndAside();
+                // this.hideHeaderAndAside();
                 let res = await this.getNavbarList();
                 if (res && res.code === 0) {
                     this.layoutId = _.get(res.data, '2.id');

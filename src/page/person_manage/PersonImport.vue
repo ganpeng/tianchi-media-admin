@@ -130,4 +130,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.person-import-container {
+    background: #1A2233;
+}
 </style>

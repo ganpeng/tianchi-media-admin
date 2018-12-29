@@ -149,6 +149,29 @@ let router = new Router({
             name: 'EditLiveChannelByImportExcel',
             component: EditLiveChannelByImportExcel
         },
+        // 视频导入
+        {
+            path: '/manage-video/import',
+            name: 'VideoImport',
+            component: VideoImport
+        },
+        // 节目导入
+        {
+            path: '/programme-manage/import',
+            name: 'ProgrammeImport',
+            component: ProgrammeImport
+        },
+        // 人物导入
+        {
+            path: '/person-manage/import',
+            name: 'PersonImport',
+            component: PersonImport
+        },
+        {
+            path: '/channel-live/import',
+            name: 'LiveChannelImport',
+            component: LiveChannelImport
+        },
         // 网站内容结构
         {
             path: '/layout',
@@ -378,11 +401,6 @@ let router = new Router({
                     name: 'DuplicateList',
                     component: DuplicateList
                 },
-                {
-                    path: '/person-manage/import',
-                    name: 'PersonImport',
-                    component: PersonImport
-                },
                 // 节目管理
                 // 新增节目
                 {
@@ -413,12 +431,6 @@ let router = new Router({
                     path: '/programme-manage/type',
                     name: 'ProgrammeTypeManage',
                     component: ProgrammeTypeManage
-                },
-                // 节目导入
-                {
-                    path: '/programme-manage/import',
-                    name: 'ProgrammeImport',
-                    component: ProgrammeImport
                 },
                 //  广告管理
                 // 广告资源列表
@@ -481,12 +493,6 @@ let router = new Router({
                     name: 'VideoList',
                     component: VideoList
                 },
-                // 视频导入
-                {
-                    path: '/manage-video/import',
-                    name: 'VideoImport',
-                    component: VideoImport
-                },
                 //  视频下载列表
                 {
                     path: '/manage-video/download-list',
@@ -514,11 +520,6 @@ let router = new Router({
                     path: '/channel-live/edit/:id',
                     name: 'EditLiveChannel',
                     component: EditLiveChannel
-                },
-                {
-                    path: '/channel-live/import',
-                    name: 'LiveChannelImport',
-                    component: LiveChannelImport
                 },
                 {
                     path: '/channel-live/preview/:id',

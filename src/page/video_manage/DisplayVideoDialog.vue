@@ -1,7 +1,7 @@
 <template>
     <div class="player-container">
         <el-dialog
-            :title="getTitle"
+            title="视频"
             class="my-dialog"
             :visible.sync="displayVideoDialogVisible"
             :show-close="true"
@@ -11,6 +11,7 @@
             :append-to-body="true"
             @open="initVideo">
                 <div v-if="displayVideoDialogVisible">
+                    <h2 class="video-name">{{getTitle}}</h2>
                     <video-player ref="player" @play="play" :video="{url, type: 'hls'}" :contextmenu="contextmenu"></video-player>
                     <p class="video-link">视频地址：{{url}}</p>
                 </div>
@@ -58,7 +59,7 @@ export default {
             } else {
                 videoName = this.title;
             }
-            return `正在播放：${videoName}`;
+            return `${videoName}`;
         }
     },
     methods: {
@@ -85,5 +86,14 @@ export default {
 <style lang="less" scoped>
 .video-link {
     margin-top: 10px;
+}
+.video-name {
+    font-size: 16px;
+    margin: 10px 0;
+}
+</style>
+<style>
+.el-dialog__body {
+    padding: 0 20px 20px 20px!important;
 }
 </style>

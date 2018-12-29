@@ -32,8 +32,8 @@
                             <i
                                 v-if="!showDelete(index)"
                                 @click="cancelUpload(index)"
-                                class="text-danger delete-btn el-icon-close pointer"></i>
-                            <el-button type="text" v-if="showRetryBtn(index)" @click="retryUploadHandler(index)">重试</el-button>
+                                class="text-danger pointer">取消</i>
+                            <span v-if="showRetryBtn(index)" @click="retryUploadHandler(index)" class="text-primary pointer">重试</span>
                         </span>
                     </li>
                 </ul>
@@ -582,6 +582,7 @@ export default {
 <style lang="scss" scoped>
 .video-import-container {
     overflow: hidden;
+    background: #1A2233;
     .file-upload-info-list {
         width: 100%;
         height: 800px;
@@ -616,11 +617,18 @@ export default {
                 text-align: center;
             }
             .control {
-                width: 30px;
+                // width: 30px;
                 text-align: center;
+                .el-button {
+                    min-width: none;
+                }
             }
         }
     }
 }
-
+</style>
+<style>
+.el-progress-bar__outer {
+    background-color: #3E495E;
+}
 </style>

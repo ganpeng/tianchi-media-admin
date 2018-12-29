@@ -258,4 +258,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.live-channel-import-container {
+    background: #1A2233;
+}
 </style>

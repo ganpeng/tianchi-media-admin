@@ -207,10 +207,14 @@ export default {
     float: left;
     margin-right: 10px;
     .image-list {
-        clear: both;
+        // clear: both;
+        display: flex;
+        flex-wrap: wrap;
         .image-item {
             position: relative;
-            float: left;
+            // float: left;
+            width: 170px;
+            height: 126px;
             margin-right: 30px;
             margin-bottom: 10px;
             cursor: zoom-in;

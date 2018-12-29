@@ -36,7 +36,7 @@
                         <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">搜索</el-button>
                     </el-form-item>
                 </el-form>
-                <video-table :status="'SUCCESS'" :hasRadio="true"></video-table>
+                <video-table :status="'SUCCESS'"></video-table>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
                     <el-button @click="closeSelectVideoDialog">取 消</el-button>
                     <el-button type="primary" @click="selectVideoEnter">确 定</el-button>
@@ -162,14 +162,6 @@
                     <el-radio @input="inputHandler(true, 'free')" :value="video.free" :label="true">是</el-radio>
                     <el-radio @input="inputHandler(false, 'free')" :value="video.free" :label="false">否</el-radio>
                 </span>
-                <!-- <el-radio-group
-                    v-else
-                    :value="video.free"
-                    @input="inputHandler($event, 'free')"
-                >
-                    <el-radio :label="true">是</el-radio>
-                    <el-radio :label="false">否</el-radio>
-                </el-radio-group> -->
             </el-form-item>
             <el-form-item label="视频封面图">
                 <single-image-uploader
@@ -205,7 +197,7 @@
     import role from '@/util/config/role';
     import dimension from '@/util/config/dimension';
     import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
-    import VideoTable from '../video_manage/VideoTable';
+    import VideoTable from './VideoTable';
 
     import SearchPerson from '../../components/custom_components/custom/SearchPerson';
     import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
