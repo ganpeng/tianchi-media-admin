@@ -345,6 +345,17 @@
                         this.$refs.videoTable.checkedVideoList();
                     });
             }, 1000 * 10);
+            // 初始化视频来源和共享站点的列表
+            this.$service.getAllSiteList().then(response => {
+                if (response && response.code === 0) {
+                    this.shareSiteOptions = response.data;
+                }
+            });
+            this.$service.getAllVideoSourceList().then(response => {
+                if (response && response.code === 0) {
+                    this.sourceOptions = response.data;
+                }
+            });
         },
         beforeRouteLeave(to, from, next) {
             clearInterval(this.timer);

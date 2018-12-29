@@ -49,6 +49,9 @@
             line-height: 34px;
         }
     }
+    .el-form-item__content {
+        line-height: 34px !important;
+    }
 }
 
 // 人物列表中的图片大小
@@ -335,6 +338,9 @@ input:-webkit-autofill {
 
 // 2.0多选框样式
 .el-checkbox__input {
+    &.is-indeterminate .el-checkbox__inner::before {
+        background-color: #2A3040;
+    }
     span.el-checkbox__inner {
         background: transparent;
         border: 1px solid #3E495E;
@@ -346,7 +352,7 @@ input:-webkit-autofill {
     &.is-focus {
         span.el-checkbox__inner {
             background: transparent;
-            border: 1px solid transparent;
+            border: 1px solid #3E495E;
             border-radius: 2px;
             &::after {
                 border-color: #2A3040;

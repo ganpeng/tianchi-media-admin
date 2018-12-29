@@ -200,6 +200,9 @@
                     font-size: $normalFontSize;
                     background: #0062C4;
                     border: none;
+                    &:hover {
+                        background: #1989FA;
+                    }
                 }
             }
             .el-checkbox {

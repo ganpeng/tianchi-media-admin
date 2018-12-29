@@ -23,6 +23,7 @@
                 <el-form-item label="频道类别">
                     <el-select
                         v-model="listQueryParams.typeIdList"
+                        @change="getChannelList"
                         clearable
                         multiple
                         placeholder="全部">
@@ -35,8 +36,11 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="录制状态">
-                    <el-select v-model="listQueryParams.record" clearable
-                               placeholder="全部">
+                    <el-select
+                        v-model="listQueryParams.record"
+                        @change="getChannelList"
+                        clearable
+                        placeholder="全部">
                         <el-option
                             v-for="item in recordOptions"
                             :key="item.value"
