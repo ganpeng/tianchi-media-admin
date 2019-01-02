@@ -30,7 +30,7 @@
                 <el-col :span="24">
                     <el-form-item label="选择专题" prop="layoutTemplate">
                         <el-button class="btn-style-two" @click="showDialog">节目专题</el-button>
-                        <div class="selected-table">
+                        <div v-if="checkedProgrammeSubjectList.length > 0" class="selected-table">
                             <p class="table-title">已选择的节目专题</p>
                             <el-table
                                 :row-class-name="tableRowClassName"

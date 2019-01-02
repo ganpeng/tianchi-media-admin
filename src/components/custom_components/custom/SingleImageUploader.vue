@@ -148,41 +148,44 @@
     };
 </script>
 <style lang="scss" scoped>
-    .wrapper {
-        display: flex;
+.wrapper {
+    display: flex;
+}
+.img-wrapper {
+    position: relative;
+    margin-right: 10px;
+    border: 1px solid #3E495E;
+    border-radius: 4px;
+    cursor: pointer;
+    img {
+        display: inline-block;
     }
-
-    .img-wrapper {
-        position: relative;
-        // width: 100px;
-        // height: 100px;
-        margin-right: 10px;
-        border: 1px solid #3E495E;
-        border-radius: 4px;
-        cursor: pointer;
-        img {
-            display: inline-block;
-        }
+    i {
+        display: none;
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        color: $closeBtnHoverColor;
+    }
+    &:hover {
+        opacity: 0.6;
         i {
-            display: none;
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            color: $closeBtnHoverColor;
+            display: block;
         }
+    }
+}
+.uploader {
+    label {
         &:hover {
-            opacity: 0.6;
-            i {
-                display: block;
-            }
+            border-color: $mainColor;
         }
     }
-
-    .image-dimension {
-        font-size: 12px;
-        height: 22px;
-        line-height: 22px;
-        color: #6F7480;
-        text-align: center;
-    }
+}
+.image-dimension {
+    font-size: 12px;
+    height: 22px;
+    line-height: 22px;
+    color: #6F7480;
+    text-align: center;
+}
 </style>

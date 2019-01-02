@@ -71,7 +71,7 @@ const defaultProgramme = {
     // 节目看点
     desc: '',
     // 是否下架
-    visible: null,
+    visible: false,
     // 节目描述
     description: '',
     // 节目规则

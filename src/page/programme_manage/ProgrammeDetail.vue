@@ -420,9 +420,9 @@
                                 </div>
                             </div>
                         </el-form-item>
-                        <el-form-item label="节目状态">
-                            <el-radio  @input="inputHandler(true, 'visible')" :value="programme.visible" :label="true">上架</el-radio>
-                            <el-radio  @input="inputHandler(false, 'visible')" :value="programme.visible" :label="false">下架</el-radio>
+                        <el-form-item label="节目状态" prop="visible">
+                            <el-radio :disabled="video.list.length === 0" @input="inputHandler(true, 'visible')" :value="programme.visible" :label="true">上架</el-radio>
+                            <el-radio :disabled="video.list.length === 0" @input="inputHandler(false, 'visible')" :value="programme.visible" :label="false">下架</el-radio>
                         </el-form-item>
                         <el-form-item label="更新规则">
                             <el-col :span="18">
@@ -627,6 +627,9 @@
                     ],
                     programmeTemplate: [
                         { required: true, message: '请选择版式类型' }
+                    ],
+                    visible: [
+                        { required: true, message: '请选择节目状态' }
                     ]
                 }
             };

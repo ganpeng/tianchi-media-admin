@@ -38,7 +38,7 @@
                     <el-menu
                         :default-active="defaultActive"
                         class="el-menu-vertical-demo"
-                        background-color="#232e44"
+                        background-color="transparent"
                         text-color="#6a707c"
                         active-text-color="#fff">
                         <el-menu-item
@@ -355,6 +355,7 @@
 
     .el-menu {
         border-right: none;
+        background: transparent;
     }
 
     .aside-list {
@@ -366,6 +367,7 @@
             padding-left: 30px!important;
             text-align: left;
             border-left: 4px solid transparent;
+            background: transparent;
             .svg-icon {
                 fill: $navText;
                 margin-right: 20px;

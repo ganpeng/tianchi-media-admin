@@ -262,5 +262,12 @@ export default {
             }
         }
     }
+    .uploader {
+        label {
+            &:hover {
+                border-color: $mainColor;
+            }
+        }
+    }
 }
 </style>
