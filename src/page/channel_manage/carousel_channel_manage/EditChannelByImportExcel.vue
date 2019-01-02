@@ -116,6 +116,7 @@
                         this.channelAllList.map(channel => {
                             let simpleChannel = {
                                 id: channel.id,
+                                name: channel.name,
                                 innerName: channel.innerName,
                                 no: channel.no,
                                 multicastIp: channel.multicastIp,
@@ -196,6 +197,7 @@
                 let channelInfo = JSON.parse(JSON.stringify(this.channelList[index]));
                 delete channelInfo.id;
                 delete channelInfo.innerName;
+                delete channelInfo.name;
                 this.$service.updateChannelPartInfoById({
                     id: this.channelList[index].id,
                     putChannelReq: channelInfo
