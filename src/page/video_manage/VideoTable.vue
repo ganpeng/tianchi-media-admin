@@ -187,13 +187,15 @@
                 align="center"
                 label="共享站点">
                 <template slot-scope="scope">
-                    <!--注入中、注入失败、上传中、上传失败不可查看共享站点-->
-                    <el-button
-                        type="text"
-                        :disabled="scope.row.uploadStatus === 'ON_GOING' || scope.row.uploadStatus === 'FAILED' || scope.row.status === 'INJECTING' || scope.row.status === 'FAILED'"
-                        @click="checkShareSiteList(scope.row)">
-                        查看
-                    </el-button>
+                    <div class="operator-btn-wrapper">
+                        <!--注入中、注入失败、上传中、上传失败不可查看共享站点-->
+                        <span
+                            class="btn-text"
+                            :class="{disabled:scope.row.uploadStatus === 'ON_GOING' || scope.row.uploadStatus === 'FAILED' || scope.row.status === 'INJECTING' || scope.row.status === 'FAILED'}"
+                            @click="checkShareSiteList(scope.row)">
+                            查看
+                        </span>
+                    </div>
                 </template>
             </el-table-column>
             <el-table-column
@@ -219,7 +221,7 @@
                         <!--（注入成功或者拉取成功）而且（非上传中、非上传成功）的视频上传主站可点击-->
                         <span
                             v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
-                            :disabled="!((scope.row.status === 'SUCCESS' || scope.row.downloadStatus === 'SUCCESS') && !(scope.row.uploadStatus === 'ON_GOING' || scope.row.uploadStatus === 'SUCCESS'))"
+                            :class="{disabled :!((scope.row.status === 'SUCCESS' || scope.row.downloadStatus === 'SUCCESS') && !(scope.row.uploadStatus === 'ON_GOING' || scope.row.uploadStatus === 'SUCCESS'))}"
                             class="btn-text"
                             @click="pushVideoToMainSite(scope.row)">
                             上传主站
@@ -228,14 +230,14 @@
                         <!--注入中、注入失败、上传中、上传失败不可设置共享站点-->
                         <span
                             v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
-                            :disabled="!(scope.row.status === 'SUCCESS' || scope.row.uploadStatus === 'SUCCESS')"
+                            :class="{disabled:!(scope.row.status === 'SUCCESS' || scope.row.uploadStatus === 'SUCCESS')}"
                             class="btn-text"
                             @click="setSingleVideoShareSite(scope.row)">
                             共享设置
                         </span>
                         <!--在拉取中和下载中状态的视频不能删除-->
                         <span
-                            :disabled="scope.row.uploadStatus === 'ON_GOING' || scope.row.downloadStatus === 'ON_GOING'"
+                            :class="{disabled:scope.row.uploadStatus === 'ON_GOING' || scope.row.downloadStatus === 'ON_GOING'}"
                             class="btn-text text-danger"
                             @click="_deleteVideoById(scope.row.id)">
                             删除
@@ -736,6 +738,11 @@
                 color: #c0c4cc !important;
             }
         }
+    }
+
+    span.disabled {
+        opacity: 0.3;
+        pointer-events: none;
     }
 
 </style>
