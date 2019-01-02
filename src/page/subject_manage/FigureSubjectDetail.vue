@@ -2,6 +2,7 @@
 <template>
     <div>
         <div class="content-title">专题详情</div>
+        <div class="seperator-line"></div>
         <!--专题题目-->
         <div class="detail-title-block">
             <div class="subject-status shelve" v-if="subjectInfo.visible">已上架</div>
@@ -48,9 +49,9 @@
             </programme-operate-table>
         </div>
         <!--操作-->
-        <div class="operate-block">
-            <el-button type="primary" class="btn-style-two" @click="editSubject">编辑</el-button>
-            <el-button type="primary" plain class="btn-style-three" @click="toSubjectList">返回列表</el-button>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-two" type="primary" @click="editSubject">编辑</el-button>
+            <el-button class="btn-style-three" @click="toSubjectList" plain>返回列表</el-button>
         </div>
     </div>
 </template>
@@ -78,6 +79,7 @@
         },
         methods: {
             init() {
+                this.$util.toggleFixedBtnContainer();
                 this.$service.getSubjectDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         this.subjectInfo = response.data;
@@ -157,6 +159,7 @@
             div {
                 height: 17px;
                 line-height: 17px;
+                color: #6F7480;
                 &:first-child {
                     margin-top: 6px;
                     margin-bottom: 3px;
@@ -178,6 +181,9 @@
             left: 20px;
             height: 300px;
             width: 100px;
+            border: 1px solid #3E495E;
+            border-radius: 8px;
+            box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
         }
         div {
             margin-left: 155px;
@@ -217,7 +223,6 @@
     // 其它海报
     .other-poster {
         padding-bottom: 12px;
-        border-top: 1px solid #252D3F;
         border-bottom: 1px solid #252D3F;
         .thumbnail {
             margin-left: 20px;

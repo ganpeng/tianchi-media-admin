@@ -113,6 +113,11 @@
             // 勾选专题
             handleSelectionChange(val) {
                 this.multipleSelection = val;
+                if (this.multipleSelection.length === 0) {
+                    this.$emit('setBatchDisabledStatus', true);
+                } else {
+                    this.$emit('setBatchDisabledStatus', false);
+                }
             },
             // 更改单个专题状态
             updateSubjectStatus(item) {
@@ -150,6 +155,7 @@
                             this.$message.success('"' + item.name + '"' + '专题删除成功!');
                             this.$emit('getSubjectList');
                             this.multipleSelection = [];
+                            this.$emit('setBatchDisabledStatus', true);
                         }
                     });
                 }).catch(() => {
@@ -179,6 +185,7 @@
                             this.$message.success('专题批量' + (visible ? '上架' : '下架') + '成功!');
                             this.$emit('getSubjectList');
                             this.multipleSelection = [];
+                            this.$emit('setBatchDisabledStatus', true);
                         }
                     });
                 }).catch(() => {
@@ -214,6 +221,7 @@
                             this.$message.success('专题批量删除成功!');
                             this.$emit('getSubjectList');
                             this.multipleSelection = [];
+                            this.$emit('setBatchDisabledStatus', true);
                         }
                     });
                 }).catch(() => {

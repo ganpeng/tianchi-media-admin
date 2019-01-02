@@ -11,7 +11,8 @@
             <div class="float-left">
                 <el-dropdown
                     trigger="hover"
-                    class="my-dropdown">
+                    class="my-dropdown"
+                    :class="{'is-disabled':isDisabled}">
                             <span class="el-dropdown-link">
                                 批量操作<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
@@ -46,7 +47,8 @@
         <subject-operate-table
             ref="subjectOperateTable"
             :subjectList="subjectList"
-            v-on:getSubjectList="getSubjectList">
+            v-on:getSubjectList="getSubjectList"
+            v-on:setBatchDisabledStatus="setBatchDisabledStatus">
         </subject-operate-table>
         <el-pagination
             @size-change="handleSizeChange"
@@ -60,7 +62,8 @@
         <div class="text-left table-dropdow-box">
             <el-dropdown
                 trigger="hover"
-                class="my-dropdown">
+                class="my-dropdown"
+                :class="{'is-disabled':isDisabled}">
             <span class="el-dropdown-link">
                 批量操作<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
@@ -98,7 +101,7 @@
                 },
                 total: 0,
                 subjectList: [],
-                multipleSelection: []
+                isDisabled: true
             };
         },
         mounted() {
@@ -111,6 +114,9 @@
                     this.$refs.subjectFilterParams.initFilterParams(this.listQueryParams);
                 }
                 this.getSubjectList();
+            },
+            setBatchDisabledStatus(isDisabled) {
+                this.isDisabled = isDisabled;
             },
             getSubjectList(searchParams) {
                 // 设置请求参数
@@ -181,6 +187,13 @@
 
     .el-pagination {
         margin-top: 10px;
+    }
+
+    .el-dropdown {
+        &.is-disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
     }
 
 </style>

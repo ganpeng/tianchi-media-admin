@@ -58,7 +58,7 @@
                 prop="posterImageList"
                 class="image-setting-box"
                 v-if="status === 'CREATE_PROGRAMME' || status === 'EDIT_PROGRAMME'">
-                <label> (1920*1080 背景图必传)</label>
+                <label class="tips"> (1920*1080 背景图必传)</label>
                 <multi-image-uploader
                     :imageList="subjectInfo.posterImageList"
                     :deleteImageHandler="removePosterImage"
@@ -73,7 +73,7 @@
                 prop="posterImageList"
                 class="image-setting-box"
                 v-if="status === 'CREATE_FIGURE' || status === 'EDIT_FIGURE'">
-                <label> (260*600 专题E 必传)</label>
+                <label class="tips"> (260*600 专题E 必传)</label>
                 <multi-image-uploader
                     :imageList="subjectInfo.posterImageList"
                     :dimension="{width:'168',height:'180'}"
@@ -399,6 +399,9 @@
     }
 
     .image-setting-box {
+        .tips {
+            color: #A8ABB3;
+        }
         .multi-image-uploader-container {
             float: none;
         }

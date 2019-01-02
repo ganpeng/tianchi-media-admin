@@ -162,7 +162,7 @@
                         <span
                             v-if="scope.row.downloadStatus === 'ON_GOING'"
                             class="status-on-going">
-                            上传中 {{scope.row | getDownloadPercent}}
+                            拉取中 {{scope.row | getDownloadPercent}}
                         </span>
                         <span
                             v-if="scope.row.downloadStatus === 'FAILED'"
