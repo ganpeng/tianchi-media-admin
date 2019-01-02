@@ -255,7 +255,6 @@
             .user-info {
                 position: relative;
                 align-items: center;
-                // width: 154px;
                 width: 184px;
                 height: 60px;
                 line-height: $headerHeight;
@@ -329,6 +328,7 @@
             .logo {
                 width: 200px;
                 height: 110px;
+                background-image: linear-gradient(0deg, rgba(0,0,0,0.00) 0%, #000000 100%);
                 .svg-icon {
                     position: absolute;
                     left: 50%;
@@ -360,6 +360,8 @@
 
     .aside-list {
         .el-menu-item {
+            display: flex;
+            align-items: center;
             height: 50px;
             line-height: 50px;
             font-size: 20px;
@@ -371,6 +373,8 @@
             .svg-icon {
                 fill: $navText;
                 margin-right: 20px;
+                width: 30px;
+                height: 30px;
             }
             &:hover {
                 background: #0A1730 !important;

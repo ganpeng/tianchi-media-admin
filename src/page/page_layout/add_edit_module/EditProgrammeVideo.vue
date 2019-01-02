@@ -158,8 +158,7 @@
                                     placeholder="搜索你想要的信息"
                                     clearable
                                     class="border-input"
-                                    :value="''"
-                                    @input="searchInputHandler($event, 'name')"
+                                    v-model="keyword"
                                 >
                                 </el-input>
                             </el-form-item>
@@ -464,6 +463,8 @@ export default {
             dialogVisible: false,
             navbarId: '',
             index: 0,
+            keyword: '',
+            category: '',
             programme: {},
             previewImage: {
                 title: '',
@@ -572,16 +573,24 @@ export default {
             getProgrammeCategory: 'programme/getProgrammeCategory',
             getProgrammeVideoListById: 'programme/getProgrammeVideoListById'
         }),
+        keyupHandler(e) {
+            if (e.keyCode === 13) {
+                this.searchEnterHandler();
+            }
+        },
         //  弹窗的操作
         async showDialog(category) {
             try {
                 this.dialogVisible = true;
                 await this.getProgrammeCategory();
                 if (category) {
+                    this.category = category;
                     await this.getProgrammeListByNews();
                 } else {
                     await this.getProgrammeList();
                 }
+
+                window.addEventListener('keyup', this.keyupHandler);
             } catch (err) {
                 console.log(err);
             }
@@ -590,11 +599,15 @@ export default {
             this.dialogVisible = false;
             this.active = 0;
             this.programme = {};
+            this.keyword = '';
+            this.cateogry = '';
             this.previewImage = {
                 title: '',
                 display: false,
                 uri: ''
             };
+
+            window.removeEventListener('keyup', this.keyupHandler);
         },
         async dialogOpenHandler() {
             try {
@@ -682,7 +695,21 @@ export default {
         videoTableRowClassName({row, rowIndex}) {
             return row.id === this.getSquareProgrammeVideoId ? 'checked' : '';
         },
-        searchEnterHandler() {},
+        searchEnterHandler() {
+            if (this.category) {
+                if (this.keyword) {
+                    this.getProgrammeListByNews(this.keyword);
+                } else {
+                    this.getProgrammeListByNews();
+                }
+            } else {
+                if (this.keyword) {
+                    this.getProgrammeList(this.keyword);
+                } else {
+                    this.getProgrammeList();
+                }
+            }
+        },
         //  查看图片
         displayImage(image) {
             this.previewImage.title = image.name;

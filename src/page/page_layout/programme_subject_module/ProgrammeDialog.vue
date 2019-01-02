@@ -214,7 +214,12 @@ export default {
             return _.get(this.programme, 'platformList.length') === 0;
         },
         leftBottomDisabled() {
-            return !(this.programme && this.programme.featureVideoCount);
+            let {leftBottomMarkCaption} = this.programme;
+            if (leftBottomMarkCaption) {
+                return !(this.programme && this.programme.leftBottomMarkCaption);
+            } else {
+                return !(this.programme && this.programme.featureVideoCount);
+            }
         },
         rightBottomDisabled() {
             return !(this.programme && this.programme.score);

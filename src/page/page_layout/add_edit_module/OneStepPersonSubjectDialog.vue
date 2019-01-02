@@ -189,6 +189,11 @@ export default {
             getPersonSubjectList: 'pageLayout/getPersonSubjectList',
             updateSubjectById: 'pageLayout/updateSubjectById'
         }),
+        keyupHandler(e) {
+            if (e.keyCode === 13) {
+                this.searchEnterHandler();
+            }
+        },
         handlePaginationChange(value, key) {
             this.updatePersonSubjectPagination({value, key});
             this.getPersonSubjectList();
@@ -201,12 +206,16 @@ export default {
         showDialog() {
             this.getPersonSubjectList();
             this.dialogVisible = true;
+
+            window.addEventListener('keyup', this.keyupHandler);
         },
         closeDialog() {
             this.resetPersonSubject();
             this.dialogVisible = false;
             this.showExist = false;
             this.personSubjectData = {};
+
+            window.removeEventListener('keyup', this.keyupHandler);
         },
         async dialogOpenHandler() {
             try {

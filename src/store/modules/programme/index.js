@@ -1021,17 +1021,26 @@ const actions = {
     /**
      * 获取特定类型的节目列表
      */
-    async getProgrammeListByNews({commit, state}) {
+    async getProgrammeListByNews({commit, state}, keyword) {
         try {
             if (!isLoading) {
                 isLoading = true;
                 let searchFields = Object.assign({}, state.searchFields, {
                     programmeCategoryIdList: state.global.categoryList.filter((item) => item.signCode === 'NEWS').map((item) => item.id)
                 });
-                let params = Object.assign({}, searchFields, {
-                    pageSize: state.pagination.pageSize,
-                    pageNum: state.pagination.pageNum - 1
-                });
+                let params = {};
+                if (keyword) {
+                    params = Object.assign({}, searchFields, {
+                        pageSize: state.pagination.pageSize,
+                        pageNum: state.pagination.pageNum - 1,
+                        keyword
+                    });
+                } else {
+                    params = Object.assign({}, searchFields, {
+                        pageSize: state.pagination.pageSize,
+                        pageNum: state.pagination.pageNum - 1
+                    });
+                }
                 let res = await service.getProgrammeList(params);
                 if (res && res.code === 0) {
                     let {pageNum, pageSize, total, list} = res.data;

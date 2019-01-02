@@ -1,7 +1,7 @@
 <template>
     <div class="recommend-fixed-module-container">
         <div class="module-row-one">
-            <div class="btn-field text-right">
+            <div v-if="!isEdit" class="btn-field text-right">
                 <el-button @click="editFixedModuleHandler" class="btn-style-five">
                     <svg-icon icon-class="edit"></svg-icon>
                 </el-button>
@@ -41,9 +41,6 @@
             </div>
         </div>
         <div class="module-row-two">
-            <div class="btn-field text-right">
-                <el-button v-if="!isEdit" @click="editFixedModuleHandler" class="btn-style-two">编辑</el-button>
-            </div>
             <div class="content-field">
                 <div class="top-field">
                     <div class="wrapper">
@@ -289,6 +286,7 @@ export default {
         margin: 40px 0 10px 0;
     }
     .module-row-one {
+        margin-bottom: 2%;
         .content-field {
             display: flex;
             .left-field-wrapper {

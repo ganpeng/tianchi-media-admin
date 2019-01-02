@@ -244,12 +244,14 @@
                                         </el-select>
                                     </div>
                                     <div class="mark-item">
-                                        <el-checkbox v-if="markCheckedByKey('leftBottom')" :checked="true" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
-                                            左下角：更新
-                                        </el-checkbox>
-                                        <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
-                                            左下角：更新
-                                        </el-checkbox>
+                                        <div v-if="showLeftBottom">
+                                            <el-checkbox v-if="markCheckedByKey('leftBottom')" :checked="true" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
+                                                左下角：更新
+                                            </el-checkbox>
+                                            <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
+                                                左下角：更新
+                                            </el-checkbox>
+                                        </div>
                                     </div>
                                     <div class="mark-item">
                                         <el-checkbox v-if="markCheckedByKey('rightBottom')" :checked="true" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
@@ -349,6 +351,16 @@ export default {
             let {rightTop} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
             return _.isEmpty(rightTop) ? {} : rightTop;
         },
+        showLeftBottom() {
+            let categoryList = _.get(this.programme, 'categoryList');
+            if (categoryList && _.isArray(categoryList)) {
+                return categoryList.filter((category) => {
+                    return category.name === '卫视综艺' || category.name === '网络综艺' || category.name === '电视剧';
+                }).length > 0;
+            } else {
+                return false;
+            }
+        },
         leftTopDisabled() {
             return _.get(this.programme, 'platformList.length') === 0;
         },
@@ -405,6 +417,11 @@ export default {
             getProgrammeCategory: 'programme/getProgrammeCategory',
             getCustomMarkList: 'pageLayout/getCustomMarkList'
         }),
+        keyupHandler(e) {
+            if (e.keyCode === 13) {
+                this.searchEnterHandler();
+            }
+        },
         //  弹窗的操作
         async showDialog(category) {
             try {
@@ -415,6 +432,8 @@ export default {
                 } else {
                     await this.getProgrammeList();
                 }
+
+                window.addEventListener('keyup', this.keyupHandler);
             } catch (err) {
                 console.log(err);
             }
@@ -430,6 +449,8 @@ export default {
                 display: false,
                 uri: ''
             };
+
+            window.removeEventListener('keyup', this.keyupHandler);
         },
         async dialogOpenHandler() {
             try {

@@ -232,6 +232,12 @@ export default {
         this.navbarId = navbarId;
         this.index = parseInt(index);
     },
+    // mounted() {
+    //     window.addEventListener('keyup', this.keyupHandler);
+    // },
+    // beforeDestroy() {
+    //     window.removeEventListener('keyup', this.keyupHandler);
+    // },
     computed: {
         ...mapGetters({
             programmeSubject: 'pageLayout/programmeSubject',
@@ -290,10 +296,17 @@ export default {
             getProgrammeSubjectList: 'pageLayout/getProgrammeSubjectList',
             getCustomMarkList: 'pageLayout/getCustomMarkList'
         }),
+        keyupHandler(e) {
+            if (e.keyCode === 13) {
+                this.searchEnterHandler();
+            }
+        },
         //  弹窗的操作
         showDialog() {
             this.dialogVisible = true;
             this.getProgrammeSubjectList();
+
+            window.addEventListener('keyup', this.keyupHandler);
         },
         closeDialog() {
             this.resetProgrammeSubject();
@@ -301,6 +314,8 @@ export default {
             this.active = 0;
             this.showExist = false;
             this.programmeSubjectData = {};
+
+            window.removeEventListener('keyup', this.keyupHandler);
         },
         async dialogOpenHandler() {
             try {

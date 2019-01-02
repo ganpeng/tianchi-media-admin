@@ -154,7 +154,8 @@ const getters = {
     },
     getLayoutItemCornerMark(state) {
         return (navbarId, index, squareIndex) => {
-            let obj = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.cornerMark`);
+            // let obj = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.cornerMark`);
+            let obj = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}`);
             return !_.isEmpty(obj) ? obj : {};
         };
     },
