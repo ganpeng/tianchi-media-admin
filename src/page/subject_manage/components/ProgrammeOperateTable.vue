@@ -272,6 +272,7 @@
                         this.$refs.programmeTable.toggleRowSelection(this.programmeList[i], false);
                     }
                 }
+                this.$emit('setSelectedProgrammeList', this.multipleSelection);
             },
             // 对关联的节目进行排序
             movePosition(model, programme, index) {

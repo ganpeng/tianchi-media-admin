@@ -181,6 +181,8 @@
             }
             &.svg-icon-arrow_down {
                 margin-left: 5px;
+                height: 10px !important;
+                width: 10px !important;
             }
         }
     }

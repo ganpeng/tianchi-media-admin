@@ -308,16 +308,37 @@
                         this.$message.warning(value + '标签重复');
                     }
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '取消添加'
-                    });
                 });
             },
             // 成功上传图片
             imageUploadedHandler(image) {
                 this.subjectInfo.posterImageList.push(image);
                 this.subjectInfo.posterImageList = _.uniqBy(this.subjectInfo.posterImageList, 'id');
+                if (this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE') {
+                    this.resortImageList('260', '600');
+                } else {
+                    this.resortImageList('1920', '1080');
+                }
+            },
+            resortImageList(width, height) {
+                // 人物专题根据尺寸将260*600的图片放置在数组前面,节目专题将1920*1080放在前面
+                let featureImageArray = [];
+                for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
+                    if (this.subjectInfo.posterImageList[i].width.toString() === width && this.subjectInfo.posterImageList[i].height.toString() === height) {
+                        featureImageArray.push(this.subjectInfo.posterImageList[i]);
+                    }
+                }
+                this.removeFeatureImage(width, height);
+                this.subjectInfo.posterImageList = featureImageArray.concat(this.subjectInfo.posterImageList);
+            },
+            removeFeatureImage(width, height) {
+                for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
+                    if (this.subjectInfo.posterImageList[i].width.toString() === width && this.subjectInfo.posterImageList[i].height.toString() === height) {
+                        this.subjectInfo.posterImageList.splice(i, 1);
+                        this.removeFeatureImage(width, height);
+                        return;
+                    }
+                }
             },
             // 删除封面图片
             removePosterImage(imageId) {
@@ -335,10 +356,6 @@
                     this.subjectInfo.posterImageList.splice(index, 1);
                     this.$message.success('图片删除成功!');
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
                 });
             },
             // 创建或更新专题
