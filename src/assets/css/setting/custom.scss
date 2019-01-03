@@ -679,6 +679,7 @@
         color: #6F7480;
         border: 1px solid #3E495E;
         border-radius: 4px;
+        background: rgba(65,74,93,0.90);
         cursor: pointer;
         &.disabled {
             opacity: 0.4;
@@ -727,7 +728,7 @@
         height: 18px;
         position: absolute;
         top: -3px;
-        left: -5px;
+        left: -2px;
         border-radius: 18px;
         background-color: #A3D0FD;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
@@ -738,7 +739,7 @@
         background-color: #3AC26F;
     }
     &:checked:before {
-        left: 24px;
+        left: 22px;
     }
     &.switch-anim {
         transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
@@ -888,6 +889,14 @@
                 border: 1px solid #3E495E;
                 border-radius: 8px;
                 box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
+            }
+            .default-person-image {
+                width: 200px;
+                height: 200px;
+                .svg-icon {
+                    width: 200px;
+                    height: 200px;
+                }
             }
         }
         &.programme {
@@ -1046,6 +1055,7 @@
         margin-right: 10px;
         // transform: scale(0.8);
         border: 1px solid #2A3040;
+        cursor: pointer;
         &:hover {
             border: 1px solid $mainColor;
         }
@@ -1229,14 +1239,19 @@
             .el-button {
                 width: 100px;
                 height: 40px;
+                border: none;
                 span {
                     font-weight: 400;
                 }
                 &.el-button--default {
                     color: $dangerColor;
                 }
-                &.el-button--default.el-button--primary {
+                &.el-button--default.el-button--primary, &.el-button--primary {
+                    background: #0062C4;
                     color: #A3D0FD;
+                    &:hover {
+                        background: $mainColor;
+                    }
                 }
                 &:first-child {
                     margin-left: 10px;
@@ -1487,4 +1502,9 @@
 .el-radio__input.is-disabled .el-radio__inner {
     background-color: transparent;
     border: 4px solid #191D26;
+}
+
+//  全局修改checkbox的样式
+.el-checkbox__input.is-checked+.el-checkbox__label {
+    color: #fff;
 }

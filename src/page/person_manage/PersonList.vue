@@ -44,7 +44,36 @@
             <div class="table-field">
                 <h2 class="content-title">人物列表</h2>
                 <div class="table-operator-field clearfix">
-                    <div class="float-left"></div>
+                    <div class="float-left">
+                        <el-dropdown
+                            v-show="isDisabled"
+                            class="my-dropdown disabled">
+                            <span class="el-dropdown-link">
+                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <el-dropdown
+                            trigger="click"
+                            v-show="!isDisabled"
+                            class="my-dropdown">
+                            <span class="el-dropdown-link">
+                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item>
+                                    <span @click="multUpFramePersonHandler">批量上架</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span @click="multLowerFramePersonHandler">批量下架</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span @click="batchDeletPersonHandler">批量删除</span>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
                     <div class="float-right">
                         <el-button
                             class="btn-style-two contain-svg-icon"
@@ -66,7 +95,11 @@
                         </el-button>
                     </div>
                 </div>
-                <el-table :row-class-name='"figure-row"' :header-row-class-name='"common-table-header"' class="my-table-style" :data="list" border>
+                <el-table
+                    @select="selectHandler"
+                    @select-all="selectAllHandler"
+                    :row-class-name='"figure-row"' :header-row-class-name='"common-table-header"' class="my-table-style" :data="list" border>
+                    <el-table-column type="selection" align="center"></el-table-column>
                     <el-table-column prop="id" align="center" width="120px" label="编号">
                         <template slot-scope="scope">
                             {{scope.row.id | padEmpty}}
@@ -83,7 +116,7 @@
                     </el-table-column>
                     <el-table-column prop="alias" align="center" label="别名">
                         <template slot-scope="scope">
-                            {{scope.row.alias | padEmpty}}
+                            {{cutStr20(scope.row.alias) | padEmpty}}
                         </template>
                     </el-table-column>
                     <el-table-column label="照片" width="120px" align="center" >
@@ -140,7 +173,7 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="pagination.total">
         </el-pagination>
-        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
+        <preview-single-image :singleImage="previewImage"></preview-single-image>
         <el-dialog
             title="上传人物表格"
             :visible.sync="fileUploadDialogVisible"
@@ -171,8 +204,10 @@
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import store from 'store';
+    import _ from 'lodash';
     import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
     import role from '../../util/config/role';
+
     export default {
         name: 'PersonList',
         components: {
@@ -189,6 +224,7 @@
                 //  人物导入
                 fileUploadDialogVisible: false,
                 fileList: [],
+                selectedVideoList: [],
                 uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token)
             };
         },
@@ -213,7 +249,10 @@
                 searchFields: 'person/searchFields',
                 pagination: 'person/pagination',
                 mainRoleLabel: 'person/mainRoleLabel'
-            })
+            }),
+            isDisabled() {
+                return this.selectedVideoList.length === 0;
+            }
         },
         methods: {
             ...mapMutations({
@@ -251,6 +290,9 @@
                 } else {
                     return code;
                 }
+            },
+            cutStr20(value) {
+                return this.$util.cutStr(value, 19);
             },
             // 跳转到详情页面
             displayPerson(userId) {
@@ -377,12 +419,36 @@
                 }
                 this.closeFileUploadDialog();
             },
+            selectHandler(list, row) {
+                let isSelected = list.findIndex((item) => item.id === row.id) >= 0;
+                if (isSelected) {
+                    this.selectedVideoList.push(row);
+                } else {
+                    this.selectedVideoList = this.selectedVideoList.filter((item) => item.id !== row.id);
+                }
+            },
+            selectAllHandler(list) {
+                if (list.length > 0) {
+                    this.selectedVideoList = _.uniqBy(this.selectedVideoList.concat(list), 'id');
+                } else {
+                    this.selectedVideoList = this.selectedVideoList.filter((item) => {
+                        let index = this.list.findIndex((programme) => {
+                            return programme.id === item.id;
+                        });
+                        return index < 0;
+                    });
+                }
+            },
             gotoPersonImportPage() {
                 let routeData = this.$router.resolve({
                     name: 'PersonImport'
                 });
                 window.open(routeData.href, '_blank');
-            }
+            },
+            //  批量操作
+            multUpFramePersonHandler() {},
+            multLowerFramePersonHandler() {},
+            batchDeletPersonHandler() {}
         }
     };
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div class="shuffle-module-container">
-        <h2 class="content-title">新增节目专题</h2>
+        <h2 class="content-title">{{title}}</h2>
         <div class="seperator-line"></div>
         <div class="form-container">
             <el-form :model="layoutData"
@@ -269,6 +269,7 @@ export default {
         return {
             navbarId: '',
             index: 0,
+            title: '',
             saveFlag: false, // 判断页面跳转之前如果没有点保存按钮的话，就删除新增的这个layoutItem
             allowResolutions: [],
             //  节目专题弹窗相关
@@ -295,9 +296,16 @@ export default {
     },
     async created() {
         try {
-            let {navbarId, index} = this.$route.params;
+            let {navbarId, index, operator} = this.$route.params;
             this.navbarId = navbarId;
             this.index = parseInt(index);
+
+            if (operator === 'add') {
+                this.title = '新增节目专题';
+            } else {
+                this.title = '编辑节目专题';
+            }
+
             if (this.subjectId) {
                 let res = await this.$service.getSubjectById(this.subjectId);
                 if (res && res.code === 0) {

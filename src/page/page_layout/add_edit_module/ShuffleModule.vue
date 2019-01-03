@@ -1,6 +1,6 @@
 <template>
     <div class="shuffle-module-container">
-        <h2 class="content-title">新增混排模块</h2>
+        <h2 class="content-title">{{title}}</h2>
         <div class="seperator-line"></div>
         <div class="form-container">
             <el-form :model="layoutData"
@@ -229,6 +229,7 @@ export default {
         return {
             navbarId: '',
             index: 0,
+            title: '',
             saveFlag: false, // 判断页面跳转之前如果没有点保存按钮的话，就删除新增的这个layoutItem
             allowResolutions: [],
             shuffleOptions,
@@ -253,9 +254,15 @@ export default {
         next();
     },
     created() {
-        let {navbarId, index} = this.$route.params;
+        let {navbarId, index, operator} = this.$route.params;
         this.navbarId = navbarId;
         this.index = parseInt(index);
+
+        if (operator === 'add') {
+            this.title = '新增混排模块';
+        } else {
+            this.title = '编辑混排模块';
+        }
     },
     computed: {
         ...mapGetters({
@@ -447,7 +454,7 @@ export default {
         height: 180px;
         position: absolute;
         top: 0;
-        left: 180px;
+        left: 310px;
         z-index: 100;
         background: #414A5D;
         padding: 20px;

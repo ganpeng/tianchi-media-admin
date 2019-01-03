@@ -129,6 +129,7 @@
                     <single-image-uploader
                         id="filterImageUploaderOne"
                         :uri="coverImage.uri || ''"
+                        :showDelete="false"
                         :uploadSuccessHandler="addPosterImage"
                         :allowResolutions="allowResolutions"
                     ></single-image-uploader>
@@ -137,6 +138,7 @@
                     <single-image-uploader
                         id="filterImageUploaderTwo"
                         :uri="coverImageBackground.uri || ''"
+                        :showDelete="false"
                         :uploadSuccessHandler="addBgPosterImage"
                         :allowResolutions="allowResolutions"
                     ></single-image-uploader>

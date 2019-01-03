@@ -11,7 +11,9 @@
                     </span>
                 </div>
                 <img v-if="person.avatarImage" :src="person.avatarImage.uri | fileUrl" alt="" width="200" height="200">
-                <img v-else src="" alt="" width="200" height="200">
+                <div v-else class="default-person-image">
+                    <svg-icon icon-class="default_person_image"></svg-icon>
+                </div>
             </div>
             <div class="info-section">
                 <div class="title-wrapper">
@@ -27,7 +29,7 @@
                 </div>
                 <div class="seperator-line"></div>
                 <div class="tags-section">
-                    <span class="address-tag">
+                    <span v-if="person.area" class="address-tag">
                         {{areaLabel(person.area)}}
                     </span>
                     <span v-for="(name, index) in mainRoleLabel(person.mainRoleList)" :key="index" class="role-tag">

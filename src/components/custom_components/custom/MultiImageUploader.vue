@@ -266,6 +266,9 @@ export default {
         label {
             &:hover {
                 border-color: $mainColor;
+                .el-icon-plus {
+                    color: $mainColor;
+                }
             }
         }
     }

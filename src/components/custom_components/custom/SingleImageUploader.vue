@@ -3,7 +3,7 @@
         <div class="wrapper">
             <div v-if="showImage" :style="styleStr" v-show="uri" class="img-wrapper">
                 <img :style="styleStr" :src="uri" alt="">
-                <i @click="deleteImage" class="el-icon-error"></i>
+                <i v-if="showDelete" @click="deleteImage" class="el-icon-error"></i>
             </div>
             <div class="uploader-wrapper">
                 <div class="uploader" :style="styleStr">
@@ -62,6 +62,10 @@
                 type: Function,
                 default: () => {
                 }
+            },
+            showDelete: {
+                type: Boolean,
+                default: true
             }
         },
         data() {
@@ -178,6 +182,9 @@
     label {
         &:hover {
             border-color: $mainColor;
+            .el-icon-plus {
+                color: $mainColor;
+            }
         }
     }
 }

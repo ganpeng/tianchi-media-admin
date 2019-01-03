@@ -1,7 +1,7 @@
 <template>
     <div class="page-layout-container">
-        <div class="columns-container">
-            <ul class="columns-list clearfix">
+        <div class="columns-container wrapper" ref="wrapperBox">
+            <ul class="columns-list clearfix content">
                 <li
                     :style="navbarStyle(navbar)"
                     v-for="(navbar) in navbarList"
@@ -84,6 +84,8 @@
 import draggable from 'vuedraggable';
 import {mapGetters, mapActions, mapMutations} from 'vuex';
 import _ from 'lodash';
+import BScroll from 'better-scroll';
+
 import FixedLayout from './FixedLayout';
 import OtherLayout from './OtherLayout';
 import init from '../../util/init';
@@ -117,6 +119,11 @@ export default {
                 this.updateLayout();
                 this.$nextTick(() => {
                     this.setNavBarWidth();
+                });
+                new BScroll(this.$refs.wrapperBox, {  // eslint-disable-line
+                    click: true,
+                    scrollX: true,
+                    eventPassthrough: 'vertical'
                 });
             }
         } catch (err) {

@@ -10,7 +10,7 @@
                 <el-dropdown-item v-if="!onlyChannel" command="PROGRAMME_VIDEO">节目内视频</el-dropdown-item>
                 <el-dropdown-item v-if="!onlyChannel" command="PROGRAMME_SUBJECT">节目专题</el-dropdown-item>
                 <el-dropdown-item v-if="!onlyChannel" command="LINK">网页</el-dropdown-item>
-                <el-dropdown-item v-if="!onlyChannel && hasChannel" command="CHANNEL">频道</el-dropdown-item>
+                <el-dropdown-item v-if="onlyChannel && hasChannel" command="CHANNEL">频道</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
     </div>

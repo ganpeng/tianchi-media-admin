@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="214px" height="212px" viewBox="0 0 214 212" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>用户查看</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-7.8%" y="-7.2%" width="115.5%" height="114.5%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="2" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <rect id="path-2" x="0" y="0.473933649" width="200" height="199.052133" rx="8"></rect>
+    </defs>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="11-03用户管理-查看用户" transform="translate(-237.000000, -167.000000)">
+            <g id="用户查看" filter="url(#filter-1)" transform="translate(242.000000, 171.000000)">
+                <mask id="mask-3" fill="white">
+                    <use xlink:href="#path-2"></use>
+                </mask>
+                <rect stroke="#3E495E" stroke-width="1.20000005" x="-0.600000024" y="-0.126066375" width="201.2" height="200.252133" rx="8"></rect>
+                <path d="M184.688915,184.555 C180.318632,177.463333 170.972665,172.303333 161.839678,168.166667 C151.930236,163.676667 132.631226,157.263333 124.036559,149.555 C118.737213,144.8 115.186986,135.783333 116.699648,130.388333 C118.727151,123.166667 124.59668,124 135.203756,107.48 C141.678685,97.4016667 145.837666,59.8333333 139.409693,44.8333333 C133.090726,30.0866667 123.198055,19 100,19 C76.8019453,19 66.9092739,30.0866667 60.5903069,44.8333333 C54.1623344,59.8333333 58.3213148,97.4016667 64.7962435,107.48 C75.4033205,124 81.2728492,123.166667 83.3003522,130.388333 C84.8130136,135.783333 81.2627872,144.8 75.9634412,149.555 C67.3687741,157.263333 48.0697635,163.676667 38.160322,168.166667 C29.0273352,172.303333 19.6813684,177.463333 15.311085,184.555 C12.2019118,189.598333 10,199 10,199 L100,199 L190,199 C190,199 187.798088,189.598333 184.688915,184.555" id="我的" fill-opacity="0.5" fill="#3E495E" mask="url(#mask-3)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

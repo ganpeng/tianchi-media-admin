@@ -12,7 +12,7 @@
             :close-on-press-escape="false"
             :append-to-body="true">
             <div class="person-dialog-container">
-                <el-steps class="my-steps" :active="active" finish-status="success">
+                <el-steps class="my-steps" align-center :active="active" finish-status="success">
                     <el-step title="选择人物专题"></el-step>
                     <el-step title="推荐位海报"></el-step>
                 </el-steps>
@@ -142,8 +142,8 @@
                 </div>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
                     <el-button @click="cancelHanlder">取 消</el-button>
-                    <el-button v-show="active > 0" class="btn-style-three" @click="prevBtnClickHandler">上一步</el-button>
-                    <el-button v-show="active < 1" class="btn-style-three" @click="nextBtnClickHandler">下一步</el-button>
+                    <el-button v-show="active > 0" class="btn-style-three prev-btn" @click="prevBtnClickHandler">上一步</el-button>
+                    <el-button v-show="active < 1" class="btn-style-three next-btn" @click="nextBtnClickHandler">下一步</el-button>
                     <el-button v-show="active === 1" type="primary" class="btn-style-two" @click="enterSuccessHandler">确 定</el-button>
                 </div>
             </div>

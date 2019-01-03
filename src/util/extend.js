@@ -381,6 +381,17 @@ let util = {
                 type: 'info'
             });
         });
+    },
+    cutStr(str, len) {
+        let charLength = 0;
+        for (let i = 0; i < str.length; i++) {
+            let sonStr = str.charAt(i);
+            encodeURI(sonStr).length > 2 ? charLength += 1 : charLength += 0.5;
+            if (charLength >= len) {
+                let subLen = charLength === len ? i + 1 : i;
+                return `${str.substr(0, subLen)}...`;
+            }
+        }
     }
 };
 

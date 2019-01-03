@@ -12,7 +12,7 @@
             :close-on-press-escape="false"
             :append-to-body="true">
             <div class="person-dialog-container">
-                <div class="seperator-line"></div>
+                <!-- <div class="seperator-line"></div> -->
                 <div v-if="showExist">
                     <p class="table-title">已选择的节目专题</p>
                     <el-table

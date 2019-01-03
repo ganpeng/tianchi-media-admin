@@ -175,7 +175,6 @@
         <div slot="footer" class="dialog-footer">
             <el-button size="medium" @click="cancelHandler">取 消</el-button>
             <el-button
-                size="medium"
                 v-if="videoStatus !== 2"
                 type="primary"
                 @click="successHandler"
@@ -250,13 +249,13 @@
             title() {
                 switch (parseInt(this.videoStatus)) {
                     case 0:
-                        return '创建视频';
+                        return '关联视频';
                     case 1:
                         return '编辑视频';
                     case 2:
                         return '显示视频';
                     default:
-                        return '创建视频';
+                        return '关联视频';
                 }
             },
             readonly() {

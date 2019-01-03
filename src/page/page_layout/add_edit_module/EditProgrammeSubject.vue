@@ -232,12 +232,6 @@ export default {
         this.navbarId = navbarId;
         this.index = parseInt(index);
     },
-    // mounted() {
-    //     window.addEventListener('keyup', this.keyupHandler);
-    // },
-    // beforeDestroy() {
-    //     window.removeEventListener('keyup', this.keyupHandler);
-    // },
     computed: {
         ...mapGetters({
             programmeSubject: 'pageLayout/programmeSubject',

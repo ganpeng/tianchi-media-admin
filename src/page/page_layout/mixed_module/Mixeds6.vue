@@ -33,6 +33,7 @@
                     <shuffle-btn
                         v-if="isEdit"
                         :onlyChannel="true"
+                        :hasChannel="true"
                         :addShuffleLayout="addShuffleLayout(0)"
                     ></shuffle-btn>
                 </div>
@@ -42,6 +43,7 @@
                     <shuffle-btn
                         v-if="isEdit"
                         :onlyChannel="true"
+                        :hasChannel="true"
                         :addShuffleLayout="addShuffleLayout(1)"
                     ></shuffle-btn>
                 </div>
@@ -51,6 +53,7 @@
                     <shuffle-btn
                         v-if="isEdit"
                         :onlyChannel="true"
+                        :hasChannel="true"
                         :addShuffleLayout="addShuffleLayout(2)"
                     ></shuffle-btn>
                 </div>
@@ -60,6 +63,7 @@
                     <shuffle-btn
                         v-if="isEdit"
                         :onlyChannel="true"
+                        :hasChannel="true"
                         :addShuffleLayout="addShuffleLayout(3)"
                     ></shuffle-btn>
                 </div>
@@ -69,6 +73,7 @@
                     <shuffle-btn
                         v-if="isEdit"
                         :onlyChannel="true"
+                        :hasChannel="true"
                         :addShuffleLayout="addShuffleLayout(4)"
                     ></shuffle-btn>
                 </div>
@@ -78,6 +83,7 @@
                     <shuffle-btn
                         v-if="isEdit"
                         :onlyChannel="true"
+                        :hasChannel="true"
                         :addShuffleLayout="addShuffleLayout(5)"
                     ></shuffle-btn>
                 </div>

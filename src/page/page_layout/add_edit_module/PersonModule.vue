@@ -1,6 +1,6 @@
 <template>
     <div class="person-module-container">
-        <h2 class="content-title">新增人物模块</h2>
+        <h2 class="content-title">{{title}}</h2>
         <div class="seperator-line"></div>
         <div class="form-container">
             <el-form :model="layoutData"
@@ -200,6 +200,7 @@ export default {
             index: '', //  缓存的index
             selectPersonDialogVisible: false,
             tagsFieldVisible: false,
+            title: '',
             saveFlag: false, // 判断页面跳转之前如果没有点保存按钮的话，就删除新增的这个layoutItem
             areaOptions: store.get('areaList'),
             previewImage: {
@@ -223,9 +224,14 @@ export default {
         next();
     },
     created() {
-        let {navbarId, index} = this.$route.params;
+        let {navbarId, index, operator} = this.$route.params;
         this.navbarId = navbarId;
         this.index = index;
+        if (operator === 'add') {
+            this.title = '新增人物模块';
+        } else {
+            this.title = '编辑人物模块';
+        }
     },
     computed: {
         ...mapGetters({
