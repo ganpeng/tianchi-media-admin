@@ -1021,26 +1021,43 @@ const actions = {
     /**
      * 获取特定类型的节目列表
      */
-    async getProgrammeListByNews({commit, state}, keyword) {
+    async getProgrammeListIsVisibleByNews({commit, state}) {
         try {
             if (!isLoading) {
                 isLoading = true;
                 let searchFields = Object.assign({}, state.searchFields, {
                     programmeCategoryIdList: state.global.categoryList.filter((item) => item.signCode === 'NEWS').map((item) => item.id)
                 });
-                let params = {};
-                if (keyword) {
-                    params = Object.assign({}, searchFields, {
+                let params = Object.assign({}, searchFields, {
                         pageSize: state.pagination.pageSize,
                         pageNum: state.pagination.pageNum - 1,
-                        keyword
+                        visible: true
                     });
-                } else {
-                    params = Object.assign({}, searchFields, {
-                        pageSize: state.pagination.pageSize,
-                        pageNum: state.pagination.pageNum - 1
-                    });
+                let res = await service.getProgrammeList(params);
+                if (res && res.code === 0) {
+                    let {pageNum, pageSize, total, list} = res.data;
+                    commit('setProgrammeList', {list});
+                    commit('setProgrammePagination', {pageSize, pageNum: pageNum + 1, total});
                 }
+                isLoading = false;
+                return res;
+            }
+        } catch (err) {
+            isLoading = false;
+        }
+    },
+    /**
+     * 获取已经上架的节目列表
+     */
+    async getProgrammeListIsVisible({commit, state}) {
+        try {
+            if (!isLoading) {
+                isLoading = true;
+                let params = Object.assign({}, state.searchFields, {
+                    pageSize: state.pagination.pageSize,
+                    pageNum: state.pagination.pageNum - 1,
+                    visible: true
+                });
                 let res = await service.getProgrammeList(params);
                 if (res && res.code === 0) {
                     let {pageNum, pageSize, total, list} = res.data;

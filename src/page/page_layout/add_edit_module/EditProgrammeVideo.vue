@@ -14,11 +14,11 @@
             :append-to-body="true">
             <div class="person-dialog-container">
                 <div class="step-container">
-                    <el-steps v-if="showExist" class="my-steps" :active="active" finish-status="success">
+                    <el-steps v-if="showExist" align-center class="my-steps" :active="active" finish-status="success">
                         <el-step title="选择视频"></el-step>
                         <el-step title="选择图片"></el-step>
                     </el-steps>
-                    <el-steps v-else class="my-steps" :active="active" finish-status="success">
+                    <el-steps v-else class="my-steps" align-center :active="active" finish-status="success">
                         <el-step title="选择节目"></el-step>
                         <el-step title="选择视频"></el-step>
                         <el-step title="选择图片"></el-step>
@@ -158,12 +158,15 @@
                                     placeholder="搜索你想要的信息"
                                     clearable
                                     class="border-input"
-                                    v-model="keyword"
-                                >
+                                    @input="searchFieldInputHandler($event, 'keyword')"
+                                    :value="programmeSearchFields.keyword">
                                 </el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">搜索</el-button>
+                                <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">
+                                    <svg-icon icon-class="search"></svg-icon>
+                                    搜索
+                                </el-button>
                             </el-form-item>
                         </el-form>
                         <el-table
@@ -232,9 +235,7 @@
                             @size-change="handlePaginationChange($event, 'pageSize')"
                             @current-change="handlePaginationChange($event, 'pageNum')"
                             :current-page="programmePagination.pageNum"
-                            :page-sizes="[5, 10, 20, 30, 50]"
-                            :page-size="programmePagination.pageSize"
-                            layout="total, sizes, prev, pager, next, jumper"
+                            layout="total, prev, pager, next, jumper"
                             :total="programmePagination.total">
                         </el-pagination>
                     </div>
@@ -411,8 +412,8 @@
                 </div>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
                     <el-button @click="cancelHanlder">取 消</el-button>
-                    <el-button v-show="active > 0" class="btn-style-three" @click="prevBtnClickHandler">上一步</el-button>
-                    <el-button v-show="active < 2" class="btn-style-three" @click="nextBtnClickHandler">下一步</el-button>
+                    <el-button v-show="active > 0" class="btn-style-three prev-btn" @click="prevBtnClickHandler">上一步</el-button>
+                    <el-button v-show="active < 2" class="btn-style-three next-btn" @click="nextBtnClickHandler">下一步</el-button>
                     <el-button v-show="active === 2" type="primary" class="btn-style-two" @click="enterHandler">确 定</el-button>
                 </div>
             </div>
@@ -463,7 +464,6 @@ export default {
             dialogVisible: false,
             navbarId: '',
             index: 0,
-            keyword: '',
             category: '',
             programme: {},
             previewImage: {
@@ -487,6 +487,7 @@ export default {
     computed: {
         ...mapGetters({
             list: 'programme/programmeList',
+            programmeSearchFields: 'programme/programmeSearchFields',
             programmePagination: 'programme/programmePagination',
             categoryListString: 'programme/categoryListString',
             typeList: 'programme/typeList',
@@ -563,13 +564,16 @@ export default {
     },
     methods: {
         ...mapMutations({
+            resetProgrammePagination: 'programme/resetProgrammePagination',
+            resetProgrammeSearchFields: 'programme/resetProgrammeSearchFields',
             updateProgrammePagination: 'programme/updateProgrammePagination',
+            updateProgrammeSearchFields: 'programme/updateProgrammeSearchFields',
             updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
             cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex'
         }),
         ...mapActions({
-            getProgrammeList: 'programme/getProgrammeList',
-            getProgrammeListByNews: 'programme/getProgrammeListByNews',
+            getProgrammeListIsVisible: 'programme/getProgrammeListIsVisible',
+            getProgrammeListIsVisibleByNews: 'programme/getProgrammeListIsVisibleByNews',
             getProgrammeCategory: 'programme/getProgrammeCategory',
             getProgrammeVideoListById: 'programme/getProgrammeVideoListById'
         }),
@@ -578,6 +582,9 @@ export default {
                 this.searchEnterHandler();
             }
         },
+        searchFieldInputHandler(value, key) {
+            this.updateProgrammeSearchFields({key, value});
+        },
         //  弹窗的操作
         async showDialog(category) {
             try {
@@ -585,9 +592,9 @@ export default {
                 await this.getProgrammeCategory();
                 if (category) {
                     this.category = category;
-                    await this.getProgrammeListByNews();
+                    await this.getProgrammeListIsVisibleByNews();
                 } else {
-                    await this.getProgrammeList();
+                    await this.getProgrammeListIsVisible();
                 }
 
                 window.addEventListener('keyup', this.keyupHandler);
@@ -596,6 +603,8 @@ export default {
             }
         },
         closeDialog() {
+            this.resetProgrammePagination();
+            this.resetProgrammeSearchFields();
             this.dialogVisible = false;
             this.active = 0;
             this.programme = {};
@@ -626,7 +635,11 @@ export default {
         // 弹窗的操作结束
         handlePaginationChange(value, key) {
             this.updateProgrammePagination({key, value});
-            this.getProgrammeList();
+            if (this.category) {
+                this.getProgrammeListIsVisibleByNews();
+            } else {
+                this.getProgrammeListIsVisible();
+            }
         },
         //  上下步的处理方法
         prevBtnClickHandler() {
@@ -672,6 +685,7 @@ export default {
             }
         },
         changeProgrammeHandler() {
+            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: '' });
             this.showExist = false;
             this.active = 0;
         },
@@ -697,17 +711,9 @@ export default {
         },
         searchEnterHandler() {
             if (this.category) {
-                if (this.keyword) {
-                    this.getProgrammeListByNews(this.keyword);
-                } else {
-                    this.getProgrammeListByNews();
-                }
+                this.getProgrammeListIsVisibleByNews();
             } else {
-                if (this.keyword) {
-                    this.getProgrammeList(this.keyword);
-                } else {
-                    this.getProgrammeList();
-                }
+                this.getProgrammeListIsVisible();
             }
         },
         //  查看图片
@@ -767,7 +773,6 @@ export default {
         //  最后一步的确认处理函数
         enterHandler() {
             // 设置layoutItemType为PROGRAMME_VIDEO
-            console.log(this.programme);
             if (this.getImageByKey('coverImage')) {
                 this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: this.layoutItemType });
                 this.showExist = true;

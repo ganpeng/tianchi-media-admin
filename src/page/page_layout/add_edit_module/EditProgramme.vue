@@ -91,12 +91,15 @@
                                     placeholder="搜索你想要的信息"
                                     clearable
                                     class="border-input"
-                                    v-model="keyword"
-                                >
+                                    @input="searchFieldInputHandler($event, 'keyword')"
+                                    :value="programmeSearchFields.keyword">
                                 </el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">搜索</el-button>
+                                <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">
+                                    <svg-icon icon-class="search"></svg-icon>
+                                    搜索
+                                </el-button>
                             </el-form-item>
                         </el-form>
                         <el-table
@@ -165,9 +168,8 @@
                             @size-change="handlePaginationChange($event, 'pageSize')"
                             @current-change="handlePaginationChange($event, 'pageNum')"
                             :current-page="programmePagination.pageNum"
-                            :page-sizes="[5, 10, 20, 30, 50]"
-                            :page-size="programmePagination.pageSize"
-                            layout="total, sizes, prev, pager, next, jumper"
+                            :page-size="5"
+                            layout="total, prev, pager, next, jumper"
                             :total="programmePagination.total">
                         </el-pagination>
                     </div>
@@ -320,7 +322,7 @@ export default {
             active: 0,
             dialogVisible: false,
             showExist: false,
-            keyword: '',
+            category: '',
             programme: {},
             customMarkOptions: [],
             previewImage: {
@@ -338,6 +340,7 @@ export default {
     computed: {
         ...mapGetters({
             list: 'programme/programmeList',
+            programmeSearchFields: 'programme/programmeSearchFields',
             programmePagination: 'programme/programmePagination',
             categoryListString: 'programme/categoryListString',
             typeList: 'programme/typeList',
@@ -365,14 +368,9 @@ export default {
             return _.isEmpty(rightTop) ? {} : rightTop;
         },
         showLeftBottom() {
-            let categoryList = _.get(this.programme, 'categoryList');
-            if (categoryList && _.isArray(categoryList)) {
-                return categoryList.filter((category) => {
-                    return category.name === '卫视综艺' || category.name === '网络综艺' || category.name === '电视剧';
-                }).length > 0;
-            } else {
-                return false;
-            }
+            let programmeTemplate = _.get(this.programme, 'programmeTemplate');
+            let flag = programmeTemplate === 'TV_DRAMA' || programmeTemplate === 'TV_SHOW';
+            return flag;
         },
         leftTopDisabled() {
             return _.get(this.programme, 'platformList.length') === 0;
@@ -416,14 +414,16 @@ export default {
     methods: {
         ...mapMutations({
             resetProgrammePagination: 'programme/resetProgrammePagination',
+            resetProgrammeSearchFields: 'programme/resetProgrammeSearchFields',
             updateProgrammePagination: 'programme/updateProgrammePagination',
+            updateProgrammeSearchFields: 'programme/updateProgrammeSearchFields',
             updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
             cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex',
             updateLayoutItemCornerMarkByIndex: 'pageLayout/updateLayoutItemCornerMarkByIndex'
         }),
         ...mapActions({
-            getProgrammeList: 'programme/getProgrammeList',
-            getProgrammeListByNews: 'programme/getProgrammeListByNews',
+            getProgrammeListIsVisible: 'programme/getProgrammeListIsVisible',
+            getProgrammeListIsVisibleByNews: 'programme/getProgrammeListIsVisibleByNews',
             getProgrammeCategory: 'programme/getProgrammeCategory',
             getCustomMarkList: 'pageLayout/getCustomMarkList'
         }),
@@ -432,15 +432,19 @@ export default {
                 this.searchEnterHandler();
             }
         },
+        searchFieldInputHandler(value, key) {
+            this.updateProgrammeSearchFields({key, value});
+        },
         //  弹窗的操作
         async showDialog(category) {
             try {
                 this.dialogVisible = true;
                 await this.getProgrammeCategory();
                 if (category) {
-                    await this.getProgrammeListByNews();
+                    this.category = category;
+                    await this.getProgrammeListIsVisibleByNews();
                 } else {
-                    await this.getProgrammeList();
+                    await this.getProgrammeListIsVisible();
                 }
 
                 window.addEventListener('keyup', this.keyupHandler);
@@ -450,9 +454,10 @@ export default {
         },
         closeDialog() {
             this.resetProgrammePagination();
+            this.resetProgrammeSearchFields();
             this.dialogVisible = false;
             this.active = 0;
-            this.keyword = '';
+            this.category = '';
             this.programme = {};
             this.previewImage = {
                 title: '',
@@ -481,12 +486,17 @@ export default {
             }
         },
         changeProgrammeHandler() {
+            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: '' });
             this.showExist = false;
         },
         // 弹窗的操作结束
         handlePaginationChange(value, key) {
             this.updateProgrammePagination({key, value});
-            this.getProgrammeList();
+            if (this.category) {
+                this.getProgrammeListIsVisibleByNews();
+            } else {
+                this.getProgrammeListIsVisible();
+            }
         },
         //  上下步的处理方法
         prevBtnClickHandler() {
@@ -530,10 +540,10 @@ export default {
             return row.id === this.getSquareProgrammeId ? 'checked' : '';
         },
         searchEnterHandler() {
-            if (this.keyword) {
-                this.getProgrammeList(this.keyword);
+            if (this.category) {
+                this.getProgrammeListIsVisibleByNews();
             } else {
-                this.getProgrammeList();
+                this.getProgrammeListIsVisible();
             }
         },
         //  查看图片

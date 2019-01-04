@@ -570,7 +570,7 @@
                 subjectOptions: role.SUBJECT,
                 size: dimension.PROGRAMME_DIMENSION,
                 customMarkOptions: [],
-                allowResolutions: role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS,
+                // allowResolutions: role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS,
                 previewImage: {
                     display: false,
                     autoplay: false,
@@ -646,6 +646,15 @@
                 isSports: 'programme/isSports',
                 areaLabel: 'programme/areaLabel'
             }),
+            allowResolutions() {
+                if (_.get(this.programme, 'coverImage.uri')) {
+                    return role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS.filter((item) => {
+                        return item.width !== 260 && item.height !== 380;
+                    });
+                } else {
+                    return role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS;
+                }
+            },
             //  拖拽排序的字段
             produceAreaList: {
                 get() {

@@ -559,17 +559,6 @@
                         message: '已取消删除'
                     });
                 });
-                this.upLowerFrameProgramme({idList, visible: false})
-                    .then((res) => {
-                        if (res && res.code === 0) {
-                            this.getProgrammeList()
-                                .then((result) => {
-                                    if (result && result.code === 0) {
-                                        this.checkedVideoList();
-                                    }
-                                });
-                        }
-                    });
             },
             batchDeletProgrammeHandler() {
                 let idList = this.selectedVideoList.map((item) => item.id);

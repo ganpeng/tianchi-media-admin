@@ -94,6 +94,6 @@ export default {
 </style>
 <style>
 .el-dialog__body {
-    padding: 0 20px 20px 20px!important;
+    /* padding: 0 20px 20px 20px!important; */
 }
 </style>

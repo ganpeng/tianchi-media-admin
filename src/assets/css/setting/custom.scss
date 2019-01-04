@@ -191,6 +191,7 @@
     button {
         &.btn-prev, &.btn-next {
             background-color: transparent;
+            color: #606266;
         }
         &:disabled {
             color: #6F7480;
@@ -475,7 +476,7 @@
     .el-date-table td.in-range div:hover,
     .el-date-table.is-week-mode .el-date-table__row.current div,
     .el-date-table.is-week-mode .el-date-table__row:hover div {
-        background: #3AC26F;
+        background: rgba(75, 165, 255, 0.20);
     }
     .el-date-range-picker__content.is-left {
         border-right: 1px solid #909399;

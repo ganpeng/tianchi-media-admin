@@ -61,7 +61,10 @@
                             </el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">搜索</el-button>
+                            <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">
+                                <svg-icon icon-class="search"></svg-icon>
+                                搜索
+                            </el-button>
                         </el-form-item>
                     </el-form>
                     <el-table
@@ -102,9 +105,7 @@
                         @size-change="handlePaginationChange($event, 'pageSize')"
                         @current-change="handlePaginationChange($event, 'pageNum')"
                         :current-page="personSubject.pagination.pageNum"
-                        :page-sizes="[5, 10, 20, 30, 50]"
-                        :page-size="personSubject.pagination.pageSize"
-                        layout="total, sizes, prev, pager, next, jumper"
+                        layout="total, prev, pager, next, jumper"
                         :total="personSubject.pagination.total">
                     </el-pagination>
                 </div>
