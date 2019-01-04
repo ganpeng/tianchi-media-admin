@@ -387,7 +387,7 @@ export default {
             return (key) => {
                 let cornerMark = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
                 let mark = _.get(cornerMark, `${key}.caption`);
-                return !!mark;
+                return mark;
             };
         },
         getSquareProgrammeId() {
@@ -592,7 +592,23 @@ export default {
         },
         //  角标的相关操作
         markChangeHandler(value, key) {
-            let {score, featureVideoCount, platformList} = this.programme;
+            let {score, featureVideoCount, platformList, totalSets, programmeTemplate} = this.programme;
+            let leftBottomCaption = '';
+            switch (programmeTemplate) {
+                case 'TV_DRAMA':
+                    leftBottomCaption = `更新至${featureVideoCount}集`;
+                    break;
+                case 'TV_SHOW':
+                    leftBottomCaption = `更新至${featureVideoCount}期`;
+                    break;
+                default:
+                    leftBottomCaption = '';
+            }
+
+            if (programmeTemplate === 'TV_DRAMA' && featureVideoCount === totalSets) {
+                leftBottomCaption = `${totalSets}集全`;
+            }
+
             switch (key) {
                 case 'leftTop':
                     this.updateLayoutItemCornerMarkByIndex({
@@ -609,7 +625,7 @@ export default {
                         index: this.index,
                         squareIndex: this.squareIndex,
                         key: 'leftBottom',
-                        value: value ? {caption: `${featureVideoCount}`} : {}
+                        value: value ? {caption: leftBottomCaption} : {}
                     });
                     break;
                 case 'rightBottom':

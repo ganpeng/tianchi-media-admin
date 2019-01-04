@@ -154,8 +154,8 @@ const getters = {
     },
     getLayoutItemCornerMark(state) {
         return (navbarId, index, squareIndex) => {
-            // let obj = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.cornerMark`);
-            let obj = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}`);
+            let obj = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.cornerMark`);
+            // let obj = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}`);
             return !_.isEmpty(obj) ? obj : {};
         };
     },
@@ -277,6 +277,25 @@ const mutations = {
     updateLayoutItemCornerMarkByIndex(state, payload) {
         let {index, navbarId, squareIndex, key, value} = payload;
         _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.cornerMark.${key}`, value);
+
+        let markType = '';
+        switch (key) {
+            case 'leftTop':
+                markType = 'PLATFORM';
+                break;
+            case 'leftBottom':
+                markType = 'EPISODES_NUMBER';
+                break;
+            case 'rightBottom':
+                markType = 'SCORE';
+                break;
+            case 'rightTop':
+                markType = 'CUSTOM';
+                break;
+            default:
+                throw new Error('角标的key不存在');
+        }
+        _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.cornerMark.${key}.markType`, markType);
     },
     updateSortedList(state, payload) {
         let {navbarId, list} = payload;

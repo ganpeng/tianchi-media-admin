@@ -591,7 +591,23 @@ export default {
         },
         //  角标的相关操作
         markChangeHandler(value, key) {
-            let {score, featureVideoCount, platformList, leftBottomMarkCaption} = this.programme;
+            let {score, featureVideoCount, platformList, totalSets, programmeTemplate, leftBottomMarkCaption} = this.programme;
+            let leftBottomCaption = '';
+            switch (programmeTemplate) {
+                case 'TV_DRAMA':
+                    leftBottomCaption = `更新至${featureVideoCount}集`;
+                    break;
+                case 'TV_SHOW':
+                    leftBottomCaption = `更新至${featureVideoCount}期`;
+                    break;
+                default:
+                    leftBottomCaption = '';
+            }
+
+            if (programmeTemplate === 'TV_DRAMA' && featureVideoCount === totalSets) {
+                leftBottomCaption = `${totalSets}集全`;
+            }
+
             switch (key) {
                 case 'leftTop':
                     this.updateLayoutItemCornerMarkByIndex({
@@ -608,7 +624,7 @@ export default {
                         index: this.index,
                         squareIndex: this.squareIndex,
                         key: 'leftBottom',
-                        value: value ? {caption: featureVideoCount || leftBottomMarkCaption} : {}
+                        value: value ? {caption: leftBottomCaption || leftBottomMarkCaption} : {}
                     });
                     break;
                 case 'rightBottom':

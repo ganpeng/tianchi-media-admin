@@ -4,7 +4,7 @@
             <img :src="getCornerMarkByKey('leftTop') | setPlatformImage" alt="">
         </div>
         <div v-if="getCornerMarkByKey('leftBottom')" class="left-bottom-field">
-            更新至{{getCornerMarkByKey('leftBottom')}}{{title}}
+            {{getCornerMarkByKey('leftBottom')}}
         </div>
         <div :style="rightTopStyle" class="right-top-field">
         </div>
@@ -25,7 +25,7 @@ export default {
     },
     computed: {
         rightTopStyle() {
-            let image = _.get(this.cornerMark, 'cornerMark.rightTop.image');
+            let image = _.get(this.cornerMark, 'rightTop.image');
             if (_.isEmpty(image)) {
                 return '';
             } else {
@@ -34,7 +34,7 @@ export default {
         },
         getCornerMarkByKey() {
             return (key) => {
-                return _.get(this.cornerMark, `cornerMark.${key}.caption`);
+                return _.get(this.cornerMark, `${key}.caption`);
             };
         },
         title() {

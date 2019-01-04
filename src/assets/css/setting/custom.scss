@@ -1159,11 +1159,16 @@
         .el-button {
             width: 100px;
             height: 40px;
+            border: none;
             &.el-button--default {
                 color: $dangerColor;
             }
             &.el-button--default.el-button--primary {
                 color: #A3D0FD;
+                background: #0062C4;
+                &:hover {
+                    background: $mainColor;
+                }
             }
             &:first-child {
                 margin-left: 10px;
