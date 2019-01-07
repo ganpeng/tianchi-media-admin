@@ -114,6 +114,14 @@
     }
 }
 
+// 2.0下拉选择框禁用样式
+.el-dropdown {
+    &.is-disabled {
+        opacity: 0.3;
+        pointer-events: none;
+    }
+}
+
 // 人物列表中的图片大小
 .person-image {
     display: inline-block;

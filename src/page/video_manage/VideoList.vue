@@ -3,156 +3,9 @@
     <div class="video-list-container">
         <div class="table-container">
             <h2 class="content-title">搜索筛选</h2>
-            <div class="video-search-container">
-                <div @keyup.enter="getSubjectList" class="text-left filters-container">
-                    <el-form :inline="true" class="filter-form">
-                        <el-form-item>
-                            <el-input
-                                :value="searchFields.name"
-                                clearable
-                                class="border-input"
-                                @input="inputHandler($event, 'name')"
-                                placeholder="搜索你想要的信息">
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button
-                                class="btn-style-one"
-                                @click="searchHandler"
-                                type="primary">
-                                <svg-icon icon-class="search"></svg-icon>
-                                搜索
-                            </el-button>
-                        </el-form-item>
-                        <el-form-item label="后缀">
-                            <el-select
-                                :value="searchFields.suffix"
-                                clearable
-                                placeholder="请选择视频后缀"
-                                @input="inputHandler($event, 'suffix')">
-                                <el-option
-                                    v-for="(item, index) in suffixOptions"
-                                    :key="index"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="注入状态">
-                            <el-select
-                                :value="searchFields.status"
-                                @change="inputHandler($event, 'status')"
-                                clearable
-                                placeholder="请选择注入状态">
-                                <el-option
-                                    v-for="item in statusOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <!--上传状态-->
-                        <el-form-item label="上传状态">
-                            <el-select
-                                :value="searchFields.uploadStatus"
-                                clearable
-                                placeholder="请选择视频上传状态"
-                                @input="inputHandler($event, 'uploadStatus')">
-                                <el-option
-                                    v-for="(item, index) in uploadStatusOptions"
-                                    :key="index"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button
-                                class="btn-style-one"
-                                @click="clearSearchFields"
-                                type="primary">
-                                <svg-icon icon-class="reset"></svg-icon>
-                                重置
-                            </el-button>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button
-                                type="text"
-                                @click="moreFilters = !moreFilters"
-                                class="more-filters"
-                                :class="{active:moreFilters}">
-                                更多筛选
-                                <i class="el-icon-arrow-up" v-if="moreFilters"></i>
-                                <i class="el-icon-arrow-down" v-else></i>
-                            </el-button>
-                        </el-form-item>
-                    </el-form>
-                    <el-form :inline="true" class="more-filter-box filter-form" v-if="moreFilters">
-                        <!--拉取状态（子站）-->
-                        <el-form-item
-                            v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
-                            label="拉取状态">
-                            <el-select
-                                :value="searchFields.downloadStatus"
-                                clearable
-                                placeholder="请选择视频拉取状态"
-                                @input="inputHandler($event, 'downloadStatus')">
-                                <el-option
-                                    v-for="(item, index) in downloadStatusOptions"
-                                    :key="index"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="来源">
-                            <el-select
-                                :value="searchFields.originSiteId"
-                                clearable
-                                placeholder="请选择视频来源"
-                                @input="inputHandler($event, 'originSiteId')">
-                                <el-option
-                                    v-for="(item, index) in sourceOptions"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <!--共享站点搜索（主站）-->
-                        <el-form-item
-                            v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
-                            label="共享站点">
-                            <el-select
-                                :value="searchFields.shareSiteId"
-                                clearable
-                                placeholder="请选择共享站点"
-                                @input="inputHandler($event, 'shareSiteId')">
-                                <el-option
-                                    v-for="(item, index) in shareSiteOptions"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="时间">
-                            <el-date-picker
-                                prefix-icon="0"
-                                :value="searchFields.dateRange"
-                                type="daterange"
-                                @input="inputHandler($event, 'dateRange')"
-                                value-format="timestamp"
-                                :unlink-panels="true"
-                                range-separator="至"
-                                start-placeholder="开始日期"
-                                end-placeholder="结束日期">
-                            </el-date-picker>
-                        </el-form-item>
-                    </el-form>
-                </div>
-            </div>
+            <video-filter-params
+                v-on:getVideoList="getVideoList">
+            </video-filter-params>
             <div class="seperator-line"></div>
             <div class="table-field">
                 <h2 class="content-title">视频列表</h2>
@@ -161,7 +14,7 @@
                         <el-dropdown
                             trigger="click"
                             class="my-dropdown"
-                            :class="{'is-disabled':isDisabled}">
+                            :class="{'is-disabled':isBatchDisabled}">
                             <span class="el-dropdown-link">
                                 批量操作
                                 <i class="el-icon-arrow-down el-icon--right"></i>
@@ -169,7 +22,7 @@
                             <el-dropdown-menu
                                 slot="dropdown">
                                 <el-dropdown-item>
-                                    <span @click="retrySelectedVideoHandler">批量重试</span>
+                                    <span @click="retryInjectSelectedVideoHandler">批量重试</span>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
                                     <span @click="exportSelectedVideoHandler">批量导出</span>
@@ -222,17 +75,31 @@
                         </el-button>
                     </div>
                 </div>
-                <video-table ref="videoTable" :shareSiteOptions="shareSiteOptions"></video-table>
+                <video-table
+                    ref="videoTable"
+                    :shareSiteOptions="shareSiteOptions"
+                    :videoList="videoList"
+                    v-on:setBatchDisabledStatus="setBatchDisabledStatus">
+                </video-table>
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="pageNum"
+                    :page-sizes="[5, 10, 20, 50, 100, 200, 500]"
+                    :page-size="listQueryParams.pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+                </el-pagination>
                 <div class="text-left table-dropdow-box">
                     <el-dropdown
-                        class="my-dropdown" :class="{'is-disabled':isDisabled}"
+                        class="my-dropdown" :class="{'is-disabled':isBatchDisabled}"
                         trigger="click">
                             <span class="el-dropdown-link">
                                 批量操作<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item>
-                                <span @click="retrySelectedVideoHandler">批量重试</span>
+                                <span @click="retryInjectSelectedVideoHandler">批量重试</span>
                             </el-dropdown-item>
                             <el-dropdown-item>
                                 <span @click="exportSelectedVideoHandler">批量导出</span>
@@ -265,8 +132,8 @@
             custom-class="normal-dialog batch-share-site"
             width="40%">
             <div class="batch-share-body" v-if="batchShareDialogVisible">
-                <div>{{$refs.videoTable.selectedVideoList.length}}个视频可以被以下站点共享:</div>
-                <el-select v-model="siteIdList" multiple clearable placeholder="请选择共享站点">
+                <div>{{$refs.videoTable.getSelectedVideoList().length}}个视频可以被以下站点共享:</div>
+                <el-select v-model="batchShareSiteIdList" multiple clearable placeholder="请选择共享站点">
                     <el-option
                         v-for="(item, index) in shareSiteOptions"
                         :key="index"
@@ -296,93 +163,69 @@
         </el-dialog>
     </div>
 </template>
+
 <script>
-    import {mapGetters, mapMutations, mapActions} from 'vuex';
+    import VideoFilterParams from '../search_filter_params/VideoFilterParams';
     import XLSX from 'xlsx';
     import SelectMultipleMasterVideo from './SelectMultipleMasterVideo';
     import VideoTable from './VideoTable';
-    import role from '@/util/config/role';
 
-    const FileSaver = require('file-saver');
     export default {
         name: 'VideoList',
         components: {
+            VideoFilterParams,
             VideoTable,
             SelectMultipleMasterVideo
         },
         data() {
             return {
-                suffixOptions: role.VIDEO_SUFFIX_OPTIONS,
-                selectMasterVideoDialogVisible: false,
-                statusOptions: role.VIDEO_INJECTING_STATUS_OPTIONS,
-                downloadStatusOptions: role.VIDEO_DOWNLOAD_STATUS_OPTIONS,
-                uploadStatusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
-                sourceOptions: [],
+                listQueryParams: {
+                    pageNum: 0,
+                    pageSize: 10
+                },
+                pageNum: 1,
+                total: 0,
+                videoList: [],
                 shareSiteOptions: [],
-                timer: null,
-                isDisabled: true,
+                selectMasterVideoDialogVisible: false,
+                isBatchDisabled: true,
                 batchShareDialogVisible: false,
                 // 多个视频进行多个站点共享设置的共享站点Id列表
-                siteIdList: [],
-                moreFilters: false
+                batchShareSiteIdList: []
             };
         },
-        computed: {
-            ...mapGetters({
-                video: 'video/video',
-                searchFields: 'video/searchFields',
-                uploadState: 'uploadVideo/uploadState',
-                selectedVideoIdList: 'video/selectedVideoIdList'
-            })
-        },
-        created() {
-            window.eventBus.$on('setDisabled', this.setDisabled.bind(this));
-            window.addEventListener('keyup', this.keyupHandler);
-            this.resetProgramme();
-            this.timer = setInterval(() => {
-                this.getVideoList()
-                    .then(() => {
-                        this.$refs.videoTable.checkedVideoList();
-                    });
-            }, 1000 * 10);
-            // 初始化视频来源和共享站点的列表
-            this.$service.getAllSiteList().then(response => {
-                if (response && response.code === 0) {
-                    this.shareSiteOptions = response.data;
-                }
-            });
-            this.$service.getAllVideoSourceList().then(response => {
-                if (response && response.code === 0) {
-                    this.sourceOptions = response.data;
-                }
-            });
-        },
-        beforeRouteLeave(to, from, next) {
-            clearInterval(this.timer);
-            this.timer = null;
-            next();
-        },
-        beforeDestroy() {
-            window.removeEventListener('keyup', this.keyupHandler);
+        mounted() {
+            this.getVideoList();
         },
         methods: {
-            ...mapMutations({
-                updateSearchFields: 'video/updateSearchFields',
-                resetSearchFields: 'video/resetSearchFields',
-                updateUploadState: 'uploadVideo/updateUploadState',
-                resetProgramme: 'programme/resetProgramme'
-            }),
-            ...mapActions({
-                getVideoList: 'video/getVideoList',
-                retryVideoByIdList: 'video/retryVideoByIdList'
-            }),
-            setDisabled(value) {
-                this.isDisabled = value;
+            getVideoList(searchParams) {
+                // 设置请求参数
+                if (searchParams) {
+                    for (let key in searchParams) {
+                        this.listQueryParams[key] = searchParams[key];
+                    }
+                }
+                this.$service.getVideoList(this.listQueryParams).then(response => {
+                    if (response && response.code === 0) {
+                        this.videoList = response.data.list;
+                        this.total = response.data.total;
+                    }
+                });
             },
-            clearSearchFields() {
-                this.resetSearchFields();
-                this.searchHandler();
+            handleSizeChange(pageSize) {
+                this.listQueryParams.pageSize = pageSize;
+                this.getVideoList();
             },
+            handleCurrentChange(pageNum) {
+                this.pageNum = pageNum;
+                this.listQueryParams.pageNum = pageNum - 1;
+                this.getVideoList();
+            },
+            // 设置批量操作状态
+            setBatchDisabledStatus(isBatchDisabled) {
+                this.isBatchDisabled = isBatchDisabled;
+            },
+            // 打开拉取视频弹窗
             openPullVideoDialog() {
                 if (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) {
                     this.selectMasterVideoDialogVisible = true;
@@ -393,7 +236,7 @@
             // 批量设置视频共享站点
             setShareSite() {
                 // 对选择的视频列表进行检测，注入成功、上传成功的视频可以设置共享
-                let videoList = this.$refs.videoTable.selectedVideoList;
+                let videoList = this.$refs.videoTable.getSelectedVideoList();
                 for (let i = 0; i < videoList.length; i++) {
                     if (!(videoList[i].status === 'SUCCESS' || videoList[i].uploadStatus === 'SUCCESS')) {
                         this.$message.warning('共享站点设置操作只有注入成功、上传成功的视频才可进行共享设置');
@@ -405,16 +248,16 @@
             // 设置多个视频进行多个站点的共享
             batchShareVideo() {
                 let videoIdList = [];
-                this.$refs.videoTable.selectedVideoList.map(video => {
+                this.$refs.videoTable.getSelectedVideoList().map(video => {
                     videoIdList.push(video.id);
                 });
                 this.$service.setBatchVideoToBatchSite({
-                    siteIdList: this.siteIdList,
+                    siteIdList: this.batchShareSiteIdList,
                     videoIdList: videoIdList
                 }).then(response => {
                     if (response && response.code === 0) {
                         this.$message.success('成功设置视频共享站点');
-                        this.siteIdList = [];
+                        this.batchShareSiteIdList = [];
                         this.batchShareDialogVisible = false;
                     }
                 });
@@ -422,7 +265,7 @@
             // 批量上传主站——将本地视频上传至主站(只存在于子站)
             batchPushToMaster() {
                 // 对选择的视频列表进行检测，（注入成功或拉取成功）且（非上传中、非上传成功）的视频可以上传主站
-                let videoList = this.$refs.videoTable.selectedVideoList;
+                let videoList = this.$refs.videoTable.getSelectedVideoList();
                 for (let i = 0; i < videoList.length; i++) {
                     if (!((videoList[i].status === 'SUCCESS' || videoList[i].downloadStatus === 'SUCCESS') && !(videoList[i].uploadStatus === 'ON_GOING' || videoList[i].uploadStatus === 'SUCCESS'))) {
                         this.$message.warning('批量上传主站仅支持注入/拉取成功且未上传成功的视频');
@@ -431,7 +274,7 @@
                 }
                 if (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) {
                     let videoIdList = [];
-                    this.$refs.videoTable.selectedVideoList.map(video => {
+                    this.$refs.videoTable.getSelectedVideoList().map(video => {
                         videoIdList.push(video.id);
                     });
                     this.$service.batchPushVideoToMaster({videoIdList}).then(response => {
@@ -479,26 +322,18 @@
                     }
                 });
             },
-            clearInputValue() {
-                if (this.$refs.uploadInputFile && this.$refs.uploadInputFile.value) {
-                    this.$refs.uploadInputFile.value = null;
-                }
-                if (this.$refs.uploadInputDir && this.$refs.uploadInputDir.value) {
-                    this.$refs.uploadInputDir.value = null;
-                }
-            },
-            // 批量重试
-            retrySelectedVideoHandler() {
+            // 注入失败视频----批量重试
+            retryInjectSelectedVideoHandler() {
                 // 对选择的视频列表进行检测，注入失败的视频才能进行批量重试
-                let videoList = this.$refs.videoTable.selectedVideoList;
+                let videoList = this.$refs.videoTable.getSelectedVideoList();
                 for (let i = 0; i < videoList.length; i++) {
                     if (videoList[i].status !== 'FAILED') {
                         this.$message.warning('批量删除操作仅支持注入失败的视频');
                         return;
                     }
                 }
-                let idList = this.$refs.videoTable.selectedVideoList.filter((video) => {
-                    return this.needRetry(video);
+                let idList = this.$refs.videoTable.getSelectedVideoList().filter((video) => {
+                    return this.needRetryInject(video);
                 }).map((item) => item.id);
                 if (idList.length > 0) {
                     this.retryVideoByIdList(idList)
@@ -514,17 +349,18 @@
                                 });
                         });
                 } else {
-                    this.$message.warning('没有可以重新注入的视频存在');
+                    this.$message.warning('不存在可以重新注入的视频');
                 }
             },
-            needRetry(video) {
+            // 是否可以重新注入
+            needRetryInject(video) {
                 let {status, transcodeStatus} = video;
                 return (status === 'INJECTING' && transcodeStatus === 'FAILED') || status === 'FAILED';
             },
             // 批量下载视频文件
             downloadSelectedTsVideo() {
                 // 对选择的视频列表进行检测，注入成功或拉取成功或上传成功的视频文件才能批量下载
-                let videoList = this.$refs.videoTable.selectedVideoList;
+                let videoList = this.$refs.videoTable.getSelectedVideoList();
                 for (let i = 0; i < videoList.length; i++) {
                     if (!(videoList[i].status === 'SUCCESS' || videoList[i].downloadStatus === 'SUCCESS' || videoList[i].uploadStatus === 'SUCCESS')) {
                         // 主站
@@ -538,7 +374,7 @@
                 }
                 this.$message.success('正在请求下载视频文件，请稍等');
                 let videoIdList = [];
-                this.$refs.videoTable.selectedVideoList.map(video => {
+                videoList.map(video => {
                     videoIdList.push(video.id);
                 });
                 this.$service.exportTsVideos({videoIdList: videoIdList, isRetry: false}).then(response => {
@@ -547,22 +383,28 @@
                     }
                 });
             },
+            // 批量导出选择的视频文件列表的EXCEL文件
             exportSelectedVideoHandler() {
-                let videoList = this.$refs.videoTable.selectedVideoList.map((video) => {
+                let videoList = this.$refs.videoTable.getSelectedVideoList().map((video) => {
                     let obj = {};
                     obj['编号'] = video.id;
                     obj['视频名称'] = video.originName;
                     obj['视频地址'] = this.joinVideoUrl(video);
                     obj['视频时长'] = this.$util.fromSecondsToTime(video.takeTimeInSec);
-                    obj['上传日期'] = this.timeStampFormat(video.createdAt);
+                    obj['上传日期'] = this.$util.formatDate(new Date(video.createdAt), 'yyyy-MM-DD HH:mm:SS');
                     return obj;
                 });
-                this.downloadExl(videoList);
+                let exportChannelData = videoList;
+                let wb = XLSX.utils.book_new();
+                let newWsName = '表1';
+                let ws = XLSX.utils.json_to_sheet(exportChannelData);
+                XLSX.utils.book_append_sheet(wb, ws, newWsName);
+                XLSX.writeFile(wb, '导出视频列表_' + new Date() + '.xlsx');
             },
             // 批量删除视频
             deleteVideoList() {
                 // 对选择的视频列表进行检测，在拉取中和下载中状态的视频不能删除
-                let videoList = this.$refs.videoTable.selectedVideoList;
+                let videoList = this.$refs.videoTable.getSelectedVideoList();
                 for (let i = 0; i < videoList.length; i++) {
                     if (videoList[i].uploadStatus === 'ON_GOING' || videoList[i].downloadStatus === 'ON_GOING') {
                         // 主站
@@ -574,7 +416,7 @@
                         return;
                     }
                 }
-                let idList = this.$refs.videoTable.selectedVideoList.map((item) => {
+                let idList = this.$refs.videoTable.getSelectedVideoList().map((item) => {
                     return item.id;
                 });
                 if (idList.length > 0) {
@@ -584,134 +426,15 @@
                         type: 'error'
                     }).then(() => {
                         if (idList.length > 0) {
-                            this.$service.deleteVideoByIdList(idList)
-                                .then((res) => {
-                                    if (res && res.code === 0) {
-                                        this.getVideoList()
-                                            .then(() => {
-                                                this.$refs.videoTable.checkedVideoList();
-                                            });
-                                        this.$message.success('删除成功');
-                                    } else {
-                                        this.$message.error('删除失败');
-                                    }
-                                });
+                            this.$service.deleteVideoByIdList(idList).then((res) => {
+                                if (res && res.code === 0) {
+                                    this.$message.success('删除成功');
+                                    this.getVideoList();
+                                }
+                            });
                         }
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
                     });
                 }
-            },
-            keyupHandler(e) {
-                if (e.keyCode === 13) {
-                    this.searchHandler();
-                }
-            },
-            inputHandler(value, key) {
-                this.updateSearchFields({key, value});
-            },
-            searchHandler() {
-                this.getVideoList()
-                    .then(() => {
-                        this.$refs.videoTable.checkedVideoList();
-                    });
-            },
-            uploadChangeHandler(e) {
-                let files = Array.from(e.target.files).filter((file) => {
-                    return /(.mpg|.ts|.zip)$/.test(file.name);
-                });
-                if (files.length === 0) {
-                    this.$message.warning('本次选择没有符合要求的文件');
-                }
-                let newFileList = [];
-                files.forEach((file) => {
-                    let index = this.uploadState.files.findIndex((item) => {
-                        return item.file.name === file.name;
-                    });
-                    if (index === -1) {
-                        let obj = {
-                            file,
-                            progress: {
-                                percent: 0,
-                                status: 'waiting',
-                                message: ''
-                            }
-                        };
-                        newFileList.push(obj);
-                    }
-                });
-                let newFiles = this.uploadState.files.concat(newFileList);
-                this.updateUploadState({key: 'files', value: newFiles});
-                window.eventBus.$emit('startUpload');
-                this.clearInputValue();
-            },
-            //  导出部分代码
-            getCharCol(n) {
-                let s = '';
-                let m = 0;
-                while (n > 0) {
-                    m = n % 26 + 1;
-                    s = String.fromCharCode(m + 64) + s;
-                    n = (n - m) / 26;
-                }
-                return s;
-            },
-            string2ArrayBuffer(s) {
-                let buf = new ArrayBuffer(s.length);
-                let view = new Uint8Array(buf);
-                for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-                return buf;
-            },
-            downloadExl(data, type) {
-                let keys = Object.keys(data[0]);
-                let firstRow = {};
-                keys.forEach(function (item) {
-                    firstRow[item] = item;
-                });
-                data.unshift(firstRow);
-
-                let content = {};
-
-                // 把json格式的数据转为excel的行列形式
-                let sheetsData = data.map(function (item, rowIndex) {
-                    return keys.map(function (key, columnIndex) {
-                        return Object.assign({}, {
-                            value: item[key],
-                            position: (columnIndex > 25 ? this.getCharCol(columnIndex) : String.fromCharCode(65 + columnIndex)) + (rowIndex + 1)
-                        });
-                    });
-                }).reduce(function (prev, next) {
-                    return prev.concat(next);
-                });
-
-                sheetsData.forEach(function (item, index) {
-                    content[item.position] = {v: item.value};
-                });
-                // 设置区域,比如表格从A1到D10,SheetNames:标题
-                let coordinate = Object.keys(content);
-                let workBook = {
-                    SheetNames: ['视频列表'],
-                    Sheets: {
-                        '视频列表': Object.assign({}, content, {'!ref': coordinate[0] + ':' + coordinate[coordinate.length - 1]})
-                    }
-                };
-                // 这里的数据是用来定义导出的格式类型
-                let excelData = XLSX.write(workBook, {bookType: 'xlsx', bookSST: false, type: 'binary'});
-                let blob = new Blob([this.string2ArrayBuffer(excelData)], {type: ''});
-                FileSaver.saveAs(blob, '导出视频列表.xlsx');
-            },
-            timeStampFormat(seconds) {
-                let date = new Date(seconds);
-                let year = date.getFullYear();
-                let month = date.getMonth() + 1;
-                let day = date.getDate();
-                let hour = date.getHours();
-                let minute = date.getMinutes();
-                let second = date.getSeconds();
-                return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
             },
             joinVideoUrl(video) {
                 let baseUri = window.localStorage.getItem('videoBaseUri');
@@ -721,15 +444,18 @@
                 }).join(', ');
                 return urlStr;
             },
+            // 跳转到上传视频页面
             goToVideoUploadPage() {
                 let routeData = this.$router.resolve({
                     name: 'VideoImport'
                 });
                 window.open(routeData.href, '_blank');
             },
+            // 跳转到下载视频列表页面
             toDownloadVideoList() {
                 this.$router.push({name: 'DownloadVideoList'});
             },
+            // 跳转到检查时长列表页面
             toDiffTime() {
                 this.$router.push({name: 'DiffTimeVideoList'});
             }
@@ -738,39 +464,6 @@
 </script>
 
 <style scoped lang="less">
-
-    .video-search-container {
-        padding-bottom: 20px;
-        border-bottom: 1px solid #252D3F;
-        .filters-container {
-            background: #2A3040;
-            border-radius: 8px;
-        }
-        .svg-icon {
-            margin-right: 10px;
-        }
-
-        // 按钮
-        .more-filters {
-            font-size: 12px;
-            color: #6F7480;
-            &.active {
-                color: #1989FA;
-                i {
-                    color: #6F7480;
-                }
-            }
-            i {
-                margin-left: 8px;
-            }
-        }
-
-        .more-filter-box {
-            background: #252C3D;
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-        }
-    }
 
     /*批量共享视频*/
     .batch-share-site {
@@ -784,57 +477,6 @@
             .el-select {
                 margin-top: 20px;
                 width: 80%;
-            }
-        }
-    }
-
-    .el-dropdown {
-        &.is-disabled {
-            opacity: 0.3;
-            pointer-events: none;
-        }
-    }
-
-</style>
-
-<!--全局el-dialog样式-->
-<style lang="scss">
-
-    .normal-dialog {
-        background: #293550;
-        border: 0 solid #637497;
-        box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
-        border-radius: 8px;
-        .el-dialog__header {
-            padding: 0px;
-            height: 50px;
-            line-height: 55px;
-            background: #1F2D4D;
-            .el-dialog__title {
-                font-size: 20px;
-                color: #909399;
-            }
-            .el-dialog__headerbtn {
-                top: 16px;
-                font-size: 15px;
-                .el-dialog__close {
-                    color: #C35757;
-                }
-            }
-        }
-        .el-dialog__footer {
-            .el-button {
-                width: 100px;
-                height: 40px;
-                &.el-button--default {
-                    color: $dangerColor;
-                }
-                &.el-button--default.el-button--primary {
-                    color: #A3D0FD;
-                }
-                &:first-child {
-                    margin-left: 10px;
-                }
             }
         }
     }

@@ -4,22 +4,25 @@
         <el-table
             ref="multipleTable"
             header-row-class-name="common-table-header"
-            :row-class-name="tableRowClassName"
-            @select="selectHandler"
-            @select-all="selectAllHandler"
-            class="my-table-style" :data="video.list" border>
-            <el-table-column v-if="!hasRadio" type="selection" align="center">
+            @selection-change="handleSelectionChange"
+            class="my-table-style"
+            :data="videoList"
+            border>
+            <el-table-column
+                type="selection"
+                align="center">
             </el-table-column>
-            <el-table-column v-if="hasRadio" width="60px" align="center" label="选择">
-                <template slot-scope="scope">
-                    <el-radio :disabled="isDisabled(scope.row.id)" :value="video.selectedVideoId" :label="scope.row.id"
-                              @input="setSelectedVideoId({id: scope.row.id})">&nbsp;
-                    </el-radio>
-                </template>
+            <el-table-column
+                prop="id"
+                align="center"
+                width="120px"
+                label="编号">
             </el-table-column>
-            <el-table-column prop="id" align="center" width="118" label="编号">
-            </el-table-column>
-            <el-table-column width="420px" prop="originName" align="center" label="视频名称">
+            <el-table-column
+                width="420px"
+                prop="originName"
+                align="center"
+                label="视频名称">
                 <template slot-scope="scope">
                     <el-tooltip effect="dark" placement="top">
                         <div class="gan-tooltip" slot="content">{{scope.row.originName}}</div>
@@ -27,15 +30,18 @@
                     </el-tooltip>
                 </template>
             </el-table-column>
-            <el-table-column prop="link" align="center" label="预览视频">
+            <el-table-column
+                prop="link"
+                align="center"
+                label="预览视频">
                 <template slot-scope="scope">
                     <div class="btn-icon-container preview-link">
                         <el-button
                             v-if="scope.row.m3u8For4K"
                             type="text"
                             size="small"
-                            @click="displayVideoPlayer(scope.row.m3u8For4K, scope.row.originName)"
-                        >4K
+                            @click="displayVideoPlayer(scope.row.m3u8For4K, scope.row.originName)">
+                            4K
                         </el-button>
                         <svg-icon
                             v-if="scope.row.m3u8For4K"
@@ -49,8 +55,8 @@
                             v-if="scope.row.m3u8For1080P"
                             type="text"
                             size="small"
-                            @click="displayVideoPlayer(scope.row.m3u8For1080P, scope.row.originName)"
-                        >1080
+                            @click="displayVideoPlayer(scope.row.m3u8For1080P, scope.row.originName)">
+                            1080
                         </el-button>
                         <svg-icon
                             v-if="scope.row.m3u8For1080P"
@@ -64,8 +70,8 @@
                             v-if="scope.row.m3u8For720P"
                             type="text"
                             size="small"
-                            @click="displayVideoPlayer(scope.row.m3u8For720P, scope.row.originName)"
-                        >720
+                            @click="displayVideoPlayer(scope.row.m3u8For720P, scope.row.originName)">
+                            720
                         </el-button>
                         <svg-icon
                             v-if="scope.row.m3u8For720P"
@@ -79,8 +85,8 @@
                             v-if="scope.row.m3u8For480P"
                             type="text"
                             size="small"
-                            @click="displayVideoPlayer(scope.row.m3u8For480P, scope.row.originName)"
-                        >480
+                            @click="displayVideoPlayer(scope.row.m3u8For480P, scope.row.originName)">
+                            480
                         </el-button>
                         <svg-icon
                             v-if="scope.row.m3u8For480P"
@@ -91,9 +97,12 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="takeTimeInSec" align="center" label="视频时长">
+            <el-table-column
+                prop="takeTimeInSec"
+                align="center"
+                label="视频时长">
                 <template slot-scope="scope">
-                    {{duration(scope.row.takeTimeInSec)}}
+                    {{scope.row.takeTimeInSec | fromSecondsToTime}}
                 </template>
             </el-table-column>
             <!--注入状态-->
@@ -118,9 +127,9 @@
                             {{scope.row | parseStatus}}
                         </span>
                         <span
-                            v-if="needRetry(scope.row)"
+                            v-if="scope.row.status === 'FAILED'"
                             class="retry-text-btn"
-                            @click="retrySingleVideo(scope.row.id)">
+                            @click="retryInjectSingleVideo(scope.row.id)">
                             重试
                         </span>
                     </template>
@@ -203,7 +212,7 @@
                 width="160px"
                 label="上传日期">
                 <template slot-scope="scope">
-                    {{timeStampFormat(scope.row.createdAt)}}
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm:SS')}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -211,10 +220,10 @@
                 width="160px"
                 label="更新日期">
                 <template slot-scope="scope">
-                    {{timeStampFormat(scope.row.updatedAt)}}
+                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:mm:SS')}}
                 </template>
             </el-table-column>
-            <el-table-column v-if="!hasRadio" width="130px" align="center" label="操作">
+            <el-table-column width="130px" align="center" label="操作">
                 <template slot-scope="scope">
                     <div class="operator-btn-wrapper">
                         <!--上传主站（子站）-->
@@ -246,15 +255,6 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination
-            @size-change="handlePaginationChange($event, 'pageSize')"
-            @current-change="handlePaginationChange($event, 'pageNum')"
-            :current-page="pagination.pageNum"
-            :page-sizes="[5, 10, 20, 30, 50, 100, 200, 500]"
-            :page-size="pagination.pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="pagination.total">
-        </el-pagination>
         <display-video-dialog
             :url="url"
             :title="title"
@@ -302,24 +302,23 @@
         </el-dialog>
     </div>
 </template>
+
 <script>
-    import {mapGetters, mapMutations, mapActions} from 'vuex';
+
     import DisplayVideoDialog from './DisplayVideoDialog';
-    import _ from 'lodash';
 
     const ClipboardJS = require('clipboard');
+
     export default {
         components: {
             DisplayVideoDialog
         },
         props: {
-            hasRadio: {
-                type: Boolean,
-                default: false
-            },
-            status: {
-                type: String,
-                default: ''
+            videoList: {
+                type: Array,
+                default: function () {
+                    return [];
+                }
             },
             shareSiteOptions: {
                 type: Array,
@@ -333,7 +332,7 @@
                 displayVideoDialogVisible: false,
                 url: '',
                 title: '',
-                selectedVideoList: [],
+                multipleSelection: [],
                 // 展示共享站点
                 shareSiteVisible: false,
                 // 设置共享站点
@@ -408,52 +407,10 @@
                 }
             }
         },
-        created() {
-            let that = this;
-            this.getVideoList()
-                .then(() => {
-                    !this.hasRadio && this.checkedVideoList();
-                });
-            let clipboard = new ClipboardJS('.copy-btn');
-            clipboard.on('success', function (e) {
-                that.$message.success('视频链接复制成功');
-                e.clearSelection();
-            });
-            clipboard.on('error', function (e) {
-                that.$message.error('视频链接复制失败');
-            });
+        mounted() {
+            this.initClipboard();
         },
         computed: {
-            ...mapGetters({
-                video: 'video/video',
-                pagination: 'video/pagination',
-                getStatus: 'video/getStatus',
-                programmeVideo: 'programme/video'
-            }),
-            duration() {
-                return (seconds) => {
-                    return this.$util.fromSecondsToTime(seconds);
-                };
-            },
-            isDisabled() {
-                return (id) => {
-                    let list = this.programmeVideo.list;
-                    let index = list.findIndex((video) => video.storageVideoId === id);
-                    return index >= 0;
-                };
-            },
-            timeStampFormat() {
-                return (seconds) => {
-                    let date = new Date(seconds);
-                    let year = date.getFullYear();
-                    let month = date.getMonth() + 1;
-                    let day = date.getDate();
-                    let hour = date.getHours();
-                    let minute = date.getMinutes();
-                    let second = date.getSeconds();
-                    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-                };
-            },
             getVideoUrl() {
                 return (uri) => {
                     let baseUri = window.localStorage.getItem('videoBaseUri');
@@ -462,32 +419,35 @@
             }
         },
         methods: {
-            ...mapMutations({
-                setSelectedVideoId: 'video/setSelectedVideoId',
-                setPagination: 'video/setPagination',
-                updatePagination: 'video/updatePagination'
-            }),
-            ...mapActions({
-                getVideoList: 'video/getVideoList',
-                deleteVideoById: 'video/deleteVideoById',
-                retryVideoByIdList: 'video/retryVideoByIdList'
-            }),
-            //  动态的为符合条件的行添加class
-            tableRowClassName({row, rowIndex}) {
-                if (this.isDisabled(row.id) || row.id === this.video.selectedVideoId) {
-                    return 'checked';
+            initClipboard() {
+                let that = this;
+                let clipboard = new ClipboardJS('.copy-btn');
+                clipboard.on('success', function (e) {
+                    that.$message.success('视频链接复制成功');
+                    e.clearSelection();
+                });
+                clipboard.on('error', function (e) {
+                    that.$message.error('视频链接复制失败');
+                });
+            },
+            // 勾选视频
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+                if (this.multipleSelection.length === 0) {
+                    this.$emit('setBatchDisabledStatus', true);
+                } else {
+                    this.$emit('setBatchDisabledStatus', false);
                 }
-                return '';
             },
             // 展示共享站点（只存在于主站）
-            checkShareSiteList(item) {
+            checkShareSiteList(videoItem) {
                 this.shareSiteVisible = true;
-                this.currentVideo = item;
+                this.currentVideo = videoItem;
             },
             // 设置单个视频分享站点（只存在于主站）
-            setSingleVideoShareSite(item) {
+            setSingleVideoShareSite(videoItem) {
                 this.shareSiteSettingVisible = true;
-                this.currentVideo = item;
+                this.currentVideo = videoItem;
                 this.videoShareSiteIdList = [];
                 if (this.currentVideo.shareSiteList) {
                     this.currentVideo.shareSiteList.map(site => {
@@ -515,7 +475,6 @@
                     this.$service.batchPullVideoFromMaster({videoIdList}).then(response => {
                         if (response && response.code === 0 && response.data.length === 0) {
                             this.$message.success('正在拉取视频到本站，请关注其状态更改');
-                            this.$refs.videoTable.checkedVideoList();
                         } else if (response && response.code === 0 && response.data.length !== 0) {
                             // 批量上传存在有特殊情况说明
                             let message = '当前上传视频含有如下问题：';
@@ -560,119 +519,54 @@
                     this.$message.warning('请您先配置站点');
                 }
             },
-            cutStr(str) {
-                return str.length > 40 ? str.substring(0, 40) + '...' : str;
-            },
-            needRetry(video) {
-                return video.status === 'FAILED';
-            },
-            handlePaginationChange(value, key) {
-                this.updatePagination({value, key});
-                if (key === 'pageSize') {
-                    window.localStorage.setItem('videoPageSize', value);
-                } else {
-                    this.selectedVideoList = [];
-                }
-                this.getVideoList()
-                    .then(() => {
-                        !this.hasRadio && this.checkedVideoList();
-                    });
-            },
             closeDisplayVideoDialog(status) {
                 this.displayVideoDialogVisible = status;
             },
+            // 播放预览视频
             displayVideoPlayer(url, name) {
                 this.displayVideoDialogVisible = true;
-                let baseUri = window.localStorage.getItem('videoBaseUri');
-                this.url = `${baseUri}${url}`;
+                this.url = `${url}`;
                 this.title = name;
             },
+            // 删除视频文件
             _deleteVideoById(id) {
                 this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'error'
                 }).then(() => {
-                    this.deleteVideoById(id)
-                        .then((res) => {
-                            if (res && res.code === 0) {
-                                this.$message.success('视频删除成功');
-                                this.getVideoList()
-                                    .then(() => {
-                                        !this.hasRadio && this.checkedVideoList();
-                                    });
-                            } else if (res && res.code === 3306) {
-                                this.$message({
-                                    type: 'error',
-                                    message: `该视频在如下节目 [${res.data.join(', ')}] 中有引用`,
-                                    duration: 5000
-                                });
-                            } else if (res && res.code === 3308) {
-                                this.$message({
-                                    type: 'error',
-                                    message: `该视频在如下频道 [${res.data.join(', ')}] 中有引用`,
-                                    duration: 5000
-                                });
-                            }
-                        });
-                }).catch(() => {
+                    this.deleteVideoById(id).then((res) => {
+                        if (res && res.code === 0) {
+                            this.$message.success('视频删除成功');
+                        } else if (res && res.code === 3306) {
+                            this.$message({
+                                type: 'error',
+                                message: `该视频在如下节目 [${res.data.join(', ')}] 中有引用`,
+                                duration: 5000
+                            });
+                        } else if (res && res.code === 3308) {
+                            this.$message({
+                                type: 'error',
+                                message: `该视频在如下频道 [${res.data.join(', ')}] 中有引用`,
+                                duration: 5000
+                            });
+                        }
+                    });
                 });
             },
-            selectHandler(list, row) {
-                let isSelected = list.findIndex((item) => item.id === row.id) >= 0;
-                if (isSelected) {
-                    this.selectedVideoList.push(row);
-                } else {
-                    this.selectedVideoList = this.selectedVideoList.filter((item) => item.id !== row.id);
-                }
-                if (this.selectedVideoList.length > 0) {
-                    window.eventBus.$emit('setDisabled', false);
-                } else {
-                    window.eventBus.$emit('setDisabled', true);
-                }
-            },
-            selectAllHandler(list) {
-                if (list.length > 0) {
-                    this.selectedVideoList = _.uniqBy(this.selectedVideoList.concat(list), 'id');
-                } else {
-                    this.selectedVideoList = this.selectedVideoList.filter((item) => {
-                        let index = this.video.list.findIndex((video) => {
-                            return video.id === item.id;
-                        });
-                        return index < 0;
-                    });
-                }
-                if (this.selectedVideoList.length > 0) {
-                    window.eventBus.$emit('setDisabled', false);
-                } else {
-                    window.eventBus.$emit('setDisabled', true);
-                }
-            },
-            retrySingleVideo(id) {
-                this.retryVideoByIdList([id])
-                    .then((res) => {
-                        if (res && res.code === 0) {
-                            this.$message.success('该视频重新注入成功');
-                        } else {
-                            this.$message.error('该视频重新注入失败');
-                        }
-                        this.getvideolist()
-                            .then(() => {
-                                !this.hasradio && this.checkedvideolist();
-                            });
-                    });
-            },
-            checkedVideoList() {
-                this.selectedVideoList.forEach((item) => {
-                    let video = this.video.list.find((video) => {
-                        return item.code === video.code;
-                    });
-                    if (video) {
-                        this.$nextTick(() => {
-                            this.$refs.multipleTable.toggleRowSelection(video, true);
-                        });
+            // 重试注入视频
+            retryInjectSingleVideo(id) {
+                this.retryVideoByIdList([id]).then((res) => {
+                    if (res && res.code === 0) {
+                        this.$message.success('该视频重新注入成功');
+                    } else {
+                        this.$message.error('该视频重新注入失败');
                     }
                 });
+            },
+            // 获取已选的视频列表
+            getSelectedVideoList() {
+                return this.multipleSelection;
             }
         }
     };
@@ -682,10 +576,6 @@
 
     .gan-tooltip {
         width: 300px;
-    }
-
-    .el-radio__label {
-        padding-left: 0;
     }
 
     .preview-link {
@@ -727,14 +617,6 @@
 </style>
 
 <style lang="scss">
-
-    .upload-btn {
-        &.is-disabled {
-            span {
-                color: #c0c4cc !important;
-            }
-        }
-    }
 
     span.disabled {
         opacity: 0.3;
