@@ -6,6 +6,7 @@
             :data="programmeList"
             header-row-class-name="common-table-header"
             border
+            :class="{'playing-box-table':model === 'MULTIPLE'}"
             row-class-name=programme-row
             style="width: 100%"
             @select-all="selectAll"

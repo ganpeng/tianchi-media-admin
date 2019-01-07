@@ -13,8 +13,11 @@
                 <el-input v-model="subjectInfo.name" placeholder="请填写30个字以内的名称"></el-input>
             </el-form-item>
             <el-form-item label="内容分类" prop="programmeCategoryList" required>
-                <el-select v-model="programmeCategoryList" @change="setProgrammeCategoryList" multiple
-                           placeholder="请选择专题内容分类">
+                <el-select
+                    v-model="programmeCategoryList"
+                    @change="setProgrammeCategoryList"
+                    multiple
+                    placeholder="请选择专题内容分类">
                     <el-option
                         v-for="item in programmeCategoryListOptions"
                         :key="item.id"
@@ -40,7 +43,7 @@
                 <el-button
                     type="primary"
                     plain
-                    class="btn-style-two add-tag"
+                    class="btn-style-four add-tag min"
                     @click="addSubjectTag">
                     新增
                 </el-button>
@@ -84,7 +87,7 @@
             </el-form-item>
             <!--专题关联节目-->
             <div class="content-sub-title subject-programme-list">专题内节目
-                <el-button @click="selectProgrammeVisible = true" class="contain-svg-icon btn-style-two">
+                <el-button @click="selectProgrammeVisible = true" class="contain-svg-icon btn-style-four">
                     <svg-icon icon-class="link_programme"></svg-icon>
                     关联节目
                 </el-button>
@@ -446,50 +449,6 @@
             width: 20px !important;
             height: 20px !important;
             fill: #1989FA;
-        }
-    }
-
-</style>
-
-<!--全局el-dialog样式-->
-<style lang="scss">
-
-    .normal-dialog {
-        background: #293550;
-        border: 0 solid #637497;
-        box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
-        border-radius: 8px;
-        .el-dialog__header {
-            padding: 0px;
-            height: 50px;
-            line-height: 55px;
-            background: #1F2D4D;
-            .el-dialog__title {
-                font-size: 20px;
-                color: #909399;
-            }
-            .el-dialog__headerbtn {
-                top: 16px;
-                font-size: 15px;
-                .el-dialog__close {
-                    color: #C35757;
-                }
-            }
-        }
-        .el-dialog__footer {
-            .el-button {
-                width: 100px;
-                height: 40px;
-                &.el-button--default {
-                    color: $dangerColor;
-                }
-                &.el-button--default.el-button--primary {
-                    color: #A3D0FD;
-                }
-                &:first-child {
-                    margin-left: 10px;
-                }
-            }
         }
     }
 

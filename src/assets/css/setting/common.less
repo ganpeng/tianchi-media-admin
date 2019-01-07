@@ -54,6 +54,66 @@
     }
 }
 
+// 2.0弹窗样式
+.normal-dialog {
+    background: #293550;
+    border: 0 solid #637497;
+    box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
+    border-radius: 8px;
+    .el-dialog__header {
+        padding: 0px;
+        height: 50px;
+        line-height: 55px;
+        background: #1F2D4D;
+        .el-dialog__title {
+            font-size: 20px;
+            color: #909399;
+        }
+        .el-dialog__headerbtn {
+            top: 16px;
+            font-size: 15px;
+            .el-dialog__close {
+                color: #C35757;
+                &:hover {
+                    color: #D0021B;
+                }
+            }
+        }
+    }
+    .el-dialog__footer {
+        .el-button {
+            width: 100px;
+            height: 40px;
+            &.el-button--default {
+                color: #C35757;
+            }
+            &.el-button--default.el-button--primary {
+                color: #A3D0FD;
+            }
+            &:first-child {
+                margin-left: 10px;
+            }
+        }
+    }
+}
+
+// 2.0弹窗表格样式
+.playing-box-table {
+    .el-table__header {
+        tr, th {
+            background: #212A3E !important;
+        }
+    }
+    .el-table__body {
+        tr {
+            background: #191D26 !important;
+            &:hover {
+                background: #979797;
+            }
+        }
+    }
+}
+
 // 人物列表中的图片大小
 .person-image {
     display: inline-block;

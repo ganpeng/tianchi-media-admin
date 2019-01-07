@@ -23,6 +23,7 @@
                             v-model="createRangeTime"
                             @change="getProductList"
                             type="daterange"
+                            clearable
                             value-format="timestamp"
                             range-separator="至"
                             start-placeholder="开始日期"
@@ -345,6 +346,12 @@
 
     .el-pagination {
         margin-top: 10px;
+    }
+
+    .svg-icon-arrow_down {
+        margin-left: 5px;
+        height: 10px !important;
+        width: 10px !important;
     }
 
 </style>
