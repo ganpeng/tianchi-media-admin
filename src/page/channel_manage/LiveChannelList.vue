@@ -384,6 +384,7 @@
         height: 18px;
         line-height: 18px;
         font-size: 14px;
+        background: transparent;
     }
     .el-dropdown-link {
         color: $mainColor;

@@ -121,9 +121,9 @@
             </el-table-column>
         </el-table>
         <el-pagination
-            @size-change="handlePaginationChange($event, 'pageSize')"
             @current-change="handlePaginationChange($event, 'pageNum')"
             :current-page="pagination.pageNum"
+            :page-size="pagination.pageSize"
             layout="total, prev, pager, next, jumper"
             :total="pagination.total">
         </el-pagination>
@@ -159,6 +159,7 @@
         },
         created() {
             let that = this;
+            this.updatePagination({key: 'pageSize', value: 5});
             this.getVideoList();
             let clipboard = new ClipboardJS('.copy-btn');
             clipboard.on('success', function (e) {

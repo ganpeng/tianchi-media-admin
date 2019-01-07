@@ -232,9 +232,9 @@
                             </el-table-column>
                         </el-table>
                         <el-pagination
-                            @size-change="handlePaginationChange($event, 'pageSize')"
                             @current-change="handlePaginationChange($event, 'pageNum')"
                             :current-page="programmePagination.pageNum"
+                            :page-size="programmePagination.pageSize"
                             layout="total, prev, pager, next, jumper"
                             :total="programmePagination.total">
                         </el-pagination>
@@ -589,6 +589,7 @@ export default {
         async showDialog(category) {
             try {
                 this.dialogVisible = true;
+                this.updateProgrammePagination({key: 'pageSize', value: 5});
                 await this.getProgrammeCategory();
                 if (category) {
                     this.category = category;

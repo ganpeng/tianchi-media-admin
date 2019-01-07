@@ -78,7 +78,7 @@
                                         </div>
                                     </div>
                                     <span class="btn-text edit-btn" @click="editCategoryGroupByIndex(index)">编辑</span>
-                                    <i @click="deleteCategoryGroupByIndexHandler(index)" class="el-icon-error delete-btn"></i>
+                                    <i @click="deleteCategoryGroupByIndexHandler(index)" class="el-tag__close el-icon-close delete-btn"></i>
                                 </li>
                                 <li key="hahahaha" slot="footer" class="add-category-group-item" @click="addCategoryGroup">
                                     <svg-icon icon-class="plus"></svg-icon>
@@ -97,7 +97,7 @@
                                     <div class="form-item-field">
                                         <el-input
                                             v-model="categoryGroup.name"
-                                            placeholder="请输入类型组名称"
+                                            placeholder="请输入类型组名称, 建议四个字以内"
                                             clearable
                                         ></el-input>
                                     </div>
@@ -740,13 +740,18 @@ export default {
         min-width: 200px;
         height: 110px;
         background: #2A3040;
+        border: 1px solid #2A3040;
         border-radius: 4px;
         padding: 0 10px;
         margin-right: 10px;
         margin-bottom: 10px;
         cursor: pointer;
-        &:last-child {
-
+        &:hover {
+            border: 1px solid $mainColor;
+        }
+        &.sortable-drag {
+            background: #293550;
+            border: 1px solid #637497;
         }
         .header {
             height: 30px;
@@ -757,42 +762,34 @@ export default {
             border-bottom: 1px solid #3E495E;
         }
         .content {
+            span {
+                display: inline-block;
+                border-radius: 4px;
+                color: #fff;
+                font-size: 12px;
+                height: 20px;
+                line-height: 20px;
+                padding: 0 4px;
+                margin-right: 10px;
+            }
             .type-list-tags {
                 text-align: left;
                 margin-top: 10px;
                 span {
-                    display: inline-block;
                     background: #637497;
-                    border-radius: 4px;
-                    padding: 4px 5px;
-                    color: #fff;
-                    font-size: 12px;
-                    transform: scale(0.8);
                 }
             }
             .year-area-tags {
                 text-align: left;
                 margin-top: 10px;
                 .area-tag {
-                    display: inline-block;
                     background: #8AA4AF;
-                    border-radius: 4px;
-                    padding: 4px 5px;
-                    color: #fff;
-                    font-size: 12px;
-                    transform: scale(0.8);
                     .svg-icon {
                         fill: #fff;
                     }
                 }
                 .year-tag {
-                    display: inline-block;
                     background: #485777;
-                    border-radius: 4px;
-                    padding: 4px 5px;
-                    color: #fff;
-                    font-size: 12px;
-                    transform: scale(0.8);
                 }
             }
         }
@@ -808,13 +805,18 @@ export default {
             position: absolute;
             right: 10px;
             top: 5px;
-            font-size: 16px;
-            line-height: 20px;
-            background: transparent;
-            color: #6F7480;
             cursor: pointer;
-            &:hover {
-                color: $dangerColor;
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
+            border-radius: 50%;
+            font-size: 12px;
+            &.el-tag__close.el-icon-close {
+                color: #2A3040;
+                background: #6F7480;
+                &:hover {
+                    background: $dangerColor;
+                }
             }
         }
     }
@@ -851,7 +853,7 @@ export default {
         .form-item {
             display: flex;
             flex-wrap: wrap;
-            align-items: center;
+            align-items: baseline;
             font-size: 14px;
             color: #A3D0FD;
             margin-bottom: 20px;
@@ -882,6 +884,9 @@ export default {
                     .my-tags {
                         margin-top: 0;
                         margin-bottom: 10px;
+                        .el-tags {
+                            font-size: 14px;
+                        }
                     }
                 }
             }
@@ -901,15 +906,33 @@ export default {
     .add-edit-category-group-dialog {
         .el-input {
             input.el-input__inner {
+                width: 240px;
                 height: 34px;
                 line-height: 34px;
                 border-color: #A3D0FD;
+            }
+        }
+        .my-tags {
+            .el-tag {
+                background: #2A3040;
+                border-radius: 4px;
+                font-size: 12px;
+                color: #6F7480;
+                height: 24px;
+                padding: 0 8px;
+                line-height: 22px;
+                margin-right: 10px;
+                border: 1px solid #2A3040;
+                cursor: default;
             }
         }
     }
     .el-checkbox {
         color: #A3D0FD;
         &.is-checked {
+            color: #A3D0FD;
+        }
+        .el-checkbox__input.is-checked+.el-checkbox__label  {
             color: #A3D0FD;
         }
         .el-checkbox__input {

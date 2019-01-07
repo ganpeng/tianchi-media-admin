@@ -53,29 +53,29 @@
         <div class="bottom-field">
             <div class="wrapper">
                 <div :style="styleBgImageStr(5)" class="bottom-field-item">
-                    <el-button v-if="isEdit" @click="selectFilter(5)" class="btn-style-two">
-                        选择筛选
+                    <el-button v-if="isEdit" @click="selectProgrammeVideo(5)" class="btn-style-two">
+                        选择视频
                     </el-button>
                 </div>
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(6)" class="bottom-field-item">
-                    <el-button v-if="isEdit" @click="selectFilter(6)" class="btn-style-two">
-                        选择筛选
+                    <el-button v-if="isEdit" @click="selectProgrammeVideo(6)" class="btn-style-two">
+                        选择视频
                     </el-button>
                 </div>
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(7)" class="bottom-field-item">
-                    <el-button v-if="isEdit" @click="selectFilter(7)" class="btn-style-two">
-                        选择筛选
+                    <el-button v-if="isEdit" @click="selectProgrammeVideo(7)" class="btn-style-two">
+                        选择视频
                     </el-button>
                 </div>
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(8)" class="bottom-field-item">
-                    <el-button v-if="isEdit" @click="selectFilter(8)" class="btn-style-two">
-                        选择筛选
+                    <el-button v-if="isEdit" @click="selectProgrammeVideo(8)" class="btn-style-two">
+                        选择视频
                     </el-button>
                 </div>
             </div>

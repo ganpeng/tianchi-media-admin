@@ -317,6 +317,18 @@ const mutations = {
             });
         }
     },
+    cancelLayoutPersonItemByIndex(state, payload) {
+        let {index, navbarId} = payload;
+        let storeLayout = store.get('layoutStore');
+        let layoutItemMultiList = _.get(storeLayout, `${navbarId}.data.${index}.layoutItemMultiList`);
+        _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList`, layoutItemMultiList);
+        // if (layoutItemMultiList) {
+        //     _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList`, layoutItemMultiList);
+        // } else {
+        //     let _defaultLayoutItemMultiList = _.times(6, () => _.cloneDeep(defaultLayoutItem));
+        //     _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList`, _defaultLayoutItemMultiList);
+        // }
+    },
     toggleChangedByNavbarId(state, payload) {
         let {navbarId, data} = payload;
         _.set(state.layout, `${navbarId}.data`, data);

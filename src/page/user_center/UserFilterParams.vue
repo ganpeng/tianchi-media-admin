@@ -16,21 +16,15 @@
                     搜索
                 </el-button>
                 <div class="search-field-item">
-                    <label class="search-field-item-label">开始时间</label>
+                    <label class="search-field-item-label">日期</label>
                     <el-date-picker
-                        v-model="listQueryParams.registeredAtStart"
-                        type="date"
-                        clearable
-                        placeholder="请选择创建起始时间">
-                    </el-date-picker>
-                </div>
-                <div class="search-field-item">
-                    <label class="search-field-item-label">结束时间</label>
-                    <el-date-picker
-                        v-model="listQueryParams.registeredAtEnd"
-                        type="date"
-                        clearable
-                        placeholder="请选择创建起始时间">
+                        v-model="listQueryParams.dateRange"
+                        type="daterange"
+                        value-format="timestamp"
+                        :unlink-panels="true"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
                     </el-date-picker>
                 </div>
                 <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
@@ -107,12 +101,14 @@
     </div>
 </template>
 <script>
+    import _ from 'lodash';
     export default {
         name: 'ProgrammeFilterParams',
         props: [],
         data() {
             return {
                 listQueryParams: {
+                    dateRange: [],
                     registeredAtStart: '',
                     registeredAtEnd: '',
                     keyword: '',
@@ -213,8 +209,8 @@
                 // 设置过滤条件
                 this.$emit('getUserList', {
                     keyword: this.listQueryParams.keyword,
-                    registeredAtStart: this.listQueryParams.registeredAtStart,
-                    registeredAtEnd: this.listQueryParams.registeredAtEnd,
+                    registeredAtStart: _.get(this.listQueryParams, 'dateRange.0'),
+                    registeredAtEnd: _.get(this.listQueryParams, 'dateRange.1'),
                     districtCode: districtCode
                 });
             },

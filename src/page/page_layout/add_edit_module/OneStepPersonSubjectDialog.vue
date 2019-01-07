@@ -72,7 +72,7 @@
                         :header-row-class-name='"common-table-header"' class="my-table-style" :data="personSubject.list" border>
                         <el-table-column align="center" width="60px" label="选择">
                             <template slot-scope="scope">
-                                <el-radio :value="layoutItem.id" :label="scope.row.id" @input="setPersonSubjectHandler(scope.row)">&nbsp;</el-radio>
+                                <el-radio :disabled="disabled(scope.row)" :value="layoutItem.id" :label="scope.row.id" @input="setPersonSubjectHandler(scope.row)">&nbsp;</el-radio>
                             </template>
                         </el-table-column>
                         <el-table-column prop="id" align="center" width="120px" label="编号">
@@ -102,9 +102,9 @@
                         </el-table-column>
                     </el-table>
                     <el-pagination
-                        @size-change="handlePaginationChange($event, 'pageSize')"
                         @current-change="handlePaginationChange($event, 'pageNum')"
                         :current-page="personSubject.pagination.pageNum"
+                        :page-size="personSubject.pagination.pageSize"
                         layout="total, prev, pager, next, jumper"
                         :total="personSubject.pagination.total">
                     </el-pagination>
@@ -167,6 +167,13 @@ export default {
                 return _.get(this.layoutItem, `${key}.id`);
             };
         },
+        disabled() {
+            return (row) => {
+                let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
+                let index = layoutData.layoutItemMultiList.findIndex((item) => item.id === row.id);
+                return index >= 0;
+            };
+        },
         checkedPersonSubjectList() {
             let id = _.get(this.layoutItem, 'id');
             if (id && !_.isEmpty(this.personSubjectData)) {
@@ -205,8 +212,9 @@ export default {
         },
         //  弹窗控制方法
         showDialog() {
-            this.getPersonSubjectList();
             this.dialogVisible = true;
+            this.updatePersonSubjectPagination({key: 'pageSize', value: 5});
+            this.getPersonSubjectList();
 
             window.addEventListener('keyup', this.keyupHandler);
         },

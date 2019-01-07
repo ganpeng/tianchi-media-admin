@@ -183,9 +183,9 @@
                             </el-table-column>
                         </el-table>
                         <el-pagination
-                            @size-change="handlePaginationChange($event, 'pageSize')"
                             @current-change="handlePaginationChange($event, 'pageNum')"
                             :current-page="programmeSubject.pagination.pageNum"
+                            :page-size="programmeSubject.pagination.pageSize"
                             layout="total, prev, pager, next, jumper"
                             :total="programmeSubject.pagination.total">
                         </el-pagination>
@@ -411,6 +411,7 @@ export default {
         //  弹窗的操作
         showDialog() {
             this.dialogVisible = true;
+            this.updateProgrammeSubjectPagination({key: 'pageSize', value: 5});
             this.getProgrammeSubjectList();
         },
         closeDialog() {

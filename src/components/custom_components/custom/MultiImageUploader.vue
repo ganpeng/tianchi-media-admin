@@ -113,6 +113,17 @@ export default {
                 this.resetInputField();
                 return false;
             }
+            let onlyFileList = fileList.filter((item) => {
+                let {width, height} = item.demension;
+                return parseInt(width) === 260 && parseInt(height) === 380;
+            });
+
+            if (onlyFileList.length > 1) {
+                this.$message.error('六分位图只能上传一张');
+                this.resetInputField();
+                return false;
+            }
+
             let newFileList = filterFile(this.fileList, fileList);
             this.fileList = Array.from(newFileList);
             if (!this.isUploading) {
@@ -207,12 +218,10 @@ export default {
     float: left;
     margin-right: 10px;
     .image-list {
-        // clear: both;
         display: flex;
         flex-wrap: wrap;
         .image-item {
             position: relative;
-            // float: left;
             width: 170px;
             height: 126px;
             margin-right: 30px;
@@ -222,6 +231,7 @@ export default {
                 position: relative;
                 border: 1px solid #3E495E;
                 border-radius: 4px;
+                box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
             }
             .dimension-info {
                 margin-top: 10px;

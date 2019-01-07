@@ -63,7 +63,7 @@
             width="80%"
             :visible.sync="selectPersonDialogVisible"
             :show-close="true"
-            :before-close="closeSelectPersonDialog"
+            :before-close="cancelHanlder"
             @open="dialogOpenHandler"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
@@ -97,7 +97,7 @@
                             placeholder="搜索你想要的信息"
                             clearable
                             class="border-input"
-                            :value="''"
+                            :value="searchFields.name"
                             @input="searchInputHandler($event, 'name')"
                         >
                         </el-input>
@@ -163,16 +163,14 @@
                     </el-table-column>
                 </el-table>
                 <el-pagination
-                    @size-change="handlePaginationChange($event, 'pageSize')"
                     @current-change="handlePaginationChange($event, 'pageNum')"
                     :current-page="pagination.pageNum"
-                    :page-sizes="[5, 10, 20, 30, 50]"
                     :page-size="pagination.pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
+                    layout="total, prev, pager, next, jumper"
                     :total="pagination.total">
                 </el-pagination>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
-                    <el-button @click="closeSelectPersonDialog">取 消</el-button>
+                    <el-button @click="cancelHanlder">取 消</el-button>
                     <el-button type="primary" @click="selectPersonEnterHandler">确 定</el-button>
                 </div>
             </div>
@@ -284,7 +282,8 @@ export default {
     methods: {
         ...mapMutations({
             updatePagination: 'person/updatePagination',
-            resetPerson: 'person/resetPerson',
+            resetPagination: 'person/resetPagination',
+            resetSearchFields: 'person/resetSearchFields',
             updateSearchFields: 'person/updateSearchFields',
             appendLayoutItem: 'pageLayout/appendLayoutItem',
             saveLayoutToStore: 'pageLayout/saveLayoutToStore',
@@ -293,7 +292,8 @@ export default {
             updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey',
             addLayoutItemByIndex: 'pageLayout/addLayoutItemByIndex',
             deleteLayoutItembyId: 'pageLayout/deleteLayoutItembyId',
-            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex'
+            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
+            cancelLayoutPersonItemByIndex: 'pageLayout/cancelLayoutPersonItemByIndex'
         }),
         ...mapActions({
             getPersonList: 'person/getPersonList'
@@ -304,6 +304,10 @@ export default {
         handlePaginationChange(value, key) {
             this.updatePagination({value, key});
             this.getPersonList({isProgramme: false, params: {visible: true}});
+        },
+        resetPerson() {
+            this.resetPagination();
+            this.resetSearchFields();
         },
         areaLabel(code) {
             let reg = /^\d+(\.\d+)?$/;
@@ -363,12 +367,12 @@ export default {
         showSelectPersonDialog() {
             this.selectPersonDialogVisible = true;
         },
-        closeSelectPersonDialog() {
+        closeDialog() {
             this.resetPerson();
             this.selectPersonDialogVisible = false;
         },
         dialogOpenHandler() {
-            this.resetPerson();
+            this.updatePagination({key: 'pageSize', value: 5});
             this.getPersonList({isProgramme: false, params: {visible: true}});
         },
         //  搜索人物的事件处理函数
@@ -381,7 +385,7 @@ export default {
         },
         selectPersonEnterHandler() {
             if (this.layoutData.layoutItemMultiList.length === 6) {
-                this.closeSelectPersonDialog();
+                this.closeDialog();
             } else {
                 this.$message.error('必须选择6个人物');
                 return false;
@@ -402,6 +406,10 @@ export default {
         },
         deleteIconImage() {
             this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: null});
+        },
+        cancelHanlder() {
+            this.cancelLayoutPersonItemByIndex({navbarId: this.navbarId, index: this.index});
+            this.closeDialog();
         }
     }
 };
