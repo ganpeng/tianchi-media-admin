@@ -204,7 +204,8 @@ export default {
         },
         disabled() {
             return (row) => {
-                let index = this.layoutItem.layoutItemMultiList.findIndex((item) => item.id === row.id);
+                let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
+                let index = layoutData.layoutItemMultiList.findIndex((item) => item.id === row.id);
                 return index >= 0;
             };
         },

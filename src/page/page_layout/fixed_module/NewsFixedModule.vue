@@ -18,14 +18,14 @@
                     <div class="top-right-top-field">
                         <div class="wrapper">
                             <div :style="styleBgImageStr(1)" class="top-right-top-left-field">
-                                <el-button v-if="isEdit" @click="selectProgrammeVideo(1)" class="btn-style-two">
+                                <el-button v-if="isEdit" @click="selectProgrammeVideo(1)" class="btn-style-two btn130">
                                     选择视频
                                 </el-button>
                             </div>
                         </div>
                         <div class="wrapper">
                             <div :style="styleBgImageStr(2)" class="top-right-top-right-field">
-                                <el-button v-if="isEdit" @click="selectProgrammeVideo(2)" class="btn-style-two">
+                                <el-button v-if="isEdit" @click="selectProgrammeVideo(2)" class="btn-style-two btn130">
                                     选择视频
                                 </el-button>
                             </div>
@@ -34,14 +34,14 @@
                     <div class="top-right-bottom-field">
                         <div class="wrapper">
                             <div :style="styleBgImageStr(3)" class="top-right-bottom-left-field">
-                                <el-button v-if="isEdit" @click="selectProgrammeVideo(3)" class="btn-style-two">
+                                <el-button v-if="isEdit" @click="selectProgrammeVideo(3)" class="btn-style-two btn130">
                                     选择视频
                                 </el-button>
                             </div>
                         </div>
                         <div class="wrapper">
                             <div :style="styleBgImageStr(4)" class="top-right-bottom-right-field">
-                                <el-button v-if="isEdit" @click="selectProgrammeVideo(4)" class="btn-style-two">
+                                <el-button v-if="isEdit" @click="selectProgrammeVideo(4)" class="btn-style-two btn130">
                                     选择视频
                                 </el-button>
                             </div>
@@ -53,28 +53,28 @@
         <div class="bottom-field">
             <div class="wrapper">
                 <div :style="styleBgImageStr(5)" class="bottom-field-item">
-                    <el-button v-if="isEdit" @click="selectProgrammeVideo(5)" class="btn-style-two">
+                    <el-button v-if="isEdit" @click="selectProgrammeVideo(5)" class="btn-style-two btn130">
                         选择视频
                     </el-button>
                 </div>
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(6)" class="bottom-field-item">
-                    <el-button v-if="isEdit" @click="selectProgrammeVideo(6)" class="btn-style-two">
+                    <el-button v-if="isEdit" @click="selectProgrammeVideo(6)" class="btn-style-two btn130">
                         选择视频
                     </el-button>
                 </div>
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(7)" class="bottom-field-item">
-                    <el-button v-if="isEdit" @click="selectProgrammeVideo(7)" class="btn-style-two">
+                    <el-button v-if="isEdit" @click="selectProgrammeVideo(7)" class="btn-style-two btn130">
                         选择视频
                     </el-button>
                 </div>
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(8)" class="bottom-field-item">
-                    <el-button v-if="isEdit" @click="selectProgrammeVideo(8)" class="btn-style-two">
+                    <el-button v-if="isEdit" @click="selectProgrammeVideo(8)" class="btn-style-two btn130">
                         选择视频
                     </el-button>
                 </div>

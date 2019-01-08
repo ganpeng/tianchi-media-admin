@@ -27,8 +27,8 @@
                             placeholder="搜索你想要的信息"
                             clearable
                             class="border-input"
-                            :value="videoListObj.searchFields.name"
-                            @input="searchInputHandler($event, 'name')"
+                            :value="videoListObj.searchFields.keyword"
+                            @input="searchInputHandler($event, 'keyword')"
                         >
                         </el-input>
                     </el-form-item>
@@ -164,7 +164,12 @@
                 </span>
             </el-form-item>
             <el-form-item label="视频封面图">
+                <single-poster
+                    v-if="videoStatus === 2"
+                    :img="video.coverImage"
+                ></single-poster>
                 <single-image-uploader
+                    v-else
                     :uri="video.coverImage ? video.coverImage.uri : ''"
                     :deleteImage="deleteCoverImage"
                     :uploadSuccessHandler="uploadSuccessHandler"
@@ -180,13 +185,6 @@
                 @click="successHandler"
                 v-loading.fullscreen.lock="isLoading">确 定</el-button>
         </div>
-        <upload-image
-            title="上传节目图片"
-            :size="size"
-            :successHandler="setVideoCoverImage"
-            :imageUploadDialogVisible="imageUploadDialogVisible"
-            v-on:changeImageDialogStatus="closeImageDialog($event)">
-        </upload-image>
     </el-dialog>
 </template>
 <script>
@@ -195,7 +193,7 @@
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import role from '@/util/config/role';
     import dimension from '@/util/config/dimension';
-    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
+    import SinglePoster from 'sysComponents/custom_components/custom/SinglePoster';
     import VideoTable from './VideoTable';
 
     import SearchPerson from '../../components/custom_components/custom/SearchPerson';
@@ -213,7 +211,7 @@
             }
         },
         components: {
-            UploadImage,
+            SinglePoster,
             VideoTable,
             SearchPerson,
             draggable,
@@ -299,6 +297,7 @@
                 updateSearchFields: 'video/updateSearchFields',
                 // 更新人物
                 updateVideoPerson: 'programme/updateVideoPerson',
+                updatePagination: 'video/updatePagination',
                 setList: 'video/setList',
                 //  人物搜索
                 addFigureToList: 'programme/addFigureToList',
@@ -306,7 +305,7 @@
             }),
             ...mapActions({
                 updateProgrammeVideoById: 'programme/updateProgrammeVideoById',
-                getVideoList: 'video/getVideoList',
+                getSuccessVideoList: 'video/getSuccessVideoList',
                 getFeatureVideoList: 'programme/getFeatureVideoList'
             }),
             beforeCloseHandler() {
@@ -314,7 +313,7 @@
             },
             keyupHandler(e) {
                 if (e.keyCode === 13) {
-                    this.getVideoList();
+                    this.getSuccessVideoList();
                 }
             },
             openDialogHandler() {
@@ -330,6 +329,7 @@
                 this.resetCurrentVideo();
                 this.updateSearchFields({key: 'status', value: null});
                 this.updateSearchFields({key: 'videoType', value: null});
+                this.updateSearchFields({key: 'keyword', value: ''});
                 this.setSelectedVideoId({id: ''});
             },
             successHandler() {
@@ -393,7 +393,7 @@
                 this.updateSearchFields({value, key});
             },
             searchEnterHandler() {
-                this.getVideoList();
+                this.getSuccessVideoList();
             },
             uploadImageHandler() {
                 if (!this.readonly) {
@@ -405,13 +405,14 @@
             },
             closeSelectVideoDialog() {
                 this.selectVideoDialogVisible = false;
-                this.updateSearchFields({key: 'name', value: ''});
+                this.updateSearchFields({key: 'keyword', value: ''});
                 this.updateSearchFields({key: 'status', value: ''});
             },
             selectVideo() {
                 this.updateSearchFields({key: 'status', value: 'SUCCESS'});
+                this.updatePagination({key: 'pageSize', value: 5});
                 this.setList({list: []}); // 获取列表之前，先清空列表的缓存数据
-                this.getVideoList();
+                this.getSuccessVideoList();
                 this.selectVideoDialogVisible = true;
             },
             getSelectedVideo() {

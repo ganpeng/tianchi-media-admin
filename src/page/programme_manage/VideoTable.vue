@@ -160,7 +160,7 @@
         created() {
             let that = this;
             this.updatePagination({key: 'pageSize', value: 5});
-            this.getVideoList();
+            this.getSuccessVideoList();
             let clipboard = new ClipboardJS('.copy-btn');
             clipboard.on('success', function (e) {
                 that.$message.success('视频链接复制成功');
@@ -215,7 +215,7 @@
                 updatePagination: 'video/updatePagination'
             }),
             ...mapActions({
-                getVideoList: 'video/getVideoList'
+                getSuccessVideoList: 'video/getSuccessVideoList'
             }),
             //  动态的为符合条件的行添加class
             tableRowClassName({row, rowIndex}) {
@@ -226,7 +226,7 @@
             },
             handlePaginationChange(value, key) {
                 this.updatePagination({value, key});
-                this.getVideoList();
+                this.getSuccessVideoList();
             },
             closeDisplayVideoDialog(status) {
                 this.displayVideoDialogVisible = status;

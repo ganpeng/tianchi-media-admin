@@ -6,7 +6,7 @@
                     <div :style="styleStr(image.uri)" class="bg-field">
                         <div class="mask"></div>
                     </div>
-                    <i @click.stop="deleteImageHandler(image.id)" class="el-icon-error"></i>
+                    <i @click.stop="deleteImageHandler(image.id)" class="delete-icon el-tag__close el-icon-close"></i>
                     <p class="dimension-info">{{image.width}}*{{image.height}}</p>
                 </li>
                 <li :style="styleStr(obj.dataUri)" v-for="(obj, index) in showFileList" :key="index" class="image-item">
@@ -230,7 +230,7 @@ export default {
             .bg-field {
                 position: relative;
                 border: 1px solid #3E495E;
-                border-radius: 4px;
+                border-radius: 8px;
                 box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
             }
             .dimension-info {
@@ -243,12 +243,18 @@ export default {
                 bottom: 0px;
                 width: 100%;
             }
-            i.el-icon-error {
+            i.delete-icon {
                 display: none;
                 position: absolute;
-                top: 4px;
-                right: 4px;
+                top: 8px;
+                right: 8px;
+                width: 22px;
+                height: 22px;
+                line-height: 22px;
                 font-size: 18px;
+                background: #000;
+                border-radius: 50%;
+                text-align: center;
                 color: $closeBtnHoverColor;
                 cursor: pointer;
                 z-index: 1000000;
@@ -261,6 +267,7 @@ export default {
                 right: 0;
                 bottom: 0;
                 background: rgba(#000, 0.6);
+                border-radius: 8px;
             }
             &:hover {
                 .mask {

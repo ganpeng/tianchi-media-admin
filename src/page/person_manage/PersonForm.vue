@@ -31,16 +31,17 @@
                     ></el-input>
                 </el-form-item>
                 <el-form-item label="人物简介" prop="description">
-                    <el-input
-                        type="textarea"
-                        :disabled="readonly"
-                        :maxlength="300"
-                        :minlength="110"
-                        :autosize="{ minRows: 4, maxRows: 12}"
-                        placeholder="请输入人物简介"
-                        :value="person.description"
-                        @input="inputHandler($event, 'description')"
-                    ></el-input>
+                    <div class="my-text-area">
+                        <el-input
+                            type="textarea"
+                            :disabled="readonly"
+                            :maxlength="300"
+                            :minlength="110"
+                            placeholder="请输入人物简介"
+                            :value="person.description"
+                            @input="inputHandler($event, 'description')"
+                        ></el-input>
+                    </div>
                 </el-form-item>
                 <el-form-item label="出生日期" prop="birthday">
                     <el-date-picker

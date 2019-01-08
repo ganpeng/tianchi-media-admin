@@ -148,3 +148,23 @@ export const getDownloadVideoList = ({keyword, status, startedAt, endedAt, pageN
         baseURL: '/storage'
     });
 };
+
+/**
+ * 获取下载视频列表
+ */
+export const getSuccessVideoList = ({keyword, pageNum, pageSize}) => {
+    let params = {
+        keyword,
+        statusList: ['SUCCESS'],
+        pageNum: pageNum,
+        pageSize
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/storage/video/page?${paramsStr}`, {
+        baseURL: '/storage'
+    });
+};

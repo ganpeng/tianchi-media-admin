@@ -459,12 +459,7 @@
                                 this.$message.warning(this.lowerFrameProgrammeErrorHandler(res));
                             }
                         });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+                }).catch(() => {});
             },
             lowerFrameProgrammeErrorHandler(res) {
                 let {code, data, message} = res;

@@ -3,7 +3,8 @@
         <div class="wrapper">
             <div v-if="showImage" :style="styleStr" v-show="uri" class="img-wrapper">
                 <img :style="styleStr" :src="uri" alt="">
-                <i v-if="showDelete" @click="deleteImage" class="el-icon-error"></i>
+                <!-- <i v-if="showDelete" @click="deleteImage" class="el-icon-error"></i> -->
+                <i v-if="showDelete" @click="deleteImage" class="el-tag__close el-icon-close"></i>
             </div>
             <div class="uploader-wrapper">
                 <div class="uploader" :style="styleStr">
@@ -158,17 +159,25 @@
 .img-wrapper {
     position: relative;
     margin-right: 10px;
-    border: 1px solid #3E495E;
-    border-radius: 4px;
     cursor: pointer;
     img {
         display: inline-block;
+        border: 1px solid #3E495E;
+        border-radius: 8px;
+        box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
     }
     i {
         display: none;
         position: absolute;
-        top: 4px;
-        right: 4px;
+        top: 8px;
+        right: 8px;
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+        font-size: 18px;
+        background: #000;
+        border-radius: 50%;
+        text-align: center;
         color: $closeBtnHoverColor;
     }
     &:hover {

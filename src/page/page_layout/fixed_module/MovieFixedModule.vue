@@ -24,11 +24,11 @@
                                 </p>
                             </div>
                             <div v-if="isEdit" class="btn-wrapper">
-                                <el-button @click.stop="selectProgramme(0)" class="btn-style-two">
+                                <el-button @click.stop="selectProgramme(0)" class="btn-style-two btn130">
                                     选择节目
                                 </el-button>
                                 <br />
-                                <el-button @click.stop="selectProgrammeSubject(0)" class="btn-style-two">
+                                <el-button @click.stop="selectProgrammeSubject(0)" class="btn-style-two btn130">
                                     选择节目专题
                                 </el-button>
                             </div>
@@ -43,11 +43,11 @@
                                 </p>
                             </div>
                             <div v-if="isEdit" class="btn-wrapper">
-                                <el-button @click.stop="selectProgramme(1)" class="btn-style-two">
+                                <el-button @click.stop="selectProgramme(1)" class="btn-style-two btn130">
                                     选择节目
                                 </el-button>
                                 <br />
-                                <el-button @click.stop="selectProgrammeSubject(1)" class="btn-style-two">
+                                <el-button @click.stop="selectProgrammeSubject(1)" class="btn-style-two btn130">
                                     选择节目专题
                                 </el-button>
                             </div>
@@ -62,11 +62,11 @@
                                 </p>
                             </div>
                             <div v-if="isEdit" class="btn-wrapper">
-                                <el-button @click.stop="selectProgramme(2)" class="btn-style-two">
+                                <el-button @click.stop="selectProgramme(2)" class="btn-style-two btn130">
                                     选择节目
                                 </el-button>
                                 <br />
-                                <el-button @click.stop="selectProgrammeSubject(2)" class="btn-style-two">
+                                <el-button @click.stop="selectProgrammeSubject(2)" class="btn-style-two btn130">
                                     选择节目专题
                                 </el-button>
                             </div>
@@ -81,11 +81,11 @@
                                 </p>
                             </div>
                             <div v-if="isEdit" class="btn-wrapper">
-                                <el-button @click.stop="selectProgramme(3)" class="btn-style-two">
+                                <el-button @click.stop="selectProgramme(3)" class="btn-style-two btn130">
                                     选择节目
                                 </el-button>
                                 <br />
-                                <el-button @click.stop="selectProgrammeSubject(3)" class="btn-style-two">
+                                <el-button @click.stop="selectProgrammeSubject(3)" class="btn-style-two btn130">
                                     选择节目专题
                                 </el-button>
                             </div>
@@ -96,11 +96,11 @@
                     <div :style="styleBgImageStr(4)" class="top-right-field">
                         <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 4)"></corner-mark>
                         <div v-if="isEdit" class="btn-wrapper">
-                            <el-button @click="selectProgramme(4)" class="btn-style-two">
+                            <el-button @click="selectProgramme(4)" class="btn-style-two btn130">
                                 选择节目
                             </el-button>
                             <br />
-                            <el-button @click="selectProgrammeSubject(4)" class="btn-style-two">
+                            <el-button @click="selectProgrammeSubject(4)" class="btn-style-two btn130">
                                 选择节目专题
                             </el-button>
                         </div>
@@ -112,11 +112,11 @@
                     <div :style="styleBgImageStr(5)" class="bottom-left-field">
                         <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 5)"></corner-mark>
                         <div v-if="isEdit" class="btn-wrapper">
-                            <el-button @click="selectProgramme(5)" class="btn-style-two">
+                            <el-button @click="selectProgramme(5)" class="btn-style-two btn130">
                                 选择节目
                             </el-button>
                             <br />
-                            <el-button @click="selectProgrammeSubject(5)" class="btn-style-two">
+                            <el-button @click="selectProgrammeSubject(5)" class="btn-style-two btn130">
                                 选择节目专题
                             </el-button>
                         </div>
@@ -126,11 +126,11 @@
                     <div :style="styleBgImageStr(6)" class="bottom-right-field">
                         <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 6)"></corner-mark>
                         <div v-if="isEdit" class="btn-wrapper">
-                            <el-button @click="selectProgramme(6)" class="btn-style-two">
+                            <el-button @click="selectProgramme(6)" class="btn-style-two btn130">
                                 选择节目
                             </el-button>
                             <br />
-                            <el-button @click="selectProgrammeSubject(6)" class="btn-style-two">
+                            <el-button @click="selectProgrammeSubject(6)" class="btn-style-two btn130">
                                 选择节目专题
                             </el-button>
                         </div>

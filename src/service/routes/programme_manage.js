@@ -183,11 +183,5 @@ export const upLowerFrameProgramme = (idList, visible) => {
  * 批量删除节目
  */
 export const batchDeleteProgrammes = (idList) => {
-    const params = {
-        idList
-    };
-    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
-        return item !== '' && item !== undefined;
-    }));
-    return service.delete(`/v1/content/programme?${paramsStr}`);
+    return service.delete(`/v1/content/programme`, {data: idList});
 };

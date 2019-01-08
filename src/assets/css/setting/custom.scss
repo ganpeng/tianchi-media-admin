@@ -270,6 +270,9 @@
         .svg-icon {
             fill: $btnText;
         }
+        &.btn130 {
+            min-width: 130px;
+        }
     }
     //  按钮样式三
     &.btn-style-three {
@@ -810,7 +813,7 @@
         width: 100%;
         height: 100%;
         border: 1px solid #3E495E;
-        border-radius: 4px;
+        border-radius: 8px;
         background: transparent;
         cursor: pointer;
         i {
@@ -1510,6 +1513,10 @@
     }
     .el-textarea {
         width: 300px;
+        .el-textarea__inner {
+            min-height: 278px;
+            height: 278px;
+        }
     }
     .el-form-item__content {
         line-height: 34px;

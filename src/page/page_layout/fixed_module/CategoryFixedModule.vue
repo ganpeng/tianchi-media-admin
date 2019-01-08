@@ -9,21 +9,21 @@
             <div class="top-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(0)" class="top-left-field">
-                        <el-button v-if="isEdit" @click="selectFilter(0)" class="btn-style-two">
+                        <el-button v-if="isEdit" @click="selectFilter(0)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
                     </div>
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(1)" class="top-middle-field">
-                        <el-button v-if="isEdit" @click="selectFilter(1)" class="btn-style-two">
+                        <el-button v-if="isEdit" @click="selectFilter(1)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
                     </div>
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(2)" class="top-right-field">
-                        <el-button v-if="isEdit" @click="selectFilter(2)" class="btn-style-two">
+                        <el-button v-if="isEdit" @click="selectFilter(2)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
                     </div>
@@ -32,21 +32,21 @@
             <div class="bottom-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(3)" class="bottom-left-field">
-                        <el-button v-if="isEdit" @click="selectFilter(3)" class="btn-style-two">
+                        <el-button v-if="isEdit" @click="selectFilter(3)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
                     </div>
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(4)" class="bottom-middle-field">
-                        <el-button v-if="isEdit" @click="selectFilter(4)" class="btn-style-two">
+                        <el-button v-if="isEdit" @click="selectFilter(4)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
                     </div>
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(5)" class="bottom-right-field">
-                        <el-button v-if="isEdit" @click="selectFilter(5)" class="btn-style-two">
+                        <el-button v-if="isEdit" @click="selectFilter(5)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
                     </div>

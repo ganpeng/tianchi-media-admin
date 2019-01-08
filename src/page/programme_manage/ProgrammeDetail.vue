@@ -37,6 +37,7 @@
                                     type="textarea"
                                     :disabled="readonly"
                                     @input="inputHandler($event, 'description')"
+                                    :maxlength="200"
                                     :autosize="{ minRows: 4, maxRows: 40}"
                                     placeholder="请输入内容"
                                     :value="programme.description">
