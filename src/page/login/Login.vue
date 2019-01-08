@@ -97,6 +97,8 @@
                     if (response && response.code === 0) {
                         this.siteName = response.data.siteName;
                         this.$wsCache.localStorage.set('siteInfo', response.data);
+                        // 设置项目title
+                        this.$util.setProjectTitle(this.siteName);
                     }
                 });
             },

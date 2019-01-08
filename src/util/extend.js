@@ -228,32 +228,34 @@ let util = {
         }
     },
     loopGetUploadServer(resolve) {
-        service.getUpstream()
-            .then((res) => {
-                if (res && res.code === 0) {
-                    let {ip, port} = res.data;
-                    let url = `http://${ip}:${port}`;
-                    resolve(url);
-                    clearTimeout(timer);
-                } else {
-                    console.log(`上传地址获取失败: ${res}`);
-                    clearTimeout(timer);
-                    timer = setTimeout(() => {
-                        util.loopGetUploadServer(resolve);
-                    }, 1000);
-                }
-            }).catch((err) => {
-                console.log(`上传地址获取失败, 错误原因: ${err}`);
+        service.getUpstream().then((res) => {
+            if (res && res.code === 0) {
+                let {ip, port} = res.data;
+                let url = `http://${ip}:${port}`;
+                resolve(url);
+                clearTimeout(timer);
+            } else {
+                console.log(`上传地址获取失败: ${res}`);
                 clearTimeout(timer);
                 timer = setTimeout(() => {
                     util.loopGetUploadServer(resolve);
                 }, 1000);
-            });
+            }
+        }).catch((err) => {
+            console.log(`上传地址获取失败, 错误原因: ${err}`);
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                util.loopGetUploadServer(resolve);
+            }, 1000);
+        });
     },
     getUploadServer() {
         return new Promise((resolve) => {
             util.loopGetUploadServer(resolve);
         });
+    },
+    setProjectTitle(siteName) {
+        document.title = (siteName || '未配置站点') + '--天驰管理平台';
     }
 };
 
