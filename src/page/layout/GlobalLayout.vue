@@ -55,7 +55,7 @@
                 </li>
             </ul>
         </div>
-        <div :style="contentStyleStr()" class="content">
+        <div :style="contentStyleStr()" id="global-content" class="content">
             <div class="content-wrapper" :style="`min-height: ${minHeight}px`">
                 <router-view></router-view>
             </div>

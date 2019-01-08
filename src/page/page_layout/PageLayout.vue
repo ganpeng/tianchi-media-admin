@@ -1,5 +1,6 @@
 <template>
     <div class="page-layout-container">
+        <div id="top"></div>
         <div class="columns-container wrapper" ref="wrapperBox">
             <ul class="columns-list clearfix content">
                 <li
@@ -25,6 +26,7 @@
                 :renderType="item.renderType"
                 :layoutTemplate="item.layoutTemplate"
             ></other-layout>
+            <div id="bottom"></div>
         </div>
         <div class="fixed-btn-container">
             <el-dropdown
@@ -44,10 +46,17 @@
                 <el-button class="btn-style-two" @click="saveLayoutHandler">保存</el-button>
                 <el-button v-if="getLayoutChangedByNavbarId" class="btn-style-three" @click="clearLayoutHandler">清除修改</el-button>
             </div>
-
             <el-button @click="showSortViewHandler" :class="['my-add-cycle', layoutList.length <= 0 && 'disabled']">
                 <svg-icon icon-class="sort"></svg-icon>
             </el-button>
+        </div>
+        <div class="scroll-btn-container">
+            <a href="#" v-scroll-to="{el: '#top', offset: -50}">
+                <i class="el-icon-arrow-up"></i>
+            </a>
+            <a href="#" v-scroll-to="'#bottom'">
+                <i class="el-icon-arrow-down"></i>
+            </a>
         </div>
         <transition name="slide-fade">
             <div v-if="sortView" class="layout-sort">
@@ -415,5 +424,30 @@ export default {
 .slide-fade-enter, .slide-fade-leave-to {
     transform: translateX(280px);
     opacity: 0;
+}
+
+.scroll-btn-container {
+    position: fixed;
+    bottom: 34px;
+    right: 10px;
+    a {
+        display: block;
+        width: 40px;
+        height: 40px;
+        background: rgba(65,74,93,0.90);
+        box-shadow: 0 2px 10px 0 rgba(0,0,0,0.50);
+        border-radius: 20px;
+        &:first-child {
+            margin-bottom: 10px;
+        }
+        &:hover {
+            background: #0062C4;
+        }
+        i {
+            color: #A3D0FD;
+            font-size: 28px;
+            line-height: 40px;
+        }
+    }
 }
 </style>

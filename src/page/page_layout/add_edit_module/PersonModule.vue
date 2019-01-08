@@ -126,7 +126,6 @@
                     <el-table-column prop="name" align="center" label="名字">
                         <template slot-scope="scope">
                             <span
-                                @click="displayPerson(scope.row.id)"
                                 class="ellipsis three name">
                                 {{scope.row.name | padEmpty}}
                             </span>
@@ -301,6 +300,11 @@ export default {
         inputHandler(value, key) {
             this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key, value});
         },
+        keyupHandler(e) {
+            if (e.keyCode === 13) {
+                this.searchEnterHandler();
+            }
+        },
         handlePaginationChange(value, key) {
             this.updatePagination({value, key});
             this.getPersonList({isProgramme: false, params: {visible: true}});
@@ -366,10 +370,14 @@ export default {
         //  弹窗控制方法
         showSelectPersonDialog() {
             this.selectPersonDialogVisible = true;
+
+            window.addEventListener('keyup', this.keyupHandler);
         },
         closeDialog() {
             this.resetPerson();
             this.selectPersonDialogVisible = false;
+
+            window.removeEventListener('keyup', this.keyupHandler);
         },
         dialogOpenHandler() {
             this.updatePagination({key: 'pageSize', value: 5});

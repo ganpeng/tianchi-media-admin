@@ -18,6 +18,11 @@ import './icons';
 import dragula from 'dragula';
 import wsCache from '@/util/webStorage';
 
+const VueScrollTo = require('vue-scrollto');
+Vue.use(VueScrollTo, {
+    container: '#global-content'
+});
+
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.prototype.$service = service;
