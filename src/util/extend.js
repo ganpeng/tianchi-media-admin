@@ -384,6 +384,9 @@ let util = {
     },
     cutStr(str, len) {
         let charLength = 0;
+        if (!str) {
+            return '';
+        }
         for (let i = 0; i < str.length; i++) {
             let sonStr = str.charAt(i);
             encodeURI(sonStr).length > 2 ? charLength += 1 : charLength += 0.5;
@@ -392,6 +395,7 @@ let util = {
                 return `${str.substr(0, subLen)}...`;
             }
         }
+        return str;
     }
 };
 
