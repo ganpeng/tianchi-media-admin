@@ -16,20 +16,10 @@
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item>
-                            <div class="wrapper">
-                                <label for="upload-input-file">选择文件</label>
-                                <input id="upload-input-file" class="upload-input" type="file"
-                                       accept="video/*,application/zip"
-                                       ref="uploadInputFile" multiple>
-                            </div>
+                            <div class="wrapper" @click="openSetShareSiteDialogBeforeUpload('FILE')">选择文件</div>
                         </el-dropdown-item>
                         <el-dropdown-item>
-                            <div class="wrapper">
-                                <label for="upload-input-dir">选择文件夹</label>
-                                <input id="upload-input-dir" class="upload-input" type="file"
-                                       accept="video/*,application/zip"
-                                       ref="uploadInputDir" multiple directory webkitdirectory allowdirs>
-                            </div>
+                            <div class="wrapper" @click="openSetShareSiteDialogBeforeUpload('FOLDER')">选择文件夹</div>
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -236,6 +226,26 @@
             ref="videoTable"
             :shareSiteOptions="shareSiteOptions">
         </video-table>
+        <!--上传视频选择文件-->
+        <input
+            id="upload-input-file"
+            class="upload-input"
+            type="file"
+            accept="video/*,application/zip"
+            ref="uploadInputFile"
+            multiple>
+        <!--上传视频选择文件夹-->
+        <input
+            id="upload-input-dir"
+            class="upload-input"
+            type="file"
+            accept="video/*,application/zip"
+            ref="uploadInputDir"
+            multiple
+            directory
+            webkitdirectory
+            allowdirs>
+        <!--多选视频进行共享站点设置-->
         <el-dialog
             title="站点共享设置"
             :visible.sync="batchShareDialogVisible"
@@ -244,18 +254,46 @@
             width="40%">
             <div class="batch-share-body" v-if="batchShareDialogVisible">
                 <div>{{$refs.videoTable.selectedVideoList.length}}个视频可以被以下站点共享:</div>
-                <el-select v-model="siteIdList" multiple clearable placeholder="请选择共享站点">
-                    <el-option
-                        v-for="(item, index) in shareSiteOptions"
-                        :key="index"
-                        :label="item.name"
-                        :value="item.id">
-                    </el-option>
-                </el-select>
+                <div class="text-center">
+                    <el-select v-model="siteIdList" multiple clearable placeholder="请选择共享站点">
+                        <el-option
+                            v-for="(item, index) in shareSiteOptions"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.id">
+                        </el-option>
+                    </el-select>
+                </div>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="batchShareDialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="batchShareVideo">确 定</el-button>
+            </span>
+        </el-dialog>
+        <!--上传视频前进行共享站点设置-->
+        <el-dialog
+            title="预设共享站点"
+            :visible.sync="preSetShareSiteDialogVisible"
+            :close-on-click-modal="false"
+            custom-class="batch-share-site"
+            width="40%">
+            <div class="batch-share-body" v-if="preSetShareSiteDialogVisible">
+                <div class="tips">您可预先设置这批视频可被共享的站点，注入成功后将会生效，生效后也可修改。</div>
+                <div class="tips">您也可以待注入完成后再批量设置。</div>
+                <div class="text-center">
+                    <el-select v-model="preSetShareSiteIdList" multiple clearable placeholder="请选择共享站点">
+                        <el-option
+                            v-for="(item, index) in shareSiteOptions"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.id">
+                        </el-option>
+                    </el-select>
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="skipPreSetting" type="primary" plain>跳过此步</el-button>
+                <el-button type="primary" @click="preSetShareSiteToVideo">确定设置</el-button>
             </span>
         </el-dialog>
         <!--拉取选择的主站视频列表-->
@@ -291,6 +329,11 @@
         },
         data() {
             return {
+                // 设置共享站点在视频上传之前
+                preSetShareSiteIdList: [],
+                preSetShareSiteDialogVisible: false,
+                // 保存用户选择上传视频的模式----'FILE'、'FOLDER'
+                uploadVideoMode: '',
                 selectMasterVideoDialogVisible: false,
                 statusOptions: role.VIDEO_INJECTING_STATUS_OPTIONS,
                 downloadStatusOptions: role.VIDEO_DOWNLOAD_STATUS_OPTIONS,
@@ -325,6 +368,36 @@
             window.removeEventListener('keyup', this.keyupHandler);
         },
         methods: {
+            // 跳过预设共享设置
+            skipPreSetting() {
+                this.preSetShareSiteIdList = [];
+                this.preSetShareSiteToVideo();
+            },
+            // 在预设共享站点之后进行上传视频
+            preSetShareSiteToVideo() {
+                this.preSetShareSiteDialogVisible = false;
+                if (this.uploadVideoMode === 'FILE') {
+                    this.$el.querySelector('#upload-input-file').click();
+                } else if (this.uploadVideoMode === 'FOLDER') {
+                    this.$el.querySelector('#upload-input-dir').click();
+                }
+            },
+            // 在上传视频之前打开设置共享站点设置弹窗
+            openSetShareSiteDialogBeforeUpload(uploadVideoMode) {
+                // 如果是中心站点，进行预设共享站点
+                if (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteMasterEnable) {
+                    this.uploadVideoMode = uploadVideoMode;
+                    this.preSetShareSiteIdList = [];
+                    this.preSetShareSiteDialogVisible = true;
+                } else {
+                    // 非中心站点直接开始选择文件或文件夹
+                    if (uploadVideoMode === 'FILE') {
+                        this.$el.querySelector('#upload-input-file').click();
+                    } else if (uploadVideoMode === 'FOLDER') {
+                        this.$el.querySelector('#upload-input-dir').click();
+                    }
+                }
+            },
             ...mapMutations({
                 updateSearchFields: 'video/updateSearchFields',
                 resetSearchFields: 'video/resetSearchFields',
@@ -603,6 +676,7 @@
                         this.$refs.videoTable.checkedVideoList();
                     });
             },
+            // 上传视频回调
             uploadChangeHandler(e) {
                 let files = Array.from(e.target.files).filter((file) => {
                     return /(.mpg|.ts|.zip)$/.test(file.name);
@@ -618,6 +692,7 @@
                     if (index === -1) {
                         let obj = {
                             file,
+                            shareSiteList: this.preSetShareSiteIdList,
                             progress: {
                                 percent: 0,
                                 status: 'waiting',
@@ -738,6 +813,15 @@
             div {
                 text-align: left;
                 font-size: 18px;
+                &.tips {
+                    margin-bottom: 20px;
+                    font-size: 14px;
+                    line-height: 16px;
+                    text-align: center;
+                }
+                &.text-center {
+                    text-align: center;
+                }
             }
             .el-select {
                 margin-top: 20px;
