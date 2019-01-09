@@ -16,7 +16,8 @@ const defaultSearchFields = {
     videoType: null,
     dateRange: [],
     startedAt: '',
-    endedAt: ''
+    endedAt: '',
+    statusCombinator: ''
 };
 
 const defaultPagination = {

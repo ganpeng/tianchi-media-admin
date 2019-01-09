@@ -393,9 +393,15 @@
                 this.selectVideoDialogVisible = false;
                 this.updateSearchFields({key: 'name', value: ''});
                 this.updateSearchFields({key: 'status', value: ''});
+                this.updateSearchFields({key: 'downloadStatus', value: ''});
+                this.updateSearchFields({key: 'uploadStatus', value: ''});
+                this.updateSearchFields({key: 'statusCombinator', value: ''});
             },
             selectVideo() {
                 this.updateSearchFields({key: 'status', value: 'SUCCESS'});
+                this.updateSearchFields({key: 'downloadStatus', value: 'SUCCESS'});
+                this.updateSearchFields({key: 'uploadStatus', value: 'SUCCESS'});
+                this.updateSearchFields({key: 'statusCombinator', value: 'OR'});
                 this.setList({list: []}); // 获取列表之前，先清空列表的缓存数据
                 this.getVideoList();
                 this.selectVideoDialogVisible = true;

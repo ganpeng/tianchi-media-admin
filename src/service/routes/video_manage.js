@@ -5,7 +5,7 @@ import service from '../config';
 /**
  * 获取所有视频的列表
  */
-export const getVideoList = ({originSiteId, shareSiteId, startedAt, endedAt, status, uploadStatus, downloadStatus, suffix, userId, name, key, m3u8For480P, m3u8For720P, m3u8For1080P, bitrate, frameRate, pageNum, pageSize, videoType}) => {
+export const getVideoList = ({originSiteId, shareSiteId, startedAt, endedAt, status, uploadStatus, downloadStatus, suffix, userId, name, key, m3u8For480P, m3u8For720P, m3u8For1080P, bitrate, frameRate, pageNum, pageSize, videoType, statusCombinator}) => {
     let params = {
         originSiteId,
         shareSiteId,
@@ -25,7 +25,8 @@ export const getVideoList = ({originSiteId, shareSiteId, startedAt, endedAt, sta
         pageSize,
         videoType,
         startedAt,
-        endedAt
+        endedAt,
+        statusCombinator
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {

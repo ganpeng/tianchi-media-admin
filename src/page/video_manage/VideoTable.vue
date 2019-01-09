@@ -107,8 +107,9 @@
                     <span v-else>---</span>
                 </template>
             </el-table-column>
-            <!--子站上传状态（子站）-->
+            <!--子站上传状态（子站、主站）-->
             <el-table-column
+                v-if="!(hasRadio && !($wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable))"
                 align="center"
                 label="上传状态">
                 <template slot-scope="scope">
@@ -147,7 +148,7 @@
             </el-table-column>
             <!--共享站点（主站）-->
             <el-table-column
-                v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                v-if="!hasRadio && $wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
                 align="center"
                 label="共享站点">
                 <template slot-scope="scope">
@@ -229,6 +230,7 @@
             title="共享站点"
             :visible.sync="shareSiteVisible"
             :close-on-click-modal="false"
+            :append-to-body="true"
             custom-class="share-site"
             width="40%">
             <div class="batch-share-body" v-if="shareSiteVisible">
@@ -246,6 +248,7 @@
             title="视频共享站点设置"
             :visible.sync="shareSiteSettingVisible"
             :close-on-click-modal="false"
+            :append-to-body="true"
             custom-class="share-site-setting"
             width="40%">
             <div class="share-body" v-if="shareSiteSettingVisible">

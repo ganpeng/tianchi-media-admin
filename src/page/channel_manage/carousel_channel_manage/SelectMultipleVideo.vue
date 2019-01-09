@@ -89,7 +89,32 @@
                 align="center"
                 label="注入状态">
                 <template slot-scope="scope">
-                    {{scope.row.status | switchStatus}}
+                    <span class="status-normal">{{scope.row.status | switchStatus}}</span>
+                </template>
+            </el-table-column>
+            <!--子站上传状态（主站）-->
+            <el-table-column
+                v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                align="center"
+                label="上传状态">
+                <template slot-scope="scope">
+                    <span>{{scope.row.uploadStatus | getUploadStatus}}</span>
+                </template>
+            </el-table-column>
+            <!--子站拉取状态（子站）-->
+            <el-table-column
+                v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                align="center"
+                label="拉取状态">
+                <template slot-scope="scope">
+                    <span>{{scope.row.downloadStatus | getDownloadStatus}}</span>
+                </template>
+            </el-table-column>
+            <!--视频来源(主站、子站)-->
+            <el-table-column align="center" label="视频来源">
+                <template slot-scope="scope">
+                    <span v-if="!scope.row.origin || scope.row.origin.length === 0">---</span>
+                    <span v-else>{{scope.row.origin.name}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -103,9 +128,9 @@
             <el-table-column
                 align="center"
                 width="220px"
-                label="视频用途">
+                label="更新日期">
                 <template slot-scope="scope">
-                    {{scope.row.videoType | switchVideoType}}
+                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                 </template>
             </el-table-column>
         </el-table>
@@ -143,10 +168,12 @@
             return {
                 queryParams: {
                     status: 'SUCCESS',
-                    videoType: '',
+                    downloadStatus: 'SUCCESS',
+                    uploadStatus: 'SUCCESS',
                     name: '',
                     pageNum: 0,
-                    pageSize: 10
+                    pageSize: 10,
+                    statusCombinator: 'OR'
                 },
                 pageNum: 1,
                 total: 0,
@@ -173,14 +200,28 @@
                         return '------';
                 }
             },
-            switchVideoType(videoType) {
-                switch (videoType) {
-                    case 'VOD':
-                        return '点播';
-                    case 'CAROUSEL':
-                        return '轮播';
+            getUploadStatus(uploadStatus) {
+                switch (uploadStatus) {
+                    case 'ON_GOING':
+                        return '上传中';
+                    case 'SUCCESS':
+                        return '上传成功';
+                    case 'FAILED':
+                        return '上传失败';
                     default:
-                        return '------';
+                        return '---';
+                }
+            },
+            getDownloadStatus(downloadStatus) {
+                switch (downloadStatus) {
+                    case 'ON_GOING':
+                        return '拉取中';
+                    case 'SUCCESS':
+                        return '拉取成功';
+                    case 'FAILED':
+                        return '拉取失败';
+                    default:
+                        return '---';
                 }
             }
         },
