@@ -145,7 +145,12 @@
                 <div class="tips">您可预先设置这批视频可被共享的站点，注入成功后将会生效，生效后也可修改。</div>
                 <div class="tips">您也可以待注入完成后再批量设置。</div>
                 <div class="text-center">
-                    <el-select v-model="preSetShareSiteIdList" multiple clearable placeholder="请选择共享站点">
+                    <el-select
+                        v-model="preSetShareSiteIdList"
+                        multiple
+                        clearable
+                        @change="setShareSites"
+                        placeholder="请选择共享站点">
                         <el-option
                             v-for="(item, index) in shareSiteOptions"
                             :key="index"
@@ -206,6 +211,7 @@
             this.$service.getAllSiteList().then(response => {
                 if (response && response.code === 0) {
                     this.shareSiteOptions = response.data;
+                    this.shareSiteOptions.unshift({id: '0', name: '全选'});
                 }
             });
         },
@@ -313,6 +319,19 @@
             }
         },
         methods: {
+            // 设置共享站点，对全选进行处理
+            setShareSites() {
+                this.preSetShareSiteIdList.map(siteId => {
+                    if (siteId === '0') {
+                        this.preSetShareSiteIdList = [];
+                        this.shareSiteOptions.map(siteOption => {
+                            if (siteOption.name !== '全选') {
+                                this.preSetShareSiteIdList.push(siteOption.id);
+                            }
+                        });
+                    }
+                });
+            },
             // 跳过预设共享设置
             skipPreSetting() {
                 this.preSetShareSiteIdList = [];

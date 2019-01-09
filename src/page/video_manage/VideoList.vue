@@ -122,7 +122,7 @@
                         placeholder="请选择共享站点"
                         @input="inputHandler($event, 'shareSiteId')">
                         <el-option
-                            v-for="(item, index) in shareSiteOptions"
+                            v-for="(item, index) in searchShareSiteOptions"
                             :key="index"
                             :label="item.name"
                             :value="item.id">
@@ -255,7 +255,12 @@
             <div class="batch-share-body" v-if="batchShareDialogVisible">
                 <div>{{$refs.videoTable.selectedVideoList.length}}个视频可以被以下站点共享:</div>
                 <div class="text-center">
-                    <el-select v-model="siteIdList" multiple clearable placeholder="请选择共享站点">
+                    <el-select
+                        v-model="siteIdList"
+                        multiple
+                        clearable
+                        @change="setShareSites('BATCH')"
+                        placeholder="请选择共享站点">
                         <el-option
                             v-for="(item, index) in shareSiteOptions"
                             :key="index"
@@ -281,7 +286,12 @@
                 <div class="tips">您可预先设置这批视频可被共享的站点，注入成功后将会生效，生效后也可修改。</div>
                 <div class="tips">您也可以待注入完成后再批量设置。</div>
                 <div class="text-center">
-                    <el-select v-model="preSetShareSiteIdList" multiple clearable placeholder="请选择共享站点">
+                    <el-select
+                        v-model="preSetShareSiteIdList"
+                        multiple
+                        clearable
+                        @change="setShareSites('PRE')"
+                        placeholder="请选择共享站点">
                         <el-option
                             v-for="(item, index) in shareSiteOptions"
                             :key="index"
@@ -341,6 +351,7 @@
                 suffixOptions: role.VIDEO_SUFFIX_OPTIONS,
                 sourceOptions: [],
                 shareSiteOptions: [],
+                searchShareSiteOptions: [],
                 timer: null,
                 isDisabled: true,
                 batchShareDialogVisible: false,
@@ -368,6 +379,37 @@
             window.removeEventListener('keyup', this.keyupHandler);
         },
         methods: {
+            // 设置共享站点，对全选进行处理
+            setShareSites(mode) {
+                switch (mode) {
+                    case 'BATCH':
+                        this.siteIdList.map(siteId => {
+                            if (siteId === '0') {
+                                this.siteIdList = [];
+                                this.shareSiteOptions.map(siteOption => {
+                                    if (siteOption.name !== '全选') {
+                                        this.siteIdList.push(siteOption.id);
+                                    }
+                                });
+                            }
+                        });
+                        break;
+                    case 'PRE':
+                        this.preSetShareSiteIdList.map(siteId => {
+                            if (siteId === '0') {
+                                this.preSetShareSiteIdList = [];
+                                this.shareSiteOptions.map(siteOption => {
+                                    if (siteOption.name !== '全选') {
+                                        this.preSetShareSiteIdList.push(siteOption.id);
+                                    }
+                                });
+                            }
+                        });
+                        break;
+                    default:
+                        break;
+                }
+            },
             // 跳过预设共享设置
             skipPreSetting() {
                 this.preSetShareSiteIdList = [];
@@ -426,6 +468,8 @@
                 this.$service.getAllSiteList().then(response => {
                     if (response && response.code === 0) {
                         this.shareSiteOptions = response.data;
+                        this.searchShareSiteOptions = response.data.slice(0);
+                        this.shareSiteOptions.unshift({id: '0', name: '全选'});
                     }
                 });
                 this.$service.getAllVideoSourceList().then(response => {

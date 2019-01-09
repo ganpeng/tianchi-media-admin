@@ -109,7 +109,7 @@
             </el-table-column>
             <!--子站上传状态（子站、主站）-->
             <el-table-column
-                v-if="!(hasRadio && !($wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable))"
+                v-if="hasRadio && !$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
                 align="center"
                 label="上传状态">
                 <template slot-scope="scope">
@@ -148,7 +148,7 @@
             </el-table-column>
             <!--共享站点（主站）-->
             <el-table-column
-                v-if="!hasRadio && $wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
                 align="center"
                 label="共享站点">
                 <template slot-scope="scope">
@@ -253,7 +253,11 @@
             width="40%">
             <div class="share-body" v-if="shareSiteSettingVisible">
                 <div>视频可以被以下站点共享:</div>
-                <el-select v-model="videoShareSiteIdList" multiple placeholder="请选择共享站点">
+                <el-select
+                    v-model="videoShareSiteIdList"
+                    multiple
+                    @change="setShareSites"
+                    placeholder="请选择共享站点">
                     <el-option
                         v-for="(item,index) in shareSiteOptions"
                         :key="index"
@@ -415,6 +419,19 @@
                 deleteVideoById: 'video/deleteVideoById',
                 retryVideoByIdList: 'video/retryVideoByIdList'
             }),
+            // 设置共享站点，对全选进行处理
+            setShareSites() {
+                this.videoShareSiteIdList.map(siteId => {
+                    if (siteId === '0') {
+                        this.videoShareSiteIdList = [];
+                        this.shareSiteOptions.map(siteOption => {
+                            if (siteOption.name !== '全选') {
+                                this.videoShareSiteIdList.push(siteOption.id);
+                            }
+                        });
+                    }
+                });
+            },
             // 展示共享站点（只存在于主站）
             checkShareSiteList(item) {
                 this.shareSiteVisible = true;
