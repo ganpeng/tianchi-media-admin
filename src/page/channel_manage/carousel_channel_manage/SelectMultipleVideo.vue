@@ -89,7 +89,9 @@
                 align="center"
                 label="注入状态">
                 <template slot-scope="scope">
-                    <span>{{scope.row.status | switchStatus}}</span>
+                    <span :class="{'status-normal':scope.row.status === 'SUCCESS'}">
+                        {{scope.row.status | switchStatus}}
+                    </span>
                 </template>
             </el-table-column>
             <!--子站上传状态（主站）-->
@@ -191,9 +193,9 @@
             switchStatus(status) {
                 switch (status) {
                     case 'SUCCESS':
-                        return '注入成功';
+                        return '成功';
                     case 'FAILED':
-                        return '注入失败';
+                        return '失败';
                     case 'INJECTING':
                         return '注入中';
                     default:
@@ -205,9 +207,9 @@
                     case 'ON_GOING':
                         return '上传中';
                     case 'SUCCESS':
-                        return '上传成功';
+                        return '成功';
                     case 'FAILED':
-                        return '上传失败';
+                        return '失败';
                     default:
                         return '---';
                 }
@@ -217,9 +219,9 @@
                     case 'ON_GOING':
                         return '拉取中';
                     case 'SUCCESS':
-                        return '拉取成功';
+                        return '成功';
                     case 'FAILED':
-                        return '拉取失败';
+                        return '失败';
                     default:
                         return '---';
                 }
@@ -348,6 +350,7 @@
         }
     };
 </script>
+
 <style lang="scss" scoped>
 
     .el-input {
