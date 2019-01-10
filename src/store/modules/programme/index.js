@@ -650,10 +650,18 @@ const mutations = {
         let {image} = payload;
         state.programme.posterImageList.push(image);
         state.programme.posterImageList = _.uniqBy(state.programme.posterImageList, 'id');
+        let width = _.get(image, 'width');
+        let height = _.get(image, 'height');
+        if (parseInt(width) === 260 && parseInt(height) === 380) {
+            state.programme.coverImage = image;
+        }
     },
     deleteImageFromPosterImageListById(state, payload) {
         let {id} = payload;
         state.programme.posterImageList = state.programme.posterImageList.filter((image) => image.id !== id);
+        if (id === state.programme.coverImage.id) {
+            state.programme.coverImage = {};
+        }
     },
     // 新加代码结束
     addPosterImage(state, payload) {

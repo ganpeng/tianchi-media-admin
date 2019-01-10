@@ -2,45 +2,110 @@ import _ from 'lodash';
 import store from 'store';
 import service from '../../../service';
 
-//  推荐专题（背景渲染） SUBJECT,
-// 推荐节目PROGRAMME PROGRAMME,
-//  节目列表页面 PROGRAMME_LIST,
-//  视频播放页面 PROGRAMME_VIDEO,
-//  链接类型 LINK,
-//  电影节目类别 MOVIE_PROGRAMME_CATEGORY,
-//  电影节目类型 MOVIE_PROGRAMME_TYPE,
-//  电视剧节目类别 TV_DRAMA_PROGRAMME_CATEGORY,
-//  电视剧节目类型 TV_DRAMA_PROGRAMME_TYPE,
-//  新闻节目类别 NEWS_PROGRAMME_CATEGORY,
-//  新闻节目类型 NEWS_PROGRAMME_TYPE,
-//  网视节目类别 NETWORK_PROGRAMME_CATEGORY,
-//  网视节目类型 NETWORK_PROGRAMME_TYPE,
-//  体育节目类别 SPORTS_PROGRAMME_CATEGORY,
-//  体育节目类型 SPORTS_PROGRAMME_TYPE,
-//  儿童节目类别 CHILD_PROGRAMME_CATEGORY,
-//  儿童节目类型 CHILD_PROGRAMME_TYPE,
-//  纪实节目类别 RECORD_PROGRAMME_CATEGORY,
-//  纪实节目类型 RECORD_PROGRAMME_TYPE,
-//  教育节目类别 EDU_PROGRAMME_CATEGORY,
-//  教育节目类型 EDU_PROGRAMME_TYPE,
-//  卫视综艺节目类别 TV_SHOW_SATELLITE_PROGRAMME_CATEGORY,
-//  卫视综艺节目类型 TV_SHOW_SATELLITE_PROGRAMME_TYPE,
-//  网络综艺节目类别 TV_SHOW_NETWORK_PROGRAMME_CATEGORY,
-//  网络综艺节目类型 TV_SHOW_NETWORK_PROGRAMME_TYPE,
-//  音乐节目类别 MUSIC_PROGRAMME_CATEGORY,
-//  音乐节目类型 MUSIC_PROGRAMME_TYPE,
-//  曲艺节目类别 TUNE_ART_PROGRAMME_CATEGORY,
-//  曲艺节目类型 TUNE_ART_PROGRAMME_TYPE,
-//  幽默节目类别 HUMOROUS_PROGRAMME_CATEGORY,
-//  幽默节目类型 HUMOROUS_PROGRAMME_TYPE,
-//  科普中国节目类别 CHINA_SCIENCE_PROGRAMME_CATEGORY,
-//  科普中国节目类型 CHINA_SCIENCE_PROGRAMME_TYPE,
-//  新时代党建节目类别 COMMUNIST_PARTY_BUILD_PROGRAMME_CATEGORY,
-//  新时代党建节目类型 COMMUNIST_PARTY_BUILD_PROGRAMME_TYPE,
-//  直播频道（色块） CHANNEL,
-//  频道组 CHANNEL_GROUP,
-//  人物（人物） FIGURE,
-//  更多  ALL,
+// /** 节目专题*/
+// PROGRAMME_SUBJECT,
+
+// /** 人物专题*/
+// FIGURE_SUBJECT,
+
+// /** 推荐节目PROGRAMME */
+// PROGRAMME,
+
+// /** 节目列表页面 */
+// PROGRAMME_LIST,
+
+// /** 视频播放页面 */
+// PROGRAMME_VIDEO,
+
+// /** 链接类型 */
+// LINK,
+
+// /** 电影节目类别 */
+// MOVIE_PROGRAMME_CATEGORY,
+// /** 电影节目类型 */
+// MOVIE_PROGRAMME_TYPE,
+
+// /** 电视剧节目类别 */
+// TV_DRAMA_PROGRAMME_CATEGORY,
+// /** 电视剧节目类型 */
+// TV_DRAMA_PROGRAMME_TYPE,
+
+// /** 新闻节目类别 */
+// NEWS_PROGRAMME_CATEGORY,
+// /** 新闻节目类型 */
+// NEWS_PROGRAMME_TYPE,
+
+// /** 网视节目类别 */
+// NETWORK_PROGRAMME_CATEGORY,
+// /** 网视节目类型 */
+// NETWORK_PROGRAMME_TYPE,
+
+// /** 体育节目类别 */
+// SPORTS_PROGRAMME_CATEGORY,
+// /** 体育节目类型 */
+// SPORTS_PROGRAMME_TYPE,
+
+// /** 儿童节目类别 */
+// CHILD_PROGRAMME_CATEGORY,
+// /** 儿童节目类型 */
+// CHILD_PROGRAMME_TYPE,
+
+// /** 纪实节目类别 */
+// RECORD_PROGRAMME_CATEGORY,
+// /** 纪实节目类型 */
+// RECORD_PROGRAMME_TYPE,
+
+// /** 教育节目类别 */
+// EDU_PROGRAMME_CATEGORY,
+// /** 教育节目类型 */
+// EDU_PROGRAMME_TYPE,
+
+// /** 卫视综艺节目类别 */
+// TV_SHOW_SATELLITE_PROGRAMME_CATEGORY,
+// /** 卫视综艺节目类型 */
+// TV_SHOW_SATELLITE_PROGRAMME_TYPE,
+
+// /** 网络综艺节目类别 */
+// TV_SHOW_NETWORK_PROGRAMME_CATEGORY,
+// /** 网络综艺节目类型 */
+// TV_SHOW_NETWORK_PROGRAMME_TYPE,
+
+// /** 音乐节目类别 */
+// MUSIC_PROGRAMME_CATEGORY,
+// /** 音乐节目类型 */
+// MUSIC_PROGRAMME_TYPE,
+
+// /** 曲艺节目类别 */
+// TUNE_ART_PROGRAMME_CATEGORY,
+// /** 曲艺节目类型 */
+// TUNE_ART_PROGRAMME_TYPE,
+
+// /** 幽默节目类别 */
+// HUMOROUS_PROGRAMME_CATEGORY,
+// /** 幽默节目类型 */
+// HUMOROUS_PROGRAMME_TYPE,
+
+// /** 科普中国节目类别 */
+// CHINA_SCIENCE_PROGRAMME_CATEGORY,
+// /** 科普中国节目类型 */
+// CHINA_SCIENCE_PROGRAMME_TYPE,
+
+// /** 新时代党建节目类别 */
+// COMMUNIST_PARTY_BUILD_PROGRAMME_CATEGORY,
+// /** 新时代党建节目类型 */
+// COMMUNIST_PARTY_BUILD_PROGRAMME_TYPE,
+
+// /** 直播频道（色块） */
+// CHANNEL,
+
+// /** 频道组*/
+//  CHANNEL_GROUP,
+
+// /** 人物（人物） */
+// FIGURE,
+
+// /** 更多  */
+// ALL,
 
 /**
  * 根据每个色块的类型初始化每个色块的数据结构
@@ -245,6 +310,13 @@ const mutations = {
     updateLayoutItemByIndex(state, payload) {
         let {index, navbarId, squareIndex, key, value} = payload;
         _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.${key}`, value);
+    },
+    resetLayoutItemByIndex(state, payload) {
+        let {index, navbarId, squareIndex} = payload;
+        let _defaultLayoutItem = _.cloneDeep(defaultLayoutItem);
+        Object.keys(_defaultLayoutItem).forEach((key) => {
+            _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.${key}`, _defaultLayoutItem[key]);
+        });
     },
     addLayoutItemByIndex(state, payload) {
         let {index, navbarId, layoutItem} = payload;

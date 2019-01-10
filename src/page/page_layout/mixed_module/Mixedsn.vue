@@ -133,7 +133,7 @@ export default {
         },
         addFilterLayout() {
             this.isAdd = true;
-            this.$refs.selectFilterDialog.showDialog();
+            this.$refs.selectFilterDialog.showDialog('FILTER');
         },
         editHandler() {
             let {navbarId} = this.$route.params;

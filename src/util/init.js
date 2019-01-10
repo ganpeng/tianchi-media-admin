@@ -40,7 +40,7 @@ import vuexStore from '../store/index';
     FIGURE, // 人物模块
     SPECIAL, // 特别模块
  */
-let defaultLayoutItem = {
+export let defaultLayoutItem = {
     desc: '',
     id: '',
     layoutItemType: '',

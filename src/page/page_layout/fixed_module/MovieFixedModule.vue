@@ -213,13 +213,13 @@ export default {
             this.squareIndex = squareIndex;
             this.setAllowResolutions(this.squareIndex);
             this.setMovieActiveIndex(this.squareIndex);
-            this.$refs.selectProgrammeDialog.showDialog();
+            this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
         },
         selectProgrammeVideo(squareIndex) {
             this.squareIndex = squareIndex;
             this.setAllowResolutions(this.squareIndex);
             this.setMovieActiveIndex(this.squareIndex);
-            this.$refs.selectProgrammeVideoDialog.showDialog();
+            this.$refs.selectProgrammeVideoDialog.showDialog('PROGRAMME_VIDEO');
         },
         changeMovieActiveIndex(index) {
             this.movieActiveIndex = index;

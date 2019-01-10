@@ -113,6 +113,11 @@ export default {
             sortView: false
         };
     },
+    watch: {
+        '$route' (to, from) {
+            this.updateLayout();
+        }
+    },
     async mounted() {
         init();
     },

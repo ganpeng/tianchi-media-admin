@@ -156,7 +156,7 @@ export default {
         selectPersonSubject(squareIndex) {
             this.allowResolutions = [{width: 260, height: 600}];
             this.squareIndex = squareIndex;
-            this.$refs.personSubjectDialog.showDialog();
+            this.$refs.personSubjectDialog.showDialog('FIGURE_SUBJECT');
         }
     }
 };

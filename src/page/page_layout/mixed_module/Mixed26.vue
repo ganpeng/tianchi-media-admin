@@ -239,19 +239,19 @@ export default {
                 }
                 switch (layoutItemType) {
                     case 'PROGRAMME':
-                        this.$refs.selectProgrammeDialog.showDialog();
+                        this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
                         break;
                     case 'PROGRAMME_VIDEO':
-                        this.$refs.selectProgrammeVideoDialog.showDialog();
+                        this.$refs.selectProgrammeVideoDialog.showDialog('PROGRAMME_VIDEO');
                         break;
                     case 'PROGRAMME_SUBJECT':
-                        this.$refs.selectProgrammeSubjectDialog.showDialog();
+                        this.$refs.selectProgrammeSubjectDialog.showDialog('PROGRAMME_SUBJECT');
                         break;
                     case 'LINK':
-                        this.$refs.selectLinkDialog.showDialog();
+                        this.$refs.selectLinkDialog.showDialog('LINK');
                         break;
                     case 'CHANNEL':
-                        this.$refs.selectChannelDialog.showDialog();
+                        this.$refs.selectChannelDialog.showDialog('CHANNEL');
                         break;
                     default:
                         throw new Error('layoutItemType类型错误');

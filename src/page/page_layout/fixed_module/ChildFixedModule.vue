@@ -107,17 +107,22 @@ export default {
         selectProgramme(squareIndex) {
             this.squareIndex = squareIndex;
             this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectProgrammeDialog.showDialog();
+            this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
         },
         selectProgrammeVideo(squareIndex) {
             this.squareIndex = squareIndex;
             this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectProgrammeVideoDialog.showDialog();
+            this.$refs.selectProgrammeVideoDialog.showDialog('PROGRAMME_VIDEO');
+        },
+        selectProgrammeSubject(squareIndex) {
+            this.squareIndex = squareIndex;
+            this.setAllowResolutions(this.squareIndex);
+            this.$refs.selectProgrammeSubjectDialog.showDialog('PROGRAMME_SUBJECT');
         },
         selectFilter(squareIndex) {
             this.squareIndex = squareIndex;
             this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectFilterDialog.showDialog();
+            this.$refs.selectFilterDialog.showDialog('FILTER');
         },
         saveHandler() {
             let {navbarId} = this.$route.params;
@@ -190,7 +195,7 @@ export default {
                 @include paddingBg(100%);
                 border-radius: 30px;
                 background-image: url('../../../assets/img/children_history.png');
-                background-size: contain;
+                background-size: cover;
             }
             .middle-field {
                 @include paddingBg(63%);

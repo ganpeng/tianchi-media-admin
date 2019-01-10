@@ -347,6 +347,9 @@
             fill: $btnText;
         }
     }
+    &.el-button--text {
+        font-size: 14px;
+    }
 }
 
 .delete-btn {
@@ -694,6 +697,16 @@
     }
 }
 
+.my-disabled-dropdown {
+    width: 90px;
+    height: 28px;
+    line-height: 28px;
+    font-size: 12px;
+    color: #6F7480;
+    border: 1px solid #3E495E;
+    border-radius: 4px;
+}
+
 .el-dropdown-menu.el-popper {
     border: 1px solid #637497;
     background: rgba(65,74,93,0.90);
@@ -1039,7 +1052,7 @@
                     background: #2A3040;
                     border: 1px solid #3E495E;
                     border-radius: 8px;
-                    box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
+                    // box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
                 }
                 .person-name {
                     display: inline-block;

@@ -72,7 +72,6 @@ export default {
         margin-right: 10px;
         border: 1px solid #3E495E;
         border-radius: 4px;
-        cursor: pointer;
         text-align: center;
         margin-bottom: 60px;
         img {
@@ -84,12 +83,6 @@ export default {
             top: 4px;
             right: 4px;
             color: $closeBtnHoverColor;
-        }
-        &:hover {
-            opacity: 0.6;
-            i {
-                display: block;
-            }
         }
     }
     .image-dimension {

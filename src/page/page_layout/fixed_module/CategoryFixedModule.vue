@@ -110,7 +110,7 @@ export default {
         selectFilter(squareIndex) {
             this.squareIndex = squareIndex;
             this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectFilterDialog.showDialog();
+            this.$refs.selectFilterDialog.showDialog('FILTER');
         },
         saveHandler() {
             let {navbarId} = this.$route.params;

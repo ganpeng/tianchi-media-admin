@@ -86,3 +86,17 @@ export const getDuplicateList = ({pageNum, pageSize, name}) => {
 export const checkAliasIsExist = (alias) => {
     return service.get(`/v1/content/figure/duplicate/alias?alias=${alias}`);
 };
+
+/**
+ * 批量上下架人物
+ */
+export const batchLowerUpFramePerson = (idList, visible) => {
+    return service.patch(`/v1/content/figure/visible?visible=${visible}`, idList);
+};
+
+/**
+ * 批量删除人物
+ */
+export const batchDeletePerson = (idList) => {
+    return service.delete('/v1/content/figure', {data: idList});
+};

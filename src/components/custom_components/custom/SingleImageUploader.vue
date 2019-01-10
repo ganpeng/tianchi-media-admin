@@ -1,7 +1,7 @@
 <template>
     <div class="single-image-uploader-container">
         <div class="wrapper">
-            <div v-if="showImage" :style="styleStr" v-show="uri" class="img-wrapper">
+            <div v-if="showImage" :style="styleStr" v-show="uri" :class="['img-wrapper', showDelete ? 'hover' : '']">
                 <img :style="styleStr" :src="uri" alt="">
                 <!-- <i v-if="showDelete" @click="deleteImage" class="el-icon-error"></i> -->
                 <i v-if="showDelete" @click="deleteImage" class="el-tag__close el-icon-close"></i>
@@ -180,10 +180,12 @@
         text-align: center;
         color: $closeBtnHoverColor;
     }
-    &:hover {
-        opacity: 0.6;
-        i {
-            display: block;
+    &.hover {
+        &:hover {
+            opacity: 0.6;
+            i {
+                display: block;
+            }
         }
     }
 }

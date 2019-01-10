@@ -330,12 +330,7 @@
                                     this.$message.error(this.lowerFramePersonErrorHandler(res));
                                 }
                             });
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                    });
+                    }).catch(() => {});
             },
             lowerFramePersonErrorHandler(res) {
                 let {code, data, message} = res;
@@ -446,9 +441,57 @@
                 window.open(routeData.href, '_blank');
             },
             //  批量操作
-            multUpFramePersonHandler() {},
-            multLowerFramePersonHandler() {},
-            batchDeletPersonHandler() {}
+            async multUpFramePersonHandler() {
+                let idList = this.selectedVideoList.map((item) => item.id);
+                let confirm = await this.$confirm(`您确定要上架所有人物吗, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    });
+                if (confirm) {
+                    let res = await this.$service.batchLowerUpFramePerson(idList, true);
+                    if (res && res.code === 0) {
+                        this.$message.success(`人物上架成功`);
+                        this.getPersonList({isProgramme: false});
+                    } else {
+                        this.$message.error('批量上架失败');
+                    }
+                }
+            },
+            async multLowerFramePersonHandler() {
+                let idList = this.selectedVideoList.map((item) => item.id);
+                let confirm = await this.$confirm(`您确定要下架所选人物吗, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    });
+                if (confirm) {
+                    let res = await this.$service.batchLowerUpFramePerson(idList, false);
+                    if (res && res.code === 0) {
+                        this.$message.success(`人物下架成功`);
+                        this.getPersonList({isProgramme: false});
+                    } else {
+                        this.$message.error('批量下架失败');
+                    }
+                }
+            },
+            async batchDeletPersonHandler() {
+                let idList = this.selectedVideoList.map((item) => item.id);
+                let confirm = await this.$confirm(`您确定要删除所选人物吗, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    });
+                if (confirm) {
+                    let res = await this.$service.batchDeletePerson(idList);
+                    if (res && res.code === 0) {
+                        this.$message.success(`人物删除成功`);
+                        this.getPersonList({isProgramme: false});
+                    } else {
+                        this.$message.error('批量删除失败');
+                    }
+                }
+            }
         }
     };
 </script>

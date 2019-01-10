@@ -197,25 +197,25 @@ export default {
             this.$router.push({ name: 'EditFixedModule', params: {navbarId, index: 0} });
         },
         selectChannel() {
-            this.$refs.selectChannelDialog.showDialog();
+            this.$refs.selectChannelDialog.showDialog('CHANNEL');
         },
         selectProgramme(squareIndex) {
             this.squareIndex = squareIndex;
             this.setAllowResolutions(this.squareIndex);
             if (this.squareIndex === 0) {
-                this.$refs.selectProgrammeDialog.showDialog('NEWS');
+                this.$refs.selectProgrammeDialog.showDialog('PROGRAMME', 'NEWS');
             } else {
-                this.$refs.selectProgrammeDialog.showDialog();
+                this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
             }
         },
         selectProgrammeSubject(squareIndex) {
             this.squareIndex = squareIndex;
             this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectProgrammeSubjectDialog.showDialog();
+            this.$refs.selectProgrammeSubjectDialog.showDialog('PROGRAMME_SUBJECT');
         },
         selectFilter(squareIndex) {
             this.squareIndex = squareIndex;
-            this.$refs.selectFilterDialog.showDialog();
+            this.$refs.selectFilterDialog.showDialog('FILTER');
         },
         saveHandler() {
             let {navbarId} = this.$route.params;
@@ -305,6 +305,10 @@ export default {
                             width: 120px;
                             height: 66px;
                         }
+                    }
+                    .text {
+                        font-size: 24px;
+                        color: #6F7480;
                     }
                     //  频道样式
                     .channel {

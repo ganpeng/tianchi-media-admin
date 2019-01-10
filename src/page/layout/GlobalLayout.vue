@@ -147,10 +147,14 @@
                 return {active, activePath};
             },
             changeActive(index) {
-                this.active = index;
-                let newPath = this.asideList[this.active][0].uri;
-                this.defaultActive = newPath;
-                this.$router.push(newPath);
+                if (index === this.active) {
+                    window.location.reload();
+                } else {
+                    this.active = index;
+                    let newPath = this.asideList[this.active][0].uri;
+                    this.defaultActive = newPath;
+                    this.$router.push(newPath);
+                }
             },
             setMinHeight() {
                 let minHeight = window.innerHeight - 60;

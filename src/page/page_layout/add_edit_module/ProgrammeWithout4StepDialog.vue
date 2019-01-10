@@ -409,7 +409,8 @@ export default {
             updateProgrammeSearchFields: 'programme/updateProgrammeSearchFields',
             updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
             cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex',
-            updateLayoutItemCornerMarkByIndex: 'pageLayout/updateLayoutItemCornerMarkByIndex'
+            updateLayoutItemCornerMarkByIndex: 'pageLayout/updateLayoutItemCornerMarkByIndex',
+            resetLayoutItemByIndex: 'pageLayout/resetLayoutItemByIndex'
         }),
         ...mapActions({
             getProgrammeListIsVisible: 'programme/getProgrammeListIsVisible',
@@ -426,9 +427,12 @@ export default {
             this.updateProgrammeSearchFields({key, value});
         },
         //  弹窗的操作
-        async showDialog(category) {
+        async showDialog(layoutItemType, category) {
             try {
-                this.dialogVisible = true;
+                if (layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
+                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+                }
+
                 this.updateProgrammePagination({key: 'pageSize', value: 5});
                 await this.getProgrammeCategory();
                 if (category) {
@@ -438,6 +442,7 @@ export default {
                     await this.getProgrammeListIsVisible();
                 }
 
+                this.dialogVisible = true;
                 window.addEventListener('keyup', this.keyupHandler);
             } catch (err) {
                 console.log(err);
@@ -480,6 +485,7 @@ export default {
         },
         changeProgrammeHandler() {
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: '' });
+            this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
             this.showExist = false;
         },
         // 弹窗的操作结束

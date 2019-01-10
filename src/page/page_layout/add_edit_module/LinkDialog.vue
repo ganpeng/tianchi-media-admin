@@ -5,7 +5,8 @@
             class="my-dialog"
             :visible.sync="dialogVisible"
             :show-close="true"
-            :before-close="closeDialog"
+            width="80%"
+            :before-close="cancelHanlder"
             @open="dialogOpenHandler"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
@@ -44,7 +45,7 @@
                     </el-form>
                 </div>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
-                    <el-button @click="closeDialog">取 消</el-button>
+                    <el-button @click="cancelHanlder">取 消</el-button>
                     <el-button type="primary" class="btn-style-two" @click="enterSuccessHandler">确 定</el-button>
                 </div>
             </div>
@@ -119,11 +120,18 @@ export default {
     },
     methods: {
         ...mapMutations({
-            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex'
+            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
+            resetLayoutItemByIndex: 'pageLayout/resetLayoutItemByIndex',
+            cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex'
         }),
         //  弹窗控制方法
-        showDialog() {
+        async showDialog(layoutItemType) {
             this.dialogVisible = true;
+            this.$nextTick(() => {
+                if (layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
+                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+                }
+            });
         },
         dialogOpenHandler() {
             this.form.link = this.getHref;
@@ -153,6 +161,10 @@ export default {
         },
         uploadLinkImageSuccessHandler(image) {
             this.updateLayoutItemByIndex({ navbarId: this.navbarId, index: this.index, squareIndex: this.squareIndex, key: 'coverImage', value: image });
+        },
+        cancelHanlder() {
+            this.cancelLayoutItemByIndex({navbarId: this.navbarId, index: this.index, squareIndex: this.squareIndex});
+            this.closeDialog();
         }
     }
 };

@@ -510,12 +510,7 @@
                                     });
                             }
                         });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+                }).catch(() => {});
             },
             multLowerFrameProgrammeHandler() {
                 let idList = this.selectedVideoList.map((item) => item.id);
@@ -548,12 +543,7 @@
                                     });
                             }
                         });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+                }).catch(() => {});
             },
             batchDeletProgrammeHandler() {
                 let idList = this.selectedVideoList.map((item) => item.id);
@@ -576,12 +566,7 @@
                                 this.$message.error(res.data.message);
                             }
                         });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+                }).catch(() => {});
             },
             _realDeleteProgramme(id) {
                 this.$confirm(`您确定要删除该节目吗, 是否继续?`, '提示', {
@@ -593,18 +578,13 @@
                         .then((res) => {
                             if (res && res.code === 0) {
                                 this.$message.success({message: '节目删除成功'});
-                                this.$router.push({name: 'ProgrammeList'});
+                                this.getProgrammeList();
                             } else {
                                 let message = res.message || '节目删除失败';
                                 this.$message.error({message});
                             }
                         });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+                }).catch(() => {});
             },
             selectHandler(list, row) {
                 let isSelected = list.findIndex((item) => item.id === row.id) >= 0;

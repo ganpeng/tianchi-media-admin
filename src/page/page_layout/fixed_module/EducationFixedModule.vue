@@ -162,12 +162,12 @@ export default {
         selectProgramme(squareIndex) {
             this.squareIndex = squareIndex;
             this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectProgrammeDialog.showDialog();
+            this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
         },
         selectProgrammeSubject(squareIndex) {
             this.squareIndex = squareIndex;
             this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectProgrammeSubjectDialog.showDialog();
+            this.$refs.selectProgrammeSubjectDialog.showDialog('PROGRAMME_SUBJECT');
         },
         saveHandler() {
             let {navbarId} = this.$route.params;

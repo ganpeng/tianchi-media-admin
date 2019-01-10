@@ -188,8 +188,8 @@
                 </div>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
                     <el-button @click="cancelHanlder">取 消</el-button>
-                    <el-button v-show="active > 0" class="btn-style-three" @click="prevBtnClickHandler">上一步</el-button>
-                    <el-button v-show="active < 2" class="btn-style-three" @click="nextBtnClickHandler">下一步</el-button>
+                    <el-button v-show="active > 0" class="btn-style-three prev-btn" @click="prevBtnClickHandler">上一步</el-button>
+                    <el-button v-show="active < 2" class="btn-style-three next-btn" @click="nextBtnClickHandler">下一步</el-button>
                     <el-button v-show="active === 2" type="primary" class="btn-style-two" @click="enterHandler">确 定</el-button>
                 </div>
             </div>
@@ -285,7 +285,8 @@ export default {
             updateProgrammeSubject: 'pageLayout/updateProgrammeSubject',
             cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex',
             updateProgrammeSubjectPagination: 'pageLayout/updateProgrammeSubjectPagination',
-            updateLayoutItemCornerMarkByIndex: 'pageLayout/updateLayoutItemCornerMarkByIndex'
+            updateLayoutItemCornerMarkByIndex: 'pageLayout/updateLayoutItemCornerMarkByIndex',
+            resetLayoutItemByIndex: 'pageLayout/resetLayoutItemByIndex'
         }),
         ...mapActions({
             getProgrammeSubjectList: 'pageLayout/getProgrammeSubjectList',
@@ -297,11 +298,15 @@ export default {
             }
         },
         //  弹窗的操作
-        showDialog() {
-            this.dialogVisible = true;
+        showDialog(layoutItemType) {
             this.updateProgrammeSubjectPagination({key: 'pageSize', value: 5});
             this.getProgrammeSubjectList();
 
+            if (layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
+                this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+            }
+
+            this.dialogVisible = true;
             window.addEventListener('keyup', this.keyupHandler);
         },
         closeDialog() {
@@ -331,6 +336,7 @@ export default {
             }
         },
         changeProgrammeHandler() {
+            this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
             this.showExist = false;
         },
         // 弹窗的操作结束
