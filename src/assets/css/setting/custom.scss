@@ -377,7 +377,8 @@
         background-color: $mainBtn;
         border: none;
         .svg-icon {
-            fill: #fff;
+            // fill: #fff;
+            fill: #A3D0FD;
         }
         &:hover {
             background-color: $mainBtnHover;
@@ -567,6 +568,15 @@
             }
         }
     }
+    .el-select-dropdown__empty {
+        color: #D8D8D8;
+        background: rgba(65,74,93,0.90);
+    }
+    .popper__arrow {
+        &::after {
+            display: none;
+        }
+    }
 }
 
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
@@ -581,7 +591,7 @@
 //  人物搜索的弹出框的样式覆盖
 .el-autocomplete-suggestion.el-popper {
     background: rgba(65,74,93,0.90);
-    border: 0 solid #637497;
+    border: 1px solid #637497;
     box-shadow: 2px 4px 10px 0 rgba(0,0,0,0.30);
     border-radius: 4px 0px 0px 0px 4px 4px 4px;
     .el-autocomplete-suggestion__wrap.el-scrollbar__wrap {
@@ -644,6 +654,7 @@
                     .el-input__icon {
                         height: 34px;
                         line-height: 34px;
+                        color: #6F7480;
                     }
                     .el-input__inner {
                         height: 34px;

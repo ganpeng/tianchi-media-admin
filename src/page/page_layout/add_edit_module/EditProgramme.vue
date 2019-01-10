@@ -328,7 +328,8 @@ export default {
                 title: '',
                 display: false,
                 uri: ''
-            }
+            },
+            layoutItemType: ''
         };
     },
     created() {
@@ -438,17 +439,8 @@ export default {
         //  弹窗的操作
         async showDialog(layoutItemType, category) {
             try {
-                await this.getProgrammeCategory();
-                if (layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
-                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
-                }
-                this.updateProgrammePagination({key: 'pageSize', value: 5});
-                if (category) {
-                    this.category = category;
-                    await this.getProgrammeListIsVisibleByNews();
-                } else {
-                    await this.getProgrammeListIsVisible();
-                }
+                this.layoutItemType = layoutItemType;
+                this.category = category;
 
                 this.dialogVisible = true;
                 window.addEventListener('keyup', this.keyupHandler);
@@ -468,18 +460,31 @@ export default {
                 display: false,
                 uri: ''
             };
+            this.layoutItemType = '';
 
             window.removeEventListener('keyup', this.keyupHandler);
         },
         async dialogOpenHandler() {
             try {
-                if (this.getSquareProgrammeId) {
-                    await this.getProgrammeCategory();
-                    let res = await this.$service.getProgrammeInfo({id: this.getSquareProgrammeId});
-                    if (res && res.code === 0) {
-                        this.programme = res.data;
-                        this.showExist = true;
+                await this.getProgrammeCategory();
+
+                if (this.layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
+                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+                } else {
+                    if (this.getSquareProgrammeId) {
+                        let res = await this.$service.getProgrammeInfo({id: this.getSquareProgrammeId});
+                        if (res && res.code === 0) {
+                            this.programme = res.data;
+                            this.showExist = true;
+                        }
                     }
+                }
+
+                this.updateProgrammePagination({key: 'pageSize', value: 5});
+                if (this.category) {
+                    await this.getProgrammeListIsVisibleByNews();
+                } else {
+                    await this.getProgrammeListIsVisible();
                 }
                 let markRes = await this.getCustomMarkList();
                 if (markRes && markRes.code === 0) {

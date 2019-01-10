@@ -310,6 +310,7 @@ export default {
             dialogVisible: false,
             showExist: false,
             category: '',
+            layoutItemType: '',
             programme: {},
             customMarkOptions: [],
             previewImage: {
@@ -429,18 +430,8 @@ export default {
         //  弹窗的操作
         async showDialog(layoutItemType, category) {
             try {
-                if (layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
-                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
-                }
-
-                this.updateProgrammePagination({key: 'pageSize', value: 5});
-                await this.getProgrammeCategory();
-                if (category) {
-                    this.category = category;
-                    await this.getProgrammeListIsVisibleByNews();
-                } else {
-                    await this.getProgrammeListIsVisible();
-                }
+                this.layoutItemType = layoutItemType;
+                this.category = category;
 
                 this.dialogVisible = true;
                 window.addEventListener('keyup', this.keyupHandler);
@@ -454,6 +445,7 @@ export default {
             this.dialogVisible = false;
             this.active = 0;
             this.category = '';
+            this.layoutItemType = '';
             this.programme = {};
             this.previewImage = {
                 title: '',
@@ -465,19 +457,31 @@ export default {
         },
         async dialogOpenHandler() {
             try {
-                if (this.getSquareProgrammeId) {
-                    await this.getProgrammeCategory();
-                    let res = await this.$service.getProgrammeInfo({id: this.getSquareProgrammeId});
-                    if (res && res.code === 0) {
-                        this.programme = res.data;
-                        this.showExist = true;
-                    } else {
-                        this.showExist = false;
+                if (this.layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
+                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+                } else {
+                    if (this.getSquareProgrammeId) {
+                        let res = await this.$service.getProgrammeInfo({id: this.getSquareProgrammeId});
+                        if (res && res.code === 0) {
+                            this.programme = res.data;
+                            this.showExist = true;
+                        } else {
+                            this.showExist = false;
+                        }
                     }
-                    let markRes = await this.getCustomMarkList();
-                    if (markRes && markRes.code === 0) {
-                        this.customMarkOptions = markRes.data;
-                    }
+                }
+
+                let markRes = await this.getCustomMarkList();
+                if (markRes && markRes.code === 0) {
+                    this.customMarkOptions = markRes.data;
+                }
+
+                this.updateProgrammePagination({key: 'pageSize', value: 5});
+                await this.getProgrammeCategory();
+                if (this.category) {
+                    await this.getProgrammeListIsVisibleByNews();
+                } else {
+                    await this.getProgrammeListIsVisible();
                 }
             } catch (err) {
                 console.log(err);

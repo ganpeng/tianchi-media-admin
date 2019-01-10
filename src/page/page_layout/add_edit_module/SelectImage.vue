@@ -1,5 +1,5 @@
 <template>
-    <div class="select-image-container">
+    <div class="select-image-container" id="select-image">
         <div class="wrapper">
             <div v-for="(image, index) in images" :key="index" :style="styleStr" class="img-wrapper">
                 <img :style="styleStr" :src="image.uri" alt="">
@@ -70,12 +70,13 @@ export default {
     .img-wrapper {
         position: relative;
         margin-right: 10px;
-        border: 1px solid #3E495E;
         border-radius: 4px;
         text-align: center;
         margin-bottom: 60px;
         img {
             display: inline-block;
+            border-radius: 4px;
+            border: 1px solid #3E495E;
         }
         i {
             display: none;
@@ -94,4 +95,11 @@ export default {
     }
 }
 
+</style>
+<style lang="scss">
+#select-image {
+    .el-radio__label {
+        display: none;
+    }
+}
 </style>

@@ -292,7 +292,7 @@ export default {
         background-color: $mainBtn;
         border: none;
         .svg-icon {
-            fill: #fff;
+            // fill: #fff;
         }
         &:hover {
             background-color: $mainBtnHover;

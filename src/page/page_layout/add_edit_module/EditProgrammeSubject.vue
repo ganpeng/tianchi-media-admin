@@ -222,6 +222,7 @@ export default {
             navbarId: '',
             index: '',
             showExist: false,
+            layoutItemType: '',
             active: 0,
             dialogVisible: false,
             programmeSubjectData: {},
@@ -299,13 +300,7 @@ export default {
         },
         //  弹窗的操作
         showDialog(layoutItemType) {
-            this.updateProgrammeSubjectPagination({key: 'pageSize', value: 5});
-            this.getProgrammeSubjectList();
-
-            if (layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
-                this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
-            }
-
+            this.layoutItemType = layoutItemType;
             this.dialogVisible = true;
             window.addEventListener('keyup', this.keyupHandler);
         },
@@ -314,19 +309,28 @@ export default {
             this.dialogVisible = false;
             this.active = 0;
             this.showExist = false;
+            this.layoutItemType = '';
             this.programmeSubjectData = {};
 
             window.removeEventListener('keyup', this.keyupHandler);
         },
         async dialogOpenHandler() {
             try {
-                if (this.getSquareProgrammeSubjectId) {
-                    let res = await this.$service.getSubjectById(this.getSquareProgrammeSubjectId);
-                    if (res && res.code === 0) {
-                        this.programmeSubjectData = res.data;
-                        this.showExist = true;
+                if (this.layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
+                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+                } else {
+                    if (this.getSquareProgrammeSubjectId) {
+                        let res = await this.$service.getSubjectById(this.getSquareProgrammeSubjectId);
+                        if (res && res.code === 0) {
+                            this.programmeSubjectData = res.data;
+                            this.showExist = true;
+                        }
                     }
                 }
+
+                this.updateProgrammeSubjectPagination({key: 'pageSize', value: 5});
+                await this.getProgrammeSubjectList();
+
                 let markRes = await this.getCustomMarkList();
                 if (markRes && markRes.code === 0) {
                     this.customMarkOptions = markRes.data;

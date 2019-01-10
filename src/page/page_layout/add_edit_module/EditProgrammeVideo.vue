@@ -188,7 +188,7 @@
                                     {{scope.row.name | padEmpty}}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="节目图片" width="100px" align="center" >
+                            <el-table-column label="节目图片" min-width="100px" align="center" >
                                 <template slot-scope="scope">
                                     <img style="width:70px;height:auto;" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
                                 </template>
@@ -198,7 +198,7 @@
                                     {{scope.row.featureVideoCount | padEmpty}}
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" width="100px" label="分类">
+                            <el-table-column align="center" min-width="100px" label="分类">
                                 <template slot-scope="scope">
                                     <span class="ellipsis four">
                                         {{categoryListString(scope.row.categoryList) | padEmpty}}
@@ -443,10 +443,6 @@ export default {
             type: Number,
             default: 0
         },
-        layoutItemType: {
-            type: String,
-            default: 'PROGRAMME_VIDEO'
-        },
         allowResolutions: {
             type: Array,
             default: () => []
@@ -465,6 +461,7 @@ export default {
             navbarId: '',
             index: 0,
             category: '',
+            layoutItemTypeOther: '',
             programme: {},
             previewImage: {
                 title: '',
@@ -589,18 +586,8 @@ export default {
         //  弹窗的操作
         async showDialog(layoutItemType, category) {
             try {
-                if (layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
-                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
-                }
-
-                this.updateProgrammePagination({key: 'pageSize', value: 5});
-                await this.getProgrammeCategory();
-                if (category) {
-                    this.category = category;
-                    await this.getProgrammeListIsVisibleByNews();
-                } else {
-                    await this.getProgrammeListIsVisible();
-                }
+                this.layoutItemTypeOther = layoutItemType;
+                this.category = category;
 
                 this.dialogVisible = true;
                 window.addEventListener('keyup', this.keyupHandler);
@@ -616,6 +603,7 @@ export default {
             this.programme = {};
             this.keyword = '';
             this.cateogry = '';
+            this.layoutItemTypeOther = '';
             this.previewImage = {
                 title: '',
                 display: false,
@@ -626,13 +614,25 @@ export default {
         },
         async dialogOpenHandler() {
             try {
-                if (this.getSquareProgrammeVideoId) {
-                    await this.getProgrammeCategory();
-                    let res = await this.$service.getProgrammeInfo({id: this.getSquareProgrammeId});
-                    if (res && res.code === 0) {
-                        this.programme = res.data;
-                        this.showExist = true;
+                if (this.layoutItemTypeOther !== _.get(this.layoutItem, 'layoutItemType')) {
+                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+                } else {
+                    if (this.getSquareProgrammeVideoId) {
+                        await this.getProgrammeCategory();
+                        let res = await this.$service.getProgrammeInfo({id: this.getSquareProgrammeId});
+                        if (res && res.code === 0) {
+                            this.programme = res.data;
+                            this.showExist = true;
+                        }
                     }
+                }
+
+                this.updateProgrammePagination({key: 'pageSize', value: 5});
+                await this.getProgrammeCategory();
+                if (this.category) {
+                    await this.getProgrammeListIsVisibleByNews();
+                } else {
+                    await this.getProgrammeListIsVisible();
                 }
             } catch (err) {
                 console.log(err);

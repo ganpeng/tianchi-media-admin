@@ -213,8 +213,6 @@ export default {
         //  弹窗控制方法
         showDialog() {
             this.dialogVisible = true;
-            this.updatePersonSubjectPagination({key: 'pageSize', value: 5});
-            this.getPersonSubjectList();
 
             window.addEventListener('keyup', this.keyupHandler);
         },
@@ -236,6 +234,9 @@ export default {
                         this.showExist = true;
                     }
                 }
+
+                this.updatePersonSubjectPagination({key: 'pageSize', value: 5});
+                await this.getPersonSubjectList();
             } catch (err) {
                 console.log(err);
             }

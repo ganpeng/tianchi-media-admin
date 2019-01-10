@@ -151,11 +151,11 @@ export default {
         },
         selectPersonSubject() {
             this.allowResolutions = [{width: 560, height: 600}];
-            this.$refs.personSubjectDialog.showDialog();
+            this.$refs.personSubjectDialog.showDialog('FIGURE_SUBJECT');
         },
         selectProgramme() {
             this.allowResolutions = [{width: 1160, height: 600}];
-            this.$refs.selectProgrammeDialog.showDialog();
+            this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
         }
     }
 };

@@ -118,7 +118,7 @@ let defaultLayoutItem = {
     desc: '',
     id: '',
     layoutItemType: '',
-    programmeTemplate: '',
+    programmeTemplate: null,
     name: '',
     params: '',
     coverImage: {},

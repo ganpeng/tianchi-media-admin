@@ -76,6 +76,7 @@ export default {
             navbarId: '',
             index: 0,
             dialogVisible: false,
+            layoutItemType: '',
             form: {
                 link: ''
             },
@@ -127,17 +128,17 @@ export default {
         //  弹窗控制方法
         async showDialog(layoutItemType) {
             this.dialogVisible = true;
-            this.$nextTick(() => {
-                if (layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
-                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
-                }
-            });
+            this.layoutItemType = layoutItemType;
         },
         dialogOpenHandler() {
             this.form.link = this.getHref;
+            if (this.layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
+                this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+            }
         },
         closeDialog() {
             this.dialogVisible = false;
+            this.layoutItemType = '';
         },
         linkInputHandler(href) {
         },

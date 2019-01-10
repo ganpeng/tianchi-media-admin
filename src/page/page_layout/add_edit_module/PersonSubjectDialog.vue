@@ -177,6 +177,7 @@ export default {
             navbarId: '',
             index: '',
             showExist: false,
+            layoutItemType: '',
             dialogVisible: false,
             active: 0,
             personSubjectData: {}
@@ -235,7 +236,8 @@ export default {
             addImageToPersonSubjectListById: 'pageLayout/addImageToPersonSubjectListById',
             //  人物模块中人物的添加删除结束
             updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
-            cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex'
+            cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex',
+            resetLayoutItemByIndex: 'pageLayout/resetLayoutItemByIndex'
         }),
         ...mapActions({
             getPersonSubjectList: 'pageLayout/getPersonSubjectList',
@@ -255,10 +257,9 @@ export default {
             return this.layoutItem.id === row.id ? 'checked' : '';
         },
         //  弹窗控制方法
-        showDialog() {
+        showDialog(layoutItemType) {
             this.dialogVisible = true;
-            this.updatePersonSubjectPagination({key: 'pageSize', value: 5});
-            this.getPersonSubjectList();
+            this.layoutItemType = layoutItemType;
 
             window.addEventListener('keyup', this.keyupHandler);
         },
@@ -267,24 +268,27 @@ export default {
             this.dialogVisible = false;
             this.active = 0;
             this.showExist = false;
+            this.layoutItemType = '';
             this.personSubjectData = {};
 
             window.removeEventListener('keyup', this.keyupHandler);
         },
         async dialogOpenHandler() {
             try {
-                let id = _.get(this.layoutItem, 'id');
-                if (id) {
-                    let res = await this.$service.getSubjectById(id);
-                    if (res && res.code === 0) {
-                        this.personSubjectData = res.data;
-                        this.showExist = true;
+                if (this.layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
+                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+                } else {
+                    let id = _.get(this.layoutItem, 'id');
+                    if (id) {
+                        let res = await this.$service.getSubjectById(id);
+                        if (res && res.code === 0) {
+                            this.personSubjectData = res.data;
+                            this.showExist = true;
+                        }
                     }
                 }
-                // let markRes = await this.getCustomMarkList();
-                // if (markRes && markRes.code === 0) {
-                //     this.customMarkOptions = markRes.data;
-                // }
+                this.updatePersonSubjectPagination({key: 'pageSize', value: 5});
+                await this.getPersonSubjectList();
             } catch (err) {
                 console.log(err);
             }
