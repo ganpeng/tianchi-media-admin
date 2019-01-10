@@ -81,11 +81,6 @@
                     this.navBarList.splice(index, 1);
                     this.previewNavBarList.splice(index, 1);
                     this.$message.success('栏目在本地已删除，可点击保存按钮生效');
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
                 });
             },
             updateNavBarSetting() {

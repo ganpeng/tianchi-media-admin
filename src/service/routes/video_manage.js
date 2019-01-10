@@ -17,7 +17,7 @@ import service from '../config';
  * @param pageSize The current page size of video list.
  */
 
-export const getVideoList = ({name, startedAt, endedAt, status, uploadStatus, downloadStatus, suffix, originSiteId, shareSiteId, pageNum, pageSize}) => {
+export const getVideoList = ({keyword, startedAt, endedAt, status, uploadStatus, downloadStatus, suffix, originSiteId, shareSiteId, pageNum, pageSize}) => {
     // 注入中状态包括多种状态，因此改为Array形式
     let statusList = [];
     switch (status) {
@@ -32,7 +32,7 @@ export const getVideoList = ({name, startedAt, endedAt, status, uploadStatus, do
             break;
     }
     let params = {
-        name,
+        keyword,
         startedAt,
         endedAt,
         statusList,

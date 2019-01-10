@@ -2,7 +2,7 @@
     <div id="select-multiple-video" class="video-table-container text-center" @keyup.enter="getVideoList">
         <div class="search-field-item">
             <el-input
-                v-model="queryParams.name"
+                v-model="queryParams.keyword"
                 clearable
                 class="border-input"
                 placeholder="搜索你想要的信息">
@@ -153,7 +153,7 @@
                 queryParams: {
                     status: 'SUCCESS',
                     videoType: '',
-                    name: '',
+                    keyword: '',
                     pageNum: 0,
                     pageSize: 5
                 },

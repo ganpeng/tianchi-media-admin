@@ -5,7 +5,7 @@
             <el-form :inline="true" class="filter-form">
                 <el-form-item>
                     <el-input
-                        v-model="listQueryParams.name"
+                        v-model="listQueryParams.keyword"
                         clearable
                         class="border-input"
                         @change="getVideoList"
@@ -161,7 +161,7 @@
         data() {
             return {
                 listQueryParams: {
-                    name: '',
+                    keyword: '',
                     status: '',
                     downloadStatus: '',
                     uploadStatus: '',
@@ -186,7 +186,14 @@
         },
         methods: {
             initFilterParams(params) {
-                this.createRangeTime = params.startedAt ? [params.createdAtBegin, params.createdAtEnd] : [];
+                this.createRangeTime = params.startedAt ? [params.startedAt, params.endedAt] : [];
+                this.name = params.name ? params.name : '';
+                this.status = params.status ? params.status : '';
+                this.downloadStatus = params.downloadStatus ? params.downloadStatus : '';
+                this.uploadStatus = params.uploadStatus ? params.uploadStatus : '';
+                this.suffix = params.suffix ? params.suffix : '';
+                this.originSiteId = params.originSiteId ? params.originSiteId : '';
+                this.shareSiteId = params.shareSiteId ? params.shareSiteId : '';
             },
             init() {
                 // 初始化视频来源和共享站点的列表

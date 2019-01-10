@@ -4,6 +4,7 @@
         <div class="table-container">
             <h2 class="content-title">搜索筛选</h2>
             <video-filter-params
+                ref="videoFilterParams"
                 v-on:getVideoList="getVideoList">
             </video-filter-params>
             <div class="seperator-line"></div>
@@ -195,9 +196,16 @@
             };
         },
         mounted() {
-            this.getVideoList();
+            this.init();
         },
         methods: {
+            init() {
+                if (this.$wsCache.localStorage.get('videoFilter')) {
+                    this.listQueryParams = this.$wsCache.localStorage.get('videoFilter');
+                    this.$refs.videoFilterParams.initFilterParams(this.listQueryParams);
+                }
+                this.getVideoList();
+            },
             getVideoList(searchParams) {
                 // 设置请求参数
                 if (searchParams) {
@@ -205,6 +213,7 @@
                         this.listQueryParams[key] = searchParams[key];
                     }
                 }
+                this.$wsCache.localStorage.set('videoFilter', this.listQueryParams);
                 this.$service.getVideoList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.videoList = response.data.list;
