@@ -89,7 +89,7 @@
                 align="center"
                 label="注入状态">
                 <template slot-scope="scope">
-                    <span class="status-normal">{{scope.row.status | switchStatus}}</span>
+                    <span>{{scope.row.status | switchStatus}}</span>
                 </template>
             </el-table-column>
             <!--子站上传状态（主站）-->

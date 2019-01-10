@@ -1,7 +1,6 @@
 <template>
     <div v-if="uploadState.files.length > 0" class="upload-video-container">
         <div v-if="uploadState.min" class="min-container">
-            <!-- <span class="upload-status">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{currentFileName}}</span> -->
             <el-tooltip v-if="currentFileName.length > 32" class="item" effect="dark" :content="currentFileName"
                         placement="top-start">
                 <span class="upload-status float-left">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{cutStr(currentFileName, 32)}}</span>
@@ -406,6 +405,7 @@
                     if (index === -1) {
                         let obj = {
                             file,
+                            shareSiteList: this.preSetShareSiteIdList,
                             progress: {
                                 percent: 0,
                                 status: 'waiting',
@@ -515,6 +515,7 @@
                                                 if (index === that.uploadState.count) {
                                                     return {
                                                         file: obj.file,
+                                                        shareSiteList: obj.shareSiteList,
                                                         progress: {
                                                             percent: obj.progress.percent,
                                                             status: 'uploaded'
@@ -544,13 +545,12 @@
                                                 default:
                                                     status = 'error';
                                                     break;
-                                            }
-
+                                            };
                                             let files = that.uploadState.files.map((obj, index) => {
                                                 if (index === that.uploadState.count) {
                                                     return {
                                                         file: obj.file,
-                                                        shareSiteList: this.preSetShareSiteIdList,
+                                                        shareSiteList: obj.shareSiteList,
                                                         progress: {
                                                             percent: obj.progress.percent,
                                                             status,
@@ -561,7 +561,6 @@
                                                     return obj;
                                                 }
                                             });
-
                                             that.updateUploadState({key: 'files', value: files});
                                         }
                                         that.updateUploadState({key: 'count', value: that.uploadState.count + 1});
@@ -572,6 +571,7 @@
                                             if (index === that.uploadState.count) {
                                                 return {
                                                     file: obj.file,
+                                                    shareSiteList: obj.shareSiteList,
                                                     progress: {
                                                         percent: obj.progress.percent,
                                                         status: 'canceled',
@@ -592,6 +592,7 @@
                                             if (index === that.uploadState.count) {
                                                 return {
                                                     file: obj.file,
+                                                    shareSiteList: obj.shareSiteList,
                                                     progress: {
                                                         percent: obj.progress.percent,
                                                         status: 'error',
@@ -673,6 +674,7 @@
                             if (index === that.uploadState.count) {
                                 return {
                                     file: obj.file,
+                                    shareSiteList: obj.shareSiteList,
                                     progress
                                 };
                             } else {
