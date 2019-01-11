@@ -124,7 +124,7 @@
                 width="220px"
                 label="上传日期">
                 <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm:SS')}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -132,7 +132,7 @@
                 width="220px"
                 label="更新日期">
                 <template slot-scope="scope">
-                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
+                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:mm:SS')}}
                 </template>
             </el-table-column>
         </el-table>

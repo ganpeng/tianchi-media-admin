@@ -166,7 +166,7 @@
                 width="160px"
                 label="上传日期">
                 <template slot-scope="scope">
-                    {{timeStampFormat(scope.row.createdAt)}}
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm:SS')}}
                 </template>
             </el-table-column>
             <el-table-column
