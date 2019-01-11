@@ -178,11 +178,15 @@
                 uploadStatusOptions: role.VIDEO_UPLOAD_STATUS_OPTIONS,
                 sourceOptions: [],
                 shareSiteOptions: [],
-                moreFilters: false
+                moreFilters: false,
+                timer: ''
             };
         },
         mounted() {
             this.init();
+        },
+        beforeDestroy() {
+            this.timer = null;
         },
         methods: {
             initFilterParams(params) {
@@ -196,6 +200,7 @@
                 this.shareSiteId = params.shareSiteId ? params.shareSiteId : '';
             },
             init() {
+                let that = this;
                 // 初始化视频来源和共享站点的列表
                 this.$service.getAllSiteList().then(response => {
                     if (response && response.code === 0) {
@@ -207,6 +212,9 @@
                         this.sourceOptions = response.data;
                     }
                 });
+                this.timer = setInterval(function () {
+                    that.getVideoList();
+                }, 10000);
             },
             getVideoList() {
                 if (this.uploadRangeTime && this.uploadRangeTime.length === 2) {

@@ -329,7 +329,11 @@
                     cancelButtonText: '取消',
                     type: 'error'
                 }).then(() => {
-                    this.$service.deleteVideoById(video.id).then(res => {
+                    this.$service.deleteVideo({
+                        id: video.id,
+                        host: video.host,
+                        port: video.port
+                    }).then(res => {
                         if (res && res.code === 0) {
                             this.$message.success('"' + video.originName + '"' + '已成功删除');
                             this.getDiffTimeVideoList();
@@ -346,11 +350,6 @@
                                 duration: 5000
                             });
                         }
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消批量删除'
                     });
                 });
             },

@@ -113,7 +113,7 @@
                     <template v-if="scope.row.status">
                         <span v-if="scope.row.status === 'SUCCESS'" class="status-normal">成功</span>
                         <span v-if="scope.row.status === 'FAILED'" class="status-abnormal">失败</span>
-                        <span v-if="scope.row.status === 'DELETING'" class="status-deleting">删除中</span>
+                        <span v-if="scope.row.status === 'DELETING'" class="status-deleting">正在删除</span>
                         <!--任务中包含：'切片正在入库'、'转码任务转码中'-->
                         <span
                             v-if="scope.row.status === 'SPLIT_TASK_SUCCESS' || scope.row.status === 'SPLIT_TASK_ON_PROCESS'"
@@ -129,7 +129,7 @@
                         <span
                             v-if="scope.row.status === 'FAILED'"
                             class="retry-text-btn"
-                            @click="retryInjectSingleVideo(scope.row.id)">
+                            @click="retryInjectSingleVideo(scope.row)">
                             重试
                         </span>
                     </template>
@@ -248,7 +248,7 @@
                         <span
                             :class="{disabled:scope.row.uploadStatus === 'ON_GOING' || scope.row.downloadStatus === 'ON_GOING'}"
                             class="btn-text text-danger"
-                            @click="_deleteVideoById(scope.row.id)">
+                            @click="deleteVideo(scope.row)">
                             删除
                         </span>
                     </div>
@@ -529,13 +529,18 @@
                 this.title = name;
             },
             // 删除视频文件
-            _deleteVideoById(id) {
+            deleteVideo(video) {
                 this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'error'
                 }).then(() => {
-                    this.deleteVideoById(id).then((res) => {
+                    this.$service.deleteVideo({
+                        id: video.id,
+                        host: video.host,
+                        port: video.port
+                    }).then((res) => {
+                        console.log(res);
                         if (res && res.code === 0) {
                             this.$message.success('视频删除成功');
                         } else if (res && res.code === 3306) {
@@ -555,12 +560,14 @@
                 });
             },
             // 重试注入视频
-            retryInjectSingleVideo(id) {
-                this.retryVideoByIdList([id]).then((res) => {
+            retryInjectSingleVideo(video) {
+                this.$service.retryInjectVideo({
+                    id: video.id,
+                    host: video.host,
+                    port: video.port
+                }).then((res) => {
                     if (res && res.code === 0) {
-                        this.$message.success('该视频重新注入成功');
-                    } else {
-                        this.$message.error('该视频重新注入失败');
+                        this.$message.success('重试接口调用成功，请关注视频注入状态变化');
                     }
                 });
             },
@@ -614,13 +621,4 @@
             }
         }
     }
-</style>
-
-<style lang="scss">
-
-    span.disabled {
-        opacity: 0.3;
-        pointer-events: none;
-    }
-
 </style>

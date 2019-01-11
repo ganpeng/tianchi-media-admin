@@ -55,37 +55,24 @@ export const getVideoList = ({keyword, startedAt, endedAt, status, uploadStatus,
 };
 
 /**
- * 根据id删除视频
+ * 根据id删除视频列表中的视频
  */
-export const deleteVideoById = (id) => {
-    return service.delete(`/v1/storage/video/${id}`, {
-        baseURL: '/storage'
-    });
+export const deleteVideo = ({host, port, id}) => {
+    return service.delete('http://' + host + ':' + port + `/v1/storage/video/${id}`);
 };
 
 /**
- * 根据id删除对应服务器上的视频
+ * 根据id删除导出的视频
  */
 export const deleteSomeServerVideoById = ({host, port, id}) => {
     return service.delete('http://' + host + ':' + port + `/v1/storage/video/export/${id}`);
 };
 
 /**
- * 根据id列表删除视频
- */
-export const deleteVideoByIdList = (ids) => {
-    return service.patch(`/v1/storage/video/delete`, ids, {
-        baseURL: '/storage'
-    });
-};
-
-/**
  * 根据id列表重新转码视频
  */
-export const retryVideoByIdList = (ids) => {
-    return service.patch('/v1/storage/video/retry', ids, {
-        baseURL: '/storage'
-    });
+export const retryInjectVideo = ({id, host, port}) => {
+    return service.patch('http://' + host + ':' + port + `/v1/storage/video/retry/${id}`);
 };
 
 /**
