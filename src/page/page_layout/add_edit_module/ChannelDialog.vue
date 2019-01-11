@@ -7,7 +7,7 @@
             :visible.sync="dialogVisible"
             :show-close="true"
             :before-close="cancelHanlder"
-            @open="showDialog"
+            @open="dialogOpenHandler"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
             :append-to-body="true">
@@ -47,7 +47,7 @@ import _ from 'lodash';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 import ChannelSearch from './ChannelSearch';
 export default {
-    name: 'EditChannel',
+    name: 'ChannelDialog',
     props: {
         squareIndex: {
             type: Number,
@@ -92,14 +92,15 @@ export default {
         //  弹窗的操作
         async showDialog(layoutItemType) {
             this.dialogVisible = true;
-            this.$nextTick(() => {
-                if (layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
-                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
-                }
-            });
+            this.layoutItemType = layoutItemType;
         },
         closeDialog() {
             this.dialogVisible = false;
+        },
+        dialogOpenHandler() {
+            if (this.layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
+                this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+            }
         },
         selectChannelHandler(channel) {
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: channel.id });

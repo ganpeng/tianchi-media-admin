@@ -198,37 +198,39 @@
                     <el-form status-icon label-width="120px" class="my-el-form" @submit.native.prevent>
                         <el-col :span="14">
                             <el-form-item label="节目角标">
-                                <div class="mark-container">
-                                    <div class="mark-item">
-                                        <el-checkbox :checked="leftTopChecked" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
-                                            左上角：播放平台
-                                        </el-checkbox>
-                                    </div>
-                                    <div class="mark-item">
-                                            右上角：
-                                        <el-select
-                                            @input="customMarkSelectHandler"
-                                            :value="rightTop"
-                                            value-key="id"
-                                            clearable
-                                            placeholder="请选择">
-                                            <el-option
-                                                v-for="item in customMarkOptions"
-                                                :key="item.id"
-                                                :label="item.caption"
-                                                :value="item">
-                                            </el-option>
-                                        </el-select>
-                                    </div>
-                                    <div class="mark-item">
-                                        <el-checkbox :checked="leftBottomChecked" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
-                                            左下角：更新
-                                        </el-checkbox>
-                                    </div>
-                                    <div class="mark-item">
-                                        <el-checkbox :checked="rightBottomChecked" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
-                                            右下角：评分
-                                        </el-checkbox>
+                                <div class="page-layout-mark">
+                                    <div class="mark-container">
+                                        <div class="mark-item">
+                                            <el-checkbox :checked="leftTopChecked" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
+                                                左上角：播放平台
+                                            </el-checkbox>
+                                        </div>
+                                        <div class="mark-item">
+                                                右上角：
+                                            <el-select
+                                                @input="customMarkSelectHandler"
+                                                :value="rightTop"
+                                                value-key="id"
+                                                clearable
+                                                placeholder="请选择">
+                                                <el-option
+                                                    v-for="item in customMarkOptions"
+                                                    :key="item.id"
+                                                    :label="item.caption"
+                                                    :value="item">
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                        <div class="mark-item">
+                                            <el-checkbox :checked="leftBottomChecked" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
+                                                左下角：更新
+                                            </el-checkbox>
+                                        </div>
+                                        <div class="mark-item">
+                                            <el-checkbox :checked="rightBottomChecked" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
+                                                右下角：评分
+                                            </el-checkbox>
+                                        </div>
                                     </div>
                                 </div>
                             </el-form-item>
@@ -565,20 +567,5 @@ export default {
 .my-el-form {
     overflow: hidden;
     margin-top: 20px;
-    .mark-container {
-        display: flex;
-        flex-wrap: wrap;
-        .mark-item {
-            font-size: 16px;
-            color: #A8ABB3;
-            width: 40%;
-            .el-checkbox {
-                padding: 0;
-            }
-        }
-    }
-    .el-checkbox__input.is-checked+.el-checkbox__label {
-        color: #fff!important;
-    }
 }
 </style>

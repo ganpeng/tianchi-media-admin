@@ -30,6 +30,7 @@
         <div class="content-field">
             <div class="wrapper">
                 <div :style="styleBgImageStr(0)" class="field">
+                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
                         :onlyChannel="true"
@@ -40,6 +41,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(1)" class="field">
+                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
                         :onlyChannel="true"
@@ -50,6 +52,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(2)" class="field">
+                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
                         :onlyChannel="true"
@@ -60,6 +63,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(3)" class="field">
+                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
                         :onlyChannel="true"
@@ -70,6 +74,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(4)" class="field">
+                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
                         :onlyChannel="true"
@@ -80,6 +85,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(5)" class="field">
+                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
                         :onlyChannel="true"
@@ -101,11 +107,13 @@ import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
 import ShuffleBtn from './ShuffleBtn';
 import ChannelDialog from '../add_edit_module/ChannelDialog';
+import CornerMark from '../CornerMark';
 export default {
     name: 'Mixeds6',
     components: {
         ShuffleBtn,
-        ChannelDialog
+        ChannelDialog,
+        CornerMark
     },
     props: {
         item: {
@@ -136,7 +144,8 @@ export default {
     computed: {
         ...mapGetters({
             getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
         }),
         getIconImageUri() {
             return (obj) => {

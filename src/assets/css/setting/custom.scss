@@ -579,6 +579,14 @@
     }
 }
 
+.el-dropdown-menu.el-popper li.el-dropdown-menu__item {
+    background: transparent;
+    &:hover {
+        color: #fff;
+        background: $mainColor;
+    }
+}
+
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
     color: #fff;
     background: $mainColor;
@@ -1512,29 +1520,7 @@
             height: 34px;
         }
     }
-    .mark-container {
-        .mark-item {
-            color: #A8ABB3;
-            .el-checkbox {
-                color: #A8ABB3;
-            }
-            //  全局修改checkbox的样式
-            .el-checkbox__input.is-checked+.el-checkbox__label {
-                color: #fff;
-            }
-            .el-checkbox__input.is-disabled .el-checkbox__inner {
-                background: transparent;
-                border: 1px solid #3E495E;
-            }
 
-            .el-checkbox__input.is-disabled+span.el-checkbox__label {
-                color: #A8ABB3;
-            }
-            .el-input {
-                width: 200px;
-            }
-        }
-    }
     .el-textarea {
         width: 300px;
         .el-textarea__inner {
@@ -1548,6 +1534,32 @@
     .el-input--prefix .el-input__inner {
         padding-left: 15px;
     }
+}
+
+.page-layout-mark {
+    .mark-container {
+        display: flex;
+        flex-wrap: wrap;
+        .mark-item {
+            color: #c0c4cc;
+            font-size: 14px;
+            font-weight: inherit;
+            width: 45%;
+            .el-checkbox {
+                padding: 0;
+                font-weight: inherit;
+                font-size: 14px;
+                color: #c0c4cc;
+            }
+            .el-input {
+                width: 200px;
+            }
+        }
+    }
+}
+
+.el-checkbox__input.is-checked+.el-checkbox__label {
+    color: #fff!important;
 }
 
 .el-input__icon {
@@ -1592,4 +1604,31 @@
 .el-checkbox__input.is-disabled .el-checkbox__inner {
     border: 1px solid #3E495E;
     background: transparent;
+}
+
+//  页面布局相关的样式
+.content-field {
+    .wrapper {
+        :hover {
+            .mark-container {
+                .mask {
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+#page-layout-container {
+    .content-field {
+        .wrapper {
+            :hover {
+                .mark-container {
+                    .mask {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
 }

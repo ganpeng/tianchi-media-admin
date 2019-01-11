@@ -241,6 +241,7 @@
                     </div>
                 </div>
                 <div v-show="active === 1" class="step-three">
+                    <p class="table-title">当前已选节目内包含的视频</p>
                     <el-table
                         class="my-table-style"
                         :data="video.list"
@@ -443,6 +444,10 @@ export default {
             type: Number,
             default: 0
         },
+        layoutItemType: {
+            type: String,
+            default: 'PROGRAMME_VIDEO'
+        },
         allowResolutions: {
             type: Array,
             default: () => []
@@ -603,6 +608,7 @@ export default {
             this.programme = {};
             this.keyword = '';
             this.cateogry = '';
+            this.showExist = '';
             this.layoutItemTypeOther = '';
             this.previewImage = {
                 title: '',
@@ -617,9 +623,10 @@ export default {
                 if (this.layoutItemTypeOther !== _.get(this.layoutItem, 'layoutItemType')) {
                     this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
                 } else {
-                    if (this.getSquareProgrammeVideoId) {
+                    if (this.getSquareProgrammeVideoId && this.getSquareProgrammeId) {
                         await this.getProgrammeCategory();
                         let res = await this.$service.getProgrammeInfo({id: this.getSquareProgrammeId});
+                        await this.getProgrammeVideoListById(this.getSquareProgrammeId);
                         if (res && res.code === 0) {
                             this.programme = res.data;
                             this.showExist = true;
@@ -818,23 +825,4 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.my-el-form {
-    overflow: hidden;
-    margin-top: 20px;
-    .mark-container {
-        display: flex;
-        flex-wrap: wrap;
-        .mark-item {
-            font-size: 16px;
-            color: #A8ABB3;
-            width: 45%;
-            .el-checkbox {
-                padding: 0;
-            }
-        }
-    }
-    .el-checkbox__input.is-checked+.el-checkbox__label {
-        color: #fff!important;
-    }
-}
 </style>

@@ -1286,7 +1286,7 @@
     .mark-item {
         font-size: 14px;
         color: #c0c4cc;
-        font-weight: 500;
+        font-weight: 200;
         width: 45%;
         .el-checkbox {
             padding: 0;

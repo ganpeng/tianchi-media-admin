@@ -31,6 +31,7 @@
             <div class="top-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(0)" class="top-left-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                         <el-dropdown
                             v-if="isEdit"
                             class="my-el-dropdown"
@@ -46,6 +47,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(1)" class="top-middle-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                         <el-dropdown
                             v-if="isEdit"
                             class="my-el-dropdown"
@@ -61,6 +63,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(2)" class="top-right-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                         <el-dropdown
                             v-if="isEdit"
                             class="my-el-dropdown"
@@ -78,6 +81,7 @@
             <div class="bottom-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(3)" class="bottom-left-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                         <el-dropdown
                             v-if="isEdit"
                             class="my-el-dropdown"
@@ -93,6 +97,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(4)" class="bottom-middle-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                         <el-dropdown
                             v-if="isEdit"
                             class="my-el-dropdown"
@@ -108,6 +113,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(5)" class="bottom-right-field">
+                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                         <el-dropdown
                             v-if="isEdit"
                             class="my-el-dropdown"
@@ -135,11 +141,13 @@ import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
 import ShuffleBtn from './ShuffleBtn';
 import EditFilter from '../add_edit_module/EditFilter';
+import CornerMark from '../CornerMark';
 export default {
     name: 'Mixed33',
     components: {
         ShuffleBtn,
-        EditFilter
+        EditFilter,
+        CornerMark
     },
     props: {
         item: {
@@ -169,7 +177,8 @@ export default {
     computed: {
         ...mapGetters({
             getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
         }),
         getIconImageUri() {
             return (obj) => {

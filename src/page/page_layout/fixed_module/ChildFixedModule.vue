@@ -1,5 +1,5 @@
 <template>
-    <div class="child-fixed-module">
+    <div id="child-fixed-module" class="child-fixed-module">
         <div v-if="!isEdit" class="btn-field text-right">
             <el-button @click="editFixedModuleHandler" class="btn-style-five">
                 <svg-icon icon-class="edit"></svg-icon>
@@ -217,6 +217,15 @@ export default {
                     }
                 }
             }
+        }
+    }
+}
+</style>
+<style lang="scss">
+#child-fixed-module {
+    .mark-container {
+        .mask {
+            border-radius: 30px;
         }
     }
 }

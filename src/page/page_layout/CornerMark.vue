@@ -11,6 +11,7 @@
         <div v-if="getCornerMarkByKey('rightBottom')" class="right-bottom-field">
             {{getCornerMarkByKey('rightBottom')}}
         </div>
+        <div class="mask"></div>
     </div>
 </template>
 <script>
@@ -95,6 +96,17 @@ export default {
         color: yellow;
         font-size: 22px;
         background: rgba(0, 0, 0, 0.8);
+    }
+    .mask {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0, 0.9);
+        border-radius: 8px;
+        border: 1px solid $mainColor;
     }
 }
 </style>

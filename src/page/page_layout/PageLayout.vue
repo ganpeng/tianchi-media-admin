@@ -1,5 +1,5 @@
 <template>
-    <div class="page-layout-container">
+    <div id="page-layout-container" class="page-layout-container">
         <div id="top"></div>
         <div class="columns-container wrapper" ref="wrapperBox">
             <ul class="columns-list clearfix content">

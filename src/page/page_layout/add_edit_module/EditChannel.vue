@@ -78,7 +78,7 @@ export default {
     },
     methods: {
         //  弹窗的操作
-        showDialog() {
+        showDialog(layoutItemType) {
             this.dialogVisible = true;
         },
         closeDialog() {

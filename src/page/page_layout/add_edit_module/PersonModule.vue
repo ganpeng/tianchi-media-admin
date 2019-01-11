@@ -71,7 +71,7 @@
             <div class="person-dialog-container">
                 <div class="my-tags-two-container">
                     <div class="header">
-                        <span class="count">已选{{layoutData.layoutItemMultiList.length}}项</span>
+                        <span class="count">已选{{layoutItemMultiList.length}}项</span>
                         <span
                             @click="toggleTagsField"
                             :class="['el-dropdown-link', tagsFieldVisible ? 'active' : '']">
@@ -82,7 +82,7 @@
                     <div v-show="tagsFieldVisible" class="my-tags-two">
                         <el-tag
                             :key="index"
-                            v-for="(person, index) in layoutData.layoutItemMultiList"
+                            v-for="(person, index) in layoutItemMultiList"
                             closable
                             :disable-transitions="false"
                             @close="deletePersonHandler(person.id)">
@@ -209,7 +209,8 @@ export default {
                 title: [
                     { required: true, message: '请输入人物模块名称' }
                 ]
-            }
+            },
+            layoutItemMultiList: []
         };
     },
     beforeRouteLeave(to, from, next) {
@@ -224,6 +225,12 @@ export default {
         let {navbarId, index, operator} = this.$route.params;
         this.navbarId = navbarId;
         this.index = index;
+
+        let layoutData = _.get(this.layoutData, 'layoutItemMultiList');
+        if (layoutData) {
+            this.layoutItemMultiList = _.cloneDeep(layoutData);
+        }
+
         if (operator === 'add') {
             this.title = '新增人物模块';
         } else {
@@ -246,7 +253,7 @@ export default {
         },
         checkIsChecked() {
             return (row) => {
-                let index = this.layoutData.layoutItemMultiList.findIndex((person) => person.id === row.id);
+                let index = this.layoutItemMultiList.findIndex((person) => person.id === row.id);
                 return index >= 0;
             };
         },
@@ -255,8 +262,8 @@ export default {
                 if (!_.get(row, 'avatarImage.uri')) {
                     return true;
                 }
-                let index = this.layoutData.layoutItemMultiList.findIndex((person) => person.id === row.id);
-                return index < 0 && this.layoutData.layoutItemMultiList.length > 5;
+                let index = this.layoutItemMultiList.findIndex((person) => person.id === row.id);
+                return index < 0 && this.layoutItemMultiList.length > 5;
             };
         },
         getImageUri() {
@@ -329,11 +336,11 @@ export default {
         },
         //  动态的为符合条件的行添加class
         tableRowClassName({row, rowIndex}) {
-            let index = this.layoutData.layoutItemMultiList.findIndex((person) => person.id === row.id);
+            let index = this.layoutItemMultiList.findIndex((person) => person.id === row.id);
             return index >= 0 ? 'checked' : '';
         },
         checkHandler(value, person) {
-            if (this.layoutData.layoutItemMultiList.length > 5 && value) {
+            if (this.layoutItemMultiList.length > 5 && value) {
                 return false;
             }
             if (value) {
@@ -345,9 +352,9 @@ export default {
                     layoutItemType: 'FIGURE',
                     params: ''
                 };
-                this.addLayoutItemByIndex({navbarId: this.navbarId, index: this.index, layoutItem});
+                this.layoutItemMultiList.push(layoutItem);
             } else {
-                this.deleteLayoutItembyId({navbarId: this.navbarId, index: this.index, id: person.id});
+                this.layoutItemMultiList = this.layoutItemMultiList.filter((item) => item.id !== person.id);
             }
         },
         async saveHandler() {
@@ -376,6 +383,7 @@ export default {
         closeDialog() {
             this.resetPerson();
             this.selectPersonDialogVisible = false;
+            this.layoutItemMultiList = [];
 
             window.removeEventListener('keyup', this.keyupHandler);
         },
@@ -392,7 +400,9 @@ export default {
             this.showSelectPersonDialog();
         },
         selectPersonEnterHandler() {
-            if (this.layoutData.layoutItemMultiList.length === 6) {
+            if (this.layoutItemMultiList.length === 6) {
+                console.log(this.layoutItemMultiList);
+                this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'layoutItemMultiList', value: _.cloneDeep(this.layoutItemMultiList)});
                 this.closeDialog();
             } else {
                 this.$message.error('必须选择6个人物');
@@ -403,7 +413,7 @@ export default {
             this.getPersonList({isProgramme: false, params: {visible: true}});
         },
         deletePersonHandler(id) {
-            this.deleteLayoutItembyId({navbarId: this.navbarId, index: this.index, id});
+            this.layoutItemMultiList = this.layoutItemMultiList.filter((item) => item.id !== id);
         },
         toggleTagsField() {
             this.tagsFieldVisible = !this.tagsFieldVisible;
@@ -416,7 +426,6 @@ export default {
             this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: null});
         },
         cancelHanlder() {
-            this.cancelLayoutPersonItemByIndex({navbarId: this.navbarId, index: this.index});
             this.closeDialog();
         }
     }

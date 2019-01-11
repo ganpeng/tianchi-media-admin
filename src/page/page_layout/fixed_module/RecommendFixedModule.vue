@@ -267,6 +267,7 @@ export default {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        z-index: 20;
         .el-button {
             &:last-child {
                 padding: 0 10px;

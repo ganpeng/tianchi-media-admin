@@ -13,7 +13,7 @@
             :close-on-press-escape="false"
             :append-to-body="true">
             <div class="person-dialog-container">
-                <el-steps class="my-steps" :active="active" finish-status="success">
+                <el-steps class="my-steps" :active="active" center finish-status="success">
                     <el-step title="选择节目专题"></el-step>
                     <el-step title="选择图片"></el-step>
                     <el-step title="设置角标"></el-step>
@@ -165,21 +165,23 @@
                     <el-form status-icon label-width="120px" class="my-el-form" @submit.native.prevent>
                         <el-col :span="14">
                             <el-form-item label="右上角角标">
-                                <div class="mark-container">
-                                    <div class="mark-item">
-                                        <el-select
-                                            @input="customMarkSelectHandler"
-                                            :value="rightTop"
-                                            value-key="id"
-                                            clearable
-                                            placeholder="请选择">
-                                            <el-option
-                                                v-for="item in customMarkOptions"
-                                                :key="item.id"
-                                                :label="item.caption"
-                                                :value="item">
-                                            </el-option>
-                                        </el-select>
+                                <div class="page-layout-mark">
+                                    <div class="mark-container">
+                                        <div class="mark-item">
+                                            <el-select
+                                                @input="customMarkSelectHandler"
+                                                :value="rightTop"
+                                                value-key="id"
+                                                clearable
+                                                placeholder="请选择">
+                                                <el-option
+                                                    v-for="item in customMarkOptions"
+                                                    :key="item.id"
+                                                    :label="item.caption"
+                                                    :value="item">
+                                                </el-option>
+                                            </el-select>
+                                        </div>
                                     </div>
                                 </div>
                             </el-form-item>
