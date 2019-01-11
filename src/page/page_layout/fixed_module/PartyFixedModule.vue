@@ -8,7 +8,7 @@
         <div class="top-field">
             <div class="wrapper">
                 <div :style="styleBgImageStr(0)" class="top-left-field">
-                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 0)"></corner-mark>
+                    <corner-mark :squareIndex="1" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 0)"></corner-mark>
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(0)" class="btn-style-two btn130">
                             选择节目
@@ -25,7 +25,7 @@
                     <div class="top-right-top-field">
                         <div class="wrapper">
                             <div :style="styleBgImageStr(1)" class="top-right-top-left-field">
-                                <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 1)"></corner-mark>
+                                <corner-mark :squareIndex="1" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 1)"></corner-mark>
                                 <div v-if="isEdit" class="btn-wrapper">
                                     <el-button @click="selectProgramme(1)" class="btn-style-two btn130">
                                         选择节目
@@ -39,7 +39,7 @@
                         </div>
                         <div class="wrapper">
                             <div :style="styleBgImageStr(2)" class="top-right-top-right-field">
-                                <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 2)"></corner-mark>
+                                <corner-mark :squareIndex="2" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 2)"></corner-mark>
                                 <div v-if="isEdit" class="btn-wrapper">
                                     <el-button @click="selectProgramme(2)" class="btn-style-two btn130">
                                         选择节目
@@ -55,7 +55,7 @@
                     <div class="top-right-bottom-field">
                         <div class="wrapper">
                             <div :style="styleBgImageStr(3)" class="top-right-bottom-left-field">
-                                <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 3)"></corner-mark>
+                                <corner-mark :squareIndex="3" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 3)"></corner-mark>
                                 <div v-if="isEdit" class="btn-wrapper">
                                     <el-button @click="selectProgramme(3)" class="btn-style-two btn130">
                                         选择节目
@@ -69,7 +69,7 @@
                         </div>
                         <div class="wrapper">
                             <div :style="styleBgImageStr(4)" class="top-right-bottom-right-field">
-                                <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 4)"></corner-mark>
+                                <corner-mark :squareIndex="4" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 4)"></corner-mark>
                                 <div v-if="isEdit" class="btn-wrapper">
                                     <el-button @click="selectProgramme(4)" class="btn-style-two btn130">
                                         选择节目
@@ -88,7 +88,7 @@
         <div class="bottom-field">
             <div class="wrapper">
                 <div :style="styleBgImageStr(5)" class="bottom-field-item">
-                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 5)"></corner-mark>
+                    <corner-mark :squareIndex="5" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 5)"></corner-mark>
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(5)" class="btn-style-two btn130">
                             选择节目
@@ -102,7 +102,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(6)" class="bottom-field-item">
-                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 6)"></corner-mark>
+                    <corner-mark :squareIndex="6" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 6)"></corner-mark>
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(6)" class="btn-style-two btn130">
                             选择节目
@@ -116,7 +116,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(7)" class="bottom-field-item">
-                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 7)"></corner-mark>
+                    <corner-mark :squareIndex="7" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 7)"></corner-mark>
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(7)" class="btn-style-two btn130">
                             选择节目
@@ -130,7 +130,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(8)" class="bottom-field-item">
-                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 8)"></corner-mark>
+                    <corner-mark :squareIndex="8" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 8)"></corner-mark>
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(8)" class="btn-style-two btn130">
                             选择节目

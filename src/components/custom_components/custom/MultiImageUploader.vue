@@ -6,7 +6,7 @@
                     <div :style="styleStr(image.uri)" class="bg-field">
                         <div class="mask"></div>
                     </div>
-                    <i @click.stop="deleteImageHandler(image.id)" class="delete-icon el-tag__close el-icon-close"></i>
+                    <i @click.stop="deleteImage(image.id)" class="delete-icon el-tag__close el-icon-close"></i>
                     <p class="dimension-info">{{image.width}}*{{image.height}}</p>
                 </li>
                 <li :style="styleStr(obj.dataUri)" v-for="(obj, index) in showFileList" :key="index" class="image-item">
@@ -209,6 +209,20 @@ export default {
             this.previewImage.display = true;
             this.previewImage.list = this.imageList;
             this.previewImage.activeIndex = index;
+        },
+        async deleteImage(id) {
+            try {
+                let confirm = await this.$confirm(`您确定要删除图片吗, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                });
+                if (confirm) {
+                    this.deleteImageHandler(id);
+                }
+            } catch (err) {
+                console.log(err);
+            }
         }
     }
 };
@@ -267,7 +281,7 @@ export default {
                 right: 0;
                 bottom: 0;
                 background: rgba(#000, 0.6);
-                border-radius: 8px;
+                border-radius: 6px;
             }
             &:hover {
                 .mask {

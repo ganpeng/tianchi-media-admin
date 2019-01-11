@@ -30,6 +30,7 @@
         <div class="content-field">
             <div v-for="(item, index) in getLayoutItemMultiList(navbarId, index)" :key="index" class="wrapper">
                 <div :style="styleBgImageStr(index)" class="field">
+                    <corner-mark :squareIndex="index"></corner-mark>
                     <div v-if="isEdit" class="shuffle-btn-container">
                         <el-dropdown
                             @command="editFilterLayout($event, index)" placement="bottom">
@@ -61,10 +62,12 @@
 import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
 import EditFilter from '../add_edit_module/EditFilter';
+import CornerMark from '../CornerMark';
 export default {
     name: 'Mixedsn',
     components: {
-        EditFilter
+        EditFilter,
+        CornerMark
     },
     props: {
         item: {

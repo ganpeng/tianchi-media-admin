@@ -396,6 +396,24 @@ let util = {
             }
         }
         return str;
+    },
+    lowerFrameProgrammeErrorHandler(res) {
+        let {code, data, message} = res;
+        let msg = '';
+        switch (code) {
+            case 3110:
+                msg = data.map((item) => {
+                    return item ? `"${item}"` : '';
+                }).join(',');
+                return `节目包含在如下${msg}专题中`;
+            case 3111:
+                msg = data.map((item) => {
+                    return item ? `"${item}"` : '';
+                }).join(',');
+                return `节目包含在如下${msg}推荐位`;
+            default:
+                return message;
+        }
     }
 };
 

@@ -30,7 +30,7 @@
         <div class="content-field">
             <div class="wrapper">
                 <div :style="styleBgImageStr(0)" class="field-1">
-                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
+                    <corner-mark :squareIndex="0" :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
                         :addShuffleLayout="addShuffleLayout(0)"
@@ -39,7 +39,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(1)" class="field-2">
-                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
+                    <corner-mark :squareIndex="1" :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
                         :addShuffleLayout="addShuffleLayout(1)"
@@ -48,7 +48,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(2)" class="field-3">
-                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 2)"></corner-mark>
+                    <corner-mark :squareIndex="2" :cornerMark="getLayoutItemCornerMark(navbarId, index, 2)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
                         :addShuffleLayout="addShuffleLayout(2)"
@@ -57,7 +57,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(3)" class="field-4">
-                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 3)"></corner-mark>
+                    <corner-mark :squareIndex="3" :cornerMark="getLayoutItemCornerMark(navbarId, index, 3)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
                         :addShuffleLayout="addShuffleLayout(3)"

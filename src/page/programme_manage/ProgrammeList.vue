@@ -54,6 +54,7 @@
                             :value="programmeSearchFields.programmeTypeIdList"
                             @change="inputHandler($event, 'programmeTypeIdList')"
                             clearable
+                            no-data-text="请先选择分类"
                             placeholder="请选择类型">
                             <el-option
                                 v-for="item in programmeTypeOptions"

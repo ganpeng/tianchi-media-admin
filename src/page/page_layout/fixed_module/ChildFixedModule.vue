@@ -12,7 +12,7 @@
             </div>
             <div class="wrapper middle-wrapper">
                 <div :style="styleBgImageStr(0)" class="middle-field">
-                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 0)"></corner-mark>
+                    <corner-mark :squareIndex="0" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 0)"></corner-mark>
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(0)" class="btn-style-two btn130">
                             选择节目
@@ -26,7 +26,7 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(1)" class="right-field">
-                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, 1)"></corner-mark>
+                    <corner-mark :squareIndex="1" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 1)"></corner-mark>
                     <div v-if="isEdit" class="btn-wrapper">
                         <el-button @click="selectProgramme(1)" class="btn-style-two btn130">
                             选择节目

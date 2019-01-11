@@ -217,6 +217,12 @@ const getters = {
             return !_.isEmpty(obj) ? obj : {};
         };
     },
+    getLayoutItemType(state) {
+        return (navbarId, index, squareIndex) => {
+            let layoutItemType = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.layoutItemType`);
+            return layoutItemType;
+        };
+    },
     getLayoutItemCornerMark(state) {
         return (navbarId, index, squareIndex) => {
             let obj = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.cornerMark`);

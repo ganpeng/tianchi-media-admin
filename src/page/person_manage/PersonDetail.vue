@@ -160,7 +160,7 @@
                 });
             },
             goBack() {
-                this.$router.back();
+                this.$router.push({ name: 'PersonList' });
             }
         }
     };

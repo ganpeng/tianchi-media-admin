@@ -5,78 +5,91 @@
                 <svg-icon icon-class="edit"></svg-icon>
             </el-button>
         </div>
-        <div class="top-field">
-            <div class="wrapper">
-                <div :style="styleBgImageStr(0)" class="top-left-field">
-                    <el-button v-if="isEdit" @click="selectProgrammeVideo(0)" class="btn-style-two">
-                        选择视频
-                    </el-button>
-                </div>
-            </div>
-            <div class="wrapper">
-                <div class="top-right-field">
-                    <div class="top-right-top-field">
-                        <div class="wrapper">
-                            <div :style="styleBgImageStr(1)" class="top-right-top-left-field">
-                                <el-button v-if="isEdit" @click="selectProgrammeVideo(1)" class="btn-style-two btn130">
-                                    选择视频
-                                </el-button>
-                            </div>
-                        </div>
-                        <div class="wrapper">
-                            <div :style="styleBgImageStr(2)" class="top-right-top-right-field">
-                                <el-button v-if="isEdit" @click="selectProgrammeVideo(2)" class="btn-style-two btn130">
-                                    选择视频
-                                </el-button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="top-right-bottom-field">
-                        <div class="wrapper">
-                            <div :style="styleBgImageStr(3)" class="top-right-bottom-left-field">
-                                <el-button v-if="isEdit" @click="selectProgrammeVideo(3)" class="btn-style-two btn130">
-                                    选择视频
-                                </el-button>
-                            </div>
-                        </div>
-                        <div class="wrapper">
-                            <div :style="styleBgImageStr(4)" class="top-right-bottom-right-field">
-                                <el-button v-if="isEdit" @click="selectProgrammeVideo(4)" class="btn-style-two btn130">
-                                    选择视频
-                                </el-button>
-                            </div>
+        <div class="content-field">
+            <div class="top-field">
+                <div class="wrapper-top">
+                    <div class="wrapper">
+                        <div :style="styleBgImageStr(0)" class="top-left-field">
+                            <corner-mark :squareIndex="0"></corner-mark>
+                            <el-button v-if="isEdit" @click="selectProgrammeVideo(0)" class="btn-style-two">
+                                选择视频
+                            </el-button>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="bottom-field">
-            <div class="wrapper">
-                <div :style="styleBgImageStr(5)" class="bottom-field-item">
-                    <el-button v-if="isEdit" @click="selectProgrammeVideo(5)" class="btn-style-two btn130">
-                        选择视频
-                    </el-button>
+                <div class="wrapper-top">
+                    <div class="top-right-field">
+                        <div class="top-right-top-field">
+                            <div class="wrapper">
+                                <div :style="styleBgImageStr(1)" class="top-right-top-left-field">
+                                    <corner-mark :squareIndex="1"></corner-mark>
+                                    <el-button v-if="isEdit" @click="selectProgrammeVideo(1)" class="btn-style-two btn130">
+                                        选择视频
+                                    </el-button>
+                                </div>
+                            </div>
+                            <div class="wrapper">
+                                <div :style="styleBgImageStr(2)" class="top-right-top-right-field">
+                                    <corner-mark :squareIndex="2"></corner-mark>
+                                    <el-button v-if="isEdit" @click="selectProgrammeVideo(2)" class="btn-style-two btn130">
+                                        选择视频
+                                    </el-button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="top-right-bottom-field">
+                            <div class="wrapper">
+                                <div :style="styleBgImageStr(3)" class="top-right-bottom-left-field">
+                                    <corner-mark :squareIndex="3"></corner-mark>
+                                    <el-button v-if="isEdit" @click="selectProgrammeVideo(3)" class="btn-style-two btn130">
+                                        选择视频
+                                    </el-button>
+                                </div>
+                            </div>
+                            <div class="wrapper">
+                                <div :style="styleBgImageStr(4)" class="top-right-bottom-right-field">
+                                    <corner-mark :squareIndex="4"></corner-mark>
+                                    <el-button v-if="isEdit" @click="selectProgrammeVideo(4)" class="btn-style-two btn130">
+                                        选择视频
+                                    </el-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(6)" class="bottom-field-item">
-                    <el-button v-if="isEdit" @click="selectProgrammeVideo(6)" class="btn-style-two btn130">
-                        选择视频
-                    </el-button>
+            <div class="bottom-field">
+                <div class="wrapper">
+                    <div :style="styleBgImageStr(5)" class="bottom-field-item">
+                        <corner-mark :squareIndex="5"></corner-mark>
+                        <el-button v-if="isEdit" @click="selectProgrammeVideo(5)" class="btn-style-two btn130">
+                            选择视频
+                        </el-button>
+                    </div>
                 </div>
-            </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(7)" class="bottom-field-item">
-                    <el-button v-if="isEdit" @click="selectProgrammeVideo(7)" class="btn-style-two btn130">
-                        选择视频
-                    </el-button>
+                <div class="wrapper">
+                    <div :style="styleBgImageStr(6)" class="bottom-field-item">
+                        <corner-mark :squareIndex="6"></corner-mark>
+                        <el-button v-if="isEdit" @click="selectProgrammeVideo(6)" class="btn-style-two btn130">
+                            选择视频
+                        </el-button>
+                    </div>
                 </div>
-            </div>
-            <div class="wrapper">
-                <div :style="styleBgImageStr(8)" class="bottom-field-item">
-                    <el-button v-if="isEdit" @click="selectProgrammeVideo(8)" class="btn-style-two btn130">
-                        选择视频
-                    </el-button>
+                <div class="wrapper">
+                    <div :style="styleBgImageStr(7)" class="bottom-field-item">
+                        <corner-mark :squareIndex="7"></corner-mark>
+                        <el-button v-if="isEdit" @click="selectProgrammeVideo(7)" class="btn-style-two btn130">
+                            选择视频
+                        </el-button>
+                    </div>
+                </div>
+                <div class="wrapper">
+                    <div :style="styleBgImageStr(8)" class="bottom-field-item">
+                        <corner-mark :squareIndex="8"></corner-mark>
+                        <el-button v-if="isEdit" @click="selectProgrammeVideo(8)" class="btn-style-two btn130">
+                            选择视频
+                        </el-button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -93,13 +106,15 @@ import {mapGetters, mapMutations} from 'vuex';
 import ProgrammeWithout4StepDialog from '../add_edit_module/ProgrammeWithout4StepDialog';
 import EditFilter from '../add_edit_module/EditFilter';
 import EditProgrammeVideo from '../add_edit_module/EditProgrammeVideo';
+import CornerMark from '../CornerMark';
 import _ from 'lodash';
 export default {
     name: 'NewsFixedModule',
     components: {
         ProgrammeWithout4StepDialog,
         EditFilter,
-        EditProgrammeVideo
+        EditProgrammeVideo,
+        CornerMark
     },
     props: {
         isEdit: {
@@ -155,7 +170,7 @@ export default {
             this.squareIndex = squareIndex;
             this.layoutItemType = 'PROGRAMME_LIST';
             this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectProgrammeVideoDialog.showDialog('PROGRAMME_VIDEO', 'NEWS');
+            this.$refs.selectProgrammeVideoDialog.showDialog('PROGRAMME_LIST', 'NEWS');
         },
         selectFilter(squareIndex) {
             this.squareIndex = squareIndex;
@@ -228,7 +243,7 @@ export default {
     .top-field {
         display: flex;
         margin-bottom: 2%;
-        .wrapper {
+        .wrapper-top {
             flex: 1;
             &:first-child {
                 margin-right: 2%;
@@ -279,7 +294,7 @@ export default {
             margin-left: 2%;
         }
     }
-    .wrapper {
+    .wrapper-top {
         .btn-style-two {
             position: absolute;
             top: 50%;

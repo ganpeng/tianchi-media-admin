@@ -9,6 +9,7 @@
             <div class="top-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(0)" class="top-left-field">
+                        <corner-mark :squareIndex="0"></corner-mark>
                         <el-button v-if="isEdit" @click="selectFilter(0)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
@@ -16,6 +17,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(1)" class="top-middle-field">
+                        <corner-mark :squareIndex="1"></corner-mark>
                         <el-button v-if="isEdit" @click="selectFilter(1)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
@@ -23,6 +25,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(2)" class="top-right-field">
+                        <corner-mark :squareIndex="2"></corner-mark>
                         <el-button v-if="isEdit" @click="selectFilter(2)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
@@ -32,6 +35,7 @@
             <div class="bottom-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(3)" class="bottom-left-field">
+                        <corner-mark :squareIndex="3"></corner-mark>
                         <el-button v-if="isEdit" @click="selectFilter(3)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
@@ -39,6 +43,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(4)" class="bottom-middle-field">
+                        <corner-mark :squareIndex="4"></corner-mark>
                         <el-button v-if="isEdit" @click="selectFilter(4)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
@@ -46,6 +51,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(5)" class="bottom-right-field">
+                        <corner-mark :squareIndex="5"></corner-mark>
                         <el-button v-if="isEdit" @click="selectFilter(5)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
@@ -62,11 +68,13 @@
 <script>
 import {mapGetters, mapMutations} from 'vuex';
 import EditFilter from '../add_edit_module/EditFilter';
+import CornerMark from '../CornerMark';
 import _ from 'lodash';
 export default {
     name: 'CategoryFixedModule',
     components: {
-        EditFilter
+        EditFilter,
+        CornerMark
     },
     props: {
         isEdit: {

@@ -43,7 +43,7 @@
                                 </li>
                             </draggable>
                             <ul v-else class="sortable-empty-list sortable-list">
-                                <li v-for="(item, index) in [1, 2, 3, 4, 5, 6]" :key="index" class="sortable-item">
+                                <li @click="selectPersonClickHandler" v-for="(item, index) in [1, 2, 3, 4, 5, 6]" :key="index" class="sortable-item">
                                     <div class="img-wrapper">
                                         <div class="mask"></div>
                                     </div>

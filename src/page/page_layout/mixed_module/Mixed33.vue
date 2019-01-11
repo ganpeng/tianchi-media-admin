@@ -31,7 +31,7 @@
             <div class="top-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(0)" class="top-left-field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
+                        <corner-mark :squareIndex="0" :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                         <el-dropdown
                             v-if="isEdit"
                             class="my-el-dropdown"
@@ -47,7 +47,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(1)" class="top-middle-field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
+                        <corner-mark :squareIndex="1" :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                         <el-dropdown
                             v-if="isEdit"
                             class="my-el-dropdown"
@@ -63,7 +63,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(2)" class="top-right-field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
+                        <corner-mark :squareIndex="2" :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                         <el-dropdown
                             v-if="isEdit"
                             class="my-el-dropdown"
@@ -81,7 +81,7 @@
             <div class="bottom-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(3)" class="bottom-left-field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
+                        <corner-mark :squareIndex="3" :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                         <el-dropdown
                             v-if="isEdit"
                             class="my-el-dropdown"
@@ -97,7 +97,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(4)" class="bottom-middle-field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
+                        <corner-mark :squareIndex="4" :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                         <el-dropdown
                             v-if="isEdit"
                             class="my-el-dropdown"
@@ -113,7 +113,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(5)" class="bottom-right-field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
+                        <corner-mark :squareIndex="5" :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                         <el-dropdown
                             v-if="isEdit"
                             class="my-el-dropdown"

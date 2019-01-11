@@ -31,7 +31,7 @@
             <div class="top-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(0)" class="field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
+                        <corner-mark :squareIndex="0" :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(0)"
@@ -40,7 +40,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(1)" class="field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
+                        <corner-mark :squareIndex="1" :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(1)"
@@ -49,7 +49,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(2)" class="field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 2)"></corner-mark>
+                        <corner-mark :squareIndex="2" :cornerMark="getLayoutItemCornerMark(navbarId, index, 2)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(2)"
@@ -58,7 +58,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(3)" class="field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 3)"></corner-mark>
+                        <corner-mark :squareIndex="3" :cornerMark="getLayoutItemCornerMark(navbarId, index, 3)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(3)"
@@ -67,7 +67,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(4)" class="field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 4)"></corner-mark>
+                        <corner-mark :squareIndex="4" :cornerMark="getLayoutItemCornerMark(navbarId, index, 4)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(4)"
@@ -76,7 +76,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(5)" class="field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 5)"></corner-mark>
+                        <corner-mark :squareIndex="5" :cornerMark="getLayoutItemCornerMark(navbarId, index, 5)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(5)"
@@ -87,7 +87,7 @@
             <div class="bottom-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(6)" class="field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 6)"></corner-mark>
+                        <corner-mark :squareIndex="6" :cornerMark="getLayoutItemCornerMark(navbarId, index, 6)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(6)"
@@ -96,7 +96,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(7)" class="field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 7)"></corner-mark>
+                        <corner-mark :squareIndex="7" :cornerMark="getLayoutItemCornerMark(navbarId, index, 7)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(7)"
@@ -105,7 +105,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(8)" class="field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 8)"></corner-mark>
+                        <corner-mark :squareIndex="8" :cornerMark="getLayoutItemCornerMark(navbarId, index, 8)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(8)"
@@ -114,7 +114,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(9)" class="field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 9)"></corner-mark>
+                        <corner-mark :squareIndex="9" :cornerMark="getLayoutItemCornerMark(navbarId, index, 9)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(9)"
@@ -123,7 +123,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(10)" class="field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 10)"></corner-mark>
+                        <corner-mark :squareIndex="10" :cornerMark="getLayoutItemCornerMark(navbarId, index, 10)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(10)"
@@ -132,7 +132,7 @@
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(11)" class="field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 11)"></corner-mark>
+                        <corner-mark :squareIndex="11" :cornerMark="getLayoutItemCornerMark(navbarId, index, 11)"></corner-mark>
                         <shuffle-btn
                             v-if="isEdit"
                             :addShuffleLayout="addShuffleLayout(11)"

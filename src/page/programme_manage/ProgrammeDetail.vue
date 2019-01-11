@@ -422,8 +422,8 @@
                             </div>
                         </el-form-item>
                         <el-form-item label="节目状态" prop="visible">
-                            <el-radio :disabled="video.list.length === 0" @input="inputHandler(true, 'visible')" :value="programme.visible" :label="true">上架</el-radio>
-                            <el-radio :disabled="video.list.length === 0" @input="inputHandler(false, 'visible')" :value="programme.visible" :label="false">下架</el-radio>
+                            <el-radio :disabled="video.list.length === 0" @input="visibleHandler(true, 'visible')" :value="programme.visible" :label="true">上架</el-radio>
+                            <el-radio :disabled="video.list.length === 0" @input="visibleHandler(false, 'visible')" :value="programme.visible" :label="false">下架</el-radio>
                         </el-form-item>
                         <el-form-item label="更新规则">
                             <el-col :span="18">
@@ -1108,6 +1108,25 @@
                     this.getDict(value);
                 }
             },
+            async visibleHandler(value, key) {
+                try {
+                    let {id} = this.$route.params;
+                    if (this.status === 2) {
+                        let res = await this.deleteProgramme(id);
+                        if (res && res.code === 0) {
+                            this.updateProgramme({key, value});
+                        } else {
+                            this.$message.warning(this.$util.lowerFrameProgrammeErrorHandler(res));
+                            return false;
+                        }
+                        return false;
+                    } else {
+                        this.updateProgramme({key, value});
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            },
             _deletePosterImage(index, id) {
                 this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
                         confirmButtonText: '确定',
@@ -1296,9 +1315,6 @@
         }
     }
 }
-.el-checkbox__input.is-checked+.el-checkbox__label {
-    color: #fff!important;
-}
 .on-off-the-shelf {
     display: flex;
     .on-off-the-shelf-time {
@@ -1306,6 +1322,10 @@
     }
 }
 </style>
-<style lang="scss" scoped>
-
+<style lang="scss">
+.mark-container {
+    .el-input {
+        width: 160px;
+    }
+}
 </style>

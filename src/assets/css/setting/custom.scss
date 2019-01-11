@@ -1622,6 +1622,11 @@
 #page-layout-container {
     .content-field {
         .wrapper {
+            .mark-container {
+                .layout-item-type-title {
+                    display: none;
+                }
+            }
             :hover {
                 .mark-container {
                     .mask {

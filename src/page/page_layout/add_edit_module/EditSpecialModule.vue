@@ -33,7 +33,7 @@
                                 </div>
                                 <div :style="styleBgImageStr(1)" @click="selectProgramme" class="right-field">
                                     <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
-                                    <span class="square-text">节目</span>
+                                    <!-- <span class="square-text">节目</span> -->
                                 </div>
                             </div>
                         </el-form-item>

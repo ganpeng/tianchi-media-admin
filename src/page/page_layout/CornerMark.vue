@@ -12,19 +12,67 @@
             {{getCornerMarkByKey('rightBottom')}}
         </div>
         <div class="mask"></div>
+        <div class="layout-item-type-title">
+            {{layoutItemType}}
+        </div>
     </div>
 </template>
 <script>
+import {mapGetters} from 'vuex';
 import _ from 'lodash';
 export default {
     name: 'CornerMark',
     props: {
+        squareIndex: {
+            type: Number,
+            default: 0
+        },
         cornerMark: {
             type: Object,
             default: () => {}
         }
     },
+    data() {
+        return {
+            navbarId: '',
+            index: 0
+        };
+    },
     computed: {
+        ...mapGetters({
+            getLayoutItemType: 'pageLayout/getLayoutItemType',
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+        }),
+        layoutItemType() {
+            let layoutItemType = '';
+            let params = '';
+            if (this.navbarId && _.isNumber(this.index) && _.isNumber(this.squareIndex)) {
+                layoutItemType = this.getLayoutItemType(this.navbarId, this.index, this.squareIndex);
+                params = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
+            }
+
+            if (layoutItemType === 'PROGRAMME_SUBJECT') {
+                return '节目专题';
+            } else if (layoutItemType === 'FIGURE_SUBJECT') {
+                return '人物专题';
+            } else if ((layoutItemType === 'PROGRAMME') || (layoutItemType === 'PROGRAMME_LIST' && _.isEmpty(params))) {
+                return '节目';
+            } else if ((layoutItemType === 'PROGRAMME_LIST' && !_.isEmpty(params)) || layoutItemType === 'PROGRAMME_VIDEO') {
+                return '节目内视频';
+            } else if (layoutItemType === 'LINK') {
+                return '网页';
+            } else if (layoutItemType === 'CHANNEL') {
+                return '频道';
+            } else if (layoutItemType === 'FIGURE') {
+                return '人物';
+            } else if (layoutItemType === 'ALL') {
+                return '更多';
+            } else if (layoutItemType) {
+                return '筛选';
+            } else {
+                return '';
+            }
+        },
         rightTopStyle() {
             let image = _.get(this.cornerMark, 'rightTop.image');
             if (_.isEmpty(image)) {
@@ -49,6 +97,11 @@ export default {
                     return '';
             }
         }
+    },
+    created() {
+        let {navbarId, index} = this.$route.params;
+        this.navbarId = navbarId;
+        this.index = parseInt(index);
     },
     methods: {}
 };
@@ -107,6 +160,16 @@ export default {
         background: rgba(0,0,0, 0.9);
         border-radius: 8px;
         border: 1px solid $mainColor;
+    }
+    .layout-item-type-title {
+        position: absolute;
+        width: 100%;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        font-size: 12px;
+        color: #A8ABB3;
+        bottom: -30px;
     }
 }
 </style>
