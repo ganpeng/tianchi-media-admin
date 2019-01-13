@@ -16,6 +16,7 @@
                                     <div class="wrapper">
                                         <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
                                         <span class="url">{{ele.playUri}}</span>
+                                        <span class="btn-text play-btn" v-if="ele.m3u8Uri" @click="displayVideoPlayer(ele.m3u8Uri, ele.name)">播放</span>
                                     </div>
                                 </li>
                             </ul>
@@ -33,6 +34,7 @@
                                     <div class="wrapper">
                                         <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
                                         <span class="url">{{ele.playUri}}</span>
+                                        <span class="btn-text play-btn" v-if="ele.m3u8Uri" @click="displayVideoPlayer(ele.m3u8Uri, ele.name)">播放</span>
                                     </div>
                                 </li>
                             </ul>
@@ -44,18 +46,32 @@
         <div class="fixed-btn-container">
             <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
         </div>
+        <display-video-dialog
+            :url="url"
+            :title="title"
+            :displayVideoDialogVisible="displayVideoDialogVisible"
+            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
+        </display-video-dialog>
     </div>
 </template>
 <script>
     import {mapActions} from 'vuex';
+    import DisplayVideoDialog from '../video_manage/DisplayVideoDialog';
+
     export default {
         name: 'PreviewProgrammeList',
+        components: {
+            DisplayVideoDialog
+        },
         data() {
             return {
                 prevList: [],
                 afterList: [],
                 prevObj: {},
-                afterObj: {}
+                afterObj: {},
+                displayVideoDialogVisible: false,
+                url: '',
+                title: ''
             };
         },
         created() {
@@ -153,6 +169,14 @@
                     }
                     return res;
                 }, {});
+            },
+            displayVideoPlayer(url, name) {
+                this.displayVideoDialogVisible = true;
+                this.url = url;
+                this.title = name;
+            },
+            closeDisplayVideoDialog() {
+                this.displayVideoDialogVisible = false;
             }
         }
     };
@@ -193,7 +217,16 @@
         .item-li {
             padding: 0 20px 0 20px;
             .wrapper {
+                position: relative;
                 border-bottom: 1px solid #3E495E;
+                .play-btn {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    right: 10px;
+                    color: $mainColor;
+                    cursor: pointer;
+                }
             }
             &:last-child {
                 .wrapper {

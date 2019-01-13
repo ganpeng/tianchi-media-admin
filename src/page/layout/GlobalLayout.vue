@@ -102,7 +102,8 @@
                 // this.hideHeaderAndAside();
                 let res = await this.getNavbarList();
                 if (res && res.code === 0) {
-                    this.layoutId = _.get(res.data, '2.id');
+                    let recomendNavbar = res.data.find((item) => item.name === '推荐');
+                    this.layoutId = recomendNavbar.id || _.get(res.data, '2.id');
                 }
             } catch (err) {
                 console.log(err);

@@ -291,14 +291,12 @@ export default {
         min-width: 0;
         background-color: $mainBtn;
         border: none;
-        .svg-icon {
-            // fill: #fff;
-        }
         &:hover {
             background-color: $mainBtnHover;
         }
     }
 }
+
 .columns-container {
     overflow-x: scroll;
     &::-webkit-scrollbar {

@@ -218,7 +218,7 @@
                         </el-col>
                     </el-form>
                 </div>
-                <div v-show="active === 2" class="step-three">
+                <div v-if="active === 2" class="step-three">
                     <el-form status-icon label-width="120px" class="my-el-form" @submit.native.prevent>
                         <el-col :span="14">
                             <el-form-item label="节目角标">
@@ -276,8 +276,8 @@
                     <el-form status-icon label-width="120px" class="my-el-form" @submit.native.prevent>
                         <el-col :span="12">
                             <el-form-item label="节目展示方式">
-                                    <el-radio @input="setSquareProgrammeLayoutItemType('PROGRAMME')" :value="getSquareProgrammeLayoutItemType" label="PROGRAMME">进入节目详情页</el-radio>
-                                    <el-radio @input="setSquareProgrammeLayoutItemType('PROGRAMME_LIST')" :value="getSquareProgrammeLayoutItemType" label="PROGRAMME_LIST">进入节目列表页</el-radio>
+                                <el-radio @input="setSquareProgrammeLayoutItemType('PROGRAMME')" :value="getSquareProgrammeLayoutItemType" label="PROGRAMME">进入节目详情页</el-radio>
+                                <el-radio @input="setSquareProgrammeLayoutItemType('PROGRAMME_LIST')" :value="getSquareProgrammeLayoutItemType" label="PROGRAMME_LIST">进入节目列表页</el-radio>
                             </el-form-item>
                         </el-col>
                     </el-form>
@@ -383,6 +383,11 @@ export default {
         rightBottomDisabled() {
             return !(this.programme && this.programme.score);
         },
+        rightBottomChecked() {
+            let cornerMark = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
+            let mark = _.get(cornerMark, `rightBottom.caption`);
+            return mark;
+        },
         markCheckedByKey() {
             return (key) => {
                 let cornerMark = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
@@ -443,7 +448,6 @@ export default {
             try {
                 this.layoutItemType = layoutItemType;
                 this.category = category;
-
                 this.dialogVisible = true;
                 window.addEventListener('keyup', this.keyupHandler);
             } catch (err) {
@@ -456,6 +460,7 @@ export default {
             this.dialogVisible = false;
             this.active = 0;
             this.category = '';
+            this.layoutItemType = '';
             this.programme = {};
             this.previewImage = {
                 title: '',

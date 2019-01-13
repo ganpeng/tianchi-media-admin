@@ -216,7 +216,7 @@
                         </el-col>
                     </el-form>
                 </div>
-                <div v-show="active === 2" class="step-three">
+                <div v-if="active === 2" class="step-three">
                     <el-form status-icon label-width="120px" class="my-el-form" @submit.native.prevent>
                         <el-col :span="14">
                             <el-form-item label="节目角标">

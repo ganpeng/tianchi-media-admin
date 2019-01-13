@@ -28,11 +28,11 @@
                     <el-col :span="12">
                         <el-form-item label="添加模块内容" required>
                             <div class="special-square-contianer">
-                                <div :style="styleBgImageStr(0)" @click="selectPersonSubject" class="left-field">
+                                <div :style="styleBgImageStr(0)" @click="selectPersonSubject(0)" class="left-field">
                                     <span class="square-text">人物专题</span>
                                 </div>
-                                <div :style="styleBgImageStr(1)" @click="selectProgramme" class="right-field">
-                                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
+                                <div :style="styleBgImageStr(1)" @click="selectProgramme(1)" class="right-field">
+                                    <corner-mark :squareIndex="1" :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
                                     <!-- <span class="square-text">节目</span> -->
                                 </div>
                             </div>
@@ -97,7 +97,8 @@ export default {
             getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
             getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
             selectAll: 'pageLayout/selectAll',
-            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark',
+            getLayoutItemType: 'pageLayout/getLayoutItemType'
         }),
         layoutData() {
             let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
@@ -153,9 +154,10 @@ export default {
             this.allowResolutions = [{width: 560, height: 600}];
             this.$refs.personSubjectDialog.showDialog('FIGURE_SUBJECT');
         },
-        selectProgramme() {
+        selectProgramme(squareIndex) {
+            let layoutItemType = this.getLayoutItemType(this.navbarId, this.index, squareIndex);
             this.allowResolutions = [{width: 1160, height: 600}];
-            this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
+            this.$refs.selectProgrammeDialog.showDialog(layoutItemType);
         }
     }
 };

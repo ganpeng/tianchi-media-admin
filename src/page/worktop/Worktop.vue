@@ -14,6 +14,7 @@
                     <el-dropdown-item command="PersonImport">批量导入人物</el-dropdown-item>
                     <el-dropdown-item command="ProgrammeImport">批量导入节目</el-dropdown-item>
                     <el-dropdown-item command="LiveChannelImport">批量导入直播频道</el-dropdown-item>
+                    <el-dropdown-item command="CreateChannelByImportExcel">批量导入轮播频道</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </h2>

@@ -99,6 +99,7 @@
                                             v-model="categoryGroup.name"
                                             placeholder="请输入类型组名称, 建议四个字以内"
                                             clearable
+                                            :maxlength="6"
                                         ></el-input>
                                     </div>
                                 </div>

@@ -46,9 +46,11 @@ export default {
         layoutItemType() {
             let layoutItemType = '';
             let params = '';
+
             if (this.navbarId && _.isNumber(this.index) && _.isNumber(this.squareIndex)) {
+                let layoutItem = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
                 layoutItemType = this.getLayoutItemType(this.navbarId, this.index, this.squareIndex);
-                params = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
+                params = _.get(layoutItem, 'params');
             }
 
             if (layoutItemType === 'PROGRAMME_SUBJECT') {
