@@ -173,7 +173,7 @@
                     :uri="video.coverImage ? video.coverImage.uri : ''"
                     :deleteImage="deleteCoverImage"
                     :uploadSuccessHandler="uploadSuccessHandler"
-                    :allowResolutions="[{width: 344, height: 194}, {width: 560, height: 315}]"
+                    :allowResolutions="[{width: 560, height: 315}, {width: 344, height: 194}]"
                 ></single-image-uploader>
             </el-form-item>
         </el-form>

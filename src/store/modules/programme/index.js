@@ -641,9 +641,14 @@ const mutations = {
     },
     // 节目图片
     setCoverImage(state) {
-        let coverImage = state.programme.posterImageList.find((img) => {
+        let coverImage1 = state.programme.posterImageList.find((img) => {
             return parseInt(img.width) === 260 && parseInt(img.height) === 380;
         });
+        let coverImage2 = state.programme.posterImageList.find((img) => {
+            return parseInt(img.width) === 240 && parseInt(img.height) === 350;
+        });
+
+        let coverImage = coverImage1 || coverImage2;
         state.programme.coverImage = coverImage;
     },
     addImageToPosterImageList(state, payload) {

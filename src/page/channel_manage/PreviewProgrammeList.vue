@@ -16,7 +16,7 @@
                                     <div class="wrapper">
                                         <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
                                         <span class="url">{{ele.playUri}}</span>
-                                        <span class="btn-text play-btn" v-if="ele.m3u8Uri" @click="displayVideoPlayer(ele.m3u8Uri, ele.name)">播放</span>
+                                        <span class="btn-text play-btn" v-if="ele.m3u8Uri" @click="displayVideoPlayer(ele)">播放</span>
                                     </div>
                                 </li>
                             </ul>
@@ -34,7 +34,7 @@
                                     <div class="wrapper">
                                         <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
                                         <span class="url">{{ele.playUri}}</span>
-                                        <span class="btn-text play-btn" v-if="ele.m3u8Uri" @click="displayVideoPlayer(ele.m3u8Uri, ele.name)">播放</span>
+                                        <span class="btn-text play-btn" v-if="ele.m3u8Uri" @click="displayVideoPlayer(ele)">播放</span>
                                     </div>
                                 </li>
                             </ul>
@@ -107,7 +107,8 @@
         },
         methods: {
             ...mapActions({
-                getChannelPageById: 'channel/getChannelPageById'
+                getChannelPageById: 'channel/getChannelPageById',
+                getLiveChannelById: 'channel/getLiveChannelById'
             }),
             timeStampFormat(seconds) {
                 let date = new Date(seconds);
@@ -170,10 +171,19 @@
                     return res;
                 }, {});
             },
-            displayVideoPlayer(url, name) {
-                this.displayVideoDialogVisible = true;
-                this.url = url;
-                this.title = name;
+            async displayVideoPlayer(ele) {
+                try {
+                    let {channelId, m3u8Uri, name} = ele;
+                    let res = await this.getLiveChannelById(channelId);
+                    if (res && res.code === 0) {
+                        let {pushServer} = res.data;
+                        this.displayVideoDialogVisible = true;
+                        this.url = `${pushServer}${m3u8Uri}`;
+                        this.title = name;
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
             },
             closeDisplayVideoDialog() {
                 this.displayVideoDialogVisible = false;
