@@ -184,7 +184,7 @@
                     pageNum: 0,
                     pageSize: 10
                 },
-                pageNum: 1,
+                pageNum: this.$wsCache.localStorage.get('videoFilter') ? this.$wsCache.localStorage.get('videoFilter').pageNum + 1 : 1,
                 total: 0,
                 videoList: [],
                 shareSiteOptions: [],
@@ -201,8 +201,9 @@
         methods: {
             init() {
                 if (this.$wsCache.localStorage.get('videoFilter')) {
-                    this.listQueryParams = this.$wsCache.localStorage.get('videoFilter');
-                    this.$refs.videoFilterParams.initFilterParams(this.listQueryParams);
+                    this.listQueryParams.pageNum = this.$wsCache.localStorage.get('videoFilter').pageNum;
+                    this.listQueryParams.pageSize = this.$wsCache.localStorage.get('videoFilter').pageSize;
+                    this.$refs.videoFilterParams.initFilterParams(this.$wsCache.localStorage.get('videoFilter'));
                 }
                 this.getVideoList();
             },
@@ -226,7 +227,6 @@
                 this.getVideoList();
             },
             handleCurrentChange(pageNum) {
-                this.pageNum = pageNum;
                 this.listQueryParams.pageNum = pageNum - 1;
                 this.getVideoList();
             },

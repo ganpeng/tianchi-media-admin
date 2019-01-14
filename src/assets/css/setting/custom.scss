@@ -517,6 +517,11 @@
         color: #fff;
         font-size: 12px;
         border: 1px solid #3E495E;
+        &[disabled] {
+            &::-webkit-input-placeholder {
+                color: #6F7480 !important;
+            }
+        }
         &::-webkit-input-placeholder {
             color: #6F7480;
         }

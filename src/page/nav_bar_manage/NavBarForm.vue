@@ -1,8 +1,6 @@
-<!--2.0添加栏目组件-->
+<!--2.0栏目表单组件-->
 <template>
     <div>
-        <div class="content-title">添加栏目</div>
-        <div class="seperator-line"></div>
         <el-form
             ref="navBarInfo"
             :model="navBarInfo"
@@ -34,7 +32,7 @@
                     </div>
                     <p>
                         <label>100-500 * 42</label>
-                        <span>落焦图</span>
+                        <span>半落焦图</span>
                     </p>
                 </div>
                 <div class="upload-box">
@@ -72,19 +70,34 @@
             </el-form-item>
             <el-form-item label="栏目板式" class="nav-bar-model" prop="layoutTemplate" required>
                 <el-radio-group v-model="navBarInfo.layoutTemplate">
-                    <el-radio label="FS_3">新闻板式类
+                    <el-radio
+                        label="FS_3"
+                        v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_3')">
+                        新闻板式类
                         <svg-icon icon-class="model_news"></svg-icon>
                     </el-radio>
-                    <el-radio label="FS_2">电影板式类
+                    <el-radio
+                        label="FS_2"
+                        v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_2')">
+                        电影板式类
                         <svg-icon icon-class="model_movie"></svg-icon>
                     </el-radio>
-                    <el-radio label="FS_1">电视剧板式类
+                    <el-radio
+                        label="FS_1"
+                        v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_1')">
+                        电视剧板式类
                         <svg-icon icon-class="model_TV_drama"></svg-icon>
                     </el-radio>
-                    <el-radio label="FS_4">专题板式类
+                    <el-radio
+                        label="FS_4"
+                        v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_4')">
+                        专题板式类
                         <svg-icon icon-class="model_subject"></svg-icon>
                     </el-radio>
-                    <el-radio label="FS_5">儿童板式（只适用于儿童栏目）
+                    <el-radio
+                        label="FS_5"
+                        v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_5')">
+                        儿童板式（只适用于儿童栏目
                         <svg-icon icon-class="model_child"></svg-icon>
                     </el-radio>
                 </el-radio-group>
@@ -101,7 +114,13 @@
     import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 
     export default {
-        name: 'CreateNavNarForm',
+        name: 'NavNarForm',
+        props: {
+            status: {
+                type: String,
+                default: ''
+            }
+        },
         components: {
             SingleImageUploader
         },
@@ -151,7 +170,7 @@
                 navBarInfo: {
                     type: '',
                     name: '',
-                    // 落焦图
+                    // 半落焦图
                     focalImage: {},
                     // 非落焦图
                     image: {},
@@ -186,6 +205,14 @@
                         this.programmeCategoryListOptions = response.data;
                     }
                 });
+                if (this.status === 'EDIT') {
+                    this.$service.getNavBarDetail(this.$route.params.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.navBarInfo = response.data;
+                            this.navBarInfo.type = this.navBarInfo.name ? 'WORDS' : 'IMAGES';
+                        }
+                    });
+                }
             },
             pickNavBarInfoType() {
                 if (this.navBarInfo.type === 'WORDS') {
@@ -220,6 +247,7 @@
                         break;
                 }
             },
+            // 添加或者更新栏目信息
             saveNavBarInfo() {
                 // 清空对应的数据
                 if (this.navBarInfo.type.toString() === 'WORDS') {
@@ -228,12 +256,21 @@
                 } else {
                     this.navBarInfo.name = '';
                 }
-                this.$service.createNavBar(this.navBarInfo).then(response => {
-                    if (response && response.code === 0) {
-                        this.$message.success('成功创建栏目');
-                        this.toNavBarSetting();
-                    }
-                });
+                if (this.status === 'CREATE') {
+                    this.$service.createNavBar(this.navBarInfo).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('成功创建栏目');
+                            this.toNavBarSetting();
+                        }
+                    });
+                } else {
+                    this.$service.updateNavBar(this.navBarInfo).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('成功更新栏目');
+                            this.toNavBarSetting();
+                        }
+                    });
+                }
             },
             createNavBar() {
                 let that = this;
@@ -358,6 +395,7 @@
                         display: block;
                         text-align: center;
                         font-size: 12px;
+                        color: #A8ABB3;
                         line-height: 17px;
                     }
                 }

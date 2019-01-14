@@ -23,6 +23,12 @@
                     </i>
                 </div>
                 <p>
+                    <label
+                        v-if="item.type === 'CUSTOM'"
+                        class="edit"
+                        @click="toEditNavBar(item.id)">
+                        编辑
+                    </label>
                     <input v-if="item.type === 'CUSTOM'"
                            class="my-switch switch-anim"
                            type="checkbox"
@@ -105,6 +111,9 @@
                     }
                 }
                 this.previewNavBarList = array;
+            },
+            toEditNavBar(id) {
+                this.$router.push({name: 'EditNavBar', params: {id: id}});
             }
         }
     };
@@ -150,6 +159,7 @@
             cursor: grab;
             border: 1px solid #2E384D;
             &.invisible-item {
+                background-color: rgba(42, 48, 64, 0.3);
                 label {
                     color: #3E495E;
                     img {
@@ -160,7 +170,7 @@
             }
             &:hover {
                 border: 1px solid #1989FA;
-                i {
+                i, .edit {
                     visibility: visible;
                 }
             }
@@ -211,7 +221,7 @@
                     top: 10px;
                     right: 0px;
                     font-size: 16px;
-                    color: #C0C4CC;
+                    color: #6F7480;
                     cursor: pointer;
                     visibility: hidden;
                     &:hover {
@@ -221,6 +231,18 @@
             }
             P {
                 height: 45px;
+                .edit {
+                    float: left;
+                    margin-top: 12px;
+                    font-size: 14px;
+                    color: #1989FA;
+                    cursor: pointer;
+                    visibility: hidden;
+                    &:hover {
+                        text-decoration: underline;
+                        text-underline: #1989FA;
+                    }
+                }
                 .my-switch {
                     float: right;
                     margin-top: 15px;

@@ -190,14 +190,14 @@
         },
         methods: {
             initFilterParams(params) {
-                this.createRangeTime = params.startedAt ? [params.startedAt, params.endedAt] : [];
-                this.name = params.name ? params.name : '';
-                this.status = params.status ? params.status : '';
-                this.downloadStatus = params.downloadStatus ? params.downloadStatus : '';
-                this.uploadStatus = params.uploadStatus ? params.uploadStatus : '';
-                this.suffix = params.suffix ? params.suffix : '';
-                this.originSiteId = params.originSiteId ? params.originSiteId : '';
-                this.shareSiteId = params.shareSiteId ? params.shareSiteId : '';
+                this.uploadRangeTime = params.startedAt ? [params.startedAt, params.endedAt] : [];
+                this.listQueryParams.keyword = params.keyword ? params.keyword : '';
+                this.listQueryParams.status = params.status ? params.status : '';
+                this.listQueryParams.downloadStatus = params.downloadStatus ? params.downloadStatus : '';
+                this.listQueryParams.uploadStatus = params.uploadStatus ? params.uploadStatus : '';
+                this.listQueryParams.suffix = params.suffix ? params.suffix : '';
+                this.listQueryParams.originSiteId = params.originSiteId ? params.originSiteId : '';
+                this.listQueryParams.shareSiteId = params.shareSiteId ? params.shareSiteId : '';
             },
             init() {
                 let that = this;
@@ -218,8 +218,8 @@
             },
             getVideoList() {
                 if (this.uploadRangeTime && this.uploadRangeTime.length === 2) {
-                    this.listQueryParams.startedAt = this.createRangeTime[0];
-                    this.listQueryParams.endedAt = this.createRangeTime[1];
+                    this.listQueryParams.startedAt = this.uploadRangeTime[0];
+                    this.listQueryParams.endedAt = this.uploadRangeTime[1];
                 } else {
                     this.listQueryParams.startedAt = '';
                     this.listQueryParams.endedAt = '';

@@ -540,7 +540,6 @@
                         host: video.host,
                         port: video.port
                     }).then((res) => {
-                        console.log(res);
                         if (res && res.code === 0) {
                             this.$message.success('视频删除成功');
                         } else if (res && res.code === 3306) {
