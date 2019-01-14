@@ -175,8 +175,8 @@ export default {
                     { validator: requiredValidator('请选择区域') }
                 ],
                 mainRoleList: [
-                    { required: true, message: '请输入人物职业' },
-                    { validator: requiredValidator('请输入人物职业') }
+                    { required: true, message: '请输入人物职业' }
+                    // { validator: requiredValidator('请输入人物职业') }
                 ],
                 visible: [
                     { required: true, message: '请选择人物状态' }
@@ -206,6 +206,9 @@ export default {
         },
         selectMainRoleHandler(mainRole) {
             this.addMainRoleToList({mainRole});
+            if (this.person.mainRoleList.length > 0) {
+                this.$refs.createPerson.clearValidate(['mainRoleList']);
+            }
         },
         deleteMainRoleHandler(value) {
             this.deleteMainRoleByValue({value});

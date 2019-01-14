@@ -178,7 +178,7 @@
                     if (res && res.code === 0) {
                         let {pushServer} = res.data;
                         this.displayVideoDialogVisible = true;
-                        this.url = `${pushServer}${m3u8Uri}`;
+                        this.url = `http://${pushServer}${m3u8Uri}`;
                         this.title = name;
                     }
                 } catch (err) {

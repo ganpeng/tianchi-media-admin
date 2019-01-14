@@ -140,7 +140,7 @@
                 </el-table-column>
                 <el-table-column width="180px" align="center" label="操作">
                     <template slot-scope="scope">
-                        <div class="operator-btn-wrapper">
+                        <div id="channel-operator" class="operator-btn-wrapper">
                             <el-dropdown
                                 trigger="click"
                                 class="my-dropdown">
@@ -428,4 +428,14 @@
         opacity: 0;
         cursor: pointer;
     }
+</style>
+<style lang="scss">
+#channel-operator {
+    .my-dropdown {
+        border: none;
+        width: 70px;
+        height: 18px;
+        line-height: 18px;
+    }
+}
 </style>

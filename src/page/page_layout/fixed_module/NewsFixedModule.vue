@@ -287,7 +287,18 @@ export default {
             .bottom-field-item {
                 position: relative;
                 @include paddingBg(44.03292%);
-                @include toggleBtn();
+                .el-button {
+                    display: none;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+                &:hover {
+                    .el-button {
+                        display: block;
+                    }
+                }
             }
         }
         .wrapper + .wrapper {

@@ -120,6 +120,7 @@
 </template>
 <script>
 import draggable from 'vuedraggable';
+import _ from 'lodash';
 import {mapGetters, mapMutations} from 'vuex';
 import {checkIP, checkPort, checkChannelNo, checkIp} from '@/util/formValidate';
 import ChannelTypeSearch from './ChannelTypeSearch';
@@ -204,6 +205,7 @@ export default {
         },
         selectLiveCategoryHandler(liveCategory) {
             this.addLiveCategoryToList({liveCategory});
+            this.clearvaidatorByProp('typeList');
         },
         deleteLiveCategoryHandler(id) {
             this.deleteLiveCategoryById({id});
@@ -213,6 +215,12 @@ export default {
         },
         uploadSuccessHandler(image) {
             this.updateLiveChannel({key: 'logoUri', value: image.uri});
+        },
+        clearvaidatorByProp(prop) {
+            let _prop = _.get(this.liveChannel, prop);
+            if (_prop.length > 0) {
+                this.$refs.liveChannelForm.clearValidate(prop);
+            }
         }
     }
 };

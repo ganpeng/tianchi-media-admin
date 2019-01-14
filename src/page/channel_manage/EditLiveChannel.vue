@@ -11,7 +11,7 @@
     </div>
 </template>
 <script>
-import {mapActions} from 'vuex';
+import {mapActions, mapMutations} from 'vuex';
 import LiveChannelForm from './LiveChannelForm';
 export default {
     name: 'EditLiveChannel',
@@ -26,11 +26,19 @@ export default {
         if (id) {
             this.getLiveChannelById(id);
         }
+        //  清除已有的频道数据
+        this.resetLiveChannel();
+        //  获取下拉列表中的频道类型
+        this.getChannelType();
     },
     methods: {
+        ...mapMutations({
+            resetLiveChannel: 'channel/resetLiveChannel'
+        }),
         ...mapActions({
             getLiveChannelById: 'channel/getLiveChannelById',
-            updateChannelById: 'channel/updateChannelById'
+            updateChannelById: 'channel/updateChannelById',
+            getChannelType: 'channel/getChannelType'
         }),
         async editLiveChannelHandler() {
             try {

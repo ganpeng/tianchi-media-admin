@@ -854,15 +854,19 @@
             //  类型和分类搜索
             selectCategoryHandler(category) {
                 this.addCategoryToList({category});
+                this.clearvaidatorByProp('categoryList');
             },
             deleteCategoryHandler(id) {
                 this.deleteCategoryOrTypeById({id, key: 'categoryList'});
+                this.clearvaidatorByProp('categoryList');
             },
             selectTypeHandler(type) {
                 this.addTypeToList(type);
+                this.clearvaidatorByProp('typeList');
             },
             deleteTypeHandler(id) {
                 this.deleteCategoryOrTypeById({id, key: 'typeList'});
+                this.clearvaidatorByProp('typeList');
             },
             //  类型和分类搜索结束
             // 地区开始
@@ -905,6 +909,13 @@
                 this.deleteSpecByName({spec});
             },
             //  规格搜索结束
+            //  清除提示
+            clearvaidatorByProp(prop) {
+                let _prop = _.get(this.programme, prop);
+                if (_prop.length > 0) {
+                    this.$refs.createProgramForm.clearValidate(prop);
+                }
+            },
             _createProgramme() {
                 this.$refs.createProgramForm.validate(value => {
                     if (value) {

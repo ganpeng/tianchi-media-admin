@@ -53,37 +53,39 @@
                                 ></el-input>
                             </draggable>
                         </div>
-                        <h3 class="content-sub-title">类型组</h3>
-                        <div class="seperator-line"></div>
-                        <div class="category-group-list-wrapper">
-                            <draggable element="ul" class="category-group-list" v-model="getCategoryGroupList">
-                                <li v-for="(item, index) in getCategoryGroupList" :key="item.name" class="category-group-item">
-                                    <div class="header">
-                                        {{item.name}}
-                                    </div>
-                                    <div class="content">
-                                        <div class="type-list-tags">
-                                            <span v-for="(id) in item.programmeTypeList" :key="id">
-                                                {{getTypeNameById(id)}}
-                                            </span>
+                        <div class="category-group-container">
+                            <h3 class="content-sub-title">类型组</h3>
+                            <div class="seperator-line"></div>
+                            <div class="category-group-list-wrapper">
+                                <draggable element="ul" class="category-group-list" v-model="getCategoryGroupList">
+                                    <li v-for="(item, index) in getCategoryGroupList" :key="item.name" class="category-group-item">
+                                        <div class="header">
+                                            {{item.name}}
                                         </div>
-                                        <div class="year-area-tags">
-                                            <span class="year-tag" v-for="(name, index) in item.dateRangeList" :key="name + index">
-                                                {{name}}
-                                            </span>
-                                            <span class="area-tag" v-for="(obj, index) in areaLabel(item.produceAreaList)" :key="index">
-                                                <svg-icon icon-class="location"></svg-icon>
-                                                {{obj.name}}
-                                            </span>
+                                        <div class="content">
+                                            <div class="type-list-tags">
+                                                <span v-for="(id) in item.programmeTypeList" :key="id">
+                                                    {{getTypeNameById(id)}}
+                                                </span>
+                                            </div>
+                                            <div class="year-area-tags">
+                                                <span class="year-tag" v-for="(name, index) in item.dateRangeList" :key="name + index">
+                                                    {{name}}
+                                                </span>
+                                                <span class="area-tag" v-for="(obj, index) in areaLabel(item.produceAreaList)" :key="index">
+                                                    <svg-icon icon-class="location"></svg-icon>
+                                                    {{obj.name}}
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <span class="btn-text edit-btn" @click="editCategoryGroupByIndex(index)">编辑</span>
-                                    <i @click="deleteCategoryGroupByIndexHandler(index)" class="el-tag__close el-icon-close delete-btn"></i>
-                                </li>
-                                <li key="hahahaha" slot="footer" class="add-category-group-item" @click="addCategoryGroup">
-                                    <svg-icon icon-class="plus"></svg-icon>
-                                </li>
-                            </draggable>
+                                        <span class="btn-text edit-btn" @click="editCategoryGroupByIndex(index)">编辑</span>
+                                        <i @click="deleteCategoryGroupByIndexHandler(index)" class="el-tag__close el-icon-close delete-btn"></i>
+                                    </li>
+                                    <li key="hahahaha" slot="footer" class="add-category-group-item" @click="addCategoryGroup">
+                                        <svg-icon icon-class="plus"></svg-icon>
+                                    </li>
+                                </draggable>
+                            </div>
                         </div>
                         <div class="fixed-btn-container">
                             <el-button class="btn-style-two" type="primary" @click="saveProgrammeCategoryHandler">保存</el-button>
@@ -636,6 +638,9 @@ export default {
 <style lang="scss" scoped>
 .content-sub-title {
     margin-bottom: 10px;
+}
+.category-group-container {
+    margin-top: 100px;
 }
 .my-tags {
     display: flex;;

@@ -259,7 +259,7 @@ export default {
         this.index = parseInt(index);
 
         if (operator === 'add') {
-            this.title = '新增混排模块';
+            this.title = '添加混排模块';
         } else {
             this.title = '编辑混排模块';
         }

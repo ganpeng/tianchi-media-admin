@@ -299,9 +299,9 @@ export default {
             this.index = parseInt(index);
 
             if (operator === 'add') {
-                this.title = '新增节目专题';
+                this.title = '添加节目专题模块';
             } else {
-                this.title = '编辑节目专题';
+                this.title = '编辑节目专题模块';
             }
 
             if (this.subjectId) {

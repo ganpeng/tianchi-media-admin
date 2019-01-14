@@ -1,6 +1,6 @@
 <template>
     <div class="edit-special-module-container">
-        <h2 class="content-title">新增特殊模块</h2>
+        <h2 class="content-title">添加特殊模块</h2>
         <div class="seperator-line"></div>
         <div class="form-container">
             <el-form :model="layoutData" status-icon ref="specialModuleForm"

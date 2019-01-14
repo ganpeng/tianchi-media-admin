@@ -218,12 +218,14 @@ export default {
         },
         inputHandler(value, key) {
             this.updateSearchFields({key, value});
+            this.getClientErrorLogList();
         },
         searchHandler() {
             this.getClientErrorLogList();
         },
         clearSearchFields() {
             this.resetSearchFields();
+            this.getClientErrorLogList();
         }
     }
 };
