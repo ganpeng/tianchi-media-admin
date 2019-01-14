@@ -219,7 +219,6 @@
             height: $headerHeight;
             background: $headerBg;
             color: $navText;
-            z-index: 5;
             .nav-list {
                 line-height: $headerHeight;
                 padding-left: 60px;
@@ -329,7 +328,6 @@
             left: 0px;
             bottom: 0px;
             width: 200px;
-            z-index: 5;
             background-image: linear-gradient(90deg, #152036 0%, #252F46 100%);
             .logo {
                 width: 200px;
@@ -353,7 +351,6 @@
             bottom: 0px;
             overflow: scroll;
             background: $contentBg;
-            z-index: 2;
             .content-wrapper {
                 padding: 20px 20px 100px 20px;
             }

@@ -1,8 +1,8 @@
 <template>
     <!-- 单图片的海报组件 -->
     <div class="single-poster-container" :style="containerStyleStr">
-        <img :src="uri" alt="" :style="imgStyleStr">
-        <span class="desc">{{desc}}</span>
+        <img v-if="uri" :src="uri" alt="" :style="imgStyleStr">
+        <span v-if="uri" class="desc">{{desc}}</span>
     </div>
 </template>
 <script>
@@ -48,7 +48,7 @@ export default {
     img {
         border: 1px solid #3E495E;
         border-radius: 8px;
-        box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
+        // box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
     }
     .desc {
         display: block;
