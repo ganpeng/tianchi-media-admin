@@ -31,6 +31,7 @@
                 <div class="seperator-line"></div>
                 <div class="tags-section">
                     <span v-for="(name, index) in getAreaName(programme.produceAreaList)" :key="index" class="address-tag">
+                        <svg-icon icon-class="location"></svg-icon>
                         {{name}}
                     </span>
                     <span v-for="(item) in programme.categoryList" :key="item.id" class="category-tag">
@@ -46,7 +47,7 @@
                         {{item}}
                     </span>
                 </div>
-                <p class="inner-name">{{programme.innerName}}</p>
+                <p class="inner-name">{{programme.desc}}</p>
                 <p class="description programme">
                     {{programme.description}}
                 </p>
@@ -120,7 +121,7 @@
             </div>
         </div>
         <div class="seperator-line"></div>
-        <div class="other-poster">
+        <div v-if="imageList.length > 0" class="other-poster">
             <h4 class="content-sub-title">其他海报</h4>
                 <thumbnail
                     :removeSign="false"

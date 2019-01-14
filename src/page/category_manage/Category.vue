@@ -735,6 +735,12 @@ export default {
             width: 20px;
             height: 20px;
         }
+        &:hover {
+            border-color: $mainColor;
+            .svg-icon {
+                fill: $mainColor;
+            }
+        }
     }
 }
 .category-group-list {

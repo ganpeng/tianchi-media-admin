@@ -25,6 +25,17 @@
                 <svg-icon :icon-class="item.iconClass"></svg-icon>
             </li>
         </ul>
+        <div class="footer">
+            <div class="logo">
+                <svg-icon icon-class="aside_logo"></svg-icon>
+                <span>后台操作系统</span>
+            </div>
+            <div class="info">
+                <p class="address">北京朝阳区东三环中路9号 3302/3304</p>
+                <p class="name">&copy;2018 北京天驰传媒股份有限公司 保留所有权</p>
+                <p class="copy-address">All Rights Reserved.</p>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -161,6 +172,36 @@ export default {
                 fill: #4A90E2 ;
             }
         }
+    }
+}
+.footer {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    bottom: 0;
+    left: 200px;
+    right: 0;
+    height: 92px;
+    margin: 0 20px;
+    border-top: 1px solid #252D3F;
+    .logo {
+        height: 38px;
+        opacity: 0.3;
+        .svg-icon {
+            width: 160px;
+            height: 38px;
+        }
+        span {
+            font-size: 12px;
+            color: #6F7480;
+        }
+    }
+    .info {
+        font-size: 12px;
+        line-height: 18px;
+        color: #6F7480;
+        text-align: right;
     }
 }
 </style>

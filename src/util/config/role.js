@@ -536,6 +536,11 @@ const ASIDE_LIST = [
             icon: 'aside_programme'
         },
         {
+            text: '页面布局',
+            uri: `/page-layout`,
+            icon: 'aside_layout'
+        },
+        {
             text: '视频管理',
             uri: '/manage-video/list',
             icon: 'aside_video'
@@ -554,11 +559,6 @@ const ASIDE_LIST = [
             text: '栏目管理',
             uri: '/nav-bar-manage/setting',
             icon: 'aside_column'
-        },
-        {
-            text: '页面布局',
-            uri: `/page-layout`,
-            icon: 'aside_layout'
         },
         {
             text: '直播频道',
