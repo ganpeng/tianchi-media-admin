@@ -56,14 +56,14 @@ export default {
                     iconClass: 'shortcut_programme'
                 },
                 {
-                    title: `<span style=${style}>新建</span>人物专题`,
-                    name: 'CreateFigureSubject',
-                    iconClass: 'shortcut_subject'
-                },
-                {
                     title: `<span style=${style}>新建</span>节目专题`,
                     name: 'CreateProgrammeSubject',
                     iconClass: 'shortcut_programme_subject'
+                },
+                {
+                    title: `<span style=${style}>新建</span>人物专题`,
+                    name: 'CreateFigureSubject',
+                    iconClass: 'shortcut_person_subject'
                 },
                 {
                     title: `<span style=${style}>新建</span>直播频道`,
@@ -105,7 +105,15 @@ export default {
     },
     methods: {
         gotoBlankPage(name) {
-            let routeData = this.$router.resolve({ name });
+            let routeData = null;
+            if (name === 'CreateChannelByImportExcel') {
+                routeData = this.$router.resolve({
+                   name: 'CreateChannelByImportExcel',
+                   params: {category: 'CAROUSEL'}
+               });
+            } else {
+                routeData = this.$router.resolve({ name });
+            }
             window.open(routeData.href, '_blank');
         }
     }

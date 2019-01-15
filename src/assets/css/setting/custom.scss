@@ -1604,7 +1604,8 @@
 
 .el-radio__input.is-disabled .el-radio__inner, .el-radio__input.is-disabled.is-checked .el-radio__inner {
     background-color: transparent;
-    border: 4px solid #191D26;
+    // border: 4px solid #191D26;
+    border: 1px solid #3E495E;
 }
 
 .el-radio__input.is-disabled.is-checked .el-radio__inner::after {
@@ -1646,4 +1647,27 @@
             }
         }
     }
+}
+
+// 描述的样式
+.desc-wrapper {
+    position: relative;
+    width: 300px;
+    .desc-prompt {
+        position: absolute;
+        bottom: 0px;
+        right: 10px;
+        font-size: 10px;
+        color: #1989FA;
+    }
+}
+
+//  disabled状态的dropdown
+.my-disabled-dropdown {
+    width: 90px;
+    height: 28px;
+    line-height: 28px;
+    border: 1px solid #3E495E;
+    border-radius: 4px;
+    opacity: 0.3;
 }

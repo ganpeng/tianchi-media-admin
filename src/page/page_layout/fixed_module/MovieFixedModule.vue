@@ -9,7 +9,7 @@
             <div class="top-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(movieActiveIndex)" class="top-left-field">
-                        <!-- <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, 0, movieActiveIndex)"></corner-mark> -->
+                        <corner-mark :squareIndex="movieActiveIndex" :cornerMark="getLayoutItemCornerMark(navbarId, 0, movieActiveIndex)"></corner-mark>
                     </div>
                 </div>
                 <div class="wrapper">
@@ -215,11 +215,11 @@ export default {
             this.setMovieActiveIndex(this.squareIndex);
             this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
         },
-        selectProgrammeVideo(squareIndex) {
+        selectProgrammeSubject(squareIndex) {
             this.squareIndex = squareIndex;
             this.setAllowResolutions(this.squareIndex);
             this.setMovieActiveIndex(this.squareIndex);
-            this.$refs.selectProgrammeVideoDialog.showDialog('PROGRAMME_VIDEO');
+            this.$refs.selectProgrammeSubjectDialog.showDialog('PROGRAMME_SUBJECT');
         },
         changeMovieActiveIndex(index) {
             this.movieActiveIndex = index;

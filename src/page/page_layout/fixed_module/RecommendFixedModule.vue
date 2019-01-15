@@ -19,7 +19,7 @@
                             <img :src="channel.logoUri" alt="">
                             <div class="text-info">
                                 <p class="title">当前直播频道</p>
-                                <p class="name">{{channel.name}}</p>
+                                <p class="name">{{channel.no}}&nbsp;&nbsp;{{channel.name}}</p>
                             </div>
                         </div>
                         <div class="live">
@@ -127,7 +127,7 @@
         </div>
         <programme-without4-step-dialog :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeDialog"></programme-without4-step-dialog>
         <edit-programme-subject :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeSubjectDialog"></edit-programme-subject>
-        <edit-channel ref="selectChannelDialog"></edit-channel>
+        <edit-channel :selectChannelSuccessHandler="selectChannelSuccessHandler" ref="selectChannelDialog"></edit-channel>
     </div>
 </template>
 <script>
@@ -156,7 +156,8 @@ export default {
             navbarId: '',
             squareIndex: 0,
             allowResolutions: [],
-            channel: {}
+            channel: {},
+            reqBody: []
         };
     },
     computed: {
@@ -219,15 +220,28 @@ export default {
             this.squareIndex = squareIndex;
             this.$refs.selectFilterDialog.showDialog('FILTER');
         },
-        saveHandler() {
+        async saveHandler() {
             let {navbarId} = this.$route.params;
             if (!this.selectAll(navbarId, 0)) {
                 this.saveLayoutToStore(navbarId);
+
+                let res = await this.$service.postChannelLayout(this.reqBody);
+                if (res && res.code === 0) {
+                    console.log('直播频道保存成功');
+                } else {
+                    this.$message.error('直播频道保存失败');
+                }
+
                 this.$message.success('保存成功');
                 this.$router.push({ name: 'PageLayout', params: {navbarId} });
             } else {
                 this.$message.error('色块必须全部选择');
             }
+        },
+        selectChannelSuccessHandler(reqBody) {
+            let channel = _.get(reqBody, '0.channel');
+            this.reqBody = _.cloneDeep(reqBody);
+            this.channel = _.cloneDeep(channel);
         },
         setAllowResolutions(squareIndex) {
             switch (squareIndex) {
@@ -330,6 +344,7 @@ export default {
                             display: flex;
                             flex-direction: column;
                             justify-content: center;
+                            align-items: flex-start;
                             .title {
                                 font-size: 16px;
                                 line-height: 22px;

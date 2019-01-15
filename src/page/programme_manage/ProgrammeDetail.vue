@@ -33,15 +33,17 @@
                                 ></el-input>
                             </el-form-item>
                             <el-form-item label="节目简介" prop="description">
-                                <el-input
-                                    type="textarea"
-                                    :disabled="readonly"
-                                    @input="inputHandler($event, 'description')"
-                                    :maxlength="200"
-                                    :autosize="{ minRows: 4, maxRows: 40}"
-                                    placeholder="请输入内容"
-                                    :value="programme.description">
-                                </el-input>
+                                <div class="desc-wrapper">
+                                    <el-input
+                                        type="textarea"
+                                        :disabled="readonly"
+                                        @input="inputHandler($event, 'description')"
+                                        :maxlength="200"
+                                        placeholder="请输入内容"
+                                        :value="programme.description">
+                                    </el-input>
+                                    <span class="desc-prompt">已输入{{programme.description.length}}/200字</span>
+                                </div>
                             </el-form-item>
                             <el-form-item label="上映时间" prop="releaseAt">
                                 <el-date-picker
@@ -452,7 +454,7 @@
         </el-row>
         <div class="seperator-line"></div>
         <div class="programme-video-field">
-            <h4 class="content-sub-title">
+            <h4 class="content-sub-title" style="margin-left:20px;">
                 节目视频
                 <span class="count"></span>
                 <span class="count">{{programme.featureVideoCount}}个正片</span>

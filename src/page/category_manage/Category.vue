@@ -82,7 +82,8 @@
                                         <i @click="deleteCategoryGroupByIndexHandler(index)" class="el-tag__close el-icon-close delete-btn"></i>
                                     </li>
                                     <li key="hahahaha" slot="footer" class="add-category-group-item" @click="addCategoryGroup">
-                                        <svg-icon icon-class="plus"></svg-icon>
+                                        <i class="el-icon-plus"></i>
+                                        <!-- <svg-icon icon-class="plus"></svg-icon> -->
                                     </li>
                                 </draggable>
                             </div>

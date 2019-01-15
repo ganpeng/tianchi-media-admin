@@ -2,7 +2,7 @@
 <template>
     <div class="edit-programme-subject-container">
         <el-dialog
-            title="设置为节目专题"
+            title="设置频道"
             class="my-dialog"
             width="80%"
             :visible.sync="dialogVisible"
@@ -56,6 +56,10 @@ export default {
         allowResolutions: {
             type: Array,
             default: () => [{width: 260, height: 260}]
+        },
+        selectChannelSuccessHandler: {
+            type: Function,
+            default: () => {}
         }
     },
     components: {
@@ -115,10 +119,9 @@ export default {
                     channel: this.channel,
                     channelCategory: this.channel.category
                 }];
-                let res = await this.$service.postChannelLayout(reqBody);
-                if (res && res.code === 0) {
-                    this.closeDialog();
-                }
+
+                this.selectChannelSuccessHandler(reqBody);
+                this.closeDialog();
             } catch (err) {
                 console.log(err);
             }

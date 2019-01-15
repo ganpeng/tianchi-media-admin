@@ -133,7 +133,7 @@
                     </el-table-column>
                     <el-table-column label="照片" width="120px" align="center" >
                         <template slot-scope="scope">
-                            <img v-if="scope.row.avatarImage" @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="100px" height="100px" class="pointer" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">
+                            <img v-if="scope.row.avatarImage" @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="100px" height="100px" class="pointer person-image" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">
                             <span v-else>------</span>
                         </template>
                     </el-table-column>
@@ -174,7 +174,7 @@
                 </div>
             </div>
         </el-dialog>
-        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
+        <preview-single-image :singleImage="previewImage"></preview-single-image>
     </div>
 </template>
 <script>
@@ -225,11 +225,6 @@ export default {
         let {navbarId, index, operator} = this.$route.params;
         this.navbarId = navbarId;
         this.index = index;
-
-        let layoutData = _.get(this.layoutData, 'layoutItemMultiList');
-        if (layoutData) {
-            this.layoutItemMultiList = _.cloneDeep(layoutData);
-        }
 
         if (operator === 'add') {
             this.title = '新增人物模块';
@@ -376,8 +371,11 @@ export default {
         },
         //  弹窗控制方法
         showSelectPersonDialog() {
+            let layoutData = _.get(this.layoutData, 'layoutItemMultiList');
+            if (layoutData) {
+                this.layoutItemMultiList = _.cloneDeep(layoutData);
+            }
             this.selectPersonDialogVisible = true;
-
             window.addEventListener('keyup', this.keyupHandler);
         },
         closeDialog() {
@@ -496,5 +494,9 @@ export default {
             }
         }
     }
+}
+.person-image {
+    width: 80px;
+    height: 80px;
 }
 </style>

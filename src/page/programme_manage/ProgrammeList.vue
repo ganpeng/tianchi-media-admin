@@ -112,16 +112,10 @@
                 <h2 class="content-title">节目列表</h2>
                 <div class="table-operator-field clearfix">
                     <div class="float-left">
-                        <el-dropdown
-                            trigger="click"
-                            v-show="isDisabled"
-                            class="my-dropdown disabled">
-                            <span class="el-dropdown-link">
-                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                            </el-dropdown-menu>
-                        </el-dropdown>
+                        <div v-show="isDisabled" class="my-disabled-dropdown">
+                            批量操作
+                            <i class="el-icon-arrow-down"></i>
+                        </div>
                         <el-dropdown
                             trigger="click"
                             v-show="!isDisabled"

@@ -44,7 +44,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="isEdit" @click="addFilterLayout" key="999" class="wrapper">
+            <div v-if="isEdit" @click="addFilterLayout" key="999" class="wrapper add-btn">
                 <div class="field">
                     <i class="el-icon-plus"></i>
                 </div>
@@ -195,6 +195,16 @@ export default {
         .wrapper {
             &:nth-of-type(6n + 1) {
                 margin-left: 0;
+            }
+        }
+        .add-btn {
+            border: 1px solid #3E495E;
+            border-radius: 8px;
+            &:hover {
+                border-color: $mainColor;
+                i {
+                    color: $mainColor;
+                }
             }
         }
     }

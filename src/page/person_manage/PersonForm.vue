@@ -31,16 +31,16 @@
                     ></el-input>
                 </el-form-item>
                 <el-form-item label="人物简介" prop="description">
-                    <div class="my-text-area">
+                    <div class="desc-wrapper">
                         <el-input
                             type="textarea"
                             :disabled="readonly"
                             :maxlength="300"
-                            :minlength="110"
                             placeholder="请输入人物简介"
                             :value="person.description"
                             @input="inputHandler($event, 'description')"
                         ></el-input>
+                        <span class="desc-prompt">已输入{{person.description.length}}/300字</span>
                     </div>
                 </el-form-item>
                 <el-form-item label="出生日期" prop="birthday">
