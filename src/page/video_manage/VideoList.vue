@@ -52,7 +52,7 @@
                             class="btn-style-two contain-svg-icon"
                             @click="goToVideoUploadPage">
                             <svg-icon icon-class="import_pp"></svg-icon>
-                            上传
+                            注入视频
                         </el-button>
                         <el-button
                             class="btn-style-two contain-svg-icon"
@@ -162,6 +162,10 @@
                 v-on:closeSelectVideoDialog="selectMasterVideoDialogVisible = false">
             </select-multiple-master-video>
         </el-dialog>
+        <batch-message-list-dialog
+            ref="batchMessageListDialog"
+            :batchMessageList="batchMessageList">
+        </batch-message-list-dialog>
     </div>
 </template>
 
@@ -170,16 +174,19 @@
     import XLSX from 'xlsx';
     import SelectMultipleMasterVideo from './SelectMultipleMasterVideo';
     import VideoTable from './VideoTable';
+    import BatchMessageListDialog from './BatchMessageListDialog';
 
     export default {
         name: 'VideoList',
         components: {
             VideoFilterParams,
             VideoTable,
-            SelectMultipleMasterVideo
+            SelectMultipleMasterVideo,
+            BatchMessageListDialog
         },
         data() {
             return {
+                batchMessageList: [],
                 listQueryParams: {
                     pageNum: 0,
                     pageSize: 10
@@ -192,7 +199,8 @@
                 isBatchDisabled: true,
                 batchShareDialogVisible: false,
                 // 多个视频进行多个站点共享设置的共享站点Id列表
-                batchShareSiteIdList: []
+                batchShareSiteIdList: [],
+                batchRequestTimer: ''
             };
         },
         mounted() {
@@ -204,6 +212,9 @@
                     this.listQueryParams.pageNum = this.$wsCache.localStorage.get('videoFilter').pageNum;
                     this.listQueryParams.pageSize = this.$wsCache.localStorage.get('videoFilter').pageSize;
                     this.$refs.videoFilterParams.initFilterParams(this.$wsCache.localStorage.get('videoFilter'));
+                    for (let key in this.$wsCache.localStorage.get('videoFilter')) {
+                        this.listQueryParams[key] = this.$wsCache.localStorage.get('videoFilter')[key];
+                    }
                 }
                 this.getVideoList();
             },
@@ -345,21 +356,47 @@
                     return this.needRetryInject(video);
                 }).map((item) => item.id);
                 if (idList.length > 0) {
-                    this.retryVideoByIdList(idList)
-                        .then((res) => {
-                            if (res && res.code === 0) {
-                                this.$message.success('批量重新注入成功');
-                            } else {
-                                this.$message.error('批量重新注入失败');
-                            }
-                            this.getVideoList()
-                                .then(() => {
-                                    this.$refs.videoTable.checkedVideoList();
-                                });
-                        });
+                    this.$refs.batchMessageListDialog.setBatchMessageStatus(true);
+                    // 开始重新注入视频
+                    // 初始化最初批量请求信息
+                    this.batchMessageList = [];
+                    for (let i = 0; i < videoList.length; i++) {
+                        let message = {};
+                        message.id = videoList[i].id;
+                        message.name = videoList[i].name;
+                        message.message = {};
+                        message.message.relateList = [];
+                        this.batchMessageList.push(message);
+                    }
+                    let that = this;
+                    for (let i = 0; i < videoList.length; i++) {
+                        let newFunction = function () {
+                            return (function (i) {
+                                that.retryInjectSingleVideo(videoList, i);
+                            })(i);
+                        };
+                        setTimeout(newFunction, i * 1000);
+                    }
                 } else {
                     this.$message.warning('不存在可以重新注入的视频');
                 }
+            },
+            // 重新注入视频
+            retryInjectSingleVideo(videoList, index) {
+                this.$service.retryInjectVideo({
+                    id: videoList[index].id,
+                    host: videoList[index].host,
+                    port: videoList[index].port
+                }).then((res) => {
+                    this.batchMessageList[index].isFinished = true;
+                    this.batchMessageList.splice(index, 1, this.batchMessageList[index]);
+                    if (res && res.code === 0) {
+                        this.batchMessageList[index].isSuccess = true;
+                    } else {
+                        this.batchMessageList[index].isSuccess = false;
+                        this.batchMessageList[index].message.otherReason = '请求出现错误';
+                    }
+                });
             },
             // 是否可以重新注入
             needRetryInject(video) {
@@ -435,15 +472,54 @@
                         type: 'error'
                     }).then(() => {
                         if (idList.length > 0) {
-                            this.$service.deleteVideoByIdList(idList).then((res) => {
-                                if (res && res.code === 0) {
-                                    this.$message.success('删除成功');
-                                    this.getVideoList();
-                                }
-                            });
+                            this.$refs.batchMessageListDialog.setBatchMessageStatus(true);
+                            // 开始删除视频
+                            // 初始化最初批量请求信息
+                            this.batchMessageList = [];
+                            for (let i = 0; i < videoList.length; i++) {
+                                let message = {};
+                                message.id = videoList[i].id;
+                                message.name = videoList[i].name;
+                                message.message = {};
+                                message.message.relateList = [];
+                                this.batchMessageList.push(message);
+                            }
+                            let that = this;
+                            for (let i = 0; i < videoList.length; i++) {
+                                let newFunction = function () {
+                                    return (function (i) {
+                                        that.deleteSingleVideo(videoList, i);
+                                    })(i);
+                                };
+                                setTimeout(newFunction, i * 1000);
+                            }
                         }
                     });
                 }
+            },
+            deleteSingleVideo(videoList, index) {
+                this.$service.deleteVideo({
+                    id: videoList[index].id,
+                    host: videoList[index].host,
+                    port: videoList[index].port
+                }).then((res) => {
+                    this.batchMessageList[index].isFinished = true;
+                    this.batchMessageList.splice(index, 1, this.batchMessageList[index]);
+                    if (res && res.code === 0) {
+                        this.batchMessageList[index].isSuccess = true;
+                    } else if (res && res.code === 3306) {
+                        this.batchMessageList[index].isSuccess = false;
+                        this.batchMessageList[index].message.relateReason = '节目内已关联';
+                        this.batchMessageList[index].message.relateList = res.data;
+                    } else if (res && res.code === 3308) {
+                        this.batchMessageList[index].isSuccess = false;
+                        this.batchMessageList[index].message.relateReason = '频道内已关联';
+                        this.batchMessageList[index].message.relateList = res.data;
+                    } else {
+                        this.batchMessageList[index].isSuccess = false;
+                        this.batchMessageList[index].message.otherReason = '请求出现错误';
+                    }
+                });
             },
             joinVideoUrl(video) {
                 let baseUri = window.localStorage.getItem('videoBaseUri');

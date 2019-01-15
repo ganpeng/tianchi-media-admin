@@ -65,6 +65,9 @@
                     moves: function (el) {
                         return !el.classList.contains('upload-box');
                     },
+                    accepts: function (el, target, source, sibling) {
+                        return !!sibling;
+                    },
                     direction: 'horizontal'
                 }).on('drop', function () {
                     that.preview();
