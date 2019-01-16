@@ -25,7 +25,7 @@
                                             </svg-icon>
                                         </div>
                                         <div v-if="ele.playUri" class="url-wrapper">
-                                            <span class="url" @click="displayVideoPlayer(ele, 'playUri')">直播地址：{{pushServer}}{{ele.playUri}}</span>
+                                            <span class="url" @click="displayVideoPlayer(ele, 'playUri')">直播地址：{{baseUri}}{{ele.playUri}}</span>
                                             <svg-icon
                                                 v-if="ele.playUri"
                                                 icon-class="copy_btn"
@@ -59,7 +59,7 @@
                                             </svg-icon>
                                         </div>
                                         <div v-if="ele.playUri" class="url-wrapper">
-                                            <span class="url" @click="displayVideoPlayer(ele, 'playUri')">直播地址：{{pushServer}}{{ele.playUri}}</span>
+                                            <span class="url" @click="displayVideoPlayer(ele, 'playUri')">直播地址：{{baseUri}}{{ele.playUri}}</span>
                                             <svg-icon
                                                 v-if="ele.playUri"
                                                 icon-class="copy_btn"
@@ -163,11 +163,7 @@
             getVideoUrl() {
                 return (uri, uriKey) => {
                     let baseUri = window.localStorage.getItem('videoBaseUri');
-                    if (uriKey === 'm3u8Uri') {
-                        return `${this.pushServer}${uri}`;
-                    } else {
-                        return `${baseUri}${uri}`;
-                    }
+                    return `${baseUri}${uri}`;
                 };
             }
         },
@@ -250,11 +246,10 @@
             },
             displayVideoPlayer(ele, uriKey) {
                 let {m3u8Uri, name, playUri} = ele;
-                let baseUri = window.localStorage.getItem('videoBaseUri');
                 if (uriKey === 'm3u8Uri') {
-                    this.url = `${this.pushServer}${m3u8Uri}`;
+                    this.url = `${m3u8Uri}`;
                 } else {
-                    this.url = `${baseUri}${playUri}`;
+                    this.url = `${playUri}`;
                 }
                 this.title = name;
                 this.displayVideoDialogVisible = true;

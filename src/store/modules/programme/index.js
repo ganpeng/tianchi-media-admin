@@ -653,13 +653,23 @@ const mutations = {
     },
     addImageToPosterImageList(state, payload) {
         let {image} = payload;
-        state.programme.posterImageList.push(image);
-        state.programme.posterImageList = _.uniqBy(state.programme.posterImageList, 'id');
         let width = _.get(image, 'width');
         let height = _.get(image, 'height');
         if (parseInt(width) === 260 && parseInt(height) === 380) {
             state.programme.coverImage = image;
+            state.programme.posterImageList = state.programme.posterImageList.filter((item) => {
+                return parseInt(item.width) !== 260 && parseInt(item.height) !== 380;
+            });
+            state.programme.posterImageList.unshift(image);
+        } else if (parseInt(width) === 240 && parseInt(height) === 350) {
+            state.programme.posterImageList = state.programme.posterImageList.filter((item) => {
+                return parseInt(item.width) !== 240 && parseInt(item.height) !== 350;
+            });
+            state.programme.posterImageList.push(image);
+        } else {
+            state.programme.posterImageList.push(image);
         }
+        state.programme.posterImageList = _.uniqBy(state.programme.posterImageList, 'id');
     },
     deleteImageFromPosterImageListById(state, payload) {
         let {id} = payload;

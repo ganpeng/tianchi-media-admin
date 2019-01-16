@@ -29,6 +29,7 @@
     </div>
 </template>
 <script>
+// import _ from 'lodash';
 import {
     uploadRequest,
     promiseImageSize,
@@ -60,6 +61,10 @@ export default {
                     height: 100
                 };
             }
+        },
+        validator: {
+            type: Function,
+            default: () => { return true; }
         },
         imageUploadedHandler: {
             type: Function,
@@ -113,21 +118,13 @@ export default {
                 this.resetInputField();
                 return false;
             }
-            let onlyFileList = fileList.filter((item) => {
-                let {width, height} = item.demension;
-                return parseInt(width) === 260 && parseInt(height) === 380;
-            });
 
-            if (onlyFileList.length > 1) {
-                this.$message.error('六分位图只能上传一张');
-                this.resetInputField();
-                return false;
-            }
-
-            let newFileList = filterFile(this.fileList, fileList);
-            this.fileList = Array.from(newFileList);
-            if (!this.isUploading) {
-                this.uploadHandler();
+            if (this.validator(fileList)) {
+                let newFileList = filterFile(this.fileList, fileList);
+                this.fileList = Array.from(newFileList);
+                if (!this.isUploading) {
+                    this.uploadHandler();
+                }
             }
         },
         async uploadHandler() {

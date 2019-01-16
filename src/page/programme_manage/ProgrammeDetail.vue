@@ -446,6 +446,7 @@
                                 :deleteImageHandler="deleteImageHandler"
                                 :imageUploadedHandler="imageUploadedHandler"
                                 :allowResolutions="allowResolutions"
+                                :validator="imageUploadValidator"
                             ></multi-image-uploader>
                         </div>
                     </el-col>
@@ -650,13 +651,14 @@
                 areaLabel: 'programme/areaLabel'
             }),
             allowResolutions() {
-                if (_.get(this.programme, 'coverImage.uri')) {
-                    return role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS.filter((item) => {
-                        return item.width !== 260 && item.height !== 380;
-                    });
-                } else {
-                    return role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS;
-                }
+                return role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS;
+                // if (_.get(this.programme, 'coverImage.uri')) {
+                //     return role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS.filter((item) => {
+                //         return item.width !== 260 && item.height !== 380;
+                //     });
+                // } else {
+                //     return role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS;
+                // }
             },
             //  拖拽排序的字段
             produceAreaList: {
@@ -1277,6 +1279,28 @@
             },
             deleteImageHandler(id) {
                 this.deleteImageFromPosterImageListById({id});
+            },
+            imageUploadValidator(fileList) {
+                let onlyFileListOne = fileList.filter((item) => {
+                    let {width, height} = item.demension;
+                    return parseInt(width) === 260 && parseInt(height) === 380;
+                });
+
+                let onlyFileListTwo = fileList.filter((item) => {
+                    let {width, height} = item.demension;
+                    return parseInt(width) === 240 && parseInt(height) === 350;
+                });
+
+                if (onlyFileListOne.length > 1) {
+                    this.$message.error('六分位图只能上传一张');
+                    return false;
+                }
+
+                if (onlyFileListTwo.length > 1) {
+                    this.$message.error('旧版六分位图只能上传一张');
+                    return false;
+                }
+                return true;
             },
             markChangeHandler(checked, key) {
                 this.updateProgrammeMark({checked, key});
