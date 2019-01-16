@@ -140,7 +140,7 @@
                     {{scope.row.audioPid | padEmpty}}
                 </template>
             </el-table-column>
-            <el-table-column align="center" width="300px" fixed="right" label="操作">
+            <el-table-column align="center" width="300px" label="操作">
                 <template slot-scope="scope">
                     <el-button type="text" size="small" @click="previewChannelPage(scope.row.id, scope.row.name, true)">
                         节目单下载
