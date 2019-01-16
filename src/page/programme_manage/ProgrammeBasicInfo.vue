@@ -122,7 +122,7 @@
         </div>
         <div class="seperator-line"></div>
         <div v-if="imageList.length > 0" class="other-poster">
-            <h4 class="content-sub-title">其他海报</h4>
+            <h4 class="content-sub-title" style="margin-left:20px;">其他海报</h4>
                 <thumbnail
                     :removeSign="false"
                     :imageList="imageList">

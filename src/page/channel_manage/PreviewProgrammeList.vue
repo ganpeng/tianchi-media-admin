@@ -16,7 +16,7 @@
                                     <div class="wrapper">
                                         <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
                                         <div v-if="ele.m3u8Uri" class="url-wrapper">
-                                            <span class="url" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看地址：{{pushServer}}{{ele.m3u8Uri}}</span>
+                                            <span class="url" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看地址：{{baseUri}}{{ele.m3u8Uri}}</span>
                                             <svg-icon
                                                 v-if="ele.m3u8Uri"
                                                 icon-class="copy_btn"
@@ -50,7 +50,7 @@
                                     <div class="wrapper">
                                         <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
                                         <div v-if="ele.m3u8Uri" class="url-wrapper">
-                                            <span class="url" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看地址：{{pushServer}}{{ele.m3u8Uri}}</span>
+                                            <span class="url" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看地址：{{baseUri}}{{ele.m3u8Uri}}</span>
                                             <svg-icon
                                                 v-if="ele.m3u8Uri"
                                                 icon-class="copy_btn"
@@ -155,6 +155,10 @@
             channelName() {
                 let obj = this.prevList[0] || this.afterList[0];
                 return obj ? obj.channelName : '';
+            },
+            baseUri() {
+                let baseUri = window.localStorage.getItem('videoBaseUri');
+                return baseUri;
             },
             getVideoUrl() {
                 return (uri, uriKey) => {

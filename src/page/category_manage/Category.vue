@@ -82,7 +82,7 @@
                                         <i @click="deleteCategoryGroupByIndexHandler(index)" class="el-tag__close el-icon-close delete-btn"></i>
                                     </li>
                                     <li key="hahahaha" slot="footer" class="add-category-group-item" @click="addCategoryGroup">
-                                        <i class="el-icon-plus"></i>
+                                        <i class="el-icon-plus plus-icon"></i>
                                         <!-- <svg-icon icon-class="plus"></svg-icon> -->
                                     </li>
                                 </draggable>
@@ -736,10 +736,14 @@ export default {
             width: 20px;
             height: 20px;
         }
+        .plus-icon {
+            font-size: 20px;
+            color: #3E495E;
+        }
         &:hover {
             border-color: $mainColor;
-            .svg-icon {
-                fill: $mainColor;
+            .plus-icon {
+                color: $mainColor;
             }
         }
     }

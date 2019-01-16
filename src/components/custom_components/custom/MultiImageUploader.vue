@@ -3,7 +3,8 @@
         <div class="image-list-container">
             <ul class="image-list">
                 <li @click.stop="displayImage(index)" v-for="(image, index) in imageList" :key="image.id" class="image-item">
-                    <div :style="styleStr(image.uri)" class="bg-field">
+                    <div class="image-warpper">
+                        <img :src="image.uri" class="image" alt="">
                         <div class="mask"></div>
                     </div>
                     <i @click.stop="deleteImage(image.id)" class="delete-icon el-tag__close el-icon-close"></i>
@@ -13,8 +14,7 @@
                     <el-progress :stroke-width="3" :show-text="false" class="progress-bar" v-show="obj.data.progress !== 0" :percentage="obj.data.progress"></el-progress>
                 </li>
                 <li v-show="!isUploading" :style="styleStr()" class="image-item">
-                    <div class="uploader"
-                        :style="styleStr()">
+                    <div class="uploader">
                         <label class="ui_button ui_button_primary" for="multi-image-uploader">
                             <i class="el-icon-plus"></i>
                         </label>
@@ -237,15 +237,36 @@ export default {
         .image-item {
             position: relative;
             width: 170px;
-            height: 126px;
-            margin-right: 30px;
-            margin-bottom: 10px;
             cursor: zoom-in;
+            margin: 0 20px 10px 0;
+            .image-warpper {
+                position: relative;
+                .image {
+                    display: block;
+                    width: 100%;
+                    height: 100px;
+                    border-radius: 8px;
+                }
+                .mask {
+                    display: none;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(#000, 0.6);
+                    border-radius: 8px;
+                }
+                &:hover {
+                    .mask {
+                        display: block;
+                    }
+                }
+            }
             .bg-field {
                 position: relative;
                 border: 1px solid #3E495E;
                 border-radius: 8px;
-                // box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
             }
             .dimension-info {
                 margin-top: 10px;
@@ -273,16 +294,7 @@ export default {
                 cursor: pointer;
                 z-index: 1000000;
             }
-            .mask {
-                display: none;
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(#000, 0.6);
-                border-radius: 6px;
-            }
+
             &:hover {
                 .mask {
                     display: block;
@@ -294,6 +306,8 @@ export default {
         }
     }
     .uploader {
+        width: 170px;
+        height: 100px;
         label {
             &:hover {
                 border-color: $mainColor;
