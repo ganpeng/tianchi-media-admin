@@ -1277,6 +1277,7 @@
 //  弹窗的样式自定义
 .my-dialog {
     .el-dialog {
+        border: 1px solid rgba(99, 116, 151, 0.50);
         border-radius: 8px;
         background: #293550;
         box-shadow: 2px 4px 10px 0 rgba(0,0,0,0.30);

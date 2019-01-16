@@ -173,7 +173,7 @@
             width: 420px;
             height: 420px;
             background: rgba(41, 53, 80, 0.98);
-            border: 0.5px solid #637497;
+            border: 1px solid rgba(99, 116, 151, 0.5);
             box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
             border-radius: 8px;
             z-index: 400;

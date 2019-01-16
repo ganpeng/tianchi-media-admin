@@ -512,8 +512,8 @@
                 }
             }
             .info-header {
-                height: 70px;
-                line-height: 70px;
+                height: 100px;
+                line-height: 100px;
                 font-size: 20px;
                 color: #A8ABB3;
                 text-align: center;

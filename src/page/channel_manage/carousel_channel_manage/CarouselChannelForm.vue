@@ -51,7 +51,7 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="频道图" prop="logoUri" required>
-                <label>(260*260 频道图)</label>
+                <label class="tips">(260*260 频道图)</label>
                 <div>
                     <img v-if="channelInfo.logoUri" :src="channelInfo.logoUri | imageUrl" class="logo-image">
                     <single-image-uploader
@@ -86,11 +86,7 @@
         </div>
         <!--频道内节目-->
         <div class="content-sub-title">频道内节目
-            <el-button
-                type="primary"
-                plain
-                class="btn-style-six"
-                @click="popAppendVideoDialogue(0)">
+            <el-button @click="popAppendVideoDialogue(0)" class="contain-svg-icon btn-style-four">
                 <svg-icon icon-class="video"></svg-icon>
                 关联视频
             </el-button>
@@ -1149,6 +1145,9 @@
             margin-right: 30px;
             width: 78px;
             height: 78px;
+            border: 1px solid #3E495E;
+            border-radius: 8px;
+            box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.50);
         }
         .single-image-uploader-container {
             display: inline-block;
@@ -1187,6 +1186,10 @@
                 }
             }
         }
+    }
+
+    .tips {
+        color: #A8ABB3;
     }
 
     /*频道内关联的视频*/
@@ -1236,48 +1239,9 @@
         fill: #1989FA;
     }
 
-</style>
-
-<!--全局el-dialog样式-->
-<style lang="scss">
-
-    .normal-dialog {
-        background: #293550;
-        border: 0 solid #637497;
-        box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
-        border-radius: 8px;
-        .el-dialog__header {
-            padding: 0px;
-            height: 50px;
-            line-height: 55px;
-            background: #1F2D4D;
-            .el-dialog__title {
-                font-size: 20px;
-                color: #909399;
-            }
-            .el-dialog__headerbtn {
-                top: 16px;
-                font-size: 15px;
-                .el-dialog__close {
-                    color: #C35757;
-                }
-            }
-        }
-        .el-dialog__footer {
-            .el-button {
-                width: 100px;
-                height: 40px;
-                &.el-button--default {
-                    color: $dangerColor;
-                }
-                &.el-button--default.el-button--primary {
-                    color: #A3D0FD;
-                }
-                &:first-child {
-                    margin-left: 10px;
-                }
-            }
-        }
+    .svg-icon-video {
+        height: 15px !important;
+        width: 20px !important;
     }
 
 </style>

@@ -162,6 +162,7 @@
             cursor: grab;
             border: 1px solid #2E384D;
             &.invisible-item {
+                border: 1px solid transparent;
                 background-color: rgba(42, 48, 64, 0.3);
                 label {
                     color: #3E495E;

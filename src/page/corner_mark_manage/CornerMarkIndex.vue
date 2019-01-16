@@ -237,7 +237,7 @@
                         }
                         i {
                             font-size: 16px;
-                            color: #C0C4CC;
+                            color: #6F7480;
                             cursor: pointer;
                             &:hover {
                                 color: #C35757;
@@ -285,49 +285,6 @@
             .svg-icon {
                 height: 24px !important;
                 width: 36px !important;
-            }
-        }
-    }
-
-</style>
-
-<style lang="scss">
-
-    .normal-dialog {
-        background: #293550;
-        border: 0 solid #637497;
-        box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
-        border-radius: 8px;
-        .el-dialog__header {
-            padding: 0px;
-            height: 50px;
-            line-height: 55px;
-            background: #1F2D4D;
-            .el-dialog__title {
-                font-size: 20px;
-                color: #909399;
-            }
-            .el-dialog__headerbtn {
-                top: 16px;
-                font-size: 15px;
-                .el-dialog__close {
-                    color: #C35757;
-                }
-            }
-        }
-        .el-dialog__footer {
-            .el-button {
-                width: 100px;
-                height: 40px;
-                &.el-button--default {
-                    color: $dangerColor;
-                }
-                &.el-button--default.el-button--primary {
-                    color: #A3D0FD;
-                }
-                &:first-child {
-                    margin-left: 10px;
-                }
             }
         }
     }

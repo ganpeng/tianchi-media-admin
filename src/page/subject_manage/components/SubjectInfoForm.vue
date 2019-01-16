@@ -1,6 +1,7 @@
 <!--专题信息表单组件-->
 <template>
     <div>
+        <div class="seperator-line"></div>
         <div class="content-sub-title">专题基本信息</div>
         <el-form
             :model="subjectInfo"
@@ -42,8 +43,7 @@
                 </el-select>
                 <el-button
                     type="primary"
-                    plain
-                    class="btn-style-four add-tag min"
+                    class="btn-style-four min"
                     @click="addSubjectTag">
                     新增
                 </el-button>
@@ -351,15 +351,8 @@
                         index = i;
                     }
                 }
-                this.$confirm('此操作将删除该图片, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.subjectInfo.posterImageList.splice(index, 1);
-                    this.$message.success('图片删除成功!');
-                }).catch(() => {
-                });
+                this.subjectInfo.posterImageList.splice(index, 1);
+                this.$message.success('图片删除成功!');
             },
             // 创建或更新专题
             operateSubject() {
@@ -419,6 +412,7 @@
     }
 
     .image-setting-box {
+        margin-bottom: 0px;
         .tips {
             color: #A8ABB3;
         }
@@ -428,7 +422,9 @@
     }
 
     .subject-programme-list {
-        padding: 20px 0px;
+        padding-bottom: 20px;
+        padding-top: 20px;
+        margin-top: 20px;
         border-top: 1px solid #252D3F;
     }
 

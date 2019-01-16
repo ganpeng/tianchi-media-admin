@@ -16,7 +16,6 @@
             <el-button
                 :loading="loading"
                 type="primary"
-                plain
                 class="btn-style-six"
                 @click="handleUpload">
                 <svg-icon icon-class="file"></svg-icon>

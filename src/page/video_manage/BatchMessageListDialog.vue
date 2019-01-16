@@ -38,6 +38,9 @@
                     prop="name"
                     width="230"
                     label="名称">
+                    <template slot-scope="scope">
+                        <span class="ellipsis two">{{scope.row.name}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     label="信息">
@@ -252,9 +255,22 @@
 <style lang="scss">
 
     #expand-info {
+        .el-table--border::after, .el-table--group::after {
+            background: rgb(41, 53, 80) !important;
+        }
         .el-table {
-            .el-table__body tr {
-                background: rgba(41, 53, 80, 0.98);
+            border: 1px solid rgb(41, 53, 80) !important;
+            &::before {
+                height: 0px;
+            }
+            .el-table__body {
+                tr {
+                    background: rgb(41, 53, 80);
+                }
+            }
+            td {
+                border-right: 1px solid rgb(41, 53, 80) !important;
+                border-left: 1px solid rgb(41, 53, 80) !important;
             }
             .response-info-list {
                 li {

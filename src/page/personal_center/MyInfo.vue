@@ -5,8 +5,7 @@
         <div class="seperator-line"></div>
         <div class="common-details">
             <div class="poster-section person">
-                <div class="visible-wrapper">
-                </div>
+                <div class="visible-wrapper"></div>
                 <svg-icon icon-class="person_avatar"></svg-icon>
             </div>
             <div class="info-section">
@@ -22,12 +21,18 @@
                 <div class="seperator-line"></div>
                 <div class="attributes">
                     <div class="attribute-item">
-                        <label class="item-label">邮箱:</label>
-                        <span class="value">{{info.email | padEmpty}}</span>
+                        <div class="item-label">
+                            <svg-icon icon-class="email_info"></svg-icon>
+                            邮箱
+                        </div>
+                        <div class="value">{{info.email | padEmpty}}</div>
                     </div>
                     <div class="attribute-item">
-                        <label class="item-label">手机号:</label>
-                        <span class="value">{{info.mobile | padEmpty}}</span>
+                        <div class="item-label">
+                            <svg-icon icon-class="phone_info"></svg-icon>
+                            手机
+                        </div>
+                        <div class="value">{{info.mobile | padEmpty}}</div>
                     </div>
                 </div>
             </div>
@@ -79,9 +84,37 @@
         line-height: 44px;
     }
 
+    .my-info-container {
+        .attribute-item {
+            margin-bottom: 20px;
+            .item-label {
+                font-size: 16px;
+                color: #A8ABB3;
+                width: auto;
+            }
+            .value {
+                font-size: 16px;
+                color: #A8ABB3;
+            }
+        }
+    }
+
     .svg-icon-person_avatar {
         width: 200px !important;
         height: 200px !important;
+    }
+
+    .svg-icon-email_info {
+        margin-right: 6px;
+        width: 30px !important;
+        height: 18px !important;
+    }
+
+    .svg-icon-phone_info {
+        margin-right: 10px;
+        margin-left: 6px;
+        width: 20px !important;
+        height: 30px !important;
     }
 
 </style>

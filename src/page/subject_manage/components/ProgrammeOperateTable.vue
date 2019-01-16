@@ -43,7 +43,7 @@
             <el-table-column
                 align="center"
                 width="100px"
-                label="节目图片">
+                label="节目海报">
                 <template slot-scope="scope">
                     <img :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl"
                          :alt="scope.row.coverImage.name"
@@ -57,16 +57,6 @@
                 width="100px"
                 prop="featureVideoCount"
                 label="正片数量">
-            </el-table-column>
-            <el-table-column
-                width="100px"
-                align="center"
-                prop="announceAt"
-                label="上映时间">
-                <template slot-scope="scope">
-                    <label v-if="scope.row.announceAt">{{scope.row.announceAt | formatDate('yyyy-MM-DD')}}</label>
-                    <label v-else>------</label>
-                </template>
             </el-table-column>
             <el-table-column
                 min-width="150px"
@@ -93,6 +83,16 @@
                 label="类型">
                 <template slot-scope="scope">
                     {{scope.row.typeList | jsonJoin('name')}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                width="100px"
+                align="center"
+                prop="announceAt"
+                label="更新时间">
+                <template slot-scope="scope">
+                    <label v-if="scope.row.announceAt">{{scope.row.announceAt | formatDate('yyyy-MM-DD')}}</label>
+                    <label v-else>------</label>
                 </template>
             </el-table-column>
             <el-table-column

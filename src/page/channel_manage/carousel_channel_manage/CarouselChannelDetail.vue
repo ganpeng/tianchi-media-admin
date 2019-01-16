@@ -341,14 +341,18 @@
             left: 20px;
             height: 200px;
             width: 200px;
+            border: 1px solid #3E495E;
+            border-radius: 8px;
+            box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.50);
         }
         .info-container {
+            min-width: 1220px;
             margin-left: 260px;
             height: 230px;
             border-top: 1px solid #252D3F;
             > div {
                 display: inline-block;
-                margin-right: 300px;
+                margin-right: 60px;
             }
             .type-list {
                 margin-top: 10px;

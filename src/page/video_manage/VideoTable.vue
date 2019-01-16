@@ -209,18 +209,20 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                width="160px"
+                width="100px"
                 label="上传日期">
                 <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm:SS')}}
+                    <div>{{scope.row.createdAt | formatDate('yyyy-MM-DD')}}</div>
+                    <div>{{scope.row.createdAt | formatDate('HH:mm:SS')}}</div>
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
-                width="160px"
+                width="100px"
                 label="更新日期">
                 <template slot-scope="scope">
-                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:mm:SS')}}
+                    <div>{{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}</div>
+                    <div>{{scope.row.updatedAt | formatDate('HH:mm:SS')}}</div>
                 </template>
             </el-table-column>
             <el-table-column width="130px" align="center" label="操作">
