@@ -30,6 +30,7 @@
         </div>
         <div class="fixed-btn-container">
             <el-dropdown
+                class="btn-wrapper-dropdown"
                 @command="addLayout($event)" placement="bottom">
                 <el-button class="my-add-cycle">
                     <svg-icon icon-class="add"></svg-icon>
@@ -283,6 +284,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.btn-wrapper-dropdown {
+    width: 30px;
+}
 .my-add-cycle {
     &.el-button {
         width: 30px;
@@ -450,6 +454,18 @@ export default {
             color: #A3D0FD;
             font-size: 28px;
             line-height: 40px;
+        }
+    }
+}
+</style>
+<style lang="scss">
+.delete-btn {
+    .svg-icon {
+        fill: #C35757;
+    }
+    &:hover {
+        .svg-icon {
+            fill: #D0021B;
         }
     }
 }

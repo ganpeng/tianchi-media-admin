@@ -392,10 +392,12 @@
                     this.updateProgrammeSearchFields({key: 'programmeTypeIdList', value: ''});
                 }
                 if (key !== 'keyword') {
+                    this.updateProgrammePagination({key: 'pageNum', value: 1});
                     this.getProgrammeList();
                 }
             },
             searchHandler() {
+                this.updateProgrammePagination({key: 'pageNum', value: 1});
                 this.getProgrammeList()
                     .then((res) => {
                         if (res && res.code === 0) {

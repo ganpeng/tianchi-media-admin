@@ -94,41 +94,43 @@
                         </el-col>
                     </el-form>
                 </div>
-                <div v-show="active === 2" class="step-three">
+                <div v-if="active === 2" class="step-three">
                     <el-form status-icon label-width="120px" class="my-el-form" @submit.native.prevent>
                         <el-col :span="14">
                             <el-form-item label="节目角标">
-                                <div class="mark-container">
-                                    <div class="mark-item">
-                                        <el-checkbox :checked="leftTopChecked" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
-                                            左上角：播放平台
-                                        </el-checkbox>
-                                    </div>
-                                    <div class="mark-item">
-                                            右上角：
-                                        <el-select
-                                            @input="customMarkSelectHandler"
-                                            :value="rightTop"
-                                            value-key="id"
-                                            clearable
-                                            placeholder="请选择">
-                                            <el-option
-                                                v-for="item in customMarkOptions"
-                                                :key="item.id"
-                                                :label="item.caption"
-                                                :value="item">
-                                            </el-option>
-                                        </el-select>
-                                    </div>
-                                    <div class="mark-item">
-                                        <el-checkbox :checked="leftBottomChecked" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
-                                            左下角：更新
-                                        </el-checkbox>
-                                    </div>
-                                    <div class="mark-item">
-                                        <el-checkbox :checked="rightBottomChecked" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
-                                            右下角：评分
-                                        </el-checkbox>
+                                <div class="page-layout-mark">
+                                    <div class="mark-container">
+                                        <div class="mark-item">
+                                            <el-checkbox :checked="leftTopChecked" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
+                                                左上角：播放平台
+                                            </el-checkbox>
+                                        </div>
+                                        <div class="mark-item">
+                                                右上角：
+                                            <el-select
+                                                @input="customMarkSelectHandler"
+                                                :value="rightTop"
+                                                value-key="id"
+                                                clearable
+                                                placeholder="请选择">
+                                                <el-option
+                                                    v-for="item in customMarkOptions"
+                                                    :key="item.id"
+                                                    :label="item.caption"
+                                                    :value="item">
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                        <div class="mark-item">
+                                            <el-checkbox :checked="leftBottomChecked" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
+                                                左下角：更新
+                                            </el-checkbox>
+                                        </div>
+                                        <div class="mark-item">
+                                            <el-checkbox :checked="rightBottomChecked" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
+                                                右下角：评分
+                                            </el-checkbox>
+                                        </div>
                                     </div>
                                 </div>
                             </el-form-item>
@@ -137,8 +139,8 @@
                 </div>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
                     <el-button @click="cancelHanlder">取 消</el-button>
-                    <el-button v-show="active > 0" class="btn-style-three" @click="prevBtnClickHandler">上一步</el-button>
-                    <el-button v-show="active < 2" class="btn-style-three" @click="nextBtnClickHandler">下一步</el-button>
+                    <el-button v-show="active > 0" class="btn-style-three prev-btn" @click="prevBtnClickHandler">上一步</el-button>
+                    <el-button v-show="active < 2" class="btn-style-three next-btn" @click="nextBtnClickHandler">下一步</el-button>
                     <el-button v-show="active === 2" type="primary" @click="enterHandler">确 定</el-button>
                 </div>
             </div>
@@ -176,6 +178,8 @@ export default {
             index: 0,
             active: 0,
             dialogVisible: false,
+            category: '',
+            layoutItemType: '',
             programme: {},
             customMarkOptions: []
         };
@@ -251,6 +255,7 @@ export default {
         rowDisabled() {
             return (row) => {
                 let layoutItemMultiList = _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList`);
+                layoutItemMultiList = layoutItemMultiList.filter((item) => item.id !== this.getSquareProgrammeId);
                 let index = layoutItemMultiList.findIndex((item) => item.id === row.id);
                 return index >= 0;
             };
@@ -274,32 +279,49 @@ export default {
             updateProgrammePagination: 'programme/updateProgrammePagination',
             updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
             cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex',
-            updateLayoutItemCornerMarkByIndex: 'pageLayout/updateLayoutItemCornerMarkByIndex'
+            updateLayoutItemCornerMarkByIndex: 'pageLayout/updateLayoutItemCornerMarkByIndex',
+            resetLayoutItemByIndex: 'pageLayout/resetLayoutItemByIndex'
         }),
         ...mapActions({
             getCustomMarkList: 'pageLayout/getCustomMarkList'
         }),
         //  弹窗的操作
-        showDialog(category) {
-            this.dialogVisible = true;
+        async showDialog(layoutItemType, category) {
+            try {
+                this.layoutItemType = layoutItemType;
+                this.category = category;
+
+                this.dialogVisible = true;
+                window.addEventListener('keyup', this.keyupHandler);
+            } catch (err) {
+                console.log(err);
+            }
         },
         closeDialog() {
             this.dialogVisible = false;
+            this.layoutItemType = '';
+            this.category = '';
             this.active = 0;
             this.programme = {};
         },
         async dialogOpenHandler() {
             try {
-                let res = await this.getCustomMarkList();
-                if (this.getSquareProgrammeId) {
-                    let programme = this.programmeList.find((item) => item.id === this.getSquareProgrammeId);
-                    if (programme) {
-                        this.programme = programme;
+                if (this.layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
+                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+                } else {
+                    if (this.getSquareProgrammeId) {
+                        let res = await this.$service.getProgrammeInfo({id: this.getSquareProgrammeId});
+                        if (res && res.code === 0) {
+                            this.programme = res.data;
+                        }
                     }
                 }
-                if (res && res.code === 0) {
-                    this.customMarkOptions = res.data;
+
+                let markRes = await this.getCustomMarkList();
+                if (markRes && markRes.code === 0) {
+                    this.customMarkOptions = markRes.data;
                 }
+                // await this.getProgrammeCategory();
             } catch (err) {
                 console.log(err);
             }
@@ -395,7 +417,23 @@ export default {
         },
         //  角标的相关操作
         markChangeHandler(value, key) {
-            let {score, featureVideoCount, platformList} = this.programme;
+            let {score, featureVideoCount, platformList, totalSets, programmeTemplate, leftBottomMarkCaption} = this.programme;
+            let leftBottomCaption = '';
+            switch (programmeTemplate) {
+                case 'TV_DRAMA':
+                    leftBottomCaption = `更新至${featureVideoCount}集`;
+                    break;
+                case 'TV_SHOW':
+                    leftBottomCaption = `更新至${featureVideoCount}期`;
+                    break;
+                default:
+                    leftBottomCaption = '';
+            }
+
+            if (programmeTemplate === 'TV_DRAMA' && featureVideoCount === totalSets) {
+                leftBottomCaption = `${totalSets}集全`;
+            }
+
             switch (key) {
                 case 'leftTop':
                     this.updateLayoutItemCornerMarkByIndex({
@@ -403,7 +441,7 @@ export default {
                         index: this.index,
                         squareIndex: this.squareIndex,
                         key: 'leftTop',
-                        value: value ? {caption: _.get(platformList, '0')} : {}
+                        value: value ? {caption: platformList[0]} : {}
                     });
                     break;
                 case 'leftBottom':
@@ -412,7 +450,7 @@ export default {
                         index: this.index,
                         squareIndex: this.squareIndex,
                         key: 'leftBottom',
-                        value: value ? {caption: featureVideoCount} : {}
+                        value: value ? {caption: leftBottomCaption || leftBottomMarkCaption} : {}
                     });
                     break;
                 case 'rightBottom':
@@ -455,20 +493,5 @@ export default {
 .my-el-form {
     overflow: hidden;
     margin-top: 20px;
-    .mark-container {
-        display: flex;
-        flex-wrap: wrap;
-        .mark-item {
-            font-size: 16px;
-            color: #A8ABB3;
-            width: 40%;
-            .el-checkbox {
-                padding: 0;
-            }
-        }
-    }
-    .el-checkbox__input.is-checked+.el-checkbox__label {
-        color: #fff!important;
-    }
 }
 </style>

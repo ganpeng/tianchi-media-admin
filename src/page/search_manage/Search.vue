@@ -8,7 +8,8 @@
             </el-button>
         </div>
         <p class="tips"><i>*</i>每条不超过10个字</p>
-        <ul class="search-list clearfix">
+        <!-- <ul class="search-list clearfix"> -->
+        <draggable element="ul" class="search-list clearfix" v-model="list">
             <li v-for="(item, index) in list" :key="index" :class="['search-item', isEdit && item.focus ? 'is-active' : '']">
                 <div class="wrapper">
                     <span class="index">{{index + 1}}</span>
@@ -24,15 +25,20 @@
                     <span v-else class="search-name">{{item.name}}</span>
                 </div>
             </li>
-        </ul>
+        </draggable>
+        <!-- </ul> -->
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="saveSearchHandler">保存</el-button>
         </div>
     </div>
 </template>
 <script>
+import draggable from 'vuedraggable';
 export default {
     name: 'Search',
+    components: {
+        draggable
+    },
     data() {
         return {
             list: [],
@@ -131,8 +137,13 @@ export default {
         border-radius: 4px;
         margin-right: 20px;
         margin-bottom: 14px;
+        cursor: pointer;
         &.is-active {
             border-color: $mainColor;
+        }
+        &.sortable-drag {
+            background: #293550;
+            border: 1px solid #637497;
         }
         .wrapper {
             display: flex;

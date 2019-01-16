@@ -1,5 +1,5 @@
 <template>
-    <div class="mixed114-container">
+    <div class="mixed4-container">
         <div v-if="!isEdit" class="header layout-square-header">
             <div class="left">
                 <img v-if="getIconImageUri(item)" class="icon" :src="getIconImageUri(item)"/>
@@ -12,7 +12,7 @@
                         <svg-icon icon-class="add"></svg-icon>
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="PROGRAMME">节目专题</el-dropdown-item>
+                        <el-dropdown-item command="PROGRAMME_SUBJECT">节目专题</el-dropdown-item>
                         <el-dropdown-item command="FIGURE_SUBJECT">人物专题</el-dropdown-item>
                         <el-dropdown-item command="FIGURE">人物模块</el-dropdown-item>
                         <el-dropdown-item command="SPECIAL">特别模块</el-dropdown-item>
@@ -29,8 +29,8 @@
         </div>
         <div class="content-field">
             <div class="wrapper">
-                <div :style="styleBgImageStr(0)" class="left-field">
-                    <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
+                <div :style="styleBgImageStr(0)" class="field-1">
+                    <corner-mark :squareIndex="0" :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                     <dropdown-btn
                         v-if="isEdit"
                         :addShuffleLayout="addShuffleLayout(0)"
@@ -38,53 +38,30 @@
                 </div>
             </div>
             <div class="wrapper">
-                <div class="right-field">
-                    <div :style="styleBgImageStr(1)" class="right-top-field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
-                        <dropdown-btn
-                            v-if="isEdit"
-                            :addShuffleLayout="addShuffleLayout(1)"
-                        ></dropdown-btn>
-                    </div>
-                    <div class="right-bottom-field">
-                        <div class="wrapper">
-                            <div :style="styleBgImageStr(2)" class="right-bottom-field-item">
-                                <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 2)"></corner-mark>
-                                <dropdown-btn
-                                    v-if="isEdit"
-                                    :addShuffleLayout="addShuffleLayout(2)"
-                                ></dropdown-btn>
-                            </div>
-                        </div>
-                        <div class="wrapper">
-                            <div :style="styleBgImageStr(3)" class="right-bottom-field-item">
-                                <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 3)"></corner-mark>
-                                <dropdown-btn
-                                    v-if="isEdit"
-                                    :addShuffleLayout="addShuffleLayout(3)"
-                                ></dropdown-btn>
-                            </div>
-                        </div>
-                        <div class="wrapper">
-                            <div :style="styleBgImageStr(4)" class="right-bottom-field-item">
-                                <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 4)"></corner-mark>
-                                <dropdown-btn
-                                    v-if="isEdit"
-                                    :addShuffleLayout="addShuffleLayout(4)"
-                                ></dropdown-btn>
-                            </div>
-                        </div>
-                        <div class="wrapper">
-                            <div :style="styleBgImageStr(5)" class="right-bottom-field-item">
-                                <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 5)"></corner-mark>
-                                <dropdown-btn
-                                    v-if="isEdit"
-                                    :showAll="programmeList.length > 6"
-                                    :addShuffleLayout="addShuffleLayout(5)"
-                                ></dropdown-btn>
-                            </div>
-                        </div>
-                    </div>
+                <div :style="styleBgImageStr(1)" class="field-2">
+                    <corner-mark :squareIndex="1" :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
+                    <dropdown-btn
+                        v-if="isEdit"
+                        :addShuffleLayout="addShuffleLayout(1)"
+                    ></dropdown-btn>
+                </div>
+            </div>
+            <div class="wrapper">
+                <div :style="styleBgImageStr(2)" class="field-3">
+                    <corner-mark :squareIndex="2" :cornerMark="getLayoutItemCornerMark(navbarId, index, 2)"></corner-mark>
+                    <dropdown-btn
+                        v-if="isEdit"
+                        :addShuffleLayout="addShuffleLayout(2)"
+                    ></dropdown-btn>
+                </div>
+            </div>
+            <div class="wrapper">
+                <div :style="styleBgImageStr(3)" class="field-4">
+                    <corner-mark :squareIndex="3" :cornerMark="getLayoutItemCornerMark(navbarId, index, 3)"></corner-mark>
+                    <dropdown-btn
+                        v-if="isEdit"
+                        :addShuffleLayout="addShuffleLayout(3)"
+                    ></dropdown-btn>
                 </div>
             </div>
         </div>
@@ -109,8 +86,9 @@ import DropdownBtn from './DropdownBtn';
 import ProgrammeDialog from './ProgrammeDialog';
 import AllDialog from './AllDialog';
 import CornerMark from '../CornerMark';
+
 export default {
-    name: 'Mixed114',
+    name: 'Mixed4',
     components: {
         DropdownBtn,
         ProgrammeDialog,
@@ -140,7 +118,7 @@ export default {
             navbarId: '',
             squareIndex: 0,
             layoutItemType: '',
-            allowResolutions: []
+            allowResolutions: [{width: 410, height: 615}]
         };
     },
     created() {
@@ -181,22 +159,6 @@ export default {
             return (layoutItemType) => {
                 this.squareIndex = squareIndex;
                 this.layoutItemType = layoutItemType;
-                switch (squareIndex) {
-                    case 0:
-                        this.allowResolutions = [{width: 560, height: 730}];
-                        break;
-                    case 1:
-                        this.allowResolutions = [{width: 1160, height: 300}];
-                        break;
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                        this.allowResolutions = [{width: 260, height: 380}];
-                        break;
-                    default:
-                        throw new Error('squarIndex索引错误');
-                }
                 switch (layoutItemType) {
                     case 'PROGRAMME':
                         this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
@@ -219,8 +181,7 @@ export default {
         },
         deleteHandler() {
             let {navbarId} = this.$route.params;
-            this.deleteLayoutDataByIndex({navbarId, index: this.index});
-            this.saveLayoutToStore();
+            this.$util.deleteLayoutItemHandler({navbarId, index: this.index});
         }
     }
 };
@@ -236,44 +197,23 @@ export default {
     background-position: center center;
     border-radius: 8px;
 }
-.mixed114-container {
+.mixed4-container {
     .header {
         margin: 40px 0 10px 0;
     }
     .content-field {
         display: flex;
         .wrapper {
-            &:first-child {
-                width: 31.8181%;
-                .left-field {
-                    @include paddingBg(130.3571%);
-                }
+            flex: 1;
+            .field-1,
+            .field-2,
+            .field-3,
+            .field-4 {
+                @include paddingBg(150.4065%);
             }
-            &:last-child {
-                flex: 1;
-                margin-left: 2%;
-                .right-field {
-                    display: flex;
-                    flex-direction: column;
-                    .right-top-field {
-                        @include paddingBg(25.2620%);
-                    }
-                    .right-bottom-field {
-                        display: flex;
-                        flex: 1;
-                        margin-top: 2.6%;
-                        .wrapper {
-                            flex: 1;
-                            .right-bottom-field-item {
-                                @include paddingBg(150%);
-                            }
-                        }
-                        .wrapper + .wrapper {
-                            margin-left: 2.5%;
-                        }
-                    }
-                }
-            }
+        }
+        .wrapper + .wrapper {
+            margin-left: 2%;
         }
     }
 }

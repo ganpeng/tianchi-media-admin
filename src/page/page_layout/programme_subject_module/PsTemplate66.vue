@@ -237,10 +237,10 @@ export default {
                 this.layoutItemType = layoutItemType;
                 switch (layoutItemType) {
                     case 'PROGRAMME':
-                        this.$refs.selectProgrammeDialog.showDialog();
+                        this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
                         break;
                     case 'ALL':
-                        this.$refs.allDialog.showDialog();
+                        this.$refs.allDialog.showDialog('ALL');
                         break;
                     default:
                         throw new Error('类型错误');

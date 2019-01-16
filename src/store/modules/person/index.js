@@ -217,6 +217,9 @@ const mutations = {
         state.duplicate.pagination.pageNum = payload.pageNum;
         state.duplicate.pagination.total = payload.total;
     },
+    resetDuplicatePagination(state) {
+        state.duplicate.pagination = _.cloneDeep(defaultPagination);
+    },
     updateDuplicatePagination(state, payload) {
         let {key, value} = payload;
         state.duplicate.pagination[key] = value;

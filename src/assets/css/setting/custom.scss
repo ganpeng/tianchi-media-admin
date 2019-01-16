@@ -461,7 +461,11 @@
     display: none;
     border-bottom-color: rgba(65,74,93,0.90);
 }
-
+.el-dropdown-menu.el-popper {
+    .popper__arrow::after {
+        border-top-color: transparent;
+    }
+}
 //  时间日期选择器弹出框部分样式重写
 .el-picker-panel {
     background: rgba(65,74,93,0.90);
@@ -619,6 +623,9 @@
                 background: $mainColor;
             }
         }
+    }
+    .popper__arrow {
+        display: none;
     }
 }
 
@@ -1644,6 +1651,16 @@
                         display: none;
                     }
                 }
+            }
+        }
+    }
+}
+
+#movie-top-left-field.wrapper {
+    :hover {
+        .mark-container {
+            .mask {
+                display: none;
             }
         }
     }

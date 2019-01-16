@@ -111,6 +111,12 @@
                                 :programmeList="programmeList"
                                 v-if="layoutData.layoutTemplate === 'LT_6_6'"
                             ></ps-template66>
+                            <ps-template4
+                                :isEdit="true"
+                                :index="index"
+                                :programmeList="programmeList"
+                                v-if="layoutData.layoutTemplate === 'LT_4'"
+                            ></ps-template4>
                         </el-form-item>
                     </el-col>
                 </el-col>
@@ -208,6 +214,7 @@ import PsTemplate23 from '../programme_subject_module/PsTemplate23';
 import PsTemplate26 from '../programme_subject_module/PsTemplate26';
 import PsTemplate32 from '../programme_subject_module/PsTemplate32';
 import PsTemplate66 from '../programme_subject_module/PsTemplate66';
+import PsTemplate4 from '../programme_subject_module/PsTemplate4';
 
 const shuffleOptions = [
     {
@@ -224,6 +231,11 @@ const shuffleOptions = [
         value: 'LT_3_2',
         name: '3+2',
         itemCount: 5
+    },
+    {
+        value: 'LT_4',
+        name: '4',
+        itemCount: 4
     },
     {
         value: 'LT_6_6',
@@ -261,7 +273,8 @@ export default {
         PsTemplate26,
         PsTemplate23,
         PsTemplate32,
-        PsTemplate66
+        PsTemplate66,
+        PsTemplate4
     },
     data() {
         return {

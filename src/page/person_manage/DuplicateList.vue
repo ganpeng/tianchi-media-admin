@@ -14,7 +14,7 @@
                             placeholder="搜索你想要的信息">
                         </el-input>
                     </div>
-                    <el-button class="btn-style-one" @click="getDuplicateListHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                    <el-button class="btn-style-one" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
                 </div>
             </div>
             <div class="seperator-line"></div>
@@ -152,6 +152,7 @@
                 resetSearchFields: 'person/resetSearchFields',
                 resetPagination: 'person/resetPagination',
                 // 人物去重部分
+                resetDuplicatePagination: 'person/resetDuplicatePagination',
                 setDuplicateList: 'person/setDuplicateList',
                 setDuplicatePagination: 'person/setDuplicatePagination',
                 updateDuplicatePagination: 'person/updateDuplicatePagination',
@@ -162,6 +163,10 @@
                 deletePerson: 'person/deletePerson',
                 getDuplicateList: 'person/getDuplicateList'
             }),
+            searchHandler() {
+                this.resetDuplicatePagination();
+                this.getDuplicateList({isProgramme: false});
+            },
             clearSearchFields() {
                 this.resetSearchFields();
             },

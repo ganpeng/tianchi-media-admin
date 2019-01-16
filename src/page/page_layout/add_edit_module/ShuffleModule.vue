@@ -46,7 +46,7 @@
                                     >{{item.name}}</div>
                                 </el-option>
                             </el-select>
-                            <div v-if="templateIcon" class="option-template">
+                            <div v-if="templateIcon" :class="['option-template', templateTitle === 'sn' ? 'is-sn' : '']">
                                 <h4>{{templateTitle}}</h4>
                                 <svg-icon
                                     :icon-class="templateIcon"
@@ -468,6 +468,12 @@ export default {
         .svg-icon {
             width: 100%;
             height: auto;
+        }
+        &.is-sn {
+            .svg-icon {
+                width: 84px;
+                height: auto;
+            }
         }
     }
 }

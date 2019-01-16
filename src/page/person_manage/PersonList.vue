@@ -14,7 +14,7 @@
                             placeholder="搜索你想要的信息">
                         </el-input>
                     </div>
-                    <el-button class="btn-style-one" @click="getPersonList" type="primary">
+                    <el-button class="btn-style-one" @click="searchHandler" type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
                     </el-button>
@@ -266,6 +266,10 @@
                 this.resetSearchFields();
                 this.getPersonList({isProgramme: false});
             },
+            searchHandler() {
+                this.updatePagination({key: 'pageNum', value: 1});
+                this.getPersonList({isProgramme: false});
+            },
             keyupHandler(e) {
                 if (e.keyCode === 13) {
                     this.getPersonList({isProgramme: false});
@@ -306,6 +310,7 @@
             inputHandler(value, key) {
                 this.updateSearchFields({key, value});
                 if (key !== 'name') {
+                    this.updatePagination({key: 'pageNum', value: 1});
                     this.getPersonList({isProgramme: false});
                 }
             },

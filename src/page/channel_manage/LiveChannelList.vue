@@ -317,6 +317,7 @@
             inputHandler(value, key) {
                 this.updateSearchFields({key, value});
                 if (key !== 'keyword') {
+                    this.updatePagination({key: 'pageNum', value: 1});
                     this.getChannelList();
                 }
             },
@@ -357,6 +358,7 @@
                 window.open(routeData.href, '_blank');
             },
             searchHandler() {
+                this.updatePagination({key: 'pageNum', value: 1});
                 this.getChannelList();
             },
             timeStampFormat(seconds) {

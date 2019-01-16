@@ -15,8 +15,24 @@
                                 <li v-for="(ele, index) in item" :key="index" class="item-li">
                                     <div class="wrapper">
                                         <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
-                                        <span class="url">{{ele.playUri}}</span>
-                                        <span class="btn-text play-btn" v-if="ele.m3u8Uri" @click="displayVideoPlayer(ele)">播放</span>
+                                        <div v-if="ele.m3u8Uri" class="url-wrapper">
+                                            <span class="url" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看地址：{{pushServer}}{{ele.m3u8Uri}}</span>
+                                            <svg-icon
+                                                v-if="ele.m3u8Uri"
+                                                icon-class="copy_btn"
+                                                class-name="copy-btn pointer"
+                                                :data-clipboard-text="getVideoUrl(ele.m3u8Uri, 'm3u8Uri')">
+                                            </svg-icon>
+                                        </div>
+                                        <div v-if="ele.playUri" class="url-wrapper">
+                                            <span class="url" @click="displayVideoPlayer(ele, 'playUri')">直播地址：{{pushServer}}{{ele.playUri}}</span>
+                                            <svg-icon
+                                                v-if="ele.playUri"
+                                                icon-class="copy_btn"
+                                                class-name="copy-btn pointer"
+                                                :data-clipboard-text="getVideoUrl(ele.playUri, 'playUri')">
+                                            </svg-icon>
+                                        </div>
                                     </div>
                                 </li>
                             </ul>
@@ -33,8 +49,24 @@
                                 <li v-for="(ele, index) in item" :key="index" class="item-li">
                                     <div class="wrapper">
                                         <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
-                                        <span class="url">{{ele.playUri}}</span>
-                                        <span class="btn-text play-btn" v-if="ele.m3u8Uri" @click="displayVideoPlayer(ele)">播放</span>
+                                        <div v-if="ele.m3u8Uri" class="url-wrapper">
+                                            <span class="url" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看地址：{{pushServer}}{{ele.m3u8Uri}}</span>
+                                            <svg-icon
+                                                v-if="ele.m3u8Uri"
+                                                icon-class="copy_btn"
+                                                class-name="copy-btn pointer"
+                                                :data-clipboard-text="getVideoUrl(ele.m3u8Uri, 'm3u8Uri')">
+                                            </svg-icon>
+                                        </div>
+                                        <div v-if="ele.playUri" class="url-wrapper">
+                                            <span class="url" @click="displayVideoPlayer(ele, 'playUri')">直播地址：{{pushServer}}{{ele.playUri}}</span>
+                                            <svg-icon
+                                                v-if="ele.playUri"
+                                                icon-class="copy_btn"
+                                                class-name="copy-btn pointer"
+                                                :data-clipboard-text="getVideoUrl(ele.playUri, 'playUri')">
+                                            </svg-icon>
+                                        </div>
                                     </div>
                                 </li>
                             </ul>
@@ -56,7 +88,9 @@
 </template>
 <script>
     import {mapActions} from 'vuex';
+    import _ from 'lodash';
     import DisplayVideoDialog from '../video_manage/DisplayVideoDialog';
+    const ClipboardJS = require('clipboard');
 
     export default {
         name: 'PreviewProgrammeList',
@@ -71,8 +105,12 @@
                 afterObj: {},
                 displayVideoDialogVisible: false,
                 url: '',
-                title: ''
+                title: '',
+                pushServer: ''
             };
+        },
+        mounted() {
+            this.initClipboard();
         },
         created() {
             let {id} = this.$route.params;
@@ -96,6 +134,20 @@
                         this.afterList = afterList;
                         this.prevObj = prevObj;
                         this.afterObj = afterObj;
+
+                        let allList = [...this.prevList, ...afterList];
+                        if (allList.length > 0) {
+                            let channelId = _.get(allList, '0.channelId');
+                            if (channelId) {
+                                this.getLiveChannelById(channelId)
+                                    .then((channelRes) => {
+                                        if (channelRes && channelRes.code === 0) {
+                                            let {pushServer} = channelRes.data;
+                                            this.pushServer = `http://${pushServer}`;
+                                        }
+                                    });
+                            }
+                        }
                     }
                 });
         },
@@ -103,6 +155,16 @@
             channelName() {
                 let obj = this.prevList[0] || this.afterList[0];
                 return obj ? obj.channelName : '';
+            },
+            getVideoUrl() {
+                return (uri, uriKey) => {
+                    let baseUri = window.localStorage.getItem('videoBaseUri');
+                    if (uriKey === 'm3u8Uri') {
+                        return `${this.pushServer}${uri}`;
+                    } else {
+                        return `${baseUri}${uri}`;
+                    }
+                };
             }
         },
         methods: {
@@ -110,6 +172,17 @@
                 getChannelPageById: 'channel/getChannelPageById',
                 getLiveChannelById: 'channel/getLiveChannelById'
             }),
+            initClipboard() {
+                let that = this;
+                let clipboard = new ClipboardJS('.copy-btn');
+                clipboard.on('success', function (e) {
+                    that.$message.success('视频链接复制成功');
+                    e.clearSelection();
+                });
+                clipboard.on('error', function (e) {
+                    that.$message.error('视频链接复制失败');
+                });
+            },
             timeStampFormat(seconds) {
                 let date = new Date(seconds);
                 let year = date.getFullYear();
@@ -171,19 +244,16 @@
                     return res;
                 }, {});
             },
-            async displayVideoPlayer(ele) {
-                try {
-                    let {channelId, m3u8Uri, name} = ele;
-                    let res = await this.getLiveChannelById(channelId);
-                    if (res && res.code === 0) {
-                        let {pushServer} = res.data;
-                        this.displayVideoDialogVisible = true;
-                        this.url = `http://${pushServer}${m3u8Uri}`;
-                        this.title = name;
-                    }
-                } catch (err) {
-                    console.log(err);
+            displayVideoPlayer(ele, uriKey) {
+                let {m3u8Uri, name, playUri} = ele;
+                let baseUri = window.localStorage.getItem('videoBaseUri');
+                if (uriKey === 'm3u8Uri') {
+                    this.url = `${this.pushServer}${m3u8Uri}`;
+                } else {
+                    this.url = `${baseUri}${playUri}`;
                 }
+                this.title = name;
+                this.displayVideoDialogVisible = true;
             },
             closeDisplayVideoDialog() {
                 this.displayVideoDialogVisible = false;
@@ -191,7 +261,7 @@
         }
     };
 </script>
-<style scoped lang="less">
+<style scoped lang="scss">
 .content {
     margin-top: 20px;
 }
@@ -209,10 +279,15 @@
     line-height: 30px;
     color: #A8ABB3;
 }
-.url {
-    font-size: 12px;
-    line-height: 20px;
-    color: #6F7480;
+.url-wrapper {
+    display: flex;
+    justify-content: space-between;
+    .url {
+        font-size: 12px;
+        line-height: 20px;
+        color: #6F7480;
+        cursor: pointer;
+    }
 }
 </style>
 <style lang="scss">

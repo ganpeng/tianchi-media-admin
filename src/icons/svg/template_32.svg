@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="530px" height="181px" viewBox="0 0 530 181" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
-    <title>搜索输入框 copy 6</title>
+<svg width="264px" height="90px" viewBox="0 0 264 90" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
+    <title>3+2</title>
     <desc>Created with Sketch.</desc>
     <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="03-新增混排模块版式" transform="translate(-70.000000, -590.000000)" fill="#2A3040" fill-rule="nonzero" stroke="#3E495E" stroke-width="0.5">
-            <g id="搜索输入框-copy-6" transform="translate(71.000000, 591.000000)">
-                <rect x="-0.25" y="100.75" width="258.5" height="78.5" rx="4"></rect>
-                <rect id="搜索输入框-copy-8" x="-0.25" y="-0.25" width="168.5" height="90.5" rx="4"></rect>
-                <rect id="搜索输入框-copy-8" x="179.75" y="-0.25" width="168.5" height="90.5" rx="4"></rect>
-                <rect id="搜索输入框-copy-9" x="359.75" y="-0.25" width="168.5" height="90.5" rx="4"></rect>
-                <rect id="搜索输入框-copy-7" x="269.75" y="100.75" width="258.5" height="78.5" rx="4"></rect>
+        <g id="03-新增混排模块" transform="translate(-1021.000000, -359.000000)" fill="#2A3040" fill-rule="nonzero">
+            <g id="3+2" transform="translate(1021.000000, 359.000000)">
+                <rect id="搜索输入框-copy-6" x="0" y="51" width="174" height="39" rx="2"></rect>
+                <rect id="搜索输入框-copy-8" x="0" y="0" width="84" height="45" rx="2"></rect>
+                <rect id="搜索输入框-copy-8" x="90" y="0" width="84" height="45" rx="2"></rect>
+                <rect id="搜索输入框-copy-9" x="180" y="0" width="84" height="45" rx="2"></rect>
+                <rect id="搜索输入框-copy-7" x="180" y="51" width="84" height="39" rx="2"></rect>
             </g>
         </g>
     </g>

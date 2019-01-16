@@ -7,7 +7,7 @@
         </div>
         <div class="content-field">
             <div class="top-field">
-                <div class="wrapper">
+                <div id="movie-top-left-field" class="wrapper">
                     <div :style="styleBgImageStr(movieActiveIndex)" class="top-left-field">
                         <corner-mark :squareIndex="movieActiveIndex" :cornerMark="getLayoutItemCornerMark(navbarId, 0, movieActiveIndex)"></corner-mark>
                     </div>

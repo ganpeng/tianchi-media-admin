@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="170px" height="80px" viewBox="0 0 170 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
-    <title>搜索输入框 copy 45</title>
+<svg width="85px" height="41px" viewBox="0 0 85 41" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
+    <title>sn</title>
     <desc>Created with Sketch.</desc>
     <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="03-新增混排模块版式" transform="translate(-720.000000, -753.000000)" fill-rule="nonzero">
-            <g id="搜索输入框-copy-45" transform="translate(721.000000, 754.000000)">
-                <rect stroke="#3E495E" stroke-width="0.5" fill="#2A3040" x="-0.25" y="-0.25" width="78.5" height="78.5" rx="4"></rect>
-                <rect id="搜索输入框-copy-46" stroke="#3E495E" stroke-width="1" x="90" y="0" width="78" height="78" rx="4"></rect>
-                <path d="M129.916667,38 L138,38 C138.552285,38 139,38.4477153 139,39 C139,39.5522847 138.552285,40 138,40 L129.916667,40 L129.916667,48 C129.916667,48.5522847 129.468951,49 128.916667,49 C128.364382,49 127.916667,48.5522847 127.916667,48 L127.916667,40 L120,40 C119.447715,40 119,39.5522847 119,39 C119,38.4477153 119.447715,38 120,38 L127.916667,38 L127.916667,30 C127.916667,29.4477153 128.364382,29 128.916667,29 C129.468951,29 129.916667,29.4477153 129.916667,30 L129.916667,38 Z" id="新建icon-copy" fill="#3E495E"></path>
+        <g id="03-新增混排模块" transform="translate(-1021.000000, -496.000000)" fill-rule="nonzero">
+            <g id="sn" transform="translate(1021.000000, 497.000000)">
+                <rect id="搜索输入框-copy-45" fill="#2A3040" x="0" y="0" width="39" height="39" rx="2"></rect>
+                <rect id="搜索输入框-copy-46" stroke="#2A3040" stroke-width="0.5" x="45" y="0" width="39" height="39" rx="2"></rect>
+                <path d="M65.4583333,19.5 L69.5,19.5 C69.7761424,19.5 70,19.7238576 70,20 C70,20.2761424 69.7761424,20.5 69.5,20.5 L65.4583333,20.5 L65.4583333,24.5 C65.4583333,24.7761424 65.2344757,25 64.9583333,25 C64.682191,25 64.4583333,24.7761424 64.4583333,24.5 L64.4583333,20.5 L60.5,20.5 C60.2238576,20.5 60,20.2761424 60,20 C60,19.7238576 60.2238576,19.5 60.5,19.5 L64.4583333,19.5 L64.4583333,15.5 C64.4583333,15.2238576 64.682191,15 64.9583333,15 C65.2344757,15 65.4583333,15.2238576 65.4583333,15.5 L65.4583333,19.5 Z" id="Path" fill="#2A3040"></path>
             </g>
         </g>
     </g>
