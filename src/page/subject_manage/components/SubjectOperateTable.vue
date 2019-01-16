@@ -132,11 +132,6 @@
                             item.visible = !item.visible;
                         }
                     });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消' + (item.visible ? '下架' : '上架') + '专题'
-                    });
                 });
             },
             // 删除单个专题,只有下架的专题才能删除
@@ -157,11 +152,6 @@
                             this.multipleSelection = [];
                             this.$emit('setBatchDisabledStatus', true);
                         }
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
                     });
                 });
             },
@@ -187,11 +177,6 @@
                             this.multipleSelection = [];
                             this.$emit('setBatchDisabledStatus', true);
                         }
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消批量' + (visible ? '上架' : '下架')
                     });
                 });
             },
@@ -223,11 +208,6 @@
                             this.multipleSelection = [];
                             this.$emit('setBatchDisabledStatus', true);
                         }
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
                     });
                 });
             },

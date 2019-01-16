@@ -164,7 +164,8 @@
         </el-dialog>
         <batch-message-list-dialog
             ref="batchMessageListDialog"
-            :batchMessageList="batchMessageList">
+            :batchMessageList="batchMessageList"
+            v-on:setBatchDisabledStatus="setBatchDisabledStatus">
         </batch-message-list-dialog>
     </div>
 </template>
@@ -230,6 +231,7 @@
                     if (response && response.code === 0) {
                         this.videoList = response.data.list;
                         this.total = response.data.total;
+                        this.$refs.videoTable.reCheckVideoList();
                     }
                 });
             },
@@ -356,6 +358,8 @@
                     return this.needRetryInject(video);
                 }).map((item) => item.id);
                 if (idList.length > 0) {
+                    // 开始批量操作，期间禁用其它批量操作
+                    this.setBatchDisabledStatus(true);
                     this.$refs.batchMessageListDialog.setBatchMessageStatus(true);
                     // 开始重新注入视频
                     // 初始化最初批量请求信息
@@ -472,6 +476,8 @@
                         type: 'error'
                     }).then(() => {
                         if (idList.length > 0) {
+                            // 开始批量操作，期间禁用其它批量操作
+                            this.setBatchDisabledStatus(true);
                             this.$refs.batchMessageListDialog.setBatchMessageStatus(true);
                             // 开始删除视频
                             // 初始化最初批量请求信息

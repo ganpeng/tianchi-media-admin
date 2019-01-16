@@ -23,10 +23,14 @@ export const getVideoList = ({keyword, startedAt, endedAt, status, uploadStatus,
     switch (status) {
         case 'SUCCESS':
         case 'FAILED':
+        case 'UPLOAD_COMPLETED':
+        case 'SPLIT_TASK_ON_PROCESS':
+        case 'SPLIT_TASK_SUCCESS':
+        case 'DELETING':
             statusList = [status];
             break;
-        case 'INJECTING':
-            statusList = ['UPLOAD_COMPLETED', 'SPLIT_TASK_SUBMITTED', 'SPLIT_TASK_ON_QUEUE', 'SPLIT_TASK_ON_PENDING', 'SPLIT_TASK_ON_PROCESS', 'SPLIT_TASK_SUCCESS'];
+        case 'WAITING_SPLIT':
+            statusList = ['SPLIT_TASK_SUBMITTED', 'SPLIT_TASK_ON_QUEUE', 'SPLIT_TASK_ON_PENDING'];
             break;
         default:
             break;

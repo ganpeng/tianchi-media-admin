@@ -114,6 +114,10 @@
                         }
                     }
                 }
+                // 批量操作完成之后，恢复其它批量操作的功能
+                if (this.successCount + this.failCount === this.batchMessageList.length) {
+                    this.$emit('batchMessageList', false);
+                }
             }
         },
         methods: {

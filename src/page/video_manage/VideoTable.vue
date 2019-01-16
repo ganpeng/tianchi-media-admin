@@ -439,6 +439,19 @@
                     this.$emit('setBatchDisabledStatus', false);
                 }
             },
+            // 根据选中的视频项重新恢复勾选列表
+            reCheckVideoList() {
+                // 对于选择的多选项进行勾选
+                for (let i = 0; i < this.multipleSelection.length; i++) {
+                    for (let k = 0; k < this.videoList.length; k++) {
+                        if (this.multipleSelection[i].id === this.videoList[k].id) {
+                            this.$nextTick(function () {
+                                this.$refs.multipleTable.toggleRowSelection(this.videoList[k], true);
+                            });
+                        }
+                    }
+                }
+            },
             // 展示共享站点（只存在于主站）
             checkShareSiteList(videoItem) {
                 this.shareSiteVisible = true;

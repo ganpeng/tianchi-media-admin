@@ -6,6 +6,7 @@
                 <el-form-item>
                     <el-input
                         v-model="listQueryParams.keyword"
+                        @change="getChannelList"
                         placeholder="频道名称、编号等"
                         class="border-input"
                         clearable>
