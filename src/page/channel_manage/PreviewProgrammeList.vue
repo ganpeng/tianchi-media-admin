@@ -23,24 +23,27 @@
                                 <li v-for="(ele, index) in item" :key="index" class="item-li">
                                     <div class="wrapper">
                                         <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
-                                        <div v-if="ele.m3u8Uri" class="url-wrapper">
-                                            <span class="url" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看地址：{{baseUri}}{{ele.m3u8Uri}}</span>
-                                            <svg-icon
-                                                v-if="ele.m3u8Uri"
-                                                icon-class="copy_btn"
-                                                class-name="copy-btn pointer"
-                                                :data-clipboard-text="getVideoUrl(ele.m3u8Uri, 'm3u8Uri')">
-                                            </svg-icon>
+                                        <div class="btn-wrapper">
+                                            <div v-if="ele.m3u8Uri" class="url-wrapper">
+                                                <span class="url text-primary" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看</span>
+                                                <svg-icon
+                                                    v-if="ele.m3u8Uri"
+                                                    icon-class="copy_btn"
+                                                    class-name="copy-btn pointer"
+                                                    :data-clipboard-text="getVideoUrl(ele.m3u8Uri, 'm3u8Uri')">
+                                                </svg-icon>
+                                            </div>
+                                            <div v-if="ele.playUri" class="url-wrapper">
+                                                <span class="url text-primary" @click="displayVideoPlayer(ele, 'playUri')">直播</span>
+                                                <svg-icon
+                                                    v-if="ele.playUri"
+                                                    icon-class="copy_btn"
+                                                    class-name="copy-btn pointer"
+                                                    :data-clipboard-text="getVideoUrl(ele.playUri, 'playUri')">
+                                                </svg-icon>
+                                            </div>
                                         </div>
-                                        <div v-if="ele.playUri" class="url-wrapper">
-                                            <span class="url" @click="displayVideoPlayer(ele, 'playUri')">直播地址：{{baseUri}}{{ele.playUri}}</span>
-                                            <svg-icon
-                                                v-if="ele.playUri"
-                                                icon-class="copy_btn"
-                                                class-name="copy-btn pointer"
-                                                :data-clipboard-text="getVideoUrl(ele.playUri, 'playUri')">
-                                            </svg-icon>
-                                        </div>
+
                                     </div>
                                 </li>
                             </ul>
@@ -57,24 +60,27 @@
                                 <li v-for="(ele, index) in item" :key="index" class="item-li">
                                     <div class="wrapper">
                                         <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
-                                        <div v-if="ele.m3u8Uri" class="url-wrapper">
-                                            <span class="url" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看地址：{{baseUri}}{{ele.m3u8Uri}}</span>
-                                            <svg-icon
-                                                v-if="ele.m3u8Uri"
-                                                icon-class="copy_btn"
-                                                class-name="copy-btn pointer"
-                                                :data-clipboard-text="getVideoUrl(ele.m3u8Uri, 'm3u8Uri')">
-                                            </svg-icon>
+                                        <div class="btn-wrapper">
+                                            <div v-if="ele.m3u8Uri" class="url-wrapper">
+                                                <span class="url text-primary" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看</span>
+                                                <svg-icon
+                                                    v-if="ele.m3u8Uri"
+                                                    icon-class="copy_btn"
+                                                    class-name="copy-btn pointer"
+                                                    :data-clipboard-text="getVideoUrl(ele.m3u8Uri, 'm3u8Uri')">
+                                                </svg-icon>
+                                            </div>
+                                            <div v-if="ele.playUri" class="url-wrapper">
+                                                <span class="url text-primary" @click="displayVideoPlayer(ele, 'playUri')">直播</span>
+                                                <svg-icon
+                                                    v-if="ele.playUri"
+                                                    icon-class="copy_btn"
+                                                    class-name="copy-btn pointer"
+                                                    :data-clipboard-text="getVideoUrl(ele.playUri, 'playUri')">
+                                                </svg-icon>
+                                            </div>
                                         </div>
-                                        <div v-if="ele.playUri" class="url-wrapper">
-                                            <span class="url" @click="displayVideoPlayer(ele, 'playUri')">直播地址：{{baseUri}}{{ele.playUri}}</span>
-                                            <svg-icon
-                                                v-if="ele.playUri"
-                                                icon-class="copy_btn"
-                                                class-name="copy-btn pointer"
-                                                :data-clipboard-text="getVideoUrl(ele.playUri, 'playUri')">
-                                            </svg-icon>
-                                        </div>
+
                                     </div>
                                 </li>
                             </ul>
@@ -285,19 +291,29 @@
     line-height: 30px;
     color: #606060;
 }
-.url {
-    font-size: 12px;
-    line-height: 20px;
-    color: #8C8C8C;
+.time-name {
+    font-size: 14px;
+    line-height: 14px;
+    padding: 10px 0 0 0;
+    color: #A8ABB3;
 }
-.url-wrapper {
+.btn-wrapper {
     display: flex;
-    justify-content: space-between;
-    .url {
-        font-size: 12px;
-        line-height: 20px;
-        color: #6F7480;
-        cursor: pointer;
+    padding: 10px 0;
+    .url-wrapper {
+        display: flex;
+        align-content: center;
+        margin-right: 20px;
+        .url {
+            font-size: 14px;
+            line-height: 14px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .svg-icon {
+            width: 14px;
+            height: 14px;
+        }
     }
 }
 </style>
