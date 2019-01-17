@@ -24,7 +24,7 @@
                                     <div class="wrapper">
                                         <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
                                         <div v-if="ele.m3u8Uri" class="url-wrapper">
-                                            <span class="url" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看地址：{{pushServer}}{{ele.m3u8Uri}}</span>
+                                            <span class="url" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看地址：{{baseUri}}{{ele.m3u8Uri}}</span>
                                             <svg-icon
                                                 v-if="ele.m3u8Uri"
                                                 icon-class="copy_btn"
@@ -33,7 +33,7 @@
                                             </svg-icon>
                                         </div>
                                         <div v-if="ele.playUri" class="url-wrapper">
-                                            <span class="url" @click="displayVideoPlayer(ele, 'playUri')">直播地址：{{pushServer}}{{ele.playUri}}</span>
+                                            <span class="url" @click="displayVideoPlayer(ele, 'playUri')">直播地址：{{baseUri}}{{ele.playUri}}</span>
                                             <svg-icon
                                                 v-if="ele.playUri"
                                                 icon-class="copy_btn"
@@ -58,7 +58,7 @@
                                     <div class="wrapper">
                                         <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
                                         <div v-if="ele.m3u8Uri" class="url-wrapper">
-                                            <span class="url" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看地址：{{pushServer}}{{ele.m3u8Uri}}</span>
+                                            <span class="url" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看地址：{{baseUri}}{{ele.m3u8Uri}}</span>
                                             <svg-icon
                                                 v-if="ele.m3u8Uri"
                                                 icon-class="copy_btn"
@@ -67,7 +67,7 @@
                                             </svg-icon>
                                         </div>
                                         <div v-if="ele.playUri" class="url-wrapper">
-                                            <span class="url" @click="displayVideoPlayer(ele, 'playUri')">直播地址：{{pushServer}}{{ele.playUri}}</span>
+                                            <span class="url" @click="displayVideoPlayer(ele, 'playUri')">直播地址：{{baseUri}}{{ele.playUri}}</span>
                                             <svg-icon
                                                 v-if="ele.playUri"
                                                 icon-class="copy_btn"
@@ -94,7 +94,7 @@
 </template>
 <script>
     import {mapActions} from 'vuex';
-    import _ from 'lodash';
+    // import _ from 'lodash';
     import DisplayVideoDialog from '../video_manage/DisplayVideoDialog';
     const ClipboardJS = require('clipboard');
 
@@ -140,20 +140,19 @@
                         this.afterList = afterList;
                         this.prevObj = prevObj;
                         this.afterObj = afterObj;
-
-                        let allList = [...this.prevList, ...afterList];
-                        if (allList.length > 0) {
-                            let channelId = _.get(allList, '0.channelId');
-                            if (channelId) {
-                                this.getLiveChannelById(channelId)
-                                    .then((channelRes) => {
-                                        if (channelRes && channelRes.code === 0) {
-                                            let {pushServer} = channelRes.data;
-                                            this.pushServer = `http://${pushServer}`;
-                                        }
-                                    });
-                            }
-                        }
+                        // let allList = [...this.prevList, ...afterList];
+                        // if (allList.length > 0) {
+                        //     let channelId = _.get(allList, '0.channelId');
+                        //     if (channelId) {
+                        //         this.getLiveChannelById(channelId)
+                        //             .then((channelRes) => {
+                        //                 if (channelRes && channelRes.code === 0) {
+                        //                     let {pushServer} = channelRes.data;
+                        //                     this.pushServer = `http://${pushServer}`;
+                        //                 }
+                        //             });
+                        //     }
+                        // }
                     }
                 });
         },
@@ -162,14 +161,19 @@
                 let obj = this.prevList[0] || this.afterList[0];
                 return obj ? obj.channelName : '';
             },
+            baseUri() {
+                let baseUri = window.localStorage.getItem('videoBaseUri');
+                return baseUri;
+            },
             getVideoUrl() {
                 return (uri, uriKey) => {
                     let baseUri = window.localStorage.getItem('videoBaseUri');
-                    if (uriKey === 'm3u8Uri') {
-                        return `${this.pushServer}${uri}`;
-                    } else {
-                        return `${baseUri}${uri}`;
-                    }
+                    return `${baseUri}${uri}`;
+                    // if (uriKey === 'm3u8Uri') {
+                    //     return `${this.pushServer}${uri}`;
+                    // } else {
+                    //     return `${baseUri}${uri}`;
+                    // }
                 };
             }
         },
@@ -204,32 +208,26 @@
             },
             prevHandleChange(activeName) {
                 let prevArrowList = document.querySelectorAll('#prevContainer .el-collapse-item__arrow.el-icon-arrow-right');
-                // let prevItemHeader = document.querySelectorAll('#prevContainer .el-collapse-item__header');
                 let prevTitleList = document.querySelectorAll('#prevContainer .title');
                 for (let i = 0; i < prevArrowList.length; i++) {
                     if (activeName === i) {
                         prevArrowList[i].style.color = '#1989FA';
-                        // prevItemHeader[i].style.borderBottom = '1px solid #3E495E';
                         prevTitleList[i].style.color = '#1989FA';
                     } else {
                         prevArrowList[i].style.color = '#A8ABB3';
-                        // prevItemHeader[i].style.borderBottom = 'none';
                         prevTitleList[i].style.color = '#A8ABB3';
                     }
                 }
             },
             afterHandleChange(activeName) {
                 let afterArrowList = document.querySelectorAll('#afterContainer .el-collapse-item__arrow.el-icon-arrow-right');
-                // let afterItemHeader = document.querySelectorAll('#afterContainer .el-collapse-item__header');
                 let afterTitleList = document.querySelectorAll('#afterContainer .title');
                 for (let i = 0; i < afterArrowList.length; i++) {
                     if (activeName === i) {
                         afterArrowList[i].style.color = '#1989FA';
-                        // afterItemHeader[i].style.borderBottom = '1px solid #3E495E';
                         afterTitleList[i].style.color = '#1989FA';
                     } else {
                         afterArrowList[i].style.color = '#A8ABB3';
-                        // afterItemHeader[i].style.borderBottom = 'none';
                         afterTitleList[i].style.color = '#A8ABB3';
                     }
                 }
@@ -252,11 +250,10 @@
             },
             displayVideoPlayer(ele, uriKey) {
                 let {m3u8Uri, name, playUri} = ele;
-                let baseUri = window.localStorage.getItem('videoBaseUri');
                 if (uriKey === 'm3u8Uri') {
-                    this.url = `${this.pushServer}${m3u8Uri}`;
+                    this.url = `${m3u8Uri}`;
                 } else {
-                    this.url = `${baseUri}${playUri}`;
+                    this.url = `${playUri}`;
                 }
                 this.title = name;
                 this.displayVideoDialogVisible = true;
