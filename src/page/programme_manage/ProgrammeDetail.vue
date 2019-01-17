@@ -87,7 +87,6 @@
                                 <category-search
                                     :handleSelect="selectCategoryHandler"
                                 ></category-search>
-                                <el-button class="btn-style-four min" v-if="!readonly" type="primary" @click="gotoProgramTypePage" plain>新增</el-button>
                             </el-form-item>
                             <el-form-item label="节目类型" prop="typeList">
                                 <div id="type-sort" class="my-tags">
@@ -380,7 +379,7 @@
                     <el-col :span="12">
                         <h2 class="content-sub-title">&nbsp;</h2>
                         <el-form-item label="节目角标">
-                            <div class="mark-container">
+                            <div v-if="showMark" class="mark-container">
                                 <div class="mark-item">
                                     <el-checkbox v-if="markChecked('leftTop')" :checked="true" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
                                         左上角：播放平台
@@ -560,9 +559,22 @@
                 .then((res) => {
                     if (res && res.code === 0) {
                         this.customMarkOptions = res.data;
+                        this.showMark = true;
                     }
                 });
+
+            let content = document.querySelector('.content');
+            content.scrollTop = 0;
+
             this.$util.toggleFixedBtnContainer();
+        },
+        beforeRouteLeave(to, from, next) {
+            let {name} = to;
+            if (name !== 'DisplayProgramme' && name !== 'EditProgramme') {
+                this.resetProgrammeSearchFields();
+                this.resetProgrammePagination();
+            }
+            next();
         },
         data() {
             return {
@@ -574,6 +586,7 @@
                 subjectOptions: role.SUBJECT,
                 size: dimension.PROGRAMME_DIMENSION,
                 customMarkOptions: [],
+                showMark: false,
                 // allowResolutions: role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS,
                 previewImage: {
                     display: false,
@@ -774,9 +787,8 @@
             },
             markChecked() {
                 return (position) => {
-                    let mark = _.get(this.programme, `cornerMark.${position}`);
-                    let isChecked = !_.isEmpty(mark);
-                    return isChecked;
+                    let mark = _.get(this.programme, `cornerMark.${position}.caption`);
+                    return mark;
                 };
             },
             rightTop() {
@@ -793,6 +805,8 @@
                 deletePosterImage: 'programme/deletePosterImage',
                 setCoverImage: 'programme/setCoverImage',
                 setVideoList: 'programme/setVideoList',
+                resetProgrammeSearchFields: 'programme/resetProgrammeSearchFields',
+                resetProgrammePagination: 'programme/resetProgrammePagination',
                 // 视频video
                 updateSearchFields: 'video/updateSearchFields',
                 //  新的人物实时搜索
@@ -1340,9 +1354,9 @@
     display: flex;
     flex-wrap: wrap;
     .mark-item {
-        font-size: 14px;
-        color: #c0c4cc;
-        font-weight: 200;
+        font-size: 16px;
+        color: #A8ABB3;
+        font-weight: 400;
         width: 45%;
         .el-checkbox {
             padding: 0;
@@ -1350,6 +1364,17 @@
         .el-select {
             width: 160px;
         }
+    }
+    label.el-checkbox {
+        .el-checkbox__label {
+            color: #A8ABB3;
+        }
+    }
+    label.el-checkbox.is-disabled {
+        span.el-checkbox__label {
+            color: #A8ABB3;
+        }
+        opacity: 0.3;
     }
 }
 .on-off-the-shelf {
@@ -1364,5 +1389,10 @@
     .el-input {
         width: 160px;
     }
+}
+.el-checkbox__label {
+    color: #A8ABB3;
+    font-size: 16px;
+    font-weight: 400;
 }
 </style>

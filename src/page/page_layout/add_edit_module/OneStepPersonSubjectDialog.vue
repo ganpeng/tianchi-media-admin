@@ -170,7 +170,8 @@ export default {
         disabled() {
             return (row) => {
                 let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
-                let index = layoutData.layoutItemMultiList.findIndex((item) => item.id === row.id);
+                let list = layoutData.layoutItemMultiList.filter((item) => item.id !== this.personSubjectData.id);
+                let index = list.findIndex((item) => item.id === row.id);
                 return index >= 0;
             };
         },

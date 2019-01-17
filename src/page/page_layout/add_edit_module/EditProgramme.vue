@@ -623,16 +623,16 @@ export default {
             let leftBottomCaption = '';
             switch (programmeTemplate) {
                 case 'TV_DRAMA':
-                    leftBottomCaption = `更新至${featureVideoCount}集`;
+                    leftBottomCaption = featureVideoCount ? `更新至${featureVideoCount}集` : '';
                     break;
                 case 'TV_SHOW':
-                    leftBottomCaption = `更新至${featureVideoCount}期`;
+                    leftBottomCaption = featureVideoCount ? `更新至${featureVideoCount}期` : '';
                     break;
                 default:
                     leftBottomCaption = '';
             }
 
-            if (programmeTemplate === 'TV_DRAMA' && featureVideoCount === totalSets) {
+            if (programmeTemplate === 'TV_DRAMA' && totalSets && featureVideoCount === totalSets) {
                 leftBottomCaption = `${totalSets}集全`;
             }
 

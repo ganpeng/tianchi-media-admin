@@ -579,7 +579,7 @@ const actions = {
     async getProgrammeSubjectList({commit, state}) {
         try {
             let {keyword, pagination: {pageSize, pageNum}} = state.programmeSubject;
-            let params = Object.assign({}, { keyword, pageSize, pageNum: pageNum - 1 });
+            let params = Object.assign({}, { keyword, pageSize, pageNum: pageNum - 1, visible: true });
             let res = await service.getProgrammeSubjectList(params);
             if (res && res.code === 0) {
                 let {pageNum, pageSize, total, list} = res.data;

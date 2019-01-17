@@ -7,13 +7,16 @@
                         <img :src="image.uri" class="image" alt="">
                         <div class="mask"></div>
                     </div>
-                    <i @click.stop="deleteImage(image.id)" class="delete-icon el-tag__close el-icon-close"></i>
+                    <span @click.stop="deleteImage(image.id)" class="delete-btn-one small delete-icon">
+                        &times;
+                    </span>
+                    <!-- <i @click.stop="deleteImage(image.id)" class="delete-icon el-tag__close el-icon-close"></i> -->
                     <p class="dimension-info">{{image.width}}*{{image.height}}</p>
                 </li>
                 <li :style="styleStr(obj.dataUri)" v-for="(obj, index) in showFileList" :key="index" class="image-item">
                     <el-progress :stroke-width="3" :show-text="false" class="progress-bar" v-show="obj.data.progress !== 0" :percentage="obj.data.progress"></el-progress>
                 </li>
-                <li v-show="!isUploading" :style="styleStr()" class="image-item">
+                <li v-show="!isUploading" class="image-item">
                     <div class="uploader">
                         <label class="ui_button ui_button_primary" for="multi-image-uploader">
                             <i class="el-icon-plus"></i>
@@ -234,6 +237,7 @@ export default {
         .image-item {
             position: relative;
             width: 170px;
+            height: 124px;
             cursor: zoom-in;
             margin: 0 20px 10px 0;
             .image-warpper {
@@ -251,7 +255,8 @@ export default {
                     left: 0;
                     right: 0;
                     bottom: 0;
-                    background: rgba(#000, 0.6);
+                    background: #293550;
+                    opacity: 0.8;
                     border-radius: 8px;
                 }
                 &:hover {
@@ -268,6 +273,8 @@ export default {
             .dimension-info {
                 margin-top: 10px;
                 color: #A8ABB3;
+                font-size: 14px;
+                line-height: 14px;
                 text-align: center;
             }
             .progress-bar {
@@ -275,19 +282,11 @@ export default {
                 bottom: 0px;
                 width: 100%;
             }
-            i.delete-icon {
+            span.delete-icon {
                 display: none;
                 position: absolute;
                 top: 8px;
                 right: 8px;
-                width: 22px;
-                height: 22px;
-                line-height: 22px;
-                font-size: 18px;
-                background: #000;
-                border-radius: 50%;
-                text-align: center;
-                color: $closeBtnHoverColor;
                 cursor: pointer;
                 z-index: 1000000;
             }
@@ -296,7 +295,7 @@ export default {
                 .mask {
                     display: block;
                 }
-                i {
+                span.delete-icon {
                     display: block;
                 }
             }
