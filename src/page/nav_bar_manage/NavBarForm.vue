@@ -97,7 +97,7 @@
                     <el-radio
                         label="FS_5"
                         v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_5')">
-                        儿童板式（只适用于儿童栏目
+                        儿童板式（只适用于儿童栏目）
                         <svg-icon icon-class="model_child"></svg-icon>
                     </el-radio>
                 </el-radio-group>

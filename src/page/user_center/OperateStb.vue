@@ -8,22 +8,11 @@
                 class="stb-item">
                 <label>设备{{index + 1}}：</label>
                 <span>{{item.no}}</span>
-                <el-button
-                    v-if="item.status === 'NORMAL'"
-                    size="mini"
-                    type="danger"
-                    plain
-                    @click="disabledStb(item,index)">
-                    禁用
-                </el-button>
-                <el-button
-                    v-if="item.status === 'FORBIDDEN'"
-                    size="mini"
-                    type="success"
-                    plain
-                    @click="recoverStb(item,index)">
-                    恢复
-                </el-button>
+                <input
+                    class="my-switch switch-anim"
+                    type="checkbox"
+                    :checked="item.status === 'NORMAL'"
+                    @click.prevent="updateStbStatus(item,index)"/>
                 <el-select
                     v-if="item.status === 'FORBIDDEN'"
                     v-model="item.remark"
@@ -76,16 +65,16 @@
             init() {
                 this.currentUserInfo = JSON.parse(JSON.stringify(this.userInfo));
             },
-            // 禁用设备
-            disabledStb(item, index) {
-                item.status = 'FORBIDDEN';
-                this.currentUserInfo.stbList.splice(index, 1, item);
-            },
-            // 恢复设备
-            recoverStb(item, index) {
-                item.status = 'NORMAL';
-                item.remark = '';
-                this.currentUserInfo.stbList.splice(index, 1, item);
+            // 禁用/恢复设备
+            updateStbStatus(item, index) {
+                if (item.status === 'NORMAL') {
+                    item.status = 'FORBIDDEN';
+                    this.currentUserInfo.stbList.splice(index, 1, item);
+                } else {
+                    item.status = 'NORMAL';
+                    item.remark = '';
+                    this.currentUserInfo.stbList.splice(index, 1, item);
+                }
             },
             // 选择禁用原因
             pickRemark(value, item, index) {
@@ -140,8 +129,10 @@
                 line-height: 40px;
                 text-align: left;
             }
-            .el-button {
-                margin: 5px 10px;
+            .my-switch {
+                margin-top: 12px;
+                margin-right: 10px;
+                margin-left: 10px;
             }
         }
     }

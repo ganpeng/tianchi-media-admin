@@ -33,16 +33,19 @@
                 </el-button>
                 <span
                     @click="toggleSearchField"
-                    :class="['el-dropdown-link', searchFieldVisible ? 'active' : '']">
-                    更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
+                    :class="{active:searchFieldVisible}"
+                    class="more-filters">
+                    更多筛选
+                    <i class="el-icon-arrow-up" v-if="searchFieldVisible"></i>
+                    <i class="el-icon-arrow-down" v-else></i>
                 </span>
             </div>
             <div v-show="searchFieldVisible" class="field-row">
                 <div class="search-field-item">
                     <label class="search-field-item-label">省份</label>
                     <el-select v-model="listQueryParams.province"
-                            @change="selectDistrict('PROVINCE')"
-                            placeholder="请选择省份">
+                               @change="selectDistrict('PROVINCE')"
+                               placeholder="请选择省份">
                         <el-option
                             v-for="item in provinceOptions"
                             :key="item.code"
@@ -102,6 +105,7 @@
 </template>
 <script>
     import _ from 'lodash';
+
     export default {
         name: 'ProgrammeFilterParams',
         props: [],
@@ -230,5 +234,24 @@
         }
     };
 </script>
+
 <style lang="scss" scoped>
+
+    // 按钮
+    .more-filters {
+        margin-left: 20px;
+        font-size: 12px;
+        color: #6F7480;
+        cursor: pointer;
+        &.active {
+            color: #1989FA;
+            i {
+                color: #6F7480;
+            }
+        }
+        i {
+            margin-left: 8px;
+        }
+    }
+
 </style>

@@ -50,15 +50,17 @@
                             </el-option>
                         </el-select>
                     </div>
-
                     <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
                         <svg-icon icon-class="reset"></svg-icon>
                         重置
                     </el-button>
                     <span
                         @click="toggleSearchField"
-                        class="el-dropdown-link">
-                        更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
+                        :class="{active:searchFieldVisible}"
+                        class="more-filters">
+                        更多筛选
+                        <i class="el-icon-arrow-up" v-if="searchFieldVisible"></i>
+                        <i class="el-icon-arrow-down" v-else></i>
                     </span>
                 </div>
                 <div v-show="searchFieldVisible" class="field-row">
@@ -129,7 +131,8 @@
                     </el-table-column>
                     <el-table-column align="center" width="120px" label="升级包下载">
                         <template slot-scope="scope">
-                            <a v-if="scope.row.fullPackageUri" class="text-primary" :href="packageUrl(scope.row.fullPackageUri)">{{scope.row.version}}</a>
+                            <a v-if="scope.row.fullPackageUri" class="text-primary"
+                               :href="packageUrl(scope.row.fullPackageUri)">{{scope.row.version}}</a>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -149,6 +152,7 @@
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import role from '@/util/config/role';
+
     export default {
         name: 'VersionList',
         data() {
@@ -206,6 +210,7 @@
             },
             clearSearchFields() {
                 this.resetSearchFields();
+                this.getVersionList();
             },
             keyupHandler(e) {
                 if (e.keyCode === 13) {
@@ -252,8 +257,28 @@
         }
     };
 </script>
+
 <style scoped lang="scss">
-a.text-primary {
-    color: #1989FA;
-}
+
+    a.text-primary {
+        color: #1989FA;
+    }
+
+    // 按钮
+    .more-filters {
+        margin-left: 20px;
+        font-size: 12px;
+        color: #6F7480;
+        cursor: pointer;
+        &.active {
+            color: #1989FA;
+            i {
+                color: #6F7480;
+            }
+        }
+        i {
+            margin-left: 8px;
+        }
+    }
+
 </style>

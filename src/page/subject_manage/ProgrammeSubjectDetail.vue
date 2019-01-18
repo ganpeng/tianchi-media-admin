@@ -32,7 +32,7 @@
             </div>
         </div>
         <!--其它海报-->
-        <div class="other-poster">
+        <div class="other-poster" v-if="subjectInfo.posterImageList.length !== 0">
             <div class="content-sub-title">其它海报</div>
             <thumbnail
                 :imageList="subjectInfo.posterImageList"
@@ -82,6 +82,11 @@
                 this.$service.getSubjectDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         this.subjectInfo = response.data;
+                        for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
+                            if (this.subjectInfo.posterImageList[i].width.toString() === '1920' && this.subjectInfo.posterImageList[i].height.toString() === '1080') {
+                                this.subjectInfo.posterImageList.splice(i, 1);
+                            }
+                        }
                     }
                 });
             },
@@ -175,7 +180,7 @@
             width: 384px;
             border: 1px solid #3E495E;
             border-radius: 8px;
-            box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
+            box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.50);
         }
         div {
             margin-left: 443px;

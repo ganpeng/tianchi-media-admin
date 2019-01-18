@@ -181,11 +181,6 @@
                             this.$message(message);
                         }
                     });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消' + operateWords + channelInfo.innerName + '频道'
-                    });
                 });
             },
             // 删除单个频道
@@ -209,16 +204,16 @@
                             this.multipleSelection = [];
                         }
                     });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
                 });
             },
             // 勾选
             handleSelectionChange(val) {
                 this.multipleSelection = val;
+                if (this.multipleSelection.length === 0) {
+                    this.$emit('setBatchDisabledStatus', true);
+                } else {
+                    this.$emit('setBatchDisabledStatus', false);
+                }
             },
             // 批量上下架
             batchUpdateStatus(visible) {

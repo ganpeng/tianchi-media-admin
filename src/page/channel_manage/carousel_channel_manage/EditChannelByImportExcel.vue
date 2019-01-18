@@ -295,7 +295,6 @@
             > div {
                 margin-left: 20px;
                 margin-right: 20px;
-                border-bottom: 1px solid #3E495E;
             }
             .el-button {
                 margin-right: 20px;
@@ -324,13 +323,14 @@
             .list-none {
                 position: fixed;
                 left: 0px;
-                right: 300px;
+                right: 320px;
                 bottom: 0px;
-                top: 42px;
+                top: 80px;
                 margin: auto;
                 font-size: 24px;
                 color: #293550;
                 text-align: center;
+                border-top: 1px solid #3E495E;
                 img {
                     display: block;
                     width: 368px;
@@ -343,11 +343,12 @@
                 }
             }
             .info-header {
-                height: 70px;
-                line-height: 70px;
+                height: 100px;
+                line-height: 100px;
                 font-size: 20px;
                 color: #A8ABB3;
                 text-align: center;
+                border-top: 1px solid #3E495E;
             }
         }
     }

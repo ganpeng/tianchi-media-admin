@@ -1,5 +1,8 @@
 <template>
     <div id="select-multiple-video" class="video-table-container text-center" @keyup.enter="getVideoList">
+        <div class="selected-count">
+            <span>已选{{currentSelectedVideoList.length}}项</span>
+        </div>
         <div class="search-field-item">
             <el-input
                 v-model="queryParams.keyword"
@@ -266,7 +269,7 @@
             // 选择或者取消选择视频
             selectVideo(selection, video) {
                 if (video.hadSelected) {
-                    this.$message('该视频已经存在于轮播频道列表中，不可选择');
+                    this.$message('该视频已经存在于轮播频道列表中');
                     return;
                 }
                 if (this.getOperate(selection, video) === 'APPEND') {
@@ -318,6 +321,20 @@
 </script>
 
 <style lang="scss" scoped>
+
+    .selected-count {
+        margin-top: -30px;
+        height: 45px;
+        border-bottom: 1px solid #3E495E;
+        text-align: left;
+        span {
+            padding-left: 5px;
+            height: 45px;
+            line-height: 55px;
+            font-size: 14px;
+            color: #FFFFFF;
+        }
+    }
 
     .search-field-item {
         text-align: left;

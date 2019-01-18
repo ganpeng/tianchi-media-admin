@@ -32,7 +32,7 @@
             </div>
         </div>
         <!--其它海报-->
-        <div class="other-poster">
+        <div class="other-poster" v-if="subjectInfo.posterImageList.length !== 0">
             <div class="content-sub-title">其它海报</div>
             <thumbnail
                 :imageList="subjectInfo.posterImageList"
@@ -69,7 +69,8 @@
         data() {
             return {
                 subjectInfo: {
-                    subjectItemList: []
+                    subjectItemList: [],
+                    posterImageList: []
                 },
                 uniquePosterImage: {}
             };
@@ -179,15 +180,15 @@
             position: absolute;
             top: 0px;
             left: 20px;
-            height: 300px;
-            width: 100px;
+            height: 240px;
+            width: 104px;
             border: 1px solid #3E495E;
             border-radius: 8px;
-            box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
+            box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.50);
         }
         div {
             margin-left: 155px;
-            height: 310px;
+            height: 250px;
             border-top: 1px solid #252D3F;
             ul {
                 margin-top: 10px;

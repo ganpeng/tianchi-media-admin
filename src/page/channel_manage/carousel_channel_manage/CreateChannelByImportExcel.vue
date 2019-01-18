@@ -13,7 +13,7 @@
                             <svg-icon icon-class="export"></svg-icon>
                             导出模板
                         </el-button>
-                        <i>导入{{currentChannelCategory }}频道</i>
+                        <i>导入{{currentChannelCategory}}频道</i>
                         <label>
                             共{{channelList.length}}条，已进行{{finishNo}}条，成功
                             <span class="success-info">{{finishNo - failNo}}</span>条,失败
@@ -60,7 +60,7 @@
                                 type="primary"
                                 @click="createChannels"
                                 class="btn-style-two">
-                                保存
+                                创建
                             </el-button>
                             <el-button
                                 @click="toChannelList"
@@ -464,7 +464,6 @@
             > div {
                 margin-left: 20px;
                 margin-right: 20px;
-                border-bottom: 1px solid #3E495E;
             }
             .el-button {
                 margin-right: 20px;
@@ -493,13 +492,14 @@
             .list-none {
                 position: fixed;
                 left: 0px;
-                right: 300px;
+                right: 320px;
                 bottom: 0px;
-                top: 42px;
+                top: 80px;
                 margin: auto;
                 font-size: 24px;
                 color: #293550;
                 text-align: center;
+                border-top: 1px solid #3E495E;
                 img {
                     display: block;
                     width: 368px;
@@ -517,6 +517,7 @@
                 font-size: 20px;
                 color: #A8ABB3;
                 text-align: center;
+                border-top: 1px solid #3E495E;
             }
         }
     }

@@ -62,7 +62,8 @@
                     <div class="float-left">
                         <el-dropdown
                             trigger="click"
-                            class="my-dropdown">
+                            class="my-dropdown"
+                            :class="{'is-disabled':multipleSelection.length === 0}">
                             <span class="el-dropdown-link">
                                 批量操作<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
@@ -160,6 +161,24 @@
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="total">
             </el-pagination>
+            <div class="text-left table-dropdow-box">
+                <el-dropdown
+                    trigger="click"
+                    class="my-dropdown"
+                    :class="{'is-disabled':multipleSelection.length === 0}">
+                            <span class="el-dropdown-link">
+                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>
+                            <span @click="retryDownloadBatchVideos">批量重试</span>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <span @click="removeBatchVideos">批量删除</span>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </div>
         </div>
     </div>
 </template>
@@ -267,11 +286,6 @@
                     type: 'error'
                 }).then(() => {
                     this.removeSingleVideo(video);
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消批量删除'
-                    });
                 });
             },
             // 批量重试下载视频
