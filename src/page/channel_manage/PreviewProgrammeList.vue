@@ -100,7 +100,7 @@
 </template>
 <script>
     import {mapActions} from 'vuex';
-    // import _ from 'lodash';
+    import _ from 'lodash';
     import DisplayVideoDialog from '../video_manage/DisplayVideoDialog';
     const ClipboardJS = require('clipboard');
 
@@ -146,19 +146,20 @@
                         this.afterList = afterList;
                         this.prevObj = prevObj;
                         this.afterObj = afterObj;
-                        // let allList = [...this.prevList, ...afterList];
-                        // if (allList.length > 0) {
-                        //     let channelId = _.get(allList, '0.channelId');
-                        //     if (channelId) {
-                        //         this.getLiveChannelById(channelId)
-                        //             .then((channelRes) => {
-                        //                 if (channelRes && channelRes.code === 0) {
-                        //                     let {pushServer} = channelRes.data;
-                        //                     this.pushServer = `http://${pushServer}`;
-                        //                 }
-                        //             });
-                        //     }
-                        // }
+
+                        let allList = [...this.prevList, ...afterList];
+                        if (allList.length > 0) {
+                            let channelId = _.get(allList, '0.channelId');
+                            if (channelId) {
+                                this.getLiveChannelById(channelId)
+                                    .then((channelRes) => {
+                                        if (channelRes && channelRes.code === 0) {
+                                            let {pushServer} = channelRes.data;
+                                            this.pushServer = `http://${pushServer}`;
+                                        }
+                                    });
+                            }
+                        }
                     }
                 });
         },
@@ -174,12 +175,11 @@
             getVideoUrl() {
                 return (uri, uriKey) => {
                     let baseUri = window.localStorage.getItem('videoBaseUri');
-                    return `${baseUri}${uri}`;
-                    // if (uriKey === 'm3u8Uri') {
-                    //     return `${this.pushServer}${uri}`;
-                    // } else {
-                    //     return `${baseUri}${uri}`;
-                    // }
+                    if (uriKey === 'm3u8Uri') {
+                        return `${this.pushServer}${uri}`;
+                    } else {
+                        return `${baseUri}${uri}`;
+                    }
                 };
             }
         },
@@ -257,7 +257,7 @@
             displayVideoPlayer(ele, uriKey) {
                 let {m3u8Uri, name, playUri} = ele;
                 if (uriKey === 'm3u8Uri') {
-                    this.url = `${m3u8Uri}`;
+                    this.url = `${this.pushServer}${m3u8Uri}`;
                 } else {
                     this.url = `${playUri}`;
                 }
