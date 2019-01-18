@@ -564,7 +564,7 @@ const actions = {
     async getPersonSubjectList({commit, state}) {
         try {
             let {keyword, pagination: {pageSize, pageNum}} = state.personSubject;
-            let params = Object.assign({}, { keyword, pageSize, pageNum: pageNum - 1 });
+            let params = Object.assign({}, { keyword, pageSize, pageNum: pageNum - 1, visible: true });
             let res = await service.getPersonSubjectList(params);
             if (res && res.code === 0) {
                 let {pageNum, pageSize, total, list} = res.data;

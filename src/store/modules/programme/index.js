@@ -61,7 +61,7 @@ const defaultProgramme = {
     specList: [],
     // 科目
     subject: '',
-    cornerMark: { },
+    cornerMark: {},
     // 赛事
     contest: '',
     // 播放平台
@@ -354,11 +354,12 @@ const getters = {
         if (state.video.video.type !== 'FEATURE') { // 如果不是正片的话就跳过判断
             return false;
         }
-        let featureList = state.video.featureList;
-        // let list = state.video.list;
-        let index = featureList.findIndex((video) => parseInt(video.sort) === parseInt(sort));
-        return index > -1;
-        // let otherIndex = list.findIndex((video) => parseInt(video.sort) === parseInt(sort));
+        // let featureList = state.video.featureList;
+        let list = state.video.list;
+        let otherIndex = list.findIndex((video) => parseInt(video.sort) === parseInt(sort));
+        return otherIndex > -1;
+        // let index = featureList.findIndex((video) => parseInt(video.sort) === parseInt(sort));
+        // return index > -1;
         // return index > -1 || otherIndex > -1;
     },
     checkSortIsLargeThanTotalSets(state) {
@@ -590,6 +591,9 @@ const mutations = {
         let {id} = payload;
         let {list} = state.video;
         state.video.list = list.filter((video) => video.id !== id);
+        if (state.video.list.length === 0) {
+            state.programme.visible = null;
+        }
     },
     deleteVideoFromTempList(state, payload) {
         let {tempList} = state.video;

@@ -242,11 +242,14 @@ export default {
             margin: 0 20px 10px 0;
             .image-warpper {
                 position: relative;
+                border: 1px solid #3E495E;
+                border-radius: 8px;
+                overflow: hidden;
                 .image {
                     display: block;
                     width: 100%;
                     height: 100px;
-                    border-radius: 8px;
+                    border-radius: 7px;
                 }
                 .mask {
                     display: none;
@@ -257,6 +260,7 @@ export default {
                     bottom: 0;
                     background: #293550;
                     opacity: 0.8;
+                    border: 1px solid #293550;
                     border-radius: 8px;
                 }
                 &:hover {

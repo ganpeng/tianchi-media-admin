@@ -381,12 +381,15 @@
                         <el-form-item label="节目角标">
                             <div v-if="showMark" class="mark-container">
                                 <div class="mark-item">
-                                    <el-checkbox v-if="markChecked('leftTop')" :checked="true" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
+                                    <el-checkbox v-model="cornerMark.leftTop" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
+                                        左上角：播放平台
+                                    </el-checkbox>
+                                    <!-- <el-checkbox v-if="markChecked('leftTop')" :checked="true" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
                                         左上角：播放平台
                                     </el-checkbox>
                                     <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
                                         左上角：播放平台
-                                    </el-checkbox>
+                                    </el-checkbox> -->
                                 </div>
                                 <div class="mark-item">
                                     右上角：
@@ -405,26 +408,26 @@
                                     </el-select>
                                 </div>
                                 <div class="mark-item">
-                                    <el-checkbox v-if="markChecked('leftBottom')" :checked="true" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
+                                    <el-checkbox v-model="cornerMark.leftBottom" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
+                                        左下角：更新
+                                    </el-checkbox>
+                                    <!-- <el-checkbox v-if="markChecked('leftBottom')" :checked="true" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
                                         左下角：更新
                                     </el-checkbox>
                                     <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
                                         左下角：更新
-                                    </el-checkbox>
+                                    </el-checkbox> -->
                                 </div>
                                 <div class="mark-item">
-                                    <el-checkbox v-if="markChecked('rightBottom')" :checked="true" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
-                                        右下角：评分
-                                    </el-checkbox>
-                                    <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
+                                    <el-checkbox v-model="cornerMark.rightBottom" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
                                         右下角：评分
                                     </el-checkbox>
                                 </div>
                             </div>
                         </el-form-item>
                         <el-form-item label="节目状态" prop="visible">
-                            <el-radio :disabled="video.list.length === 0" @input="visibleHandler(true, 'visible')" :value="programme.visible" :label="true">上架</el-radio>
-                            <el-radio :disabled="video.list.length === 0" @input="visibleHandler(false, 'visible')" :value="programme.visible" :label="false">下架</el-radio>
+                            <el-radio @input="visibleHandler(true, 'visible')" :value="programme.visible" :label="true">上架</el-radio>
+                            <el-radio @input="visibleHandler(false, 'visible')" :value="programme.visible" :label="false">下架</el-radio>
                         </el-form-item>
                         <el-form-item label="更新规则">
                             <el-col :span="18">
@@ -456,8 +459,10 @@
         <div class="programme-video-field">
             <h4 class="content-sub-title" style="margin-left:20px;">
                 节目视频
-                <span class="count"></span>
-                <span class="count">{{programme.featureVideoCount}}个正片</span>
+                <span class="count">{{programme.featureVideoCount}}个正片,</span>
+                <span class="count">{{getPreShow}}个预告片,</span>
+                <span class="count">{{getExtras}}个花絮,</span>
+                <span class="count">{{getHighLight}}个看点</span>
             </h4>
             <div class="preview-sort clearfix">
                 <el-button
@@ -554,7 +559,6 @@
         mounted() {
             this.resetProgramme();
             this.getProgrammeTagList();
-            this.getProgrammeCategory();
             this.$service.getCustomMarkList()
                 .then((res) => {
                     if (res && res.code === 0) {
@@ -568,6 +572,23 @@
 
             this.$util.toggleFixedBtnContainer();
         },
+        created() {
+            let {id} = this.$route.params;
+            if (id) {
+                this.getProgrammeAndGetProgrammeCategory(id)
+                    .then((res) => {
+                        let categoryList = res[0].data ? res[0].data.categoryList.map((item) => item.id) : [];
+                        this.getDict(categoryList);
+                        this.getProgrammeVideoListById(id);
+                        if (res[0] && res[0].code === 0) {
+                            this.initCornerMark(res[0].data.cornerMark);
+                            this.getFeatureVideoList({id: id, pageSize: res[0].data.featureVideoCount});
+                        }
+                    });
+            } else {
+                this.getProgrammeCategory();
+            }
+        },
         beforeRouteLeave(to, from, next) {
             let {name} = to;
             if (name !== 'DisplayProgramme' && name !== 'EditProgramme') {
@@ -578,6 +599,12 @@
         },
         data() {
             return {
+                cornerMark: {
+                    leftTop: false,
+                    rightTop: false,
+                    leftBottom: false,
+                    rightBottom: false
+                },
                 sortMessage: '',
                 isLoading: false,
                 videoUploadDialogVisible: false,
@@ -663,15 +690,23 @@
                 isSports: 'programme/isSports',
                 areaLabel: 'programme/areaLabel'
             }),
+            getPreShow() {
+                return this.video.list.filter((video) => {
+                    return video.type === 'PRE_SHOW';
+                }).length;
+            },
+            getExtras() {
+                return this.video.list.filter((video) => {
+                    return video.type === 'EXTRAS';
+                }).length;
+            },
+            getHighLight() {
+                return this.video.list.filter((video) => {
+                    return video.type === 'HIGH_LIGHT';
+                }).length;
+            },
             allowResolutions() {
                 return role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS;
-                // if (_.get(this.programme, 'coverImage.uri')) {
-                //     return role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS.filter((item) => {
-                //         return item.width !== 260 && item.height !== 380;
-                //     });
-                // } else {
-                //     return role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS;
-                // }
             },
             //  拖拽排序的字段
             produceAreaList: {
@@ -787,8 +822,10 @@
             },
             markChecked() {
                 return (position) => {
-                    let mark = _.get(this.programme, `cornerMark.${position}.caption`);
-                    return mark;
+                    // let mark = _.get(this.programme, `cornerMark.${position}.caption`);
+                    let mark = _.get(this.cornerMark, `${position}.caption`);
+                    console.log(!!mark);
+                    return !!mark;
                 };
             },
             rightTop() {
@@ -847,7 +884,10 @@
                 getProgrammeCategory: 'programme/getProgrammeCategory',
                 getProgrammeVideoListById: 'programme/getProgrammeVideoListById',
                 getProgrammeTagList: 'programme/getProgrammeTagList',
-                deleteProgramme: 'programme/deleteProgramme'
+                deleteProgramme: 'programme/deleteProgramme',
+
+                getProgrammeAndGetProgrammeCategory: 'programme/getProgrammeAndGetProgrammeCategory',
+                getFeatureVideoList: 'programme/getFeatureVideoList'
             }),
             //  人物搜索
             selectChiefActorHandler(person) {
@@ -934,6 +974,17 @@
                     this.$refs.createProgramForm.clearValidate(prop);
                 }
             },
+            //  初始化角标状态
+            initCornerMark(cornerMark) {
+                this.cornerMark.leftTop = this.getCornerMarkByPosition(cornerMark, 'leftTop');
+                this.cornerMark.rightTop = this.getCornerMarkByPosition(cornerMark, 'rightTop');
+                this.cornerMark.leftBottom = this.getCornerMarkByPosition(cornerMark, 'leftBottom');
+                this.cornerMark.rightBottom = this.getCornerMarkByPosition(cornerMark, 'rightBottom');
+            },
+            getCornerMarkByPosition(cornerMark, position) {
+                let mark = _.get(cornerMark, `${position}.caption`);
+                return !!mark;
+            },
             _createProgramme() {
                 this.$refs.createProgramForm.validate(value => {
                     if (value) {
@@ -1003,7 +1054,6 @@
                                                                     type: 'success',
                                                                     message: '保存成功'
                                                                 });
-                                                                this.goBack();
                                                             } else {
                                                                 let message = `视频保存失败: ${videoRes.message}`;
                                                                 if (videoRes && videoRes.code === 3106) {
@@ -1014,17 +1064,34 @@
                                                                     message
                                                                 });
                                                             }
+                                                            this.goBack();
                                                         });
                                                 } else {
                                                     let message = this.sortMessage ? this.sortMessage : '请检查正片的集数/期号，必须按顺序填写，不能有部分填，部分没填的情况';
                                                     this.$message.error(message);
                                                 }
                                             } else {
-                                                this.$message({
-                                                    type: 'success',
-                                                    message: '保存成功'
-                                                });
-                                                this.goBack();
+                                                this.createMultProgrammeVideo({programme: res.data})
+                                                    .then((videoRes) => {
+                                                        if (videoRes && videoRes.code === 0) {
+                                                            this.deleteTempList();
+                                                            this.getProgrammeVideoListById(id);
+                                                            this.$message({
+                                                                type: 'success',
+                                                                message: '保存成功'
+                                                            });
+                                                        } else {
+                                                            let message = `视频保存失败: ${videoRes.message}`;
+                                                            if (videoRes && videoRes.code === 3106) {
+                                                                message = `视频【${this.getVideoListName(videoRes.data)}】已经添加，不能重复添加`;
+                                                            }
+                                                            this.$message({
+                                                                type: 'error',
+                                                                message
+                                                            });
+                                                        }
+                                                        this.goBack();
+                                                    });
                                             }
                                         } else {
                                             this.$message({
@@ -1140,7 +1207,7 @@
             async visibleHandler(value, key) {
                 try {
                     let {id} = this.$route.params;
-                    if (this.status === 2) {
+                    if (this.status === 2 && !value) {
                         let res = await this.deleteProgramme(id);
                         if (res && res.code === 0) {
                             this.updateProgramme({key, value});
@@ -1250,7 +1317,7 @@
                 this.previewImage.activeIndex = index;
             },
             checkImage(next) {
-                const {posterImageList} = this.programme;
+                const {posterImageList, visible} = this.programme;
                 if (posterImageList && posterImageList.length < 1) {
                     this.$message({type: 'error', message: '推荐位六分位图必须上传且只能上传一张'});
                     return false;
@@ -1273,6 +1340,17 @@
                     this.$message({type: 'error', message: '请选择默认的节目海报'});
                     return false;
                 }
+
+                if (visible === null) {
+                    this.$message.error('请选择上下架状态');
+                    return false;
+                }
+
+                if (visible && this.video.list.length === 0) {
+                    this.$message.error('上架节目的关联视频不能为空');
+                    return false;
+                }
+
                 next();
             },
             getVideoListName(list) {
