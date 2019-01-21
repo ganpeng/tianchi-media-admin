@@ -910,8 +910,8 @@ html, body {
     position: relative;
     label {
         display: inline-block;
-        background: #1989FA;
         border-radius: 20px;
+        background: #0062C4;
         min-width: 140px;
         height: 40px;
         line-height: 40px;
@@ -919,7 +919,7 @@ html, body {
         font-size: 16px;
         color: #A3D0FD;
         &:hover {
-            background: #0062C4;
+            background: #1989FA;
         }
         .svg-icon {
             fill: #A3D0FD;
@@ -1579,7 +1579,7 @@ html, body {
         }
     }
     .el-form-item__content {
-        line-height: 34px;
+        // line-height: 34px;
     }
     .el-input--prefix .el-input__inner {
         padding-left: 15px;

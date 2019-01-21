@@ -249,7 +249,7 @@ export default {
                     display: block;
                     width: 100%;
                     height: 100px;
-                    border-radius: 7px;
+                    border-radius: 8px;
                 }
                 .mask {
                     display: none;

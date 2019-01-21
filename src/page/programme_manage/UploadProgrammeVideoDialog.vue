@@ -466,7 +466,7 @@
         }
     };
 </script>
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .my-tags {
     .tag {
         cursor: default;
@@ -474,5 +474,8 @@
             border-color: #2A3040;
         }
     }
+}
+.my-form .el-form-item__content {
+
 }
 </style>

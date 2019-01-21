@@ -384,12 +384,6 @@
                                     <el-checkbox v-model="cornerMark.leftTop" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
                                         左上角：播放平台
                                     </el-checkbox>
-                                    <!-- <el-checkbox v-if="markChecked('leftTop')" :checked="true" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
-                                        左上角：播放平台
-                                    </el-checkbox>
-                                    <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
-                                        左上角：播放平台
-                                    </el-checkbox> -->
                                 </div>
                                 <div class="mark-item">
                                     右上角：
@@ -398,6 +392,7 @@
                                         :value="rightTop"
                                         value-key="id"
                                         clearable
+                                        class="mark-select"
                                         placeholder="请选择">
                                         <el-option
                                             v-for="item in customMarkOptions"
@@ -411,12 +406,6 @@
                                     <el-checkbox v-model="cornerMark.leftBottom" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
                                         左下角：更新
                                     </el-checkbox>
-                                    <!-- <el-checkbox v-if="markChecked('leftBottom')" :checked="true" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
-                                        左下角：更新
-                                    </el-checkbox>
-                                    <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
-                                        左下角：更新
-                                    </el-checkbox> -->
                                 </div>
                                 <div class="mark-item">
                                     <el-checkbox v-model="cornerMark.rightBottom" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
@@ -459,10 +448,7 @@
         <div class="programme-video-field">
             <h4 class="content-sub-title" style="margin-left:20px;">
                 节目视频
-                <span class="count">{{programme.featureVideoCount}}个正片,</span>
-                <span class="count">{{getPreShow}}个预告片,</span>
-                <span class="count">{{getExtras}}个花絮,</span>
-                <span class="count">{{getHighLight}}个看点</span>
+                <span v-if="getFeature > 0" class="count">{{getFeature}}个正片</span><span v-if="getPreShow > 0" class="count">, {{getPreShow}}个预告片</span><span v-if="getExtras > 0" class="count">, {{getExtras}}个花絮</span><span v-if="getHighLight > 0" class="count">, {{getHighLight}}个看点</span>
             </h4>
             <div class="preview-sort clearfix">
                 <el-button
@@ -690,6 +676,11 @@
                 isSports: 'programme/isSports',
                 areaLabel: 'programme/areaLabel'
             }),
+            getFeature() {
+                return this.video.list.filter((video) => {
+                    return video.type === 'FEATURE';
+                }).length;
+            },
             getPreShow() {
                 return this.video.list.filter((video) => {
                     return video.type === 'PRE_SHOW';
@@ -1464,8 +1455,12 @@
 </style>
 <style lang="scss">
 .mark-container {
-    .el-input {
-        width: 160px;
+    .mark-select {
+        &.el-select {
+            .el-input {
+                width: 160px;
+            }
+        }
     }
 }
 .el-checkbox__label {

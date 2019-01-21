@@ -591,9 +591,9 @@ const mutations = {
         let {id} = payload;
         let {list} = state.video;
         state.video.list = list.filter((video) => video.id !== id);
-        if (state.video.list.length === 0) {
-            state.programme.visible = null;
-        }
+        // if (state.video.list.length === 0) {
+        //     state.programme.visible = null;
+        // }
     },
     deleteVideoFromTempList(state, payload) {
         let {tempList} = state.video;
