@@ -146,6 +146,7 @@
                         节目单下载
                     </el-button>
                     <el-button type="text" size="small" @click="previewChannelPage(scope.row.id)">节目单预览</el-button>
+                    <el-button type="text" size="small" @click="displayVideoPlayer(scope.row)">直播</el-button>
                     <el-button type="text" size="small" @click="_updateLiveChannel(scope.row.id)">编辑</el-button>
                     <el-button class="text-danger" type="text" size="small" @click="_deleteLiveChannel(scope.row.id)">
                         删除
@@ -214,18 +215,26 @@
                 <el-button size="medium" @click="closeFileUploadDialog">关闭</el-button>
             </div>
         </el-dialog>
+        <display-video-dialog
+            :url="url"
+            :title="title"
+            :displayVideoDialogVisible="displayVideoDialogVisible"
+            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
+        </display-video-dialog>
     </div>
 </template>
 <script>
     import {mapGetters, mapActions, mapMutations} from 'vuex';
     import LiveChannelDialog from './LiveChannelDialog';
+    import DisplayVideoDialog from '../video_manage/DisplayVideoDialog';
 
     const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
     const x2js = new X2JS();
     export default {
         name: 'LiveChannelList',
         components: {
-            LiveChannelDialog
+            LiveChannelDialog,
+            DisplayVideoDialog
         },
         data() {
             return {
@@ -236,6 +245,9 @@
                 //  节目单上传变量结束
                 liveChannelDialogVisible: false,
                 fileUploadDialogVisible: false,
+                displayVideoDialogVisible: false,
+                url: '',
+                title: '',
                 fileList: [],
                 uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
                 recordOptinos: [
@@ -598,6 +610,16 @@
                         upload();
                     });
                 }
+            },
+            closeDisplayVideoDialog() {
+                this.displayVideoDialogVisible = false;
+            },
+            displayVideoPlayer(channel) {
+                let {hlsPlayUrl, name} = channel;
+                let token = this.$store.state.user.token;
+                this.url = `${hlsPlayUrl}?token=${token}`;
+                this.title = name;
+                this.displayVideoDialogVisible = true;
             }
         }
     };
