@@ -14,7 +14,7 @@ switch (npmEventName) {
         break;
     // test url
     case 'dev:test':
-        h5NginxProxyTarget = 'http://test4-admin.tianchiapi.com';
+        h5NginxProxyTarget = 'http://test1-admin.tianchiapi.com';
         break;
     // test url
     case 'dev:prod':

@@ -23,7 +23,35 @@
                                 <li v-for="(ele, index) in item" :key="index" class="item-li">
                                     <div class="wrapper">
                                         <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
-                                        <span class="url">{{ele.playUri}}</span>
+                                        <div class="btn-wrapper">
+                                            <div v-if="ele.playUri" class="url-wrapper">
+                                                <span class="url text-primary" @click="displayVideoPlayer(ele, 'playUri')">直播</span>
+                                                <svg-icon
+                                                    v-if="ele.playUri"
+                                                    icon-class="copy_btn"
+                                                    class-name="copy-btn pointer"
+                                                    :data-clipboard-text="getVideoUrl(ele.playUri, 'playUri')">
+                                                </svg-icon>
+                                            </div>
+                                            <div v-if="ele.m3u8Uri" class="url-wrapper">
+                                                <span class="url text-primary" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看</span>
+                                                <svg-icon
+                                                    v-if="ele.m3u8Uri"
+                                                    icon-class="copy_btn"
+                                                    class-name="copy-btn pointer"
+                                                    :data-clipboard-text="getVideoUrl(ele.m3u8Uri, 'm3u8Uri')">
+                                                </svg-icon>
+                                            </div>
+                                            <div v-if="ele.hlsPlayUrl" class="url-wrapper">
+                                                <span class="url text-primary" @click="displayVideoPlayer(ele, 'hlsPlayUrl')">模拟源</span>
+                                                <svg-icon
+                                                    v-if="ele.hlsPlayUrl"
+                                                    icon-class="copy_btn"
+                                                    class-name="copy-btn pointer"
+                                                    :data-clipboard-text="getVideoUrl(ele.hlsPlayUrl, 'hlsPlayUrl')">
+                                                </svg-icon>
+                                            </div>
+                                        </div>
                                     </div>
                                 </li>
                             </ul>
@@ -38,8 +66,38 @@
                             </template>
                             <ul class="item-list">
                                 <li v-for="(ele, index) in item" :key="index" class="item-li">
-                                    <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
-                                    <span class="url">{{ele.playUri}}</span>
+                                    <div class="wrapper">
+                                        <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
+                                        <div class="btn-wrapper">
+                                            <div v-if="ele.playUri" class="url-wrapper">
+                                                <span class="url text-primary" @click="displayVideoPlayer(ele, 'playUri')">直播</span>
+                                                <svg-icon
+                                                    v-if="ele.playUri"
+                                                    icon-class="copy_btn"
+                                                    class-name="copy-btn pointer"
+                                                    :data-clipboard-text="getVideoUrl(ele.playUri, 'playUri')">
+                                                </svg-icon>
+                                            </div>
+                                            <div v-if="ele.m3u8Uri" class="url-wrapper">
+                                                <span class="url text-primary" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看</span>
+                                                <svg-icon
+                                                    v-if="ele.m3u8Uri"
+                                                    icon-class="copy_btn"
+                                                    class-name="copy-btn pointer"
+                                                    :data-clipboard-text="getVideoUrl(ele.m3u8Uri, 'm3u8Uri')">
+                                                </svg-icon>
+                                            </div>
+                                            <div v-if="ele.hlsPlayUrl" class="url-wrapper">
+                                                <span class="url text-primary" @click="displayVideoPlayer(ele, 'hlsPlayUrl')">模拟源</span>
+                                                <svg-icon
+                                                    v-if="ele.hlsPlayUrl"
+                                                    icon-class="copy_btn"
+                                                    class-name="copy-btn pointer"
+                                                    :data-clipboard-text="getVideoUrl(ele.hlsPlayUrl, 'hlsPlayUrl')">
+                                                </svg-icon>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </li>
                             </ul>
                         </el-collapse-item>
@@ -48,19 +106,39 @@
             </el-row>
             <el-button class="page-margin-btn page-main-btn" @click="goBack" plain>返回列表页</el-button>
         </div>
+        <display-video-dialog
+            :url="url"
+            :title="title"
+            :displayVideoDialogVisible="displayVideoDialogVisible"
+            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
+        </display-video-dialog>
     </div>
 </template>
 <script>
     import {mapActions} from 'vuex';
+    import _ from 'lodash';
+    import DisplayVideoDialog from '../video_manage/DisplayVideoDialog';
+    const ClipboardJS = require('clipboard');
+
     export default {
         name: 'PreviewProgrammeList',
+        components: {
+            DisplayVideoDialog
+        },
         data() {
             return {
                 prevList: [],
                 afterList: [],
                 prevObj: {},
-                afterObj: {}
+                afterObj: {},
+                displayVideoDialogVisible: false,
+                url: '',
+                title: '',
+                pushServer: ''
             };
+        },
+        mounted() {
+            this.initClipboard();
         },
         created() {
             let {id} = this.$route.params;
@@ -84,6 +162,20 @@
                         this.afterList = afterList;
                         this.prevObj = prevObj;
                         this.afterObj = afterObj;
+
+                        let allList = [...this.prevList, ...afterList];
+                        if (allList.length > 0) {
+                            let channelId = _.get(allList, '0.channelId');
+                            if (channelId) {
+                                this.getLiveChannelById(channelId)
+                                    .then((channelRes) => {
+                                        if (channelRes && channelRes.code === 0) {
+                                            let {pushServer} = channelRes.data;
+                                            this.pushServer = `http://${pushServer}`;
+                                        }
+                                    });
+                            }
+                        }
                     }
                 });
         },
@@ -91,12 +183,41 @@
             channelName() {
                 let obj = this.prevList[0] || this.afterList[0];
                 return obj ? obj.channelName : '';
+            },
+            baseUri() {
+                let baseUri = window.localStorage.getItem('videoBaseUri');
+                return baseUri;
+            },
+            getVideoUrl() {
+                return (uri, uriKey) => {
+                    let baseUri = window.localStorage.getItem('videoBaseUri');
+                    let token = this.$store.state.user.token;
+                    if (uriKey === 'm3u8Uri') {
+                        return `${this.pushServer}${uri}`;
+                    } else if (uriKey === 'hlsPlayUrl') {
+                        return `${uri}?token=${token}`;
+                    } else {
+                        return `${baseUri}${uri}`;
+                    }
+                };
             }
         },
         methods: {
             ...mapActions({
-                getChannelPageById: 'channel/getChannelPageById'
+                getChannelPageById: 'channel/getChannelPageById',
+                getLiveChannelById: 'channel/getLiveChannelById'
             }),
+            initClipboard() {
+                let that = this;
+                let clipboard = new ClipboardJS('.copy-btn');
+                clipboard.on('success', function (e) {
+                    that.$message.success('视频链接复制成功');
+                    e.clearSelection();
+                });
+                clipboard.on('error', function (e) {
+                    that.$message.error('视频链接复制失败');
+                });
+            },
             timeStampFormat(seconds) {
                 let date = new Date(seconds);
                 let year = date.getFullYear();
@@ -118,8 +239,8 @@
                         prevArrowList[i].style.color = '#1989FA';
                         prevTitleList[i].style.color = '#1989FA';
                     } else {
-                        prevArrowList[i].style.color = '#303133';
-                        prevTitleList[i].style.color = '#303133';
+                        prevArrowList[i].style.color = '#A8ABB3';
+                        prevTitleList[i].style.color = '#A8ABB3';
                     }
                 }
             },
@@ -131,8 +252,8 @@
                         afterArrowList[i].style.color = '#1989FA';
                         afterTitleList[i].style.color = '#1989FA';
                     } else {
-                        afterArrowList[i].style.color = '#303133';
-                        afterTitleList[i].style.color = '#303133';
+                        afterArrowList[i].style.color = '#A8ABB3';
+                        afterTitleList[i].style.color = '#A8ABB3';
                     }
                 }
             },
@@ -151,6 +272,23 @@
                     }
                     return res;
                 }, {});
+            },
+            displayVideoPlayer(ele, uriKey) {
+                let that = this;
+                let {m3u8Uri, name, playUri, hlsPlayUrl} = ele;
+                let token = that.$store.state.user.token;
+                if (uriKey === 'm3u8Uri') {
+                    this.url = `${this.pushServer}${m3u8Uri}?token=${token}`;
+                } else if (uriKey === 'hlsPlayUrl') {
+                    this.url = `${hlsPlayUrl}?token=${token}`;
+                } else {
+                    this.url = `${playUri}?token=${token}`;
+                }
+                this.title = name;
+                this.displayVideoDialogVisible = true;
+            },
+            closeDisplayVideoDialog() {
+                this.displayVideoDialogVisible = false;
             }
         }
     };
@@ -176,9 +314,29 @@
     line-height: 30px;
     color: #606060;
 }
-.url {
-    font-size: 12px;
-    line-height: 20px;
-    color: #8C8C8C;
+.time-name {
+    font-size: 14px;
+    line-height: 14px;
+    padding: 10px 0 0 0;
+    color: #A8ABB3;
+}
+.btn-wrapper {
+    display: flex;
+    padding: 10px 0;
+    .url-wrapper {
+        display: flex;
+        align-content: center;
+        margin-right: 20px;
+        .url {
+            font-size: 14px;
+            line-height: 14px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .svg-icon {
+            width: 14px;
+            height: 14px;
+        }
+    }
 }
 </style>
