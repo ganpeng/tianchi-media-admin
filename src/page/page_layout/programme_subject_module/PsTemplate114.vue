@@ -28,7 +28,7 @@
             </div>
         </div>
         <div class="content-field">
-            <div class="wrapper">
+            <div class="wrapper wrapper-field">
                 <div :style="styleBgImageStr(0)" class="left-field">
                     <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                     <dropdown-btn
@@ -37,14 +37,16 @@
                     ></dropdown-btn>
                 </div>
             </div>
-            <div class="wrapper">
+            <div class="wrapper-field">
                 <div class="right-field">
-                    <div :style="styleBgImageStr(1)" class="right-top-field">
-                        <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
-                        <dropdown-btn
-                            v-if="isEdit"
-                            :addShuffleLayout="addShuffleLayout(1)"
-                        ></dropdown-btn>
+                    <div class="wrapper">
+                        <div :style="styleBgImageStr(1)" class="right-top-field">
+                            <corner-mark :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
+                            <dropdown-btn
+                                v-if="isEdit"
+                                :addShuffleLayout="addShuffleLayout(1)"
+                            ></dropdown-btn>
+                        </div>
                     </div>
                     <div class="right-bottom-field">
                         <div class="wrapper">
@@ -242,7 +244,7 @@ export default {
     }
     .content-field {
         display: flex;
-        .wrapper {
+        .wrapper-field {
             &:first-child {
                 width: 31.8181%;
                 .left-field {

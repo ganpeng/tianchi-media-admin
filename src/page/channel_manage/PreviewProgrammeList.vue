@@ -82,18 +82,13 @@
         <div class="fixed-btn-container">
             <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
         </div>
-        <display-video-dialog
-            :url="url"
-            :title="title"
-            :displayVideoDialogVisible="displayVideoDialogVisible"
-            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
-        </display-video-dialog>
+        <display-video-dialog ref="displayVideoDialog" :url="url" :title="title"></display-video-dialog>
     </div>
 </template>
 <script>
     import {mapActions} from 'vuex';
     import _ from 'lodash';
-    import DisplayVideoDialog from '../video_manage/DisplayVideoDialog';
+    import DisplayVideoDialog from '../../components/custom_components/custom/DisplayVideoDialog';
     const ClipboardJS = require('clipboard');
 
     export default {
@@ -107,7 +102,6 @@
                 afterList: [],
                 prevObj: {},
                 afterObj: {},
-                displayVideoDialogVisible: false,
                 url: '',
                 title: '',
                 pushServer: ''
@@ -256,10 +250,7 @@
                     this.url = `${playUri}`;
                 }
                 this.title = name;
-                this.displayVideoDialogVisible = true;
-            },
-            closeDisplayVideoDialog() {
-                this.displayVideoDialogVisible = false;
+                this.$refs.displayVideoDialog.showDialog();
             }
         }
     };

@@ -59,17 +59,6 @@
                             {{scope.row.sort | padEmpty}}
                         </template>
                 </el-table-column>
-                <!--
-                <el-table-column
-                    align="center"
-                    label="相关人物">
-                        <template slot-scope="scope">
-                            <span class="ellipsis two">
-                                {{videoPersonName(scope.row.figureList) | padEmpty}}
-                            </span>
-                        </template>
-                </el-table-column>
-                -->
                 <el-table-column
                     align="center"
                     min-width="100px"
@@ -201,20 +190,16 @@
             </el-table>
         </el-row>
         <upload-programme-video-dialog :videoStatus="videoStatus" :videoUploadDialogVisible="videoUploadDialogVisible" v-on:changeVideoDialogStatus="closeVideoDialog($event)"></upload-programme-video-dialog>
-        <display-video-dialog
-            :url="url"
-            :title="videoTitle"
-            :displayVideoDialogVisible="displayVideoDialogVisible"
-            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
-        </display-video-dialog>
+        <display-video-dialog ref="displayVideoDialog" :url="url" :title="videoTitle"></display-video-dialog>
         <preview-single-image :singleImage="previewImage"></preview-single-image>
     </div>
 </template>
 <script>
 import {mapGetters, mapActions, mapMutations} from 'vuex';
 import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
-import DisplayVideoDialog from '../video_manage/DisplayVideoDialog';
 import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
+import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
+
 import role from '@/util/config/role';
 const ClipboardJS = require('clipboard');
 export default {
@@ -241,7 +226,6 @@ export default {
     data() {
         return {
             videoUploadDialogVisible: false,
-            displayVideoDialogVisible: false,
             url: '',
             videoTitle: '',
             isEdit: true,
@@ -311,7 +295,6 @@ export default {
             if (this.isUnsavedVideo(id)) {
                 let video = this.video.list.find((video) => video.id === id);
                 this.setCurrentVideo({currentVideo: video});
-                console.log(video.type);
                 if (video.type === 'FEATURE') {
                     this.setCacheSort({sort: video.sort});
                 }
@@ -372,14 +355,11 @@ export default {
                 }
             });
         },
-        closeDisplayVideoDialog(status) {
-            this.displayVideoDialogVisible = status;
-        },
         displayVideoPlayer(url, name) {
-            this.displayVideoDialogVisible = true;
             let baseUri = window.localStorage.getItem('videoBaseUri');
             this.url = `${baseUri}${url}`;
             this.videoTitle = name;
+            this.$refs.displayVideoDialog.showDialog();
         },
         // 放大预览图片
         displayImage(image) {
