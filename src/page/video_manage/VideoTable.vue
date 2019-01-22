@@ -4,7 +4,8 @@
         <el-table
             ref="multipleTable"
             header-row-class-name="common-table-header"
-            @selection-change="handleSelectionChange"
+            @select-all="selectAll"
+            @select="selectRow"
             class="my-table-style"
             :data="videoList"
             border>
@@ -421,6 +422,74 @@
             }
         },
         methods: {
+            // 多选的模式中选择或取消某一行
+            selectRow(selection, row) {
+                // 判断当前行为，选择或者取消
+                let checkStatus;
+                for (let i = 0; i < selection.length; i++) {
+                    if (selection[i].id === row.id) {
+                        checkStatus = true;
+                    }
+                }
+                if (checkStatus) {
+                    for (let k = 0; k < this.multipleSelection.length; k++) {
+                        if (this.multipleSelection[k].id === row.id) {
+                            return;
+                        }
+                    }
+                    this.multipleSelection.push(row);
+                } else {
+                    for (let n = 0; n < this.multipleSelection.length; n++) {
+                        if (this.multipleSelection[n].id === row.id) {
+                            this.multipleSelection.splice(n, 1);
+                        }
+                    }
+                }
+                if (this.multipleSelection.length === 0) {
+                    this.$emit('setBatchDisabledStatus', true);
+                } else {
+                    this.$emit('setBatchDisabledStatus', false);
+                }
+            },
+            // 多选模式下的全选
+            selectAll(selections) {
+                // 判断是添加还是删除所有当前list
+                // 取消全选
+                if (selections.length === 0) {
+                    for (let i = 0; i < this.videoList.length; i++) {
+                        for (let k = 0; k < this.multipleSelection.length; k++) {
+                            if (this.videoList[i].id === this.multipleSelection[k].id) {
+                                this.multipleSelection.splice(k, 1);
+                            }
+                        }
+                    }
+                    // 全选添加
+                } else {
+                    for (let i = 0; i < this.videoList.length; i++) {
+                        let tag = false;
+                        // 去掉当前已选择的
+                        for (let k = 0; k < this.multipleSelection.length; k++) {
+                            if (this.videoList[i].id === this.multipleSelection[k].id) {
+                                tag = true;
+                            }
+                        }
+                        // 去掉原先已选择的
+                        for (let m = 0; m < this.multipleSelection.length; m++) {
+                            if (this.videoList[i].id === this.multipleSelection[m].id) {
+                                tag = true;
+                            }
+                        }
+                        if (tag === false) {
+                            this.multipleSelection.push(this.videoList[i]);
+                        }
+                    }
+                }
+                if (this.multipleSelection.length === 0) {
+                    this.$emit('setBatchDisabledStatus', true);
+                } else {
+                    this.$emit('setBatchDisabledStatus', false);
+                }
+            },
             initClipboard() {
                 let that = this;
                 let clipboard = new ClipboardJS('.copy-btn');
@@ -432,27 +501,31 @@
                     that.$message.error('视频链接复制失败');
                 });
             },
-            // 勾选视频
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
-                if (this.multipleSelection.length === 0) {
-                    this.$emit('setBatchDisabledStatus', true);
-                } else {
-                    this.$emit('setBatchDisabledStatus', false);
-                }
-            },
             // 根据选中的视频项重新恢复勾选列表
             reCheckVideoList() {
-                // 对于选择的多选项进行勾选
+                // 踢出选中数组中不是本页的数据
+                let currentSelection = [];
                 for (let i = 0; i < this.multipleSelection.length; i++) {
                     for (let k = 0; k < this.videoList.length; k++) {
                         if (this.multipleSelection[i].id === this.videoList[k].id) {
-                            this.$nextTick(function () {
-                                this.$refs.multipleTable.toggleRowSelection(this.videoList[k], true);
-                            });
+                            currentSelection.push(this.videoList[k]);
                         }
                     }
                 }
+                this.multipleSelection = currentSelection;
+                this.$nextTick(function () {
+                    // 对于选择的多选项进行勾选
+                    for (let i = 0; i < this.multipleSelection.length; i++) {
+                        for (let k = 0; k < this.videoList.length; k++) {
+                            this.$refs.multipleTable.toggleRowSelection(this.videoList[k], false);
+                            if (this.multipleSelection[i].id === this.videoList[k].id) {
+                                this.$nextTick(function () {
+                                    this.$refs.multipleTable.toggleRowSelection(this.videoList[k], true);
+                                });
+                            }
+                        }
+                    }
+                });
             },
             // 展示共享站点（只存在于主站）
             checkShareSiteList(videoItem) {

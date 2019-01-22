@@ -172,6 +172,7 @@
                 .svg-icon {
                     cursor: pointer;
                     &.svg-icon-minimize {
+                        margin-bottom: 2px;
                         fill: #637497;
                         &:hover {
                             fill: #1989FA;
@@ -192,7 +193,6 @@
         /*列表样式*/
         .el-table {
             margin: 0px 10px;
-
         }
     }
 
@@ -271,6 +271,8 @@
             td {
                 border-right: 1px solid rgb(41, 53, 80) !important;
                 border-left: 1px solid rgb(41, 53, 80) !important;
+                border-top: 1px solid rgb(41, 53, 80) !important;
+                border-bottom: 1px solid #3E495E !important;
             }
             .response-info-list {
                 li {

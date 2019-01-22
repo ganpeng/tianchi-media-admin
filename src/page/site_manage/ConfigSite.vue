@@ -4,11 +4,11 @@
         <div class="content-title">配置站点</div>
         <div class="seperator-line"></div>
         <el-form
-            class="text-left"
             ref="siteInfo"
             :rules="infoRules"
             label-width="130px"
-            :model="siteInfo">
+            :model="siteInfo"
+            class="form-block fill-form">
             <el-form-item
                 label="站点名称"
                 prop="name">
@@ -19,6 +19,7 @@
                 required
                 prop="siteToken">
                 <el-input
+                    size="medium"
                     v-model="siteInfo.siteToken"
                     placeholder="请填写子站token进行配置">
                 </el-input>

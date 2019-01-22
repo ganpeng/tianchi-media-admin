@@ -43,16 +43,29 @@
     .el-input, .el-textarea, .el-select {
         width: 300px !important;
     }
-    .el-input, .el-select {
-        height: 34px !important;
-        input {
-            height: 34px;
-            line-height: 34px;
-        }
+    .el-input {
+        transform: scale(1, 0.945);
     }
-    .el-form-item__content {
-        // line-height: 34px !important;
+    .el-input__icon {
+        height: 100% !important;
     }
+    //.el-input {
+    //    height: 34px !important;
+    //    input {
+    //        height: 34px;
+    //        line-height: 34px;
+    //    }
+    //}
+    //.el-select:not(.multiple-select) {
+    //    height: 34px !important;
+    //    input {
+    //        height: 34px;
+    //        line-height: 34px;
+    //    }
+    //}
+    //.el-form-item__content {
+    //    line-height: 34px !important;
+    //}
 }
 
 // 2.0弹窗样式
@@ -379,7 +392,7 @@ input:-webkit-autofill {
     }
 }
 
-// 2.0多选下拉框样式
+//2.0多选下拉框样式
 .el-select {
     .el-select__tags {
         .el-tag {

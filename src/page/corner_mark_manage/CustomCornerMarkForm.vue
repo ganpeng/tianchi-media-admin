@@ -11,7 +11,11 @@
             <label class="type">运营角标</label>
         </el-form-item>
         <el-form-item label="角标名称" prop="caption" required>
-            <el-input v-model="cornerMarkInfo.caption" placeholder="请填写角标名称"></el-input>
+            <el-input
+                v-model="cornerMarkInfo.caption"
+                size="medium"
+                placeholder="请填写角标名称">
+            </el-input>
         </el-form-item>
         <el-form-item label="角标图片" prop="image" required>
             <label> (大角标125*99，小角标76*46)</label>

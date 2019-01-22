@@ -17,6 +17,7 @@
             <!--栏目标题-->
             <el-form-item prop="name" class="words-box" label-width="0px" ref="wordsInfo">
                 <el-input
+                    size="medium"
                     v-model="navBarInfo.name"
                     :disabled="navBarInfo.type === 'IMAGES' || !navBarInfo.type"
                     placeholder="请输入栏目标题，10字以内">
@@ -59,6 +60,7 @@
                 <el-select
                     v-model="navBarInfo.signCode"
                     clearable
+                    size="medium"
                     placeholder="请选择栏目分类">
                     <el-option
                         v-for="item in programmeCategoryListOptions"
@@ -441,6 +443,9 @@
             margin-top: 10px;
             width: 370px !important;
             height: 158px !important;
+            &.svg-icon-model_child {
+                height: 112px !important;
+            }
         }
     }
 

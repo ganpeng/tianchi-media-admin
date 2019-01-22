@@ -223,6 +223,12 @@
                             font-size: 24px;
                             color: #3E495E;
                         }
+                        &:hover {
+                            border-color: #1989FA;
+                            i {
+                                color: #1989FA;
+                            }
+                        }
                     }
                     div {
                         height: 35px;

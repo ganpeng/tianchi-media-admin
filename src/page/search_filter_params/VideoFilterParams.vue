@@ -8,14 +8,14 @@
                         v-model="listQueryParams.keyword"
                         clearable
                         class="border-input"
-                        @change="getVideoList"
+                        @change="getVideoList(true)"
                         placeholder="搜索你想要的信息">
                     </el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button
                         class="btn-style-one"
-                        @click="getVideoList"
+                        @click="getVideoList(true)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
@@ -26,7 +26,7 @@
                         v-model="listQueryParams.suffix"
                         clearable
                         placeholder="请选择视频后缀"
-                        @change="getVideoList">
+                        @change="getVideoList(true)">
                         <el-option
                             v-for="(item, index) in suffixOptions"
                             :key="index"
@@ -38,7 +38,7 @@
                 <el-form-item label="注入状态">
                     <el-select
                         v-model="listQueryParams.status"
-                        @change="getVideoList"
+                        @change="getVideoList(true)"
                         clearable
                         placeholder="请选择注入状态">
                         <el-option
@@ -55,7 +55,7 @@
                         v-model="listQueryParams.uploadStatus"
                         clearable
                         placeholder="请选择视频上传状态"
-                        @change="getVideoList">
+                        @change="getVideoList(true)">
                         <el-option
                             v-for="(item, index) in uploadStatusOptions"
                             :key="index"
@@ -94,7 +94,7 @@
                         v-model="listQueryParams.downloadStatus"
                         clearable
                         placeholder="请选择视频拉取状态"
-                        @change="getVideoList">
+                        @change="getVideoList(true)">
                         <el-option
                             v-for="(item, index) in downloadStatusOptions"
                             :key="index"
@@ -108,7 +108,7 @@
                         v-model="listQueryParams.originSiteId"
                         clearable
                         placeholder="请选择视频来源"
-                        @change="getVideoList">
+                        @change="getVideoList(true)">
                         <el-option
                             v-for="(item, index) in sourceOptions"
                             :key="index"
@@ -125,7 +125,7 @@
                         v-model="listQueryParams.shareSiteId"
                         clearable
                         placeholder="请选择共享站点"
-                        @change="getVideoList">
+                        @change="getVideoList(true)">
                         <el-option
                             v-for="(item, index) in shareSiteOptions"
                             :key="index"
@@ -139,7 +139,7 @@
                         prefix-icon="0"
                         v-model="uploadRangeTime"
                         type="daterange"
-                        @change="getVideoList"
+                        @change="getVideoList(true)"
                         value-format="timestamp"
                         :unlink-panels="true"
                         range-separator="至"
@@ -216,7 +216,7 @@
                     that.getVideoList();
                 }, 10000);
             },
-            getVideoList() {
+            getVideoList(isReset) {
                 if (this.uploadRangeTime && this.uploadRangeTime.length === 2) {
                     this.listQueryParams.startedAt = this.uploadRangeTime[0];
                     this.listQueryParams.endedAt = this.uploadRangeTime[1];
@@ -224,7 +224,7 @@
                     this.listQueryParams.startedAt = '';
                     this.listQueryParams.endedAt = '';
                 }
-                this.$emit('getVideoList', this.listQueryParams);
+                this.$emit('getVideoList', this.listQueryParams, isReset);
             },
             clearSearchFields() {
                 for (let key in this.listQueryParams) {

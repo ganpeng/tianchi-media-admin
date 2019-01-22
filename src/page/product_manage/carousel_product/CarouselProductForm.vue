@@ -12,7 +12,11 @@
                 <label class="product-category">轮播频道包</label>
             </el-form-item>
             <el-form-item label="名称" prop="name" required>
-                <el-input v-model="productInfo.name" placeholder="请填写30个字以内的名称"></el-input>
+                <el-input
+                    v-model="productInfo.name"
+                    size="medium"
+                    placeholder="请填写30个字以内的名称">
+                </el-input>
             </el-form-item>
             <el-form-item label="简介" prop="description">
                 <el-input

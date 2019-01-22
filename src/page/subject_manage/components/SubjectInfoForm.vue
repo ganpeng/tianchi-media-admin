@@ -11,13 +11,18 @@
             label-width="120px"
             class="form-block fill-form">
             <el-form-item label="专题名称" prop="name" required>
-                <el-input v-model="subjectInfo.name" placeholder="请填写30个字以内的名称"></el-input>
+                <el-input
+                    v-model="subjectInfo.name"
+                    size="medium"
+                    placeholder="请填写30个字以内的名称">
+                </el-input>
             </el-form-item>
             <el-form-item label="内容分类" prop="programmeCategoryList" required>
                 <el-select
                     v-model="programmeCategoryList"
                     @change="setProgrammeCategoryList"
                     multiple
+                    size="medium"
                     placeholder="请选择专题内容分类">
                     <el-option
                         v-for="item in programmeCategoryListOptions"
@@ -31,8 +36,8 @@
                 <el-select
                     v-model="subjectInfo.tagList"
                     multiple
-                    filterable
-                    clearable
+                    class="multiple-select"
+                    size="medium"
                     placeholder="请选择专题标签">
                     <el-option
                         v-for="item in tagOptions"

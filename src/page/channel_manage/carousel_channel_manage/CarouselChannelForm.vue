@@ -11,16 +11,33 @@
             label-width="110px"
             class="form-block">
             <el-form-item label="频道名称" prop="name" required>
-                <el-input v-model="channelInfo.name" placeholder="请填写20个字以内的频道名称"></el-input>
+                <el-input
+                    v-model="channelInfo.name"
+                    size="medium"
+                    placeholder="请填写20个字以内的频道名称">
+                </el-input>
             </el-form-item>
             <el-form-item label="内部名称" prop="innerName" required>
-                <el-input v-model="channelInfo.innerName" placeholder="请填写20个字以内的内部名称"></el-input>
+                <el-input
+                    v-model="channelInfo.innerName"
+                    size="medium"
+                    placeholder="请填写20个字以内的内部名称">
+                </el-input>
             </el-form-item>
             <el-form-item label="频道编号" prop="no" required>
-                <el-input v-model="channelInfo.no" type="number" placeholder="请填写频道编号数字，例如'001'"></el-input>
+                <el-input
+                    v-model="channelInfo.no"
+                    type="number"
+                    size="medium"
+                    placeholder="请填写频道编号数字，例如'001'">
+                </el-input>
             </el-form-item>
             <el-form-item label="频道类别" prop="typeIdList" required>
-                <el-select v-model="channelInfo.typeIdList" multiple placeholder="请选择频道类别">
+                <el-select
+                    v-model="channelInfo.typeIdList"
+                    multiple
+                    size="medium"
+                    placeholder="请选择频道类别">
                     <el-option
                         v-for="item in typeOptions"
                         :key="item.id"
@@ -30,19 +47,42 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="组播地址" prop="multicastIp" required>
-                <el-input v-model="channelInfo.multicastIp" placeholder="请填写组播地址"></el-input>
+                <el-input
+                    v-model="channelInfo.multicastIp"
+                    size="medium"
+                    placeholder="请填写组播地址">
+                </el-input>
             </el-form-item>
             <el-form-item label="端口号" prop="multicastPort" required>
-                <el-input v-model="channelInfo.multicastPort" type="number" placeholder="请填写端口号"></el-input>
+                <el-input
+                    v-model="channelInfo.multicastPort"
+                    type="number"
+                    size="medium"
+                    placeholder="请填写端口号">
+                </el-input>
             </el-form-item>
             <el-form-item label="tsID" prop="tsId">
-                <el-input v-model="channelInfo.tsId" type="number" placeholder="请填写tsId"></el-input>
+                <el-input
+                    v-model="channelInfo.tsId"
+                    type="number"
+                    size="medium"
+                    placeholder="请填写tsId">
+                </el-input>
             </el-form-item>
             <el-form-item label="serviceID" prop="serviceId">
-                <el-input v-model="channelInfo.serviceId" type="number" placeholder="请填写serviceId"></el-input>
+                <el-input
+                    v-model="channelInfo.serviceId"
+                    type="number"
+                    size="medium"
+                    placeholder="请填写serviceId">
+                </el-input>
             </el-form-item>
             <el-form-item label="所属服务器" prop="pushServer" required>
-                <el-input v-model="channelInfo.pushServer" placeholder="请填写所属服务器的IP地址"></el-input>
+                <el-input
+                    v-model="channelInfo.pushServer"
+                    size="medium"
+                    placeholder="请填写所属服务器的IP地址">
+                </el-input>
             </el-form-item>
             <el-form-item label="状态" prop="visible" required>
                 <el-radio-group v-model="channelInfo.visible">
