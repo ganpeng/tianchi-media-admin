@@ -278,11 +278,11 @@
                 let {m3u8Uri, name, playUri, hlsPlayUrl} = ele;
                 let token = that.$store.state.user.token;
                 if (uriKey === 'm3u8Uri') {
-                    this.url = `${this.pushServer}${m3u8Uri}`;
+                    this.url = `${this.pushServer}${m3u8Uri}?token=${token}`;
                 } else if (uriKey === 'hlsPlayUrl') {
                     this.url = `${hlsPlayUrl}?token=${token}`;
                 } else {
-                    this.url = `${playUri}`;
+                    this.url = `${playUri}?token=${token}`;
                 }
                 this.title = name;
                 this.displayVideoDialogVisible = true;
