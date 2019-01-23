@@ -15,7 +15,7 @@
                 <el-form-item>
                     <el-button
                         class="btn-style-one"
-                        @click="getVideoList(true)"
+                        @click="getVideoList(false)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
@@ -231,7 +231,7 @@
                     this.listQueryParams[key] = '';
                 }
                 this.uploadRangeTime = [];
-                this.getVideoList();
+                this.getVideoList(true);
             }
         }
     };

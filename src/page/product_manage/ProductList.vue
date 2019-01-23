@@ -9,11 +9,15 @@
                         <el-input
                             v-model="listQueryParams.keyword"
                             clearable
+                            @change="getProductList(true)"
                             class="border-input"
                             placeholder="填写产品包编号、名称">
                         </el-input>
                     </div>
-                    <el-button class="btn-style-one" @click="getProductList" type="primary">
+                    <el-button
+                        class="btn-style-one"
+                        @click="getProductList(false)"
+                        type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
                     </el-button>
@@ -21,7 +25,7 @@
                         <label class="search-field-item-label">时间</label>
                         <el-date-picker
                             v-model="createRangeTime"
-                            @change="getProductList"
+                            @change="getProductList(true)"
                             type="daterange"
                             clearable
                             value-format="timestamp"
@@ -34,7 +38,7 @@
                         <label class="search-field-item-label">类型</label>
                         <el-select
                             v-model="listQueryParams.productCategory"
-                            @change="getProductList"
+                            @change="getProductList(true)"
                             clearable
                             placeholder="请选择产品包类型">
                             <el-option
@@ -45,7 +49,10 @@
                             </el-option>
                         </el-select>
                     </div>
-                    <el-button class="btn-style-one" type="primary" @click="clearFilters" plain>
+                    <el-button
+                        class="btn-style-one"
+                        type="primary"
+                        @click="clearFilters">
                         <svg-icon icon-class="reset"></svg-icon>
                         重置
                     </el-button>
@@ -209,13 +216,16 @@
             this.getProductList();
         },
         methods: {
-            getProductList() {
+            getProductList(isReset) {
                 if (this.createRangeTime && this.createRangeTime.length === 2) {
                     this.listQueryParams.createdAtStart = this.createRangeTime[0];
                     this.listQueryParams.createdAtEnd = this.createRangeTime[1];
                 } else {
                     this.listQueryParams.createdAtStart = '';
                     this.listQueryParams.createdAtEnd = '';
+                }
+                if (isReset) {
+                    this.listQueryParams.pageNum = 1;
                 }
                 this.$service.getProductList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
@@ -267,7 +277,7 @@
                 this.listQueryParams.createdAtStart = '';
                 this.listQueryParams.createdAtEnd = '';
                 this.createRangeTime = [];
-                this.getProductList();
+                this.getProductList(true);
             },
             handleSizeChange(pageSize) {
                 this.listQueryParams.pageSize = pageSize;

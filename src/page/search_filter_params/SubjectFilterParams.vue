@@ -6,6 +6,7 @@
                 <el-form-item>
                     <el-input
                         v-model="listQueryParams.keyword"
+                        @change="getSubjectList(true)"
                         clearable
                         class="border-input"
                         placeholder="专题名称等">
@@ -14,7 +15,7 @@
                 <el-form-item>
                     <el-button
                         class="btn-style-one"
-                        @click="getSubjectList"
+                        @click="getSubjectList(false)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
@@ -23,7 +24,7 @@
                 <el-form-item label="状态">
                     <el-select
                         v-model="listQueryParams.visible"
-                        @change="getSubjectList"
+                        @change="getSubjectList(true)"
                         clearable
                         placeholder="全部">
                         <el-option
@@ -37,7 +38,7 @@
                 <el-form-item label="类型">
                     <el-select
                         v-model="listQueryParams.category"
-                        @change="getSubjectList"
+                        @change="getSubjectList(true)"
                         clearable
                         placeholder="全部">
                         <el-option
@@ -51,7 +52,7 @@
                 <el-form-item label="分类">
                     <el-select
                         v-model="listQueryParams.programmeCategoryId"
-                        @change="getSubjectList"
+                        @change="getSubjectList(true)"
                         clearable
                         placeholder="全部">
                         <el-option
@@ -89,7 +90,7 @@
                         prefix-icon="0"
                         v-model="createRangeTime"
                         type="daterange"
-                        @change="getSubjectList"
+                        @change="getSubjectList(true)"
                         value-format="timestamp"
                         range-separator="至"
                         start-placeholder="开始日期"
@@ -152,7 +153,7 @@
                     }
                 });
             },
-            getSubjectList() {
+            getSubjectList(isReset) {
                 if (this.createRangeTime && this.createRangeTime.length === 2) {
                     this.listQueryParams.createdAtBegin = this.createRangeTime[0];
                     this.listQueryParams.createdAtEnd = this.createRangeTime[1];
@@ -160,7 +161,7 @@
                     this.listQueryParams.createdAtBegin = '';
                     this.listQueryParams.createdAtEnd = '';
                 }
-                this.$emit('getSubjectList', this.listQueryParams);
+                this.$emit('getSubjectList', this.listQueryParams, isReset);
             },
             clearFilters() {
                 for (let key in this.listQueryParams) {
@@ -171,7 +172,7 @@
                     }
                 }
                 this.createRangeTime = [];
-                this.getSubjectList();
+                this.getSubjectList(true);
             }
         }
     };

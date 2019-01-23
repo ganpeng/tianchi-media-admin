@@ -118,12 +118,23 @@
             setBatchDisabledStatus(isDisabled) {
                 this.isDisabled = isDisabled;
             },
-            getSubjectList(searchParams) {
+            handleSizeChange(pageSize) {
+                this.listQueryParams.pageSize = pageSize;
+                this.getSubjectList();
+            },
+            handleCurrentChange(pageNum) {
+                this.listQueryParams.pageNum = pageNum;
+                this.getSubjectList();
+            },
+            getSubjectList(searchParams, isReset) {
                 // 设置请求参数
                 if (searchParams) {
                     for (let key in searchParams) {
                         this.listQueryParams[key] = searchParams[key];
                     }
+                }
+                if (isReset) {
+                    this.listQueryParams.pageNum = 1;
                 }
                 this.$wsCache.localStorage.set('subjectFilter', this.listQueryParams);
                 this.$service.getSubjectList(this.listQueryParams).then(response => {
@@ -144,14 +155,6 @@
             // 批量删除
             batchRemove() {
                 this.$refs.subjectOperateTable.batchRemove();
-            },
-            handleSizeChange(pageSize) {
-                this.listQueryParams.pageSize = pageSize;
-                this.getSubjectList();
-            },
-            handleCurrentChange(pageNum) {
-                this.listQueryParams.pageNum = pageNum;
-                this.getSubjectList();
             },
             // 创建专题
             createSubject(command) {

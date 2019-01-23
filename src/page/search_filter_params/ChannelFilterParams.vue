@@ -6,7 +6,7 @@
                 <el-form-item>
                     <el-input
                         v-model="listQueryParams.keyword"
-                        @change="getChannelList"
+                        @change="getChannelList(true)"
                         placeholder="频道名称、编号等"
                         class="border-input"
                         clearable>
@@ -15,7 +15,7 @@
                 <el-form-item>
                     <el-button
                         class="btn-style-one"
-                        @click="getChannelList"
+                        @click="getChannelList(false)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
@@ -24,7 +24,7 @@
                 <el-form-item label="类型">
                     <el-select
                         v-model="listQueryParams.typeIdList"
-                        @change="getChannelList"
+                        @change="getChannelList(true)"
                         clearable
                         placeholder="全部">
                         <el-option
@@ -38,7 +38,7 @@
                 <el-form-item label="状态">
                     <el-select
                         v-model="listQueryParams.visible"
-                        @change="getChannelList"
+                        @change="getChannelList(true)"
                         clearable
                         placeholder="全部">
                         <el-option
@@ -102,15 +102,15 @@
                     }
                 });
             },
-            getChannelList() {
-                this.$emit('getChannelList', this.listQueryParams);
+            getChannelList(isReset) {
+                this.$emit('getChannelList', this.listQueryParams, isReset);
             },
             clearFilters() {
                 for (let key in this.listQueryParams) {
                     this.listQueryParams[key] = '';
                 }
                 this.listQueryParams.category = 'CAROUSEL';
-                this.getChannelList();
+                this.getChannelList(true);
             }
         }
     };

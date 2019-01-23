@@ -21,14 +21,14 @@
                 <div class="seperator-line"></div>
                 <div class="attributes">
                     <div class="attribute-item">
-                        <div class="item-label">
+                        <div class="item-label" id="email-label">
                             <svg-icon icon-class="email_info"></svg-icon>
                             邮箱
                         </div>
                         <div class="value">{{info.email | padEmpty}}</div>
                     </div>
                     <div class="attribute-item">
-                        <div class="item-label">
+                        <div class="item-label" id="phone-label">
                             <svg-icon icon-class="phone_info"></svg-icon>
                             手机
                         </div>
@@ -87,7 +87,7 @@
     .my-info-container {
         .attribute-item {
             margin-bottom: 20px;
-            .item-label {
+            #email-label, #phone-label {
                 font-size: 16px;
                 color: #A8ABB3;
                 width: auto;

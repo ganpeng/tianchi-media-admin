@@ -219,13 +219,17 @@
                 }
                 this.getVideoList();
             },
-            getVideoList(searchParams) {
+            getVideoList(searchParams, isReset) {
                 // 设置请求参数
                 if (searchParams) {
                     for (let key in searchParams) {
                         this.listQueryParams[key] = searchParams[key];
                     }
                 }
+                if (isReset) {
+                    this.pageNum = 1;
+                }
+                this.listQueryParams.pageNum = this.pageNum - 1;
                 this.$wsCache.localStorage.set('videoFilter', this.listQueryParams);
                 this.$service.getVideoList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
@@ -240,7 +244,7 @@
                 this.getVideoList();
             },
             handleCurrentChange(pageNum) {
-                this.listQueryParams.pageNum = pageNum - 1;
+                this.pageNum = pageNum;
                 this.getVideoList();
             },
             // 设置批量操作状态

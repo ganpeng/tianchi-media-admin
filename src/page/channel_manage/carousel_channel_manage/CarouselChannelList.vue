@@ -121,12 +121,15 @@
                 }
                 this.getChannelList();
             },
-            getChannelList(searchParams) {
+            getChannelList(searchParams, isReset) {
                 // 设置请求参数
                 if (searchParams) {
                     for (let key in searchParams) {
                         this.listQueryParams[key] = searchParams[key];
                     }
+                }
+                if (isReset) {
+                    this.pageNum = 1;
                 }
                 this.listQueryParams.pageNum = this.pageNum - 1;
                 this.listQueryParams.category = 'CAROUSEL';
