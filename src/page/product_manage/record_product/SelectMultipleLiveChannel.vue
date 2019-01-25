@@ -69,7 +69,12 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
         </el-pagination>
-        <el-button type="primary" plain class="apppend-Channel" @click="appendChannel" size="small">添加所选直播回看频道
+        <el-button
+            type="primary"
+            class="btn-style-two"
+            @click="appendChannel"
+            size="small">
+            添加
         </el-button>
     </div>
 </template>
@@ -231,13 +236,7 @@
 
     .el-table {
         margin-top: 0px;
-        img {
-            width: 70px;
-            height: auto;
-        }
+        margin-bottom: 10px;
     }
 
-    .apppend-Channel {
-        margin-top: 30px;
-    }
 </style>

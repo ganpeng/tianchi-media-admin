@@ -1,0 +1,1738 @@
+// body全局样式
+html, body {
+    color: #A8ABB3;
+}
+
+//  内容区域的title样式
+.content-title {
+    font-size: 24px;
+    color: #6F7480;
+    text-align: left;
+    margin: 20px 0;
+}
+
+//  内容区域小点的title
+.content-sub-title {
+    font-size: 20px;
+    color: #6F7480;
+    margin: 20px 0;
+    text-align: left;
+}
+
+//  文字的不同提示颜色
+.text-primary {
+    color: $mainColor;
+}
+.text-success {
+    color: $successColor;
+}
+.text-warning {
+    color: #E6A23C;
+}
+.text-danger {
+    color: $dangerColor;
+}
+.text-info {
+    color: #909399;
+}
+
+//  统一处理必填项提示的小星号
+.el-form-item.is-required>.el-form-item__label {
+    &:after {
+        content: '*';
+        color: #f56c6c;
+        margin-right: 4px;
+        line-height: 18px;
+    }
+    &::before {
+        content: '';
+    }
+}
+
+//  表格每一行hover之后改变背景色
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+    background-color: #333A4C!important;
+}
+
+//  表格样式
+.el-table {
+    &.my-table-style {
+        margin: 0;
+        margin-bottom: 10px;
+    }
+    &::before {
+        background-color: #343d4f;
+    }
+    .el-checkbox {
+        padding: 0;
+    }
+    .el-table__header {
+        height: 60px;
+        tr, th {
+            background: #293550;
+        }
+        th {
+            border: 1px solid #3E495E;
+            .cell {
+                font-size: 18px;
+                color: #909399;
+            }
+        }
+    }
+    .el-table__body {
+        tr {
+            background: #2a3040;
+            &:hover {
+                background: #333A4C;
+            }
+        }
+        td {
+            font-size: 14px;
+            color: #909399;
+            border: 1px solid #343d4f;
+            span.name {
+                &:hover {
+                    color: $mainColor;
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
+            }
+        }
+        img {
+            border: 1px solid #3E495E;
+            border-radius: 8px;
+        }
+    }
+    .el-table__empty-block {
+        background: #2a3040;
+    }
+    .checked {
+        background: #000!important;
+    }
+}
+
+.el-dialog {
+    .el-table {
+        &.my-table-style {
+            .el-table__header {
+                height: 60px;
+                tr, th {
+                    background: #212A3E;
+                }
+                th {
+                    border: 1px solid #3E495E;
+                    .cell {
+                        font-size: 18px;
+                        color: #909399;
+                    }
+                }
+            }
+            .el-table__body {
+                tr {
+                    background: #191D26;
+                    &:hover {
+                        background: #2A3040;
+                    }
+                }
+                td {
+                    font-size: 14px;
+                    color: #909399;
+                    border: 1px solid #343d4f;
+                    span.name {
+                        &:hover {
+                            color: $mainColor;
+                            text-decoration: underline;
+                            cursor: pointer;
+                        }
+                    }
+                    .el-radio__inner::after {
+                        background-color: #191D26;
+                    }
+                }
+                img {
+                    border: 1px solid #3E495E;
+                    border-radius: 8px;
+                }
+            }
+        }
+    }
+}
+
+
+//  表格上面的文字描述
+.table-title {
+    font-size: 18px;
+    color: #A8ABB3;
+    height: 40px;
+    line-height: 40px;
+}
+
+.el-table--border {
+    border: 1px solid #343d4f;
+}
+
+.el-table--border::after, .el-table--group::after {
+    background-color: #343d4f;
+}
+
+
+//  分页的样式修改
+.el-pagination {
+    text-align: right;
+    .el-select {
+        .el-input__inner {
+            color: #6F7480;
+            background-color: transparent;
+            border: 1px solid #2c3549;
+        }
+    }
+    .el-pagination__jump {
+        .el-input__inner {
+            color: #6F7480;
+            border: 1px solid #2c3549;
+            background-color: transparent;
+        }
+    }
+    button {
+        &.btn-prev, &.btn-next {
+            background-color: transparent;
+            color: #606266;
+        }
+        &:disabled {
+            color: #6F7480;
+        }
+    }
+    .el-pager {
+        li.number {
+            background: transparent;
+            color: #595c61;
+            &.active {
+                color: #409EFF;
+                cursor: default;
+            }
+        }
+        li.more.btn-quicknext, li.more.btn-quickprev {
+            color: #595c61;
+            background: transparent;
+        }
+    }
+}
+
+//  按钮样式重写
+
+.fixed-btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-30%);
+    width: 500px;
+    height: 80px;
+    background: #293550;
+    box-shadow: 0 2px 10px 0 rgba(0,0,0,0.20);
+    border-radius: 8px;
+    z-index: 100;
+    .el-button {
+        margin-right: 20px;
+    }
+}
+
+.el-button {
+    min-width: 100px;
+    padding: 0;
+    font-size: 16px;
+    border-radius: 20px;
+    //  按钮样式一
+    &.btn-style-one {
+        height: 34px;
+        line-height: 34px;
+        color: $btnText;
+        border: 1px solid #64A4E5;
+        background: transparent;
+        &:hover {
+            background: #4987C6;
+            border: 1px solid #4987C6;
+        }
+        .svg-icon {
+            fill: $btnText;
+        }
+    }
+    //  按钮样式二
+    &.btn-style-two {
+        height: 40px;
+        line-height: 40px;
+        color: $btnText;
+        background: $mainBtn;
+        border: none;
+        &.big {
+            width: 130px;
+        }
+        &:hover {
+            background: $mainBtnHover;
+        }
+        .svg-icon {
+            fill: $btnText;
+        }
+        &.btn130 {
+            min-width: 130px;
+        }
+    }
+    //  按钮样式三
+    &.btn-style-three {
+        height: 40px;
+        line-height: 40px;
+        background: #FFFFFF;
+        color: #1989FA;
+        border-radius: 20px;
+        border: none;
+        &:hover {
+            background: #CCCCCC;
+        }
+    }
+    //  按钮样式四
+    &.btn-style-four {
+        width: 130px;
+        height: 34px;
+        line-height: 34px;
+        color: $btnText;
+        background: $mainBtn;
+        border: none;
+        &.min {
+            width: 70px;
+            min-width: 70px;
+        }
+        &:hover {
+            background: $mainBtnHover;
+        }
+        .svg-icon {
+            fill: $btnText;
+        }
+    }
+    //  按钮样式五
+    &.btn-style-five {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        width: 60px;
+        height: 40px;
+        line-height: 40px;
+        color: $btnText;
+        background: $mainBtn;
+        border: none;
+        min-width: 0;
+        &:hover {
+            background: $mainBtnHover;
+        }
+        span {
+            display: inherit;
+        }
+        .svg-icon {
+            fill: $btnText;
+            width: 28px;
+            height: 28px;
+        }
+    }
+    //  按钮样式六
+    &.btn-style-six {
+        padding: 0px 17px;
+        height: 34px;
+        line-height: 26px;
+        color: $btnText;
+        background: $mainBtn;
+        border: none;
+        &:hover {
+            background: $mainBtnHover;
+        }
+        .svg-icon {
+            height: 18px !important;
+            width: 18px !important;
+            margin-right: 15px;
+            fill: $btnText;
+        }
+    }
+    &.el-button--text {
+        font-size: 14px;
+    }
+}
+
+.delete-btn {
+    &.one {
+        cursor: pointer;
+        .svg-icon {
+            width: 40px;
+            height: 40px;
+        }
+    }
+}
+
+.btn-icon-container {
+    .el-button {
+        min-width: 20px;
+    }
+}
+
+.my-add-cycle {
+    &.el-button {
+        width: 30px;
+        height: 30px;
+        border-radius: 30px;
+        min-width: 0;
+        background-color: $mainBtn;
+        border: none;
+        .svg-icon {
+            // fill: #fff;
+            fill: #A3D0FD;
+        }
+        &:hover {
+            background-color: $mainBtnHover;
+        }
+    }
+    &.disabled {
+        cursor: not-allowed;
+        opacity: 0.3;
+    }
+}
+
+//  删除按钮
+.delete-btn-one {
+    display: inline-block;
+    color: #C35757;
+    background: rgba(46, 56, 77, 0.5);
+    border-radius: 50%;
+    text-align: center;
+    &:hover {
+        color: #D0021B;
+        background: rgba(46, 56, 77, 1);
+    }
+    &.big {
+        width: 42px;
+        height: 42px;
+        line-height: 42px;
+        font-size: 22px;
+    }
+    &.small {
+        width: 22px;
+        height: 22px;
+        line-height: 20px;
+        font-size: 22px;
+    }
+}
+
+
+//  自定义form表单的样式
+.form-container {
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+//  自定义input输入框
+//  此处覆盖element-ui的样式
+.el-form-item.is-success .el-input__inner,
+.el-form-item.is-success .el-input__inner:focus,
+.el-form-item.is-success .el-textarea__inner,
+.el-form-item.is-success .el-textarea__inner:focus {
+    border-color: #3AC26F;
+}
+
+.el-form-item.is-error .el-input__inner,
+.el-form-item.is-error .el-input__inner:focus,
+.el-form-item.is-error .el-textarea__inner,
+.el-form-item.is-error .el-textarea__inner:focus,
+.el-message-box__input input.invalid,
+.el-message-box__input input.invalid:focus {
+    border-color: #C35757;
+}
+
+.el-textarea__inner {
+    color: #fff;
+    font-size: 12px;
+    border: 1px solid #3E495E;
+    background-color: transparent;
+    &::-webkit-input-placeholder {
+        color: #6F7480;
+    }
+}
+
+// 时间日期选择器样式重写
+.el-date-editor,
+.el-range-editor {
+    border: 1px solid #3E495E;
+    border-radius: 4px;
+    input.el-input__inner {
+        border: none;
+    }
+    .el-icon-date {
+        display: none;
+    }
+    .el-input__icon {
+        color: #6F7480;
+        line-height: 34px;
+    }
+    .el-range-input {
+        &::-webkit-input-placeholder {
+            color: #6F7480;
+        }
+    }
+    .el-range-separator {
+        height: 32px;
+        color: #6F7480;
+    }
+}
+
+
+//  弹出框的小箭头的样式重写
+.el-popper[x-placement^=bottom] .popper__arrow {
+    display: none;
+    border-bottom-color: rgba(65,74,93,0.90);
+}
+.el-popper[x-placement^=bottom] .popper__arrow::after {
+    display: none;
+    border-bottom-color: rgba(65,74,93,0.90);
+}
+.el-dropdown-menu.el-popper {
+    .popper__arrow::after {
+        border-top-color: transparent;
+    }
+}
+//  时间日期选择器弹出框部分样式重写
+.el-picker-panel {
+    background: rgba(65,74,93,0.90);
+    border: none;
+    color: #fff;
+    .el-date-table th {
+        color: #909399;
+        border-bottom: solid 1px #637497;
+    }
+    .el-date-table td.next-month, .el-date-table td.prev-month {
+        color: #637497;
+    }
+    .el-date-table td.today span {
+        color: $mainColor;
+    }
+    .el-date-table td.current:not(.disabled) span {
+        color: #fff;
+        background: $mainColor;
+    }
+
+    .el-date-table td.in-range div,
+    .el-date-table td.in-range div:hover,
+    .el-date-table.is-week-mode .el-date-table__row.current div,
+    .el-date-table.is-week-mode .el-date-table__row:hover div {
+        background: rgba(75, 165, 255, 0.20);
+    }
+    .el-date-range-picker__content.is-left {
+        border-right: 1px solid #909399;
+    }
+    .el-picker-panel__icon-btn {
+        color: #909399;
+        &:hover {
+            color: $mainColor;
+        }
+    }
+}
+
+//  form表单相关的样式重写
+.el-form-item__label {
+    font-size: 16px;
+    color: #6F7480;
+}
+
+
+.el-input__inner {
+    background: transparent;
+    :focus {
+        background: transparent;
+    }
+}
+
+.el-input {
+    input {
+        color: #fff;
+        font-size: 12px;
+        border: 1px solid #3E495E;
+        &[disabled] {
+            &::-webkit-input-placeholder {
+                color: #6F7480 !important;
+            }
+        }
+        &::-webkit-input-placeholder {
+            color: #6F7480;
+        }
+    }
+    // 自定义下边框输入框
+    &.border-input {
+        input {
+            // width: 200px;
+            height: 34px;
+            background: transparent;
+            border-radius: 0px;
+            border: none;
+            font-size: 16px;
+            color: #A3D0FD;
+            border-bottom: 1px solid #3E495E;
+            &:focus {
+                border-bottom: 1px solid #1989FA;
+            }
+            &::-webkit-input-placeholder {
+                color: #3E495E;
+            }
+        }
+    }
+    &.is-disabled {
+        .el-input__inner {
+            background-color: transparent;
+            border: 1px solid #3E495E;
+        }
+    }
+}
+
+//  下拉选择框样式重写
+.el-select-dropdown.el-popper {
+    border: 1px solid #637497;
+    box-shadow: 2px 4px 10px 0 rgba(0,0,0,0.30);
+    border-radius: 4px 0px 0px 0px 4px 4px 4px;
+    overflow: hidden;
+    .el-scrollbar {
+        background: rgba(65,74,93,0.90);
+    }
+    .el-select-dropdown__wrap.el-scrollbar__wrap {
+        border: none;
+        .el-select-dropdown__item {
+            color: #D8D8D8;
+            background: transparent;
+            &:hover {
+                color: #fff;
+                background: $mainColor;
+            }
+        }
+    }
+    .el-select-dropdown__empty {
+        color: #D8D8D8;
+        background: rgba(65,74,93,0.90);
+    }
+    .popper__arrow {
+        &::after {
+            display: none;
+        }
+    }
+}
+
+.el-dropdown-menu.el-popper li.el-dropdown-menu__item {
+    background: transparent;
+    &:hover {
+        color: #fff;
+        background: $mainColor;
+    }
+}
+
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
+    color: #fff;
+    background: $mainColor;
+    &:hover {
+        color: #D8D8D8;
+        background: rgba(65,74,93,0.90);
+    }
+}
+
+//  人物搜索的弹出框的样式覆盖
+.el-autocomplete-suggestion.el-popper {
+    background: rgba(65,74,93,0.90);
+    border: 1px solid #637497;
+    box-shadow: 2px 4px 10px 0 rgba(0,0,0,0.30);
+    border-radius: 4px 0px 0px 0px 4px 4px 4px;
+    .el-autocomplete-suggestion__wrap.el-scrollbar__wrap {
+        border: none;
+        background: rgba(65,74,93,0.90);
+        li {
+            color: #D8D8D8;
+            background: rgba(65,74,93,0.90);
+            &:hover {
+                color: #fff;
+                background: $mainColor;
+            }
+        }
+    }
+    .popper__arrow {
+        display: none;
+    }
+}
+
+//  自定义分割线
+.seperator-line {
+    width: 100%;
+    height: 0px;
+    border-bottom: 1px solid #252D3F;
+}
+
+//  搜索区域的样式重写
+.search-field {
+    background: #2A3040;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    .field-row {
+        display: flex;
+        align-items: center;
+        padding: 23px 10px;
+        &:first-child {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        &:last-child {
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            background: #252C3D;
+        }
+        .search-field-item {
+            display: flex;
+            align-items: center;
+            min-width: 120px;
+            margin-right: 30px;
+            .search-field-item-label {
+                min-width: 40px;
+                font-size: 16px;
+                color: #6F7480;
+                margin: 0 10px;
+            }
+            .el-date-editor, .el-input__inner {
+                color: #A3D0FD;
+                height: 34px;
+            }
+            .el-select {
+                .el-input {
+                    height: 34px;
+                    .el-input__icon {
+                        height: 34px;
+                        line-height: 34px;
+                        color: #6F7480;
+                    }
+                    .el-input__inner {
+                        height: 34px;
+                    }
+                }
+            }
+        }
+        .el-dropdown-link {
+            font-size: 12px;
+            color: #6F7480;
+            min-width: 80px;
+            margin-left: 20px;
+            cursor: pointer;
+            &.active {
+                color: $mainColor;
+            }
+        }
+    }
+    .svg-icon {
+        margin-right: 10px;
+    }
+}
+
+//  dropdown 下拉框组件自定义
+.table-operator-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    .my-dropdown {
+        margin-left: 0px;
+    }
+    .el-checkbox {
+        padding: 0;
+    }
+}
+.el-dropdown {
+    &.my-dropdown {
+        width: 90px;
+        height: 28px;
+        line-height: 28px;
+        font-size: 12px;
+        color: #6F7480;
+        border: 1px solid #3E495E;
+        border-radius: 4px;
+        cursor: pointer;
+        &.disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+    }
+}
+
+.my-disabled-dropdown {
+    width: 90px;
+    height: 28px;
+    line-height: 28px;
+    font-size: 12px;
+    color: #6F7480;
+    border: 1px solid #3E495E;
+    border-radius: 4px;
+}
+
+.el-dropdown-menu.el-popper {
+    border: 1px solid #637497;
+    background: rgba(65,74,93,0.90);
+    box-shadow: 2px 4px 10px 0 rgba(0,0,0,0.30);
+    border-radius: 4px 0px 0px 0px 4px 4px 4px;
+    overflow: hidden;
+    li {
+        color: #D8D8D8;
+        font-size: 12px;
+        height: 20px;
+        line-height: 20px;
+        background: rgba(65,74,93,0.90);
+        &:hover {
+            color: #fff;
+            background: $mainColor;
+        }
+    }
+}
+
+//  switch开关样式重写
+.my-switch {
+    width: 40px;
+    height: 14px;
+    position: relative;
+    border: 1px solid #6F7480;
+    background-color: #6F7480;
+    box-shadow: #6F7480 0 0 0 0 inset;
+    border-radius: 14px;
+    background-clip: content-box;
+    display: inline-block;
+    -webkit-appearance: none;
+    user-select: none;
+    outline: none;
+    cursor: pointer;
+    &:before {
+        content: '';
+        width: 18px;
+        height: 18px;
+        position: absolute;
+        top: -3px;
+        left: -2px;
+        border-radius: 18px;
+        background-color: #A3D0FD;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+    &:checked {
+        border-color: #3AC26F;
+        box-shadow: #3AC26F 0 0 0 16px inset;
+        background-color: #3AC26F;
+    }
+    &:checked:before {
+        left: 22px;
+    }
+    &.switch-anim {
+        transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
+        &:before {
+            transition: left 0.3s;
+        }
+        :checked {
+            box-shadow: #3AC26F 0 0 0 16px inset;
+            background-color: #3AC26F;
+            transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s;
+            &:before {
+                transition: left 0.3s;
+            }
+        }
+    }
+}
+
+// 上下架文字样式定义
+.on-the-shelf {
+    display: block;
+    color: #3AC26F;
+    font-size: 14px;
+    &.inline {
+        display: inline-block;
+        margin-left: 8px;
+    }
+}
+
+.off-the-shelf {
+    display: block;
+    color: #6F7480;
+    font-size: 14px;
+    &.inline {
+        display: inline-block;
+        margin-left: 8px;
+    }
+}
+
+
+//  表格操作按钮的样式
+.operator-btn-wrapper {
+    .btn-text {
+        color: $mainColor;
+        font-size: 14px;
+        cursor: pointer;
+        &:hover {
+            text-decoration: underline;
+        }
+        &.text-danger {
+            color: #C35757;
+        }
+        &.text-normal {
+            color: $successColor;
+        }
+    }
+}
+
+//  上传按钮样式重写
+.uploader {
+    position: relative;
+    label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        border: 1px solid #3E495E;
+        border-radius: 8px;
+        background: transparent;
+        cursor: pointer;
+        i {
+            color: #3E495E;
+            font-size: 20px;
+        }
+    }
+    input[type=file] {
+        position:absolute;
+        clip:rect(0 0 0 0);
+    }
+    &.person-uploader {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+.btn-uploader {
+    position: relative;
+    label {
+        display: inline-block;
+        border-radius: 20px;
+        background: #0062C4;
+        min-width: 140px;
+        height: 40px;
+        line-height: 40px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #A3D0FD;
+        &:hover {
+            background: #1989FA;
+        }
+        .svg-icon {
+            fill: #A3D0FD;
+        }
+    }
+    input[type=file] {
+        position:absolute;
+        clip:rect(0 0 0 0);
+    }
+}
+
+
+// 节目和人物详情页面的公共样式
+.common-details {
+    display: flex;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    .poster-section {
+        margin-right: 20px;
+        .visible-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 44px;
+            .visible {
+                display: inline-block;
+                font-size: 20px;
+                padding: 0 5px;
+                border-radius: 4px;
+                &.is-visible {
+                    color: #fff;
+                    background: #3AC26F;
+                }
+                &.dis-visible {
+                    color: #6F7480;
+                    background: #2A3040;
+                }
+            }
+        }
+        &.person {
+            width: 200px;
+            height: 100%;
+            img {
+                display: block;
+                width: 200px;
+                height: 200px;
+                background: #2A3040;
+                border: 1px solid #3E495E;
+                border-radius: 8px;
+                box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
+            }
+            .default-person-image {
+                width: 200px;
+                height: 200px;
+                .svg-icon {
+                    width: 200px;
+                    height: 200px;
+                }
+            }
+        }
+        &.programme {
+            width: 172px;
+            height: 100%;
+            img {
+                display: block;
+                width: 172px;
+                height: 250px;
+                background: #2A3040;
+                border: 1px solid #3E495E;
+                border-radius: 8px;
+                box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
+            }
+        }
+    }
+    .info-section {
+        flex: 1;
+        .title-wrapper {
+            display: flex;
+            justify-content: space-between;
+            .left-side {
+                display: flex;
+                align-items: center;
+                justify-content: start;
+            }
+            .title {
+                display: flex;
+                color: #fff;
+                font-size: 20px;
+                height: 44px;
+                line-height: 44px;
+            }
+            .release-at {
+                font-size: 16px;
+                color: #6F7480;
+                margin: 0 20px;
+            }
+            .score {
+                display: inline-block;
+                background: #D27B25;
+                border-radius: 4px;
+                color: #fff;
+                padding: 0 5px;
+                font-size: 24px;
+            }
+            .date {
+                span {
+                    display: block;
+                    font-size: 12px;
+                    line-height: 20px;
+                    color: #6F7480;
+                    text-align: left;
+                }
+            }
+        }
+        .tags-section {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            // height: 50px;
+            margin: 10px 0;
+            span {
+                border-radius: 4px;
+                font-size: 12px;
+                color: #fff;
+                height: 20px;
+                line-height: 20px;
+                padding: 0px 6px;
+                border-radius: 4px;
+                margin-right: 10px;
+            }
+            .address-tag {
+                background: #8AA4AF;
+                .svg-icon {
+                    fill: #fff;
+                }
+            }
+            .category-tag {
+                background: #637497;
+            }
+            .type-tag {
+                color: #637497;
+                background: #2E384D ;
+            }
+            .role-tag {
+                background: #637497;
+            }
+            .spec-tag {
+                color: #6F7480;
+                background: #2A3040;
+            }
+        }
+        .attributes {
+            text-align: left;
+            font-size: 16px;
+            line-height: 32px;
+            color: #6F7480;
+            margin-top: 10px;
+            .item-label {
+                display: inline-block;
+                width: 60px;
+                text-align: right;
+            }
+        }
+        .inner-name {
+            text-align: left;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #6F7480;
+        }
+        .description {
+            width: 460px;
+            font-size: 14px;
+            color: #6F7480;
+            text-align: left;
+            text-indent: 2em;
+            &.programme {
+                width: 90%;
+                height: 60px;
+            }
+        }
+        .person-posters {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            margin-top: 20px;
+            .poster {
+                margin-right: 20px;
+                width: 80px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                img {
+                    display: block;
+                    width: 80px;
+                    height: 80px;
+                    background: #2A3040;
+                    border: 1px solid #3E495E;
+                    border-radius: 8px;
+                    // box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
+                }
+                .person-name {
+                    display: inline-block;
+                    font-size: 12px;
+                    color: #6F7480;
+                    margin-top: 5px;
+                }
+            }
+        }
+    }
+}
+
+//  自定义tag标签
+.my-tags {
+    .el-tag {
+        background: #2A3040;
+        border-radius: 4px;
+        font-size: 12px;
+        color: #6F7480;
+        height: 24px;
+        padding: 0 8px;
+        line-height: 22px;
+        margin-right: 10px;
+        // transform: scale(0.8);
+        border: 1px solid #2A3040;
+        cursor: pointer;
+        &:hover {
+            border: 1px solid $mainColor;
+        }
+        .el-tag__close.el-icon-close {
+            color: #2A3040;
+            background: #6F7480;
+            &:hover {
+                background: $dangerColor;
+            }
+        }
+    }
+    &.big {
+        .el-tag {
+            height: 34px;
+            line-height: 34px;
+        }
+    }
+}
+
+.my-tags-two-container {
+    .header {
+        display: flex;
+        align-items: center;
+        height: 40px;
+        .count {
+            color: #fff;
+            font-size: 14px;
+            margin-right: 20px;
+        }
+        .el-dropdown-link {
+            font-size: 12px;
+            color: #6F7480;
+            min-width: 80px;
+            margin-left: 20px;
+            cursor: pointer;
+            &.active {
+                color: $mainColor;
+            }
+        }
+    }
+    .my-tags-two {
+        margin: 10px 0;
+        .el-tag {
+            color: #FFF;
+            background: #1989FA;
+            border-radius: 4px;
+            font-size: 14px;
+            border: none;
+            margin-right: 10px;
+            .el-tag__close.el-icon-close {
+                color: #2A3040;
+                background: #6F7480;
+                // color: #1989FA;
+                // background: #C0C4CC;
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+                font-size: 16px;
+                &:hover {
+                    background: $dangerColor;
+                }
+            }
+        }
+    }
+}
+
+
+//  消息提示盒子样式重写
+.el-message-box {
+    width: 500px;
+    background: #293550;
+    border: none;
+    box-shadow: 2px 4px 10px 0 rgba(0,0,0,0.30);
+    border-radius: 8px;
+    padding-bottom: 20px;
+    .el-message-box__header {
+        background: #1F2D4D;
+        text-align: center;
+        span {
+            font-size: 20px;
+            color: #fff;
+        }
+        .el-message-box__close.el-icon-close {
+            color: $closeBtnColor;
+            &:hover {
+                color: $closeBtnHoverColor;
+            }
+        }
+    }
+    .el-message-box__status {
+        display: none;
+    }
+    .el-message-box__message {
+        text-align: center;
+        p {
+            font-size: 20px;
+            color: #fff;
+            padding: 30px 0;
+        }
+    }
+    .el-message-box__btns {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: center;
+        align-items: center;
+        .el-button {
+            width: 100px;
+            height: 40px;
+            border: none;
+            font-weight: 400;
+            &.el-button--default {
+                color: $dangerColor;
+            }
+            &.el-button--default.el-button--primary {
+                color: #A3D0FD;
+                background: #0062C4;
+                &:hover {
+                    background: $mainColor;
+                }
+            }
+            &:first-child {
+                margin-left: 10px;
+            }
+        }
+    }
+}
+
+//  radio标签样式重写
+.el-radio {
+    padding: 0;
+    .el-radio__inner {
+        border: 1px solid #3E495E;
+        background-color: transparent;
+    }
+}
+
+//  自定义选择上传文件的按钮样式
+.file {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+}
+.file input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.file:hover {
+    background: #AADFFD;
+    border-color: #78C3F3;
+    color: #004974;
+    text-decoration: none;
+}
+
+//  弹窗的样式自定义
+.my-dialog {
+    .el-dialog {
+        border: 1px solid rgba(99, 116, 151, 0.50);
+        border-radius: 8px;
+        background: #293550;
+        box-shadow: 2px 4px 10px 0 rgba(0,0,0,0.30);
+        .el-dialog__header {
+            position: relative;
+            height: 50px;
+            line-height: 50px;
+            padding: 0;
+            background: #1F2D4D;
+            border-radius: 8px 8px 0px 0px;
+            .el-dialog__title {
+                font-size: 20px;
+                color: #909399;
+            }
+            .el-dialog__headerbtn {
+                top: 50%;
+                transform: translateY(-50%);
+                .el-dialog__close.el-icon-close {
+                    color: $closeBtnColor;
+                    font-size: 20px;
+                    &:hover {
+                        color: $closeBtnHoverColor;
+                    }
+                }
+            }
+        }
+        .dialog-footer {
+            .el-button {
+                width: 100px;
+                height: 40px;
+                border: none;
+                span {
+                    font-weight: 400;
+                }
+                &.el-button--default {
+                    color: $dangerColor;
+                }
+                &.el-button--default.el-button--primary, &.el-button--primary {
+                    background: #0062C4;
+                    color: #A3D0FD;
+                    &:hover {
+                        background: $mainColor;
+                    }
+                }
+                &:first-child {
+                    margin-left: 10px;
+                }
+                &.prev-btn,
+                &.next-btn {
+                    color: $mainColor;
+                }
+            }
+        }
+        .seperator-line {
+            border-bottom: 1px solid #3E495E;
+        }
+    }
+}
+
+//  导入页面的样式
+.import-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    font-size: 24px;
+    color: #6F7480;
+    .left {
+        flex: 1;
+        padding: 0 20px;
+        .header {
+            margin: 20px 0;
+            span {
+                font-size: 16px;
+                &:first-child {
+                    margin-left: 20px;
+                }
+            }
+        }
+        .info-field {
+            h3 {
+                font-size: 20px;
+                color: #6F7480;
+                margin: 20px 0;
+            }
+            .file-name {
+                width: 800px;
+                height: 40px;
+                margin: 0 auto;
+                line-height: 40px;
+                font-size: 14px;
+                color: #6F7480;
+                background: #2A3040;
+                border-radius: 8px;
+            }
+            .table-field {
+                width: 900px;
+                margin: 0 auto;
+            }
+            .btn-group {
+                margin-top: 100px;
+            }
+        }
+        .empty-upload {
+            display: inline-block;
+            margin: 160px auto;
+            margin-bottom: 0;
+            img {
+                display: block;
+                width: 368px;
+                height: 260px;
+            }
+            p {
+                font-size: 24px;
+                color: #293550;
+                margin: 20px 0;
+            }
+        }
+    }
+    .right {
+        position: relative;
+        width: 300px;
+        border-left: 1px solid #3E495E;
+        .inner-right {
+            margin-left: 20px;
+            .header {
+                margin: 20px 0;
+            }
+            .input-field {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                h5 {
+                    font-size: 14px;
+                    margin: 10px 0;
+                    color: #6F7480;
+                }
+                .uploader {
+                    width: 240px;
+                    height: 240px;
+                }
+                .upload-btn-wrapper {
+                    margin-top: 100px;
+                    .btn-uploader {
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+//  自定义小提示样式
+.my-tool-tips {
+    font-size: 12px;
+    color: #6F7480;
+    margin-left: 10px;
+}
+
+//   自定义多步骤条
+.my-steps {
+    &.el-steps {
+        width: 60%;
+        .el-step__head {
+            .el-step__line {
+                background: #637497;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            .el-step__icon {
+                width: 50px;
+                height: 50px;
+                .el-step__icon-inner {
+                    font-size: 16px;
+                }
+            }
+            &.is-wait {
+                .el-step__icon {
+                    background-color: #637497;
+                    border: none;
+                    .el-step__icon-inner {
+                        color: #A3D0FD;
+                    }
+                }
+            }
+            &.is-success {
+                .el-step__line {
+                    background: $successColor;
+                }
+                .el-step__icon {
+                    background-color: $successColor;
+                    border: none;
+                    .el-step__icon-inner {
+                        color: #fff;
+                    }
+                }
+            }
+        }
+        .el-step__main {
+            .el-step__title {
+                &.is-success {
+                    color: $successColor;
+                }
+                &.is-process {
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
+
+.layout-square-header {
+    display: flex;
+    justify-content: space-between;
+    .left {
+        display: flex;
+        .icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .title {
+            font-size: 24px;
+            line-height: 40px;
+            color: #fff;
+        }
+    }
+    .right {
+        display: flex;
+        .el-button:nth-child(2) {
+            margin: 0 10px;
+        }
+    }
+}
+
+.image-container {
+    display: flex;
+}
+
+//  表单中的各项的宽度
+.my-form {
+    text-align: left;
+    .el-input,
+    .el-select,
+    .el-date-editor,
+    .el-autocomplete
+    {
+        width: 300px;
+        height: 34px;
+        .el-input__icon {
+            height: 34px;
+            line-height: 34px;
+        }
+        .el-input__inner {
+            height: 34px;
+        }
+    }
+
+    .el-textarea {
+        width: 300px;
+        .el-textarea__inner {
+            min-height: 278px;
+            height: 278px;
+        }
+    }
+    .el-form-item__content {
+        // line-height: 34px;
+    }
+    .el-input--prefix .el-input__inner {
+        padding-left: 15px;
+    }
+}
+
+.page-layout-mark {
+    .mark-container {
+        display: flex;
+        flex-wrap: wrap;
+        .mark-item {
+            color: #A8ABB3;
+            font-size: 16px;
+            font-weight: 400;
+            width: 45%;
+            .el-checkbox {
+                padding: 0;
+                font-weight: 400;
+                font-size: 14px;
+                color: #A8ABB3;
+            }
+            .el-input {
+                width: 200px;
+            }
+        }
+    }
+}
+
+//  全局的checkbox的样式覆盖
+.el-checkbox__input.is-checked+.el-checkbox__label {
+    color: #fff!important;
+}
+.el-checkbox__input.is-disabled+span.el-checkbox__label {
+    color: #A8ABB3;
+    opacity: 0.3;
+}
+
+.el-input__icon {
+    height: 34px;
+    line-height: 34px;
+}
+
+.my-ellipsis {
+    text-overflow:ellipsis;
+    overflow:hidden;
+    white-space:nowrap;
+}
+
+//  全局修改radio的disabled样式
+.el-radio__input {
+    &.is-checked.is-disable {
+        .el-radio__inner {
+            background-color: transparent;
+            border: 4px solid #191D26;
+        }
+    }
+    .el-radio__inner {
+        &::after {
+            background: #1A2233;
+        }
+        .is-disable {
+            background-color: transparent;
+            border: 4px solid #191D26;
+        }
+    }
+    .el-radio__label {
+        font-size: 16px;
+    }
+}
+.el-radio__label {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.el-radio__input.is-disabled .el-radio__inner, .el-radio__input.is-disabled.is-checked .el-radio__inner {
+    background-color: transparent;
+    // border: 4px solid #191D26;
+    border: 1px solid #3E495E;
+}
+
+.el-radio__input.is-disabled.is-checked .el-radio__inner::after {
+    background: transparent;
+}
+
+.el-checkbox__input.is-disabled .el-checkbox__inner {
+    border: 1px solid #3E495E;
+    background: transparent;
+}
+
+.el-radio:focus:not(.is-focus):not(:active):not(.is-disabled) .el-radio__inner {
+    box-shadow: none;
+}
+//  页面布局相关的样式
+.content-field {
+    .wrapper {
+        :hover {
+            .mark-container {
+                .mask {
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+#page-layout-container {
+    .content-field {
+        .wrapper {
+            .mark-container {
+                .layout-item-type-title {
+                    display: none;
+                }
+            }
+            :hover {
+                .mark-container {
+                    .mask {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+#movie-top-left-field.wrapper {
+    :hover {
+        .mark-container {
+            .mask {
+                display: none;
+            }
+        }
+    }
+}
+
+// 描述的样式
+.desc-wrapper {
+    position: relative;
+    width: 300px;
+    .desc-prompt {
+        position: absolute;
+        bottom: 0px;
+        right: 10px;
+        font-size: 10px;
+        color: #1989FA;
+    }
+}
+
+//  disabled状态的dropdown
+.my-disabled-dropdown {
+    width: 90px;
+    height: 28px;
+    line-height: 28px;
+    border: 1px solid #3E495E;
+    border-radius: 4px;
+    opacity: 0.3;
+}

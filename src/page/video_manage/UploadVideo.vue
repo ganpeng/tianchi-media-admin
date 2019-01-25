@@ -1,6 +1,7 @@
 <template>
     <div v-if="uploadState.files.length > 0" class="upload-video-container">
         <div v-if="uploadState.min" class="min-container">
+            <!-- <span class="upload-status">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{currentFileName}}</span> -->
             <el-tooltip v-if="currentFileName.length > 32" class="item" effect="dark" :content="currentFileName"
                         placement="top-start">
                 <span class="upload-status float-left">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{cutStr(currentFileName, 32)}}</span>
@@ -8,10 +9,7 @@
             <span v-else class="upload-status float-left">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{cutStr(currentFileName, 32)}}</span>
             <div class="btn-wrapper-min float-right">
                 <span @click="toggleWindow(false)">
-                    <svg-icon
-                        class-name="max-min pointer"
-                        icon-class="max_larger">
-                    </svg-icon>
+                    <svg-icon class-name="max-min pointer" icon-class="max_larger"></svg-icon>
                 </span>
                 <span>
                     <i @click="resetFiles" class="close-btn el-icon-close pointer"></i>
@@ -28,10 +26,23 @@
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item>
-                            <div class="wrapper" @click="openSetShareSiteDialogBeforeUpload('FILE')">选择文件</div>
+                            <div class="wrapper">
+                                <input id="upload-input-file2" class="upload-input" accept="video/*,application/zip"
+                                       type="file" ref="uploadInputFile" multiple>
+                                <label for="upload-input-file2">选择文件</label>
+                            </div>
                         </el-dropdown-item>
                         <el-dropdown-item>
-                            <div class="wrapper" @click="openSetShareSiteDialogBeforeUpload('FOLDER')">选择文件夹</div>
+                            <div class="wrapper">
+                                <input id="upload-input-dir2" class="upload-input" type="file"
+                                       accept="video/*,application/zip"
+                                       ref="uploadInputDir"
+                                       multiple
+                                       directory
+                                       webkitdirectory
+                                       allowdirs>
+                                <label for="upload-input-dir2">选择文件夹</label>
+                            </div>
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -42,35 +53,13 @@
                 <span v-else class="max-status upload-status float-left">正在上传({{uploadState.count}}/{{uploadState.files.length}}): {{cutStr(currentFileName, 32)}}</span>
                 <div class="btn-wrapper-max float-right">
                     <span @click="toggleWindow(true)">
-                        <svg-icon
-                            class-name="max-min pointer"
-                            icon-class="min_smaller">
-                        </svg-icon>
+                        <svg-icon class-name="max-min pointer" icon-class="min_smaller"></svg-icon>
                     </span>
                     <span>
                         <i @click="resetFiles" class="close-btn el-icon-close pointer"></i>
                     </span>
                 </div>
             </div>
-            <!--上传视频---选择文件-->
-            <input
-                id="upload-input-file2"
-                class="upload-input"
-                accept="video/*,application/zip"
-                type="file"
-                ref="uploadInputFile"
-                multiple>
-            <!--上传视频---选择文件夹-->
-            <input
-                id="upload-input-dir2"
-                class="upload-input"
-                type="file"
-                accept="video/*,application/zip"
-                ref="uploadInputDir"
-                multiple
-                directory
-                webkitdirectory
-                allowdirs>
             <div class="table-wrapper">
                 <el-table
                     :data="uploadState.files"
@@ -121,52 +110,22 @@
                     <el-table-column
                         label="操作">
                         <template slot-scope="scope">
-                            <i v-if="!showDelete(scope.$index)"
-                               @click="cancelUpload(scope.$index)"
-                               class="delete-btn el-icon-close pointer"></i>
-                            <el-button type="text" v-if="showRetryBtn(scope.$index)"
-                                       @click="retryUploadHandler(scope.$index)">重试
+                            <i
+                                v-if="!showDelete(scope.$index)"
+                                @click="cancelUpload(scope.$index)"
+                                class="delete-btn el-icon-close pointer"></i>
+                            <el-button
+                                type="text" v-if="showRetryBtn(scope.$index)"
+                                @click="retryUploadHandler(scope.$index)">
+                                重试
                             </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </div>
         </div>
-        <!--上传视频前进行共享站点设置-->
-        <el-dialog
-            title="预设共享站点"
-            :visible.sync="preSetShareSiteDialogVisible"
-            :close-on-click-modal="false"
-            :append-to-body="true"
-            custom-class="batch-share-site"
-            width="40%">
-            <div class="batch-share-body" v-if="preSetShareSiteDialogVisible">
-                <div class="tips">您可预先设置这批视频可被共享的站点，注入成功后将会生效，生效后也可修改。</div>
-                <div class="tips">您也可以待注入完成后再批量设置。</div>
-                <div class="text-center">
-                    <el-select
-                        v-model="preSetShareSiteIdList"
-                        multiple
-                        clearable
-                        @change="setShareSites"
-                        placeholder="请选择共享站点">
-                        <el-option
-                            v-for="(item, index) in shareSiteOptions"
-                            :key="index"
-                            :label="item.name"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="skipPreSetting" type="primary" plain>跳过此步</el-button>
-                <el-button type="primary" @click="preSetShareSiteToVideo(true)">确定设置</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
-
 <script>
     import {mapGetters, mapMutations} from 'vuex';
     import store from 'store';
@@ -176,12 +135,6 @@
         name: 'UploadVideo',
         data() {
             return {
-                // 设置共享站点在视频上传之前
-                preSetShareSiteIdList: [],
-                preSetShareSiteDialogVisible: false,
-                // 保存用户选择上传视频的模式----'FILE'、'FOLDER'
-                uploadVideoMode: '',
-                shareSiteOptions: [],
                 cancelFlag: 0 // 0 表示手动cancel， 1表示点击重试之后的cancel
             };
         },
@@ -206,13 +159,6 @@
                     return '当前有视频正在上传中，确定要离开吗？';
                 }
             }, true);
-            // 初始化共享站点的列表
-            this.$service.getAllSiteList().then(response => {
-                if (response && response.code === 0) {
-                    this.shareSiteOptions = response.data;
-                    this.shareSiteOptions.unshift({id: '0', name: '全选'});
-                }
-            });
         },
         computed: {
             ...mapGetters({
@@ -318,49 +264,6 @@
             }
         },
         methods: {
-            // 设置共享站点，对全选进行处理
-            setShareSites() {
-                this.preSetShareSiteIdList.map(siteId => {
-                    if (siteId === '0') {
-                        this.preSetShareSiteIdList = [];
-                        this.shareSiteOptions.map(siteOption => {
-                            if (siteOption.name !== '全选') {
-                                this.preSetShareSiteIdList.push(siteOption.id);
-                            }
-                        });
-                    }
-                });
-            },
-            // 跳过预设共享设置
-            skipPreSetting() {
-                this.preSetShareSiteIdList = [];
-                this.preSetShareSiteToVideo();
-            },
-            // 在预设共享站点之后进行上传视频
-            preSetShareSiteToVideo() {
-                this.preSetShareSiteDialogVisible = false;
-                if (this.uploadVideoMode === 'FILE') {
-                    this.$el.querySelector('#upload-input-file2').click();
-                } else if (this.uploadVideoMode === 'FOLDER') {
-                    this.$el.querySelector('#upload-input-dir2').click();
-                }
-            },
-            // 在上传视频之前打开设置共享站点设置弹窗
-            openSetShareSiteDialogBeforeUpload(uploadVideoMode) {
-                // 如果是中心站点，进行预设共享站点
-                if (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteMasterEnable) {
-                    this.uploadVideoMode = uploadVideoMode;
-                    this.preSetShareSiteIdList = [];
-                    this.preSetShareSiteDialogVisible = true;
-                } else {
-                    // 非中心站点直接开始选择文件或文件夹
-                    if (uploadVideoMode === 'FILE') {
-                        this.$el.querySelector('#upload-input-file2').click();
-                    } else if (uploadVideoMode === 'FOLDER') {
-                        this.$el.querySelector('#upload-input-dir2').click();
-                    }
-                }
-            },
             ...mapMutations({
                 updateUploadState: 'uploadVideo/updateUploadState'
             }),
@@ -405,7 +308,6 @@
                     if (index === -1) {
                         let obj = {
                             file,
-                            shareSiteList: this.preSetShareSiteIdList,
                             progress: {
                                 percent: 0,
                                 status: 'waiting',
@@ -418,8 +320,8 @@
                 let newFiles = this.uploadState.files.concat(newFileList);
                 this.updateUploadState({key: 'files', value: newFiles});
                 window.eventBus.$emit('startUpload');
-                this.$el.querySelector('#upload-input-file2').value = '';
-                this.$el.querySelector('#upload-input-dir2').value = '';
+                this.$refs.uploadInputFile.value = null;
+                this.$refs.uploadInputDir.value = null;
             },
             checkServerIsLiving(count) {
                 let that = this;
@@ -500,11 +402,8 @@
                     if (status) {
                         let formData = new FormData();
                         let file = that.uploadState.files[that.uploadState.count].file;
-                        let shareSiteList = that.uploadState.files[that.uploadState.count].shareSiteList;
                         formData.append('videoType', 'VOD');
                         formData.append('file', file);
-                        // 添加共享站点的id列表
-                        formData.append('shareSiteList', shareSiteList);
                         that.$util.getUploadServer()
                             .then((baseUri) => {
                                 that.uploadRequest(formData, baseUri)
@@ -515,7 +414,6 @@
                                                 if (index === that.uploadState.count) {
                                                     return {
                                                         file: obj.file,
-                                                        shareSiteList: obj.shareSiteList,
                                                         progress: {
                                                             percent: obj.progress.percent,
                                                             status: 'uploaded'
@@ -545,12 +443,12 @@
                                                 default:
                                                     status = 'error';
                                                     break;
-                                            };
+                                            }
+
                                             let files = that.uploadState.files.map((obj, index) => {
                                                 if (index === that.uploadState.count) {
                                                     return {
                                                         file: obj.file,
-                                                        shareSiteList: obj.shareSiteList,
                                                         progress: {
                                                             percent: obj.progress.percent,
                                                             status,
@@ -561,6 +459,7 @@
                                                     return obj;
                                                 }
                                             });
+
                                             that.updateUploadState({key: 'files', value: files});
                                         }
                                         that.updateUploadState({key: 'count', value: that.uploadState.count + 1});
@@ -571,7 +470,6 @@
                                             if (index === that.uploadState.count) {
                                                 return {
                                                     file: obj.file,
-                                                    shareSiteList: obj.shareSiteList,
                                                     progress: {
                                                         percent: obj.progress.percent,
                                                         status: 'canceled',
@@ -592,7 +490,6 @@
                                             if (index === that.uploadState.count) {
                                                 return {
                                                     file: obj.file,
-                                                    shareSiteList: obj.shareSiteList,
                                                     progress: {
                                                         percent: obj.progress.percent,
                                                         status: 'error',
@@ -674,7 +571,6 @@
                             if (index === that.uploadState.count) {
                                 return {
                                     file: obj.file,
-                                    shareSiteList: obj.shareSiteList,
                                     progress
                                 };
                             } else {
@@ -702,8 +598,8 @@
                 this.updateUploadState({key: 'count', value: 0});
                 this.updateUploadState({key: 'files', value: []});
                 this.updateUploadState({key: 'isUploading', value: false});
-                this.$el.querySelector('#upload-input-file2').value = '';
-                this.$el.querySelector('#upload-input-dir2').value = '';
+                this.$refs.uploadInputFile.vale = '';
+                this.$refs.uploadInputDir.value = '';
                 window.eventBus.$emit('clearInputValue');
             },
             convertFileSize(size) {
@@ -728,7 +624,6 @@
         }
     };
 </script>
-
 <style lang="less" scoped>
     .upload-video-container {
         position: absolute;
@@ -864,30 +759,5 @@
         line-height: 38px;
         text-align: left;
         margin-left: 10px;
-    }
-
-    /*批量共享视频*/
-    .batch-share-site {
-        .batch-share-body {
-            text-align: left;
-            margin-bottom: 40px;
-            div {
-                text-align: left;
-                font-size: 18px;
-                &.tips {
-                    margin-bottom: 20px;
-                    font-size: 14px;
-                    line-height: 16px;
-                    text-align: center;
-                }
-                &.text-center {
-                    text-align: center;
-                }
-            }
-            .el-select {
-                margin-top: 20px;
-                width: 80%;
-            }
-        }
     }
 </style>

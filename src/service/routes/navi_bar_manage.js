@@ -3,26 +3,41 @@
  */
 
 import service from '../config';
-
-/**
- * 获取导航栏目列表
- */
-export const getNavBarList = () => {
-    return service.get('/v1/content/nav-bar/list');
-};
+import util from '../../util/extend';
 
 /**
  * 导航栏全量修改
  * @param navBarList An array of navigation bar list
- * @example navBarList [{
- *       id: 'string',
- *       name: 'string',
- *       releaseStatus: 'RELEASED',
- *       sort: 0,
- *       uri: 'empty',
- *       visible: false
- *     }]
  */
 export const setNavBarList = (navBarList) => {
     return service.put('/v1/content/nav-bar', navBarList);
+};
+
+/**
+ * 新增栏目
+ */
+export const createNavBar = ({name, focalImage, image, signCode, layoutTemplate}) => {
+    return service.post('/v1/content/nav-bar', {name, focalImage, image, signCode, layoutTemplate});
+};
+
+/**
+ * 获取栏目详情
+ * @param id The id of nav bar.
+ */
+export const getNavBarDetail = (id) => {
+    return service.get(util.format('/v1/content/nav-bar/{0}', id));
+};
+
+/**
+ * 修改栏目信息
+ */
+export const updateNavBar = ({id, name, focalImage, image, signCode, layoutTemplate}) => {
+    return service.patch('/v1/content/nav-bar', {
+        id,
+        name,
+        focalImage,
+        image,
+        signCode,
+        layoutTemplate
+    });
 };

@@ -1,33 +1,34 @@
 <!--多选主站上的视频列表组件（已筛选除了子站视频）-->
 <template>
-    <div class="video-table-container text-center" @keyup.enter="getVideoList">
-        <el-form :inline="true" class="text-left">
-            <el-form-item>
-                <el-input
-                    v-model="listQueryParams.keyword"
-                    placeholder="搜索你想要的信息"
-                    clearable>
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-                <el-input v-show="false"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-select
-                    v-model="listQueryParams.suffix"
-                    clearable
-                    placeholder="请选择视频后缀">
-                    <el-option
-                        v-for="(item, index) in suffixOptions"
-                        :key="index"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" plain icon="el-icon-search" @click="getVideoList">搜索</el-button>
-            </el-form-item>
-        </el-form>
+    <div class="video-table-container text-left" @keyup.enter="getVideoList">
+        <div class="search-field-item">
+            <el-input
+                v-model="listQueryParams.keyword"
+                clearable
+                class="border-input"
+                placeholder="搜索你想要的信息">
+            </el-input>
+            <el-button
+                class="btn-style-one"
+                @click="getVideoList"
+                icon="el-icon-search"
+                type="primary"
+                plain>
+                搜索
+            </el-button>
+            <el-input v-show="false"></el-input>
+            <el-select
+                v-model="listQueryParams.suffix"
+                clearable
+                placeholder="请选择视频后缀">
+                <el-option
+                    v-for="(item, index) in suffixOptions"
+                    :key="index"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+            </el-select>
+        </div>
         <el-table
             ref="selectMultipleVideoTable"
             :data="videoList"
@@ -84,7 +85,7 @@
                 width="220px"
                 label="上传日期">
                 <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm:SS')}}
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                 </template>
             </el-table-column>
         </el-table>
@@ -97,7 +98,7 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
         </el-pagination>
-        <div slot="footer" class="dialog-footer text-right">
+        <div slot="footer" class="dialog-footer">
             <el-button @click="closeSelectVideoDialog">取 消</el-button>
             <el-button type="primary" @click="pullVideoFromMaster">确 定</el-button>
         </div>
@@ -242,14 +243,38 @@
         }
     };
 </script>
+
 <style lang="scss" scoped>
 
-    .el-input {
-        width: 400px;
+    .search-field-item {
+        margin-top: 24px;
+        margin-left: 40px;
+        margin-bottom: 20px;
+        .el-input {
+            margin-right: 20px;
+            width: 180px;
+        }
+        .el-select {
+            margin-left: 30px;
+        }
     }
 
     .dialog-footer {
         margin-top: 50px;
+        text-align: right;
+        .el-button {
+            width: 100px;
+            height: 40px;
+            &.el-button--default {
+                color: $dangerColor;
+            }
+            &.el-button--default.el-button--primary {
+                color: #A3D0FD;
+            }
+            &:first-child {
+                margin-left: 10px;
+            }
+        }
     }
 
 </style>

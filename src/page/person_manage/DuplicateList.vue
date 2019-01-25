@@ -1,86 +1,96 @@
 <!--人物列表组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'人物资源管理'},
-            {name:'人物列表-查询重复'}]">
-        </custom-breadcrumb>
-        <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left">
-            <el-form-item class="float-right">
-                <el-button class="page-main-btn" @click="goBack" plain>返回人物列表</el-button>
-            </el-form-item>
-            <el-col :span="24">
-                <el-form-item class="search">
-                    <el-input
-                        :value="duplicate.searchFields.name"
-                        @input="inputHandler($event, 'name')"
-                        placeholder="搜索你想要的信息"
-                        clearable
-                    >
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button class="page-main-btn" type="primary" @click="getDuplicateListHandler" icon="el-icon-search" plain>搜索</el-button>
-                </el-form-item>
-            </el-col>
-        </el-form>
-        <el-table :row-class-name='"figure-row"' :header-row-class-name='"common-table-header"' class="my-table-style" :data="duplicate.list" border>
-            <el-table-column prop="id" align="center" width="120px" label="编号">
-                <template slot-scope="scope">
-                    {{scope.row.id | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column prop="name" align="center" label="名字">
-                <template slot-scope="scope">
-                    <span class="ellipsis three">
-                        {{scope.row.name | padEmpty}}
-                    </span>
-                </template>
-            </el-table-column>
-            <el-table-column label="照片" width="120px" align="center" >
-                <template slot-scope="scope">
-                    <img v-if="scope.row.avatarImage" @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="100px" height="100px" class="pointer" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">
-                    <span v-else>------</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="area" align="center" label="地区">
-                <template slot-scope="scope">
-                    {{areaLabel(scope.row.area) | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column prop="mainRole" align="center" label="职业">
-                <template slot-scope="scope">
-                    <span class="ellipsis three">
-                        {{mainRoleLabel(scope.row.mainRoleList).join(', ') | padEmpty}}
-                    </span>
-                </template>
-            </el-table-column>
-            <el-table-column align="center" label="状态">
-                <template slot-scope="scope">
-                    <i v-if="scope.row.visible" class="status-normal">已上架</i>
-                    <i v-else class="status-abnormal">已下架</i>
-                </template>
-            </el-table-column>
-            <el-table-column align="center" label="更新时间">
-                <template slot-scope="scope">
-                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column align="center" width="120px" label="操作">
-                <template slot-scope="scope">
-                    <div class="btn-wrapper">
-                        <el-button class="text-success" type="text" size="small" @click="displayPerson(scope.row.id)">详情</el-button>
-                        <el-button type="text" size="small" @click="editPerson(scope.row.id)">编辑</el-button>
-                        <el-button type="text" size="small" @click="_lowerFramePerson(scope.row)">
-                            {{scope.row.visible ? '下架' : '上架'}}
-                        </el-button>
-                        <el-button class="text-danger" type="text" size="small" @click="_deletePerson(scope.row.id)">删除</el-button>
+    <div class="duplicate-list-container">
+        <div class="table-container">
+            <h2 class="content-title">搜索筛选</h2>
+            <div class="search-field">
+                <div class="field-row">
+                    <div class="search-field-item">
+                        <el-input
+                            :value="duplicate.searchFields.name"
+                            @input="inputHandler($event, 'name')"
+                            clearable
+                            class="border-input"
+                            placeholder="搜索你想要的信息">
+                        </el-input>
                     </div>
-                </template>
-            </el-table-column>
-        </el-table>
+                    <el-button class="btn-style-one" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                </div>
+            </div>
+            <div class="seperator-line"></div>
+            <div class="table-field">
+                <h2 class="content-title">重复人物列表</h2>
+                <div class="table-operator-field clearfix">
+                    <div class="float-left"></div>
+                    <div class="float-right">
+                        <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
+                    </div>
+                </div>
+                <el-table :row-class-name='"figure-row"' :header-row-class-name='"common-table-header"' class="my-table-style" :data="duplicate.list" border>
+                    <el-table-column prop="id" align="center" width="120px" label="编号">
+                        <template slot-scope="scope">
+                            {{scope.row.id | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="name" align="center" label="名字">
+                        <template slot-scope="scope">
+                            <span
+                                @click="displayPerson(scope.row.id)"
+                                class="ellipsis three name">
+                                {{scope.row.name | padEmpty}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="alias" align="center" label="别名">
+                        <template slot-scope="scope">
+                            {{cutStr20(scope.row.alias) | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="照片" width="120px" align="center" >
+                        <template slot-scope="scope">
+                            <img v-if="scope.row.avatarImage" @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" class="pointer person-image" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">
+                            <span v-else>------</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="area" align="center" label="地区">
+                        <template slot-scope="scope">
+                            {{areaLabel(scope.row.area) | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="mainRole" align="center" label="职业">
+                        <template slot-scope="scope">
+                            <span class="ellipsis three">
+                                {{mainRoleLabel(scope.row.mainRoleList).join(', ') | padEmpty}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="状态">
+                        <template slot-scope="scope">
+                            <input
+                                class="my-switch switch-anim"
+                                type="checkbox"
+                                :checked="scope.row.visible"
+                                @click.prevent="_lowerFramePerson(scope.row)"/>
+                            <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                            <i v-else class="off-the-shelf">已下架</i>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="更新时间">
+                        <template slot-scope="scope">
+                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" width="120px" label="操作">
+                        <template slot-scope="scope">
+                            <div class="operator-btn-wrapper">
+                                <span class="btn-text" @click="editPerson(scope.row.id)">编辑</span>
+                                <span class="btn-text text-danger" @click="_deletePerson(scope.row.id)">删除</span>
+                            </div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
         <el-pagination
             @size-change="handlePaginationChange($event, 'pageSize')"
             @current-change="handlePaginationChange($event, 'pageNum')"
@@ -142,6 +152,7 @@
                 resetSearchFields: 'person/resetSearchFields',
                 resetPagination: 'person/resetPagination',
                 // 人物去重部分
+                resetDuplicatePagination: 'person/resetDuplicatePagination',
                 setDuplicateList: 'person/setDuplicateList',
                 setDuplicatePagination: 'person/setDuplicatePagination',
                 updateDuplicatePagination: 'person/updateDuplicatePagination',
@@ -152,6 +163,10 @@
                 deletePerson: 'person/deletePerson',
                 getDuplicateList: 'person/getDuplicateList'
             }),
+            searchHandler() {
+                this.resetDuplicatePagination();
+                this.getDuplicateList({isProgramme: false});
+            },
             clearSearchFields() {
                 this.resetSearchFields();
             },
@@ -171,6 +186,9 @@
                 } else {
                     return code;
                 }
+            },
+            cutStr20(value) {
+                return this.$util.cutStr(value, 19);
             },
             // 跳转到详情页面
             displayPerson(userId) {
@@ -302,5 +320,9 @@
     &:nth-of-type(2n + 1) {
         margin-left: 10px;
     }
+}
+.person-image {
+    width: 80px;
+    height: 80px;
 }
 </style>

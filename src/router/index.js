@@ -3,7 +3,8 @@ import Router from 'vue-router';
 import store from '../store';
 import './reload';
 import Login from 'sysPage/login/Login';
-import Layout from 'sysPage/layout/Layout';
+// import Layout from 'sysPage/layout/Layout';
+import GlobalLayout from 'sysPage/layout/GlobalLayout';
 import Home from 'sysPage/home/Home';
 import InfoSetting from 'sysPage/personal_center/InfoSetting';
 import MyInfo from 'sysPage/personal_center/MyInfo';
@@ -20,6 +21,8 @@ import EditAdmin from 'sysPage/admin_manage/EditAdmin';
 import ErrorLayout from 'sysPage/error/ErrorLayout';
 import ErrorNotFound from 'sysPage/error/404';
 import NavBarSetting from 'sysPage/nav_bar_manage/NavBarSetting';
+import CreateNavBar from 'sysPage/nav_bar_manage/CreateNavBar';
+import EditNavBar from 'sysPage/nav_bar_manage/EditNavBar';
 import NavBarLayoutSetting from 'sysPage/nav_bar_manage/NavBarLayoutSetting';
 import PersonList from 'sysPage/person_manage/PersonList';
 import CreatePerson from 'sysPage/person_manage/CreatePerson';
@@ -35,17 +38,17 @@ import AppendSingleSubject from 'sysPage/layout_manage/AppendSingleSubject';
 import ModelAppendShuffle from 'sysPage/layout_manage/ModelAppendShuffle';
 import ModelAppendProgrammeSubject from 'sysPage/layout_manage/ModelAppendProgrammeSubject';
 import ModelAppendPersonSubject from 'sysPage/layout_manage/ModelAppendPersonSubject';
-import CreateProgrammeSubject from 'sysPage/subject_manage/programme_subject/CreateProgrammeSubject';
-import CreatePersonSubject from 'sysPage/subject_manage/person_subject/CreatePersonSubject';
+// 专题模块
+import CreateProgrammeSubject from 'sysPage/subject_manage/CreateProgrammeSubject';
+import CreateFigureSubject from 'sysPage/subject_manage/CreateFigureSubject';
+import EditProgrammeSubject from 'sysPage/subject_manage/EditProgrammeSubject';
+import EditFigureSubject from 'sysPage/subject_manage/EditFigureSubject';
+import ProgrammeSubjectDetail from 'sysPage/subject_manage/ProgrammeSubjectDetail';
+import FigureSubjectDetail from 'sysPage/subject_manage/FigureSubjectDetail';
 import SubjectList from 'sysPage/subject_manage/SubjectList';
-import AdvertResourceList from 'sysPage/advert_manage/advert_resources_manage/AdvertResourceList';
-import PersonSubjectDetail from 'sysPage/subject_manage/person_subject/PersonSubjectDetail';
-import EditPersonSubject from 'sysPage/subject_manage/person_subject/EditPersonSubjectBasicInfo';
-import EditSubjectPersons from 'sysPage/subject_manage/person_subject/EditSubjectPersons';
-import ProgrammeSubjectDetail from 'sysPage/subject_manage/programme_subject/ProgrammeSubjectDetail';
+// 广告模块
 import StartingAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/StartingAdvertGroupList';
-import EditProgrammeSubject from 'sysPage/subject_manage/programme_subject/EditProgrammeSubjectBasicInfo';
-import EditSubjectProgrammes from 'sysPage/subject_manage/programme_subject/EditSubjectProgrammes';
+import AdvertResourceList from 'sysPage/advert_manage/advert_resources_manage/AdvertResourceList';
 import PreProgrammeAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/PreProgrammeAdvertGroupList';
 import ScreensaverAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/ScreensaverAdvertGroupList';
 import PauseAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/PauseAdvertGroupList';
@@ -59,6 +62,7 @@ import DiffTimeVideoList from 'sysPage/video_manage/DiffTimeVideoList';
 import LiveChannelList from 'sysPage/channel_manage/LiveChannelList';
 import EditLiveChannelByImportExcel from 'sysPage/channel_manage/EditLiveChannelByImportExcel';
 import CarouselChannelList from 'sysPage/channel_manage/carousel_channel_manage/CarouselChannelList';
+import CreateCarouselChannel from 'sysPage/channel_manage/carousel_channel_manage/CreateCarouselChannel';
 import CreateChannelByImportExcel from 'sysPage/channel_manage/carousel_channel_manage/CreateChannelByImportExcel';
 import EditChannelByImportExcel from 'sysPage/channel_manage/carousel_channel_manage/EditChannelByImportExcel';
 import CarouselChannelDetail from 'sysPage/channel_manage/carousel_channel_manage/CarouselChannelDetail';
@@ -85,6 +89,30 @@ import ProgrammeProductDetail from 'sysPage/product_manage/programme_product/Pro
 import CarouselProductDetail from 'sysPage/product_manage/carousel_product/CarouselProductDetail';
 import RecordProductDetail from 'sysPage/product_manage/record_product/RecordProductDetail';
 import DuplicateList from 'sysPage/person_manage/DuplicateList';
+import Worktop from 'sysPage/worktop/Worktop';
+import ClientLogList from 'sysPage/client_log/ClientLogList';
+import Category from 'sysPage/category_manage/Category';
+import Search from 'sysPage/search_manage/Search';
+import PageLayout from 'sysPage/page_layout/PageLayout';
+import CreateDevice from 'sysPage/device_manage/CreateDevice';
+import EditDevice from 'sysPage/device_manage/EditDevice';
+import CreateLiveChannel from 'sysPage/channel_manage/CreateLiveChannel';
+import EditLiveChannel from 'sysPage/channel_manage/EditLiveChannel';
+import CreateVersion from 'sysPage/version_manage/CreateVersion';
+import ProgrammeImport from 'sysPage/programme_manage/ProgrammeImport';
+import PersonImport from 'sysPage/person_manage/PersonImport';
+// 角标管理
+import CornerMarkIndex from 'sysPage/corner_mark_manage/CornerMarkIndex';
+import LiveChannelImport from 'sysPage/channel_manage/LiveChannelImport';
+import VideoImport from 'sysPage/video_manage/VideoImport';
+
+//  页面布局
+import EditFixedModule from 'sysPage/page_layout/add_edit_module/EditFixedModule';
+import PersonModule from 'sysPage/page_layout/add_edit_module/PersonModule';
+import EditSpecialModule from 'sysPage/page_layout/add_edit_module/EditSpecialModule';
+import PersonSubjectModule from 'sysPage/page_layout/add_edit_module/PersonSubjectModule';
+import ShuffleModule from 'sysPage/page_layout/add_edit_module/ShuffleModule';
+import ProgrammeSubjectModule from 'sysPage/page_layout/add_edit_module/ProgrammeSubjectModule';
 import SiteList from 'sysPage/site_manage/SiteList';
 import ConfigSite from 'sysPage/site_manage/ConfigSite';
 
@@ -104,11 +132,55 @@ let router = new Router({
             name: 'Login',
             component: Login
         },
+        // 轮播频道-批量创建轮播频道
+        {
+            path: '/channel-manage/carousel/import-create/:category',
+            name: 'CreateChannelByImportExcel',
+            component: CreateChannelByImportExcel
+        },
+        // 轮播频道-批量修改轮播频道
+        {
+            path: '/channel-manage/carousel/import-edit',
+            name: 'EditChannelByImportExcel',
+            component: EditChannelByImportExcel
+        },
+        //  直播频道管理-批量修改
+        {
+            path: '/channel-manage/live/import-edit',
+            name: 'EditLiveChannelByImportExcel',
+            component: EditLiveChannelByImportExcel
+        },
+        // 视频导入
+        {
+            path: '/manage-video/import',
+            name: 'VideoImport',
+            component: VideoImport
+        },
+        // 节目导入
+        {
+            path: '/programme-manage/import',
+            name: 'ProgrammeImport',
+            component: ProgrammeImport
+        },
+        // 人物导入
+        {
+            path: '/person-manage/import',
+            name: 'PersonImport',
+            component: PersonImport
+        },
+        {
+            path: '/channel-live/import',
+            name: 'LiveChannelImport',
+            component: LiveChannelImport
+        },
         // 网站内容结构
         {
             path: '/layout',
-            name: 'Layout',
-            component: Layout,
+            name: 'GlobalLayout',
+            component: GlobalLayout,
+            // path: '/layout',
+            // name: 'Layout',
+            // component: Layout,
             // 首页
             children: [
                 {
@@ -124,19 +196,19 @@ let router = new Router({
                 },
                 // 个人中心-我的信息
                 {
-                    path: '/personal-center/my-info',
+                    path: '/my-info',
                     name: 'MyInfo',
                     component: MyInfo
                 },
                 // 个人中心-信息设置页面
                 {
-                    path: '/personal-center/info-setting',
+                    path: '/info-setting',
                     name: 'InfoSetting',
                     component: InfoSetting
                 },
                 // 个人中心-修改密码页面
                 {
-                    path: '/personal-center/modify-password',
+                    path: '/modify-password',
                     name: 'ModifyPassword',
                     component: ModifyPassword
                 },
@@ -193,6 +265,18 @@ let router = new Router({
                     path: '/nav-bar-manage/setting',
                     name: 'NavBarSetting',
                     component: NavBarSetting
+                },
+                // 内容管理-栏目管理-新增
+                {
+                    path: '/nav-bar-manage/create',
+                    name: 'CreateNavBar',
+                    component: CreateNavBar
+                },
+                // 内容管理-栏目管理-编辑
+                {
+                    path: '/nav-bar-manage/edit/:id',
+                    name: 'EditNavBar',
+                    component: EditNavBar
                 },
                 // 内容管理-栏目管理-布局设置
                 {
@@ -256,21 +340,27 @@ let router = new Router({
                 },
                 // 内容管理-专题管理-新增人物专题
                 {
-                    path: '/subject-manage/person/create',
-                    name: 'CreatePersonSubject',
-                    component: CreatePersonSubject
+                    path: '/subject-manage/figure/create',
+                    name: 'CreateFigureSubject',
+                    component: CreateFigureSubject
                 },
-                // 内容管理-专题管理-专题列表
+                // 内容管理-专题管理-人物专题-编辑
                 {
-                    path: '/subject-manage/list',
-                    name: 'SubjectList',
-                    component: SubjectList
+                    path: '/subject-manage/figure/edit/:id',
+                    name: 'EditFigureSubject',
+                    component: EditFigureSubject
+                },
+                // 内容管理-专题管理-节目专题-编辑
+                {
+                    path: '/subject-manage/programme/edit/:id',
+                    name: 'EditProgrammeSubject',
+                    component: EditProgrammeSubject
                 },
                 // 内容管理-专题管理-人物专题-详情
                 {
-                    path: '/subject-manage/person/detail/:id',
-                    name: 'PersonSubjectDetail',
-                    component: PersonSubjectDetail
+                    path: '/subject-manage/figure/detail/:id',
+                    name: 'FigureSubjectDetail',
+                    component: FigureSubjectDetail
                 },
                 // 内容管理-专题管理-节目专题-详情
                 {
@@ -278,29 +368,11 @@ let router = new Router({
                     name: 'ProgrammeSubjectDetail',
                     component: ProgrammeSubjectDetail
                 },
-                // 内容管理-专题管理-人物专题-编辑基本信息
+                // 内容管理-专题管理-专题列表
                 {
-                    path: '/subject-manage/person/edit-basic/:id',
-                    name: 'EditPersonSubject',
-                    component: EditPersonSubject
-                },
-                // 内容管理-专题管理-节目专题-编辑基本信息
-                {
-                    path: '/subject-manage/programme/edit-basic/:id',
-                    name: 'EditProgrammeSubject',
-                    component: EditProgrammeSubject
-                },
-                // 内容管理-专题管理-人物专题-编辑内容
-                {
-                    path: '/subject-manage/person/edit-content/:id',
-                    name: 'EditSubjectPersons',
-                    component: EditSubjectPersons
-                },
-                // 内容管理-专题管理-节目专题-编辑内容
-                {
-                    path: '/subject-manage/programme/edit-content/:id',
-                    name: 'EditSubjectProgrammes',
-                    component: EditSubjectProgrammes
+                    path: '/subject-manage/list',
+                    name: 'SubjectList',
+                    component: SubjectList
                 },
                 // 人物管理-新增人物
                 {
@@ -345,13 +417,13 @@ let router = new Router({
                 },
                 // 节目管理-编辑节目
                 {
-                    path: '/progrmme-manage/edit/:id',
+                    path: '/programme-manage/edit/:id',
                     name: 'EditProgramme',
                     component: EditProgramme
                 },
                 // 节目管理-节目详情
                 {
-                    path: '/progrmme-manage/display/:id',
+                    path: '/programme-manage/display/:id',
                     name: 'DisplayProgramme',
                     component: DisplayProgramme
                 },
@@ -422,7 +494,7 @@ let router = new Router({
                     name: 'DetailPageAdvertList',
                     component: DetailPageAdvertGroupList
                 },
-                //  视频管理
+                // 视频管理
                 {
                     path: '/manage-video/list',
                     name: 'VideoList',
@@ -442,54 +514,52 @@ let router = new Router({
                 },
                 //  直播频道管理
                 {
-                    path: '/channel-manage/live/list',
+                    path: '/channel-live/list',
                     name: 'LiveChannelList',
                     component: LiveChannelList
                 },
-                //  直播频道管理-批量修改
                 {
-                    path: '/channel-manage/live/import-edit',
-                    name: 'EditLiveChannelByImportExcel',
-                    component: EditLiveChannelByImportExcel
+                    path: '/channel-live/create',
+                    name: 'CreateLiveChannel',
+                    component: CreateLiveChannel
                 },
                 {
-                    path: '/channel-manage/live/preview/:id',
+                    path: '/channel-live/edit/:id',
+                    name: 'EditLiveChannel',
+                    component: EditLiveChannel
+                },
+                {
+                    path: '/channel-live/preview/:id',
                     name: 'PreviewProgrammeList',
                     component: PreviewProgrammeList
                 },
                 // 轮播频道列表
                 {
-                    path: '/channel-manage/carousel/list',
+                    path: '/channel-carousel/list',
                     name: 'CarouselChannelList',
                     component: CarouselChannelList
                 },
-                // 轮播频道-批量创建轮播频道
+                // 轮播频道-创建单个轮播频道
                 {
-                    path: '/channel-manage/carousel/import-create/:category',
-                    name: 'CreateChannelByImportExcel',
-                    component: CreateChannelByImportExcel
-                },
-                // 轮播频道-批量修改轮播频道
-                {
-                    path: '/channel-manage/carousel/import-edit',
-                    name: 'EditChannelByImportExcel',
-                    component: EditChannelByImportExcel
+                    path: '/channel-carousel/create',
+                    name: 'CreateCarouselChannel',
+                    component: CreateCarouselChannel
                 },
                 // 轮播频道详情
                 {
-                    path: '/channel-manage/carousel/detail/:id',
+                    path: '/channel-carousel/detail/:id',
                     name: 'CarouselChannelDetail',
                     component: CarouselChannelDetail
                 },
                 // 编辑轮播频道
                 {
-                    path: '/channel-manage/carousel/edit/:id',
+                    path: '/channel-carousel/edit/:id',
                     name: 'EditCarouselChannel',
                     component: EditCarouselChannel
                 },
                 //  频道类别管理
                 {
-                    path: '/channel-manage/category',
+                    path: '/channel-category',
                     name: 'ChannelCategory',
                     component: ChannelCategory
                 },
@@ -499,11 +569,101 @@ let router = new Router({
                     name: 'VersionList',
                     component: VersionList
                 },
+                {
+                    path: '/manage-version/create',
+                    name: 'CreateVersion',
+                    component: CreateVersion
+                },
                 //  设备管理
                 {
                     path: '/manage-device/list',
                     name: 'DeviceList',
                     component: DeviceList
+                },
+                {
+                    path: '/manage-device/create',
+                    name: 'CreateDevice',
+                    component: CreateDevice
+                },
+                {
+                    path: '/manage-device/edit/:id',
+                    name: 'EditDevice',
+                    component: EditDevice
+                },
+                //  操作台管理
+                {
+                    path: '/worktop-manage',
+                    name: 'Worktop',
+                    component: Worktop
+                },
+                //  客户端日志管理
+                {
+                    path: '/clientlog/list',
+                    name: 'ClientLogList',
+                    component: ClientLogList
+                },
+                {
+                    path: '/category-manage',
+                    name: 'Category',
+                    component: Category
+                },
+                {
+                    path: '/search-manage',
+                    name: 'Search',
+                    component: Search
+                },
+                //  角标管理
+                {
+                    path: '/corner-mark-manage/index',
+                    name: 'CornerMarkIndex',
+                    component: CornerMarkIndex
+                },
+                //  页面布局
+                {
+                    path: '/page-layout/:navbarId',
+                    name: 'PageLayout',
+                    component: PageLayout
+                },
+                {
+                    path: '/page-layout/:navbarId/edit-fixed/:index',
+                    name: 'EditFixedModule',
+                    component: EditFixedModule
+                },
+                /**
+                 *
+                 FIGURE
+                 SPECIAL
+                 FIGURE_SUBJECT
+                 PROGRAMME
+                 FIGURE_SUBJECT'
+                 */
+                {
+                    path: '/page-layout/:navbarId/:operator/figure/:index',
+                    name: 'PersonModule',
+                    component: PersonModule
+                },
+                {
+                    path: '/page-layout/:navbarId/:operator/special/:index',
+                    name: 'EditSpecialModule',
+                    component: EditSpecialModule
+                },
+                {
+                    path: '/page-layout/:navbarId/:operator/figure_subject/:index',
+                    name: 'PersonSubjectModule',
+                    component: PersonSubjectModule
+                },
+                {
+                    path: '/page-layout/:navbarId/:operator/shuffle/:index',
+                    name: 'ShuffleModule',
+                    component: ShuffleModule
+                },
+                {
+                    path: '/page-layout/:navbarId/:operator/programme_subject/:index',
+                    name: 'ProgrammeSubjectModule',
+                    component: ProgrammeSubjectModule
+                },
+                {
+                    path: '/page-layout/:navbarId/add/programme/:index'
                 },
                 //  产品管理-产品包列表
                 {
@@ -601,15 +761,17 @@ let router = new Router({
         {
             path: '/error-layout',
             name: 'ErrorLayout',
-            component: ErrorLayout,
+            component:
+            ErrorLayout,
             // 404页面
-            children: [
-                {
-                    path: '/error/404',
-                    name: 'ErrorNotFound',
-                    component: ErrorNotFound
-                }
-            ]
+            children:
+                [
+                    {
+                        path: '/error/404',
+                        name: 'ErrorNotFound',
+                        component: ErrorNotFound
+                    }
+                ]
         }
     ]
 });
@@ -652,6 +814,7 @@ router.beforeEach((to, from, next) => {
     } else {
         next({name: 'ErrorNotFound'});
     }
+    next();
 });
 
 export default router;

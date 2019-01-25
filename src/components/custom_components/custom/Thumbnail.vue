@@ -1,18 +1,21 @@
 <!--缩略图组件-->
 <template>
-    <div class="text-center">
+    <div class="text-center thumbnail">
         <ul id="image-list">
             <li v-for="(item,index) in imageList" :key="index">
                 <div
-                    :style="{ 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
-                    @click="displayImage(index)">
+                    :style="{ width: width, height: height, 'background-image': 'url(' + appendImagePrefix(item.uri) + ')'}"
+                    @click.self="displayImage(index)">
+                    <span v-if="removeSign" @click="removeImage(index,item.id)">
+                        <svg-icon icon-class="remove_image_hover"></svg-icon>
+                        <svg-icon icon-class="remove_image_default"></svg-icon>
+                    </span>
+                    <i @click.self="displayImage(index)"></i>
                 </div>
-                <label>{{item.width}}*{{item.height}}</label>
-                <span
-                    v-if="removeSign"
-                    @click="removeImage(index,item.id)">
-                    删除
-                </span>
+                <p>
+                    <label>{{item.width}}*{{item.height}}</label>
+                    <span>{{item | getImageStyleName}}</span>
+                </p>
             </li>
         </ul>
         <preview-multiple-images
@@ -23,6 +26,7 @@
 
 <script>
     import PreviewMultipleImages from './PreviewMultipleImages';
+    import {ALL_IMAGE_DIMENSIONS} from '@/util/config/dimension.js';
 
     export default {
         name: 'Thumbnail',
@@ -30,6 +34,14 @@
             PreviewMultipleImages
         },
         props: {
+            width: {
+                type: String,
+                default: '170px'
+            },
+            height: {
+                type: String,
+                default: '100px'
+            },
             imageList: {
                 type: Array,
                 default: function () {
@@ -50,6 +62,16 @@
                     list: []
                 }
             };
+        },
+        filters: {
+            // 获取图片的样式名称
+            getImageStyleName: function (image) {
+                for (let i = 0; i < ALL_IMAGE_DIMENSIONS.length; i++) {
+                    if (image.width === ALL_IMAGE_DIMENSIONS[i].width.toString() && image.height === ALL_IMAGE_DIMENSIONS[i].height.toString()) {
+                        return ALL_IMAGE_DIMENSIONS[i].styleName;
+                    }
+                }
+            }
         },
         methods: {
             appendImagePrefix(uri) {
@@ -81,26 +103,66 @@
             align-items: center;
             margin-right: 20px;
             div {
-                width: 150px;
+                position: relative;
+                width: 170px;
                 height: 100px;
                 background-size: cover;
                 background-repeat: no-repeat;
                 background-position: center;
+                background-color: #2A3040;
+                border: 1px solid #3E495E;
+                border-radius: 8px;
+                box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
                 cursor: zoom-in;
-            }
-            label {
-                margin: 10px 0px;
-                height: 14px;
-                font-size: 12px;
-                color: #909399;
-            }
-            span {
-                height: 14px;
-                font-size: 12px;
-                color: $baseRed;
-                cursor: pointer;
                 &:hover {
-                    color: $deepRed;
+                    span {
+                        visibility: visible;
+                        .svg-icon-remove_image_hover {
+                            display: none;
+                        }
+                        &:hover {
+                            .svg-icon-remove_image_hover {
+                                display: inline;
+                            }
+                            .svg-icon-remove_image_default {
+                                display: none;
+                            }
+                        }
+                    }
+                    i {
+                        visibility: visible;
+                    }
+                }
+                span {
+                    visibility: hidden;
+                    position: absolute;
+                    top: 5px;
+                    right: 10px;
+                    z-index: 400;
+                    cursor: pointer;
+                    .svg-icon {
+                        width: 23px;
+                        height: 23px;
+                    }
+                }
+                i {
+                    visibility: hidden;
+                    position: absolute;
+                    top: 0px;
+                    bottom: 0px;
+                    left: 0px;
+                    right: 0px;
+                    z-index: 300;
+                    background: rgba(41, 53, 80, 0.80);
+                }
+            }
+            p {
+                margin-top: 9px;
+                label, span {
+                    margin: 10px 0px;
+                    height: 14px;
+                    font-size: 12px;
+                    color: #6F7480;
                 }
             }
         }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="7px" height="12px" viewBox="0 0 7 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>Path</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Design" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g id="08-01类型管理" transform="translate(-715.000000, -510.000000)" fill-rule="nonzero">
+            <path d="M718,517.464556 C716.303853,517.221941 715,515.763236 715,514 C715,512.067003 716.567003,510.5 718.5,510.5 C720.432997,510.5 722,512.067003 722,514 C722,515.763236 720.696147,517.221941 719,517.464556 L719,521.5 C719,521.776142 718.776142,522 718.5,522 C718.223858,522 718,521.776142 718,521.5 L718,517.464556 Z" id="Path"></path>
+        </g>
+    </g>
+</svg>

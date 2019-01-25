@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>Combined Shape</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Design" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g id="UI-库" transform="translate(-370.000000, -5190.000000)" fill-rule="nonzero">
+            <path d="M404,5216 L426,5216 C428.209139,5216 430,5217.79086 430,5220 C430,5222.20914 428.209139,5224 426,5224 L404,5224 L404,5246 C404,5248.20914 402.209139,5250 400,5250 C397.790861,5250 396,5248.20914 396,5246 L396,5224 L374,5224 C371.790861,5224 370,5222.20914 370,5220 C370,5217.79086 371.790861,5216 374,5216 L396,5216 L396,5194 C396,5191.79086 397.790861,5190 400,5190 C402.209139,5190 404,5191.79086 404,5194 L404,5216 Z" id="Combined-Shape"></path>
+        </g>
+    </g>
+</svg>

@@ -1,16 +1,11 @@
 <!--创建类型包组件-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'产品管理'},
-            {name:'创建类别包'}]">
-        </custom-breadcrumb>
-        <div class="block-box">
-            <category-product-form
-                status="0">
-            </category-product-form>
-        </div>
+        <div class="content-title">添加类别包</div>
+        <div class="seperator-line"></div>
+        <category-product-form
+            status="CREATE_PRODUCT">
+        </category-product-form>
     </div>
 </template>
 
@@ -31,7 +26,4 @@
 
 <style lang="less" scoped>
 
-    .block-box {
-        margin-top: 50px;
-    }
 </style>

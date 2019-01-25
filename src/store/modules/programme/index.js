@@ -1,6 +1,7 @@
 import axios from 'axios';
 import _ from 'lodash';
 import uuid from 'uuid';
+import store from 'store';
 import service from '../../../service';
 import wsCache from '@/util/webStorage';
 import {checkImageExist, getPageSize} from '@/util/formValidate';
@@ -52,12 +53,15 @@ const defaultProgramme = {
     horizontalCoverImage: {},
     // 节目类别
     categoryList: [],
+    //  节目版式
+    programmeTemplate: '',
     // 年级
     gradeList: [],
     // 规格
     specList: [],
     // 科目
     subject: '',
+    cornerMark: {},
     // 赛事
     contest: '',
     // 播放平台
@@ -67,9 +71,11 @@ const defaultProgramme = {
     // 节目看点
     desc: '',
     // 是否下架
-    visible: null,
+    visible: false,
     // 节目描述
     description: '',
+    // 节目规则
+    updateRule: '',
     // 发行时间
     announceAt: '',
     // 状态 ENUM('NORMAL', 'DELETE') DEFAULT 'NORMAL'
@@ -173,7 +179,6 @@ const defaultProgrammeVideo = {
     list: [],
     tempList: [],
     featureList: [],
-    // pagination: _.cloneDeep(defaultPagination),
     pagination: _.cloneDeep(defaultVideoPagination),
     video: _.cloneDeep(defaultVideo)
 };
@@ -181,11 +186,12 @@ const defaultProgrammeVideo = {
 const defaultProgrammeSearchFields = {
     keyword: '',
     visible: '',
+    releaseAtDateRange: [],
     releaseAtStart: '', // 开始的发行日期
     releaseAtEnd: '', //  结束的发行日期
-    produceAreaList: [],
-    programmeTypeIdList: [],
-    programmeCategoryIdList: []
+    produceAreaList: '',
+    programmeTypeIdList: '',
+    programmeCategoryIdList: ''
 };
 
 const defaultGlobal = {
@@ -229,7 +235,8 @@ const getters = {
         return state.searchFields;
     },
     programmeTypeOptions(state) {
-        return state.searchFields.programmeCategoryIdList.reduce((res, id) => {
+        let categoryIdList = [state.searchFields.programmeCategoryIdList];
+        return categoryIdList.reduce((res, id) => {
             let programmeType = state.global.categoryList.find((category) => {
                 return category.id === id;
             });
@@ -243,6 +250,19 @@ const getters = {
     },
     programme(state) {
         return state.programme;
+    },
+    // 地区
+    areaLabel() {
+        return (areaList) => {
+            let areas = store.get('areaList') || [];
+            return areaList.reduce((res, curr) => {
+                let area = areas.find((item) => item.code === curr);
+                if (area) {
+                    res.push(area);
+                }
+                return res;
+            }, []);
+        };
     },
     //  导演，主演， 编剧
     role(state) {
@@ -264,9 +284,9 @@ const getters = {
     },
     // 分类，类型
     typeListOptions(state) {
-        return state.programme.categoryList.reduce((res, id) => {
+        return state.programme.categoryList.reduce((res, _category) => {
             let category = state.global.categoryList.find((category) => {
-                return category.id === id;
+                return category.id === _category.id;
             });
             if (!_.isEmpty(category)) {
                 res = res.concat(category.programmeTypeList);
@@ -331,11 +351,16 @@ const getters = {
     },
     checkSortIsExist(state) {
         let sort = state.video.video.sort;
-        let featureList = state.video.featureList;
+        if (state.video.video.type !== 'FEATURE') { // 如果不是正片的话就跳过判断
+            return false;
+        }
+        // let featureList = state.video.featureList;
         let list = state.video.list;
-        let index = featureList.findIndex((video) => parseInt(video.sort) === parseInt(sort));
         let otherIndex = list.findIndex((video) => parseInt(video.sort) === parseInt(sort));
-        return index > -1 || otherIndex > -1;
+        return otherIndex > -1;
+        // let index = featureList.findIndex((video) => parseInt(video.sort) === parseInt(sort));
+        // return index > -1;
+        // return index > -1 || otherIndex > -1;
     },
     checkSortIsLargeThanTotalSets(state) {
         let sort = state.video.video.sort;
@@ -350,7 +375,7 @@ const getters = {
     isTvPlay(state) {
         let category = state.global.categoryList.find((item) => item.name === '电视剧');
         let id = category ? category.id : '';
-        let index = state.programme.categoryList.findIndex((item) => item === id);
+        let index = state.programme.categoryList.findIndex((item) => item.id === id);
         return index >= 0;
     },
     isShow(state) {
@@ -358,25 +383,25 @@ const getters = {
         let category2 = state.global.categoryList.find((item) => item.name === '网络综艺');
         let id1 = category1 ? category1.id : '';
         let id2 = category2 ? category2.id : '';
-        let index = state.programme.categoryList.findIndex((item) => (item === id1 || item === id2));
+        let index = state.programme.categoryList.findIndex((item) => (item.id === id1 || item.id === id2));
         return index >= 0;
     },
     isMovie(state) {
         let category = state.global.categoryList.find((item) => item.name === '电影');
         let id = category ? category.id : '';
-        let index = state.programme.categoryList.findIndex((item) => item === id);
+        let index = state.programme.categoryList.findIndex((item) => item.id === id);
         return index >= 0;
     },
     isEducation(state) {
         let category = state.global.categoryList.find((item) => item.name === '教育');
         let id = category ? category.id : '';
-        let index = state.programme.categoryList.findIndex((item) => item === id);
+        let index = state.programme.categoryList.findIndex((item) => item.id === id);
         return index >= 0;
     },
     isSports(state) {
         let category = state.global.categoryList.find((item) => item.name === '体育');
         let id = category ? category.id : '';
-        let index = state.programme.categoryList.findIndex((item) => item === id);
+        let index = state.programme.categoryList.findIndex((item) => item.id === id);
         return index >= 0;
     },
     categoryListString(state) {
@@ -387,41 +412,48 @@ const getters = {
     typeList(state) {
         return (id) => {
             let programme = getProgrammeById(id);
-            let allTypeList = programme.categoryList.reduce((prev, curr) => {
+            let allTypeList = programme ? programme.categoryList.reduce((prev, curr) => {
                 let obj = state.global.categoryList.find((item) => item.id === curr.id);
                 if (obj) {
                     return prev.concat(obj.programmeTypeList);
                 } else {
                     return prev.concat([]);
                 }
-            }, []);
-            let typeList = programme.typeList.filter((item) => {
+            }, []) : [];
+            let typeList = programme ? programme.typeList.filter((item) => {
                 let findIndex = allTypeList.findIndex((ele) => ele.id === item.id);
                 return findIndex > -1;
-            });
+            }) : [];
             return typeList.map((item) => item.name).join(', ');
         };
     },
     getDirector(state) {
         return (id) => {
             let programme = getProgrammeById(id);
-            let director = programme.figureListMap['DIRECTOR'] ? programme.figureListMap['DIRECTOR'] : [];
+            let director = programme && programme.figureListMap['DIRECTOR'] ? programme.figureListMap['DIRECTOR'] : [];
             return director.map((item) => item.name).join(', ');
         };
     },
     getChiefActor(state) {
         return (id) => {
             let programme = getProgrammeById(id);
-            let chiefActor = programme.figureListMap['CHIEF_ACTOR'] ? programme.figureListMap['CHIEF_ACTOR'] : [];
+            let chiefActor = programme && programme.figureListMap['CHIEF_ACTOR'] ? programme.figureListMap['CHIEF_ACTOR'] : [];
             return chiefActor.map((item) => item.name).join(', ');
         };
     },
     getScenarist(state) {
         return (id) => {
             let programme = getProgrammeById(id);
-            let scenarist = programme.figureListMap['SCENARIST'] ? programme.figureListMap['SCENARIST'] : [];
+            let scenarist = programme && programme.figureListMap['SCENARIST'] ? programme.figureListMap['SCENARIST'] : [];
             return scenarist.map((item) => item.name).join(', ');
         };
+    },
+    getAllRoleList(state) {
+        let {figureListMap} = state.programme;
+        let directorList = figureListMap['DIRECTOR'] ? figureListMap['DIRECTOR'] : [];
+        let chiefActorList = figureListMap['CHIEF_ACTOR'] ? figureListMap['CHIEF_ACTOR'] : [];
+        let scenaristList = figureListMap['SCENARIST'] ? figureListMap['SCENARIST'] : [];
+        return [...directorList, ...chiefActorList, ...scenaristList];
     }
 };
 
@@ -456,6 +488,10 @@ const mutations = {
     updateProgrammeSearchFields(state, payload) {
         let {key, value} = payload;
         state.searchFields[key] = value;
+        if (key === 'releaseAtDateRange') {
+            state.searchFields.releaseAtStart = state.searchFields.releaseAtDateRange ? state.searchFields.releaseAtDateRange[0] : '';
+            state.searchFields.releaseAtEnd = state.searchFields.releaseAtDateRange ? state.searchFields.releaseAtDateRange[1] : '';
+        }
     },
     resetProgrammeSearchFields(state) {
         state.searchFields = _.cloneDeep(defaultProgrammeSearchFields);
@@ -489,28 +525,6 @@ const mutations = {
         let {key, value} = payload;
         state.global[key].unshift({value});
     },
-    updatePersonResult(state, payload) {
-        let {key, value} = payload;
-        let personKey = key.split('Result')[0];
-        let prevPersonList = state.programme[key].filter((person) => {
-            let index = state.programme[personKey].findIndex((item) => item.id === person.id);
-            if (index >= 0) {
-                return person;
-            }
-        });
-        let result = value.concat(prevPersonList);
-        state.programme[key] = _.uniqBy(result, 'id');
-    },
-    updatePerson(state, payload) {
-        let {key, idList} = payload;
-        let personList = idList.map((id) => {
-            let resultKey = `${key}Result`;
-            return state.programme[resultKey].find((item) => {
-                return item.id === id;
-            });
-        });
-        state.programme[key] = personList;
-    },
     //  节目视频
     setVideoList(state, payload) {
         state.video.list = payload.list;
@@ -526,10 +540,6 @@ const mutations = {
         state.video.pagination.pageNum = payload.pageNum;
         state.video.pagination.total = payload.total;
     },
-    updateVideoPagination(state, payload) {
-        let {key, value} = payload;
-        state.video.pagination[key] = value;
-    },
     setCurrentVideo(state, payload) {
         let {currentVideo} = payload;
         Object.keys(currentVideo).forEach((key) => {
@@ -541,10 +551,14 @@ const mutations = {
     },
     updateVideo(state, payload) {
         let {key, value} = payload;
-        state.video.video[key] = value || null;
+        if (key === 'free') {
+            state.video.video[key] = value;
+        } else {
+            state.video.video[key] = value || null;
+        }
     },
     setVideoCoverImage(state, payload) {
-        state.video.video.coverImage = payload.posterImage;
+        state.video.video.coverImage = payload.coverImage;
     },
     resetVideoPagination(state) {
         state.video.pagination = _.cloneDeep(defaultVideoPagination);
@@ -577,6 +591,9 @@ const mutations = {
         let {id} = payload;
         let {list} = state.video;
         state.video.list = list.filter((video) => video.id !== id);
+        // if (state.video.list.length === 0) {
+        //     state.programme.visible = null;
+        // }
     },
     deleteVideoFromTempList(state, payload) {
         let {tempList} = state.video;
@@ -628,14 +645,42 @@ const mutations = {
     },
     // 节目图片
     setCoverImage(state) {
-        let coverImage = state.programme.posterImageList.find((img) => {
+        let coverImage1 = state.programme.posterImageList.find((img) => {
+            return parseInt(img.width) === 260 && parseInt(img.height) === 380;
+        });
+        let coverImage2 = state.programme.posterImageList.find((img) => {
             return parseInt(img.width) === 240 && parseInt(img.height) === 350;
         });
-        let horizontalCoverImage = state.programme.posterImageList.find((img) => {
-            return parseInt(img.width) === 807 && parseInt(img.height) === 455;
-        });
+
+        let coverImage = coverImage1 || coverImage2;
         state.programme.coverImage = coverImage;
-        state.programme.horizontalCoverImage = horizontalCoverImage;
+    },
+    addImageToPosterImageList(state, payload) {
+        let {image} = payload;
+        let width = _.get(image, 'width');
+        let height = _.get(image, 'height');
+        if (parseInt(width) === 260 && parseInt(height) === 380) {
+            state.programme.coverImage = image;
+            state.programme.posterImageList = state.programme.posterImageList.filter((item) => {
+                return parseInt(item.width) !== 260 && parseInt(item.height) !== 380;
+            });
+            state.programme.posterImageList.unshift(image);
+        } else if (parseInt(width) === 240 && parseInt(height) === 350) {
+            state.programme.posterImageList = state.programme.posterImageList.filter((item) => {
+                return parseInt(item.width) !== 240 && parseInt(item.height) !== 350;
+            });
+            state.programme.posterImageList.push(image);
+        } else {
+            state.programme.posterImageList.push(image);
+        }
+        state.programme.posterImageList = _.uniqBy(state.programme.posterImageList, 'id');
+    },
+    deleteImageFromPosterImageListById(state, payload) {
+        let {id} = payload;
+        state.programme.posterImageList = state.programme.posterImageList.filter((image) => image.id !== id);
+        if (id === state.programme.coverImage.id) {
+            state.programme.coverImage = {};
+        }
     },
     // 新加代码结束
     addPosterImage(state, payload) {
@@ -698,6 +743,155 @@ const mutations = {
     },
     getProgrammeFromLocalStorage() {
         return wsCache.localStorage.get('programme');
+    },
+    // 新的人物搜索的交互代码
+    addPersonByRole(state, payload) {
+        let {role, person} = payload;
+        let obj = {};
+        let pRole = '';
+
+        switch (role) {
+            case 'leadActor':
+                pRole = 'CHIEF_ACTOR';
+                break;
+            case 'director':
+                pRole = 'DIRECTOR';
+                break;
+            case 'scenarist':
+                pRole = 'SCENARIST';
+                break;
+            default:
+                throw new Error('人物类型错误');
+        }
+
+        obj.id = person.id;
+        obj.name = person.name;
+        obj.avatarUri = _.get(person, 'avatarImage.uri');
+        obj.role = pRole;
+        obj.playRole = null;
+        obj.visible = null;
+
+        state.programme[role].push(obj);
+        state.programme[role] = _.uniqBy(state.programme[role], 'id');
+    },
+    deletePersonById(state, payload) {
+        let {id, key} = payload;
+        state.programme[key] = state.programme[key].filter((person) => person.id !== id);
+    },
+    //  搜索分类类型
+    addCategoryToList(state, payload) {
+        let {category} = payload;
+        state.programme.categoryList.push(category);
+        state.programme.categoryList = _.uniqBy(state.programme.categoryList, 'id');
+    },
+    addTypeToList(state, type) {
+        state.programme.typeList.push(type);
+        state.programme.typeList = _.uniqBy(state.programme.typeList, 'id');
+    },
+    deleteCategoryOrTypeById(state, payload) {
+        let {id, key} = payload;
+        state.programme[key] = state.programme[key].filter((person) => person.id !== id);
+    },
+    //  搜索分类结束
+    //  搜索地区开始
+    addAreaToList(state, payload) {
+        let {area} = payload;
+        let code = _.get(area, 'code');
+        state.programme.produceAreaList.push(code);
+        state.programme.produceAreaList = _.uniq(state.programme.produceAreaList);
+    },
+    deleteAreaByCode(state, payload) {
+        let {code} = payload;
+        state.programme.produceAreaList = state.programme.produceAreaList.filter((_code) => _code !== code);
+    },
+    // 搜索地区结束
+    // 搜索关键字开始
+    addTagToList(state, payload) {
+        let {tag} = payload;
+        let name = _.get(tag, 'name');
+        state.programme.tagList.push(name);
+        state.programme.tagList = _.uniq(state.programme.tagList);
+    },
+    deleteTagByName(state, payload) {
+        let {tag} = payload;
+        state.programme.tagList = state.programme.tagList.filter((_tag) => _tag !== tag);
+    },
+    //  搜索关键字结束
+    //  播放平台搜索开始
+    addPlatformToList(state, payload) {
+        let {platform} = payload;
+        let name = _.get(platform, 'name');
+        state.programme.platformList.push(name);
+        state.programme.platformList = _.uniq(state.programme.platformList);
+    },
+    deletePlatformByName(state, payload) {
+        let {platform} = payload;
+        state.programme.platformList = state.programme.platformList.filter((_platform) => _platform !== platform);
+    },
+    //  播放平台搜索结束
+    //  年级搜索开始
+    addGradeToList(state, payload) {
+        let {grade} = payload;
+        let name = _.get(grade, 'name');
+        state.programme.gradeList.push(name);
+        state.programme.gradeList = _.uniq(state.programme.gradeList);
+    },
+    deleteGradeByName(state, payload) {
+        let {grade} = payload;
+        state.programme.gradeList = state.programme.gradeList.filter((_grade) => _grade !== grade);
+    },
+    //  年级搜索结束
+    //  规格搜索开始
+    addSpecToList(state, payload) {
+        let {spec} = payload;
+        let name = _.get(spec, 'name');
+        state.programme.specList.push(name);
+        state.programme.specList = _.uniq(state.programme.specList);
+    },
+    deleteSpecByName(state, payload) {
+        let {spec} = payload;
+        state.programme.specList = state.programme.specList.filter((_spec) => _spec !== spec);
+    },
+    //  规格搜索结束
+    /**
+     * 节目中当前视频的相关操作开始
+     */
+    //  视频中figureList的增删改查
+    addFigureToList(state, payload) {
+        let {figure} = payload;
+        state.video.video.figureList.push(figure);
+        state.video.video.figureList = _.uniqBy(state.video.video.figureList, 'id');
+    },
+    deleteFigureById(state, payload) {
+        let {id} = payload;
+        state.video.video.figureList = state.video.video.figureList.filter((figure) => figure.id !== id);
+    },
+    //  视频中figureList的增删改查结束
+    updateProgrammeMark(state, payload) {
+        let {key, checked} = payload;
+        let markType = '';
+        switch (key) {
+            case 'leftTop':
+                markType = 'PLATFORM';
+                break;
+            case 'leftBottom':
+                markType = 'EPISODES_NUMBER';
+                break;
+            case 'rightBottom':
+                markType = 'SCORE';
+                break;
+            default:
+                throw new Error('角标的key不存在');
+        }
+        if (checked) {
+            state.programme.cornerMark[key] = {
+                caption: '',
+                imageUri: '',
+                markType
+            };
+        } else {
+            delete state.programme.cornerMark[key];
+        }
     }
 };
 
@@ -705,24 +899,13 @@ const mutations = {
  * 对节目数据做处理
  */
 function formatProgramme(programme, state) {
-    let {global: {categoryList}, video: {list}} = state;
-    let programmeTypeList = categoryList.reduce((res, curr) => {
-        return res.concat(curr.programmeTypeList);
-    }, []);
+    let {video: {list}} = state;
     let result = Object.assign({}, programme, {
         // 版权开始日期
         copyrightStartedAt: programme.copyrightRange[0],
         // 版权结束日期
         copyrightEndedAt: programme.copyrightRange[1],
         featureVideoCount: list.filter((video) => video.type === 'FEATURE').length,
-        categoryList: programme.categoryList.map((id) => {
-            let category = categoryList.find((category) => category.id === id);
-            return category;
-        }),
-        typeList: programme.typeList.map((id) => {
-            let type = programmeTypeList.find((type) => type.id === id);
-            return type;
-        }),
         // 人物
         licence: programme.licence === '' ? null : programme.licence,
         figureList: [].concat(programme.leadActor.map((item) => {
@@ -793,23 +976,8 @@ function serializeProgrammData(programme, state) {
         scenaristResult = scenarist;
     }
 
-    let allTypeList = programme.categoryList.reduce((prev, curr) => {
-        let obj = state.global.categoryList.find((item) => item.id === curr.id);
-        if (obj) {
-            return prev.concat(obj.programmeTypeList);
-        } else {
-            return prev.concat([]);
-        }
-    }, []);
-    let typeList = programme.typeList.filter((item) => {
-        let findIndex = allTypeList.findIndex((ele) => ele.id === item.id);
-        return findIndex > -1;
-    });
-
     let res = Object.assign({}, defaultProgramme, programme, {
         copyrightRange: [programme.copyrightStartedAt, programme.copyrightEndedAt],
-        categoryList: programme.categoryList.map((category) => category.id),
-        typeList: typeList.filter((type) => type !== null).map((type) => type.id),
         director,
         leadActor,
         scenarist,
@@ -842,13 +1010,80 @@ const actions = {
     /**
      * 获取节目列表
      */
-    async getProgrammeList({commit, state}) {
+    async getProgrammeList({commit, state}, keyword) {
+        try {
+            if (!isLoading) {
+                isLoading = true;
+                let searchFields = Object.assign({}, state.searchFields, {
+                    produceAreaList: [state.searchFields.produceAreaList],
+                    categoryIdList: [state.searchFields.categoryIdList],
+                    programmeTypeIdList: [state.searchFields.programmeTypeIdList]
+                });
+                let params = {};
+                if (keyword) {
+                    params = Object.assign({}, searchFields, {
+                        pageSize: state.pagination.pageSize,
+                        pageNum: state.pagination.pageNum - 1,
+                        keyword
+                    });
+                } else {
+                    params = Object.assign({}, searchFields, {
+                        pageSize: state.pagination.pageSize,
+                        pageNum: state.pagination.pageNum - 1
+                    });
+                }
+                let res = await service.getProgrammeList(params);
+                if (res && res.code === 0) {
+                    let {pageNum, pageSize, total, list} = res.data;
+                    commit('setProgrammeList', {list});
+                    commit('setProgrammePagination', {pageSize, pageNum: pageNum + 1, total});
+                }
+                isLoading = false;
+                return res;
+            }
+        } catch (err) {
+            isLoading = false;
+        }
+    },
+    /**
+     * 获取特定类型的节目列表
+     */
+    async getProgrammeListIsVisibleByNews({commit, state}) {
+        try {
+            if (!isLoading) {
+                isLoading = true;
+                let searchFields = Object.assign({}, state.searchFields, {
+                    programmeCategoryIdList: state.global.categoryList.filter((item) => item.signCode === 'NEWS').map((item) => item.id)
+                });
+                let params = Object.assign({}, searchFields, {
+                        pageSize: state.pagination.pageSize,
+                        pageNum: state.pagination.pageNum - 1,
+                        visible: true
+                    });
+                let res = await service.getProgrammeList(params);
+                if (res && res.code === 0) {
+                    let {pageNum, pageSize, total, list} = res.data;
+                    commit('setProgrammeList', {list});
+                    commit('setProgrammePagination', {pageSize, pageNum: pageNum + 1, total});
+                }
+                isLoading = false;
+                return res;
+            }
+        } catch (err) {
+            isLoading = false;
+        }
+    },
+    /**
+     * 获取已经上架的节目列表
+     */
+    async getProgrammeListIsVisible({commit, state}) {
         try {
             if (!isLoading) {
                 isLoading = true;
                 let params = Object.assign({}, state.searchFields, {
                     pageSize: state.pagination.pageSize,
-                    pageNum: state.pagination.pageNum - 1
+                    pageNum: state.pagination.pageNum - 1,
+                    visible: true
                 });
                 let res = await service.getProgrammeList(params);
                 if (res && res.code === 0) {
@@ -1037,20 +1272,45 @@ const actions = {
         }
     },
     // 视频相关的请求
-    async createMultProgrammeVideo({commit, state}, {programme}) {
+    //  创建节目的时候保存视频
+    async createMultProgrammeVideo({state}, programme) {
         try {
             let {list} = state.video;
             let videoList = filterProgrammeVideoList(list, programme);
             let res = await service.createMultProgrammeVideo(videoList);
             return res;
-        } catch (err) {}
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    //  编辑节目的时候保存视频
+    async editMultProgrammeVideo({state}) {
+        try {
+            let {list} = state.video;
+            let {programme} = state;
+            let videoList = filterProgrammeVideoList(list, programme);
+            let res = await service.createMultProgrammeVideo(videoList);
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    async editEmptyProgrammeVideo({state}, id) {
+        try {
+            let res = await service.editEmptyProgrammeVideo(id);
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
     },
     async getProgrammeVideoById({commit, state}, id) {
         try {
             let res = await service.getProgrammeVideoInfo({id});
             if (res && res.code === 0) {
                 commit('setCurrentVideo', {currentVideo: res.data});
-                commit('setCacheSort', {sort: res.data.sort});
+                if (res.data.type === 'FEATURE') {
+                    commit('setCacheSort', {sort: res.data.sort});
+                }
             }
         } catch (err) {
         }
@@ -1128,6 +1388,15 @@ const actions = {
     async upLowerFrameProgramme({commit, state}, {idList, visible}) {
         try {
             let res = await service.upLowerFrameProgramme(idList, visible);
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    //   节目批量删除
+    async batchDeleteProgrammes({commit, state}, idList) {
+        try {
+            let res = await service.batchDeleteProgrammes(idList);
             return res;
         } catch (err) {
             console.log(err);

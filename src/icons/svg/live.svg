@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="121px" height="66px" viewBox="0 0 121 66" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>lIVE</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="100%" x2="50%" y2="3.061617e-15%" id="linearGradient-1">
+            <stop stop-color="#A7ADB7" offset="0%"></stop>
+            <stop stop-color="#6F7480" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" fill-opacity="0.05">
+        <g id="03-页面布局" transform="translate(-859.000000, -565.000000)" fill="url(#linearGradient-1)">
+            <path d="M876,565 L876,631 L859,631 L859,565 L876,565 Z M900,565 L900,631 L883,631 L883,565 L900,565 Z M948,565 L939.213504,631 L912.97719,631 L903,565 L921.229927,565 C923.337602,583.181684 924.843061,598.550277 925.74635,611.106238 C926.64964,598.41439 927.593973,587.135936 928.57938,577.270537 L929.770073,565 L948,565 Z M950,565 L978.849315,565 L978.849315,578.208153 L967.30137,578.208153 L967.30137,590.723286 L978.109589,590.723286 L978.109589,603.279185 L967.30137,603.279185 L967.30137,617.791847 L980,617.791847 L980,631 L950,631 L950,565 Z" id="lIVE"></path>
+        </g>
+    </g>
+</svg>

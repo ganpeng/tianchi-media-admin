@@ -6,7 +6,8 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: @basicFontColor;
+    // color: @basicFontColor;
+    color: #A8ABB3;
 }
 
 // dragula.js 拖拽样式全局设置
@@ -36,126 +37,103 @@
     filter: alpha(opacity=20);
 }
 
-// 大标题的样式
-.block-title {
-    padding: 30px 0 20px 20px;
-    line-height: 2;
-    text-align: left;
-    font-size: @blockTitleFontSize;
-}
-
-// 二级标题样式
-.block-vice-title {
-    text-align: left;
-    padding: 15px 20px;
-}
-
-// 页面二级模块样式
-.vice-block {
-    margin-top: 30px;
-}
-
-// 对表格的margin做处理
-.my-table-style {
-    margin-left: 0 !important;
-}
-
-// 使form表单中的每个item左对齐
+// 2.0 使form表单中的每个item左对齐
 .form-block {
     text-align: left;
-    .operate {
-        text-align: center;
+    .el-input, .el-textarea, .el-select {
+        width: 300px !important;
     }
+    .el-input {
+        transform: scale(1, 0.945);
+    }
+    .el-input__icon {
+        height: 100% !important;
+    }
+    //.el-input {
+    //    height: 34px !important;
+    //    input {
+    //        height: 34px;
+    //        line-height: 34px;
+    //    }
+    //}
+    //.el-select:not(.multiple-select) {
+    //    height: 34px !important;
+    //    input {
+    //        height: 34px;
+    //        line-height: 34px;
+    //    }
+    //}
+    //.el-form-item__content {
+    //    line-height: 34px !important;
+    //}
 }
 
-// 表格的标题
-.table-title {
-    font-size: 18px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    text-align: left;
-}
-
-// 搜索框的样式
-.el-form {
-    .create-account {
-        float: right;
-    }
-    .el-tag {
-        cursor: pointer;
-        a {
-            display: block;
-            height: 100%;
-            width: 100%;
-        }
-    }
-}
-
-// 表格的通用样式
-.el-table {
-    position: relative;
-    margin: 30px 0px;
-    text-align: center;
-    border-radius: 4px !important;
-    .common-table-header {
-        div.cell {
-            color: #283841;
-            font-size: 14px;
-        }
-    }
-    .warning-row {
-        background: oldlace;
-    }
-    .success-row {
-        background: #f0f9eb;
-    }
-    .unselectable-row {
-        background: #f0f9eb;
-        .el-checkbox {
-            display: none;
-        }
-    }
-    //  专题列表行的样式
-    .subject-row {
-        height: 90px;
-    }
-    //  站点列表行的样式
-    .site-row {
+// 2.0弹窗样式
+.normal-dialog {
+    background: #293550;
+    border: 1px solid rgba(99, 116, 151, 0.50);
+    box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
+    border-radius: 8px;
+    .el-dialog__header {
+        padding: 0px;
         height: 50px;
+        line-height: 55px;
+        background: #1F2D4D;
+        .el-dialog__title {
+            font-size: 20px;
+            color: #909399;
+        }
+        .el-dialog__headerbtn {
+            top: 16px;
+            font-size: 15px;
+            .el-dialog__close {
+                color: #C35757;
+                &:hover {
+                    color: #D0021B;
+                }
+            }
+        }
     }
-    //  产品包列表行的样式
-    .product-row {
-        height: 60px;
-    }
-    // 节目列表行的样式
-    .programme-row {
-        height: 120px;
-    }
-    // 人物列表行的样式
-    .figure-row {
-        height: 125px;
-    }
-    // 频道列表行的样式
-    .channel-row {
-        height: 90px;
-    }
-    // 视频列表行的样式（正常）
-    .video-row {
-        height: 72px;
-    }
-    // 视频列表行的样式(较大)
-    .video-larger-row {
-        height: 118px;
-    }
-    // 去除单选的label样式
-    .el-radio__label {
-        display: none;
+    .el-dialog__footer {
+        .el-button {
+            width: 100px;
+            height: 40px;
+            &.el-button--default {
+                color: #C35757;
+            }
+            &.el-button--default.el-button--primary {
+                color: #A3D0FD;
+            }
+            &:first-child {
+                margin-left: 10px;
+            }
+        }
     }
 }
 
-// 表格下面分页右对齐
-.el-pagination {
-    text-align: right;
+// 2.0弹窗表格样式
+.playing-box-table {
+    .el-table__header {
+        tr, th {
+            background: #212A3E !important;
+        }
+    }
+    .el-table__body {
+        tr {
+            background: #191D26 !important;
+            &:hover {
+                background: #979797;
+            }
+        }
+    }
+}
+
+// 2.0下拉选择框禁用样式
+.el-dropdown {
+    &.is-disabled {
+        opacity: 0.3;
+        pointer-events: none;
+    }
 }
 
 // 人物列表中的图片大小
@@ -263,21 +241,6 @@ li {
     }
 }
 
-/** 去除table组件中表头行中的全选多选框 */
-.table-header-row {
-    .el-checkbox {
-        display: none;
-    }
-}
-
-.video-table-container {
-    .table-header-row {
-        .el-checkbox {
-            display: block;
-        }
-    }
-}
-
 /** 页面的大标题样式 */
 .page-title {
     display: flex;
@@ -333,65 +296,6 @@ li {
     }
 }
 
-/** 恢复按钮样式  */
-.recover-btn {
-    span {
-        color: #67C23A;
-    }
-}
-
-/** 列表页面右上角添加按钮样式  */
-.create-blue-btn {
-    background-color: transparent;
-    border: 1px solid #1989FA;
-    color: #1989FA;
-    &.contain-svg-icon {
-        padding: 4px 12px;
-    }
-    span {
-        display: flex;
-        align-items: center;
-    }
-    * {
-        color: #1989FA;
-    }
-    .svg-icon {
-        margin-right: 8px;
-        width: 28px !important;
-        height: 28px !important;
-        fill: #1989FA;
-        // 图片的icon颜色设置
-        &.svg-icon-image, &.svg-icon-video {
-            fill: #A3D0FD;
-        }
-    }
-
-    &:hover, &:focus {
-        background-color: #1989FA;
-        * {
-            color: #fff;
-        }
-        .svg-icon {
-            fill: #fff;
-        }
-    }
-    &.is-disabled {
-        background-color: transparent;
-        border-color: #a5d2ff;
-        span {
-            color: #a5d2ff;
-        }
-        &:hover {
-            color: #a5d2ff;
-            background-color: transparent;
-            border-color: #a5d2ff;
-            span {
-                color: #a5d2ff;
-            }
-        }
-    }
-}
-
 /** 禁播、删除等按钮样式  */
 .disabled-red-btn {
     background-color: transparent;
@@ -424,13 +328,6 @@ li {
     }
 }
 
-/** 页面表单中的尺寸样式 */
-.fill-form {
-    .el-input, .el-textarea, .el-select {
-        width: 600px;
-    }
-}
-
 /** 清除筛选项的button样式 */
 .clear-filter {
     .svg-icon {
@@ -446,57 +343,193 @@ li {
     }
 }
 
-/** 列表筛选参数样式 */
+// 2.0 input去除chrome自动填充背景色
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px rgb(41, 53, 80) inset;
+    color: #A3D0FD !important;
+}
+
+/** 2.0列表筛选参数样式 */
 .filter-form {
     position: relative;
-    padding-top: 25px;
+    padding: 23px 10px 0px 10px;
     text-align: left;
+    .el-form-item {
+        margin-bottom: 23px;
+        margin-right: 30px;
+        &:first-child {
+            margin-right: 20px;
+        }
+    }
     .el-form-item__label {
         font-size: 16px;
+        height: 34px;
+        line-height: 40px;
+    }
+    .el-input {
+        height: 33px;
+    }
+    .el-input__inner {
+        height: 33px;
+        line-height: 33px;
+    }
+    .el-form-item__content {
+        height: 34px;
+    }
+    .more-filters {
+        width: 72px;
+        min-width: 72px;
+    }
+}
+
+/* 2.0表格底部下拉框 */
+.table-dropdow-box {
+    margin-bottom: 150px;
+    .el-dropdown {
+        text-align: center;
+        position: relative;
+        top: -28px;
+    }
+}
+
+//2.0多选下拉框样式
+.el-select {
+    .el-select__tags {
+        .el-tag {
+            background: #2A3040;
+            border-radius: 4px;
+            &:hover {
+                border: 1px solid #1989FA;
+            }
+            .el-icon-close {
+                height: 16px;
+                width: 16px;
+                line-height: 16px;
+                background: #6F7480;
+                color: #2A3040;
+            }
+            &:hover {
+                .el-icon-close {
+                    background: #C35757;
+                    color: #2A3040;
+                }
+            }
+        }
+    }
+}
+
+// 2.0多选框样式
+.el-checkbox__input {
+    &.is-indeterminate .el-checkbox__inner::before {
+        background-color: #2A3040;
+    }
+    span.el-checkbox__inner {
+        background: transparent;
+        border: 1px solid #3E495E;
+        border-radius: 2px;
+        &::after {
+            border-color: #2A3040;
+        }
+    }
+    &.is-focus {
+        span.el-checkbox__inner {
+            background: transparent;
+            border: 1px solid #3E495E;
+            border-radius: 2px;
+            &::after {
+                border-color: #2A3040;
+            }
+        }
+    }
+    &.is-checked {
+        span.el-checkbox__inner {
+            background: #1989FA;
+            border: 1px solid transparent;
+            border-radius: 2px;
+            &::after {
+                border-color: #2A3040;
+            }
+        }
     }
 }
 
 /* 非正常状态 */
 .status-abnormal {
     display: inline-block;
-    padding: 0 10px;
-    line-height: 22px;
+    padding: 1px 13px;
+    line-height: 24px;
     background: #F6CCD1;
-    border-radius: 14px;
+    border-radius: 8px;
     font-size: 12px;
-    color: rgba(208, 2, 27, 0.80);
+    color: #C35757;
     text-align: center;
 }
 
 /* 正常状态 */
 .status-normal {
     display: inline-block;
-    padding: 0 10px;
-    line-height: 22px;
+    padding: 1px 13px;
+    line-height: 24px;
     background: #B8E986;
-    border-radius: 14px;
-    color: #417505;
+    border-radius: 8px;
     letter-spacing: 0;
-    text-align: center;
     font-size: 12px;
+    color: #417505;
+    text-align: center;
 }
 
-/* 中间状态 */
-.status-mid {
+/* 进行中状态 */
+.status-on-going {
     display: inline-block;
-    padding: 0 10px;
-    line-height: 22px;
+    padding: 1px 8px;
+    line-height: 24px;
     background: #A3D0FD;
-    border-radius: 14px;
+    border-radius: 8px;
     color: #1989FA;
     letter-spacing: 0;
     text-align: center;
     font-size: 12px;
 }
 
-//  表格圆角样式
-.el-table {
-    border-radius: 4px !important;
+/* 初始化状态 */
+.status-initiating {
+    display: inline-block;
+    padding: 1px 8px;
+    line-height: 24px;
+    background: rgba(163, 208, 253, 0.20);
+    border-radius: 8px;
+    font-size: 12px;
+    color: #1989FA;
+    letter-spacing: 0;
+    text-align: center;
+}
+
+/* 删除中状态 */
+.status-deleting {
+    display: inline-block;
+    padding: 1px 8px;
+    line-height: 24px;
+    background: rgba(62, 73, 94, 0.50);
+    border-radius: 8px;
+    font-size: 12px;
+    color: #6F7480;
+    letter-spacing: 0;
+    text-align: center;
+}
+
+span.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+// 2.0状态重试按钮
+.retry-text-btn {
+    padding: 2px 4px;
+    margin-left: 14px;
+    font-size: 12px;
+    color: #1989FA;
+    text-align: center;
+    cursor: pointer;
 }
 
 #label-font {
@@ -508,7 +541,6 @@ li {
 /*! autoprefixer: off */
 .ellipsis {
     display: -webkit-box;
-    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     -ms-text-overflow: ellipsis;
@@ -525,11 +557,6 @@ li {
     &.four {
         -webkit-line-clamp: 4;
     }
-}
-
-//  表格圆角样式
-.el-table {
-    border-radius: 4px !important;
 }
 
 #label-font {

@@ -1,35 +1,32 @@
 <!--站点配置中心组件-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'站点管理'},
-            {name:'配置站点'}]">
-        </custom-breadcrumb>
+        <div class="content-title">配置站点</div>
+        <div class="seperator-line"></div>
         <el-form
-            class="text-left"
             ref="siteInfo"
             :rules="infoRules"
-            :model="siteInfo">
+            label-width="130px"
+            :model="siteInfo"
+            class="form-block fill-form">
             <el-form-item
                 label="站点名称"
-                label-width="120px"
                 prop="name">
-                <label>{{siteInfo.siteName}}</label>
+                <label class="site-name">{{siteInfo.siteName}}</label>
             </el-form-item>
             <el-form-item
                 label="站点token配置"
-                label-width="120px"
                 required
                 prop="siteToken">
                 <el-input
+                    size="medium"
                     v-model="siteInfo.siteToken"
                     placeholder="请填写子站token进行配置">
                 </el-input>
             </el-form-item>
         </el-form>
-        <div class="operate">
-            <el-button @click="configSite" type="primary" class="page-main-btn">保存</el-button>
+        <div class="operate-block text-center">
+            <el-button type="primary" @click="configSite" class="btn-style-two">保存</el-button>
         </div>
     </div>
 </template>
@@ -91,16 +88,28 @@
 <style lang="scss" scoped>
 
     .el-form {
-        margin-top: 50px;
+        margin-top: 30px;
     }
 
     .el-input {
         width: 400px;
     }
 
-    .operate {
-        margin-top: 200px;
-        margin-bottom: 80px;
+    .site-name {
+        color: #fff;
+    }
+
+    // 操作
+    .operate-block {
+        position: fixed;
+        bottom: 10px;
+        left: 0px;
+        right: 0px;
+        margin: auto;
+        width: 500px;
+        height: 80px;
+        line-height: 90px;
+        z-index: 600;
     }
 
 </style>

@@ -1,19 +1,24 @@
 <template>
-    <div class="video-table-container text-center" @keyup.enter="getVideoList">
-        <el-form :inline="true" class="text-left">
-            <el-form-item>
-                <el-input
-                    v-model="queryParams.name"
-                    placeholder="搜索你想要的信息"
-                    clearable>
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-                <el-input v-show="false"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" plain icon="el-icon-search" @click="getVideoList">搜索</el-button>
-            </el-form-item>
-        </el-form>
+    <div id="select-multiple-video" class="video-table-container text-center" @keyup.enter="getVideoList">
+        <div class="selected-count">
+            <span>已选{{currentSelectedVideoList.length}}项</span>
+        </div>
+        <div class="search-field-item">
+            <el-input
+                v-model="queryParams.keyword"
+                clearable
+                class="border-input"
+                placeholder="搜索你想要的信息">
+            </el-input>
+            <el-button
+                class="btn-style-one"
+                @click="getVideoList"
+                icon="el-icon-search"
+                type="primary"
+                plain>
+                搜索
+            </el-button>
+        </div>
         <el-table
             ref="selectMultipleVideoTable"
             :data="videoList"
@@ -100,7 +105,9 @@
                 align="center"
                 label="上传状态">
                 <template slot-scope="scope">
-                    <span>{{scope.row.uploadStatus | getUploadStatus}}</span>
+                    <span :class="{'status-normal':scope.row.uploadStatus === 'SUCCESS'}">
+                        {{scope.row.uploadStatus | getUploadStatus}}
+                    </span>
                 </template>
             </el-table-column>
             <!--子站拉取状态（子站）-->
@@ -109,7 +116,9 @@
                 align="center"
                 label="拉取状态">
                 <template slot-scope="scope">
-                    <span>{{scope.row.downloadStatus | getDownloadStatus}}</span>
+                    <span :class="{'status-normal':scope.row.downloadStatus === 'SUCCESS'}">
+                        {{scope.row.downloadStatus | getDownloadStatus}}
+                    </span>
                 </template>
             </el-table-column>
             <!--视频来源(主站、子站)-->
@@ -145,7 +154,7 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
         </el-pagination>
-        <div slot="footer" class="dialog-footer text-right">
+        <div slot="footer" class="dialog-footer">
             <el-button @click="closeSelectVideoDialog">取 消</el-button>
             <el-button type="primary" @click="appendVideo">确 定</el-button>
         </div>
@@ -165,16 +174,24 @@
         components: {
             DisplayVideoDialog
         },
-        props: ['currentSelectedVideoList'],
+        props: {
+            currentSelectedVideoList: {
+                type: Array,
+                default: function () {
+                    return [];
+                }
+            }
+        },
         data() {
             return {
                 queryParams: {
                     status: 'SUCCESS',
+                    videoType: '',
+                    keyword: '',
+                    pageNum: 0,
+                    pageSize: 5,
                     downloadStatus: 'SUCCESS',
                     uploadStatus: 'SUCCESS',
-                    name: '',
-                    pageNum: 0,
-                    pageSize: 10,
                     statusCombinator: 'OR'
                 },
                 pageNum: 1,
@@ -300,7 +317,7 @@
             // 选择或者取消选择视频
             selectVideo(selection, video) {
                 if (video.hadSelected) {
-                    this.$message('该视频已经存在于轮播频道列表中，不可选择');
+                    this.$message('该视频已经存在于轮播频道列表中');
                     return;
                 }
                 if (this.getOperate(selection, video) === 'APPEND') {
@@ -353,12 +370,61 @@
 
 <style lang="scss" scoped>
 
-    .el-input {
-        width: 400px;
+    .selected-count {
+        margin-top: -30px;
+        height: 45px;
+        border-bottom: 1px solid #3E495E;
+        text-align: left;
+        span {
+            padding-left: 5px;
+            height: 45px;
+            line-height: 55px;
+            font-size: 14px;
+            color: #FFFFFF;
+        }
+    }
+
+    .search-field-item {
+        text-align: left;
+        margin-top: 24px;
+        margin-left: 40px;
+        margin-bottom: 20px;
+        .el-input {
+            margin-right: 20px;
+            width: 180px;
+        }
     }
 
     .dialog-footer {
-        margin-top: 50px;
+        margin-top: 20px;
+        text-align: right;
+        .el-button {
+            width: 100px;
+            height: 40px;
+            &.el-button--default {
+                color: $dangerColor;
+            }
+            &.el-button--default.el-button--primary {
+                color: #A3D0FD;
+            }
+            &:first-child {
+                margin-left: 10px;
+            }
+        }
+    }
+
+    .el-table {
+        margin: 10px 0px !important;
+    }
+
+</style>
+
+<style lang="scss">
+
+    #select-multiple-video {
+        .el-pagination__sizes {
+            display: none;
+        }
     }
 
 </style>

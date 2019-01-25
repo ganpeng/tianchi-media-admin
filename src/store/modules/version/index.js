@@ -77,6 +77,10 @@ const mutations = {
     updateSearchFields(state, payload) {
         let {key, value} = payload;
         state.searchFields[key] = value;
+        if (key === 'dateRange') {
+            state.searchFields.releaseAtStart = state.searchFields.dateRange ? state.searchFields.dateRange[0] : '';
+            state.searchFields.releaseAtEnd = state.searchFields.dateRange ? state.searchFields.dateRange[1] : '';
+        }
     },
     resetSearchFields(state) {
         state.searchFields = _.cloneDeep(defaultSearchFields);
@@ -111,8 +115,8 @@ const actions = {
         try {
             let {searchFields} = state;
             let params = {
-                releaseAtStart: searchFields.dateRange[0],
-                releaseAtEnd: searchFields.dateRange[1],
+                releaseAtStart: searchFields.releaseAtStart,
+                releaseAtEnd: searchFields.releaseAtEnd,
                 forced: searchFields.forced !== '' ? searchFields.forced === 1 : searchFields.forced,
                 keyword: searchFields.keyword,
                 productType: searchFields.productType,

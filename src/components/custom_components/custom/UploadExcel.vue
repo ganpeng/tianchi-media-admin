@@ -1,17 +1,25 @@
 <!--导入excel组件-->
 <template>
-    <div>
+    <div class="upload-excel">
         <input id="excel-upload-input" ref="excel-upload-input" type="file" accept=".xlsx, .xls" @change="handleClick">
-        <div id="drop" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">
-            将文件拖到此处或
+        <div class="tips">
+            <label>拖拽文件到此区域</label>
+            <div>进行上传</div>
+        </div>
+        <div id="drop"
+             @drop="handleDrop"
+             @dragover="handleDragover"
+             @dragenter="handleDragover">
+            <i class="el-icon-plus"></i>
+        </div>
+        <div class="operate">
             <el-button
                 :loading="loading"
-                style="margin-left:16px;"
-                size="mini"
                 type="primary"
-                plain
+                class="btn-style-six"
                 @click="handleUpload">
-                点击上传
+                <svg-icon icon-class="file"></svg-icon>
+                选择文件
             </el-button>
         </div>
     </div>
@@ -136,21 +144,42 @@
 </script>
 
 <style lang="scss" scoped>
-    #excel-upload-input {
-        display: none;
-        z-index: -9999;
+
+    .upload-excel {
+        #excel-upload-input {
+            display: none;
+            z-index: -9999;
+        }
+
+        .tips {
+            margin-bottom: 10px;
+            width: 240px;
+            text-align: center;
+            label, div {
+                font-size: 14px;
+                color: #A8ABB3;
+                text-align: center;
+            }
+        }
+
+        #drop {
+            margin-bottom: 50px;
+            height: 240px;
+            width: 240px;
+            line-height: 260px;
+            border: 1px solid #3E495E;
+            border-radius: 8px;
+            i {
+                display: inline;
+                font-size: 50px;
+                color: #3E495E;
+            }
+        }
+
+        .operate {
+            width: 240px;
+            text-align: center;
+        }
     }
 
-    #drop {
-        border: 2px dashed #bbb;
-        width: 600px;
-        height: 160px;
-        line-height: 160px;
-        margin: 0 auto;
-        font-size: 24px;
-        border-radius: 5px;
-        text-align: center;
-        color: #bbb;
-        position: relative;
-    }
 </style>

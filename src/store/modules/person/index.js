@@ -4,6 +4,8 @@ import service from '../../../service';
 import role from '@/util/config/role';
 
 const defaultPerson = {
+    alias: '',
+    englishName: '',
     area: '',
     birthday: '',
     description: '',
@@ -16,7 +18,8 @@ const defaultPerson = {
     programmeList: [],
     updatedAt: '',
     weight: '',
-    avatarImage: {}
+    visible: '',
+    avatarImage: null
 };
 
 const defaultSearchFields = {
@@ -197,7 +200,7 @@ const mutations = {
     },
     setAvatarImage(state) {
         state.currentPerson.avatarImage = state.currentPerson.posterImageList.find((img) => {
-            return parseInt(img.width) === 200 && parseInt(img.height) === 200;
+            return parseInt(img.width) === 260 && parseInt(img.height) === 260;
         });
     },
     setBackgroundImage(state) {
@@ -214,6 +217,9 @@ const mutations = {
         state.duplicate.pagination.pageNum = payload.pageNum;
         state.duplicate.pagination.total = payload.total;
     },
+    resetDuplicatePagination(state) {
+        state.duplicate.pagination = _.cloneDeep(defaultPagination);
+    },
     updateDuplicatePagination(state, payload) {
         let {key, value} = payload;
         state.duplicate.pagination[key] = value;
@@ -221,16 +227,28 @@ const mutations = {
     updateDuplicateSearchFields(state, payload) {
         let {key, value} = payload;
         state.duplicate.searchFields[key] = value;
+    },
+    //  人物角色的搜索以及增删改查开始
+    addMainRoleToList(state, payload) {
+        let {mainRole} = payload;
+        let value = _.get(mainRole, 'value');
+        state.currentPerson.mainRoleList.push(value);
+        state.currentPerson.mainRoleList = _.uniq(state.currentPerson.mainRoleList);
+    },
+    deleteMainRoleByValue(state, payload) {
+        let {value} = payload;
+        state.currentPerson.mainRoleList = state.currentPerson.mainRoleList.filter((item) => item !== value);
     }
+    //  人物角色的搜索以及增删改查结束
 };
 
 const actions = {
-    async getPersonList({commit, state}, {isProgramme, name}) {
+    async getPersonList({commit, state}, {isProgramme, name, params}) {
         try {
             let searchName = !name ? state.searchFields.name : name;
             let {pageNum, pageSize} = state.pagination;
             let {area} = state.searchFields;
-            let res = await service.getPersonList({ pageNum: pageNum - 1, pageSize, name: searchName, area });
+            let res = await service.getPersonList(Object.assign({}, { pageNum: pageNum - 1, pageSize, name: searchName, area }, params));
             if (res && res.code === 0) {
                 let {pageNum, pageSize, total, list} = res.data;
                 if (!isProgramme) {
@@ -250,6 +268,7 @@ const actions = {
             if (res && res.code === 0) {
                 commit('setCurrentPerson', {currentPerson: res.data});
             }
+            return res;
         } catch (err) {
         }
     },
@@ -326,6 +345,15 @@ const actions = {
                 commit('setDuplicateList', {list: newList});
                 commit('setDuplicatePagination', {pageSize, pageNum: pageNum + 1, total});
             }
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    async checkAliasIsExist({commit, state}) {
+        try {
+            let {alias} = state.currentPerson;
+            let res = await service.checkAliasIsExist(alias);
+            return res;
         } catch (err) {
             console.log(err);
         }

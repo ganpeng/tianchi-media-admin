@@ -2,6 +2,7 @@
 <template>
     <el-dialog
         title="新增人物"
+        class="my-dialog"
         :visible.sync="createPersonDialogVisible"
         :show-close="true"
         :before-close="beforeCloseHandler"
@@ -20,6 +21,7 @@
 </template>
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
+import _ from 'lodash';
 import PersonForm from '../person_manage/PersonForm';
 export default {
     components: {
@@ -44,7 +46,8 @@ export default {
             resetPerson: 'person/resetPerson'
         }),
         ...mapActions({
-            createPerson: 'person/createPerson'
+            createPerson: 'person/createPerson',
+            checkAliasIsExist: 'person/checkAliasIsExist'
         }),
         beforeCloseHandler() {
             this.cancelHandler();
@@ -53,16 +56,27 @@ export default {
             const personForm = this.$refs.personForm.$refs['createPerson'];
             personForm.validate(valid => {
                 if (valid) {
-                    this.checkImageLength(() => {
+                    if (_.get(this.person.avatarImage, 'uri')) {
                         this.isLoading = true;
-                        this.createPerson()
-                            .then(() => {
-                                this.$message.success('创建人物成功');
-                                this.cancelHandler();
-                            }).finally(() => {
-                                this.isLoading = false;
+                        this.checkAliasIsExist()
+                            .then((result) => {
+                                if (result && result.code === 0) {
+                                    if (!result.data) {
+                                        this.createPerson()
+                                            .then((res) => {
+                                                this.$message.success('创建人物成功');
+                                                this.cancelHandler();
+                                            }).finally(() => {
+                                                this.isLoading = false;
+                                            });
+                                    } else {
+                                        this.$message.error(`人物别名${this.person.alias}已存在`);
+                                    }
+                                }
                             });
-                    });
+                    } else {
+                        this.$message.error('请上传人物头像');
+                    }
                 } else {
                     return false;
                 }
@@ -72,15 +86,6 @@ export default {
             this.$emit('changePersonDialogStatus', false);
             this.resetPerson();
             this.$refs.personForm.$refs['createPerson'].clearValidate();
-        },
-        checkImageLength(next) {
-            let {posterImageList} = this.person;
-            if (posterImageList.length <= 0) {
-                this.$message.error('请上传图片');
-                return false;
-            } else {
-                next();
-            }
         }
     }
 };

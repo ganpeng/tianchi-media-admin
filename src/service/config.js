@@ -30,6 +30,8 @@ service.interceptors.request.use(
 
 // 添加响应拦截器，统一处理
 service.interceptors.response.use((response) => {
+    // 添加响应的头到response.data中
+    response.data.config = response.config;
     if (response.data.code === 0) {
         return response.data;
         // 用户未登录，删除本地cookie、storage、store中数据，转到登录页面
@@ -43,14 +45,9 @@ service.interceptors.response.use((response) => {
     });
     return response.data;
 }, (err) => {
-    let errResponse = err.response;
-    if (errResponse && errResponse.status === 500 && errResponse.data.code === 1001) {
-        store.dispatch('user/logout', false);
-        return false;
-    }
     if (window.navigator.onLine) {
         Message({
-            message: errResponse.data.message,
+            message: err.response ? err.response.data.message : '请求出现错误',
             type: 'warning'
         });
     } else {
@@ -59,6 +56,7 @@ service.interceptors.response.use((response) => {
             type: 'error'
         });
     }
+    return {config: err.config};
 });
 
 export default service;

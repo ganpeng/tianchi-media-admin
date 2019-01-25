@@ -335,8 +335,20 @@ export const VIDEO_TRANSFER_STATUS = {
 // 视频的注入状态
 export const VIDEO_INJECTING_STATUS_OPTIONS = [
     {
-        value: 'INJECTING',
-        label: '注入中'
+        value: 'UPLOAD_COMPLETED',
+        label: '上传成功'
+    },
+    {
+        value: 'WAITING_SPLIT',
+        label: '等待转码'
+    },
+    {
+        value: 'SPLIT_TASK_ON_PROCESS',
+        label: '转码中'
+    },
+    {
+        value: 'SPLIT_TASK_SUCCESS',
+        label: '入库中'
     },
     {
         value: 'SUCCESS',
@@ -345,6 +357,10 @@ export const VIDEO_INJECTING_STATUS_OPTIONS = [
     {
         value: 'FAILED',
         label: '注入失败'
+    },
+    {
+        value: 'DELETING',
+        label: '删除中'
     }
 ];
 
@@ -366,19 +382,20 @@ export const VIDEO_DOWNLOAD_STATUS_OPTIONS = [
 
 // 视频的子站向主站上传状态
 export const VIDEO_UPLOAD_STATUS_OPTIONS = [
-    {
-        value: 'ON_GOING',
-        label: '上传中'
-    },
-    {
-        value: 'SUCCESS',
-        label: '上传成功'
-    },
-    {
-        value: 'FAILED',
-        label: '上传失败'
-    }
-];
+        {
+            value: 'ON_GOING',
+            label: '上传中'
+        },
+        {
+            value: 'SUCCESS',
+            label: '上传成功'
+        },
+        {
+            value: 'FAILED',
+            label: '上传失败'
+        }
+    ]
+;
 
 //  视频类型
 export const VIDEO_TYPE_OPTIONS = [
@@ -512,6 +529,291 @@ const RECOMMEND_OPTIONS = [
     }
 ];
 
+// const defaultLayoutNavbarId = '5bf42d08b778252f2343eafe';
+
+const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', '站点管理', '配置中心', ''];
+
+const ASIDE_LIST = [
+    [
+        {
+            text: '操控台',
+            uri: '/worktop-manage',
+            icon: 'aside_console'
+        },
+        {
+            text: '客户端日志',
+            uri: '/clientlog/list',
+            icon: 'aside_clientlog'
+        }
+    ],
+    [
+        {
+            text: '节目管理',
+            uri: '/programme-manage/list',
+            icon: 'aside_programme'
+        },
+        {
+            text: '页面布局',
+            uri: `/page-layout`,
+            icon: 'aside_layout'
+        },
+        {
+            text: '视频管理',
+            uri: '/manage-video/list',
+            icon: 'aside_video'
+        },
+        {
+            text: '专题管理',
+            uri: '/subject-manage/list',
+            icon: 'aside_subject'
+        },
+        {
+            text: '人物管理',
+            uri: '/person-manage/list',
+            icon: 'aside_person'
+        },
+        {
+            text: '栏目管理',
+            uri: '/nav-bar-manage/setting',
+            icon: 'aside_column'
+        },
+        {
+            text: '直播频道',
+            uri: '/channel-live/list',
+            icon: 'shortcut_live_channel'
+        },
+        {
+            text: '轮播频道',
+            uri: '/channel-carousel/list',
+            icon: 'shortcut_carousel_channel'
+        },
+        {
+            text: '类型管理',
+            uri: '/category-manage',
+            icon: 'aside_category'
+        },
+        {
+            text: '角标管理',
+            uri: '/corner-mark-manage/index',
+            icon: 'aside_mark'
+        },
+        {
+            text: '搜索管理',
+            uri: '/search-manage',
+            icon: 'search'
+        }
+    ],
+    [
+        {
+            text: '用户管理',
+            uri: '/user-center/list',
+            icon: 'aside_user'
+        }
+    ],
+    [
+        {
+            text: '版本管理',
+            uri: '/manage-version/list',
+            icon: 'shortcut_version'
+        },
+        {
+            text: '设备管理',
+            uri: '/manage-device/list',
+            icon: 'aside_device'
+        }
+    ],
+    [
+        {
+            text: '管理员',
+            uri: '/manage-admin/list',
+            icon: 'aside_admin'
+        }
+    ],
+    [
+        {
+            text: '产品管理',
+            uri: '/product-manage/list',
+            icon: 'aside_product'
+        }
+    ],
+    [
+        {
+            text: '站点列表',
+            uri: '/site-manage/list',
+            icon: 'site_list'
+        }
+    ],
+    [
+        {
+            text: '站点配置',
+            uri: '/config-manage/site',
+            icon: 'site_config'
+        }
+    ],
+    [
+        {
+            text: '基本信息',
+            uri: '/my-info',
+            icon: 'basic_info'
+        },
+        {
+            text: '修改密码',
+            uri: '/modify-password',
+            icon: 'modify_password'
+        }
+    ]
+];
+
+const LAYOUT_TEMPLATE_LIST = [
+    {
+        text: '节目',
+        value: 'PROGRAMME'
+    },
+    {
+        text: '专题',
+        value: 'SUBJECT'
+    },
+    {
+        text: '节目专题',
+        value: 'PROGRAMME_SUBJECT'
+    },
+    {
+        text: '人物专题',
+        value: 'FIGURE_SUBJECT'
+    },
+    {
+        text: '页面',
+        value: 'LINK'
+    },
+    {
+        text: '频道',
+        value: 'CHANNEL'
+    },
+    {
+        text: '人物',
+        value: 'FIGURE'
+    }
+];
+
+const PROGRAMME_ALLOW_PICTURE_DIMENSIONS = [
+    {
+        width: 260,
+        height: 380
+    },
+    {
+        width: 240,
+        height: 350
+    },
+    {
+        width: 738,
+        height: 472
+    },
+    {
+        width: 472,
+        height: 472
+    },
+    {
+        width: 342,
+        height: 472
+    },
+    {
+        width: 996,
+        height: 472
+    },
+    {
+        width: 860,
+        height: 472
+    },
+    {
+        width: 1310,
+        height: 472
+    },
+    {
+        width: 560,
+        height: 720
+    },
+    {
+        width: 560,
+        height: 600
+    },
+    {
+        width: 560,
+        height: 222
+    },
+    {
+        width: 560,
+        height: 300
+    },
+    {
+        width: 410,
+        height: 216
+    },
+    {
+        width: 410,
+        height: 472
+    },
+    {
+        width: 410,
+        height: 615
+    },
+    {
+        width: 860,
+        height: 440
+    },
+    {
+        width: 860,
+        height: 260
+    },
+    {
+        width: 1160,
+        height: 300
+    },
+    {
+        width: 1160,
+        height: 600
+    }
+];
+
+//  推荐专题（背景渲染） SUBJECT,
+// 推荐节目PROGRAMME PROGRAMME,
+//  节目列表页面 PROGRAMME_LIST,
+//  视频播放页面 PROGRAMME_VIDEO,
+//  链接类型 LINK,
+//  电影节目类别 MOVIE_PROGRAMME_CATEGORY,
+//  电影节目类型 MOVIE_PROGRAMME_TYPE,
+//  电视剧节目类别 TV_DRAMA_PROGRAMME_CATEGORY,
+//  电视剧节目类型 TV_DRAMA_PROGRAMME_TYPE,
+//  新闻节目类别 NEWS_PROGRAMME_CATEGORY,
+//  新闻节目类型 NEWS_PROGRAMME_TYPE,
+//  网视节目类别 NETWORK_PROGRAMME_CATEGORY,
+//  网视节目类型 NETWORK_PROGRAMME_TYPE,
+//  体育节目类别 SPORTS_PROGRAMME_CATEGORY,
+//  体育节目类型 SPORTS_PROGRAMME_TYPE,
+//  儿童节目类别 CHILD_PROGRAMME_CATEGORY,
+//  儿童节目类型 CHILD_PROGRAMME_TYPE,
+//  纪实节目类别 RECORD_PROGRAMME_CATEGORY,
+//  纪实节目类型 RECORD_PROGRAMME_TYPE,
+//  教育节目类别 EDU_PROGRAMME_CATEGORY,
+//  教育节目类型 EDU_PROGRAMME_TYPE,
+//  卫视综艺节目类别 TV_SHOW_SATELLITE_PROGRAMME_CATEGORY,
+//  卫视综艺节目类型 TV_SHOW_SATELLITE_PROGRAMME_TYPE,
+//  网络综艺节目类别 TV_SHOW_NETWORK_PROGRAMME_CATEGORY,
+//  网络综艺节目类型 TV_SHOW_NETWORK_PROGRAMME_TYPE,
+//  音乐节目类别 MUSIC_PROGRAMME_CATEGORY,
+//  音乐节目类型 MUSIC_PROGRAMME_TYPE,
+//  曲艺节目类别 TUNE_ART_PROGRAMME_CATEGORY,
+//  曲艺节目类型 TUNE_ART_PROGRAMME_TYPE,
+//  幽默节目类别 HUMOROUS_PROGRAMME_CATEGORY,
+//  幽默节目类型 HUMOROUS_PROGRAMME_TYPE,
+//  科普中国节目类别 CHINA_SCIENCE_PROGRAMME_CATEGORY,
+//  科普中国节目类型 CHINA_SCIENCE_PROGRAMME_TYPE,
+//  新时代党建节目类别 COMMUNIST_PARTY_BUILD_PROGRAMME_CATEGORY,
+//  新时代党建节目类型 COMMUNIST_PARTY_BUILD_PROGRAMME_TYPE,
+//  直播频道（色块） CHANNEL,
+//  频道组 CHANNEL_GROUP,
+//  人物（人物） FIGURE,
+//  更多  ALL,
+
 export default {
     MAIN_ROLE_OPTIONS,
     VIDEO_TYPE,
@@ -539,5 +841,10 @@ export default {
     FORCED_OPTIONS,
     RECOMMEND_OPTIONS,
     HARDWARE_TYPE_OPTIONS,
-    VIDEO_SUFFIX_OPTIONS
+//  页面样式布局相关
+    NAV_LIST,
+    ASIDE_LIST,
+    LAYOUT_TEMPLATE_LIST,
+    VIDEO_SUFFIX_OPTIONS,
+    PROGRAMME_ALLOW_PICTURE_DIMENSIONS
 };

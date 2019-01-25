@@ -2,11 +2,11 @@
 <template>
     <div class="text-left">
         <el-form :model="userInfo"
-                 :rules="infoRules"
-                 status-icon
-                 ref="userInfo"
-                 label-width="90px"
-                 class="form-block">
+                :rules="infoRules"
+                status-icon
+                ref="userInfo"
+                label-width="100px"
+                class="form-block my-form">
             <el-form-item label="姓名" prop="name" required>
                 <el-input v-model="userInfo.name" placeholder="请输入姓名"></el-input>
             </el-form-item>
@@ -14,25 +14,25 @@
                 <el-input v-model="userInfo.identityId" @change="changeIdentityId" placeholder="请输入身份证号"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button @click="verifyIdentityId" class="create-blue-btn">验证身份证号</el-button>
-                <el-button @click="toEditUserInfo" class="create-blue-btn" v-if="identityIdExist">该用户已存在，点此编辑信息
+                <el-button @click="verifyIdentityId" class="btn-style-two">验证</el-button>
+                <el-button @click="toEditUserInfo" class="btn-style-two" v-if="identityIdExist">该用户已存在，点此编辑信息
                 </el-button>
             </el-form-item>
             <el-form-item :label="'设备ID' + (index + 1)"
-                          props="stbList"
-                          v-for="(item, index) in userInfo.stbList"
-                          :key="index"
-                          required>
+                        props="stbList"
+                        v-for="(item, index) in userInfo.stbList"
+                        :key="index"
+                        required>
                 <el-input v-model="item.no" placeholder="请输入设备ID"></el-input>
-                <el-button v-if="userInfo.stbList.length > 1" plain @click="removeDevice(index)">删除设备</el-button>
+                <el-button class="btn-style-two" v-if="userInfo.stbList.length > 1" plain @click="removeDevice(index)">删除设备</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button @click="addDevice" class="create-blue-btn">添加设备</el-button>
+                <el-button class="btn-style-two" @click="addDevice">添加设备</el-button>
             </el-form-item>
             <el-form-item label="省份" prop="province" required>
                 <el-select v-model="userInfo.province"
-                           @change="selectDistrict('PROVINCE')"
-                           placeholder="请选择省份">
+                        @change="selectDistrict('PROVINCE')"
+                        placeholder="请选择省份">
                     <el-option
                         v-for="item in provinceOptions"
                         :key="item.code"
@@ -93,22 +93,15 @@
                 <el-input v-model="userInfo.telephone" placeholder="请输入固定电话号码"></el-input>
             </el-form-item>
         </el-form>
-        <div class="operate-item">
-            <el-button
-                class="page-main-btn"
-                :disabled="btnDisabled"
-                type="primary"
-                @click="operateUser">
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-two" :disabled="btnDisabled" type="primary" @click="operateUser">
                 {{status === '0' ? '创建' : '保存'}}
             </el-button>
-            <el-button type="primary" plain @click="reset" class="page-main-btn">重置</el-button>
-            <el-button @click="toUserList" class="page-main-btn">返回列表页</el-button>
+            <el-button class="btn-style-three" @click="toUserList" plain>返回列表页</el-button>
         </div>
     </div>
 </template>
-
 <script>
-
     export default {
         name: 'CreateUser',
         props: {
@@ -261,6 +254,7 @@
         },
         mounted() {
             this.init();
+            this.$util.toggleFixedBtnContainer();
         },
         methods: {
             init() {
@@ -469,16 +463,5 @@
         }
     };
 </script>
-
 <style lang="scss" scoped>
-
-    .el-input, .el-select {
-        width: 600px;
-    }
-
-    .operate-item {
-        margin: 120px 0px 80px 0px;
-        text-align: center;
-    }
-
 </style>

@@ -170,12 +170,25 @@ export const realDeleteProgramme = (id) => {
 
 export const upLowerFrameProgramme = (idList, visible) => {
     const params = {
-        idList,
         visible
     };
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
         return item !== '' && item !== undefined;
     }));
 
-    return service.patch(`/v1/content/programme/visible?${paramsStr}`);
+    return service.patch(`/v1/content/programme/visible?${paramsStr}`, idList);
+};
+
+/**
+ * 批量删除节目
+ */
+export const batchDeleteProgrammes = (idList) => {
+    return service.delete(`/v1/content/programme`, {data: idList});
+};
+
+/**
+ * 视频列表为空时候的保存
+ */
+export const editEmptyProgrammeVideo = (id) => {
+    return service.delete(`/v1/content/programme/video/all/${id}`);
 };

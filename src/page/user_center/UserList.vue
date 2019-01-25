@@ -1,131 +1,128 @@
 <!--用户列表组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'用户管理'},
-            {name:'用户列表'}]">
-        </custom-breadcrumb>
-        <div class="block-box">
+    <div class="user-list-container">
+        <div class="table-container">
+            <h2 class="content-title">搜索筛选</h2>
             <user-filter-params
                 v-on:getUserList="getUserList">
             </user-filter-params>
-            <el-table
-                :data="userList"
-                header-row-class-name="common-table-header"
-                border
-                style="width: 100%">
-                <el-table-column
-                    align="center"
-                    width="60px"
-                    label="序号">
-                    <template slot-scope="scope">
-                        <label>{{scope.$index + 1}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    width="140px"
-                    prop="name"
-                    label="姓名">
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    prop="fullAddress"
-                    label="地址">
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    width="200px"
-                    prop="identityId"
-                    label="身份证号">
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    prop="stbList"
-                    label="设备ID">
-                    <template slot-scope="scope">
-                        <label v-if="!scope.row.stbList || scope.row.stbList.length === 0">------</label>
-                        <div
-                            v-else
-                            v-for="(item, index) in scope.row.stbList"
-                            :key="index">
-                            {{item.no}}
-                            <label v-if="item.status === 'FORBIDDEN'" class="disabled-stb">已禁用</label>
-                        </div>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    width="150px"
-                    prop="mobile"
-                    label="手机">
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    prop="telephone"
-                    width="150px"
-                    label="电话">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.telephone ? scope.row.telephone : '-------'}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    width="120px"
-                    label="创建时间">
-                    <template slot-scope="scope">
-                        {{scope.row.registeredAt | formatDate('yyyy-MM-DD')}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    width="120px"
-                    label="操作"
-                    class="operate">
-                    <template slot-scope="scope">
+            <div class="seperator-line"></div>
+            <div class="table-field">
+                <h2 class="content-title">用户列表</h2>
+                <div class="table-operator-field clearfix">
+                    <div class="float-left">
+                    </div>
+                    <div class="float-right">
                         <el-button
-                            type="text"
-                            size="small"
-                            @click="checkUserDetailInfo(scope.row)"
-                            class="detail-btn">
-                            查看
+                            class="btn-style-two contain-svg-icon"
+                            @click="toCreateUser">
+                            <svg-icon icon-class="add"></svg-icon>
+                            添加
                         </el-button>
-                        <el-button
-                            type="text"
-                            size="small"
-                            @click="editUserInfo(scope.row)">
-                            编辑
-                        </el-button>
-                        <el-button
-                            type="text"
-                            size="small"
-                            class="operate-stb"
-                            @click="operateStb(scope.row)">
-                            操作设备
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="listQueryParams.pageNum"
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="listQueryParams.pageSize"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="total">
-            </el-pagination>
-            <div class="create-item">
-                <el-button
-                    class="create-blue-btn contain-svg-icon"
-                    @click="toCreateUser">
-                    <svg-icon icon-class="add"></svg-icon>
-                    创建用户
-                </el-button>
+                    </div>
+                </div>
+                <el-table
+                    :data="userList"
+                    header-row-class-name="common-table-header"
+                    border
+                    class="my-table-style"
+                    style="width: 100%">
+                    <el-table-column
+                        align="center"
+                        width="60px"
+                        label="序号">
+                        <template slot-scope="scope">
+                            <label>{{scope.$index + 1}}</label>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        width="140px"
+                        prop="name"
+                        label="姓名">
+                        <template slot-scope="scope">
+                            <span
+                                @click="checkUserDetailInfo(scope.row)"
+                                class="name">
+                                {{scope.row.name | padEmpty}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        prop="fullAddress"
+                        label="地址">
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        width="200px"
+                        prop="identityId"
+                        label="身份证号">
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        prop="stbList"
+                        label="设备ID">
+                        <template slot-scope="scope">
+                            <label v-if="!scope.row.stbList || scope.row.stbList.length === 0">------</label>
+                            <div
+                                v-else
+                                v-for="(item, index) in scope.row.stbList"
+                                :key="index">
+                                {{item.no}}
+                                <label v-if="item.status === 'FORBIDDEN'" class="disabled-stb">已禁用</label>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        width="150px"
+                        prop="mobile"
+                        label="手机">
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        prop="telephone"
+                        width="150px"
+                        label="电话">
+                        <template slot-scope="scope">
+                            <label>{{scope.row.telephone ? scope.row.telephone : '-------'}}</label>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        width="120px"
+                        label="创建时间">
+                        <template slot-scope="scope">
+                            {{scope.row.registeredAt | formatDate('yyyy-MM-DD')}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        width="120px"
+                        label="操作"
+                        class="operate">
+                        <template slot-scope="scope">
+                            <div class="operator-btn-wrapper">
+                                <span class="btn-text" @click="editUserInfo(scope.row)">编辑</span>
+                                <span class="btn-text" @click="operateStb(scope.row)">操作设备</span>
+                            </div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="listQueryParams.pageNum"
+                    :page-sizes="[10, 20, 30, 50]"
+                    :page-size="listQueryParams.pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+                </el-pagination>
             </div>
         </div>
         <el-dialog
+            class="my-dialog"
             :title='currentUserInfo.name + "的设备操作"'
             :visible.sync="operateStbDialogVisible"
             width="50%">

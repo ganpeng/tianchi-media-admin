@@ -189,7 +189,6 @@
             return {
                 isLoading: false,
                 imageUploadDialogVisible: false,
-                radio2: 3,
                 size: dimension.CHANNEL_LOGO_DIMENSION,
                 inputRules: {
                     name: [

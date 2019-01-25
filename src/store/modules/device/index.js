@@ -5,6 +5,8 @@ const defaultSearchFields = {
     no: '',
     hardWareId: '',
     status: '',
+    registeredAtStart: '',
+    registeredAtEnd: '',
     registeredAt: []
 };
 
@@ -17,7 +19,8 @@ const defaultPagination = {
 const defaultDevice = {
     caNo: '',
     no: '',
-    hardWareId: ''
+    hardWareId: '',
+    status: 'NORMAL'
 };
 
 const state = {
@@ -68,6 +71,10 @@ const mutations = {
     updateSearchFields(state, payload) {
         let {key, value} = payload;
         state.searchFields[key] = value;
+        if (key === 'registeredAt') {
+            state.searchFields.registeredAtStart = state.searchFields.registeredAt ? state.searchFields.registeredAt[0] : '';
+            state.searchFields.registeredAtEnd = state.searchFields.registeredAt ? state.searchFields.registeredAt[1] : '';
+        }
     },
     resetSearchFields(state) {
         state.searchFields = _.cloneDeep(defaultSearchFields);
@@ -98,8 +105,7 @@ const actions = {
     async getDeviceList({commit, state}) {
         try {
             let {pageNum, pageSize} = state.pagination;
-            let {registeredAt, no, hardWareId, status} = state.searchFields;
-            let [registeredAtStart, registeredAtEnd] = registeredAt;
+            let {no, hardWareId, status, registeredAtStart, registeredAtEnd} = state.searchFields;
             let params = Object.assign({},
                 {pageNum: pageNum - 1, pageSize}, {
                     no, hardWareId, status, registeredAtStart, registeredAtEnd
@@ -110,7 +116,9 @@ const actions = {
                 commit('setList', {list});
                 commit('setPagination', { pageNum: pageNum + 1, pageSize, total });
             }
-        } catch (err) {}
+        } catch (err) {
+            console.log(err);
+        }
     },
     async addDevice({commit, state}) {
         try {
@@ -118,6 +126,16 @@ const actions = {
             let res = await service.addDevice(device);
             return res;
         } catch (err) { }
+    },
+    async getDeviceById({commit, state}, id) {
+        try {
+            let res = await service.getDeviceById(id);
+            if (res && res.code === 0) {
+                commit('setDevice', {device: res.data});
+            }
+        } catch (err) {
+            console.log(err);
+        }
     },
     async updateDeviceById({commit, state}) {
         try {

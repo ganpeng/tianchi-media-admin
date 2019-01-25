@@ -1,68 +1,42 @@
 <!--我的信息组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'个人中心'},
-            {name:'我的信息'}]">
-        </custom-breadcrumb>
-        <el-card id="info-box">
-            <div class="avatar-box">
-                <el-card>
-                    <img src="~assets/img/avatar_square_default.png">
-                </el-card>
-                <label>账号创建于{{info.createdAt | formatDate('yyyy年MM月DD日')}}</label>
+    <div class="my-info-container">
+        <h2 class="content-title">个人中心</h2>
+        <div class="seperator-line"></div>
+        <div class="common-details">
+            <div class="poster-section person">
+                <div class="visible-wrapper"></div>
+                <svg-icon icon-class="person_avatar"></svg-icon>
             </div>
-            <div class="info">
-                <div>
-                    <label>
-                        <svg-icon
-                            icon-class="personal_center"
-                            class-name="svg-box">
-                        </svg-icon>
-                        我</label>
-                    <span>{{info.name}}</span>
-                </div>
-                <div>
-                    <label>
-                        <svg-icon
-                            icon-class="email"
-                            class-name="svg-box">
-                        </svg-icon>
-                        邮箱</label>
-                    <span>{{info.email}}</span>
-                </div>
-                <div class="box">
-                    <div>
-                        <label>
-                            <svg-icon
-                                icon-class="mobile"
-                                class-name="svg-box">
-                            </svg-icon>
-                            手机</label>
-                        <span>{{info.mobile}}</span>
+            <div class="info-section">
+                <el-button type="primary" class="btn-style-two edit-btn" @click="editInfo">编辑</el-button>
+                <div class="title-wrapper">
+                    <span class="title">{{info.name ? info.name : '我'}}</span>
+                    <div class="date">
+                        <span id="create-date">
+                            创建于{{info.createdAt | formatDate('yyyy-MM-DD')}}
+                        </span>
                     </div>
-                    <template v-if="info.telephone">
-                        <img src="~assets/img/angle-line.png">
-                        <div>
-                            <label>
-                                <svg-icon
-                                    icon-class="telephone"
-                                    class-name="svg-box">
-                                </svg-icon>
-                                电话</label>
-                            <span>{{info.telephone ? info.telephone : ''}}</span>
+                </div>
+                <div class="seperator-line"></div>
+                <div class="attributes">
+                    <div class="attribute-item">
+                        <div class="item-label" id="email-label">
+                            <svg-icon icon-class="email_info"></svg-icon>
+                            邮箱
                         </div>
-                    </template>
+                        <div class="value">{{info.email | padEmpty}}</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="item-label" id="phone-label">
+                            <svg-icon icon-class="phone_info"></svg-icon>
+                            手机
+                        </div>
+                        <div class="value">{{info.mobile | padEmpty}}</div>
+                    </div>
                 </div>
             </div>
-            <div @click="toInfoSetting" class="edit-icon-box">
-                <svg-icon
-                    icon-class="edit"
-                    class-name="svg-box">
-                </svg-icon>
-            </div>
-        </el-card>
+        </div>
     </div>
 </template>
 
@@ -87,7 +61,7 @@
                     }
                 });
             },
-            toInfoSetting() {
+            editInfo() {
                 this.$router.push({name: 'InfoSetting'});
             }
         }
@@ -96,74 +70,51 @@
 
 <style lang="scss" scoped>
 
-    #info-box {
+    .info-section {
         position: relative;
-        padding: 20px;
-        margin-top: 100px;
-        width: 600px;
-        height: 300px;
-        overflow: visible;
-        .avatar-box {
+        .edit-btn {
             position: absolute;
-            left: 20px;
-            top: -40px;
-            .el-card {
-                margin-bottom: 26px;
-                width: 150px;
-                height: 150px;
-                background: $dynamicGray;
+            top: 60px;
+            right: 0px;
+        }
+    }
+
+    #create-date {
+        height: 44px;
+        line-height: 44px;
+    }
+
+    .my-info-container {
+        .attribute-item {
+            margin-bottom: 20px;
+            #email-label, #phone-label {
+                font-size: 16px;
+                color: #A8ABB3;
+                width: auto;
             }
-            label {
-                font-size: $smallestFontSize;
-                color: #B8C7CE;
+            .value {
+                font-size: 16px;
+                color: #A8ABB3;
             }
         }
-        .info {
-            position: absolute;
-            left: 200px;
-            top: 50px;
-            height: 200px;
-            width: 350px;
-            overflow: hidden;
-            div:not(.box) {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                margin-bottom: 25px;
-            }
-            div.box {
-                display: flex;
-                flex-direction: row;
-                justify-content: left;
-            }
-            label {
-                text-align: left;
-                margin-bottom: 12px;
-                color: #9B9B9B;
-                font-size: $normalFontSize;
-            }
-            span {
-                text-align: left;
-                font-size: 20px;
-                color: $baseAsideColor;
-            }
-            .svg-box {
-                fill: $dynamicGray;
-            }
-        }
-        .edit-icon-box {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            height: 30px;
-            width: 30px;
-            cursor: pointer;
-            .svg-box {
-                height: 30px !important;
-                width: 30px !important;
-                fill: $baseBlue;
-            }
-        }
+    }
+
+    .svg-icon-person_avatar {
+        width: 200px !important;
+        height: 200px !important;
+    }
+
+    .svg-icon-email_info {
+        margin-right: 6px;
+        width: 30px !important;
+        height: 18px !important;
+    }
+
+    .svg-icon-phone_info {
+        margin-right: 10px;
+        margin-left: 6px;
+        width: 20px !important;
+        height: 30px !important;
     }
 
 </style>

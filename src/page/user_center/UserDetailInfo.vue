@@ -1,42 +1,72 @@
 <!--用户详情组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'用户管理'},
-            {name:'用户详情'}]">
-        </custom-breadcrumb>
-        <div class="vice-block" id="basic-info">
-            <h3 class="block-vice-title">专题基本信息</h3>
-            <el-card>
-                <ul class="text-left">
-                    <li><span>用户姓名</span><label>{{userInfo.name}}</label></li>
-                    <li><span>身份证号</span><label>{{userInfo.identityId}}</label></li>
-                    <li>
-                        <span>设备ID</span>
-                        <label>
+    <div class="user-detail-container">
+        <h2 class="content-title">用户详情</h2>
+        <div class="seperator-line"></div>
+        <div class="common-details">
+            <div class="poster-section person">
+                <div class="visible-wrapper">
+                    <!--  有可能会有状态
+                    <span :class="['visible', userInfo.status === 'NORMAL' ? 'is-visible' : 'dis-visible']">
+                        {{userInfo.status === 'NORMAL' ? '正常' : '禁用'}}
+                    </span>
+                    -->
+                </div>
+                <img src="" alt="" width="200" height="200">
+            </div>
+            <div class="info-section">
+                <div class="title-wrapper">
+                    <span class="title">{{userInfo.name}}</span>
+                    <div class="date">
+                        <span class="create-date">
+                            创建于{{userInfo.createdAt | formatDate('yyyy-MM-DD')}}
+                        </span>
+                        <span class="update-date">
+                            更新于{{userInfo.updatedAt | formatDate('yyyy-MM-DD')}}
+                        </span>
+                    </div>
+                </div>
+                <div class="seperator-line"></div>
+                <div class="attributes">
+                    <div class="attribute-item">
+                        <label class="item-label">用户姓名:</label>
+                        <span class="value">{{userInfo.name | padEmpty}}</span>
+                    </div>
+                    <div class="attribute-item">
+                        <label class="item-label">身份证号:</label>
+                        <span class="value">{{userInfo.identityId | padEmpty}}</span>
+                    </div>
+                    <div class="attribute-item">
+                        <label class="item-label">设备ID:</label>
+                        <span class="my-tags">
                             <el-tag v-for="(item, index) in userInfo.stbList"
                                     :key="index"
                                     type="info">
                                 {{item.no}}
                             </el-tag>
-                        </label>
-                    </li>
-                    <li><span>详细地址</span><label>{{userInfo.fullAddress}}</label></li>
-                    <li><span>手机号码</span><label>{{userInfo.mobile}}</label></li>
-                    <li><span>电话号码</span><label>{{userInfo.telephone}}</label></li>
-                </ul>
-            </el-card>
+                        </span>
+                    </div>
+                    <div class="attribute-item">
+                        <label class="item-label">详细地址:</label>
+                        <span class="value">{{userInfo.fullAddress | padEmpty}}</span>
+                    </div>
+                    <div class="attribute-item">
+                        <label class="item-label">手机号码:</label>
+                        <span class="value">{{userInfo.mobile | padEmpty}}</span>
+                    </div>
+                    <div class="attribute-item">
+                        <label class="item-label">电话号码:</label>
+                        <span class="value">{{userInfo.telephone | padEmpty}}</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="operate-item">
-            <el-button type="primary" @click="toEdit" class="page-main-btn">编辑</el-button>
-            <el-button @click="toUserList" class="page-main-btn">返回列表页</el-button>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-three" @click="toUserList" plain>返回列表</el-button>
         </div>
     </div>
 </template>
-
 <script>
-
     export default {
         name: 'UserDetailInfo',
         data() {
@@ -58,6 +88,7 @@
         },
         mounted() {
             this.init();
+            this.$util.toggleFixedBtnContainer();
         },
         methods: {
             init() {
@@ -84,43 +115,11 @@
 </script>
 
 <style lang="scss" scoped>
-
-    #basic-info {
-        .el-card {
-            width: 600px;
-            ul {
-                li {
-                    display: flex;
-                    margin-bottom: 10px;
-                    min-height: 32px;
-                    flex-direction: row;
-                    justify-content: left;
-                    align-items: center;
-                    > span {
-                        width: 120px;
-                        flex-shrink: 0;
-                        text-align: center;
-                        font-size: $largerFontSize;
-                        color: $baseGray;
-                    }
-                    label {
-                        width: 380px;
-                        font-size: $normalFontSize;
-                        color: #909399;
-                        flex-shrink: 0;
-                        line-height: 2;
-                        .el-tag {
-                            margin-right: 10px;
-                            border: none;
-                        }
-                    }
-                }
-            }
+.attributes {
+    .attribute-item {
+        .item-label {
+            width: 80px;
         }
     }
-
-    .operate-item {
-        margin: 120px 0px 80px 0px;
-    }
-
+}
 </style>

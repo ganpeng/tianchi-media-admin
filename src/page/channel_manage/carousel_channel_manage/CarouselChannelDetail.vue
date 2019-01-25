@@ -1,192 +1,176 @@
 <!--轮播频道详情页面-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'频道管理'},
-            {name:'轮播频道详情'}]">
-        </custom-breadcrumb>
-        <div class="main-block">
-            <div id="basic-info">
-                <!--基本信息-->
-                <div class="vice-block float-left">
-                    <h3 class="block-vice-title">频道基本信息</h3>
-                    <el-card>
-                        <ul>
-                            <li><span>频道名称</span><label>{{channelInfo.innerName}}</label></li>
-                            <li><span>频道编号</span><label>{{channelInfo.no}}</label></li>
-                            <li>
-                                <span>频道类别</span>
-                                <label>
-                                    <el-tag v-for="(item, index) in channelInfo.typeList"
-                                            :key="index"
-                                            type="info">
-                                        {{item.name}}
-                                    </el-tag>
-                                </label>
-                            </li>
-                            <li><span>组播地址</span><label>{{channelInfo.multicastIp}}</label></li>
-                            <li><span>端口号</span><label>{{channelInfo.multicastPort}}</label></li>
-                            <li><span>tsId</span><label>{{channelInfo.tsId}}</label></li>
-                            <li><span>serviceId</span><label>{{channelInfo.serviceId}}</label></li>
-                            <li><span>所属服务器</span><label>{{channelInfo.pushServer}}</label></li>
-                            <li><span>频道状态</span>
-                                <label>
-                                    <i class="status-normal" v-if="channelInfo.visible">正常</i>
-                                    <i class="status-abnormal" v-else>禁播</i>
-                                </label>
-                            </li>
-                        </ul>
-                    </el-card>
-                </div>
-                <!--封面图-->
-                <div class="vice-block float-left">
-                    <h3 class="block-vice-title">频道封面图</h3>
-                    <img :src="channelInfo.logoUri | imageUrl">
-                </div>
+        <div class="content-title">轮播频道详情</div>
+        <div class="seperator-line"></div>
+        <!--轮播信息-->
+        <div class="detail-title-block">
+            <div class="channel-status shelve" v-if="channelInfo.visible">正常</div>
+            <div class="channel-status un-shelve" v-else>禁播</div>
+            <div class="title">
+                <label>{{channelInfo.name}}</label>
             </div>
-            <!--节目信息-->
-            <div class="vice-block text-left">
-                <h3 class="block-vice-title">频道节目信息</h3>
-                <el-card>
-                    <ul>
-                        <li>
-                            <span>当前播放</span>
-                            <label class="on-play">
-                                {{channelInfo.currentProgramme ? channelInfo.currentProgramme : '暂无当前播放节目'}}
-                            </label>
-                        </li>
-                        <li><span>播放时段</span><label>{{channelInfo.duration}}</label></li>
-                        <li>
-                            <span>视频个数</span>
-                            <label>
-                                {{channelInfo.carouselVideoList ? channelInfo.carouselVideoList.length : ''}}个
-                            </label>
+            <div class="channel-time">
+                <div>创建于{{channelInfo.createdAt | formatDate('yyyy.MM.DD')}}</div>
+                <div>更新于{{channelInfo.updatedAt | formatDate('yyyy.MM.DD')}}</div>
+            </div>
+        </div>
+        <!--相关信息-->
+        <div class="about-channel">
+            <img :src="channelInfo.logoUri | imageUrl">
+            <div class="info-container">
+                <div>
+                    <ul class="type-list">
+                        <li v-for="(item, index) in channelInfo.typeList"
+                            :key="index">
+                            {{item.name}}
                         </li>
                     </ul>
-                </el-card>
-                <el-table
-                    header-row-class-name="common-table-header"
-                    row-class-name=video-row
-                    :data="channelInfo.carouselVideoList"
-                    border
-                    style="width: 100%">
-                    <el-table-column
-                        width="80px"
-                        align="center"
-                        label="播放顺序">
-                        <template slot-scope="scope">
-                            <label>{{scope.$index + 1}}</label>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        align="center"
-                        width="120px"
-                        prop="code"
-                        label="视频编号">
-                    </el-table-column>
-                    <el-table-column
-                        align="center"
-                        prop="originName"
-                        label="视频文件名">
-                    </el-table-column>
-                    <el-table-column
-                        align="center"
-                        prop="name"
-                        label="视频展示名">
-                    </el-table-column>
-                    <el-table-column
-                        prop="link"
-                        align="center"
-                        width="240px"
-                        label="预览视频">
-                        <template slot-scope="scope">
-                            <div class="btn-icon-container">
-                                <el-button
-                                    v-if="scope.row.m3u8For4K"
-                                    type="text"
-                                    size="small"
-                                    @click="displayVideo(scope.row.m3u8For4K,scope.row.originName)"
-                                >4K
-                                </el-button>
-                                <svg-icon
-                                    v-if="scope.row.m3u8For4K"
-                                    icon-class="copy_btn"
-                                    class-name="copy-btn"
-                                    :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
-                                </svg-icon>
-                            </div>
-                            <div class="btn-icon-container">
-                                <el-button
-                                    v-if="scope.row.m3u8For1080P"
-                                    type="text"
-                                    size="small"
-                                    @click="displayVideo(scope.row.m3u8For1080P,scope.row.originName)"
-                                >1080
-                                </el-button>
-                                <svg-icon
-                                    v-if="scope.row.m3u8For1080P"
-                                    icon-class="copy_btn"
-                                    class-name="copy-btn"
-                                    :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
-                                </svg-icon>
-                            </div>
-                            <div class="btn-icon-container">
-                                <el-button
-                                    v-if="scope.row.m3u8For720P"
-                                    type="text"
-                                    size="small"
-                                    @click="displayVideo(scope.row.m3u8For720P,scope.row.originName)"
-                                >720
-                                </el-button>
-                                <svg-icon
-                                    v-if="scope.row.m3u8For720P"
-                                    icon-class="copy_btn"
-                                    class-name="copy-btn"
-                                    :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
-                                </svg-icon>
-                            </div>
-                            <div class="btn-icon-container">
-                                <el-button
-                                    v-if="scope.row.m3u8For480P"
-                                    type="text"
-                                    size="small"
-                                    @click="displayVideo(scope.row.m3u8For480P,scope.row.originName)"
-                                >480
-                                </el-button>
-                                <svg-icon
-                                    v-if="scope.row.m3u8For480P"
-                                    icon-class="copy_btn"
-                                    class-name="copy-btn"
-                                    :data-clipboard-text="getVideoUrl(scope.row.m3u8For480P)">
-                                </svg-icon>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="takeTimeInSec"
-                        width="150px"
-                        align="center"
-                        label="视频时长">
-                        <template slot-scope="scope">
-                            {{scope.row.takeTimeInSec | fromSecondsToTime}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        align="center"
-                        width="100px"
-                        label="视频状态">
-                        <template slot-scope="scope">
-                            <i class="status-normal" v-if="scope.row.visible">正常</i>
-                            <i class="status-abnormal" v-else>禁播</i>
-                        </template>
-                    </el-table-column>
-                </el-table>
+                    <ul class="info-list">
+                        <li><span>内部名称：</span><label>{{channelInfo.innerName}}</label></li>
+                        <li><span>组播地址：</span><label>{{channelInfo.multicastIp}}</label></li>
+                        <li><span>端口号：</span><label>{{channelInfo.multicastPort}}</label></li>
+                        <li><span>tsID：</span><label>{{channelInfo.tsId ? channelInfo.tsId : '无' }}</label></li>
+                        <li><span>serviceID：</span><label>{{channelInfo.serviceId ? channelInfo.serviceId :'无'}}</label>
+                        </li>
+                    </ul>
+                </div>
+                <ul class="info-list right-info">
+                    <li><span>频道编号：</span><label>{{channelInfo.no}}</label></li>
+                    <li><span>所属服务器：</span><label>{{channelInfo.pushServer}}</label></li>
+                    <li>
+                        <span>当前播放：</span>
+                        <label class="on-play">
+                            {{channelInfo.currentProgramme ? channelInfo.currentProgramme : '暂无当前播放节目'}}
+                        </label>
+                    </li>
+                    <li><span>播放时段：</span><label class="duration">{{channelInfo.duration}}</label></li>
+                    <li>
+                        <span>视频数量：</span>
+                        <label>
+                            {{channelInfo.carouselVideoList ? channelInfo.carouselVideoList.length : ''}}个
+                        </label>
+                    </li>
+                </ul>
             </div>
-            <div id="operate-list">
-                <el-button type="primary" class="page-main-btn" @click="editInfo">编辑</el-button>
-                <el-button @click="toChannelList" class="page-main-btn">返回列表页</el-button>
-            </div>
+        </div>
+        <!--节目信息-->
+        <div class="content-title">频道内节目</div>
+        <el-table
+            header-row-class-name="common-table-header"
+            row-class-name=video-row
+            :data="channelInfo.carouselVideoList"
+            border
+            style="width: 100%">
+            <el-table-column
+                width="50px"
+                align="center"
+                label="序号">
+                <template slot-scope="scope">
+                    <label>{{scope.$index + 1}}</label>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                width="120px"
+                prop="code"
+                label="ID">
+            </el-table-column>
+            <el-table-column
+                align="center"
+                prop="name"
+                min-width="230px"
+                label="展示名">
+            </el-table-column>
+            <el-table-column
+                align="center"
+                prop="originName"
+                min-width="420px"
+                label="文件名">
+            </el-table-column>
+            <el-table-column
+                prop="link"
+                align="center"
+                width="240px"
+                label="预览">
+                <template slot-scope="scope">
+                    <div class="btn-icon-container">
+                        <el-button
+                            v-if="scope.row.m3u8For4K"
+                            type="text"
+                            size="small"
+                            @click="displayVideo(scope.row.m3u8For4K,scope.row.originName)"
+                        >4K
+                        </el-button>
+                        <svg-icon
+                            v-if="scope.row.m3u8For4K"
+                            icon-class="copy_btn"
+                            class-name="copy-btn"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
+                        </svg-icon>
+                    </div>
+                    <div class="btn-icon-container">
+                        <el-button
+                            v-if="scope.row.m3u8For1080P"
+                            type="text"
+                            size="small"
+                            @click="displayVideo(scope.row.m3u8For1080P,scope.row.originName)"
+                        >1080
+                        </el-button>
+                        <svg-icon
+                            v-if="scope.row.m3u8For1080P"
+                            icon-class="copy_btn"
+                            class-name="copy-btn"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
+                        </svg-icon>
+                    </div>
+                    <div class="btn-icon-container">
+                        <el-button
+                            v-if="scope.row.m3u8For720P"
+                            type="text"
+                            size="small"
+                            @click="displayVideo(scope.row.m3u8For720P,scope.row.originName)"
+                        >720
+                        </el-button>
+                        <svg-icon
+                            v-if="scope.row.m3u8For720P"
+                            icon-class="copy_btn"
+                            class-name="copy-btn"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
+                        </svg-icon>
+                    </div>
+                    <div class="btn-icon-container">
+                        <el-button
+                            v-if="scope.row.m3u8For480P"
+                            type="text"
+                            size="small"
+                            @click="displayVideo(scope.row.m3u8For480P,scope.row.originName)"
+                        >480
+                        </el-button>
+                        <svg-icon
+                            v-if="scope.row.m3u8For480P"
+                            icon-class="copy_btn"
+                            class-name="copy-btn"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For480P)">
+                        </svg-icon>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                width="100px"
+                label="视频状态">
+                <template slot-scope="scope">
+                    <div class="operator-btn-wrapper">
+                        <i class="btn-text text-normal" v-if="scope.row.visible">正常</i>
+                        <i class="btn-text text-danger" v-else>禁播</i>
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div id="operate-list">
+            <el-button type="primary" class="btn-style-two" @click="editInfo">编辑</el-button>
+            <el-button @click="toChannelList" class="btn-style-three">返回列表</el-button>
         </div>
         <display-video-dialog
             :url="previewVideoInfo.url"
@@ -280,68 +264,150 @@
 
 <style lang="scss" scoped>
 
-    .main-block {
-        position: relative;
-        padding-top: 80px;
-        margin-bottom: 80px;
-    }
-
-    #basic-info {
-        max-width: 1200px;
-        display: flex;
-        justify-content: space-between;
+    // 频道题目
+    .detail-title-block {
+        height: 50px;
+        line-height: 50px;
         overflow: hidden;
-    }
+        .channel-status {
+            float: left;
+            margin-left: 86px;
+            margin-right: 94px;
+            margin-top: 9px;
+            height: 30px;
+            width: 80px;
+            line-height: 30px;
+            border-radius: 4px;
+            font-size: 20px;
+            text-align: center;
+            &.un-shelve {
+                color: #6F7480;
+                background: #2A3040;
+            }
+            &.shelve {
+                color: #fff;
+                background: #3AC26F;
+            }
+        }
 
-    .el-card {
-        display: inline-block;
-        padding-right: 50px;
-        ul {
-            li {
-                display: flex;
-                margin-bottom: 10px;
-                min-height: 32px;
-                flex-direction: row;
-                justify-content: left;
-                align-items: center;
-                > span {
-                    margin-right: 80px;
-                    width: 120px;
-                    text-align: right;
-                    flex-shrink: 0;
-                    font-size: $largerFontSize;
-                    color: $baseGray;
-                }
-                label {
-                    width: 380px;
-                    font-size: $normalFontSize;
-                    color: #909399;
-                    flex-shrink: 0;
-                    line-height: 2;
-                    text-align: left;
-                    &.on-play {
-                        color: $baseBlue;
-                    }
-                    .el-tag {
-                        border: none;
-                        margin-right: 10px;
-                    }
+        .title {
+            float: left;
+            label {
+                font-size: 20px;
+                color: #FFFFFF;
+            }
+            span {
+                display: inline-block;
+                margin-top: 9px;
+                margin-left: 20px;
+                height: 30px;
+                width: 100px;
+                line-height: 30px;
+                background: #D27B25;
+                border-radius: 4px;
+                font-size: 20px;
+                color: #FFFFFF;
+            }
+        }
+        .channel-time {
+            float: right;
+            margin-left: 350px;
+            margin-right: 20px;
+            div {
+                height: 17px;
+                line-height: 17px;
+                &:first-child {
+                    margin-top: 6px;
+                    margin-bottom: 3px;
                 }
             }
         }
-    }
-
-    img {
-        display: block;
     }
 
     .copy-btn {
         cursor: pointer;
     }
 
-    #operate-list {
-        position: absolute;
-        right: 0px;
-        top: 10px;
+    // 相关信息
+    .about-channel {
+        position: relative;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #252D3F;
+        text-align: left;
+        overflow: hidden;
+        img {
+            position: absolute;
+            top: 0px;
+            left: 20px;
+            height: 200px;
+            width: 200px;
+            border: 1px solid #3E495E;
+            border-radius: 8px;
+            box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.50);
+        }
+        .info-container {
+            min-width: 1220px;
+            margin-left: 260px;
+            height: 230px;
+            border-top: 1px solid #252D3F;
+            > div {
+                display: inline-block;
+                margin-right: 60px;
+            }
+            .type-list {
+                margin-top: 10px;
+                height: 40px;
+                li {
+                    float: left;
+                    margin-right: 10px;
+                    padding: 0px 5px;
+                    height: 20px;
+                    line-height: 20px;
+                    background: #637497;
+                    border-radius: 4px;
+                    font-size: 10px;
+                    color: #FFFFFF;
+                }
+            }
+            .info-list {
+                display: inline-block;
+                &.right-info {
+                    padding-top: 50px;
+                }
+                li {
+                    margin-bottom: 8px;
+                    span {
+                        display: inline-block;
+                        width: 110px;
+                        text-align: right;
+                        padding-right: 10px;
+                        font-size: 16px;
+                        color: #A8ABB3;
+                    }
+                    label {
+                        display: inline-block;
+                        font-size: 16px;
+                        color: #A8ABB3;
+                        &.on-play {
+                            padding: 6px 8px;
+                            font-size: 12px;
+                            color: #FFFFFF;
+                            background: #0062C4;
+                            border-radius: 4px;
+                        }
+                        &.duration {
+                            font-size: 12px;
+                            color: #A8ABB3;
+                            line-height: 17px;
+                        }
+                    }
+                }
+            }
+        }
     }
+
+    #operate-list {
+        margin-top: 200px;
+    }
+
 </style>

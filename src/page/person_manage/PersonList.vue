@@ -1,124 +1,164 @@
 <!--人物列表组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'人物资源管理'},
-            {name:'人物列表'}]">
-        </custom-breadcrumb>
-        <el-form id="label-font" :inline="true" class="demo-form-inline search-form text-left">
-            <el-col :span="24">
-                <el-form-item class="float-right">
-                    <el-button
-                        class="page-main-btn create-blue-btn contain-svg-icon"
-                        @click="createPerson">
-                        <svg-icon icon-class="add"></svg-icon>
-                        新增人物
-                    </el-button>
-                    <el-button
-                        class="page-main-btn create-blue-btn contain-svg-icon"
-                        @click="showFileUploadDialog">
-                        <svg-icon icon-class="upload"></svg-icon>
-                        导入人物
-                    </el-button>
-                </el-form-item>
-            </el-col>
-            <el-col :span="24">
-                <el-form-item label="地区">
-                    <el-select
-                        :value="searchFields.area"
-                        filterable
-                        clearable
-                        placeholder="请选择地区"
-                        @input="inputHandler($event, 'area')">
-                        <el-option
-                            v-for="(item, index) in areaOptions"
-                            :key="index"
-                            :label="item.name"
-                            :value="item.code">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item class="search">
-                    <el-input
-                        :value="searchFields.name"
-                        @input="inputHandler($event, 'name')"
-                        placeholder="搜索你想要的信息"
-                        clearable
-                    >
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button class="page-main-btn" type="primary" @click="getPersonList" icon="el-icon-search" plain>搜索</el-button>
-                    <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
-                        <svg-icon
-                            icon-class="clear_filter"
-                            class-name="svg-box">
-                        </svg-icon>
-                        清空筛选条件
-                    </el-button>
-                </el-form-item>
-                    <el-form-item class="float-right margin-bottom-0">
-                        <el-button class="create-blue-btn" size="small" @click="getDuplicateListHandler">重复人物查询</el-button>
-                    </el-form-item>
-            </el-col>
-        </el-form>
-        <el-table :row-class-name='"figure-row"' :header-row-class-name='"common-table-header"' class="my-table-style" :data="list" border>
-            <el-table-column prop="id" align="center" width="120px" label="编号">
-                <template slot-scope="scope">
-                    {{scope.row.id | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column prop="name" align="center" label="名字">
-                <template slot-scope="scope">
-                    <span class="ellipsis three">
-                        {{scope.row.name | padEmpty}}
-                    </span>
-                </template>
-            </el-table-column>
-            <el-table-column label="照片" width="120px" align="center" >
-                <template slot-scope="scope">
-                    <img v-if="scope.row.avatarImage" @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="100px" height="100px" class="pointer" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">
-                    <span v-else>------</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="area" align="center" label="地区">
-                <template slot-scope="scope">
-                    {{areaLabel(scope.row.area) | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column prop="mainRole" align="center" label="职业">
-                <template slot-scope="scope">
-                    <span class="ellipsis three">
-                        {{mainRoleLabel(scope.row.mainRoleList).join(', ') | padEmpty}}
-                    </span>
-                </template>
-            </el-table-column>
-            <el-table-column align="center" label="状态">
-                <template slot-scope="scope">
-                    <i v-if="scope.row.visible" class="status-normal">已上架</i>
-                    <i v-else class="status-abnormal">已下架</i>
-                </template>
-            </el-table-column>
-            <el-table-column align="center" label="更新时间">
-                <template slot-scope="scope">
-                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
-                </template>
-            </el-table-column>
-            <el-table-column align="center" width="120px" label="操作">
-                <template slot-scope="scope">
-                    <div class="btn-wrapper">
-                        <el-button class="text-success" type="text" size="small" @click="displayPerson(scope.row.id)">详情</el-button>
-                        <el-button type="text" size="small" @click="editPerson(scope.row.id)">编辑</el-button>
-                        <el-button type="text" size="small" @click="_lowerFramePerson(scope.row)">
-                            {{scope.row.visible ? '下架' : '上架'}}
-                        </el-button>
-                        <el-button class="text-danger" type="text" size="small" @click="_deletePerson(scope.row.id)">删除</el-button>
+    <div class="person-list-container">
+        <div class="table-container">
+            <h2 class="content-title">搜索筛选</h2>
+            <div class="search-field">
+                <div class="field-row">
+                    <div class="search-field-item">
+                        <el-input
+                            :value="searchFields.name"
+                            clearable
+                            class="border-input"
+                            @input="inputHandler($event, 'name')"
+                            placeholder="搜索你想要的信息">
+                        </el-input>
                     </div>
-                </template>
-            </el-table-column>
-        </el-table>
+                    <el-button class="btn-style-one" @click="searchHandler" type="primary">
+                        <svg-icon icon-class="search"></svg-icon>
+                        搜索
+                    </el-button>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">地区</label>
+                        <el-select
+                            :value="searchFields.area"
+                            filterable
+                            clearable
+                            placeholder="请选择地区"
+                            @input="inputHandler($event, 'area')">
+                            <el-option
+                                v-for="(item, index) in areaOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.code">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields">
+                        <svg-icon icon-class="reset"></svg-icon>
+                        重置
+                    </el-button>
+                </div>
+            </div>
+            <div class="seperator-line"></div>
+            <div class="table-field">
+                <h2 class="content-title">人物列表</h2>
+                <div class="table-operator-field clearfix">
+                    <div class="float-left">
+                        <div v-show="isDisabled" class="my-disabled-dropdown">
+                            批量操作
+                            <i class="el-icon-arrow-down"></i>
+                        </div>
+                        <el-dropdown
+                            trigger="click"
+                            v-show="!isDisabled"
+                            class="my-dropdown">
+                            <span class="el-dropdown-link">
+                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item>
+                                    <span @click="multUpFramePersonHandler">批量上架</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span @click="multLowerFramePersonHandler">批量下架</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span @click="batchDeletPersonHandler">批量删除</span>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <div class="float-right">
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="createPerson">
+                            <svg-icon icon-class="add"></svg-icon>
+                            添加
+                        </el-button>
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="gotoPersonImportPage">
+                            <svg-icon icon-class="import"></svg-icon>
+                            导入
+                        </el-button>
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="getDuplicateListHandler">
+                            <svg-icon icon-class="export"></svg-icon>
+                            查重
+                        </el-button>
+                    </div>
+                </div>
+                <el-table
+                    @select="selectHandler"
+                    @select-all="selectAllHandler"
+                    :row-class-name='"figure-row"' :header-row-class-name='"common-table-header"' class="my-table-style" :data="list" border>
+                    <el-table-column type="selection" align="center"></el-table-column>
+                    <el-table-column prop="id" align="center" width="120px" label="编号">
+                        <template slot-scope="scope">
+                            {{scope.row.id | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="name" align="center" label="名字">
+                        <template slot-scope="scope">
+                            <span
+                                @click="displayPerson(scope.row.id)"
+                                class="ellipsis three name">
+                                {{scope.row.name | padEmpty}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="alias" align="center" label="别名">
+                        <template slot-scope="scope">
+                            {{cutStr20(scope.row.alias) | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="照片" width="120px" align="center" >
+                        <template slot-scope="scope">
+                            <img v-if="scope.row.avatarImage" @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="100px" height="100px" class="person-image pointer" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">
+                            <span v-else>------</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="area" align="center" label="地区">
+                        <template slot-scope="scope">
+                            {{areaLabel(scope.row.area) | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="mainRole" align="center" label="职业">
+                        <template slot-scope="scope">
+                            <span class="ellipsis three">
+                                {{mainRoleLabel(scope.row.mainRoleList).join(', ') | padEmpty}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="状态">
+                        <template slot-scope="scope">
+                            <input
+                                class="my-switch switch-anim"
+                                type="checkbox"
+                                :checked="scope.row.visible"
+                                @click.prevent="_lowerFramePerson(scope.row)"/>
+                            <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                            <i v-else class="off-the-shelf">已下架</i>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="更新时间">
+                        <template slot-scope="scope">
+                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" width="120px" label="操作">
+                        <template slot-scope="scope">
+                            <div class="operator-btn-wrapper">
+                                <span class="btn-text" @click="editPerson(scope.row.id)">编辑</span>
+                                <span class="btn-text text-danger" @click="_deletePerson(scope.row.id)">删除</span>
+                            </div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
         <el-pagination
             @size-change="handlePaginationChange($event, 'pageSize')"
             @current-change="handlePaginationChange($event, 'pageNum')"
@@ -128,7 +168,7 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="pagination.total">
         </el-pagination>
-        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
+        <preview-single-image :singleImage="previewImage"></preview-single-image>
         <el-dialog
             title="上传人物表格"
             :visible.sync="fileUploadDialogVisible"
@@ -159,8 +199,10 @@
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import store from 'store';
+    import _ from 'lodash';
     import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
     import role from '../../util/config/role';
+
     export default {
         name: 'PersonList',
         components: {
@@ -177,6 +219,7 @@
                 //  人物导入
                 fileUploadDialogVisible: false,
                 fileList: [],
+                selectedVideoList: [],
                 uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token)
             };
         },
@@ -201,7 +244,10 @@
                 searchFields: 'person/searchFields',
                 pagination: 'person/pagination',
                 mainRoleLabel: 'person/mainRoleLabel'
-            })
+            }),
+            isDisabled() {
+                return this.selectedVideoList.length === 0;
+            }
         },
         methods: {
             ...mapMutations({
@@ -218,6 +264,11 @@
             }),
             clearSearchFields() {
                 this.resetSearchFields();
+                this.getPersonList({isProgramme: false});
+            },
+            searchHandler() {
+                this.updatePagination({key: 'pageNum', value: 1});
+                this.getPersonList({isProgramme: false});
             },
             keyupHandler(e) {
                 if (e.keyCode === 13) {
@@ -225,7 +276,10 @@
                 }
             },
             createPerson() {
-                this.$router.push({ name: 'CreatePerson' });
+                let routeData = this.$router.resolve({
+                    name: 'CreatePerson'
+                });
+                window.open(routeData.href, '_blank');
             },
             areaLabel(code) {
                 let reg = /^\d+(\.\d+)?$/;
@@ -235,6 +289,9 @@
                 } else {
                     return code;
                 }
+            },
+            cutStr20(value) {
+                return this.$util.cutStr(value, 19);
             },
             // 跳转到详情页面
             displayPerson(userId) {
@@ -252,6 +309,10 @@
             },
             inputHandler(value, key) {
                 this.updateSearchFields({key, value});
+                if (key !== 'name') {
+                    this.updatePagination({key: 'pageNum', value: 1});
+                    this.getPersonList({isProgramme: false});
+                }
             },
             _lowerFramePerson(person) {
                 let {id, visible} = person;
@@ -269,12 +330,7 @@
                                     this.$message.error(this.lowerFramePersonErrorHandler(res));
                                 }
                             });
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                    });
+                    }).catch(() => {});
             },
             lowerFramePersonErrorHandler(res) {
                 let {code, data, message} = res;
@@ -357,14 +413,96 @@
                     });
                 }
                 this.closeFileUploadDialog();
+            },
+            selectHandler(list, row) {
+                let isSelected = list.findIndex((item) => item.id === row.id) >= 0;
+                if (isSelected) {
+                    this.selectedVideoList.push(row);
+                } else {
+                    this.selectedVideoList = this.selectedVideoList.filter((item) => item.id !== row.id);
+                }
+            },
+            selectAllHandler(list) {
+                if (list.length > 0) {
+                    this.selectedVideoList = _.uniqBy(this.selectedVideoList.concat(list), 'id');
+                } else {
+                    this.selectedVideoList = this.selectedVideoList.filter((item) => {
+                        let index = this.list.findIndex((programme) => {
+                            return programme.id === item.id;
+                        });
+                        return index < 0;
+                    });
+                }
+            },
+            gotoPersonImportPage() {
+                let routeData = this.$router.resolve({
+                    name: 'PersonImport'
+                });
+                window.open(routeData.href, '_blank');
+            },
+            //  批量操作
+            async multUpFramePersonHandler() {
+                let idList = this.selectedVideoList.map((item) => item.id);
+                let confirm = await this.$confirm(`您确定要上架所有人物吗, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    });
+                if (confirm) {
+                    let res = await this.$service.batchLowerUpFramePerson(idList, true);
+                    if (res && res.code === 0) {
+                        this.$message.success(`人物上架成功`);
+                        this.getPersonList({isProgramme: false});
+                    } else {
+                        this.$message.error('批量上架失败');
+                    }
+                }
+            },
+            async multLowerFramePersonHandler() {
+                let idList = this.selectedVideoList.map((item) => item.id);
+                let confirm = await this.$confirm(`您确定要下架所选人物吗, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    });
+                if (confirm) {
+                    let res = await this.$service.batchLowerUpFramePerson(idList, false);
+                    if (res && res.code === 0) {
+                        this.$message.success(`人物下架成功`);
+                        this.getPersonList({isProgramme: false});
+                    } else {
+                        this.$message.error('批量下架失败');
+                    }
+                }
+            },
+            async batchDeletPersonHandler() {
+                let idList = this.selectedVideoList.map((item) => item.id);
+                let confirm = await this.$confirm(`您确定要删除所选人物吗, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    });
+                if (confirm) {
+                    let res = await this.$service.batchDeletePerson(idList);
+                    if (res && res.code === 0) {
+                        this.$message.success(`人物删除成功`);
+                        this.getPersonList({isProgramme: false});
+                    } else {
+                        this.$message.error('批量删除失败');
+                    }
+                }
             }
         }
     };
 </script>
 <style scoped lang="less">
-.btn-wrapper .el-button {
-    &:nth-of-type(2n + 1) {
-        margin-left: 10px;
-    }
+.btn-style-one {
+    margin-left: 10px;
+}
+.person-image {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #3E495E;
+    border-radius: 8px;
 }
 </style>

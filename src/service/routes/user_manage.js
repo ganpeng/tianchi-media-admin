@@ -51,8 +51,8 @@ export const getUserList = ({keyword, districtCode, registeredAtStart, registere
     let params = {
         keyword,
         districtCode,
-        registeredAtStart: registeredAtStart ? Date.parse(registeredAtStart) : '',
-        registeredAtEnd: registeredAtEnd ? Date.parse(registeredAtEnd) : '',
+        registeredAtStart,
+        registeredAtEnd,
         pageNum: pageNum - 1,
         pageSize
     };

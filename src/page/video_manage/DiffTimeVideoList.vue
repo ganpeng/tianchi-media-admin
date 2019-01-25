@@ -1,198 +1,205 @@
 <!--视频资源管理-视频列表-检查时长-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'视频资源管理'},
-            {name:'视频列表'},
-            {name:'检查时长'}]">
-        </custom-breadcrumb>
-        <div class="block-box">
-            <div @keyup.enter="getDiffTimeVideoList" class="text-left">
-                <el-form :inline="true" class="filter-form">
-                    <el-form-item>
-                        <el-input v-model="listQueryParams.keyword" placeholder="请填写视频名称或编号"></el-input>
-                    </el-form-item>
-                    <el-form-item label="创建时间">
+        <div class="table-container">
+            <h2 class="content-title">搜索筛选</h2>
+            <div class="search-field">
+                <div class="field-row" @keyup.enter="getDiffTimeVideoList">
+                    <div class="search-field-item">
+                        <el-input
+                            v-model="listQueryParams.keyword"
+                            @change="getDiffTimeVideoList"
+                            clearable
+                            class="border-input"
+                            placeholder="请填写视频名称或编号">
+                        </el-input>
+                    </div>
+                    <el-button class="btn-style-one" @click="getDiffTimeVideoList" type="primary">
+                        <svg-icon icon-class="search"></svg-icon>
+                        搜索
+                    </el-button>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">时间</label>
                         <el-date-picker
                             v-model="createRangeTime"
+                            @change="getDiffTimeVideoList"
                             type="daterange"
                             value-format="timestamp"
                             range-separator="至"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期">
                         </el-date-picker>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" plain icon="el-icon-search" @click="getDiffTimeVideoList">搜索
-                        </el-button>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" plain class="clear-filter" @click="clearFilters">
-                            <svg-icon
-                                icon-class="clear_filter">
-                            </svg-icon>
-                            清空筛选条件
-                        </el-button>
-                    </el-form-item>
-                </el-form>
+                    </div>
+                    <el-button class="btn-style-one" type="primary" @click="clearFilters" plain>
+                        <svg-icon icon-class="reset"></svg-icon>
+                        重置
+                    </el-button>
+                </div>
             </div>
-            <el-table
-                header-row-class-name="common-table-header"
-                class="my-table-style"
-                @selection-change="handleSelectionChange"
-                :data="videoList"
-                border>
-                <el-table-column
-                    type="selection"
-                    align="center"
-                    width="55">
-                </el-table-column>
-                <el-table-column prop="id" align="center" width="118" label="编号"></el-table-column>
-                <el-table-column width="420px" prop="originName" align="center" label="视频名称">
-                    <template slot-scope="scope">
-                        <el-tooltip effect="dark" placement="top">
-                            <div class="gan-tooltip" slot="content">{{scope.row.originName}}</div>
-                            <span class="ellipsis-two">{{scope.row.originName}}</span>
-                        </el-tooltip>
-                    </template>
-                </el-table-column>
-                <el-table-column width="120px" prop="takeTimeInSec" align="center" label="转码前时长">
-                    <template slot-scope="scope">
-                        <span>{{scope.row.takeTimeInSec | fromSecondsToTime}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column width="120px" prop="realDuration" align="center" label="转码后时长">
-                    <template slot-scope="scope">
-                        <span>{{scope.row.realDuration | fromSecondsToTime}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column width="100px" align="center" label="时间相差（s）">
-                    <template slot-scope="scope">
-                        <span>{{parseInt(scope.row.takeTimeInSec - scope.row.realDuration)}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="link" align="center" label="预览视频">
-                    <template slot-scope="scope">
-                        <div class="btn-icon-container">
-                            <el-button
-                                v-if="scope.row.m3u8For4K"
-                                type="text"
-                                size="small"
-                                @click="displayVideoPlayer(scope.row.m3u8For4K, scope.row.originName)"
-                            >4K
-                            </el-button>
-                            <svg-icon
-                                v-if="scope.row.m3u8For4K"
-                                icon-class="copy_btn"
-                                class-name="copy-btn pointer"
-                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
-                            </svg-icon>
-                        </div>
-                        <div class="btn-icon-container">
-                            <el-button
-                                v-if="scope.row.m3u8For1080P"
-                                type="text"
-                                size="small"
-                                @click="displayVideoPlayer(scope.row.m3u8For1080P, scope.row.originName)"
-                            >1080
-                            </el-button>
-                            <svg-icon
-                                v-if="scope.row.m3u8For1080P"
-                                icon-class="copy_btn"
-                                class-name="copy-btn pointer"
-                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
-                            </svg-icon>
-                        </div>
-                        <div class="btn-icon-container">
-                            <el-button
-                                v-if="scope.row.m3u8For720P"
-                                type="text"
-                                size="small"
-                                @click="displayVideoPlayer(scope.row.m3u8For720P, scope.row.originName)"
-                            >720
-                            </el-button>
-                            <svg-icon
-                                v-if="scope.row.m3u8For720P"
-                                icon-class="copy_btn"
-                                class-name="copy-btn pointer"
-                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
-                            </svg-icon>
-                        </div>
-                        <div class="btn-icon-container">
-                            <el-button
-                                v-if="scope.row.m3u8For480P"
-                                type="text"
-                                size="small"
-                                @click="displayVideoPlayer(scope.row.m3u8For480P, scope.row.originName)"
-                            >480
-                            </el-button>
-                            <svg-icon
-                                v-if="scope.row.m3u8For480P"
-                                icon-class="copy_btn"
-                                class-name="copy-btn pointer"
-                                :data-clipboard-text="getVideoUrl(scope.row.m3u8For480P)">
-                            </svg-icon>
-                        </div>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="注入状态">
-                    <template slot-scope="scope">
-                        <span>成功</span>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="上传日期">
-                    <template slot-scope="scope">
-                        {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="更新日期">
-                    <template slot-scope="scope">
-                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    fixed="right"
-                    align="center"
-                    width="100px"
-                    label="操作"
-                    class="operate">
-                    <template slot-scope="scope">
+            <div class="seperator-line"></div>
+            <div class="table-field">
+                <h2 class="content-title">检查视频列表</h2>
+                <div class="table-operator-field clearfix">
+                    <div class="float-left">
+                        <el-dropdown
+                            trigger="click"
+                            class="my-dropdown">
+                            <span class="el-dropdown-link">
+                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item>
+                                    <span @click="removeBatchVideos">批量删除</span>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <div class="float-right">
                         <el-button
-                            class="remove-btn"
+                            class="btn-style-two contain-svg-icon"
+                            @click="exportAllList">
+                            <svg-icon icon-class="export"></svg-icon>
+                            全部导出
+                        </el-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <el-table
+            header-row-class-name="common-table-header"
+            class="my-table-style"
+            @selection-change="handleSelectionChange"
+            :data="videoList"
+            border>
+            <el-table-column
+                type="selection"
+                align="center"
+                width="55">
+            </el-table-column>
+            <el-table-column prop="id" align="center" width="118" label="编号"></el-table-column>
+            <el-table-column width="420px" prop="originName" align="center" label="视频名称">
+                <template slot-scope="scope">
+                    <el-tooltip effect="dark" placement="top">
+                        <div class="gan-tooltip" slot="content">{{scope.row.originName}}</div>
+                        <span class="ellipsis-two">{{scope.row.originName}}</span>
+                    </el-tooltip>
+                </template>
+            </el-table-column>
+            <el-table-column width="120px" prop="takeTimeInSec" align="center" label="转码前时长">
+                <template slot-scope="scope">
+                    <span>{{scope.row.takeTimeInSec | fromSecondsToTime}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column width="120px" prop="realDuration" align="center" label="转码后时长">
+                <template slot-scope="scope">
+                    <span>{{scope.row.realDuration | fromSecondsToTime}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column width="100px" align="center" label="时间相差（s）">
+                <template slot-scope="scope">
+                    <span>{{parseInt(scope.row.takeTimeInSec - scope.row.realDuration)}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="link" align="center" label="预览视频">
+                <template slot-scope="scope">
+                    <div class="btn-icon-container preview-link">
+                        <el-button
+                            v-if="scope.row.m3u8For4K"
                             type="text"
                             size="small"
-                            @click="removeVideo(scope.row)">
-                            删除
+                            @click="displayVideoPlayer(scope.row.m3u8For4K, scope.row.originName)"
+                        >4K
                         </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="listQueryParams.pageNum"
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="listQueryParams.pageSize"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="total">
-            </el-pagination>
-            <div class="visible-item">
-                <el-button
-                    class="create-blue-btn"
-                    size="small"
-                    @click="exportAllList">
-                    全部导出
-                </el-button>
-                <el-button
-                    :class="'disabled-red-btn ' + (multipleSelection.length === 0 ? 'is-disabled' : '')"
-                    size="small"
-                    @click="removeBatchVideos">
-                    批量删除
-                </el-button>
-            </div>
-            <el-button class="create-blue-btn back-list" @click="toVideoList">返回视频列表</el-button>
-        </div>
+                        <svg-icon
+                            v-if="scope.row.m3u8For4K"
+                            icon-class="copy_btn"
+                            class-name="copy-btn pointer"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For4K)">
+                        </svg-icon>
+                    </div>
+                    <div class="btn-icon-container preview-link">
+                        <el-button
+                            v-if="scope.row.m3u8For1080P"
+                            type="text"
+                            size="small"
+                            @click="displayVideoPlayer(scope.row.m3u8For1080P, scope.row.originName)"
+                        >1080
+                        </el-button>
+                        <svg-icon
+                            v-if="scope.row.m3u8For1080P"
+                            icon-class="copy_btn"
+                            class-name="copy-btn pointer"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For1080P)">
+                        </svg-icon>
+                    </div>
+                    <div class="btn-icon-container preview-link">
+                        <el-button
+                            v-if="scope.row.m3u8For720P"
+                            type="text"
+                            size="small"
+                            @click="displayVideoPlayer(scope.row.m3u8For720P, scope.row.originName)"
+                        >720
+                        </el-button>
+                        <svg-icon
+                            v-if="scope.row.m3u8For720P"
+                            icon-class="copy_btn"
+                            class-name="copy-btn pointer"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For720P)">
+                        </svg-icon>
+                    </div>
+                    <div class="btn-icon-container preview-link">
+                        <el-button
+                            v-if="scope.row.m3u8For480P"
+                            type="text"
+                            size="small"
+                            @click="displayVideoPlayer(scope.row.m3u8For480P, scope.row.originName)"
+                        >480
+                        </el-button>
+                        <svg-icon
+                            v-if="scope.row.m3u8For480P"
+                            icon-class="copy_btn"
+                            class-name="copy-btn pointer"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For480P)">
+                        </svg-icon>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="注入状态">
+                <template slot-scope="scope">
+                    <span class="status-normal">成功</span>
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="上传日期">
+                <template slot-scope="scope">
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="更新日期">
+                <template slot-scope="scope">
+                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                width="100px"
+                label="操作"
+                class="operate">
+                <template slot-scope="scope">
+                    <div class="operator-btn-wrapper">
+                        <span class="btn-text text-danger" @click="removeVideo(scope.row)">删除</span>
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="listQueryParams.pageNum"
+            :page-sizes="[10, 20, 30, 50]"
+            :page-size="listQueryParams.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total">
+        </el-pagination>
         <display-video-dialog
             :url="url"
             :title="title"
@@ -284,6 +291,7 @@
                 this.listQueryParams.startedAt = '';
                 this.listQueryParams.endedAt = '';
                 this.createRangeTime = [];
+                this.getDiffTimeVideoList();
             },
             // 导出问题时长视频列表
             exportAllList() {
@@ -321,7 +329,11 @@
                     cancelButtonText: '取消',
                     type: 'error'
                 }).then(() => {
-                    this.$service.deleteVideoById(video.id).then(res => {
+                    this.$service.deleteVideo({
+                        id: video.id,
+                        host: video.host,
+                        port: video.port
+                    }).then(res => {
                         if (res && res.code === 0) {
                             this.$message.success('"' + video.originName + '"' + '已成功删除');
                             this.getDiffTimeVideoList();
@@ -338,11 +350,6 @@
                                 duration: 5000
                             });
                         }
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消批量删除'
                     });
                 });
             },
@@ -365,46 +372,22 @@
                                 this.$message.error('批量删除失败');
                             }
                         });
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消批量删除'
-                        });
                     });
+                } else {
+                    this.$message.warning('请先选择视频');
                 }
-            },
-            toVideoList() {
-                this.$router.push({name: 'VideoList'});
             }
         }
-    };
+    }
+    ;
 </script>
 
 <style lang="scss" scoped>
 
-    .block-box {
-        position: relative;
-        padding-top: 55px;
-    }
-
-    .back-list {
-        position: absolute;
-        right: 0px;
-        top: 10px;
-    }
-
-    .el-table {
-        margin-top: 0px;
-    }
-
-    .el-pagination {
-        margin-bottom: 50px;
-    }
-
-    .visible-item {
-        position: absolute;
-        right: 0px;
-        top: 85px;
+    .preview-link {
+        .el-button {
+            font-size: 14px;
+        }
     }
 
 </style>

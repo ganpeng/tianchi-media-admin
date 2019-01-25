@@ -1,16 +1,11 @@
 <!--编辑类型包组件-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'产品管理'},
-            {name:'编辑类别包'}]">
-        </custom-breadcrumb>
-        <div class="block-box">
-            <category-product-form
-                status="1">
-            </category-product-form>
-        </div>
+        <div class="content-title">编辑类别包</div>
+        <div class="seperator-line"></div>
+        <category-product-form
+            status="EDIT_PRODUCT">
+        </category-product-form>
     </div>
 </template>
 
@@ -31,7 +26,4 @@
 
 <style lang="less" scoped>
 
-    .block-box {
-        margin-top: 50px;
-    }
 </style>

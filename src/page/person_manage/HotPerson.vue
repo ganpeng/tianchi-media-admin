@@ -1,5 +1,6 @@
+<!-- 热门人物组件 -->
 <template>
-    <div class="container">
+    <div class="hot-person-container">
         <custom-breadcrumb
             v-bind:breadcrumbList="[
             {name:'人物资源管理'},

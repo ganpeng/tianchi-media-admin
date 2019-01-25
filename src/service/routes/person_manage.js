@@ -10,9 +10,9 @@ export const createPerson = (person) => {
 /**
  * 获取人物列表
  */
-export const getPersonList = ({pageNum, pageSize, name, area}) => {
+export const getPersonList = ({pageNum, pageSize, name, area, visible}) => {
     return service.get('/v1/content/figure/page', {
-        params: {pageNum, pageSize, name, area}
+        params: {pageNum, pageSize, name, area, visible}
     });
 };
 
@@ -78,4 +78,25 @@ export const getDuplicateList = ({pageNum, pageSize, name}) => {
     return service.get(`/v1/content/figure/duplicate/page`, {
         params: {pageNum, pageSize, name}
     });
+};
+
+/**
+ * 检查人物的别名是否存在
+ */
+export const checkAliasIsExist = (alias) => {
+    return service.get(`/v1/content/figure/duplicate/alias?alias=${alias}`);
+};
+
+/**
+ * 批量上下架人物
+ */
+export const batchLowerUpFramePerson = (idList, visible) => {
+    return service.patch(`/v1/content/figure/visible?visible=${visible}`, idList);
+};
+
+/**
+ * 批量删除人物
+ */
+export const batchDeletePerson = (idList) => {
+    return service.delete('/v1/content/figure', {data: idList});
 };

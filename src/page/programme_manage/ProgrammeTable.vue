@@ -3,6 +3,7 @@
     <div class="tele-play-table-container">
         <el-row>
             <el-table
+                class="my-table-style"
                 :data="dataList"
                 border
                 header-row-class-name="common-table-header"
@@ -18,7 +19,7 @@
                 </el-table-column>
                 <el-table-column
                     prop="originName"
-                    label="视频文件名"
+                    label="文件名"
                     align="center"
                     width="180">
                         <template slot-scope="scope">
@@ -28,16 +29,19 @@
                         </template>
                 </el-table-column>
                 <el-table-column
-                    label="是否有封面图"
+                    label="封面图"
                     align="center"
-                    width="120">
-                        <template slot-scope="scope">
-                            {{scope.row.coverImage ? '是' : '否'}}
-                        </template>
+                    width="123">
+                    <template slot-scope="scope">
+                        <img v-if="scope.row.coverImage && scope.row.coverImage.uri" style="width:103px;height:auto;"
+                            @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer"
+                            :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
+                        <span v-else>无</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="name"
-                    label="视频展示名"
+                    label="展示名"
                     align="center"
                     width="160">
                         <template slot-scope="scope">
@@ -57,15 +61,7 @@
                 </el-table-column>
                 <el-table-column
                     align="center"
-                    label="相关人物">
-                        <template slot-scope="scope">
-                            <span class="ellipsis two">
-                                {{videoPersonName(scope.row.figureList) | padEmpty}}
-                            </span>
-                        </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
+                    min-width="100px"
                     label="关联正片">
                         <template slot-scope="scope">
                             <span class="ellipsis two">
@@ -75,8 +71,8 @@
                 </el-table-column>
                 <el-table-column
                     align="center"
-                    width="180"
-                    label="视频地址">
+                    min-width="180"
+                    label="预览">
                     <template slot-scope="scope">
                         <div class="btn-icon-container">
                             <el-button
@@ -139,7 +135,7 @@
                 <el-table-column
                     prop="type"
                     align="center"
-                    min-width="80px"
+                    min-width="100px"
                     label="内容类型">
                         <template slot-scope="scope">
                             {{getVideoType(scope.row.type) | padEmpty}}
@@ -160,8 +156,14 @@
                     min-width="80px"
                     label="上下架">
                     <template slot-scope="scope">
-                        <i v-if="scope.row.visible" class="status-normal">已上架</i>
-                        <i v-else class="status-abnormal">已下架</i>
+                        <input
+                            v-if="status !== 1 && isShow"
+                            class="my-switch switch-anim"
+                            type="checkbox"
+                            :checked="scope.row.visible"
+                            @click.prevent="_lowerFramePerson(scope.row)"/>
+                        <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                        <i v-else class="off-the-shelf">已下架</i>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -178,31 +180,26 @@
                     align="center"
                     width="160">
                     <template slot-scope="scope">
-                        <el-button @click="displayVideo(scope.row.id)" type="text" class="text-success" size="small">查看</el-button>
-                        <el-button v-if="status !== 1" @click="editVideo(scope.row.id)" type="text" size="small">编辑</el-button>
-                        <el-button v-if="status !== 1 && isShow" @click="deleteVideo(scope.row.id, scope.row.visible)" type="text" size="small">
-                            {{scope.row.visible ? '下架' : '上架'}}
-                        </el-button>
-                        <el-button v-if="status !== 1" @click="realDeleteVideo(scope.row.id)" type="text" class="text-danger" size="small">取消关联</el-button>
+                        <div class="operator-btn-wrapper">
+                            <span class="btn-text" @click="displayVideo(scope.row.id)">查看</span>
+                            <span class="btn-text" v-if="status !== 1" @click="editVideo(scope.row.id)">编辑</span>
+                            <span class="btn-text text-danger" v-if="status !== 1" @click="realDeleteVideo(scope.row.id)">取消关联</span>
+                        </div>
                     </template>
                 </el-table-column>
             </el-table>
         </el-row>
         <upload-programme-video-dialog :videoStatus="videoStatus" :videoUploadDialogVisible="videoUploadDialogVisible" v-on:changeVideoDialogStatus="closeVideoDialog($event)"></upload-programme-video-dialog>
-        <display-video-dialog
-            :url="url"
-            :title="videoTitle"
-            :displayVideoDialogVisible="displayVideoDialogVisible"
-            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
-        </display-video-dialog>
-        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
+        <display-video-dialog ref="displayVideoDialog" :url="url" :title="videoTitle"></display-video-dialog>
+        <preview-single-image :singleImage="previewImage"></preview-single-image>
     </div>
 </template>
 <script>
 import {mapGetters, mapActions, mapMutations} from 'vuex';
 import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
-import DisplayVideoDialog from '../video_manage/DisplayVideoDialog';
 import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
+import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
+
 import role from '@/util/config/role';
 const ClipboardJS = require('clipboard');
 export default {
@@ -229,7 +226,6 @@ export default {
     data() {
         return {
             videoUploadDialogVisible: false,
-            displayVideoDialogVisible: false,
             url: '',
             videoTitle: '',
             isEdit: true,
@@ -299,7 +295,9 @@ export default {
             if (this.isUnsavedVideo(id)) {
                 let video = this.video.list.find((video) => video.id === id);
                 this.setCurrentVideo({currentVideo: video});
-                this.setCacheSort({sort: video.sort});
+                if (video.type === 'FEATURE') {
+                    this.setCacheSort({sort: video.sort});
+                }
                 this.videoUploadDialogVisible = true;
                 this.videoStatus = 1;
             } else {
@@ -314,7 +312,9 @@ export default {
             if (this.isUnsavedVideo(id)) {
                 let video = this.video.list.find((video) => video.id === id);
                 this.setCurrentVideo({currentVideo: video});
-                this.setCacheSort({sort: video.sort});
+                if (video.type === 'FEATURE') {
+                    this.setCacheSort({sort: video.sort});
+                }
                 this.videoUploadDialogVisible = true;
                 this.videoStatus = 2;
             } else {
@@ -332,29 +332,10 @@ export default {
                     type: 'error'
                 }).then(() => {
                     this.deleteProgrammeVideoById(id);
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
                 });
         },
         closeVideoDialog(status) {
             this.videoUploadDialogVisible = status;
-        },
-        deleteUnsavedVideo(uid) {
-            this.$confirm('此操作将永久删除该视频, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'error'
-            }).then(() => {
-                this.deleteVideoFromTempList({uid});
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });
-            });
         },
         realDeleteVideo(id) {
             this.$confirm('此操作将永久删除该视频, 是否继续?', '提示', {
@@ -365,27 +346,20 @@ export default {
                 if (this.isUnsavedVideo(id)) {
                     this.deleteVideoFromList({id});
                 } else {
-                    this.realDeleteProgrammeVideoById(id)
-                        .then((res) => {
-                            this.deleteVideoFromList({id});
-                            this.getFeatureVideoList({id: this.$route.params.id, pageSize: 99999});
-                        });
+                    this.deleteVideoFromList({id});
+                    // this.realDeleteProgrammeVideoById(id)
+                    //     .then((res) => {
+                    //         this.deleteVideoFromList({id});
+                    //         this.getFeatureVideoList({id: this.$route.params.id, pageSize: 99999});
+                    //     });
                 }
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });
             });
         },
-        closeDisplayVideoDialog(status) {
-            this.displayVideoDialogVisible = status;
-        },
         displayVideoPlayer(url, name) {
-            this.displayVideoDialogVisible = true;
             let baseUri = window.localStorage.getItem('videoBaseUri');
             this.url = `${baseUri}${url}`;
             this.videoTitle = name;
+            this.$refs.displayVideoDialog.showDialog();
         },
         // 放大预览图片
         displayImage(image) {

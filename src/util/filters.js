@@ -59,6 +59,10 @@ const FILTERS = {
     },
     padEmpty(value) {
         return value === '' || value === undefined || value === null ? '------' : value;
+    },
+    fileUrl(uri) {
+        let baseUri = window.localStorage.getItem('imageBaseUri');
+        return `${baseUri}${uri}`;
     }
 };
 

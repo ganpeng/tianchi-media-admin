@@ -1,152 +1,143 @@
-<!--添加节目-->
+<!--节目详情-->
 <template>
-    <div class="program-container">
-        <el-row>
-            <el-col :span="10">
-                <div class="vice-block">
-                    <h3 class="block-vice-title">节目基本信息</h3>
-                    <div class="base-info-container">
-                        <div class="form-block">
-                            <div class="info-wrapper">
-                                <span class="label">全平台通用ID</span>
-                                <span class="text">{{programme.code}}</span>
-                            </div>
-                            <div class="info-wrapper">
-                                <span class="label">节目来源</span>
-                                <span class="text">内容中心</span>
-                            </div>
-                            <div class="info-wrapper">
-                                <span class="label">节目名称</span>
-                                <span class="text">{{programme.name}}</span>
-                            </div>
-                            <div class="info-wrapper">
-                                <span class="label">内部节目名称</span>
-                                <span class="text">{{programme.innerName}}</span>
-                            </div>
-                            <div class="info-wrapper">
-                                <span class="label">上映年</span>
-                                <span class="text">{{programme.releaseAt | formatDate('yyyy-MM-DD')}}</span>
-                            </div>
-                            <div class="info-wrapper">
-                                <span class="label">所属地区</span>
-                                <span class="text">{{getAreaName(programme.produceAreaList)}}</span>
-                            </div>
-                            <div class="info-wrapper">
-                                <span class="label">版权起始日期</span>
-                                <span class="text">{{programme.copyrightStartedAt | formatDate('yyyy-MM-DD')}} ~ {{programme.copyrightEndedAt | formatDate('yyyy-MM-DD')}}</span>
-                            </div>
-                            <div class="info-wrapper">
-                                <span class="label">牌照方</span>
-                                <span class="text">{{programme.licence}}</span>
-                            </div>
-                            <div class="info-wrapper">
-                                <span class="label">版权方</span>
-                                <span class="text">{{programme.copyrightReserved}}</span>
-                            </div>
-                            <div class="info-wrapper">
-                                <span class="label">总集数</span>
-                                <span class="text">{{programme.totalSets}}</span>
-                            </div>
-                            <div class="info-wrapper">
-                                <span class="label">评分</span>
-                                <span class="text">{{programme.score}}</span>
-                            </div>
-                            <div class="info-wrapper">
-                                <span class="label">显示播放量</span>
-                                <span class="text">{{programme.playCountBasic}}</span>
-                            </div>
-                            <div class="info-wrapper">
-                                <span class="label">实际播放量</span>
-                                <span class="text">{{programme.playCountReal}}</span>
-                            </div>
-                            <div class="info-wrapper">
-                                <span class="label">发行方</span>
-                                <span class="text">{{programme.announcer}}</span>
-                            </div>
-                            <div v-if="isMovie" class="info-wrapper">
-                                <span class="label">规格</span>
-                                <el-tag size="small" class="margin-right-s" v-for="(name, index) in programme.specList" :key="index" type="info">{{name}}</el-tag>
-                            </div>
-                            <div v-if="isEducation" class="info-wrapper">
-                                <span class="label">年级</span>
-                                <el-tag size="small" class="margin-right-s" v-for="(name, index) in programme.gradeList" :key="index" type="info">{{name}}</el-tag>
-                            </div>
-                            <div v-if="isEducation" class="info-wrapper">
-                                <span class="label">科目</span>
-                                <span class="text">{{programme.subject}}</span>
-                            </div>
-                            <div v-if="isSports" class="info-wrapper">
-                                <span class="label">赛事</span>
-                                <span class="text">{{programme.contest}}</span>
-                            </div>
-                            <div class="info-wrapper">
-                                <span class="label">播放平台</span>
-                                <el-tag size="small" class="margin-right-s" v-for="(name, index) in programme.platformList" :key="index" type="info">{{name}}</el-tag>
-                            </div>
+    <div class="program-display-container">
+        <div class="common-details">
+            <div class="poster-section programme">
+                <div class="visible-wrapper">
+                    <span :class="['visible', programme.visible ? 'is-visible' : 'dis-visible']">
+                        {{programme.visible ? '上架' : '下架'}}
+                    </span>
+                </div>
+                <!-- <img :src="programme.posterImageList[0] ? programme.posterImageList[0].uri : ''" alt="" width="200" height="200"> -->
+                <img :src="programme.coverImage ? programme.coverImage.uri : ''" alt="">
+            </div>
+            <div class="info-section">
+                <div class="title-wrapper">
+                    <div class="left-side">
+                        <span class="title">{{programme.name}}</span>
+                        <span v-if="programme.releaseAt" class="release-at">[{{programme.releaseAt | formatDate('yyyy.MM.DD')}}]</span>
+                        <span class="score">{{programme.score}}</span>
+                        <span v-if="isTvPlay && programme.totalSets" class="total-sets">{{programme.totalSets}}集</span>
+                    </div>
+                    <div class="date">
+                        <span class="create-date">
+                            创建于{{programme.createdAt | formatDate('yyyy.MM.DD')}}
+                        </span>
+                        <span class="update-date">
+                            更新于{{programme.updatedAt | formatDate('yyyy.MM.DD')}}
+                        </span>
+                    </div>
+                </div>
+                <div class="seperator-line"></div>
+                <div class="tags-section">
+                    <span v-for="(name, index) in getAreaName(programme.produceAreaList)" :key="index" class="address-tag">
+                        <svg-icon icon-class="location"></svg-icon>
+                        {{name}}
+                    </span>
+                    <span v-for="(item) in programme.categoryList" :key="item.id" class="category-tag">
+                        {{item.name}}
+                    </span>
+                    <span v-for="(item) in programme.typeList" :key="item.id" class="category-tag">
+                        {{item.name}}
+                    </span>
+                    <span v-for="(item, index) in programme.tagList" :key="`${index}_tag`" class="type-tag">
+                        {{item}}
+                    </span>
+                    <span v-for="(item, index) in programme.specList" :key="`${index}_spec`" class="spec-tag">
+                        {{item}}
+                    </span>
+                </div>
+                <p class="inner-name">{{programme.desc}}</p>
+                <p class="description programme">
+                    {{programme.description}}
+                </p>
+                <ul class="person-posters">
+                    <li v-for="(person, index) in getAllRoleList" :key="index" class="poster">
+                        <img :src="person.avatarUri" alt="" width="80" height="80">
+                        <span class="person-name my-ellipsis">{{person.name}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="seperator-line"></div>
+        <div class="other-info">
+            <h4 class="content-sub-title">其他信息</h4>
+            <div class="other-content">
+                <div class="left-side">
+                    <div class="attributes">
+                        <div class="attribute-item">
+                            <label class="label">版权起止时间</label>
+                            <span class="value">{{programme.copyrightStartedAt | formatDate('yyyy.MM.DD')}}-{{programme.copyrightEndedAt | formatDate('yyyy.MM.DD')}}</span>
+                        </div>
+                        <div class="attribute-item">
+                            <label class="label">牌照方</label>
+                            <span class="value">
+                                {{fixedEmptyValue(programme.licence)}}
+                            </span>
+                        </div>
+                        <div class="attribute-item">
+                            <label class="label">版权方</label>
+                            <span class="value">{{fixedEmptyValue(programme.copyrightReserved)}}</span>
+                        </div>
+                        <div class="attribute-item">
+                            <label class="label">发行方</label>
+                            <span class="value">{{fixedEmptyValue(programme.announcer)}}</span>
+                        </div>
+                        <div class="attribute-item">
+                            <label class="label">播放平台</label>
+                            <span class="value">
+                                {{programme.platformList.join(', ')}}
+                            </span>
                         </div>
                     </div>
                 </div>
-            </el-col>
-            <el-col :span="12">
-                <el-row>
-                    <div class="vice-block">
-                        <h3 class="block-vice-title">节目类型/简介</h3>
-                        <div class="programme-desc-container">
-                            <div class="form-block">
-                                <div class="info-wrapper">
-                                    <span class="label">节目分类</span>
-                                    <el-tag size="small" class="margin-right-s" v-for="(name, index) in getCategoryNameList(programme.categoryList)" :key="index" type="info">{{name}}</el-tag>
-                                </div>
-                                <div class="info-wrapper">
-                                    <span class="label">节目类型</span>
-                                    <el-tag size="small" class="margin-right-s" v-for="(name, index) in getTypeNameList(programme.typeList)" :key="index" type="info">{{name}}</el-tag>
-                                </div>
-                                <div class="info-wrapper">
-                                    <span class="label">关键字</span>
-                                    <el-tag size="small" class="margin-right-s" v-for="(name, index) in programme.tagList" :key="index" type="info">{{name}}</el-tag>
-                                </div>
-                                <div class="info-wrapper">
-                                    <span class="label">节目看点</span>
-                                    <span class="text">{{programme.desc}}</span>
-                                </div>
-                                <div class="info-wrapper">
-                                    <span class="label">节目简介</span>
-                                    <span style="line-height:18px;" class="text desc">{{programme.description}}</span>
-                                </div>
+                <div class="right-side">
+                    <div class="attribute-item mark">
+                        <label class="label">角标</label>
+                        <div class="mark-container">
+                            <div class="left-top">
+                                左上角
+                                <span>{{getMark('leftTop')}}</span>
+                            </div>
+                            <div class="right-top">
+                                右上角
+                                <span>{{getMark('rightTop')}}</span>
+                            </div>
+                            <div class="left-bottom">
+                                左下角
+                                <span>{{getMark('leftBottom')}}</span>
+                            </div>
+                            <div class="right-bottom">
+                                右下角
+                                <span>{{getMark('rightBottom')}}</span>
                             </div>
                         </div>
                     </div>
-                </el-row>
-                <el-row>
-                    <div class="vice-block">
-                        <h3 class="block-vice-title">演职人员</h3>
-                        <div class="programme-person-container">
-                            <div class="form-block">
-                                <div class="info-wrapper">
-                                    <span class="label">节目主演</span>
-                                    <el-tag size="small" class="margin-right-s" v-for="(name, index) in getPersonNameList('CHIEF_ACTOR')" :key="index" type="info">{{name}}</el-tag>
-                                </div>
-                                <div class="info-wrapper">
-                                    <span class="label">节目导演</span>
-                                    <el-tag size="small" class="margin-right-s" v-for="(name, index) in getPersonNameList('DIRECTOR')" :key="index" type="info">{{name}}</el-tag>
-                                </div>
-                                <div class="info-wrapper">
-                                    <span class="label">节目编剧</span>
-                                    <el-tag size="small" class="margin-right-s" v-for="(name, index) in getPersonNameList('SCENARIST')" :key="index" type="info">{{name}}</el-tag>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="attribute-item play-count">
+                        <label class="label">播放量</label>
+                        <span class="value">{{programme.playCountDisplay}}</span>
                     </div>
-                </el-row>
-            </el-col>
-        </el-row>
+                </div>
+            </div>
+        </div>
+        <div class="seperator-line"></div>
+        <div v-if="imageList.length > 0" class="other-poster">
+            <h4 class="content-sub-title" style="margin-left:20px;">其他海报</h4>
+                <thumbnail
+                    :removeSign="false"
+                    :imageList="imageList">
+                </thumbnail>
+        </div>
     </div>
 </template>
 <script>
     import {mapGetters} from 'vuex';
+    import _ from 'lodash';
     import store from 'store';
+    import Thumbnail from '../../components/custom_components/custom/Thumbnail';
     export default {
         name: 'ProgrammeBasicInfo',
+        components: { Thumbnail },
         props: {
             status: { // status 有三种状态，0代表创建 "create", 1代表显示 "display", 2代表编辑 "edit"
                 type: Number
@@ -163,8 +154,19 @@
                 isMovie: 'programme/isMovie',
                 isEducation: 'programme/isEducation',
                 isShow: 'programme/isShow',
-                isSports: 'programme/isSports'
+                isSports: 'programme/isSports',
+                getAllRoleList: 'programme/getAllRoleList'
             }),
+            imageList() {
+                return this.programme.posterImageList.filter((image) => {
+                    return parseInt(image.width) !== 260 && parseInt(image.height) !== 380;
+                });
+            },
+            getMark() {
+                return (position) => {
+                    return _.get(this.programme, `cornerMark.${position}.caption`);
+                };
+            },
             getYear() {
                 return (timeStamp) => {
                     return timeStamp ? new Date(timeStamp).getFullYear() : '';
@@ -178,51 +180,99 @@
                             return area.code === code;
                         });
                         return area ? area.name : '';
-                    }).join(', ');
-                };
-            },
-            getPersonNameList() {
-                return (role) => {
-                    let personList = this.programme.figureListMap[role];
-                    if (personList) {
-                       return personList.map((item) => item.name);
-                    } else {
-                        return [];
-                    }
-                };
-            },
-            getCategoryNameList() {
-                return (categoryIdList) => {
-                    return categoryIdList.map((id) => {
-                        let category = this.global.categoryList.find((category) => category.id === id);
-                        return category ? category.name : '';
                     });
                 };
             },
-            getTypeNameList() {
-                return (typeIdList) => {
-                    let typeList = this.global.categoryList.reduce((prev, curr) => {
-                        return prev.concat(curr.programmeTypeList);
-                    }, []);
-
-                    return typeIdList.map((id) => {
-                        let type = typeList.find((type) => type.id === id);
-                        return type ? type.name : '';
-                    });
+            fixedEmptyValue() {
+                return (value) => {
+                    return _.isEmpty(value) ? '无' : value;
                 };
             }
         }
     };
 </script>
 <style lang="less" scoped>
-.block-title {
-    font-family: PingFangSC-Regular;
-    font-size: 20px;
-    color: #283841;
-    margin: 15px 0;
-    padding: 0;
-}
 .el-tag {
     border: none;
+}
+.title-wrapper {
+    .score {
+        margin-left: 10px;
+    }
+    .total-sets {
+        margin-left: 20px;
+        font-size: 16px;
+        color: #A8ABB3;
+    }
+}
+.other-info {
+    margin-left: 20px;
+    margin-bottom: 10px;
+    .other-content {
+        display: flex;
+        .left-side {
+            flex: 1;
+        }
+        .right-side {
+            position: relative;
+            flex: 1;
+            .play-count {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                .label {
+                    color: #6F7480;
+                    margin-right: 20px;
+                }
+                .value {
+                    font-size: 36px;
+                    color: #637497;
+                }
+            }
+            .mark {
+                display: flex;
+                .mark-container {
+                    width: 420px;
+                    display: flex;
+                    flex-wrap: wrap;
+                    .left-top,
+                    .right-top,
+                    .left-bottom,
+                    .right-bottom {
+                        width: 210px;
+                    }
+                }
+            }
+            .attribute-item {
+                font-size: 16px;
+                line-height: 32px;
+                color: #6F7480;
+                text-align: left;
+                .label {
+                    display: inline-block;
+                    width: 100px;
+                    text-align: right;
+                    margin-right: 20px;
+                }
+            }
+        }
+        .attributes {
+            .attribute-item {
+                font-size: 16px;
+                line-height: 32px;
+                color: #6F7480;
+                text-align: left;
+                .label {
+                    display: inline-block;
+                    width: 100px;
+                    text-align: right;
+                    margin-right: 20px;
+                }
+            }
+        }
+    }
+}
+.other-poster {
+    margin-bottom: 10px;
 }
 </style>

@@ -4,9 +4,10 @@ import role from '@/util/config/role';
 import {getPageSize} from '@/util/formValidate';
 
 let isLoading = false; // 解决重复调用列表接口的问题
+let successLoading = false; //  请求成功列表的重复调用变量
 
 const defaultSearchFields = {
-    name: '',
+    keyword: '',
     status: '',
     downloadStatus: '',
     uploadStatus: '',
@@ -149,6 +150,31 @@ const actions = {
             isLoading = false;
         }
     },
+    /**
+     * 获取成功状态的视频列表
+     */
+    async getSuccessVideoList({commit, state}) {
+        try {
+            if (!successLoading) {
+                successLoading = true;
+                let {pageNum, pageSize} = state.pagination;
+                let params = Object.assign({}, {
+                    pageNum: pageNum > 0 ? pageNum - 1 : 0,
+                    pageSize,
+                    keyword: state.searchFields.keyword
+                });
+                let result = await service.getSuccessVideoList(params);
+                if (result && result.code === 0) {
+                    let {list, pageSize, pageNum, total} = result.data;
+                    commit('setList', {list});
+                    commit('setPagination', {pageNum: pageNum + 1, pageSize, total});
+                }
+                successLoading = false;
+            }
+        } catch (err) {
+            successLoading = false;
+        }
+    },
     async deleteVideoById({commit, state}, id) {
         try {
             let result = await service.deleteVideoById(id);
@@ -163,7 +189,6 @@ const actions = {
                 return result;
             }
         } catch (err) {
-            console.log(err);
         }
     },
     async getServers({commit, state}) {
@@ -180,7 +205,6 @@ const actions = {
             let res = await service.retryVideoByIdList(ids);
             return res;
         } catch (err) {
-            console.log(err);
         }
     }
 };

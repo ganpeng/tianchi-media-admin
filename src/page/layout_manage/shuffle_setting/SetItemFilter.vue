@@ -137,7 +137,6 @@
         </upload-image>
     </div>
 </template>
-
 <script>
     import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
     import dict from '@/util/config/dictionary';

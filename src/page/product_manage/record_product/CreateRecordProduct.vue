@@ -1,16 +1,11 @@
 <!--创建直播回看包组件-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'产品管理'},
-            {name:'创建直播回看包'}]">
-        </custom-breadcrumb>
-        <div class="block-box">
-            <record-product-form
-                status="0">
-            </record-product-form>
-        </div>
+        <div class="content-title">添加直播回看包</div>
+        <div class="seperator-line"></div>
+        <record-product-form
+            status="CREATE_PRODUCT">
+        </record-product-form>
     </div>
 </template>
 
@@ -31,7 +26,4 @@
 
 <style lang="less" scoped>
 
-    .block-box {
-        margin-top: 50px;
-    }
 </style>

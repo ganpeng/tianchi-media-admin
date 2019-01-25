@@ -1,130 +1,82 @@
 <!--内容管理-专题管理-专题列表（包含人物和节目）组件-->
 <template>
     <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'专题管理'},
-            {name:'专题列表'}]">
-        </custom-breadcrumb>
-        <div class="block-box">
-            <subject-filter-params
-                ref="subjectFilterParams"
-                v-on:getSubjectList="getSubjectList">
-            </subject-filter-params>
-            <el-table
-                header-row-class-name="common-table-header"
-                :data="subjectList"
-                border
-                row-class-name=subject-row
-                style="width: 100%">
-                <el-table-column
-                    align="center"
-                    prop="code"
-                    width="120px"
-                    label="编号">
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    prop="name"
-                    label="名称">
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    width="140px"
-                    prop="itemCount"
-                    label="包含节目/人物数">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.subjectItemList === null ? 0 : scope.row.subjectItemList.length}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    prop="category"
-                    label="专题类型">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.category === 'FIGURE'?'人物' : '节目'}}</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    prop="programmeCategoryList"
-                    label="节目专题类型">
-                    <template slot-scope="scope">
-                        <label v-if="scope.row.programmeCategoryList && scope.row.programmeCategoryList.length !== 0">
-                            {{scope.row.programmeCategoryList | jsonJoin('name') }}</label>
-                        <label v-else>------</label>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    label="创建时间">
-                    <template slot-scope="scope">
-                        {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    label="状态">
-                    <template slot-scope="scope">
-                        <i class="status-normal" v-if="scope.row.visible">已上架</i>
-                        <i class="status-abnormal" v-else>已下架</i>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center"
-                                 label="操作"
-                                 width="120px"
-                                 fixed="right"
-                                 class="operate">
-                    <template slot-scope="scope">
-                        <el-button type="text" size="small" class="detail-btn" @click="checkSubjectDetail(scope.row)">
-                            查看
-                        </el-button>
-                        <el-dropdown id="edit-dropdown" @command="handleEdit($event,scope.row)">
-                            <span
-                                class="el-dropdown-link">
-                                编辑<i class="el-icon-arrow-down el-icon--right"></i>
+        <div class="content-title">搜索筛选</div>
+        <subject-filter-params
+            ref="subjectFilterParams"
+            v-on:getSubjectList="getSubjectList">
+        </subject-filter-params>
+        <div class="content-title">专题列表</div>
+        <div class="table-operator-field clearfix">
+            <div class="float-left">
+                <el-dropdown
+                    trigger="hover"
+                    class="my-dropdown"
+                    :class="{'is-disabled':isDisabled}">
+                            <span class="el-dropdown-link">
+                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item
-                                    command="BASIC">
-                                    基本信息
-                                </el-dropdown-item>
-                                <el-dropdown-item
-                                    command="CONTENT">
-                                    增删内容
-                                </el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                        <el-button type="text" size="small" @click="setSubjectVisible(scope.row)">
-                            {{scope.row.visible ? '下架' : '上架'}}
-                        </el-button>
-                        <el-button
-                            type="text"
-                            size="small"
-                            class="remove-btn"
-                            @click="removeSubject(scope.row)">
-                            删除
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="listQueryParams.pageNum"
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="listQueryParams.pageSize"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="totalAmount">
-            </el-pagination>
-            <el-dropdown @command="createSubject" class="create-item">
-                <el-button class="create-blue-btn contain-svg-icon">
-                    <svg-icon icon-class="add"></svg-icon>
-                    创建专题<i class="el-icon-arrow-down el-icon--right"></i>
-                </el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>
+                            <span @click="batchShelve">批量上架</span>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <span @click="batchUnShelve">批量下架</span>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <span @click="batchRemove">批量删除</span>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </div>
+            <div class="float-right">
+                <el-dropdown
+                    @command="createSubject($event)" placement="bottom">
+                    <el-button class="btn-style-two contain-svg-icon">
+                        <svg-icon icon-class="add"></svg-icon>
+                        添加
+                        <svg-icon icon-class="arrow_down"></svg-icon>
+                    </el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="PROGRAMME">节目专题</el-dropdown-item>
+                        <el-dropdown-item command="FIGURE">人物专题</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </div>
+        </div>
+        <subject-operate-table
+            ref="subjectOperateTable"
+            :subjectList="subjectList"
+            v-on:getSubjectList="getSubjectList"
+            v-on:setBatchDisabledStatus="setBatchDisabledStatus">
+        </subject-operate-table>
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="listQueryParams.pageNum"
+            :page-sizes="[10, 20, 30, 50]"
+            :page-size="listQueryParams.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total">
+        </el-pagination>
+        <div class="text-left table-dropdow-box">
+            <el-dropdown
+                trigger="hover"
+                class="my-dropdown"
+                :class="{'is-disabled':isDisabled}">
+            <span class="el-dropdown-link">
+                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="PROGRAMME">创建节目专题</el-dropdown-item>
-                    <el-dropdown-item command="PERSON">创建人物专题</el-dropdown-item>
+                    <el-dropdown-item>
+                        <span @click="batchShelve">批量上架</span>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                        <span @click="batchUnShelve">批量下架</span>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                        <span @click="batchRemove">批量删除</span>
+                    </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
@@ -133,11 +85,13 @@
 
 <script>
     import SubjectFilterParams from '../search_filter_params/SubjectFilterParams';
+    import SubjectOperateTable from './components/SubjectOperateTable';
 
     export default {
         name: 'SubjectList',
         components: {
-            SubjectFilterParams
+            SubjectFilterParams,
+            SubjectOperateTable
         },
         data() {
             return {
@@ -145,8 +99,9 @@
                     pageNum: 1,
                     pageSize: 10
                 },
-                totalAmount: 0,
-                subjectList: []
+                total: 0,
+                subjectList: [],
+                isDisabled: true
             };
         },
         mounted() {
@@ -160,32 +115,8 @@
                 }
                 this.getSubjectList();
             },
-            getSubjectList(searchParams) {
-                // 设置请求参数
-                if (searchParams) {
-                    for (let key in searchParams) {
-                        this.listQueryParams[key] = searchParams[key];
-                    }
-                }
-                this.$wsCache.localStorage.set('subjectFilter', this.listQueryParams);
-                this.$service.getSubjectList(this.listQueryParams).then(response => {
-                    if (response && response.code === 0) {
-                        this.subjectList = response.data.list;
-                        this.totalAmount = response.data.total;
-                    }
-                });
-            },
-            handleEdit(command, info) {
-                switch (command) {
-                    case 'BASIC':
-                        this.editBasicInfo(info);
-                        break;
-                    case 'CONTENT':
-                        this.editSubjectContainer(info);
-                        break;
-                    default:
-                        break;
-                }
+            setBatchDisabledStatus(isDisabled) {
+                this.isDisabled = isDisabled;
             },
             handleSizeChange(pageSize) {
                 this.listQueryParams.pageSize = pageSize;
@@ -195,74 +126,42 @@
                 this.listQueryParams.pageNum = pageNum;
                 this.getSubjectList();
             },
-            // 查询专题详情
-            checkSubjectDetail(item) {
-                this.$router.push({
-                    name: item.category === 'FIGURE' ? 'PersonSubjectDetail' : 'ProgrammeSubjectDetail',
-                    params: {id: item.id}
-                });
-            },
-            // 设置专题的上下架
-            setSubjectVisible(item) {
-                this.$confirm('此操作将' + (item.visible ? '下架该专题' : '上架该专题') + ', 是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
+            getSubjectList(searchParams, isReset) {
+                // 设置请求参数
+                if (searchParams) {
+                    for (let key in searchParams) {
+                        this.listQueryParams[key] = searchParams[key];
                     }
-                ).then(() => {
-                    this.$service.setSubjectVisible(item.id).then(response => {
-                        if (response && response.code === 0) {
-                            this.$message.success(item.name + '专题' + (item.visible ? '下架成功' : '上架成功'));
-                            item.visible = !item.visible;
-                        }
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消' + (item.visible ? '下架' : '上架' + item.name + '专题')
-                    });
+                }
+                if (isReset) {
+                    this.listQueryParams.pageNum = 1;
+                }
+                this.$wsCache.localStorage.set('subjectFilter', this.listQueryParams);
+                this.$service.getSubjectList(this.listQueryParams).then(response => {
+                    if (response && response.code === 0) {
+                        this.subjectList = response.data.list;
+                        this.total = response.data.total;
+                    }
                 });
             },
-            // 删除当前专题，并跳转专题列表页面
-            removeSubject(item) {
-                this.$confirm('此操作将删除当前专题, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.$service.deleteSubject(item.id).then(response => {
-                        if (response && response.code === 0) {
-                            this.$message({
-                                type: 'success',
-                                message: item.name + '专题删除成功!'
-                            });
-                            this.getSubjectList();
-                        }
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+            // 批量上架
+            batchShelve() {
+                this.$refs.subjectOperateTable.batchUpdateStatus(true);
             },
-            // 编辑专题基本信息
-            editBasicInfo(item) {
-                this.$router.push({
-                    name: item.category === 'FIGURE' ? 'EditPersonSubject' : 'EditProgrammeSubject',
-                    params: {id: item.id}
-                });
+            // 批量下架
+            batchUnShelve() {
+                this.$refs.subjectOperateTable.batchUpdateStatus(false);
             },
-            // 编辑专题包含项
-            editSubjectContainer(item) {
-                this.$router.push({
-                    name: item.category === 'FIGURE' ? 'EditSubjectPersons' : 'EditSubjectProgrammes',
-                    params: {id: item.id}
-                });
+            // 批量删除
+            batchRemove() {
+                this.$refs.subjectOperateTable.batchRemove();
             },
             // 创建专题
             createSubject(command) {
-                this.$router.push({name: command === 'PROGRAMME' ? 'CreateProgrammeSubject' : 'CreatePersonSubject'});
+                let routeData = this.$router.resolve({
+                    name: command === 'PROGRAMME' ? 'CreateProgrammeSubject' : 'CreateFigureSubject'
+                });
+                window.open(routeData.href, '_blank');
             }
         }
     };
@@ -270,36 +169,36 @@
 
 <style lang="scss" scoped>
 
-    .block-box {
-        position: relative;
-        padding-top: 55px;
-    }
-
-    .create-item {
-        position: absolute;
-        right: 0px;
-        top: 10px;
-    }
-
-    .el-table {
-        margin-top: 0px;
-    }
-
-    .el-pagination {
-        margin-bottom: 50px;
-    }
-
-    #edit-dropdown {
-        cursor: pointer;
-        .el-dropdown-link {
-            color: $baseBlue;
-            font-size: 12px;
+    // 含有svg的样式
+    .btn-style-two {
+        padding: 0px 20px;
+        &:hover {
+            .svg-icon {
+                fill: #A3D0FD;
+            }
+        }
+        .svg-icon {
+            fill: #A3D0FD;
+            &.svg-icon-add {
+                margin-right: 5px;
+            }
+            &.svg-icon-arrow_down {
+                margin-left: 5px;
+                height: 10px !important;
+                width: 10px !important;
+            }
         }
     }
 
-    .detail-btn {
-        padding-left: 12px;
-        margin-right: 12px;
+    .el-pagination {
+        margin-top: 10px;
+    }
+
+    .el-dropdown {
+        &.is-disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
     }
 
 </style>

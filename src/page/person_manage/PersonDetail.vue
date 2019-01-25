@@ -1,12 +1,9 @@
 <!-- 人物详情 -->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'人物资源管理'},
-            {name:getPageName}]">
-        </custom-breadcrumb>
-        <el-row>
+    <div class="person-container">
+        <h2 class="content-title">{{getPageName}}</h2>
+        <div class="seperator-line"></div>
+        <div class="form-container">
             <person-form
                 v-on:uploadSuccess="uploadSuccess($event)"
                 :isDialog="false"
@@ -14,28 +11,20 @@
                 :readonly="readonly"
                 ref="personForm"
             ></person-form>
-            <el-col :span="24">
-                <div class="form-btn">
-                    <span class="btn-wrapper" v-show="!readonly">
-                        <el-button class="page-main-btn page-margin-btn" v-show="isEdit" type="primary" @click="_updatePerson">保存</el-button>
-                        <el-button
-                            class="page-main-btn page-margin-btn"
-                            v-show="!isEdit"
-                            type="primary"
-                            @click="_createPerson"
-                            v-loading.fullscreen.lock="isLoading">创 建</el-button>
-                    </span>
-                    <el-button class="page-main-btn page-margin-btn" @click="goBack" plain>返回人物列表</el-button>
-                </div>
-            </el-col>
-        </el-row>
+        </div>
+        <div class="fixed-btn-container">
+            <span style="margin-right: 10px;" v-show="!readonly">
+                <el-button class="btn-style-two" v-if="isEdit" type="primary" @click="_updatePerson">保存</el-button>
+                <el-button class="btn-style-two" v-if="!isEdit" type="primary" @click="_createPerson">创建</el-button>
+            </span>
+            <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
+        </div>
     </div>
 </template>
 <script>
+    import _ from 'lodash';
     import { mapActions, mapGetters, mapMutations } from 'vuex';
     import PersonForm from './PersonForm';
-    import _ from 'lodash';
-
     export default {
         name: 'PersonDetail',
         components: {
@@ -48,17 +37,26 @@
         },
         data() {
             return {
-                isLoading: false
+                isLoading: false,
+                alias: ''
             };
         },
-        created() {
-            let {id} = this.$route.params;
-            this.resetPerson();
-            if (this.status === 1 || this.status === 2) {
+        async created() {
+            try {
+                let {id} = this.$route.params;
+                this.resetPerson();
                 if (id) {
-                    this.getPersonById(id);
+                    let res = await this.getPersonById(id);
+                    if (res && res.code === 0) {
+                        this.alias = res.data.alias;
+                    }
                 }
+            } catch (err) {
+                console.log(err);
             }
+        },
+        mounted() {
+            this.$util.toggleFixedBtnContainer();
         },
         computed: {
             ...mapGetters({
@@ -67,18 +65,17 @@
             readonly() {
                 return this.status === 1;
             },
-
             isEdit() {
                 return this.status === 2;
             },
             getPageName() {
                 switch (this.status) {
                     case 0:
-                        return '新增人物';
+                        return '添加人物';
                     case 1:
-                        return '人物列表-详情';
+                        return '人物详情';
                     case 2:
-                        return '人物列表-编辑';
+                        return '编辑人物';
                     default:
                         return '';
                 }
@@ -86,29 +83,39 @@
         },
         methods: {
             ...mapMutations({
-                setAvatarImage: 'person/setAvatarImage',
-                resetPerson: 'person/resetPerson',
-                setBackgroundImage: 'person/setBackgroundImage'
+                resetPerson: 'person/resetPerson'
             }),
             ...mapActions({
                 createPerson: 'person/createPerson',
                 updatePersonById: 'person/updatePersonById',
-                getPersonById: 'person/getPersonById'
+                getPersonById: 'person/getPersonById',
+                checkAliasIsExist: 'person/checkAliasIsExist'
             }),
             // 新增人物
             _createPerson() {
                 this.$refs.personForm.$refs['createPerson'].validate(valid => {
                     if (valid) {
-                        this.checkImageLength(() => {
+                        if (_.get(this.person.avatarImage, 'uri')) {
                             this.isLoading = true;
-                            this.createPerson()
-                                .then((res) => {
-                                    this.$message.success('创建人物成功');
-                                    this.$router.push({ name: 'PersonList' });
-                                }).finally(() => {
-                                    this.isLoading = false;
+                            this.checkAliasIsExist()
+                                .then((result) => {
+                                    if (result && result.code === 0) {
+                                        if (!result.data) {
+                                            this.createPerson()
+                                                .then((res) => {
+                                                    this.$message.success('创建人物成功');
+                                                    this.$router.push({ name: 'PersonList' });
+                                                }).finally(() => {
+                                                    this.isLoading = false;
+                                                });
+                                        } else {
+                                            this.$message.error(`人物别名${this.person.alias}已存在`);
+                                        }
+                                    }
                                 });
-                        });
+                        } else {
+                            this.$message.error('请上传人物头像');
+                        }
                     } else {
                         return false;
                     }
@@ -118,57 +125,45 @@
             _updatePerson() {
                 this.$refs.personForm.$refs['createPerson'].validate(valid => {
                     if (valid) {
-                        this.checkImageLength(() => {
+                        if (_.get(this.person.avatarImage, 'uri')) {
                             this.isLoading = true;
-                            this.updatePersonById()
-                                .then(() => {
-                                    this.$message.success('编辑人物成功');
-                                    this.$router.back();
-                                }).finally(() => {
-                                    this.isLoading = false;
-                                });
-                        });
-                    } else {
-                        return false;
+                            if (this.alias === this.person.alias) {
+                                this.updatePersonById()
+                                    .then(() => {
+                                        this.$message.success('编辑人物成功');
+                                        this.$router.back();
+                                    }).finally(() => {
+                                        this.isLoading = false;
+                                    });
+                            } else {
+                                this.checkAliasIsExist()
+                                    .then((result) => {
+                                        if (result && result.code === 0) {
+                                            if (!result.data) {
+                                                this.updatePersonById()
+                                                    .then(() => {
+                                                        this.$message.success('编辑人物成功');
+                                                        this.$router.back();
+                                                    }).finally(() => {
+                                                        this.isLoading = false;
+                                                    });
+                                            } else {
+                                                this.$message.error(`人物别名${this.person.alias}已存在`);
+                                            }
+                                        }
+                                    });
+                            }
+                        } else {
+                            this.$message.error('请上传人物头像');
+                        }
                     }
                 });
             },
-            checkImageLength(next) {
-                let {posterImageList} = this.person;
-                if (posterImageList.length <= 0) {
-                    this.$message.error('请上传图片');
-                    return false;
-                }
-                let sizeOne = posterImageList.findIndex((img) => parseInt(img.width) === 200 && parseInt(img.height) === 200);
-                let sizeTwo = posterImageList.findIndex((img) => parseInt(img.width) === 1920 && parseInt(img.height) === 1080);
-
-                if (sizeOne < 0 || sizeTwo < 0) {
-                    this.$message.error('人物的头像和背景图都必须上传且只能上传一张');
-                    return false;
-                }
-                // 设置默认图
-                this.setAvatarImage();
-                this.setBackgroundImage();
-
-                if (_.isEmpty(this.person.avatarImage)) {
-                    this.$message.error('请选择人物默认的封面图');
-                    return false;
-                }
-
-                next();
-            },
-            // 重制表单
-            reset() {
-                this.$refs.personForm.$refs['createPerson'].resetFields();
-            },
             goBack() {
-                this.$router.back();
+                this.$router.push({ name: 'PersonList' });
             }
         }
     };
 </script>
-<style lang="less" scoped>
-.btn-wrapper {
-    margin-right: 10px;
-}
+<style lang="scss" scoped>
 </style>

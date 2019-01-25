@@ -1,29 +1,28 @@
 <!--单张图片预览组件-->
 <template>
-    <div v-if="previewSingleImage.display" class="cover-mask">
-        <div class="title">
-            <span>{{previewSingleImage.title}}</span>
-        </div>
+    <div v-if="singleImage.display" class="cover-mask">
         <div class="image-box">
-            <img :src="previewSingleImage.uri | imageUrl">
+            <div class="title">
+                <span>{{singleImage.title}}</span>
+            </div>
+            <img :src="singleImage.uri | imageUrl">
+            <i class="el-icon-close" @click="singleImage.display = false"></i>
         </div>
-        <i class="el-icon-close" @click="closePreview"></i>
     </div>
 </template>
 
 <script>
     export default {
         name: 'PreviewSingleImage',
-        props: ['previewSingleImage'],
-        methods: {
-            closePreview() {
-                this.previewSingleImage.display = false;
-            },
-            appendImagePrefix(uri) {
-                let baseUri = window.localStorage.getItem('imageBaseUri');
-                return baseUri + uri;
+        props: {
+            singleImage: {
+                type: Object,
+                default: function () {
+                    return {};
+                }
             }
-        }
+        },
+        methods: {}
     };
 </script>
 
@@ -41,35 +40,34 @@
         width: 100%;
         height: 100%;
         z-index: 3000;
-        background-color: rgba(0, 0, 0, 0.8);
-    }
-
-    .title {
-        position: fixed;
-        left: 0px;
-        top: 0px;
-        width: 100%;
-        height: 64px;
-        font-size: 20px;
-        color: #fff;
-        line-height: 64px;
+        background-color: transparent;
     }
 
     .image-box {
-        width: 100%;
+        position: relative;
+        padding: 0px 120px 45px 120px;
+        background: rgba(12, 16, 25, 0.90);
+        box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
+        border-radius: 8px;
         overflow-x: scroll;
+        .title {
+            height: 75px;
+            line-height: 89px;
+            font-size: 14px;
+            color: #A8ABB3;
+        }
     }
 
     .el-icon-close {
-        position: fixed;
+        position: absolute;
         right: 26px;
         top: 26px;
         padding: 6px;
         font-size: 16px;
         cursor: pointer;
-        color: #fff;
+        color: #C35757;
         &:hover {
-            color: $baseRed;
+            color: #D0021B;
         }
     }
 

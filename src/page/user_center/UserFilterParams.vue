@@ -1,106 +1,110 @@
 <!--搜索用户参数设置组件-->
 <template>
     <div @keyup.enter="getUserList" class="text-left">
-        <el-form :inline="true">
-            <el-form-item label="创建起始时间">
-                <el-date-picker
-                    v-model="listQueryParams.registeredAtStart"
-                    type="date"
-                    clearable
-                    placeholder="请选择创建起始时间">
-                </el-date-picker>
-            </el-form-item>
-            <el-form-item label="创建结束时间">
-                <el-date-picker
-                    v-model="listQueryParams.registeredAtEnd"
-                    type="date"
-                    clearable
-                    placeholder="请选择创建结束时间">
-                </el-date-picker>
-            </el-form-item>
-            <el-form-item label="省份" prop="province">
-                <el-select v-model="listQueryParams.province"
-                           @change="selectDistrict('PROVINCE')"
-                           placeholder="请选择省份">
-                    <el-option
-                        v-for="item in provinceOptions"
-                        :key="item.code"
-                        :label="item.name"
-                        :value="item.code">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="城市" prop="city">
-                <el-select
-                    v-model="listQueryParams.city"
-                    @change="selectDistrict('CITY')"
-                    placeholder="请选择城市"
-                    :disabled="cityDisabled">
-                    <el-option
-                        v-for="item in cityOptions"
-                        :key="item.code"
-                        :label="item.name"
-                        :value="item.code">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-        </el-form>
-        <el-form :inline="true">
-            <el-form-item label="县区" prop="county">
-                <el-select
-                    v-model="listQueryParams.county"
-                    @change="selectDistrict('COUNTY')"
-                    placeholder="请选择县区"
-                    :disabled="countyDisabled">
-                    <el-option
-                        v-for="item in countyOptions"
-                        :key="item.code"
-                        :label="item.name"
-                        :value="item.code">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="乡镇/街道" prop="street">
-                <el-select
-                    v-model="listQueryParams.street"
-                    @change="selectDistrict('STREET')"
-                    placeholder="请选择乡镇/街道"
-                    :disabled="streetDisabled">
-                    <el-option
-                        v-for="item in streetOptions"
-                        :key="item.code"
-                        :label="item.name"
-                        :value="item.code">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item>
-                <el-input
-                    v-model="listQueryParams.keyword"
-                    clearable
-                    placeholder="搜索你想要的信息">
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-                <el-input v-show="false"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button @click="getUserList" type="primary" plain icon="el-icon-search">搜索</el-button>
-            </el-form-item>
-            <el-form-item>
-                <el-button
-                    type="primary"
-                    plain
-                    class="clear-filter"
-                    @click="clearSearchFields">
-                    <svg-icon icon-class="clear_filter"></svg-icon>
-                    清空筛选条件
+        <div class="search-field">
+            <div class="field-row">
+                <div class="search-field-item">
+                    <el-input
+                        v-model="listQueryParams.keyword"
+                        clearable
+                        class="border-input"
+                        placeholder="搜索你想要的信息">
+                    </el-input>
+                </div>
+                <el-button class="btn-style-one" @click="getUserList" type="primary">
+                    <svg-icon icon-class="search"></svg-icon>
+                    搜索
                 </el-button>
-            </el-form-item>
-        </el-form>
+                <div class="search-field-item">
+                    <label class="search-field-item-label">日期</label>
+                    <el-date-picker
+                        v-model="listQueryParams.dateRange"
+                        type="daterange"
+                        value-format="timestamp"
+                        :unlink-panels="true"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+                    </el-date-picker>
+                </div>
+                <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
+                    <svg-icon icon-class="reset"></svg-icon>
+                    重置
+                </el-button>
+                <span
+                    @click="toggleSearchField"
+                    :class="{active:searchFieldVisible}"
+                    class="more-filters">
+                    更多筛选
+                    <i class="el-icon-arrow-up" v-if="searchFieldVisible"></i>
+                    <i class="el-icon-arrow-down" v-else></i>
+                </span>
+            </div>
+            <div v-show="searchFieldVisible" class="field-row">
+                <div class="search-field-item">
+                    <label class="search-field-item-label">省份</label>
+                    <el-select v-model="listQueryParams.province"
+                               @change="selectDistrict('PROVINCE')"
+                               placeholder="请选择省份">
+                        <el-option
+                            v-for="item in provinceOptions"
+                            :key="item.code"
+                            :label="item.name"
+                            :value="item.code">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="search-field-item">
+                    <label class="search-field-item-label">城市</label>
+                    <el-select
+                        v-model="listQueryParams.city"
+                        @change="selectDistrict('CITY')"
+                        placeholder="请选择城市"
+                        :disabled="cityDisabled">
+                        <el-option
+                            v-for="item in cityOptions"
+                            :key="item.code"
+                            :label="item.name"
+                            :value="item.code">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="search-field-item">
+                    <label class="search-field-item-label">县区</label>
+                    <el-select
+                        v-model="listQueryParams.county"
+                        @change="selectDistrict('COUNTY')"
+                        placeholder="请选择县区"
+                        :disabled="countyDisabled">
+                        <el-option
+                            v-for="item in countyOptions"
+                            :key="item.code"
+                            :label="item.name"
+                            :value="item.code">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="search-field-item">
+                    <label class="search-field-item-label">乡镇/街道</label>
+                    <el-select
+                        v-model="listQueryParams.street"
+                        @change="selectDistrict('STREET')"
+                        placeholder="请选择乡镇/街道"
+                        :disabled="streetDisabled">
+                        <el-option
+                            v-for="item in streetOptions"
+                            :key="item.code"
+                            :label="item.name"
+                            :value="item.code">
+                        </el-option>
+                    </el-select>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
-
 <script>
+    import _ from 'lodash';
 
     export default {
         name: 'ProgrammeFilterParams',
@@ -108,6 +112,7 @@
         data() {
             return {
                 listQueryParams: {
+                    dateRange: [],
                     registeredAtStart: '',
                     registeredAtEnd: '',
                     keyword: '',
@@ -122,7 +127,8 @@
                 streetOptions: [],
                 cityDisabled: true,
                 countyDisabled: true,
-                streetDisabled: true
+                streetDisabled: true,
+                searchFieldVisible: false
             };
         },
         mounted() {
@@ -207,8 +213,8 @@
                 // 设置过滤条件
                 this.$emit('getUserList', {
                     keyword: this.listQueryParams.keyword,
-                    registeredAtStart: this.listQueryParams.registeredAtStart,
-                    registeredAtEnd: this.listQueryParams.registeredAtEnd,
+                    registeredAtStart: _.get(this.listQueryParams, 'dateRange.0'),
+                    registeredAtEnd: _.get(this.listQueryParams, 'dateRange.1'),
                     districtCode: districtCode
                 });
             },
@@ -221,6 +227,9 @@
                         this.listQueryParams[key] = '';
                     }
                 }
+            },
+            toggleSearchField() {
+                this.searchFieldVisible = !this.searchFieldVisible;
             }
         }
     };
@@ -228,8 +237,21 @@
 
 <style lang="scss" scoped>
 
-    .el-form-item {
-        margin-right: 30px;
+    // 按钮
+    .more-filters {
+        margin-left: 20px;
+        font-size: 12px;
+        color: #6F7480;
+        cursor: pointer;
+        &.active {
+            color: #1989FA;
+            i {
+                color: #6F7480;
+            }
+        }
+        i {
+            margin-left: 8px;
+        }
     }
 
 </style>

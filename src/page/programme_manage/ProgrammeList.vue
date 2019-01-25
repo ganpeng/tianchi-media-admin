@@ -1,62 +1,101 @@
 <!-- 节目列表页组件 -->
 <template>
     <div class="program-list-container">
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'节目资源管理'},
-            {name:'节目列表'}]">
-        </custom-breadcrumb>
         <div class="table-container">
-            <el-form id="label-font" :inline="true" class="demo-form-inline text-left">
-                <el-col :span="24">
-                    <el-form-item class="float-right">
-                        <el-button
-                            class="page-main-btn create-blue-btn contain-svg-icon"
-                            @click="createProgramme">
-                            <svg-icon icon-class="add"></svg-icon>
-                            新增节目
-                        </el-button>
-                        <el-button
-                            class="page-main-btn create-blue-btn contain-svg-icon"
-                            @click="showFileUploadDialog">
-                            <svg-icon icon-class="upload"></svg-icon>
-                            导入节目
-                        </el-button>
-                    </el-form-item>
-                </el-col>
-                <div>
-                    <el-form-item
-                        label-width="100px" label="上映开始年">
-                        <el-date-picker
-                            :value="programmeSearchFields.releaseAtStart"
-                            type="date"
+            <h2 class="content-title">搜索筛选</h2>
+            <div class="search-field">
+                <div class="field-row">
+                    <div class="search-field-item">
+                        <el-input
+                            :value="programmeSearchFields.keyword"
                             clearable
-                            style="width:180px;"
-                            @input="inputHandler($event, 'releaseAtStart')"
-                            placeholder="请选择上映时间">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item
-                        label-width="100px" label="上映结束年">
-                        <el-date-picker
-                            :value="programmeSearchFields.releaseAtEnd"
-                            type="date"
+                            class="border-input"
+                            @input="inputHandler($event, 'keyword')"
+                            placeholder="搜索你想要的信息">
+                        </el-input>
+                    </div>
+                    <el-button class="btn-style-one" @click="searchHandler">
+                        <svg-icon icon-class="search"></svg-icon>
+                        搜索
+                    </el-button>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">状态</label>
+                        <el-select
+                            :value="programmeSearchFields.visible"
+                            @change="inputHandler($event, 'visible')"
                             clearable
-                            style="width:180px;"
-                            @input="inputHandler($event, 'releaseAtEnd')"
-                            placeholder="请选择上映时间">
+                            placeholder="请选择状态">
+                            <el-option
+                                v-for="item in visibleOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">分类</label>
+                        <el-select
+                            :value="programmeSearchFields.programmeCategoryIdList"
+                            @change="inputHandler($event, 'programmeCategoryIdList')"
+                            clearable
+                            placeholder="请选择分类">
+                            <el-option
+                                v-for="item in global.categoryList"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">类型</label>
+                        <el-select
+                            :value="programmeSearchFields.programmeTypeIdList"
+                            @change="inputHandler($event, 'programmeTypeIdList')"
+                            clearable
+                            no-data-text="请先选择分类"
+                            placeholder="请选择类型">
+                            <el-option
+                                v-for="item in programmeTypeOptions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <el-button class="btn-style-one" @click="clearSearchFields">
+                        <svg-icon icon-class="reset"></svg-icon>
+                        重置
+                    </el-button>
+                    <span
+                        @click="toggleSearchField"
+                        :class="['el-dropdown-link', searchFieldVisible ? 'active' : '']">
+                        更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
+                </div>
+                <div v-show="searchFieldVisible" class="field-row">
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">发行日期</label>
+                        <el-date-picker
+                            :value="programmeSearchFields.releaseAtDateRange"
+                            type="daterange"
+                            @input="inputHandler($event, 'releaseAtDateRange')"
+                            value-format="timestamp"
+                            :unlink-panels="true"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
                         </el-date-picker>
-                    </el-form-item>
-                    <el-form-item
-                        label-width="50px" label="地区">
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">地区</label>
                         <el-select
                             :value="programmeSearchFields.produceAreaList"
                             clearable
                             filterable
-                            multiple
-                            style="width:180px;"
                             @change="inputHandler($event, 'produceAreaList')"
-                            placeholder="请选择制片地区"
+                            placeholder="请选择地区"
                         >
                             <el-option
                                 v-for="(item, index) in areaOptions"
@@ -65,170 +104,151 @@
                                 :value="item.code">
                             </el-option>
                         </el-select>
-                    </el-form-item>
-                    <el-form-item
-                        label-width="50px" label="分类">
-                        <el-select
-                            :value="programmeSearchFields.programmeCategoryIdList"
-                            multiple
-                            style="width:180px;"
-                            @change="inputHandler($event, 'programmeCategoryIdList')"
-                            placeholder="请选择">
-                            <el-option
-                                v-for="item in global.categoryList"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
+                    </div>
                 </div>
-                <div>
-                    <el-form-item
-                        label-width="100px" class="margin-bottom-0" label="类型">
-                        <el-select
-                            :value="programmeSearchFields.programmeTypeIdList"
-                            @change="inputHandler($event, 'programmeTypeIdList')"
-                            clearable
-                            style="width:180px;"
-                            multiple
-                            placeholder="请选择">
-                            <el-option
-                                v-for="item in programmeTypeOptions"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item
-                        label-width="100px" class="margin-bottom-0" label="节目状态">
-                        <el-select
-                            :value="programmeSearchFields.visible"
-                            @change="inputHandler($event, 'visible')"
-                            clearable
-                            style="width:180px;"
-                            placeholder="请选择">
-                            <el-option
-                                v-for="item in visibleOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item
-                        label-width="50px" class="margin-bottom-0 search" label=" ">
-                        <el-input
-                            :value="programmeSearchFields.keyword"
-                            clearable
-                            style="width:180px;"
-                            @input="inputHandler($event, 'keyword')"
-                            placeholder="搜索你想要的信息">
-                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item class="margin-bottom-0">
-                        <el-button class="page-main-btn" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
-                        <el-button class="clear-filter page-main-btn clear-btn" type="primary" @click="clearSearchFields" plain>
-                            <svg-icon
-                                icon-class="clear_filter"
-                                class-name="svg-box">
-                            </svg-icon>
-                            清空筛选条件
-                        </el-button>
-                    </el-form-item>
-                    <el-form-item class="float-right margin-bottom-0">
-                        <el-button class="delete-btn create-blue-btn" :disabled="isDisabled" size="small" @click="multUpFrameProgrammeHandler">批量上架</el-button>
-                        <el-button class="delete-btn disabled-red-btn" :disabled="isDisabled"  size="small" @click="multLowerFrameProgrammeHandler">批量下架</el-button>
-                    </el-form-item>
-                </div>
-            </el-form>
-            <el-table
-                ref="multipleTable"
-                @select="selectHandler"
-                @select-all="selectAllHandler"
-                row-class-name="programme-row" header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
-                <el-table-column type="selection" align="center"></el-table-column>
-                <el-table-column prop="code" align="center" width="120px" label="节目编号">
-                    <template slot-scope="scope">
-                        {{scope.row.code | padEmpty}}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="name" align="center" min-width="100px" label="节目名称">
-                    <template slot-scope="scope">
-                        <span class="ellipsis four">
-                            {{scope.row.name | padEmpty}}
-                        </span>
-                    </template>
-                </el-table-column>
-                <el-table-column label="节目图片" width="90" align="center" >
-                    <template slot-scope="scope">
-                        <img style="width:70px;height:auto;" @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer" :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
-                    </template>
-                </el-table-column>
-                <el-table-column prop="featureVideoCount" width="80px" align="center" label="正片数量">
-                    <template slot-scope="scope">
-                        {{scope.row.featureVideoCount | padEmpty}}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="releaseAt" align="center" width="100px" label="上映时间">
-                    <template slot-scope="scope">
-                        {{ scope.row.releaseAt | formatDate('yyyy-MM-DD') | padEmpty}}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="produceAreaList" min-width="150px" align="center" label="地区">
-                    <template slot-scope="scope">
-                        <span class="ellipsis four">
-                            {{areaLabel(scope.row.produceAreaList) | padEmpty}}
-                        </span>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" width="100px" label="分类">
-                    <template slot-scope="scope">
-                        <span class="ellipsis four">
-                            {{categoryListString(scope.row.categoryList) | padEmpty}}
-                        </span>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" min-width="100px" label="类型">
-                    <template slot-scope="scope">
-                        <span class="ellipsis four">
-                            {{typeList(scope.row.id) | padEmpty}}
-                        </span>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" min-width="100px" label="演员">
-                    <template slot-scope="scope">
-                        <span class="ellipsis four">
-                            {{getChiefActor(scope.row.id) | padEmpty}}
-                        </span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
-                    <template slot-scope="scope">
-                        <i v-if="scope.row.visible" class="status-normal">已上架</i>
-                        <i v-else class="status-abnormal">已下架</i>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" min-width="100px" label="更新时间">
-                    <template slot-scope="scope">
-                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" width="120px" label="操作">
-                    <template slot-scope="scope">
-                        <div class="btn-wrapper">
-                            <el-button class="text-success" type="text" size="small" @click="displayProgramme(scope.row.id)">详情</el-button>
-                            <el-button type="text" size="small" @click="editProgramme(scope.row.id)">编辑</el-button>
-                            <el-button type="text" size="small" @click="lowerFrameProgramme(scope.row)">
-                                {{scope.row.visible ? '下架' : '上架'}}
-                            </el-button>
-                            <el-button class="text-danger" type="text" size="small" @click="_realDeleteProgramme(scope.row.id)">删除</el-button>
+            </div>
+            <div class="seperator-line"></div>
+            <div class="table-field">
+                <h2 class="content-title">节目列表</h2>
+                <div class="table-operator-field clearfix">
+                    <div class="float-left">
+                        <div v-show="isDisabled" class="my-disabled-dropdown">
+                            批量操作
+                            <i class="el-icon-arrow-down"></i>
                         </div>
-                    </template>
-                </el-table-column>
-            </el-table>
+                        <el-dropdown
+                            trigger="click"
+                            v-show="!isDisabled"
+                            class="my-dropdown">
+                            <span class="el-dropdown-link">
+                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item>
+                                    <span @click="multUpFrameProgrammeHandler">批量上架</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span @click="multLowerFrameProgrammeHandler">批量下架</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span @click="batchDeletProgrammeHandler">批量删除</span>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <div class="float-right">
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="createProgramme">
+                            <svg-icon icon-class="add"></svg-icon>
+                            添加
+                        </el-button>
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="gotoProgrammeImportPage">
+                            <svg-icon icon-class="import"></svg-icon>
+                            导入
+                        </el-button>
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="exportSelectedProgrammeExcel">
+                            <svg-icon icon-class="export"></svg-icon>
+                            导出
+                        </el-button>
+                    </div>
+                </div>
+                <el-table
+                    ref="multipleTable"
+                    @select="selectHandler"
+                    @select-all="selectAllHandler"
+                    row-class-name="programme-row" header-row-class-name="common-table-header" class="my-table-style"
+                    :data="list" border>
+                    <el-table-column type="selection" align="center"></el-table-column>
+                    <el-table-column prop="code" align="center" width="120px" label="节目编号">
+                        <template slot-scope="scope">
+                            {{scope.row.code | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="name" align="center" min-width="100px" label="节目名称">
+                        <template slot-scope="scope">
+                            <span
+                                @click="displayProgramme(scope.row.id)"
+                                class="ellipsis four name">
+                                {{scope.row.name | padEmpty}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="节目图片" width="100px" align="center">
+                        <template slot-scope="scope">
+                            <img style="width:70px;height:auto;"
+                                 @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer"
+                                 :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="featureVideoCount" width="100px" align="center" label="正片数量">
+                        <template slot-scope="scope">
+                            {{scope.row.featureVideoCount | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="releaseAt" align="center" width="100px" label="上映时间">
+                        <template slot-scope="scope">
+                            {{ scope.row.releaseAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="produceAreaList" min-width="150px" align="center" label="地区">
+                        <template slot-scope="scope">
+                            <span class="ellipsis four">
+                                {{areaLabel(scope.row.produceAreaList).map((area) => area.name).join(', ') | padEmpty}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" width="100px" label="分类">
+                        <template slot-scope="scope">
+                            <span class="ellipsis four">
+                                {{categoryListString(scope.row.categoryList) | padEmpty}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" min-width="100px" label="类型">
+                        <template slot-scope="scope">
+                            <span class="ellipsis four">
+                                {{typeList(scope.row.id) | padEmpty}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" min-width="100px" label="演员">
+                        <template slot-scope="scope">
+                            <span class="ellipsis four">
+                                {{getChiefActor(scope.row.id) | padEmpty}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="releaseStatus" min-width="100px" align="center" label="状态">
+                        <template slot-scope="scope">
+                            <input
+                                class="my-switch switch-anim"
+                                type="checkbox"
+                                :checked="scope.row.visible"
+                                @click.prevent="lowerFrameProgramme(scope.row)"/>
+                            <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                            <i v-else class="off-the-shelf">已下架</i>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" min-width="100px" label="更新时间">
+                        <template slot-scope="scope">
+                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" width="120px" label="操作">
+                        <template slot-scope="scope">
+                            <div class="operator-btn-wrapper">
+                                <span class="btn-text" @click="editProgramme(scope.row.id)">编辑</span>
+                                <span class="btn-text text-danger" @click="_realDeleteProgramme(scope.row.id)">删除</span>
+                            </div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
             <el-pagination
                 @size-change="handlePaginationChange($event, 'pageSize')"
                 @current-change="handlePaginationChange($event, 'pageNum')"
@@ -239,194 +259,185 @@
                 :total="programmePagination.total">
             </el-pagination>
         </div>
-        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
-        <el-dialog
-            title="上传节目表格"
-            :visible.sync="fileUploadDialogVisible"
-            :headers="uploadHeaders"
-            :show-close="true"
-            :before-close="closeFileUploadDialog"
-            :close-on-click-modal="false"
-            :close-on-press-escape="false">
-            <el-upload
-                class="upload-demo"
-                ref="upload"
-                :headers="uploadHeaders"
-                accept=".xlsx, .xls"
-                action="/admin/v1/content/programme/import"
-                :auto-upload="false"
-                :file-list="fileList"
-                :on-success="uploadSuccessHandler"
-                :with-credentials="true">
-                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-                    <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
-            </el-upload>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="closeFileUploadDialog">关闭</el-button>
-            </div>
-        </el-dialog>
+        <preview-single-image :singleImage="previewImage"></preview-single-image>
     </div>
 </template>
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
-import store from 'store';
-import _ from 'lodash';
-import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
+    import {mapGetters, mapActions, mapMutations} from 'vuex';
+    import store from 'store';
+    import _ from 'lodash';
+    import XLSX from 'xlsx';
+    import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 
-export default {
-    name: 'ProgrammeList',
-    components: {
-        PreviewSingleImage
-    },
-    data() {
-        return {
-            areaOptions: store.get('areaList'),
-            fileUploadDialogVisible: false,
-            fileList: [],
-            multipleSelection: [],
-            selectedVideoList: [],
-            uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
-            visibleOptions: [
-                {
-                    value: true,
-                    label: '已上架'
-                },
-                {
-                    value: false,
-                    label: '已下架'
+    export default {
+        name: 'ProgrammeList',
+        components: {
+            PreviewSingleImage
+        },
+        data() {
+            return {
+                //  toggle搜索区域
+                searchFieldVisible: false,
+                //  选择数据
+                areaOptions: store.get('areaList'),
+                fileUploadDialogVisible: false,
+                fileList: [],
+                selectedVideoList: [],
+                uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
+                visibleOptions: [
+                    {
+                        value: true,
+                        label: '已上架'
+                    },
+                    {
+                        value: false,
+                        label: '已下架'
+                    }
+                ],
+                previewImage: {
+                    title: '',
+                    display: false,
+                    uri: ''
                 }
-            ],
-            previewImage: {
-                title: '',
-                display: false,
-                uri: ''
+            };
+        },
+        created() {
+            this.getProgrammeList()
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        this.checkedVideoList();
+                    }
+                });
+            this.getProgrammeCategory();
+            window.addEventListener('keyup', this.keyupHandler);
+        },
+        beforeDestroy() {
+            window.removeEventListener('keyup', this.keyupHandler);
+        },
+        computed: {
+            ...mapGetters({
+                programmePagination: 'programme/programmePagination',
+                programmeSearchFields: 'programme/programmeSearchFields',
+                programmeTypeOptions: 'programme/programmeTypeOptions',
+                global: 'programme/global',
+                list: 'programme/programmeList',
+                typeList: 'programme/typeList',
+                categoryListString: 'programme/categoryListString',
+                getDirector: 'programme/getDirector',
+                getChiefActor: 'programme/getChiefActor',
+                getScenarist: 'programme/getScenarist',
+                areaLabel: 'programme/areaLabel'
+            }),
+            isDisabled() {
+                return this.selectedVideoList.length === 0;
             }
-        };
-    },
-    created() {
-        this.getProgrammeList()
-            .then((res) => {
-                if (res && res.code === 0) {
-                    this.checkedVideoList();
+        },
+        beforeRouteLeave(to, from, next) {
+            let {name} = to;
+            if (name !== 'DisplayProgramme' && name !== 'EditProgramme') {
+                this.resetProgrammeSearchFields();
+                this.resetProgrammePagination();
+            }
+            next();
+        },
+        methods: {
+            ...mapMutations({
+                updateProgrammePagination: 'programme/updateProgrammePagination',
+                updateProgrammeSearchFields: 'programme/updateProgrammeSearchFields',
+                resetProgrammeSearchFields: 'programme/resetProgrammeSearchFields',
+                resetProgrammePagination: 'programme/resetProgrammePagination'
+            }),
+            ...mapActions({
+                getProgrammeList: 'programme/getProgrammeList',
+                getProgrammeCategory: 'programme/getProgrammeCategory',
+                deleteProgramme: 'programme/deleteProgramme',
+                realDeleteProgramme: 'programme/realDeleteProgramme',
+                upLowerFrameProgramme: 'programme/upLowerFrameProgramme',
+                batchDeleteProgrammes: 'programme/batchDeleteProgrammes'
+            }),
+            keyupHandler(e) {
+                if (e.keyCode === 13) {
+                    this.getProgrammeList()
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                this.checkedVideoList();
+                            }
+                        });
                 }
-            });
-        this.getProgrammeCategory();
-        window.addEventListener('keyup', this.keyupHandler);
-    },
-    beforeDestroy() {
-        window.removeEventListener('keyup', this.keyupHandler);
-    },
-    computed: {
-        ...mapGetters({
-            programmePagination: 'programme/programmePagination',
-            programmeSearchFields: 'programme/programmeSearchFields',
-            programmeTypeOptions: 'programme/programmeTypeOptions',
-            global: 'programme/global',
-            list: 'programme/programmeList',
-            typeList: 'programme/typeList',
-            categoryListString: 'programme/categoryListString',
-            getDirector: 'programme/getDirector',
-            getChiefActor: 'programme/getChiefActor',
-            getScenarist: 'programme/getScenarist'
-        }),
-        isDisabled() {
-            return this.selectedVideoList.length === 0;
-        }
-    },
-    beforeRouteLeave(to, from, next) {
-        let {name} = to;
-        if (name !== 'DisplayProgramme' && name !== 'EditProgramme') {
-            this.resetProgrammeSearchFields();
-            this.resetProgrammePagination();
-        }
-        next();
-    },
-    methods: {
-        ...mapMutations({
-            updateProgrammePagination: 'programme/updateProgrammePagination',
-            updateProgrammeSearchFields: 'programme/updateProgrammeSearchFields',
-            resetProgrammeSearchFields: 'programme/resetProgrammeSearchFields',
-            resetProgrammePagination: 'programme/resetProgrammePagination'
-        }),
-        ...mapActions({
-            getProgrammeList: 'programme/getProgrammeList',
-            getProgrammeCategory: 'programme/getProgrammeCategory',
-            deleteProgramme: 'programme/deleteProgramme',
-            realDeleteProgramme: 'programme/realDeleteProgramme',
-            upLowerFrameProgramme: 'programme/upLowerFrameProgramme'
-        }),
-        keyupHandler(e) {
-            if (e.keyCode === 13) {
+            },
+            createProgramme() {
+                let routeData = this.$router.resolve({
+                    name: 'CreateProgramme'
+                });
+                window.open(routeData.href, '_blank');
+            },
+            clearSearchFields() {
+                this.resetProgrammeSearchFields();
                 this.getProgrammeList()
                     .then((res) => {
                         if (res && res.code === 0) {
                             this.checkedVideoList();
                         }
                     });
-            }
-        },
-        createProgramme() {
-            this.$router.push({ name: 'CreateProgramme' });
-        },
-        clearSearchFields() {
-            this.resetProgrammeSearchFields();
-        },
-        areaLabel(areaList) {
-            return areaList.reduce((res, curr) => {
-                let area = this.areaOptions.find((item) => item.code === curr);
-                return area ? `${res}, ${area.name}` : res;
-            }, '').replace(/^,/, '');
-        },
-        editProgramme(id) {
-            this.$router.push({ name: 'EditProgramme', params: { id } });
-        },
-        displayProgramme(id) {
-            this.$router.push({ name: 'DisplayProgramme', params: { id } });
-        },
-        inputHandler(value, key) {
-            this.updateProgrammeSearchFields({key, value});
-            if (key === 'programmeCategoryIdList') {
-                this.updateProgrammeSearchFields({key: 'programmeTypeIdList', value: []});
-            }
-        },
-        searchHandler() {
-            this.getProgrammeList()
-                .then((res) => {
-                    if (res && res.code === 0) {
-                        this.checkedVideoList();
-                    }
-                });
-        },
-        displayImage(image) {
-            this.previewImage.title = image.name;
-            this.previewImage.display = true;
-            this.previewImage.uri = image.uri;
-        },
-        handlePaginationChange(value, key) {
-            this.updateProgrammePagination({key, value});
-            if (key === 'pageSize') {
-                window.localStorage.setItem('programmePageSize', value);
-            }
-            this.getProgrammeList()
-                .then((res) => {
-                    if (res && res.code === 0) {
-                        this.checkedVideoList();
-                    }
-                });
-        },
-        showFileUploadDialog() {
-            this.fileUploadDialogVisible = true;
-        },
-        closeFileUploadDialog() {
-            this.fileUploadDialogVisible = false;
-            this.fileList = [];
-        },
-        submitUpload() {
-            this.$refs.upload.submit();
-        },
-        lowerFrameProgramme(programme) {
-            let {id, visible} = programme;
-            this.$confirm(`您确定要${visible ? '下架节目' : '上架节目'}吗, 是否继续?`, '提示', {
+            },
+            editProgramme(id) {
+                this.$router.push({name: 'EditProgramme', params: {id}});
+            },
+            displayProgramme(id) {
+                this.$router.push({name: 'DisplayProgramme', params: {id}});
+            },
+            inputHandler(value, key) {
+                this.updateProgrammeSearchFields({key, value});
+                if (key === 'programmeCategoryIdList') {
+                    this.updateProgrammeSearchFields({key: 'programmeTypeIdList', value: ''});
+                }
+                if (key !== 'keyword') {
+                    this.updateProgrammePagination({key: 'pageNum', value: 1});
+                    this.getProgrammeList();
+                }
+            },
+            searchHandler() {
+                this.updateProgrammePagination({key: 'pageNum', value: 1});
+                this.getProgrammeList()
+                    .then((res) => {
+                        if (res && res.code === 0) {
+                            this.checkedVideoList();
+                        }
+                    });
+            },
+            // 导出选择的节目
+            exportSelectedProgrammeExcel() {
+                if (!this.selectedVideoList || this.selectedVideoList.length === 0) {
+                    this.$message.warning('请选择节目');
+                    return;
+                }
+                let wb = XLSX.utils.book_new();
+                let wsData = this.selectedVideoList;
+                let ws = XLSX.utils.json_to_sheet(wsData);
+                /* Add the worksheet to the workbook */
+                XLSX.utils.book_append_sheet(wb, ws, '表1');
+                XLSX.writeFile(wb, '节目导出表_' + new Date() + '.xlsx');
+            },
+            displayImage(image) {
+                this.previewImage.title = image.name;
+                this.previewImage.display = true;
+                this.previewImage.uri = image.uri;
+            },
+            handlePaginationChange(value, key) {
+                this.updateProgrammePagination({key, value});
+                if (key === 'pageSize') {
+                    window.localStorage.setItem('programmePageSize', value);
+                }
+                this.getProgrammeList()
+                    .then((res) => {
+                        if (res && res.code === 0) {
+                            this.checkedVideoList();
+                        }
+                    });
+            },
+            lowerFrameProgramme(programme) {
+                let {id, visible} = programme;
+                this.$confirm(`您确定要${visible ? '下架节目' : '上架节目'}吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'error'
@@ -445,34 +456,29 @@ export default {
                                 this.$message.warning(this.lowerFrameProgrammeErrorHandler(res));
                             }
                         });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
-        },
-        lowerFrameProgrammeErrorHandler(res) {
-            let {code, data, message} = res;
-            let msg = '';
-            switch (code) {
-                case 3110:
-                    msg = data.map((item) => {
-                        return item ? `"${item}"` : '';
-                    }).join(',');
-                    return `节目包含在如下${msg}专题中`;
-                case 3111:
-                    msg = data.map((item) => {
-                        return item ? `"${item}"` : '';
-                    }).join(',');
-                    return `节目包含在如下${msg}推荐位`;
-                default:
-                    return message;
-            }
-        },
-        multUpFrameProgrammeHandler() {
-            let idList = this.selectedVideoList.map((item) => item.id);
-            this.$confirm(`您确定要上架选中的节目吗?`, '提示', {
+                }).catch(() => {});
+            },
+            lowerFrameProgrammeErrorHandler(res) {
+                let {code, data, message} = res;
+                let msg = '';
+                switch (code) {
+                    case 3110:
+                        msg = data.map((item) => {
+                            return item ? `"${item}"` : '';
+                        }).join(',');
+                        return `节目包含在如下${msg}专题中`;
+                    case 3111:
+                        msg = data.map((item) => {
+                            return item ? `"${item}"` : '';
+                        }).join(',');
+                        return `节目包含在如下${msg}推荐位`;
+                    default:
+                        return message;
+                }
+            },
+            multUpFrameProgrammeHandler() {
+                let idList = this.selectedVideoList.map((item) => item.id);
+                this.$confirm(`您确定要上架选中的节目吗?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'error'
@@ -501,16 +507,11 @@ export default {
                                     });
                             }
                         });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
-        },
-        multLowerFrameProgrammeHandler() {
-            let idList = this.selectedVideoList.map((item) => item.id);
-            this.$confirm(`您确定要下架选中的节目吗?`, '提示', {
+                }).catch(() => {});
+            },
+            multLowerFrameProgrammeHandler() {
+                let idList = this.selectedVideoList.map((item) => item.id);
+                this.$confirm(`您确定要下架选中的节目吗?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'error'
@@ -539,26 +540,33 @@ export default {
                                     });
                             }
                         });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
-            this.upLowerFrameProgramme({idList, visible: false})
-                .then((res) => {
-                    if (res && res.code === 0) {
-                        this.getProgrammeList()
-                            .then((result) => {
-                                if (result && result.code === 0) {
-                                    this.checkedVideoList();
-                                }
-                            });
-                    }
-                });
-        },
-        _realDeleteProgramme(id) {
-            this.$confirm(`您确定要删除该节目吗, 是否继续?`, '提示', {
+                }).catch(() => {});
+            },
+            batchDeletProgrammeHandler() {
+                let idList = this.selectedVideoList.map((item) => item.id);
+                this.$confirm(`您确定要删除选中的节目吗?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.batchDeleteProgrammes(idList)
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                this.$message.success('节目批量删除成功');
+                                this.getProgrammeList()
+                                    .then((result) => {
+                                        if (result && result.code === 0) {
+                                            this.checkedVideoList();
+                                        }
+                                    });
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        });
+                }).catch(() => {});
+            },
+            _realDeleteProgramme(id) {
+                this.$confirm(`您确定要删除该节目吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'error'
@@ -566,92 +574,58 @@ export default {
                     this.realDeleteProgramme(id)
                         .then((res) => {
                             if (res && res.code === 0) {
-                                this.$message.success({ message: '节目删除成功' });
-                                this.$router.push({ name: 'ProgrammeList' });
+                                this.$message.success({message: '节目删除成功'});
+                                this.getProgrammeList();
                             } else {
                                 let message = res.message || '节目删除失败';
-                                this.$message.error({ message });
+                                this.$message.error({message});
                             }
                         });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
-        },
-        uploadSuccessHandler(res, file, fileList) {
-            if (res && res.code === 0) {
-                this.$message({
-                    type: 'success',
-                    message: '节目导入成功'
-                });
-            } else if (res && res.code === 3119) {
-                this.$message({
-                    type: 'error',
-                    message: '节目视频导入失败'
-                });
-            } else if (res && res.code === 3117) {
-                this.$message({
-                    type: 'error',
-                    message: '节目导入部分成功'
-                });
-            } else {
-                this.$message({
-                    type: 'error',
-                    message: '节目导入失败'
-                });
-            }
-            this.closeFileUploadDialog();
-            this.getProgrammeList()
-                .then((res) => {
-                    if (res && res.code === 0) {
-                        this.checkedVideoList();
-                    }
-                });
-        },
-        selectHandler(list, row) {
-            let isSelected = list.findIndex((item) => item.id === row.id) >= 0;
-            if (isSelected) {
-                this.selectedVideoList.push(row);
-            } else {
-                this.selectedVideoList = this.selectedVideoList.filter((item) => item.id !== row.id);
-            }
-        },
-        selectAllHandler(list) {
-            if (list.length > 0) {
-                this.selectedVideoList = _.uniqBy(this.selectedVideoList.concat(list), 'id');
-            } else {
-                this.selectedVideoList = this.selectedVideoList.filter((item) => {
-                    let index = this.list.findIndex((programme) => {
-                        return programme.id === item.id;
-                    });
-                    return index < 0;
-                });
-            }
-        },
-        checkedVideoList() {
-            this.selectedVideoList.forEach((item) => {
-                let programme = this.list.find((programme) => {
-                    return item.code === programme.code;
-                });
-                if (programme) {
-                    this.$nextTick(() => {
-                        this.$refs.multipleTable.toggleRowSelection(programme, true);
+                }).catch(() => {});
+            },
+            selectHandler(list, row) {
+                let isSelected = list.findIndex((item) => item.id === row.id) >= 0;
+                if (isSelected) {
+                    this.selectedVideoList.push(row);
+                } else {
+                    this.selectedVideoList = this.selectedVideoList.filter((item) => item.id !== row.id);
+                }
+            },
+            selectAllHandler(list) {
+                if (list.length > 0) {
+                    this.selectedVideoList = _.uniqBy(this.selectedVideoList.concat(list), 'id');
+                } else {
+                    this.selectedVideoList = this.selectedVideoList.filter((item) => {
+                        let index = this.list.findIndex((programme) => {
+                            return programme.id === item.id;
+                        });
+                        return index < 0;
                     });
                 }
-            });
+            },
+            checkedVideoList() {
+                this.selectedVideoList.forEach((item) => {
+                    let programme = this.list.find((programme) => {
+                        return item.code === programme.code;
+                    });
+                    if (programme) {
+                        this.$nextTick(() => {
+                            this.$refs.multipleTable.toggleRowSelection(programme, true);
+                        });
+                    }
+                });
+            },
+            toggleSearchField() {
+                this.searchFieldVisible = !this.searchFieldVisible;
+            },
+            gotoProgrammeImportPage() {
+                let routeData = this.$router.resolve({
+                    name: 'ProgrammeImport'
+                });
+                window.open(routeData.href, '_blank');
+            }
         }
-    }
-};
+    };
 </script>
-<style lang="less" scoped>
-.margin-bottom-0 {
-    margin-bottom: 0;
-}
-.btn-wrapper .el-button {
-    &:nth-of-type(2n + 1) {
-        margin-left: 10px;
-    }
-}
+<style lang="scss" scoped>
 </style>

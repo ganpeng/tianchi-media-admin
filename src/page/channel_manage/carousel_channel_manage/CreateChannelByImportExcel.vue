@@ -1,61 +1,86 @@
 <!--导入excel统一新建频道组件-->
 <template>
-    <div>
-        <custom-breadcrumb
-            v-bind:breadcrumbList="[
-            {name:'频道管理'},
-            {name: currentChannelCategory + '频道批量创建'}]">
-        </custom-breadcrumb>
-        <div class="import-container">
-            <upload-excel-component
-                :on-success='handleSuccess'
-                :before-upload="beforeUpload">
-            </upload-excel-component>
-            <el-table
-                :data="channelList"
-                header-row-class-name="common-table-header"
-                border
-                highlight-current-row
-                style="width: 100%;margin-top:20px;">
-                <el-table-column
-                    align="center"
-                    width="60px"
-                    label="序号">
-                    <template slot-scope="scope">
-                        <label>{{scope.$index + 1}}</label>
+    <div class="import-page-container">
+        <div id="container">
+            <!--左侧-->
+            <div class="left-container">
+                <!--上传状态-->
+                <div class="upload-status">
+                    <div>
+                        <el-button
+                            class="btn-style-six contain-svg-icon"
+                            @click="exportTemplate">
+                            <svg-icon icon-class="export"></svg-icon>
+                            导出模板
+                        </el-button>
+                        <i>导入{{currentChannelCategory}}频道</i>
+                        <label>
+                            共{{channelList.length}}条，已进行{{finishNo}}条，成功
+                            <span class="success-info">{{finishNo - failNo}}</span>条,失败
+                            <span class="fail-info">{{failNo}}</span>条
+                        </label>
+                    </div>
+                </div>
+                <!--主要信息-->
+                <div class="main-info">
+                    <div class="list-none" v-if="channelList.length === 0">
+                        <img src="../../../assets/img/empty_upload.png">
+                    </div>
+                    <template v-else>
+                        <div class="info-header">已选文件</div>
+                        <el-table
+                            :data="channelList"
+                            header-row-class-name="common-table-header"
+                            border>
+                            <el-table-column
+                                align="center"
+                                width="60px"
+                                label="序号">
+                                <template slot-scope="scope">
+                                    <label>{{scope.$index + 1}}</label>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                align="center"
+                                v-for='item of tableHeader'
+                                :prop="item"
+                                :label="item"
+                                :key='item'>
+                            </el-table-column>
+                            <el-table-column
+                                align="center"
+                                prop="message"
+                                label="提示信息">
+                            </el-table-column>
+                        </el-table>
+                        <div class="operate-item">
+                            <el-button
+                                v-if="channelList.length !== 0"
+                                :disabled="createDisabled"
+                                type="primary"
+                                @click="createChannels"
+                                class="btn-style-two">
+                                创建
+                            </el-button>
+                            <el-button
+                                @click="toChannelList"
+                                type="primary"
+                                plain
+                                class="btn-style-three">
+                                返回列表
+                            </el-button>
+                        </div>
                     </template>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    v-for='item of tableHeader'
-                    :prop="item"
-                    :label="item"
-                    :key='item'>
-                </el-table-column>
-                <el-table-column
-                    align="center"
-                    prop="message"
-                    label="提示信息">
-                </el-table-column>
-            </el-table>
-            <div class="text-left">
-                <label class="tips">{{tips}}</label>
+                </div>
             </div>
-            <el-button
-                v-if="channelList.length !== 0"
-                :disabled="createDisabled"
-                @click="createChannels"
-                type="primary"
-                class="page-main-btn">
-                创建{{currentChannelCategory}}频道
-            </el-button>
-            <el-button
-                class="page-main-btn"
-                @click="toChannelList">
-                返回{{currentChannelCategory}}频道列表页
-            </el-button>
-            <div class="operate-item">
-                <el-button class="create-blue-btn" @click="exportTemplate">导出{{currentChannelCategory}}频道模板</el-button>
+            <div class="right-container">
+                <div class="title">批量导入区域</div>
+                <div class="upload">
+                    <upload-excel-component
+                        :on-success='handleSuccess'
+                        :before-upload="beforeUpload">
+                    </upload-excel-component>
+                </div>
             </div>
         </div>
     </div>
@@ -106,9 +131,9 @@
                         type: '频道类别（请确保类别已建好）\n' +
                         '（必填）',
                         transcribe: '提供回看服务（必选）',
-                        recordIp: '录制组播地址（非必填）如果此流为清流，则此字段不用填写。\n' +
+                        recordIp: '录制组播地址（必填）如果此流为清流，则此字段不用填写。\n' +
                         '如果该频道不录制，此字段也不用填写',
-                        recordPort: '录制端口（非必填）如果此流为清流，则此字段不用填写。\n' +
+                        recordPort: '录制端口（必填）如果此流为清流，则此字段不用填写。\n' +
                         '如果该频道不录制，此字段也不用填写',
                         multicastIp: '组播地址\n' +
                         '（必填）',
@@ -117,7 +142,7 @@
                         pushServer: '所属服务器\n' +
                         '（必填）',
                         logoUri: '频道封面链接\n' +
-                        ' 240*134' +
+                        ' 260*260' +
                         '（必填）\n',
                         '备注说明': '1 封面图片不为空即可，可以等频道建好后补充；\n' +
                         '3 导入时请先删除该文本示例数据。'
@@ -161,6 +186,7 @@
                     }];
                 } else {
                     wsData = [{
+                        name: '频道名称（20字以内，用于TV端展示）（必填）',
                         innerName: '频道名称（20字以内）\n（必填）',
                         no: '频道编号\n' +
                         '（必填）',
@@ -175,12 +201,13 @@
                         pushServer: '所属服务器\n' +
                         '（必填）',
                         logoUri: '频道封面链接\n' +
-                        ' 240*134' +
+                        ' 260*260' +
                         '（必填）\n',
                         '备注说明': '1 封面图片不为空即可，可以等频道建好后补充；\n' +
                         '2 导入或新建的频道默认为禁播状态；\n' +
                         '3 导入时请先删除该文本示例数据。'
                     }, {
+                        name: '新片速递',
                         innerName: '新片速递',
                         no: '814',
                         type: '体育',
@@ -192,6 +219,7 @@
                         logoUri: '/image',
                         '备注说明': ''
                     }, {
+                        name: '射雕英雄传剧场',
                         innerName: '射雕英雄传剧场',
                         no: '813',
                         type: '娱乐/体育',
@@ -298,7 +326,7 @@
                         this.failNo++;
                         this.channelList[index].message = '第' + (index + 1) + '个:频道创建失败：' + response.message;
                     }
-                    this.tips = '提示：当前一共有' + this.channelList.length + '个' + this.currentChannelCategory + '频道，已经进行了' + this.finishNo + '个，失败' + this.failNo + '个';
+                    this.tips = '共' + this.channelList.length + '条' + this.currentChannelCategory + '频道，进行了' + this.finishNo + '条，失败' + this.failNo + '个';
                     this.$set(this.channelList, index, this.channelList[index]);
                     if (this.finishNo === this.channelList.length) {
                         this.createDisabled = false;
@@ -309,13 +337,10 @@
             // 验证频道信息
             validateChannel(channel, index) {
                 let message = '';
-                // 只有直播频道含有展示名称
-                if (this.$route.params.category === 'LIVE') {
-                    if (this.$util.isEmpty(channel.name)) {
-                        message = message + '频道展示名称不能为空;';
-                    } else if (this.$util.trim(channel.name).length > 20) {
-                        message = message + '频道展示名称不能超过20个字;';
-                    }
+                if (this.$util.isEmpty(channel.name)) {
+                    message = message + '频道展示名称不能为空;';
+                } else if (this.$util.trim(channel.name).length > 20) {
+                    message = message + '频道展示名称不能超过20个字;';
                 }
                 // 验证名称
                 if (this.$util.isEmpty(channel.innerName)) {
@@ -411,18 +436,128 @@
 
 <style lang="scss" scoped>
 
-    .create-btn {
-        margin: 120px 20px 80px 0px;
+    .import-page-container {
+        background: #1A2233;
+        min-height: 100%;
+        #container {
+            height: 100%;
+        }
     }
 
-    .import-container {
+    .left-container {
         position: relative;
+        padding-top: 80px;
+        padding-bottom: 80px;
+        margin-right: 300px;
+        height: 100%;
+        .upload-status {
+            padding-left: 300px;
+            position: fixed;
+            top: 0px;
+            right: 300px;
+            width: 100%;
+            z-index: 200;
+            height: 80px;
+            line-height: 80px;
+            text-align: center;
+            background: #1A2233;
+            > div {
+                margin-left: 20px;
+                margin-right: 20px;
+            }
+            .el-button {
+                margin-right: 20px;
+            }
+            i {
+                margin-right: 22px;
+                font-size: 24px;
+                color: #A8ABB3;
+            }
+            label {
+                font-size: 16px;
+                color: #A8ABB3;
+                .success-info {
+                    color: #3AC26F;
+                }
+                .fail-info {
+                    color: #C35757;
+                }
+            }
+        }
+        .main-info {
+            position: relative;
+            height: 100%;
+            padding: 0px 20px;
+            background: #1A2233;
+            .list-none {
+                position: fixed;
+                left: 0px;
+                right: 320px;
+                bottom: 0px;
+                top: 80px;
+                margin: auto;
+                font-size: 24px;
+                color: #293550;
+                text-align: center;
+                border-top: 1px solid #3E495E;
+                img {
+                    display: block;
+                    width: 368px;
+                    position: absolute;
+                    left: 0px;
+                    right: 0px;
+                    bottom: 0px;
+                    top: 0px;
+                    margin: auto;
+                }
+            }
+            .info-header {
+                height: 100px;
+                line-height: 100px;
+                font-size: 20px;
+                color: #A8ABB3;
+                text-align: center;
+                border-top: 1px solid #3E495E;
+            }
+        }
+    }
+
+    .right-container {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        display: flex;
+        z-index: 300;
+        flex-direction: column;
+        height: 100%;
+        width: 300px;
+        border-left: 1px solid #3E495E;
+        background: #1A2233;
+        .title {
+            flex-grow: 0;
+            margin-left: 20px;
+            margin-right: 40px;
+            height: 80px;
+            text-align: center;
+            line-height: 80px;
+            font-size: 24px;
+            color: #A8ABB3;
+            border-bottom: 1px solid #3E495E;
+        }
+        .upload {
+            margin-left: 20px;
+            .upload-excel {
+                margin-top: 140px;
+            }
+        }
     }
 
     .operate-item {
-        position: absolute;
-        top: 10px;
-        right: 10px;
+        margin-top: 200px;
+        padding-bottom: 70px;
+        .el-button:last-child {
+            margin-left: 40px;
+        }
     }
 
 </style>

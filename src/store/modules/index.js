@@ -10,6 +10,9 @@ import channel from './channel';
 import version from './version';
 import uploadVideo from './upload_video';
 import device from './device';
+import clientErrorLog from './client_errorlog';
+import category from './category';
+import pageLayout from './page_layout';
 
 export default {
     permission,
@@ -22,5 +25,8 @@ export default {
     channel,
     version,
     uploadVideo,
-    device
+    device,
+    clientErrorLog,
+    category,
+    pageLayout
 };

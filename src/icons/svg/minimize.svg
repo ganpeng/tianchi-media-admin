@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="2px" viewBox="0 0 20 2" version="1.1" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
+    <title>最小化</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Design" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g id="03-01视频管理-视频列表-删除反馈浮窗01" transform="translate(-1363.000000, -485.000000)" fill-rule="nonzero">
+            <g id="浮窗口" transform="translate(770.000000, 461.000000)">
+                <rect id="最小化"
+                      transform="translate(603.000000, 24.700000) scale(1, -1) translate(-603.000000, -24.700000) "
+                      x="593" y="24" width="20" height="1.4" rx="0.7"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

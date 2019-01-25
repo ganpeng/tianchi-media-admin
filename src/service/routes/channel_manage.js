@@ -37,7 +37,7 @@ export const getChannelCount = (id) => {
 };
 
 /**
- * 批量新增频道
+ * 新增频道
  */
 export const createChannels = (channelList) => {
     return service.post('/v1/live/channel', channelList);
@@ -119,4 +119,32 @@ export const batchSetChannel = ({idList, visible}) => {
     }));
 
     return service.patch(`/v1/live/channel/visible?${paramsStr}`);
+};
+
+/**
+ * 根据id获取类型组列表
+ */
+export const getProgrammeTypeGroupListById = (id) => {
+    return service.get(`/v1/content/programme-type-group/list?categoryId=${id}`);
+};
+
+/**
+ *  根据id保存节目组列表
+ */
+export const postProgrammeTypeGroupListById = (categoryId, programmeTypeGroupList) => {
+    return service.post(`/v1/content/programme-type-group?categoryId=${categoryId}`, programmeTypeGroupList);
+};
+
+/**
+ * 根据关键字搜索直播频道
+ */
+export const searchLiveChannelList = (keyword) => {
+    return service.get(`/v1/live/channel/page?keyword=${keyword}&pageNum=0&pageSize=999&category=LIVE`);
+};
+
+/**
+ * 根据关键字搜索轮播频道
+ */
+export const searchCarouselChannelList = (keyword) => {
+    return service.get(`/v1/live/channel/page?keyword=${keyword}&pageNum=0&pageSize=999&category=CAROUSEL`);
 };

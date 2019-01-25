@@ -1,24 +1,223 @@
-//  广告图片尺寸
-export const ADVERT_DIMENSION = [
-    //  暂停广告
+/**
+ * @fileOverview Define the dimension of images
+ */
+
+/**
+ * 2.0所有图片尺寸以及名称
+ */
+export const ALL_IMAGE_DIMENSIONS = [
     {
-        value: '800*500',
-        label: '暂停广告：800*500'
+        width: 1920,
+        height: 1080,
+        styleName: '专题背景'
     },
-    // 音量/换台广告
     {
-        value: '435*220',
-        label: '音乐/换台广告：435*220'
+        width: 560,
+        height: 600,
+        styleName: '专题A'
     },
-    // 弹窗广告
     {
-        value: '500*250',
-        label: '弹窗广告：500*250'
+        width: 1160,
+        height: 600,
+        styleName: '专题B'
     },
-    // 会员广告
     {
-        value: '316*146',
-        label: '会员广告：316*146'
+        width: 1310,
+        height: 472,
+        styleName: '专题C'
+    },
+    {
+        width: 410,
+        height: 472,
+        styleName: '专题D'
+    },
+    {
+        width: 260,
+        height: 600,
+        styleName: '专题E'
+    },
+    {
+        width: 860,
+        height: 440,
+        styleName: '横版A'
+    },
+    {
+        width: 560,
+        height: 300,
+        styleName: '横版B'
+    },
+    {
+        width: 1160,
+        height: 300,
+        styleName: '横版C'
+    },
+    {
+        width: 996,
+        height: 472,
+        styleName: '横版D'
+    },
+    {
+        width: 860,
+        height: 260,
+        styleName: '横版E'
+    },
+    {
+        width: 860,
+        height: 472,
+        styleName: '横版F'
+    },
+    {
+        width: 560,
+        height: 720,
+        styleName: '竖版A'
+    },
+    {
+        width: 260,
+        height: 380,
+        styleName: '竖版B'
+    },
+    {
+        width: 410,
+        height: 615,
+        styleName: '竖版C'
+    },
+    {
+        width: 342,
+        height: 472,
+        styleName: '竖版D'
+    },
+    {
+        width: 560,
+        height: 222,
+        styleName: '头条/分类'
+    },
+    {
+        width: 260,
+        height: 260,
+        styleName: '人物/频道'
+    },
+    {
+        width: 410,
+        height: 216,
+        styleName: '新闻/音乐'
+    },
+    {
+        width: 410,
+        height: 180,
+        styleName: '分类'
+    }
+];
+
+/**
+ * 2.0人物专题封面尺寸
+ */
+export const FIGURE_SUBJECT_DIMENSION = [
+    {
+        width: 560,
+        height: 600,
+        styleName: '专题A'
+    },
+    {
+        width: 410,
+        height: 472,
+        styleName: '专题D'
+    },
+    {
+        width: 260,
+        height: 600,
+        styleName: '专题E'
+    }
+];
+
+/**
+ * 2.0节目专题封面尺寸
+ */
+export const PROGRAMME_SUBJECT_DIMENSION = [
+    {
+        width: 1920,
+        height: 1080,
+        styleName: '专题背景'
+    },
+    {
+        width: 410,
+        height: 472,
+        styleName: '专题D'
+    },
+    {
+        width: 1160,
+        height: 600,
+        styleName: '专题B'
+    },
+    {
+        width: 1310,
+        height: 472,
+        styleName: '专题C'
+    },
+    {
+        width: 860,
+        height: 440,
+        styleName: '横版A'
+    },
+    {
+        width: 560,
+        height: 300,
+        styleName: '横版B'
+    },
+    {
+        width: 560,
+        height: 720,
+        styleName: '竖版A'
+    },
+    {
+        width: 1160,
+        height: 300,
+        styleName: '横版C'
+    },
+    {
+        width: 260,
+        height: 380,
+        styleName: '竖版B'
+    },
+    {
+        width: 996,
+        height: 472,
+        styleName: '横版D'
+    },
+    {
+        width: 410,
+        height: 615,
+        styleName: '竖版C'
+    },
+    {
+        width: 342,
+        height: 472,
+        styleName: '竖版D'
+    },
+    {
+        width: 860,
+        height: 260,
+        styleName: '横版E'
+    },
+    {
+        width: 860,
+        height: 472,
+        styleName: '横版F'
+    }
+];
+
+/**
+ * 2.0运营角标尺寸
+ */
+export const CORNER_MARK_DIMENSION = [
+    {
+        width: 125,
+        height: 99,
+        styleName: '大角标'
+    },
+    {
+        width: 76,
+        height: 46,
+        styleName: '小角标'
     }
 ];
 
@@ -215,16 +414,22 @@ export const VIDEO_COVER_DIMENSION = [
     }
 ];
 
-//  直播频道logo图
+//  2.0直播频道logo图
 export const CHANNEL_LOGO_DIMENSION = [
     {
         value: '240*134',
-        label: 'Logo：240*134'
+        label: 'Logo：240*134',
+        width: 260,
+        height: 260,
+        styleName: '频道图'
     }
 ];
 
 export default {
-    ADVERT_DIMENSION,
+    ALL_IMAGE_DIMENSIONS,
+    FIGURE_SUBJECT_DIMENSION,
+    PROGRAMME_SUBJECT_DIMENSION,
+    CORNER_MARK_DIMENSION,
     PROGRAMME_DIMENSION,
     SUBJECT_BACKGROUND_IMAGE_DIMENSION,
     LAYOUT_IMAGE_DIMENSION,

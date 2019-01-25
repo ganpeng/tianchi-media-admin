@@ -2,6 +2,7 @@
 <template>
     <el-dialog
         :title="title"
+        class="my-dialog"
         :visible.sync="videoUploadDialogVisible"
         :show-close="true"
         @open="openDialogHandler"
@@ -11,6 +12,7 @@
         <!-- 选择视频的表格 -->
         <el-dialog
             title="选择视频"
+            class="my-dialog"
             width="80%"
             :visible.sync="selectVideoDialogVisible"
             :show-close="true"
@@ -19,90 +21,98 @@
             :close-on-press-escape="false"
             :append-to-body="true">
             <div class="video-list">
-                <el-form :inline="true" @submit.native.prevent>
+                <el-form :inline="true" class="my-form" @submit.native.prevent>
                     <el-form-item class="search">
                         <el-input
                             placeholder="搜索你想要的信息"
                             clearable
-                            :value="videoListObj.searchFields.name"
-                            @input="searchInputHandler($event, 'name')"
+                            class="border-input"
+                            :value="videoListObj.searchFields.keyword"
+                            @input="searchInputHandler($event, 'keyword')"
                         >
-                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
                         </el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="searchEnterHandler">搜索</el-button>
+                        <el-button type="primary" class="btn-style-one" @click="searchEnterHandler">搜索</el-button>
                     </el-form-item>
                 </el-form>
-                <video-table :status="'SUCCESS'" :hasRadio="true"></video-table>
+                <video-table :status="'SUCCESS'"></video-table>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
                     <el-button @click="closeSelectVideoDialog">取 消</el-button>
                     <el-button type="primary" @click="selectVideoEnter">确 定</el-button>
                 </div>
             </div>
         </el-dialog>
-        <el-form :model="video" :rules="uploadVideoRules" ref="uploadVideoForm" class="form-block" label-width="100px">
+        <el-form :model="video" :rules="uploadVideoRules" ref="uploadVideoForm" class="form-block my-form"
+                 label-width="100px">
             <el-form-item v-if="!readonly" label="选择视频">
-                <el-button type="primary" @click="selectVideo">选择</el-button>
+                <el-button class="btn-style-four min" type="primary" @click="selectVideo">选择</el-button>
             </el-form-item>
             <el-form-item label="视频ID">
-                <el-input :value="video.storageVideoId" disabled></el-input>
+                <span>{{video.storageVideoId}}</span>
             </el-form-item>
-            <el-form-item
-                label="视频文件名">
-                <el-input
-                    :disabled="true"
-                    :value="video.originName"
-                ></el-input>
+            <el-form-item label="视频文件名">
+                <span>{{video.originName}}</span>
             </el-form-item>
             <el-form-item label="视频时长">
-                <el-input
-                    :value="duration(video.takeTimeInSec)"
-                    :disabled="true"
-                ></el-input>
+                <span>{{duration(video.takeTimeInSec)}}</span>
             </el-form-item>
             <el-form-item label="视频清晰度">
-                <el-tag type="info">HD_480</el-tag>
-                <el-tag type="info">HD_720</el-tag>
-                <el-tag type="info">HD_1080</el-tag>
+                <div class="my-tags">
+                    <el-tag v-if="video.m3u8For480P" class="tag" type="info">HD_480</el-tag>
+                    <el-tag v-if="video.m3u8For720P" class="tag" type="info">HD_720</el-tag>
+                    <el-tag v-if="video.m3u8For1080P" class="tag" type="info">HD_1080</el-tag>
+                    <el-tag v-if="video.m3u8For4K" class="tag" type="info">HD_4K</el-tag>
+                </div>
             </el-form-item>
             <el-form-item
                 ref="name"
                 label="视频展示名"
                 prop="name">
+                <span v-if="readonly">{{video.name}}</span>
                 <el-input
-                    :disabled="readonly"
+                    v-else
                     :value="video.name"
                     auto-complete="off"
                     placeholder="请输入子集名称"
-                    @input="inputHandler($event, 'name')"
-                ></el-input>
+                    @input="inputHandler($event, 'name')">
+                </el-input>
             </el-form-item>
             <el-form-item label="视频简介" prop="description">
+                <span v-if="readonly">{{video.description}}</span>
                 <el-input
-                    :disabled="readonly"
+                    v-else
                     type="textarea"
                     :maxlength="50"
                     :autosize="{ minRows: 4, maxRows: 14}"
                     placeholder="请输入子集简介"
                     :value="video.description"
-                    @input="inputHandler($event, 'description')"
-                >
+                    @input="inputHandler($event, 'description')">
                 </el-input>
             </el-form-item>
             <el-form-item label="相关人物">
                 <label for="figureList"></label>
-                <person-select
-                    :disabled="readonly"
-                    :value="video.figureList"
-                    :searchResult="video.figureListResult"
-                    :changeSuccessHandler="figureListChangeHandler"
-                    :searchSuccessHandler="figureListSuccessHandler"
-                ></person-select>
+                <div class="my-tags">
+                    <draggable v-model="figureList">
+                        <el-tag
+                            :key="index"
+                            v-for="(person, index) in figureList"
+                            :closable="!readonly"
+                            :disable-transitions="false"
+                            @close="deleteFigureHandler(person.id)">
+                            {{person.name}}
+                        </el-tag>
+                    </draggable>
+                </div>
+                <search-person
+                    v-if="!readonly"
+                    :handleSelect="selectFigureHandler">
+                </search-person>
             </el-form-item>
             <el-form-item label="内容类型" prop="type">
+                <span v-if="readonly">{{getVideoType(video.type)}}</span>
                 <el-select
-                    :disabled="readonly"
+                    v-else
                     :value="video.type"
                     placeholder="请选择内容类型"
                     @input="inputHandler($event, 'type')"
@@ -115,36 +125,13 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="视频封面图">
-                <div class="text-left clearfix">
-                    <el-button
-                        class="float-left page-main-btn create-blue-btn contain-svg-icon"
-                        v-if="!readonly"
-                        @click="uploadImageHandler">
-                        <svg-icon
-                            icon-class="image"
-                            class-name="svg-box">
-                        </svg-icon>
-                        上传图片
-                    </el-button>
-                </div>
-                <ul
-                    v-if="video.coverImage"
-                    class="cover-list">
-                    <li>
-                        <div
-                            class="image-box"
-                            :style="{'cursor': 'default','background-image': 'url(' + appendImagePrefix(video.coverImage.uri) + ')'}">
-                        </div>
-                    </li>
-                </ul>
-            </el-form-item>
             <el-form-item
-                v-if="video.type === 'FEATURE'"
+                v-if="video.type === 'FEATURE' || video.type === 'PRE_SHOW'"
                 :rules="(isTvPlay || isShow) ? [{ required: true, message: '请输入集数/期号' }, {pattern: /^\+?[1-9]\d*$/, message: '只能输入大于0的整数'}] : [{pattern: /^\+?[1-9]\d*$/, message: '只能输入大于0的整数'}]"
                 label="集数/期号" prop="sort">
+                <span v-if="readonly">{{video.sort}}</span>
                 <el-input
-                    :disabled="readonly"
+                    v-else
                     :value="video.sort"
                     min="1"
                     type="number"
@@ -153,10 +140,9 @@
                 ></el-input>
             </el-form-item>
             <el-form-item
-                v-if="video.type !== 'FEATURE'"
+                v-if="video.type !== 'FEATURE'&& !readonly"
                 label="关联正片" prop="parentId">
                 <el-select
-                    :disabled="readonly"
                     :value="video.parentId"
                     placeholder="请选择要关联的正片"
                     @change="inputHandler($event, 'parentId')"
@@ -171,41 +157,48 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="是否付费" prop="free">
-                <el-radio-group
-                    :disabled="readonly"
-                    :value="video.free"
-                    @input="inputHandler($event, 'free')"
-                >
-                    <el-radio :label="true">是</el-radio>
-                    <el-radio :label="false">否</el-radio>
-                </el-radio-group>
+                <span v-if="readonly">{{video.free ? '是' : '否'}}</span>
+                <span v-else>
+                    <el-radio @input="inputHandler(true, 'free')" :value="video.free" :label="true">是</el-radio>
+                    <el-radio @input="inputHandler(false, 'free')" :value="video.free" :label="false">否</el-radio>
+                </span>
+            </el-form-item>
+            <el-form-item label="视频封面图">
+                <single-poster
+                    v-if="videoStatus === 2"
+                    :img="video.coverImage"
+                ></single-poster>
+                <single-image-uploader
+                    v-else
+                    :uri="video.coverImage ? video.coverImage.uri : ''"
+                    :deleteImage="deleteCoverImage"
+                    :uploadSuccessHandler="uploadSuccessHandler"
+                    :allowResolutions="[{width: 560, height: 315}, {width: 344, height: 194}]"
+                ></single-image-uploader>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button size="medium" @click="cancelHandler">取 消</el-button>
             <el-button
-                size="medium"
                 v-if="videoStatus !== 2"
                 type="primary"
                 @click="successHandler"
-                v-loading.fullscreen.lock="isLoading">确 定</el-button>
+                v-loading.fullscreen.lock="isLoading">确 定
+            </el-button>
         </div>
-        <upload-image
-            title="上传节目图片"
-            :size="size"
-            :successHandler="setVideoCoverImage"
-            :imageUploadDialogVisible="imageUploadDialogVisible"
-            v-on:changeImageDialogStatus="closeImageDialog($event)">
-        </upload-image>
     </el-dialog>
 </template>
 <script>
+    import draggable from 'vuedraggable';
+    import _ from 'lodash';
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import role from '@/util/config/role';
     import dimension from '@/util/config/dimension';
-    import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
-    import VideoTable from '../video_manage/VideoTable';
-    import PersonSelect from './PersonSelect';
+    import SinglePoster from 'sysComponents/custom_components/custom/SinglePoster';
+    import VideoTable from './VideoTable';
+
+    import SearchPerson from '../../components/custom_components/custom/SearchPerson';
+    import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 
     export default {
         props: {
@@ -219,9 +212,11 @@
             }
         },
         components: {
-            UploadImage,
+            SinglePoster,
             VideoTable,
-            PersonSelect
+            SearchPerson,
+            draggable,
+            SingleImageUploader
         },
         data() {
             return {
@@ -232,7 +227,7 @@
                 imageUploadDialogVisible: false,
                 selectVideoDialogVisible: false,
                 uploadVideoRules: {
-                    type: [{ required: true, message: '请选择视频内容类型' }]
+                    type: [{required: true, message: '请选择视频内容类型'}]
                 }
             };
         },
@@ -253,13 +248,13 @@
             title() {
                 switch (parseInt(this.videoStatus)) {
                     case 0:
-                        return '创建视频';
+                        return '关联视频';
                     case 1:
                         return '编辑视频';
                     case 2:
                         return '显示视频';
                     default:
-                        return '创建视频';
+                        return '关联视频';
                 }
             },
             readonly() {
@@ -269,6 +264,20 @@
                 return (seconds) => {
                     return this.$util.fromSecondsToTime(seconds);
                 };
+            },
+            getVideoType() {
+                return (type) => {
+                    let obj = this.videoType.find((item) => item.value === type);
+                    return _.get(obj, 'label');
+                };
+            },
+            figureList: {
+                get() {
+                    return this.video.figureList;
+                },
+                set(value) {
+                    this.updateVideo({key: 'figureList', value});
+                }
             }
         },
         created() {
@@ -288,13 +297,16 @@
                 setSelectedVideoId: 'video/setSelectedVideoId',
                 updateSearchFields: 'video/updateSearchFields',
                 // 更新人物
-                updateVideoPersonResult: 'programme/updateVideoPersonResult',
                 updateVideoPerson: 'programme/updateVideoPerson',
-                setList: 'video/setList'
+                updatePagination: 'video/updatePagination',
+                setList: 'video/setList',
+                //  人物搜索
+                addFigureToList: 'programme/addFigureToList',
+                deleteFigureById: 'programme/deleteFigureById'
             }),
             ...mapActions({
                 updateProgrammeVideoById: 'programme/updateProgrammeVideoById',
-                getVideoList: 'video/getVideoList',
+                getSuccessVideoList: 'video/getSuccessVideoList',
                 getFeatureVideoList: 'programme/getFeatureVideoList'
             }),
             beforeCloseHandler() {
@@ -302,12 +314,14 @@
             },
             keyupHandler(e) {
                 if (e.keyCode === 13) {
-                    this.getVideoList();
+                    this.getSuccessVideoList();
                 }
             },
             openDialogHandler() {
                 //  当弹窗打开的时候，先清除表单遗留的校验信息
-                this.$refs.uploadVideoForm.clearValidate();
+                this.$nextTick(() => {
+                    this.$refs.uploadVideoForm.clearValidate();
+                });
             },
             cancelHandler() {
                 this.$emit('changeVideoDialogStatus', false);
@@ -316,6 +330,7 @@
                 this.resetCurrentVideo();
                 this.updateSearchFields({key: 'status', value: null});
                 this.updateSearchFields({key: 'videoType', value: null});
+                this.updateSearchFields({key: 'keyword', value: ''});
                 this.setSelectedVideoId({id: ''});
             },
             successHandler() {
@@ -379,7 +394,7 @@
                 this.updateSearchFields({value, key});
             },
             searchEnterHandler() {
-                this.getVideoList();
+                this.getSuccessVideoList();
             },
             uploadImageHandler() {
                 if (!this.readonly) {
@@ -391,7 +406,7 @@
             },
             closeSelectVideoDialog() {
                 this.selectVideoDialogVisible = false;
-                this.updateSearchFields({key: 'name', value: ''});
+                this.updateSearchFields({key: 'keyword', value: ''});
                 this.updateSearchFields({key: 'status', value: ''});
                 this.updateSearchFields({key: 'downloadStatus', value: ''});
                 this.updateSearchFields({key: 'uploadStatus', value: ''});
@@ -399,11 +414,12 @@
             },
             selectVideo() {
                 this.updateSearchFields({key: 'status', value: 'SUCCESS'});
+                this.updatePagination({key: 'pageSize', value: 5});
                 this.updateSearchFields({key: 'downloadStatus', value: 'SUCCESS'});
                 this.updateSearchFields({key: 'uploadStatus', value: 'SUCCESS'});
                 this.updateSearchFields({key: 'statusCombinator', value: 'OR'});
                 this.setList({list: []}); // 获取列表之前，先清空列表的缓存数据
-                this.getVideoList();
+                this.getSuccessVideoList();
                 this.selectVideoDialogVisible = true;
             },
             getSelectedVideo() {
@@ -438,14 +454,37 @@
                 let baseUri = window.localStorage.getItem('imageBaseUri');
                 return baseUri + uri;
             },
-            figureListChangeHandler(value) {
-                this.updateVideoPerson({key: 'figureList', idList: value});
+            //   视频关联人物的搜索部分开始
+            selectFigureHandler(figure) {
+                this.addFigureToList({figure});
             },
-            figureListSuccessHandler(list) {
-                this.updateVideoPersonResult({key: 'figureListResult', value: list});
+            deleteFigureHandler(id) {
+                this.deleteFigureById({id});
+            },
+            //   视频关联人物的搜索部分结束
+            //  视频图片相关操作开始
+            uploadSuccessHandler(coverImage) {
+                this.setVideoCoverImage({coverImage});
+            },
+            deleteCoverImage() {
+                this.setVideoCoverImage({coverImage: null});
             }
+            //  视频图片相关操作开始
         }
     };
 </script>
-<style lang="less" scoped>
+
+<style lang="scss" scoped>
+    .my-tags {
+        .tag {
+            cursor: default;
+            &:hover {
+                border-color: #2A3040;
+            }
+        }
+    }
+
+    .my-form .el-form-item__content {
+
+    }
 </style>

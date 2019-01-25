@@ -4,28 +4,49 @@ import service from '../config';
 
 /**
  * 获取所有视频的列表
+ * @param name The keyword of video, such as name or code.
+ * @param startedAt The start time at upload to local successfully of video.
+ * @param endedAt The end time at upload successfully of video.
+ * @param status The status of video injecting, such as 'SUCCESS', 'FAILED', 'INJECTING'.
+ * @param uploadStatus The status of video upload to master site, such as 'SUCCESS', 'FAILED', 'ON_GOING'.
+ * @param downloadStatus The status of video download from master site, such as 'SUCCESS', 'FAILED', 'ON_GOING'.
+ * @param suffix The suffix of video, such as 'mpg', 'ts', 'zip'.
+ * @param originSiteId The id of video's origin source site.
+ * @param shareSiteId The id of master site's video share branch site.
+ * @param pageNum The current page number of video list.
+ * @param pageSize The current page size of video list.
  */
-export const getVideoList = ({originSiteId, shareSiteId, startedAt, endedAt, status, uploadStatus, downloadStatus, suffix, userId, name, key, m3u8For480P, m3u8For720P, m3u8For1080P, bitrate, frameRate, pageNum, pageSize, videoType, statusCombinator}) => {
+
+export const getVideoList = ({keyword, startedAt, endedAt, status, uploadStatus, downloadStatus, suffix, originSiteId, shareSiteId, pageNum, pageSize, statusCombinator}) => {
+    // 注入中状态包括多种状态，因此改为Array形式
+    let statusList = [];
+    switch (status) {
+        case 'SUCCESS':
+        case 'FAILED':
+        case 'UPLOAD_COMPLETED':
+        case 'SPLIT_TASK_ON_PROCESS':
+        case 'SPLIT_TASK_SUCCESS':
+        case 'DELETING':
+            statusList = [status];
+            break;
+        case 'WAITING_SPLIT':
+            statusList = ['SPLIT_TASK_SUBMITTED', 'SPLIT_TASK_ON_QUEUE', 'SPLIT_TASK_ON_PENDING'];
+            break;
+        default:
+            break;
+    }
     let params = {
-        originSiteId,
-        shareSiteId,
-        userId,
-        name,
-        key,
-        m3u8For480P,
-        m3u8For720P,
-        m3u8For1080P,
-        bitrate,
-        frameRate,
-        status,
+        keyword,
+        startedAt,
+        endedAt,
+        statusList,
         downloadStatus,
         uploadStatus,
         suffix,
+        originSiteId,
+        shareSiteId,
         pageNum,
         pageSize,
-        videoType,
-        startedAt,
-        endedAt,
         statusCombinator
     };
 
@@ -39,37 +60,24 @@ export const getVideoList = ({originSiteId, shareSiteId, startedAt, endedAt, sta
 };
 
 /**
- * 根据id删除视频
+ * 根据id删除视频列表中的视频
  */
-export const deleteVideoById = (id) => {
-    return service.delete(`/v1/storage/video/${id}`, {
-        baseURL: '/storage'
-    });
+export const deleteVideo = ({host, port, id}) => {
+    return service.delete('http://' + host + ':' + port + `/v1/storage/video/${id}`);
 };
 
 /**
- * 根据id删除对应服务器上的视频
+ * 根据id删除导出的视频
  */
 export const deleteSomeServerVideoById = ({host, port, id}) => {
     return service.delete('http://' + host + ':' + port + `/v1/storage/video/export/${id}`);
 };
 
 /**
- * 根据id列表删除视频
- */
-export const deleteVideoByIdList = (ids) => {
-    return service.patch(`/v1/storage/video/delete`, ids, {
-        baseURL: '/storage'
-    });
-};
-
-/**
  * 根据id列表重新转码视频
  */
-export const retryVideoByIdList = (ids) => {
-    return service.patch('/v1/storage/video/retry', ids, {
-        baseURL: '/storage'
-    });
+export const retryInjectVideo = ({id, host, port}) => {
+    return service.patch('http://' + host + ':' + port + `/v1/storage/video/retry/${id}`);
 };
 
 /**
@@ -129,6 +137,29 @@ export const getDownloadVideoList = ({keyword, status, startedAt, endedAt, pageN
     }));
 
     return service.get(`/v1/storage/video/export/page?${paramsStr}`, {
+        baseURL: '/storage'
+    });
+};
+
+/**
+ * 获取可以使用的视频列表
+ */
+export const getSuccessVideoList = ({keyword, pageNum, pageSize}) => {
+    let params = {
+        keyword,
+        statusList: ['SUCCESS'],
+        downloadStatus: 'SUCCESS',
+        uploadStatus: 'SUCCESS',
+        pageNum: pageNum,
+        pageSize,
+        statusCombinator: 'OR'
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/storage/video/page?${paramsStr}`, {
         baseURL: '/storage'
     });
 };

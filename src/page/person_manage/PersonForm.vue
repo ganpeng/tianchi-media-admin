@@ -4,7 +4,7 @@
         <el-form :model="person" :rules="infoRules" status-icon ref="createPerson"
                 label-width="100px"
                 @submit.native.prevent
-                class="form-block">
+                class="form-block my-form">
             <el-col :span="isDialog ? 24 : 8">
                 <el-form-item label="人物姓名" prop="name">
                     <el-input
@@ -14,24 +14,43 @@
                         placeholder="请输入人物姓名"
                     ></el-input>
                 </el-form-item>
-                <el-form-item label="人物简介" prop="description">
+                <el-form-item label="人物别名" prop="alias">
                     <el-input
-                        type="textarea"
+                        :value="person.alias"
                         :disabled="readonly"
-                        :maxlength="300"
-                        :minlength="110"
-                        :autosize="{ minRows: 4, maxRows: 12}"
-                        placeholder="请输入人物简介"
-                        :value="person.description"
-                        @input="inputHandler($event, 'description')"
+                        @input="inputHandler($event, 'alias')"
+                        placeholder="请输入人物别名"
                     ></el-input>
+                </el-form-item>
+                <el-form-item label="英文名" prop="englishName">
+                    <el-input
+                        :value="person.englishName"
+                        :disabled="readonly"
+                        @input="inputHandler($event, 'englishName')"
+                        placeholder="请输入人物英文名"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item label="人物简介" prop="description">
+                    <div class="desc-wrapper">
+                        <el-input
+                            type="textarea"
+                            :disabled="readonly"
+                            :maxlength="300"
+                            placeholder="请输入人物简介"
+                            :value="person.description"
+                            @input="inputHandler($event, 'description')"
+                        ></el-input>
+                        <span class="desc-prompt">已输入{{person.description.length}}/300字</span>
+                    </div>
                 </el-form-item>
                 <el-form-item label="出生日期" prop="birthday">
                     <el-date-picker
                         :value="person.birthday"
                         :disabled="readonly"
                         type="date"
-                        placeholder="年/月/日"
+                        default-value="2000-1-1"
+                        placeholder="请选择出生日期"
+                        prefix-icon="''"
                         @input="inputHandler($event, 'birthday')"
                     ></el-date-picker>
                 </el-form-item>
@@ -52,97 +71,49 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="身高" prop="height">
-                    <el-input
-                        type="number"
-                        :disabled="readonly"
-                        placeholder=""
-                        :value="person.height"
-                        @input="inputHandler($event, 'height')"
-                    >
-                        <template slot="append">cm</template>
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="体重" prop="weight">
-                    <el-input
-                        type="number"
-                        :disabled="readonly"
-                        placeholder=""
-                        :value="person.weight"
-                        @input="inputHandler($event, 'weight')"
-                    >
-                        <template slot="append">kg</template>
-                    </el-input>
-                </el-form-item>
                 <el-form-item label="职业" prop="mainRoleList">
-                    <el-select
-                        multiple
-                        :disabled="readonly"
-                        :value="(person.mainRoleList ? person.mainRoleList : [])"
-                        placeholder="请选择职业"
-                        @input="inputHandler($event, 'mainRoleList')"
-                    >
-                        <el-option
-                            v-for="item in mainRoleoptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
+                    <div class="my-tags">
+                        <draggable v-model="mainRoleList">
+                            <el-tag
+                                :key="index"
+                                v-for="(item, index) in mainRoles(mainRoleList)"
+                                closable
+                                :disable-transitions="false"
+                                @close="deleteMainRoleHandler(item.value)">
+                                {{item.label}}
+                            </el-tag>
+                        </draggable>
+                    </div>
+                    <main-role-search
+                        :handleSelect="selectMainRoleHandler"
+                    ></main-role-search>
+                </el-form-item>
+                <el-form-item label="人物状态" prop="visible">
+                    <el-radio @input="inputHandler(true, 'visible')" :value="person.visible" :label="true">上架</el-radio>
+                    <el-radio @input="inputHandler(false, 'visible')" :value="person.visible" :label="false">下架</el-radio>
                 </el-form-item>
             </el-col>
             <el-col :span="24">
                 <el-form-item label="人物图片" required>
-                    <div class="text-left clearfix">
-                        <el-button
-                            class="float-left page-main-btn create-blue-btn contain-svg-icon"
-                            v-if="!readonly"
-                            @click="uploadImageHandler">
-                            <svg-icon
-                                icon-class="image"
-                                class-name="svg-box">
-                            </svg-icon>
-                            上传图片
-                        </el-button>
-                        <span class="text-info">人物的头像: 200*200,人物背景图: 1920*1080都必须上传</span>
-                    </div>
-                    <div class="wrapper">
-                        <thumbnail
-                            :removeSign="!readonly"
-                            :imageList="person.posterImageList"
-                            v-on:removeImage="_deletePosterImage">
-                        </thumbnail>
-                    </div>
+                    <single-image-uploader
+                        :uri="person.avatarImage ? person.avatarImage.uri : ''"
+                        :deleteImage="deleteAvatarImage"
+                        :uploadSuccessHandler="uploadSuccessHandler"
+                        :allowResolutions="[{width: 260, height: 260}, {width: 200, height: 200}, {width: 260, height: 280}]"
+                    ></single-image-uploader>
                 </el-form-item>
             </el-col>
         </el-form>
-        <upload-image
-            :size='size'
-            title="上传人物图片"
-            ref="uploadImageDialog"
-            :successHandler="addPosterImage"
-            :imageUploadDialogVisible="imageUploadDialogVisible"
-            v-on:changeImageDialogStatus="closeImageDialog($event)"
-        >
-        </upload-image>
-        <preview-multiple-images :previewMultipleImages="previewImage"></preview-multiple-images>
     </div>
 </template>
 <script>
-
-/**
- *
- * 图片上传的逻辑，每种尺寸的图片必须且只能传一张, 如果都传了就不现实长传图片的按钮，传过的图片的尺寸，不能在尺寸列表中显示该尺寸， 图片支持删除
- *
- */
+import draggable from 'vuedraggable';
 import {mapGetters, mapMutations} from 'vuex';
 import store from 'store';
-import UploadImage from 'sysComponents/custom_components/custom/UploadImage';
-import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
-import Thumbnail from '../../components/custom_components/custom/Thumbnail';
-import dimension from '@/util/config/dimension';
+import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 import role from '@/util/config/role';
 import {requiredValidator} from '@/util/formValidate';
+import mainRoleSearch from './mainRoleSearch';
 
 export default {
     name: 'PersonForm',
@@ -161,20 +132,40 @@ export default {
         }
     },
     components: {
-        UploadImage,
-        PreviewMultipleImages,
-        Thumbnail
+        SingleImageUploader,
+        draggable,
+        mainRoleSearch
     },
     computed: {
         ...mapGetters({
-            person: 'person/currentPerson'
-        })
+            person: 'person/currentPerson',
+            mainRoleLabel: 'person/mainRoleLabel'
+        }),
+        mainRoleList: {
+            get() {
+                return this.person.mainRoleList;
+            },
+            set(value) {
+                this.updateCurrentPerson({key: 'mainRoleList', value});
+            }
+        },
+        mainRoles() {
+            return (mainRoleList) => {
+                return mainRoleList.map((item) => {
+                    let obj = role.MAIN_ROLE_OPTIONS.find((mainRoleItem) => mainRoleItem.value === item);
+                    return obj;
+                });
+            };
+        }
     },
     data() {
         return {
             infoRules: {
                 name: [
                     { required: true, message: '请输入人物名称' }
+                ],
+                alias: [
+                    { required: true, message: '请输入人物别名' }
                 ],
                 description: [
                     { required: true, message: '请输入人物简介' }
@@ -184,77 +175,72 @@ export default {
                     { validator: requiredValidator('请选择区域') }
                 ],
                 mainRoleList: [
-                    { required: true, message: '请输入人物职业' },
-                    { validator: requiredValidator('请输入人物职业') }
+                    { required: true, message: '请输入人物职业' }
+                    // { validator: requiredValidator('请输入人物职业') }
+                ],
+                visible: [
+                    { required: true, message: '请选择人物状态' }
                 ]
             },
-            imageUploadDialogVisible: false,
             areaOptions: store.get('areaList'),
-            mainRoleoptions: role.MAIN_ROLE_OPTIONS,
-            size: dimension.PERSON_DIMENSION,
-            previewImage: {
-                display: false,
-                autoplay: false,
-                activeIndex: 0,
-                list: []
-            }
+            mainRoleoptions: role.MAIN_ROLE_OPTIONS
         };
     },
     methods: {
         ...mapMutations({
             updateCurrentPerson: 'person/updateCurrentPerson',
-            addPosterImage: 'person/addPosterImage',
-            deletePosterImage: 'person/deletePosterImage',
-            updateRecommend: 'person/updateRecommend'
+            addMainRoleToList: 'person/addMainRoleToList',
+            deleteMainRoleByValue: 'person/deleteMainRoleByValue'
         }),
-        uploadImageHandler() {
-            if (!this.readonly) {
-                this.imageUploadDialogVisible = true;
-            }
-        },
-        closeImageDialog(status) {
-            this.imageUploadDialogVisible = status;
-        },
         inputHandler(value, key) {
             this.updateCurrentPerson({key, value});
+            if (key === 'name') {
+                this.updateCurrentPerson({key: 'alias', value});
+            }
         },
-        inputRecommendHandler(value, key) {
-            this.updateRecommend({key, value});
+        uploadSuccessHandler(img) {
+            this.updateCurrentPerson({key: 'avatarImage', value: img});
         },
-        _deletePosterImage(index, id) {
-            this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'error'
-                }).then(() => {
-                    this.deletePosterImage({id});
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+        deleteAvatarImage() {
+            this.updateCurrentPerson({key: 'avatarImage', value: null});
         },
-        displayImage(index) {
-            this.previewImage.display = true;
-            this.previewImage.list = this.person.posterImageList;
-            this.previewImage.activeIndex = index;
+        selectMainRoleHandler(mainRole) {
+            this.addMainRoleToList({mainRole});
+            if (this.person.mainRoleList.length > 0) {
+                this.$refs.createPerson.clearValidate(['mainRoleList']);
+            }
         },
-        appendImagePrefix(uri) {
-            let baseUri = window.localStorage.getItem('imageBaseUri');
-            return baseUri + uri;
+        deleteMainRoleHandler(value) {
+            this.deleteMainRoleByValue({value});
         }
     }
 };
 </script>
-<style lang="less" scoped>
-.person-form-container {
-    margin-top: 60px;
-}
-.text-info {
-    margin-left: 10px;
-}
-.wrapper {
-    margin-top: 20px;
+<style lang="scss" scoped>
+.img-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border: 1px solid #3E495E;
+    border-radius: 4px;
+    cursor: pointer;
+    img {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+    }
+    i {
+        display: none;
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        color: $closeBtnHoverColor;
+    }
+    &:hover {
+        opacity: 0.6;
+        i {
+            display: block;
+        }
+    }
 }
 </style>

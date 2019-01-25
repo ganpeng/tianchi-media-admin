@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="29px" height="29px" viewBox="0 0 29 29" version="1.1" xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
-    <title>添加icon copy</title>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>新建icon</title>
     <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Design" stroke="none" stroke-width="1" fill-rule="evenodd">
-        <g id="01推荐设置" transform="translate(-304.000000, -1990.000000)">
-            <g id="添加按钮-灰" transform="translate(290.000000, 1984.000000)">
-                <g id="添加icon-copy-" transform="translate(14.000000, 6.000000)">
-                    <g id="Group">
-                        <path
-                            d="M16,13 L24.5,13 C25.3284271,13 26,13.6715729 26,14.5 C26,15.3284271 25.3284271,16 24.5,16 L16,16 L16,24.5 C16,25.3284271 15.3284271,26 14.5,26 C13.6715729,26 13,25.3284271 13,24.5 L13,16 L4.5,16 C3.67157288,16 3,15.3284271 3,14.5 C3,13.6715729 3.67157288,13 4.5,13 L13,13 L13,4.5 C13,3.67157288 13.6715729,3 14.5,3 C15.3284271,3 16,3.67157288 16,4.5 L16,13 Z"
-                            id="Combined-Shape"></path>
-                        <path
-                            d="M14.5,29 C6.49187113,29 0,22.5081289 0,14.5 C0,6.49187113 6.49187113,0 14.5,0 C22.5081289,0 29,6.49187113 29,14.5 C29,22.5081289 22.5081289,29 14.5,29 Z M14.5,27 C21.4035594,27 27,21.4035594 27,14.5 C27,7.59644063 21.4035594,2 14.5,2 C7.59644063,2 2,7.59644063 2,14.5 C2,21.4035594 7.59644063,27 14.5,27 Z"
-                            id="Combined-Shape"></path>
-                    </g>
-                </g>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="12-01版本设备-版本管理" transform="translate(-1230.000000, -311.000000)" fill="#A3D0FD" fill-rule="nonzero">
+            <g id="新建btn" transform="translate(1210.000000, 301.000000)">
+                <path d="M30.9166667,19 L39,19 C39.5522847,19 40,19.4477153 40,20 C40,20.5522847 39.5522847,21 39,21 L30.9166667,21 L30.9166667,29 C30.9166667,29.5522847 30.4689514,30 29.9166667,30 C29.3643819,30 28.9166667,29.5522847 28.9166667,29 L28.9166667,21 L21,21 C20.4477153,21 20,20.5522847 20,20 C20,19.4477153 20.4477153,19 21,19 L28.9166667,19 L28.9166667,11 C28.9166667,10.4477153 29.3643819,10 29.9166667,10 C30.4689514,10 30.9166667,10.4477153 30.9166667,11 L30.9166667,19 Z" id="新建icon"></path>
             </g>
         </g>
     </g>
