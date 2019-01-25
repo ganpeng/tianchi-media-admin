@@ -138,7 +138,7 @@
                         {{scope.row.audioPid | padEmpty}}
                     </template>
                 </el-table-column>
-                <el-table-column width="180px" align="center" label="操作">
+                <el-table-column width="220px" align="center" label="操作">
                     <template slot-scope="scope">
                         <div id="channel-operator" class="operator-btn-wrapper">
                             <el-dropdown
@@ -156,6 +156,7 @@
                                     </el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
+                            <span class="btn-text" @click="displayVideoPlayer(scope.row)">直播</span>
                             <span class="btn-text" @click="editLiveChannel(scope.row.id)">编辑</span>
                             <span class="btn-text text-danger" @click="_deleteLiveChannel(scope.row.id)">删除</span>
                         </div>
@@ -172,15 +173,20 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="pagination.total">
         </el-pagination>
+        <display-video-dialog ref="displayVideoDialog" :url="url" :title="title"></display-video-dialog>
     </div>
 </template>
 <script>
     import {mapGetters, mapActions, mapMutations} from 'vuex';
+    import DisplayVideoDialog from '../../components/custom_components/custom/DisplayVideoDialog';
 
     const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
     const x2js = new X2JS();
     export default {
         name: 'LiveChannelList',
+        components: {
+            DisplayVideoDialog
+        },
         data() {
             return {
                 //  节目单上传变量
@@ -188,8 +194,8 @@
                 files: [],
                 count: 0,
                 //  节目单上传变量结束
-                liveChannelDialogVisible: false,
-                fileUploadDialogVisible: false,
+                url: '',
+                title: '',
                 fileList: [],
                 uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
                 recordOptinos: [
@@ -374,6 +380,12 @@
             gotoBlankPage(name) {
                 let routeData = this.$router.resolve({name});
                 window.open(routeData.href, '_blank');
+            },
+            displayVideoPlayer(channel) {
+                let {name, hlsPlayUrl} = channel;
+                this.url = hlsPlayUrl;
+                this.title = name;
+                this.$refs.displayVideoDialog.showDialog();
             }
         }
     };
