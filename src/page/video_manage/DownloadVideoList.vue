@@ -286,6 +286,11 @@
                     type: 'error'
                 }).then(() => {
                     this.removeSingleVideo(video);
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消批量删除'
+                    });
                 });
             },
             // 批量重试下载视频

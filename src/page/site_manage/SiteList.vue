@@ -142,11 +142,6 @@
                             this.getSiteList();
                         }
                     });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '取消添加'
-                    });
                 });
             },
             // 更新站点
@@ -163,11 +158,6 @@
                             this.$message.success('成功更新站点');
                             this.getSiteList();
                         }
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '取消编辑'
                     });
                 });
             },
@@ -186,11 +176,6 @@
                             });
                             this.getSiteList();
                         }
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
                     });
                 });
             }

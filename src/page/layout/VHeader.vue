@@ -65,9 +65,12 @@
             logout() {
                 this.$store.dispatch('user/logout', true);
             },
+            // 如果是子站，点击跳转到设置子站点页面;中心站点跳转到站点列表
             toConfigSite() {
-                if (!this.siteName || this.siteName.indexOf('配置站点') !== -1) {
+                if (this.$wsCache.localStorage.get('siteInfo') && !this.$wsCache.localStorage.get('siteInfo').siteMasterEnable) {
                     this.$router.push({name: 'ConfigSite'});
+                } else {
+                    this.$router.push({name: 'SiteList'});
                 }
             }
         }

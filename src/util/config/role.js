@@ -382,19 +382,20 @@ export const VIDEO_DOWNLOAD_STATUS_OPTIONS = [
 
 // 视频的子站向主站上传状态
 export const VIDEO_UPLOAD_STATUS_OPTIONS = [
-    {
-        value: 'ON_GOING',
-        label: '上传中'
-    },
-    {
-        value: 'SUCCESS',
-        label: '上传成功'
-    },
-    {
-        value: 'FAILED',
-        label: '上传失败'
-    }
-];
+        {
+            value: 'ON_GOING',
+            label: '上传中'
+        },
+        {
+            value: 'SUCCESS',
+            label: '上传成功'
+        },
+        {
+            value: 'FAILED',
+            label: '上传失败'
+        }
+    ]
+;
 
 //  视频类型
 export const VIDEO_TYPE_OPTIONS = [
@@ -840,7 +841,7 @@ export default {
     FORCED_OPTIONS,
     RECOMMEND_OPTIONS,
     HARDWARE_TYPE_OPTIONS,
-    //  页面样式布局相关
+//  页面样式布局相关
     NAV_LIST,
     ASIDE_LIST,
     LAYOUT_TEMPLATE_LIST,

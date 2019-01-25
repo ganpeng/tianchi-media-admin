@@ -745,7 +745,7 @@ let router = new Router({
                 },
                 //  站点管理-配置站点
                 {
-                    path: '/config-manage/site',
+                    path: '/site-manage/config',
                     name: 'ConfigSite',
                     component: ConfigSite
                 },

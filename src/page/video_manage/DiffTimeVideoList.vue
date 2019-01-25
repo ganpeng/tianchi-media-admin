@@ -372,15 +372,14 @@
                                 this.$message.error('批量删除失败');
                             }
                         });
-                    }).catch(() => {
-                        this.$message.info('已取消批量删除');
                     });
                 } else {
                     this.$message.warning('请先选择视频');
                 }
             }
         }
-    };
+    }
+    ;
 </script>
 
 <style lang="scss" scoped>

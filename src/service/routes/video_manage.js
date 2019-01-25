@@ -17,7 +17,7 @@ import service from '../config';
  * @param pageSize The current page size of video list.
  */
 
-export const getVideoList = ({keyword, startedAt, endedAt, status, uploadStatus, downloadStatus, suffix, originSiteId, shareSiteId, pageNum, pageSize}) => {
+export const getVideoList = ({keyword, startedAt, endedAt, status, uploadStatus, downloadStatus, suffix, originSiteId, shareSiteId, pageNum, pageSize, statusCombinator}) => {
     // 注入中状态包括多种状态，因此改为Array形式
     let statusList = [];
     switch (status) {
@@ -46,7 +46,8 @@ export const getVideoList = ({keyword, startedAt, endedAt, status, uploadStatus,
         originSiteId,
         shareSiteId,
         pageNum,
-        pageSize
+        pageSize,
+        statusCombinator
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
@@ -141,14 +142,17 @@ export const getDownloadVideoList = ({keyword, status, startedAt, endedAt, pageN
 };
 
 /**
- * 获取下载视频列表
+ * 获取可以使用的视频列表
  */
 export const getSuccessVideoList = ({keyword, pageNum, pageSize}) => {
     let params = {
         keyword,
         statusList: ['SUCCESS'],
+        downloadStatus: 'SUCCESS',
+        uploadStatus: 'SUCCESS',
         pageNum: pageNum,
-        pageSize
+        pageSize,
+        statusCombinator: 'OR'
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {

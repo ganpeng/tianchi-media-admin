@@ -43,7 +43,8 @@
                 </div>
             </div>
         </el-dialog>
-        <el-form :model="video" :rules="uploadVideoRules" ref="uploadVideoForm" class="form-block my-form" label-width="100px">
+        <el-form :model="video" :rules="uploadVideoRules" ref="uploadVideoForm" class="form-block my-form"
+                 label-width="100px">
             <el-form-item v-if="!readonly" label="选择视频">
                 <el-button class="btn-style-four min" type="primary" @click="selectVideo">选择</el-button>
             </el-form-item>
@@ -74,8 +75,8 @@
                     :value="video.name"
                     auto-complete="off"
                     placeholder="请输入子集名称"
-                    @input="inputHandler($event, 'name')"
-                ></el-input>
+                    @input="inputHandler($event, 'name')">
+                </el-input>
             </el-form-item>
             <el-form-item label="视频简介" prop="description">
                 <span v-if="readonly">{{video.description}}</span>
@@ -86,8 +87,7 @@
                     :autosize="{ minRows: 4, maxRows: 14}"
                     placeholder="请输入子集简介"
                     :value="video.description"
-                    @input="inputHandler($event, 'description')"
-                >
+                    @input="inputHandler($event, 'description')">
                 </el-input>
             </el-form-item>
             <el-form-item label="相关人物">
@@ -106,8 +106,8 @@
                 </div>
                 <search-person
                     v-if="!readonly"
-                    :handleSelect="selectFigureHandler"
-                ></search-person>
+                    :handleSelect="selectFigureHandler">
+                </search-person>
             </el-form-item>
             <el-form-item label="内容类型" prop="type">
                 <span v-if="readonly">{{getVideoType(video.type)}}</span>
@@ -183,7 +183,8 @@
                 v-if="videoStatus !== 2"
                 type="primary"
                 @click="successHandler"
-                v-loading.fullscreen.lock="isLoading">确 定</el-button>
+                v-loading.fullscreen.lock="isLoading">确 定
+            </el-button>
         </div>
     </el-dialog>
 </template>
@@ -226,7 +227,7 @@
                 imageUploadDialogVisible: false,
                 selectVideoDialogVisible: false,
                 uploadVideoRules: {
-                    type: [{ required: true, message: '请选择视频内容类型' }]
+                    type: [{required: true, message: '请选择视频内容类型'}]
                 }
             };
         },
@@ -407,10 +408,16 @@
                 this.selectVideoDialogVisible = false;
                 this.updateSearchFields({key: 'keyword', value: ''});
                 this.updateSearchFields({key: 'status', value: ''});
+                this.updateSearchFields({key: 'downloadStatus', value: ''});
+                this.updateSearchFields({key: 'uploadStatus', value: ''});
+                this.updateSearchFields({key: 'statusCombinator', value: ''});
             },
             selectVideo() {
                 this.updateSearchFields({key: 'status', value: 'SUCCESS'});
                 this.updatePagination({key: 'pageSize', value: 5});
+                this.updateSearchFields({key: 'downloadStatus', value: 'SUCCESS'});
+                this.updateSearchFields({key: 'uploadStatus', value: 'SUCCESS'});
+                this.updateSearchFields({key: 'statusCombinator', value: 'OR'});
                 this.setList({list: []}); // 获取列表之前，先清空列表的缓存数据
                 this.getSuccessVideoList();
                 this.selectVideoDialogVisible = true;
@@ -466,16 +473,18 @@
         }
     };
 </script>
+
 <style lang="scss" scoped>
-.my-tags {
-    .tag {
-        cursor: default;
-        &:hover {
-            border-color: #2A3040;
+    .my-tags {
+        .tag {
+            cursor: default;
+            &:hover {
+                border-color: #2A3040;
+            }
         }
     }
-}
-.my-form .el-form-item__content {
 
-}
+    .my-form .el-form-item__content {
+
+    }
 </style>

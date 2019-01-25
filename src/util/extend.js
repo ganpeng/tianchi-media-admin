@@ -228,28 +228,30 @@ let util = {
             });
         }
     },
+    setProjectTitle(siteName) {
+        document.title = (siteName || '未配置站点') + '--天驰管理平台';
+    },
     loopGetUploadServer(resolve) {
-        service.getUpstream()
-            .then((res) => {
-                if (res && res.code === 0) {
-                    let {ip, port} = res.data;
-                    let url = `http://${ip}:${port}`;
-                    resolve(url);
-                    clearTimeout(timer);
-                } else {
-                    console.log(`上传地址获取失败: ${res}`);
-                    clearTimeout(timer);
-                    timer = setTimeout(() => {
-                        util.loopGetUploadServer(resolve);
-                    }, 1000);
-                }
-            }).catch((err) => {
-                console.log(`上传地址获取失败, 错误原因: ${err}`);
+        service.getUpstream().then((res) => {
+            if (res && res.code === 0) {
+                let {ip, port} = res.data;
+                let url = `http://${ip}:${port}`;
+                resolve(url);
+                clearTimeout(timer);
+            } else {
+                console.log(`上传地址获取失败: ${res}`);
                 clearTimeout(timer);
                 timer = setTimeout(() => {
                     util.loopGetUploadServer(resolve);
                 }, 1000);
-            });
+            }
+        }).catch((err) => {
+            console.log(`上传地址获取失败, 错误原因: ${err}`);
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                util.loopGetUploadServer(resolve);
+            }, 1000);
+        });
     },
     getUploadServer() {
         return new Promise((resolve) => {
@@ -298,9 +300,13 @@ let util = {
                     renderType: 'SHUFFLE',
                     layoutItemMultiList: []
                 };
-                vuexStore.commit('pageLayout/insertLayoutDataByIndex', {navbarId, index, layoutData: shuffleLayoutData});
+                vuexStore.commit('pageLayout/insertLayoutDataByIndex', {
+                    navbarId,
+                    index,
+                    layoutData: shuffleLayoutData
+                });
                 vuexStore.commit('pageLayout/saveLayoutToStore');
-                router.push({ name: 'ShuffleModule', params: {navbarId, index, operator: 'add'} });
+                router.push({name: 'ShuffleModule', params: {navbarId, index, operator: 'add'}});
                 break;
             case 'FIGURE':
                 let layoutData = {
@@ -316,7 +322,7 @@ let util = {
                 };
                 vuexStore.commit('pageLayout/insertLayoutDataByIndex', {navbarId, index, layoutData});
                 vuexStore.commit('pageLayout/saveLayoutToStore');
-                router.push({ name: 'PersonModule', params: {navbarId, index, operator: 'add'} });
+                router.push({name: 'PersonModule', params: {navbarId, index, operator: 'add'}});
                 break;
             case 'SPECIAL':
                 let specialLayoutData = {
@@ -329,9 +335,13 @@ let util = {
                     renderType: 'SPECIAL',
                     layoutItemMultiList: _.times(2, () => _.cloneDeep(defaultLayoutItem))
                 };
-                vuexStore.commit('pageLayout/insertLayoutDataByIndex', {navbarId, index, layoutData: specialLayoutData});
+                vuexStore.commit('pageLayout/insertLayoutDataByIndex', {
+                    navbarId,
+                    index,
+                    layoutData: specialLayoutData
+                });
                 vuexStore.commit('pageLayout/saveLayoutToStore');
-                router.push({ name: 'EditSpecialModule', params: {navbarId, index, operator: 'add'} });
+                router.push({name: 'EditSpecialModule', params: {navbarId, index, operator: 'add'}});
                 break;
             case 'FIGURE_SUBJECT':
                 let personSubjectLayoutData = {
@@ -344,9 +354,13 @@ let util = {
                     renderType: 'FIGURE_SUBJECT',
                     layoutItemMultiList: _.times(6, () => _.cloneDeep(defaultLayoutItem))
                 };
-                vuexStore.commit('pageLayout/insertLayoutDataByIndex', {navbarId, index, layoutData: personSubjectLayoutData});
+                vuexStore.commit('pageLayout/insertLayoutDataByIndex', {
+                    navbarId,
+                    index,
+                    layoutData: personSubjectLayoutData
+                });
                 vuexStore.commit('pageLayout/saveLayoutToStore');
-                router.push({ name: 'PersonSubjectModule', params: {navbarId, index, operator: 'add'} });
+                router.push({name: 'PersonSubjectModule', params: {navbarId, index, operator: 'add'}});
                 break;
             case 'PROGRAMME_SUBJECT':
                 let programmeSubjectLayoutData = {
@@ -359,9 +373,13 @@ let util = {
                     renderType: 'PROGRAMME_SUBJECT',
                     layoutItemMultiList: []
                 };
-                vuexStore.commit('pageLayout/insertLayoutDataByIndex', {navbarId, index, layoutData: programmeSubjectLayoutData});
+                vuexStore.commit('pageLayout/insertLayoutDataByIndex', {
+                    navbarId,
+                    index,
+                    layoutData: programmeSubjectLayoutData
+                });
                 vuexStore.commit('pageLayout/saveLayoutToStore');
-                router.push({ name: 'ProgrammeSubjectModule', params: {navbarId, index, operator: 'add'} });
+                router.push({name: 'ProgrammeSubjectModule', params: {navbarId, index, operator: 'add'}});
                 break;
             default:
                 throw new Error('类型错误');

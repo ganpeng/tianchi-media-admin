@@ -67,7 +67,17 @@
                 align="center"
                 label="注入状态">
                 <template slot-scope="scope">
-                    {{scope.row.status | switchStatus}}
+                    <span :class="{'status-normal':scope.row.status === 'SUCCESS'}">
+                        {{scope.row.status | switchStatus}}
+                    </span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                prop="uploadStatus"
+                align="center"
+                label="上传状态">
+                <template slot-scope="scope">
+                    <span>{{scope.row.uploadStatus | getUploadStatus}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -117,11 +127,23 @@
             switchStatus(status) {
                 switch (status) {
                     case 'SUCCESS':
-                        return '注入成功';
+                        return '成功';
                     case 'FAILED':
-                        return '注入失败';
+                        return '失败';
                     case 'INJECTING':
                         return '注入中';
+                    default:
+                        return '---';
+                }
+            },
+            getUploadStatus(uploadStatus) {
+                switch (uploadStatus) {
+                    case 'ON_GOING':
+                        return '上传中';
+                    case 'SUCCESS':
+                        return '成功';
+                    case 'FAILED':
+                        return '失败';
                     default:
                         return '---';
                 }

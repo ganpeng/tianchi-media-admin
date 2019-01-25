@@ -1,4 +1,4 @@
-<!--视频列表组件-->
+<!--预览节目列表组件-->
 <template>
     <div class="preview-channel-programme-list-container">
         <h2 class="content-title">{{channelName}}</h2>
@@ -17,7 +17,8 @@
                                         <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
                                         <div class="btn-wrapper">
                                             <div v-if="ele.m3u8Uri" class="url-wrapper">
-                                                <span class="text-primary url" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看</span>
+                                                <span class="text-primary url"
+                                                      @click="displayVideoPlayer(ele, 'm3u8Uri')">回看</span>
                                                 <svg-icon
                                                     v-if="ele.m3u8Uri"
                                                     icon-class="copy_btn"
@@ -26,7 +27,8 @@
                                                 </svg-icon>
                                             </div>
                                             <div v-if="ele.playUri" class="url-wrapper">
-                                                <span class="text-primary url" @click="displayVideoPlayer(ele, 'playUri')">直播</span>
+                                                <span class="text-primary url"
+                                                      @click="displayVideoPlayer(ele, 'playUri')">直播</span>
                                                 <svg-icon
                                                     v-if="ele.playUri"
                                                     icon-class="copy_btn"
@@ -53,7 +55,8 @@
                                         <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
                                         <div class="btn-wrapper">
                                             <div v-if="ele.m3u8Uri" class="url-wrapper">
-                                                <span class="text-primary url" @click="displayVideoPlayer(ele, 'm3u8Uri')">回看</span>
+                                                <span class="text-primary url"
+                                                      @click="displayVideoPlayer(ele, 'm3u8Uri')">回看</span>
                                                 <svg-icon
                                                     v-if="ele.m3u8Uri"
                                                     icon-class="copy_btn"
@@ -62,7 +65,8 @@
                                                 </svg-icon>
                                             </div>
                                             <div v-if="ele.playUri" class="url-wrapper">
-                                                <span class="text-primary url" @click="displayVideoPlayer(ele, 'playUri')">直播</span>
+                                                <span class="text-primary url"
+                                                      @click="displayVideoPlayer(ele, 'playUri')">直播</span>
                                                 <svg-icon
                                                     v-if="ele.playUri"
                                                     icon-class="copy_btn"
@@ -89,6 +93,7 @@
     import {mapActions} from 'vuex';
     import _ from 'lodash';
     import DisplayVideoDialog from '../../components/custom_components/custom/DisplayVideoDialog';
+
     const ClipboardJS = require('clipboard');
 
     export default {
@@ -256,93 +261,98 @@
     };
 </script>
 <style scoped lang="scss">
-.content {
-    margin-top: 20px;
-}
-.title, .time-name, .url {
-    display: block;
-    text-align: left;
-}
-.title {
-    font-size: 18px;
-    color: #A8ABB3;
-    padding-left: 20px;
-}
-.time-name {
-    font-size: 14px;
-    line-height: 14px;
-    padding: 10px 0 0 0;
-    color: #A8ABB3;
-}
-.btn-wrapper {
-    display: flex;
-    padding: 10px 0;
-    .url-wrapper {
+    .content {
+        margin-top: 20px;
+    }
+
+    .title, .time-name, .url {
+        display: block;
+        text-align: left;
+    }
+
+    .title {
+        font-size: 18px;
+        color: #A8ABB3;
+        padding-left: 20px;
+    }
+
+    .time-name {
+        font-size: 14px;
+        line-height: 14px;
+        padding: 10px 0 0 0;
+        color: #A8ABB3;
+    }
+
+    .btn-wrapper {
         display: flex;
-        align-content: center;
-        margin-right: 20px;
-        .url {
-            font-size: 14px;
-            line-height: 14px;
-            cursor: pointer;
-            margin-right: 5px;
-        }
-        .svg-icon {
-            width: 14px;
-            height: 14px;
+        padding: 10px 0;
+        .url-wrapper {
+            display: flex;
+            align-content: center;
+            margin-right: 20px;
+            .url {
+                font-size: 14px;
+                line-height: 14px;
+                cursor: pointer;
+                margin-right: 5px;
+            }
+            .svg-icon {
+                width: 14px;
+                height: 14px;
+            }
         }
     }
-}
 </style>
 <style lang="scss">
-#prevContainer,
-#afterContainer {
-    border-top: none;
-    border-bottom: none;
-    border-radius: 8px;
-    overflow: hidden;
-    .item-list {
-        background: #2A3040;
-        .item-li {
-            padding: 0 20px 0 20px;
-            .wrapper {
-                position: relative;
-                border-bottom: 1px solid #3E495E;
-                .play-btn {
-                    position: absolute;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    right: 10px;
-                    color: $mainColor;
-                    cursor: pointer;
-                }
-            }
-            &:last-child {
-                .wrapper {
-                    border-bottom: none;
-                }
-            }
-        }
-    }
-    .el-collapse-item {
-        border-bottom: 1px solid #3E495E;
-        &:last-child {
-            border-bottom: none;
-        }
-        .el-collapse-item__header {
+    #prevContainer,
+    #afterContainer {
+        border-top: none;
+        border-bottom: none;
+        border-radius: 8px;
+        overflow: hidden;
+        .item-list {
             background: #2A3040;
-            border: none;
-            .el-collapse-item__arrow {
-                color: rgb(168, 171, 179);
+            .item-li {
+                padding: 0 20px 0 20px;
+                .wrapper {
+                    position: relative;
+                    border-bottom: 1px solid #3E495E;
+                    .play-btn {
+                        position: absolute;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        right: 10px;
+                        color: $mainColor;
+                        cursor: pointer;
+                    }
+                }
+                &:last-child {
+                    .wrapper {
+                        border-bottom: none;
+                    }
+                }
+            }
+        }
+        .el-collapse-item {
+            border-bottom: 1px solid #3E495E;
+            &:last-child {
+                border-bottom: none;
+            }
+            .el-collapse-item__header {
+                background: #2A3040;
+                border: none;
+                .el-collapse-item__arrow {
+                    color: rgb(168, 171, 179);
+                }
             }
         }
     }
-}
 
-.el-collapse-item__content {
-    padding-bottom: 0;
-}
-.el-collapse-item__wrap {
-    border-bottom: none;
-}
+    .el-collapse-item__content {
+        padding-bottom: 0;
+    }
+
+    .el-collapse-item__wrap {
+        border-bottom: none;
+    }
 </style>

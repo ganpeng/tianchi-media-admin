@@ -1,4 +1,4 @@
-<!--视频列表组件-->
+<!--直播频道列表组件-->
 <template>
     <div class="live-channel-container">
         <div class="table-container">
@@ -388,6 +388,7 @@
         font-size: 14px;
         background: transparent;
     }
+
     .el-dropdown-link {
         color: $mainColor;
     }
@@ -431,13 +432,14 @@
         cursor: pointer;
     }
 </style>
+
 <style lang="scss">
-#channel-operator {
-    .my-dropdown {
-        border: none;
-        width: 70px;
-        height: 18px;
-        line-height: 18px;
+    #channel-operator {
+        .my-dropdown {
+            border: none;
+            width: 70px;
+            height: 18px;
+            line-height: 18px;
+        }
     }
-}
 </style>

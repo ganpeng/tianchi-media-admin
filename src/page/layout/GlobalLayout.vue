@@ -196,9 +196,12 @@
                 }
                 this.$router.push({path});
             },
+            // 如果是子站，点击跳转到设置子站点页面;中心站点跳转到站点列表
             toConfigSite() {
-                if (!this.siteName) {
+                if (this.$wsCache.localStorage.get('siteInfo') && !this.$wsCache.localStorage.get('siteInfo').siteMasterEnable) {
                     this.$router.push({name: 'ConfigSite'});
+                } else {
+                    this.$router.push({name: 'SiteList'});
                 }
             }
         }
@@ -332,7 +335,7 @@
             .logo {
                 width: 200px;
                 height: 110px;
-                background-image: linear-gradient(0deg, rgba(0,0,0,0.00) 0%, #000000 100%);
+                background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.00) 0%, #000000 100%);
                 .svg-icon {
                     position: absolute;
                     left: 50%;
@@ -370,7 +373,7 @@
             line-height: 50px;
             font-size: 20px;
             color: $navText;
-            padding-left: 30px!important;
+            padding-left: 30px !important;
             text-align: left;
             border-left: 4px solid transparent;
             background: transparent;

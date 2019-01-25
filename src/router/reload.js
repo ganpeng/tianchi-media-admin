@@ -6,6 +6,7 @@ import store from '../store';
 import service from '../service';
 import Cookies from 'js-cookie';
 import wsCache from '@/util/webStorage';
+import util from '@/util/extend';
 
 if (Cookies.get('token') && !store.state.user.token) {
     // 设置cookie中的系统用户信息
@@ -26,4 +27,7 @@ if (Cookies.get('token') && !store.state.user.token) {
                 }
             });
     }
+    // 设置项目title
+    let siteName = (wsCache.localStorage.get('siteInfo') && wsCache.localStorage.get('siteInfo').siteName) ? wsCache.localStorage.get('siteInfo').siteName : '';
+    util.setProjectTitle(siteName);
 }

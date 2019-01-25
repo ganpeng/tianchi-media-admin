@@ -99,6 +99,8 @@
                     if (response && response.code === 0) {
                         this.siteName = response.data.siteName;
                         this.$wsCache.localStorage.set('siteInfo', response.data);
+                        // 设置项目title
+                        this.$util.setProjectTitle(this.siteName);
                     }
                 });
             },
@@ -153,6 +155,11 @@
         line-height: 20px;
         background: #191D26;
         border-radius: 10px;
+    }
+
+    .site-name {
+        padding: 0px;
+        cursor: auto;
     }
 
     .el-main {

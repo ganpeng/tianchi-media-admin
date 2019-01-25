@@ -94,13 +94,38 @@
             </el-table-column>
             <!--注入状态-->
             <el-table-column
+                prop="status"
                 align="center"
                 label="注入状态">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.status">
-                        <span v-if="scope.row.status === 'SUCCESS'" class="status-normal">成功</span>
-                    </template>
-                    <span v-else>---</span>
+                    <span :class="{'status-normal':scope.row.status === 'SUCCESS'}">
+                        {{scope.row.status | switchStatus}}
+                    </span>
+                </template>
+            </el-table-column>
+            <!--子站上传状态（主站）-->
+            <el-table-column
+                v-if="$wsCache.localStorage.get('siteInfo') && $wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                align="center"
+                label="上传状态">
+                <template slot-scope="scope">
+                    <span>{{scope.row.uploadStatus | getUploadStatus}}</span>
+                </template>
+            </el-table-column>
+            <!--子站拉取状态（子站）-->
+            <el-table-column
+                v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
+                align="center"
+                label="拉取状态">
+                <template slot-scope="scope">
+                    <span>{{scope.row.downloadStatus | getDownloadStatus}}</span>
+                </template>
+            </el-table-column>
+            <!--视频来源(主站、子站)-->
+            <el-table-column align="center" label="视频来源">
+                <template slot-scope="scope">
+                    <span v-if="!scope.row.origin || scope.row.origin.length === 0">---</span>
+                    <span v-else>{{scope.row.origin.name}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -156,6 +181,44 @@
                 url: '',
                 title: ''
             };
+        },
+        filters: {
+            switchStatus(status) {
+                switch (status) {
+                    case 'SUCCESS':
+                        return '成功';
+                    case 'FAILED':
+                        return '失败';
+                    case 'INJECTING':
+                        return '注入中';
+                    default:
+                        return '------';
+                }
+            },
+            getUploadStatus(uploadStatus) {
+                switch (uploadStatus) {
+                    case 'ON_GOING':
+                        return '上传中';
+                    case 'SUCCESS':
+                        return '成功';
+                    case 'FAILED':
+                        return '失败';
+                    default:
+                        return '---';
+                }
+            },
+            getDownloadStatus(downloadStatus) {
+                switch (downloadStatus) {
+                    case 'ON_GOING':
+                        return '拉取中';
+                    case 'SUCCESS':
+                        return '成功';
+                    case 'FAILED':
+                        return '失败';
+                    default:
+                        return '---';
+                }
+            }
         },
         created() {
             let that = this;
@@ -245,6 +308,7 @@
     .gan-tooltip {
         width: 300px;
     }
+
     .el-radio__label {
         padding-left: 0;
     }
