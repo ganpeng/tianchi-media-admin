@@ -109,7 +109,9 @@
                 align="center"
                 label="上传状态">
                 <template slot-scope="scope">
-                    <span>{{scope.row.uploadStatus | getUploadStatus}}</span>
+                    <span :class="{'status-normal':scope.row.uploadStatus === 'SUCCESS'}">
+                        {{scope.row.uploadStatus | getUploadStatus}}
+                    </span>
                 </template>
             </el-table-column>
             <!--子站拉取状态（子站）-->
@@ -118,7 +120,9 @@
                 align="center"
                 label="拉取状态">
                 <template slot-scope="scope">
-                    <span>{{scope.row.downloadStatus | getDownloadStatus}}</span>
+                    <span :class="{'status-normal':scope.row.downloadStatus === 'SUCCESS'}">
+                        {{scope.row.downloadStatus | getDownloadStatus}}
+                    </span>
                 </template>
             </el-table-column>
             <!--视频来源(主站、子站)-->
