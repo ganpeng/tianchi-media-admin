@@ -201,7 +201,7 @@
                         <!--注入中、注入失败、上传中、上传失败不可查看共享站点-->
                         <span
                             class="btn-text"
-                            :class="{disabled:scope.row.uploadStatus === 'ON_GOING' || scope.row.uploadStatus === 'FAILED' || scope.row.status === 'INJECTING' || scope.row.status === 'FAILED'}"
+                            :class="{disabled:!(scope.row.status === 'SUCCESS' || scope.row.uploadStatus === 'SUCCESS')}"
                             @click="checkShareSiteList(scope.row)">
                             查看
                         </span>

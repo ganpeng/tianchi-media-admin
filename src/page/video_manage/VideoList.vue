@@ -134,7 +134,12 @@
             width="40%">
             <div class="batch-share-body" v-if="batchShareDialogVisible">
                 <div>{{$refs.videoTable.getSelectedVideoList().length}}个视频可以被以下站点共享:</div>
-                <el-select v-model="batchShareSiteIdList" multiple clearable placeholder="请选择共享站点">
+                <el-select
+                    v-model="batchShareSiteIdList"
+                    multiple
+                    clearable
+                    @change="setShareSites"
+                    placeholder="请选择共享站点">
                     <el-option
                         v-for="(item, index) in shareSiteOptions"
                         :key="index"
@@ -218,6 +223,13 @@
                     }
                 }
                 this.getVideoList();
+                // 初始化共享站点的列表
+                this.$service.getAllSiteList().then(response => {
+                    if (response && response.code === 0) {
+                        this.shareSiteOptions = response.data;
+                        this.shareSiteOptions.unshift({id: '0', name: '全选'});
+                    }
+                });
             },
             getVideoList(searchParams, isReset) {
                 // 设置请求参数
@@ -236,6 +248,19 @@
                         this.videoList = response.data.list;
                         this.total = response.data.total;
                         this.$refs.videoTable.reCheckVideoList();
+                    }
+                });
+            },
+            // 设置共享站点，对全选进行处理
+            setShareSites() {
+                this.batchShareSiteIdList.map(siteId => {
+                    if (siteId === '0') {
+                        this.batchShareSiteIdList = [];
+                        this.shareSiteOptions.map(siteOption => {
+                            if (siteOption.name !== '全选') {
+                                this.batchShareSiteIdList.push(siteOption.id);
+                            }
+                        });
                     }
                 });
             },
