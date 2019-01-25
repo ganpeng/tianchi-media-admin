@@ -869,6 +869,8 @@
                 // 新加
                 updateProgrammeById: 'programme/updateProgrammeById',
                 createMultProgrammeVideo: 'programme/createMultProgrammeVideo',
+                editMultProgrammeVideo: 'programme/editMultProgrammeVideo',
+                editEmptyProgrammeVideo: 'programme/editEmptyProgrammeVideo',
                 getDict: 'programme/getDict',
                 // 新加结束
                 createProgramme: 'programme/createProgramme',
@@ -988,7 +990,7 @@
                                             let id = res.data.id;
                                             if (this.video.list.length > 0) {
                                                 if (this.checkVideoList(this.video.list)) {
-                                                    this.createMultProgrammeVideo({programme: res.data})
+                                                    this.createMultProgrammeVideo(res.data)
                                                         .then((videoRes) => {
                                                             if (videoRes && videoRes.code === 0) {
                                                                 this.deleteTempList();
@@ -1036,7 +1038,7 @@
                                         if (res && res.code === 0) {
                                             if (this.video.list.length > 0) {
                                                 if (this.checkVideoList(this.video.list)) {
-                                                    this.createMultProgrammeVideo({programme: res.data})
+                                                    this.editMultProgrammeVideo()
                                                         .then((videoRes) => {
                                                             if (videoRes && videoRes.code === 0) {
                                                                 this.deleteTempList();
@@ -1062,7 +1064,7 @@
                                                     this.$message.error(message);
                                                 }
                                             } else {
-                                                this.createMultProgrammeVideo({programme: res.data})
+                                                this.editEmptyProgrammeVideo(id)
                                                     .then((videoRes) => {
                                                         if (videoRes && videoRes.code === 0) {
                                                             this.deleteTempList();
@@ -1085,10 +1087,14 @@
                                                     });
                                             }
                                         } else {
-                                            this.$message({
-                                                type: 'error',
-                                                message: `节目保存失败: ${res.message}`
-                                            });
+                                            if (res.code === 3110 || res.code === 3111) {
+                                                this.$message.warning(this.$util.lowerFrameProgrammeErrorHandler(res));
+                                            } else {
+                                                this.$message({
+                                                    type: 'error',
+                                                    message: `节目保存失败: ${res.message}`
+                                                });
+                                            }
                                         }
                                     }).finally(() => {
                                         this.isLoading = false;

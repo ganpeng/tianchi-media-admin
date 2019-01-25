@@ -1272,13 +1272,36 @@ const actions = {
         }
     },
     // 视频相关的请求
-    async createMultProgrammeVideo({commit, state}, {programme}) {
+    //  创建节目的时候保存视频
+    async createMultProgrammeVideo({state}, programme) {
         try {
             let {list} = state.video;
             let videoList = filterProgrammeVideoList(list, programme);
             let res = await service.createMultProgrammeVideo(videoList);
             return res;
-        } catch (err) {}
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    //  编辑节目的时候保存视频
+    async editMultProgrammeVideo({state}) {
+        try {
+            let {list} = state.video;
+            let {programme} = state;
+            let videoList = filterProgrammeVideoList(list, programme);
+            let res = await service.createMultProgrammeVideo(videoList);
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    async editEmptyProgrammeVideo({state}, id) {
+        try {
+            let res = await service.editEmptyProgrammeVideo(id);
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
     },
     async getProgrammeVideoById({commit, state}, id) {
         try {

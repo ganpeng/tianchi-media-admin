@@ -185,3 +185,10 @@ export const upLowerFrameProgramme = (idList, visible) => {
 export const batchDeleteProgrammes = (idList) => {
     return service.delete(`/v1/content/programme`, {data: idList});
 };
+
+/**
+ * 视频列表为空时候的保存
+ */
+export const editEmptyProgrammeVideo = (id) => {
+    return service.delete(`/v1/content/programme/video/all/${id}`);
+};
