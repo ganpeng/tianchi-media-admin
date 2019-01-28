@@ -22,8 +22,8 @@ export default {
         this.$util.toggleFixedBtnContainer();
     },
     created() {
-        // let {id} = this.$route.params;
-        // this.getDeviceById(id);
+        let {id} = this.$route.params;
+        this.getDeviceById(id);
     },
     methods: {
         ...mapActions({

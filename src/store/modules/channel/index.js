@@ -2,6 +2,8 @@ import _ from 'lodash';
 import service from '../../../service';
 import {getPageSize} from '@/util/formValidate';
 
+let isLoading = false;
+
 let defaultChannelTypeList = [
     {
         name: '直播频道',
@@ -233,14 +235,20 @@ const actions = {
      */
     async createChannels() {
         try {
-            let liveChannel = _.cloneDeep(state.liveChannel);
-            delete liveChannel.releaseStatus;
-            delete liveChannel.status;
-            delete liveChannel.id;
-            delete liveChannel.visible;
-            let res = await service.createChannels(liveChannel);
-            return res;
+            if (!isLoading) {
+                isLoading = true;
+                let liveChannel = _.cloneDeep(state.liveChannel);
+                delete liveChannel.releaseStatus;
+                delete liveChannel.status;
+                delete liveChannel.id;
+                delete liveChannel.visible;
+                let res = await service.createChannels(liveChannel);
+                isLoading = false;
+                return res;
+            }
         } catch (err) {
+            console.log(err);
+            isLoading = false;
         }
     },
     /**
@@ -261,10 +269,16 @@ const actions = {
      */
     async updateChannelById({commit, state}, id) {
         try {
-            let liveChannel = _.cloneDeep(state.liveChannel);
-            let res = await service.updateChannelById(id, liveChannel);
-            return res;
+            if (!isLoading) {
+                isLoading = true;
+                let liveChannel = _.cloneDeep(state.liveChannel);
+                let res = await service.updateChannelById(id, liveChannel);
+                isLoading = false;
+                return res;
+            }
         } catch (err) {
+            console.log(err);
+            isLoading = false;
         }
     },
     /**

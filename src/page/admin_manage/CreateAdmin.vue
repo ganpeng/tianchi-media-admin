@@ -77,6 +77,7 @@
                 }
             };
             return {
+                isLoading: false,
                 createInfo: {
                     name: '',
                     telephone: '',
@@ -106,16 +107,23 @@
                 this.$refs['createInfo'].validate((valid) => {
                     if (valid) {
                         // 请求接口
-                        this.$service.createAdmin({
-                            email: this.createInfo.email,
-                            mobile: this.createInfo.mobile,
-                            name: this.createInfo.name
-                        }).then(response => {
-                            if (response) {
-                                this.$message(response.data.name + '的账号创建成功');
-                                this.$router.push({name: 'AdminList'});
-                            }
-                        });
+                        if (!this.isLoading) {
+                            this.isLoading = true;
+                            this.$service.createAdmin({
+                                email: this.createInfo.email,
+                                mobile: this.createInfo.mobile,
+                                name: this.createInfo.name
+                            }).then(response => {
+                                this.isLoading = false;
+                                if (response) {
+                                    this.$message(response.data.name + '的账号创建成功');
+                                    this.$router.push({name: 'AdminList'});
+                                }
+                            }).catch((err) => {
+                                console.log(err);
+                                this.isLoading = false;
+                            });
+                        }
                     } else {
                         return false;
                     }

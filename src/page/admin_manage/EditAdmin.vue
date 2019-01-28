@@ -79,6 +79,7 @@
                 }
             };
             return {
+                isLoading: false,
                 editInfo: {
                     id: '',
                     name: '',
@@ -129,18 +130,25 @@
                 this.$refs['editInfo'].validate((valid) => {
                     if (valid) {
                         // 请求接口
-                        this.$service.updateAdminInfo({
-                            id: this.editInfo.id,
-                            email: this.editInfo.email,
-                            telephone: this.editInfo.telephone,
-                            mobile: this.editInfo.mobile,
-                            name: this.editInfo.name
-                        }).then(response => {
-                            if (response) {
-                                this.$message(response.data.name + '的账号更新成功');
-                                this.$router.push({name: 'AdminList'});
-                            }
-                        });
+                        if (!this.isLoading) {
+                            this.isLoading = true;
+                            this.$service.updateAdminInfo({
+                                id: this.editInfo.id,
+                                email: this.editInfo.email,
+                                telephone: this.editInfo.telephone,
+                                mobile: this.editInfo.mobile,
+                                name: this.editInfo.name
+                            }).then(response => {
+                                this.isLoading = false;
+                                if (response) {
+                                    this.$message(response.data.name + '的账号更新成功');
+                                    this.$router.push({name: 'AdminList'});
+                                }
+                            }).catch((err) => {
+                                console.log(err);
+                                this.isLoading = false;
+                            });
+                        }
                     } else {
                         return false;
                     }

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import service from '../../../service';
-// let isLoading = false; // 解决重复调用列表接口的问题
+let isLoading = false; // 解决重复调用列表接口的问题
 const defaultSearchFields = {
     no: '',
     hardWareId: '',
@@ -122,10 +122,17 @@ const actions = {
     },
     async addDevice({commit, state}) {
         try {
-            let device = _.cloneDeep(state.device);
-            let res = await service.addDevice(device);
-            return res;
-        } catch (err) { }
+            if (!isLoading) {
+                isLoading = true;
+                let device = _.cloneDeep(state.device);
+                let res = await service.addDevice(device);
+                isLoading = false;
+                return res;
+            }
+        } catch (err) {
+            console.log(err);
+            isLoading = false;
+        }
     },
     async getDeviceById({commit, state}, id) {
         try {
@@ -137,13 +144,19 @@ const actions = {
             console.log(err);
         }
     },
-    async updateDeviceById({commit, state}) {
+    async updateDeviceById({commit, state}, id) {
         try {
-            let device = state.device;
-            let id = state.currentId;
-            let res = await service.updateDeviceById(id, device);
-            return res;
-        } catch (err) {}
+            if (!isLoading) {
+                isLoading = true;
+                let device = state.device;
+                let res = await service.updateDeviceById(id, device);
+                isLoading = false;
+                return res;
+            }
+        } catch (err) {
+            console.log(err);
+            isLoading = false;
+        }
     },
     async deleteDeviceById({commit, state}, id) {
         try {

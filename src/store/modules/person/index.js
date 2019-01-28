@@ -3,6 +3,8 @@ import _ from 'lodash';
 import service from '../../../service';
 import role from '@/util/config/role';
 
+let isLoading = false;
+
 const defaultPerson = {
     alias: '',
     englishName: '',
@@ -275,24 +277,36 @@ const actions = {
 
     async createPerson({commit, state}) {
         try {
-            let person = _.cloneDeep(state.currentPerson);
-            delete person.createdAt;
-            let res = await service.createPerson(person);
-            if (res && res.code === 0) {
-                return res;
+            if (!isLoading) {
+                isLoading = true;
+                let person = _.cloneDeep(state.currentPerson);
+                delete person.createdAt;
+                let res = await service.createPerson(person);
+                isLoading = false;
+                if (res && res.code === 0) {
+                    return res;
+                }
             }
         } catch (err) {
+            console.log(err);
+            isLoading = false;
         }
     },
     async updatePersonById({commit, state}) {
         try {
-            let person = _.cloneDeep(state.currentPerson);
-            delete person.createdAt;
-            let res = service.updatePersonById(person.id, person);
-            if (res && res.code === 0) {
-                return res;
+            if (!isLoading) {
+                isLoading = true;
+                let person = _.cloneDeep(state.currentPerson);
+                delete person.createdAt;
+                let res = service.updatePersonById(person.id, person);
+                isLoading = false;
+                if (res && res.code === 0) {
+                    return res;
+                }
             }
         } catch (err) {
+            console.log(err);
+            isLoading = false;
         }
     },
     async searchPerson({commit, state}, name) {

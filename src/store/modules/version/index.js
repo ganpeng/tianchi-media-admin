@@ -2,6 +2,8 @@ import _ from 'lodash';
 import service from '../../../service';
 import {getPageSize} from '@/util/formValidate';
 
+let isLoading = false;
+
 const defaultVersion = {
     productType: '', // 客户端类型
     version: '', // 版本号
@@ -106,10 +108,17 @@ function formatVersion(version) {
 const actions = {
     async postVersion({commit, state}) {
         try {
-            let version = formatVersion(state.version);
-            let res = await service.postVersion(version);
-            return res;
-        } catch (err) {}
+            if (!isLoading) {
+                isLoading = true;
+                let version = formatVersion(state.version);
+                let res = await service.postVersion(version);
+                isLoading = false;
+                return res;
+            }
+        } catch (err) {
+            console.log(err);
+            isLoading = false;
+        }
     },
     async getVersionList({commit, state}) {
         try {
