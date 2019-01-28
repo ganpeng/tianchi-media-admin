@@ -65,11 +65,12 @@
             <custom-corner-mark-form
                 v-if="cornerMarkDialogVisible"
                 ref="customCornerMarkForm"
-                v-on:successHandler="successHandler">
+                v-on:successHandler="successHandler"
+                v-on:setIsLoadingStatus="setIsLoadingStatus">
             </custom-corner-mark-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="cornerMarkDialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="confirmCornerMarkForm">确定</el-button>
+                <el-button type="primary" @click="confirmCornerMarkForm" :loading="isLoading">确定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -85,6 +86,7 @@
         },
         data() {
             return {
+                isLoading: false,
                 customCornerMarkList: [],
                 cornerMarkDialogVisible: false,
                 dialogTitle: '创建角标'
@@ -94,6 +96,9 @@
             this.getCornerMarkList();
         },
         methods: {
+            setIsLoadingStatus(status) {
+                this.isLoading = status;
+            },
             getCornerMarkList() {
                 this.$service.getCornerMarkList({markType: 'CUSTOM'}).then(response => {
                     if (response && response.code === 0) {
@@ -131,11 +136,6 @@
                             this.$message.success('角标删除成功');
                             this.getCornerMarkList();
                         }
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
                     });
                 });
             }

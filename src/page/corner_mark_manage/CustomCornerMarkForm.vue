@@ -99,12 +99,14 @@
             confirmCornerMark() {
                 this.$refs['subjectInfo'].validate((valid) => {
                     if (valid) {
+                        this.$emit('setIsLoadingStatus', true);
                         if (this.mode === 'CREATE') {
                             this.$service.createCornerMark(this.cornerMarkInfo).then(response => {
                                 if (response && response.code === 0) {
                                     this.$message.success('角标创建成功');
                                     this.$emit('successHandler');
                                 }
+                                this.$emit('setIsLoadingStatus', false);
                             });
                         }
                         if (this.mode === 'EDIT') {
@@ -113,6 +115,7 @@
                                     this.$message.success('角标更新成功');
                                     this.$emit('successHandler');
                                 }
+                                this.$emit('setIsLoadingStatus', false);
                             });
                         }
                     } else {

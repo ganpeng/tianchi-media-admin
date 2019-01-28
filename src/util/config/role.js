@@ -646,7 +646,7 @@ const ASIDE_LIST = [
     [
         {
             text: '站点配置',
-            uri: '/config-manage/site',
+            uri: '/site-manage/config',
             icon: 'site_config'
         }
     ],

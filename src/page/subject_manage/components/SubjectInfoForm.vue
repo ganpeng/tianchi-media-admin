@@ -105,7 +105,7 @@
             </programme-operate-table>
         </el-form>
         <div class="fixed-btn-container">
-            <el-button class="btn-style-two" type="primary" @click="operateSubject">保存</el-button>
+            <el-button class="btn-style-two" type="primary" @click="operateSubject" :loading="isLoading">保存</el-button>
             <el-button class="btn-style-three" @click="toSubjectList" plain>返回列表</el-button>
         </div>
         <el-dialog
@@ -224,6 +224,7 @@
                 }
             };
             return {
+                isLoading: false,
                 programmeAllowResolutions: PROGRAMME_SUBJECT_DIMENSION,
                 figureAllowResolutions: FIGURE_SUBJECT_DIMENSION,
                 programmeCategoryList: [],
@@ -375,6 +376,7 @@
                                 }
                             });
                         }
+                        this.isLoading = true;
                         // 创建专题
                         if (this.status === 'CREATE_PROGRAMME' || this.status === 'CREATE_FIGURE') {
                             this.subjectInfo.category = this.status === 'CREATE_PROGRAMME' ? 'PROGRAMME' : 'FIGURE';
@@ -382,6 +384,8 @@
                                 if (response && response.code === 0) {
                                     this.$message.success('成功创建专题');
                                     this.toSubjectList();
+                                } else {
+                                    this.isLoading = false;
                                 }
                             });
                         } else {
@@ -389,6 +393,8 @@
                                 if (response && response.code === 0) {
                                     this.$message.success('成功更新专题');
                                     this.toSubjectList();
+                                } else {
+                                    this.isLoading = false;
                                 }
                             });
                         }

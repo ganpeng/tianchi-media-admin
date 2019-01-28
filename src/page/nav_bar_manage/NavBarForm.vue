@@ -106,7 +106,7 @@
             </el-form-item>
         </el-form>
         <div class="fixed-btn-container">
-            <el-button class="btn-style-two" type="primary" @click="createNavBar">保存</el-button>
+            <el-button class="btn-style-two" type="primary" @click="createNavBar" :loading="isLoading">保存</el-button>
             <el-button class="btn-style-three" @click="toNavBarSetting" plain>返回</el-button>
         </div>
     </div>
@@ -167,6 +167,7 @@
                 }
             };
             return {
+                isLoading: false,
                 uploadMode: '',
                 allowResolutions: [{width: 100, height: 42}],
                 navBarInfo: {
@@ -258,11 +259,14 @@
                 } else {
                     this.navBarInfo.name = '';
                 }
+                this.isLoading = true;
                 if (this.status === 'CREATE') {
                     this.$service.createNavBar(this.navBarInfo).then(response => {
                         if (response && response.code === 0) {
                             this.$message.success('成功创建栏目');
                             this.toNavBarSetting();
+                        } else {
+                            this.isLoading = false;
                         }
                     });
                 } else {
@@ -270,6 +274,8 @@
                         if (response && response.code === 0) {
                             this.$message.success('成功更新栏目');
                             this.toNavBarSetting();
+                        } else {
+                            this.isLoading = false;
                         }
                     });
                 }

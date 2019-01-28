@@ -420,7 +420,7 @@
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
         <div class="fixed-btn-container">
-            <el-button class="btn-style-two" type="primary" @click="saveChannelInfo">保存</el-button>
+            <el-button class="btn-style-two" type="primary" @click="saveChannelInfo" :loading="isLoading">保存</el-button>
             <el-button class="btn-style-three" @click="toChannelList" plain>返回列表</el-button>
         </div>
         <el-dialog
@@ -561,6 +561,7 @@
                 }
             };
             return {
+                isLoading: false,
                 displayNameSettingVisible: false,
                 sortToolVisible: true,
                 allowResolutions: CHANNEL_LOGO_DIMENSION,
@@ -995,12 +996,15 @@
                                 }
                             });
                         });
+                        this.isLoading = true;
                         switch (this.status) {
                             case 'CREATE_CHANNEL':
                                 this.$service.createChannels(this.channelInfo).then(response => {
                                     if (response && response.code === 0) {
                                         this.$message('成功创建频道');
                                         this.toChannelList();
+                                    } else {
+                                        this.isLoading = false;
                                     }
                                 });
                                 break;
@@ -1012,6 +1016,8 @@
                                     if (response && response.code === 0) {
                                         this.$message.success('保存频道信息成功');
                                         this.toChannelList();
+                                    } else {
+                                        this.isLoading = false;
                                     }
                                 });
                                 break;

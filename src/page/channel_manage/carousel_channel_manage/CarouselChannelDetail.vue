@@ -168,9 +168,9 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div id="operate-list">
-            <el-button type="primary" class="btn-style-two" @click="editInfo">编辑</el-button>
-            <el-button @click="toChannelList" class="btn-style-three">返回列表</el-button>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-two" type="primary" @click="editInfo">保存</el-button>
+            <el-button class="btn-style-three" @click="toChannelList" plain>返回列表</el-button>
         </div>
         <display-video-dialog
             :url="previewVideoInfo.url"
@@ -214,6 +214,7 @@
         },
         methods: {
             init() {
+                this.$util.toggleFixedBtnContainer();
                 this.$service.getChannelDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         this.channelInfo = response.data;
