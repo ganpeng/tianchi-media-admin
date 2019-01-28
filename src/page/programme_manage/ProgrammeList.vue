@@ -71,7 +71,7 @@
                     <span
                         @click="toggleSearchField"
                         :class="['el-dropdown-link', searchFieldVisible ? 'active' : '']">
-                        更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
+                        更多筛选<i v-if="searchFieldVisible" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
                     </span>
                 </div>
                 <div v-show="searchFieldVisible" class="field-row">

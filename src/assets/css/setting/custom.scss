@@ -721,6 +721,9 @@ html, body {
             cursor: pointer;
             &.active {
                 color: $mainColor;
+                .my-arrow-icon {
+                    color: #6F7480;
+                }
             }
         }
     }
@@ -866,6 +869,7 @@ html, body {
         color: $mainColor;
         font-size: 14px;
         cursor: pointer;
+        margin-left: 10px;
         &:hover {
             text-decoration: underline;
         }

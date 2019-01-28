@@ -13,7 +13,7 @@
                     <!-- <i @click.stop="deleteImage(image.id)" class="delete-icon el-tag__close el-icon-close"></i> -->
                     <p class="dimension-info">{{image.width}}*{{image.height}}</p>
                 </li>
-                <li :style="styleStr(obj.dataUri)" v-for="(obj, index) in showFileList" :key="index" class="image-item">
+                <li :style="styleStr(obj.dataUri)" v-for="(obj, index) in showFileList" :key="index" class="image-item uploading-image-item">
                     <el-progress :stroke-width="3" :show-text="false" class="progress-bar" v-show="obj.data.progress !== 0" :percentage="obj.data.progress"></el-progress>
                 </li>
                 <li v-show="!isUploading" class="image-item">
@@ -283,8 +283,11 @@ export default {
             }
             .progress-bar {
                 position: absolute;
+                left: 50%;
                 bottom: 0px;
-                width: 100%;
+                width: 98%;
+                transform: translateX(-50%);
+                border-radius: 8px;
             }
             span.delete-icon {
                 display: none;
@@ -303,6 +306,10 @@ export default {
                     display: block;
                 }
             }
+        }
+        .uploading-image-item {
+            border-radius: 8px;
+            border: 1px solid #3E495E;
         }
     }
     .uploader {
