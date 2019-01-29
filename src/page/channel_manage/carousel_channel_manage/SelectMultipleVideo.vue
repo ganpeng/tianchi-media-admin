@@ -1,7 +1,7 @@
 <template>
     <div id="select-multiple-video" class="video-table-container text-center" @keyup.enter="getVideoList">
         <div class="selected-count">
-            <span>已选{{currentSelectedVideoList.length}}项</span>
+            <span>已选{{selectedMultipleVideo.length}}项</span>
         </div>
         <div class="search-field-item">
             <el-input
@@ -130,18 +130,18 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                width="220px"
+                width="110px"
                 label="上传日期">
                 <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm:SS')}}
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
-                width="220px"
+                width="110px"
                 label="更新日期">
                 <template slot-scope="scope">
-                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:mm:SS')}}
+                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
         </el-table>
@@ -203,7 +203,7 @@
                 },
                 hasRadio: true,
                 videoList: [],
-                selectedMultipleVideo: []
+                selectedMultipleVideo: this.currentSelectedVideoList
             };
         },
         filters: {

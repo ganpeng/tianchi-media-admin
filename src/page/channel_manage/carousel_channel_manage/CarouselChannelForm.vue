@@ -786,8 +786,8 @@
                     // 添加的视频设置为默认正常
                     selectedVideoList[i].visible = true;
                     delete selectedVideoList[i].id;
-                    this.currentSelectedVideoList.splice(this.currentVideoIndex + i, 0, selectedVideoList[i]);
                 }
+                this.currentSelectedVideoList = selectedVideoList;
             },
             // 视频列表排序
             sortVideoList() {
