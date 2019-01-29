@@ -71,7 +71,8 @@
                     :imageList="subjectInfo.posterImageList"
                     :deleteImageHandler="removePosterImage"
                     :imageUploadedHandler="imageUploadedHandler"
-                    :allowResolutions="programmeAllowResolutions">
+                    :allowResolutions="programmeAllowResolutions"
+                    :validator="imageUploadValidator">
                 </multi-image-uploader>
             </el-form-item>
             <!--设置人物专题封面图片-->
@@ -87,7 +88,8 @@
                     :dimension="{width:'168',height:'180'}"
                     :deleteImageHandler="removePosterImage"
                     :imageUploadedHandler="imageUploadedHandler"
-                    :allowResolutions="figureAllowResolutions">
+                    :allowResolutions="figureAllowResolutions"
+                    :validator="imageUploadValidator">
                 </multi-image-uploader>
             </el-form-item>
             <!--专题关联节目-->
@@ -316,12 +318,44 @@
                     } else {
                         this.$message.warning(value + '标签重复');
                     }
-                }).catch(() => {
                 });
             },
             // 成功上传图片
             imageUploadedHandler(image) {
-                this.subjectInfo.posterImageList.push(image);
+                // 人物专题的唯一尺寸图片的替换
+                if (this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE') {
+                    if (image.width.toString() === '260' && image.height.toString() === '600') {
+                        let tag = false;
+                        for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
+                            if (this.subjectInfo.posterImageList[i].width.toString() === '260' && this.subjectInfo.posterImageList[i].height.toString() === '600') {
+                                this.subjectInfo.posterImageList[i] = image;
+                                tag = true;
+                            }
+                        }
+                        if (tag === false) {
+                            this.subjectInfo.posterImageList.push(image);
+                        }
+                    } else {
+                        this.subjectInfo.posterImageList.push(image);
+                    }
+                }
+                // 节目专题的唯一尺寸图片的替换
+                if (this.status === 'CREATE_PROGRAMME' || this.status === 'EDIT_PROGRAMME') {
+                    if (image.width.toString() === '1920' && image.height.toString() === '1080') {
+                        let tag = false;
+                        for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
+                            if (this.subjectInfo.posterImageList[i].width.toString() === '1920' && this.subjectInfo.posterImageList[i].height.toString() === '1080') {
+                                this.subjectInfo.posterImageList[i] = image;
+                                tag = true;
+                            }
+                        }
+                        if (tag === false) {
+                            this.subjectInfo.posterImageList.push(image);
+                        }
+                    } else {
+                        this.subjectInfo.posterImageList.push(image);
+                    }
+                }
                 this.subjectInfo.posterImageList = _.uniqBy(this.subjectInfo.posterImageList, 'id');
                 if (this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE') {
                     this.resortImageList('260', '600');
@@ -348,6 +382,21 @@
                         return;
                     }
                 }
+            },
+            imageUploadValidator(fileList) {
+                let onlyFileListOne = fileList.filter((item) => {
+                    let {width, height} = item.demension;
+                    if (this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE') {
+                        return parseInt(width) === 260 && parseInt(height) === 600;
+                    } else {
+                        return parseInt(width) === 1920 && parseInt(height) === 1080;
+                    }
+                });
+                if (onlyFileListOne.length > 1) {
+                    this.$message.error(this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE' ? '260*600专题E图只能上传一张' : '1920*1080专题背景图只能有上传一张');
+                    return false;
+                }
+                return true;
             },
             // 删除封面图片
             removePosterImage(imageId) {
