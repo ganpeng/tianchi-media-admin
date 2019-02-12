@@ -114,6 +114,20 @@
                         :allowResolutions="[{width: 260, height: 260}]"
                     ></single-image-uploader>
                 </el-form-item>
+                <el-form-item label="区域码">
+                    <div class="my-tags">
+                        <el-tag
+                            :key="index"
+                            v-for="(type, index) in []"
+                            closable
+                            :disable-transitions="false">
+                            {{type}}
+                        </el-tag>
+                    </div>
+                    <area-code-search
+                        :handleSelect="selectAreaCodeHandler"
+                    ></area-code-search>
+                </el-form-item>
             </el-form>
         </el-col>
     </div>
@@ -124,13 +138,15 @@ import _ from 'lodash';
 import {mapGetters, mapMutations} from 'vuex';
 import {checkIP, checkPort, checkChannelNo, checkIp} from '@/util/formValidate';
 import ChannelTypeSearch from './ChannelTypeSearch';
+import AreaCodeSearch from './AreaCodeSearch';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 export default {
     name: 'LiveChannelForm',
     components: {
         draggable,
         ChannelTypeSearch,
-        SingleImageUploader
+        SingleImageUploader,
+        AreaCodeSearch
     },
     data() {
         return {
@@ -209,6 +225,9 @@ export default {
         },
         deleteLiveCategoryHandler(id) {
             this.deleteLiveCategoryById({id});
+        },
+        selectAreaCodeHandler(area) {
+            console.log(area);
         },
         deleteLogoUri() {
             this.updateLiveChannel({key: 'logoUri', value: ''});

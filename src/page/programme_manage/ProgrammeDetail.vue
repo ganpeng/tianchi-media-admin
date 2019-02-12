@@ -1043,19 +1043,13 @@
                                                             if (videoRes && videoRes.code === 0) {
                                                                 this.deleteTempList();
                                                                 this.getProgrammeVideoListById(id);
-                                                                this.$message({
-                                                                    type: 'success',
-                                                                    message: '保存成功'
-                                                                });
+                                                                this.$message.success('保存成功');
                                                             } else {
                                                                 let message = `视频保存失败: ${videoRes.message}`;
                                                                 if (videoRes && videoRes.code === 3106) {
                                                                     message = `视频【${this.getVideoListName(videoRes.data)}】已经添加，不能重复添加`;
                                                                 }
-                                                                this.$message({
-                                                                    type: 'error',
-                                                                    message
-                                                                });
+                                                                this.$message.error(message);
                                                             }
                                                             this.goBack();
                                                         });
@@ -1078,10 +1072,7 @@
                                                             if (videoRes && videoRes.code === 3106) {
                                                                 message = `视频【${this.getVideoListName(videoRes.data)}】已经添加，不能重复添加`;
                                                             }
-                                                            this.$message({
-                                                                type: 'error',
-                                                                message
-                                                            });
+                                                            this.$message.error(message);
                                                         }
                                                         this.goBack();
                                                     });

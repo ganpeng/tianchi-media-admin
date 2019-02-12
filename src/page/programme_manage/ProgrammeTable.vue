@@ -178,7 +178,7 @@
                 <el-table-column
                     label="操作"
                     align="center"
-                    width="160">
+                    width="180">
                     <template slot-scope="scope">
                         <div class="operator-btn-wrapper">
                             <span class="btn-text" @click="displayVideo(scope.row.id)">查看</span>

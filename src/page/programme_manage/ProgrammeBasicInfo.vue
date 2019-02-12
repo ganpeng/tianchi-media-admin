@@ -8,7 +8,6 @@
                         {{programme.visible ? '上架' : '下架'}}
                     </span>
                 </div>
-                <!-- <img :src="programme.posterImageList[0] ? programme.posterImageList[0].uri : ''" alt="" width="200" height="200"> -->
                 <img :src="programme.coverImage ? programme.coverImage.uri : ''" alt="">
             </div>
             <div class="info-section">

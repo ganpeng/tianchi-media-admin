@@ -97,7 +97,7 @@
                 <el-table-column prop="no" align="center" width="120px" label="展示编号"></el-table-column>
                 <el-table-column prop="innerName" align="center" min-width="120px" label="名称">
                     <template slot-scope="scope">
-                        <span class="ellipsis two">
+                        <span @click="displayLiveChannel(scope.row.id)" class="ellipsis two name">
                             {{scope.row.innerName}}
                         </span>
                     </template>
@@ -386,6 +386,9 @@
                 this.url = hlsPlayUrl;
                 this.title = name;
                 this.$refs.displayVideoDialog.showDialog();
+            },
+            displayLiveChannel(id) {
+                this.$router.push({name: 'LiveChannelDetail', params: {id}});
             }
         }
     };

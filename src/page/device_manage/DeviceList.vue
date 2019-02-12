@@ -19,6 +19,19 @@
                         搜索
                     </el-button>
                     <div class="search-field-item">
+                        <label class="search-field-item-label">时间</label>
+                        <el-date-picker
+                            :value="searchFields.registeredAt"
+                            type="daterange"
+                            :unlink-panels="true"
+                            value-format="timestamp"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            @input="inputSearchFieldHandler($event, 'registeredAt')"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </div>
+                    <div class="search-field-item">
                         <label class="search-field-item-label">类型</label>
                         <el-select
                             :value="searchFields.hardWareId"
@@ -34,6 +47,17 @@
                             </el-option>
                         </el-select>
                     </div>
+                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
+                        <svg-icon icon-class="reset"></svg-icon>
+                        重置
+                    </el-button>
+                    <span
+                        @click="toggleSearchField"
+                        :class="['el-dropdown-link', searchFieldVisible ? 'active' : '']">
+                        更多筛选<i v-if="searchFieldVisible" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
+                    </span>
+                </div>
+                <div v-show="searchFieldVisible" class="field-row">
                     <div class="search-field-item">
                         <label class="search-field-item-label">状态</label>
                         <el-select
@@ -51,22 +75,37 @@
                         </el-select>
                     </div>
                     <div class="search-field-item">
-                        <label class="search-field-item-label">时间</label>
-                        <el-date-picker
-                            :value="searchFields.registeredAt"
-                            type="daterange"
-                            :unlink-panels="true"
-                            value-format="timestamp"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            @input="inputSearchFieldHandler($event, 'registeredAt')"
-                            end-placeholder="结束日期">
-                        </el-date-picker>
+                        <label class="search-field-item-label">固件版本</label>
+                        <el-select
+                            :value="searchFields.status"
+                            placeholder="请选择固件版本"
+                            clearable
+                            @input="inputSearchFieldHandler($event, 'status')"
+                        >
+                            <el-option
+                                v-for="(item, index) in []"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
                     </div>
-                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
-                        <svg-icon icon-class="reset"></svg-icon>
-                        重置
-                    </el-button>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">所属区域</label>
+                        <el-select
+                            :value="searchFields.status"
+                            placeholder="请选择所属区域"
+                            clearable
+                            @input="inputSearchFieldHandler($event, 'status')"
+                        >
+                            <el-option
+                                v-for="(item, index) in []"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
                 </div>
             </div>
             <div class="seperator-line"></div>
@@ -76,8 +115,8 @@
                     <div class="float-left"></div>
                     <div class="float-right">
                         <el-button
-                            class="btn-style-two contain-svg-icon"
-                            @click="createDevice">
+                            disabled
+                            class="btn-style-two contain-svg-icon">
                                 <svg-icon icon-class="add"></svg-icon>
                             添加
                         </el-button>
@@ -109,7 +148,12 @@
                             {{scope.row.currentVersion | padEmpty}}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" label="固件版本">
+                    <el-table-column min-width="120" align="center" label="固件版本">
+                        <template slot-scope="scope">
+                            {{scope.row.currentHardVersion | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column min-width="120" align="center" label="所属区域">
                         <template slot-scope="scope">
                             {{scope.row.currentHardVersion | padEmpty}}
                         </template>
@@ -119,14 +163,19 @@
                             {{scope.row.mac | padEmpty}}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" width="160" label="最后在线时间">
+                    <el-table-column width="140" align="center" label="token">
                         <template slot-scope="scope">
-                            {{scope.row.lastOnlineTime | formatDate('yyyy-MM-DD') | padEmpty}}
+                            {{scope.row.mac | padEmpty}}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" label="注册时间">
+                    <el-table-column align="center" min-width="160" label="注册时间">
                         <template slot-scope="scope">
                             {{scope.row.registeredAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" min-width="160" label="最后在线时间">
+                        <template slot-scope="scope">
+                            {{scope.row.lastOnlineTime | formatDate('yyyy-MM-DD') | padEmpty}}
                         </template>
                     </el-table-column>
                     <el-table-column  align="center" label="状态">
@@ -140,9 +189,11 @@
                             <i v-else class="off-the-shelf">禁用</i>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" width="200px" label="操作">
+                    <el-table-column align="center" width="120px" label="操作">
                         <template slot-scope="scope">
                             <div class="operator-btn-wrapper">
+                                <!-- <span class="btn-text">编辑</span>
+                                <span class="btn-text text-danger">删除</span> -->
                                 <span class="btn-text" @click="editDevice(scope.row.id)">编辑</span>
                                 <span class="btn-text text-danger" @click="deleteDeviceHandler(scope.row.id)">删除</span>
                             </div>
@@ -170,6 +221,7 @@
         components: {},
         data() {
             return {
+                searchFieldVisible: false,
                 status: 0, // 0 是创建，1 是编辑
                 hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS,
                 visibleOptions: [
@@ -242,7 +294,10 @@
                 this.$router.push({name: 'CreateDevice'});
             },
             editDevice(id) {
-                this.$router.push({name: 'EditDevice', params: {id}});
+                // this.$router.push({name: 'EditDevice', params: {id}});
+            },
+            toggleSearchField() {
+                this.searchFieldVisible = !this.searchFieldVisible;
             },
             toggleStatusHandler(id) {
                 let _device = this.list.find((device) => device.id === id);
@@ -264,32 +319,22 @@
                                 this.$message.success('设备更新成功');
                             }
                         });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
                 });
             },
             deleteDeviceHandler(id) {
-                this.$confirm(`您确定要删除该设备吗, 是否继续?`, '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'error'
-                }).then(() => {
-                    this.deleteDeviceById(id)
-                        .then((res) => {
-                            if (res && res.code === 0) {
-                                this.getDeviceList();
-                                this.$message.success('设备删除成功');
-                            }
-                        });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+                // this.$confirm(`您确定要删除该设备吗, 是否继续?`, '提示', {
+                //     confirmButtonText: '确定',
+                //     cancelButtonText: '取消',
+                //     type: 'error'
+                // }).then(() => {
+                //     this.deleteDeviceById(id)
+                //         .then((res) => {
+                //             if (res && res.code === 0) {
+                //                 this.getDeviceList();
+                //                 this.$message.success('设备删除成功');
+                //             }
+                //         });
+                // });
             }
         }
     };

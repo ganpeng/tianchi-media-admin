@@ -60,6 +60,7 @@ import VideoList from 'sysPage/video_manage/VideoList';
 import DownloadVideoList from 'sysPage/video_manage/DownloadVideoList';
 import DiffTimeVideoList from 'sysPage/video_manage/DiffTimeVideoList';
 import LiveChannelList from 'sysPage/channel_manage/LiveChannelList';
+import LiveChannelDetail from 'sysPage/channel_manage/LiveChannelDetail';
 import EditLiveChannelByImportExcel from 'sysPage/channel_manage/EditLiveChannelByImportExcel';
 import CarouselChannelList from 'sysPage/channel_manage/carousel_channel_manage/CarouselChannelList';
 import CreateCarouselChannel from 'sysPage/channel_manage/carousel_channel_manage/CreateCarouselChannel';
@@ -76,7 +77,6 @@ import HotPerson from 'sysPage/person_manage/HotPerson';
 import PreviewProgrammeList from 'sysPage/channel_manage/PreviewProgrammeList';
 import DeviceList from 'sysPage/device_manage/DeviceList';
 import ProductList from 'sysPage/product_manage/ProductList';
-import GoodsList from 'sysPage/goods_manage/GoodsList';
 import CreateCategoryProduct from 'sysPage/product_manage/category_product/CreateCategoryProduct';
 import EditCategoryProduct from 'sysPage/product_manage/category_product/EditCategoryProduct';
 import CreateProgrammeProduct from 'sysPage/product_manage/programme_product/CreateProgrammeProduct';
@@ -92,6 +92,7 @@ import RecordProductDetail from 'sysPage/product_manage/record_product/RecordPro
 import DuplicateList from 'sysPage/person_manage/DuplicateList';
 import Worktop from 'sysPage/worktop/Worktop';
 import ClientLogList from 'sysPage/client_log/ClientLogList';
+import GoodsList from 'sysPage/goods_manage/GoodsList';
 import Category from 'sysPage/category_manage/Category';
 import Search from 'sysPage/search_manage/Search';
 import PageLayout from 'sysPage/page_layout/PageLayout';
@@ -530,6 +531,11 @@ let router = new Router({
                     component: EditLiveChannel
                 },
                 {
+                    path: '/channel-live/display/:id',
+                    name: 'LiveChannelDetail',
+                    component: LiveChannelDetail
+                },
+                {
                     path: '/channel-live/preview/:id',
                     name: 'PreviewProgrammeList',
                     component: PreviewProgrammeList
@@ -602,6 +608,12 @@ let router = new Router({
                     path: '/clientlog/list',
                     name: 'ClientLogList',
                     component: ClientLogList
+                },
+                //  商品管理
+                {
+                    path: '/goods/list',
+                    name: 'GoodsList',
+                    component: GoodsList
                 },
                 {
                     path: '/category-manage',
