@@ -634,6 +634,11 @@ const ASIDE_LIST = [
             text: '产品管理',
             uri: '/product-manage/list',
             icon: 'aside_product'
+        },
+        {
+            text: '商品管理',
+            uri: '/goods-manage/list',
+            icon: 'goods_list'
         }
     ],
     [

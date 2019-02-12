@@ -76,6 +76,7 @@ import HotPerson from 'sysPage/person_manage/HotPerson';
 import PreviewProgrammeList from 'sysPage/channel_manage/PreviewProgrammeList';
 import DeviceList from 'sysPage/device_manage/DeviceList';
 import ProductList from 'sysPage/product_manage/ProductList';
+import GoodsList from 'sysPage/goods_manage/GoodsList';
 import CreateCategoryProduct from 'sysPage/product_manage/category_product/CreateCategoryProduct';
 import EditCategoryProduct from 'sysPage/product_manage/category_product/EditCategoryProduct';
 import CreateProgrammeProduct from 'sysPage/product_manage/programme_product/CreateProgrammeProduct';
@@ -742,6 +743,12 @@ let router = new Router({
                     path: '/product-manage/detail-record/:id',
                     name: 'RecordProductDetail',
                     component: RecordProductDetail
+                },
+                //  商品管理-商品列表
+                {
+                    path: '/goods-manage/list',
+                    name: 'GoodsList',
+                    component: GoodsList
                 },
                 //  站点管理-配置站点
                 {

@@ -1,51 +1,93 @@
 <!--搜索用户参数设置组件-->
 <template>
-    <div @keyup.enter="getUserList" class="text-left">
-        <div class="search-field">
-            <div class="field-row">
-                <div class="search-field-item">
+    <div class="user-search-container">
+        <div @keyup.enter="getUserList" class="text-left filters-container">
+            <el-form :inline="true" class="filter-form">
+                <el-form-item>
                     <el-input
                         v-model="listQueryParams.keyword"
+                        @change="getUserList(true)"
                         clearable
                         class="border-input"
                         placeholder="搜索你想要的信息">
                     </el-input>
-                </div>
-                <el-button class="btn-style-one" @click="getUserList" type="primary">
-                    <svg-icon icon-class="search"></svg-icon>
-                    搜索
-                </el-button>
-                <div class="search-field-item">
-                    <label class="search-field-item-label">日期</label>
+                </el-form-item>
+                <el-form-item>
+                    <el-button
+                        class="btn-style-one"
+                        @click="getUserList(false)"
+                        type="primary">
+                        <svg-icon icon-class="search"></svg-icon>
+                        搜索
+                    </el-button>
+                </el-form-item>
+                <el-form-item label="状态">
+                    <el-select
+                        v-model="listQueryParams.status"
+                        @change="getUserList(true)"
+                        clearable
+                        placeholder="全部">
+                        <el-option
+                            v-for="item in userStatusOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="所属地区">
+                    <el-select
+                        v-model="listQueryParams.district"
+                        @change="getUserList(true)"
+                        clearable
+                        placeholder="全部">
+                        <el-option
+                            v-for="item in districtOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="日期">
                     <el-date-picker
+                        prefix-icon="0"
                         v-model="listQueryParams.dateRange"
                         type="daterange"
+                        @change="getUserList(true)"
                         value-format="timestamp"
-                        :unlink-panels="true"
                         range-separator="至"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
                     </el-date-picker>
-                </div>
-                <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
-                    <svg-icon icon-class="reset"></svg-icon>
-                    重置
-                </el-button>
-                <span
-                    @click="toggleSearchField"
-                    :class="{active:searchFieldVisible}"
-                    class="more-filters">
-                    更多筛选
-                    <i class="el-icon-arrow-up" v-if="searchFieldVisible"></i>
-                    <i class="el-icon-arrow-down" v-else></i>
-                </span>
-            </div>
-            <div v-show="searchFieldVisible" class="field-row">
-                <div class="search-field-item">
-                    <label class="search-field-item-label">省份</label>
-                    <el-select v-model="listQueryParams.province"
-                               @change="selectDistrict('PROVINCE')"
-                               placeholder="请选择省份">
+                </el-form-item>
+                <el-form-item>
+                    <el-button
+                        class="btn-style-one"
+                        @click="clearSearchFields"
+                        type="primary">
+                        <svg-icon icon-class="reset"></svg-icon>
+                        重置
+                    </el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button
+                        type="text"
+                        @click="moreFilters = !moreFilters"
+                        class="more-filters"
+                        :class="{active:moreFilters}">
+                        更多筛选
+                        <i class="el-icon-arrow-up" v-if="moreFilters"></i>
+                        <i class="el-icon-arrow-down" v-else></i>
+                    </el-button>
+                </el-form-item>
+            </el-form>
+            <el-form :inline="true" class="more-filter-box filter-form" v-if="moreFilters">
+                <el-form-item label="省份">
+                    <el-select
+                        v-model="listQueryParams.province"
+                        @change="selectDistrict('PROVINCE')"
+                        placeholder="请选择省份">
                         <el-option
                             v-for="item in provinceOptions"
                             :key="item.code"
@@ -53,9 +95,8 @@
                             :value="item.code">
                         </el-option>
                     </el-select>
-                </div>
-                <div class="search-field-item">
-                    <label class="search-field-item-label">城市</label>
+                </el-form-item>
+                <el-form-item label="城市">
                     <el-select
                         v-model="listQueryParams.city"
                         @change="selectDistrict('CITY')"
@@ -68,9 +109,8 @@
                             :value="item.code">
                         </el-option>
                     </el-select>
-                </div>
-                <div class="search-field-item">
-                    <label class="search-field-item-label">县区</label>
+                </el-form-item>
+                <el-form-item label="县区">
                     <el-select
                         v-model="listQueryParams.county"
                         @change="selectDistrict('COUNTY')"
@@ -83,9 +123,8 @@
                             :value="item.code">
                         </el-option>
                     </el-select>
-                </div>
-                <div class="search-field-item">
-                    <label class="search-field-item-label">乡镇/街道</label>
+                </el-form-item>
+                <el-form-item label="乡镇">
                     <el-select
                         v-model="listQueryParams.street"
                         @change="selectDistrict('STREET')"
@@ -98,8 +137,8 @@
                             :value="item.code">
                         </el-option>
                     </el-select>
-                </div>
-            </div>
+                </el-form-item>
+            </el-form>
         </div>
     </div>
 </template>
@@ -107,11 +146,12 @@
     import _ from 'lodash';
 
     export default {
-        name: 'ProgrammeFilterParams',
-        props: [],
+        name: 'UserFilterParams',
         data() {
             return {
                 listQueryParams: {
+                    status: '',
+                    district: '',
                     dateRange: [],
                     registeredAtStart: '',
                     registeredAtEnd: '',
@@ -121,6 +161,11 @@
                     county: '',
                     street: ''
                 },
+                userStatusOptions: [
+                    {label: '有效', value: 0},
+                    {label: '无效', value: 1},
+                    {label: '注销', value: 2}],
+                districtOptions: [],
                 provinceOptions: [],
                 cityOptions: [],
                 countyOptions: [],
@@ -128,7 +173,8 @@
                 cityDisabled: true,
                 countyDisabled: true,
                 streetDisabled: true,
-                searchFieldVisible: false
+                searchFieldVisible: false,
+                moreFilters: false
             };
         },
         mounted() {
@@ -137,6 +183,12 @@
         methods: {
             init() {
                 this.getDistrictList({level: 'PROVINCE'});
+                // 获取所属区域的数据
+                // this.$service.getOwnDistrictList().then(response => {
+                //     if (response && response.code === 0) {
+                //         this.districtOptions = response.data.list;
+                //     }
+                // });
             },
             // 获取地区列表
             getDistrictList({level, code}) {
@@ -227,6 +279,7 @@
                         this.listQueryParams[key] = '';
                     }
                 }
+                this.getUserList();
             },
             toggleSearchField() {
                 this.searchFieldVisible = !this.searchFieldVisible;
@@ -237,20 +290,36 @@
 
 <style lang="scss" scoped>
 
-    // 按钮
-    .more-filters {
-        margin-left: 20px;
-        font-size: 12px;
-        color: #6F7480;
-        cursor: pointer;
-        &.active {
-            color: #1989FA;
+    .user-search-container {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #252D3F;
+        .filters-container {
+            background: #2A3040;
+            border-radius: 8px;
+        }
+        .svg-icon {
+            margin-right: 10px;
+        }
+
+        // 按钮
+        .more-filters {
+            font-size: 12px;
+            color: #6F7480;
+            &.active {
+                color: #1989FA;
+                i {
+                    color: #6F7480;
+                }
+            }
             i {
-                color: #6F7480;
+                margin-left: 8px;
             }
         }
-        i {
-            margin-left: 8px;
+
+        .more-filter-box {
+            background: #252C3D;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
         }
     }
 

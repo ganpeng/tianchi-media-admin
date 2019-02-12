@@ -14,6 +14,7 @@
                     </div>
                     <div class="float-right">
                         <el-button
+                            disabled="disabled"
                             class="btn-style-two contain-svg-icon"
                             @click="toCreateUser">
                             <svg-icon icon-class="add"></svg-icon>
@@ -36,6 +37,18 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                        prop="id"
+                        align="center"
+                        width="120px"
+                        label="ID">
+                    </el-table-column>
+                    <el-table-column
+                        prop="bossId"
+                        align="center"
+                        width="120px"
+                        label="BOSS编号">
+                    </el-table-column>
+                    <el-table-column
                         align="center"
                         width="140px"
                         prop="name"
@@ -55,38 +68,45 @@
                     </el-table-column>
                     <el-table-column
                         align="center"
-                        width="200px"
-                        prop="identityId"
-                        label="身份证号">
+                        prop="ownDistrict"
+                        label="所属区域">
                     </el-table-column>
                     <el-table-column
                         align="center"
                         prop="stbList"
-                        label="设备ID">
+                        label="设备编号">
                         <template slot-scope="scope">
                             <label v-if="!scope.row.stbList || scope.row.stbList.length === 0">------</label>
-                            <div
-                                v-else
-                                v-for="(item, index) in scope.row.stbList"
-                                :key="index">
+                            <div v-else
+                                 v-for="(item, index) in scope.row.stbList"
+                                 :key="index">
                                 {{item.no}}
-                                <label v-if="item.status === 'FORBIDDEN'" class="disabled-stb">已禁用</label>
                             </div>
                         </template>
                     </el-table-column>
                     <el-table-column
                         align="center"
-                        width="150px"
-                        prop="mobile"
-                        label="手机">
+                        prop="caList"
+                        label="CA卡号">
+                        <template slot-scope="scope">
+                            <label v-if="!scope.row.caList || scope.row.caList.length === 0">------</label>
+                            <div v-else
+                                 v-for="(item, index) in scope.row.caList"
+                                 :key="index">
+                                {{item.no}}
+                            </div>
+                        </template>
                     </el-table-column>
                     <el-table-column
                         align="center"
-                        prop="telephone"
-                        width="150px"
-                        label="电话">
+                        label="所购产品">
                         <template slot-scope="scope">
-                            <label>{{scope.row.telephone ? scope.row.telephone : '-------'}}</label>
+                            <div class="operator-btn-wrapper">
+                                <span class="btn-text"
+                                      @click="checkGoodsList(scope.row)">
+                                      查看
+                                </span>
+                            </div>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -100,12 +120,26 @@
                     <el-table-column
                         align="center"
                         width="120px"
+                        label="更新时间">
+                        <template slot-scope="scope">
+                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        prop="status"
+                        width="120px"
+                        label="状态">
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        width="120px"
                         label="操作"
                         class="operate">
                         <template slot-scope="scope">
                             <div class="operator-btn-wrapper">
-                                <span class="btn-text" @click="editUserInfo(scope.row)">编辑</span>
-                                <span class="btn-text" @click="operateStb(scope.row)">操作设备</span>
+                                <span class="btn-text disabled" @click="editUserInfo(scope.row)">编辑</span>
+                                <span class="btn-text disabled" @click="operateStb(scope.row)">设备</span>
                             </div>
                         </template>
                     </el-table-column>
@@ -121,6 +155,7 @@
                 </el-pagination>
             </div>
         </div>
+        <!--设备操作-->
         <el-dialog
             class="my-dialog"
             :title='currentUserInfo.name + "的设备操作"'
@@ -131,6 +166,74 @@
                 :userInfo="currentUserInfo"
                 v-on:closeDialog="closeDialog">
             </operate-stb>
+        </el-dialog>
+        <!--所购产品-->
+        <el-dialog
+            title="所购产品"
+            :visible.sync="goodsListVisible"
+            :close-on-click-modal="false"
+            custom-class="normal-dialog"
+            width="60%">
+            <div v-if="goodsListVisible">
+                <el-table
+                    :data="currentGoodsList"
+                    header-row-class-name="common-table-header"
+                    border
+                    class="my-table-style"
+                    style="width: 100%">
+                    <el-table-column
+                        align="center"
+                        width="60px"
+                        label="序号">
+                        <template slot-scope="scope">
+                            <label>{{scope.$index + 1}}</label>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="goodsId"
+                        align="center"
+                        width="120px"
+                        label="产品编号">
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        prop="name"
+                        label="产品名称">
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        prop="bookStatus"
+                        label="购买状态">
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        width="140px"
+                        label="订购时间">
+                        <template slot-scope="scope">
+                            {{scope.row.bookAt | formatDate('yyyy-MM-DD')}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        width="140px"
+                        label="订购生效时间">
+                        <template slot-scope="scope">
+                            {{scope.row.takeEffectAt | formatDate('yyyy-MM-DD')}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        width="140px"
+                        label="订购失效时间">
+                        <template slot-scope="scope">
+                            {{scope.row.loseEffectAt | formatDate('yyyy-MM-DD')}}
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="goodsListVisible = false">关闭</el-button>
+            </span>
         </el-dialog>
     </div>
 </template>
@@ -148,13 +251,15 @@
         data() {
             return {
                 operateStbDialogVisible: false,
+                goodsListVisible: false,
                 currentUserInfo: {},
                 listQueryParams: {
                     pageNum: 1,
                     pageSize: 10
                 },
                 total: 0,
-                userList: []
+                userList: [],
+                currentGoodsList: []
             };
         },
         mounted() {
@@ -173,6 +278,10 @@
                         this.total = response.data.total;
                     }
                 });
+            },
+            // 查看所购产品
+            checkGoodsList() {
+                this.goodsListVisible = true;
             },
             handleSizeChange(pageSize) {
                 this.listQueryParams.pageSize = pageSize;
@@ -214,21 +323,6 @@
 
 <style lang="scss" scoped>
 
-    .block-box {
-        position: relative;
-        padding-top: 80px;
-    }
-
-    .create-item {
-        position: absolute;
-        right: 0px;
-        top: 10px;
-    }
-
-    .el-table {
-        margin: 0px;
-    }
-
     .disabled-stb {
         margin-left: 10px;
         color: $baseRed;
@@ -239,8 +333,7 @@
     }
 
     .el-pagination {
-        margin-top: 20px;
-        margin-bottom: 126px;
+        margin-top: 10px;
     }
 
 </style>
