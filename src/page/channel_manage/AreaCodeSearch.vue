@@ -25,12 +25,12 @@ export default {
     },
     computed: {
         ...mapGetters({
-            liveChannelTypeList: 'channel/liveChannelTypeList'
+            filialeList: 'channel/filialeList'
         })
     },
     methods: {
         querySearchAsync(queryString, cb) {
-            var results = queryString ? this.liveChannelTypeList.filter(this.createStateFilter(queryString)) : this.liveChannelTypeList;
+            var results = queryString ? this.filialeList.filter(this.createStateFilter(queryString)) : this.filialeList;
             cb(results);
         },
         createStateFilter(queryString) {

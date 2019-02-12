@@ -91,6 +91,18 @@
                 </div>
             </div>
         </div>
+        <div class="seperator-line"></div>
+        <div class="area-container">
+            <h4 class="content-sub-title">所属区域 <span>{{filialeList.length}}个</span></h4>
+            <ul class="search-list clearfix">
+                <li v-for="(item, index) in filialeList" :key="index" :class="['search-item']">
+                    <div class="wrapper">
+                        <span class="index">{{index + 1}}</span>
+                        <span class="search-name">{{item.name}}</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="editLiveChannel">编辑</el-button>
             <el-button class="btn-style-three" @click="goBack">返回列表</el-button>
@@ -108,7 +120,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            liveChannel: 'channel/liveChannel'
+            liveChannel: 'channel/liveChannel',
+            filialeList: 'channel/filialeList'
         })
     },
     mounted() {
@@ -159,6 +172,51 @@ export default {
             .label {
                 width: 120px;
                 text-align: right;
+            }
+        }
+    }
+}
+
+.content-sub-title {
+    span {
+        font-size: 20px;
+        color: #1989FA;
+    }
+}
+
+.search-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    .search-item {
+        width: 200px;
+        height: 34px;
+        line-height: 34px;
+        border: 1px solid #3E495E;
+        background: #2A3040;
+        border-radius: 4px;
+        margin-right: 20px;
+        margin-bottom: 14px;
+        .wrapper {
+            display: flex;
+            align-items: center;
+            height: 32px;
+            .index {
+                width: 32px;
+                height: 32px;
+                line-height: 32px;
+                color: #A8ABB3;
+                border-right: 1px solid #3E495E;
+            }
+            .search-name {
+                color:#A8ABB3;
+                flex: 1;
+                height: 32px;
+                font-size: 14px;
+                line-height: 32px;
+                text-indent: 10px;
+                text-align: left;
             }
         }
     }

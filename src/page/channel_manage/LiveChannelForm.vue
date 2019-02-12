@@ -118,7 +118,7 @@
                     <div class="my-tags">
                         <el-tag
                             :key="index"
-                            v-for="(type, index) in []"
+                            v-for="(filiale, index) in []"
                             closable
                             :disable-transitions="false">
                             {{type}}
@@ -135,7 +135,7 @@
 <script>
 import draggable from 'vuedraggable';
 import _ from 'lodash';
-import {mapGetters, mapMutations} from 'vuex';
+import {mapGetters, mapMutations, mapActions} from 'vuex';
 import {checkIP, checkPort, checkChannelNo, checkIp} from '@/util/formValidate';
 import ChannelTypeSearch from './ChannelTypeSearch';
 import AreaCodeSearch from './AreaCodeSearch';
@@ -208,11 +208,17 @@ export default {
             }
         }
     },
+    created() {
+        this.getFilialeList();
+    },
     methods: {
         ...mapMutations({
             updateLiveChannel: 'channel/updateLiveChannel',
             addLiveCategoryToList: 'channel/addLiveCategoryToList',
             deleteLiveCategoryById: 'channel/deleteLiveCategoryById'
+        }),
+        ...mapActions({
+            getFilialeList: 'channel/getFilialeList'
         }),
         inputHandler(value, key) {
             this.updateLiveChannel({key, value});

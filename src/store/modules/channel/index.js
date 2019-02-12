@@ -20,6 +20,7 @@ let defaultChannelTypeList = [
 let defaultSearchFields = {
     keyword: '',
     typeIdList: '',
+    code: '',
     record: undefined,
     category: 'LIVE'
 };
@@ -56,6 +57,7 @@ let defaultLiveChannel = {
 
 const defaultState = {
     searchFields: _.cloneDeep(defaultSearchFields),
+    filialeList: [],
     list: [],
     pagination: _.cloneDeep(defaultPagination),
     liveChannel: _.cloneDeep(defaultLiveChannel),
@@ -72,6 +74,9 @@ const getters = {
     },
     list(state) {
         return state.list;
+    },
+    filialeList(state) {
+        return state.filialeList;
     },
     pagination(state) {
         return state.pagination;
@@ -112,6 +117,9 @@ const mutations = {
     },
     resetState(state) {
         state = _.clone(defaultState);
+    },
+    setFilialeList(state, payload) {
+        state.filialeList = payload.filialeList;
     },
     // 频道分页
     setPagination(state, payload) {
@@ -319,6 +327,20 @@ const actions = {
             let res = await service.getChannelPageById(id);
             return res;
         } catch (err) {
+            console.log(err);
+        }
+    },
+    /**
+     * 获取区域列表
+     */
+    async getFilialeList({commit}) {
+        try {
+            let res = await service.getFilialeList();
+            if (res && res.code === 0) {
+                commit('setFilialeList', {filialeList: res.data});
+            }
+        } catch (err) {
+            console.log(err);
         }
     }
 };

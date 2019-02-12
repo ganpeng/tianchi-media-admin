@@ -5,6 +5,7 @@ const defaultSearchFields = {
     no: '',
     hardWareId: '',
     status: '',
+    code: '',
     registeredAtStart: '',
     registeredAtEnd: '',
     registeredAt: []

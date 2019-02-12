@@ -54,6 +54,22 @@
                         </el-option>
                     </el-select>
                 </div>
+                <div class="search-field-item">
+                    <label class="search-field-item-label">区域</label>
+                    <el-select
+                        :value="searchFields.code"
+                        clearable
+                        placeholder="请选择区域"
+                        @input="inputHandler($event, 'code')"
+                    >
+                        <el-option
+                            v-for="(item, index) in filialeList"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.code">
+                        </el-option>
+                    </el-select>
+                </div>
                 <el-button class="btn-style-one" type="primary" @click="clearSearchFields">
                     <svg-icon icon-class="reset"></svg-icon>
                     重置
@@ -214,6 +230,7 @@
         created() {
             this.getChannelType();
             this.getChannelList();
+            this.getFilialeList();
             window.addEventListener('keyup', this.keyupHandler);
         },
         beforeDestroy() {
@@ -224,6 +241,7 @@
                 list: 'channel/list',
                 pagination: 'channel/pagination',
                 typeName: 'channel/typeName',
+                filialeList: 'channel/filialeList',
                 liveChannelTypeList: 'channel/liveChannelTypeList',
                 searchFields: 'channel/searchFields'
             })
@@ -240,7 +258,8 @@
                 getChannelList: 'channel/getChannelList',
                 deleteChannelById: 'channel/deleteChannelById',
                 getLiveChannelById: 'channel/getLiveChannelById',
-                getChannelPageById: 'channel/getChannelPageById'
+                getChannelPageById: 'channel/getChannelPageById',
+                getFilialeList: 'channel/getFilialeList'
             }),
             clearSearchFields() {
                 this.resetSearchFields();

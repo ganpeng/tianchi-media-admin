@@ -609,12 +609,6 @@ let router = new Router({
                     name: 'ClientLogList',
                     component: ClientLogList
                 },
-                //  商品管理
-                {
-                    path: '/goods/list',
-                    name: 'GoodsList',
-                    component: GoodsList
-                },
                 {
                     path: '/category-manage',
                     name: 'Category',

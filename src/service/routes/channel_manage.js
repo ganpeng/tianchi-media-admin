@@ -148,3 +148,10 @@ export const searchLiveChannelList = (keyword) => {
 export const searchCarouselChannelList = (keyword) => {
     return service.get(`/v1/live/channel/page?keyword=${keyword}&pageNum=0&pageSize=999&category=CAROUSEL`);
 };
+
+/**
+ * 获取频道区域列表
+ */
+export const getFilialeList = () => {
+    return service.get('/v1/filiale/list');
+};

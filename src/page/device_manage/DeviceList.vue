@@ -93,16 +93,16 @@
                     <div class="search-field-item">
                         <label class="search-field-item-label">所属区域</label>
                         <el-select
-                            :value="searchFields.status"
+                            :value="searchFields.code"
                             placeholder="请选择所属区域"
                             clearable
-                            @input="inputSearchFieldHandler($event, 'status')"
+                            @input="inputSearchFieldHandler($event, 'code')"
                         >
                             <el-option
-                                v-for="(item, index) in []"
+                                v-for="(item, index) in filialeList"
                                 :key="index"
                                 :label="item.name"
-                                :value="item.value">
+                                :value="item.code">
                             </el-option>
                         </el-select>
                     </div>
@@ -231,6 +231,7 @@
         },
         created() {
             this.getDeviceList();
+            this.getFilialeList();
             window.addEventListener('keyup', this.keyupHandler);
         },
         beforeDestroy() {
@@ -239,6 +240,7 @@
         computed: {
             ...mapGetters({
                 list: 'device/list',
+                filialeList: 'channel/filialeList',
                 pagination: 'device/pagination',
                 searchFields: 'device/searchFields',
                 device: 'device/device'
@@ -269,7 +271,8 @@
                 addDevice: 'device/addDevice',
                 getDeviceList: 'device/getDeviceList',
                 updateDeviceById: 'device/updateDeviceById',
-                deleteDeviceById: 'device/deleteDeviceById'
+                deleteDeviceById: 'device/deleteDeviceById',
+                getFilialeList: 'channel/getFilialeList'
             }),
             clearSearchFields() {
                 this.resetSearchFields();
