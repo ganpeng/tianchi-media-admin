@@ -153,5 +153,5 @@ export const searchCarouselChannelList = (keyword) => {
  * 获取频道区域列表
  */
 export const getFilialeList = () => {
-    return service.get('/v1/filiale/list');
+    return service.get('/v1/company/list');
 };

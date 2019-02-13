@@ -52,6 +52,7 @@ let defaultLiveChannel = {
     videoPid: '',
     //  直播频道的类型列表
     typeList: [],
+    companyList: [],
     visible: false // 是否上下架
 };
 
@@ -188,6 +189,27 @@ const mutations = {
     deleteLiveCategoryById(state, payload) {
         let {id} = payload;
         state.liveChannel.typeList = state.liveChannel.typeList.filter((item) => item.id !== id);
+    },
+    //  增加公司到列表
+    addCompanyToList(state, payload) {
+        let {company} = payload;
+        if (_.isNull(state.liveChannel.companyList)) {
+            state.liveChannel.companyList = [];
+        }
+        let {name} = company;
+        if (name === '全部') {
+            state.liveChannel.companyList = _.cloneDeep(state.filialeList);
+        } else {
+            state.liveChannel.companyList.push(company);
+        }
+        state.liveChannel.companyList = _.uniqBy(state.liveChannel.companyList, 'id');
+    },
+    //  从列表中删除公司
+    deleteCompanyFromList(state, payload) {
+        let {company} = payload;
+        state.liveChannel.companyList = state.liveChannel.companyList.filter((_company) => {
+            return _company.id !== company.id;
+        });
     }
 };
 
@@ -266,6 +288,9 @@ const actions = {
         try {
             let res = await service.getChannelDetail(id);
             if (res && res.code === 0) {
+                if (_.isNull(res.data.companyList)) {
+                    res.data.companyList = [];
+                }
                 commit('setLiveChannel', {liveChannel: Object.assign({record: null}, res.data)});
                 return res;
             }

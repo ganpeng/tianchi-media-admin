@@ -30,7 +30,8 @@ export default {
     },
     methods: {
         querySearchAsync(queryString, cb) {
-            var results = queryString ? this.filialeList.filter(this.createStateFilter(queryString)) : this.filialeList;
+            let options = [{id: 1000, code: 880101, name: '全部'}, ...this.filialeList];
+            var results = queryString ? options.filter(this.createStateFilter(queryString)) : options;
             cb(results);
         },
         createStateFilter(queryString) {

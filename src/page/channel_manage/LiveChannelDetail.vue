@@ -93,9 +93,9 @@
         </div>
         <div class="seperator-line"></div>
         <div class="area-container">
-            <h4 class="content-sub-title">所属区域 <span>{{filialeList.length}}个</span></h4>
+            <h4 class="content-sub-title">所属区域 <span>{{liveChannel.companyList.length}}个</span></h4>
             <ul class="search-list clearfix">
-                <li v-for="(item, index) in filialeList" :key="index" :class="['search-item']">
+                <li v-for="(item, index) in liveChannel.companyList" :key="index" :class="['search-item']">
                     <div class="wrapper">
                         <span class="index">{{index + 1}}</span>
                         <span class="search-name">{{item.name}}</span>

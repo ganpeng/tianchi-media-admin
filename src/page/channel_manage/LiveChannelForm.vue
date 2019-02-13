@@ -118,10 +118,11 @@
                     <div class="my-tags">
                         <el-tag
                             :key="index"
-                            v-for="(filiale, index) in []"
+                            v-for="(company, index) in liveChannel.companyList"
                             closable
+                            @close="deleteCompanyHandler(company)"
                             :disable-transitions="false">
-                            {{type}}
+                            {{company.name}}
                         </el-tag>
                     </div>
                     <area-code-search
@@ -215,7 +216,9 @@ export default {
         ...mapMutations({
             updateLiveChannel: 'channel/updateLiveChannel',
             addLiveCategoryToList: 'channel/addLiveCategoryToList',
-            deleteLiveCategoryById: 'channel/deleteLiveCategoryById'
+            deleteLiveCategoryById: 'channel/deleteLiveCategoryById',
+            addCompanyToList: 'channel/addCompanyToList',
+            deleteCompanyFromList: 'channel/deleteCompanyFromList'
         }),
         ...mapActions({
             getFilialeList: 'channel/getFilialeList'
@@ -232,8 +235,11 @@ export default {
         deleteLiveCategoryHandler(id) {
             this.deleteLiveCategoryById({id});
         },
-        selectAreaCodeHandler(area) {
-            console.log(area);
+        selectAreaCodeHandler(company) {
+            this.addCompanyToList({company});
+        },
+        deleteCompanyHandler(company) {
+            this.deleteCompanyFromList({company});
         },
         deleteLogoUri() {
             this.updateLiveChannel({key: 'logoUri', value: ''});
