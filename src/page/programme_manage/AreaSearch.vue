@@ -31,7 +31,7 @@ export default {
         },
         createStateFilter(queryString) {
             return (state) => {
-                return (state.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+                return (state.name.toLowerCase().indexOf(queryString.toLowerCase()) >= 0);
             };
         },
         selectHandler(category) {

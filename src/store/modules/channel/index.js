@@ -203,6 +203,8 @@ const mutations = {
             state.liveChannel.companyList.push(company);
         }
         state.liveChannel.companyList = _.uniqBy(state.liveChannel.companyList, 'id');
+        let flag = checkCompanyListIsAll(state.liveChannel.companyList, state.filialeList);
+        state.liveChannel.common = flag;
     },
     //  从列表中删除公司
     deleteCompanyFromList(state, payload) {
@@ -210,8 +212,17 @@ const mutations = {
         state.liveChannel.companyList = state.liveChannel.companyList.filter((_company) => {
             return _company.id !== company.id;
         });
+        let flag = checkCompanyListIsAll(state.liveChannel.companyList, state.filialeList);
+        state.liveChannel.common = flag;
     }
 };
+
+function checkCompanyListIsAll(source, target) {
+    let sortedSource = _.chain(_.cloneDeep(source)).sortBy('id').value();
+    let sortedTarget = _.chain(_.cloneDeep(target)).sortBy('id').value();
+    let flag = _.isEqual(sortedSource, sortedTarget);
+    return flag;
+}
 
 const actions = {
     /**
@@ -272,6 +283,9 @@ const actions = {
                 delete liveChannel.status;
                 delete liveChannel.id;
                 delete liveChannel.visible;
+                if (liveChannel.common) {
+                    delete liveChannel.companyList;
+                }
                 let res = await service.createChannels(liveChannel);
                 isLoading = false;
                 return res;
@@ -305,6 +319,9 @@ const actions = {
             if (!isLoading) {
                 isLoading = true;
                 let liveChannel = _.cloneDeep(state.liveChannel);
+                if (liveChannel.common) {
+                    delete liveChannel.companyList;
+                }
                 let res = await service.updateChannelById(id, liveChannel);
                 isLoading = false;
                 return res;

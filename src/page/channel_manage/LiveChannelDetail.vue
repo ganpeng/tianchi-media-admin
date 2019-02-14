@@ -14,15 +14,31 @@
             <div class="info-section">
                 <div class="title-wrapper">
                     <div class="left-side">
-                        <span class="title">{{liveChannel.name}}</span>
+                        <span class="title">{{liveChannel.no}} {{liveChannel.name}}</span>
                     </div>
-                    <div class="date">
-                        <span class="create-date">
-                            创建于{{liveChannel.createdAt | formatDate('yyyy.MM.DD')}}
-                        </span>
-                        <span class="update-date">
-                            更新于{{liveChannel.updatedAt | formatDate('yyyy.MM.DD')}}
-                        </span>
+                    <div class="right-wrapper">
+                        <div class="btn-group-wrapper">
+                            <el-dropdown
+                                @command="programmePageOperator($event)" placement="bottom">
+                                <el-button class="btn-style-two contain-svg-icon">
+                                    <svg-icon icon-class="programme_page"></svg-icon>
+                                    节目单
+                                    <svg-icon icon-class="arrow_down"></svg-icon>
+                                </el-button>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item command="DOWNLOAD">下载节目单</el-dropdown-item>
+                                    <el-dropdown-item command="PREVIEW">预览节目单</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </div>
+                        <div class="date">
+                            <span class="create-date">
+                                创建于{{liveChannel.createdAt | formatDate('yyyy.MM.DD')}}
+                            </span>
+                            <span class="update-date">
+                                更新于{{liveChannel.updatedAt | formatDate('yyyy.MM.DD')}}
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="seperator-line"></div>
@@ -53,8 +69,20 @@
                         </li>
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
+                                <span class="label">当前节目：</span>
+                                <span class="value">{{currentLiveChannel.channelName}}</span>
+                            </div>
+                        </li>
+                        <li class="text-info-item">
+                            <div class="text-info-item-wrapper">
                                 <span class="label">是否回看：</span>
                                 <span class="value">{{liveChannel.record ? '是' : '否'}}</span>
+                            </div>
+                        </li>
+                        <li class="text-info-item">
+                            <div class="text-info-item-wrapper">
+                                <span class="label">公共区域：</span>
+                                <span class="value">{{liveChannel.common ? '是' : '否'}}</span>
                             </div>
                         </li>
                         <li class="text-info-item">
@@ -65,26 +93,26 @@
                         </li>
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
-                                <span class="label">videoPid：</span>
-                                <span class="value">{{liveChannel.videoPid}}</span>
-                            </div>
-                        </li>
-                        <li class="text-info-item">
-                            <div class="text-info-item-wrapper">
                                 <span class="label">录制IP：</span>
                                 <span class="value">{{liveChannel.recordIp}}</span>
                             </div>
                         </li>
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
-                                <span class="label">audioPid：</span>
-                                <span class="value">{{liveChannel.audioPid}}</span>
+                                <span class="label">录制端口：</span>
+                                <span class="value">{{liveChannel.recordPort}}</span>
                             </div>
                         </li>
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
-                                <span class="label">录制端口：</span>
-                                <span class="value">{{liveChannel.recordPort}}</span>
+                                <span class="label">videoPid：</span>
+                                <span class="value">{{liveChannel.videoPid}}</span>
+                            </div>
+                        </li>
+                        <li class="text-info-item">
+                            <div class="text-info-item-wrapper">
+                                <span class="label">audioPid：</span>
+                                <span class="value">{{liveChannel.audioPid}}</span>
                             </div>
                         </li>
                     </ul>
@@ -111,11 +139,14 @@
 </template>
 <script>
 import {mapGetters, mapActions} from 'vuex';
+
+const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
+const x2js = new X2JS();
 export default {
     name: 'LiveChannelDetail',
     data() {
         return {
-
+            currentLiveChannel: {}
         };
     },
     computed: {
@@ -127,15 +158,32 @@ export default {
     mounted() {
         this.$util.toggleFixedBtnContainer();
     },
-    created() {
-        let {id} = this.$route.params;
-        if (id) {
-            this.getLiveChannelById(id);
+    async created() {
+        try {
+            let {id} = this.$route.params;
+            if (id) {
+                await this.getLiveChannelById(id);
+                let res = await this.getChannelPageById(id);
+                if (res && res.code === 0) {
+                    let timeStamp = new Date().getTime();
+                    if (res.data && res.data.length > 0) {
+                        let currentLiveChannel = res.data.find((item) => {
+                            return item.startTime <= timeStamp && item.endTime >= timeStamp;
+                        });
+                        if (currentLiveChannel) {
+                            this.currentLiveChannel = currentLiveChannel;
+                        }
+                    }
+                }
+            }
+        } catch (err) {
+            console.log(err);
         }
     },
     methods: {
         ...mapActions({
-            getLiveChannelById: 'channel/getLiveChannelById'
+            getLiveChannelById: 'channel/getLiveChannelById',
+            getChannelPageById: 'channel/getChannelPageById'
         }),
         editLiveChannel() {
             let {id} = this.$route.params;
@@ -143,6 +191,64 @@ export default {
         },
         goBack() {
             this.$router.push({name: 'LiveChannelList'});
+        },
+        programmePageOperator(command) {
+            let {id, name} = this.liveChannel;
+            if (command === 'DOWNLOAD') {
+                this.previewChannelPage(id, name, true);
+            } else {
+                this.previewChannelPage(id);
+            }
+        },
+        previewChannelPage(id, name, flag) {
+            this.getChannelPageById(id)
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        let data = res.data.map((item) => {
+                            item.startTime = this.timeStampFormat(item.startTime);
+                            item.endTime = this.timeStampFormat(item.endTime);
+                            return item;
+                        });
+                        let xml = x2js.json2xml_str({'频道': {'节目': data}});
+                        let blob = new Blob(['<?xml version="1.0" encoding="UTF-8"?>', xml], {type: 'application/xml'});
+                        if (flag) {
+                            this.openDownloadDialog(blob, `${name}.xml`);
+                        } else {
+                            if (res.data.length > 0) {
+                                this.$router.push({name: 'PreviewProgrammeList', params: {id}});
+                            } else {
+                                this.$message.error('当前频道下没有节目单');
+                                return false;
+                            }
+                        }
+                    }
+                });
+        },
+        openDownloadDialog(url, saveName) {
+            if (typeof url === 'object' && url instanceof Blob) {
+                url = URL.createObjectURL(url); // 创建blob地址
+            }
+            let aLink = document.createElement('a');
+            aLink.href = url;
+            aLink.download = saveName || ''; // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
+            let event;
+            if (window.MouseEvent) {
+                event = new MouseEvent('click');
+            } else {
+                event = document.createEvent('MouseEvents');
+                event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            }
+            aLink.dispatchEvent(event);
+        },
+        timeStampFormat(seconds) {
+            let date = new Date(seconds);
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
+            let hour = date.getHours();
+            let minute = date.getMinutes();
+            let second = date.getSeconds();
+            return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
         }
     }
 };

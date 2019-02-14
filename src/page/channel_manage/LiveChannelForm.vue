@@ -114,6 +114,9 @@
                         :allowResolutions="[{width: 260, height: 260}]"
                     ></single-image-uploader>
                 </el-form-item>
+                <el-form-item label="公共区域">
+                    <span>{{liveChannel.common ? '是' : '否'}}</span>
+                </el-form-item>
                 <el-form-item label="区域码">
                     <div class="my-tags">
                         <el-tag
