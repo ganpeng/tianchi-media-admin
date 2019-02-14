@@ -42,10 +42,10 @@
                         clearable
                         placeholder="全部">
                         <el-option
-                            v-for="item in districtOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            v-for="item in companyList"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.code">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -165,7 +165,7 @@
                     {label: '有效', value: 0},
                     {label: '无效', value: 1},
                     {label: '注销', value: 2}],
-                districtOptions: [],
+                companyList: [],
                 provinceOptions: [],
                 cityOptions: [],
                 countyOptions: [],
@@ -184,11 +184,11 @@
             init() {
                 this.getDistrictList({level: 'PROVINCE'});
                 // 获取所属区域的数据
-                // this.$service.getOwnDistrictList().then(response => {
-                //     if (response && response.code === 0) {
-                //         this.districtOptions = response.data.list;
-                //     }
-                // });
+                this.$service.getFilialeList().then(response => {
+                    if (response && response.code === 0) {
+                        this.companyList = response.data;
+                    }
+                });
             },
             // 获取地区列表
             getDistrictList({level, code}) {
