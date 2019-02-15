@@ -89,6 +89,7 @@
 <script>
     import UploadExcelComponent from 'sysComponents/custom_components/custom/UploadExcel';
     import XLSX from 'xlsx';
+    import _ from 'lodash';
 
     export default {
         name: 'CreateChannelByImportExcel',
@@ -101,6 +102,7 @@
                 channelList: [],
                 tableHeader: [],
                 typeOptions: [],
+                companyOptions: [],
                 failNo: 0,
                 finishNo: 0
             };
@@ -113,6 +115,12 @@
                 this.$service.getChannelType({category: this.$route.params.category}).then(response => {
                     if (response && response.code === 0) {
                         this.typeOptions = response.data;
+                    }
+                });
+                // 获取所属区域的数据
+                this.$service.getFilialeList().then(response => {
+                    if (response && response.code === 0) {
+                        this.companyOptions = response.data;
                     }
                 });
             },
@@ -141,9 +149,9 @@
                         '（必填）',
                         pushServer: '所属服务器\n' +
                         '（必填）',
-                        common: '是否为公共频道\n' +
+                        public: '是否为公共频道\n' +
                         '（必填）',
-                        companyList: '所属区域码，多个用/隔开',
+                        company: '所属区域码，多个用/隔开',
                         logoUri: '频道封面链接\n' +
                         ' 260*260' +
                         '（必填）\n',
@@ -160,8 +168,8 @@
                         multicastIp: '232.1.1.2',
                         multicastPort: '1234',
                         pushServer: '192.168.0.2',
-                        common: '否',
-                        companyList: '073/099/3004',
+                        public: '否',
+                        company: '073/099/3004',
                         logoUri: '/image',
                         '备注说明': ''
                     }, {
@@ -175,8 +183,8 @@
                         multicastIp: '232.1.1.3',
                         multicastPort: '1234',
                         pushServer: '192.168.0.3',
-                        common: '是',
-                        companyList: '若为公共频道，则这里无需填写',
+                        public: '是',
+                        company: '若为公共频道，则这里无需填写',
                         logoUri: '/image',
                         '备注说明': ''
                     }, {
@@ -207,9 +215,9 @@
                         serviceId: 'serviceId',
                         pushServer: '所属服务器\n' +
                         '（必填）',
-                        common: '是否为公共频道\n' +
+                        public: '是否为公共频道\n' +
                         '（必填）',
-                        companyList: '所属区域码，多个用/隔开',
+                        company: '所属区域码，多个用/隔开',
                         logoUri: '频道封面链接\n' +
                         ' 260*260' +
                         '（必填）\n',
@@ -226,8 +234,8 @@
                         tsId: '202',
                         serviceId: '2002',
                         pushServer: '192.168.0.2',
-                        common: '否',
-                        companyList: '073/099/3004',
+                        public: '否',
+                        company: '073/099/3004',
                         logoUri: '/image',
                         '备注说明': ''
                     }, {
@@ -240,14 +248,13 @@
                         tsId: '203',
                         serviceId: '2003',
                         pushServer: '192.168.0.3',
-                        common: '是',
-                        companyList: '若为公共频道，则这里无需填写',
+                        public: '是',
+                        company: '若为公共频道，则这里无需填写',
                         logoUri: '/image',
                         '备注说明': ''
                     }];
                 }
                 let ws = XLSX.utils.json_to_sheet(wsData);
-                /* Add the worksheet to the workbook */
                 XLSX.utils.book_append_sheet(wb, ws, newWsName);
                 XLSX.writeFile(wb, this.currentChannelCategory + '频道批量创建导入表.xlsx');
             },
@@ -300,7 +307,7 @@
                 // 对每一项进行设置
                 for (let i = 0; i < this.channelList.length; i++) {
                     this.channelList[i].typeList = [];
-                    // 设置type
+                    // 设置typeList
                     let typeList = this.channelList[i].type.split('/');
                     for (let k = 0; k < typeList.length; k++) {
                         this.typeOptions.map(type => {
@@ -308,6 +315,20 @@
                                 this.channelList[i].typeList.push(type);
                             }
                         });
+                    }
+                    // 设置是否为公共频道
+                    this.channelList[i].common = this.channelList[i].public === '是';
+                    // 设置区域码companyList，非公共频道对区域码不做处理
+                    this.channelList[i].companyList = [];
+                    if (!this.channelList[i].common) {
+                        let companyList = this.channelList[i].company.split('/');
+                        for (let k = 0; k < companyList.length; k++) {
+                            this.companyOptions.map(company => {
+                                if (company.code.toString() === companyList[k]) {
+                                    this.channelList[i].companyList.push(company);
+                                }
+                            });
+                        }
                     }
                     // 设置是否回看
                     if (this.$route.params.category === 'LIVE') {
@@ -415,6 +436,28 @@
                         message = message + '请填写正确的serviceId;';
                     }
                 }
+                // 是否为公共频道
+                if (channel.public !== '是' && channel.public !== '否') {
+                    message = message + '请正确填写是否为公共频道;';
+                }
+                // 所属区域，公共频道为'是'，对于区域码不进行验证
+                if (channel.public === '否') {
+                    if (this.$util.isEmpty(channel.company)) {
+                        message = message + '请填写区域码;';
+                    }
+                    if (this.isCompanyExist(channel.company).length !== 0) {
+                        message = message + '以下区域码不存在：' + this.isCompanyExist(channel.company).toString() + ';';
+                    } else {
+                        // 检查非公共频道下是否区域码设置为全部；全部区域码存在、没有重复的、数量与全部区域码相同
+                        let companyList = channel.company.split('/');
+                        let list = _.uniq(companyList);
+                        if (companyList.length !== list.length) {
+                            message = message + '区域码存在重复;';
+                        } else if (companyList.length === this.companyOptions.length) {
+                            message = message + '公共频道和区域码设置存在冲突;';
+                        }
+                    }
+                }
                 // 所属服务器，只对轮播、直播都不验证
                 // 频道封面
                 if (this.$util.isEmpty(channel.logoUri)) {
@@ -443,6 +486,23 @@
                     }
                 }
                 return true;
+            },
+            // 检测区域码是否存在
+            isCompanyExist(company) {
+                let companyList = company.split('/');
+                let errorCodeArray = [];
+                for (let i = 0; i < companyList.length; i++) {
+                    let tag = false;
+                    this.companyOptions.map(company => {
+                        if (company.code.toString() === companyList[i]) {
+                            tag = true;
+                        }
+                    });
+                    if (!tag) {
+                        errorCodeArray.push(companyList[i]);
+                    }
+                }
+                return errorCodeArray;
             }
         }
     };

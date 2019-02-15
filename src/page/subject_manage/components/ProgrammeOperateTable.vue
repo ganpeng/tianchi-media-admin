@@ -88,10 +88,10 @@
             <el-table-column
                 width="100px"
                 align="center"
-                prop="announceAt"
+                prop="updatedAt"
                 label="更新时间">
                 <template slot-scope="scope">
-                    <label v-if="scope.row.announceAt">{{scope.row.announceAt | formatDate('yyyy-MM-DD')}}</label>
+                    <label v-if="scope.row.updatedAt">{{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}</label>
                     <label v-else>------</label>
                 </template>
             </el-table-column>
