@@ -117,7 +117,7 @@
                 <el-form-item label="公共区域">
                     <span>{{liveChannel.common ? '是' : '否'}}</span>
                 </el-form-item>
-                <el-form-item label="区域码">
+                <el-form-item label="区域码" prop="companyList">
                     <div class="my-tags">
                         <el-tag
                             :key="index"
@@ -191,6 +191,9 @@ export default {
                 typeList: [
                     { required: true, message: '请选择直播频道类别' }
                 ],
+                companyList: [
+                    { required: true, message: '请选择所属区域' }
+                ],
                 logoUri: [
                     { required: true, message: '请上传直播频道logo' }
                 ]
@@ -240,6 +243,7 @@ export default {
         },
         selectAreaCodeHandler(company) {
             this.addCompanyToList({company});
+            this.clearvaidatorByProp('companyList');
         },
         deleteCompanyHandler(company) {
             this.deleteCompanyFromList({company});

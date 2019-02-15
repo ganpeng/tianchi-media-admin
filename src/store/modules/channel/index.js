@@ -20,9 +20,10 @@ let defaultChannelTypeList = [
 let defaultSearchFields = {
     keyword: '',
     typeIdList: '',
-    code: '',
+    companyCode: undefined,
     record: undefined,
-    category: 'LIVE'
+    category: 'LIVE',
+    common: undefined
 };
 
 let defaultPagination = {
@@ -139,6 +140,11 @@ const mutations = {
     updateSearchFields(state, payload) {
         let {key, value} = payload;
         state.searchFields[key] = value;
+        if (key === 'common') {
+            if (value || value === '') {
+                state.searchFields.companyCode = '';
+            }
+        }
     },
     resetSearchFields(state) {
         state.searchFields = _.cloneDeep(defaultSearchFields);
@@ -340,8 +346,7 @@ const actions = {
             if (res && res.code === 0) {
                 return res;
             }
-        } catch (err) {
-        }
+        } catch (err) {}
     },
     /**
      * 获取频道的列表

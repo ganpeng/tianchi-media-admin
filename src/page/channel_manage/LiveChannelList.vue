@@ -55,18 +55,18 @@
                     </el-select>
                 </div>
                 <div class="search-field-item">
-                    <label class="search-field-item-label">区域</label>
+                    <label class="search-field-item-label">公共频道</label>
                     <el-select
-                        :value="searchFields.code"
+                        :value="searchFields.common"
                         clearable
-                        placeholder="请选择区域"
-                        @input="inputHandler($event, 'code')"
+                        placeholder="是否是公共区域"
+                        @input="inputHandler($event, 'common')"
                     >
                         <el-option
-                            v-for="(item, index) in filialeList"
+                            v-for="(item, index) in [{name: '是', value: true}, {name: '否', value: false}]"
                             :key="index"
                             :label="item.name"
-                            :value="item.code">
+                            :value="item.value">
                         </el-option>
                     </el-select>
                 </div>
@@ -74,6 +74,29 @@
                     <svg-icon icon-class="reset"></svg-icon>
                     重置
                 </el-button>
+                <span
+                    @click="toggleSearchField"
+                    :class="['el-dropdown-link', searchFieldVisible ? 'active' : '']">
+                    更多筛选<i v-if="searchFieldVisible" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
+                </span>
+            </div>
+            <div v-show="searchFieldVisible" class="field-row">
+                <div class="search-field-item">
+                    <label class="search-field-item-label">区域</label>
+                    <el-select
+                        :value="searchFields.companyCode"
+                        clearable
+                        placeholder="请选择区域"
+                        @input="inputHandler($event, 'companyCode')"
+                    >
+                        <el-option
+                            v-for="(item, index) in companyOptions"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.code">
+                        </el-option>
+                    </el-select>
+                </div>
             </div>
         </div>
         <div class="seperator-line"></div>
@@ -224,7 +247,8 @@
                         value: false
                     }
                 ],
-                status: 0
+                status: 0,
+                searchFieldVisible: false
             };
         },
         created() {
@@ -244,7 +268,15 @@
                 filialeList: 'channel/filialeList',
                 liveChannelTypeList: 'channel/liveChannelTypeList',
                 searchFields: 'channel/searchFields'
-            })
+            }),
+            companyOptions() {
+                let {common} = this.searchFields;
+                if (common) {
+                    return [];
+                } else {
+                    return this.filialeList;
+                }
+            }
         },
         methods: {
             ...mapMutations({
@@ -392,6 +424,9 @@
             },
             displayLiveChannel(id) {
                 this.$router.push({name: 'LiveChannelDetail', params: {id}});
+            },
+            toggleSearchField() {
+                this.searchFieldVisible = !this.searchFieldVisible;
             }
         }
     };

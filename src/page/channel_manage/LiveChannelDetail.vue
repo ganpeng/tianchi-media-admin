@@ -121,8 +121,15 @@
         </div>
         <div class="seperator-line"></div>
         <div class="area-container">
-            <h4 class="content-sub-title">所属区域 <span>{{liveChannel.companyList.length}}个</span></h4>
-            <ul class="search-list clearfix">
+            <h4 class="content-sub-title">
+                所属区域
+                <span>{{liveChannel.companyList.length}}个</span>
+                <span @click="toggleClickHandler" class="toggle-btn">
+                    {{showCompanyList ? '收起' : '展开'}}
+                    <i v-if="showCompanyList" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
+                </span>
+            </h4>
+            <ul v-if="showCompanyList" class="search-list clearfix">
                 <li v-for="(item, index) in liveChannel.companyList" :key="index" :class="['search-item']">
                     <div class="wrapper">
                         <span class="index">{{index + 1}}</span>
@@ -146,7 +153,8 @@ export default {
     name: 'LiveChannelDetail',
     data() {
         return {
-            currentLiveChannel: {}
+            currentLiveChannel: {},
+            showCompanyList: true
         };
     },
     computed: {
@@ -191,6 +199,9 @@ export default {
         },
         goBack() {
             this.$router.push({name: 'LiveChannelList'});
+        },
+        toggleClickHandler() {
+            this.showCompanyList = !this.showCompanyList;
         },
         programmePageOperator(command) {
             let {id, name} = this.liveChannel;
@@ -284,9 +295,17 @@ export default {
 }
 
 .content-sub-title {
-    span {
+    span:first-child {
         font-size: 20px;
-        color: #1989FA;
+    }
+    .toggle-btn {
+        font-size: 14px;
+        color: $mainColor;
+        cursor: pointer;
+        margin-left: 40px;
+        i {
+            color: #3E495E;
+        }
     }
 }
 
