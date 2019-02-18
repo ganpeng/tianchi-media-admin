@@ -149,7 +149,7 @@
                         '（必填）',
                         pushServer: '所属服务器\n' +
                         '（必填）',
-                        public: '是否为公共频道\n' +
+                        publicChannel: '是否为公共频道\n' +
                         '（必填）',
                         company: '所属区域码，多个用/隔开',
                         logoUri: '频道封面链接\n' +
@@ -168,7 +168,7 @@
                         multicastIp: '232.1.1.2',
                         multicastPort: '1234',
                         pushServer: '192.168.0.2',
-                        public: '否',
+                        publicChannel: '否',
                         company: '073/099/3004',
                         logoUri: '/image',
                         '备注说明': ''
@@ -183,7 +183,7 @@
                         multicastIp: '232.1.1.3',
                         multicastPort: '1234',
                         pushServer: '192.168.0.3',
-                        public: '是',
+                        publicChannel: '是',
                         company: '若为公共频道，则这里无需填写',
                         logoUri: '/image',
                         '备注说明': ''
@@ -215,7 +215,7 @@
                         serviceId: 'serviceId',
                         pushServer: '所属服务器\n' +
                         '（必填）',
-                        public: '是否为公共频道\n' +
+                        publicChannel: '是否为公共频道\n' +
                         '（必填）',
                         company: '所属区域码，多个用/隔开',
                         logoUri: '频道封面链接\n' +
@@ -234,7 +234,7 @@
                         tsId: '202',
                         serviceId: '2002',
                         pushServer: '192.168.0.2',
-                        public: '否',
+                        publicChannel: '否',
                         company: '073/099/3004',
                         logoUri: '/image',
                         '备注说明': ''
@@ -248,7 +248,7 @@
                         tsId: '203',
                         serviceId: '2003',
                         pushServer: '192.168.0.3',
-                        public: '是',
+                        publicChannel: '是',
                         company: '若为公共频道，则这里无需填写',
                         logoUri: '/image',
                         '备注说明': ''
@@ -317,7 +317,7 @@
                         });
                     }
                     // 设置是否为公共频道
-                    this.channelList[i].common = this.channelList[i].public === '是';
+                    this.channelList[i].common = this.channelList[i].publicChannel === '是';
                     // 设置区域码companyList，非公共频道对区域码不做处理
                     this.channelList[i].companyList = [];
                     if (!this.channelList[i].common) {
@@ -356,7 +356,7 @@
                     this.finishNo++;
                     if (response && response.code === 0) {
                         this.channelList[index].message = 'OK';
-                        this.$message('创建成功');
+                        this.$message.success('创建成功');
                     } else {
                         this.failNo++;
                         this.channelList[index].message = '第' + (index + 1) + '个:频道创建失败：' + response.message;
@@ -365,7 +365,7 @@
                     this.$set(this.channelList, index, this.channelList[index]);
                     if (this.finishNo === this.channelList.length) {
                         this.createDisabled = false;
-                        this.$message(this.channelList.length + '个' + this.currentChannelCategory + '频道的创建完成，请查看对应的信息提示');
+                        this.$message.success(this.channelList.length + '个' + this.currentChannelCategory + '频道的创建完成，请查看对应的信息提示');
                     }
                 });
             },
@@ -437,15 +437,14 @@
                     }
                 }
                 // 是否为公共频道
-                if (channel.public !== '是' && channel.public !== '否') {
+                if (channel.publicChannel !== '是' && channel.publicChannel !== '否') {
                     message = message + '请正确填写是否为公共频道;';
                 }
                 // 所属区域，公共频道为'是'，对于区域码不进行验证
-                if (channel.public === '否') {
+                if (channel.publicChannel === '否') {
                     if (this.$util.isEmpty(channel.company)) {
                         message = message + '请填写区域码;';
-                    }
-                    if (this.isCompanyExist(channel.company).length !== 0) {
+                    } else if (this.isCompanyExist(channel.company).length !== 0) {
                         message = message + '以下区域码不存在：' + this.isCompanyExist(channel.company).toString() + ';';
                     } else {
                         // 检查非公共频道下是否区域码设置为全部；全部区域码存在、没有重复的、数量与全部区域码相同

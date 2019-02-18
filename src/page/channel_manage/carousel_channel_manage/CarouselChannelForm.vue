@@ -46,6 +46,24 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="公共频道" prop="common" required>
+                {{channelInfo.common ? '是' : '否'}}
+            </el-form-item>
+            <el-form-item label="区域码" prop="companyCodeList" required>
+                <el-select
+                    v-model="channelInfo.companyCodeList"
+                    @change="setCompanies"
+                    multiple
+                    size="medium"
+                    placeholder="请选择区域码">
+                    <el-option
+                        v-for="item in companyOptions"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.code">
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="组播地址" prop="multicastIp" required>
                 <el-input
                     v-model="channelInfo.multicastIp"
@@ -512,6 +530,13 @@
                     callback();
                 }
             };
+            let checkCompanyCodeList = (rule, value, callback) => {
+                if (this.channelInfo.companyCodeList.length === 0) {
+                    return callback(new Error('请选择区域码'));
+                } else {
+                    callback();
+                }
+            };
             let checkMulticastIp = (rule, value, callback) => {
                 this.channelInfo.multicastIp = this.$util.trim(this.channelInfo.multicastIp);
                 if (this.$util.isEmpty(value)) {
@@ -579,6 +604,8 @@
                 channelInfo: {
                     category: 'CAROUSEL',
                     typeIdList: [],
+                    common: false,
+                    companyCodeList: [],
                     multicastIp: '',
                     pushServer: '',
                     visible: '',
@@ -586,6 +613,7 @@
                 },
                 sectionList: [{name: ''}],
                 typeOptions: [],
+                companyOptions: [],
                 // 当前的频道含有的视频列表
                 currentSelectedVideoList: [],
                 currentVideoIndex: '',
@@ -606,6 +634,9 @@
                     ],
                     typeIdList: [
                         {validator: checkTypeIdList, trigger: 'change'}
+                    ],
+                    companyCodeList: [
+                        {validator: checkCompanyCodeList, trigger: 'change'}
                     ],
                     multicastIp: [
                         {validator: checkMulticastIp, trigger: 'blur'}
@@ -640,6 +671,74 @@
             this.init();
         },
         methods: {
+            init() {
+                this.$util.toggleFixedBtnContainer();
+                this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
+                    if (response && response.code === 0) {
+                        this.typeOptions = response.data;
+                    }
+                });
+                // 获取所属区域的数据
+                this.$service.getFilialeList().then(response => {
+                    if (response && response.code === 0) {
+                        this.companyOptions = response.data;
+                        this.companyOptions.unshift({id: '0', code: '0', name: '全选'});
+                    }
+                });
+                let that = this;
+                let clipboard = new ClipboardJS('.copy-btn');
+                clipboard.on('success', function (e) {
+                    that.$message.success('视频链接复制成功');
+                    e.clearSelection();
+                });
+                clipboard.on('error', function (e) {
+                    that.$message.error('视频链接复制失败');
+                });
+                if (this.status === 'EDIT_CHANNEL') {
+                    this.getChannelDetail();
+                }
+            },
+            getChannelDetail() {
+                this.$service.getChannelDetail(this.$route.params.id).then(response => {
+                    if (response && response.code === 0) {
+                        for (let key in response.data) {
+                            this.channelInfo[key] = response.data[key];
+                        }
+                        response.data.typeList.map(type => {
+                            this.channelInfo.typeIdList.push(type.id);
+                        });
+                        response.data.companyList.map(company => {
+                            this.channelInfo.companyCodeList.push(company.code);
+                        });
+                        this.currentSelectedVideoList = response.data.carouselVideoList;
+                        this.currentSelectedVideoList.map(video => {
+                            if (video.onPlay) {
+                                this.channelInfo.currentProgramme = video.originName;
+                                this.channelInfo.duration = this.$util.formatDate(new Date(video.lastPlayTime), 'yyyy年MM月DD日HH时mm分SS秒') + '---' + this.$util.formatDate(new Date(video.lastPlayTime + video.takeTimeInSec * 1000), 'yyyy年MM月DD日HH时mm分SS秒');
+                            }
+                        });
+                    }
+                });
+            },
+            // 设置区域码，对全选进行处理
+            setCompanies() {
+                if (this.channelInfo.companyCodeList.length !== (this.companyOptions.length - 1)) {
+                    this.channelInfo.common = false;
+                } else {
+                    this.channelInfo.common = true;
+                }
+                this.channelInfo.companyCodeList.map(companyCode => {
+                    if (companyCode === '0') {
+                        this.channelInfo.companyCodeList = [];
+                        this.companyOptions.map(companyOption => {
+                            if (companyOption.name !== '全选') {
+                                this.channelInfo.companyCodeList.push(companyOption.code);
+                            }
+                        });
+                        this.channelInfo.common = true;
+                    }
+                });
+            },
             // 对关联的视频进行排序
             movePosition(model, video, index) {
                 switch (model) {
@@ -731,45 +830,6 @@
                 this.$message({
                     message: '已根据填写的删除部分对展示名称进行了处理',
                     type: 'success'
-                });
-            },
-            init() {
-                this.$util.toggleFixedBtnContainer();
-                this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
-                    if (response && response.code === 0) {
-                        this.typeOptions = response.data;
-                    }
-                });
-                let that = this;
-                let clipboard = new ClipboardJS('.copy-btn');
-                clipboard.on('success', function (e) {
-                    that.$message.success('视频链接复制成功');
-                    e.clearSelection();
-                });
-                clipboard.on('error', function (e) {
-                    that.$message.error('视频链接复制失败');
-                });
-                if (this.status === 'EDIT_CHANNEL') {
-                    this.getChannelDeatil();
-                }
-            },
-            getChannelDeatil() {
-                this.$service.getChannelDetail(this.$route.params.id).then(response => {
-                    if (response && response.code === 0) {
-                        for (let key in response.data) {
-                            this.channelInfo[key] = response.data[key];
-                        }
-                        response.data.typeList.map(type => {
-                            this.channelInfo.typeIdList.push(type.id);
-                        });
-                        this.currentSelectedVideoList = response.data.carouselVideoList;
-                        this.currentSelectedVideoList.map(video => {
-                            if (video.onPlay) {
-                                this.channelInfo.currentProgramme = video.originName;
-                                this.channelInfo.duration = this.$util.formatDate(new Date(video.lastPlayTime), 'yyyy年MM月DD日HH时mm分SS秒') + '---' + this.$util.formatDate(new Date(video.lastPlayTime + video.takeTimeInSec * 1000), 'yyyy年MM月DD日HH时mm分SS秒');
-                            }
-                        });
-                    }
                 });
             },
             // 打开视频列表，设置当前点击的某一行视频
@@ -993,6 +1053,14 @@
                             this.typeOptions.map(type => {
                                 if (typeId === type.id) {
                                     this.channelInfo.typeList.push(type);
+                                }
+                            });
+                        });
+                        this.channelInfo.companyList = [];
+                        this.channelInfo.companyCodeList.map(companyCode => {
+                            this.companyOptions.map(company => {
+                                if (companyCode === company.code) {
+                                    this.channelInfo.companyList.push(company);
                                 }
                             });
                         });

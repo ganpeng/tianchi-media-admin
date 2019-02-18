@@ -146,7 +146,7 @@
                                 multicastIp: channel.multicastIp,
                                 multicastPort: channel.multicastPort,
                                 pushServer: channel.pushServer,
-                                public: channel.common ? '是' : '否',
+                                publicChannel: channel.common ? '是' : '否',
                                 company: company.slice(1)
                             };
                             exportChannelData.push(simpleChannel);
@@ -224,7 +224,7 @@
                 delete channelInfo.innerName;
                 delete channelInfo.name;
                 channelInfo.record = channelInfo.transcribe === '是';
-                channelInfo.common = channelInfo.public === '是';
+                channelInfo.common = channelInfo.publicChannel === '是';
                 channelInfo.typeList = [];
                 // 设置type
                 let typeList = channelInfo.type.split('/');
@@ -252,7 +252,7 @@
                     this.finishNo++;
                     if (response && response.code === 0) {
                         this.channelList[index].message = 'OK';
-                        this.$message('修改成功');
+                        this.$message.success('修改成功');
                     } else {
                         this.failNo++;
                         this.channelList[index].message = '第' + (index + 1) + '个:频道修改失败：' + response.message;
@@ -261,7 +261,7 @@
                     this.$set(this.channelList, index, this.channelList[index]);
                     if (this.finishNo === this.channelList.length) {
                         this.updateDisabled = false;
-                        this.$message(this.channelList.length + '个直播频道的修改完成，请查看对应的信息提示');
+                        this.$message.success(this.channelList.length + '个直播频道的修改完成，请查看对应的信息提示');
                     }
                 });
             },
@@ -285,15 +285,14 @@
                     message = message + '频道类别不存在;';
                 }
                 // 是否为公共频道
-                if (channel.public !== '是' && channel.public !== '否') {
+                if (channel.publicChannel !== '是' && channel.publicChannel !== '否') {
                     message = message + '请正确填写是否为公共频道;';
                 }
                 // 所属区域，公共频道为'是'，对于区域码不进行验证
-                if (channel.public === '否') {
+                if (channel.publicChannel === '否') {
                     if (this.$util.isEmpty(channel.company)) {
                         message = message + '请填写区域码;';
-                    }
-                    if (this.isCompanyExist(channel.company).length !== 0) {
+                    } else if (this.isCompanyExist(channel.company).length !== 0) {
                         message = message + '以下区域码不存在：' + this.isCompanyExist(channel.company).toString() + ';';
                     } else {
                         // 检查非公共频道下是否区域码设置为全部；全部区域码存在、没有重复的、数量与全部区域码相同
@@ -501,4 +500,5 @@
             margin-left: 40px;
         }
     }
+
 </style>
