@@ -404,7 +404,8 @@ export default {
                     posterImageList: clonePosterImageList
                 });
                 if (res && res.code === 0) {
-                    this.programmeSubjectData.posterImageList = _.cloneDeep(res.data.posterImageList);
+                    // this.programmeSubjectData.posterImageList = _.cloneDeep(res.data.posterImageList);
+                    this.programmeSubjectData.posterImageList = _.cloneDeep(clonePosterImageList);
                 }
             } catch (err) {
                 console.log(err);

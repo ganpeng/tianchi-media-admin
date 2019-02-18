@@ -114,7 +114,7 @@
                         :allowResolutions="[{width: 260, height: 260}]"
                     ></single-image-uploader>
                 </el-form-item>
-                <el-form-item label="公共区域">
+                <el-form-item label="公共频道">
                     <span>{{liveChannel.common ? '是' : '否'}}</span>
                 </el-form-item>
                 <el-form-item label="区域码" prop="companyList">

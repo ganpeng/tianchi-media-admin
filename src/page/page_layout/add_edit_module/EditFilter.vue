@@ -12,9 +12,11 @@
             :close-on-click-modal="false"
             :close-on-press-escape="false"
             :append-to-body="true">
-            <el-form :inline="false" class="text-left filters" label-width="180px">
-                <el-form-item label="筛选条件">
-                    <el-select v-model="categorySignCode" clearable placeholder="请选择栏目类别" @change="setCategory">
+            <el-form ref="filterForm" :inline="false" class="text-left filters" label-width="180px">
+                <el-form-item label="筛选条件" required>
+                    <el-select
+                        :rules="[{required: true, message: '请选择筛选条件'}]"
+                        v-model="categorySignCode" clearable placeholder="请选择栏目类别" @change="setCategory">
                         <el-option
                             v-for="item in categoryOptions"
                             :key="item.id"
@@ -295,11 +297,11 @@
                             }
                         });
                         // 删除项目列表中的'党建'项目，混排筛选中不存在'党建'项目
-                        for (let i = 0; i < this.categoryOptions.length; i++) {
-                            if (this.categoryOptions[i].name === '党建') {
-                                this.categoryOptions.splice(i, 1);
-                            }
-                        }
+                        // for (let i = 0; i < this.categoryOptions.length; i++) {
+                        //     if (this.categoryOptions[i].name === '党建') {
+                        //         this.categoryOptions.splice(i, 1);
+                        //     }
+                        // }
                         // 删除项目列表中的'幽默'项目，混排筛选中不存在'幽默'项目
                         for (let i = 0; i < this.categoryOptions.length; i++) {
                             if (this.categoryOptions[i].name === '幽默') {
@@ -458,7 +460,11 @@
                     });
                 }
             },
-            complete() {
+            async complete() {
+                if (!this.categorySignCode) {
+                    this.$message.error('请选择筛选项');
+                    return false;
+                }
                 // 检测推荐筛选项的封面
                 if (!this.coverImage.id) {
                     this.$message({
