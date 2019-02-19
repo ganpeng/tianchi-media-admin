@@ -402,15 +402,9 @@
             },
             uploadSuccessHandler(res, file, fileList) {
                 if (res && res.code === 0) {
-                    this.$message({
-                        type: 'success',
-                        message: '人物导入成功'
-                    });
+                    this.$message.success('人物导入成功');
                 } else {
-                    this.$message({
-                        type: 'error',
-                        message: '人物导入失败'
-                    });
+                    this.$message.error('人物导入失败');
                 }
                 this.closeFileUploadDialog();
             },

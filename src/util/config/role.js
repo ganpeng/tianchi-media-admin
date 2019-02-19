@@ -531,7 +531,7 @@ const RECOMMEND_OPTIONS = [
 
 // const defaultLayoutNavbarId = '5bf42d08b778252f2343eafe';
 
-const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', '站点管理', '配置中心', ''];
+const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', '广告管理', '站点管理', '配置中心', ''];
 
 const ASIDE_LIST = [
     [
@@ -639,6 +639,18 @@ const ASIDE_LIST = [
             text: '商品管理',
             uri: '/goods-manage/list',
             icon: 'goods_list'
+        }
+    ],
+    [
+        {
+            text: '广告主管理',
+            uri: '/adsowner-manage/list',
+            icon: 'goods_list'
+        },
+        {
+            text: '广告管理',
+            uri: '/ads-manage/list',
+            icon: 'aside_product'
         }
     ],
     [

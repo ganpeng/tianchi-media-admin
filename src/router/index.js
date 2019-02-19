@@ -46,16 +46,6 @@ import EditFigureSubject from 'sysPage/subject_manage/EditFigureSubject';
 import ProgrammeSubjectDetail from 'sysPage/subject_manage/ProgrammeSubjectDetail';
 import FigureSubjectDetail from 'sysPage/subject_manage/FigureSubjectDetail';
 import SubjectList from 'sysPage/subject_manage/SubjectList';
-// 广告模块
-import StartingAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/StartingAdvertGroupList';
-import AdvertResourceList from 'sysPage/advert_manage/advert_resources_manage/AdvertResourceList';
-import PreProgrammeAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/PreProgrammeAdvertGroupList';
-import ScreensaverAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/ScreensaverAdvertGroupList';
-import PauseAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/PauseAdvertGroupList';
-import LiveAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/LiveAdvertGroupList';
-import VolumeBarAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/VolumeBarAdvertGroupList';
-import DialogAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/DialogAdvertGroupList';
-import DetailPageAdvertGroupList from 'sysPage/advert_manage/advert_launch_manage/DetailPageAdvertGroupList';
 import VideoList from 'sysPage/video_manage/VideoList';
 import DownloadVideoList from 'sysPage/video_manage/DownloadVideoList';
 import DiffTimeVideoList from 'sysPage/video_manage/DiffTimeVideoList';
@@ -117,6 +107,9 @@ import ShuffleModule from 'sysPage/page_layout/add_edit_module/ShuffleModule';
 import ProgrammeSubjectModule from 'sysPage/page_layout/add_edit_module/ProgrammeSubjectModule';
 import SiteList from 'sysPage/site_manage/SiteList';
 import ConfigSite from 'sysPage/site_manage/ConfigSite';
+
+//  广告
+import AdvertisingOwnerList from 'sysPage/advertising_manage/advertising_owner/AdvertisingOwnerList';
 
 Vue.use(Router);
 
@@ -444,57 +437,9 @@ let router = new Router({
                 //  广告管理
                 // 广告资源列表
                 {
-                    path: '/advert-resource/list',
-                    name: 'AdvertResourceList',
-                    component: AdvertResourceList
-                },
-                // 开机广告列表
-                {
-                    path: '/advert-launch/starting/list',
-                    name: 'StartingAdvertGroupList',
-                    component: StartingAdvertGroupList
-                },
-                //  前置节目广告列表
-                {
-                    path: '/advert-launch/preprogramme/list',
-                    name: 'PreProgrammeAdvertGroupList',
-                    component: PreProgrammeAdvertGroupList
-                },
-                //  屏保广告列表
-                {
-                    path: '/advert-launch/screensaver/list',
-                    name: 'ScreensaverrammeAdvertGroupList',
-                    component: ScreensaverAdvertGroupList
-                },
-                //  暂停广告列表
-                {
-                    path: '/advert-launch/pause/list',
-                    name: 'PauseAdvertGroupList',
-                    component: PauseAdvertGroupList
-                },
-                //  直播换台广告列表
-                {
-                    path: '/advert-launch/live/list',
-                    name: 'LiveAdvertGroupList',
-                    component: LiveAdvertGroupList
-                },
-                //  音量条广告列表
-                {
-                    path: '/advert-launch/volumebar/list',
-                    name: 'VolumeBarAdvertGroupList',
-                    component: VolumeBarAdvertGroupList
-                },
-                //  弹窗广告列表
-                {
-                    path: '/advert-launch/dialog/list',
-                    name: 'DialogAdvertGroupList',
-                    component: DialogAdvertGroupList
-                },
-                //  详情页广告列表
-                {
-                    path: '/advert-launch/detailpage/list',
-                    name: 'DetailPageAdvertList',
-                    component: DetailPageAdvertGroupList
+                    path: '/adsowner-manage/list',
+                    name: 'AdvertisingOwnerList',
+                    component: AdvertisingOwnerList
                 },
                 // 视频管理
                 {
