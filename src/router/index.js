@@ -108,8 +108,11 @@ import ProgrammeSubjectModule from 'sysPage/page_layout/add_edit_module/Programm
 import SiteList from 'sysPage/site_manage/SiteList';
 import ConfigSite from 'sysPage/site_manage/ConfigSite';
 
-//  广告
+//  广告主
 import AdvertisingOwnerList from 'sysPage/advertising_manage/advertising_owner/AdvertisingOwnerList';
+import AddAdvertisingOwner from 'sysPage/advertising_manage/advertising_owner/AddAdvertisingOwner';
+import EditAdvertisingOwner from 'sysPage/advertising_manage/advertising_owner/EditAdvertisingOwner';
+import DisplayAdvertisingOwner from 'sysPage/advertising_manage/advertising_owner/DisplayAdvertisingOwner';
 import ADList from 'sysPage/advertising_manage/ad_manage/ADList';
 
 Vue.use(Router);
@@ -441,6 +444,24 @@ let router = new Router({
                     path: '/adsowner-manage/list',
                     name: 'AdvertisingOwnerList',
                     component: AdvertisingOwnerList
+                },
+                // 广告主资源列表
+                {
+                    path: '/adsowner-manage/add/:id',
+                    name: 'AddAdvertisingOwner',
+                    component: AddAdvertisingOwner
+                },
+                // 广告主资源列表
+                {
+                    path: '/adsowner-manage/edit/:id',
+                    name: 'EditAdvertisingOwner',
+                    component: EditAdvertisingOwner
+                },
+                // 广告主资源列表
+                {
+                    path: '/adsowner-manage/display/:id',
+                    name: 'DisplayAdvertisingOwner',
+                    component: DisplayAdvertisingOwner
                 },
                 // 广告列表
                 {

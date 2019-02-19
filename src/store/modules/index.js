@@ -13,6 +13,7 @@ import device from './device';
 import clientErrorLog from './client_errorlog';
 import category from './category';
 import pageLayout from './page_layout';
+import advertising from './advertising';
 
 export default {
     permission,
@@ -28,5 +29,6 @@ export default {
     device,
     clientErrorLog,
     category,
-    pageLayout
+    pageLayout,
+    advertising
 };
