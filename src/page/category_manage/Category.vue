@@ -448,7 +448,7 @@ export default {
                         let res2 = await this.postProgrammeTypeGroupListById(activeProgrammeCategoryId);
                         if (res2 && res2.code === 0) {
                             this.$message.success('类型组保存成功');
-                            this.gotoBlankPage();
+                            // this.gotoBlankPage();
                         }
                     }
                 }
