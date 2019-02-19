@@ -110,6 +110,7 @@ import ConfigSite from 'sysPage/site_manage/ConfigSite';
 
 //  广告
 import AdvertisingOwnerList from 'sysPage/advertising_manage/advertising_owner/AdvertisingOwnerList';
+import ADList from 'sysPage/advertising_manage/ad_manage/ADList';
 
 Vue.use(Router);
 
@@ -435,11 +436,17 @@ let router = new Router({
                     component: ProgrammeTypeManage
                 },
                 //  广告管理
-                // 广告资源列表
+                // 广告主列表
                 {
                     path: '/adsowner-manage/list',
                     name: 'AdvertisingOwnerList',
                     component: AdvertisingOwnerList
+                },
+                // 广告列表
+                {
+                    path: '/ads-manage/list',
+                    name: 'ADList',
+                    component: ADList
                 },
                 // 视频管理
                 {
