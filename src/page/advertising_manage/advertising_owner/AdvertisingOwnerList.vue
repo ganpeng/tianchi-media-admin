@@ -37,11 +37,11 @@
                     </el-select>
                 </div>
                 <div class="search-field-item">
-                    <label class="search-field-item-label">资源类型</label>
+                    <label class="search-field-item-label">是否上架</label>
                     <el-select
                         :value="searchFields.typeIdList"
                         clearable
-                        placeholder="请选择资源类型"
+                        placeholder="请选择"
                         @input="inputHandler($event, 'typeIdList')"
                     >
                         <el-option
@@ -53,7 +53,7 @@
                     </el-select>
                 </div>
                 <div class="search-field-item">
-                    <label class="search-field-item-label">状态</label>
+                    <label class="search-field-item-label">广告状态</label>
                     <el-select
                         :value="searchFields.record"
                         clearable
@@ -79,6 +79,22 @@
                 </span>
             </div>
             <div v-show="searchFieldVisible" class="field-row">
+                <div class="search-field-item">
+                    <label class="search-field-item-label">资源类型</label>
+                    <el-select
+                        :value="searchFields.typeIdList"
+                        clearable
+                        placeholder="请选择资源类型"
+                        @input="inputHandler($event, 'typeIdList')"
+                    >
+                        <el-option
+                            v-for="(item, index) in []"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.id">
+                        </el-option>
+                    </el-select>
+                </div>
                 <div class="search-field-item">
                     <label class="search-field-item-label">创建时间</label>
                     <el-date-picker
@@ -177,7 +193,12 @@ export default {
         })
     },
     methods: {
-        addAdvertisingOwner() {},
+        addAdvertisingOwner() {
+            let routeData = this.$router.resolve({
+                name: 'AddAdvertisingOwner'
+            });
+            window.open(routeData.href, '_blank');
+        },
         inputHandler() {},
         searchHandler() {},
         clearSearchFields() {},

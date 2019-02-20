@@ -12,6 +12,9 @@ let defaultPagination = {
 };
 
 let defaultAdvertisingOwner = {
+    name: '',
+    description: '',
+    adMaterialList: []
 };
 
 const defaultState = {
@@ -24,6 +27,9 @@ const defaultState = {
 const state = _.cloneDeep(defaultState);
 
 const getters = {
+    advertisingOwner(state) {
+        return state.advertisingOwner;
+    },
     list(state) {
         return state.list;
     },
@@ -61,6 +67,18 @@ const mutations = {
     },
     resetSearchFields(state) {
         state.searchFields = _.cloneDeep(defaultSearchFields);
+    },
+    setAdvertisingOwner(state, payload) {
+        state.advertisingOwner = payload.advertisingOwner;
+    },
+    updateAdvertisingOwner(state, payload) {
+        let {key, value} = payload;
+        state.advertisingOwner[key] = value;
+    },
+    addAdMaterial(state, payload) {
+        let {adMaterial} = payload;
+        state.advertisingOwner.adMaterialList.push(adMaterial);
+        state.advertisingOwner.adMaterialList = _.uniqBy(state.advertisingOwner.adMaterialList, 'storageId');
     }
 };
 

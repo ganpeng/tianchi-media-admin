@@ -446,19 +446,19 @@ let router = new Router({
                     name: 'AdvertisingOwnerList',
                     component: AdvertisingOwnerList
                 },
-                // 广告主资源列表
+                // 新增广告主资源
                 {
-                    path: '/adsowner-manage/add/:id',
+                    path: '/adsowner-manage/add',
                     name: 'AddAdvertisingOwner',
                     component: AddAdvertisingOwner
                 },
-                // 广告主资源列表
+                // 编辑广告主资源
                 {
                     path: '/adsowner-manage/edit/:id',
                     name: 'EditAdvertisingOwner',
                     component: EditAdvertisingOwner
                 },
-                // 广告主资源列表
+                // 显示广告主资源
                 {
                     path: '/adsowner-manage/display/:id',
                     name: 'DisplayAdvertisingOwner',

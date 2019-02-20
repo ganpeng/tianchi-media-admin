@@ -1,5 +1,8 @@
 import _ from 'lodash';
 
+export const videoRegex = /^video/;
+export const imageRegex = /^image/;
+
 function readBlobAsDataURL(obj) {
     return new Promise((resolve, reject) => {
         let fileRead = new FileReader();
@@ -32,7 +35,7 @@ function loadImage(obj) {
     return new Promise((resolve, reject) => {
         let img = new Image();
         img.src = obj.imageData;
-        img.onload = function () {
+        img.onload = function() {
             resolve({
                 demension: {
                     width: img.width,
@@ -42,6 +45,28 @@ function loadImage(obj) {
             });
         };
         img.onerror = function (err) {
+            reject(err);
+        };
+    });
+}
+
+function loadVideo(obj) {
+    return new Promise((resolve, reject) => {
+        const video = document.createElement('video');
+        const url = URL.createObjectURL(obj.file);
+        video.src = url;
+        video.load();
+        video.onloadedmetadata = function() {
+            URL.revokeObjectURL(url);
+            resolve({
+                demension: {
+                    width: video.videoWidth,
+                    height: video.videoHeight
+                },
+                file: obj.file
+            });
+        };
+        video.onerror = function(err) {
             reject(err);
         };
     });
@@ -95,6 +120,19 @@ export function readBlobAsDataURLFromList(images) {
     return Promise.all(images.map((image) => {
         return readBlobAsDataURL(image);
     }));
+}
+
+export function promiseFileSize(files) {
+    return Promise.all(Array.from(files).map((file) => loadFile(file)))
+                .then((list) => {
+                    return Promise.all(list.map((obj) => {
+                        if (videoRegex.test(obj.file.type)) {
+                            return loadVideo(obj);
+                        } else {
+                            return loadImage(obj);
+                        }
+                    }));
+                });
 }
 
 export function uploadRequest(options) {
