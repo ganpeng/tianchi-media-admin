@@ -114,6 +114,7 @@ import AddAdvertisingOwner from 'sysPage/advertising_manage/advertising_owner/Ad
 import EditAdvertisingOwner from 'sysPage/advertising_manage/advertising_owner/EditAdvertisingOwner';
 import DisplayAdvertisingOwner from 'sysPage/advertising_manage/advertising_owner/DisplayAdvertisingOwner';
 import ADList from 'sysPage/advertising_manage/ad_manage/ADList';
+import CreateBootAD from 'sysPage/advertising_manage/ad_manage/CreateBootAD';
 
 Vue.use(Router);
 
@@ -468,6 +469,12 @@ let router = new Router({
                     path: '/ads-manage/list',
                     name: 'ADList',
                     component: ADList
+                },
+                // 创建开机广告
+                {
+                    path: '/ads-manage/create-boot-ad',
+                    name: 'CreateBootAD',
+                    component: CreateBootAD
                 },
                 // 视频管理
                 {

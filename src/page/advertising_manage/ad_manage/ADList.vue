@@ -1,11 +1,10 @@
 <!--广告管理-广告列表（包含开机、屏保、音量条、详情页广告）组件-->
 <template>
     <div>
-        <div class="table-container">
-            <div class="content-title">搜索筛选</div>
-            <div class="search-field">
-                <div class="field-row" @keyup.enter="getADList">
-                    <div class="search-field-item">
+        <div class="subject-search-container">
+            <div @keyup.enter="getADList" class="text-left filters-container">
+                <el-form :inline="true" class="filter-form">
+                    <el-form-item>
                         <el-input
                             v-model="listQueryParams.keyword"
                             clearable
@@ -13,29 +12,17 @@
                             class="border-input"
                             placeholder="搜索你想要的信息">
                         </el-input>
-                    </div>
-                    <el-button
-                        class="btn-style-one"
-                        @click="getADList(false)"
-                        type="primary">
-                        <svg-icon icon-class="search"></svg-icon>
-                        搜索
-                    </el-button>
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">创建时间</label>
-                        <el-date-picker
-                            v-model="createRangeTime"
-                            @change="getADList(true)"
-                            type="daterange"
-                            clearable
-                            value-format="timestamp"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期">
-                        </el-date-picker>
-                    </div>
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">广告类型</label>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button
+                            class="btn-style-one"
+                            @click="getADList(false)"
+                            type="primary">
+                            <svg-icon icon-class="search"></svg-icon>
+                            搜索
+                        </el-button>
+                    </el-form-item>
+                    <el-form-item label="广告类型">
                         <el-select
                             v-model="listQueryParams.adCategory"
                             @change="getADList(true)"
@@ -48,24 +35,22 @@
                                 :value="item.value">
                             </el-option>
                         </el-select>
-                    </div>
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">资源类型</label>
+                    </el-form-item>
+                    <el-form-item label="是否上架">
                         <el-select
-                            v-model="listQueryParams.resourceCategory"
+                            v-model="listQueryParams.status"
                             @change="getADList(true)"
                             clearable
-                            placeholder="请选择资源类型">
+                            placeholder="请选择状态">
                             <el-option
-                                v-for="item in resourceCategoryOptions"
+                                v-for="item in sheleveStatusOptions"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
                             </el-option>
                         </el-select>
-                    </div>
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">状态</label>
+                    </el-form-item>
+                    <el-form-item label="广告状态">
                         <el-select
                             v-model="listQueryParams.status"
                             @change="getADList(true)"
@@ -78,37 +63,78 @@
                                 :value="item.value">
                             </el-option>
                         </el-select>
-                    </div>
-                    <el-button
-                        class="btn-style-one"
-                        type="primary"
-                        @click="clearFilters">
-                        <svg-icon icon-class="reset"></svg-icon>
-                        重置
-                    </el-button>
-                </div>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button
+                            class="btn-style-one"
+                            @click="clearFilters"
+                            type="primary">
+                            <svg-icon icon-class="reset"></svg-icon>
+                            重置
+                        </el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button
+                            type="text"
+                            @click="moreFilters = !moreFilters"
+                            class="more-filters"
+                            :class="{active:moreFilters}">
+                            更多筛选
+                            <i class="el-icon-arrow-up" v-if="moreFilters"></i>
+                            <i class="el-icon-arrow-down" v-else></i>
+                        </el-button>
+                    </el-form-item>
+                </el-form>
+                <el-form :inline="true" class="more-filter-box filter-form" v-if="moreFilters">
+                    <el-form-item label="资源类型">
+                        <el-select
+                            v-model="listQueryParams.resourceCategory"
+                            @change="getADList(true)"
+                            clearable
+                            placeholder="请选择资源类型">
+                            <el-option
+                                v-for="item in resourceCategoryOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="创建时间">
+                        <el-date-picker
+                            v-model="createRangeTime"
+                            @change="getADList(true)"
+                            type="daterange"
+                            clearable
+                            value-format="timestamp"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-form>
             </div>
-            <div class="seperator-line"></div>
-            <div class="table-field">
-                <h2 class="content-title">广告列表</h2>
-                <div class="table-operator-field clearfix">
-                    <div class="float-left"></div>
-                    <div class="float-right">
-                        <el-dropdown @command="createAD($event)" placement="bottom">
-                            <el-button class="btn-style-two contain-svg-icon">
-                                <svg-icon icon-class="add"></svg-icon>
-                                添加
-                                <svg-icon icon-class="arrow_down"></svg-icon>
-                            </el-button>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="POWER_ON_AD">开机广告</el-dropdown-item>
-                                <el-dropdown-item command="VOLUME_AD">音量条广告</el-dropdown-item>
-                                <el-dropdown-item command="SWITCH_CHANNEL_AD">换台广告</el-dropdown-item>
-                                <el-dropdown-item command="SCREEN_SAVER_AD">屏保广告</el-dropdown-item>
-                                <el-dropdown-item command="DEATIL_AD">详情页广告</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                    </div>
+        </div>
+        <div class="seperator-line"></div>
+        <div class="table-field">
+            <h2 class="content-title">广告列表</h2>
+            <div class="table-operator-field clearfix">
+                <div class="float-left"></div>
+                <div class="float-right">
+                    <el-dropdown @command="createAD($event)" placement="bottom">
+                        <el-button class="btn-style-two contain-svg-icon">
+                            <svg-icon icon-class="add"></svg-icon>
+                            添加
+                            <svg-icon icon-class="arrow_down"></svg-icon>
+                        </el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="BOOT_AD">开机广告</el-dropdown-item>
+                            <el-dropdown-item command="VOLUME_AD">音量条广告</el-dropdown-item>
+                            <el-dropdown-item command="CHANNEL_SWITCH_AD">换台广告</el-dropdown-item>
+                            <el-dropdown-item command="SCREEN_SAVER_AD">屏保广告</el-dropdown-item>
+                            <el-dropdown-item command="DEATIL_AD">详情页广告</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
                 </div>
             </div>
         </div>
@@ -238,6 +264,7 @@
         name: 'ADList',
         data() {
             return {
+                moreFilters: false,
                 listQueryParams: {
                     keyword: '',
                     adCategory: '',
@@ -250,10 +277,10 @@
                 },
                 createRangeTime: [],
                 adCategoryOptions: [
-                    {value: 'POWER_ON_AD', label: '开机广告'},
+                    {value: 'BOOT_AD', label: '开机广告'},
                     {value: 'VOLUME_AD', label: '音量条广告'},
-                    {value: 'DETAIL_AD', label: '详情页广告'},
-                    {value: 'SWITCH_CHANNEL_AD', label: '换台广告'},
+                    {value: 'PROGRAMME_DETAIL_AD', label: '详情页广告'},
+                    {value: 'CHANNEL_SWITCH_AD', label: '换台广告'},
                     {value: 'SCREEN_SAVER_AD', label: '屏保广告'}
                 ],
                 resourceCategoryOptions: [
@@ -261,10 +288,13 @@
                     {value: 'PICTURE', label: '图片'}
                 ],
                 statusOptions: [
-                    {value: 'UN_PUBLISHED', label: '未发布'},
-                    {value: 'GO_EFFECT', label: '生效'},
-                    {value: 'LOSE_EFFECT', label: '失效'},
-                    {value: 'UN_SHELEVED', label: '已下架'},
+                    {value: 'UN_PUBLISHED', label: '生效'},
+                    {value: 'GO_EFFECT', label: '未生效'},
+                    {value: 'LOSE_EFFECT', label: '失效'}
+                ],
+                sheleveStatusOptions: [
+                    {value: 'SHELEVED', label: '已上架'},
+                    {value: 'UN_SHELEVED', label: '已下架'}
                 ],
                 totalAmount: 0,
                 adList: []
@@ -273,15 +303,15 @@
         filters: {
             getCategoryName: function (category) {
                 switch (category) {
-                    case 'POWER_ON_AD':
+                    case 'BOOT_AD':
                         return '开机广告';
-                    case 'DETAIL_AD':
+                    case 'PROGRAMME_DETAIL_AD':
                         return '详情页广告';
                     case 'SCREEN_SAVER_AD':
                         return '屏保广告';
                     case 'VOLUME_AD':
                         return '音量条广告';
-                    case 'SWITCH_CHANNEL_AD':
+                    case 'CHANNEL_SWITCH_AD':
                         return '换台广告';
                     default:
                         break;
@@ -303,12 +333,12 @@
                 if (isReset) {
                     this.listQueryParams.pageNum = 1;
                 }
-                this.$service.getADList(this.listQueryParams).then(response => {
-                    if (response && response.code === 0) {
-                        this.adList = response.data.list;
-                        this.totalAmount = response.data.total;
-                    }
-                });
+                // this.$service.getADList(this.listQueryParams).then(response => {
+                //     if (response && response.code === 0) {
+                //         this.adList = response.data.list;
+                //         this.totalAmount = response.data.total;
+                //     }
+                // });
             },
             // 对列表进行排序
             sortADList(column) {
@@ -397,18 +427,13 @@
                             item.visible = !item.visible;
                         }
                     });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消' + (item.visible ? '下架' : '上架' + item.name + '产品包')
-                    });
                 });
             },
             // 创建产品包
             createAD(command) {
                 switch (command) {
-                    case 'POWER_ON_AD':
-                        this.$router.push({name: 'CreatePowerOnAD'});
+                    case 'BOOT_AD':
+                        this.$router.push({name: 'CreateBootAD'});
                         break;
                     case 'SCREEN_SAVER_AD':
                         this.$router.push({name: 'CreateScreenSaverAD'});
@@ -416,10 +441,10 @@
                     case 'VOLUME_AD':
                         this.$router.push({name: 'CreateVolumeAD'});
                         break;
-                    case 'DETAIL_AD':
-                        this.$router.push({name: 'CreateDetailAD'});
+                    case 'PROGRAMME_DETAIL_AD':
+                        this.$router.push({name: 'CreateProgrammeDetailAD'});
                         break;
-                    case 'SWITCH_CHANNEL_AD':
+                    case 'CHANNEL_SWITCH_AD':
                         this.$router.push({name: 'CreateSwitchChannelAD'});
                         break;
                     default:
@@ -431,6 +456,39 @@
 </script>
 
 <style lang="scss" scoped>
+
+    .subject-search-container {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #252D3F;
+        .filters-container {
+            background: #2A3040;
+            border-radius: 8px;
+        }
+        .svg-icon {
+            margin-right: 10px;
+        }
+
+        // 按钮
+        .more-filters {
+            font-size: 12px;
+            color: #6F7480;
+            &.active {
+                color: #1989FA;
+                i {
+                    color: #6F7480;
+                }
+            }
+            i {
+                margin-left: 8px;
+            }
+        }
+
+        .more-filter-box {
+            background: #252C3D;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+    }
 
     .el-pagination {
         margin-top: 10px;

@@ -4,7 +4,7 @@
         <div class="content-title">添加开机广告</div>
         <ad-form
             :adInfo="adInfo"
-            status="CREATE_POWER_ON_AD">
+            status="CREATE_BOOT_AD">
         </ad-form>
     </div>
 </template>
@@ -13,13 +13,15 @@
     import AdForm from './ADForm';
 
     export default {
-        name: 'CreatePowerOnAD',
+        name: 'CreateBootAD',
         components: {
             AdForm
         },
         data() {
             return {
-                adInfo: {}
+                adInfo: {
+                    posterImageList: []
+                }
             };
         },
         methods: {}
