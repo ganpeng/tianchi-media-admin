@@ -27,7 +27,7 @@
                             v-model="listQueryParams.adCategory"
                             @change="getADList(true)"
                             clearable
-                            placeholder="请选择广告类型">
+                            placeholder="全部">
                             <el-option
                                 v-for="item in adCategoryOptions"
                                 :key="item.value"
@@ -36,12 +36,12 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="是否上架">
+                    <el-form-item label="上下架">
                         <el-select
                             v-model="listQueryParams.status"
                             @change="getADList(true)"
                             clearable
-                            placeholder="请选择状态">
+                            placeholder="全部">
                             <el-option
                                 v-for="item in sheleveStatusOptions"
                                 :key="item.value"
@@ -55,7 +55,7 @@
                             v-model="listQueryParams.status"
                             @change="getADList(true)"
                             clearable
-                            placeholder="请选择状态">
+                            placeholder="全部">
                             <el-option
                                 v-for="item in statusOptions"
                                 :key="item.value"
@@ -91,7 +91,7 @@
                             v-model="listQueryParams.resourceCategory"
                             @change="getADList(true)"
                             clearable
-                            placeholder="请选择资源类型">
+                            placeholder="全部">
                             <el-option
                                 v-for="item in resourceCategoryOptions"
                                 :key="item.value"
