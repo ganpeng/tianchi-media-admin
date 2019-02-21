@@ -2,32 +2,32 @@
     <div class="advertising-owner-form-container">
         <div class="form-container">
             <el-form :model="advertisingOwner" :rules="inputRules" ref="advertisingOwnerForm" @submit.native.prevent class="my-form" label-width="120px">
-                <el-col :span="24">
-                    <el-col :span="8">
-                        <el-form-item label="广告主名称" prop="name">
-                            <el-input
-                                :value="advertisingOwner.name"
-                                :maxlength="30"
-                                placeholder="请输入广告主名称"
-                                @input="inputHandler($event, 'name')"
-                            ></el-input>
-                        </el-form-item>
-                        <el-form-item label="广告主备注" prop="description">
-                            <el-input
-                                :value="advertisingOwner.description"
-                                :maxlength="100"
-                                placeholder="请输入广告主备注"
-                                @input="inputHandler($event, 'description')"
-                            ></el-input>
-                        </el-form-item>
-                    </el-col>
+                <el-col :span="8">
+                    <el-form-item label="广告主名称" prop="name">
+                        <el-input
+                            :value="advertisingOwner.name"
+                            :maxlength="30"
+                            placeholder="请输入广告主名称"
+                            @input="inputHandler($event, 'name')"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="广告主备注" prop="description">
+                        <el-input
+                            :value="advertisingOwner.description"
+                            :maxlength="100"
+                            placeholder="请输入广告主备注"
+                            @input="inputHandler($event, 'description')"
+                        ></el-input>
+                    </el-form-item>
                 </el-col>
-                <el-form-item label="资源上传">
-                    <multi-type-file-upload
-                        :adMaterialList="advertisingOwner.adMaterialList"
-                        :fileUploadedSuccessHandler="fileUploadedSuccessHandler"
-                    ></multi-type-file-upload>
-                </el-form-item>
+                <el-col :span="24">
+                    <el-form-item label="资源上传">
+                        <multi-type-file-upload
+                            :adMaterialList="advertisingOwner.adMaterialList"
+                            :fileUploadedSuccessHandler="fileUploadedSuccessHandler"
+                        ></multi-type-file-upload>
+                    </el-form-item>
+                </el-col>
             </el-form>
         </div>
     </div>

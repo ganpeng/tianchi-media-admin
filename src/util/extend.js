@@ -432,6 +432,25 @@ let util = {
             default:
                 return message;
         }
+    },
+    convertFileSize(size) {
+        let kb = 1024;
+        let mb = kb * 1024;
+        let gb = mb * 1024;
+        if (!size) {
+            return '';
+        }
+        if (size >= gb) {
+            return Math.round(size / gb) + 'Gb';
+        } else if (size >= mb) {
+            let f = size / mb;
+            return Math.round(f) + 'Mb';
+        } else if (size >= kb) {
+            let f = size / kb;
+            return Math.round(f) + 'Kb';
+        } else {
+            return size + 'Byte';
+        }
     }
 };
 

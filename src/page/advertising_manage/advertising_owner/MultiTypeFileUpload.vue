@@ -2,16 +2,20 @@
     <div class="multi-type-file-upload-container">
         <div class="image-list-container">
             <ul class="image-list">
-                <li @click.stop="displayImage(index)" v-for="(image, index) in adMaterialList" :key="image.id" class="image-item">
+                <li @click.stop="displayImage(image, index)" v-for="(image, index) in adMaterialList" :key="image.id" class="image-item">
                     <div class="image-warpper">
                         <img v-if="image.mediaType === 'IMAGE'" :src="image.storageUri" class="image" alt="">
-                        <img v-else class="image" alt="">
+                        <span v-else @click="displayVideo(image)" class="image video-item" alt="">
+                            <span class="play-btn">
+                                <i class="el-icon-caret-right"></i>
+                            </span>
+                        </span>
                         <div class="mask"></div>
                     </div>
                     <span @click.stop="deleteImage(image.id)" class="delete-btn-one small delete-icon">
                         &times;
                     </span>
-                    <p class="dimension-info">{{image.width}}*{{image.height}}</p>
+                    <p class="dimension-info">{{image.width}}*{{image.height}} {{convertFileSize(image.size)}}</p>
                 </li>
                 <li :style="styleStr(obj.dataUri)" v-for="(obj, index) in showFileList" :key="index" class="image-item uploading-image-item">
                     <el-progress :stroke-width="3" :show-text="false" class="progress-bar" v-show="obj.data.progress !== 0" :percentage="obj.data.progress"></el-progress>
@@ -26,12 +30,23 @@
                 </li>
             </ul>
         </div>
+        <preview-multiple-images
+            :previewMultipleImages="previewImage">
+        </preview-multiple-images>
+        <display-video-dialog
+            ref="displayVideoDialog"
+            :title="video.title"
+            :url="video.url"
+        ></display-video-dialog>
     </div>
 </template>
 <script>
 import { uploadRequest, promiseFileSize, videoRegex, filterFile } from '../../../util/upload';
+import PreviewMultipleImages from '../../../components/custom_components/custom/PreviewMultipleImages';
+import DisplayVideoDialog from '../../../components/custom_components/custom/DisplayVideoDialog';
 export default {
     name: 'MultiTypeFileUpload',
+    components: { PreviewMultipleImages, DisplayVideoDialog },
     props: {
         adMaterialList: {
             type: Array,
@@ -52,6 +67,10 @@ export default {
                 autoplay: false,
                 activeIndex: 0,
                 list: []
+            },
+            video: {
+                title: '',
+                url: ''
             }
         };
     },
@@ -67,6 +86,22 @@ export default {
                 console.log(obj);
                 return obj.data.status === 1 || obj.data.status === 3;
             });
+        },
+        previewImageList() {
+            return this.adMaterialList.map((item) => {
+                return {
+                    id: item.storageId,
+                    name: item.name,
+                    uri: item.storageUri,
+                    width: item.width,
+                    height: item.height
+                };
+            });
+        },
+        convertFileSize() {
+            return (size) => {
+                return this.$util.convertFileSize(size);
+            };
         }
     },
     methods: {
@@ -164,10 +199,17 @@ export default {
             this.isUploading = false;
         },
         // 放大预览图片
-        displayImage(index) {
-            this.previewImage.display = true;
-            this.previewImage.list = this.imageList;
-            this.previewImage.activeIndex = index;
+        displayImage(obj, index) {
+            if (obj.mediaType === 'IMAGE') {
+                this.previewImage.display = true;
+                this.previewImage.list = this.previewImageList;
+                this.previewImage.activeIndex = index;
+            }
+        },
+        displayVideo(obj) {
+            this.video.title = obj.name;
+            this.video.url = obj.storageUri;
+            this.$refs.displayVideoDialog.showDialog();
         },
         async deleteImage(id) {
             try {
@@ -209,6 +251,29 @@ export default {
                     width: 100%;
                     height: 100px;
                     border-radius: 8px;
+                }
+                .video-item {
+                    position: relative;
+                    .play-btn {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 50px;
+                        background: rgba(0,0,0,0.50);
+                        i {
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            font-size: 30px;
+                            color: #333B4E;
+                        }
+                        z-index: 150;
+                        cursor: pointer;
+                    }
                 }
                 .mask {
                     display: none;
