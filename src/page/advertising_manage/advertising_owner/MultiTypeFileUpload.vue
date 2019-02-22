@@ -12,7 +12,7 @@
                         </span>
                         <div class="mask"></div>
                     </div>
-                    <span @click.stop="deleteImage(image.id)" class="delete-btn-one small delete-icon">
+                    <span v-if="!isUploading" @click.stop="deleteImage(image.storageId)" class="delete-btn-one small delete-icon">
                         &times;
                     </span>
                     <p class="dimension-info">{{image.width}}*{{image.height}} {{convertFileSize(image.size)}}</p>
@@ -55,6 +55,10 @@ export default {
         fileUploadedSuccessHandler: {
             type: Function,
             default: () => {}
+        },
+        deleteAdMaterialHandler: {
+            type: Function,
+            default: () => {}
         }
     },
     data() {
@@ -83,7 +87,6 @@ export default {
     computed: {
         showFileList() {
             return this.fileList.filter((obj) => {
-                console.log(obj);
                 return obj.data.status === 1 || obj.data.status === 3;
             });
         },
@@ -219,7 +222,10 @@ export default {
                     type: 'error'
                 });
                 if (confirm) {
-                    // this.deleteImageHandler(id);
+                    let res = await this.$service.deleteAdMaterialById(id);
+                    if (res && res.code === 0) {
+                        this.deleteAdMaterialHandler(id);
+                    }
                 }
             } catch (err) {
                 console.log(err);

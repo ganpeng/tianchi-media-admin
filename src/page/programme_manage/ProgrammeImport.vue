@@ -6,7 +6,7 @@
             </div>
             <div class="seperator-line"></div>
             <div class="info-field">
-                <h3>以选文件</h3>
+                <h3>已选文件</h3>
                 <p class="file-name">
                     {{this.file ? this.file.name : ''}}
                     <span style="margin-left: 20px;" :class="[success ? 'text-success' : 'text-danger']">{{this.importStatus}}</span>

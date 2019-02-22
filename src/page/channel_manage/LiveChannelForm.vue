@@ -52,6 +52,10 @@
                     >
                     </el-input>
                 </el-form-item>
+                <el-form-item label="推流方式" prop="methods">
+                    <el-checkbox :value="methodsChecked('HLS')" @change="methodsHandler($event, 'HLS')">HLS</el-checkbox>
+                    <el-checkbox :value="methodsChecked('UDP')" @change="methodsHandler($event, 'UDP')">UDP</el-checkbox>
+                </el-form-item>
                 <el-form-item label="录制IP" prop="recordIp">
                     <el-input
                         placeholder="请输入录制IP"
@@ -213,6 +217,12 @@ export default {
             set(value) {
                 this.updateLiveChannel({key: 'typeList', value});
             }
+        },
+        methodsChecked() {
+            return (key) => {
+                let index = this.liveChannel.methods.findIndex((item) => item === key);
+                return index > -1;
+            };
         }
     },
     created() {
@@ -231,6 +241,19 @@ export default {
         }),
         inputHandler(value, key) {
             this.updateLiveChannel({key, value});
+        },
+        methodsHandler(value, key) {
+            let methods = _.cloneDeep(this.liveChannel.methods);
+            if (value) {
+                methods.push(key);
+            } else {
+                methods = methods.filter((item) => item !== key);
+            }
+            methods = _.uniq(methods);
+            this.updateLiveChannel({key: 'methods', value: methods});
+        },
+        methodsChangeHandler(value) {
+            // console.log(value);
         },
         toggleDeviceStatus() {
         },
@@ -267,5 +290,8 @@ export default {
 .off-the-shelf,
 .on-the-shelf {
     display: inline-block;
+}
+.el-checkbox {
+    padding: 0;
 }
 </style>

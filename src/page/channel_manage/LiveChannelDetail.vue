@@ -115,6 +115,12 @@
                                 <span class="value">{{liveChannel.audioPid}}</span>
                             </div>
                         </li>
+                        <li class="text-info-item">
+                            <div class="text-info-item-wrapper">
+                                <span class="label">推流方式：</span>
+                                <span class="value">{{liveChannel.methods.join(' ')}}</span>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>

@@ -25,6 +25,7 @@
                         <multi-type-file-upload
                             :adMaterialList="advertisingOwner.adMaterialList"
                             :fileUploadedSuccessHandler="fileUploadedSuccessHandler"
+                            :deleteAdMaterialHandler="deleteAdMaterialHandler"
                         ></multi-type-file-upload>
                     </el-form-item>
                 </el-col>
@@ -50,7 +51,6 @@ export default {
             }
         };
     },
-    created() {},
     computed: {
         ...mapGetters({
             advertisingOwner: 'advertising/advertisingOwner'
@@ -59,10 +59,14 @@ export default {
     methods: {
         ...mapMutations({
             updateAdvertisingOwner: 'advertising/updateAdvertisingOwner',
-            addAdMaterial: 'advertising/addAdMaterial'
+            addAdMaterial: 'advertising/addAdMaterial',
+            deleteAdMaterialById: 'advertising/deleteAdMaterialById'
         }),
         inputHandler(value, key) {
             this.updateAdvertisingOwner({key, value});
+        },
+        deleteAdMaterialHandler(id) {
+            this.deleteAdMaterialById({id});
         },
         fileUploadedSuccessHandler(data) {
             let adMaterial = {};

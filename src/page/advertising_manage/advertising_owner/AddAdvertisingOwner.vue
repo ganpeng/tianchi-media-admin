@@ -10,6 +10,7 @@
     </div>
 </template>
 <script>
+import {mapActions} from 'vuex';
 import AdvertisingOwnerForm from './AdvertisingOwnerForm';
 export default {
     name: 'AddAdvertisingOwner',
@@ -20,17 +21,26 @@ export default {
     created() {},
     computed: {},
     methods: {
+        ...mapActions({
+            newAdvertisingOwner: 'advertising/newAdvertisingOwner'
+        }),
         async addAdvertisingOwnerHandler() {
             try {
                 let valid = await this.$refs.advertisingOwnerFormComponent.$refs.advertisingOwnerForm.validate();
                 if (valid) {
-                    console.log('aaaa');
+                    let res = await this.newAdvertisingOwner();
+                    if (res && res.code === 0) {
+                        this.$message.success('添加成功');
+                        this.gotoList();
+                    }
                 }
             } catch (err) {
                 console.log(err);
             }
         },
-        gotoList() {}
+        gotoList() {
+            this.$router.push({name: 'AdvertisingOwnerList'});
+        }
     }
 };
 </script>

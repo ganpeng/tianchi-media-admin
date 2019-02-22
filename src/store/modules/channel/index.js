@@ -54,6 +54,7 @@ let defaultLiveChannel = {
     //  直播频道的类型列表
     typeList: [],
     companyList: [],
+    methods: [],
     visible: false // 是否上下架
 };
 
@@ -311,7 +312,7 @@ const actions = {
                 if (_.isNull(res.data.companyList)) {
                     res.data.companyList = [];
                 }
-                commit('setLiveChannel', {liveChannel: Object.assign({record: null}, res.data)});
+                commit('setLiveChannel', {liveChannel: Object.assign({record: null, methods: [], companyList: []}, res.data)});
                 return res;
             }
         } catch (err) {
