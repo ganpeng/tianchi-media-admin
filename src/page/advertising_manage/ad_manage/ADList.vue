@@ -132,7 +132,7 @@
                             <el-dropdown-item command="VOLUME_AD">音量条广告</el-dropdown-item>
                             <el-dropdown-item command="CHANNEL_SWITCH_AD">换台广告</el-dropdown-item>
                             <el-dropdown-item command="SCREEN_SAVER_AD">屏保广告</el-dropdown-item>
-                            <el-dropdown-item command="DEATIL_AD">详情页广告</el-dropdown-item>
+                            <el-dropdown-item command="PROGRAMME_DETAIL_AD">详情页广告</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
@@ -429,7 +429,7 @@
                     });
                 });
             },
-            // 创建产品包
+            // 创建广告
             createAD(command) {
                 switch (command) {
                     case 'BOOT_AD':
@@ -445,7 +445,7 @@
                         this.$router.push({name: 'CreateProgrammeDetailAD'});
                         break;
                     case 'CHANNEL_SWITCH_AD':
-                        this.$router.push({name: 'CreateSwitchChannelAD'});
+                        this.$router.push({name: 'CreateChannelSwitchAD'});
                         break;
                     default:
                         break;

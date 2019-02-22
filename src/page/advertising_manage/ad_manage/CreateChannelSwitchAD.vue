@@ -1,10 +1,10 @@
-<!--创建开机广告组件-->
+<!--创建换台广告组件-->
 <template>
     <div>
-        <div class="content-title">添加开机广告</div>
+        <div class="content-title">添加换台广告</div>
         <ad-form
             :adInfo="adInfo"
-            status="CREATE_BOOT_AD">
+            status="CREATE_CHANNEL_SWITCH_AD">
         </ad-form>
     </div>
 </template>
@@ -13,7 +13,7 @@
     import AdForm from './ADForm';
 
     export default {
-        name: 'CreateBootAD',
+        name: 'CreateChannelSwitchAD',
         components: {
             AdForm
         },

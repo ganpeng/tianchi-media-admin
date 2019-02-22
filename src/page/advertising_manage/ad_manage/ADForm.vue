@@ -42,29 +42,60 @@
                     end-placeholder="结束日期">
                 </el-date-picker>
             </el-form-item>
+            <el-form-item label="上下架">
+                <label class="ad-status">上架</label>
+            </el-form-item>
             <el-form-item label="广告资源" prop="resource" required>
                 <el-button @click="selectADResourceVisible = true" class="contain-svg-icon btn-style-four">
                     <svg-icon icon-class="file"></svg-icon>
                     关联资源
                 </el-button>
-                <div id="ad-resource" v-if="adInfo.resource.name">
-                    <div class="ad-container" @click="previewVideoResource">
+                <!--视频资源列表-->
+                <div id="ad-video-resource"
+                     v-if="adInfo.videoResource.name && (status === 'CREATE_BOOT_AD' || status === 'EDIT_BOOT_AD')">
+                    <div class="ad-video-container" @click="previewVideoResource">
                         <i class="el-icon-circle-close" @click.stop="removeVideoResource"></i>
                         <svg-icon icon-class="video-ad"></svg-icon>
                         <div class="ad-desc">
-                            <div>{{adInfo.resource.name}}</div>
-                            <div>{{adInfo.resource.duration}}ss&nbsp;&nbsp;&nbsp;&nbsp;{{adInfo.resource.size}}</div>
+                            <div>{{adInfo.videoResource.name}}</div>
+                            <div>{{adInfo.videoResource.duration}}ss&nbsp;&nbsp;&nbsp;&nbsp;{{adInfo.videoResource.size}}</div>
                         </div>
                     </div>
                     <ul>
-                        <li><label>总时长</label><span>{{adInfo.resource.duration}}s</span></li>
-                        <li><label>总体积</label><span>{{adInfo.resource.size}}</span></li>
-                        <li><label>广告主</label><span class="ad-owner">{{adInfo.resource.owner}}</span></li>
+                        <li><label>总时长</label><span>{{adInfo.videoResource.duration}}s</span></li>
+                        <li><label>总体积</label><span>{{adInfo.videoResource.size}}</span></li>
+                        <li><label>广告主</label><span class="ad-owner">{{adInfo.videoResource.owner}}</span></li>
                     </ul>
                 </div>
-                <!--<thumbnail-->
-                <!--:imageList="adInfo.posterImageList">-->
-                <!--</thumbnail>-->
+                <!--图片资源列表-->
+                <div id="ad-image-resource"
+                     v-if="adInfo.imageResourceList.length !== 0 && !(status === 'CREATE_BOOT_AD' || status === 'EDIT_BOOT_AD')">
+                    <div class="image-list">
+                        <div class="ad-image-container"
+                             v-for="(item, index) in adInfo.imageResourceList"
+                             :key="index"
+                             :style="{'background-image': 'url(' + item.url + ')'}">
+                            <i class="el-icon-circle-close" @click.stop="removeImageResource(item,index)"></i>
+                            <div class="ad-desc">
+                                <div>{{item.name}}</div>
+                                <div>{{item.size}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li><label>总体积</label><span>{{imageResourceSize}}</span></li>
+                        <li>
+                            <label>广告主</label>
+                            <span>
+                                <div class="ad-owner"
+                                     v-for="(item,index) in adInfo.imageResourceList"
+                                     :key="index">
+                                      {{item.owner}}
+                                 </div>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
             </el-form-item>
         </el-form>
         <div class="fixed-btn-container">
@@ -77,12 +108,14 @@
             :close-on-click-modal=false
             custom-class="normal-dialog"
             width="80%">
-            <!--<select-ad-image-resource>-->
-            <!--</select-ad-image-resource>-->
             <select-ad-video-resource
                 ref="selectADVideoResource"
-                v-if="selectADResourceVisible">
+                v-if="selectADResourceVisible && (status === 'CREATE_BOOT_AD' || status === 'EDIT_BOOT_AD')">
             </select-ad-video-resource>
+            <select-ad-image-resource
+                ref="selectADImageResource"
+                v-if="selectADResourceVisible && !(status === 'CREATE_BOOT_AD' || status === 'EDIT_BOOT_AD')">
+            </select-ad-image-resource>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="selectADResourceVisible = false">取消</el-button>
                 <el-button type="primary" @click="confirmLinkADResource">确定</el-button>
@@ -98,15 +131,14 @@
 </template>
 
 <script>
-    import Thumbnail from 'sysComponents/custom_components/custom/Thumbnail';
     import SelectAdImageResource from './SelectADImageResource';
     import SelectAdVideoResource from './SelectADVideoResource';
     import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
+    import _ from 'lodash';
 
     export default {
         name: 'ADForm',
         components: {
-            Thumbnail,
             SelectAdImageResource,
             SelectAdVideoResource,
             DisplayVideoDialog
@@ -176,10 +208,20 @@
                 }
             };
             let checkResource = (rule, value, callback) => {
-                if (!this.adInfo.resource.name) {
-                    return callback(new Error('关联资源不能为空'));
-                } else {
-                    callback();
+                if (this.status === 'CREATE_BOOT_AD' || this.status === 'EDIT_BOOT_AD') {
+                    if (!this.adInfo.videoResource.name) {
+                        return callback(new Error('关联资源不能为空'));
+                    } else {
+                        callback();
+                    }
+                } else if (!(this.status === 'CREATE_BOOT_AD' || this.status === 'EDIT_BOOT_AD')) {
+                    if (this.adInfo.imageResourceList.length === 0) {
+                        return callback(new Error('关联资源不能为空'));
+                    } else if (this.getImageResourceTotalSize(this.adInfo.imageResourceList) > 50) {
+                        return callback(new Error('图片资源体积应小于300M'));
+                    } else {
+                        callback();
+                    }
                 }
             };
             return {
@@ -204,6 +246,15 @@
                 }
             };
         },
+        computed: {
+            imageResourceSize: function () {
+                let size = 0;
+                this.adInfo.imageResourceList.map(image => {
+                    size = size + parseInt(image.size);
+                });
+                return size;
+            }
+        },
         mounted() {
             this.init();
         },
@@ -220,19 +271,39 @@
                 return nextHour < startTime;
             },
             confirmLinkADResource() {
-                let videoInfo = this.$refs.selectADVideoResource.getVideoInfo();
-                if (videoInfo) {
-                    this.adInfo.resource = videoInfo;
-                    this.selectADResourceVisible = false;
+                if (this.status !== 'CREATE_BOOT_AD' && this.status !== 'EDIT_BOOT_AD') {
+                    let imageInfo = this.$refs.selectADImageResource.getImageInfo();
+                    if (imageInfo) {
+                        this.adInfo.imageResourceList = this.adInfo.imageResourceList.concat(imageInfo);
+                        this.adInfo.imageResourceList = _.uniqBy(this.adInfo.imageResourceList, 'value');
+                        this.selectADResourceVisible = false;
+                    }
+                } else {
+                    let videoInfo = this.$refs.selectADVideoResource.getVideoInfo();
+                    if (videoInfo) {
+                        this.adInfo.videoResource = videoInfo;
+                        this.selectADResourceVisible = false;
+                    }
                 }
             },
             removeVideoResource() {
-                this.adInfo.resource = {};
+                this.adInfo.videoResource = {};
+            },
+            removeImageResource(image, index) {
+                this.adInfo.imageResourceList.splice(index, 1);
+            },
+            // 获取图片资源的总体积
+            getImageResourceTotalSize(imageList) {
+                let size = 0;
+                imageList.map(image => {
+                    size = size + parseInt(image.size);
+                });
+                return size;
             },
             previewVideoResource() {
                 this.displayVideoDialogVisible = true;
-                this.url = this.adInfo.resource.url;
-                this.title = this.adInfo.resource.title;
+                this.url = this.adInfo.videoResource.url;
+                this.title = this.adInfo.videoResource.title;
             },
             operateAD() {
                 this.$refs['adInfo'].validate((valid) => {
@@ -304,11 +375,12 @@
         color: #A8ABB3;
     }
 
-    #ad-resource {
+    /*视频资源展示*/
+    #ad-video-resource {
         margin-top: 20px;
         height: 152px;
-        .ad-container {
-            float: left;
+        .ad-video-container {
+            margin-right: 22px;
             position: relative;
             height: 100px;
             width: 170px;
@@ -357,10 +429,11 @@
             }
         }
         ul {
-            float: left;
-            margin-left: 22px;
+            display: inline-block;
+            margin-top: 60px;
+            padding-right: 25px;
             height: 100px;
-            width: 170px;
+            min-width: 170px;
             background: #2A3040;
             border: 1px solid #3E495E;
             border-radius: 8px;
@@ -380,6 +453,88 @@
                     &.ad-owner {
                         color: #A8ABB3;
                     }
+                }
+            }
+        }
+    }
+
+    /*图片资源展示*/
+    #ad-image-resource {
+        margin-top: 20px;
+        height: 152px;
+        .image-list {
+            display: flex;
+            justify-content: left;
+        }
+        .ad-image-container {
+            margin-right: 22px;
+            position: relative;
+            height: 100px;
+            width: 170px;
+            background: #2A3040;
+            border: 1px solid #3E495E;
+            border-radius: 8px;
+            cursor: pointer;
+            &:hover {
+                border: 1px solid #1989FA;
+                i {
+                    visibility: visible;
+                }
+            }
+            /*删除按钮*/
+            i {
+                position: absolute;
+                top: 2px;
+                right: 2px;
+                font-size: 16px;
+                color: #6F7480;
+                cursor: pointer;
+                visibility: hidden;
+                &:hover {
+                    color: #C35757;
+                }
+            }
+            .ad-desc {
+                margin-top: 105px;
+                div {
+                    height: 20px;
+                    line-height: 20px;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #A8ABB3;
+                }
+            }
+        }
+        ul {
+            display: inline-block;
+            margin-top: 60px;
+            min-width: 170px;
+            padding-bottom: 10px;
+            padding-right: 25px;
+            background: #2A3040;
+            border: 1px solid #3E495E;
+            border-radius: 8px;
+            li {
+                margin-left: 11px;
+                margin-bottom: 15px;
+                margin-top: 15px;
+                height: 24px;
+                line-height: 24px;
+                label {
+                    float: left;
+                    margin-right: 34px;
+                    width: 36px;
+                    font-size: 12px;
+                    color: #A8ABB3;
+                }
+                span {
+                    float: left;
+                    font-size: 12px;
+                    color: #3AC26F;
+                }
+                .ad-owner {
+                    font-size: 12px;
+                    color: #A8ABB3;
                 }
             }
         }

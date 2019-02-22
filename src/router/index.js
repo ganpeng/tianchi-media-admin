@@ -115,6 +115,10 @@ import EditAdvertisingOwner from 'sysPage/advertising_manage/advertising_owner/E
 import DisplayAdvertisingOwner from 'sysPage/advertising_manage/advertising_owner/DisplayAdvertisingOwner';
 import ADList from 'sysPage/advertising_manage/ad_manage/ADList';
 import CreateBootAD from 'sysPage/advertising_manage/ad_manage/CreateBootAD';
+import CreateVolumeAD from 'sysPage/advertising_manage/ad_manage/CreateVolumeAD';
+import CreateScreenSaverAD from 'sysPage/advertising_manage/ad_manage/CreateScreenSaverAD';
+import CreateChannelSwitchAD from 'sysPage/advertising_manage/ad_manage/CreateChannelSwitchAD';
+import CreateProgrammeDetailAD from 'sysPage/advertising_manage/ad_manage/CreateProgrammeDetailAD';
 
 Vue.use(Router);
 
@@ -475,6 +479,30 @@ let router = new Router({
                     path: '/ads-manage/create-boot-ad',
                     name: 'CreateBootAD',
                     component: CreateBootAD
+                },
+                // 创建音量条广告
+                {
+                    path: '/ads-manage/create-volume-ad',
+                    name: 'CreateVolumeAD',
+                    component: CreateVolumeAD
+                },
+                // 创建屏保广告
+                {
+                    path: '/ads-manage/create-screen-saver-ad',
+                    name: 'CreateScreenSaverAD',
+                    component: CreateScreenSaverAD
+                },
+                // 创建节目详情广告
+                {
+                    path: '/ads-manage/create-programme-detail-ad',
+                    name: 'CreateProgrammeDetailAD',
+                    component: CreateProgrammeDetailAD
+                },
+                // 创建换台广告
+                {
+                    path: '/ads-manage/create-channel-switch-ad',
+                    name: 'CreateChannelSwitchAD',
+                    component: CreateChannelSwitchAD
                 },
                 // 视频管理
                 {

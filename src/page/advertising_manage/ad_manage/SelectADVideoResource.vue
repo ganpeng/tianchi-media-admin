@@ -16,7 +16,9 @@
                 </el-option>
             </el-select>
         </div>
-        <el-radio-group v-model="resource">
+        <el-radio-group
+            v-model="resource"
+            @change="setSelectedResource">
             <el-radio
                 :label="item.value"
                 v-for="(item,index) in videoList"
@@ -56,6 +58,7 @@
                 title: '',
                 displayVideoDialogVisible: false,
                 resource: '',
+                selectedResourceInfo: {},
                 adOwner: '',
                 ownerOptions: [
                     {name: '一重', value: '1'},
@@ -65,7 +68,7 @@
                 videoList: [
                     {
                         name: '一重2019年开机广告',
-                        owner: '一重',
+                        owner: '一重111111111111111111111111111111111111111111111111',
                         value: '1',
                         duration: '20',
                         size: '20M',
@@ -104,6 +107,14 @@
             getADResource() {
 
             },
+            // 设置选择的视频资源
+            setSelectedResource() {
+                for (let i = 0; i < this.videoList.length; i++) {
+                    if (this.videoList[i].value === this.resource) {
+                        this.selectedResourceInfo = this.videoList[i];
+                    }
+                }
+            },
             previewVideo(video) {
                 this.displayVideoDialogVisible = true;
                 this.url = video.url;
@@ -117,11 +128,7 @@
                     this.$message.warning('请选择相应的视频资源');
                     return false;
                 } else {
-                    for (let i = 0; i < this.videoList.length; i++) {
-                        if (this.videoList[i].value === this.resource) {
-                            return this.videoList[i];
-                        }
-                    }
+                    return this.selectedResourceInfo;
                 }
             }
         }

@@ -1,10 +1,10 @@
-<!--创建开机广告组件-->
+<!--创建屏保广告组件-->
 <template>
     <div>
-        <div class="content-title">添加开机广告</div>
+        <div class="content-title">添加屏保广告</div>
         <ad-form
             :adInfo="adInfo"
-            status="CREATE_BOOT_AD">
+            status="CREATE_SCREEN_SAVER_AD">
         </ad-form>
     </div>
 </template>
@@ -13,7 +13,7 @@
     import AdForm from './ADForm';
 
     export default {
-        name: 'CreateBootAD',
+        name: 'CreateScreenSaverAD',
         components: {
             AdForm
         },
