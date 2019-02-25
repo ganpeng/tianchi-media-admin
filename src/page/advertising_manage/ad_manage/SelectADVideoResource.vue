@@ -31,7 +31,7 @@
                     <div class="ad-desc">
                         <div class="ellipsis one">{{item.name}}</div>
                         <div>{{item.width}}*{{item.height}}</div>
-                        <div>{{item.duration}}s&nbsp;&nbsp;&nbsp;&nbsp;{{item.size}}</div>
+                        <div>{{item.duration}}s&nbsp;&nbsp;&nbsp;&nbsp;{{item.size | convertFileSize}}</div>
                         <div>{{item.advertiserName}}</div>
                     </div>
                 </div>

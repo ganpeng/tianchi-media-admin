@@ -24,12 +24,12 @@
                     </el-form-item>
                     <el-form-item label="广告类型">
                         <el-select
-                            v-model="listQueryParams.adCategory"
+                            v-model="listQueryParams.adType"
                             @change="getADList(true)"
                             clearable
                             placeholder="全部">
                             <el-option
-                                v-for="item in adCategoryOptions"
+                                v-for="item in adTypeOptions"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
@@ -38,12 +38,12 @@
                     </el-form-item>
                     <el-form-item label="上下架">
                         <el-select
-                            v-model="listQueryParams.status"
+                            v-model="listQueryParams.visible"
                             @change="getADList(true)"
                             clearable
                             placeholder="全部">
                             <el-option
-                                v-for="item in sheleveStatusOptions"
+                                v-for="item in visibleOptions"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
@@ -52,7 +52,7 @@
                     </el-form-item>
                     <el-form-item label="广告状态">
                         <el-select
-                            v-model="listQueryParams.status"
+                            v-model="listQueryParams.adStatus"
                             @change="getADList(true)"
                             clearable
                             placeholder="全部">
@@ -88,12 +88,12 @@
                 <el-form :inline="true" class="more-filter-box filter-form" v-if="moreFilters">
                     <el-form-item label="资源类型">
                         <el-select
-                            v-model="listQueryParams.resourceCategory"
+                            v-model="listQueryParams.mediaType"
                             @change="getADList(true)"
                             clearable
                             placeholder="全部">
                             <el-option
-                                v-for="item in resourceCategoryOptions"
+                                v-for="item in mediaTypeOptions"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
@@ -147,7 +147,7 @@
             style="width: 100%">
             <el-table-column
                 align="center"
-                prop="code"
+                prop="id"
                 width="120px"
                 label="编号">
             </el-table-column>
@@ -163,34 +163,34 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                prop="category"
+                prop="adType"
                 label="类型">
                 <template slot-scope="scope">
-                    <label>{{scope.row.category | getCategoryName}}</label>
+                    <label>{{scope.row.adType | getCategoryName}}</label>
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
-                prop="adOwner"
+                prop="adMaterialList"
                 label="广告主">
                 <template slot-scope="scope">
-                    <label>{{scope.row.adOwner}}</label>
+                    <label>{{scope.row.adMaterialList | jsonJoin('advertiserName')}}</label>
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
-                prop="resourceCount"
+                prop="adMaterialList"
                 label="资源个数">
                 <template slot-scope="scope">
-                    <label>{{scope.row.resourceCount}}</label>
+                    <label>{{scope.row.adMaterialCount}}</label>
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
-                prop="resourceSize"
+                prop="adMaterialSize"
                 label="资源体积">
                 <template slot-scope="scope">
-                    <label>{{scope.row.resourceSize}}</label>
+                    <label>{{scope.row.adMaterialSize | convertFileSize}}</label>
                 </template>
             </el-table-column>
             <el-table-column
@@ -198,7 +198,8 @@
                 prop="expiryDate"
                 label="有效期">
                 <template slot-scope="scope">
-                    <label>{{scope.row.expiryDate}}</label>
+                    <div>{{scope.row.applyDateBegin | formatDate('yyyy-MM-DD HH:mm:SS')}}</div>
+                    <div>{{scope.row.applyDateEnd | formatDate('yyyy-MM-DD HH:mm:SS')}}</div>
                 </template>
             </el-table-column>
             <el-table-column
@@ -206,7 +207,12 @@
                 min-width="140px"
                 label="状态">
                 <template slot-scope="scope">
-                    有效
+                    <span v-if="scope.row.adStatus === 'ACTIVE' && scope.row.visible"
+                          class="status-normal">生效</span>
+                    <span
+                        v-if="scope.row.adStatus === 'WAITING' && scope.row.visible"
+                        class="status-deleting">未生效</span>
+                    <span v-if="!scope.row.visible">/</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -250,6 +256,9 @@
                 <template slot-scope="scope">
                     <div class="operator-btn-wrapper">
                         <span class="btn-text" @click="editADInfo(scope.row)">编辑</span>
+                        <span class="btn-text text-danger"
+                              :class="{disabled:scope.row.adStatus !== 'WAITING'}"
+                              @click="removeAD(scope.row)">删除</span>
                     </div>
                 </template>
             </el-table-column>
@@ -275,34 +284,34 @@
                 moreFilters: false,
                 listQueryParams: {
                     keyword: '',
-                    adCategory: '',
-                    resourceCategory: '',
+                    adType: '',
+                    mediaType: '',
                     createdAtStart: '',
                     createdAtEnd: '',
                     pageNum: 1,
                     pageSize: 10,
-                    orderList: 'ID_DESC'
+                    order: 'UPDATED_AT_DESC'
                 },
                 createRangeTime: [],
-                adCategoryOptions: [
-                    {value: 'BOOT_AD', label: '开机广告'},
-                    {value: 'VOLUME_AD', label: '音量条广告'},
-                    {value: 'PROGRAMME_DETAIL_AD', label: '详情页广告'},
-                    {value: 'CHANNEL_SWITCH_AD', label: '换台广告'},
-                    {value: 'SCREEN_SAVER_AD', label: '屏保广告'}
+                adTypeOptions: [
+                    {value: 'BOOT', label: '开机广告'},
+                    {value: 'VOLUME', label: '音量条广告'},
+                    {value: 'PROGRAMME_DETAIL', label: '详情页广告'},
+                    {value: 'CHANNEL_SWITCH', label: '换台广告'},
+                    {value: 'SCREEN_SAVER', label: '屏保广告'}
                 ],
-                resourceCategoryOptions: [
+                mediaTypeOptions: [
                     {value: 'VIDEO', label: '视频'},
-                    {value: 'PICTURE', label: '图片'}
+                    {value: 'IMAGE', label: '图片'}
                 ],
                 statusOptions: [
-                    {value: 'UN_PUBLISHED', label: '生效'},
-                    {value: 'GO_EFFECT', label: '未生效'},
-                    {value: 'LOSE_EFFECT', label: '失效'}
+                    {value: 'ACTIVE', label: '生效'},
+                    {value: 'WAITING', label: '未生效'},
+                    {value: 'EXPIRED', label: '失效'}
                 ],
-                sheleveStatusOptions: [
-                    {value: 'SHELEVED', label: '已上架'},
-                    {value: 'UN_SHELEVED', label: '已下架'}
+                visibleOptions: [
+                    {value: true, label: '已上架'},
+                    {value: false, label: '已下架'}
                 ],
                 totalAmount: 0,
                 adList: []
@@ -311,15 +320,15 @@
         filters: {
             getCategoryName: function (category) {
                 switch (category) {
-                    case 'BOOT_AD':
+                    case 'BOOT':
                         return '开机广告';
-                    case 'PROGRAMME_DETAIL_AD':
+                    case 'PROGRAMME_DETAIL':
                         return '详情页广告';
-                    case 'SCREEN_SAVER_AD':
+                    case 'SCREEN_SAVER':
                         return '屏保广告';
-                    case 'VOLUME_AD':
+                    case 'VOLUME':
                         return '音量条广告';
-                    case 'CHANNEL_SWITCH_AD':
+                    case 'CHANNEL_SWITCH':
                         return '换台广告';
                     default:
                         break;
@@ -341,21 +350,21 @@
                 if (isReset) {
                     this.listQueryParams.pageNum = 1;
                 }
-                // this.$service.getADList(this.listQueryParams).then(response => {
-                //     if (response && response.code === 0) {
-                //         this.adList = response.data.list;
-                //         this.totalAmount = response.data.total;
-                //     }
-                // });
+                this.$service.getADList(this.listQueryParams).then(response => {
+                    if (response && response.code === 0) {
+                        this.adList = response.data.list;
+                        this.totalAmount = response.data.total;
+                    }
+                });
             },
             // 对列表进行排序
             sortADList(column) {
                 if (column.prop === 'createdAt') {
-                    this.listQueryParams.orderList = column.order === 'ascending' ? 'CREATED_AT_ASC' : 'CREATED_AT_DESC';
+                    this.listQueryParams.order = column.order === 'ascending' ? 'CREATED_AT_ASC' : 'CREATED_AT_DESC';
                 } else if (column.prop === 'updatedAt') {
-                    this.listQueryParams.orderList = column.order === 'ascending' ? 'UPDATED_AT_ASC' : 'UPDATED_AT_DESC';
+                    this.listQueryParams.order = column.order === 'ascending' ? 'UPDATED_AT_ASC' : 'UPDATED_AT_DESC';
                 } else {
-                    this.listQueryParams.orderList = 'ID_ASC';
+                    this.listQueryParams.order = 'ID_ASC';
                 }
                 if (this.listQueryParams.pageNum === 1) {
                     this.getADList();
@@ -421,17 +430,36 @@
                 }
                 this.$router.push({name: routeName, params: {id: item.id}});
             },
+            // 未生效的广告可以删除
+            removeAD(item) {
+                this.$confirm('此操作将删除' + item.name + '广告, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$service.deleteAD(item.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('"' + item.name + '"' + '广告删除成功!');
+                            this.getADList();
+                        }
+                    });
+                });
+            },
             // 设置产品包的上下架
             updateProductStatus(item) {
-                this.$confirm('此操作将' + (item.visible ? '下架该产品包' : '上架该产品包') + ', 是否继续?', '提示', {
+                if (!item.visible) {
+                    this.$message.warning('已下架的广告不能再次上架');
+                    return;
+                }
+                this.$confirm('此操作将' + (item.visible ? '下架该广告' : '上架该广告') + ', 下架的广告不能再次上架，是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
                     }
                 ).then(() => {
-                    this.$service.setProductVisible({id: item.id}).then(response => {
+                    this.$service.setADVisible(item.id).then(response => {
                         if (response && response.code === 0) {
-                            this.$message.success(item.name + '产品包' + (item.visible ? '下架成功' : '上架成功'));
+                            this.$message.success(item.name + '广告' + (item.visible ? '下架成功' : '上架成功'));
                             item.visible = !item.visible;
                         }
                     });

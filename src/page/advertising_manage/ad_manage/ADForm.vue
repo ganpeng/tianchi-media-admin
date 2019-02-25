@@ -45,7 +45,7 @@
             <el-form-item label="上下架">
                 <label class="ad-status">上架</label>
             </el-form-item>
-            <el-form-item label="广告资源" prop="resource" required>
+            <el-form-item label="广告资源" prop="adMaterialList" required>
                 <el-button @click="selectADResourceVisible = true" class="contain-svg-icon btn-style-four">
                     <svg-icon icon-class="file"></svg-icon>
                     关联资源
@@ -59,13 +59,15 @@
                         <div class="ad-desc">
                             <div class="ellipsis one">{{adInfo.adMaterialList[0].name}}</div>
                             <div>{{adInfo.adMaterialList[0].width}}*{{adInfo.adMaterialList[0].height}}</div>
-                            <div>{{adInfo.adMaterialList[0].duration}}s&nbsp;&nbsp;&nbsp;&nbsp;{{adInfo.adMaterialList[0].size}}</div>
+                            <div>{{adInfo.adMaterialList[0].duration}}s&nbsp;&nbsp;&nbsp;&nbsp;
+                                {{adInfo.adMaterialList[0].size | convertFileSize}}
+                            </div>
                             <div>{{adInfo.adMaterialList[0].advertiserName}}</div>
                         </div>
                     </div>
                     <ul>
                         <li><label>总时长</label><span>{{adInfo.adMaterialList[0].duration}}s</span></li>
-                        <li><label>总体积</label><span>{{adInfo.adMaterialList[0].size}}</span></li>
+                        <li><label>总体积</label><span>{{adInfo.adMaterialList[0].size | convertFileSize}}</span></li>
                         <li>
                             <label>广告主</label>
                             <span class="ad-owner">{{adInfo.adMaterialList[0].advertiserName}}</span>
@@ -83,13 +85,13 @@
                             <i class="el-icon-circle-close" @click.stop="removeImageResource(item,index)"></i>
                             <div class="ad-desc">
                                 <div>{{item.width}}*{{item.height}}</div>
-                                <div>{{item.size}}</div>
+                                <div>{{item.size | convertFileSize}}</div>
                                 <div>{{item.advertiserName}}</div>
                             </div>
                         </div>
                     </div>
                     <ul>
-                        <li><label>总体积</label><span>{{imageResourceSize}}</span></li>
+                        <li><label>总体积</label><span>{{imageResourceSize | convertFileSize}}</span></li>
                         <li>
                             <label>广告主</label>
                             <span>
@@ -214,20 +216,31 @@
                 }
             };
             let checkResource = (rule, value, callback) => {
-                if (this.status === 'CREATE_BOOT_AD' || this.status === 'EDIT_BOOT_AD') {
-                    if (!this.adInfo.adMaterialList[0]) {
-                        return callback(new Error('关联资源不能为空'));
+                if (!this.adInfo.adMaterialList[0]) {
+                    return callback(new Error('关联资源不能为空'));
+                    //    换台广告、详情页广告总体积小于2MB
+                } else if (this.status === 'CREATE_CHANNEL_SWITCH_AD' || this.status === 'EDIT_CHANNEL_SWITCH_AD' || this.status === 'CREATE_PROGRAMME_DETAIL_AD' || this.status === 'EDIT_PROGRAMME_DETAIL_AD') {
+                    if (this.getImageResourceTotalSize(this.adInfo.adMaterialList) > 2 * 1024 * 1024) {
+                        return callback(new Error('图片资源体积应小于2M'));
                     } else {
                         callback();
                     }
-                } else if (!(this.status === 'CREATE_BOOT_AD' || this.status === 'EDIT_BOOT_AD')) {
-                    if (this.adInfo.adMaterialList.length === 0) {
-                        return callback(new Error('关联资源不能为空'));
-                    } else if (this.getImageResourceTotalSize(this.adInfo.adMaterialList) > 50) {
-                        return callback(new Error('图片资源体积应小于300M'));
+                    //    音量条广告总体积小于1MB
+                } else if (this.status === 'CREATE_VOLUME_AD' || this.status === 'EDIT_VOLUME_AD') {
+                    if (this.getImageResourceTotalSize(this.adInfo.adMaterialList) > 1 * 1024 * 1024) {
+                        return callback(new Error('图片资源体积应小于1M'));
                     } else {
                         callback();
                     }
+                    //    屏保广告总体积小于10MB
+                } else if (this.status === 'CREATE_SCREEN_SAVER_AD' || this.status === 'EDIT_SCREEN_SAVER_AD') {
+                    if (this.getImageResourceTotalSize(this.adInfo.adMaterialList) > 10 * 1024 * 1024) {
+                        return callback(new Error('图片资源体积应小于10M'));
+                    } else {
+                        callback();
+                    }
+                } else {
+                    callback();
                 }
             };
             return {
@@ -246,7 +259,7 @@
                     effectRangeTime: [
                         {validator: checkEffectRangeTime, trigger: 'blur'}
                     ],
-                    resource: [
+                    adMaterialList: [
                         {validator: checkResource, trigger: 'change'}
                     ]
                 }
@@ -314,21 +327,15 @@
             operateAD() {
                 this.$refs['adInfo'].validate((valid) => {
                     if (valid) {
-                        // 设置节目专题的背景图片
-                        if (this.status === 'CREATE_PROGRAMME' || this.status === 'EDIT_PROGRAMME') {
-                            this.adInfo.adMaterialList.map(image => {
-                                if (image.width.toString() === '1920' && image.height.toString() === '1080') {
-                                    this.adInfo.backgroundImage = image;
-                                }
-                            });
-                        }
+                        // 设置生效时间
+                        this.adInfo.applyDateBegin = this.adInfo.effectRangeTime[0];
+                        this.adInfo.applyDateEnd = this.adInfo.effectRangeTime[1];
                         this.isLoading = true;
-                        // 创建专题
-                        if (this.status === 'CREATE_PROGRAMME' || this.status === 'CREATE_FIGURE') {
-                            this.adInfo.category = this.status === 'CREATE_PROGRAMME' ? 'PROGRAMME' : 'FIGURE';
-                            this.$service.createSubject(this.adInfo).then(response => {
+                        // 创建广告
+                        if (this.status.indexOf('CREATE') !== -1) {
+                            this.$service.createAD(this.adInfo).then(response => {
                                 if (response && response.code === 0) {
-                                    this.$message.success('成功创建专题');
+                                    this.$message.success('成功创建广告');
                                     this.toADList();
                                 } else {
                                     this.isLoading = false;

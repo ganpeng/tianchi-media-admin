@@ -26,7 +26,7 @@
                      :style="{'background-image': 'url(' + item.storageUri + ')'}">
                     <div class="ad-desc">
                         <div>{{item.name}}</div>
-                        <div>{{item.duration}}s&nbsp;&nbsp;&nbsp;&nbsp;{{item.size}}</div>
+                        <div>{{item.duration}}s&nbsp;&nbsp;&nbsp;&nbsp;{{item.size | convertFileSize}}</div>
                     </div>
                 </div>
             </el-checkbox>

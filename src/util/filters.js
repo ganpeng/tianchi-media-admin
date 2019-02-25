@@ -63,6 +63,9 @@ const FILTERS = {
     fileUrl(uri) {
         let baseUri = window.localStorage.getItem('imageBaseUri');
         return `${baseUri}${uri}`;
+    },
+    convertFileSize(size) {
+        return util.convertFileSize(size);
     }
 };
 
