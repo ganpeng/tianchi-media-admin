@@ -4,26 +4,26 @@
         <div class="item-container">
             <label class="item-name">广告主</label>
             <el-select
-                v-model="adOwner"
+                v-model="adOwnerId"
                 @change="getADResource"
                 clearable
                 placeholder="请选择广告主">
                 <el-option
                     v-for="item in ownerOptions"
-                    :key="item.value"
+                    :key="item.id"
                     :label="item.name"
-                    :value="item.value">
+                    :value="item.id">
                 </el-option>
             </el-select>
         </div>
         <el-checkbox-group v-model="selectedResourceIdList">
             <el-checkbox
                 @change="checkImage(item,$event)"
-                :label="item.value"
+                :label="item.id"
                 v-for="(item,index) in imageList"
                 :key="index">
                 <div class="video-box"
-                     :style="{'background-image': 'url(' + item.url + ')'}">
+                     :style="{'background-image': 'url(' + item.storageUri + ')'}">
                     <div class="ad-desc">
                         <div>{{item.name}}</div>
                         <div>{{item.duration}}s&nbsp;&nbsp;&nbsp;&nbsp;{{item.size}}</div>
@@ -42,65 +42,9 @@
             return {
                 selectedResourceIdList: [],
                 selectedResourceList: [],
-                adOwner: '',
-                ownerOptions: [
-                    {name: '一重', value: '1'},
-                    {name: '二重', value: '2'},
-                    {name: '大起大重', value: '3'}
-                ],
-                imageList: [],
-                imageListOne: [
-                    {
-                        name: '一重2019年开机广告',
-                        owner: '一重',
-                        value: '1',
-                        duration: '20',
-                        size: '20M',
-                        url: 'http://0.0.0.0:8081/group1/M00/01/E7/CgEBUVxlGZ-AFn6kAACzb8qKBxU201.jpg'
-                    },
-                    {
-                        name: '二重2019年开机广告',
-                        owner: '二重',
-                        value: '2',
-                        duration: '30',
-                        size: '30M',
-                        url: 'http://0.0.0.0:8081/group3/M00/01/E7/CgEBU1xlGdqASZpRAAC4C-0n_nE287.jpg'
-                    },
-                    {
-                        name: '大起大重2019年开机广告',
-                        owner: '大起大重',
-                        value: '3',
-                        duration: '40',
-                        size: '40M',
-                        url: 'http://0.0.0.0:8081/group1/M00/01/E7/CgEBUVxlGkKAeI03AACsmdHAeqk833.jpg'
-                    }
-                ],
-                imageListTwo: [
-                    {
-                        name: '一重2019年开机广告1111',
-                        owner: '一重',
-                        value: '4',
-                        duration: '20',
-                        size: '20M',
-                        url: 'http://0.0.0.0:8081/group1/M00/01/E7/CgEBUVxlGZ-AFn6kAACzb8qKBxU201.jpg'
-                    },
-                    {
-                        name: '二重2019年开机广告2222',
-                        owner: '二重',
-                        value: '5',
-                        duration: '30',
-                        size: '30M',
-                        url: 'http://0.0.0.0:8081/group3/M00/01/E7/CgEBU1xlGdqASZpRAAC4C-0n_nE287.jpg'
-                    },
-                    {
-                        name: '大起大重2019年开机广告333',
-                        owner: '大起大重',
-                        value: '6',
-                        duration: '40',
-                        size: '40M',
-                        url: 'http://0.0.0.0:8081/group1/M00/01/E7/CgEBUVxlGkKAeI03AACsmdHAeqk833.jpg'
-                    }
-                ]
+                adOwnerId: '',
+                ownerOptions: [],
+                imageList: []
             };
         },
         mounted() {
@@ -108,19 +52,23 @@
         },
         methods: {
             init() {
-                // this.$service.getOwners.then(response => {
-                //     if (response && response.code === 0) {
-                //         this.ownerOptions = response.data.list;
-                //     }
-                // });
-                this.imageList = this.imageListOne;
+                this.$service.getAdvertisingOwnerList({pageSize: 1000, pageNum: 0}).then(response => {
+                    if (response && response.code === 0) {
+                        this.ownerOptions = response.data.list;
+                    }
+                });
             },
             getADResource() {
-                if (this.imageList === this.imageListTwo) {
-                    this.imageList = this.imageListOne;
-                } else {
-                    this.imageList = this.imageListTwo;
-                }
+                this.$service.getADOwnerResourceList({
+                    advertiserId: this.adOwnerId,
+                    mediaType: 'IMAGE',
+                    pageSize: 1000,
+                    pageNum: 1
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.imageList = response.data.list;
+                    }
+                });
             },
             checkImage(image, isAdd) {
                 // 设置选中的图片资源list
@@ -128,7 +76,7 @@
                     this.selectedResourceList.push(image);
                 } else {
                     for (let i = 0; i < this.selectedResourceList.length; i++) {
-                        if (this.selectedResourceList[i].value === image.value) {
+                        if (this.selectedResourceList[i].id === image.id) {
                             this.selectedResourceList.splice(i, 1);
                         }
                     }
@@ -172,6 +120,9 @@
             float: left;
             margin-right: 40px;
             margin-top: 30px;
+            & + .el-checkbox {
+                margin-left: 0px;
+            }
         }
         .video-box {
             height: 100px;

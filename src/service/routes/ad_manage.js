@@ -1,67 +1,33 @@
+/**
+ * @fileOverview Define the API functions of ad module
+ */
+
 import service from '../config';
+import qs from 'querystring';
+import _ from 'lodash';
+
 /**
- * 新增广告
+ * 创建广告
  */
-export const createAd = (ad) => {
-    return service.post('/v1/ad/ad-material', ad);
+export const createAD = ({name, desc, adType, adMaterialList}) => {
+    return service.post('/v1/ad/general-ad', {name, desc, adType, adMaterialList});
 };
 
 /**
- * 获取广告列表
+ * 获取广告主的资源列表
+ * @param mediaType The type of resource, such as IMAGE、VIDEO.
  */
-export const getAdList = ({pageNum, pageSize, name, mediaType}) => {
-    return service.get('/v1/ad/ad-material/page', {
-        params: {
-            pageNum,
-            pageSize,
-            name,
-            mediaType
-        }
-    });
-};
+export const getADOwnerResourceList = ({advertiserId, mediaType, pageNum, pageSize}) => {
+    const params = {
+        advertiserId,
+        mediaType,
+        pageNum: pageNum - 1,
+        pageSize
+    };
 
-/**
- * 根据广告的id修改广告
- */
-export const updateAdInfo = ({id, ad}) => {
-    return service.patch(`/v1/ad/ad-material/${id}`, ad);
-};
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
 
-/**
- * 删除广告资源
- */
-export const deleteAd = ({id}) => {
-    return service.delete(`/v1/ad/ad-material/${id}`);
-};
-
-//  广告组接口
-
-/**
- * 创建广告组
- */
-export const createGeneralAd = ({generalAd}) => {
-    return service.post(`/v1/ad/general-ad`, generalAd);
-};
-
-/**
- * 获取广告组列表
- */
-export const getGeneralAdList = ({releaseStatus, strategyStatus, pageNum, pageSize}) => {
-    return service.get(`/v1/ad/general-ad/page`, {
-        params: { releaseStatus, strategyStatus, pageNum, pageSize }
-    });
-};
-
-/**
- * 删除广告组
- */
-export const deleteGeneralAd = ({id}) => {
-    return service.delete(`/v1/ad/general-ad/${id}`);
-};
-
-/**
- * 更新广告组
- */
-export const updateGeneralAd = ({id, generalAd}) => {
-    return service.put(`/v1/ad/general-ad/${id}`, generalAd);
+    return service.get(`/v1/ad/ad-material/page?${paramsStr}`);
 };

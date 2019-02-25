@@ -52,33 +52,39 @@
                 </el-button>
                 <!--视频资源列表-->
                 <div id="ad-video-resource"
-                     v-if="adInfo.videoResource.name && (status === 'CREATE_BOOT_AD' || status === 'EDIT_BOOT_AD')">
+                     v-if="adInfo.adMaterialList[0] && (status === 'CREATE_BOOT_AD' || status === 'EDIT_BOOT_AD')">
                     <div class="ad-video-container" @click="previewVideoResource">
                         <i class="el-icon-circle-close" @click.stop="removeVideoResource"></i>
                         <svg-icon icon-class="video-ad"></svg-icon>
                         <div class="ad-desc">
-                            <div>{{adInfo.videoResource.name}}</div>
-                            <div>{{adInfo.videoResource.duration}}ss&nbsp;&nbsp;&nbsp;&nbsp;{{adInfo.videoResource.size}}</div>
+                            <div class="ellipsis one">{{adInfo.adMaterialList[0].name}}</div>
+                            <div>{{adInfo.adMaterialList[0].width}}*{{adInfo.adMaterialList[0].height}}</div>
+                            <div>{{adInfo.adMaterialList[0].duration}}s&nbsp;&nbsp;&nbsp;&nbsp;{{adInfo.adMaterialList[0].size}}</div>
+                            <div>{{adInfo.adMaterialList[0].advertiserName}}</div>
                         </div>
                     </div>
                     <ul>
-                        <li><label>总时长</label><span>{{adInfo.videoResource.duration}}s</span></li>
-                        <li><label>总体积</label><span>{{adInfo.videoResource.size}}</span></li>
-                        <li><label>广告主</label><span class="ad-owner">{{adInfo.videoResource.owner}}</span></li>
+                        <li><label>总时长</label><span>{{adInfo.adMaterialList[0].duration}}s</span></li>
+                        <li><label>总体积</label><span>{{adInfo.adMaterialList[0].size}}</span></li>
+                        <li>
+                            <label>广告主</label>
+                            <span class="ad-owner">{{adInfo.adMaterialList[0].advertiserName}}</span>
+                        </li>
                     </ul>
                 </div>
                 <!--图片资源列表-->
                 <div id="ad-image-resource"
-                     v-if="adInfo.imageResourceList.length !== 0 && !(status === 'CREATE_BOOT_AD' || status === 'EDIT_BOOT_AD')">
+                     v-if="adInfo.adMaterialList.length !== 0 && !(status === 'CREATE_BOOT_AD' || status === 'EDIT_BOOT_AD')">
                     <div class="image-list">
                         <div class="ad-image-container"
-                             v-for="(item, index) in adInfo.imageResourceList"
+                             v-for="(item, index) in adInfo.adMaterialList"
                              :key="index"
-                             :style="{'background-image': 'url(' + item.url + ')'}">
+                             :style="{'background-image': 'url(' + item.storageUri + ')'}">
                             <i class="el-icon-circle-close" @click.stop="removeImageResource(item,index)"></i>
                             <div class="ad-desc">
-                                <div>{{item.name}}</div>
+                                <div>{{item.width}}*{{item.height}}</div>
                                 <div>{{item.size}}</div>
+                                <div>{{item.advertiserName}}</div>
                             </div>
                         </div>
                     </div>
@@ -88,9 +94,9 @@
                             <label>广告主</label>
                             <span>
                                 <div class="ad-owner"
-                                     v-for="(item,index) in adInfo.imageResourceList"
+                                     v-for="(item,index) in adInfo.adMaterialList"
                                      :key="index">
-                                      {{item.owner}}
+                                      {{item.advertiserName}}
                                  </div>
                             </span>
                         </li>
@@ -209,15 +215,15 @@
             };
             let checkResource = (rule, value, callback) => {
                 if (this.status === 'CREATE_BOOT_AD' || this.status === 'EDIT_BOOT_AD') {
-                    if (!this.adInfo.videoResource.name) {
+                    if (!this.adInfo.adMaterialList[0]) {
                         return callback(new Error('关联资源不能为空'));
                     } else {
                         callback();
                     }
                 } else if (!(this.status === 'CREATE_BOOT_AD' || this.status === 'EDIT_BOOT_AD')) {
-                    if (this.adInfo.imageResourceList.length === 0) {
+                    if (this.adInfo.adMaterialList.length === 0) {
                         return callback(new Error('关联资源不能为空'));
-                    } else if (this.getImageResourceTotalSize(this.adInfo.imageResourceList) > 50) {
+                    } else if (this.getImageResourceTotalSize(this.adInfo.adMaterialList) > 50) {
                         return callback(new Error('图片资源体积应小于300M'));
                     } else {
                         callback();
@@ -249,7 +255,7 @@
         computed: {
             imageResourceSize: function () {
                 let size = 0;
-                this.adInfo.imageResourceList.map(image => {
+                this.adInfo.adMaterialList.map(image => {
                     size = size + parseInt(image.size);
                 });
                 return size;
@@ -272,25 +278,25 @@
             },
             confirmLinkADResource() {
                 if (this.status !== 'CREATE_BOOT_AD' && this.status !== 'EDIT_BOOT_AD') {
-                    let imageInfo = this.$refs.selectADImageResource.getImageInfo();
-                    if (imageInfo) {
-                        this.adInfo.imageResourceList = this.adInfo.imageResourceList.concat(imageInfo);
-                        this.adInfo.imageResourceList = _.uniqBy(this.adInfo.imageResourceList, 'value');
+                    let imageList = this.$refs.selectADImageResource.getImageInfo();
+                    if (imageList) {
+                        this.adInfo.adMaterialList = this.adInfo.adMaterialList.concat(imageList);
+                        this.adInfo.adMaterialList = _.uniqBy(this.adInfo.adMaterialList, 'id');
                         this.selectADResourceVisible = false;
                     }
                 } else {
                     let videoInfo = this.$refs.selectADVideoResource.getVideoInfo();
                     if (videoInfo) {
-                        this.adInfo.videoResource = videoInfo;
+                        this.adInfo.adMaterialList[0] = videoInfo;
                         this.selectADResourceVisible = false;
                     }
                 }
             },
             removeVideoResource() {
-                this.adInfo.videoResource = {};
+                this.adInfo.adMaterialList = [];
             },
             removeImageResource(image, index) {
-                this.adInfo.imageResourceList.splice(index, 1);
+                this.adInfo.adMaterialList.splice(index, 1);
             },
             // 获取图片资源的总体积
             getImageResourceTotalSize(imageList) {
@@ -302,15 +308,15 @@
             },
             previewVideoResource() {
                 this.displayVideoDialogVisible = true;
-                this.url = this.adInfo.videoResource.url;
-                this.title = this.adInfo.videoResource.title;
+                this.url = this.adInfo.adMaterialList[0].storageUri;
+                this.title = this.adInfo.adMaterialList[0].name;
             },
             operateAD() {
                 this.$refs['adInfo'].validate((valid) => {
                     if (valid) {
                         // 设置节目专题的背景图片
                         if (this.status === 'CREATE_PROGRAMME' || this.status === 'EDIT_PROGRAMME') {
-                            this.adInfo.posterImageList.map(image => {
+                            this.adInfo.adMaterialList.map(image => {
                                 if (image.width.toString() === '1920' && image.height.toString() === '1080') {
                                     this.adInfo.backgroundImage = image;
                                 }
@@ -377,6 +383,7 @@
 
     /*视频资源展示*/
     #ad-video-resource {
+        margin-bottom: 170px;
         margin-top: 20px;
         height: 152px;
         .ad-video-container {
@@ -430,7 +437,7 @@
         }
         ul {
             display: inline-block;
-            margin-top: 60px;
+            margin-top: 80px;
             padding-right: 25px;
             height: 100px;
             min-width: 170px;
@@ -460,14 +467,17 @@
 
     /*图片资源展示*/
     #ad-image-resource {
+        margin-bottom: 170px;
         margin-top: 20px;
         height: 152px;
         .image-list {
             display: flex;
             justify-content: left;
+            flex-wrap: wrap;
         }
         .ad-image-container {
             margin-right: 22px;
+            margin-bottom: 80px;
             position: relative;
             height: 100px;
             width: 170px;
@@ -507,7 +517,7 @@
         }
         ul {
             display: inline-block;
-            margin-top: 60px;
+            margin-top: 20px;
             min-width: 170px;
             padding-bottom: 10px;
             padding-right: 25px;

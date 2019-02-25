@@ -20,10 +20,9 @@
         data() {
             return {
                 adInfo: {
-                    posterImageList: [],
+                    adMaterialList: [],
                     effectRangeTime: [],
-                    videoResource: {},
-                    imageResourceList: []
+                    adType: 'BOOT'
                 }
             };
         },

@@ -20,7 +20,7 @@ export const putAdvertisingOwner = (advertisingOwner) => {
  * @param {广告主的id} id 根据广告主的id获取广告主的信息
  */
 export const getAdvertisingOwnerById = (id) => {
-    let params = { id };
+    let params = {id};
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
         return item !== '' && item !== undefined;

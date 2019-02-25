@@ -4,23 +4,23 @@
         <div class="item-container">
             <label class="item-name">广告主</label>
             <el-select
-                v-model="adOwner"
+                v-model="adOwnerId"
                 @change="getADResource"
                 clearable
                 placeholder="请选择广告主">
                 <el-option
                     v-for="item in ownerOptions"
-                    :key="item.value"
+                    :key="item.id"
                     :label="item.name"
-                    :value="item.value">
+                    :value="item.id">
                 </el-option>
             </el-select>
         </div>
         <el-radio-group
-            v-model="resource"
+            v-model="resourceId"
             @change="setSelectedResource">
             <el-radio
-                :label="item.value"
+                :label="item.id"
                 v-for="(item,index) in videoList"
                 :key="index">
                 <div class="video-box"
@@ -29,8 +29,10 @@
                         <svg-icon icon-class="video-ad"></svg-icon>
                     </div>
                     <div class="ad-desc">
-                        <div>{{item.name}}</div>
+                        <div class="ellipsis one">{{item.name}}</div>
+                        <div>{{item.width}}*{{item.height}}</div>
                         <div>{{item.duration}}s&nbsp;&nbsp;&nbsp;&nbsp;{{item.size}}</div>
+                        <div>{{item.advertiserName}}</div>
                     </div>
                 </div>
             </el-radio>
@@ -57,40 +59,11 @@
                 url: '',
                 title: '',
                 displayVideoDialogVisible: false,
-                resource: '',
+                resourceId: '',
                 selectedResourceInfo: {},
-                adOwner: '',
-                ownerOptions: [
-                    {name: '一重', value: '1'},
-                    {name: '二重', value: '2'},
-                    {name: '大起大重', value: '3'}
-                ],
-                videoList: [
-                    {
-                        name: '一重2019年开机广告',
-                        owner: '一重111111111111111111111111111111111111111111111111',
-                        value: '1',
-                        duration: '20',
-                        size: '20M',
-                        url: 'http://0.0.0.0:8081/group2/M00/01/D5/CgEBUlxj8QOAZpn_AADzk1u9fQw85.m3u8'
-                    },
-                    {
-                        name: '二重2019年开机广告',
-                        owner: '二重',
-                        value: '2',
-                        duration: '30',
-                        size: '30M',
-                        url: 'http://0.0.0.0:8081/group2/M00/01/D1/CgEBUlxj8HaALJmKAAEarkZ_vtI54.m3u8'
-                    },
-                    {
-                        name: '大起大重2019年开机广告',
-                        owner: '大起大重',
-                        value: '3',
-                        duration: '40',
-                        size: '40M',
-                        url: 'http://0.0.0.0:8081/group1/M00/01/C0/CgEBUVxj7eCAQOozAAGYmNPnWOk86.m3u8'
-                    }
-                ]
+                adOwnerId: '',
+                ownerOptions: [],
+                videoList: []
             };
         },
         mounted() {
@@ -98,33 +71,42 @@
         },
         methods: {
             init() {
-                // this.$service.getOwners.then(response => {
-                //     if (response && response.code === 0) {
-                //         this.ownerOptions = response.data.list;
-                //     }
-                // });
+                this.$service.getAdvertisingOwnerList({pageSize: 1000, pageNum: 0}).then(response => {
+                    if (response && response.code === 0) {
+                        this.ownerOptions = response.data.list;
+                    }
+                });
             },
             getADResource() {
-
+                this.$service.getADOwnerResourceList({
+                    advertiserId: this.adOwnerId,
+                    mediaType: 'VIDEO',
+                    pageSize: 1000,
+                    pageNum: 1
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.videoList = response.data.list;
+                    }
+                });
             },
             // 设置选择的视频资源
             setSelectedResource() {
                 for (let i = 0; i < this.videoList.length; i++) {
-                    if (this.videoList[i].value === this.resource) {
+                    if (this.videoList[i].id === this.resourceId) {
                         this.selectedResourceInfo = this.videoList[i];
                     }
                 }
             },
             previewVideo(video) {
                 this.displayVideoDialogVisible = true;
-                this.url = video.url;
-                this.title = video.title;
+                this.url = video.storageUri;
+                this.title = video.name;
             },
             closeDisplayVideoDialog(status) {
                 this.displayVideoDialogVisible = status;
             },
             getVideoInfo() {
-                if (!this.resource) {
+                if (!this.resourceId) {
                     this.$message.warning('请选择相应的视频资源');
                     return false;
                 } else {

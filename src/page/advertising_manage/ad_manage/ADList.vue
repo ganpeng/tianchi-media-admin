@@ -187,6 +187,14 @@
             </el-table-column>
             <el-table-column
                 align="center"
+                prop="resourceSize"
+                label="资源体积">
+                <template slot-scope="scope">
+                    <label>{{scope.row.resourceSize}}</label>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
                 prop="expiryDate"
                 label="有效期">
                 <template slot-scope="scope">
@@ -195,10 +203,25 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                prop="resourceSize"
-                label="资源体积">
+                min-width="140px"
+                label="状态">
                 <template slot-scope="scope">
-                    <label>{{scope.row.resourceSize}}</label>
+                    有效
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="140px"
+                label="上下架">
+                <template slot-scope="scope">
+                    <input
+                        class="my-switch switch-anim"
+                        type="checkbox"
+                        v-model="scope.row.visible"
+                        :checked="scope.row.visible"
+                        @click.prevent="updateProductStatus(scope.row)"/>
+                    <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                    <i v-else class="off-the-shelf">已下架</i>
                 </template>
             </el-table-column>
             <el-table-column
@@ -217,21 +240,6 @@
                 label="创建时间">
                 <template slot-scope="scope">
                     {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm')}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                min-width="140px"
-                label="状态">
-                <template slot-scope="scope">
-                    <input
-                        class="my-switch switch-anim"
-                        type="checkbox"
-                        v-model="scope.row.visible"
-                        :checked="scope.row.visible"
-                        @click.prevent="updateProductStatus(scope.row)"/>
-                    <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
-                    <i v-else class="off-the-shelf">已下架</i>
                 </template>
             </el-table-column>
             <el-table-column
