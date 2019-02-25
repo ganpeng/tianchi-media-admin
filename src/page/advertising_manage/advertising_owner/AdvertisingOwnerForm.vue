@@ -73,6 +73,7 @@ export default {
             if (data.file) {
                 adMaterial.height = _.get(data, 'demension.height');
                 adMaterial.width = _.get(data, 'demension.width');
+                adMaterial.duration = _.get(data, 'demension.duration');
                 adMaterial.name = _.get(data, 'file.name');
                 adMaterial.mediaType = 'VIDEO';
                 adMaterial.size = _.get(data, 'file.size');
@@ -87,6 +88,7 @@ export default {
                 adMaterial.storageId = _.get(data, 'image.id');
                 adMaterial.storageUri = _.get(data, 'image.uri');
             }
+            console.log(adMaterial);
             this.addAdMaterial({adMaterial});
         }
     }

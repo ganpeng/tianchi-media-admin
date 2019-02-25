@@ -437,7 +437,7 @@ const getters = {
     getChiefActor(state) {
         return (id) => {
             let programme = getProgrammeById(id);
-            let chiefActor = programme && programme.figureListMap['CHIEF_ACTOR'] ? programme.figureListMap['CHIEF_ACTOR'] : [];
+            let chiefActor = programme && programme.figureListMap['ACTOR'] ? programme.figureListMap['ACTOR'] : [];
             return chiefActor.map((item) => item.name).join(', ');
         };
     },
@@ -451,7 +451,7 @@ const getters = {
     getAllRoleList(state) {
         let {figureListMap} = state.programme;
         let directorList = figureListMap['DIRECTOR'] ? figureListMap['DIRECTOR'] : [];
-        let chiefActorList = figureListMap['CHIEF_ACTOR'] ? figureListMap['CHIEF_ACTOR'] : [];
+        let chiefActorList = figureListMap['ACTOR'] ? figureListMap['ACTOR'] : [];
         let scenaristList = figureListMap['SCENARIST'] ? figureListMap['SCENARIST'] : [];
         return [...directorList, ...chiefActorList, ...scenaristList];
     }
@@ -752,7 +752,7 @@ const mutations = {
 
         switch (role) {
             case 'leadActor':
-                pRole = 'CHIEF_ACTOR';
+                pRole = 'ACTOR';
                 break;
             case 'director':
                 pRole = 'DIRECTOR';
@@ -910,7 +910,7 @@ function formatProgramme(programme, state) {
         licence: programme.licence === '' ? null : programme.licence,
         figureList: [].concat(programme.leadActor.map((item) => {
             let obj = {};
-            obj.role = 'CHIEF_ACTOR';
+            obj.role = 'ACTOR';
             obj.id = item.id;
             obj.name = item.name;
             obj.avatarUri = item.avatarUri;
@@ -960,7 +960,7 @@ function formatProgramme(programme, state) {
  */
 function serializeProgrammData(programme, state) {
     let director = programme.figureListMap['DIRECTOR'] ? programme.figureListMap['DIRECTOR'] : [];
-    let leadActor = programme.figureListMap['CHIEF_ACTOR'] ? programme.figureListMap['CHIEF_ACTOR'] : [];
+    let leadActor = programme.figureListMap['ACTOR'] ? programme.figureListMap['ACTOR'] : [];
     let scenarist = programme.figureListMap['SCENARIST'] ? programme.figureListMap['SCENARIST'] : [];
     let directorResult = [];
     let leadActorResult = [];

@@ -61,7 +61,8 @@ function loadVideo(obj) {
             resolve({
                 demension: {
                     width: video.videoWidth,
-                    height: video.videoHeight
+                    height: video.videoHeight,
+                    duration: video.duration
                 },
                 file: obj.file
             });

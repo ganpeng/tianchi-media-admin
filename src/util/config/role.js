@@ -6,7 +6,7 @@ export const MAIN_ROLE_OPTIONS = [
         label: '导演'
     },
     {
-        value: 'CHIEF_ACTOR',
+        value: 'ACTOR',
         label: '主演'
     },
     {

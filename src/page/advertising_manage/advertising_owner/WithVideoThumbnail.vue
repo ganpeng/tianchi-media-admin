@@ -12,21 +12,7 @@
                         </span>
                         <div class="mask"></div>
                     </div>
-                    <span v-if="!isUploading" @click.stop="deleteImage(image.id)" class="delete-btn-one small delete-icon">
-                        &times;
-                    </span>
                     <p class="dimension-info">{{image.width}}*{{image.height}} {{convertFileSize(image.size)}}</p>
-                </li>
-                <li :style="styleStr(obj.dataUri)" v-for="(obj, index) in showFileList" :key="index" class="image-item uploading-image-item">
-                    <el-progress :stroke-width="3" :show-text="false" class="progress-bar" v-show="obj.data.progress !== 0" :percentage="obj.data.progress"></el-progress>
-                </li>
-                <li v-show="!isUploading" class="image-item">
-                    <div class="uploader">
-                        <label class="ui_button ui_button_primary" for="multi-type-uploader">
-                            <i class="el-icon-plus"></i>
-                        </label>
-                        <input ref="multiITypeUploader" type="file" id="multi-type-uploader" multiple accept="image/*, video/*">
-                    </div>
                 </li>
             </ul>
         </div>
@@ -41,31 +27,19 @@
     </div>
 </template>
 <script>
-import { uploadRequest, promiseFileSize, videoRegex, filterFile } from '../../../util/upload';
 import PreviewMultipleImages from '../../../components/custom_components/custom/PreviewMultipleImages';
 import DisplayVideoDialog from '../../../components/custom_components/custom/DisplayVideoDialog';
 export default {
-    name: 'MultiTypeFileUpload',
+    name: 'WithVideoThumbnail',
     components: { PreviewMultipleImages, DisplayVideoDialog },
     props: {
         adMaterialList: {
             type: Array,
             default: () => []
-        },
-        fileUploadedSuccessHandler: {
-            type: Function,
-            default: () => {}
-        },
-        deleteAdMaterialHandler: {
-            type: Function,
-            default: () => {}
         }
     },
     data() {
         return {
-            isUploading: false,
-            fileList: [],
-            count: 0,
             previewImage: {
                 display: false,
                 autoplay: false,
@@ -78,18 +52,7 @@ export default {
             }
         };
     },
-    created() {
-        this.$nextTick(() => {
-            let testUpload = document.querySelector('#multi-type-uploader');
-            testUpload.addEventListener('change', this.uploadChangeHandler.bind(this), false);
-        });
-    },
     computed: {
-        showFileList() {
-            return this.fileList.filter((obj) => {
-                return obj.data.status === 1 || obj.data.status === 3;
-            });
-        },
         previewImageList() {
             return this.adMaterialList.map((item) => {
                 return {
@@ -108,99 +71,6 @@ export default {
         }
     },
     methods: {
-        styleStr(dataUri) {
-            if (dataUri) {
-                return `width: 120px;height: 50px;background: url("${dataUri}") no-repeat; background-size: cover; background-position: center;`;
-            } else {
-                return `width: 120px;height: 50px;`;
-            }
-        },
-        async uploadChangeHandler(e) {
-            try {
-                let fileList = await promiseFileSize(e.target.files);
-                let newFileList = filterFile(this.fileList, fileList);
-                this.fileList = Array.from(newFileList);
-                if (!this.isUploading) {
-                    this.uploadHandler();
-                }
-            } catch (err) {
-                console.log(err);
-            }
-            //  /group2/M00/01/E8/CgEBUlxtEaqAHcP5B4B4BLwLVoA031.mp4
-        },
-        async uploadHandler() {
-            if (this.fileList[this.count] === undefined) {
-                this.resetInputField();
-                return false;
-            }
-            //  获取上传文件的服务器地址
-            let baseUri = await this.$util.getUploadServer();
-            // 构造上传的数据和配置项
-            let formData = new FormData();
-            let {file, demension} = this.fileList[this.count];
-            formData.append('file', file);
-            let headers = this.$util.getUploadHeaders(this.$store.state.user.token);
-            let uri = videoRegex.test(file.type) ? `${baseUri}/v1/storage/file` : `${baseUri}/v1/storage/image`;
-            let options = {
-                formData,
-                headers,
-                uri,
-                progressHandler: (event) => {
-                    let percent = event.loaded / event.total * 100;
-                    this.updateProgress(Math.round(percent));
-                }
-            };
-            //  准备开始上传了
-            this.updateStatus(3);
-            this.isUploading = true;
-            try {
-                let resStr = await uploadRequest(options);
-                let res = JSON.parse(resStr);
-                //  上传成功 0 成功, 1 等待, 2 失败 3 正在上传
-                if (res && (res.code === 0)) {
-                    if (res.data[0] && (res.data[0].failCode === 0 || res.data[0].failCode === 3300)) {
-                        let result = { ...res.data[0], demension };
-                        this.fileUploadedSuccessHandler(result);
-                    } else {
-                        this.$message.error(res.data[0].failReason);
-                    }
-                } else {
-                    this.$message.error('图片保存失败');
-                }
-                this.updateStatus(0);
-                this.count++;
-                this.uploadHandler();
-            } catch (err) {
-                //  上传失败
-                console.log(err);
-                this.updateStatus(2);
-                console.log('error');
-                this.count++;
-                this.uploadHandler();
-            }
-        },
-        updateProgress(progress) {
-            this.fileList = this.fileList.map((item, index) => {
-                if (index === this.count) {
-                    item.data.progress = progress;
-                }
-                return item;
-            });
-        },
-        updateStatus(status) {
-            this.fileList = this.fileList.map((item, index) => {
-                if (index === this.count) {
-                    item.data.status = status;
-                }
-                return item;
-            });
-        },
-        resetInputField() {
-            this.$refs.multiITypeUploader.value = null;
-            this.fileList = [];
-            this.count = 0;
-            this.isUploading = false;
-        },
         // 放大预览图片
         displayImage(obj, index) {
             if (obj.mediaType === 'IMAGE') {
@@ -213,23 +83,6 @@ export default {
             this.video.title = obj.name;
             this.video.url = obj.storageUri;
             this.$refs.displayVideoDialog.showDialog();
-        },
-        async deleteImage(id) {
-            try {
-                let confirm = await this.$confirm(`您确定要删除图片吗, 是否继续?`, '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'error'
-                });
-                if (confirm) {
-                    let res = await this.$service.deleteAdMaterialById(id);
-                    if (res && res.code === 0) {
-                        this.deleteAdMaterialHandler(id);
-                    }
-                }
-            } catch (err) {
-                console.log(err);
-            }
         }
     }
 };

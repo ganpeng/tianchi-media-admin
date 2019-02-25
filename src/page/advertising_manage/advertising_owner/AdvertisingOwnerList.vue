@@ -275,6 +275,9 @@ export default {
             });
             window.open(routeData.href, '_blank');
         },
+        editAdvertisingOwner(id) {
+            this.$router.push({name: 'EditAdvertisingOwner', params: {id}});
+        },
         displayAdvertisingOwner(id) {
             this.$router.push({name: 'DisplayAdvertisingOwner', params: {id}});
         },
@@ -298,9 +301,6 @@ export default {
         },
         toggleSearchField() {
             this.searchFieldVisible = !this.searchFieldVisible;
-        },
-        editAdvertisingOwner(id) {
-            this.$router.push({name: 'EditAdvertisingOwner', params: {id}});
         },
         deleteAdvertisingOwner(id) {
             console.log(id);

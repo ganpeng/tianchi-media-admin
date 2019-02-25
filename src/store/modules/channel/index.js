@@ -23,7 +23,8 @@ let defaultSearchFields = {
     companyCode: undefined,
     record: undefined,
     category: 'LIVE',
-    common: undefined
+    common: undefined,
+    visible: ''
 };
 
 let defaultPagination = {

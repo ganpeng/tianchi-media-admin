@@ -97,6 +97,21 @@
                         </el-option>
                     </el-select>
                 </div>
+                <div class="search-field-item">
+                    <label class="search-field-item-label">状态</label>
+                    <el-select
+                        :value="searchFields.visible"
+                        @change="inputHandler($event, 'visible')"
+                        clearable
+                        placeholder="请选择状态">
+                        <el-option
+                            v-for="item in visibleOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
             </div>
         </div>
         <div class="seperator-line"></div>
@@ -177,6 +192,17 @@
                         {{scope.row.audioPid | padEmpty}}
                     </template>
                 </el-table-column>
+                <el-table-column align="center" label="状态">
+                    <template slot-scope="scope">
+                        <input
+                            class="my-switch switch-anim"
+                            type="checkbox"
+                            :checked="scope.row.visible"
+                            @click.prevent="_lowerFrameLiveChannel(scope.row)"/>
+                        <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                        <i v-else class="off-the-shelf">已下架</i>
+                    </template>
+                </el-table-column>
                 <el-table-column width="220px" align="center" label="操作">
                     <template slot-scope="scope">
                         <div id="channel-operator" class="operator-btn-wrapper">
@@ -245,6 +271,16 @@
                     {
                         name: '否',
                         value: false
+                    }
+                ],
+                visibleOptions: [
+                    {
+                        value: true,
+                        label: '已上架'
+                    },
+                    {
+                        value: false,
+                        label: '已下架'
                     }
                 ],
                 status: 0,
@@ -382,6 +418,27 @@
                         message: '已取消删除'
                     });
                 });
+            },
+            async _lowerFrameLiveChannel(channel) {
+                try {
+                    let {id, visible} = channel;
+                    let confirm = await this.$confirm(`此操作将${visible ? '下架' : '上架'}该频道, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    });
+                    if (confirm) {
+                        let res = await this.$service.setChannelVisible(id);
+                        if (res && res.code === 0) {
+                            this.$message.success('频道下架成功');
+                            this.getChannelList();
+                        } else {
+                            this.$message.error(res.message);
+                        }
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
             },
             createLiveChannel() {
                 let routeData = this.$router.resolve({name: 'CreateLiveChannel'});

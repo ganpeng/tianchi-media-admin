@@ -20,14 +20,7 @@ export const putAdvertisingOwner = (advertisingOwner) => {
  * @param {广告主的id} id 根据广告主的id获取广告主的信息
  */
 export const getAdvertisingOwnerById = (id) => {
-    let params = {id};
-
-    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
-        return item !== '' && item !== undefined;
-    }));
-
-    // return service.get(`/v1/ad/advertiser/${id}?${paramsStr}`);
-    return service.get(`/v1/ad/advertiser?${paramsStr}`);
+    return service.get(`/v1/ad/advertiser/${id}`);
 };
 
 /**
@@ -45,4 +38,15 @@ export const getAdvertisingOwnerList = (params) => {
  */
 export const deleteAdMaterialById = (id) => {
     return service.delete(`/v1/ad/ad-material/${id}`);
+};
+
+/**
+ * 根据广告主的id获取该广告主所投放的广告列表
+ */
+export const getAdListByAdvertiserId = (params) => {
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/ad/general-ad/page?${paramsStr}`);
 };

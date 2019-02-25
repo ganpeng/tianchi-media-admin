@@ -36,7 +36,7 @@
                 align="center"
                 label="演员">
                 <template slot-scope="scope">
-                    <label>{{scope.row.figureListMap | displayFigures('CHIEF_ACTOR')}}</label>
+                    <label>{{scope.row.figureListMap | displayFigures('ACTOR')}}</label>
                 </template>
             </el-table-column>
         </el-table>

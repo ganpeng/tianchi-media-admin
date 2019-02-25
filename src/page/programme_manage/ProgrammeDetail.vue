@@ -639,9 +639,9 @@
                     innerName: [
                         { required: true, message: '请输入内部节目名称' }
                     ],
-                    desc: [
-                        { required: true, message: '请输入节目看点' }
-                    ],
+                    // desc: [
+                    //     { required: true, message: '请输入节目看点' }
+                    // ],
                     description: [
                         { required: true, message: '请输入节目简介' }
                     ],

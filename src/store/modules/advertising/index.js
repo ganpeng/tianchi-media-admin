@@ -1,8 +1,7 @@
 import _ from 'lodash';
 import service from '../../../service';
 
-// let isLoading = false;
-
+let isLoading = false;
 let defaultSearchFields = {
     keyword: '',
     adType: '',
@@ -33,7 +32,11 @@ const defaultState = {
     searchFields: _.cloneDeep(defaultSearchFields),
     list: [],
     pagination: _.cloneDeep(defaultPagination),
-    advertisingOwner: _.cloneDeep(defaultAdvertisingOwner)
+    advertisingOwner: _.cloneDeep(defaultAdvertisingOwner),
+    adList: {
+        list: [],
+        pagination: _.cloneDeep(defaultPagination)
+    }
 };
 
 const state = _.cloneDeep(defaultState);
@@ -41,6 +44,9 @@ const state = _.cloneDeep(defaultState);
 const getters = {
     advertisingOwner(state) {
         return state.advertisingOwner;
+    },
+    adList(state) {
+        return state.adList;
     },
     list(state) {
         return state.list;
@@ -57,6 +63,9 @@ const mutations = {
     setList(state, payload) {
         state.list = payload.list;
     },
+    setAdList(state, payload) {
+        state.adList.list = payload.list;
+    },
     resetState(state) {
         state = _.clone(defaultState);
     },
@@ -65,12 +74,24 @@ const mutations = {
         state.pagination.pageNum = payload.pageNum;
         state.pagination.total = payload.total;
     },
+    setAdListPagination(state, payload) {
+        state.adList.pagination.pageSize = payload.pageSize;
+        state.adList.pagination.pageNum = payload.pageNum;
+        state.adList.pagination.total = payload.total;
+    },
     updatePagination(state, payload) {
         let {key, value} = payload;
         state.pagination[key] = value;
     },
+    updateAdListPagination(state, payload) {
+        let {key, value} = payload;
+        state.adList.pagination[key] = value;
+    },
     resetPagination(state) {
         state.pagination = _.cloneDeep(defaultPagination);
+    },
+    resetAdListPagination(state) {
+        state.adList.pagination = _.cloneDeep(defaultPagination);
     },
     // 搜索
     updateSearchFields(state, payload) {
@@ -98,7 +119,7 @@ const mutations = {
     },
     deleteAdMaterialById(state, payload) {
         let {id} = payload;
-        state.advertisingOwner.adMaterialList = state.advertisingOwner.adMaterialList.filter((item) => item.storageId !== id);
+        state.advertisingOwner.adMaterialList = state.advertisingOwner.adMaterialList.filter((item) => item.id !== id);
     }
 };
 
@@ -108,11 +129,16 @@ const actions = {
      */
     async newAdvertisingOwner({state}) {
         try {
-            let {advertisingOwner} = state;
-            let reqBody = _.pick(advertisingOwner, ['name', 'description', 'adMaterialList']);
-            let res = await service.postAdvertisingOwner(reqBody);
-            return res;
+            if (!isLoading) {
+                isLoading = true;
+                let {advertisingOwner} = state;
+                let reqBody = _.pick(advertisingOwner, ['name', 'description', 'adMaterialList']);
+                let res = await service.postAdvertisingOwner(reqBody);
+                isLoading = false;
+                return res;
+            }
         } catch (err) {
+            isLoading = false;
             console.log(err);
         }
     },
@@ -150,7 +176,6 @@ const actions = {
                 pageNum: state.pagination.pageNum - 1
             });
             params = _.omit(params, ['dateRange', 'total']);
-            console.log(params);
             let res = await service.getAdvertisingOwnerList(params);
             if (res && res.code === 0) {
                 let {list, pageNum, pageSize, total} = res.data;
@@ -159,6 +184,19 @@ const actions = {
             }
         } catch (err) {
             console.log(err);
+        }
+    },
+    async getAdListByAdvertiserId({state, commit}, advertiserId) {
+        let {pagination} = state.adList;
+        let params = Object.assign({}, {advertiserId}, pagination, {
+            pageNum: pagination.pageNum - 1
+        });
+        params = _.omit(params, ['total']);
+        let res = await service.getAdListByAdvertiserId(params);
+        if (res && res.code === 0) {
+            let {list, pageNum, pageSize, total} = res.data;
+            commit('setAdList', {list});
+            commit('setAdListPagination', { pageNum: pageNum + 1, pageSize, total });
         }
     }
 };
