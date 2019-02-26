@@ -342,9 +342,9 @@
                                 }
                             });
                         } else {
-                            this.$service.updateSubjectInfo(this.adInfo).then(response => {
+                            this.$service.updateADInfo(this.adInfo).then(response => {
                                 if (response && response.code === 0) {
-                                    this.$message.success('成功更新专题');
+                                    this.$message.success('成功更新广告');
                                     this.toADList();
                                 } else {
                                     this.isLoading = false;

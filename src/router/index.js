@@ -115,10 +115,16 @@ import EditAdvertisingOwner from 'sysPage/advertising_manage/advertising_owner/E
 import DisplayAdvertisingOwner from 'sysPage/advertising_manage/advertising_owner/DisplayAdvertisingOwner';
 import ADList from 'sysPage/advertising_manage/ad_manage/ADList';
 import CreateBootAD from 'sysPage/advertising_manage/ad_manage/CreateBootAD';
+import EditBootAD from 'sysPage/advertising_manage/ad_manage/EditBootAD';
 import CreateVolumeAD from 'sysPage/advertising_manage/ad_manage/CreateVolumeAD';
+import EditVolumeAD from 'sysPage/advertising_manage/ad_manage/EditVolumeAD';
 import CreateScreenSaverAD from 'sysPage/advertising_manage/ad_manage/CreateScreenSaverAD';
+import EditScreenSaverAD from 'sysPage/advertising_manage/ad_manage/EditScreenSaverAD';
 import CreateChannelSwitchAD from 'sysPage/advertising_manage/ad_manage/CreateChannelSwitchAD';
+import EditChannelSwitchAD from 'sysPage/advertising_manage/ad_manage/EditChannelSwitchAD';
 import CreateProgrammeDetailAD from 'sysPage/advertising_manage/ad_manage/CreateProgrammeDetailAD';
+import EditProgrammeDetailAD from 'sysPage/advertising_manage/ad_manage/EditProgrammeDetailAD';
+import ADDetail from 'sysPage/advertising_manage/ad_manage/ADDetail';
 
 Vue.use(Router);
 
@@ -480,11 +486,23 @@ let router = new Router({
                     name: 'CreateBootAD',
                     component: CreateBootAD
                 },
+                // 编辑开机广告
+                {
+                    path: '/ads-manage/edit-boot-ad/:id',
+                    name: 'EditBootAD',
+                    component: EditBootAD
+                },
                 // 创建音量条广告
                 {
                     path: '/ads-manage/create-volume-ad',
                     name: 'CreateVolumeAD',
                     component: CreateVolumeAD
+                },
+                // 编辑音量条广告
+                {
+                    path: '/ads-manage/edit-volume-ad/:id',
+                    name: 'EditVolumeAD',
+                    component: EditVolumeAD
                 },
                 // 创建屏保广告
                 {
@@ -492,17 +510,41 @@ let router = new Router({
                     name: 'CreateScreenSaverAD',
                     component: CreateScreenSaverAD
                 },
+                // 编辑屏保广告
+                {
+                    path: '/ads-manage/edit-screen-saver-ad/:id',
+                    name: 'EditScreenSaverAD',
+                    component: EditScreenSaverAD
+                },
                 // 创建节目详情广告
                 {
                     path: '/ads-manage/create-programme-detail-ad',
                     name: 'CreateProgrammeDetailAD',
                     component: CreateProgrammeDetailAD
                 },
+                // 编辑节目详情广告
+                {
+                    path: '/ads-manage/edit-programme-detail-ad/:id',
+                    name: 'EditProgrammeDetailAD',
+                    component: EditProgrammeDetailAD
+                },
                 // 创建换台广告
                 {
                     path: '/ads-manage/create-channel-switch-ad',
                     name: 'CreateChannelSwitchAD',
                     component: CreateChannelSwitchAD
+                },
+                // 编辑换台广告
+                {
+                    path: '/ads-manage/edit-channel-switch-ad/:id',
+                    name: 'EditChannelSwitchAD',
+                    component: EditChannelSwitchAD
+                },
+                // 广告详情
+                {
+                    path: '/ads-manage/ad-detail/:id',
+                    name: 'ADDetail',
+                    component: ADDetail
                 },
                 // 视频管理
                 {

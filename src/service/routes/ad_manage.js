@@ -82,3 +82,26 @@ export const setADVisible = (id) => {
 export const deleteAD = (id) => {
     return service.delete(util.format('/v1/ad/general-ad/{0}', id));
 };
+
+/**
+ * 获取广告详情
+ * @param id The id of ad.
+ */
+export const getADDetail = (id) => {
+    return service.get(util.format('/v1/ad/general-ad/{0}', id));
+};
+
+/**
+ * 修改广告信息
+ */
+export const updateADInfo = ({id, name, desc, adType, applyDateBegin, applyDateEnd, adMaterialList}) => {
+    return service.put(util.format('/v1/ad/general-ad/{0}', id), {
+        id,
+        name,
+        desc,
+        adType,
+        applyDateBegin,
+        applyDateEnd,
+        adMaterialList
+    });
+};

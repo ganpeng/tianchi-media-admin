@@ -22,7 +22,7 @@
                             搜索
                         </el-button>
                     </el-form-item>
-                    <el-form-item label="广告类型">
+                    <el-form-item label="类型">
                         <el-select
                             v-model="listQueryParams.adType"
                             @change="getADList(true)"
@@ -50,7 +50,7 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="广告状态">
+                    <el-form-item label="状态">
                         <el-select
                             v-model="listQueryParams.adStatus"
                             @change="getADList(true)"
@@ -196,6 +196,7 @@
             <el-table-column
                 align="center"
                 prop="expiryDate"
+                min-width="120px"
                 label="有效期">
                 <template slot-scope="scope">
                     <div>{{scope.row.applyDateBegin | formatDate('yyyy-MM-DD HH:mm:SS')}}</div>
@@ -204,20 +205,19 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                min-width="140px"
                 label="状态">
                 <template slot-scope="scope">
                     <span v-if="scope.row.adStatus === 'ACTIVE' && scope.row.visible"
                           class="status-normal">生效</span>
-                    <span
-                        v-if="scope.row.adStatus === 'WAITING' && scope.row.visible"
-                        class="status-deleting">未生效</span>
+                    <span v-if="scope.row.adStatus === 'WAITING' && scope.row.visible"
+                          class="status-deleting">未生效</span>
+                    <span v-if="scope.row.adStatus === 'EXPIRED' && scope.row.visible"
+                          class="status-abnormal">已失效</span>
                     <span v-if="!scope.row.visible">/</span>
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
-                min-width="140px"
                 label="上下架">
                 <template slot-scope="scope">
                     <input
@@ -234,6 +234,7 @@
                 align="center"
                 prop="updatedAt"
                 sortable="custom"
+                min-width="100px"
                 label="更新时间">
                 <template slot-scope="scope">
                     {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:mm')}}
@@ -243,6 +244,7 @@
                 align="center"
                 prop="createdAt"
                 sortable="custom"
+                min-width="100px"
                 label="创建时间">
                 <template slot-scope="scope">
                     {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm')}}
@@ -255,10 +257,18 @@
                 class="operate">
                 <template slot-scope="scope">
                     <div class="operator-btn-wrapper">
-                        <span class="btn-text" @click="editADInfo(scope.row)">编辑</span>
-                        <span class="btn-text text-danger"
-                              :class="{disabled:scope.row.adStatus !== 'WAITING'}"
-                              @click="removeAD(scope.row)">删除</span>
+                        <span
+                            class="btn-text"
+                            :class="{disabled:scope.row.adStatus === 'EXPIRED' || !scope.row.visible}"
+                            @click="editADInfo(scope.row)">
+                            编辑
+                        </span>
+                        <span
+                            class="btn-text text-danger"
+                            :class="{disabled:scope.row.adStatus !== 'WAITING'}"
+                            @click="removeAD(scope.row)">
+                            删除
+                        </span>
                     </div>
                 </template>
             </el-table-column>
@@ -285,9 +295,11 @@
                 listQueryParams: {
                     keyword: '',
                     adType: '',
+                    adStatus: '',
                     mediaType: '',
                     createdAtStart: '',
                     createdAtEnd: '',
+                    visible: '',
                     pageNum: 1,
                     pageSize: 10,
                     order: 'UPDATED_AT_DESC'
@@ -374,18 +386,21 @@
             },
             editADInfo(item) {
                 let routeName = '';
-                switch (item.category) {
-                    case 'PROGRAMME_CATEGORY':
-                        routeName = 'EditCategoryProduct';
+                switch (item.adType) {
+                    case 'PROGRAMME_DETAIL':
+                        routeName = 'EditProgrammeDetailAD';
                         break;
-                    case 'PROGRAMME':
-                        routeName = 'EditProgrammeProduct';
+                    case 'VOLUME':
+                        routeName = 'EditVolumeAD';
                         break;
-                    case 'CAROUSEL':
-                        routeName = 'EditCarouselProduct';
+                    case 'SCREEN_SAVER':
+                        routeName = 'EditScreenSaverAD';
                         break;
-                    case 'RECORD':
-                        routeName = 'EditRecordProduct';
+                    case 'BOOT':
+                        routeName = 'EditBootAD';
+                        break;
+                    case 'CHANNEL_SWITCH':
+                        routeName = 'EditChannelSwitchAD';
                         break;
                     default:
                         break;
@@ -394,10 +409,12 @@
             },
             clearFilters() {
                 this.listQueryParams.keyword = '';
-                this.listQueryParams.adCategory = '';
-                this.listQueryParams.resourceCategory = '';
+                this.listQueryParams.adType = '';
+                this.listQueryParams.adStatus = '';
+                this.listQueryParams.mediaType = '';
                 this.listQueryParams.createdAtStart = '';
                 this.listQueryParams.createdAtEnd = '';
+                this.listQueryParams.visible = '';
                 this.createRangeTime = [];
                 this.getADList(true);
             },
@@ -409,26 +426,9 @@
                 this.listQueryParams.pageNum = pageNum;
                 this.getADList();
             },
-            // 查询产品详情
+            // 查询广告详情
             checkADDetail(item) {
-                let routeName = '';
-                switch (item.category) {
-                    case 'PROGRAMME_CATEGORY':
-                        routeName = 'CategoryProductDetail';
-                        break;
-                    case 'PROGRAMME':
-                        routeName = 'ProgrammeProductDetail';
-                        break;
-                    case 'CAROUSEL':
-                        routeName = 'CarouselProductDetail';
-                        break;
-                    case 'RECORD':
-                        routeName = 'RecordProductDetail';
-                        break;
-                    default:
-                        break;
-                }
-                this.$router.push({name: routeName, params: {id: item.id}});
+                this.$router.push({name: 'ADDetail', params: {id: item.id}});
             },
             // 未生效的广告可以删除
             removeAD(item) {
