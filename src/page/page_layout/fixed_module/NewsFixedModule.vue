@@ -11,9 +11,20 @@
                     <div class="wrapper">
                         <div :style="styleBgImageStr(0)" class="top-left-field">
                             <corner-mark :squareIndex="0"></corner-mark>
-                            <el-button v-if="isEdit" @click="selectProgrammeVideo(0)" class="btn-style-two">
-                                选择视频
-                            </el-button>
+                            <div v-if="isEdit" class="btn-wrapper">
+                                <el-button @click="selectProgramme(0)" class="btn-style-two btn130">
+                                    选择节目
+                                </el-button>
+                                <el-button @click="selectProgrammeSubject(0)" class="btn-style-two btn130">
+                                    选择节目专题
+                                </el-button>
+                                <el-button @click="selectProgrammeVideo(0)" class="btn-style-two btn130">
+                                    选择视频
+                                </el-button>
+                                <el-button @click="selectLink(0)" class="btn-style-two btn130">
+                                    选择网页
+                                </el-button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -23,17 +34,39 @@
                             <div class="wrapper">
                                 <div :style="styleBgImageStr(1)" class="top-right-top-left-field">
                                     <corner-mark :squareIndex="1"></corner-mark>
-                                    <el-button v-if="isEdit" @click="selectProgrammeVideo(1)" class="btn-style-two btn130">
-                                        选择视频
-                                    </el-button>
+                                    <div v-if="isEdit" class="btn-wrapper">
+                                        <el-button @click="selectProgramme(1)" class="btn-style-two btn130">
+                                            选择节目
+                                        </el-button>
+                                        <el-button @click="selectProgrammeSubject(1)" class="btn-style-two btn130">
+                                            选择节目专题
+                                        </el-button>
+                                        <el-button @click="selectProgrammeVideo(1)" class="btn-style-two btn130">
+                                            选择视频
+                                        </el-button>
+                                        <el-button @click="selectLink(1)" class="btn-style-two btn130">
+                                            选择网页
+                                        </el-button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="wrapper">
                                 <div :style="styleBgImageStr(2)" class="top-right-top-right-field">
                                     <corner-mark :squareIndex="2"></corner-mark>
-                                    <el-button v-if="isEdit" @click="selectProgrammeVideo(2)" class="btn-style-two btn130">
-                                        选择视频
-                                    </el-button>
+                                    <div v-if="isEdit" class="btn-wrapper">
+                                        <el-button @click="selectProgramme(2)" class="btn-style-two btn130">
+                                            选择节目
+                                        </el-button>
+                                        <el-button @click="selectProgrammeSubject(2)" class="btn-style-two btn130">
+                                            选择节目专题
+                                        </el-button>
+                                        <el-button @click="selectProgrammeVideo(2)" class="btn-style-two btn130">
+                                            选择视频
+                                        </el-button>
+                                        <el-button @click="selectLink(2)" class="btn-style-two btn130">
+                                            选择网页
+                                        </el-button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -41,17 +74,39 @@
                             <div class="wrapper">
                                 <div :style="styleBgImageStr(3)" class="top-right-bottom-left-field">
                                     <corner-mark :squareIndex="3"></corner-mark>
-                                    <el-button v-if="isEdit" @click="selectProgrammeVideo(3)" class="btn-style-two btn130">
-                                        选择视频
-                                    </el-button>
+                                    <div v-if="isEdit" class="btn-wrapper">
+                                        <el-button @click="selectProgramme(3)" class="btn-style-two btn130">
+                                            选择节目
+                                        </el-button>
+                                        <el-button @click="selectProgrammeSubject(3)" class="btn-style-two btn130">
+                                            选择节目专题
+                                        </el-button>
+                                        <el-button @click="selectProgrammeVideo(3)" class="btn-style-two btn130">
+                                            选择视频
+                                        </el-button>
+                                        <el-button @click="selectLink(3)" class="btn-style-two btn130">
+                                            选择网页
+                                        </el-button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="wrapper">
                                 <div :style="styleBgImageStr(4)" class="top-right-bottom-right-field">
                                     <corner-mark :squareIndex="4"></corner-mark>
-                                    <el-button v-if="isEdit" @click="selectProgrammeVideo(4)" class="btn-style-two btn130">
-                                        选择视频
-                                    </el-button>
+                                    <div v-if="isEdit" class="btn-wrapper">
+                                        <el-button @click="selectProgramme(4)" class="btn-style-two btn130">
+                                            选择节目
+                                        </el-button>
+                                        <el-button @click="selectProgrammeSubject(4)" class="btn-style-two btn130">
+                                            选择节目专题
+                                        </el-button>
+                                        <el-button @click="selectProgrammeVideo(4)" class="btn-style-two btn130">
+                                            选择视频
+                                        </el-button>
+                                        <el-button @click="selectLink(4)" class="btn-style-two btn130">
+                                            选择网页
+                                        </el-button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -62,33 +117,77 @@
                 <div class="wrapper">
                     <div :style="styleBgImageStr(5)" class="bottom-field-item">
                         <corner-mark :squareIndex="5"></corner-mark>
-                        <el-button v-if="isEdit" @click="selectProgrammeVideo(5)" class="btn-style-two btn130">
-                            选择视频
-                        </el-button>
+                        <div v-if="isEdit" class="btn-wrapper">
+                            <el-button @click="selectProgramme(5)" class="btn-style-two btn130">
+                                选择节目
+                            </el-button>
+                            <el-button @click="selectProgrammeSubject(5)" class="btn-style-two btn130">
+                                选择节目专题
+                            </el-button>
+                            <el-button @click="selectProgrammeVideo(5)" class="btn-style-two btn130">
+                                选择视频
+                            </el-button>
+                            <el-button @click="selectLink(5)" class="btn-style-two btn130">
+                                选择网页
+                            </el-button>
+                        </div>
                     </div>
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(6)" class="bottom-field-item">
                         <corner-mark :squareIndex="6"></corner-mark>
-                        <el-button v-if="isEdit" @click="selectProgrammeVideo(6)" class="btn-style-two btn130">
-                            选择视频
-                        </el-button>
+                        <div v-if="isEdit" class="btn-wrapper">
+                            <el-button @click="selectProgramme(6)" class="btn-style-two btn130">
+                                选择节目
+                            </el-button>
+                            <el-button @click="selectProgrammeSubject(6)" class="btn-style-two btn130">
+                                选择节目专题
+                            </el-button>
+                            <el-button @click="selectProgrammeVideo(6)" class="btn-style-two btn130">
+                                选择视频
+                            </el-button>
+                            <el-button @click="selectLink(6)" class="btn-style-two btn130">
+                                选择网页
+                            </el-button>
+                        </div>
                     </div>
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(7)" class="bottom-field-item">
                         <corner-mark :squareIndex="7"></corner-mark>
-                        <el-button v-if="isEdit" @click="selectProgrammeVideo(7)" class="btn-style-two btn130">
-                            选择视频
-                        </el-button>
+                        <div v-if="isEdit" class="btn-wrapper">
+                            <el-button @click="selectProgramme(7)" class="btn-style-two btn130">
+                                选择节目
+                            </el-button>
+                            <el-button @click="selectProgrammeSubject(7)" class="btn-style-two btn130">
+                                选择节目专题
+                            </el-button>
+                            <el-button @click="selectProgrammeVideo(7)" class="btn-style-two btn130">
+                                选择视频
+                            </el-button>
+                            <el-button @click="selectLink(7)" class="btn-style-two btn130">
+                                选择网页
+                            </el-button>
+                        </div>
                     </div>
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(8)" class="bottom-field-item">
                         <corner-mark :squareIndex="8"></corner-mark>
-                        <el-button v-if="isEdit" @click="selectProgrammeVideo(8)" class="btn-style-two btn130">
-                            选择视频
-                        </el-button>
+                        <div v-if="isEdit" class="btn-wrapper">
+                            <el-button @click="selectProgramme(8)" class="btn-style-two btn130">
+                                选择节目
+                            </el-button>
+                            <el-button @click="selectProgrammeSubject(8)" class="btn-style-two btn130">
+                                选择节目专题
+                            </el-button>
+                            <el-button @click="selectProgrammeVideo(8)" class="btn-style-two btn130">
+                                选择视频
+                            </el-button>
+                            <el-button @click="selectLink(8)" class="btn-style-two btn130">
+                                选择网页
+                            </el-button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -96,25 +195,40 @@
         <div v-if="isEdit" class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="saveHandler">保存</el-button>
         </div>
-        <programme-without4-step-dialog :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeDialog"></programme-without4-step-dialog>
         <edit-filter :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectFilterDialog"></edit-filter>
         <edit-programme-video :squareIndex="squareIndex" :layoutItemType="layoutItemType" :allowResolutions="allowResolutions" ref="selectProgrammeVideoDialog"></edit-programme-video>
+
+        <!-- 新增 -->
+        <programme-without4-step-dialog :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeDialog"></programme-without4-step-dialog>
+        <edit-programme-subject :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeSubjectDialog"></edit-programme-subject>
+        <link-dialog
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectLinkDialog">
+        ></link-dialog>
     </div>
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex';
-import ProgrammeWithout4StepDialog from '../add_edit_module/ProgrammeWithout4StepDialog';
+import _ from 'lodash';
 import EditFilter from '../add_edit_module/EditFilter';
 import EditProgrammeVideo from '../add_edit_module/EditProgrammeVideo';
 import CornerMark from '../CornerMark';
-import _ from 'lodash';
+
+//  新增
+import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
+import ProgrammeWithout4StepDialog from '../add_edit_module/ProgrammeWithout4StepDialog';
+import LinkDialog from '../add_edit_module/LinkDialog';
 export default {
     name: 'NewsFixedModule',
     components: {
-        ProgrammeWithout4StepDialog,
         EditFilter,
         EditProgrammeVideo,
-        CornerMark
+        CornerMark,
+        //  新增
+        ProgrammeWithout4StepDialog,
+        EditProgrammeSubject,
+        LinkDialog
     },
     props: {
         isEdit: {
@@ -161,11 +275,6 @@ export default {
             let {navbarId} = this.$route.params;
             this.$router.push({ name: 'EditFixedModule', params: {navbarId, index: 0} });
         },
-        selectProgramme(squareIndex) {
-            this.squareIndex = squareIndex;
-            this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
-        },
         selectProgrammeVideo(squareIndex) {
             this.squareIndex = squareIndex;
             this.layoutItemType = 'PROGRAMME_LIST';
@@ -177,6 +286,23 @@ export default {
             this.setAllowResolutions(this.squareIndex);
             this.$refs.selectFilterDialog.showDialog('FILTER');
         },
+        //  新增
+        selectProgramme(squareIndex) {
+            this.squareIndex = squareIndex;
+            this.setAllowResolutions(this.squareIndex);
+            this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
+        },
+        selectProgrammeSubject(squareIndex) {
+            this.squareIndex = squareIndex;
+            this.setAllowResolutions(this.squareIndex);
+            this.$refs.selectProgrammeSubjectDialog.showDialog('PROGRAMME_SUBJECT');
+        },
+        selectLink(squareIndex) {
+            this.squareIndex = squareIndex;
+            this.setAllowResolutions(this.squareIndex);
+            this.$refs.selectLinkDialog.showDialog('Link');
+        },
+        //  新增结束
         saveHandler() {
             let {navbarId} = this.$route.params;
             if (!this.selectAll(navbarId, 0)) {
@@ -233,6 +359,29 @@ export default {
     }
 }
 
+@mixin btnWrapper() {
+    .btn-wrapper {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 130px;
+        .el-button {
+            font-size: 12px;
+            margin-top: 5px;
+            margin-left: 0;
+            height: 24px;
+            line-height: 24px;
+        }
+    }
+    &:hover {
+        .btn-wrapper {
+            display: block;
+        }
+    }
+}
+
 .news-fixed-module {
     margin-top: 20px;
     .btn-field {
@@ -251,7 +400,7 @@ export default {
             .top-left-field {
                 position: relative;
                 @include paddingBg(50.998%);
-                @include toggleBtn();
+                @include btnWrapper();
             }
             .top-right-field {
                 display: flex;
@@ -273,13 +422,14 @@ export default {
                         .top-right-bottom-right-field {
                             position: relative;
                             @include paddingBg(48.6748%);
-                            @include toggleBtn();
+                            @include btnWrapper();
                         }
                     }
                 }
             }
         }
     }
+    .top-field,
     .bottom-field {
         display: flex;
         .wrapper {
@@ -287,13 +437,7 @@ export default {
             .bottom-field-item {
                 position: relative;
                 @include paddingBg(44.03292%);
-                .el-button {
-                    display: none;
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                }
+                @include btnWrapper();
                 &:hover {
                     .el-button {
                         display: block;
@@ -303,14 +447,6 @@ export default {
         }
         .wrapper + .wrapper {
             margin-left: 2%;
-        }
-    }
-    .wrapper-top {
-        .btn-style-two {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
         }
     }
 }

@@ -250,7 +250,7 @@
         methods: {
             ...mapMutations({
                 updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
-                setLayoutItemByIndex: 'pageLayout/setLayoutItemByIndex',
+                updateLayoutItemByKeys: 'pageLayout/updateLayoutItemByKeys',
                 addLayoutItemByIndex: 'pageLayout/addLayoutItemByIndex'
             }),
             getOriginState() {
@@ -505,10 +505,17 @@
                 let filterItem = {
                     id: '',
                     name: '',
+                    programmeTemplate: null,
                     params: JSON.stringify(params),
                     layoutItemType: this.categorySignCode + '_PROGRAMME_CATEGORY',
                     coverImage: this.coverImage,
-                    coverImageBackground: this.coverImageBackground
+                    coverImageBackground: this.coverImageBackground,
+                    cornerMark: {
+                        leftTop: {},
+                        leftBottom: {},
+                        rightTop: {},
+                        rightBottom: {}
+                    }
                 };
                 let {navbarId, index} = this.$route.params;
 
@@ -520,17 +527,14 @@
                         layoutItem: filterItem
                     });
                 } else {
-                    this.setLayoutItemByIndex({
+                    this.updateLayoutItemByKeys({
                         index,
                         navbarId,
                         squareIndex: this.squareIndex,
                         layoutItem: filterItem
                     });
                 }
-                this.$message({
-                    message: '成功设置混排模块的筛选项',
-                    type: 'success'
-                });
+                this.$message.success('成功设置混排模块的筛选项');
                 this.closeDialog();
             },
             //  弹出框相关的操作

@@ -85,6 +85,23 @@
             :allowResolutions="allowResolutions"
             ref="selectLinkDialog">
         ></link-dialog>
+
+        <!--  新增加的部分 -->
+        <person-subject-dialog
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="personSubjectDialog"
+        ></person-subject-dialog>
+        <edit-filter
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectFilterDialog">
+        ></edit-filter>
+        <channel-dialog
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectChannelDialog">
+        ></channel-dialog>
     </div>
 </template>
 <script>
@@ -97,6 +114,10 @@ import EditProgrammeVideo from '../add_edit_module/EditProgrammeVideo';
 import LinkDialog from '../add_edit_module/LinkDialog';
 import CornerMark from '../CornerMark';
 
+//  新增加的部分
+import PersonSubjectDialog from '../add_edit_module/PersonSubjectDialog';
+import EditFilter from '../add_edit_module/EditFilter';
+import ChannelDialog from '../add_edit_module/ChannelDialog';
 export default {
     name: 'Mixed4',
     components: {
@@ -105,7 +126,11 @@ export default {
         EditProgrammeSubject,
         EditProgrammeVideo,
         LinkDialog,
-        CornerMark
+        CornerMark,
+        //  新增加的部分
+        EditFilter,
+        PersonSubjectDialog,
+        ChannelDialog
     },
     props: {
         item: {
@@ -180,7 +205,15 @@ export default {
                     case 'LINK':
                         this.$refs.selectLinkDialog.showDialog('LINK');
                         break;
+                        //  新增加的部分
+                    case 'FIGURE_SUBJECT':
+                        this.$refs.personSubjectDialog.showDialog('FIGURE_SUBJECT');
+                        break;
+                    case 'FILTER':
+                        this.$refs.selectFilterDialog.showDialog();
+                        break;
                     case 'CHANNEL':
+                        this.$refs.selectChannelDialog.showDialog('CHANNEL');
                         break;
                     default:
                         throw new Error('类型错误');

@@ -368,7 +368,7 @@
                     </el-table>
                 </div>
                 <div v-show="active === 2" class="step-two">
-                    <el-form class="my-el-form" status-icon label-width="120px" @submit.native.prevent>
+                    <el-form class="my-el-form" style="margin-top:20px;" status-icon label-width="120px" @submit.native.prevent>
                         <el-col :span="24">
                             <el-form-item label="非焦点图" required>
                                 <div class="image-container">

@@ -33,7 +33,7 @@
                     <corner-mark :squareIndex="0" :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
-                        :onlyChannel="true"
+                        :onlyChannel="false"
                         :hasChannel="true"
                         :addShuffleLayout="addShuffleLayout(0)"
                     ></shuffle-btn>
@@ -44,7 +44,7 @@
                     <corner-mark :squareIndex="1" :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
-                        :onlyChannel="true"
+                        :onlyChannel="false"
                         :hasChannel="true"
                         :addShuffleLayout="addShuffleLayout(1)"
                     ></shuffle-btn>
@@ -55,7 +55,7 @@
                     <corner-mark :squareIndex="2" :cornerMark="getLayoutItemCornerMark(navbarId, index, 2)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
-                        :onlyChannel="true"
+                        :onlyChannel="false"
                         :hasChannel="true"
                         :addShuffleLayout="addShuffleLayout(2)"
                     ></shuffle-btn>
@@ -66,7 +66,7 @@
                     <corner-mark :squareIndex="3" :cornerMark="getLayoutItemCornerMark(navbarId, index, 3)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
-                        :onlyChannel="true"
+                        :onlyChannel="false"
                         :hasChannel="true"
                         :addShuffleLayout="addShuffleLayout(3)"
                     ></shuffle-btn>
@@ -77,7 +77,7 @@
                     <corner-mark :squareIndex="4" :cornerMark="getLayoutItemCornerMark(navbarId, index, 4)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
-                        :onlyChannel="true"
+                        :onlyChannel="false"
                         :hasChannel="true"
                         :addShuffleLayout="addShuffleLayout(4)"
                     ></shuffle-btn>
@@ -88,7 +88,7 @@
                     <corner-mark :squareIndex="5" :cornerMark="getLayoutItemCornerMark(navbarId, index, 5)"></corner-mark>
                     <shuffle-btn
                         v-if="isEdit"
-                        :onlyChannel="true"
+                        :onlyChannel="false"
                         :hasChannel="true"
                         :addShuffleLayout="addShuffleLayout(5)"
                     ></shuffle-btn>
@@ -100,6 +100,12 @@
             :allowResolutions="allowResolutions"
             ref="selectChannelDialog">
         ></channel-dialog>
+        <!-- 新增 -->
+        <edit-filter
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectFilterDialog">
+        ></edit-filter>
     </div>
 </template>
 <script>
@@ -108,12 +114,16 @@ import _ from 'lodash';
 import ShuffleBtn from './ShuffleBtn';
 import ChannelDialog from '../add_edit_module/ChannelDialog';
 import CornerMark from '../CornerMark';
+//  新增加的部分
+import EditFilter from '../add_edit_module/EditFilter';
 export default {
     name: 'Mixeds6',
     components: {
         ShuffleBtn,
         ChannelDialog,
-        CornerMark
+        CornerMark,
+        //  新增加的部分
+        EditFilter
     },
     props: {
         item: {
@@ -190,6 +200,10 @@ export default {
                         break;
                     case 'CHANNEL':
                         this.$refs.selectChannelDialog.showDialog('CHANNEL');
+                        break;
+                        //  新增加的部分
+                    case 'FILTER':
+                        this.$refs.selectFilterDialog.showDialog();
                         break;
                     default:
                         throw new Error('类型错误');

@@ -8,6 +8,7 @@
                     @submit.native.prevent
                     class="form-block my-form">
                 <el-col :span="8">
+                    <!--
                     <el-form-item label="模块名称" prop="title">
                         <el-input
                             :value="layoutData.title"
@@ -15,6 +16,7 @@
                             placeholder="请输入模块名称"
                         ></el-input>
                     </el-form-item>
+                    -->
                     <el-form-item label="名称icon">
                         <single-image-uploader
                             :uri="layoutData.iconImage ? layoutData.iconImage.uri : ''"
@@ -28,12 +30,15 @@
                     <el-col :span="12">
                         <el-form-item label="添加模块内容" required>
                             <div class="special-square-contianer">
-                                <div :style="styleBgImageStr(0)" @click="selectPersonSubject(0)" class="left-field">
-                                    <span class="square-text">人物专题</span>
+                                <!-- <div :style="styleBgImageStr(0)" @click="selectPersonSubject(0)" class="left-field"> -->
+                                <div :style="styleBgImageStr(0)" class="left-field">
+                                    <corner-mark :squareIndex="0" :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
+                                    <shuffle-btn :addShuffleLayout="addShuffleLayout(0)"></shuffle-btn>
                                 </div>
-                                <div :style="styleBgImageStr(1)" @click="selectProgramme(1)" class="right-field">
+                                <!-- <div :style="styleBgImageStr(1)" @click="selectProgramme(1)" class="right-field"> -->
+                                <div :style="styleBgImageStr(1)" class="right-field">
                                     <corner-mark :squareIndex="1" :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
-                                    <!-- <span class="square-text">节目</span> -->
+                                    <shuffle-btn :addShuffleLayout="addShuffleLayout(1)"></shuffle-btn>
                                 </div>
                             </div>
                         </el-form-item>
@@ -46,14 +51,40 @@
         </div>
         <person-subject-dialog
             :allowResolutions="allowResolutions"
-            :squareIndex="0"
+            :squareIndex="squareIndex"
             ref="personSubjectDialog"
         ></person-subject-dialog>
         <edit-programme
-            :squareIndex="1"
+            :squareIndex="squareIndex"
             :allowResolutions="allowResolutions"
             ref="selectProgrammeDialog">
         </edit-programme>
+        <!-- 新增 -->
+        <edit-programme-subject
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectProgrammeSubjectDialog">
+        </edit-programme-subject>
+        <edit-programme-video
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectProgrammeVideoDialog">
+        </edit-programme-video>
+        <link-dialog
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectLinkDialog">
+        ></link-dialog>
+        <edit-filter
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectFilterDialog">
+        ></edit-filter>
+        <channel-dialog
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectChannelDialog">
+        ></channel-dialog>
     </div>
 </template>
 <script>
@@ -63,18 +94,36 @@ import SingleImageUploader from 'sysComponents/custom_components/custom/SingleIm
 import PersonSubjectDialog from './PersonSubjectDialog';
 import EditProgramme from './EditProgramme';
 import CornerMark from '../CornerMark';
+
+//  新增部分
+import ShuffleBtn from '../mixed_module/ShuffleBtn';
+import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
+import EditProgrammeVideo from '../add_edit_module/EditProgrammeVideo';
+import LinkDialog from '../add_edit_module/LinkDialog';
+import EditFilter from '../add_edit_module/EditFilter';
+import ChannelDialog from '../add_edit_module/ChannelDialog';
+
 export default {
     name: 'EditSpecialModule',
     components: {
         SingleImageUploader,
         PersonSubjectDialog,
         EditProgramme,
-        CornerMark
+        CornerMark,
+        //  新增部分
+        ShuffleBtn,
+        EditProgrammeSubject,
+        EditProgrammeVideo,
+        LinkDialog,
+        EditFilter,
+        ChannelDialog
     },
     data() {
         return {
             navbarId: '',
             index: '',
+            squareIndex: 0,
+            layoutItemType: '',
             saveFlag: false, // 判断页面跳转之前如果没有点保存按钮的话，就删除新增的这个layoutItem
             allowResolutions: []
         };
@@ -121,8 +170,7 @@ export default {
         ...mapMutations({
             deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
             saveLayoutToStore: 'pageLayout/saveLayoutToStore',
-            updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey',
-            setLayoutItemByIndex: 'pageLayout/setLayoutItemByIndex'
+            updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey'
         }),
         inputHandler(value, key) {
             this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key, value});
@@ -158,6 +206,48 @@ export default {
             let layoutItemType = this.getLayoutItemType(this.navbarId, this.index, squareIndex);
             this.allowResolutions = [{width: 1160, height: 600}];
             this.$refs.selectProgrammeDialog.showDialog(layoutItemType);
+        },
+        addShuffleLayout(squareIndex) {
+            return (layoutItemType) => {
+                this.squareIndex = squareIndex;
+                this.layoutItemType = layoutItemType;
+                switch (squareIndex) {
+                    case 0:
+                        this.allowResolutions = [{width: 560, height: 600}];
+                        break;
+                    case 1:
+                        this.allowResolutions = [{width: 1160, height: 600}];
+                        break;
+                    default:
+                        throw new Error('squarIndex索引错误');
+                }
+                switch (layoutItemType) {
+                    case 'PROGRAMME':
+                        this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
+                        break;
+                    case 'PROGRAMME_VIDEO':
+                        this.$refs.selectProgrammeVideoDialog.showDialog('PROGRAMME_VIDEO');
+                        break;
+                    case 'PROGRAMME_SUBJECT':
+                        this.$refs.selectProgrammeSubjectDialog.showDialog('PROGRAMME_SUBJECT');
+                        break;
+                    case 'LINK':
+                        this.$refs.selectLinkDialog.showDialog('LINK');
+                        break;
+                        //  新增加的部分
+                    case 'FIGURE_SUBJECT':
+                        this.$refs.personSubjectDialog.showDialog('FIGURE_SUBJECT');
+                        break;
+                    case 'FILTER':
+                        this.$refs.selectFilterDialog.showDialog();
+                        break;
+                    case 'CHANNEL':
+                        this.$refs.selectChannelDialog.showDialog('CHANNEL');
+                        break;
+                    default:
+                        throw new Error('layoutItemType类型错误');
+                }
+            };
         }
     }
 };

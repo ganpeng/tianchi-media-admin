@@ -29,22 +29,22 @@
         </div>
         <div class="content-field">
             <div class="wrapper">
-                <div :style="styleBgImageStr(0)" class="field"></div>
+                <div @click="gotoPersonDetail(0)" :style="styleBgImageStr(0)" class="field pointer"></div>
             </div>
             <div class="wrapper">
-                <div :style="styleBgImageStr(1)" class="field"></div>
+                <div @click="gotoPersonDetail(1)" :style="styleBgImageStr(1)" class="field pointer"></div>
             </div>
             <div class="wrapper">
-                <div :style="styleBgImageStr(2)" class="field"></div>
+                <div @click="gotoPersonDetail(2)" :style="styleBgImageStr(2)" class="field pointer"></div>
             </div>
             <div class="wrapper">
-                <div :style="styleBgImageStr(3)" class="field"></div>
+                <div @click="gotoPersonDetail(3)" :style="styleBgImageStr(3)" class="field pointer"></div>
             </div>
             <div class="wrapper">
-                <div :style="styleBgImageStr(4)" class="field"></div>
+                <div @click="gotoPersonDetail(4)" :style="styleBgImageStr(4)" class="field pointer"></div>
             </div>
             <div class="wrapper">
-                <div :style="styleBgImageStr(5)" class="field"></div>
+                <div @click="gotoPersonDetail(5)" :style="styleBgImageStr(5)" class="field pointer"></div>
             </div>
         </div>
     </div>
@@ -108,6 +108,11 @@ export default {
         deleteHandler() {
             let {navbarId} = this.$route.params;
             this.$util.deleteLayoutItemHandler({navbarId, index: this.index});
+        },
+        gotoPersonDetail(squareIndex) {
+            let {navbarId} = this.$route.params;
+            let id = _.get(this.layout, `${navbarId}.data.${this.index}.layoutItemMultiList.${squareIndex}.id`);
+            this.$router.push({ name: 'DisplayPerson', params: { id } });
         }
     }
 };

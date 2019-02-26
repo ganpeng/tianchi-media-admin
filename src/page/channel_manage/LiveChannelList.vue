@@ -199,8 +199,8 @@
                             type="checkbox"
                             :checked="scope.row.visible"
                             @click.prevent="_lowerFrameLiveChannel(scope.row)"/>
-                        <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
-                        <i v-else class="off-the-shelf">已下架</i>
+                        <i v-if="scope.row.visible" class="on-the-shelf">正常</i>
+                        <i v-else class="off-the-shelf">禁播</i>
                     </template>
                 </el-table-column>
                 <el-table-column width="220px" align="center" label="操作">
@@ -276,11 +276,11 @@
                 visibleOptions: [
                     {
                         value: true,
-                        label: '已上架'
+                        label: '正常'
                     },
                     {
                         value: false,
-                        label: '已下架'
+                        label: '禁播'
                     }
                 ],
                 status: 0,

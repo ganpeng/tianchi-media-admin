@@ -291,8 +291,7 @@ export default {
         ...mapMutations({
             deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
             saveLayoutToStore: 'pageLayout/saveLayoutToStore',
-            updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey',
-            setLayoutItemByIndex: 'pageLayout/setLayoutItemByIndex'
+            updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey'
         }),
         inputHandler(value, key) {
             this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key, value});

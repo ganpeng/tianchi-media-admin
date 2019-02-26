@@ -291,7 +291,6 @@ export default {
             // 新加api
             insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex',
             updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey',
-            addLayoutItemByIndex: 'pageLayout/addLayoutItemByIndex',
             deleteLayoutItembyId: 'pageLayout/deleteLayoutItembyId',
             deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
             cancelLayoutPersonItemByIndex: 'pageLayout/cancelLayoutPersonItemByIndex'

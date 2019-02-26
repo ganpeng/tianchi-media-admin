@@ -133,6 +133,17 @@
             :allowResolutions="allowResolutions"
             ref="selectLinkDialog">
         ></link-dialog>
+        <!-- 新增加的部分 -->
+        <person-subject-dialog
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="personSubjectDialog"
+        ></person-subject-dialog>
+        <edit-filter
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectFilterDialog">
+        ></edit-filter>
         <channel-dialog
             :squareIndex="squareIndex"
             :allowResolutions="allowResolutions"
@@ -148,8 +159,12 @@ import EditProgramme from '../add_edit_module/EditProgramme';
 import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
 import EditProgrammeVideo from '../add_edit_module/EditProgrammeVideo';
 import LinkDialog from '../add_edit_module/LinkDialog';
-import ChannelDialog from '../add_edit_module/ChannelDialog';
 import CornerMark from '../CornerMark';
+
+//  新增加的部分
+import PersonSubjectDialog from '../add_edit_module/PersonSubjectDialog';
+import EditFilter from '../add_edit_module/EditFilter';
+import ChannelDialog from '../add_edit_module/ChannelDialog';
 export default {
     name: 'Mixed26',
     components: {
@@ -158,8 +173,11 @@ export default {
         EditProgrammeSubject,
         EditProgrammeVideo,
         LinkDialog,
-        ChannelDialog,
-        CornerMark
+        CornerMark,
+        //  新增加的部分
+        EditFilter,
+        PersonSubjectDialog,
+        ChannelDialog
     },
     props: {
         item: {
@@ -249,6 +267,13 @@ export default {
                         break;
                     case 'LINK':
                         this.$refs.selectLinkDialog.showDialog('LINK');
+                        break;
+                        //  新增加的部分
+                    case 'FIGURE_SUBJECT':
+                        this.$refs.personSubjectDialog.showDialog('FIGURE_SUBJECT');
+                        break;
+                    case 'FILTER':
+                        this.$refs.selectFilterDialog.showDialog();
                         break;
                     case 'CHANNEL':
                         this.$refs.selectChannelDialog.showDialog('CHANNEL');

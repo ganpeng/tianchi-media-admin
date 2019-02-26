@@ -13,9 +13,14 @@
                         <el-button @click="selectProgramme(0)" class="btn-style-two btn130">
                             选择节目
                         </el-button>
-                        <br />
                         <el-button @click="selectProgrammeSubject(0)" class="btn-style-two btn130">
                             选择节目专题
+                        </el-button>
+                        <el-button @click="selectProgrammeVideo(0)" class="btn-style-two btn130">
+                            选择视频
+                        </el-button>
+                        <el-button @click="selectLink(0)" class="btn-style-two btn130">
+                            选择网页
                         </el-button>
                     </div>
                 </div>
@@ -30,9 +35,14 @@
                                     <el-button @click="selectProgramme(1)" class="btn-style-two btn130">
                                         选择节目
                                     </el-button>
-                                    <br />
                                     <el-button @click="selectProgrammeSubject(1)" class="btn-style-two btn130">
                                         选择节目专题
+                                    </el-button>
+                                    <el-button @click="selectProgrammeVideo(1)" class="btn-style-two btn130">
+                                        选择视频
+                                    </el-button>
+                                    <el-button @click="selectLink(1)" class="btn-style-two btn130">
+                                        选择网页
                                     </el-button>
                                 </div>
                             </div>
@@ -44,9 +54,14 @@
                                     <el-button @click="selectProgramme(2)" class="btn-style-two btn130">
                                         选择节目
                                     </el-button>
-                                    <br />
                                     <el-button @click="selectProgrammeSubject(2)" class="btn-style-two btn130">
                                         选择节目专题
+                                    </el-button>
+                                    <el-button @click="selectProgrammeVideo(2)" class="btn-style-two btn130">
+                                        选择视频
+                                    </el-button>
+                                    <el-button @click="selectLink(2)" class="btn-style-two btn130">
+                                        选择网页
                                     </el-button>
                                 </div>
                             </div>
@@ -60,9 +75,14 @@
                                     <el-button @click="selectProgramme(3)" class="btn-style-two btn130">
                                         选择节目
                                     </el-button>
-                                    <br />
                                     <el-button @click="selectProgrammeSubject(3)" class="btn-style-two btn130">
                                         选择节目专题
+                                    </el-button>
+                                    <el-button @click="selectProgrammeVideo(3)" class="btn-style-two btn130">
+                                        选择视频
+                                    </el-button>
+                                    <el-button @click="selectLink(3)" class="btn-style-two btn130">
+                                        选择网页
                                     </el-button>
                                 </div>
                             </div>
@@ -74,9 +94,14 @@
                                     <el-button @click="selectProgramme(4)" class="btn-style-two btn130">
                                         选择节目
                                     </el-button>
-                                    <br />
                                     <el-button @click="selectProgrammeSubject(4)" class="btn-style-two btn130">
                                         选择节目专题
+                                    </el-button>
+                                    <el-button @click="selectProgrammeVideo(4)" class="btn-style-two btn130">
+                                        选择视频
+                                    </el-button>
+                                    <el-button @click="selectLink(4)" class="btn-style-two btn130">
+                                        选择网页
                                     </el-button>
                                 </div>
                             </div>
@@ -93,9 +118,14 @@
                         <el-button @click="selectProgramme(5)" class="btn-style-two btn130">
                             选择节目
                         </el-button>
-                        <br />
                         <el-button @click="selectProgrammeSubject(5)" class="btn-style-two btn130">
                             选择节目专题
+                        </el-button>
+                        <el-button @click="selectProgrammeVideo(5)" class="btn-style-two btn130">
+                            选择视频
+                        </el-button>
+                        <el-button @click="selectLink(5)" class="btn-style-two btn130">
+                            选择网页
                         </el-button>
                     </div>
                 </div>
@@ -107,9 +137,14 @@
                         <el-button @click="selectProgramme(6)" class="btn-style-two btn130">
                             选择节目
                         </el-button>
-                        <br />
                         <el-button @click="selectProgrammeSubject(6)" class="btn-style-two btn130">
                             选择节目专题
+                        </el-button>
+                        <el-button @click="selectProgrammeVideo(6)" class="btn-style-two btn130">
+                            选择视频
+                        </el-button>
+                        <el-button @click="selectLink(6)" class="btn-style-two btn130">
+                            选择网页
                         </el-button>
                     </div>
                 </div>
@@ -121,9 +156,14 @@
                         <el-button @click="selectProgramme(7)" class="btn-style-two btn130">
                             选择节目
                         </el-button>
-                        <br />
                         <el-button @click="selectProgrammeSubject(7)" class="btn-style-two btn130">
                             选择节目专题
+                        </el-button>
+                        <el-button @click="selectProgrammeVideo(7)" class="btn-style-two btn130">
+                            选择视频
+                        </el-button>
+                        <el-button @click="selectLink(7)" class="btn-style-two btn130">
+                            选择网页
                         </el-button>
                     </div>
                 </div>
@@ -135,9 +175,14 @@
                         <el-button @click="selectProgramme(8)" class="btn-style-two btn130">
                             选择节目
                         </el-button>
-                        <br />
                         <el-button @click="selectProgrammeSubject(8)" class="btn-style-two btn130">
                             选择节目专题
+                        </el-button>
+                        <el-button @click="selectProgrammeVideo(8)" class="btn-style-two btn130">
+                            选择视频
+                        </el-button>
+                        <el-button @click="selectLink(8)" class="btn-style-two btn130">
+                            选择网页
                         </el-button>
                     </div>
                 </div>
@@ -148,20 +193,36 @@
         </div>
         <programme-without4-step-dialog :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeDialog"></programme-without4-step-dialog>
         <edit-programme-subject :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeSubjectDialog"></edit-programme-subject>
+
+        <!-- 新增 -->
+        <edit-programme-video :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeVideoDialog"></edit-programme-video>
+        <link-dialog
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectLinkDialog">
+        ></link-dialog>
     </div>
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex';
+import _ from 'lodash';
 import ProgrammeWithout4StepDialog from '../add_edit_module/ProgrammeWithout4StepDialog';
 import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
 import CornerMark from '../CornerMark';
-import _ from 'lodash';
+
+//  新增
+import EditProgrammeVideo from '../add_edit_module/EditProgrammeVideo';
+import LinkDialog from '../add_edit_module/LinkDialog';
 export default {
     name: 'PartyFixedModule',
     components: {
         ProgrammeWithout4StepDialog,
         EditProgrammeSubject,
-        CornerMark
+        CornerMark,
+
+        //  新增
+        EditProgrammeVideo,
+        LinkDialog
     },
     props: {
         isEdit: {
@@ -219,6 +280,18 @@ export default {
             this.setAllowResolutions(this.squareIndex);
             this.$refs.selectProgrammeSubjectDialog.showDialog('PROGRAMME_SUBJECT');
         },
+        //  新增
+        selectProgrammeVideo(squareIndex) {
+            this.squareIndex = squareIndex;
+            this.setAllowResolutions(this.squareIndex);
+            this.$refs.selectProgrammeVideoDialog.showDialog('PROGRAMME_VIDEO');
+        },
+        selectLink(squareIndex) {
+            this.squareIndex = squareIndex;
+            this.setAllowResolutions(this.squareIndex);
+            this.$refs.selectLinkDialog.showDialog('Link');
+        },
+        //  新增结束
         saveHandler() {
             let {navbarId} = this.$route.params;
             if (!this.selectAll(navbarId, 0)) {
@@ -270,11 +343,13 @@ export default {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        width: 130px;
         .el-button {
-            &:last-child {
-                padding: 0 10px;
-                margin-top: 10px;
-            }
+            font-size: 12px;
+            margin-top: 5px;
+            margin-left: 0;
+            height: 24px;
+            line-height: 24px;
         }
     }
     &:hover {

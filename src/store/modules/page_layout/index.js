@@ -258,7 +258,7 @@ const getters = {
                 allFlag = !_.every(layoutItemMultiList, (item) => _.get(item, 'coverImage.uri'));
             } else {
                 allFlag = _.some(layoutItemMultiList, (item) => {
-                    if (item.layoutItemType === 'LINK') {
+                    if (item.layoutItemType === 'LINK' || /_PROGRAMME_CATEGORY$/.test(item.layoutItemType)) {
                         return !_.get(item, 'coverImage.uri');
                     } else {
                         return !item.id || !_.get(item, 'coverImage.uri');
@@ -339,6 +339,13 @@ const mutations = {
     updateLayoutDataByKey(state, payload) {
         let {navbarId, index, key, value} = payload;
         _.set(state.layout, `${navbarId}.data.${index}.${key}`, value);
+    },
+    updateLayoutItemByKeys(state, payload) {
+        let {index, navbarId, squareIndex, layoutItem} = payload;
+        let _layoutItem = _.cloneDeep(layoutItem);
+        Object.keys(_layoutItem).forEach((key) => {
+            _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.${key}`, _layoutItem[key]);
+        });
     },
     insertLayoutDataByIndex(state, payload) {
         let {navbarId, index, layoutData} = payload;

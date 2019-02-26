@@ -372,8 +372,7 @@ export default {
             updateProgrammeSubject: 'pageLayout/updateProgrammeSubject',
             deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
             saveLayoutToStore: 'pageLayout/saveLayoutToStore',
-            updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey',
-            setLayoutItemByIndex: 'pageLayout/setLayoutItemByIndex'
+            updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey'
         }),
         ...mapActions({
             getProgrammeSubjectList: 'pageLayout/getProgrammeSubjectList'
