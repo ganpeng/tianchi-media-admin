@@ -23,9 +23,9 @@
                         <el-button @click="selectProgrammeVideo(0)" class="btn-style-two btn130">
                             选择视频
                         </el-button>
-                        <el-button @click="selectLink(0)" class="btn-style-two btn130">
+                        <!-- <el-button @click="selectLink(0)" class="btn-style-two btn130">
                             选择网页
-                        </el-button>
+                        </el-button> -->
                     </div>
                 </div>
             </div>
@@ -42,9 +42,9 @@
                         <el-button @click="selectProgrammeVideo(1)" class="btn-style-two btn130">
                             选择视频
                         </el-button>
-                        <el-button @click="selectLink(1)" class="btn-style-two btn130">
+                        <!-- <el-button @click="selectLink(1)" class="btn-style-two btn130">
                             选择网页
-                        </el-button>
+                        </el-button> -->
                     </div>
                 </div>
             </div>
