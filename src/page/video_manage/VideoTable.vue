@@ -289,7 +289,11 @@
             width="40%">
             <div class="share-body" v-if="shareSiteSettingVisible">
                 <div>视频可以被以下站点共享:</div>
-                <el-select v-model="videoShareSiteIdList" multiple placeholder="请选择共享站点">
+                <el-select
+                    v-model="videoShareSiteIdList"
+                    multiple
+                    @change="setShareSites"
+                    placeholder="请选择共享站点">
                     <el-option
                         v-for="(item,index) in shareSiteOptions"
                         :key="index"
@@ -524,6 +528,19 @@
                                 });
                             }
                         }
+                    }
+                });
+            },
+            // 设置共享站点，对全选进行处理
+            setShareSites() {
+                this.videoShareSiteIdList.map(siteId => {
+                    if (siteId === '0') {
+                        this.videoShareSiteIdList = [];
+                        this.shareSiteOptions.map(siteOption => {
+                            if (siteOption.name !== '全选') {
+                                this.videoShareSiteIdList.push(siteOption.id);
+                            }
+                        });
                     }
                 });
             },
