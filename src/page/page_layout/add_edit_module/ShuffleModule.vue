@@ -11,7 +11,14 @@
                     @submit.native.prevent
                     class="form-block my-form">
                 <el-col :span="8">
-                    <el-form-item label="模块名称" prop="title">
+                    <el-form-item v-if="layoutData.layoutTemplate === 'LT_3_3'" label="模块名称">
+                        <el-input
+                            :value="layoutData.title"
+                            @input="inputHandler($event, 'title')"
+                            placeholder="请输入模块名称"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item v-else label="模块名称" prop="title">
                         <el-input
                             :value="layoutData.title"
                             @input="inputHandler($event, 'title')"
