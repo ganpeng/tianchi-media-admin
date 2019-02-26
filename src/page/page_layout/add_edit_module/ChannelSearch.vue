@@ -28,7 +28,6 @@ export default {
     },
     methods: {
         querySearchAsync(name, cb) {
-            console.log(this.isCarousel);
             if (this.isCarousel) {
                 this.$service.searchCarouselChannelList(name)
                     .then((res) => {

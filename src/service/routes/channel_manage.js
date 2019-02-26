@@ -148,7 +148,8 @@ export const searchLiveChannelList = (keyword) => {
  * 根据关键字搜索轮播频道
  */
 export const searchCarouselChannelList = (keyword) => {
-    return service.get(`/v1/live/channel/page?keyword=${keyword}&pageNum=0&pageSize=999&category=CAROUSEL`);
+    // return service.get(`/v1/live/channel/page?keyword=${keyword}&pageNum=0&pageSize=999&category=CAROUSEL`);
+    return service.get(`/v1/live/channel/page?keyword=${keyword}&pageNum=0&pageSize=999`);
 };
 
 /**

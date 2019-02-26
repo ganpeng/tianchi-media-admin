@@ -87,7 +87,7 @@ export default {
                         message: '请输入网页地址'
                     },
                     {
-                        pattern: /^http:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/, // eslint-disable-line
+                        pattern: /^https?:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/, // eslint-disable-line
                         message: '请输入正确的网址'
                     }
                 ]
