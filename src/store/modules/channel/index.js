@@ -24,7 +24,8 @@ let defaultSearchFields = {
     record: undefined,
     category: 'LIVE',
     common: undefined,
-    visible: ''
+    visible: '',
+    protocolList: []
 };
 
 let defaultPagination = {

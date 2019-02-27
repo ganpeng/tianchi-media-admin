@@ -72,6 +72,7 @@ export default {
                 activeIndex: 0,
                 list: []
             },
+            displayVideoDialogVisible: false,
             video: {
                 title: '',
                 url: ''

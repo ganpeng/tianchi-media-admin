@@ -112,6 +112,22 @@
                         </el-option>
                     </el-select>
                 </div>
+                <div id="multi-selecter" class="search-field-item">
+                    <label class="search-field-item-label">推流方式</label>
+                    <el-select
+                        :value="searchFields.protocolList"
+                        @change="inputHandler($event, 'protocolList')"
+                        clearable
+                        multiple
+                        placeholder="请选择状态">
+                        <el-option
+                            v-for="item in [{name: 'HLS', value: 'HLS'}, {name: 'UDP', value: 'UDP'}]"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
             </div>
         </div>
         <div class="seperator-line"></div>
@@ -132,10 +148,10 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item>
-                                <span @click="multUpFrameChannelHandler">批量上架</span>
+                                <span @click="multUpFrameChannelHandler">批量恢复</span>
                             </el-dropdown-item>
                             <el-dropdown-item>
-                                <span @click="multLowerFrameChannelHandler">批量下架</span>
+                                <span @click="multLowerFrameChannelHandler">批量禁播</span>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -461,7 +477,8 @@
             async _lowerFrameLiveChannel(channel) {
                 try {
                     let {id, visible} = channel;
-                    let confirm = await this.$confirm(`此操作将${visible ? '下架' : '上架'}该频道, 是否继续?`, '提示', {
+                    let message = `${visible ? '禁播' : '恢复'}`;
+                    let confirm = await this.$confirm(`此操作将${message}该频道, 是否继续?`, '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'error'
@@ -469,7 +486,7 @@
                     if (confirm) {
                         let res = await this.$service.setChannelVisible(id);
                         if (res && res.code === 0) {
-                            this.$message.success('频道下架成功');
+                            this.$message.success(`频道${message}成功`);
                             this.getChannelList();
                         } else {
                             this.$message.error(res.message);
@@ -546,7 +563,7 @@
             },
             async multUpFrameChannelHandler() {
                 let idList = this.selectedChannelList.map((item) => item.id);
-                let confirm = await this.$confirm(`您确定要上架所选频道吗, 是否继续?`, '提示', {
+                let confirm = await this.$confirm(`您确定要恢复所选频道吗, 是否继续?`, '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'error'
@@ -554,17 +571,17 @@
                 if (confirm) {
                     let res = await this.$service.batchSetChannel({idList, visible: true});
                     if (res && res.code === 0) {
-                        this.$message.success(`频道上架成功`);
+                        this.$message.success(`频道批量恢复成功`);
                         this.selectedChannelList = [];
                         this.getChannelList();
                     } else {
-                        this.$message.error('批量上架失败');
+                        this.$message.error('批量恢复失败');
                     }
                 }
             },
             async multLowerFrameChannelHandler() {
                 let idList = this.selectedChannelList.map((item) => item.id);
-                let confirm = await this.$confirm(`您确定要下架所选频道吗, 是否继续?`, '提示', {
+                let confirm = await this.$confirm(`您确定要禁播所选频道吗, 是否继续?`, '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'error'
@@ -572,11 +589,11 @@
                 if (confirm) {
                     let res = await this.$service.batchSetChannel({idList, visible: true});
                     if (res && res.code === 0) {
-                        this.$message.success(`频道下架成功`);
+                        this.$message.success(`频道批量禁播成功`);
                         this.selectedChannelList = [];
                         this.getChannelList();
                     } else {
-                        this.$message.error('批量上架失败');
+                        this.$message.error('批量禁播失败');
                     }
                 }
             }
@@ -608,6 +625,11 @@
         width: 70px;
         height: 18px;
         line-height: 18px;
+    }
+}
+#multi-selecter {
+    input {
+        height: 34px!important;
     }
 }
 </style>

@@ -24,13 +24,8 @@
                             :handleSelect="selectChannelHandler"
                         ></channel-search>
                     </el-form-item>
-                    <el-form-item label="图片" required>
-                        <single-image-uploader
-                            id="programmeSubjectImageUploaderOne"
-                            :uri="logoUri || ''"
-                            :uploadSuccessHandler="uploadChannelCoverImageSuccessHandler"
-                            :allowResolutions="allowResolutions"
-                        ></single-image-uploader>
+                    <el-form-item label="图片">
+                        <single-poster :img="image"></single-poster>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
@@ -45,6 +40,7 @@
 import {mapGetters} from 'vuex';
 import _ from 'lodash';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
+import SinglePoster from 'sysComponents/custom_components/custom/SinglePoster';
 import ChannelSearch from './ChannelSearch';
 export default {
     name: 'EditChannel',
@@ -64,6 +60,7 @@ export default {
     },
     components: {
         SingleImageUploader,
+        SinglePoster,
         ChannelSearch
     },
     data() {
@@ -76,6 +73,13 @@ export default {
         ...mapGetters({
             navbarList: 'pageLayout/navbarList'
         }),
+        image() {
+            return {
+                width: 260,
+                height: 260,
+                uri: _.get(this.channel, 'logoUri')
+            };
+        },
         logoUri() {
             return _.get(this.channel, 'logoUri');
         }

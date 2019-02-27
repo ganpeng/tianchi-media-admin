@@ -24,7 +24,6 @@
 <script>
 import DPlayer from 'dplayer';
 import 'dplayer/dist/DPlayer.min.css';
-const Hls = window.Hls = require('hls.js');
 export default {
     name: 'DisplayVideoDialog',
     props: {
@@ -51,17 +50,7 @@ export default {
                 that.player = new DPlayer({
                     container: document.getElementById('dplayer'),
                     autoplay: true,
-                    video: {
-                        url: that.url,
-                        type: 'customHls',
-                        customType: {
-                            'customHls': function (video, player) {
-                                that.hls = new Hls();
-                                that.hls.loadSource(video.src);
-                                that.hls.attachMedia(video);
-                            }
-                        }
-                    }
+                    video: { url: that.url }
                 });
             });
         },
@@ -74,9 +63,6 @@ export default {
             this.player.pause();
             this.player.seek(0);
             this.player.destroy();
-            this.hls.detachMedia();
-            this.hls.stopLoad();
-            this.hls.destroy();
             this.displayVideoDialogVisible = false;
         }
     }

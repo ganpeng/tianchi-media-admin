@@ -9,7 +9,7 @@
             <div class="content-field">
                 <div class="left-field-wrapper">
                     <div class="left-field">
-                        <div v-if="isEdit" class="btn-wrapper">
+                        <div v-if="isEdit" style="width: 150px" class="btn-wrapper">
                             <p class="text">设置直播频道</p>
                             <el-button @click="selectChannel" class="btn-style-two">
                                 选择
