@@ -55,7 +55,7 @@ let defaultLiveChannel = {
     //  直播频道的类型列表
     typeList: [],
     companyList: [],
-    methods: [],
+    protocolList: [],
     visible: false // 是否上下架
 };
 
@@ -313,7 +313,10 @@ const actions = {
                 if (_.isNull(res.data.companyList)) {
                     res.data.companyList = [];
                 }
-                commit('setLiveChannel', {liveChannel: Object.assign({record: null, methods: [], companyList: []}, res.data)});
+                if (_.isNull(res.data.protocolList)) {
+                    res.data.protocolList = [];
+                }
+                commit('setLiveChannel', {liveChannel: Object.assign({record: null, protocolList: [], companyList: []}, res.data)});
                 return res;
             }
         } catch (err) {
@@ -345,9 +348,7 @@ const actions = {
     async deleteChannelById({commit, state}, id) {
         try {
             let res = await service.deleteChannelById(id);
-            if (res && res.code === 0) {
-                return res;
-            }
+            return res;
         } catch (err) {}
     },
     /**

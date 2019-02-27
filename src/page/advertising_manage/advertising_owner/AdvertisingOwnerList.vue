@@ -124,7 +124,9 @@
                     </el-button>
                 </div>
             </div>
-            <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
+            <el-table
+                @sort-change="sortChangeHandler"
+                header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
                 <el-table-column prop="id" align="center" width="120px" label="编号"></el-table-column>
                 <el-table-column prop="name" align="center" min-width="120px" label="广告主名称">
                     <template slot-scope="scope">
@@ -154,12 +156,12 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" min-width="160" label="创建时间">
+                <el-table-column sortable align="center" min-width="160" label="创建时间" prop="createdAt">
                     <template slot-scope="scope">
                         {{scope.row.createdAt | formatDate('yyyy-MM-DD') | padEmpty}}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" min-width="160" label="更新时间">
+                <el-table-column sortable align="center" min-width="160" label="更新时间" prop="updatedAt">
                     <template slot-scope="scope">
                         {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
                     </template>
@@ -168,7 +170,7 @@
                     <template slot-scope="scope">
                         <div id="channel-operator" class="operator-btn-wrapper">
                             <span class="btn-text" @click="editAdvertisingOwner(scope.row.id)">编辑</span>
-                            <span class="btn-text text-danger" @click="deleteAdvertisingOwner(scope.row.id)">删除</span>
+                            <!-- <span class="btn-text text-danger" @click="deleteAdvertisingOwner(scope.row.id)">删除</span> -->
                         </div>
                     </template>
                 </el-table-column>
@@ -187,6 +189,7 @@
 </template>
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex';
+import _ from 'lodash';
 export default {
     name: 'AdvertisingOwnerList',
     data() {
@@ -264,7 +267,8 @@ export default {
         ...mapMutations({
             updateSearchFields: 'advertising/updateSearchFields',
             updatePagination: 'advertising/updatePagination',
-            resetSearchFields: 'advertising/resetSearchFields'
+            resetSearchFields: 'advertising/resetSearchFields',
+            setList: 'advertising/setList'
         }),
         ...mapActions({
             getAdvertisingOwnerList: 'advertising/getAdvertisingOwnerList'
@@ -301,6 +305,27 @@ export default {
         },
         toggleSearchField() {
             this.searchFieldVisible = !this.searchFieldVisible;
+        },
+        sortChangeHandler(obj) {
+            let {prop, order} = obj;
+            if (prop === 'createdAt') {
+                let sortedListByCreatedAt = [];
+                if (order === 'ascending') {
+                    sortedListByCreatedAt = _.chain(this.list).sortBy('createdAt').value();
+                } else {
+                    sortedListByCreatedAt = _.chain(this.list).sortBy('createdAt').reverse().value();
+                }
+                this.setList({list: sortedListByCreatedAt});
+            }
+            if (prop === 'updatedAt') {
+                let sortedListByCreatedAt = [];
+                if (order === 'ascending') {
+                    sortedListByCreatedAt = _.chain(this.list).sortBy('updatedAt').value();
+                } else {
+                    sortedListByCreatedAt = _.chain(this.list).sortBy('updatedAt').reverse().value();
+                }
+                this.setList({list: sortedListByCreatedAt});
+            }
         },
         deleteAdvertisingOwner(id) {
             console.log(id);

@@ -52,7 +52,7 @@
                     >
                     </el-input>
                 </el-form-item>
-                <el-form-item label="推流方式" prop="methods">
+                <el-form-item label="推流方式" prop="protocolList">
                     <el-checkbox :value="methodsChecked('HLS')" @change="methodsHandler($event, 'HLS')">HLS</el-checkbox>
                     <el-checkbox :value="methodsChecked('UDP')" @change="methodsHandler($event, 'UDP')">UDP</el-checkbox>
                 </el-form-item>
@@ -198,6 +198,9 @@ export default {
                 companyList: [
                     { required: true, message: '请选择所属区域' }
                 ],
+                protocolList: [
+                    { required: true, message: '请选择推流方式' }
+                ],
                 logoUri: [
                     { required: true, message: '请上传直播频道logo' }
                 ]
@@ -220,7 +223,7 @@ export default {
         },
         methodsChecked() {
             return (key) => {
-                let index = this.liveChannel.methods.findIndex((item) => item === key);
+                let index = this.liveChannel.protocolList.findIndex((item) => item === key);
                 return index > -1;
             };
         }
@@ -243,14 +246,14 @@ export default {
             this.updateLiveChannel({key, value});
         },
         methodsHandler(value, key) {
-            let methods = _.cloneDeep(this.liveChannel.methods);
+            let protocolList = _.cloneDeep(this.liveChannel.protocolList);
             if (value) {
-                methods.push(key);
+                protocolList.push(key);
             } else {
-                methods = methods.filter((item) => item !== key);
+                protocolList = protocolList.filter((item) => item !== key);
             }
-            methods = _.uniq(methods);
-            this.updateLiveChannel({key: 'methods', value: methods});
+            protocolList = _.uniq(protocolList);
+            this.updateLiveChannel({key: 'protocolList', value: protocolList});
         },
         methodsChangeHandler(value) {
             // console.log(value);

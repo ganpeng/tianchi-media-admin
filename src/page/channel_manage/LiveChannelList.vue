@@ -118,7 +118,28 @@
         <div class="tabel-field">
             <h2 class="content-title">频道列表</h2>
             <div class="table-operator-field clearfix">
-                <div class="float-left"></div>
+                <div class="float-left">
+                    <div v-show="isDisabled" class="my-disabled-dropdown">
+                        批量操作
+                        <i class="el-icon-arrow-down"></i>
+                    </div>
+                    <el-dropdown
+                        trigger="click"
+                        v-show="!isDisabled"
+                        class="my-dropdown">
+                        <span class="el-dropdown-link">
+                            批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>
+                                <span @click="multUpFrameChannelHandler">批量上架</span>
+                            </el-dropdown-item>
+                            <el-dropdown-item>
+                                <span @click="multLowerFrameChannelHandler">批量下架</span>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
                 <div class="float-right">
                     <el-button
                         class="btn-style-two contain-svg-icon"
@@ -146,7 +167,11 @@
                     </el-button>
                 </div>
             </div>
-            <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
+            <el-table
+                @select="selectHandler"
+                @select-all="selectAllHandler"
+                header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
+                <el-table-column type="selection" align="center"></el-table-column>
                 <el-table-column prop="code" align="center" width="120px" label="编号"></el-table-column>
                 <el-table-column prop="no" align="center" width="120px" label="展示编号"></el-table-column>
                 <el-table-column prop="innerName" align="center" min-width="120px" label="名称">
@@ -175,6 +200,11 @@
                 <el-table-column prop="recordIp" min-width="120px" align="center" label="录制IP"></el-table-column>
                 <el-table-column prop="recordPort" width="100px" align="center" label="录制端口"></el-table-column>
                 <el-table-column prop="pushServer" align="center" min-width="120px" label="服务器"></el-table-column>
+                <el-table-column align="center" width="120px" label="推流方式">
+                    <template slot-scope="scope">
+                        {{scope.row.protocolList ? scope.row.protocolList.join(', ') : ''}}
+                    </template>
+                </el-table-column>
                 <el-table-column align="center" width="60px" label="回看">
                     <template slot-scope="scope">
                         <span :class="[scope.row.record ? 'yes' : 'no']">
@@ -208,7 +238,7 @@
                         <div id="channel-operator" class="operator-btn-wrapper">
                             <el-dropdown
                                 trigger="click"
-                                class="my-dropdown">
+                                class="my-other-dropdown">
                                 <span class="el-dropdown-link">
                                     节目单<i class="el-icon-arrow-down el-icon--right"></i>
                                 </span>
@@ -223,7 +253,7 @@
                             </el-dropdown>
                             <span class="btn-text" @click="displayVideoPlayer(scope.row)">直播</span>
                             <span class="btn-text" @click="editLiveChannel(scope.row.id)">编辑</span>
-                            <span class="btn-text text-danger" @click="_deleteLiveChannel(scope.row.id)">删除</span>
+                            <span class="btn-text text-danger" @click="_deleteLiveChannel(scope.row)">删除</span>
                         </div>
                     </template>
                 </el-table-column>
@@ -243,6 +273,7 @@
 </template>
 <script>
     import {mapGetters, mapActions, mapMutations} from 'vuex';
+    import _ from 'lodash';
     import DisplayVideoDialog from '../../components/custom_components/custom/DisplayVideoDialog';
 
     const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
@@ -284,7 +315,8 @@
                     }
                 ],
                 status: 0,
-                searchFieldVisible: false
+                searchFieldVisible: false,
+                selectedChannelList: []
             };
         },
         created() {
@@ -312,6 +344,9 @@
                 } else {
                     return this.filialeList;
                 }
+            },
+            isDisabled() {
+                return this.selectedChannelList.length === 0;
             }
         },
         methods: {
@@ -398,26 +433,30 @@
                     this.getChannelList();
                 }
             },
-            _deleteLiveChannel(id) {
-                this.$confirm('此操作将删除该频道, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'error'
-                }).then(() => {
-                    this.deleteChannelById(id)
-                        .then(() => {
-                            this.$message({
-                                type: 'success',
-                                message: '删除成功'
-                            });
-                            this.getChannelList();
-                        });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
+            async _deleteLiveChannel(channel) {
+                try {
+                    let {id, visible} = channel;
+                    if (visible) {
+                        this.$message.warning('该频道为正常状态，暂时不能删除');
+                        return false;
+                    }
+                    let confirm = await this.$confirm('此操作将删除该频道, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
                     });
-                });
+                    if (confirm) {
+                        let res = await this.deleteChannelById(id);
+                        if (res && res.code === 0) {
+                            this.$message.success('删除成功');
+                            this.getChannelList();
+                        } else {
+                            this.$message.error(res.message);
+                        }
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
             },
             async _lowerFrameLiveChannel(channel) {
                 try {
@@ -484,12 +523,68 @@
             },
             toggleSearchField() {
                 this.searchFieldVisible = !this.searchFieldVisible;
+            },
+            selectHandler(list, row) {
+                let isSelected = list.findIndex((item) => item.id === row.id) >= 0;
+                if (isSelected) {
+                    this.selectedChannelList.push(row);
+                } else {
+                    this.selectedChannelList = this.selectedChannelList.filter((item) => item.id !== row.id);
+                }
+            },
+            selectAllHandler(list) {
+                if (list.length > 0) {
+                    this.selectedChannelList = _.uniqBy(this.selectedChannelList.concat(list), 'id');
+                } else {
+                    this.selectedChannelList = this.selectedChannelList.filter((item) => {
+                        let index = this.list.findIndex((programme) => {
+                            return programme.id === item.id;
+                        });
+                        return index < 0;
+                    });
+                }
+            },
+            async multUpFrameChannelHandler() {
+                let idList = this.selectedChannelList.map((item) => item.id);
+                let confirm = await this.$confirm(`您确定要上架所选频道吗, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    });
+                if (confirm) {
+                    let res = await this.$service.batchSetChannel({idList, visible: true});
+                    if (res && res.code === 0) {
+                        this.$message.success(`频道上架成功`);
+                        this.selectedChannelList = [];
+                        this.getChannelList();
+                    } else {
+                        this.$message.error('批量上架失败');
+                    }
+                }
+            },
+            async multLowerFrameChannelHandler() {
+                let idList = this.selectedChannelList.map((item) => item.id);
+                let confirm = await this.$confirm(`您确定要下架所选频道吗, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    });
+                if (confirm) {
+                    let res = await this.$service.batchSetChannel({idList, visible: true});
+                    if (res && res.code === 0) {
+                        this.$message.success(`频道下架成功`);
+                        this.selectedChannelList = [];
+                        this.getChannelList();
+                    } else {
+                        this.$message.error('批量上架失败');
+                    }
+                }
             }
         }
     };
 </script>
 <style scoped lang="scss">
-    .my-dropdown {
+    .my-other-dropdown {
         border: none;
         color: $mainColor;
         width: 70px;
@@ -498,11 +593,6 @@
         font-size: 14px;
         background: transparent;
     }
-
-    .el-dropdown-link {
-        color: $mainColor;
-    }
-
     .yes {
         color: $successColor;
     }
@@ -510,46 +600,14 @@
     .no {
         color: $dangerColor;
     }
-
-    .table-wrapper {
-        height: 500px;
-        overflow-y: scroll;
-    }
-
-    .file {
-        position: relative;
-        display: inline-block;
-        background: #409EFF;
-        border: 1px solid #409EFF;
-        border-radius: 3px;
-        font-size: 12px;
-        line-height: 34px;
-        padding: 0px 15px;
-        overflow: hidden;
-        color: #fff;
-        text-decoration: none;
-        text-indent: 0;
-    }
-
-    .file input {
-        position: absolute;
-        font-size: 100px;
-        right: 0;
-        top: 0;
-        width: 80px;
-        height: 34px;
-        opacity: 0;
-        cursor: pointer;
-    }
 </style>
-
 <style lang="scss">
-    #channel-operator {
-        .my-dropdown {
-            border: none;
-            width: 70px;
-            height: 18px;
-            line-height: 18px;
-        }
+#channel-operator {
+    .el-dropdown {
+        border: none;
+        width: 70px;
+        height: 18px;
+        line-height: 18px;
     }
+}
 </style>
