@@ -174,7 +174,7 @@
                 prop="adMaterialList"
                 label="广告主">
                 <template slot-scope="scope">
-                    <label>{{scope.row.adMaterialList | jsonJoin('advertiserName')}}</label>
+                    <label>{{scope.row.advertiserList | jsonJoin('name')}}</label>
                 </template>
             </el-table-column>
             <el-table-column

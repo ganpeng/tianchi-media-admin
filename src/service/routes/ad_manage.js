@@ -23,12 +23,12 @@ export const createAD = ({name, desc, adType, applyDateBegin, applyDateEnd, adMa
 
 /**
  * 获取广告主的资源列表
- * @param mediaType The type of resource, such as IMAGE、VIDEO.
+ * @param adType
  */
-export const getADOwnerResourceList = ({advertiserId, mediaType, pageNum, pageSize}) => {
+export const getADOwnerResourceList = ({advertiserId, adType, pageNum, pageSize}) => {
     const params = {
         advertiserId,
-        mediaType,
+        adType,
         pageNum: pageNum - 1,
         pageSize
     };

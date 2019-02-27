@@ -21,7 +21,6 @@
             return {
                 adInfo: {
                     adMaterialList: [],
-                    effectRangeTime: [],
                     adType: 'PROGRAMME_DETAIL'
                 }
             };

@@ -21,7 +21,6 @@
             return {
                 adInfo: {
                     adMaterialList: [],
-                    effectRangeTime: [],
                     adType: 'CHANNEL_SWITCH'
                 }
             };

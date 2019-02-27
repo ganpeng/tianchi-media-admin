@@ -30,16 +30,19 @@
             <el-form-item label="广告类型">
                 <label class="ad-category">{{status | getADCategory}}</label>
             </el-form-item>
-            <el-form-item label="起止时间" prop="effectRangeTime" required>
+            <el-form-item label="生效时间" prop="applyDateBegin" required>
                 <el-date-picker
-                    v-model="adInfo.effectRangeTime"
-                    type="datetimerange"
-                    clearable
-                    onPick="onPickTimeRange"
-                    value-format="timestamp"
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期">
+                    v-model="adInfo.applyDateBegin"
+                    :disabled="status.indexOf('EDIT') !== -1 && adInfo.visible && adInfo.adStatus === 'ACTIVE'"
+                    type="datetime"
+                    placeholder="选择日期时间">
+                </el-date-picker>
+            </el-form-item>
+            <el-form-item label="失效时间" prop="applyDateEnd" required>
+                <el-date-picker
+                    v-model="adInfo.applyDateEnd"
+                    type="datetime"
+                    placeholder="选择日期时间">
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="上下架">
@@ -96,7 +99,7 @@
                             <label>广告主</label>
                             <span>
                                 <div class="ad-owner"
-                                     v-for="(item,index) in adInfo.adMaterialList"
+                                     v-for="(item,index) in advertiserArray"
                                      :key="index">
                                       {{item.advertiserName}}
                                  </div>
@@ -118,10 +121,12 @@
             width="80%">
             <select-ad-video-resource
                 ref="selectADVideoResource"
+                :adType="adInfo.adType"
                 v-if="selectADResourceVisible && (status === 'CREATE_BOOT_AD' || status === 'EDIT_BOOT_AD')">
             </select-ad-video-resource>
             <select-ad-image-resource
                 ref="selectADImageResource"
+                :adType="adInfo.adType"
                 v-if="selectADResourceVisible && !(status === 'CREATE_BOOT_AD' || status === 'EDIT_BOOT_AD')">
             </select-ad-image-resource>
             <span slot="footer" class="dialog-footer">
@@ -206,11 +211,28 @@
                     callback();
                 }
             };
-            let checkEffectRangeTime = (rule, value, callback) => {
-                if (!value || this.$util.isEmpty(value[0])) {
-                    return callback(new Error('起止时间不能为空'));
-                } else if (!this.isStartTimeFit(value[0])) {
+            // 生效时间
+            let checkApplyDateBegin = (rule, value, callback) => {
+                if (!value || this.$util.isEmpty(value)) {
+                    return callback(new Error('生效时间不能为空'));
+                } else if (!this.isStartTimeFit(value) && !(this.status.indexOf('EDIT') !== -1 && this.adInfo.visible && this.adInfo.adStatus === 'ACTIVE')) {
                     return callback(new Error('最早时间应为当前小时+1'));
+                } else if (this.adInfo.applyDateEnd && this.adInfo.applyDateBegin >= this.adInfo.applyDateEnd) {
+                    return callback(new Error('生效时间应小于失效时间'));
+                } else if (this.adInfo.applyDateEnd && this.getConflictMessage(this.adInfo.applyDateBegin, this.adInfo.applyDateEnd)) {
+                    return callback(new Error(this.getConflictMessage(this.adInfo.applyDateBegin, this.adInfo.applyDateEnd)));
+                } else {
+                    callback();
+                }
+            };
+            // 失效时间
+            let checkApplyDateEnd = (rule, value, callback) => {
+                if (!value || this.$util.isEmpty(value)) {
+                    return callback(new Error('失效时间不能为空'));
+                } else if (this.adInfo.applyDateBegin && this.adInfo.applyDateBegin >= this.adInfo.applyDateEnd) {
+                    return callback(new Error('失效时间应大于生效时间'));
+                } else if (this.adInfo.applyDateBegin && this.getConflictMessage(this.adInfo.applyDateBegin, this.adInfo.applyDateEnd)) {
+                    return callback(new Error(this.getConflictMessage(this.adInfo.applyDateBegin, this.adInfo.applyDateEnd)));
                 } else {
                     callback();
                 }
@@ -256,13 +278,17 @@
                     desc: [
                         {validator: checkDesc, trigger: 'blur'}
                     ],
-                    effectRangeTime: [
-                        {validator: checkEffectRangeTime, trigger: 'blur'}
+                    applyDateBegin: [
+                        {validator: checkApplyDateBegin, trigger: 'blur'}
+                    ],
+                    applyDateEnd: [
+                        {validator: checkApplyDateEnd, trigger: 'blur'}
                     ],
                     adMaterialList: [
                         {validator: checkResource, trigger: 'change'}
                     ]
-                }
+                },
+                visibleTypeADList: []
             };
         },
         computed: {
@@ -272,14 +298,49 @@
                     size = size + parseInt(image.size);
                 });
                 return size;
+            },
+            advertiserArray: function () {
+                return _.uniqBy(this.adInfo.adMaterialList, 'advertiserName');
             }
         },
         mounted() {
             this.init();
         },
         methods: {
+            // 根据已上架的当前类型的广告列表检测当前设置是否有生效时间的冲突
+            getConflictMessage(begin, end) {
+                let beginTime = begin.getTime();
+                let endTime = end.getTime();
+                let conflictMessage = '';
+                // 创建广告创建时的检测
+                if (this.status.indexOf('CREATE') !== -1) {
+                    for (let i = 0; i < this.visibleTypeADList.length; i++) {
+                        if ((this.visibleTypeADList[i].applyDateBegin <= beginTime && beginTime <= this.visibleTypeADList[i].applyDateEnd) || (this.visibleTypeADList[i].applyDateBegin <= endTime && endTime <= this.visibleTypeADList[i].applyDateEnd)) {
+                            conflictMessage = '该广告的起止时间和以下广告存在冲突：广告名称：' + this.visibleTypeADList[i].name + ' 有效期：' + this.$util.formatDate(new Date(this.visibleTypeADList[i].applyDateBegin), 'yyyy-MM-DD HH:mm:SS') + '至' + this.$util.formatDate(new Date(this.visibleTypeADList[i].applyDateEnd), 'yyyy-MM-DD HH:mm:SS') + '，暂不能设置';
+                        }
+                    }
+                } else {
+                    //  检测广告编辑时的检测
+                    for (let i = 0; i < this.visibleTypeADList.length; i++) {
+                        if (this.adInfo.id !== this.visibleTypeADList[i].id && ((this.visibleTypeADList[i].applyDateBegin <= beginTime && beginTime <= this.visibleTypeADList[i].applyDateEnd) || (this.visibleTypeADList[i].applyDateBegin <= endTime && endTime <= this.visibleTypeADList[i].applyDateEnd))) {
+                            conflictMessage = '该广告的起止时间和以下广告存在冲突：广告名称：' + this.visibleTypeADList[i].name + ' 有效期：' + this.$util.formatDate(new Date(this.visibleTypeADList[i].applyDateBegin), 'yyyy-MM-DD HH:mm:SS') + '至' + this.$util.formatDate(new Date(this.visibleTypeADList[i].applyDateEnd), 'yyyy-MM-DD HH:mm:SS') + '，暂不能设置';
+                        }
+                    }
+                }
+                return conflictMessage;
+            },
             init() {
                 this.$util.toggleFixedBtnContainer();
+                this.$service.getADList({
+                    adType: this.adInfo.adType,
+                    visible: true,
+                    pageNum: 1,
+                    pageSize: 10000
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.visibleTypeADList = response.data.list;
+                    }
+                });
             },
             // 生效开始时间为最早当前时数+1
             isStartTimeFit(startTime) {
@@ -327,9 +388,6 @@
             operateAD() {
                 this.$refs['adInfo'].validate((valid) => {
                     if (valid) {
-                        // 设置生效时间
-                        this.adInfo.applyDateBegin = this.adInfo.effectRangeTime[0];
-                        this.adInfo.applyDateEnd = this.adInfo.effectRangeTime[1];
                         this.isLoading = true;
                         // 创建广告
                         if (this.status.indexOf('CREATE') !== -1) {

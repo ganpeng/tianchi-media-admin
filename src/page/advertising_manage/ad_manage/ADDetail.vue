@@ -80,12 +80,12 @@
                     <li>
                         <label>广告主</label>
                         <span>
-                                <div class="ad-owner"
-                                     v-for="(item,index) in adInfo.adMaterialList"
-                                     :key="index">
-                                      {{item.advertiserName}}
-                                 </div>
-                            </span>
+                            <div class="ad-owner"
+                                 v-for="(item,index) in adInfo.advertiserList"
+                                 :key="index">
+                                 {{item.name}}
+                            </div>
+                        </span>
                     </li>
                 </ul>
             </div>

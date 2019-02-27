@@ -38,6 +38,12 @@
 
     export default {
         name: 'SelectADImageResource',
+        props: {
+            adType: {
+                type: String,
+                default: ''
+            }
+        },
         data() {
             return {
                 selectedResourceIdList: [],
@@ -61,7 +67,7 @@
             getADResource() {
                 this.$service.getADOwnerResourceList({
                     advertiserId: this.adOwnerId,
-                    mediaType: 'IMAGE',
+                    adType: this.adType,
                     pageSize: 1000,
                     pageNum: 1
                 }).then(response => {
