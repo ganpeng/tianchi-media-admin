@@ -325,6 +325,8 @@
                             }
                         });
                     }
+                    // 设置protocolList
+                    this.channelList[i].protocolList = this.channelList[i].protocol.split('/');
                     // 设置是否为公共频道
                     this.channelList[i].common = this.channelList[i].publicChannel === '是';
                     // 设置区域码companyList，非公共频道对区域码不做处理
@@ -434,6 +436,12 @@
                 } else if (!this.$util.isPort(channel.multicastPort)) {
                     message = message + '请填写正确的端口号;';
                 }
+                // 推流方式
+                if (this.$util.isEmpty(channel.protocol)) {
+                    message = message + '请填写推流方式;';
+                } else if (this.isProtocolTypeExist(channel.protocol)) {
+                    message = message + '推流方式不存在;';
+                }
                 // 只有轮播频道含有tsId和serviceId
                 if (this.$route.params.category === 'CAROUSEL') {
                     // tsId
@@ -494,6 +502,17 @@
                     }
                 }
                 return true;
+            },
+            // 检测推流方式是否存在
+            isProtocolTypeExist(protocolType) {
+                let protocolList = protocolType.split('/');
+                let tag = true;
+                for (let i = 0; i < protocolList.length; i++) {
+                    if (protocolList[i] !== 'UDP' || protocolList[i] !== 'HLS') {
+                        tag = false;
+                    }
+                }
+                return tag;
             },
             // 检测区域码是否存在
             isCompanyExist(company) {

@@ -146,6 +146,7 @@
                                 multicastIp: channel.multicastIp,
                                 multicastPort: channel.multicastPort,
                                 pushServer: channel.pushServer,
+                                protocol: channel.protocolList ? channel.protocolList.join('/') : '',
                                 publicChannel: channel.common ? '是' : '否',
                                 company: company.slice(1)
                             };
@@ -235,6 +236,8 @@
                         }
                     });
                 }
+                // 设置protocolList
+                channelInfo.protocolList = channelInfo.protocol.split('/');
                 channelInfo.companyList = [];
                 // 设置companyList
                 let companyList = channelInfo.company.split('/');
@@ -283,6 +286,12 @@
                     message = message + '请填写频道类别;';
                 } else if (!this.isChannelTypeExist(channel.type)) {
                     message = message + '频道类别不存在;';
+                }
+                // 推流方式
+                if (this.$util.isEmpty(channel.protocol)) {
+                    message = message + '请填写推流方式;';
+                } else if (this.isProtocolTypeExist(channel.protocol)) {
+                    message = message + '推流方式不存在;';
                 }
                 // 是否为公共频道
                 if (channel.publicChannel !== '是' && channel.publicChannel !== '否') {
@@ -361,6 +370,17 @@
                     }
                 }
                 return true;
+            },
+            // 检测推流方式是否存在
+            isProtocolTypeExist(protocolType) {
+                let protocolList = protocolType.split('/');
+                let tag = true;
+                for (let i = 0; i < protocolList.length; i++) {
+                    if (protocolList[i] !== 'UDP' || protocolList[i] !== 'HLS') {
+                        tag = false;
+                    }
+                }
+                return tag;
             },
             // 检测区域码是否存在
             isCompanyExist(company) {
