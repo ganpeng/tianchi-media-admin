@@ -35,18 +35,17 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="推流方式">
+                <el-form-item label="公共频道">
                     <el-select
-                        v-model="listQueryParams.protocolList"
+                        v-model="listQueryParams.common"
                         @change="getChannelList(true)"
                         clearable
-                        multiple
                         placeholder="全部">
                         <el-option
-                            v-for="(item, index) in protocolOptions"
+                            v-for="(item, index) in commonOptions"
                             :key="index"
-                            :label="item"
-                            :value="item">
+                            :label="item.name"
+                            :value="item.value">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -73,6 +72,48 @@
                         重置
                     </el-button>
                 </el-form-item>
+                <el-form-item>
+                    <el-button
+                        type="text"
+                        @click="moreFilters = !moreFilters"
+                        class="more-filters"
+                        :class="{active:moreFilters}">
+                        更多筛选
+                        <i class="el-icon-arrow-up" v-if="moreFilters"></i>
+                        <i class="el-icon-arrow-down" v-else></i>
+                    </el-button>
+                </el-form-item>
+            </el-form>
+            <el-form :inline="true" class="more-filter-box filter-form" v-if="moreFilters">
+                <el-form-item label="区域码">
+                    <el-select
+                        v-model="listQueryParams.companyCode"
+                        @change="getChannelList(true)"
+                        clearable
+                        placeholder="全部">
+                        <el-option
+                            v-for="item in companyOptions"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.code">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="推流方式">
+                    <el-select
+                        v-model="listQueryParams.protocolList"
+                        @change="getChannelList(true)"
+                        clearable
+                        multiple
+                        placeholder="全部">
+                        <el-option
+                            v-for="(item, index) in protocolOptions"
+                            :key="index"
+                            :label="item"
+                            :value="item">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
             </el-form>
         </div>
     </div>
@@ -87,6 +128,8 @@
                 listQueryParams: {
                     category: 'CAROUSEL',
                     typeIdList: '',
+                    common: '',
+                    companyCode: '',
                     visible: '',
                     keyword: ''
                 },
@@ -98,7 +141,16 @@
                     value: false,
                     label: '禁播'
                 }],
-                typeOptions: []
+                commonOptions: [{
+                    value: true,
+                    name: '是'
+                }, {
+                    value: false,
+                    name: '否'
+                }],
+                companyOptions: [],
+                typeOptions: [],
+                moreFilters: false
             };
         },
         mounted() {
@@ -115,6 +167,12 @@
                 this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
                     if (response && response.code === 0) {
                         this.typeOptions = response.data;
+                    }
+                });
+                // 获取所属区域的数据
+                this.$service.getFilialeList().then(response => {
+                    if (response && response.code === 0) {
+                        this.companyOptions = response.data;
                     }
                 });
             },
