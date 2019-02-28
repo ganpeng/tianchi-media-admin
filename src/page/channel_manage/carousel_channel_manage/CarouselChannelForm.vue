@@ -46,24 +46,6 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="公共频道" prop="common" required>
-                {{channelInfo.common ? '是' : '否'}}
-            </el-form-item>
-            <el-form-item label="区域码" prop="companyCodeList" required>
-                <el-select
-                    v-model="channelInfo.companyCodeList"
-                    @change="setCompanies"
-                    multiple
-                    size="medium"
-                    placeholder="请选择区域码">
-                    <el-option
-                        v-for="item in companyOptions"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.code">
-                    </el-option>
-                </el-select>
-            </el-form-item>
             <el-form-item label="组播地址" prop="multicastIp" required>
                 <el-input
                     v-model="channelInfo.multicastIp"
@@ -126,6 +108,35 @@
                         :uploadSuccessHandler="uploadSuccessHandler">
                     </single-image-uploader>
                 </div>
+            </el-form-item>
+            <el-form-item label="公共频道" prop="common" required>
+                {{channelInfo.common ? '是' : '否'}}
+            </el-form-item>
+            <el-form-item label="区域码" prop="companyList" required>
+                <div class="my-tags">
+                    <el-tag
+                        :key="index"
+                        v-for="(item, index) in channelInfo.companyList"
+                        closable
+                        @close="removeCompany(item, index)"
+                        :disable-transitions="false">
+                        {{item.name}}
+                    </el-tag>
+                </div>
+                <el-autocomplete
+                    class="inline-input"
+                    v-model="channelInfo.company"
+                    :fetch-suggestions="querySearch"
+                    placeholder="请选择区域码"
+                    @select="setCompanies">
+                    <template slot-scope="{ item }">
+                        <div class="name">{{ item.name }}</div>
+                    </template>
+                    <i v-if="channelInfo.companyList.length !== 0"
+                       slot="suffix"
+                       @click="removeAllCompany"
+                       class="close-btn el-select__caret el-input__icon el-icon-circle-close is-show-close"></i>
+                </el-autocomplete>
             </el-form-item>
         </el-form>
         <div class="seperator-line"></div>
@@ -484,6 +495,7 @@
     import SelectMultipleVideo from './SelectMultipleVideo';
     import SortDialog from 'sysComponents/custom_components/custom/SortDialog';
     import {CHANNEL_LOGO_DIMENSION} from '@/util/config/dimension';
+    import _ from 'lodash';
 
     const ClipboardJS = require('clipboard');
 
@@ -539,8 +551,8 @@
                     callback();
                 }
             };
-            let checkCompanyCodeList = (rule, value, callback) => {
-                if (this.channelInfo.companyCodeList.length === 0) {
+            let checkCompanyList = (rule, value, callback) => {
+                if (this.channelInfo.companyList.length === 0) {
                     return callback(new Error('请选择区域码'));
                 } else {
                     callback();
@@ -602,6 +614,7 @@
                 }
             };
             return {
+                restaurants: [],
                 isLoading: false,
                 displayNameSettingVisible: false,
                 sortToolVisible: true,
@@ -621,7 +634,7 @@
                     category: 'CAROUSEL',
                     typeIdList: [],
                     common: false,
-                    companyCodeList: [],
+                    companyList: [],
                     protocolList: [],
                     multicastIp: '',
                     pushServer: '',
@@ -652,8 +665,8 @@
                     typeIdList: [
                         {validator: checkTypeIdList, trigger: 'change'}
                     ],
-                    companyCodeList: [
-                        {validator: checkCompanyCodeList, trigger: 'change'}
+                    companyList: [
+                        {validator: checkCompanyList, trigger: 'change'}
                     ],
                     multicastIp: [
                         {validator: checkMulticastIp, trigger: 'blur'}
@@ -691,6 +704,23 @@
             this.init();
         },
         methods: {
+            // 删除所有选中的区域码
+            removeAllCompany() {
+                this.channelInfo.companyList.splice(0);
+            },
+            // 删除区域码
+            removeCompany(company, index) {
+                this.channelInfo.companyList.splice(index, 1);
+            },
+            querySearch(queryString, cb) {
+                let results = queryString ? this.companyOptions.filter(this.createFilter(queryString)) : this.companyOptions;
+                cb(results);
+            },
+            createFilter(queryString) {
+                return (companyOptions) => {
+                    return (companyOptions.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+                };
+            },
             init() {
                 this.$util.toggleFixedBtnContainer();
                 this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
@@ -731,9 +761,6 @@
                         response.data.typeList.map(type => {
                             this.channelInfo.typeIdList.push(type.id);
                         });
-                        response.data.companyList.map(company => {
-                            this.channelInfo.companyCodeList.push(company.code);
-                        });
                         this.currentSelectedVideoList = response.data.carouselVideoList;
                         this.currentSelectedVideoList.map(video => {
                             if (video.onPlay) {
@@ -745,23 +772,26 @@
                 });
             },
             // 设置区域码，对全选进行处理
-            setCompanies() {
-                if (this.channelInfo.companyCodeList.length !== (this.companyOptions.length - 1)) {
-                    this.channelInfo.common = false;
-                } else {
+            setCompanies(item) {
+                // 对全选进行处理
+                if (item.name === '全选') {
+                    this.channelInfo.companyList.splice(0);
+                    this.companyOptions.map(company => {
+                        if (company.name !== '全选') {
+                            this.channelInfo.companyList.push(company);
+                        }
+                    });
                     this.channelInfo.common = true;
-                }
-                this.channelInfo.companyCodeList.map(companyCode => {
-                    if (companyCode === '0') {
-                        this.channelInfo.companyCodeList = [];
-                        this.companyOptions.map(companyOption => {
-                            if (companyOption.name !== '全选') {
-                                this.channelInfo.companyCodeList.push(companyOption.code);
-                            }
-                        });
+                } else {
+                    // 对非全选进行处理
+                    this.channelInfo.companyList.push({id: item.id, name: item.name, code: item.code});
+                    this.channelInfo.companyList = _.uniqBy(this.channelInfo.companyList, 'id');
+                    if (this.channelInfo.companyList.length !== (this.companyOptions.length - 1)) {
+                        this.channelInfo.common = false;
+                    } else {
                         this.channelInfo.common = true;
                     }
-                });
+                }
             },
             // 对关联的视频进行排序
             movePosition(model, video, index) {
@@ -1080,14 +1110,6 @@
                                 }
                             });
                         });
-                        this.channelInfo.companyList = [];
-                        this.channelInfo.companyCodeList.map(companyCode => {
-                            this.companyOptions.map(company => {
-                                if (companyCode === company.code) {
-                                    this.channelInfo.companyList.push(company);
-                                }
-                            });
-                        });
                         this.isLoading = true;
                         switch (this.status) {
                             case 'CREATE_CHANNEL':
@@ -1125,7 +1147,8 @@
                 this.$router.push({name: 'CarouselChannelList'});
             }
         }
-    };
+    }
+    ;
 </script>
 
 <style lang="scss" scoped>
@@ -1386,6 +1409,10 @@
         .el-checkbox {
             padding: 0;
         }
+    }
+
+    .my-tags {
+        width: 300px;
     }
 
 </style>

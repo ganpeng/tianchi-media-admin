@@ -565,6 +565,9 @@
             margin-right: 22px;
             margin-bottom: 80px;
             position: relative;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
             height: 100px;
             width: 170px;
             background: #2A3040;
