@@ -1050,7 +1050,7 @@
                     });
                     if (!tag) {
                         this.$message({
-                            message: '当前正常频道中不含能正常播放的视频，不能保存',
+                            message: '正常状态的频道内需含有非禁播状态的视频',
                             type: 'warning'
                         });
                         return;
