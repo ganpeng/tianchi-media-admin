@@ -229,7 +229,7 @@ export default {
         selectLink(squareIndex) {
             this.squareIndex = squareIndex;
             this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectLinkDialog.showDialog('Link');
+            this.$refs.selectLinkDialog.showDialog('LINK');
         },
         //  新增结束
         saveHandler() {

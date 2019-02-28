@@ -36,6 +36,7 @@
                             <el-form-item label="网页封面图" required>
                                 <single-image-uploader
                                     id="linkImageUploader"
+                                    :showDelete="false"
                                     :uri="layoutItem.coverImage ? layoutItem.coverImage.uri : ''"
                                     :uploadSuccessHandler="uploadLinkImageSuccessHandler"
                                     :allowResolutions="allowResolutions"
