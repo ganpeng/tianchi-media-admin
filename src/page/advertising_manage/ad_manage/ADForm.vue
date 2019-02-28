@@ -84,6 +84,7 @@
                         <div class="ad-image-container"
                              v-for="(item, index) in adInfo.adMaterialList"
                              :key="index"
+                             @click.self="displayImage(index)"
                              :style="{'background-image': 'url(' + item.storageUri + ')'}">
                             <i class="el-icon-circle-close" @click.stop="removeImageResource(item,index)"></i>
                             <div class="ad-desc">
@@ -140,6 +141,9 @@
             :displayVideoDialogVisible="displayVideoDialogVisible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
+        <preview-multiple-images
+            :previewMultipleImages="previewImage">
+        </preview-multiple-images>
     </div>
 </template>
 
@@ -147,6 +151,7 @@
     import SelectAdImageResource from './SelectADImageResource';
     import SelectAdVideoResource from './SelectADVideoResource';
     import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
+    import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import _ from 'lodash';
 
     export default {
@@ -154,7 +159,8 @@
         components: {
             SelectAdImageResource,
             SelectAdVideoResource,
-            DisplayVideoDialog
+            DisplayVideoDialog,
+            PreviewMultipleImages
         },
         /* status: 'CREATE_BOOT_AD'代表创建开机广告 */
         props: {
@@ -288,7 +294,13 @@
                         {validator: checkResource, trigger: 'change'}
                     ]
                 },
-                visibleTypeADList: []
+                visibleTypeADList: [],
+                previewImage: {
+                    display: false,
+                    autoplay: false,
+                    activeIndex: 0,
+                    list: []
+                }
             };
         },
         computed: {
@@ -309,8 +321,8 @@
         methods: {
             // 根据已上架的当前类型的广告列表检测当前设置是否有生效时间的冲突
             getConflictMessage(begin, end) {
-                let beginTime = begin.getTime();
-                let endTime = end.getTime();
+                let beginTime = begin instanceof Date ? begin.getTime() : begin;
+                let endTime = end instanceof Date ? end.getTime() : end;
                 let conflictMessage = '';
                 // 创建广告创建时的检测
                 if (this.status.indexOf('CREATE') !== -1) {
@@ -419,6 +431,15 @@
             },
             closeDisplayVideoDialog(status) {
                 this.displayVideoDialogVisible = status;
+            },
+            // 放大预览图片
+            displayImage(index) {
+                this.previewImage.display = true;
+                for (let i = 0; i < this.adInfo.adMaterialList.length; i++) {
+                    this.adInfo.adMaterialList[i].uri = this.adInfo.adMaterialList[i].storageUri;
+                }
+                this.previewImage.list = this.adInfo.adMaterialList;
+                this.previewImage.activeIndex = index;
             }
         }
     };
@@ -502,7 +523,7 @@
         }
         ul {
             display: inline-block;
-            margin-top: 80px;
+            margin-top: 100px;
             padding-right: 25px;
             height: 100px;
             min-width: 170px;

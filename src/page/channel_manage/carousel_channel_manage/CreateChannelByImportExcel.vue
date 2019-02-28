@@ -149,6 +149,8 @@
                         '（必填）',
                         pushServer: '所属服务器\n' +
                         '（必填）',
+                        protocol: '推流方式\n' +
+                        '（必填,支持多选，/隔开）',
                         publicChannel: '是否为公共频道\n' +
                         '（必填）',
                         company: '所属区域码，多个用/隔开',
@@ -168,6 +170,7 @@
                         multicastIp: '232.1.1.2',
                         multicastPort: '1234',
                         pushServer: '192.168.0.2',
+                        protocol: 'HLS/UDP',
                         publicChannel: '否',
                         company: '073/099/3004',
                         logoUri: '/image',
@@ -183,6 +186,7 @@
                         multicastIp: '232.1.1.3',
                         multicastPort: '1234',
                         pushServer: '192.168.0.3',
+                        protocol: 'HLS',
                         publicChannel: '是',
                         company: '若为公共频道，则这里无需填写',
                         logoUri: '/image',
@@ -196,6 +200,7 @@
                         multicastIp: '',
                         multicastPort: '',
                         pushServer: '',
+                        protocol: '',
                         logoUri: '',
                         '备注说明': ''
                     }];
@@ -215,6 +220,8 @@
                         serviceId: 'serviceId',
                         pushServer: '所属服务器\n' +
                         '（必填）',
+                        protocol: '推流方式\n' +
+                        '（必填,支持多选，/隔开）',
                         publicChannel: '是否为公共频道\n' +
                         '（必填）',
                         company: '所属区域码，多个用/隔开',
@@ -234,6 +241,7 @@
                         tsId: '202',
                         serviceId: '2002',
                         pushServer: '192.168.0.2',
+                        protocol: 'HLS/UDP',
                         publicChannel: '否',
                         company: '073/099/3004',
                         logoUri: '/image',
@@ -248,6 +256,7 @@
                         tsId: '203',
                         serviceId: '2003',
                         pushServer: '192.168.0.3',
+                        protocol: 'HLS',
                         publicChannel: '是',
                         company: '若为公共频道，则这里无需填写',
                         logoUri: '/image',

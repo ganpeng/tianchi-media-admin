@@ -61,6 +61,16 @@
             prop="multicastPort"
             label="端口号">
         </el-table-column>
+        <el-table-column
+            align="center"
+            min-width="80px"
+            prop="protocolList"
+            label="推流方式">
+            <template slot-scope="scope">
+                <label class="protocol-type" v-for="(item, index) in scope.row.protocolList"
+                       :key="index">{{item}}</label>
+            </template>
+        </el-table-column>
         <!--tsId-->
         <el-table-column
             align="center"
@@ -261,5 +271,11 @@
 </script>
 
 <style lang="scss" scoped>
+
+    .protocol-type {
+        &:nth-child(2) {
+            margin-left: 6px;
+        }
+    }
 
 </style>

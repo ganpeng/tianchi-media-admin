@@ -35,6 +35,21 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="推流方式">
+                    <el-select
+                        v-model="listQueryParams.protocolList"
+                        @change="getChannelList(true)"
+                        clearable
+                        multiple
+                        placeholder="全部">
+                        <el-option
+                            v-for="(item, index) in protocolOptions"
+                            :key="index"
+                            :label="item"
+                            :value="item">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="状态">
                     <el-select
                         v-model="listQueryParams.visible"
@@ -75,6 +90,7 @@
                     visible: '',
                     keyword: ''
                 },
+                protocolOptions: ['UDP', 'HLS'],
                 visibleOptions: [{
                     value: true,
                     label: '正常'

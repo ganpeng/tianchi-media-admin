@@ -1,6 +1,7 @@
 <!--广告管理-广告列表（包含开机、屏保、音量条、详情页广告）组件-->
 <template>
     <div>
+        <div class="content-title">搜索筛选</div>
         <div class="subject-search-container">
             <div @keyup.enter="getADList" class="text-left filters-container">
                 <el-form :inline="true" class="filter-form">

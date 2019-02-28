@@ -79,6 +79,12 @@
                     placeholder="请填写端口号">
                 </el-input>
             </el-form-item>
+            <el-form-item label="推流方式" prop="protocolList" required>
+                <el-checkbox-group v-model="channelInfo.protocolList">
+                    <el-checkbox label="HLS"></el-checkbox>
+                    <el-checkbox label="UDP"></el-checkbox>
+                </el-checkbox-group>
+            </el-form-item>
             <el-form-item label="tsID" prop="tsId">
                 <el-input
                     v-model="channelInfo.tsId"
@@ -102,7 +108,10 @@
                     placeholder="请填写所属服务器的IP地址">
                 </el-input>
             </el-form-item>
-            <el-form-item label="状态" prop="visible" required>
+            <el-form-item label="状态" prop="visible" required v-if="status === 'CREATE_CHANNEL'">
+                <label>禁播</label>
+            </el-form-item>
+            <el-form-item label="状态" prop="visible" required v-if="status === 'EDIT_CHANNEL'">
                 <el-radio-group v-model="channelInfo.visible">
                     <el-radio :label="true">正常</el-radio>
                     <el-radio :label="false">禁播</el-radio>
@@ -556,6 +565,13 @@
                     callback();
                 }
             };
+            let checkProtocolList = (rule, value, callback) => {
+                if (value.length === 0) {
+                    return callback(new Error('请勾选推流方式'));
+                } else {
+                    callback();
+                }
+            };
             let checkServiceId = (rule, value, callback) => {
                 if (!this.$util.isEmpty(value) && !this.$util.isChannelServiceId(value)) {
                     return callback(new Error('请填写正确的serviceId'));
@@ -606,9 +622,10 @@
                     typeIdList: [],
                     common: false,
                     companyCodeList: [],
+                    protocolList: [],
                     multicastIp: '',
                     pushServer: '',
-                    visible: '',
+                    visible: false,
                     logoUri: ''
                 },
                 sectionList: [{name: ''}],
@@ -643,6 +660,9 @@
                     ],
                     multicastPort: [
                         {validator: checkMulticastPort, trigger: 'blur'}
+                    ],
+                    protocolList: [
+                        {validator: checkProtocolList, trigger: 'change'}
                     ],
                     tsId: [
                         {validator: checkTsId, trigger: 'blur'}
@@ -702,7 +722,11 @@
                 this.$service.getChannelDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         for (let key in response.data) {
-                            this.channelInfo[key] = response.data[key];
+                            if (!response.data.protocolList) {
+                                this.channelInfo.protocolList = [];
+                            } else {
+                                this.channelInfo[key] = response.data[key];
+                            }
                         }
                         response.data.typeList.map(type => {
                             this.channelInfo.typeIdList.push(type.id);
@@ -1069,7 +1093,7 @@
                             case 'CREATE_CHANNEL':
                                 this.$service.createChannels(this.channelInfo).then(response => {
                                     if (response && response.code === 0) {
-                                        this.$message('成功创建频道');
+                                        this.$message.success('成功创建频道');
                                         this.toChannelList();
                                     } else {
                                         this.isLoading = false;
@@ -1356,6 +1380,12 @@
     .svg-icon-video {
         height: 15px !important;
         width: 20px !important;
+    }
+
+    .el-checkbox-group {
+        .el-checkbox {
+            padding: 0;
+        }
     }
 
 </style>

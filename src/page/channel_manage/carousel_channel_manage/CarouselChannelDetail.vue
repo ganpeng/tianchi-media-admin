@@ -33,6 +33,14 @@
                         <li><span>tsID：</span><label>{{channelInfo.tsId ? channelInfo.tsId : '无' }}</label></li>
                         <li><span>serviceID：</span><label>{{channelInfo.serviceId ? channelInfo.serviceId :'无'}}</label>
                         </li>
+                        <li><span>推流方式：</span>
+                            <label
+                                class="protocol-type"
+                                v-for="(item,index) in channelInfo.protocolList"
+                                :key="index">
+                                {{item}}
+                            </label>
+                        </li>
                     </ul>
                 </div>
                 <ul class="info-list right-info">
@@ -169,7 +177,7 @@
             </el-table-column>
         </el-table>
         <div class="fixed-btn-container">
-            <el-button class="btn-style-two" type="primary" @click="editInfo">保存</el-button>
+            <el-button class="btn-style-two" type="primary" @click="editInfo">编辑</el-button>
             <el-button class="btn-style-three" @click="toChannelList" plain>返回列表</el-button>
         </div>
         <display-video-dialog
@@ -389,6 +397,9 @@
                         display: inline-block;
                         font-size: 16px;
                         color: #A8ABB3;
+                        &.protocol-type {
+                            margin-right: 10px;
+                        }
                         &.on-play {
                             padding: 6px 8px;
                             font-size: 12px;

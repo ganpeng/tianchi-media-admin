@@ -67,6 +67,7 @@
                     <div class="ad-image-container"
                          v-for="(item, index) in adInfo.adMaterialList"
                          :key="index"
+                         @click.self="displayImage(index)"
                          :style="{'background-image': 'url(' + item.storageUri + ')'}">
                         <div class="ad-desc">
                             <div>{{item.width}}*{{item.height}}</div>
@@ -101,16 +102,21 @@
             :displayVideoDialogVisible="displayVideoDialogVisible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
+        <preview-multiple-images
+            :previewMultipleImages="previewImage">
+        </preview-multiple-images>
     </div>
 </template>
 
 <script>
     import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
+    import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
 
     export default {
         name: 'ADDetail',
         components: {
-            DisplayVideoDialog
+            DisplayVideoDialog,
+            PreviewMultipleImages
         },
         data() {
             return {
@@ -119,6 +125,12 @@
                 displayVideoDialogVisible: false,
                 adInfo: {
                     adMaterialList: []
+                },
+                previewImage: {
+                    display: false,
+                    autoplay: false,
+                    activeIndex: 0,
+                    list: []
                 }
             };
         },
@@ -185,6 +197,15 @@
             },
             closeDisplayVideoDialog(status) {
                 this.displayVideoDialogVisible = status;
+            },
+            // 放大预览图片
+            displayImage(index) {
+                this.previewImage.display = true;
+                for (let i = 0; i < this.adInfo.adMaterialList.length; i++) {
+                    this.adInfo.adMaterialList[i].uri = this.adInfo.adMaterialList[i].storageUri;
+                }
+                this.previewImage.list = this.adInfo.adMaterialList;
+                this.previewImage.activeIndex = index;
             }
         }
     };
@@ -333,7 +354,7 @@
         }
         ul {
             display: inline-block;
-            margin-top: 80px;
+            margin-top: 100px;
             padding-right: 25px;
             height: 100px;
             min-width: 170px;
