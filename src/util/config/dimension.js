@@ -210,8 +210,10 @@ export const PROGRAMME_SUBJECT_DIMENSION = [
  */
 export const CORNER_MARK_DIMENSION = [
     {
-        width: 125,
-        height: 99,
+        // width: 125,
+        // height: 99,
+        width: 124,
+        height: 98,
         styleName: '大角标'
     },
     {
