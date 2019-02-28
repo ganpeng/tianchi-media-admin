@@ -67,7 +67,7 @@
                     <el-table-column prop="type" min-width="120px" align="center" label="广告类型">
                         <template slot-scope="scope">
                             <span class="ellipsis two">
-                                {{scope.row.adType}}
+                                {{adTypeName(scope.row.adType)}}
                             </span>
                         </template>
                     </el-table-column>
@@ -103,7 +103,7 @@
                     <el-table-column prop="type" min-width="120px" align="center" label="状态">
                         <template slot-scope="scope">
                             <span class="ellipsis two">
-                                {{scope.row.adStatus}}
+                                {{adStatusName(scope.row.adStatus)}}
                             </span>
                         </template>
                     </el-table-column>
@@ -145,7 +145,9 @@
 </template>
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex';
+import _ from 'lodash';
 import WithVideoThumbnail from './WithVideoThumbnail';
+import role from '../../../util/config/role';
 export default {
     name: 'DisplayAdvertisingOwner',
     components: {WithVideoThumbnail},
@@ -164,6 +166,20 @@ export default {
                 item.uri = item.storageUri;
                 return item;
             });
+        },
+        adTypeName() {
+            return (value) => {
+                let adType = role.AD_TYPE_OPTIONS.find((item) => item.value === value);
+                console.log(adType);
+                return _.get(adType, 'name');
+            };
+        },
+        adStatusName() {
+            return (value) => {
+                let adStatus = role.AD_STATUS_OPTIONS.find((item) => item.value === value);
+                console.log(adStatus);
+                return _.get(adStatus, 'name');
+            };
         }
     },
     methods: {

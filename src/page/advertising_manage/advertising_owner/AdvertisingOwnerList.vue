@@ -190,33 +190,13 @@
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
+import role from '../../../util/config/role';
 export default {
     name: 'AdvertisingOwnerList',
     data() {
         return {
             searchFieldVisible: false,
-            adTypeOptions: [
-                {
-                    name: '开机广告',
-                    value: 'BOOT'
-                },
-                {
-                    name: '屏保广告',
-                    value: 'SCREEN_SAVER'
-                },
-                {
-                    name: '换台广告',
-                    value: 'CHANNEL_SWITCH'
-                },
-                {
-                    name: '音量条广告',
-                    value: 'VOLUME'
-                },
-                {
-                    name: '详情页广告',
-                    value: 'PROGRAMME_DETAIL'
-                }
-            ],
+            adTypeOptions: role.AD_TYPE_OPTIONS,
             adVisibleOptions: [
                 {
                     name: '上架',
@@ -227,20 +207,7 @@ export default {
                     value: false
                 }
             ],
-            adStatusOptions: [
-                {
-                    name: '已失效',
-                    value: 'EXPIRED'
-                },
-                {
-                    name: '生效中',
-                    value: 'ACTIVE'
-                },
-                {
-                    name: '待生效',
-                    value: 'WAITING'
-                }
-            ],
+            adStatusOptions: role.AD_STATUS_OPTIONS,
             mediaTypeOptions: [
                 {
                     name: '视频',

@@ -133,7 +133,9 @@
                         </el-tag>
                     </div>
                     <area-code-search
+                        :showDeleteBtn="liveChannel.companyList.length > 0"
                         :handleSelect="selectAreaCodeHandler"
+                        :clearHandler="clearCompanyListHandler"
                     ></area-code-search>
                 </el-form-item>
             </el-form>
@@ -285,6 +287,9 @@ export default {
             if (_prop.length > 0) {
                 this.$refs.liveChannelForm.clearValidate(prop);
             }
+        },
+        clearCompanyListHandler() {
+            this.updateLiveChannel({key: 'companyList', value: []});
         }
     }
 };

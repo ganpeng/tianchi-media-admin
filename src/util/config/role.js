@@ -791,6 +791,44 @@ const PROGRAMME_ALLOW_PICTURE_DIMENSIONS = [
     }
 ];
 
+const AD_TYPE_OPTIONS = [
+    {
+        name: '开机广告',
+        value: 'BOOT'
+    },
+    {
+        name: '屏保广告',
+        value: 'SCREEN_SAVER'
+    },
+    {
+        name: '换台广告',
+        value: 'CHANNEL_SWITCH'
+    },
+    {
+        name: '音量条广告',
+        value: 'VOLUME'
+    },
+    {
+        name: '详情页广告',
+        value: 'PROGRAMME_DETAIL'
+    }
+];
+
+const AD_STATUS_OPTIONS = [
+    {
+        name: '已失效',
+        value: 'EXPIRED'
+    },
+    {
+        name: '生效中',
+        value: 'ACTIVE'
+    },
+    {
+        name: '待生效',
+        value: 'WAITING'
+    }
+];
+
 //  推荐专题（背景渲染） SUBJECT,
 // 推荐节目PROGRAMME PROGRAMME,
 //  节目列表页面 PROGRAMME_LIST,
@@ -863,5 +901,8 @@ export default {
     ASIDE_LIST,
     LAYOUT_TEMPLATE_LIST,
     VIDEO_SUFFIX_OPTIONS,
-    PROGRAMME_ALLOW_PICTURE_DIMENSIONS
+    PROGRAMME_ALLOW_PICTURE_DIMENSIONS,
+//  广告相关
+    AD_TYPE_OPTIONS,
+    AD_STATUS_OPTIONS
 };

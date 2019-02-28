@@ -5,14 +5,24 @@
         value-key="name"
         placeholder="请输入内容"
         @select="selectHandler"
-    ></el-autocomplete>
+    >
+        <i v-if="showDeleteBtn" slot="suffix" @click="clearHandler" class="close-btn el-select__caret el-input__icon el-icon-circle-close is-show-close"></i>
+    </el-autocomplete>
 </template>
 <script>
 import {mapGetters} from 'vuex';
 export default {
     name: 'ChannelTypeSearch',
     props: {
+        showDeleteBtn: {
+            type: Boolean,
+            default: false
+        },
         handleSelect: {
+            type: Function,
+            default: () => {}
+        },
+        clearHandler: {
             type: Function,
             default: () => {}
         }
@@ -47,4 +57,8 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.close-btn {
+    color: #909399;
+    cursor: pointer;
+}
 </style>
