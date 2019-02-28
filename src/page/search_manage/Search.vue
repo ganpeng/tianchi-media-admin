@@ -3,12 +3,12 @@
         <h2 class="content-title">搜索管理</h2>
         <div class="seperator-line"></div>
         <div class="btn-wrapper">
+            <el-button v-if="list.length === 0" class="btn-style-two" type="primary" @click="initData">初始化</el-button>
             <el-button class="btn-style-two" type="primary" @click="toggleEditHandler">
                 {{isEdit ? '完成' : '编辑'}}
             </el-button>
         </div>
         <p class="tips"><i>*</i>每条不超过10个字</p>
-        <!-- <ul class="search-list clearfix"> -->
         <draggable element="ul" class="search-list clearfix" v-model="list">
             <li v-for="(item, index) in list" :key="index" :class="['search-item', isEdit && item.focus ? 'is-active' : '']">
                 <div class="wrapper">
@@ -26,7 +26,6 @@
                 </div>
             </li>
         </draggable>
-        <!-- </ul> -->
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="saveSearchHandler">保存</el-button>
         </div>
@@ -34,6 +33,7 @@
 </template>
 <script>
 import draggable from 'vuedraggable';
+import _ from 'lodash';
 export default {
     name: 'Search',
     components: {
@@ -57,6 +57,15 @@ export default {
         this.$util.toggleFixedBtnContainer();
     },
     methods: {
+        initData() {
+            let list = _.times(20, (index) => {
+                return {
+                    name: '',
+                    focus: false
+                };
+            });
+            this.list = list;
+        },
         searchItemChangeHandler(e, index) {
             let _index = this.list.findIndex((item) => {
                 return item.name === e.target.value;
