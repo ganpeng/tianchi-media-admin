@@ -414,7 +414,7 @@ export default {
                     .wrapper {
                         flex: 1;
                         &:first-child {
-                            margin-right: 4%;
+                            margin-right: 2%;
                         }
                         .top-right-top-left-field,
                         .top-right-top-right-field,
