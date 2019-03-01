@@ -39,6 +39,7 @@
                             </el-button>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="PROGRAMME">筛选</el-dropdown-item>
+                                <el-dropdown-item command="LINK">网页</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -56,6 +57,12 @@
             :allowResolutions="allowResolutions"
             ref="selectFilterDialog">
         </edit-filter>
+        <!-- 新增部分 -->
+        <link-dialog
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectLinkDialog">
+        ></link-dialog>
     </div>
 </template>
 <script>
@@ -63,11 +70,14 @@ import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
 import EditFilter from '../add_edit_module/EditFilter';
 import CornerMark from '../CornerMark';
+//  新增部分
+import LinkDialog from '../add_edit_module/LinkDialog';
 export default {
     name: 'Mixedsn',
     components: {
         EditFilter,
-        CornerMark
+        CornerMark,
+        LinkDialog
     },
     props: {
         item: {
@@ -128,7 +138,11 @@ export default {
         editFilterLayout(command, squareIndex) {
             this.isAdd = false;
             this.squareIndex = squareIndex;
-            this.$refs.selectFilterDialog.showDialog();
+            if (command === 'LINK') {
+                this.$refs.selectLinkDialog.showDialog(command);
+            } else {
+                this.$refs.selectFilterDialog.showDialog();
+            }
         },
         addLayout(type) {
             let {navbarId} = this.$route.params;

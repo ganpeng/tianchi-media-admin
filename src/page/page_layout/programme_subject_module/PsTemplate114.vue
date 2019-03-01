@@ -185,7 +185,7 @@ export default {
                 this.layoutItemType = layoutItemType;
                 switch (squareIndex) {
                     case 0:
-                        this.allowResolutions = [{width: 560, height: 730}];
+                        this.allowResolutions = [{width: 560, height: 720}];
                         break;
                     case 1:
                         this.allowResolutions = [{width: 1160, height: 300}];
