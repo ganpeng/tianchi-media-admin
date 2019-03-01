@@ -1,138 +1,152 @@
 <!--轮播频道列表项组件-->
 <template>
-    <el-table
-        :data="channelList"
-        header-row-class-name="common-table-header"
-        row-class-name=channel-row
-        @row-dblclick="showChannelVideoMessage"
-        @selection-change="handleSelectionChange"
-        border
-        style="width: 100%">
-        <el-table-column
-            type="selection"
-            align="center"
-            width="60">
-        </el-table-column>
-        <el-table-column
-            prop="no"
-            width="60px"
-            align="center"
-            label="编号">
-        </el-table-column>
-        <el-table-column
-            prop="name"
-            min-width="140px"
-            align="center"
-            label="名称">
-            <template slot-scope="scope">
+    <div>
+        <el-table
+            :data="channelList"
+            header-row-class-name="common-table-header"
+            row-class-name=channel-row
+            @row-dblclick="showChannelVideoMessage"
+            @selection-change="handleSelectionChange"
+            border
+            style="width: 100%">
+            <el-table-column
+                type="selection"
+                align="center"
+                width="60">
+            </el-table-column>
+            <el-table-column
+                prop="no"
+                width="60px"
+                align="center"
+                label="编号">
+            </el-table-column>
+            <el-table-column
+                prop="name"
+                min-width="140px"
+                align="center"
+                label="名称">
+                <template slot-scope="scope">
                 <span @click="toChannelDetail(scope.row)" class="ellipsis four name">
                     {{scope.row.name}}
                 </span>
-            </template>
-        </el-table-column>
-        <el-table-column
-            prop="innerName"
-            min-width="140px"
-            align="center"
-            label="别名">
-            <template slot-scope="scope">
+                </template>
+            </el-table-column>
+            <el-table-column
+                prop="innerName"
+                min-width="140px"
+                align="center"
+                label="别名">
+                <template slot-scope="scope">
                 <span @click="toChannelDetail(scope.row)" class="ellipsis four name">
                 {{scope.row.innerName}}
                 </span>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            min-width="140px"
-            label="类别">
-            <template slot-scope="scope">
-                <label>{{scope.row.typeList | jsonJoin('name')}}</label>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            min-width="120px"
-            prop="multicastIp"
-            label="组播地址">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            min-width="80px"
-            prop="multicastPort"
-            label="端口号">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            min-width="80px"
-            prop="protocolList"
-            label="推流方式">
-            <template slot-scope="scope">
-                <label class="protocol-type" v-for="(item, index) in scope.row.protocolList"
-                       :key="index">{{item}}</label>
-            </template>
-        </el-table-column>
-        <!--tsId-->
-        <el-table-column
-            align="center"
-            min-width="110px"
-            prop="tsId"
-            label="tsID">
-            <template slot-scope="scope">
-                <label>{{scope.row.tsId ? scope.row.tsId : '------'}}</label>
-            </template>
-        </el-table-column>
-        <!--serviceId-->
-        <el-table-column
-            align="center"
-            min-width="120px"
-            prop="serviceId"
-            label="serviceID">
-            <template slot-scope="scope">
-                <label>{{scope.row.serviceId ? scope.row.serviceId : '------'}}</label>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            min-width="180px"
-            prop="pushServer"
-            label="所属服务器">
-            <template slot-scope="scope">
-                <label>{{scope.row.pushServer ? scope.row.pushServer : '------'}}</label>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            min-width="100px"
-            label="状态">
-            <template slot-scope="scope">
-                <input
-                    class="my-switch switch-anim"
-                    type="checkbox"
-                    v-model="scope.row.visible"
-                    :checked="scope.row.visible"
-                    @click.prevent="updateChannelStatus(scope.row)"/>
-                <i v-if="scope.row.visible" class="on-the-shelf">正常</i>
-                <i v-else class="off-the-shelf">禁播</i>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            width="110px"
-            label="操作"
-            class="operate">
-            <template slot-scope="scope">
-                <div class="operator-btn-wrapper">
-                    <span class="btn-text" @click="editChannelInfo(scope.row)">编辑</span>
-                    <span class="btn-text text-danger" @click="removeChannel(scope.row)">删除</span>
-                </div>
-            </template>
-        </el-table-column>
-    </el-table>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="140px"
+                label="类别">
+                <template slot-scope="scope">
+                    <label>{{scope.row.typeList | jsonJoin('name')}}</label>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="120px"
+                prop="multicastIp"
+                label="组播地址">
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="80px"
+                prop="multicastPort"
+                label="端口号">
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="80px"
+                prop="protocolList"
+                label="推流方式">
+                <template slot-scope="scope">
+                    <label class="protocol-type" v-for="(item, index) in scope.row.protocolList"
+                           :key="index">{{item}}</label>
+                </template>
+            </el-table-column>
+            <!--tsId-->
+            <el-table-column
+                align="center"
+                min-width="110px"
+                prop="tsId"
+                label="tsID">
+                <template slot-scope="scope">
+                    <label>{{scope.row.tsId ? scope.row.tsId : '------'}}</label>
+                </template>
+            </el-table-column>
+            <!--serviceId-->
+            <el-table-column
+                align="center"
+                min-width="120px"
+                prop="serviceId"
+                label="serviceID">
+                <template slot-scope="scope">
+                    <label>{{scope.row.serviceId ? scope.row.serviceId : '------'}}</label>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="180px"
+                prop="pushServer"
+                label="所属服务器">
+                <template slot-scope="scope">
+                    <label>{{scope.row.pushServer ? scope.row.pushServer : '------'}}</label>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="100px"
+                label="状态">
+                <template slot-scope="scope">
+                    <input
+                        class="my-switch switch-anim"
+                        type="checkbox"
+                        v-model="scope.row.visible"
+                        :checked="scope.row.visible"
+                        @click.prevent="updateChannelStatus(scope.row)"/>
+                    <i v-if="scope.row.visible" class="on-the-shelf">正常</i>
+                    <i v-else class="off-the-shelf">禁播</i>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                width="110px"
+                label="操作"
+                class="operate">
+                <template slot-scope="scope">
+                    <div class="operator-btn-wrapper">
+                        <span class="btn-text" @click="previewChannel(scope.row)">轮播</span>
+                        <span class="btn-text" @click="editChannelInfo(scope.row)">编辑</span>
+                        <span class="btn-text text-danger" @click="removeChannel(scope.row)">删除</span>
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
+        <display-video-dialog
+            :url="previewVideoInfo.url"
+            :title="previewVideoInfo.title"
+            :displayVideoDialogVisible="previewVideoInfo.visible"
+            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
+        </display-video-dialog>
+    </div>
 </template>
 
 <script>
+    import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
+
     export default {
         name: 'CarouselChannelOperateTable',
+        components: {
+            DisplayVideoDialog
+        },
         props: {
             channelList: {
                 type: Array,
@@ -143,10 +157,28 @@
         },
         data() {
             return {
-                multipleSelection: []
+                multipleSelection: [],
+                previewVideoInfo: {
+                    url: '',
+                    title: '',
+                    visible: false
+                }
             };
         },
         methods: {
+            previewChannel(channel) {
+                if (!channel.hlsPlayUrl) {
+                    this.$message.warning('当前轮播链接不存在');
+                    return;
+                }
+                this.previewVideoInfo.url = channel.hlsPlayUrl;
+                this.previewVideoInfo.title = channel.name;
+                this.previewVideoInfo.visible = true;
+            },
+            // 关闭视频预览
+            closeDisplayVideoDialog(status) {
+                this.previewVideoInfo.visible = status;
+            },
             showChannelVideoMessage(row) {
                 this.$service.getChannelDetail(row.id).then(response => {
                     if (response && response.code === 0) {
