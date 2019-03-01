@@ -125,7 +125,6 @@
                 </div>
                 <el-autocomplete
                     class="inline-input"
-                    v-model="channelInfo.company"
                     :fetch-suggestions="querySearch"
                     placeholder="请选择区域码"
                     @select="setCompanies">
@@ -707,10 +706,12 @@
             // 删除所有选中的区域码
             removeAllCompany() {
                 this.channelInfo.companyList.splice(0);
+                this.channelInfo.common = false;
             },
             // 删除区域码
             removeCompany(company, index) {
                 this.channelInfo.companyList.splice(index, 1);
+                this.channelInfo.common = false;
             },
             querySearch(queryString, cb) {
                 let results = queryString ? this.companyOptions.filter(this.createFilter(queryString)) : this.companyOptions;
@@ -752,11 +753,10 @@
                 this.$service.getChannelDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         for (let key in response.data) {
-                            if (!response.data.protocolList) {
-                                this.channelInfo.protocolList = [];
-                            } else {
+                            if (!(key === 'protocolList' && !response.data.protocolList)) {
                                 this.channelInfo[key] = response.data[key];
                             }
+                            this.channelInfo.common = !!this.channelInfo.common;
                         }
                         response.data.typeList.map(type => {
                             this.channelInfo.typeIdList.push(type.id);
