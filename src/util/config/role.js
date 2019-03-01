@@ -774,6 +774,10 @@ const PROGRAMME_ALLOW_PICTURE_DIMENSIONS = [
         height: 615
     },
     {
+        width: 807,
+        height: 455
+    },
+    {
         width: 860,
         height: 440
     },
