@@ -72,7 +72,7 @@
                             <label class="ui_button ui_button_primary" for="live-channel-import-uploader">
                                 选择文件
                             </label>
-                            <input name="file" ref="liveChannelImportUploader" multiple class="el-upload__input" type="file" id="live-channel-import-uploader" accept="application/xml">
+                            <input name="file" ref="liveChannelImportUploader" multiple class="el-upload__input" type="file" id="live-channel-import-uploader" accept="application/xml, text/plain">
                         </div>
                     </div>
                 </div>

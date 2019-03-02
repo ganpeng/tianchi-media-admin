@@ -7,6 +7,7 @@
             :visible.sync="displayVideoDialogVisible"
             :show-close="true"
             :before-close="closeDialog"
+            @open="dialogOpenHandler"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
             :append-to-body="true">
@@ -40,7 +41,7 @@ export default {
         return {
             displayVideoDialogVisible: false,
             player: null,
-            hls: null
+            fullScreen: false
         };
     },
     methods: {
@@ -53,6 +54,21 @@ export default {
                     video: { url: that.url }
                 });
             });
+        },
+        dialogOpenHandler() {
+            let that = this;
+            this.$nextTick(() => {
+                let dplayerDom = document.querySelector('#dplayer');
+                dplayerDom.addEventListener('dblclick', that.fullScreenHandler, false);
+            });
+        },
+        fullScreenHandler() {
+            this.fullScreen = !this.fullScreen;
+            if (this.fullScreen) {
+                this.player.fullScreen.cancel('browser');
+            } else {
+                this.player.fullScreen.request('browser');
+            }
         },
         showDialog() {
             this.displayVideoDialogVisible = true;

@@ -27,6 +27,7 @@
                     <el-form-item label="图片" required>
                         <single-image-uploader
                             id="programmeSubjectImageUploaderOne"
+                            :showDelete="false"
                             :uri="layoutItem.coverImage ? layoutItem.coverImage.uri : ''"
                             :uploadSuccessHandler="uploadChannelCoverImageSuccessHandler"
                             :allowResolutions="allowResolutions"
