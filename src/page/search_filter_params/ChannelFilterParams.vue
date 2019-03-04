@@ -129,6 +129,7 @@
                     category: 'CAROUSEL',
                     typeIdList: '',
                     common: '',
+                    protocolList: [],
                     companyCode: '',
                     visible: '',
                     keyword: ''
@@ -148,10 +149,15 @@
                     value: false,
                     name: '否'
                 }],
-                companyOptions: [],
+                companyList: [],
                 typeOptions: [],
                 moreFilters: false
             };
+        },
+        computed: {
+            companyOptions: function () {
+                return this.listQueryParams.common ? [] : this.companyList;
+            }
         },
         mounted() {
             this.init();
@@ -161,6 +167,9 @@
                 this.listQueryParams.typeIdList = params.typeIdList ? params.typeIdList : '';
                 this.listQueryParams.visible = params.visible ? params.visible : '';
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
+                this.listQueryParams.common = params.common ? params.common : '';
+                this.listQueryParams.protocolList = params.protocolList ? params.protocolList : '';
+                this.listQueryParams.companyCode = params.companyCode ? params.companyCode : '';
             },
             init() {
                 // 初始化频道类别列表
@@ -172,16 +181,23 @@
                 // 获取所属区域的数据
                 this.$service.getFilialeList().then(response => {
                     if (response && response.code === 0) {
-                        this.companyOptions = response.data;
+                        this.companyList = response.data;
                     }
                 });
             },
             getChannelList(isReset) {
+                if (this.listQueryParams.common) {
+                    this.listQueryParams.companyCode = '';
+                }
                 this.$emit('getChannelList', this.listQueryParams, isReset);
             },
             clearFilters() {
                 for (let key in this.listQueryParams) {
-                    this.listQueryParams[key] = '';
+                    if (Array.isArray(this.listQueryParams[key])) {
+                        this.listQueryParams[key] = [];
+                    } else {
+                        this.listQueryParams[key] = '';
+                    }
                 }
                 this.listQueryParams.category = 'CAROUSEL';
                 this.getChannelList(true);

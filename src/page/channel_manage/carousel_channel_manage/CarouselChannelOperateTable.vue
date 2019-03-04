@@ -103,6 +103,15 @@
             </el-table-column>
             <el-table-column
                 align="center"
+                min-width="70px"
+                prop="common"
+                label="公共频道">
+                <template slot-scope="scope">
+                    <label>{{scope.row.common ? '是' : '否'}}</label>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
                 min-width="100px"
                 label="状态">
                 <template slot-scope="scope">
