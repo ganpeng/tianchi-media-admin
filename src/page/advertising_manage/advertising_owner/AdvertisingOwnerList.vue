@@ -302,7 +302,13 @@ export default {
                         type: 'error'
                     });
                 if (confirm) {
-                    console.log(id);
+                    let res = await this.$service.deleteAdvertisingOwnerById(id);
+                    if (res && res.code === 0) {
+                        this.$message.success('删除成功');
+                        this.getAdvertisingOwnerList();
+                    } else {
+                        this.$message.error(res.message);
+                    }
                 }
             } catch (err) {
                 console.log(err);

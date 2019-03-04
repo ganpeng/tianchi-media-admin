@@ -50,3 +50,10 @@ export const getAdListByAdvertiserId = (params) => {
 
     return service.get(`/v1/ad/general-ad/page?${paramsStr}`);
 };
+
+/**
+ * 根据广告主的id删除广告主
+ */
+export const deleteAdvertisingOwnerById = (id) => {
+    return service.delete(`/v1/ad/advertiser/${id}`);
+};
