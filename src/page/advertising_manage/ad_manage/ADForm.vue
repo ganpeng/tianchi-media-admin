@@ -327,14 +327,18 @@
                 // 创建广告创建时的检测
                 if (this.status.indexOf('CREATE') !== -1) {
                     for (let i = 0; i < this.visibleTypeADList.length; i++) {
-                        if ((this.visibleTypeADList[i].applyDateBegin <= beginTime && beginTime <= this.visibleTypeADList[i].applyDateEnd) || (this.visibleTypeADList[i].applyDateBegin <= endTime && endTime <= this.visibleTypeADList[i].applyDateEnd)) {
+                        let adIndexBegin = this.visibleTypeADList[i].applyDateBegin;
+                        let adIndexEnd = this.visibleTypeADList[i].applyDateEnd;
+                        if ((adIndexBegin <= beginTime && beginTime <= adIndexEnd) || (adIndexBegin <= endTime && endTime <= adIndexEnd) || (beginTime <= adIndexBegin && adIndexBegin <= endTime) || (beginTime <= adIndexEnd && adIndexEnd <= endTime)) {
                             conflictMessage = '该广告的起止时间和以下广告存在冲突：广告名称：' + this.visibleTypeADList[i].name + ' 有效期：' + this.$util.formatDate(new Date(this.visibleTypeADList[i].applyDateBegin), 'yyyy-MM-DD HH:mm:SS') + '至' + this.$util.formatDate(new Date(this.visibleTypeADList[i].applyDateEnd), 'yyyy-MM-DD HH:mm:SS') + '，暂不能设置';
                         }
                     }
                 } else {
                     //  检测广告编辑时的检测
                     for (let i = 0; i < this.visibleTypeADList.length; i++) {
-                        if (this.adInfo.id !== this.visibleTypeADList[i].id && ((this.visibleTypeADList[i].applyDateBegin <= beginTime && beginTime <= this.visibleTypeADList[i].applyDateEnd) || (this.visibleTypeADList[i].applyDateBegin <= endTime && endTime <= this.visibleTypeADList[i].applyDateEnd))) {
+                        let adIndexBegin = this.visibleTypeADList[i].applyDateBegin;
+                        let adIndexEnd = this.visibleTypeADList[i].applyDateEnd;
+                        if (this.adInfo.id !== this.visibleTypeADList[i].id && ((adIndexBegin <= beginTime && beginTime <= adIndexEnd) || (adIndexBegin <= endTime && endTime <= adIndexEnd) || (beginTime <= adIndexBegin && adIndexBegin <= endTime) || (beginTime <= adIndexEnd && adIndexEnd <= endTime))) {
                             conflictMessage = '该广告的起止时间和以下广告存在冲突：广告名称：' + this.visibleTypeADList[i].name + ' 有效期：' + this.$util.formatDate(new Date(this.visibleTypeADList[i].applyDateBegin), 'yyyy-MM-DD HH:mm:SS') + '至' + this.$util.formatDate(new Date(this.visibleTypeADList[i].applyDateEnd), 'yyyy-MM-DD HH:mm:SS') + '，暂不能设置';
                         }
                     }
