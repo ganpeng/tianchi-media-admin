@@ -645,12 +645,12 @@ const ASIDE_LIST = [
         {
             text: '广告主管理',
             uri: '/adsowner-manage/list',
-            icon: 'goods_list'
+            icon: 'advertiser'
         },
         {
             text: '广告管理',
             uri: '/ads-manage/list',
-            icon: 'aside_product'
+            icon: 'ad'
         }
     ],
     [

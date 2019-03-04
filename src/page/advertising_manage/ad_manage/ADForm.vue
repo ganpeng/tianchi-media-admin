@@ -222,7 +222,7 @@
                 if (!value || this.$util.isEmpty(value)) {
                     return callback(new Error('生效时间不能为空'));
                 } else if (!this.isStartTimeFit(value) && !(this.status.indexOf('EDIT') !== -1 && this.adInfo.visible && this.adInfo.adStatus === 'ACTIVE')) {
-                    return callback(new Error('最早时间应为当前小时+1'));
+                    return callback(new Error('生效时间应大于当前时间'));
                 } else if (this.adInfo.applyDateEnd && this.adInfo.applyDateBegin >= this.adInfo.applyDateEnd) {
                     return callback(new Error('生效时间应小于失效时间'));
                 } else if (this.adInfo.applyDateEnd && this.getConflictMessage(this.adInfo.applyDateBegin, this.adInfo.applyDateEnd)) {
@@ -354,13 +354,9 @@
                     }
                 });
             },
-            // 生效开始时间为最早当前时数+1
+            // 生效开始时间不晚于当前时间
             isStartTimeFit(startTime) {
-                let current = new Date();
-                let nowMilliseconds = current.getTime();
-                let hourMilliseconds = nowMilliseconds - (current.getMinutes() * 60 + current.getSeconds()) * 1000;
-                let nextHour = hourMilliseconds + 60 * 60 * 1000;
-                return nextHour < startTime;
+                return new Date().getTime() < startTime;
             },
             confirmLinkADResource() {
                 if (this.status !== 'CREATE_BOOT_AD' && this.status !== 'EDIT_BOOT_AD') {
