@@ -102,7 +102,7 @@
                     </el-table-column>
                     <el-table-column prop="type" min-width="120px" align="center" label="状态">
                         <template slot-scope="scope">
-                            <span class="ellipsis two">
+                            <span :class="adStatusClass(scope.row.adStatus)">
                                 {{adStatusName(scope.row.adStatus)}}
                             </span>
                         </template>
@@ -177,8 +177,25 @@ export default {
         adStatusName() {
             return (value) => {
                 let adStatus = role.AD_STATUS_OPTIONS.find((item) => item.value === value);
-                console.log(adStatus);
-                return _.get(adStatus, 'name');
+                if (value === 'EXPIRED') {
+                    return '/';
+                } else {
+                    return _.get(adStatus, 'name');
+                }
+            };
+        },
+        adStatusClass() {
+            return (value) => {
+                switch (value) {
+                    case 'ACTIVE':
+                        return `status-normal`;
+                    case 'WAITING':
+                        return `status-deleting`;
+                    case 'EXPIRED':
+                        return `status-abnormal`;
+                    default:
+                        return ``;
+                }
             };
         }
     },

@@ -824,11 +824,11 @@ const AD_STATUS_OPTIONS = [
         value: 'EXPIRED'
     },
     {
-        name: '生效中',
+        name: '生效',
         value: 'ACTIVE'
     },
     {
-        name: '待生效',
+        name: '未生效',
         value: 'WAITING'
     }
 ];
