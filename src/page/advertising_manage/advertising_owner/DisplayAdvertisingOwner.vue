@@ -102,8 +102,8 @@
                     </el-table-column>
                     <el-table-column prop="type" min-width="120px" align="center" label="状态">
                         <template slot-scope="scope">
-                            <span :class="adStatusClass(scope.row.adStatus)">
-                                {{adStatusName(scope.row.adStatus)}}
+                            <span :class="adStatusClass(scope.row)">
+                                {{adStatusName(scope.row)}}
                             </span>
                         </template>
                     </el-table-column>
@@ -170,31 +170,31 @@ export default {
         adTypeName() {
             return (value) => {
                 let adType = role.AD_TYPE_OPTIONS.find((item) => item.value === value);
-                console.log(adType);
                 return _.get(adType, 'name');
             };
         },
         adStatusName() {
-            return (value) => {
-                let adStatus = role.AD_STATUS_OPTIONS.find((item) => item.value === value);
-                if (value === 'EXPIRED') {
-                    return '/';
+            return (row) => {
+                let {adStatus, visible} = row;
+                let _adStatus = role.AD_STATUS_OPTIONS.find((item) => item.value === adStatus);
+                if (visible) {
+                    return _.get(_adStatus, 'name');
                 } else {
-                    return _.get(adStatus, 'name');
+                    return '/';
                 }
             };
         },
         adStatusClass() {
-            return (value) => {
-                switch (value) {
-                    case 'ACTIVE':
-                        return `status-normal`;
-                    case 'WAITING':
-                        return `status-deleting`;
-                    case 'EXPIRED':
-                        return `status-abnormal`;
-                    default:
-                        return ``;
+            return (row) => {
+                let {visible, adStatus} = row;
+                if (adStatus === 'ACTIVE' && visible) {
+                    return `status-normal`;
+                } else if (adStatus === 'WAITING' && visible) {
+                    return `status-deleting`;
+                } else if (adStatus === 'EXPIRED' && visible) {
+                    return `status-abnormal`;
+                } else {
+                    return '';
                 }
             };
         }
