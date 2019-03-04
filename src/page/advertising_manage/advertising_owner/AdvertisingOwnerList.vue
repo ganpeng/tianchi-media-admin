@@ -91,7 +91,7 @@
                             v-for="(item, index) in mediaTypeOptions"
                             :key="index"
                             :label="item.name"
-                            :value="item.id">
+                            :value="item.value">
                         </el-option>
                     </el-select>
                 </div>

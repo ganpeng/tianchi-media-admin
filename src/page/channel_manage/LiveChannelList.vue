@@ -59,7 +59,7 @@
                     <el-select
                         :value="searchFields.common"
                         clearable
-                        placeholder="是否是公共区域"
+                        placeholder="请选择是否公共频道"
                         @input="inputHandler($event, 'common')"
                     >
                         <el-option
@@ -188,7 +188,7 @@
                 @select-all="selectAllHandler"
                 header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
                 <el-table-column type="selection" align="center"></el-table-column>
-                <el-table-column prop="code" align="center" width="120px" label="编号"></el-table-column>
+                <!-- <el-table-column prop="code" align="center" width="120px" label="编号"></el-table-column> -->
                 <el-table-column prop="no" align="center" width="120px" label="展示编号"></el-table-column>
                 <el-table-column prop="innerName" align="center" min-width="120px" label="名称">
                     <template slot-scope="scope">
@@ -199,7 +199,7 @@
                 </el-table-column>
                 <el-table-column prop="name" align="center" min-width="120px" label="展示名">
                     <template slot-scope="scope">
-                        <span class="ellipsis two">
+                        <span @click="displayLiveChannel(scope.row.id)" class="ellipsis two name">
                             {{scope.row.name}}
                         </span>
                     </template>
@@ -216,11 +216,6 @@
                 <el-table-column prop="recordIp" min-width="120px" align="center" label="录制IP"></el-table-column>
                 <el-table-column prop="recordPort" width="100px" align="center" label="录制端口"></el-table-column>
                 <el-table-column prop="pushServer" align="center" min-width="120px" label="服务器"></el-table-column>
-                <el-table-column align="center" width="120px" label="推流方式">
-                    <template slot-scope="scope">
-                        {{scope.row.protocolList ? scope.row.protocolList.join(', ') : ''}}
-                    </template>
-                </el-table-column>
                 <el-table-column align="center" width="60px" label="回看">
                     <template slot-scope="scope">
                         <span :class="[scope.row.record ? 'yes' : 'no']">
@@ -236,6 +231,18 @@
                 <el-table-column prop="audioPid" align="center" width="100px" label="audioPid">
                     <template slot-scope="scope">
                         {{scope.row.audioPid | padEmpty}}
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" width="120px" label="公共频道">
+                    <template slot-scope="scope">
+                        <span :class="[scope.row.common ? 'yes' : 'no']">
+                            {{scope.row.common ? '是' : '否'}}
+                        </span>
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" width="120px" label="推流方式">
+                    <template slot-scope="scope">
+                        {{scope.row.protocolList ? scope.row.protocolList.join(', ') : ''}}
                     </template>
                 </el-table-column>
                 <el-table-column align="center" label="状态">

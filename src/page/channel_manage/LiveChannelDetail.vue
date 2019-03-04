@@ -118,7 +118,7 @@
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
                                 <span class="label">推流方式：</span>
-                                <span class="value">{{liveChannel.methods.join(' ')}}</span>
+                                <span class="value">{{liveChannel.protocolList.join(' ')}}</span>
                             </div>
                         </li>
                     </ul>
