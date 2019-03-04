@@ -4,7 +4,7 @@
         <div class="seperator-line"></div>
         <advertising-owner-form ref="advertisingOwnerFormComponent"></advertising-owner-form>
         <div class="fixed-btn-container">
-            <el-button class="btn-style-two" type="primary" @click="editAdvertisingOwnerHandler">编辑</el-button>
+            <el-button class="btn-style-two" type="primary" @click="editAdvertisingOwnerHandler">保存</el-button>
             <el-button class="btn-style-three" @click="gotoList" plain>返回列表</el-button>
         </div>
     </div>

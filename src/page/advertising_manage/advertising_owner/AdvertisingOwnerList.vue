@@ -170,7 +170,7 @@
                     <template slot-scope="scope">
                         <div id="channel-operator" class="operator-btn-wrapper">
                             <span class="btn-text" @click="editAdvertisingOwner(scope.row.id)">编辑</span>
-                            <!-- <span class="btn-text text-danger" @click="deleteAdvertisingOwner(scope.row.id)">删除</span> -->
+                            <span class="btn-text text-danger" @click="deleteAdvertisingOwner(scope.row.id)">删除</span>
                         </div>
                     </template>
                 </el-table-column>
@@ -294,12 +294,22 @@ export default {
                 this.setList({list: sortedListByCreatedAt});
             }
         },
-        deleteAdvertisingOwner(id) {
-            console.log(id);
+        async deleteAdvertisingOwner(id) {
+            try {
+                let confirm = await this.$confirm(`您确定要删除广告主吗, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error'
+                    });
+                if (confirm) {
+                    console.log(id);
+                }
+            } catch (err) {
+                console.log(err);
+            }
         }
     }
 };
 </script>
 <style lang="scss" scoped>
-
 </style>

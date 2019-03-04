@@ -59,7 +59,7 @@
                     <el-select
                         :value="searchFields.common"
                         clearable
-                        placeholder="请选择是否公共频道"
+                        placeholder="全部"
                         @input="inputHandler($event, 'common')"
                     >
                         <el-option
