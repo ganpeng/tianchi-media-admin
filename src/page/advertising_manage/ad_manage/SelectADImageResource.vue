@@ -25,8 +25,8 @@
                 <div class="video-box"
                      :style="{'background-image': 'url(' + item.storageUri + ')'}">
                     <div class="ad-desc">
-                        <div>{{item.name}}</div>
-                        <div>{{item.duration}}s&nbsp;&nbsp;&nbsp;&nbsp;{{item.size | convertFileSize}}</div>
+                        <div>{{item.width}}*{{item.height}}</div>
+                        <div>{{item.size | convertFileSize}}</div>
                     </div>
                 </div>
             </el-checkbox>

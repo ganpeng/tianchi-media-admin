@@ -37,7 +37,7 @@ switch (npmEventName) {
         h5NginxProxyTarget = 'http://admin.tianchiapi.com';
         break;
     case 'dev:lian':
-        h5NginxProxyTarget = 'http://10.0.3.243:8100';
+        h5NginxProxyTarget = 'http://10.0.3.147:8100';
         break;
     // default is dev url
     default:
