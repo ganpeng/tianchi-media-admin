@@ -33,6 +33,8 @@
                 this.$service.getADDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         this.adInfo = response.data;
+                        this.adInfo.applyDateEnd = new Date(this.adInfo.applyDateEnd);
+                        this.adInfo.applyDateBegin = new Date(this.adInfo.applyDateBegin);
                     }
                 });
             }

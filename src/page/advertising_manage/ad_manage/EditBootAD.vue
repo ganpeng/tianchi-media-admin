@@ -33,9 +33,8 @@
                 this.$service.getADDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         this.adInfo = response.data;
-                        this.adInfo.effectRangeTime = [];
-                        this.adInfo.effectRangeTime[0] = this.adInfo.applyDateBegin;
-                        this.adInfo.effectRangeTime[1] = this.adInfo.applyDateEnd;
+                        this.adInfo.applyDateEnd = new Date(this.adInfo.applyDateEnd);
+                        this.adInfo.applyDateBegin = new Date(this.adInfo.applyDateBegin);
                     }
                 });
             }
