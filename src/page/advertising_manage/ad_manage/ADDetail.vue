@@ -9,7 +9,12 @@
             <div class="ad-status un-shelve" v-else>已下架</div>
             <div class="title">
                 <label>{{adInfo.name}}</label>
-                <span>{{adInfo.adType | getADType}}</span>
+                <span v-if="adInfo.adStatus === 'ACTIVE' && adInfo.visible"
+                      class="status-normal">已生效</span>
+                <span v-if="adInfo.adStatus === 'WAITING' && adInfo.visible"
+                      class="status-deleting">未生效</span>
+                <span v-if="adInfo.adStatus === 'EXPIRED' && adInfo.visible"
+                      class="status-abnormal">已失效</span>
             </div>
             <div class="ad-time">
                 <div>创建于{{adInfo.createdAt | formatDate('yyyy.MM.DD')}}</div>
@@ -18,37 +23,36 @@
         </div>
         <!--相关信息-->
         <div class="about-ad">
+            <svg-icon icon-class="ad_ads"></svg-icon>
             <div>
-                <p>生效时间</p>
-                <span>{{adInfo.applyDateBegin | formatDate('yyyy-MM-DD HH:mm:SS')}} - {{adInfo.applyDateEnd | formatDate('yyyy-MM-DD HH:mm:SS')}}</span>
-                <p>广告状态</p>
-                <span v-if="adInfo.adStatus === 'ACTIVE' && adInfo.visible"
-                      class="status-normal">生效</span>
-                <span
-                    v-if="adInfo.adStatus === 'WAITING' && adInfo.visible"
-                    class="status-deleting">未生效</span>
-                <span v-if="!adInfo.visible">/</span>
-                <p>资源数量</p>
-                <span>{{adInfo.adMaterialList.length}}个</span>
-                <p>广告描述</p>
-                <span>{{adInfo.desc}}</span>
+                <span class="ad-type">{{adInfo.adType | getADType}}</span>
+                <p>时间:
+                    <span class="ad-effect-time">{{adInfo.applyDateBegin | formatDate('yyyy.MM.DD HH:mm:SS')}} - {{adInfo.applyDateEnd | formatDate('yyyy.MM.DD HH:mm:SS')}}</span>
+                </p>
+                <p>描述:
+                    <span class="ad-info-desc">{{adInfo.desc}}</span>
+                </p>
             </div>
         </div>
         <!--资源列表-->
-        <div class="other-poster">
-            <div class="content-sub-title">广告资源</div>
+        <div class="resource-list">
+            <div class="content-sub-title">广告资源
+                <span class="resource-list-count">{{adInfo.adMaterialList.length}}个</span>
+            </div>
             <!--视频资源列表-->
             <div id="ad-video-resource"
                  v-if="adInfo.adMaterialList[0] && adInfo.adType === 'BOOT'">
                 <div class="ad-video-container" @click="previewVideoResource">
                     <svg-icon icon-class="video-ad"></svg-icon>
-                    <div class="ad-desc">
-                        <div class="ellipsis one">{{adInfo.adMaterialList[0].name}}</div>
+                    <div class="resource-info">
                         <div>{{adInfo.adMaterialList[0].width}}*{{adInfo.adMaterialList[0].height}}</div>
                         <div>{{adInfo.adMaterialList[0].duration}}s&nbsp;&nbsp;&nbsp;&nbsp;
                             {{adInfo.adMaterialList[0].size | convertFileSize}}
                         </div>
-                        <div>{{adInfo.adMaterialList[0].advertiserName}}</div>
+                        <div class="ellipsis one">{{adInfo.adMaterialList[0].advertiserName}}</div>
+                    </div>
+                    <div class="ad-desc">
+                        <div class="ellipsis one">{{adInfo.adMaterialList[0].name}}</div>
                     </div>
                 </div>
                 <ul>
@@ -69,10 +73,16 @@
                          :key="index"
                          @click.self="displayImage(index)"
                          :style="{'background-image': 'url(' + item.storageUri + ')'}">
+                        <div class="image-cover" @click.self="displayImage(index)">
+                            <svg-icon icon-class="ad_image"></svg-icon>
+                            <div class="resource-info">
+                                <div>{{item.width}}*{{item.height}}</div>
+                                <div>{{item.size | convertFileSize}}</div>
+                                <div class="ellipsis one">{{item.advertiserName}}</div>
+                            </div>
+                        </div>
                         <div class="ad-desc">
-                            <div>{{item.width}}*{{item.height}}</div>
-                            <div>{{item.size | convertFileSize}}</div>
-                            <div>{{item.advertiserName}}</div>
+                            <div class="ellipsis one">{{item.name}}</div>
                         </div>
                     </div>
                 </div>
@@ -224,8 +234,8 @@
         overflow: hidden;
         .ad-status {
             float: left;
-            margin-left: 30px;
-            margin-right: 40px;
+            margin-left: 80px;
+            margin-right: 90px;
             margin-top: 9px;
             height: 30px;
             width: 80px;
@@ -250,16 +260,8 @@
                 color: #FFFFFF;
             }
             span {
-                display: inline-block;
                 margin-top: 9px;
-                margin-left: 20px;
-                height: 30px;
-                width: 100px;
-                line-height: 30px;
-                background: #D27B25;
-                border-radius: 4px;
-                font-size: 20px;
-                color: #FFFFFF;
+                margin-left: 30px;
             }
         }
         .ad-time {
@@ -280,23 +282,59 @@
 
     // 相关信息
     .about-ad {
+        position: relative;
+        height: 204px;
         padding-bottom: 12px;
-        margin-left: 30px;
         border-bottom: 1px solid #252D3F;
         text-align: left;
         overflow: hidden;
+        .svg-icon-ad_ads {
+            position: absolute;
+            top: 2px;
+            left: 20px;
+            height: 200px !important;
+            width: 200px !important;
+        }
         div {
+            margin-left: 250px;
             border-top: 1px solid #252D3F;
-            p {
+            .ad-type {
+                display: inline-block;
                 margin-top: 20px;
-                margin-bottom: 9px;
-                font-size: 18px;
-                color: #A8ABB3;
+                margin-right: 10px;
+                padding: 0px 5px;
+                height: 20px;
+                line-height: 20px;
+                background: #637497;
+                border-radius: 4px;
+                font-size: 10px;
+                color: #FFFFFF;
             }
-            span {
-                font-size: 14px;
+            p {
+                margin-top: 18px;
+                margin-left: 18px;
+                font-size: 16px;
                 color: #A8ABB3;
+                .ad-effect-time {
+                    margin-left: 4px;
+                    padding: 4px 8px;
+                    background: #0062C4;
+                    border-radius: 4px;
+                    font-size: 16px;
+                    color: #FFFFFF;
+                }
+                .ad-info-desc {
+                    margin-left: 4px;
+                    font-size: 16px;
+                    color: #A8ABB3;
+                }
             }
+        }
+    }
+
+    .resource-list {
+        .resource-list-count {
+            margin-left: 20px;
         }
     }
 
@@ -307,9 +345,9 @@
         height: 152px;
         text-align: left;
         .ad-video-container {
+            position: relative;
             margin-left: 30px;
             margin-right: 22px;
-            position: relative;
             height: 100px;
             width: 170px;
             background: #2A3040;
@@ -317,36 +355,33 @@
             border-radius: 8px;
             cursor: pointer;
             &:hover {
-                border: 1px solid #1989FA;
-                i {
-                    visibility: visible;
-                }
+                background: rgba(41, 53, 80, 0.80);
                 .svg-icon-video-ad {
                     fill-opacity: 1;
                 }
+                .resource-info {
+                    visibility: visible;
+                }
             }
             .svg-icon-video-ad {
-                margin-top: 25px;
-                margin-left: 58px;
-                width: 50px !important;
-                height: 50px !important;
+                position: absolute;
+                bottom: 10px;
+                left: 10px;
+                width: 30px !important;
+                height: 30px !important;
                 fill-opacity: 0.5;
             }
-            /*删除按钮*/
-            i {
-                position: absolute;
-                top: 2px;
-                right: 2px;
-                font-size: 16px;
-                color: #6F7480;
-                cursor: pointer;
+            .resource-info {
                 visibility: hidden;
-                &:hover {
-                    color: #C35757;
+                margin-top: 8px;
+                margin-left: 10px;
+                div {
+                    font-size: 12px;
+                    color: #FFFFFF;
                 }
             }
             .ad-desc {
-                margin-top: 30px;
+                margin: 55px 10px 0px 10px;
                 div {
                     height: 20px;
                     line-height: 20px;
@@ -358,7 +393,8 @@
         }
         ul {
             display: inline-block;
-            margin-top: 100px;
+            margin-left: 30px;
+            margin-top: 45px;
             padding-right: 25px;
             height: 100px;
             min-width: 170px;
@@ -400,37 +436,53 @@
             flex-wrap: wrap;
         }
         .ad-image-container {
-            margin-right: 22px;
-            margin-bottom: 80px;
             position: relative;
+            margin-right: 22px;
+            margin-bottom: 20px;
             height: 100px;
             width: 170px;
             background: #2A3040;
             border: 1px solid #3E495E;
             border-radius: 8px;
-            cursor: pointer;
+            cursor: zoom-in;
             &:hover {
-                border: 1px solid #1989FA;
-                i {
+                background: rgba(41, 53, 80, 0.80);
+                .image-cover {
                     visibility: visible;
                 }
             }
-            /*删除按钮*/
-            i {
-                position: absolute;
-                top: 2px;
-                right: 2px;
-                font-size: 16px;
-                color: #6F7480;
-                cursor: pointer;
+            .image-cover {
                 visibility: hidden;
-                &:hover {
-                    color: #C35757;
+                position: absolute;
+                left: 0px;
+                right: 0px;
+                top: 0px;
+                bottom: 0px;
+                background: rgba(41, 53, 80, 0.80);
+                border-radius: 8px;
+                cursor: zoom-in;
+                .svg-icon-ad_image {
+                    position: absolute;
+                    bottom: 10px;
+                    left: 10px;
+                    width: 30px !important;
+                    height: 30px !important;
+                    z-index: 1000;
+                }
+                .resource-info {
+                    position: absolute;
+                    left: 10px;
+                    top: 8px;
+                    div {
+                        font-size: 12px;
+                        color: #FFFFFF;
+                    }
                 }
             }
             .ad-desc {
                 margin-top: 105px;
                 div {
+                    margin: 0px 10px;
                     height: 20px;
                     line-height: 20px;
                     text-align: center;
@@ -441,6 +493,7 @@
         }
         ul {
             display: inline-block;
+            margin-left: 30px;
             margin-top: 20px;
             min-width: 170px;
             padding-bottom: 10px;
