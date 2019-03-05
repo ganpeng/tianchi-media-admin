@@ -17,9 +17,9 @@
             </el-select>
         </div>
         <el-radio-group
-            v-model="resourceId"
             @change="setSelectedResource">
             <el-radio
+                v-if="!!adOwnerId"
                 :label="item.id"
                 v-for="(item,index) in videoList"
                 :key="index">
@@ -84,16 +84,20 @@
                 });
             },
             getADResource() {
-                this.$service.getADOwnerResourceList({
-                    advertiserId: this.adOwnerId,
-                    adType: this.adType,
-                    pageSize: 1000,
-                    pageNum: 1
-                }).then(response => {
-                    if (response && response.code === 0) {
-                        this.videoList = response.data.list;
-                    }
-                });
+                if (this.adOwnerId) {
+                    this.$service.getADOwnerResourceList({
+                        advertiserId: this.adOwnerId,
+                        adType: this.adType,
+                        pageSize: 1000,
+                        pageNum: 1
+                    }).then(response => {
+                        if (response && response.code === 0) {
+                            this.videoList = response.data.list;
+                        }
+                    });
+                } else {
+                    this.videoList = [];
+                }
             },
             // 设置选择的视频资源
             setSelectedResource() {

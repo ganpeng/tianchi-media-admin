@@ -16,7 +16,8 @@
                 </el-option>
             </el-select>
         </div>
-        <el-checkbox-group v-model="selectedResourceIdList">
+        <el-checkbox-group
+            v-model="selectedResourceIdList">
             <el-checkbox
                 @change="checkImage(item,$event)"
                 :label="item.id"
@@ -65,16 +66,20 @@
                 });
             },
             getADResource() {
-                this.$service.getADOwnerResourceList({
-                    advertiserId: this.adOwnerId,
-                    adType: this.adType,
-                    pageSize: 1000,
-                    pageNum: 1
-                }).then(response => {
-                    if (response && response.code === 0) {
-                        this.imageList = response.data.list;
-                    }
-                });
+                if (this.adOwnerId) {
+                    this.$service.getADOwnerResourceList({
+                        advertiserId: this.adOwnerId,
+                        adType: this.adType,
+                        pageSize: 1000,
+                        pageNum: 1
+                    }).then(response => {
+                        if (response && response.code === 0) {
+                            this.imageList = response.data.list;
+                        }
+                    });
+                } else {
+                    this.imageList = [];
+                }
             },
             checkImage(image, isAdd) {
                 // 设置选中的图片资源list

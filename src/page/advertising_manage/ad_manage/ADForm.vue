@@ -1,6 +1,6 @@
 <!--广告信息表单组件-->
 <template>
-    <div>
+    <div id="ad-form-container">
         <div class="seperator-line"></div>
         <el-form
             :model="adInfo"
@@ -16,7 +16,7 @@
                     placeholder="请填写广告名称，不超过20个字符">
                 </el-input>
             </el-form-item>
-            <el-form-item label="广告描述" prop="desc" required>
+            <el-form-item label="广告描述" prop="desc">
                 <el-input
                     v-model="adInfo.desc"
                     size="medium"
@@ -46,7 +46,7 @@
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="上下架">
-                <label class="ad-status">上架</label>
+                <el-radio v-model="adVisible" label="1">上架</el-radio>
             </el-form-item>
             <el-form-item label="广告资源" prop="adMaterialList" required>
                 <el-button @click="selectADResourceVisible = true" class="contain-svg-icon btn-style-four">
@@ -209,9 +209,7 @@
                 }
             };
             let checkDesc = (rule, value, callback) => {
-                if (this.$util.isEmpty(value)) {
-                    return callback(new Error('广告描述不能为空'));
-                } else if (this.$util.trim(value).length > 100) {
+                if (!this.$util.isEmpty(value) && this.$util.trim(value).length > 100) {
                     return callback(new Error('广告描述不能超过100字'));
                 } else {
                     callback();
@@ -272,6 +270,7 @@
                 }
             };
             return {
+                adVisible: '1',
                 url: '',
                 title: '',
                 displayVideoDialogVisible: false,
@@ -638,5 +637,9 @@
             }
         }
     }
+
+</style>
+
+<style lang="scss">
 
 </style>
