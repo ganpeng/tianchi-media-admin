@@ -67,12 +67,12 @@
                                 <span class="value">{{liveChannel.multicastIp}}</span>
                             </div>
                         </li>
-                        <li class="text-info-item">
+                        <!-- <li class="text-info-item">
                             <div class="text-info-item-wrapper">
                                 <span class="label">当前节目：</span>
                                 <span class="value">{{currentLiveChannel.channelName}}</span>
                             </div>
-                        </li>
+                        </li> -->
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
                                 <span class="label">是否回看：</span>
@@ -81,7 +81,7 @@
                         </li>
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
-                                <span class="label">公共区域：</span>
+                                <span class="label">公共频道：</span>
                                 <span class="value">{{liveChannel.common ? '是' : '否'}}</span>
                             </div>
                         </li>
@@ -106,13 +106,13 @@
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
                                 <span class="label">videoPid：</span>
-                                <span class="value">{{liveChannel.videoPid}}</span>
+                                <span class="value">{{liveChannel.videoPid ? liveChannel.videoPid : '无'}}</span>
                             </div>
                         </li>
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
                                 <span class="label">audioPid：</span>
-                                <span class="value">{{liveChannel.audioPid}}</span>
+                                <span class="value">{{liveChannel.audioPid ? liveChannel.audioPid : '无'}}</span>
                             </div>
                         </li>
                         <li class="text-info-item">
@@ -129,8 +129,8 @@
         <div class="area-container">
             <h4 class="content-sub-title">
                 所属区域
-                <span>{{liveChannel.companyList.length}}个</span>
-                <span @click="toggleClickHandler" class="toggle-btn">
+                <span v-if="liveChannel.companyList.length > 0">{{liveChannel.companyList.length}}个</span>
+                <span v-if="liveChannel.companyList.length > 0" @click="toggleClickHandler" class="toggle-btn">
                     {{showCompanyList ? '收起' : '展开'}}
                     <i v-if="showCompanyList" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
                 </span>
@@ -143,6 +143,7 @@
                     </div>
                 </li>
             </ul>
+            <div v-if="liveChannel.companyList.length > 0" class="seperator-line"></div>
         </div>
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="editLiveChannel">编辑</el-button>

@@ -3,6 +3,11 @@
         <h2 class="content-title">广告主详情</h2>
         <div class="seperator-line"></div>
         <div class="common-details">
+            <div class="poster-section person">
+                <div class="default-person-image">
+                    <svg-icon icon-class="ad_ads_owner"></svg-icon>
+                </div>
+            </div>
             <div class="info-section">
                 <div class="title-wrapper">
                     <div class="left-side">
@@ -22,26 +27,23 @@
                 <div class="seperator-line"></div>
                 <div class="attributes">
                     <div class="attribute-item">
-                        <label class="item-label">广告主编号：</label>
+                        <label class="item-label">编号：</label>
                         <span class="value">{{advertisingOwner.id}}</span>
                     </div>
                     <div class="attribute-item">
-                        <label class="item-label">广告主名称：</label>
-                        <span class="value">{{advertisingOwner.name}}</span>
-                    </div>
-                    <div class="attribute-item">
-                        <label class="item-label">广告主备注：</label>
+                        <label class="item-label">备注：</label>
                         <span class="value">{{advertisingOwner.description}}</span>
                     </div>
                 </div>
-                <div class="seperator-line"></div>
-                <div class="ad-material-list-container clearfix">
-                    <h4 class="content-sub-title">广告资源</h4>
-                    <with-video-thumbnail
-                        :adMaterialList="advertisingOwner.adMaterialList"
-                    ></with-video-thumbnail>
-                </div>
-
+            </div>
+        </div>
+        <div class="seperator-line"></div>
+        <div class="ad-material-list-container clearfix">
+            <h4 class="content-sub-title">广告资源</h4>
+            <div class="thumbail-wrapper">
+                <with-video-thumbnail
+                    :adMaterialList="advertisingOwner.adMaterialList"
+                ></with-video-thumbnail>
             </div>
         </div>
         <div class="ad-list-container">
@@ -226,7 +228,16 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.common-details .info-section .attributes .item-label {
-    width: 100px;
+.thumbail-wrapper {
+    margin-left: 20px;
+}
+.default-person-image {
+    margin-top: 10px;
+}
+.attribute-item {
+    .item-label {
+        width: 48px!important;
+        text-align: left!important;
+    }
 }
 </style>

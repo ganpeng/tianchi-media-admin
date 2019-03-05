@@ -6,13 +6,24 @@
                     <div class="image-warpper">
                         <img v-if="image.mediaType === 'IMAGE'" :src="image.storageUri" class="image" alt="">
                         <span v-else @click="displayVideo(image)" class="image video-item" alt="">
-                            <span class="play-btn">
-                                <i class="el-icon-caret-right"></i>
-                            </span>
                         </span>
-                        <div class="mask"></div>
+                        <div class="mask">
+                            <div class="basic-info-wrapper">
+                                <span class="dimension">{{image.width}}*{{image.height}}</span>
+                                <span class="size">
+                                    {{convertFileSize(image.size)}}
+                                    {{image.duration ? `${image.duration}s` : ''}}
+                                </span>
+                            </div>
+                            <span v-if="image.mediaType === 'IMAGE'" class="image-icon">
+                                <svg-icon class="image" icon-class="ad_image"></svg-icon>
+                            </span>
+                            <span @click="displayVideo(image)" v-else class="video-icon">
+                                <svg-icon icon-class="ad_video" class="video"></svg-icon>
+                            </span>
+                        </div>
                     </div>
-                    <p class="dimension-info">{{image.width}}*{{image.height}} {{convertFileSize(image.size)}}</p>
+                    <p class="dimension-info my-ellipsis">{{image.name}}</p>
                 </li>
             </ul>
         </div>
@@ -145,6 +156,37 @@ export default {
                     opacity: 0.8;
                     border: 1px solid #293550;
                     border-radius: 8px;
+                    .basic-info-wrapper {
+                        position: absolute;
+                        top: 20px;
+                        left: 10px;
+                        .dimension,
+                        .size {
+                            display: block;
+                            font-size: 12px;
+                            color: #fff;
+                            text-align: left;
+                        }
+                    }
+                    .image-icon {
+                        position: absolute;
+                        bottom: 10px;
+                        left: 7px;
+                        .svg-icon {
+                            width: 40px;
+                            height: 22px;
+                        }
+                    }
+                    .video-icon {
+                        position: absolute;
+                        bottom: 10px;
+                        left: 10px;
+                        cursor: pointer;
+                        .svg-icon {
+                            width: 30px;
+                            height: 30px;
+                        }
+                    }
                 }
                 &:hover {
                     .mask {

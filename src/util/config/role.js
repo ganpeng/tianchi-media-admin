@@ -643,7 +643,7 @@ const ASIDE_LIST = [
     ],
     [
         {
-            text: '广告主管理',
+            text: '广告主',
             uri: '/adsowner-manage/list',
             icon: 'advertiser'
         },

@@ -118,8 +118,8 @@ const mutations = {
         state.advertisingOwner.adMaterialList = _.uniqBy(state.advertisingOwner.adMaterialList, 'storageId');
     },
     deleteAdMaterialById(state, payload) {
-        let {id} = payload;
-        state.advertisingOwner.adMaterialList = state.advertisingOwner.adMaterialList.filter((item) => item.id !== id);
+        let {index} = payload;
+        state.advertisingOwner.adMaterialList = state.advertisingOwner.adMaterialList.filter((item, _index) => _index !== index);
     }
 };
 

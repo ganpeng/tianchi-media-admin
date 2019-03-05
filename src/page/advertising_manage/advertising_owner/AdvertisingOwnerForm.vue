@@ -20,8 +20,13 @@
                         ></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="24">
+                <el-col :span="20">
                     <el-form-item label="资源上传">
+                        <span style="line-height:20px;display:block;">{{prompt}}</span>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="24">
+                    <el-form-item label="">
                         <multi-type-file-upload
                             :adMaterialList="advertisingOwner.adMaterialList"
                             :fileUploadedSuccessHandler="fileUploadedSuccessHandler"
@@ -48,7 +53,8 @@ export default {
                 name: [
                     { required: true, message: '请输入广告主名称' }
                 ]
-            }
+            },
+            prompt: '换台广告、详情页广告支持PNG/JPG/WEBP/GIF,432*198,GIF1MB以内,其余200KB以内,调音广告支持PNG,320*140,100KB以内,屏保广告支持PNG/JPG/WEBP,1920*1080,1MB以内,开机广告支持MP4,1280*720以上,60MB以内'
         };
     },
     computed: {
@@ -65,8 +71,8 @@ export default {
         inputHandler(value, key) {
             this.updateAdvertisingOwner({key, value});
         },
-        deleteAdMaterialHandler(id) {
-            this.deleteAdMaterialById({id});
+        deleteAdMaterialHandler(index) {
+            this.deleteAdMaterialById({index});
         },
         fileUploadedSuccessHandler(data) {
             let adMaterial = {};
@@ -88,7 +94,6 @@ export default {
                 adMaterial.storageId = _.get(data, 'image.id');
                 adMaterial.storageUri = _.get(data, 'image.uri');
             }
-            console.log(adMaterial);
             this.addAdMaterial({adMaterial});
         }
     }
