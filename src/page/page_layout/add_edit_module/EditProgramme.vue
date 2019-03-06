@@ -468,14 +468,13 @@ export default {
                 uri: ''
             };
             this.layoutItemType = '';
-
             window.removeEventListener('keyup', this.keyupHandler);
         },
         async dialogOpenHandler() {
             try {
                 await this.getProgrammeCategory();
-
-                if (this.layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
+                let _layoutItemType = _.get(this.layoutItem, 'layoutItemType');
+                if (_layoutItemType !== 'PROGRAMME' && _layoutItemType !== 'PROGRAMME_LIST') {
                     this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
                 } else {
                     if (this.getSquareProgrammeId) {
