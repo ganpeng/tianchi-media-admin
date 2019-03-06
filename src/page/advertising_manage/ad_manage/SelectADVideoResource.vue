@@ -17,6 +17,7 @@
             </el-select>
         </div>
         <el-radio-group
+            v-model="resourceId"
             @change="setSelectedResource">
             <el-radio
                 v-if="!!adOwnerId"
