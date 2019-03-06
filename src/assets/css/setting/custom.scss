@@ -1228,6 +1228,15 @@ html, body {
     }
 }
 
+// 上下架组件的disabled的状态
+.my-switch {
+    &.disabled {
+        opacity: 0.3;
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+}
+
 //去掉时间选择器的'此刻'按钮
 .el-date-picker {
     background: rgba(65, 74, 93, 0.90);

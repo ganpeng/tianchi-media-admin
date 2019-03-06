@@ -223,12 +223,15 @@
                 <template slot-scope="scope">
                     <input
                         class="my-switch switch-anim"
+                        :class="{'disabled':(!scope.row.visible || scope.row.visible && scope.row.adStatus === 'EXPIRED')}"
                         type="checkbox"
                         v-model="scope.row.visible"
                         :checked="scope.row.visible"
                         @click.prevent="updateProductStatus(scope.row)"/>
-                    <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
-                    <i v-else class="off-the-shelf">已下架</i>
+                    <i v-if="scope.row.visible" class="on-the-shelf shelf"
+                       :class="{'disabled':(!scope.row.visible || scope.row.visible && scope.row.adStatus === 'EXPIRED')}">已上架</i>
+                    <i v-else class="off-the-shelf shelf"
+                       :class="{'disabled':(!scope.row.visible || scope.row.visible && scope.row.adStatus === 'EXPIRED')}">已下架</i>
                 </template>
             </el-table-column>
             <el-table-column
@@ -539,6 +542,12 @@
         margin-left: 5px;
         height: 10px !important;
         width: 10px !important;
+    }
+
+    .shelf {
+        &.disabled {
+            opacity: 0.3;
+        }
     }
 
 </style>
