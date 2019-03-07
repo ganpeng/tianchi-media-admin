@@ -55,9 +55,10 @@
     </div>
 </template>
 <script>
-import { uploadRequest, promiseFileSize, videoRegex, filterFile } from '../../../util/upload';
+import { uploadRequest, promiseFileSize, videoRegex, filterFile, filterNotMatchFiles } from '../../../util/upload';
 import PreviewMultipleImages from '../../../components/custom_components/custom/PreviewMultipleImages';
 import DisplayVideoDialog from '../../../components/custom_components/custom/DisplayVideoDialog';
+
 export default {
     name: 'MultiTypeFileUpload',
     components: { PreviewMultipleImages, DisplayVideoDialog },
@@ -134,14 +135,27 @@ export default {
             try {
                 let fileList = await promiseFileSize(e.target.files);
                 let newFileList = filterFile(this.fileList, fileList);
-                this.fileList = Array.from(newFileList);
+                let {matchedFiles, notMatchedFiles} = filterNotMatchFiles(newFileList);
+                let messageList = notMatchedFiles.map((item) => {
+                    return `资源：${item.name}, 错误原因：${item.message}`;
+                });
+
+                if (matchedFiles.length === 0) {
+                    this.$message.error('本次选择没有符合要求的文件');
+                    return false;
+                }
+                if (messageList.length > 0) {
+                    this.$message.error(messageList.join(', '));
+                }
+
+                // this.fileList = Array.from(newFileList);
+                this.fileList = Array.from(matchedFiles);
                 if (!this.isUploading) {
                     this.uploadHandler();
                 }
             } catch (err) {
                 console.log(err);
             }
-            //  /group2/M00/01/E8/CgEBUlxtEaqAHcP5B4B4BLwLVoA031.mp4
         },
         async uploadHandler() {
             if (this.fileList[this.count] === undefined) {

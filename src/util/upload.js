@@ -136,6 +136,177 @@ export function promiseFileSize(files) {
                 });
 }
 
+/**
+ * 上传广告资源时候的校验方法
+ */
+export function filterNotMatchFiles(files) {
+    let allowImageDimensions = [{width: 432, height: 198}, {width: 320, height: 140}, {width: 1920, height: 1080}];
+    let allowVideoDimensions = [{width: 1280, height: 720}];
+    let allowGifDimensions = [{width: 432, height: 198}];
+    let videoList = files.filter((obj) => {
+        return /^video/.test(obj.file.type);
+    });
+    let imageList = files.filter((obj) => {
+        return /(png|jpe?g|webp)$/.test(obj.file.type);
+    });
+    let gifImageList = files.filter((obj) => {
+        return /(gif)$/.test(obj.file.type);
+    });
+
+    function imageFilter(imageFiles) {
+        let imageMatchedFiles = [];
+        let imageNotMatchedFiles = [];
+
+        for (let i = 0; i < imageFiles.length; i++) {
+            let item = imageFiles[i];
+            let demensionMatchedIndex = allowImageDimensions.findIndex((_item) => {
+                return _item.width === item.demension.width && _item.height === item.demension.height;
+            });
+
+            if (demensionMatchedIndex < 0) {
+                 imageNotMatchedFiles.push({
+                     name: item.file.name,
+                     message: '图片尺寸不符合要求'
+                 });
+                 continue;
+            }
+
+            if (item.demension.width === 432 && item.demension.height === 198) {
+                check432_198(item);
+            } else if (item.demension.width === 320 && item.demension.height === 140) {
+                check320_140(item);
+            } else if (item.demension.width === 1920 && item.demension.height === 1080) {
+                check1920_1080(item);
+            } else {
+                 imageNotMatchedFiles.push({
+                     name: item.file.name,
+                     message: '图片尺寸不符合要求'
+                 });
+                 continue;
+            }
+        }
+
+        function check432_198(obj) { // eslint-disable-line
+            if (obj.file.size <= 200 * 1024) {
+                imageMatchedFiles.push(obj);
+            } else {
+                imageNotMatchedFiles.push({
+                    name: obj.file.name,
+                    message: '432*198尺寸的图片必须小于200K'
+                });
+            }
+        }
+
+        function check320_140(obj) { // eslint-disable-line
+            if (!(/png$/.test(obj.file.type))) {
+                imageNotMatchedFiles.push({
+                    name: obj.file.name,
+                    message: '320*140尺寸的图片格式必须为PNG'
+                });
+            }
+
+            if ((/png$/.test(obj.file.type)) && obj.file.size > 100 * 1024) {
+                imageNotMatchedFiles.push({
+                    name: obj.file.name,
+                    message: '320*140尺寸的图片大小必须小于100K'
+                });
+            } else {
+                imageMatchedFiles.push(obj);
+            }
+        }
+
+        function check1920_1080(obj) { // eslint-disable-line
+            if (obj.file.size <= 1024 * 1024) {
+                imageMatchedFiles.push(obj);
+            } else {
+                imageNotMatchedFiles.push({
+                    name: obj.file.name,
+                    message: '1920*1080尺寸的图片必须小于1M'
+                });
+            }
+        }
+
+        return { imageMatchedFiles, imageNotMatchedFiles };
+    }
+
+    function gifFilter(gifFiles) {
+        let gifMatchedFiles = [];
+        let gifNotMatchedFiles = [];
+        gifFiles.forEach((item) => {
+            let demensionMatchedIndex = allowGifDimensions.findIndex((_item) => {
+                return _item.width === item.demension.width && _item.height === item.demension.height;
+            });
+
+            let sizeMatched = item.file.size <= 1024 * 1024;
+            if (demensionMatchedIndex < 0) {
+                gifNotMatchedFiles.push({
+                    name: item.file.name,
+                    message: 'gif图尺寸不符合要求'
+                });
+            }
+
+            if (demensionMatchedIndex >= 0 && !sizeMatched) {
+                gifNotMatchedFiles.push({
+                    name: item.file.name,
+                    message: 'gif图必须小于或等于1M'
+                });
+            }
+
+            if (demensionMatchedIndex >= 0 && sizeMatched) {
+                gifMatchedFiles.push(item);
+            }
+        });
+        return { gifMatchedFiles, gifNotMatchedFiles };
+    }
+
+    function videoFilter(videoFiles) {
+        let videoMatchedFiles = [];
+        let videoNotMatchedFiles = [];
+        videoFiles.forEach((item) => {
+            let demensionMatchedIndex = allowVideoDimensions.findIndex((_item) => {
+                return _item.width <= item.demension.width && _item.height <= item.demension.height;
+            });
+
+            let sizeMatched = item.file.size <= (60 * 1024 * 1024);
+            let durationMatched = item.demension.duration <= 60;
+
+            if (demensionMatchedIndex < 0) {
+                videoNotMatchedFiles.push({
+                    name: item.file.name,
+                    message: '视频分辨率不符合要求'
+                });
+            }
+
+            if (demensionMatchedIndex >= 0 && !sizeMatched) {
+                videoNotMatchedFiles.push({
+                    name: item.file.name,
+                    message: '视频必须小于或等于60M'
+                });
+            }
+
+            if (demensionMatchedIndex >= 0 && sizeMatched && !durationMatched) {
+                videoNotMatchedFiles.push({
+                    name: item.file.name,
+                    message: '视频时长必须小于或等于60S'
+                });
+            }
+
+            if (demensionMatchedIndex >= 0 && sizeMatched && durationMatched) {
+                videoMatchedFiles.push(item);
+            }
+        });
+        return { videoMatchedFiles, videoNotMatchedFiles };
+    }
+    let { gifMatchedFiles, gifNotMatchedFiles } = gifFilter(gifImageList);
+    let { videoMatchedFiles, videoNotMatchedFiles } = videoFilter(videoList);
+    let { imageMatchedFiles, imageNotMatchedFiles } = imageFilter(imageList);
+
+    return {
+        matchedFiles: [...gifMatchedFiles, ...videoMatchedFiles, ...imageMatchedFiles],
+        notMatchedFiles: [...gifNotMatchedFiles, ...videoNotMatchedFiles, ...imageNotMatchedFiles]
+    };
+}
+
 export function uploadRequest(options) {
     return new Promise((resolve, reject) => {
         let {uri, formData, headers, progressHandler} = options;

@@ -22,7 +22,19 @@
                 </el-col>
                 <el-col :span="20">
                     <el-form-item label="资源上传">
-                        <span style="line-height:20px;display:block;">{{prompt}}</span>
+                        <span class="prompt-info-icon">
+                            <svg-icon icon-class="info_i_1"></svg-icon>
+                            <div class="prompt-info-dialog">
+                                ·换台广告、详情页广告 <br>
+                                支持PNG/JPG/WEBP/GIF ，432*198，GIF1MB以内，其余200KB以内 <br>
+                                ·调音广告 <br>
+                                支持PNG，320*140，100KB以内 <br>
+                                ·屏保广告 <br>
+                                支持PNG/JPG/WEBP，1920*1080，1MB以内 <br>
+                                ·开机广告 <br>
+                                支持MP4，1280*720以上，60MB以内 <br>
+                            </div>
+                        </span>
                     </el-form-item>
                 </el-col>
                 <el-col :span="24">
@@ -53,8 +65,7 @@ export default {
                 name: [
                     { required: true, message: '请输入广告主名称' }
                 ]
-            },
-            prompt: '换台广告、详情页广告支持PNG/JPG/WEBP/GIF,432*198,GIF1MB以内,其余200KB以内,调音广告支持PNG,320*140,100KB以内,屏保广告支持PNG/JPG/WEBP,1920*1080,1MB以内,开机广告支持MP4,1280*720以上,60MB以内'
+            }
         };
     },
     computed: {
@@ -100,5 +111,42 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
+.prompt-info-icon {
+    position: relative;
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    background: rgba(41,53,80,0.80);
+    border-radius: 50%;
+    .svg-icon {
+        fill: #6F7480;
+    }
+    &:hover {
+        background: #293550;
+        .svg-icon {
+            fill: #fff;
+        }
+        .prompt-info-dialog {
+            display: block;
+        }
+    }
+    .prompt-info-dialog {
+        display: none;
+        position: absolute;
+        top: 14px;
+        left: 32px;
+        width: 406px;
+        // height: 160px;
+        background: rgba(65,74,93,0.90);
+        border: 0 solid #637497;
+        box-shadow: 2px 4px 10px 0 rgba(0,0,0,0.30);
+        border-radius: 8px;
+        text-align: left;
+        font-size: 12px;
+        line-height: 20px;
+        padding: 12px;
+    }
+}
 </style>
