@@ -52,3 +52,10 @@ export const getDistrictList = ({level, code}) => {
 export const getServers = () => {
     return service.get('/v1/sys/config/upstreams');
 };
+
+/**
+ * 获取回看时移前缀
+ */
+export const getLiveUrlPrefix = () => {
+    return service.get('/v1/sys/config/live/url-prefix');
+};

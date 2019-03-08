@@ -111,7 +111,29 @@ html, body {
         background: #2a3040;
     }
     .checked {
-        background: #000 !important;
+        background: #000!important;
+    }
+    .descending {
+        .caret-wrapper {
+            .sort-caret.descending {
+                border-top-color: #409EFF;
+            }
+        }
+    }
+    .ascending {
+        .caret-wrapper {
+            .sort-caret.ascending {
+                border-bottom-color: #409EFF;
+            }
+        }
+    }
+    .caret-wrapper {
+        .sort-caret.descending {
+            border-top-color: #3E495E;
+        }
+        .sort-caret.ascending {
+            border-bottom-color: #3E495E;
+        }
     }
 }
 
@@ -691,6 +713,9 @@ html, body {
             align-items: center;
             min-width: 120px;
             margin-right: 30px;
+            &:nth-of-type(2) {
+                margin-left: 30px;
+            }
             .search-field-item-label {
                 min-width: 40px;
                 font-size: 16px;
@@ -953,7 +978,7 @@ html, body {
                 display: inline-block;
                 font-size: 20px;
                 padding: 0 5px;
-                border-radius: 4px;
+                border-radius: 8px;
                 &.is-visible {
                     color: #fff;
                     background: #3AC26F;

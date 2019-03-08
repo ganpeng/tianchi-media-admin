@@ -86,14 +86,11 @@ export default {
 <style lang="less" scoped>
 .video-link {
     margin-top: 10px;
+    color: #A8ABB3;
 }
 .video-name {
     font-size: 16px;
     margin: 10px 0;
-}
-</style>
-<style>
-.el-dialog__body {
-    /* padding: 0 20px 20px 20px!important; */
+    color: #A8ABB3;
 }
 </style>

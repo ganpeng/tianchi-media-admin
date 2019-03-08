@@ -35,14 +35,22 @@
                     >
                     </el-input>
                 </el-form-item>
-                <el-form-item label="所属服务器" prop="pushServer">
+                <el-form-item label="服务器组" prop="serverGroup">
+                    <el-input
+                        placeholder="请输入所属服务器组"
+                        :value="liveChannel.serverGroup"
+                        @input="inputHandler($event, 'serverGroup')"
+                    >
+                    </el-input>
+                </el-form-item>
+                <!-- <el-form-item label="所属服务器" prop="pushServer">
                     <el-input
                         placeholder="请输入所属服务器地址"
                         :value="liveChannel.pushServer"
                         @input="inputHandler($event, 'pushServer')"
                     >
                     </el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="频道端口" prop="multicastPort">
                     <el-input
                         type="number"
@@ -190,6 +198,9 @@ export default {
                 pushServer: [
                     { required: true, message: '请输入所属服务器地址' },
                     { validator: checkIp }
+                ],
+                serverGroup: [
+                    { required: true, message: '请输入所属服务器组' }
                 ],
                 record: [
                     { required: true, message: '请选择是否录制直播回看' }

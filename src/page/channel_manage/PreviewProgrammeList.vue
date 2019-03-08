@@ -109,7 +109,9 @@
                 afterObj: {},
                 url: '',
                 title: '',
-                pushServer: ''
+                pushServer: '',
+                serverGroup: '',
+                urlPrefix: ''
             };
         },
         mounted() {
@@ -145,8 +147,17 @@
                                 this.getLiveChannelById(channelId)
                                     .then((channelRes) => {
                                         if (channelRes && channelRes.code === 0) {
-                                            let {pushServer} = channelRes.data;
+                                            let {pushServer, serverGroup} = channelRes.data;
                                             this.pushServer = `http://${pushServer}`;
+                                            this.serverGroup = serverGroup;
+
+                                            this.$service.getLiveUrlPrefix()
+                                                .then((urlRes) => {
+                                                    if (urlRes && urlRes.code === 0) {
+                                                        // console.log(urlRes.data);
+                                                        this.urlPrefix = urlRes.data;
+                                                    }
+                                                });
                                         }
                                     });
                             }
@@ -250,7 +261,7 @@
             displayVideoPlayer(ele, uriKey) {
                 let {m3u8Uri, name, playUri} = ele;
                 if (uriKey === 'm3u8Uri') {
-                    this.url = `${this.pushServer}${m3u8Uri}`;
+                    this.url = `${this.urlPrefix}/${this.serverGroup}${m3u8Uri}`;
                 } else {
                     this.url = `${playUri}`;
                 }

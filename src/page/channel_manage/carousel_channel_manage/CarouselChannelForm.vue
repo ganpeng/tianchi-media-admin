@@ -1041,7 +1041,7 @@
                     type: 'warning'
                 }).then(() => {
                     videoItem.visible = !videoItem.visible;
-                    this.$message.success((videoItem.visible ? '禁播' : '恢复') + '视频成功!');
+                    this.$message.success((videoItem.visible ? '恢复' : '禁播') + '视频成功!');
                 }).catch(() => {
                     this.$message({
                         type: 'info',

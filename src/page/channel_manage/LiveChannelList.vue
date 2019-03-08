@@ -215,7 +215,7 @@
                 <el-table-column prop="multicastPort" width="100px" align="center" label="端口"></el-table-column>
                 <el-table-column prop="recordIp" min-width="120px" align="center" label="录制IP"></el-table-column>
                 <el-table-column prop="recordPort" width="100px" align="center" label="录制端口"></el-table-column>
-                <el-table-column prop="pushServer" align="center" min-width="120px" label="服务器"></el-table-column>
+                <el-table-column prop="serverGroup" align="center" min-width="120px" label="服务器组"></el-table-column>
                 <el-table-column align="center" width="60px" label="回看">
                     <template slot-scope="scope">
                         <span :class="[scope.row.record ? 'yes' : 'no']">

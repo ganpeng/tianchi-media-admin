@@ -21,7 +21,7 @@
                     搜索
                 </el-button>
                 <div class="search-field-item">
-                    <label class="search-field-item-label">广告类型</label>
+                    <label class="search-field-item-label">类型</label>
                     <el-select
                         :value="searchFields.adType"
                         clearable
@@ -37,7 +37,7 @@
                     </el-select>
                 </div>
                 <div class="search-field-item">
-                    <label class="search-field-item-label">是否上架</label>
+                    <label class="search-field-item-label">上下架</label>
                     <el-select
                         :value="searchFields.adVisible"
                         clearable
@@ -53,7 +53,7 @@
                     </el-select>
                 </div>
                 <div class="search-field-item">
-                    <label class="search-field-item-label">广告状态</label>
+                    <label class="search-field-item-label">状态</label>
                     <el-select
                         :value="searchFields.adStatus"
                         clearable

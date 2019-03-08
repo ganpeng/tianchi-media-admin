@@ -18,10 +18,10 @@
                             <span v-if="image.mediaType === 'IMAGE'" class="image-icon">
                                 <svg-icon class="image" icon-class="ad_image"></svg-icon>
                             </span>
-                            <span @click="displayVideo(image)" v-else class="video-icon">
-                                <svg-icon icon-class="ad_video" class="video"></svg-icon>
-                            </span>
                         </div>
+                        <span v-if="image.mediaType === 'VIDEO'" @click="displayVideo(image)" class="video-icon">
+                            <svg-icon icon-class="ad_video" class="video"></svg-icon>
+                        </span>
                     </div>
                     <p class="dimension-info my-ellipsis">{{image.name}}</p>
                 </li>
@@ -88,6 +88,8 @@ export default {
                 this.previewImage.display = true;
                 this.previewImage.list = this.previewImageList;
                 this.previewImage.activeIndex = index;
+            } else {
+                this.displayVideo(obj);
             }
         },
         displayVideo(obj) {
@@ -108,7 +110,7 @@ export default {
         .image-item {
             position: relative;
             width: 170px;
-            height: 124px;
+            // height: 124px;
             cursor: zoom-in;
             margin: 0 20px 10px 0;
             .image-warpper {
@@ -145,6 +147,16 @@ export default {
                         cursor: pointer;
                     }
                 }
+                .video-icon {
+                    position: absolute;
+                    bottom: 10px;
+                    left: 10px;
+                    cursor: pointer;
+                    .svg-icon {
+                        width: 30px;
+                        height: 30px;
+                    }
+                }
                 .mask {
                     display: none;
                     position: absolute;
@@ -177,16 +189,6 @@ export default {
                             height: 22px;
                         }
                     }
-                    .video-icon {
-                        position: absolute;
-                        bottom: 10px;
-                        left: 10px;
-                        cursor: pointer;
-                        .svg-icon {
-                            width: 30px;
-                            height: 30px;
-                        }
-                    }
                 }
                 &:hover {
                     .mask {
@@ -203,7 +205,7 @@ export default {
                 margin-top: 10px;
                 color: #A8ABB3;
                 font-size: 14px;
-                line-height: 14px;
+                line-height: 18px;
                 text-align: center;
             }
             .progress-bar {

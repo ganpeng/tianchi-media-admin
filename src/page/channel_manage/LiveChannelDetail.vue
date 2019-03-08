@@ -139,7 +139,8 @@
                 <li v-for="(item, index) in liveChannel.companyList" :key="index" :class="['search-item']">
                     <div class="wrapper">
                         <span class="index">{{index + 1}}</span>
-                        <span class="search-name">{{item.name}}</span>
+                        <span class="search-name my-ellipsis">{{item.name}}</span>
+                        <span v-if="item.name.length > 11" class="ellipsis-content">{{item.name}}</span>
                     </div>
                 </li>
             </ul>
@@ -331,6 +332,7 @@ export default {
         margin-right: 20px;
         margin-bottom: 14px;
         .wrapper {
+            position: relative;
             display: flex;
             align-items: center;
             height: 32px;
@@ -349,6 +351,22 @@ export default {
                 line-height: 32px;
                 text-indent: 10px;
                 text-align: left;
+            }
+            .ellipsis-content {
+                display: none;
+                position: absolute;
+                top: -24px;
+                left: 20px;
+                background: rgba(0,0,0,0.90);
+                box-shadow: 2px 4px 10px 0 rgba(0,0,0,0.30);
+                border-radius: 4px;
+                white-space: nowrap;
+                padding: 0 10px;
+            }
+            &:hover {
+                .ellipsis-content {
+                    display: block;
+                }
             }
         }
     }

@@ -87,9 +87,11 @@ export default {
 <style lang="scss" scoped>
 .video-link {
     margin-top: 10px;
+    color: #A8ABB3;
 }
 .video-name {
     font-size: 16px;
     margin: 10px 0;
+    color: #A8ABB3;
 }
 </style>

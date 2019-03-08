@@ -46,6 +46,7 @@ let defaultLiveChannel = {
     multicastIp: '', // ip地址
     multicastPort: '', // 端口
     pushServer: '', // 所属服务器
+    serverGroup: '', // 服务器组
     releaseStatus: '', // 直播频道的发布状态
     status: '', // 直播频道状态`
     record: '', // 是否支持直播回看
