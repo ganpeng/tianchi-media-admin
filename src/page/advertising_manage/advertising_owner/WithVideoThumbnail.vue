@@ -15,8 +15,11 @@
                                     {{image.duration ? `${image.duration}s` : ''}}
                                 </span>
                             </div>
-                            <span v-if="image.mediaType === 'IMAGE'" class="image-icon">
+                            <span v-if="image.mediaType === 'IMAGE' && !isGif(image.name)" class="image-icon">
                                 <svg-icon class="image" icon-class="ad_image"></svg-icon>
+                            </span>
+                            <span v-if="image.mediaType === 'IMAGE' && isGif(image.name)" class="image-icon">
+                                <svg-icon class="image" icon-class="ad_gif"></svg-icon>
                             </span>
                         </div>
                         <span v-if="image.mediaType === 'VIDEO'" @click="displayVideo(image)" class="video-icon">
@@ -78,6 +81,11 @@ export default {
         convertFileSize() {
             return (size) => {
                 return this.$util.convertFileSize(size);
+            };
+        },
+        isGif() {
+            return (name) => {
+                return /gif$/.test(name);
             };
         }
     },
