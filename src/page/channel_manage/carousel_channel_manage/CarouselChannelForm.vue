@@ -83,6 +83,15 @@
                     placeholder="请填写serviceId">
                 </el-input>
             </el-form-item>
+            <!--  新加选项  -->
+            <el-form-item label="服务器组" prop="serverGroup">
+                <el-input
+                    v-model="channelInfo.serverGroup"
+                    size="medium"
+                    placeholder="请填写所属服务器组">
+                </el-input>
+            </el-form-item>
+            <!--
             <el-form-item label="所属服务器" prop="pushServer" required>
                 <el-input
                     v-model="channelInfo.pushServer"
@@ -90,6 +99,7 @@
                     placeholder="请填写所属服务器的IP地址">
                 </el-input>
             </el-form-item>
+            -->
             <el-form-item label="状态" prop="visible" required v-if="status === 'CREATE_CHANNEL'">
                 <label>禁播</label>
             </el-form-item>
@@ -637,6 +647,7 @@
                     protocolList: [],
                     multicastIp: '',
                     pushServer: '',
+                    serverGroup: '', // 新加字段
                     visible: false,
                     logoUri: ''
                 },
@@ -684,6 +695,9 @@
                     ],
                     pushServer: [
                         {validator: checkPushServer, trigger: 'blur'}
+                    ],
+                    serverGroup: [ // 新加校验
+                        { required: true, message: '请输入所属服务器组' }
                     ],
                     logoUri: [
                         {validator: checkLogoUri, trigger: 'blur'}

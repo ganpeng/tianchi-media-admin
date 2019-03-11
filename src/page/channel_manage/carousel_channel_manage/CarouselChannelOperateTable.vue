@@ -95,12 +95,23 @@
             <el-table-column
                 align="center"
                 min-width="180px"
+                prop="serverGroup"
+                label="服务器组">
+                <template slot-scope="scope">
+                    <label>{{scope.row.serverGroup ? scope.row.serverGroup : '------'}}</label>
+                </template>
+            </el-table-column>
+            <!--
+            <el-table-column
+                align="center"
+                min-width="180px"
                 prop="pushServer"
                 label="所属服务器">
                 <template slot-scope="scope">
                     <label>{{scope.row.pushServer ? scope.row.pushServer : '------'}}</label>
                 </template>
             </el-table-column>
+            -->
             <el-table-column
                 align="center"
                 min-width="70px"
