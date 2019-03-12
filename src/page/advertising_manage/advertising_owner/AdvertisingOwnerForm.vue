@@ -147,6 +147,7 @@ export default {
         font-size: 12px;
         line-height: 20px;
         padding: 12px;
+        z-index: 20;
     }
 }
 </style>

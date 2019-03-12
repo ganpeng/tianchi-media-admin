@@ -53,7 +53,7 @@ export const deleteProgrammeVideoById = (id) => {
 /**
  * 子集下架
  */
-export const toggleVisible = ({id}) => {
+export const lowerFrameVideo = (id) => {
     return service.patch(`/v1/content/programme/video/${id}/visible`);
 };
 

@@ -161,7 +161,7 @@
                             class="my-switch switch-anim"
                             type="checkbox"
                             :checked="scope.row.visible"
-                            @click.prevent="_lowerFramePerson(scope.row)"/>
+                            @click.prevent="_lowerFrameVideo(scope.row)"/>
                         <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
                         <i v-else class="off-the-shelf">已下架</i>
                     </template>
@@ -196,6 +196,7 @@
 </template>
 <script>
 import {mapGetters, mapActions, mapMutations} from 'vuex';
+import _ from 'lodash';
 import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
@@ -279,7 +280,8 @@ export default {
             deleteVideoFromTempList: 'programme/deleteVideoFromTempList',
             deleteVideoFromList: 'programme/deleteVideoFromList',
             setCurrentVideo: 'programme/setCurrentVideo',
-            setCacheSort: 'programme/setCacheSort'
+            setCacheSort: 'programme/setCacheSort',
+            updateCurrentVideo: 'programme/updateCurrentVideo'
         }),
         ...mapActions({
             getProgrammeVideoById: 'programme/getProgrammeVideoById',
@@ -366,6 +368,30 @@ export default {
             this.previewImage.title = image.name;
             this.previewImage.display = true;
             this.previewImage.uri = image.uri;
+        },
+        async _lowerFrameVideo(video) {
+            try {
+                let {id, visible} = video;
+                let operatorText = visible ? '下架' : '上架';
+                let confirm = await this.$confirm(`此操作将${operatorText}该视频, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                });
+                if (confirm) {
+                    let res = await this.$service.lowerFrameVideo(id);
+                    if (res && res.code === 0) {
+                        let _video = _.cloneDeep(video);
+                        _video.visible = !_video.visible;
+                        this.updateCurrentVideo({video: _video});
+                        this.$message.success(`视频${operatorText}成功`);
+                    } else {
+                        this.$message.error(`视频${operatorText}失败`);
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
         }
     }
 };

@@ -672,6 +672,7 @@
                 video: 'programme/video',
                 isTvPlay: 'programme/isTvPlay',
                 isMovie: 'programme/isMovie',
+                isShow: 'programme/isShow',
                 isEducation: 'programme/isEducation',
                 isSports: 'programme/isSports',
                 areaLabel: 'programme/areaLabel'
@@ -806,7 +807,16 @@
                 return this.programme.platformList.length === 0;
             },
             leftBottomDisabled() {
-                return !this.programme.totalSets;
+                let hasFeature = this.video.list.filter((item) => item.type === 'FEATURE').length > 0;
+                if (this.isShow) {
+                    if (hasFeature) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return !this.programme.totalSets;
+                }
             },
             rightBottomDisabled() {
                 return !this.programme.score;
