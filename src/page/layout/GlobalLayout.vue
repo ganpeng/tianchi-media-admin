@@ -230,15 +230,15 @@
                     li:last-child {
                         display: none;
                     }
-                    li:nth-child(7) {
+                    li:nth-child(8) { // 原来是7，我改成8了，原因是广告项被隐藏了
                         display: inline-block;
                     }
                 }
-                &:not(.is-center-site) {
+                &:not(.is-center-site) { // 原来是7，我改成8了，原因是广告项被隐藏了
                     li:last-child {
                         display: inline-block;
                     }
-                    li:nth-child(7) {
+                    li:nth-child(8) {
                         display: none;
                     }
                 }

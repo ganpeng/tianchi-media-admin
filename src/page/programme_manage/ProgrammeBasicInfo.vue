@@ -8,7 +8,8 @@
                         {{programme.visible ? '上架' : '下架'}}
                     </span>
                 </div>
-                <img :src="programme.coverImage ? programme.coverImage.uri : ''" alt="">
+                <img v-if="programme.coverImage && programme.coverImage.uri" :src="programme.coverImage ? programme.coverImage.uri : ''" alt="">
+                <div v-else class="default-poster"></div>
             </div>
             <div class="info-section">
                 <div class="title-wrapper">
@@ -52,7 +53,8 @@
                 </p>
                 <ul class="person-posters">
                     <li v-for="(person, index) in getAllRoleList" :key="index" class="poster">
-                        <img :src="person.avatarUri" alt="" width="80" height="80">
+                        <img v-if="person.avatarUri" :src="person.avatarUri" alt="" width="80" height="80">
+                        <div v-else class="default-poster"></div>
                         <span class="person-name my-ellipsis">{{person.name}}</span>
                     </li>
                 </ul>
