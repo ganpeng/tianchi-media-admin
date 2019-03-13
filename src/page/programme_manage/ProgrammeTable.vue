@@ -340,7 +340,7 @@ export default {
             this.videoUploadDialogVisible = status;
         },
         realDeleteVideo(id) {
-            this.$confirm('此操作将永久删除该视频, 是否继续?', '提示', {
+            this.$confirm('确定取消关联视频吗?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'error'

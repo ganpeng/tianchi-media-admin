@@ -447,6 +447,7 @@ export default {
             this.dialogVisible = false;
             this.active = 0;
             this.category = '';
+            this.showExist = false;
             this.layoutItemType = '';
             this.programme = {};
             this.previewImage = {

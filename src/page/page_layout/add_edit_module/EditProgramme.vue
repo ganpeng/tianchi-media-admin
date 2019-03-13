@@ -461,6 +461,7 @@ export default {
             this.active = 0;
             this.category = '';
             this.layoutItemType = '';
+            this.showExist = false;
             this.programme = {};
             this.previewImage = {
                 title: '',
@@ -474,10 +475,14 @@ export default {
             try {
                 await this.getProgrammeCategory();
                 let _layoutItemType = _.get(this.layoutItem, 'layoutItemType');
+                console.log(_layoutItemType);
                 if (_layoutItemType !== 'PROGRAMME' && _layoutItemType !== 'PROGRAMME_LIST') {
                     this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
                 } else {
                     if (this.getSquareProgrammeId) {
+                        console.log('alsdkflsdjkflsdjfd');
+                        console.log(this.getSquareProgrammeId);
+                        console.log('alsdkflsdjkflsdjfd');
                         let res = await this.$service.getProgrammeInfo({id: this.getSquareProgrammeId});
                         if (res && res.code === 0) {
                             this.programme = res.data;

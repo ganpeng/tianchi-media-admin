@@ -13,7 +13,7 @@
             :close-on-press-escape="false"
             :append-to-body="true">
             <div class="person-dialog-container">
-                <el-steps class="my-steps" :active="active" center finish-status="success">
+                <el-steps class="my-steps" :active="active" align-center finish-status="success">
                     <el-step title="选择节目专题"></el-step>
                     <el-step title="选择图片"></el-step>
                     <el-step title="设置角标"></el-step>

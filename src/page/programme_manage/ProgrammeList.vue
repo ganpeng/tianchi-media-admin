@@ -180,9 +180,10 @@
                     </el-table-column>
                     <el-table-column label="节目图片" width="100px" align="center">
                         <template slot-scope="scope">
-                            <img style="width:70px;height:auto;"
+                            <img v-if="scope.row.coverImage && scope.row.coverImage.uri" style="width:70px;height:auto;"
                                  @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer"
                                  :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
+                            <span v-else >{{ '' | padEmpty }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="featureVideoCount" width="100px" align="center" label="正片数量">

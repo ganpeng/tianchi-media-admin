@@ -296,8 +296,11 @@ export default {
                 right: 8px;
                 cursor: pointer;
                 z-index: 1000000;
+                background-color: rgba(0, 0, 0, 0.5);
+                &:hover {
+                    background-color: rgb(0, 0, 0);
+                }
             }
-
             &:hover {
                 .mask {
                     display: block;
@@ -305,6 +308,9 @@ export default {
                 span.delete-icon {
                     display: block;
                 }
+            }
+            &:last-child {
+                cursor: pointer;
             }
         }
         .uploading-image-item {

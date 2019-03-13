@@ -229,6 +229,7 @@ export default {
                 border-radius: 30px;
                 background-image: url('../../../assets/img/children_history.png');
                 background-size: cover;
+                background-color: transparent;
             }
             .middle-field {
                 @include paddingBg(63%);
