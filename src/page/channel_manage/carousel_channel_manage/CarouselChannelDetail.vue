@@ -8,7 +8,7 @@
             <div class="channel-status shelve" v-if="channelInfo.visible">正常</div>
             <div class="channel-status un-shelve" v-else>禁播</div>
             <div class="title">
-                <label>{{channelInfo.name}}</label>
+                <label>{{channelInfo.no}}</label>&nbsp;&nbsp;<label>{{channelInfo.name}}</label>
             </div>
             <div class="channel-time">
                 <div>创建于{{channelInfo.createdAt | formatDate('yyyy.MM.DD')}}</div>
@@ -33,18 +33,17 @@
                         <li><span>tsID：</span><label>{{channelInfo.tsId ? channelInfo.tsId : '无' }}</label></li>
                         <li><span>serviceID：</span><label>{{channelInfo.serviceId ? channelInfo.serviceId :'无'}}</label>
                         </li>
-                        <li><span>推流方式：</span>
-                            <label
-                                class="protocol-type"
-                                v-for="(item,index) in channelInfo.protocolList"
-                                :key="index">
-                                {{item}}
-                            </label>
-                        </li>
                     </ul>
                 </div>
                 <ul class="info-list right-info">
-                    <li><span>频道编号：</span><label>{{channelInfo.no}}</label></li>
+                    <li><span>推流方式：</span>
+                        <label
+                            class="protocol-type"
+                            v-for="(item,index) in channelInfo.protocolList"
+                            :key="index">
+                            {{item}}
+                        </label>
+                    </li>
                     <li><span>所属服务器：</span><label>{{channelInfo.pushServer}}</label></li>
                     <li>
                         <span>当前播放：</span>

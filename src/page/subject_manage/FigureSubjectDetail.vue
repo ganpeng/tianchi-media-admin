@@ -121,7 +121,7 @@
             height: 30px;
             width: 80px;
             line-height: 30px;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 20px;
             text-align: center;
             &.un-shelve {

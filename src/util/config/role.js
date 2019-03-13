@@ -648,7 +648,7 @@ const ASIDE_LIST = [
             icon: 'advertiser'
         },
         {
-            text: '广告管理',
+            text: '广告',
             uri: '/ads-manage/list',
             icon: 'ad'
         }

@@ -18,7 +18,7 @@
                 prop="no"
                 width="60px"
                 align="center"
-                label="编号">
+                label="台号">
             </el-table-column>
             <el-table-column
                 prop="name"

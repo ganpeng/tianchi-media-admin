@@ -57,7 +57,10 @@
                 <div id="ad-video-resource"
                      v-if="adInfo.adMaterialList[0] && (status === 'CREATE_BOOT_AD' || status === 'EDIT_BOOT_AD')">
                     <div class="ad-video-container" @click="previewVideoResource">
-                        <i class="el-icon-circle-close" @click.stop="removeVideoResource"></i>
+                        <span @click.stop="removeVideoResource">
+                           <svg-icon icon-class="remove_image_hover"></svg-icon>
+                           <svg-icon icon-class="remove_image_default"></svg-icon>
+                        </span>
                         <svg-icon icon-class="video-ad"></svg-icon>
                         <div class="ad-desc">
                             <div class="ellipsis one">{{adInfo.adMaterialList[0].name}}</div>
@@ -86,7 +89,10 @@
                              :key="index"
                              @click.self="displayImage(index)"
                              :style="{'background-image': 'url(' + item.storageUri + ')'}">
-                            <i class="el-icon-circle-close" @click.stop="removeImageResource(item,index)"></i>
+                            <span @click.stop="removeImageResource(item,index)">
+                                 <svg-icon icon-class="remove_image_hover"></svg-icon>
+                                 <svg-icon icon-class="remove_image_default"></svg-icon>
+                            </span>
                             <div class="ad-desc">
                                 <div>{{item.width}}*{{item.height}}</div>
                                 <div>{{item.size | convertFileSize}}</div>
@@ -482,8 +488,19 @@
             cursor: pointer;
             &:hover {
                 border: 1px solid #1989FA;
-                i {
+                span {
                     visibility: visible;
+                    .svg-icon-remove_image_hover {
+                        display: none;
+                    }
+                    &:hover {
+                        .svg-icon-remove_image_hover {
+                            display: inline;
+                        }
+                        .svg-icon-remove_image_default {
+                            display: none;
+                        }
+                    }
                 }
                 .svg-icon-video-ad {
                     fill-opacity: 1;
@@ -497,16 +514,16 @@
                 fill-opacity: 0.5;
             }
             /*删除按钮*/
-            i {
-                position: absolute;
-                top: 2px;
-                right: 2px;
-                font-size: 16px;
-                color: #6F7480;
-                cursor: pointer;
+            span {
                 visibility: hidden;
-                &:hover {
-                    color: #C35757;
+                position: absolute;
+                top: 5px;
+                right: 10px;
+                z-index: 400;
+                cursor: pointer;
+                .svg-icon {
+                    width: 23px !important;
+                    height: 23px !important;
                 }
             }
             .ad-desc {
@@ -526,7 +543,6 @@
             padding-right: 25px;
             height: 100px;
             min-width: 170px;
-            background: #2A3040;
             border: 1px solid #3E495E;
             border-radius: 8px;
             li {
@@ -564,32 +580,43 @@
             margin-right: 22px;
             margin-bottom: 80px;
             position: relative;
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
             height: 100px;
             width: 170px;
             background: #2A3040;
             border: 1px solid #3E495E;
             border-radius: 8px;
             cursor: pointer;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
             &:hover {
                 border: 1px solid #1989FA;
-                i {
+                span {
                     visibility: visible;
+                    .svg-icon-remove_image_hover {
+                        display: none;
+                    }
+                    &:hover {
+                        .svg-icon-remove_image_hover {
+                            display: inline;
+                        }
+                        .svg-icon-remove_image_default {
+                            display: none;
+                        }
+                    }
                 }
             }
             /*删除按钮*/
-            i {
-                position: absolute;
-                top: 2px;
-                right: 2px;
-                font-size: 16px;
-                color: #6F7480;
-                cursor: pointer;
+            span {
                 visibility: hidden;
-                &:hover {
-                    color: #C35757;
+                position: absolute;
+                top: 5px;
+                right: 10px;
+                z-index: 400;
+                cursor: pointer;
+                .svg-icon {
+                    width: 23px !important;
+                    height: 23px !important;
                 }
             }
             .ad-desc {
@@ -609,7 +636,6 @@
             min-width: 170px;
             padding-bottom: 10px;
             padding-right: 25px;
-            background: #2A3040;
             border: 1px solid #3E495E;
             border-radius: 8px;
             li {
@@ -637,9 +663,5 @@
             }
         }
     }
-
-</style>
-
-<style lang="scss">
 
 </style>

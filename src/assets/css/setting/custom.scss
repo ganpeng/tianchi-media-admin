@@ -111,7 +111,7 @@ html, body {
         background: #2a3040;
     }
     .checked {
-        background: #000!important;
+        background: #000 !important;
     }
     .descending {
         .caret-wrapper {
@@ -485,6 +485,9 @@ html, body {
     border-radius: 4px;
     input.el-input__inner {
         border: none;
+        &:disabled {
+            border: none;
+        }
     }
     .el-icon-date {
         display: none;

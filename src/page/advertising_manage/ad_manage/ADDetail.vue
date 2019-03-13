@@ -240,7 +240,7 @@
             height: 30px;
             width: 80px;
             line-height: 30px;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 20px;
             text-align: center;
             &.un-shelve {
@@ -398,7 +398,6 @@
             padding-right: 25px;
             height: 100px;
             min-width: 170px;
-            background: #2A3040;
             border: 1px solid #3E495E;
             border-radius: 8px;
             li {
@@ -444,6 +443,9 @@
             background: #2A3040;
             border: 1px solid #3E495E;
             border-radius: 8px;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
             cursor: zoom-in;
             &:hover {
                 background: rgba(41, 53, 80, 0.80);
@@ -498,7 +500,6 @@
             min-width: 170px;
             padding-bottom: 10px;
             padding-right: 25px;
-            background: #2A3040;
             border: 1px solid #3E495E;
             border-radius: 8px;
             li {
