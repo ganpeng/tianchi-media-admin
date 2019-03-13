@@ -13,7 +13,14 @@
             :append-to-body="true">
                 <div v-if="displayVideoDialogVisible">
                     <h2 class="video-name">{{title}}</h2>
-                    <div id="dplayer"></div>
+                    <!-- <div id="dplayer"></div> -->
+                    <video
+                        id="my-player"
+                        class="video-js"
+                        controls
+                        autoplay
+                        preload="auto">
+                    </video>
                     <p class="video-link">视频地址：{{url}}</p>
                 </div>
                 <div slot="footer" class="dialog-footer">
@@ -25,6 +32,8 @@
 <script>
 import DPlayer from 'dplayer';
 import 'dplayer/dist/DPlayer.min.css';
+import videojs from 'video.js';
+import 'video.js/dist/alt/video-js-cdn.min.css';
 export default {
     name: 'DisplayVideoDialog',
     props: {
@@ -41,6 +50,7 @@ export default {
         return {
             displayVideoDialogVisible: false,
             player: null,
+            videoPlayer: null,
             fullScreen: false
         };
     },
@@ -55,12 +65,26 @@ export default {
                 });
             });
         },
-        dialogOpenHandler() {
+        initVideoPlayer() {
             let that = this;
             this.$nextTick(() => {
-                let dplayerDom = document.querySelector('#dplayer');
-                dplayerDom.addEventListener('dblclick', that.fullScreenHandler, false);
+                let myPlayer = document.getElementById('my-player');
+                let options = {};
+                that.videoPlayer = videojs(myPlayer, options, () => {
+                    console.log('video is ready!!!');
+                });
+                this.videoPlayer.src({
+                    src: this.url,
+                    type: 'application/x-mpegURL'
+                });
             });
+        },
+        dialogOpenHandler() {
+            // let that = this;
+            // this.$nextTick(() => {
+            //     let dplayerDom = document.querySelector('#dplayer');
+            //     dplayerDom.addEventListener('dblclick', that.fullScreenHandler, false);
+            // });
         },
         fullScreenHandler() {
             this.fullScreen = !this.fullScreen;
@@ -72,13 +96,15 @@ export default {
         },
         showDialog() {
             this.displayVideoDialogVisible = true;
-            this.initPlayer();
+            // this.initPlayer();
+            this.initVideoPlayer();
         },
         closeDialog() {
-            this.player.switchVideo({url: ''});
-            this.player.pause();
-            this.player.seek(0);
-            this.player.destroy();
+            // this.player.switchVideo({url: ''});
+            // this.player.pause();
+            // this.player.seek(0);
+            // this.player.destroy();
+            this.videoPlayer.dispose();
             this.displayVideoDialogVisible = false;
         }
     }
@@ -93,5 +119,10 @@ export default {
     font-size: 16px;
     margin: 10px 0;
     color: #A8ABB3;
+
+}
+.video-js {
+    width: 100%;
+    height: 400px;
 }
 </style>

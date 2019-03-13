@@ -18,7 +18,7 @@
                                         <div class="btn-wrapper">
                                             <div v-if="ele.m3u8Uri" class="url-wrapper">
                                                 <span class="text-primary url"
-                                                      @click="displayVideoPlayer(ele, 'm3u8Uri')">模拟源</span>
+                                                      @click="displayVideoPlayer(ele, 'm3u8Uri')">回看</span>
                                                 <svg-icon
                                                     v-if="ele.m3u8Uri"
                                                     icon-class="copy_btn"
@@ -28,7 +28,7 @@
                                             </div>
                                             <div v-if="ele.playUri" class="url-wrapper">
                                                 <span class="text-primary url"
-                                                      @click="displayVideoPlayer(ele, 'playUri')">回看</span>
+                                                      @click="displayVideoPlayer(ele, 'playUri')">模拟源</span>
                                                 <svg-icon
                                                     v-if="ele.playUri"
                                                     icon-class="copy_btn"
@@ -56,7 +56,7 @@
                                         <div class="btn-wrapper">
                                             <div v-if="ele.m3u8Uri" class="url-wrapper">
                                                 <span class="text-primary url"
-                                                      @click="displayVideoPlayer(ele, 'm3u8Uri')">模拟源</span>
+                                                      @click="displayVideoPlayer(ele, 'm3u8Uri')">回看</span>
                                                 <svg-icon
                                                     v-if="ele.m3u8Uri"
                                                     icon-class="copy_btn"
@@ -66,7 +66,7 @@
                                             </div>
                                             <div v-if="ele.playUri" class="url-wrapper">
                                                 <span class="text-primary url"
-                                                      @click="displayVideoPlayer(ele, 'playUri')">回看</span>
+                                                      @click="displayVideoPlayer(ele, 'playUri')">模拟源</span>
                                                 <svg-icon
                                                     v-if="ele.playUri"
                                                     icon-class="copy_btn"

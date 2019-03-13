@@ -183,6 +183,7 @@
         <display-video-dialog
             :url="previewVideoInfo.url"
             :title="previewVideoInfo.title"
+            ref="displayVideoPlayer"
             :displayVideoDialogVisible="previewVideoInfo.visible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
@@ -190,7 +191,7 @@
 </template>
 
 <script>
-    import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
+    import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
 
     const ClipboardJS = require('clipboard');
 
@@ -250,6 +251,7 @@
                 this.previewVideoInfo.url = `${baseUri}${url}`;
                 this.previewVideoInfo.title = title;
                 this.previewVideoInfo.visible = true;
+                this.$refs.displayVideoPlayer.showDialog();
             },
             // 关闭视频预览
             closeDisplayVideoDialog(status) {

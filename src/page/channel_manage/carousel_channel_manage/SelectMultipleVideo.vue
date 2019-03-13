@@ -161,13 +161,14 @@
         <display-video-dialog
             :url="previewVideoInfo.url"
             :title="previewVideoInfo.title"
+            ref="displayVideoPlayer"
             :displayVideoDialogVisible="previewVideoInfo.visible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
     </div>
 </template>
 <script>
-    import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
+    import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
 
     export default {
         name: 'SelectMultipleVideo',
@@ -360,6 +361,7 @@
                 this.previewVideoInfo.url = `${baseUri}${url}`;
                 this.previewVideoInfo.title = title;
                 this.previewVideoInfo.visible = true;
+                this.$refs.displayVideoPlayer.showDialog();
             },
             closeSelectVideoDialog() {
                 this.$emit('closeSelectVideoDialog');

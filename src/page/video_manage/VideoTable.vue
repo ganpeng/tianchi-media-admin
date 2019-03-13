@@ -261,6 +261,7 @@
         <display-video-dialog
             :url="url"
             :title="title"
+            ref="displayVideoPlayer"
             :displayVideoDialogVisible="displayVideoDialogVisible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
@@ -311,8 +312,7 @@
 </template>
 
 <script>
-
-    import DisplayVideoDialog from './DisplayVideoDialog';
+    import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
 
     const ClipboardJS = require('clipboard');
 
@@ -632,6 +632,7 @@
                 this.displayVideoDialogVisible = true;
                 this.url = `${url}`;
                 this.title = name;
+                this.$refs.displayVideoPlayer.showDialog();
             },
             // 删除视频文件
             deleteVideo(video) {

@@ -9,7 +9,7 @@
                 <div class="search-field-item">
                     <el-input
                         :value="searchFields.keyword"
-                        placeholder="请输入主名称或编号"
+                        placeholder="搜索你想要的信息"
                         @input="inputHandler($event, 'keyword')"
                         clearable
                         class="border-input"

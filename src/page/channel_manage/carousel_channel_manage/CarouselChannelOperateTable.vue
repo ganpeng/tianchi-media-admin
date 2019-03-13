@@ -153,6 +153,7 @@
         <display-video-dialog
             :url="previewVideoInfo.url"
             :title="previewVideoInfo.title"
+            ref="displayVideoDialog"
             :displayVideoDialogVisible="previewVideoInfo.visible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
@@ -160,7 +161,7 @@
 </template>
 
 <script>
-    import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
+    import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
 
     export default {
         name: 'CarouselChannelOperateTable',
@@ -194,6 +195,7 @@
                 this.previewVideoInfo.url = channel.hlsPlayUrl;
                 this.previewVideoInfo.title = channel.name;
                 this.previewVideoInfo.visible = true;
+                this.$refs.displayVideoDialog.showDialog();
             },
             // 关闭视频预览
             closeDisplayVideoDialog(status) {

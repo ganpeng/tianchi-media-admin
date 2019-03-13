@@ -8,7 +8,7 @@ html, body {
     font-size: 24px;
     color: #6F7480;
     text-align: left;
-    margin: 20px 0;
+    margin: 20px 0 10px 0;
 }
 
 //  内容区域小点的title
@@ -698,7 +698,7 @@ html, body {
     .field-row {
         display: flex;
         align-items: center;
-        padding: 23px 10px;
+        padding: 26px 10px 20px 10px;
         &:first-child {
             border-top-left-radius: 8px;
             border-top-right-radius: 8px;
@@ -713,14 +713,18 @@ html, body {
             align-items: center;
             min-width: 120px;
             margin-right: 30px;
+            &:nth-of-type(1) {
+                margin-right: 20px;
+            }
             &:nth-of-type(2) {
                 margin-left: 30px;
             }
             .search-field-item-label {
-                min-width: 40px;
+                // min-width: 40px;
                 font-size: 16px;
                 color: #6F7480;
-                margin: 0 10px;
+                margin-right: 10px;
+                // margin: 0 10px;
             }
             .el-date-editor, .el-input__inner {
                 color: #A3D0FD;
