@@ -24,8 +24,12 @@
     background-position: center center;
     background-size: 100% 100%;
     .svg-icon {
-        width: 100%;
-        height: 100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 690px;
+        height: 417px;
     }
 }
 </style>
