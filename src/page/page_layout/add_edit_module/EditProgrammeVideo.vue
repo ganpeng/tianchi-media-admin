@@ -825,4 +825,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.step-one {
+    margin-top: 20px;
+}
 </style>

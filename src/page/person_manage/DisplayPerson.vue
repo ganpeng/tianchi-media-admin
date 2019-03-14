@@ -44,7 +44,7 @@
                     </div>
                     <div class="attribute-item">
                         <label class="item-label">英文名:</label>
-                        <span class="value">{{person.englishName}}</span>
+                        <span class="value">{{person.englishName ? person.englishName : '无'}}</span>
                     </div>
                 </div>
                 <p class="description">

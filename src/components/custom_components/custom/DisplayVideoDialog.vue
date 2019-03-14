@@ -44,6 +44,10 @@ export default {
         title: {
             type: String,
             default: ''
+        },
+        type: {
+            type: String,
+            default: 'application/x-mpegURL'
         }
     },
     data() {
@@ -75,7 +79,7 @@ export default {
                 });
                 this.videoPlayer.src({
                     src: this.url,
-                    type: 'application/x-mpegURL'
+                    type: that.type
                 });
             });
         },

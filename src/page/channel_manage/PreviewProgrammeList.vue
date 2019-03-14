@@ -261,7 +261,7 @@
             displayVideoPlayer(ele, uriKey) {
                 let {m3u8Uri, name, playUri} = ele;
                 if (uriKey === 'm3u8Uri') {
-                    this.url = `${this.urlPrefix}/${this.serverGroup}${m3u8Uri}`;
+                    this.url = `${this.urlPrefix}${m3u8Uri}`;
                 } else {
                     this.url = `${playUri}`;
                 }

@@ -37,6 +37,7 @@
             ref="displayVideoDialog"
             :title="video.title"
             :url="video.url"
+            type="video/mp4"
         ></display-video-dialog>
     </div>
 </template>
