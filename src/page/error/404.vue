@@ -1,5 +1,6 @@
 <template>
     <div class="error-page-container">
+        <svg-icon icon-class="404_new"></svg-icon>
     </div>
 </template>
 <script>
@@ -18,9 +19,13 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('../../assets/img/404.jpg');
+    background-color: #1A2233;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 100% 100%;
+    .svg-icon {
+        width: 100%;
+        height: 100%;
+    }
 }
 </style>

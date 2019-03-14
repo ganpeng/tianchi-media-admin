@@ -170,14 +170,9 @@
                 let obj = this.prevList[0] || this.afterList[0];
                 return obj ? obj.channelName : '';
             },
-            baseUri() {
-                let baseUri = window.localStorage.getItem('videoBaseUri');
-                return baseUri;
-            },
             getVideoUrl() {
                 return (uri, uriKey) => {
-                    let baseUri = window.localStorage.getItem('videoBaseUri');
-                    return `${baseUri}${uri}`;
+                    return `${this.urlPrefix}${uri}`;
                 };
             }
         },
