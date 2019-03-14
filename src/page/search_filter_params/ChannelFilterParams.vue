@@ -220,4 +220,25 @@
         }
     }
 
+    // 按钮
+    .more-filters {
+        font-size: 12px;
+        color: #6F7480;
+        &.active {
+            color: #1989FA;
+            i {
+                color: #6F7480;
+            }
+        }
+        i {
+            margin-left: 8px;
+        }
+    }
+
+    .more-filter-box {
+        background: #252C3D;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+
 </style>

@@ -449,6 +449,9 @@
             cursor: zoom-in;
             &:hover {
                 background: rgba(41, 53, 80, 0.80);
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
                 .image-cover {
                     visibility: visible;
                 }
@@ -456,12 +459,12 @@
             .image-cover {
                 visibility: hidden;
                 position: absolute;
+                height: 100px;
+                width: 170px;
                 left: 0px;
-                right: 0px;
                 top: 0px;
-                bottom: 0px;
                 background: rgba(41, 53, 80, 0.80);
-                border-radius: 8px;
+                border-radius: 7px;
                 cursor: zoom-in;
                 .svg-icon-ad_image {
                     position: absolute;

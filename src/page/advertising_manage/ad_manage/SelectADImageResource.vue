@@ -140,10 +140,10 @@
             width: 170px;
             border: 1px solid #3E495E;
             border-radius: 8px;
+            background: #2A3040;
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
-            background: #2A3040;
             cursor: pointer;
             overflow: visible;
             &:hover {

@@ -323,7 +323,7 @@
                 statusOptions: [
                     {value: 'ACTIVE', label: '生效'},
                     {value: 'WAITING', label: '未生效'},
-                    {value: 'EXPIRED', label: '失效'}
+                    {value: 'EXPIRED', label: '已失效'}
                 ],
                 visibleOptions: [
                     {value: true, label: '已上架'},
