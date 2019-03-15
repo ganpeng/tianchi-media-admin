@@ -28,9 +28,10 @@
                 </el-tag>
             </p>
         </div>
-        <div class="search-field-item">
+        <div class="search-field-item" @keyup.enter="getProgrammeList">
             <el-input
                 v-model="listQueryParams.keyword"
+                @change="getProgrammeList"
                 clearable
                 class="border-input"
                 placeholder="节目名称等">

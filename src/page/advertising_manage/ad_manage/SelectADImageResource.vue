@@ -173,8 +173,8 @@
     #select-ad-video {
         .el-checkbox__input {
             position: absolute;
-            top: 22px;
-            left: 10px;
+            top: 170px;
+            left: 90px;
         }
     }
 

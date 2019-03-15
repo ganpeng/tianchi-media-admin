@@ -87,12 +87,13 @@
                         <div class="ad-image-container"
                              v-for="(item, index) in adInfo.adMaterialList"
                              :key="index"
-                             @click.self="displayImage(index)"
                              :style="{'background-image': 'url(' + item.storageUri + ')'}">
-                            <span @click.stop="removeImageResource(item,index)">
-                                 <svg-icon icon-class="remove_image_hover"></svg-icon>
-                                 <svg-icon icon-class="remove_image_default"></svg-icon>
-                            </span>
+                            <div class="image-cover" @click.self="displayImage(index)">
+                                <span @click.stop="removeImageResource(item,index)">
+                                     <svg-icon icon-class="remove_image_hover"></svg-icon>
+                                     <svg-icon icon-class="remove_image_default"></svg-icon>
+                                 </span>
+                            </div>
                             <div class="ad-desc">
                                 <div>{{item.width}}*{{item.height}}</div>
                                 <div>{{item.size | convertFileSize}}</div>
@@ -590,9 +591,31 @@
             background-repeat: no-repeat;
             background-position: center;
             &:hover {
-                border: 1px solid #1989FA;
-                span {
+                .image-cover {
                     visibility: visible;
+                }
+            }
+            .image-cover {
+                visibility: hidden;
+                position: absolute;
+                height: 100px;
+                width: 170px;
+                left: 0px;
+                top: 0px;
+                background: rgba(41, 53, 80, 0.80);
+                border-radius: 7px;
+                cursor: zoom-in;
+                /*删除按钮*/
+                span {
+                    position: absolute;
+                    top: 5px;
+                    right: 10px;
+                    z-index: 400;
+                    cursor: pointer;
+                    .svg-icon {
+                        width: 23px !important;
+                        height: 23px !important;
+                    }
                     .svg-icon-remove_image_hover {
                         display: none;
                     }
@@ -604,19 +627,6 @@
                             display: none;
                         }
                     }
-                }
-            }
-            /*删除按钮*/
-            span {
-                visibility: hidden;
-                position: absolute;
-                top: 5px;
-                right: 10px;
-                z-index: 400;
-                cursor: pointer;
-                .svg-icon {
-                    width: 23px !important;
-                    height: 23px !important;
                 }
             }
             .ad-desc {
