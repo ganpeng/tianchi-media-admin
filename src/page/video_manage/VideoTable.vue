@@ -351,7 +351,6 @@
         },
         data() {
             return {
-                displayRelateDialogVisible: false,
                 displayVideoDialogVisible: false,
                 url: '',
                 title: '',

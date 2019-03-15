@@ -42,6 +42,15 @@
     text-align: left;
     .el-input, .el-textarea, .el-select {
         width: 300px !important;
+        &.el-date-editor--date {
+            width: 230px !important;
+        }
+        &.el-date-editor--time {
+            width: 124px !important;
+        }
+        i.el-icon-time {
+            display: none;
+        }
     }
     .el-input {
         transform: scale(1, 0.945);
@@ -49,23 +58,6 @@
     .el-input__icon {
         height: 100% !important;
     }
-    //.el-input {
-    //    height: 34px !important;
-    //    input {
-    //        height: 34px;
-    //        line-height: 34px;
-    //    }
-    //}
-    //.el-select:not(.multiple-select) {
-    //    height: 34px !important;
-    //    input {
-    //        height: 34px;
-    //        line-height: 34px;
-    //    }
-    //}
-    //.el-form-item__content {
-    //    line-height: 34px !important;
-    //}
 }
 
 // 2.0弹窗样式
@@ -143,13 +135,6 @@
     display: inline-block;
     width: 60px;
     height: 60px;
-}
-
-// 可设置的模块
-.settable {
-    position: relative;
-    transition: background-color 0.5s;
-    color: #fff;
 }
 
 //  类型管理的树形状结构

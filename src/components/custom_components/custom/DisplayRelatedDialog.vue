@@ -57,7 +57,7 @@
         },
         data() {
             return {
-                displayRelatedDialogVisible: true,
+                displayRelatedDialogVisible: false,
                 tableData: [{
                     type: '推荐栏目',
                     position: '混排模块'
