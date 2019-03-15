@@ -31,6 +31,16 @@
                     </el-tooltip>
                 </template>
             </el-table-column>
+            <!--关联-->
+            <el-table-column
+                width="60px"
+                prop="relatedCount"
+                align="center"
+                label="关联">
+                <template slot-scope="scope">
+                    <span @click="openRelateDialog(scope.row)" class="name">{{scope.row.relatedCount}}关联关系</span>
+                </template>
+            </el-table-column>
             <el-table-column
                 prop="link"
                 align="center"
@@ -308,17 +318,22 @@
                 <el-button type="primary" @click="confirmVideoShareSite">确 定</el-button>
             </span>
         </el-dialog>
+        <display-related-dialog
+            ref="displayRelatedDialog">
+        </display-related-dialog>
     </div>
 </template>
 
 <script>
     import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
+    import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
 
     const ClipboardJS = require('clipboard');
 
     export default {
         components: {
-            DisplayVideoDialog
+            DisplayVideoDialog,
+            DisplayRelatedDialog
         },
         props: {
             videoList: {
@@ -336,6 +351,7 @@
         },
         data() {
             return {
+                displayRelateDialogVisible: false,
                 displayVideoDialogVisible: false,
                 url: '',
                 title: '',
@@ -426,6 +442,10 @@
             }
         },
         methods: {
+            // 打开关联对话框
+            openRelateDialog(item) {
+                this.$refs.displayRelatedDialog.showDialog();
+            },
             // 多选的模式中选择或取消某一行
             selectRow(selection, row) {
                 // 判断当前行为，选择或者取消

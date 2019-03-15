@@ -147,6 +147,20 @@
                         end-placeholder="结束日期">
                     </el-date-picker>
                 </el-form-item>
+                <el-form-item label="关联">
+                    <el-select
+                        v-model="listQueryParams.related"
+                        clearable
+                        placeholder="请选择关联"
+                        @change="getVideoList(true)">
+                        <el-option
+                            v-for="(item, index) in relatedOptions"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
             </el-form>
         </div>
     </div>
@@ -172,6 +186,9 @@
                     endedAt: ''
                 },
                 uploadRangeTime: [],
+                relatedOptions: [
+                    {name: '有', value: true},
+                    {name: '无', value: false}],
                 suffixOptions: role.VIDEO_SUFFIX_OPTIONS,
                 statusOptions: role.VIDEO_INJECTING_STATUS_OPTIONS,
                 downloadStatusOptions: role.VIDEO_DOWNLOAD_STATUS_OPTIONS,
