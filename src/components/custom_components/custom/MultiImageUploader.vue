@@ -7,9 +7,13 @@
                         <img :src="image.uri" class="image" alt="">
                         <div class="mask"></div>
                     </div>
-                    <span @click.stop="deleteImage(image.id)" class="delete-btn-one small delete-icon">
-                        &times;
+                    <span v-if="!isUploading" @click.stop="deleteImage(image.id)" class="delete-icon">
+                        <svg-icon icon-class="remove_image_hover"></svg-icon>
+                        <svg-icon icon-class="remove_image_default"></svg-icon>
                     </span>
+                    <!-- <span @click.stop="deleteImage(image.id)" class="delete-btn-one small delete-icon">
+                        &times;
+                    </span> -->
                     <!-- <i @click.stop="deleteImage(image.id)" class="delete-icon el-tag__close el-icon-close"></i> -->
                     <p class="dimension-info">{{image.width}}*{{image.height}}</p>
                 </li>
@@ -296,10 +300,29 @@ export default {
                 right: 8px;
                 cursor: pointer;
                 z-index: 1000000;
-                background-color: rgba(0, 0, 0, 0.5);
-                &:hover {
-                    background-color: rgb(0, 0, 0);
+                .svg-icon-remove_image_default,
+                .svg-icon-remove_image_hover {
+                    width: 23px;
+                    height: 23px;
                 }
+                .svg-icon-remove_image_default {
+                    display: block;
+                }
+                .svg-icon-remove_image_hover {
+                    display: none;
+                }
+                &:hover {
+                    .svg-icon-remove_image_hover {
+                        display: block;
+                    }
+                    .svg-icon-remove_image_default {
+                        display: none;
+                    }
+                }
+                // background-color: rgba(0, 0, 0, 0.5);
+                // &:hover {
+                //     background-color: rgb(0, 0, 0);
+                // }
             }
             &:hover {
                 .mask {

@@ -14,12 +14,16 @@ const defaultVersion = {
     hardwareType: '', // 硬件类型
     fullPackageUri: '', // 全量升级包地址
     fullPackageMd5: '', // 包的md5
-    incrPackageUri: '' // 增量升级包地址
+    incrPackageUri: '', // 增量升级包地址
+    common: false, // 是否全局升级
+    companyList: [] // 所属区域
 };
 
 const defaultSearchFields = {
     releaseAtStart: '',
     releaseAtEnd: '',
+    common: '',
+    companyCode: '',
     forced: '', // 强制升级
     keyword: '', // 关键字
     productType: '', // 升级类型
@@ -83,6 +87,11 @@ const mutations = {
             state.searchFields.releaseAtStart = state.searchFields.dateRange ? state.searchFields.dateRange[0] : '';
             state.searchFields.releaseAtEnd = state.searchFields.dateRange ? state.searchFields.dateRange[1] : '';
         }
+        if (key === 'common') {
+            if (value || value === '') {
+                state.searchFields.companyCode = '';
+            }
+        }
     },
     resetSearchFields(state) {
         state.searchFields = _.cloneDeep(defaultSearchFields);
@@ -96,8 +105,40 @@ const mutations = {
     },
     resetVersion(state) {
         state.version = _.cloneDeep(defaultVersion);
+    },
+    //  增加公司到列表
+    addCompanyToList(state, payload) {
+        let {company} = payload;
+        if (_.isNull(state.version.companyList)) {
+            state.version.companyList = [];
+        }
+        let {name} = company;
+        if (name === '全部') {
+            state.version.companyList = _.cloneDeep(state.filialeList);
+        } else {
+            state.version.companyList.push(company);
+        }
+        state.version.companyList = _.uniqBy(state.version.companyList, 'id');
+        let flag = checkCompanyListIsAll(state.version.companyList, state.filialeList);
+        state.version.common = flag;
+    },
+    //  从列表中删除公司
+    deleteCompanyFromList(state, payload) {
+        let {company} = payload;
+        state.version.companyList = state.version.companyList.filter((_company) => {
+            return _company.id !== company.id;
+        });
+        let flag = checkCompanyListIsAll(state.version.companyList, state.filialeList);
+        state.version.common = flag;
     }
 };
+
+function checkCompanyListIsAll(source, target) {
+    let sortedSource = _.chain(_.cloneDeep(source)).sortBy('id').value();
+    let sortedTarget = _.chain(_.cloneDeep(target)).sortBy('id').value();
+    let flag = _.isEqual(sortedSource, sortedTarget);
+    return flag;
+}
 
 function formatVersion(version) {
     return Object.assign({}, version, {
@@ -110,7 +151,10 @@ const actions = {
         try {
             if (!isLoading) {
                 isLoading = true;
-                let version = formatVersion(state.version);
+                let version = _.cloneDeep(formatVersion(state.version));
+                if (version.common) {
+                    delete version.companyList;
+                }
                 let res = await service.postVersion(version);
                 isLoading = false;
                 return res;
@@ -139,6 +183,16 @@ const actions = {
                 commit('setPagination', {pageNum: pageNum + 1, pageSize, total});
             }
         } catch (err) {}
+    },
+    async getVersionById({commit, state}, id) {
+        try {
+            let res = await service.getVersionById(id);
+            if (res && res.code === 0) {
+                commit('setVersion', {version: Object.assign({companyList: []}, res.data)});
+            }
+        } catch (err) {
+            console.log(err);
+        }
     }
 };
 

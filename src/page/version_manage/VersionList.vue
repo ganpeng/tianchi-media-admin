@@ -65,6 +65,38 @@
                 </div>
                 <div v-show="searchFieldVisible" class="field-row">
                     <div class="search-field-item">
+                        <label class="search-field-item-label">公共频道</label>
+                        <el-select
+                            :value="searchFields.common"
+                            clearable
+                            placeholder="全部"
+                            @input="inputHandler($event, 'common')"
+                        >
+                            <el-option
+                                v-for="(item, index) in [{name: '是', value: true}, {name: '否', value: false}]"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">区域</label>
+                        <el-select
+                            :value="searchFields.companyCode"
+                            clearable
+                            placeholder="请选择区域"
+                            @input="inputHandler($event, 'companyCode')"
+                        >
+                            <el-option
+                                v-for="(item, index) in companyOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.code">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="search-field-item">
                         <label class="search-field-item-label">时间</label>
                         <el-date-picker
                             :value="searchFields.dateRange"
@@ -98,7 +130,7 @@
                     <el-table-column align="center" width="120px" label="编号" prop="id"></el-table-column>
                     <el-table-column label="版本名称" width="120px" align="center" prop="version">
                         <template slot-scope="scope">
-                            <span class="ellipsis two">
+                            <span @click="displayVersion(scope.row.id)" class="ellipsis two name">
                                 {{scope.row.version}}
                             </span>
                         </template>
@@ -109,30 +141,35 @@
                             {{scope.row.productType === 'TV_LAUNCHER' ? '应用升级' : '系统升级'}}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" label="硬件类型">
-                        <template slot-scope="scope">
-                            {{hardwareType(scope.row.hardwareType)}}
-                        </template>
-                    </el-table-column>
                     <el-table-column width="120px" align="center" label="升级方式">
                         <template slot-scope="scope">
                             {{scope.row.forced ? '强制升级' : '选择升级'}}
                         </template>
                     </el-table-column>
-                    <el-table-column width="120px" align="center" label="发布时间" prop="releaseAt">
+                    <el-table-column align="center" label="硬件类型">
                         <template slot-scope="scope">
-                            {{scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="设备统计">
-                        <template slot-scope="scope">
-                            {{scope.row.installed | padEmpty}}
+                            {{hardwareType(scope.row.hardwareType)}}
                         </template>
                     </el-table-column>
                     <el-table-column align="center" width="120px" label="升级包下载">
                         <template slot-scope="scope">
                             <a v-if="scope.row.fullPackageUri" class="text-primary"
                                :href="packageUrl(scope.row.fullPackageUri)">{{scope.row.version}}</a>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="升级包体积">
+                        <template slot-scope="scope">
+                            {{hardwareType(scope.row.hardwareType)}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="设备数">
+                        <template slot-scope="scope">
+                            {{scope.row.installed | padEmpty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="120px" align="center" label="发布时间" prop="releaseAt">
+                        <template slot-scope="scope">
+                            {{scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
                         </template>
                     </el-table-column>
                 </el-table>
@@ -166,6 +203,7 @@
         created() {
             this.resetState();
             this.getVersionList();
+            this.getFilialeList();
             window.addEventListener('keyup', this.keyupHandler);
         },
         beforeDestroy() {
@@ -176,13 +214,22 @@
                 list: 'version/list',
                 version: 'version/version',
                 pagination: 'version/pagination',
-                searchFields: 'version/searchFields'
+                searchFields: 'version/searchFields',
+                filialeList: 'channel/filialeList'
             }),
             packageUrl(uri) {
                 return (uri) => {
                     let baseUri = window.localStorage.getItem('videoBaseUri');
                     return `${baseUri}${uri}`;
                 };
+            },
+            companyOptions() {
+                let {common} = this.searchFields;
+                if (common) {
+                    return [];
+                } else {
+                    return this.filialeList;
+                }
             }
         },
         methods: {
@@ -197,10 +244,14 @@
             }),
             ...mapActions({
                 postVersion: 'version/postVersion',
-                getVersionList: 'version/getVersionList'
+                getVersionList: 'version/getVersionList',
+                getFilialeList: 'channel/getFilialeList'
             }),
             createVersion() {
                 this.$router.push({name: 'CreateVersion'});
+            },
+            displayVersion(id) {
+                this.$router.push({name: 'VersionDetail', params: {id}});
             },
             toggleSearchField() {
                 this.searchFieldVisible = !this.searchFieldVisible;

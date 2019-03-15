@@ -55,17 +55,16 @@
                     </el-select>
                 </div>
                 <div class="search-field-item">
-                    <label class="search-field-item-label">公共频道</label>
+                    <label class="search-field-item-label">状态</label>
                     <el-select
-                        :value="searchFields.common"
+                        :value="searchFields.visible"
+                        @change="inputHandler($event, 'visible')"
                         clearable
-                        placeholder="全部"
-                        @input="inputHandler($event, 'common')"
-                    >
+                        placeholder="请选择状态">
                         <el-option
-                            v-for="(item, index) in [{name: '是', value: true}, {name: '否', value: false}]"
-                            :key="index"
-                            :label="item.name"
+                            v-for="item in visibleOptions"
+                            :key="item.value"
+                            :label="item.label"
                             :value="item.value">
                         </el-option>
                     </el-select>
@@ -82,6 +81,22 @@
             </div>
             <div v-show="searchFieldVisible" class="field-row">
                 <div class="search-field-item">
+                    <label class="search-field-item-label">公共频道</label>
+                    <el-select
+                        :value="searchFields.common"
+                        clearable
+                        placeholder="全部"
+                        @input="inputHandler($event, 'common')"
+                    >
+                        <el-option
+                            v-for="(item, index) in [{name: '是', value: true}, {name: '否', value: false}]"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="search-field-item">
                     <label class="search-field-item-label">区域</label>
                     <el-select
                         :value="searchFields.companyCode"
@@ -94,21 +109,6 @@
                             :key="index"
                             :label="item.name"
                             :value="item.code">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="search-field-item">
-                    <label class="search-field-item-label">状态</label>
-                    <el-select
-                        :value="searchFields.visible"
-                        @change="inputHandler($event, 'visible')"
-                        clearable
-                        placeholder="请选择状态">
-                        <el-option
-                            v-for="item in visibleOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
                         </el-option>
                     </el-select>
                 </div>

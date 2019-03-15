@@ -20,6 +20,13 @@ export const getVersionList = (params) => {
 };
 
 /**
+ * 根据版本id获取版本
+ */
+export const getVersionById = (id) => {
+    return service.get(`/v1/sys/client-version/${id}`);
+};
+
+/**
  * 获取客户端错误日志列表
  */
 export const getClientErrorLogList = (params) => {

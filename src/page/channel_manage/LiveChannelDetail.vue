@@ -130,6 +130,11 @@
             <h4 class="content-sub-title">
                 所属区域
                 <span v-if="liveChannel.companyList.length > 0">{{liveChannel.companyList.length}}个</span>
+                <span v-if="liveChannel.companyList.length <= 0" class="toggle-btn disabled">
+                    展开
+                    <!-- <i class="el-icon-arrow-up el-icon--right my-arrow-icon"></i> -->
+                    <i class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
+                </span>
                 <span v-if="liveChannel.companyList.length > 0" @click="toggleClickHandler" :class="['toggle-btn', showCompanyList ? 'is-active' : '']">
                     {{showCompanyList ? '收起' : '展开'}}
                     <i v-if="showCompanyList" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
@@ -316,6 +321,11 @@ export default {
         }
         i {
             color: #3E495E;
+        }
+        &.disabled {
+            opacity: 0.5;
+            font-size: 14px;
+            cursor: default;
         }
     }
 }

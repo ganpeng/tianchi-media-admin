@@ -29,8 +29,12 @@
                             <svg-icon icon-class="ad_video" class="video"></svg-icon>
                         </span>
                     </div>
-                    <span v-if="!isUploading" @click.stop="deleteImage(image.id, index)" class="delete-btn-one small delete-icon">
+                    <!-- <span v-if="!isUploading" @click.stop="deleteImage(image.id, index)" class="delete-btn-one small delete-icon">
                         &times;
+                    </span> -->
+                    <span v-if="!isUploading" @click.stop="deleteImage(image.id, index)" class="delete-icon">
+                        <svg-icon icon-class="remove_image_hover"></svg-icon>
+                        <svg-icon icon-class="remove_image_default"></svg-icon>
                     </span>
                     <p class="dimension-info my-ellipsis">{{image.name}}</p>
                 </li>
@@ -400,12 +404,30 @@ export default {
                 right: 8px;
                 cursor: pointer;
                 z-index: 1000000;
-                background-color: rgba(0, 0, 0, 0.5);
-                &:hover {
-                    background-color: rgb(0, 0, 0);
+                .svg-icon-remove_image_default,
+                .svg-icon-remove_image_hover {
+                    width: 23px;
+                    height: 23px;
                 }
+                .svg-icon-remove_image_default {
+                    display: block;
+                }
+                .svg-icon-remove_image_hover {
+                    display: none;
+                }
+                &:hover {
+                    .svg-icon-remove_image_hover {
+                        display: block;
+                    }
+                    .svg-icon-remove_image_default {
+                        display: none;
+                    }
+                }
+                // background-color: rgba(0, 0, 0, 0.5);
+                // &:hover {
+                //     background-color: rgb(0, 0, 0);
+                // }
             }
-
             &:hover {
                 .mask {
                     display: block;
