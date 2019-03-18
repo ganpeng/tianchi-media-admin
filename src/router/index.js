@@ -58,6 +58,11 @@ import CreateChannelByImportExcel from 'sysPage/channel_manage/carousel_channel_
 import EditChannelByImportExcel from 'sysPage/channel_manage/carousel_channel_manage/EditChannelByImportExcel';
 import CarouselChannelDetail from 'sysPage/channel_manage/carousel_channel_manage/CarouselChannelDetail';
 import EditCarouselChannel from 'sysPage/channel_manage/carousel_channel_manage/EditCarouselChannel';
+// 插播系统
+import InterCutList from 'sysPage/channel_manage/inter_cut_manage/InterCutList';
+import CreateInterCut from 'sysPage/channel_manage/inter_cut_manage/CreateInterCut';
+import EditInterCut from 'sysPage/channel_manage/inter_cut_manage/EditInterCut';
+import InterCutDetail from 'sysPage/channel_manage/inter_cut_manage/InterCutDetail';
 import ChannelCategory from 'sysPage/channel_manage/ChannelCategory';
 import ModelAppendChannel from 'sysPage/layout_manage/ModelAppendChannel';
 import AppendChannel from 'sysPage/layout_manage/AppendChannel';
@@ -614,6 +619,30 @@ let router = new Router({
                     path: '/channel-carousel/edit/:id',
                     name: 'EditCarouselChannel',
                     component: EditCarouselChannel
+                },
+                // 插播频道列表
+                {
+                    path: '/channel-inter-cut/list',
+                    name: 'InterCutList',
+                    component: InterCutList
+                },
+                // 创建插播频道
+                {
+                    path: '/channel-inter-cut/create',
+                    name: 'CreateInterCut',
+                    component: CreateInterCut
+                },
+                // 编辑插播频道
+                {
+                    path: '/channel-inter-cut/edit/:id',
+                    name: 'EditInterCut',
+                    component: EditInterCut
+                },
+                // 插播频道详情
+                {
+                    path: '/channel-inter-cut/detail/:id',
+                    name: 'InterCutDetail',
+                    component: InterCutDetail
                 },
                 //  频道类别管理
                 {

@@ -588,6 +588,11 @@ const ASIDE_LIST = [
             icon: 'shortcut_carousel_channel'
         },
         {
+            text: '轮播插播',
+            uri: '/channel-inter-cut/list',
+            icon: 'shortcut_carousel_channel'
+        },
+        {
             text: '类型管理',
             uri: '/category-manage',
             icon: 'aside_category'

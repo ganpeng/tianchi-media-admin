@@ -1,13 +1,13 @@
-<!--内容管理-频道管理-轮播频道管理-轮播频道列表组件-->
+<!--内容管理-频道管理-轮播插播列表组件-->
 <template>
     <div>
         <div class="content-title">搜索筛选</div>
         <div class="block-box">
-            <channel-filter-params
-                ref="channelFilterParams"
-                v-on:getChannelList="getChannelList">
-            </channel-filter-params>
-            <div class="content-title">频道列表</div>
+            <inter-cut-filter-params
+                ref="interCutFilterParams"
+                v-on:getInterCutList="getInterCutList">
+            </inter-cut-filter-params>
+            <div class="content-title">轮播插播列表</div>
             <div class="table-operator-field clearfix">
                 <div class="float-left">
                     <el-dropdown
@@ -19,10 +19,7 @@
                             </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item>
-                                <span @click="batchSetStatus(true)">批量恢复</span>
-                            </el-dropdown-item>
-                            <el-dropdown-item>
-                                <span @click="batchSetStatus(false)">批量禁播</span>
+                                <span @click="batchRemoveInterCut">批量删除</span>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -30,30 +27,18 @@
                 <div class="float-right">
                     <el-button
                         class="btn-style-two contain-svg-icon"
-                        @click="createCarouselChannel">
+                        @click="createInterCut">
                         <svg-icon icon-class="add"></svg-icon>
                         添加
                     </el-button>
-                    <el-button
-                        class="btn-style-two contain-svg-icon"
-                        @click="createChannelByImportExcel">
-                        <svg-icon icon-class="import"></svg-icon>
-                        导入
-                    </el-button>
-                    <el-button
-                        class="btn-style-two contain-svg-icon"
-                        @click="editChannelByImportExcel">
-                        <svg-icon icon-class="export"></svg-icon>
-                        修改
-                    </el-button>
                 </div>
             </div>
-            <carousel-channel-operate-table
-                ref="channelOperateTable"
-                :channelList="channelList"
-                v-on:getChannelList="getChannelList"
+            <inter-cut-operate-table
+                ref="interCutOperateTable"
+                :interCutList="interCutList"
+                v-on:getInterCutList="getInterCutList"
                 v-on:setBatchDisabledStatus="setBatchDisabledStatus">
-            </carousel-channel-operate-table>
+            </inter-cut-operate-table>
             <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
@@ -73,10 +58,7 @@
                     </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item>
-                            <span @click="batchSetStatus(true)">批量恢复</span>
-                        </el-dropdown-item>
-                        <el-dropdown-item>
-                            <span @click="batchSetStatus(false)">批量禁播</span>
+                            <span @click="batchRemoveInterCut">批量删除</span>
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -86,17 +68,15 @@
 </template>
 
 <script>
-    import CreateChannel from './CreateInterCut';
-    import ChannelFilterParams from '../../search_filter_params/ChannelFilterParams';
-    import CarouselChannelOperateTable from './InterCutOperateTable';
+    import InterCutFilterParams from '../../search_filter_params/InterCutFilterParams';
+    import InterCutOperateTable from './InterCutOperateTable';
     import wsCache from '@/util/webStorage';
 
     export default {
-        name: 'CarouselChannelList',
+        name: 'InterCutList',
         components: {
-            CreateChannel,
-            ChannelFilterParams,
-            CarouselChannelOperateTable
+            InterCutFilterParams,
+            InterCutOperateTable
         },
         data() {
             return {
@@ -106,7 +86,7 @@
                 },
                 pageNum: 1,
                 total: 0,
-                channelList: [],
+                interCutList: [],
                 isDisabled: true
             };
         },
@@ -115,13 +95,13 @@
         },
         methods: {
             init() {
-                if (wsCache.localStorage.get('carouselChannelListParams')) {
-                    this.listQueryParams = wsCache.localStorage.get('carouselChannelListParams');
-                    this.$refs.channelFilterParams.initFilterParams(this.listQueryParams);
+                if (wsCache.localStorage.get('interCutListParams')) {
+                    this.listQueryParams = wsCache.localStorage.get('interCutListParams');
+                    this.$refs.interCutFilterParams.initFilterParams(this.listQueryParams);
                 }
-                this.getChannelList();
+                this.getInterCutList();
             },
-            getChannelList(searchParams, isReset) {
+            getInterCutList(searchParams, isReset) {
                 // 设置请求参数
                 if (searchParams) {
                     for (let key in searchParams) {
@@ -132,12 +112,10 @@
                     this.pageNum = 1;
                 }
                 this.listQueryParams.pageNum = this.pageNum - 1;
-                this.listQueryParams.category = 'CAROUSEL';
-                // 保存当前参数到localStorage中，下次页面重建的时候，自动填写并查询
-                wsCache.localStorage.set('carouselChannelListParams', this.listQueryParams);
-                this.$service.getChannelList(this.listQueryParams).then(response => {
+                wsCache.localStorage.set('interCutListParams', this.listQueryParams);
+                this.$service.getInterCutList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
-                        this.channelList = response.data.list;
+                        this.interCutList = response.data.list;
                         this.total = response.data.total;
                     }
                 });
@@ -147,32 +125,18 @@
             },
             handleSizeChange(pageSize) {
                 this.listQueryParams.pageSize = pageSize;
-                this.getChannelList();
+                this.getInterCutList();
             },
             handleCurrentChange(pageNum) {
                 this.pageNum = pageNum;
-                this.getChannelList();
+                this.getInterCutList();
             },
-            createChannelByImportExcel() {
+            // 批量删除
+            batchRemoveInterCut() {
+            },
+            createInterCut() {
                 let routeData = this.$router.resolve({
-                    name: 'CreateChannelByImportExcel',
-                    params: {category: 'CAROUSEL'}
-                });
-                window.open(routeData.href, '_blank');
-            },
-            editChannelByImportExcel() {
-                let routeData = this.$router.resolve({
-                    name: 'EditChannelByImportExcel'
-                });
-                window.open(routeData.href, '_blank');
-            },
-            // 批量恢复或者禁播
-            batchSetStatus(visible) {
-                this.$refs.channelOperateTable.batchUpdateStatus(visible);
-            },
-            createCarouselChannel() {
-                let routeData = this.$router.resolve({
-                    name: 'CreateCarouselChannel'
+                    name: 'CreateInterCut'
                 });
                 window.open(routeData.href, '_blank');
             }
