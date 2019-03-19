@@ -8,6 +8,7 @@
             <el-dropdown-menu v-if="onlyChannel" slot="dropdown">
                 <el-dropdown-item command="PROGRAMME">节目</el-dropdown-item>
                 <el-dropdown-item command="PROGRAMME_VIDEO">节目内视频</el-dropdown-item>
+                <el-dropdown-item command="SUBJECT_VIDEO">专题内视频</el-dropdown-item>
                 <el-dropdown-item command="PROGRAMME_SUBJECT">节目专题</el-dropdown-item>
                 <el-dropdown-item command="FIGURE_SUBJECT">人物专题</el-dropdown-item>
                 <el-dropdown-item command="LINK">网页</el-dropdown-item>

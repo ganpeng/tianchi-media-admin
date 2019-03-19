@@ -228,18 +228,26 @@
                 imageUploadDialogVisible: false,
                 coverImage: {},
                 coverImageBackground: {},
-                entertainmentList: []
+                entertainmentList: [],
+                // 新增
+                navbarId: '',
+                index: 0
             };
         },
         computed: {
             ...mapGetters({
-                layout: 'pageLayout/layout'
+                layout: 'pageLayout/layout',
+                getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
             }),
             getImageByKey() {
                 return (key) => {
                     let {navbarId, index} = this.$route.params;
                     return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.${key}.uri`);
                 };
+            },
+            layoutItem() {
+                let layoutItem = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
+                return layoutItem;
             }
         },
         created() {
@@ -251,7 +259,8 @@
             ...mapMutations({
                 updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
                 updateLayoutItemByKeys: 'pageLayout/updateLayoutItemByKeys',
-                addLayoutItemByIndex: 'pageLayout/addLayoutItemByIndex'
+                addLayoutItemByIndex: 'pageLayout/addLayoutItemByIndex',
+                resetLayoutItemByIndex: 'pageLayout/resetLayoutItemByIndex'
             }),
             getOriginState() {
                 let {navbarId, index} = this.$route.params;
@@ -269,7 +278,11 @@
                 this.initGrade();
                 this.initSubject();
                 // 回填相应的数据
-                // console.log(this.getOriginState);
+                let _layoutItemType = _.get(this.layoutItem, 'layoutItemType');
+                if (!/_PROGRAMME_CATEGORY$/.test(_layoutItemType)) {
+                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+                }
+
                 if (this.getOriginState() && this.getOriginState().coverImage) {
                     this.coverImage = this.getOriginState().coverImage;
                     this.categorySignCode = this.getOriginState().layoutItemType.replace('_PROGRAMME_CATEGORY', '');
@@ -423,14 +436,6 @@
                 });
                 // 初始化频道项
                 this.platformOptions = this.platformObject[this.categorySignCode];
-            },
-            appendImagePrefix(uri) {
-                let baseUri = window.localStorage.getItem('imageBaseUri');
-                return baseUri + uri;
-            },
-            // 关闭上传图片对话框
-            closeImageDialog(status) {
-                this.imageUploadDialogVisible = status;
             },
             // 添加封面图片
             addPosterImage(image) {

@@ -227,10 +227,11 @@ export default {
             }, 0);
             columnsList.style.width = `${width + 20}px`;
         },
-        async columnsTabChangeHandler(id, layoutTemplate) {
+        columnsTabChangeHandler(id, layoutTemplate) {
             this.activeId = id;
             this.layoutTemplate = layoutTemplate;
             this.$router.push({ name: 'PageLayout', params: {navbarId: id} });
+            this.clearLayoutHandler(); // 获取最新的栏目布局数据
         },
         async saveLayoutHandler() {
             try {

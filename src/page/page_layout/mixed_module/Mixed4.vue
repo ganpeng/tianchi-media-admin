@@ -102,6 +102,12 @@
             :allowResolutions="allowResolutions"
             ref="selectChannelDialog">
         ></channel-dialog>
+        <!--  2.2.0 新增 -->
+        <subject-video
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="subjectVideoDialog"
+        ></subject-video>
     </div>
 </template>
 <script>
@@ -118,6 +124,10 @@ import CornerMark from '../CornerMark';
 import PersonSubjectDialog from '../add_edit_module/PersonSubjectDialog';
 import EditFilter from '../add_edit_module/EditFilter';
 import ChannelDialog from '../add_edit_module/ChannelDialog';
+
+//  2.2.0新增
+import SubjectVideo from '../add_edit_module/SubjectVideo';
+
 export default {
     name: 'Mixed4',
     components: {
@@ -130,7 +140,9 @@ export default {
         //  新增加的部分
         EditFilter,
         PersonSubjectDialog,
-        ChannelDialog
+        ChannelDialog,
+        //  2.2.0新增
+        SubjectVideo
     },
     props: {
         item: {
@@ -214,6 +226,10 @@ export default {
                         break;
                     case 'CHANNEL':
                         this.$refs.selectChannelDialog.showDialog('CHANNEL');
+                        break;
+                        //  2.2.0新增
+                    case 'SUBJECT_VIDEO':
+                        this.$refs.subjectVideoDialog.showDialog('SUBJECT_VIDEO');
                         break;
                     default:
                         throw new Error('类型错误');

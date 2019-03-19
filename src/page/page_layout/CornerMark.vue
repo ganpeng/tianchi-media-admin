@@ -69,6 +69,8 @@ export default {
                 return '人物';
             } else if (layoutItemType === 'ALL') {
                 return '更多';
+            } else if (layoutItemType === 'SUBJECT_VIDEO') {
+                return '专题内视频';
             } else if (layoutItemType) {
                 return '筛选';
             } else {
