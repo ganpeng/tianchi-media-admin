@@ -1,20 +1,20 @@
-<!--编辑轮播频道的组件-->
+<!--编辑轮播插播的组件-->
 <template>
     <div>
-        <div class="content-title">编辑轮播频道</div>
-        <carousel-channel-form
-            status="EDIT_CHANNEL">
-        </carousel-channel-form>
+        <div class="content-title">编辑轮播插播</div>
+        <inter-cut-form
+            status="EDIT_INTER_CUT">
+        </inter-cut-form>
     </div>
 </template>
 
 <script>
-    import CarouselChannelForm from './InterCutForm';
+    import InterCutForm from './InterCutForm';
 
     export default {
-        name: 'EditCarouselChannel',
+        name: 'EditInterCut',
         components: {
-            CarouselChannelForm
+            InterCutForm
         },
         data() {
             return {};

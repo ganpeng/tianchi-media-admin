@@ -1,4 +1,4 @@
-<!--轮播频道列表项组件-->
+<!--轮播插播列表项组件-->
 <template>
     <div>
         <el-table
@@ -74,7 +74,7 @@
                 label="状态">
                 <template slot-scope="scope">
                     <span v-if="scope.row.adStatus === 'ACTIVE' && scope.row.visible"
-                          class="status-normal">生效</span>
+                          class="status-normal">生效中</span>
                     <span v-if="scope.row.adStatus === 'WAITING' && scope.row.visible"
                           class="status-deleting">未生效</span>
                     <span v-if="scope.row.adStatus === 'EXPIRED' && scope.row.visible"

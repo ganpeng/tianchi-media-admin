@@ -90,7 +90,7 @@
                     status: ''
                 },
                 statusOptions: [
-                    {value: 'ACTIVE', label: '生效'},
+                    {value: 'ACTIVE', label: '生效中'},
                     {value: 'WAITING', label: '未生效'},
                     {value: 'EXPIRED', label: '已失效'}
                 ],

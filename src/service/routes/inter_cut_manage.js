@@ -71,6 +71,13 @@ export const getSubjectDetail = (id) => {
 };
 
 /**
+ * 获取插播生效时间是否冲突
+ */
+export const getEffectTimeValidity = (id) => {
+    return service.get(util.format('/v1/content/subject/{0}', id));
+};
+
+/**
  * 删除单个插播
  * @param id The id of subject.
  */
