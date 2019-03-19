@@ -52,16 +52,17 @@
                         closable
                         @close="removeChannel(item, index)"
                         :disable-transitions="false">
-                        {{item.name}}
+                        {{item.innerName}}
                     </el-tag>
                 </div>
                 <el-autocomplete
                     class="inline-input"
                     :fetch-suggestions="querySearch"
                     placeholder="请选择执行插播的频道"
+                    @blur="validateChannelList"
                     @select="setChannels">
                     <template slot-scope="{ item }">
-                        <div class="name">{{ item.name }}</div>
+                        <div class="name">{{ item.innerName }}</div>
                     </template>
                     <i v-if="interCutInfo.channelList.length !== 0"
                        slot="suffix"
@@ -250,7 +251,7 @@
 
 <script>
     import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
-    import SelectMultipleVideo from './SelectMultipleVideo';
+    import SelectMultipleVideo from '../carousel_channel_manage/SelectMultipleVideo';
     import _ from 'lodash';
 
     const ClipboardJS = require('clipboard');
@@ -291,6 +292,8 @@
                 if (this.interCutInfo.scheduled) {
                     if (!this.interCutInfo.startDate || !this.interCutInfo.startPoint) {
                         return callback(new Error('请完整选择开始时间'));
+                    } else if ((parseInt(this.interCutInfo.startDate) + this.getTimePointMilliseconds(this.interCutInfo.startPoint)) < Date.now()) {
+                        return callback(new Error('开始时间应大于当前时间'));
                     } else {
                         this.$service.getEffectTimeValidity().then(response => {
                             if (response && response.code === 0) {
@@ -344,7 +347,7 @@
                         {validator: checkStartTime, trigger: 'change'}
                     ],
                     channelList: [
-                        {validator: checkChannelList, trigger: 'change'}
+                        {validator: checkChannelList, trigger: 'blur'}
                     ]
                 }
             };
@@ -360,7 +363,11 @@
                 if (!this.interCutInfo.startDate || !this.interCutInfo.startPoint) {
                     return '';
                 } else {
-                    return parseInt(this.interCutInfo.startDate) + parseInt(this.interCutInfo.startPoint);
+                    let milliSeconds = 0;
+                    for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                        milliSeconds = milliSeconds + this.currentSelectedVideoList[i].takeTimeInSec * 1000;
+                    }
+                    return milliSeconds + parseInt(this.interCutInfo.startDate) + parseInt(this.getTimePointMilliseconds(this.interCutInfo.startPoint));
                 }
             }
         },
@@ -377,7 +384,7 @@
                 }).then(response => {
                     if (response && response.code === 0) {
                         this.channelOptions = response.data.list;
-                        this.channelOptions.unshift({id: '0', code: '0', name: '全选'});
+                        this.channelOptions.unshift({id: '0', code: '0', innerName: '全选'});
                     }
                 });
                 let that = this;
@@ -389,29 +396,17 @@
                 clipboard.on('error', function (e) {
                     that.$message.error('视频链接复制失败');
                 });
-                if (this.status === 'EDIT_CHANNEL') {
-                    this.getChannelDetail();
+                if (this.status === 'EDIT_INTER_CUT') {
+                    this.getInterCutDetail();
                 }
             },
             getChannelDetail() {
                 this.$service.getInterCutDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         for (let key in response.data) {
-                            if (!(key === 'protocolList' && !response.data.protocolList)) {
-                                this.interCutInfo[key] = response.data[key];
-                            }
-                            this.interCutInfo.common = !!this.interCutInfo.common;
+                            this.interCutInfo[key] = response.data[key];
                         }
-                        response.data.typeList.map(type => {
-                            this.interCutInfo.typeIdList.push(type.id);
-                        });
-                        this.currentSelectedVideoList = response.data.carouselVideoList;
-                        this.currentSelectedVideoList.map(video => {
-                            if (video.onPlay) {
-                                this.interCutInfo.currentProgramme = video.originName;
-                                this.interCutInfo.duration = this.$util.formatDate(new Date(video.lastPlayTime), 'yyyy年MM月DD日HH时mm分SS秒') + '---' + this.$util.formatDate(new Date(video.lastPlayTime + video.takeTimeInSec * 1000), 'yyyy年MM月DD日HH时mm分SS秒');
-                            }
-                        });
+                        this.currentSelectedVideoList = response.data.videoList;
                     }
                 });
             },
@@ -422,38 +417,51 @@
                     this.interCutInfo.startPoint = '';
                     this.interCutInfo.startTime = '';
                     this.interCutInfo.endTime = '';
+                    // 清除时间错误提醒
+                    this.$refs['interCutInfo'].validateField('startTime');
                 }
+            },
+            // 将当前时间选择器的毫秒数改为只是小时、分钟、秒的毫秒数
+            getTimePointMilliseconds(milliseconds) {
+                let currentDate = new Date(milliseconds);
+                return (currentDate.getHours() * 60 * 60 + currentDate.getMinutes() * 60 + currentDate.getSeconds()) * 1000;
+            },
+            validateChannelList() {
+                this.$refs['interCutInfo'].validateField('channelList');
             },
             removeAllChannel() {
                 this.interCutInfo.channelList.splice(0);
+                this.validateChannelList();
             },
             removeChannel(channel, index) {
                 this.interCutInfo.channelList.splice(index, 1);
+                this.validateChannelList();
             },
             querySearch(queryString, cb) {
                 let results = queryString ? this.channelOptions.filter(this.createFilter(queryString)) : this.channelOptions;
                 cb(results);
             },
             createFilter(queryString) {
-                return (companyOptions) => {
-                    return (companyOptions.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+                return (channelOptions) => {
+                    return (channelOptions.innerName.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
                 };
             },
             // 设置区域码，对全选进行处理
             setChannels(item) {
                 // 对全选进行处理
-                if (item.name === '全选') {
-                    this.interCutInfo.channleList.splice(0);
-                    this.companyOptions.map(company => {
-                        if (company.name !== '全选') {
-                            this.interCutInfo.channleList.push(company);
+                if (item.innerName === '全选') {
+                    this.interCutInfo.channelList.splice(0);
+                    this.channelOptions.map(channel => {
+                        if (channel.innerName !== '全选') {
+                            this.interCutInfo.channelList.push(channel);
                         }
                     });
                 } else {
                     // 对非全选进行处理
-                    this.interCutInfo.channleList.push({id: item.id, name: item.name, code: item.code});
-                    this.interCutInfo.channleList = _.uniqBy(this.interCutInfo.channleList, 'id');
+                    this.interCutInfo.channelList.push({id: item.id, innerName: item.innerName, code: item.code});
+                    this.interCutInfo.channelList = _.uniqBy(this.interCutInfo.channelList, 'id');
                 }
+                this.validateChannelList();
             },
             // 对关联的视频进行排序
             movePosition(model, video, index) {
@@ -531,7 +539,7 @@
             closeDisplayVideoDialog(status) {
                 this.previewVideoInfo.visible = status;
             },
-            // 删除视频，当前正在播放视频可以删除-2018.08.09
+            // 删除视频
             removeConfirm(index) {
                 this.$confirm('是否确认删除视频，此操作将在点击保存时生效，请知晓。', '提示', {
                     confirmButtonText: '确定',
@@ -547,12 +555,16 @@
             },
             // 保存
             saveInterCutInfo() {
+                if (this.currentSelectedVideoList.length === 0) {
+                    this.$message.warning('当前插播不含有视频，不能保存');
+                    return;
+                }
                 this.$refs['interCutInfo'].validate((valid) => {
                     if (valid) {
                         for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
                             this.currentSelectedVideoList[i].sort = i;
                         }
-                        this.interCutInfo.carouselVideoList = this.currentSelectedVideoList;
+                        this.interCutInfo.videoList = this.currentSelectedVideoList;
                         this.isLoading = true;
                         switch (this.status) {
                             case 'CREATE_INTER_CUT':
@@ -596,18 +608,6 @@
 
 <style lang="scss" scoped>
 
-    .el-date-picker {
-        width: 230px;
-    }
-
-    .el-time-picker {
-        width: 100px;
-    }
-
-    .el-input, .el-select {
-        width: 600px;
-    }
-
     /*频道基本信息*/
     .el-form {
         margin-top: 20px;
@@ -649,9 +649,7 @@
 
     /*频道内关联的视频*/
     .el-table {
-        .el-input {
-            width: 100%;
-        }
+        margin-bottom: 50px;
         .sort {
             span {
                 display: inline-block;
@@ -681,7 +679,7 @@
     }
 
     .my-tags {
-        width: 300px;
+        max-width: 1050px;
     }
 
 </style>

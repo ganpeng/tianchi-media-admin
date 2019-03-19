@@ -7,6 +7,7 @@
             <el-input
                 v-model="queryParams.keyword"
                 clearable
+                @change="getVideoList"
                 class="border-input"
                 placeholder="搜索你想要的信息">
             </el-input>
@@ -34,7 +35,7 @@
                 width="55">
             </el-table-column>
             <el-table-column
-                prop="code"
+                prop="id"
                 align="center"
                 width="120px"
                 label="编号">
@@ -202,9 +203,8 @@
                     title: '',
                     visible: false
                 },
-                hasRadio: true,
                 videoList: [],
-                selectedMultipleVideo: this.currentSelectedVideoList
+                selectedMultipleVideo: this.currentSelectedVideoList.slice(0)
             };
         },
         filters: {
@@ -317,10 +317,6 @@
             },
             // 选择或者取消选择视频
             selectVideo(selection, video) {
-                if (video.hadSelected) {
-                    this.$message('该视频已经存在于轮播频道列表中');
-                    return;
-                }
                 if (this.getOperate(selection, video) === 'APPEND') {
                     this.selectedMultipleVideo.push(video);
                 } else {

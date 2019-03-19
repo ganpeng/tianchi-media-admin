@@ -135,10 +135,7 @@
             batchRemoveInterCut() {
             },
             createInterCut() {
-                let routeData = this.$router.resolve({
-                    name: 'CreateInterCut'
-                });
-                window.open(routeData.href, '_blank');
+                this.$router.push({name: 'CreateInterCut'});
             }
         }
     };

@@ -484,6 +484,7 @@ html, body {
     border: 1px solid #3E495E;
     border-radius: 4px;
     input.el-input__inner {
+        padding-left: 10px;
         border: none;
         &:disabled {
             border: none;
@@ -504,6 +505,47 @@ html, body {
     .el-range-separator {
         height: 32px;
         color: #6F7480;
+    }
+}
+
+// 时间选择器下拉样式
+.el-time-panel {
+    background: rgba(65, 74, 93, 0.90);
+    border: 0 solid #637497;
+    box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
+    border-radius: 4px;
+    .el-time-panel__content {
+        .el-time-spinner__item {
+            font-size: 14px;
+            color: #A8ABB3;
+            &:hover {
+                background: #333B4E;
+            }
+            &.active {
+                font-size: 16px;
+                color: #FFFFFF;
+                &:hover {
+                    background: none;
+                }
+            }
+        }
+        &::before, &::after {
+            border-top: 1px solid #637497;
+            border-bottom: 1px solid #637497;
+        }
+    }
+    .el-time-panel__footer {
+        border-top: 1px solid #637497;
+        .el-time-panel__btn {
+            &.cancel {
+                font-size: 14px;
+                color: #A8ABB3;
+            }
+            &.confirm {
+                font-size: 14px;
+                color: #1989FA;
+            }
+        }
     }
 }
 
