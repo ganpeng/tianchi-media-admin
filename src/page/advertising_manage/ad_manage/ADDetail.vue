@@ -26,6 +26,12 @@
             <svg-icon icon-class="ad_ads"></svg-icon>
             <div>
                 <span class="ad-type">{{adInfo.adType | getADType}}</span>
+                <ul v-if="adInfo.adType === 'PREPOSITION'">
+                    <li v-for="(item, index) in adInfo.categoryList"
+                        :key="index">
+                        {{item.name}}
+                    </li>
+                </ul>
                 <p>时间:
                     <span class="ad-effect-time">{{adInfo.applyDateBegin | formatDate('yyyy.MM.DD HH:mm:SS')}} - {{adInfo.applyDateEnd | formatDate('yyyy.MM.DD HH:mm:SS')}}</span>
                 </p>
@@ -41,32 +47,43 @@
             </div>
             <!--视频资源列表-->
             <div id="ad-video-resource"
-                 v-if="adInfo.adMaterialList[0] && adInfo.adType === 'BOOT'">
-                <div class="ad-video-container" @click="previewVideoResource">
-                    <svg-icon icon-class="video-ad"></svg-icon>
-                    <div class="resource-info">
-                        <div>{{adInfo.adMaterialList[0].width}}*{{adInfo.adMaterialList[0].height}}</div>
-                        <div>{{adInfo.adMaterialList[0].duration}}s&nbsp;&nbsp;&nbsp;&nbsp;
-                            {{adInfo.adMaterialList[0].size | convertFileSize}}
+                 v-if="adInfo.adMaterialList.length !== 0 && (adInfo.adType === 'BOOT' || adInfo.adType === 'PREPOSITION')">
+                <div class="video-list">
+                    <div class="ad-video-container"
+                         v-for="(item, index) in adInfo.adMaterialList"
+                         :key="index"
+                         @click="previewVideoResource(item)">
+                        <svg-icon icon-class="video-ad"></svg-icon>
+                        <div class="resource-info">
+                            <div>{{item.width}}*{{item.height}}</div>
+                            <div>{{item.duration}}s&nbsp;&nbsp;&nbsp;&nbsp;
+                                {{item.size | convertFileSize}}
+                            </div>
+                            <div class="ellipsis one">{{item.advertiserName}}</div>
                         </div>
-                        <div class="ellipsis one">{{adInfo.adMaterialList[0].advertiserName}}</div>
-                    </div>
-                    <div class="ad-desc">
-                        <div class="ellipsis one">{{adInfo.adMaterialList[0].name}}</div>
+                        <div class="ad-desc">
+                            <div class="ellipsis one">{{item.name}}</div>
+                        </div>
                     </div>
                 </div>
                 <ul>
-                    <li><label>总时长</label><span>{{adInfo.adMaterialList[0].duration}}s</span></li>
-                    <li><label>总体积</label><span>{{adInfo.adMaterialSize | convertFileSize}}</span></li>
+                    <li><label>总时长</label><span>{{videoResourceDuration}}s</span></li>
+                    <li><label>总体积</label><span>{{resourceSize | convertFileSize}}</span></li>
                     <li>
                         <label>广告主</label>
-                        <span class="ad-owner">{{adInfo.adMaterialList[0].advertiserName}}</span>
+                        <span>
+                            <div class="ad-owner"
+                                 v-for="(item,index) in advertiserArray"
+                                 :key="index">
+                                {{item.advertiserName}}
+                            </div>
+                        </span>
                     </li>
                 </ul>
             </div>
             <!--图片资源列表-->
             <div id="ad-image-resource"
-                 v-if="adInfo.adMaterialList.length !== 0 && adInfo.adType !== 'BOOT'">
+                 v-if="adInfo.adMaterialList.length !== 0 && adInfo.adType !== 'BOOT' && adInfo.adType !== 'PREPOSITION'">
                 <div class="image-list">
                     <div class="ad-image-container"
                          v-for="(item, index) in adInfo.adMaterialList"
@@ -87,7 +104,7 @@
                     </div>
                 </div>
                 <ul>
-                    <li><label>总体积</label><span>{{adInfo.adMaterialSize | convertFileSize}}</span></li>
+                    <li><label>总体积</label><span>{{resourceSize | convertFileSize}}</span></li>
                     <li>
                         <label>广告主</label>
                         <span>
@@ -125,6 +142,7 @@
 <script>
     import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
+    import _ from 'lodash';
 
     export default {
         name: 'ADDetail',
@@ -161,6 +179,8 @@
                         return '屏保广告';
                     case 'BOOT':
                         return '开机广告';
+                    case 'PREPOSITION':
+                        return '片头广告';
                     default:
                         return '';
                 }
@@ -168,6 +188,25 @@
         },
         mounted() {
             this.init();
+        },
+        computed: {
+            resourceSize: function () {
+                let size = 0;
+                this.adInfo.adMaterialList.map(image => {
+                    size = size + parseInt(image.size);
+                });
+                return size;
+            },
+            advertiserArray: function () {
+                return _.uniqBy(this.adInfo.adMaterialList, 'advertiserName');
+            },
+            videoResourceDuration: function () {
+                let duration = 0;
+                this.adInfo.adMaterialList.map(video => {
+                    duration = duration + parseInt(video.duration);
+                });
+                return duration;
+            }
         },
         methods: {
             init() {
@@ -298,6 +337,21 @@
         div {
             margin-left: 250px;
             border-top: 1px solid #252D3F;
+            ul {
+                margin-top: 20px;
+                height: 30px;
+                li {
+                    float: left;
+                    margin: 4px 10px 4px 0px;
+                    padding: 0px 5px;
+                    height: 20px;
+                    line-height: 20px;
+                    background: #637497;
+                    border-radius: 4px;
+                    font-size: 10px;
+                    color: #FFFFFF;
+                }
+            }
             .ad-type {
                 display: inline-block;
                 margin-top: 20px;
@@ -344,6 +398,11 @@
         margin-top: 20px;
         height: 152px;
         text-align: left;
+        .video-list {
+            display: flex;
+            justify-content: left;
+            flex-wrap: wrap;
+        }
         .ad-video-container {
             position: relative;
             margin-left: 30px;
@@ -396,27 +455,30 @@
             margin-left: 30px;
             margin-top: 45px;
             padding-right: 25px;
-            height: 100px;
             min-width: 170px;
             border: 1px solid #3E495E;
             border-radius: 8px;
             li {
                 margin-left: 11px;
-                margin-top: 10px;
                 margin-bottom: 10px;
-                height: 18px;
+                margin-top: 10px;
+                height: 24px;
+                line-height: 24px;
                 label {
+                    float: left;
                     margin-right: 34px;
                     width: 36px;
                     font-size: 12px;
                     color: #A8ABB3;
                 }
                 span {
+                    float: left;
                     font-size: 12px;
                     color: #3AC26F;
-                    &.ad-owner {
-                        color: #A8ABB3;
-                    }
+                }
+                .ad-owner {
+                    font-size: 12px;
+                    color: #A8ABB3;
                 }
             }
         }

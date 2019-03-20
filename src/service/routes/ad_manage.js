@@ -10,13 +10,14 @@ import util from '../../util/extend';
 /**
  * 创建广告
  */
-export const createAD = ({name, desc, adType, applyDateBegin, applyDateEnd, adMaterialList}) => {
+export const createAD = ({name, desc, adType, applyDateBegin, applyDateEnd, categoryList, adMaterialList}) => {
     return service.post('/v1/ad/general-ad', {
         name,
         desc,
         adType,
         applyDateBegin,
         applyDateEnd,
+        categoryList,
         adMaterialList
     });
 };
@@ -94,7 +95,7 @@ export const getADDetail = (id) => {
 /**
  * 修改广告信息
  */
-export const updateADInfo = ({id, name, desc, adType, applyDateBegin, applyDateEnd, adMaterialList}) => {
+export const updateADInfo = ({id, name, desc, adType, applyDateBegin, applyDateEnd, categoryList, adMaterialList}) => {
     return service.put(util.format('/v1/ad/general-ad/{0}', id), {
         id,
         name,
@@ -102,6 +103,7 @@ export const updateADInfo = ({id, name, desc, adType, applyDateBegin, applyDateE
         adType,
         applyDateBegin,
         applyDateEnd,
+        categoryList,
         adMaterialList
     });
 };

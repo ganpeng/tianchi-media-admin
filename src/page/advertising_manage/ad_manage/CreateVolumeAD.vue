@@ -21,6 +21,7 @@
             return {
                 adInfo: {
                     adMaterialList: [],
+                    categoryList: [],
                     adType: 'VOLUME'
                 }
             };

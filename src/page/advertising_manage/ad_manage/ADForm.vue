@@ -45,6 +45,34 @@
                     placeholder="选择日期时间">
                 </el-date-picker>
             </el-form-item>
+            <el-form-item
+                label="作用类别" prop="categoryList" required
+                v-if="status === 'CREATE_PREPOSITION_AD' || status === 'EDIT_PREPOSITION_AD'">
+                <div class="my-tags">
+                    <el-tag
+                        :key="index"
+                        v-for="(item, index) in adInfo.categoryList"
+                        closable
+                        @close="removeCategory(item, index)"
+                        :disable-transitions="false">
+                        {{item.name}}
+                    </el-tag>
+                </div>
+                <el-autocomplete
+                    class="inline-input"
+                    placeholder="请选择作用类别"
+                    :fetch-suggestions="querySearch"
+                    @blur="validateCategoryList"
+                    @select="setCategories">
+                    <template slot-scope="{ item }">
+                        <div class="name">{{ item.name }}</div>
+                    </template>
+                    <i v-if="adInfo.categoryList.length !== 0"
+                       slot="suffix"
+                       @click="removeAllCategory"
+                       class="close-btn el-select__caret el-input__icon el-icon-circle-close is-show-close"></i>
+                </el-autocomplete>
+            </el-form-item>
             <el-form-item label="上下架">
                 <el-radio v-model="adVisible" label="1">上架</el-radio>
             </el-form-item>
@@ -270,6 +298,17 @@
                     callback();
                 }
             };
+            let checkCategoryList = (rule, value, callback) => {
+                if (this.status === 'CREATE_PREPOSITION_AD' || this.status === 'EDIT_PREPOSITION_AD') {
+                    if (this.adInfo.categoryList.length === 0) {
+                        return callback(new Error('请选择作用类别'));
+                    } else {
+                        callback();
+                    }
+                } else {
+                    callback();
+                }
+            };
             let checkResource = (rule, value, callback) => {
                 if (this.adInfo.adMaterialList.length === 0) {
                     return callback(new Error('关联资源不能为空'));
@@ -314,6 +353,7 @@
                 displayVideoDialogVisible: false,
                 selectADResourceVisible: false,
                 isLoading: false,
+                categoryOptions: [],
                 infoRules: {
                     name: [
                         {validator: checkName, trigger: 'blur'}
@@ -326,6 +366,9 @@
                     ],
                     applyDateEnd: [
                         {validator: checkApplyDateEnd, trigger: 'blur'}
+                    ],
+                    categoryList: [
+                        {validator: checkCategoryList, trigger: 'blur'}
                     ],
                     adMaterialList: [
                         {validator: checkResource, trigger: 'change'}
@@ -363,6 +406,31 @@
             this.init();
         },
         methods: {
+            init() {
+                this.$util.toggleFixedBtnContainer();
+                this.$service.getADList({
+                    adType: this.adInfo.adType,
+                    visible: true,
+                    pageNum: 1,
+                    pageSize: 10000
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.visibleTypeADList = response.data.list;
+                    }
+                });
+                if (this.status === 'CREATE_PREPOSITION_AD' || this.status === 'EDIT_PREPOSITION_AD') {
+                    this.$service.getProgrammeCategory().then(response => {
+                        if (response && response.code === 0) {
+                            this.categoryOptions = response.data;
+                            if (this.status === 'CREATE_PREPOSITION_AD') {
+                                // 默认全选
+                                this.adInfo.categoryList = response.data.slice(0);
+                            }
+                            this.categoryOptions.unshift({id: '0', signCode: '0', name: '全选'});
+                        }
+                    });
+                }
+            },
             // 根据已上架的当前类型的广告列表检测当前设置是否有生效时间的冲突
             getConflictMessage(begin, end) {
                 let beginTime = begin instanceof Date ? begin.getTime() : begin;
@@ -389,22 +457,46 @@
                 }
                 return conflictMessage;
             },
-            init() {
-                this.$util.toggleFixedBtnContainer();
-                this.$service.getADList({
-                    adType: this.adInfo.adType,
-                    visible: true,
-                    pageNum: 1,
-                    pageSize: 10000
-                }).then(response => {
-                    if (response && response.code === 0) {
-                        this.visibleTypeADList = response.data.list;
-                    }
-                });
-            },
             // 生效开始时间不晚于当前时间
             isStartTimeFit(startTime) {
                 return new Date().getTime() < startTime;
+            },
+            validateCategoryList() {
+                this.$refs['adInfo'].validateField('categoryList');
+            },
+            removeAllCategory() {
+                this.adInfo.categoryList.splice(0);
+                this.validateCategoryList();
+            },
+            removeCategory(category, index) {
+                this.adInfo.categoryList.splice(index, 1);
+                this.validateCategoryList();
+            },
+            querySearch(queryString, cb) {
+                let results = queryString ? this.categoryOptions.filter(this.createFilter(queryString)) : this.categoryOptions;
+                cb(results);
+            },
+            createFilter(queryString) {
+                return (categoryOptions) => {
+                    return (categoryOptions.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+                };
+            },
+            // 设置区域码，对全选进行处理
+            setCategories(item) {
+                // 对全选进行处理
+                if (item.name === '全选') {
+                    this.adInfo.categoryList.splice(0);
+                    this.categoryOptions.map(category => {
+                        if (category.name !== '全选') {
+                            this.adInfo.categoryList.push(category);
+                        }
+                    });
+                } else {
+                    // 对非全选进行处理
+                    this.adInfo.categoryList.push({id: item.id, name: item.name, signCode: item.signCode});
+                    this.adInfo.categoryList = _.uniqBy(this.adInfo.categoryList, 'id');
+                }
+                this.validateCategoryList();
             },
             confirmLinkADResource() {
                 switch (this.status) {
@@ -623,8 +715,8 @@
             margin-top: 100px;
             li {
                 margin-left: 11px;
-                margin-bottom: 12px;
-                margin-top: 12px;
+                margin-bottom: 10px;
+                margin-top: 10px;
                 height: 24px;
                 line-height: 24px;
                 label {
@@ -752,6 +844,10 @@
                 }
             }
         }
+    }
+
+    .my-tags {
+        max-width: 600px;
     }
 
 </style>
