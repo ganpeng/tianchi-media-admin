@@ -29,22 +29,34 @@
         </div>
         <div class="content-field">
             <div class="wrapper">
-                <div @click="gotoPersonDetail(0)" :style="styleBgImageStr(0)" class="field pointer"></div>
+                <div @click="gotoPersonDetail(0)" :style="styleBgImageStr(0)" class="field pointer">
+                    <span class="person-name">{{getPersonName(0)}}</span>
+                </div>
             </div>
             <div class="wrapper">
-                <div @click="gotoPersonDetail(1)" :style="styleBgImageStr(1)" class="field pointer"></div>
+                <div @click="gotoPersonDetail(1)" :style="styleBgImageStr(1)" class="field pointer">
+                    <span class="person-name">{{getPersonName(1)}}</span>
+                </div>
             </div>
             <div class="wrapper">
-                <div @click="gotoPersonDetail(2)" :style="styleBgImageStr(2)" class="field pointer"></div>
+                <div @click="gotoPersonDetail(2)" :style="styleBgImageStr(2)" class="field pointer">
+                    <span class="person-name">{{getPersonName(2)}}</span>
+                </div>
             </div>
             <div class="wrapper">
-                <div @click="gotoPersonDetail(3)" :style="styleBgImageStr(3)" class="field pointer"></div>
+                <div @click="gotoPersonDetail(3)" :style="styleBgImageStr(3)" class="field pointer">
+                    <span class="person-name">{{getPersonName(3)}}</span>
+                </div>
             </div>
             <div class="wrapper">
-                <div @click="gotoPersonDetail(4)" :style="styleBgImageStr(4)" class="field pointer"></div>
+                <div @click="gotoPersonDetail(4)" :style="styleBgImageStr(4)" class="field pointer">
+                    <span class="person-name">{{getPersonName(4)}}</span>
+                </div>
             </div>
             <div class="wrapper">
-                <div @click="gotoPersonDetail(5)" :style="styleBgImageStr(5)" class="field pointer"></div>
+                <div @click="gotoPersonDetail(5)" :style="styleBgImageStr(5)" class="field pointer">
+                    <span class="person-name">{{getPersonName(5)}}</span>
+                </div>
             </div>
         </div>
     </div>
@@ -67,28 +79,42 @@ export default {
     data() {
         return {};
     },
+    created() {
+        let {navbarId} = this.$route.params;
+        this.navbarId = navbarId;
+    },
     computed: {
         ...mapGetters({
             layout: 'pageLayout/layout',
-            getNavbarNameById: 'pageLayout/getNavbarNameById'
+            getNavbarNameById: 'pageLayout/getNavbarNameById',
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
         }),
+        layoutItem() {
+            return (squareIndex) => {
+                return this.getLayoutItemByNavbarId(this.navbarId, this.index, squareIndex);
+            };
+        },
         getIconImageUri() {
             return (obj) => {
                 return _.get(obj, 'iconImage.uri');
             };
         },
-        getImageUriByKeyAndIndex() {
-            return (key, squareIndex) => {
-                let {navbarId} = this.$route.params;
-                let uri = _.get(this.layout, `${navbarId}.data.${this.index}.layoutItemMultiList.${squareIndex}.${key}.uri`);
-                return uri;
-            };
-        },
         styleBgImageStr() {
             return (squareIndex) => {
-                let bgStr = `background-image: url(${this.getImageUriByKeyAndIndex('coverImage', squareIndex)})`;
+                let uri = _.get(this.layoutItem(squareIndex), 'coverImage.uri');
+                let height = _.get(this.layoutItem(squareIndex), 'coverImage.height');
+                let bgStr = `background-image: url(${uri})`;
+                if (parseInt(height) === 280) {
+                    bgStr = `background-image: url(${uri});padding-bottom: 107.2963%;background-color: transparent;`;
+                }
                 return bgStr;
             };
+        },
+        getPersonName() {
+            return (squareIndex) => {
+                let name = _.get(this.layoutItem(squareIndex), 'name');
+                return name;
+            }
         }
     },
     methods: {
@@ -140,6 +166,12 @@ export default {
             .field {
                 @include paddingBg(100%);
                 border-radius: 50%;
+                .person-name {
+                    position: absolute;
+                    left: 50%;
+                    bottom: -20px;
+                    transform: translateX(-50%);
+                }
             }
         }
         .wrapper + .wrapper {

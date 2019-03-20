@@ -10,25 +10,46 @@
                 <div class="wrapper">
                     <div :style="styleBgImageStr(0)" class="top-left-field">
                         <corner-mark :squareIndex="0"></corner-mark>
+                        <shuffle-btn
+                            v-if="isEdit"
+                            :onlyChannel="false"
+                            :addShuffleLayout="addShuffleLayout(0)"
+                        ></shuffle-btn>
+                        <!--
                         <el-button v-if="isEdit" @click="selectFilter(0)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
+                        -->
                     </div>
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(1)" class="top-middle-field">
                         <corner-mark :squareIndex="1"></corner-mark>
+                        <shuffle-btn
+                            v-if="isEdit"
+                            :onlyChannel="false"
+                            :addShuffleLayout="addShuffleLayout(1)"
+                        ></shuffle-btn>
+                        <!--
                         <el-button v-if="isEdit" @click="selectFilter(1)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
+                        -->
                     </div>
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(2)" class="top-right-field">
                         <corner-mark :squareIndex="2"></corner-mark>
+                        <shuffle-btn
+                            v-if="isEdit"
+                            :onlyChannel="false"
+                            :addShuffleLayout="addShuffleLayout(2)"
+                        ></shuffle-btn>
+                        <!--
                         <el-button v-if="isEdit" @click="selectFilter(2)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
+                        -->
                     </div>
                 </div>
             </div>
@@ -36,25 +57,46 @@
                 <div class="wrapper">
                     <div :style="styleBgImageStr(3)" class="bottom-left-field">
                         <corner-mark :squareIndex="3"></corner-mark>
+                        <shuffle-btn
+                            v-if="isEdit"
+                            :onlyChannel="false"
+                            :addShuffleLayout="addShuffleLayout(3)"
+                        ></shuffle-btn>
+                        <!--
                         <el-button v-if="isEdit" @click="selectFilter(3)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
+                        -->
                     </div>
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(4)" class="bottom-middle-field">
                         <corner-mark :squareIndex="4"></corner-mark>
+                        <shuffle-btn
+                            v-if="isEdit"
+                            :onlyChannel="false"
+                            :addShuffleLayout="addShuffleLayout(4)"
+                        ></shuffle-btn>
+                        <!--
                         <el-button v-if="isEdit" @click="selectFilter(4)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
+                        -->
                     </div>
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(5)" class="bottom-right-field">
                         <corner-mark :squareIndex="5"></corner-mark>
+                        <shuffle-btn
+                            v-if="isEdit"
+                            :onlyChannel="false"
+                            :addShuffleLayout="addShuffleLayout(5)"
+                        ></shuffle-btn>
+                        <!--
                         <el-button v-if="isEdit" @click="selectFilter(5)" class="btn-style-two btn130">
                             选择筛选
                         </el-button>
+                        -->
                     </div>
                 </div>
             </div>
@@ -62,19 +104,34 @@
         <div v-if="isEdit" class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="saveHandler">保存</el-button>
         </div>
-        <edit-filter :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectFilterDialog"></edit-filter>
+        <edit-filter
+            :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectFilterDialog">
+        </edit-filter>
+        <!--  2.2.0新增逻辑 -->
+        <link-dialog
+            :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectLinkDialog">
+        </link-dialog>
     </div>
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex';
+import _ from 'lodash';
 import EditFilter from '../add_edit_module/EditFilter';
 import CornerMark from '../CornerMark';
-import _ from 'lodash';
+
+// 2.2.0新增
+import LinkDialog from '../add_edit_module/LinkDialog';
+import ShuffleBtn from './ShuffleBtn';
+
 export default {
     name: 'CategoryFixedModule',
     components: {
         EditFilter,
-        CornerMark
+        CornerMark,
+
+        //  2.2.0新增逻辑
+        LinkDialog,
+        ShuffleBtn
     },
     props: {
         isEdit: {
@@ -129,6 +186,23 @@ export default {
             } else {
                 this.$message.error('色块必须全部选择');
             }
+        },
+        addShuffleLayout(squareIndex) {
+            return (layoutItemType) => {
+                this.squareIndex = squareIndex;
+                this.layoutItemType = layoutItemType;
+                this.setAllowResolutions(this.squareIndex);
+                switch (layoutItemType) {
+                    case 'LINK':
+                        this.$refs.selectLinkDialog.showDialog('LINK');
+                        break;
+                    case 'FILTER':
+                        this.$refs.selectFilterDialog.showDialog();
+                        break;
+                    default:
+                        throw new Error('layoutItemType类型错误');
+                }
+            };
         },
         setAllowResolutions(squareIndex) {
             switch (squareIndex) {

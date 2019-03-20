@@ -480,9 +480,7 @@
         <display-video-dialog
             :url="url"
             :title="videoTitle"
-            :displayVideoDialogVisible="displayVideoDialogVisible"
-            ref="displayVideoDialog"
-            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
+            ref="displayVideoDialog">
         </display-video-dialog>
     </div>
 </template>
@@ -492,7 +490,7 @@ import _ from 'lodash';
 import role from '@/util/config/role';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
-import DisplayVideoDialog from '../../../components/custom_components/custom/DisplayVideoDialog';
+import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
 import SelectImage from './SelectImage';
 const ClipboardJS = require('clipboard');
 export default {

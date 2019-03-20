@@ -19,13 +19,6 @@
                 <el-dropdown-item command="CHANNEL">频道</el-dropdown-item>
                 <el-dropdown-item command="FILTER">筛选</el-dropdown-item>
             </el-dropdown-menu>
-            <!-- <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-if="!onlyChannel" command="PROGRAMME">节目</el-dropdown-item>
-                <el-dropdown-item v-if="!onlyChannel" command="PROGRAMME_VIDEO">节目内视频</el-dropdown-item>
-                <el-dropdown-item v-if="!onlyChannel" command="PROGRAMME_SUBJECT">节目专题</el-dropdown-item>
-                <el-dropdown-item v-if="!onlyChannel" command="LINK">网页</el-dropdown-item>
-                <el-dropdown-item v-if="onlyChannel || hasChannel" command="CHANNEL">频道</el-dropdown-item>
-            </el-dropdown-menu> -->
         </el-dropdown>
     </div>
 </template>
@@ -57,7 +50,7 @@ export default {
 <style lang="scss" scoped>
 .shuffle-btn-container {
     position: absolute;
-    right: 10px;
-    top: 2px;
+    right: 20px;
+    top: 10px;
 }
 </style>

@@ -153,7 +153,6 @@ export default {
     },
     computed: {
         ...mapGetters({
-            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
             getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
             getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
         }),

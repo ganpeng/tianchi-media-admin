@@ -7,10 +7,8 @@
         </div>
         <div class="content-field">
             <div class="top-field">
-                <div id="movie-top-left-field" class="wrapper">
-                    <div :style="styleBgImageStr(movieActiveIndex)" class="top-left-field">
-                        <corner-mark :squareIndex="movieActiveIndex" :cornerMark="getLayoutItemCornerMark(navbarId, 0, movieActiveIndex)"></corner-mark>
-                    </div>
+                <div id="movie-top-left-field" :style="styleBgImageStr(movieActiveIndex)" class="wrapper">
+                    <corner-mark :squareIndex="movieActiveIndex" :cornerMark="getLayoutItemCornerMark(navbarId, 0, movieActiveIndex)"></corner-mark>
                 </div>
                 <div class="wrapper">
                     <div class="top-middle-field">
@@ -23,20 +21,10 @@
                                     {{getLayoutItemValueByKey('desc', 0)}}
                                 </p>
                             </div>
-                            <div v-if="isEdit" class="btn-wrapper">
-                                <el-button @click.stop="selectProgramme(0)" class="btn-style-two btn130">
-                                    选择节目
-                                </el-button>
-                                <el-button @click.stop="selectProgrammeSubject(0)" class="btn-style-two btn130">
-                                    选择节目专题
-                                </el-button>
-                                <el-button @click="selectProgrammeVideo(0)" class="btn-style-two btn130">
-                                    选择视频
-                                </el-button>
-                                <el-button @click="selectLink(0)" class="btn-style-two btn130">
-                                    选择网页
-                                </el-button>
-                            </div>
+                            <shuffle-btn
+                                v-if="isEdit"
+                                :addShuffleLayout="addShuffleLayout(0)"
+                            ></shuffle-btn>
                         </div>
                         <div @click.stop="changeMovieActiveIndex(1)" :class="['top-middle-field-item', movieActiveIndex === 1 ? 'active' : '']">
                             <div class="movie-text-info">
@@ -47,20 +35,10 @@
                                     {{getLayoutItemValueByKey('desc', 1)}}
                                 </p>
                             </div>
-                            <div v-if="isEdit" class="btn-wrapper">
-                                <el-button @click.stop="selectProgramme(1)" class="btn-style-two btn130">
-                                    选择节目
-                                </el-button>
-                                <el-button @click.stop="selectProgrammeSubject(1)" class="btn-style-two btn130">
-                                    选择节目专题
-                                </el-button>
-                                <el-button @click="selectProgrammeVideo(1)" class="btn-style-two btn130">
-                                    选择视频
-                                </el-button>
-                                <el-button @click="selectLink(1)" class="btn-style-two btn130">
-                                    选择网页
-                                </el-button>
-                            </div>
+                            <shuffle-btn
+                                v-if="isEdit"
+                                :addShuffleLayout="addShuffleLayout(1)"
+                            ></shuffle-btn>
                         </div>
                         <div @click.stop="changeMovieActiveIndex(2)" :class="['top-middle-field-item', movieActiveIndex === 2 ? 'active' : '']">
                             <div class="movie-text-info">
@@ -71,20 +49,10 @@
                                     {{getLayoutItemValueByKey('desc', 2)}}
                                 </p>
                             </div>
-                            <div v-if="isEdit" class="btn-wrapper">
-                                <el-button @click.stop="selectProgramme(2)" class="btn-style-two btn130">
-                                    选择节目
-                                </el-button>
-                                <el-button @click.stop="selectProgrammeSubject(2)" class="btn-style-two btn130">
-                                    选择节目专题
-                                </el-button>
-                                <el-button @click="selectProgrammeVideo(2)" class="btn-style-two btn130">
-                                    选择视频
-                                </el-button>
-                                <el-button @click="selectLink(2)" class="btn-style-two btn130">
-                                    选择网页
-                                </el-button>
-                            </div>
+                            <shuffle-btn
+                                v-if="isEdit"
+                                :addShuffleLayout="addShuffleLayout(2)"
+                            ></shuffle-btn>
                         </div>
                         <div @click.stop="changeMovieActiveIndex(3)" :class="['top-middle-field-item', movieActiveIndex === 3 ? 'active' : '']">
                             <div class="movie-text-info">
@@ -95,80 +63,38 @@
                                     {{getLayoutItemValueByKey('desc', 3)}}
                                 </p>
                             </div>
-                            <div v-if="isEdit" class="btn-wrapper">
-                                <el-button @click.stop="selectProgramme(3)" class="btn-style-two btn130">
-                                    选择节目
-                                </el-button>
-                                <el-button @click.stop="selectProgrammeSubject(3)" class="btn-style-two btn130">
-                                    选择节目专题
-                                </el-button>
-                                <el-button @click="selectProgrammeVideo(3)" class="btn-style-two btn130">
-                                    选择视频
-                                </el-button>
-                                <el-button @click="selectLink(3)" class="btn-style-two btn130">
-                                    选择网页
-                                </el-button>
-                            </div>
+                            <shuffle-btn
+                                v-if="isEdit"
+                                :addShuffleLayout="addShuffleLayout(3)"
+                            ></shuffle-btn>
                         </div>
                     </div>
                 </div>
-                <div class="wrapper">
-                    <div :style="styleBgImageStr(4)" class="top-right-field">
-                        <corner-mark :squareIndex="4" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 4)"></corner-mark>
-                        <div v-if="isEdit" class="btn-wrapper">
-                            <el-button @click="selectProgramme(4)" class="btn-style-two btn130">
-                                选择节目
-                            </el-button>
-                            <el-button @click="selectProgrammeSubject(4)" class="btn-style-two btn130">
-                                选择节目专题
-                            </el-button>
-                            <el-button @click="selectProgrammeVideo(4)" class="btn-style-two btn130">
-                                选择视频
-                            </el-button>
-                            <el-button @click="selectLink(4)" class="btn-style-two btn130">
-                                选择网页
-                            </el-button>
-                        </div>
-                    </div>
+                <div :style="styleBgImageStr(4)" class="wrapper">
+                    <corner-mark :squareIndex="4" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 4)"></corner-mark>
+                    <shuffle-btn
+                        v-if="isEdit"
+                        :addShuffleLayout="addShuffleLayout(4)"
+                    ></shuffle-btn>
                 </div>
             </div>
             <div class="bottom-field">
                 <div class="wrapper">
                     <div :style="styleBgImageStr(5)" class="bottom-left-field">
                         <corner-mark :squareIndex="5" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 5)"></corner-mark>
-                        <div v-if="isEdit" class="btn-wrapper">
-                            <el-button @click="selectProgramme(5)" class="btn-style-two btn130">
-                                选择节目
-                            </el-button>
-                            <el-button @click="selectProgrammeSubject(5)" class="btn-style-two btn130">
-                                选择节目专题
-                            </el-button>
-                            <el-button @click="selectProgrammeVideo(5)" class="btn-style-two btn130">
-                                选择视频
-                            </el-button>
-                            <el-button @click="selectLink(5)" class="btn-style-two btn130">
-                                选择网页
-                            </el-button>
-                        </div>
+                        <shuffle-btn
+                            v-if="isEdit"
+                            :addShuffleLayout="addShuffleLayout(5)"
+                        ></shuffle-btn>
                     </div>
                 </div>
                 <div class="wrapper">
                     <div :style="styleBgImageStr(6)" class="bottom-right-field">
                         <corner-mark :squareIndex="6" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 6)"></corner-mark>
-                        <div v-if="isEdit" class="btn-wrapper">
-                            <el-button @click="selectProgramme(6)" class="btn-style-two btn130">
-                                选择节目
-                            </el-button>
-                            <el-button @click="selectProgrammeSubject(6)" class="btn-style-two btn130">
-                                选择节目专题
-                            </el-button>
-                            <el-button @click="selectProgrammeVideo(6)" class="btn-style-two btn130">
-                                选择视频
-                            </el-button>
-                            <el-button @click="selectLink(6)" class="btn-style-two btn130">
-                                选择网页
-                            </el-button>
-                        </div>
+                        <shuffle-btn
+                            v-if="isEdit"
+                            :addShuffleLayout="addShuffleLayout(6)"
+                        ></shuffle-btn>
                     </div>
                 </div>
             </div>
@@ -186,6 +112,28 @@
             :allowResolutions="allowResolutions"
             ref="selectLinkDialog">
         ></link-dialog>
+
+        <!--  2.2.0 新增的逻辑 -->
+        <person-subject-dialog
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="personSubjectDialog"
+        ></person-subject-dialog>
+        <edit-filter
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectFilterDialog">
+        ></edit-filter>
+        <channel-dialog
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectChannelDialog">
+        ></channel-dialog>
+        <subject-video
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="subjectVideoDialog"
+        ></subject-video>
     </div>
 </template>
 <script>
@@ -198,6 +146,13 @@ import CornerMark from '../CornerMark';
 //  新增
 import EditProgrammeVideo from '../add_edit_module/EditProgrammeVideo';
 import LinkDialog from '../add_edit_module/LinkDialog';
+
+//  2.2.0新增的逻辑
+import ShuffleBtn from '../mixed_module/ShuffleBtn';
+import PersonSubjectDialog from '../add_edit_module/PersonSubjectDialog';
+import EditFilter from '../add_edit_module/EditFilter';
+import ChannelDialog from '../add_edit_module/ChannelDialog';
+import SubjectVideo from '../add_edit_module/SubjectVideo';
 export default {
     name: 'MovieFixedModule',
     components: {
@@ -207,7 +162,14 @@ export default {
 
         //  新增
         EditProgrammeVideo,
-        LinkDialog
+        LinkDialog,
+
+        //  2.2.0新增
+        ShuffleBtn,
+        PersonSubjectDialog,
+        EditFilter,
+        ChannelDialog,
+        SubjectVideo
     },
     props: {
         isEdit: {
@@ -302,6 +264,43 @@ export default {
                 this.$message.error('色块必须全部选择');
             }
         },
+        addShuffleLayout(squareIndex) {
+            return (layoutItemType) => {
+                this.squareIndex = squareIndex;
+                this.layoutItemType = layoutItemType;
+                this.setAllowResolutions(this.squareIndex);
+                switch (layoutItemType) {
+                    case 'PROGRAMME':
+                        this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
+                        break;
+                    case 'PROGRAMME_VIDEO':
+                        this.$refs.selectProgrammeVideoDialog.showDialog('PROGRAMME_VIDEO');
+                        break;
+                    case 'PROGRAMME_SUBJECT':
+                        this.$refs.selectProgrammeSubjectDialog.showDialog('PROGRAMME_SUBJECT');
+                        break;
+                    case 'LINK':
+                        this.$refs.selectLinkDialog.showDialog('LINK');
+                        break;
+                        //  新增加的部分
+                    case 'FIGURE_SUBJECT':
+                        this.$refs.personSubjectDialog.showDialog('FIGURE_SUBJECT');
+                        break;
+                    case 'FILTER':
+                        this.$refs.selectFilterDialog.showDialog();
+                        break;
+                    case 'CHANNEL':
+                        this.$refs.selectChannelDialog.showDialog('CHANNEL');
+                        break;
+                        //  2.2.0新增
+                    case 'SUBJECT_VIDEO':
+                        this.$refs.subjectVideoDialog.showDialog('SUBJECT_VIDEO');
+                        break;
+                    default:
+                        throw new Error('layoutItemType类型错误');
+                }
+            };
+        },
         setAllowResolutions(squareIndex) {
             switch (squareIndex) {
                 case 0:
@@ -336,20 +335,6 @@ export default {
     border-radius: 8px;
     border: 1px solid #2A3040;
 }
-@mixin btnWrapper() {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 130px;
-    .el-button {
-        font-size: 12px;
-        margin-top: 5px;
-        margin-left: 0;
-        height: 24px;
-        line-height: 24px;
-    }
-}
 .movie-fixed-module-container {
     margin-top: 20px;
     .btn-field {
@@ -363,17 +348,21 @@ export default {
             margin-bottom: 2%;
             .wrapper {
                 &:first-child {
-                    width: 56.1904%;
+                    width: 56.5909%;
+                    @include paddingBg(26.8181%);
+                    border-top-right-radius:0;
+                    border-bottom-right-radius:0;
                 }
                 &:nth-child(2) {
-                    width: 22.8571%;
-                    margin: 0 0.47619%;
+                    width: 21.5909%;
+                    margin-right: 2.2727%;
+                    @include paddingBg(26.8181%);
+                    border-top-left-radius:0;
+                    border-bottom-left-radius:0;
                 }
                 &:last-child {
-                    width: 20%;
-                }
-                .top-left-field {
-                    @include paddingBg(54.2372%);
+                    width: 19.4318%;
+                    @include paddingBg(26.8181%);
                 }
                 .top-middle-field {
                     display: flex;
@@ -382,34 +371,14 @@ export default {
                     width: 100%;
                     height: 100%;
                     .top-middle-field-item {
-                        @include paddingBg(32%);
+                        @include paddingBg(30.5263%);
+                        border-radius: 0;
                         cursor: pointer;
-                        .btn-wrapper {
-                            display: none;
-                            @include btnWrapper();
-                        }
                         &:hover {
                             background-color: $mainColor;
-                            // border: 1px solid #1989FA;
-                            .btn-wrapper {
-                                display: block;
-                            }
                         }
                         &.active {
                             background-color: $mainColor;
-                        }
-                    }
-                }
-                .top-right-field {
-                    @include paddingBg(152.3809%);
-                    .btn-wrapper {
-                        display: none;
-                        @include btnWrapper();
-                    }
-                    &:hover {
-                        // border: 1px solid #1989FA;
-                        .btn-wrapper {
-                            display: block;
                         }
                     }
                 }
@@ -447,16 +416,6 @@ export default {
                 .bottom-left-field,
                 .bottom-right-field {
                     @include paddingBg(30.6201%);
-                    .btn-wrapper {
-                        display: none;
-                        @include btnWrapper();
-                    }
-                    &:hover {
-                        // border: 1px solid #1989FA;
-                        .btn-wrapper {
-                            display: block;
-                        }
-                    }
                 }
             }
         }

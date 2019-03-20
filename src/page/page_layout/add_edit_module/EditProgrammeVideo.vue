@@ -423,8 +423,7 @@
         <display-video-dialog
             :url="url"
             :title="videoTitle"
-            :displayVideoDialogVisible="displayVideoDialogVisible"
-            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
+            ref="displayVideoDialog">
         </display-video-dialog>
     </div>
 </template>
@@ -434,7 +433,7 @@ import _ from 'lodash';
 import role from '@/util/config/role';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
-import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
+import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
 import SelectImage from './SelectImage';
 const ClipboardJS = require('clipboard');
 export default {
@@ -802,10 +801,9 @@ export default {
         },
         //  视频列表相关的方法
         displayVideoPlayer(url, name) {
-            this.displayVideoDialogVisible = true;
-            let baseUri = window.localStorage.getItem('videoBaseUri');
-            this.url = `${baseUri}${url}`;
+            this.url = url;
             this.videoTitle = name;
+            this.$refs.displayVideoDialog.showDialog();
         },
         initClipboard() {
             let that = this;
