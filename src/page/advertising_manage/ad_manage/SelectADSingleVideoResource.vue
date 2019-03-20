@@ -1,4 +1,4 @@
-<!--选择广告资源图片组件-->
+<!--选择单个广告资源视频组件-->
 <template>
     <div id="select-ad-video">
         <div class="item-container">
@@ -16,29 +16,44 @@
                 </el-option>
             </el-select>
         </div>
-        <el-checkbox-group
-            v-model="selectedResourceIdList">
-            <el-checkbox
-                @change="checkImage(item,$event)"
+        <el-radio-group
+            v-model="resourceId"
+            @change="setSelectedResource">
+            <el-radio
+                v-if="!!adOwnerId"
                 :label="item.id"
-                v-for="(item,index) in imageList"
+                v-for="(item,index) in videoList"
                 :key="index">
                 <div class="video-box"
-                     :style="{'background-image': 'url(' + item.storageUri + ')'}">
+                     @click.self="previewVideo(item)">
+                    <div @click="previewVideo(item)" class="icon-box">
+                        <svg-icon icon-class="video-ad"></svg-icon>
+                    </div>
                     <div class="ad-desc">
+                        <div class="ellipsis one">{{item.name}}</div>
                         <div>{{item.width}}*{{item.height}}</div>
-                        <div>{{item.size | convertFileSize}}</div>
+                        <div>{{item.duration}}s&nbsp;&nbsp;&nbsp;&nbsp;{{item.size | convertFileSize}}</div>
                     </div>
                 </div>
-            </el-checkbox>
-        </el-checkbox-group>
+            </el-radio>
+        </el-radio-group>
+        <display-video-dialog
+            :url="url"
+            :title="title"
+            :displayVideoDialogVisible="displayVideoDialogVisible"
+            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
+        </display-video-dialog>
     </div>
 </template>
 
 <script>
+    import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
 
     export default {
-        name: 'SelectADImageResource',
+        name: 'SelectADVideoResource',
+        components: {
+            DisplayVideoDialog
+        },
         props: {
             adType: {
                 type: String,
@@ -47,11 +62,14 @@
         },
         data() {
             return {
-                selectedResourceIdList: [],
-                selectedResourceList: [],
+                url: '',
+                title: '',
+                displayVideoDialogVisible: false,
+                resourceId: '',
+                selectedResourceInfo: {},
                 adOwnerId: '',
                 ownerOptions: [],
-                imageList: []
+                videoList: []
             };
         },
         mounted() {
@@ -74,36 +92,39 @@
                         pageNum: 1
                     }).then(response => {
                         if (response && response.code === 0) {
-                            this.imageList = response.data.list;
+                            this.videoList = response.data.list;
                         }
                     });
                 } else {
-                    this.imageList = [];
+                    this.videoList = [];
                 }
             },
-            checkImage(image, isAdd) {
-                // 设置选中的图片资源list
-                if (isAdd) {
-                    this.selectedResourceList.push(image);
-                } else {
-                    for (let i = 0; i < this.selectedResourceList.length; i++) {
-                        if (this.selectedResourceList[i].id === image.id) {
-                            this.selectedResourceList.splice(i, 1);
-                        }
+            // 设置选择的视频资源
+            setSelectedResource() {
+                for (let i = 0; i < this.videoList.length; i++) {
+                    if (this.videoList[i].id === this.resourceId) {
+                        this.selectedResourceInfo = this.videoList[i];
                     }
                 }
             },
-            getImageArrayInfo() {
-                if (this.selectedResourceIdList.length === 0) {
-                    this.$message.warning('请选择相应的图片资源');
+            previewVideo(video) {
+                this.displayVideoDialogVisible = true;
+                this.url = video.storageUri;
+                this.title = video.name;
+            },
+            closeDisplayVideoDialog(status) {
+                this.displayVideoDialogVisible = status;
+            },
+            getVideoArrayInfo() {
+                if (!this.resourceId) {
+                    this.$message.warning('请选择相应的视频资源');
                     return false;
                 } else {
-                    return this.selectedResourceList;
+                    return this.selectedResourceInfo;
                 }
             }
         }
-    }
-    ;
+    };
 </script>
 
 <style lang="scss" scoped>
@@ -123,27 +144,24 @@
         }
     }
 
-    .el-checkbox-group {
+    .el-radio-group {
         padding-bottom: 50px;
         margin-left: 40px;
         overflow: hidden;
-        .el-checkbox {
+        .el-radio {
             float: left;
             margin-right: 40px;
             margin-top: 30px;
-            & + .el-checkbox {
+            & + .el-radio {
                 margin-left: 0px;
             }
         }
         .video-box {
             height: 100px;
             width: 170px;
+            background: #2A3040;
             border: 1px solid #3E495E;
             border-radius: 8px;
-            background: #2A3040;
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
             cursor: pointer;
             overflow: visible;
             &:hover {
@@ -151,10 +169,23 @@
                 i {
                     visibility: visible;
                 }
+                .svg-icon-video-ad {
+                    fill-opacity: 1;
+                }
+            }
+            .icon-box {
+                display: inline-block;
+            }
+            .svg-icon-video-ad {
+                margin-top: 25px;
+                margin-left: 58px;
+                width: 50px !important;
+                height: 50px !important;
+                fill-opacity: 0.5;
             }
             .ad-desc {
                 position: relative;
-                top: 105px;
+                top: 25px;
                 div {
                     height: 20px;
                     line-height: 20px;
@@ -171,10 +202,10 @@
 <style lang="scss">
 
     #select-ad-video {
-        .el-checkbox__input {
+        .el-radio__input {
             position: absolute;
-            top: 170px;
-            left: 90px;
+            top: 22px;
+            left: 5px;
         }
     }
 

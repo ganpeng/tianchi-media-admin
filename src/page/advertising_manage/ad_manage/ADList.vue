@@ -130,6 +130,7 @@
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item command="BOOT_AD">开机广告</el-dropdown-item>
+                            <el-dropdown-item command="PREPOSITION_AD">片头广告</el-dropdown-item>
                             <el-dropdown-item command="VOLUME_AD">音量条广告</el-dropdown-item>
                             <el-dropdown-item command="CHANNEL_SWITCH_AD">换台广告</el-dropdown-item>
                             <el-dropdown-item command="SCREEN_SAVER_AD">屏保广告</el-dropdown-item>
@@ -311,6 +312,7 @@
                 createRangeTime: [],
                 adTypeOptions: [
                     {value: 'BOOT', label: '开机广告'},
+                    {value: 'PREPOSITION', label: '片头广告'},
                     {value: 'VOLUME', label: '音量条广告'},
                     {value: 'PROGRAMME_DETAIL', label: '详情页广告'},
                     {value: 'CHANNEL_SWITCH', label: '换台广告'},
@@ -338,6 +340,8 @@
                 switch (category) {
                     case 'BOOT':
                         return '开机广告';
+                    case 'PREPOSITION':
+                        return '片头广告';
                     case 'PROGRAMME_DETAIL':
                         return '详情页广告';
                     case 'SCREEN_SAVER':
@@ -402,6 +406,9 @@
                         break;
                     case 'BOOT':
                         routeName = 'EditBootAD';
+                        break;
+                    case 'PREPOSITION':
+                        routeName = 'EditPrepositionAD';
                         break;
                     case 'CHANNEL_SWITCH':
                         routeName = 'EditChannelSwitchAD';
@@ -478,6 +485,9 @@
                 switch (command) {
                     case 'BOOT_AD':
                         this.$router.push({name: 'CreateBootAD'});
+                        break;
+                    case 'PREPOSITION_AD':
+                        this.$router.push({name: 'CreatePrepositionAD'});
                         break;
                     case 'SCREEN_SAVER_AD':
                         this.$router.push({name: 'CreateScreenSaverAD'});

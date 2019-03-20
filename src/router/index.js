@@ -122,6 +122,8 @@ import DisplayAdvertisingOwner from 'sysPage/advertising_manage/advertising_owne
 import ADList from 'sysPage/advertising_manage/ad_manage/ADList';
 import CreateBootAD from 'sysPage/advertising_manage/ad_manage/CreateBootAD';
 import EditBootAD from 'sysPage/advertising_manage/ad_manage/EditBootAD';
+import CreatePrepositionAD from 'sysPage/advertising_manage/ad_manage/CreatePrepositionAD';
+import EditPrepositionAD from 'sysPage/advertising_manage/ad_manage/EditPrepositionAD';
 import CreateVolumeAD from 'sysPage/advertising_manage/ad_manage/CreateVolumeAD';
 import EditVolumeAD from 'sysPage/advertising_manage/ad_manage/EditVolumeAD';
 import CreateScreenSaverAD from 'sysPage/advertising_manage/ad_manage/CreateScreenSaverAD';
@@ -497,6 +499,18 @@ let router = new Router({
                     path: '/ads-manage/edit-boot-ad/:id',
                     name: 'EditBootAD',
                     component: EditBootAD
+                },
+                // 创建片头广告
+                {
+                    path: '/ads-manage/create-preposition-ad',
+                    name: 'CreatePrepositionAD',
+                    component: CreatePrepositionAD
+                },
+                // 编辑片头广告
+                {
+                    path: '/ads-manage/edit-preposition-ad/:id',
+                    name: 'EditPrepositionAD',
+                    component: EditPrepositionAD
                 },
                 // 创建音量条广告
                 {
