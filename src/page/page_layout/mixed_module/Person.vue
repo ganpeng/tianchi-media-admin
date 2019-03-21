@@ -30,32 +30,32 @@
         <div class="content-field">
             <div class="wrapper">
                 <div @click="gotoPersonDetail(0)" :style="styleBgImageStr(0)" class="field pointer">
-                    <span class="person-name">{{getPersonName(0)}}</span>
+                    <span class="person-name my-ellipsis">{{getPersonName(0)}}</span>
                 </div>
             </div>
             <div class="wrapper">
                 <div @click="gotoPersonDetail(1)" :style="styleBgImageStr(1)" class="field pointer">
-                    <span class="person-name">{{getPersonName(1)}}</span>
+                    <span class="person-name my-ellipsis">{{getPersonName(1)}}</span>
                 </div>
             </div>
             <div class="wrapper">
                 <div @click="gotoPersonDetail(2)" :style="styleBgImageStr(2)" class="field pointer">
-                    <span class="person-name">{{getPersonName(2)}}</span>
+                    <span class="person-name my-ellipsis">{{getPersonName(2)}}</span>
                 </div>
             </div>
             <div class="wrapper">
                 <div @click="gotoPersonDetail(3)" :style="styleBgImageStr(3)" class="field pointer">
-                    <span class="person-name">{{getPersonName(3)}}</span>
+                    <span class="person-name my-ellipsis">{{getPersonName(3)}}</span>
                 </div>
             </div>
             <div class="wrapper">
                 <div @click="gotoPersonDetail(4)" :style="styleBgImageStr(4)" class="field pointer">
-                    <span class="person-name">{{getPersonName(4)}}</span>
+                    <span class="person-name my-ellipsis">{{getPersonName(4)}}</span>
                 </div>
             </div>
             <div class="wrapper">
                 <div @click="gotoPersonDetail(5)" :style="styleBgImageStr(5)" class="field pointer">
-                    <span class="person-name">{{getPersonName(5)}}</span>
+                    <span class="person-name my-ellipsis">{{getPersonName(5)}}</span>
                 </div>
             </div>
         </div>
@@ -114,7 +114,7 @@ export default {
             return (squareIndex) => {
                 let name = _.get(this.layoutItem(squareIndex), 'name');
                 return name;
-            }
+            };
         }
     },
     methods: {
@@ -171,6 +171,7 @@ export default {
                     left: 50%;
                     bottom: -20px;
                     transform: translateX(-50%);
+                    width: 100%;
                 }
             }
         }

@@ -43,14 +43,6 @@
                     >
                     </el-input>
                 </el-form-item>
-                <!-- <el-form-item label="所属服务器" prop="pushServer">
-                    <el-input
-                        placeholder="请输入所属服务器地址"
-                        :value="liveChannel.pushServer"
-                        @input="inputHandler($event, 'pushServer')"
-                    >
-                    </el-input>
-                </el-form-item> -->
                 <el-form-item label="频道端口" prop="multicastPort">
                     <el-input
                         type="number"
@@ -129,7 +121,7 @@
                 <el-form-item label="公共频道">
                     <span>{{liveChannel.common ? '是' : '否'}}</span>
                 </el-form-item>
-                <el-form-item label="区域码" prop="companyList">
+                <el-form-item label="区域码" prop="companyList" style="min-width:1050px;">
                     <div class="my-tags">
                         <el-tag
                             :key="index"

@@ -436,7 +436,7 @@ export default {
 
 .scroll-btn-container {
     position: fixed;
-    bottom: 34px;
+    bottom: 10px;
     right: 10px;
     a {
         display: block;
