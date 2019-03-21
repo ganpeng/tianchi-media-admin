@@ -590,7 +590,7 @@ const ASIDE_LIST = [
         {
             text: '轮播插播',
             uri: '/channel-inter-cut/list',
-            icon: 'shortcut_carousel_channel'
+            icon: 'shortcut_inter_cut'
         },
         {
             text: '类型管理',

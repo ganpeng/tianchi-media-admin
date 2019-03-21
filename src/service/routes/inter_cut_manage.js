@@ -10,87 +10,90 @@ import _ from 'lodash';
 /**
  * 创建插播
  */
-export const createInterCut = ({category, name, programmeCategoryList, tagList, backgroundImage, posterImageList, subjectItemList, visible}) => {
-    return service.post('/v1/content/subject', {
-        category,
-        releaseStatus: 'RELEASED',
+export const createInterCut = ({name, scheduled, startTime, totalDuration, channelList, videoList}) => {
+    return service.post('/v1/live/inter-cut', {
         name,
-        programmeCategoryList,
-        tagList,
-        backgroundImage,
-        posterImageList,
-        subjectItemList,
-        visible
+        scheduled,
+        startTime,
+        totalDuration,
+        channelList,
+        videoList
     });
 };
 
 /**
  * 获取插播列表
  */
-export const getInterCutList = ({keyword, category, programmeCategoryId, createdAtBegin, createdAtEnd, pageNum, pageSize, visible}) => {
+export const getInterCutList = ({keyword, channelIdList, scheduled, playStatus, order, pageNum, pageSize}) => {
     const params = {
-        pageNum: pageNum - 1,
-        pageSize,
         keyword,
-        category,
-        programmeCategoryIdList: programmeCategoryId,
-        createdAtBegin: createdAtBegin ? new Date(createdAtBegin).getTime() : '',
-        createdAtEnd: createdAtEnd ? new Date(createdAtEnd).getTime() : '',
-        visible
+        channelIdList,
+        scheduled,
+        playStatus,
+        order,
+        pageSize,
+        pageNum: pageNum - 1
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
         return item !== '' && item !== undefined;
     }));
 
-    return service.get(`/v1/content/subject/page?${paramsStr}`);
+    return service.get(`/v1/live/inter-cut/page?${paramsStr}`);
 };
 
 /**
  * 修改插播信息
  */
-export const updateInterCInfo = ({id, name, programmeCategoryList, tagList, backgroundImage, posterImageList, subjectItemList, visible}) => {
-    return service.patch(util.format('/v1/content/subject/{0}', id), {
+export const updateInterCutInfo = ({id, name, scheduled, startTime, totalDuration, channelList, videoList}) => {
+    return service.put('/v1/live/inter-cut', {
         id,
         name,
-        programmeCategoryList,
-        tagList,
-        backgroundImage,
-        posterImageList,
-        subjectItemList,
-        visible
+        scheduled,
+        startTime,
+        totalDuration,
+        channelList,
+        videoList
     });
 };
 
 /**
  * 获取插播详情
- * @param id The id of subject.
  */
-export const getSubjectDetail = (id) => {
-    return service.get(util.format('/v1/content/subject/{0}', id));
+export const getInterCutDetail = (id) => {
+    return service.get(util.format('/v1/live/inter-cut/{0}', id));
 };
 
 /**
  * 获取插播生效时间是否冲突
  */
-export const getEffectTimeValidity = (id) => {
-    return service.get(util.format('/v1/content/subject/{0}', id));
+export const getInterCutConflicting = ({channelIdList, startTime, endTime, excludedInterCutId}) => {
+    const params = {
+        channelIdList,
+        startTime,
+        endTime,
+        excludedInterCutId
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/live/inter-cut/conflicting?${paramsStr}`);
 };
 
 /**
  * 删除单个插播
- * @param id The id of subject.
  */
-export const deleteSubject = (id) => {
-    return service.delete(util.format('/v1/content/subject/{0}', id));
+export const deleteInterCutById = (id) => {
+    return service.delete(util.format('/v1/live/inter-cut/{0}', id));
 };
 
 /**
  * 批量删除插播
- * @param idList The idList of subject.
  */
-export const batchDeleteSubject = ({idList}) => {
-    return service.delete('/v1/content/subject', {data: idList});
+export const batchDeleteInterCut = ({idList}) => {
+    return service.delete('/v1/live/inter-cut', {data: idList});
 };
 
 /**

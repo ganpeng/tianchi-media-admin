@@ -42,7 +42,7 @@
             <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                :current-page="pageNum"
+                :current-page="listQueryParams.pageNum"
                 :page-sizes="[10, 20, 50, 100, 200, 500]"
                 :page-size="listQueryParams.pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
@@ -81,10 +81,9 @@
         data() {
             return {
                 listQueryParams: {
-                    pageNum: 0,
+                    pageNum: 1,
                     pageSize: 10
                 },
-                pageNum: 1,
                 total: 0,
                 interCutList: [],
                 isDisabled: true
@@ -109,9 +108,8 @@
                     }
                 }
                 if (isReset) {
-                    this.pageNum = 1;
+                    this.listQueryParams.pageNum = 1;
                 }
-                this.listQueryParams.pageNum = this.pageNum - 1;
                 wsCache.localStorage.set('interCutListParams', this.listQueryParams);
                 this.$service.getInterCutList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
@@ -128,11 +126,12 @@
                 this.getInterCutList();
             },
             handleCurrentChange(pageNum) {
-                this.pageNum = pageNum;
+                this.listQueryParams.pageNum = pageNum;
                 this.getInterCutList();
             },
             // 批量删除
             batchRemoveInterCut() {
+                this.$refs.interCutOperateTable.batchRemove();
             },
             createInterCut() {
                 this.$router.push({name: 'CreateInterCut'});

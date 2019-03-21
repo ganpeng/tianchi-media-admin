@@ -27,20 +27,29 @@
             <el-table-column
                 align="center"
                 min-width="100px"
-                prop="channelCount"
+                prop="channelList"
                 label="插播频道">
+                <template slot-scope="scope">
+                    {{scope.row.channelList.length}}
+                </template>
             </el-table-column>
             <el-table-column
                 align="center"
                 min-width="100px"
-                prop="videoCount"
+                prop="videoList"
                 label="视频数量">
+                <template slot-scope="scope">
+                    {{scope.row.videoList.length}}
+                </template>
             </el-table-column>
             <el-table-column
                 align="center"
                 min-width="120px"
                 prop="duration"
                 label="视频总时长">
+                <template slot-scope="scope">
+                    {{scope.row.totalDuration | fromSecondsToTime}}
+                </template>
             </el-table-column>
             <el-table-column
                 align="center"
@@ -48,7 +57,7 @@
                 prop="common"
                 label="定时">
                 <template slot-scope="scope">
-                    <label>{{scope.row.common ? '是' : '否'}}</label>
+                    <label>{{scope.row.scheduled ? '是' : '否'}}</label>
                 </template>
             </el-table-column>
             <el-table-column
@@ -56,8 +65,8 @@
                 min-width="100px"
                 label="开始时间">
                 <template slot-scope="scope">
-                    <div>{{scope.row.createdAt | formatDate('yyyy-MM-DD')}}</div>
-                    <div>{{scope.row.createdAt | formatDate('HH:mm:SS')}}</div>
+                    <div>{{scope.row.startTime | formatDate('yyyy-MM-DD')}}</div>
+                    <div>{{scope.row.startTime | formatDate('HH:mm:SS')}}</div>
                 </template>
             </el-table-column>
             <el-table-column
@@ -65,21 +74,20 @@
                 min-width="100px"
                 label="结束时间">
                 <template slot-scope="scope">
-                    <div>{{scope.row.createdAt | formatDate('yyyy-MM-DD')}}</div>
-                    <div>{{scope.row.createdAt | formatDate('HH:mm:SS')}}</div>
+                    <div>{{(scope.row.startTime + scope.row.totalDuration*1000) | formatDate('yyyy-MM-DD')}}</div>
+                    <div>{{(scope.row.startTime + scope.row.totalDuration*1000) | formatDate('HH:mm:SS')}}</div>
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
                 label="状态">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.adStatus === 'ACTIVE' && scope.row.visible"
+                    <span v-if="scope.row.playStatus === 'ACTIVE'"
                           class="status-normal">生效中</span>
-                    <span v-if="scope.row.adStatus === 'WAITING' && scope.row.visible"
+                    <span v-if="scope.row.playStatus === 'WAITING'"
                           class="status-deleting">未生效</span>
-                    <span v-if="scope.row.adStatus === 'EXPIRED' && scope.row.visible"
+                    <span v-if="scope.row.playStatus === 'EXPIRED'"
                           class="status-abnormal">已失效</span>
-                    <span v-if="!scope.row.visible">/</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -116,59 +124,51 @@
             };
         },
         methods: {
-            // 更改状态
-            updateChannelStatus(channelInfo) {
-                let operateWords = channelInfo.visible ? '禁播' : '恢复';
-                this.$confirm('此操作将' + operateWords + channelInfo.innerName + '频道, 是否继续?', '提示', {
+            // 批量删除，只有未生效的才能删除
+            batchRemove() {
+                if (!this.multipleSelection || this.multipleSelection.length === 0) {
+                    this.$message.warning('请先选择插播');
+                    return;
+                }
+                for (let i = 0; i < this.multipleSelection.length; i++) {
+                    if (this.multipleSelection[i].playStatus !== 'WAITING') {
+                        this.$message.warning('当前选中的插播中含有生效中或已失效的插播，暂时不能批量删除');
+                        return;
+                    }
+                }
+                this.$confirm('此操作将批量删除插播, 是否继续?', '提示', {
                     confirmButtonText: '确定',
-                    cancelButtonText: '取消',
+                    cancelButtonTxt: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$service.setChannelVisible(channelInfo.id).then(response => {
+                    let interCutIdList = [];
+                    this.multipleSelection.map(interCut => {
+                        interCutIdList.push(interCut.id);
+                    });
+                    this.$service.batchDeleteInterCut({idList: interCutIdList}).then(response => {
                         if (response && response.code === 0) {
-                            this.$message({
-                                type: 'success',
-                                message: operateWords + channelInfo.innerName + '频道成功!'
-                            });
-                            channelInfo.visible = !channelInfo.visible;
-                            //    频道在栏目推荐位上
-                        } else if (response && response.code === 3610) {
-                            let message = '';
-                            response.data.map(item => {
-                                message = message + '、' + item.navBarName;
-                            });
-                            message = channelInfo.innerName + '频道在"' + message.slice(1) + '"栏目推荐位上，不能被禁播';
-                            this.$message(message);
-                            // 频道在栏目频道布局推荐位上
-                        } else if (response && response.code === 3611) {
-                            let message = '';
-                            response.data.map(item => {
-                                message = message + '、' + item.navBarName;
-                            });
-                            message = channelInfo.innerName + '频道在"' + message.slice(1) + '"栏目频道布局推荐位上，不能被禁播';
-                            this.$message(message);
+                            this.$message.success('插播批量删除成功!');
+                            this.$emit('getInterCutList');
+                            this.multipleSelection = [];
+                            this.$emit('setBatchDisabledStatus', true);
                         }
                     });
                 });
             },
-            // 删除单个频道
-            removeChannel(channelInfo) {
-                if (channelInfo.visible) {
-                    this.$message.warning('由于' + channelInfo.innerName + '频道为正常状态，暂时不能删除');
-                    return;
-                }
-                this.$confirm('此操作将删除' + channelInfo.innerName + '频道, 是否继续?', '提示', {
+            // 删除
+            removeChannel(item) {
+                this.$confirm('此操作将删除"' + item.name + '"插播, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$service.deleteChannelById(channelInfo.id).then(response => {
+                    this.$service.deleteInterCutById(item.id).then(response => {
                         if (response && response.code === 0) {
                             this.$message({
                                 type: 'success',
-                                message: '成功删除' + channelInfo.innerName + '频道!'
+                                message: '成功删除' + item.name + '插播'
                             });
-                            this.$emit('getinterCutList');
+                            this.$emit('getInterCutList');
                             this.multipleSelection = [];
                         }
                     });

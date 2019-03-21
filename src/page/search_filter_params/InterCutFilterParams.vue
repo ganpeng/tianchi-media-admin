@@ -23,8 +23,9 @@
                 </el-form-item>
                 <el-form-item label="频道">
                     <el-select
-                        v-model="listQueryParams.channel"
+                        v-model="listQueryParams.channelIdList"
                         @change="getInterCutList(true)"
+                        filterable
                         clearable
                         placeholder="全部">
                         <el-option
@@ -37,12 +38,12 @@
                 </el-form-item>
                 <el-form-item label="定时">
                     <el-select
-                        v-model="listQueryParams.timing"
+                        v-model="listQueryParams.scheduled"
                         @change="getInterCutList(true)"
                         clearable
                         placeholder="全部">
                         <el-option
-                            v-for="(item, index) in timingOptions"
+                            v-for="(item, index) in scheduledOptions"
                             :key="index"
                             :label="item.name"
                             :value="item.value">
@@ -51,12 +52,12 @@
                 </el-form-item>
                 <el-form-item label="状态">
                     <el-select
-                        v-model="listQueryParams.status"
+                        v-model="listQueryParams.playStatus"
                         @change="getInterCutList(true)"
                         clearable
                         placeholder="全部">
                         <el-option
-                            v-for="item in statusOptions"
+                            v-for="item in playStatusOptions"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -85,16 +86,16 @@
             return {
                 listQueryParams: {
                     keyword: '',
-                    channel: '',
-                    timing: '',
-                    status: ''
+                    channelIdList: '',
+                    scheduled: '',
+                    playStatus: ''
                 },
-                statusOptions: [
+                playStatusOptions: [
                     {value: 'ACTIVE', label: '生效中'},
                     {value: 'WAITING', label: '未生效'},
                     {value: 'EXPIRED', label: '已失效'}
                 ],
-                timingOptions: [{
+                scheduledOptions: [{
                     value: true,
                     name: '是'
                 }, {
@@ -110,9 +111,9 @@
         methods: {
             initFilterParams(params) {
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
-                this.listQueryParams.channel = params.channel ? params.channel : '';
-                this.listQueryParams.timing = params.timing ? params.timing : '';
-                this.listQueryParams.status = params.status ? params.status : '';
+                this.listQueryParams.channelIdList = params.channelIdList ? params.channelIdList : '';
+                this.listQueryParams.scheduled = params.scheduled ? params.scheduled : '';
+                this.listQueryParams.playStatus = params.playStatus ? params.playStatus : '';
             },
             init() {
                 this.$service.getChannelList({

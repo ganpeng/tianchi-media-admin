@@ -294,14 +294,39 @@
                         return callback(new Error('请完整选择开始时间'));
                     } else if ((parseInt(this.interCutInfo.startDate) + this.getTimePointMilliseconds(this.interCutInfo.startPoint)) < Date.now()) {
                         return callback(new Error('开始时间应大于当前时间'));
-                    } else {
-                        this.$service.getEffectTimeValidity().then(response => {
+                        //    检测生效时间是否冲突
+                    } else if (this.interCutInfo.channelList.length !== 0 && this.currentSelectedVideoList.length !== 0) {
+                        let channelIdList = [];
+                        this.interCutInfo.channelList.map(channel => {
+                            channelIdList.push(channel.id);
+                        });
+                        let startTime = parseInt(this.interCutInfo.startDate) + this.getTimePointMilliseconds(this.interCutInfo.startPoint);
+                        let milliSeconds = 0;
+                        for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                            milliSeconds = milliSeconds + this.currentSelectedVideoList[i].takeTimeInSec * 1000;
+                        }
+                        this.$service.getInterCutConflicting({
+                            channelIdList: channelIdList,
+                            startTime: startTime,
+                            endTime: startTime + milliSeconds,
+                            excludedInterCutId: this.$route.params.id ? this.$route.params.id : ''
+                        }).then(response => {
                             if (response && response.code === 0) {
-                                callback();
+                                if (response.data.length === 0) {
+                                    callback();
+                                } else {
+                                    let errorMessage = '';
+                                    response.data.map(item => {
+                                        errorMessage = errorMessage + '、' + item.name;
+                                    });
+                                    return callback(new Error('以下插播与当前生效时间冲突：' + errorMessage.slice(1)));
+                                }
                             } else {
                                 return callback(new Error('暂时无法判断开始时间是否冲突'));
                             }
                         });
+                    } else {
+                        callback();
                     }
                 } else {
                     callback();
@@ -325,7 +350,8 @@
                     startDate: '',
                     startPoint: '',
                     channelList: [],
-                    videoList: []
+                    videoList: [],
+                    totalDuration: ''
                 },
                 channelOptions: [],
                 // 当前的频道含有的视频列表
@@ -367,6 +393,7 @@
                     for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
                         milliSeconds = milliSeconds + this.currentSelectedVideoList[i].takeTimeInSec * 1000;
                     }
+                    this.validateEffectTime();
                     return milliSeconds + parseInt(this.interCutInfo.startDate) + parseInt(this.getTimePointMilliseconds(this.interCutInfo.startPoint));
                 }
             }
@@ -400,11 +427,18 @@
                     this.getInterCutDetail();
                 }
             },
-            getChannelDetail() {
+            getInterCutDetail() {
                 this.$service.getInterCutDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         for (let key in response.data) {
                             this.interCutInfo[key] = response.data[key];
+                        }
+                        // 对开始时间进行设置
+                        if (this.interCutInfo.scheduled) {
+                            let startDate = new Date(this.interCutInfo.startTime);
+                            this.interCutInfo.startDate = this.interCutInfo.startTime - (startDate.getHours() * 60 * 60 + startDate.getMinutes() * 60 + startDate.getSeconds()) * 1000;
+                            let currentDate = new Date();
+                            this.interCutInfo.startPoint = currentDate.valueOf() - (currentDate.getHours() * 60 * 60 + currentDate.getMinutes() * 60 + currentDate.getSeconds()) * 1000 + (startDate.getHours() * 60 * 60 + startDate.getMinutes() * 60 + startDate.getSeconds()) * 1000;
                         }
                         this.currentSelectedVideoList = response.data.videoList;
                     }
@@ -418,7 +452,7 @@
                     this.interCutInfo.startTime = '';
                     this.interCutInfo.endTime = '';
                     // 清除时间错误提醒
-                    this.$refs['interCutInfo'].validateField('startTime');
+                    this.validateEffectTime();
                 }
             },
             // 将当前时间选择器的毫秒数改为只是小时、分钟、秒的毫秒数
@@ -426,16 +460,21 @@
                 let currentDate = new Date(milliseconds);
                 return (currentDate.getHours() * 60 * 60 + currentDate.getMinutes() * 60 + currentDate.getSeconds()) * 1000;
             },
+            validateEffectTime() {
+                this.$refs['interCutInfo'].validateField('startTime');
+            },
             validateChannelList() {
                 this.$refs['interCutInfo'].validateField('channelList');
             },
             removeAllChannel() {
                 this.interCutInfo.channelList.splice(0);
                 this.validateChannelList();
+                this.validateEffectTime();
             },
             removeChannel(channel, index) {
                 this.interCutInfo.channelList.splice(index, 1);
                 this.validateChannelList();
+                this.validateEffectTime();
             },
             querySearch(queryString, cb) {
                 let results = queryString ? this.channelOptions.filter(this.createFilter(queryString)) : this.channelOptions;
@@ -446,7 +485,7 @@
                     return (channelOptions.innerName.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
                 };
             },
-            // 设置区域码，对全选进行处理
+            // 设置频道，对全选进行处理
             setChannels(item) {
                 // 对全选进行处理
                 if (item.innerName === '全选') {
@@ -458,10 +497,16 @@
                     });
                 } else {
                     // 对非全选进行处理
-                    this.interCutInfo.channelList.push({id: item.id, innerName: item.innerName, code: item.code});
+                    this.interCutInfo.channelList.push({
+                        id: item.id,
+                        innerName: item.innerName,
+                        name: item.name,
+                        no: item.no
+                    });
                     this.interCutInfo.channelList = _.uniqBy(this.interCutInfo.channelList, 'id');
                 }
                 this.validateChannelList();
+                this.validateEffectTime();
             },
             // 对关联的视频进行排序
             movePosition(model, video, index) {
@@ -555,12 +600,23 @@
             },
             // 保存
             saveInterCutInfo() {
-                if (this.currentSelectedVideoList.length === 0) {
-                    this.$message.warning('当前插播不含有视频，不能保存');
-                    return;
-                }
                 this.$refs['interCutInfo'].validate((valid) => {
                     if (valid) {
+                        if (this.currentSelectedVideoList.length === 0) {
+                            this.$message.warning('当前插播不含有视频，不能保存');
+                            return;
+                        }
+                        //  设置开始时间
+                        if (this.interCutInfo.scheduled) {
+                            this.interCutInfo.startTime = parseInt(this.interCutInfo.startDate) + this.getTimePointMilliseconds(this.interCutInfo.startPoint);
+                        } else {
+                            this.interCutInfo.startTime = '';
+                        }
+                        // 设置持续时间秒数
+                        this.interCutInfo.totalDuration = 0;
+                        for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                            this.interCutInfo.totalDuration = this.interCutInfo.totalDuration + this.currentSelectedVideoList[i].takeTimeInSec;
+                        }
                         for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
                             this.currentSelectedVideoList[i].sort = i;
                         }
@@ -578,10 +634,7 @@
                                 });
                                 break;
                             case 'EDIT_INTER_CUT':
-                                this.$service.updateInterCutById(
-                                    this.$route.params.id,
-                                    this.interCutInfo
-                                ).then(response => {
+                                this.$service.updateInterCutInfo(this.interCutInfo).then(response => {
                                     if (response && response.code === 0) {
                                         this.$message.success('保存轮播插播信息成功');
                                         this.toInterCutList();

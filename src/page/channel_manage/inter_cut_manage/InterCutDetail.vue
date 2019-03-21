@@ -1,76 +1,70 @@
-<!--轮播频道详情页面-->
+<!--轮播插播详情页面-->
 <template>
     <div>
-        <div class="content-title">轮播频道详情</div>
+        <div class="content-title">轮播插播详情</div>
         <div class="seperator-line"></div>
-        <!--轮播信息-->
+        <!--信息-->
         <div class="detail-title-block">
-            <div class="channel-status shelve" v-if="channelInfo.visible">正常</div>
-            <div class="channel-status un-shelve" v-else>禁播</div>
             <div class="title">
-                <label>{{channelInfo.no}}</label>&nbsp;&nbsp;<label>{{channelInfo.name}}</label>
+                <label>{{interCutInfo.name}}</label>
+                <span v-if="interCutInfo.playStatus === 'ACTIVE'"
+                      class="status-normal">已生效</span>
+                <span v-if="interCutInfo.playStatus === 'WAITING'"
+                      class="status-deleting">未生效</span>
+                <span v-if="interCutInfo.playStatus === 'EXPIRED'"
+                      class="status-abnormal">已失效</span>
             </div>
-            <div class="channel-time">
-                <div>创建于{{channelInfo.createdAt | formatDate('yyyy.MM.DD')}}</div>
-                <div>更新于{{channelInfo.updatedAt | formatDate('yyyy.MM.DD')}}</div>
+            <div class="ad-time">
+                <div>创建于{{interCutInfo.createdAt | formatDate('yyyy.MM.DD')}}</div>
+                <div>更新于{{interCutInfo.updatedAt | formatDate('yyyy.MM.DD')}}</div>
             </div>
         </div>
         <!--相关信息-->
-        <div class="about-channel">
-            <img :src="channelInfo.logoUri | imageUrl">
-            <div class="info-container">
-                <div>
-                    <ul class="type-list">
-                        <li v-for="(item, index) in channelInfo.typeList"
-                            :key="index">
-                            {{item.name}}
-                        </li>
-                    </ul>
-                    <ul class="info-list">
-                        <li><span>内部名称：</span><label>{{channelInfo.innerName}}</label></li>
-                        <li><span>组播地址：</span><label>{{channelInfo.multicastIp}}</label></li>
-                        <li><span>端口号：</span><label>{{channelInfo.multicastPort}}</label></li>
-                        <li><span>tsID：</span><label>{{channelInfo.tsId ? channelInfo.tsId : '无' }}</label></li>
-                        <li><span>serviceID：</span><label>{{channelInfo.serviceId ? channelInfo.serviceId :'无'}}</label>
-                        </li>
-                    </ul>
-                </div>
-                <ul class="info-list right-info">
-                    <li><span>推流方式：</span>
-                        <label
-                            class="protocol-type"
-                            v-for="(item,index) in channelInfo.protocolList"
-                            :key="index">
-                            {{item}}
-                        </label>
-                    </li>
-                    <li><span>所属服务器：</span><label>{{channelInfo.pushServer}}</label></li>
-                    <li>
-                        <span>当前播放：</span>
-                        <label class="on-play">
-                            {{channelInfo.currentProgramme ? channelInfo.currentProgramme : '暂无当前播放节目'}}
-                        </label>
-                    </li>
-                    <li><span>播放时段：</span><label class="duration">{{channelInfo.duration}}</label></li>
-                    <li>
-                        <span>视频数量：</span>
-                        <label>
-                            {{channelInfo.carouselVideoList ? channelInfo.carouselVideoList.length : ''}}个
-                        </label>
-                    </li>
-                </ul>
+        <div class="about-ad">
+            <svg-icon icon-class="inter_cut_placer"></svg-icon>
+            <div>
+                <p class="scheduled">定时:
+                    <span v-if="interCutInfo.scheduled" class="is-scheduled">是</span>
+                    <span v-else>否</span>
+                </p>
+                <p>播放时段:
+                    <span class="ad-effect-time">{{interCutInfo.startTime | formatDate('yyyy.MM.DD HH:mm:SS')}} - {{(interCutInfo.startTime + interCutInfo.totalDuration * 1000) | formatDate('yyyy.MM.DD HH:mm:SS')}}</span>
+                </p>
+                <p>当前播放:
+                    <span class="ad-info-desc">{{interCutInfo.desc}}</span>
+                </p>
             </div>
         </div>
+        <!--频道信息-->
+        <div class="content-sub-title">插播频道
+            <label class="relate-count">{{interCutInfo.channelList.length}}个</label>
+            <el-button
+                type="text"
+                @click="moreFilters = !moreFilters"
+                class="more-filters"
+                :class="{active:moreFilters}">
+                <label v-if="moreFilters">收起</label>
+                <label v-else>展开</label>
+                <i class="el-icon-arrow-up" v-if="moreFilters"></i>
+                <i class="el-icon-arrow-down" v-else></i>
+            </el-button>
+        </div>
+        <ul class="channel-list" v-if="moreFilters">
+            <li v-for="(item,index) in interCutInfo.channelList" :key="index" class="ellipsis one">
+                {{item.no}} {{item.innerName}}
+            </li>
+        </ul>
+        <div class="seperator-line"></div>
         <!--节目信息-->
-        <div class="content-title">频道内节目</div>
+        <div class="content-sub-title">插播视频<label class="relate-count">{{interCutInfo.videoList.length}}个</label></div>
         <el-table
             header-row-class-name="common-table-header"
             row-class-name=video-row
-            :data="channelInfo.carouselVideoList"
+            :data="interCutInfo.videoList"
             border
             style="width: 100%">
             <el-table-column
-                width="50px"
+                width="100px"
                 align="center"
                 label="序号">
                 <template slot-scope="scope">
@@ -82,12 +76,6 @@
                 width="120px"
                 prop="code"
                 label="ID">
-            </el-table-column>
-            <el-table-column
-                align="center"
-                prop="name"
-                min-width="230px"
-                label="展示名">
             </el-table-column>
             <el-table-column
                 align="center"
@@ -169,15 +157,14 @@
                 label="视频状态">
                 <template slot-scope="scope">
                     <div class="operator-btn-wrapper">
-                        <i class="btn-text text-normal" v-if="scope.row.visible">正常</i>
-                        <i class="btn-text text-danger" v-else>禁播</i>
+                        <i class="btn-text text-normal">正常</i>
                     </div>
                 </template>
             </el-table-column>
         </el-table>
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="editInfo">编辑</el-button>
-            <el-button class="btn-style-three" @click="toChannelList" plain>返回列表</el-button>
+            <el-button class="btn-style-three" @click="toInterCutList" plain>返回列表</el-button>
         </div>
         <display-video-dialog
             :url="previewVideoInfo.url"
@@ -201,7 +188,8 @@
         },
         data() {
             return {
-                channelInfo: {},
+                moreFilters: true,
+                interCutInfo: {},
                 previewVideoInfo: {
                     url: '',
                     title: '',
@@ -223,15 +211,9 @@
         methods: {
             init() {
                 this.$util.toggleFixedBtnContainer();
-                this.$service.getChannelDetail(this.$route.params.id).then(response => {
+                this.$service.getInterCutDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
-                        this.channelInfo = response.data;
-                        this.channelInfo.carouselVideoList.map(video => {
-                            if (video.onPlay) {
-                                this.channelInfo.currentProgramme = video.originName;
-                                this.channelInfo.duration = this.$util.formatDate(new Date(video.lastPlayTime), 'yyyy年MM月DD日HH时mm分SS秒') + '---' + this.$util.formatDate(new Date(video.lastPlayTime + video.takeTimeInSec * 1000), 'yyyy年MM月DD日HH时mm分SS秒');
-                            }
-                        });
+                        this.interCutInfo = response.data;
                     }
                 });
                 let that = this;
@@ -256,16 +238,15 @@
             closeDisplayVideoDialog(status) {
                 this.previewVideoInfo.visible = status;
             },
-            // 编辑轮播频道
             editInfo() {
                 this.$router.push({
-                    name: 'EditCarouselChannel',
+                    name: 'EditInterCUt',
                     params: {id: this.$route.params.id}
                 });
             },
-            toChannelList() {
+            toInterCutList() {
                 this.$router.push({
-                    name: 'CarouselChannelList'
+                    name: 'interCutList'
                 });
             }
         }
@@ -279,44 +260,31 @@
         height: 50px;
         line-height: 50px;
         overflow: hidden;
-        .channel-status {
-            float: left;
-            margin-left: 86px;
-            margin-right: 94px;
-            margin-top: 9px;
-            height: 30px;
-            width: 80px;
-            line-height: 30px;
-            border-radius: 4px;
-            font-size: 20px;
-            text-align: center;
-            &.un-shelve {
+        .ad-time {
+            float: right;
+            margin-left: 350px;
+            margin-right: 20px;
+            div {
+                height: 17px;
+                line-height: 17px;
                 color: #6F7480;
-                background: #2A3040;
-            }
-            &.shelve {
-                color: #fff;
-                background: #3AC26F;
+                &:first-child {
+                    margin-top: 6px;
+                    margin-bottom: 3px;
+                }
             }
         }
 
         .title {
             float: left;
+            margin-left: 270px;
             label {
                 font-size: 20px;
                 color: #FFFFFF;
             }
             span {
-                display: inline-block;
                 margin-top: 9px;
                 margin-left: 20px;
-                height: 30px;
-                width: 100px;
-                line-height: 30px;
-                background: #D27B25;
-                border-radius: 4px;
-                font-size: 20px;
-                color: #FFFFFF;
             }
         }
         .channel-time {
@@ -338,89 +306,116 @@
         cursor: pointer;
     }
 
-    // 相关信息
-    .about-channel {
+    .about-ad {
         position: relative;
+        height: 160px;
         padding-bottom: 12px;
         border-bottom: 1px solid #252D3F;
         text-align: left;
-        overflow: hidden;
-        img {
+        .svg-icon-inter_cut_placer {
             position: absolute;
-            top: 0px;
+            top: -45px;
             left: 20px;
-            height: 200px;
-            width: 200px;
-            border: 1px solid #3E495E;
-            border-radius: 8px;
-            box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.50);
+            height: 200px !important;
+            width: 200px !important;
         }
-        .info-container {
-            min-width: 1220px;
-            margin-left: 260px;
-            height: 230px;
+        div {
+            margin-left: 250px;
             border-top: 1px solid #252D3F;
-            > div {
+            .ad-type {
                 display: inline-block;
-                margin-right: 60px;
+                margin-top: 20px;
+                margin-right: 10px;
+                padding: 0px 5px;
+                height: 20px;
+                line-height: 20px;
+                background: #637497;
+                border-radius: 4px;
+                font-size: 10px;
+                color: #FFFFFF;
             }
-            .type-list {
-                margin-top: 10px;
-                height: 40px;
-                li {
-                    float: left;
-                    margin-right: 10px;
-                    padding: 0px 5px;
-                    height: 20px;
-                    line-height: 20px;
-                    background: #637497;
+            p {
+                margin-top: 18px;
+                margin-left: 18px;
+                font-size: 16px;
+                color: #A8ABB3;
+                &.scheduled {
+                    margin-left: 48px;
+                    span {
+                        margin-left: 12px;
+                        font-size: 16px;
+                        color: #6F7480;
+                        &.is-scheduled {
+                            color: #3AC26F;
+                        }
+                    }
+                }
+                .ad-effect-time {
+                    margin-left: 4px;
+                    padding: 4px 8px;
+                    background: #0062C4;
                     border-radius: 4px;
-                    font-size: 10px;
+                    font-size: 16px;
                     color: #FFFFFF;
                 }
-            }
-            .info-list {
-                display: inline-block;
-                &.right-info {
-                    padding-top: 50px;
-                }
-                li {
-                    margin-bottom: 8px;
-                    span {
-                        display: inline-block;
-                        width: 110px;
-                        text-align: right;
-                        padding-right: 10px;
-                        font-size: 16px;
-                        color: #A8ABB3;
-                    }
-                    label {
-                        display: inline-block;
-                        font-size: 16px;
-                        color: #A8ABB3;
-                        &.protocol-type {
-                            margin-right: 10px;
-                        }
-                        &.on-play {
-                            padding: 6px 8px;
-                            font-size: 12px;
-                            color: #FFFFFF;
-                            background: #0062C4;
-                            border-radius: 4px;
-                        }
-                        &.duration {
-                            font-size: 12px;
-                            color: #A8ABB3;
-                            line-height: 17px;
-                        }
-                    }
+                .ad-info-desc {
+                    margin-left: 4px;
+                    font-size: 16px;
+                    color: #A8ABB3;
                 }
             }
         }
     }
 
-    #operate-list {
-        margin-top: 200px;
+    .channel-list {
+        display: flex;
+        padding: 0px 5px;
+        margin: 22px 60px 5px 40px;
+        flex-wrap: wrap;
+        li {
+            margin-right: 20px;
+            margin-bottom: 20px;
+            width: 200px;
+            height: 34px;
+            line-height: 34px;
+            background: #2A3040;
+            border: 1px solid #3E495E;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #A8ABB3;
+            text-align: center;
+        }
+    }
+
+    .content-sub-title {
+        color: #A8ABB3;
+        .relate-count {
+            margin-left: 20px;
+            font-size: 20px;
+            color: #A8ABB3;
+        }
+    }
+
+    // 按钮
+    .more-filters {
+        font-size: 12px;
+        color: #6F7480;
+        label {
+            cursor: pointer;
+        }
+        &.active {
+            color: #1989FA;
+            i {
+                color: #6F7480;
+            }
+        }
+        i {
+            margin-left: 8px;
+        }
+    }
+
+    .el-table {
+        margin-bottom: 100px;
     }
 
 </style>

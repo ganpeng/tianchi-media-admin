@@ -346,7 +346,7 @@
                     padding: 0px 5px;
                     height: 20px;
                     line-height: 20px;
-                    background: #637497;
+                    background: #2E384D;
                     border-radius: 4px;
                     font-size: 10px;
                     color: #FFFFFF;

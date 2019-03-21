@@ -188,7 +188,7 @@
                 }
                 for (let i = 0; i < this.multipleSelection.length; i++) {
                     if (this.multipleSelection[i].visible) {
-                        this.$message.warning('当前选中的专题中含有已上架的专题，暂时不能批量下架');
+                        this.$message.warning('当前选中的专题中含有已上架的专题，暂时不能批量删除');
                         return;
                     }
                 }
