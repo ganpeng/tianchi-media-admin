@@ -28,10 +28,10 @@
                     <span v-else>否</span>
                 </p>
                 <p>播放时段:
-                    <span class="ad-effect-time">{{interCutInfo.startTime | formatDate('yyyy.MM.DD HH:mm:SS')}} - {{(interCutInfo.startTime + interCutInfo.totalDuration * 1000) | formatDate('yyyy.MM.DD HH:mm:SS')}}</span>
+                    <span class="ad-info-desc">{{interCutInfo.startTime | formatDate('yyyy.MM.DD HH:mm:SS')}} - {{(interCutInfo.startTime + interCutInfo.totalDuration * 1000) | formatDate('yyyy.MM.DD HH:mm:SS')}}</span>
                 </p>
                 <p>当前播放:
-                    <span class="ad-info-desc">{{interCutInfo.currentProgramme}}</span>
+                    <span class="current-programme">{{interCutInfo.currentProgramme}}</span>
                 </p>
             </div>
         </div>
@@ -226,9 +226,8 @@
                         this.interCutInfo.videoList.map(video => {
                             if (video.onPlay) {
                                 this.interCutInfo.currentProgramme = video.originName;
-                                this.interCutInfo.duration = this.$util.formatDate(new Date(video.lastPlayTime), 'yyyy年MM月DD日HH时mm分SS秒') + '---' + this.$util.formatDate(new Date(video.lastPlayTime + video.takeTimeInSec * 1000), 'yyyy年MM月DD日HH时mm分SS秒');
                             } else {
-                                this.interCutInfo.currentProgramme = '暂无';
+                                this.interCutInfo.currentProgramme = '暂无当前播放节目';
                             }
                         });
                     }
@@ -367,12 +366,12 @@
                         }
                     }
                 }
-                .ad-effect-time {
+                .current-programme {
                     margin-left: 4px;
                     padding: 4px 8px;
                     background: #0062C4;
                     border-radius: 4px;
-                    font-size: 16px;
+                    font-size: 12px;
                     color: #FFFFFF;
                 }
                 .ad-info-desc {

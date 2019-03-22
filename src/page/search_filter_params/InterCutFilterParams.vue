@@ -7,7 +7,7 @@
                     <el-input
                         v-model="listQueryParams.keyword"
                         @change="getInterCutList(true)"
-                        placeholder="插播名称、编号等"
+                        placeholder="插播名称等"
                         class="border-input"
                         clearable>
                     </el-input>

@@ -130,6 +130,7 @@
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item command="BOOT_AD">开机广告</el-dropdown-item>
+                            <el-dropdown-item command="PAUSE_AD">暂停广告</el-dropdown-item>
                             <el-dropdown-item command="PREPOSITION_AD">片头广告</el-dropdown-item>
                             <el-dropdown-item command="VOLUME_AD">音量条广告</el-dropdown-item>
                             <el-dropdown-item command="CHANNEL_SWITCH_AD">换台广告</el-dropdown-item>
@@ -210,7 +211,7 @@
                 label="状态">
                 <template slot-scope="scope">
                     <span v-if="scope.row.adStatus === 'ACTIVE' && scope.row.visible"
-                          class="status-normal">生效</span>
+                          class="status-normal">生效中</span>
                     <span v-if="scope.row.adStatus === 'WAITING' && scope.row.visible"
                           class="status-deleting">未生效</span>
                     <span v-if="scope.row.adStatus === 'EXPIRED' && scope.row.visible"
@@ -312,6 +313,7 @@
                 createRangeTime: [],
                 adTypeOptions: [
                     {value: 'BOOT', label: '开机广告'},
+                    {value: 'PAUSE', label: '暂停广告'},
                     {value: 'PREPOSITION', label: '片头广告'},
                     {value: 'VOLUME', label: '音量条广告'},
                     {value: 'PROGRAMME_DETAIL', label: '详情页广告'},
@@ -323,7 +325,7 @@
                     {value: 'IMAGE', label: '图片'}
                 ],
                 statusOptions: [
-                    {value: 'ACTIVE', label: '生效'},
+                    {value: 'ACTIVE', label: '生效中'},
                     {value: 'WAITING', label: '未生效'},
                     {value: 'EXPIRED', label: '已失效'}
                 ],
@@ -340,6 +342,8 @@
                 switch (category) {
                     case 'BOOT':
                         return '开机广告';
+                    case 'PAUSE':
+                        return '暂停广告';
                     case 'PREPOSITION':
                         return '片头广告';
                     case 'PROGRAMME_DETAIL':
@@ -406,6 +410,9 @@
                         break;
                     case 'BOOT':
                         routeName = 'EditBootAD';
+                        break;
+                    case 'PAUSE':
+                        routeName = 'EditPauseAD';
                         break;
                     case 'PREPOSITION':
                         routeName = 'EditPrepositionAD';
@@ -485,6 +492,9 @@
                 switch (command) {
                     case 'BOOT_AD':
                         this.$router.push({name: 'CreateBootAD'});
+                        break;
+                    case 'PAUSE_AD':
+                        this.$router.push({name: 'CreatePauseAD'});
                         break;
                     case 'PREPOSITION_AD':
                         this.$router.push({name: 'CreatePrepositionAD'});

@@ -122,6 +122,8 @@ import DisplayAdvertisingOwner from 'sysPage/advertising_manage/advertising_owne
 import ADList from 'sysPage/advertising_manage/ad_manage/ADList';
 import CreateBootAD from 'sysPage/advertising_manage/ad_manage/CreateBootAD';
 import EditBootAD from 'sysPage/advertising_manage/ad_manage/EditBootAD';
+import CreatePauseAD from 'sysPage/advertising_manage/ad_manage/CreatePauseAD';
+import EditPauseAD from 'sysPage/advertising_manage/ad_manage/EditPauseAD';
 import CreatePrepositionAD from 'sysPage/advertising_manage/ad_manage/CreatePrepositionAD';
 import EditPrepositionAD from 'sysPage/advertising_manage/ad_manage/EditPrepositionAD';
 import CreateVolumeAD from 'sysPage/advertising_manage/ad_manage/CreateVolumeAD';
@@ -499,6 +501,18 @@ let router = new Router({
                     path: '/ads-manage/edit-boot-ad/:id',
                     name: 'EditBootAD',
                     component: EditBootAD
+                },
+                // 创建暂停广告
+                {
+                    path: '/ads-manage/create-pause-ad',
+                    name: 'CreatePauseAD',
+                    component: CreatePauseAD
+                },
+                // 编辑暂停广告
+                {
+                    path: '/ads-manage/edit-pause-ad/:id',
+                    name: 'EditPauseAD',
+                    component: EditPauseAD
                 },
                 // 创建片头广告
                 {

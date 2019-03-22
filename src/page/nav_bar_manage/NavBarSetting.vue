@@ -316,6 +316,12 @@
                 }
             }
         }
+        .el-icon-circle-close {
+            display: none;
+        }
+        .edit {
+            display: none;
+        }
         P {
             position: relative;
             height: 45px;

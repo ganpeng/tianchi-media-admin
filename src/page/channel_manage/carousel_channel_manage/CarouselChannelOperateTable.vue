@@ -81,8 +81,20 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                min-width="100px"
                 label="状态">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.playStatus === 'ACTIVE'"
+                          class="status-normal">生效中</span>
+                    <span v-if="scope.row.playStatus === 'WAITING'"
+                          class="status-deleting">未生效</span>
+                    <span v-if="scope.row.playStatus === 'EXPIRED'"
+                          class="status-abnormal">已失效</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="100px"
+                label="启用/正常">
                 <template slot-scope="scope">
                     <input
                         class="my-switch switch-anim"

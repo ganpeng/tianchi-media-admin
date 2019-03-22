@@ -47,7 +47,7 @@
             </el-form-item>
             <el-form-item
                 label="作用类别" prop="categoryList" required
-                v-if="status === 'CREATE_PREPOSITION_AD' || status === 'EDIT_PREPOSITION_AD'">
+                v-if="status.indexOf('PREPOSITION') !== -1 || status.indexOf('PAUSE') !== -1">
                 <div class="my-tags">
                     <el-tag
                         :key="index"
@@ -235,6 +235,9 @@
                     case 'CREATE_BOOT_AD':
                     case 'EDIT_BOOT_AD':
                         return '开机广告';
+                    case 'CREATE_PAUSE_AD':
+                    case 'EDIT_PAUSE_AD':
+                        return '暂停广告';
                     case 'CREATE_PREPOSITION_AD':
                     case 'EDIT_PREPOSITION_AD':
                         return '片头广告';
@@ -299,7 +302,7 @@
                 }
             };
             let checkCategoryList = (rule, value, callback) => {
-                if (this.status === 'CREATE_PREPOSITION_AD' || this.status === 'EDIT_PREPOSITION_AD') {
+                if (this.status.indexOf('PREPOSITION') !== -1 || this.status.indexOf('PAUSE') !== -1) {
                     if (this.adInfo.categoryList.length === 0) {
                         return callback(new Error('请选择作用类别'));
                     } else {
@@ -326,8 +329,8 @@
                     } else {
                         callback();
                     }
-                    //    屏保广告总体积小于10MB
-                } else if (this.status === 'CREATE_SCREEN_SAVER_AD' || this.status === 'EDIT_SCREEN_SAVER_AD') {
+                    //    暂停、屏保广告总体积小于10MB
+                } else if (this.status.indexOf('PAUSE') !== -1 || this.status.indexOf('SCREEN_SAVER') !== -1) {
                     if (this.getResourceTotalSize(this.adInfo.adMaterialList) > 10 * 1024 * 1024) {
                         return callback(new Error('图片资源体积应小于10M'));
                     } else {
@@ -418,11 +421,11 @@
                         this.visibleTypeADList = response.data.list;
                     }
                 });
-                if (this.status === 'CREATE_PREPOSITION_AD' || this.status === 'EDIT_PREPOSITION_AD') {
+                if (this.status.indexOf('PREPOSITION') !== -1 || this.status.indexOf('PAUSE') !== -1) {
                     this.$service.getProgrammeCategory().then(response => {
                         if (response && response.code === 0) {
                             this.categoryOptions = response.data;
-                            if (this.status === 'CREATE_PREPOSITION_AD') {
+                            if (this.status.indexOf('CREATE') !== -1) {
                                 // 默认全选
                                 this.adInfo.categoryList = response.data.slice(0);
                             }
@@ -517,6 +520,8 @@
                     case 'EDIT_SCREEN_SAVER_AD':
                     case 'CREATE_VOLUME_AD':
                     case 'EDIT_VOLUME_AD':
+                    case 'CREATE_PAUSE_AD':
+                    case 'EDIT_PAUSE_AD':
                         let imageList = this.$refs.selectADImageResource.getImageArrayInfo();
                         if (imageList) {
                             this.adInfo.adMaterialList = this.adInfo.adMaterialList.concat(imageList);

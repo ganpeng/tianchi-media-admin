@@ -9,6 +9,13 @@
             <div class="channel-status un-shelve" v-else>禁播</div>
             <div class="title">
                 <label>{{channelInfo.no}}</label>&nbsp;&nbsp;<label>{{channelInfo.name}}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span v-if="channelInfo.playStatus === 'ACTIVE'"
+                      class="status-normal">已生效</span>
+                <span v-if="channelInfo.playStatus === 'WAITING'"
+                      class="status-deleting">未生效</span>
+                <span v-if="channelInfo.playStatus === 'EXPIRED'"
+                      class="status-abnormal">已失效</span>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <label v-if="channelInfo.startTime" class="start-time">
                     开始时间： {{channelInfo.startTime | formatDate('yyyy.MM.DD HH:mm:SS')}}</label>
             </div>
@@ -30,6 +37,7 @@
                     </ul>
                     <ul class="info-list">
                         <li><span>内部名称：</span><label>{{channelInfo.innerName}}</label></li>
+                        <li><span>公共频道：</span><label>{{channelInfo.common ? '是':'否'}}</label></li>
                         <li><span>组播地址：</span><label>{{channelInfo.multicastIp}}</label></li>
                         <li><span>端口号：</span><label>{{channelInfo.multicastPort}}</label></li>
                         <li><span>tsID：</span><label>{{channelInfo.tsId ? channelInfo.tsId : '无' }}</label></li>
@@ -63,8 +71,35 @@
                 </ul>
             </div>
         </div>
+        <div class="seperator-line"></div>
+        <div class="area-container">
+            <h4 class="content-sub-title">
+                所属区域
+                <span v-if="channelInfo.companyList.length > 0">{{channelInfo.companyList.length}}个</span>
+                <span v-if="channelInfo.companyList.length <= 0" class="toggle-btn disabled">
+                    展开
+                    <i class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
+                </span>
+                <span v-if="channelInfo.companyList.length > 0" @click="showCompanyList = !showCompanyList"
+                      :class="['toggle-btn', showCompanyList ? 'is-active' : '']">
+                    {{showCompanyList ? '收起' : '展开'}}
+                    <i v-if="showCompanyList" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i>
+                    <i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
+                </span>
+            </h4>
+            <ul v-if="showCompanyList" class="search-list clearfix">
+                <li v-for="(item, index) in channelInfo.companyList" :key="index" :class="['search-item']">
+                    <div class="wrapper">
+                        <span class="index">{{index + 1}}</span>
+                        <span class="search-name my-ellipsis">{{item.name}}</span>
+                        <span v-if="item.name.length > 11" class="ellipsis-content">{{item.name}}</span>
+                    </div>
+                </li>
+            </ul>
+            <div v-if="channelInfo.companyList.length > 0" class="seperator-line"></div>
+        </div>
         <!--节目信息-->
-        <div class="content-title">频道内节目</div>
+        <div class="content-sub-title">频道内节目</div>
         <el-table
             header-row-class-name="common-table-header"
             row-class-name=video-row
@@ -203,7 +238,10 @@
         },
         data() {
             return {
-                channelInfo: {},
+                showCompanyList: true,
+                channelInfo: {
+                    companyList: []
+                },
                 previewVideoInfo: {
                     url: '',
                     title: '',
@@ -425,8 +463,86 @@
         }
     }
 
-    #operate-list {
-        margin-top: 200px;
+    .content-sub-title {
+        span:first-child {
+            font-size: 20px;
+        }
+        .toggle-btn {
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 40px;
+            &.is-active,
+            &:hover {
+                color: $mainColor;
+            }
+            i {
+                color: #3E495E;
+            }
+            &.disabled {
+                opacity: 0.5;
+                font-size: 14px;
+                cursor: default;
+            }
+        }
+    }
+
+    .svg-icon-arrow_down {
+        font-size: 12px;
+    }
+
+    .search-list {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-top: 10px;
+        .search-item {
+            width: 200px;
+            height: 34px;
+            line-height: 34px;
+            border: 1px solid #3E495E;
+            background: #2A3040;
+            border-radius: 4px;
+            margin-right: 20px;
+            margin-bottom: 14px;
+            .wrapper {
+                position: relative;
+                display: flex;
+                align-items: center;
+                height: 32px;
+                .index {
+                    width: 32px;
+                    height: 32px;
+                    line-height: 32px;
+                    color: #A8ABB3;
+                    border-right: 1px solid #3E495E;
+                }
+                .search-name {
+                    color: #A8ABB3;
+                    flex: 1;
+                    height: 32px;
+                    font-size: 14px;
+                    line-height: 32px;
+                    text-indent: 10px;
+                    text-align: left;
+                }
+                .ellipsis-content {
+                    display: none;
+                    position: absolute;
+                    top: -24px;
+                    left: 20px;
+                    background: rgba(0, 0, 0, 0.90);
+                    box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
+                    border-radius: 4px;
+                    white-space: nowrap;
+                    padding: 0 10px;
+                }
+                &:hover {
+                    .ellipsis-content {
+                        display: block;
+                    }
+                }
+            }
+        }
     }
 
 </style>
