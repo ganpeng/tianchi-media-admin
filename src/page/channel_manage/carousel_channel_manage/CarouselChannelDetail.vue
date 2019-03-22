@@ -8,7 +8,9 @@
             <div class="channel-status shelve" v-if="channelInfo.visible">正常</div>
             <div class="channel-status un-shelve" v-else>禁播</div>
             <div class="title">
-                <label>{{channelInfo.no}}</label>&nbsp;&nbsp;<label>{{channelInfo.name}}</label>
+                <label>{{channelInfo.no}}</label>&nbsp;&nbsp;<label>{{channelInfo.name}}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label v-if="channelInfo.startTime" class="start-time">
+                    开始时间： {{channelInfo.startTime | formatDate('yyyy.MM.DD HH:mm:SS')}}</label>
             </div>
             <div class="channel-time">
                 <div>创建于{{channelInfo.createdAt | formatDate('yyyy.MM.DD')}}</div>
@@ -44,7 +46,7 @@
                             {{item}}
                         </label>
                     </li>
-                    <li><span>所属服务器：</span><label>{{channelInfo.pushServer}}</label></li>
+                    <li><span>服务器组：</span><label>{{channelInfo.serverGroup}}</label></li>
                     <li>
                         <span>当前播放：</span>
                         <label class="on-play">
@@ -317,6 +319,10 @@
                 border-radius: 4px;
                 font-size: 20px;
                 color: #FFFFFF;
+            }
+            .start-time {
+                font-size: 14px;
+                color: #A8ABB3;
             }
         }
         .channel-time {

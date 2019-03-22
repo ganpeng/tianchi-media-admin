@@ -31,7 +31,7 @@
                     <span class="ad-effect-time">{{interCutInfo.startTime | formatDate('yyyy.MM.DD HH:mm:SS')}} - {{(interCutInfo.startTime + interCutInfo.totalDuration * 1000) | formatDate('yyyy.MM.DD HH:mm:SS')}}</span>
                 </p>
                 <p>当前播放:
-                    <span class="ad-info-desc">{{interCutInfo.desc}}</span>
+                    <span class="ad-info-desc">{{interCutInfo.currentProgramme}}</span>
                 </p>
             </div>
         </div>
@@ -163,7 +163,13 @@
             </el-table-column>
         </el-table>
         <div class="fixed-btn-container">
-            <el-button class="btn-style-two" type="primary" @click="editInfo">编辑</el-button>
+            <el-button
+                class="btn-style-two"
+                type="primary"
+                @click="editInfo"
+                v-if="interCutInfo.playStatus === 'WAITING'">
+                编辑
+            </el-button>
             <el-button class="btn-style-three" @click="toInterCutList" plain>返回列表</el-button>
         </div>
         <display-video-dialog
@@ -189,7 +195,10 @@
         data() {
             return {
                 moreFilters: true,
-                interCutInfo: {},
+                interCutInfo: {
+                    videoList: [],
+                    channelList: []
+                },
                 previewVideoInfo: {
                     url: '',
                     title: '',
@@ -214,6 +223,14 @@
                 this.$service.getInterCutDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         this.interCutInfo = response.data;
+                        this.interCutInfo.videoList.map(video => {
+                            if (video.onPlay) {
+                                this.interCutInfo.currentProgramme = video.originName;
+                                this.interCutInfo.duration = this.$util.formatDate(new Date(video.lastPlayTime), 'yyyy年MM月DD日HH时mm分SS秒') + '---' + this.$util.formatDate(new Date(video.lastPlayTime + video.takeTimeInSec * 1000), 'yyyy年MM月DD日HH时mm分SS秒');
+                            } else {
+                                this.interCutInfo.currentProgramme = '暂无';
+                            }
+                        });
                     }
                 });
                 let that = this;
@@ -240,13 +257,13 @@
             },
             editInfo() {
                 this.$router.push({
-                    name: 'EditInterCUt',
+                    name: 'EditInterCut',
                     params: {id: this.$route.params.id}
                 });
             },
             toInterCutList() {
                 this.$router.push({
-                    name: 'interCutList'
+                    name: 'IterCutList'
                 });
             }
         }

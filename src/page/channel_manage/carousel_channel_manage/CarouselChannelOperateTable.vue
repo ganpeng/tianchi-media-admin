@@ -32,17 +32,6 @@
                 </template>
             </el-table-column>
             <el-table-column
-                prop="innerName"
-                min-width="140px"
-                align="center"
-                label="别名">
-                <template slot-scope="scope">
-                <span @click="toChannelDetail(scope.row)" class="ellipsis four name">
-                {{scope.row.innerName}}
-                </span>
-                </template>
-            </el-table-column>
-            <el-table-column
                 align="center"
                 min-width="140px"
                 label="类别">
@@ -72,26 +61,6 @@
                            :key="index">{{item}}</label>
                 </template>
             </el-table-column>
-            <!--tsId-->
-            <el-table-column
-                align="center"
-                min-width="110px"
-                prop="tsId"
-                label="tsID">
-                <template slot-scope="scope">
-                    <label>{{scope.row.tsId ? scope.row.tsId : '------'}}</label>
-                </template>
-            </el-table-column>
-            <!--serviceId-->
-            <el-table-column
-                align="center"
-                min-width="120px"
-                prop="serviceId"
-                label="serviceID">
-                <template slot-scope="scope">
-                    <label>{{scope.row.serviceId ? scope.row.serviceId : '------'}}</label>
-                </template>
-            </el-table-column>
             <el-table-column
                 align="center"
                 min-width="180px"
@@ -101,17 +70,6 @@
                     <label>{{scope.row.serverGroup ? scope.row.serverGroup : '------'}}</label>
                 </template>
             </el-table-column>
-            <!--
-            <el-table-column
-                align="center"
-                min-width="180px"
-                prop="pushServer"
-                label="所属服务器">
-                <template slot-scope="scope">
-                    <label>{{scope.row.pushServer ? scope.row.pushServer : '------'}}</label>
-                </template>
-            </el-table-column>
-            -->
             <el-table-column
                 align="center"
                 min-width="70px"

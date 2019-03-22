@@ -37,11 +37,13 @@
                 <el-date-picker
                     v-model="channelInfo.startDate"
                     type="date"
+                    value-format="timestamp"
                     size="medium"
                     placeholder="请选择日期">
                 </el-date-picker>
                 <el-time-picker
                     v-model="channelInfo.startPoint"
+                    value-format="timestamp"
                     size="medium"
                     placeholder="请选择时间">
                 </el-time-picker>
@@ -141,6 +143,7 @@
                 <el-autocomplete
                     class="inline-input"
                     :fetch-suggestions="querySearch"
+                    @blur="validateCompanyList"
                     placeholder="请选择区域码"
                     @select="setCompanies">
                     <template slot-scope="{ item }">
@@ -573,6 +576,17 @@
                     callback();
                 }
             };
+            let checkStartTime = (rule, value, callback) => {
+                if ((this.channelInfo.startDate && !this.channelInfo.startPoint) || (!this.channelInfo.startDate && this.channelInfo.startPoint)) {
+                    return callback(new Error('请完整选择开始时间'));
+                } else if (!this.channelInfo.startDate && !this.channelInfo.startPoint) {
+                    callback();
+                } else if ((parseInt(this.channelInfo.startDate) + this.getTimePointMilliseconds(this.channelInfo.startPoint)) < Date.now()) {
+                    return callback(new Error('开始时间应大于当前时间'));
+                } else {
+                    callback();
+                }
+            };
             let checkMulticastIp = (rule, value, callback) => {
                 this.channelInfo.multicastIp = this.$util.trim(this.channelInfo.multicastIp);
                 if (this.$util.isEmpty(value)) {
@@ -650,6 +664,9 @@
                     typeIdList: [],
                     common: false,
                     companyList: [],
+                    startTime: '',
+                    startDate: '',
+                    startPoint: '',
                     protocolList: [],
                     multicastIp: '',
                     pushServer: '',
@@ -682,7 +699,10 @@
                         {validator: checkTypeIdList, trigger: 'change'}
                     ],
                     companyList: [
-                        {validator: checkCompanyList, trigger: 'change'}
+                        {validator: checkCompanyList, trigger: 'blur'}
+                    ],
+                    startTime: [
+                        {validator: checkStartTime, trigger: 'change'}
                     ],
                     multicastIp: [
                         {validator: checkMulticastIp, trigger: 'blur'}
@@ -723,15 +743,20 @@
             this.init();
         },
         methods: {
+            validateCompanyList() {
+                this.$refs['channelInfo'].validateField('companyList');
+            },
             // 删除所有选中的区域码
             removeAllCompany() {
                 this.channelInfo.companyList.splice(0);
                 this.channelInfo.common = false;
+                this.validateCompanyList();
             },
             // 删除区域码
             removeCompany(company, index) {
                 this.channelInfo.companyList.splice(index, 1);
                 this.channelInfo.common = false;
+                this.validateCompanyList();
             },
             querySearch(queryString, cb) {
                 let results = queryString ? this.companyOptions.filter(this.createFilter(queryString)) : this.companyOptions;
@@ -781,6 +806,12 @@
                         response.data.typeList.map(type => {
                             this.channelInfo.typeIdList.push(type.id);
                         });
+                        if (this.channelInfo.startTime) {
+                            let startDate = new Date(this.channelInfo.startTime);
+                            this.channelInfo.startDate = this.channelInfo.startTime - (startDate.getHours() * 60 * 60 + startDate.getMinutes() * 60 + startDate.getSeconds()) * 1000;
+                            let currentDate = new Date();
+                            this.channelInfo.startPoint = currentDate.valueOf() - (currentDate.getHours() * 60 * 60 + currentDate.getMinutes() * 60 + currentDate.getSeconds()) * 1000 + (startDate.getHours() * 60 * 60 + startDate.getMinutes() * 60 + startDate.getSeconds()) * 1000;
+                        }
                         this.currentSelectedVideoList = response.data.carouselVideoList;
                         this.currentSelectedVideoList.map(video => {
                             if (video.onPlay) {
@@ -812,6 +843,7 @@
                         this.channelInfo.common = true;
                     }
                 }
+                this.validateCompanyList();
             },
             // 对关联的视频进行排序
             movePosition(model, video, index) {
@@ -862,6 +894,11 @@
             },
             uploadSuccessHandler(image) {
                 this.channelInfo.logoUri = image.uri;
+            },
+            // 将当前时间选择器的毫秒数改为只是小时、分钟、秒的毫秒数
+            getTimePointMilliseconds(milliseconds) {
+                let currentDate = new Date(milliseconds);
+                return (currentDate.getHours() * 60 * 60 + currentDate.getMinutes() * 60 + currentDate.getSeconds()) * 1000;
             },
             // 根据视频展示名在文字的最后添加'-'
             insertShortLine() {
@@ -1131,6 +1168,12 @@
                                 }
                             });
                         });
+                        //  设置开始时间
+                        if (this.channelInfo.startDate && this.channelInfo.startPoint) {
+                            this.channelInfo.startTime = parseInt(this.channelInfo.startDate) + this.getTimePointMilliseconds(this.channelInfo.startPoint);
+                        } else {
+                            this.channelInfo.startTime = '';
+                        }
                         this.isLoading = true;
                         switch (this.status) {
                             case 'CREATE_CHANNEL':

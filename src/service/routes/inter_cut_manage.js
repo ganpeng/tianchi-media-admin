@@ -93,22 +93,5 @@ export const deleteInterCutById = (id) => {
  * 批量删除插播
  */
 export const batchDeleteInterCut = ({idList}) => {
-    return service.delete('/v1/live/inter-cut', {data: idList});
-};
-
-/**
- * 插播的上下架，假如线上是上架状态，请求之后会更改为下架状态，反之亦然
- * @param id The id of subject.
- */
-export const setSubjectVisible = (id) => {
-    return service.patch(util.format('/v1/content/subject/{0}/visible', id));
-};
-
-/**
- * 批量上下架插播
- * @param idList The idList of subject.
- * @param visible The visible of subject.
- */
-export const batchUpdateSubjectStatus = ({idList, visible}) => {
-    return service.patch(util.format('/v1/content/subject/visible?visible={0}', visible), idList);
+    return service.delete('/v1/live/inter-cut/batch', {data: idList});
 };

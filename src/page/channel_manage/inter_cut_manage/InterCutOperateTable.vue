@@ -97,8 +97,15 @@
                 class="operate">
                 <template slot-scope="scope">
                     <div class="operator-btn-wrapper">
-                        <span class="btn-text" @click="editChannelInfo(scope.row)">编辑</span>
-                        <span class="btn-text text-danger" @click="removeChannel(scope.row)">删除</span>
+                        <span class="btn-text" @click="editInterCutInfo(scope.row)"
+                              :class="{disabled:scope.row.playStatus !== 'WAITING'}">
+                              编辑
+                        </span>
+                        <span class="btn-text text-danger"
+                              @click="removeInterCut(scope.row)"
+                              :class="{disabled:scope.row.playStatus !== 'WAITING'}">
+                              删除
+                        </span>
                     </div>
                 </template>
             </el-table-column>
@@ -156,7 +163,11 @@
                 });
             },
             // 删除
-            removeChannel(item) {
+            removeInterCut(item) {
+                if (item.playStatus !== 'WAITING') {
+                    this.$message.warning('当前插播频道已生效或已过期，不能删除');
+                    return;
+                }
                 this.$confirm('此操作将删除"' + item.name + '"插播, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -189,7 +200,11 @@
                     params: {id: item.id}
                 });
             },
-            editChannelInfo(item) {
+            editInterCutInfo(item) {
+                if (item.playStatus !== 'WAITING') {
+                    this.$message.warning('当前插播频道已生效或已过期，不能编辑');
+                    return;
+                }
                 this.$router.push({
                     name: 'EditInterCut',
                     params: {id: item.id}
