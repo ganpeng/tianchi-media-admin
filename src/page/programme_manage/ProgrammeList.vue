@@ -24,7 +24,7 @@
                             :value="programmeSearchFields.visible"
                             @change="inputHandler($event, 'visible')"
                             clearable
-                            placeholder="请选择状态">
+                            placeholder="全部">
                             <el-option
                                 v-for="item in visibleOptions"
                                 :key="item.value"
@@ -39,7 +39,7 @@
                             :value="programmeSearchFields.programmeCategoryIdList"
                             @change="inputHandler($event, 'programmeCategoryIdList')"
                             clearable
-                            placeholder="请选择分类">
+                            placeholder="全部">
                             <el-option
                                 v-for="item in global.categoryList"
                                 :key="item.id"
@@ -55,7 +55,7 @@
                             @change="inputHandler($event, 'programmeTypeIdList')"
                             clearable
                             no-data-text="请先选择分类"
-                            placeholder="请选择类型">
+                            placeholder="全部">
                             <el-option
                                 v-for="item in programmeTypeOptions"
                                 :key="item.id"
@@ -95,7 +95,7 @@
                             clearable
                             filterable
                             @change="inputHandler($event, 'produceAreaList')"
-                            placeholder="请选择地区"
+                            placeholder="全部"
                         >
                             <el-option
                                 v-for="(item, index) in areaOptions"

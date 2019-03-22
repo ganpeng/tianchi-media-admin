@@ -260,11 +260,6 @@ export default {
             protocolList = _.uniq(protocolList);
             this.updateLiveChannel({key: 'protocolList', value: protocolList});
         },
-        methodsChangeHandler(value) {
-            // console.log(value);
-        },
-        toggleDeviceStatus() {
-        },
         selectLiveCategoryHandler(liveCategory) {
             this.addLiveCategoryToList({liveCategory});
             this.clearvaidatorByProp('typeList');

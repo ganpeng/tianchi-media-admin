@@ -24,7 +24,7 @@
                             :value="searchFields.area"
                             filterable
                             clearable
-                            placeholder="请选择地区"
+                            placeholder="全部"
                             @input="inputHandler($event, 'area')">
                             <el-option
                                 v-for="(item, index) in areaOptions"
@@ -315,7 +315,11 @@
                 }
             },
             _lowerFramePerson(person) {
-                let {id, visible} = person;
+                let {id, visible, avatarImage} = person;
+                if (!_.get(avatarImage, 'uri') && !visible) {
+                    this.$message.error('没有图片的人物不能上架');
+                    return false;
+                }
                 this.$confirm(`您确定要${visible ? '下架人物' : '上架人物'}吗, 是否继续?`, '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',

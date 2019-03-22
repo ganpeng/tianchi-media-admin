@@ -95,6 +95,26 @@
                             <span class="file-percent" v-show="percent !== 0">{{percent}}%</span>
                         </span>
                     </el-form-item>
+                    <el-form-item label="公共频道">
+                        <span>{{version.allCompanyUpdate ? '是' : '否'}}</span>
+                    </el-form-item>
+                    <el-form-item label="区域码" prop="districtCodeList" style="min-width:1050px;">
+                        <div class="my-tags">
+                            <el-tag
+                                :key="index"
+                                v-for="(company, index) in version.districtCodeList"
+                                closable
+                                @close="deleteCompanyHandler(company)"
+                                :disable-transitions="false">
+                                {{company.name}}
+                            </el-tag>
+                        </div>
+                        <area-code-search
+                            :showDeleteBtn="version.districtCodeList.length > 0"
+                            :handleSelect="selectAreaCodeHandler"
+                            :clearHandler="clearCompanyListHandler"
+                        ></area-code-search>
+                    </el-form-item>
                 </el-form>
             </el-col>
         </div>
@@ -106,10 +126,14 @@
 </template>
 <script>
 import axios from 'axios';
+import _ from 'lodash';
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import role from '@/util/config/role';
+import AreaCodeSearch from './AreaCodeSearch';
+
 export default {
     name: 'CreateVersion',
+    components: {AreaCodeSearch},
     data() {
         let checkVersionCode = (rule, value, callback) => {
             let reg = /^\+?[1-9][0-9]*$/;
@@ -143,6 +167,7 @@ export default {
     },
     created() {
         this.resetVersion();
+        this.getFilialeList();
         this.$nextTick(() => {
             let uploadInputFile = document.querySelector('#version-file-input');
             uploadInputFile.addEventListener('input', this.uploadChangeHandler);
@@ -156,10 +181,13 @@ export default {
     methods: {
         ...mapMutations({
             updateVersion: 'version/updateVersion',
-            resetVersion: 'version/resetVersion'
+            resetVersion: 'version/resetVersion',
+            addCompanyToList: 'version/addCompanyToList',
+            deleteCompanyFromList: 'version/deleteCompanyFromList'
         }),
         ...mapActions({
-            postVersion: 'version/postVersion'
+            postVersion: 'version/postVersion',
+            getFilialeList: 'version/getFilialeList'
         }),
         async createVersionHandler() {
             try {
@@ -229,6 +257,22 @@ export default {
                     message: res.data[0].failReason
                 });
             }
+        },
+        selectAreaCodeHandler(company) {
+            this.addCompanyToList({company});
+            this.clearvaidatorByProp('districtCodeList');
+        },
+        deleteCompanyHandler(company) {
+            this.deleteCompanyFromList({company});
+        },
+        clearvaidatorByProp(prop) {
+            let _prop = _.get(this.version, prop);
+            if (_prop.length > 0) {
+                this.$refs.createVersion.clearValidate(prop);
+            }
+        },
+        clearCompanyListHandler() {
+            this.updateVersion({key: 'districtCodeList', value: []});
         }
     }
 };

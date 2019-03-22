@@ -35,7 +35,7 @@
                         <label class="search-field-item-label">类型</label>
                         <el-select
                             :value="searchFields.hardWareId"
-                            placeholder="请选择设备类型"
+                            placeholder="全部"
                             clearable
                             @input="inputSearchFieldHandler($event, 'hardWareId')"
                         >
@@ -62,7 +62,7 @@
                         <label class="search-field-item-label">状态</label>
                         <el-select
                             :value="searchFields.status"
-                            placeholder="请选择设备状态"
+                            placeholder="全部"
                             clearable
                             @input="inputSearchFieldHandler($event, 'status')"
                         >
@@ -78,7 +78,7 @@
                         <label class="search-field-item-label">固件版本</label>
                         <el-select
                             :value="searchFields.status"
-                            placeholder="请选择固件版本"
+                            placeholder="全部"
                             clearable
                             @input="inputSearchFieldHandler($event, 'status')"
                         >
@@ -94,7 +94,7 @@
                         <label class="search-field-item-label">所属区域</label>
                         <el-select
                             :value="searchFields.code"
-                            placeholder="请选择所属区域"
+                            placeholder="全部"
                             clearable
                             @input="inputSearchFieldHandler($event, 'code')"
                         >

@@ -1079,6 +1079,9 @@ html, body {
         .title-wrapper {
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            line-height: 50px;
             .left-side {
                 display: flex;
                 align-items: center;
@@ -1115,6 +1118,8 @@ html, body {
                 color: #fff;
                 padding: 0 5px;
                 font-size: 24px;
+                height: 32px;
+                line-height: 32px;
             }
             .date {
                 span {

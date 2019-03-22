@@ -119,9 +119,8 @@ export default {
         .image-item {
             position: relative;
             width: 170px;
-            // height: 124px;
             cursor: zoom-in;
-            margin: 0 20px 10px 0;
+            margin: 0 20px 20px 0;
             .image-warpper {
                 position: relative;
                 border: 1px solid #3E495E;

@@ -67,12 +67,6 @@
                                 <span class="value">{{liveChannel.multicastIp}}</span>
                             </div>
                         </li>
-                        <!-- <li class="text-info-item">
-                            <div class="text-info-item-wrapper">
-                                <span class="label">当前节目：</span>
-                                <span class="value">{{currentLiveChannel.channelName}}</span>
-                            </div>
-                        </li> -->
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
                                 <span class="label">是否回看：</span>
@@ -131,9 +125,7 @@
                 所属区域
                 <span v-if="liveChannel.companyList.length > 0">{{liveChannel.companyList.length}}个</span>
                 <span v-if="liveChannel.companyList.length <= 0" class="toggle-btn disabled">
-                    展开
-                    <!-- <i class="el-icon-arrow-up el-icon--right my-arrow-icon"></i> -->
-                    <i class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
+                    展开<i class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
                 </span>
                 <span v-if="liveChannel.companyList.length > 0" @click="toggleClickHandler" :class="['toggle-btn', showCompanyList ? 'is-active' : '']">
                     {{showCompanyList ? '收起' : '展开'}}

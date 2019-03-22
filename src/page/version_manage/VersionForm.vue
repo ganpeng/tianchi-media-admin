@@ -96,6 +96,26 @@
                 </el-progress>
                 <span v-show="percent !== 0">{{percent}}%</span>
             </el-form-item>
+            <el-form-item label="公共频道">
+                <span>{{version.allCompanyUpdate ? '是' : '否'}}</span>
+            </el-form-item>
+            <el-form-item label="区域码" prop="districtCodeList" style="min-width:1050px;">
+                <div class="my-tags">
+                    <el-tag
+                        :key="index"
+                        v-for="(company, index) in version.districtCodeList"
+                        closable
+                        @close="deleteCompanyHandler(company)"
+                        :disable-transitions="false">
+                        {{company.name}}
+                    </el-tag>
+                </div>
+                <area-code-search
+                    :showDeleteBtn="version.districtCodeList.length > 0"
+                    :handleSelect="selectAreaCodeHandler"
+                    :clearHandler="clearCompanyListHandler"
+                ></area-code-search>
+            </el-form-item>
         </el-form>
     </div>
 </template>
@@ -103,6 +123,7 @@
 import {mapGetters, mapMutations} from 'vuex';
 import role from '@/util/config/role';
 import axios from 'axios';
+import AreaCodeSearch from '../channel_manage/AreaCodeSearch';
 
 export default {
     name: 'VersionForm',
@@ -148,7 +169,8 @@ export default {
     methods: {
         ...mapMutations({
             updateVersion: 'version/updateVersion',
-            resetVersion: 'version/resetVersion'
+            resetVersion: 'version/resetVersion',
+            addCompanyToList: 'version/addCompanyToList'
         }),
         inputHandler(value, key) {
             this.updateVersion({key, value});
@@ -201,6 +223,19 @@ export default {
                     message: res.data[0].failReason
                 });
             }
+        },
+        selectAreaCodeHandler(company) {
+            this.addCompanyToList({company});
+            this.clearvaidatorByProp('districtCodeList');
+        },
+        clearvaidatorByProp(prop) {
+            let _prop = _.get(this.version, prop);
+            if (_prop.length > 0) {
+                this.$refs.createVersion.clearValidate(prop);
+            }
+        },
+        clearCompanyListHandler() {
+            this.updateVersion({key: 'districtCodeList', value: []});
         }
     }
 };

@@ -15,14 +15,15 @@ const defaultVersion = {
     fullPackageUri: '', // 全量升级包地址
     fullPackageMd5: '', // 包的md5
     incrPackageUri: '', // 增量升级包地址
-    common: false, // 是否全局升级
-    companyList: [] // 所属区域
+    allCompanyUpdate: false, // 是否全局升级
+    districtCodeList: [], // 所属区域
+    clientVersionStatsList: []
 };
 
 const defaultSearchFields = {
     releaseAtStart: '',
     releaseAtEnd: '',
-    common: '',
+    allCompanyUpdate: '',
     companyCode: '',
     forced: '', // 强制升级
     keyword: '', // 关键字
@@ -39,6 +40,7 @@ const defaultPagination = {
 const state = {
     searchFields: _.cloneDeep(defaultSearchFields),
     version: _.cloneDeep(defaultVersion),
+    filialeList: [],
     list: [],
     pagination: _.cloneDeep(defaultPagination)
 };
@@ -55,6 +57,9 @@ const getters = {
     },
     searchFields(state) {
         return state.searchFields;
+    },
+    filialeList(state) {
+        return state.filialeList;
     }
 };
 
@@ -73,6 +78,9 @@ const mutations = {
         state.pagination.pageNum = payload.pageNum;
         state.pagination.total = payload.total;
     },
+    setFilialeList(state, payload) {
+        state.filialeList = payload.filialeList;
+    },
     resetPagination(state, payload) {
         state.pagination = _.cloneDeep(defaultPagination);
     },
@@ -87,7 +95,7 @@ const mutations = {
             state.searchFields.releaseAtStart = state.searchFields.dateRange ? state.searchFields.dateRange[0] : '';
             state.searchFields.releaseAtEnd = state.searchFields.dateRange ? state.searchFields.dateRange[1] : '';
         }
-        if (key === 'common') {
+        if (key === 'allCompanyUpdate') {
             if (value || value === '') {
                 state.searchFields.companyCode = '';
             }
@@ -109,27 +117,27 @@ const mutations = {
     //  增加公司到列表
     addCompanyToList(state, payload) {
         let {company} = payload;
-        if (_.isNull(state.version.companyList)) {
-            state.version.companyList = [];
+        if (_.isNull(state.version.districtCodeList)) {
+            state.version.districtCodeList = [];
         }
         let {name} = company;
         if (name === '全部') {
-            state.version.companyList = _.cloneDeep(state.filialeList);
+            state.version.districtCodeList = _.cloneDeep(state.filialeList);
         } else {
-            state.version.companyList.push(company);
+            state.version.districtCodeList.push(company);
         }
-        state.version.companyList = _.uniqBy(state.version.companyList, 'id');
-        let flag = checkCompanyListIsAll(state.version.companyList, state.filialeList);
-        state.version.common = flag;
+        state.version.districtCodeList = _.uniqBy(state.version.districtCodeList, 'id');
+        let flag = checkCompanyListIsAll(state.version.districtCodeList, state.filialeList);
+        state.version.allCompanyUpdate = flag;
     },
     //  从列表中删除公司
     deleteCompanyFromList(state, payload) {
         let {company} = payload;
-        state.version.companyList = state.version.companyList.filter((_company) => {
+        state.version.districtCodeList = state.version.districtCodeList.filter((_company) => {
             return _company.id !== company.id;
         });
-        let flag = checkCompanyListIsAll(state.version.companyList, state.filialeList);
-        state.version.common = flag;
+        let flag = checkCompanyListIsAll(state.version.districtCodeList, state.filialeList);
+        state.version.allCompanyUpdate = flag;
     }
 };
 
@@ -152,8 +160,10 @@ const actions = {
             if (!isLoading) {
                 isLoading = true;
                 let version = _.cloneDeep(formatVersion(state.version));
-                if (version.common) {
-                    delete version.companyList;
+                if (version.allCompanyUpdate) {
+                    delete version.districtCodeList;
+                } else {
+                    version.districtCodeList = version.districtCodeList.map((item) => item.code);
                 }
                 let res = await service.postVersion(version);
                 isLoading = false;
@@ -174,7 +184,9 @@ const actions = {
                 keyword: searchFields.keyword,
                 productType: searchFields.productType,
                 pageNum: state.pagination.pageNum > 0 ? state.pagination.pageNum - 1 : 0,
-                pageSize: state.pagination.pageSize
+                pageSize: state.pagination.pageSize,
+                allCompanyUpdate: searchFields.allCompanyUpdate,
+                companyCode: searchFields.companyCode
             };
             let res = await service.getVersionList(params);
             if (res && res.code === 0) {
@@ -188,7 +200,20 @@ const actions = {
         try {
             let res = await service.getVersionById(id);
             if (res && res.code === 0) {
-                commit('setVersion', {version: Object.assign({companyList: []}, res.data)});
+                commit('setVersion', {version: Object.assign({districtCodeList: [], clientVersionStatsList: []}, res.data)});
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    /**
+     * 获取区域列表
+     */
+    async getFilialeList({commit}) {
+        try {
+            let res = await service.getFilialeList();
+            if (res && res.code === 0) {
+                commit('setFilialeList', {filialeList: res.data});
             }
         } catch (err) {
             console.log(err);

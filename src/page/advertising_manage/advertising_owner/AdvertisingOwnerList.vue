@@ -25,7 +25,7 @@
                     <el-select
                         :value="searchFields.adType"
                         clearable
-                        placeholder="请选择广告类型"
+                        placeholder="全部"
                         @input="inputHandler($event, 'adType')"
                     >
                         <el-option
@@ -41,7 +41,7 @@
                     <el-select
                         :value="searchFields.adVisible"
                         clearable
-                        placeholder="请选择"
+                        placeholder="全部"
                         @input="inputHandler($event, 'adVisible')"
                     >
                         <el-option
@@ -57,7 +57,7 @@
                     <el-select
                         :value="searchFields.adStatus"
                         clearable
-                        placeholder="请选择广告状态"
+                        placeholder="全部"
                         @input="inputHandler($event, 'adStatus')"
                     >
                         <el-option
@@ -84,7 +84,7 @@
                     <el-select
                         :value="searchFields.mediaType"
                         clearable
-                        placeholder="请选择资源类型"
+                        placeholder="全部"
                         @input="inputHandler($event, 'mediaType')"
                     >
                         <el-option

@@ -25,7 +25,7 @@
                             filterable
                             clearable
                             @input="inputHandler($event, 'productType')"
-                            placeholder="请选择升级类型">
+                            placeholder="全部">
                             <el-option
                                 v-for="(item, index) in productTypeOptions"
                                 :key="index"
@@ -41,7 +41,7 @@
                             filterable
                             clearable
                             @input="inputHandler($event, 'forced')"
-                            placeholder="请选择升级方式">
+                            placeholder="全部">
                             <el-option
                                 v-for="(item, index) in forcedOptions"
                                 :key="index"
@@ -67,10 +67,10 @@
                     <div class="search-field-item">
                         <label class="search-field-item-label">公共频道</label>
                         <el-select
-                            :value="searchFields.common"
+                            :value="searchFields.allCompanyUpdate"
                             clearable
                             placeholder="全部"
-                            @input="inputHandler($event, 'common')"
+                            @input="inputHandler($event, 'allCompanyUpdate')"
                         >
                             <el-option
                                 v-for="(item, index) in [{name: '是', value: true}, {name: '否', value: false}]"
@@ -85,7 +85,7 @@
                         <el-select
                             :value="searchFields.companyCode"
                             clearable
-                            placeholder="请选择区域"
+                            placeholder="全部"
                             @input="inputHandler($event, 'companyCode')"
                         >
                             <el-option
@@ -164,7 +164,7 @@
                     </el-table-column>
                     <el-table-column align="center" label="设备数">
                         <template slot-scope="scope">
-                            {{scope.row.installed | padEmpty}}
+                            {{scope.row.stbCount}}
                         </template>
                     </el-table-column>
                     <el-table-column width="120px" align="center" label="发布时间" prop="releaseAt">
@@ -224,8 +224,8 @@
                 };
             },
             companyOptions() {
-                let {common} = this.searchFields;
-                if (common) {
+                let {allCompanyUpdate} = this.searchFields;
+                if (allCompanyUpdate) {
                     return [];
                 } else {
                     return this.filialeList;

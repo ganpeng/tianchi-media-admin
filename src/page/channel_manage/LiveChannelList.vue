@@ -25,7 +25,7 @@
                     <el-select
                         :value="searchFields.typeIdList"
                         clearable
-                        placeholder="请选择频道类型"
+                        placeholder="全部"
                         @input="inputHandler($event, 'typeIdList')"
                     >
                         <el-option
@@ -43,7 +43,7 @@
                     <el-select
                         :value="searchFields.record"
                         clearable
-                        placeholder="请选择是否录制回看"
+                        placeholder="全部"
                         @input="inputHandler($event, 'record')"
                     >
                         <el-option
@@ -60,7 +60,7 @@
                         :value="searchFields.visible"
                         @change="inputHandler($event, 'visible')"
                         clearable
-                        placeholder="请选择状态">
+                        placeholder="全部">
                         <el-option
                             v-for="item in visibleOptions"
                             :key="item.value"
@@ -101,7 +101,7 @@
                     <el-select
                         :value="searchFields.companyCode"
                         clearable
-                        placeholder="请选择区域"
+                        placeholder="全部"
                         @input="inputHandler($event, 'companyCode')"
                     >
                         <el-option
@@ -119,7 +119,7 @@
                         @change="inputHandler($event, 'protocolList')"
                         clearable
                         multiple
-                        placeholder="请选择状态">
+                        placeholder="全部">
                         <el-option
                             v-for="item in [{name: 'HLS', value: 'HLS'}, {name: 'UDP', value: 'UDP'}]"
                             :key="item.value"
@@ -188,8 +188,7 @@
                 @select-all="selectAllHandler"
                 header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
                 <el-table-column type="selection" align="center"></el-table-column>
-                <!-- <el-table-column prop="code" align="center" width="120px" label="编号"></el-table-column> -->
-                <el-table-column prop="no" align="center" width="120px" label="展示编号"></el-table-column>
+                <el-table-column prop="no" align="center" width="60px" label="台号"></el-table-column>
                 <el-table-column prop="innerName" align="center" min-width="120px" label="名称">
                     <template slot-scope="scope">
                         <span @click="displayLiveChannel(scope.row.id)" class="ellipsis two name">
@@ -213,26 +212,12 @@
                 </el-table-column>
                 <el-table-column prop="multicastIp" min-width="120px" align="center" label="IP"></el-table-column>
                 <el-table-column prop="multicastPort" width="100px" align="center" label="端口"></el-table-column>
-                <!--
-                <el-table-column prop="recordIp" min-width="120px" align="center" label="录制IP"></el-table-column>
-                <el-table-column prop="recordPort" width="100px" align="center" label="录制端口"></el-table-column>
-                -->
                 <el-table-column prop="serverGroup" align="center" min-width="120px" label="服务器组"></el-table-column>
                 <el-table-column align="center" width="60px" label="回看">
                     <template slot-scope="scope">
                         <span :class="[scope.row.record ? 'yes' : 'no']">
                             {{scope.row.record ? '是' : '否'}}
                         </span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="videoPid" align="center" width="100px" label="videoPid">
-                    <template slot-scope="scope">
-                        {{scope.row.videoPid | padEmpty}}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="audioPid" align="center" width="100px" label="audioPid">
-                    <template slot-scope="scope">
-                        {{scope.row.audioPid | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column align="center" width="120px" label="公共频道">

@@ -825,16 +825,16 @@ const AD_TYPE_OPTIONS = [
 
 const AD_STATUS_OPTIONS = [
     {
-        name: '已失效',
-        value: 'EXPIRED'
-    },
-    {
-        name: '生效',
+        name: '生效中',
         value: 'ACTIVE'
     },
     {
         name: '未生效',
         value: 'WAITING'
+    },
+    {
+        name: '已失效',
+        value: 'EXPIRED'
     }
 ];
 

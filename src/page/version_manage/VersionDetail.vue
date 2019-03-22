@@ -32,31 +32,31 @@
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
                             <label class="label">设备数：</label>
-                            <span class="value">{{version.installed}}</span>
+                            <span class="value">{{version.stbCount}}</span>
                         </div>
                     </li>
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
                             <label class="label">升级类型：</label>
-                            <span class="value">{{version.productType}}</span>
+                            <span class="value">{{version.productType === 'TV_LAUNCHER' ? '应用升级' : '系统升级'}}</span>
                         </div>
                     </li>
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
                             <label class="label">全局升级：</label>
-                            <span class="value">{{version.common}}</span>
+                            <span class="value">{{version.allCompanyUpdate ? '是' : '否'}}</span>
                         </div>
                     </li>
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
                             <label class="label">升级方式：</label>
-                            <span class="value">{{version.forced}}</span>
+                            <span class="value">{{version.forced ? '强制升级' : '选择升级'}}</span>
                         </div>
                     </li>
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
                             <label class="label">硬件类型：</label>
-                            <span class="value">{{version.hardwareType}}</span>
+                            <span class="value">{{hardwareType(version.hardwareType)}}</span>
                         </div>
                     </li>
                     <li class="text-info-item">
@@ -75,28 +75,29 @@
             </div>
         </div>
         <div class="seperator-line"></div>
-        <div class="area-container">
+        <div v-if="version.clientVersionStatsList.length > 0" class="area-container">
             <h4 class="content-sub-title">
                 所属区域
-                <span v-if="version.companyList.length > 0">{{version.companyList.length}}个</span>
-                <span v-if="version.companyList.length <= 0" class="toggle-btn disabled">
+                <span v-if="version.clientVersionStatsList.length > 0">{{version.clientVersionStatsList.length}}个</span>
+                <span v-if="version.clientVersionStatsList.length <= 0" class="toggle-btn disabled">
                     展开<i class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
                 </span>
-                <span v-if="version.companyList.length > 0" @click="toggleClickHandler" :class="['toggle-btn', showCompanyList ? 'is-active' : '']">
+                <span v-if="version.clientVersionStatsList.length > 0" @click="toggleClickHandler" :class="['toggle-btn', showCompanyList ? 'is-active' : '']">
                     {{showCompanyList ? '收起' : '展开'}}
                     <i v-if="showCompanyList" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
                 </span>
             </h4>
             <ul v-if="showCompanyList" class="search-list clearfix">
-                <li v-for="(item, index) in version.companyList" :key="index" :class="['search-item']">
+                <li v-for="(item, index) in version.clientVersionStatsList" :key="index" :class="['search-item']">
                     <div class="wrapper">
                         <span class="index">{{index + 1}}</span>
                         <span class="search-name my-ellipsis">{{item.name}}</span>
                         <span v-if="item.name.length > 11" class="ellipsis-content">{{item.name}}</span>
                     </div>
+                    <div class="hahaha">设备:{{item.stbCountByCompany}} 升级率:{{item.updatedRatio ? `${item.updatedRatio}%` : ''}}</div>
                 </li>
             </ul>
-            <div v-if="version.companyList.length > 0" class="seperator-line"></div>
+            <div v-if="version.clientVersionStatsList.length > 0" class="seperator-line"></div>
         </div>
         <div class="fixed-btn-container">
             <el-button class="btn-style-three" @click="goBack">返回列表</el-button>
@@ -117,7 +118,12 @@ export default {
         ...mapGetters({
             version: 'version/version',
             filialeList: 'channel/filialeList'
-        })
+        }),
+        hardwareType() {
+            return (hardwareType) => {
+                return hardwareType ? (hardwareType === 'HARDWARE_3796' ? '3796' : '3798') : '无';
+            };
+        }
     },
     mounted() {
         this.$util.toggleFixedBtnContainer();
@@ -214,11 +220,11 @@ export default {
     margin-top: 10px;
     .search-item {
         width: 200px;
-        height: 34px;
+        // height: 34px;
         line-height: 34px;
-        border: 1px solid #3E495E;
         background: #2A3040;
         border-radius: 4px;
+        border: 1px solid #3E495E;
         margin-right: 20px;
         margin-bottom: 14px;
         .wrapper {
@@ -226,6 +232,7 @@ export default {
             display: flex;
             align-items: center;
             height: 32px;
+            border-bottom: 1px solid #3E495E;
             .index {
                 width: 32px;
                 height: 32px;
