@@ -120,7 +120,7 @@
             </div>
         </div>
         <div class="seperator-line"></div>
-        <div class="area-container">
+        <div v-if="liveChannel.companyList.length > 0" class="area-container">
             <h4 class="content-sub-title">
                 所属区域
                 <span v-if="liveChannel.companyList.length > 0">{{liveChannel.companyList.length}}个</span>
