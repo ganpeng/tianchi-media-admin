@@ -165,6 +165,9 @@ const actions = {
                 } else {
                     version.districtCodeList = version.districtCodeList.map((item) => item.code);
                 }
+                if (version.productType === 'TV_LAUNCHER') {
+                    delete version.hardwareType;
+                }
                 let res = await service.postVersion(version);
                 isLoading = false;
                 return res;

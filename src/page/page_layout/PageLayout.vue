@@ -227,11 +227,25 @@ export default {
             }, 0);
             columnsList.style.width = `${width + 20}px`;
         },
-        columnsTabChangeHandler(id, layoutTemplate) {
-            this.activeId = id;
-            this.layoutTemplate = layoutTemplate;
-            this.$router.push({ name: 'PageLayout', params: {navbarId: id} });
-            this.clearLayoutHandler(); // 获取最新的栏目布局数据
+        async columnsTabChangeHandler(id, layoutTemplate) {
+            try {
+                this.activeId = id;
+                this.layoutTemplate = layoutTemplate;
+                this.$router.push({ name: 'PageLayout', params: {navbarId: id} });
+                if (this.getLayoutChangedByNavbarId) {
+                    let confirm = await this.$confirm(`此栏目有未保存的更改，是否现在保存?`, '提示', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'error'
+                        });
+                        console.log(confirm);
+                    if (confirm) {
+                        this.clearLayoutHandler(); // 获取最新的栏目布局数据
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
         },
         async saveLayoutHandler() {
             try {
@@ -411,8 +425,6 @@ export default {
             position: absolute;
             right: 10px;
             top: 32px;
-            .svg-icon {
-            }
         }
         .sortable-drag {
             background-color: #0062C4;

@@ -126,7 +126,9 @@
                         </el-button>
                     </div>
                 </div>
-                <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
+                <el-table
+                    @sort-change="sortChangeHandler"
+                    header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
                     <el-table-column align="center" width="120px" label="编号" prop="id"></el-table-column>
                     <el-table-column label="版本名称" width="120px" align="center" prop="version">
                         <template slot-scope="scope">
@@ -162,7 +164,7 @@
                             {{hardwareType(scope.row.hardwareType)}}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" label="设备数">
+                    <el-table-column sortable align="center" prop="stbCount" label="设备数">
                         <template slot-scope="scope">
                             {{scope.row.stbCount}}
                         </template>
@@ -187,134 +189,144 @@
     </div>
 </template>
 <script>
-    import {mapGetters, mapMutations, mapActions} from 'vuex';
-    import role from '@/util/config/role';
-
-    export default {
-        name: 'VersionList',
-        data() {
-            return {
-                //  toggle搜索区域
-                searchFieldVisible: false,
-                productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
-                forcedOptions: role.FORCED_OPTIONS
+import {mapGetters, mapMutations, mapActions} from 'vuex';
+import _ from 'lodash';
+import role from '@/util/config/role';
+export default {
+    name: 'VersionList',
+    data() {
+        return {
+            //  toggle搜索区域
+            searchFieldVisible: false,
+            productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
+            forcedOptions: role.FORCED_OPTIONS
+        };
+    },
+    created() {
+        this.resetState();
+        this.getVersionList();
+        this.getFilialeList();
+        window.addEventListener('keyup', this.keyupHandler);
+    },
+    beforeDestroy() {
+        window.removeEventListener('keyup', this.keyupHandler);
+    },
+    computed: {
+        ...mapGetters({
+            list: 'version/list',
+            version: 'version/version',
+            pagination: 'version/pagination',
+            searchFields: 'version/searchFields',
+            filialeList: 'channel/filialeList'
+        }),
+        packageUrl(uri) {
+            return (uri) => {
+                let baseUri = window.localStorage.getItem('videoBaseUri');
+                return `${baseUri}${uri}`;
             };
         },
-        created() {
-            this.resetState();
-            this.getVersionList();
-            this.getFilialeList();
-            window.addEventListener('keyup', this.keyupHandler);
-        },
-        beforeDestroy() {
-            window.removeEventListener('keyup', this.keyupHandler);
-        },
-        computed: {
-            ...mapGetters({
-                list: 'version/list',
-                version: 'version/version',
-                pagination: 'version/pagination',
-                searchFields: 'version/searchFields',
-                filialeList: 'channel/filialeList'
-            }),
-            packageUrl(uri) {
-                return (uri) => {
-                    let baseUri = window.localStorage.getItem('videoBaseUri');
-                    return `${baseUri}${uri}`;
-                };
-            },
-            companyOptions() {
-                let {allCompanyUpdate} = this.searchFields;
-                if (allCompanyUpdate) {
-                    return [];
-                } else {
-                    return this.filialeList;
-                }
-            }
-        },
-        methods: {
-            ...mapMutations({
-                updateSearchFields: 'version/updateSearchFields',
-                updatePagination: 'version/updatePagination',
-                resetVersion: 'version/resetVersion',
-                resetPagination: 'version/resetPagination',
-                resetSearchFields: 'version/resetSearchFields',
-                setVersion: 'version/setVersion',
-                resetState: 'version/resetState'
-            }),
-            ...mapActions({
-                postVersion: 'version/postVersion',
-                getVersionList: 'version/getVersionList',
-                getFilialeList: 'channel/getFilialeList'
-            }),
-            createVersion() {
-                this.$router.push({name: 'CreateVersion'});
-            },
-            displayVersion(id) {
-                this.$router.push({name: 'VersionDetail', params: {id}});
-            },
-            toggleSearchField() {
-                this.searchFieldVisible = !this.searchFieldVisible;
-            },
-            hardwareType(hardwareType) {
-                return hardwareType ? (hardwareType === 'HARDWARE_3796' ? '3796' : '3798') : '------';
-            },
-            clearSearchFields() {
-                this.resetSearchFields();
-                this.getVersionList();
-            },
-            keyupHandler(e) {
-                if (e.keyCode === 13) {
-                    this.getVersionList();
-                }
-            },
-            getLink(version) {
-                return `${version.uriPrefix}${version.fullPackageUri}`;
-            },
-            // 跳转到详情页面
-            handlePaginationChange(value, key) {
-                this.updatePagination({value, key});
-                if (key === 'pageSize') {
-                    window.localStorage.setItem('versionPageSize', value);
-                }
-                this.getVersionList();
-            },
-            inputHandler(value, key) {
-                this.updateSearchFields({key, value});
-                if (key !== 'keyword') {
-                    this.getVersionList();
-                }
-            },
-            submitVersionHandler() {
-                this.$refs.versionForm.$refs.createVersion.validate(value => {
-                    if (value) {
-                        if (this.version.fullPackageUri) {
-                            this.postVersion()
-                                .then((res) => {
-                                    if (res && res.code === 0) {
-                                        this.resetVersion();
-                                        this.closeVersionFormDialog();
-                                        this.getVersionList();
-                                    } else {
-                                        this.$message.error('新增版本失败');
-                                    }
-                                });
-                        } else {
-                            this.$message.error('请上传文件');
-                        }
-                    }
-                });
+        companyOptions() {
+            let {allCompanyUpdate} = this.searchFields;
+            if (allCompanyUpdate) {
+                return [];
+            } else {
+                return this.filialeList;
             }
         }
-    };
+    },
+    methods: {
+        ...mapMutations({
+            updateSearchFields: 'version/updateSearchFields',
+            updatePagination: 'version/updatePagination',
+            resetVersion: 'version/resetVersion',
+            resetPagination: 'version/resetPagination',
+            resetSearchFields: 'version/resetSearchFields',
+            setVersion: 'version/setVersion',
+            resetState: 'version/resetState',
+            setList: 'version/setList'
+        }),
+        ...mapActions({
+            postVersion: 'version/postVersion',
+            getVersionList: 'version/getVersionList',
+            getFilialeList: 'channel/getFilialeList'
+        }),
+        createVersion() {
+            this.$router.push({name: 'CreateVersion'});
+        },
+        displayVersion(id) {
+            this.$router.push({name: 'VersionDetail', params: {id}});
+        },
+        toggleSearchField() {
+            this.searchFieldVisible = !this.searchFieldVisible;
+        },
+        hardwareType(hardwareType) {
+            return hardwareType ? (hardwareType === 'HARDWARE_3796' ? '3796' : '3798') : '------';
+        },
+        clearSearchFields() {
+            this.resetSearchFields();
+            this.getVersionList();
+        },
+        keyupHandler(e) {
+            if (e.keyCode === 13) {
+                this.getVersionList();
+            }
+        },
+        getLink(version) {
+            return `${version.uriPrefix}${version.fullPackageUri}`;
+        },
+        // 跳转到详情页面
+        handlePaginationChange(value, key) {
+            this.updatePagination({value, key});
+            if (key === 'pageSize') {
+                window.localStorage.setItem('versionPageSize', value);
+            }
+            this.getVersionList();
+        },
+        inputHandler(value, key) {
+            this.updateSearchFields({key, value});
+            if (key !== 'keyword') {
+                this.getVersionList();
+            }
+        },
+        submitVersionHandler() {
+            this.$refs.versionForm.$refs.createVersion.validate(value => {
+                if (value) {
+                    if (this.version.fullPackageUri) {
+                        this.postVersion()
+                            .then((res) => {
+                                if (res && res.code === 0) {
+                                    this.resetVersion();
+                                    this.closeVersionFormDialog();
+                                    this.getVersionList();
+                                } else {
+                                    this.$message.error('新增版本失败');
+                                }
+                            });
+                    } else {
+                        this.$message.error('请上传文件');
+                    }
+                }
+            });
+        },
+        sortChangeHandler(obj) {
+            let {prop, order} = obj;
+            if (prop === 'stbCount') {
+                let sortedListByCreatedAt = [];
+                if (order === 'ascending') {
+                    sortedListByCreatedAt = _.chain(this.list).sortBy('stbCount').value();
+                } else {
+                    sortedListByCreatedAt = _.chain(this.list).sortBy('stbCount').reverse().value();
+                }
+                this.setList({list: sortedListByCreatedAt});
+            }
+        }
+    }
+};
 </script>
-
 <style scoped lang="scss">
-
     a.text-primary {
         color: #1989FA;
     }
-
     // 按钮
     .more-filters {
         margin-left: 20px;
