@@ -210,6 +210,11 @@
                         </span>
                     </template>
                 </el-table-column>
+                <el-table-column width="80px" align="center" label="关联">
+                    <template slot-scope="scope">
+                        <span v-html="refCount(scope.row.refCount)"></span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="multicastIp" min-width="120px" align="center" label="IP"></el-table-column>
                 <el-table-column prop="multicastPort" width="100px" align="center" label="端口"></el-table-column>
                 <el-table-column prop="serverGroup" align="center" min-width="120px" label="服务器组"></el-table-column>
@@ -357,6 +362,15 @@
             },
             isDisabled() {
                 return this.selectedChannelList.length === 0;
+            },
+            refCount() {
+                return (refCount) => {
+                    if (_.isNull(refCount)) {
+                        return '<span>无</span>';
+                    } else {
+                        return `<span class="name">${refCount}</span>`;
+                    }
+                };
             }
         },
         methods: {

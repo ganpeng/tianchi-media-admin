@@ -23,6 +23,7 @@
                             </div>
                             <shuffle-btn
                                 v-if="isEdit"
+                                class="movie-add-btn"
                                 :addShuffleLayout="addShuffleLayout(0)"
                             ></shuffle-btn>
                         </div>
@@ -37,6 +38,7 @@
                             </div>
                             <shuffle-btn
                                 v-if="isEdit"
+                                class="movie-add-btn"
                                 :addShuffleLayout="addShuffleLayout(1)"
                             ></shuffle-btn>
                         </div>
@@ -51,6 +53,7 @@
                             </div>
                             <shuffle-btn
                                 v-if="isEdit"
+                                class="movie-add-btn"
                                 :addShuffleLayout="addShuffleLayout(2)"
                             ></shuffle-btn>
                         </div>
@@ -65,6 +68,7 @@
                             </div>
                             <shuffle-btn
                                 v-if="isEdit"
+                                class="movie-add-btn"
                                 :addShuffleLayout="addShuffleLayout(3)"
                             ></shuffle-btn>
                         </div>
@@ -374,11 +378,14 @@ export default {
                         @include paddingBg(30.5263%);
                         border-radius: 0;
                         cursor: pointer;
+                        color: #6F7480;
                         &:hover {
-                            background-color: $mainColor;
+                            border: 1px solid #1989FA;
                         }
                         &.active {
-                            background-color: $mainColor;
+                            color: #fff;
+                            background-color: #293550;
+                            border: 1px solid #1989FA;
                         }
                     }
                 }
@@ -391,15 +398,13 @@ export default {
                 width: 90%;
                 transform: translateY(-50%);
                 .movie-name {
-                    color: #fff;
-                    font-size: 30px;
+                    font-size: 20px;
                     text-overflow:ellipsis;
                     overflow:hidden;
                     white-space:nowrap;
                 }
                 .movie-desc {
-                    color: #f1f1f1;
-                    font-size: 24px;
+                    font-size: 16px;
                     text-overflow:ellipsis;
                     overflow:hidden;
                     white-space:nowrap;

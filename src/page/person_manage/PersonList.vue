@@ -120,6 +120,11 @@
                             <span v-else>------</span>
                         </template>
                     </el-table-column>
+                    <el-table-column width="80px" align="center" label="关联">
+                        <template slot-scope="scope">
+                            <span v-html="refCount(scope.row.refCount)"></span>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="area" align="center" label="地区">
                         <template slot-scope="scope">
                             {{areaLabel(scope.row.area) | padEmpty}}
@@ -247,6 +252,15 @@
             }),
             isDisabled() {
                 return this.selectedVideoList.length === 0;
+            },
+            refCount() {
+                return (refCount) => {
+                    if (_.isNull(refCount)) {
+                        return '<span>无</span>';
+                    } else {
+                        return `<span class="name">${refCount}</span>`;
+                    }
+                };
             }
         },
         methods: {

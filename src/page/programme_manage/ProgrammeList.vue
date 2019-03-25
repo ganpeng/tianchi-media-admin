@@ -191,6 +191,11 @@
                             {{scope.row.featureVideoCount | padEmpty}}
                         </template>
                     </el-table-column>
+                    <el-table-column width="80px" align="center" label="关联">
+                        <template slot-scope="scope">
+                            <span v-html="refCount(scope.row.refCount)"></span>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="releaseAt" align="center" width="100px" label="上映时间">
                         <template slot-scope="scope">
                             {{ scope.row.releaseAt | formatDate('yyyy-MM-DD') | padEmpty}}
@@ -331,6 +336,15 @@
             }),
             isDisabled() {
                 return this.selectedVideoList.length === 0;
+            },
+            refCount() {
+                return (refCount) => {
+                    if (_.isNull(refCount)) {
+                        return '<span>无</span>';
+                    } else {
+                        return `<span class="name">${refCount}</span>`;
+                    }
+                };
             }
         },
         beforeRouteLeave(to, from, next) {

@@ -52,5 +52,9 @@ export default {
     position: absolute;
     right: 20px;
     top: 10px;
+    &.movie-add-btn {
+        top: 50%;
+        transform: translateY(-50%);
+    }
 }
 </style>
