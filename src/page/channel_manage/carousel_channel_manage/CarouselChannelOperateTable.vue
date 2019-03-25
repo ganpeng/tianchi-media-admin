@@ -40,6 +40,15 @@
                 </template>
             </el-table-column>
             <el-table-column
+                width="60px"
+                prop="relatedCount"
+                align="center"
+                label="关联">
+                <template slot-scope="scope">
+                    <span @click="openRelateDialog(scope.row)" class="name">{{scope.row.refCount ? scope.row.refCount : '/'}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
                 align="center"
                 min-width="120px"
                 prop="multicastIp"
@@ -83,11 +92,11 @@
                 align="center"
                 label="状态">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.playStatus === 'ACTIVE'"
+                    <span v-if="scope.row.applyStatus === 'ACTIVE'"
                           class="status-normal">生效中</span>
-                    <span v-if="scope.row.playStatus === 'WAITING'"
+                    <span v-if="scope.row.applyStatus === 'WAITING'"
                           class="status-deleting">未生效</span>
-                    <span v-if="scope.row.playStatus === 'EXPIRED'"
+                    <span v-if="scope.row.applyStatus === 'EXPIRED'"
                           class="status-abnormal">已失效</span>
                 </template>
             </el-table-column>
@@ -127,16 +136,23 @@
             :displayVideoDialogVisible="previewVideoInfo.visible"
             v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
         </display-video-dialog>
+        <display-related-dialog
+            ref="displayRelatedDialog"
+            :currentItemInfo="currentChannel"
+            type="CAROUSEL">
+        </display-related-dialog>
     </div>
 </template>
 
 <script>
     import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
+    import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
 
     export default {
         name: 'CarouselChannelOperateTable',
         components: {
-            DisplayVideoDialog
+            DisplayVideoDialog,
+            DisplayRelatedDialog
         },
         props: {
             channelList: {
@@ -148,6 +164,7 @@
         },
         data() {
             return {
+                currentChannel: {},
                 multipleSelection: [],
                 previewVideoInfo: {
                     url: '',
@@ -157,6 +174,11 @@
             };
         },
         methods: {
+            // 打开关联对话框
+            openRelateDialog(item) {
+                this.currentChannel = item;
+                this.$refs.displayRelatedDialog.showDialog();
+            },
             previewChannel(channel) {
                 if (!channel.hlsPlayUrl) {
                     this.$message.warning('当前轮播链接不存在');

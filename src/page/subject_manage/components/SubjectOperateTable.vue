@@ -1,101 +1,122 @@
 <!--专题列表项组件-->
 <template>
-    <el-table
-        :data="subjectList"
-        @selection-change="handleSelectionChange"
-        border
-        style="width: 100%">
-        <el-table-column
-            type="selection"
-            align="center"
-            width="60px">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="code"
-            width="120px"
-            label="ID">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="name"
-            min-width="220px"
-            label="专题名称">
-            <template slot-scope="scope">
+    <div>
+        <el-table
+            :data="subjectList"
+            @selection-change="handleSelectionChange"
+            border
+            style="width: 100%">
+            <el-table-column
+                type="selection"
+                align="center"
+                width="60px">
+            </el-table-column>
+            <el-table-column
+                align="center"
+                prop="code"
+                width="120px"
+                label="ID">
+            </el-table-column>
+            <el-table-column
+                align="center"
+                prop="name"
+                min-width="220px"
+                label="专题名称">
+                <template slot-scope="scope">
                 <span @click="toSubjectDetail(scope.row)" class="ellipsis four name">
                     {{scope.row.name}}
                 </span>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            min-width="140px"
-            prop="itemCount"
-            label="内容数量">
-            <template slot-scope="scope">
-                <label>{{scope.row.itemCount}}</label>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="category"
-            min-width="140px"
-            label="专题类型">
-            <template slot-scope="scope">
-                <label>{{scope.row.category === 'FIGURE'?'人物' : '节目'}}</label>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="programmeCategoryList"
-            min-width="130px"
-            label="内容分类">
-            <template slot-scope="scope">
-                <label v-if="scope.row.programmeCategoryList && scope.row.programmeCategoryList.length !== 0">
-                    {{scope.row.programmeCategoryList | jsonJoin('name') }}</label>
-                <label v-else>------</label>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            min-width="140px"
-            label="状态">
-            <template slot-scope="scope">
-                <input
-                    class="my-switch switch-anim"
-                    type="checkbox"
-                    v-model="scope.row.visible"
-                    :checked="scope.row.visible"
-                    @click.prevent="updateSubjectStatus(scope.row)"/>
-                <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
-                <i v-else class="off-the-shelf">已下架</i>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            min-width="140px"
-            label="创建时间">
-            <template slot-scope="scope">
-                {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            label="操作"
-            width="110px">
-            <template slot-scope="scope">
-                <div class="operator-btn-wrapper">
-                    <span class="btn-text" @click="editSubject(scope.row)">编辑</span>
-                    <span class="btn-text text-danger" @click="removeSubject(scope.row)">删除</span>
-                </div>
-            </template>
-        </el-table-column>
-    </el-table>
+                </template>
+            </el-table-column>
+            <el-table-column
+                width="60px"
+                prop="relatedCount"
+                align="center"
+                label="关联">
+                <template slot-scope="scope">
+                    <span @click="openRelateDialog(scope.row)" class="name">{{scope.row.refCount ? scope.row.refCount : '/'}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="140px"
+                prop="itemCount"
+                label="内容数量">
+                <template slot-scope="scope">
+                    <label>{{scope.row.itemCount}}</label>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                prop="category"
+                min-width="140px"
+                label="专题类型">
+                <template slot-scope="scope">
+                    <label>{{scope.row.category === 'FIGURE'?'人物' : '节目'}}</label>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                prop="programmeCategoryList"
+                min-width="130px"
+                label="内容分类">
+                <template slot-scope="scope">
+                    <label v-if="scope.row.programmeCategoryList && scope.row.programmeCategoryList.length !== 0">
+                        {{scope.row.programmeCategoryList | jsonJoin('name') }}</label>
+                    <label v-else>------</label>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="140px"
+                label="状态">
+                <template slot-scope="scope">
+                    <input
+                        class="my-switch switch-anim"
+                        type="checkbox"
+                        v-model="scope.row.visible"
+                        :checked="scope.row.visible"
+                        @click.prevent="updateSubjectStatus(scope.row)"/>
+                    <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
+                    <i v-else class="off-the-shelf">已下架</i>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="140px"
+                label="创建时间">
+                <template slot-scope="scope">
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                label="操作"
+                width="110px">
+                <template slot-scope="scope">
+                    <div class="operator-btn-wrapper">
+                        <span class="btn-text" @click="editSubject(scope.row)">编辑</span>
+                        <span class="btn-text text-danger" @click="removeSubject(scope.row)">删除</span>
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
+        <display-related-dialog
+            ref="displayRelatedDialog"
+            :currentItemInfo="currentSubject"
+            type="SUBJECT">
+        </display-related-dialog>
+    </div>
 </template>
 
 <script>
+    import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
+
     export default {
         name: 'SubjectOperateTable',
+        components: {
+            DisplayRelatedDialog
+        },
         props: {
             subjectList: {
                 type: Array,
@@ -106,10 +127,16 @@
         },
         data() {
             return {
-                multipleSelection: []
+                multipleSelection: [],
+                currentSubject: {}
             };
         },
         methods: {
+            // 打开关联对话框
+            openRelateDialog(item) {
+                this.currentSubject = item;
+                this.$refs.displayRelatedDialog.showDialog();
+            },
             // 勾选专题
             handleSelectionChange(val) {
                 this.multipleSelection = val;

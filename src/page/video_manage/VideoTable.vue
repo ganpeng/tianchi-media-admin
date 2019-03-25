@@ -38,7 +38,7 @@
                 align="center"
                 label="关联">
                 <template slot-scope="scope">
-                    <span @click="openRelateDialog(scope.row)" class="name">{{scope.row.relatedCount}}关联关系</span>
+                    <span @click="openRelateDialog(scope.row)" class="name">{{scope.row.refCount ? scope.row.refCount : '/'}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -124,7 +124,7 @@
                     <template v-if="scope.row.status">
                         <span v-if="scope.row.status === 'SUCCESS'" class="status-normal">成功</span>
                         <span v-if="scope.row.status === 'FAILED'" class="status-abnormal">失败</span>
-                        <span v-if="scope.row.status === 'DELETING'" class="status-deleting">正在删除</span>
+                        <span v-if="scope.row.status === 'DELETING'" class="status-deleting">正在删除&nbsp; &nbsp; {{scope.row.deleteProgress}}%</span>
                         <!--任务中包含：'切片正在入库'、'转码任务转码中'-->
                         <span
                             v-if="scope.row.status === 'SPLIT_TASK_SUCCESS' || scope.row.status === 'SPLIT_TASK_ON_PROCESS'"
@@ -319,7 +319,9 @@
             </span>
         </el-dialog>
         <display-related-dialog
-            ref="displayRelatedDialog">
+            ref="displayRelatedDialog"
+            :currentItemInfo="currentVideo"
+            type="VIDEO">
         </display-related-dialog>
     </div>
 </template>
@@ -443,6 +445,7 @@
         methods: {
             // 打开关联对话框
             openRelateDialog(item) {
+                this.currentVideo = item;
                 this.$refs.displayRelatedDialog.showDialog();
             },
             // 多选的模式中选择或取消某一行

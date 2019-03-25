@@ -9,11 +9,11 @@
             <div class="channel-status un-shelve" v-else>禁播</div>
             <div class="title">
                 <label>{{channelInfo.no}}</label>&nbsp;&nbsp;<label>{{channelInfo.name}}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span v-if="channelInfo.playStatus === 'ACTIVE'"
+                <span v-if="channelInfo.applyStatus === 'ACTIVE'"
                       class="status-normal">已生效</span>
-                <span v-if="channelInfo.playStatus === 'WAITING'"
+                <span v-if="channelInfo.applyStatus === 'WAITING'"
                       class="status-deleting">未生效</span>
-                <span v-if="channelInfo.playStatus === 'EXPIRED'"
+                <span v-if="channelInfo.applyStatus === 'EXPIRED'"
                       class="status-abnormal">已失效</span>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <label v-if="channelInfo.startTime" class="start-time">

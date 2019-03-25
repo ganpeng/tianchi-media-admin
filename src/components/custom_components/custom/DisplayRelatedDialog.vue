@@ -2,43 +2,57 @@
 <template>
     <el-dialog
         title="关联关系"
-        class="my-dialog"
+        class="relate-dialog"
         custom-class="related-custom-dialog"
         :visible.sync="displayRelatedDialogVisible"
         :show-close="true"
         :before-close="closeDialog"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
+        :modal="false"
+        top="25vh"
         :append-to-body="true">
         <div v-if="displayRelatedDialogVisible">
-            <div class="text-center origin-name">
-                《毒液：致命守护者》
+            <!--视频-->
+            <div v-if="type === 'VIDEO'">
+                <div class="origin-name">
+                    {{currentItemInfo.originName}}
+                </div>
             </div>
-            <div class="text-center tips">
-                已被关联在以下位置
+            <!--专题-->
+            <div v-if="type === 'SUBJECT'">
+                <div class="origin-name">
+                    {{currentItemInfo.name}}
+                </div>
+                <ul class="category-list">
+                    <li>{{currentItemInfo.category === 'FIGURE' ? '人物' : '节目'}}</li>
+                </ul>
+                <div class="status status-up" v-if="currentItemInfo.visible">已上架</div>
+                <div class="status status-down" v-else>已下架</div>
             </div>
-            <el-table
-                header-row-class-name="common-table-header"
-                class="my-table-style"
-                :data="tableData"
-                border>
-                <el-table-column
-                    prop="type"
-                    label="关联页面"
-                    width="180">
-                </el-table-column>
-                <el-table-column
-                    prop="position"
-                    label="关联位置"
-                    width="180">
-                    <template slot-scope="scope">
-                        <span @click="toRelateRoute(scope.row)" class="name">{{scope.row.position}}</span>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </div>
-        <div slot="footer" class="dialog-footer">
-            <el-button @click="closeDialog">关闭</el-button>
+            <!--频道-->
+            <div v-if="type === 'CAROUSEL' || type === 'LIVE'">
+                <div class="origin-name">
+                    {{currentItemInfo.innerName}}
+                </div>
+                <ul class="category-list">
+                    <li v-for="(item, index) in currentItemInfo.typeList" :key="index">
+                        {{item.name}}
+                    </li>
+                </ul>
+                <div class="status status-up" v-if="currentItemInfo.visible">已上架</div>
+                <div class="status status-down" v-else>已下架</div>
+            </div>
+            <ul class="relate-list">
+                <li class="relate-title">
+                    <span>关联页面</span>
+                    <label>关联位置</label>
+                </li>
+                <li v-for="(item,index) in currentItemInfo.refObjList" :key="index">
+                    <span>{{item | getRelatedType}}</span>
+                    <label @click="toRelatedRoute(item)">{{item.name}}</label>
+                </li>
+            </ul>
         </div>
     </el-dialog>
 </template>
@@ -48,31 +62,64 @@
     export default {
         name: 'DisplayRelateDialog',
         props: {
-            relatedJson: {
-                type: Array,
+            type: {
+                type: String,
+                default: '1234'
+            },
+            currentItemInfo: {
+                type: Object,
                 default: function () {
-                    return [];
+                    return {};
                 }
             }
         },
         data() {
             return {
-                displayRelatedDialogVisible: false,
-                tableData: [{
-                    type: '推荐栏目',
-                    position: '混排模块'
-                }, {
-                    type: '节目专题',
-                    position: '乌龙院专题'
-                }, {
-                    type: '轮播频道',
-                    position: '刘德华频道'
-                }]
+                displayRelatedDialogVisible: false
             };
         },
+        filters: {
+            getRelatedType(refItem) {
+                switch (refItem.refType) {
+                    case 'PROGRAMME':
+                        return '节目';
+                    case 'SUBJECT':
+                        return '专题';
+                    case 'CAROUSEL':
+                        return '轮播';
+                    case 'LAYOUT':
+                        return '页面布局';
+                    case 'PRODUCT':
+                        return '产品';
+                    case 'INTERCUT':
+                        return '轮播插播';
+                    default:
+                        break;
+                }
+            }
+        },
         methods: {
-            toRelateRoute(item) {
-
+            toRelatedRoute(refItem) {
+                switch (refItem.refType) {
+                    case 'PROGRAMME':
+                        this.$router.push({name: 'EditProgramme', params: {id: refItem.id}});
+                        break;
+                    case 'SUBJECT':
+                        this.$router.push({name: 'EditProgrammeSubject', params: {id: refItem.id}});
+                        break;
+                    case 'CAROUSEL':
+                        this.$router.push({name: 'EditCarouselChannel', params: {id: refItem.id}});
+                        break;
+                    case 'LAYOUT':
+                        return '页面布局';
+                    case 'PRODUCT':
+                        return '产品';
+                    case 'INTERCUT':
+                        this.$router.push({name: 'EditInterCut', params: {id: refItem.id}});
+                        break;
+                    default:
+                        break;
+                }
             },
             showDialog() {
                 this.displayRelatedDialogVisible = true;
@@ -86,22 +133,114 @@
 
 <style lang="scss" scoped>
 
-    .origin-name {
-        font-size: 14px;
-    }
-
-    .tips {
-        margin-bottom: 20px;
-        font-size: 14px;
-    }
-
 </style>
 
 <style lang="scss">
 
-    .my-dialog {
+    .relate-dialog {
         .related-custom-dialog {
-            width: 405px !important;
+            width: 500px !important;
+            border-radius: 8px;
+            background: rgba(12, 16, 25, 0.80);
+            box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
+        }
+        .el-dialog__header {
+            .el-dialog__title {
+                font-size: 20px;
+                color: #A8ABB3;
+            }
+            .el-dialog__headerbtn {
+                transform: translateY(-50%);
+                .el-dialog__close.el-icon-close {
+                    color: $closeBtnColor;
+                    font-size: 20px;
+                    &:hover {
+                        color: $closeBtnHoverColor;
+                    }
+                }
+            }
+        }
+        .el-dialog__body {
+            padding: 20px 20px 90px 20px;
+            .origin-name {
+                padding-left: 30px;
+                margin-bottom: 4px;
+                text-align: left;
+                font-size: 16px;
+                color: #A8ABB3;
+            }
+            .category-list {
+                display: flex;
+                padding-left: 30px;
+                margin-bottom: 10px;
+                li {
+                    margin-right: 10px;
+                    font-size: 14px;
+                    color: #6F7480;
+                }
+            }
+            .status {
+                margin-left: 30px;
+                width: 50px;
+                height: 20px;
+                line-height: 20px;
+                text-align: center;
+                border-radius: 8px;
+                font-size: 12px;
+                color: #FFFFFF;
+                &.status-up {
+                    background: #3AC26F;
+                }
+                &.status-down {
+                    background: #6F7480;
+                }
+            }
+            .relate-list {
+                margin-top: 20px;
+                li {
+                    height: 60px;
+                    line-height: 60px;
+                    border-bottom: 1px solid #252D3F;
+                    span {
+                        display: inline-block;
+                        width: 200px;
+                        text-align: center;
+                        font-size: 16px;
+                        color: #FFFFFF;
+                        img {
+                            margin-top: 20px;
+                            height: 20px;
+                            width: auto;
+                        }
+                    }
+                    label {
+                        display: inline-block;
+                        width: 255px;
+                        text-align: center;
+                        font-size: 16px;
+                        color: #1989FA;
+                        cursor: pointer;
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
+                    &.relate-title {
+                        height: 40px;
+                        line-height: 40px;
+                        background: rgba(37, 45, 63, 0.50);
+                        border-bottom: none;
+                        span, label {
+                            font-size: 16px;
+                            color: #A8ABB3;
+                            cursor: default;
+                            &:hover {
+                                text-decoration: none;
+                            }
+                        }
+                    }
+                }
+
+            }
         }
     }
 
