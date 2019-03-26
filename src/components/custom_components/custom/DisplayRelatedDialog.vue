@@ -1,5 +1,4 @@
-<!-- 视频播放的组件  -->
-import { imageRegex } from '../../../util/upload';
+<!-- 关联关系的组件  -->
 <template>
     <el-dialog
         title="关联关系"
@@ -72,7 +71,7 @@ import { imageRegex } from '../../../util/upload';
                 </li>
                 <li v-for="(item,index) in currentItemInfo.refObjList" :key="index">
                     <span v-html="getRelatedType(item)"></span>
-                    <label @click="toRelatedRoute(item)">{{item.name}}</label>
+                    <label @click="toRelatedRoute(item)">{{item.name ? item.name : '点击跳转'}}</label>
                 </li>
             </ul>
         </div>
@@ -86,7 +85,7 @@ import { imageRegex } from '../../../util/upload';
         props: {
             type: {
                 type: String,
-                default: '1234'
+                default: ''
             },
             currentItemInfo: {
                 type: Object,
@@ -129,7 +128,17 @@ import { imageRegex } from '../../../util/upload';
                         this.$router.push({name: 'EditProgramme', params: {id: refItem.refId}});
                         break;
                     case 'SUBJECT':
-                        this.$router.push({name: 'EditProgrammeSubject', params: {id: refItem.refId}});
+                        let subjectParams = JSON.parse(refItem.params);
+                        switch (subjectParams.subjectCategory) {
+                            case 'FIGURE':
+                                this.$router.push({name: 'EditFigureSubject', params: {id: refItem.refId}});
+                                break;
+                            case 'PROGRAMME':
+                                this.$router.push({name: 'EditProgrammeSubject', params: {id: refItem.refId}});
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                     case 'CAROUSEL':
                         this.$router.push({name: 'EditCarouselChannel', params: {id: refItem.refId}});
@@ -138,7 +147,22 @@ import { imageRegex } from '../../../util/upload';
                         this.layoutRouter(refItem);
                         break;
                     case 'PRODUCT':
-                        return '产品';
+                        let productParams = JSON.parse(refItem.params);
+                        console.log(productParams);
+                        switch (productParams.productCategory) {
+                            case 'PROGRAMME':
+                                this.$router.push({name: 'EditProgrammeProduct', params: {id: refItem.refId}});
+                                break;
+                            case 'CAROUSEL':
+                                this.$router.push({name: 'EditCarouselProduct', params: {id: refItem.refId}});
+                                break;
+                            case 'RECORD':
+                                this.$router.push({name: 'EditRecordProduct', params: {id: refItem.refId}});
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
                     case 'INTERCUT':
                         this.$router.push({name: 'EditInterCut', params: {id: refItem.refId}});
                         break;
@@ -162,19 +186,34 @@ import { imageRegex } from '../../../util/upload';
                     } else {
                         switch (renderType) {
                             case 'FIGURE':
-                                this.$router.push({name: 'PersonModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                this.$router.push({
+                                    name: 'PersonModule',
+                                    params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                });
                                 break;
                             case 'SPECIAL':
-                                this.$router.push({name: 'EditSpecialModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                this.$router.push({
+                                    name: 'EditSpecialModule',
+                                    params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                });
                                 break;
                             case 'PROGRAMME_SUBJECT':
-                                this.$router.push({name: 'ProgrammeSubjectModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                this.$router.push({
+                                    name: 'ProgrammeSubjectModule',
+                                    params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                });
                                 break;
                             case 'FIGURE_SUBJECT':
-                                this.$router.push({name: 'PersonSubjectModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                this.$router.push({
+                                    name: 'PersonSubjectModule',
+                                    params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                });
                                 break;
                             case 'SHUFFLE':
-                                this.$router.push({name: 'ShuffleModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                this.$router.push({
+                                    name: 'ShuffleModule',
+                                    params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                });
                                 break;
                         }
                     }

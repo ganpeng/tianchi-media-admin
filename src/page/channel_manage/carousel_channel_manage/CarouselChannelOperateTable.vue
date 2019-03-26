@@ -16,9 +16,20 @@
             </el-table-column>
             <el-table-column
                 prop="no"
-                width="60px"
+                width="80px"
                 align="center"
                 label="台号">
+                <template slot-scope="scope">
+                    <span>{{scope.row.no}}</span>
+                    <span @click="previewChannel(scope.row)"
+                          v-if="scope.row.visible"
+                          class="display-btn">
+                        <svg-icon icon-class="channel_video_play"></svg-icon>
+                    </span>
+                    <span v-else class="display-btn disabled">
+                        <svg-icon icon-class="channel_video_play"></svg-icon>
+                    </span>
+                </template>
             </el-table-column>
             <el-table-column
                 prop="name"
@@ -122,7 +133,6 @@
                 class="operate">
                 <template slot-scope="scope">
                     <div class="operator-btn-wrapper">
-                        <span class="btn-text" @click="previewChannel(scope.row)">轮播</span>
                         <span class="btn-text" @click="editChannelInfo(scope.row)">编辑</span>
                         <span class="btn-text text-danger" @click="removeChannel(scope.row)">删除</span>
                     </div>
@@ -322,6 +332,10 @@
         &:nth-child(2) {
             margin-left: 6px;
         }
+    }
+
+    .display-btn {
+        cursor: pointer;
     }
 
 </style>
