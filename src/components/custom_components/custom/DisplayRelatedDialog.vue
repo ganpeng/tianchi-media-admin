@@ -1,4 +1,5 @@
 <!-- 视频播放的组件  -->
+import { imageRegex } from '../../../util/upload';
 <template>
     <el-dialog
         title="关联关系"
@@ -43,13 +44,34 @@
                 <div class="status status-up" v-if="currentItemInfo.visible">已上架</div>
                 <div class="status status-down" v-else>已下架</div>
             </div>
+            <!--节目-->
+            <div v-if="type === 'PROGRAMME'">
+                <div class="origin-name">
+                    {{currentItemInfo.innerName}}
+                </div>
+                <ul class="category-list">
+                    <li v-for="(item, index) in currentItemInfo.typeList" :key="index">
+                        {{item.name}}
+                    </li>
+                </ul>
+                <div class="status status-up" v-if="currentItemInfo.visible">已上架</div>
+                <div class="status status-down" v-else>已下架</div>
+            </div>
+            <!--人物-->
+            <div v-if="type === 'FIGURE'">
+                <div class="origin-name">
+                    {{currentItemInfo.innerName}}
+                </div>
+                <div class="status status-up" v-if="currentItemInfo.visible">已上架</div>
+                <div class="status status-down" v-else>已下架</div>
+            </div>
             <ul class="relate-list">
                 <li class="relate-title">
                     <span>关联页面</span>
                     <label>关联位置</label>
                 </li>
                 <li v-for="(item,index) in currentItemInfo.refObjList" :key="index">
-                    <span>{{item | getRelatedType}}</span>
+                    <span v-html="getRelatedType(item)"></span>
                     <label @click="toRelatedRoute(item)">{{item.name}}</label>
                 </li>
             </ul>
@@ -78,44 +100,47 @@
                 displayRelatedDialogVisible: false
             };
         },
-        filters: {
-            getRelatedType(refItem) {
-                switch (refItem.refType) {
-                    case 'PROGRAMME':
-                        return '节目';
-                    case 'SUBJECT':
-                        return '专题';
-                    case 'CAROUSEL':
-                        return '轮播';
-                    case 'LAYOUT':
-                        return '页面布局';
-                    case 'PRODUCT':
-                        return '产品';
-                    case 'INTERCUT':
-                        return '轮播插播';
-                    default:
-                        break;
-                }
+        computed: {
+            getRelatedType() {
+                return (refItem) => {
+                    switch (refItem.refType) {
+                        case 'PROGRAMME':
+                            return '节目';
+                        case 'SUBJECT':
+                            return '专题';
+                        case 'CAROUSEL':
+                            return '轮播';
+                        case 'LAYOUT':
+                            return this.getLayoutTitle(refItem);
+                        case 'PRODUCT':
+                            return '产品';
+                        case 'INTERCUT':
+                            return '轮播插播';
+                        default:
+                            break;
+                    }
+                };
             }
         },
         methods: {
             toRelatedRoute(refItem) {
                 switch (refItem.refType) {
                     case 'PROGRAMME':
-                        this.$router.push({name: 'EditProgramme', params: {id: refItem.id}});
+                        this.$router.push({name: 'EditProgramme', params: {id: refItem.refId}});
                         break;
                     case 'SUBJECT':
-                        this.$router.push({name: 'EditProgrammeSubject', params: {id: refItem.id}});
+                        this.$router.push({name: 'EditProgrammeSubject', params: {id: refItem.refId}});
                         break;
                     case 'CAROUSEL':
-                        this.$router.push({name: 'EditCarouselChannel', params: {id: refItem.id}});
+                        this.$router.push({name: 'EditCarouselChannel', params: {id: refItem.refId}});
                         break;
                     case 'LAYOUT':
-                        return '页面布局';
+                        this.layoutRouter(refItem);
+                        break;
                     case 'PRODUCT':
                         return '产品';
                     case 'INTERCUT':
-                        this.$router.push({name: 'EditInterCut', params: {id: refItem.id}});
+                        this.$router.push({name: 'EditInterCut', params: {id: refItem.refId}});
                         break;
                     default:
                         break;
@@ -126,6 +151,45 @@
             },
             closeDialog() {
                 this.displayRelatedDialogVisible = false;
+            },
+            layoutRouter(refItem) {
+                if (refItem.refType === 'LAYOUT' && refItem.params) {
+                    let params = JSON.parse(refItem.params);
+                    let {renderType, navBarId, sort} = params;
+                    sort = sort - 1;
+                    if (parseInt(sort) === 0) {
+                        this.$router.push({name: 'EditFixedModule', params: {navbarId: navBarId, index: sort}});
+                    } else {
+                        switch (renderType) {
+                            case 'FIGURE':
+                                this.$router.push({name: 'PersonModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                break;
+                            case 'SPECIAL':
+                                this.$router.push({name: 'EditSpecialModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                break;
+                            case 'PROGRAMME_SUBJECT':
+                                this.$router.push({name: 'ProgrammeSubjectModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                break;
+                            case 'FIGURE_SUBJECT':
+                                this.$router.push({name: 'PersonSubjectModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                break;
+                            case 'SHUFFLE':
+                                this.$router.push({name: 'ShuffleModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                break;
+                        }
+                    }
+                }
+            },
+            getLayoutTitle(refItem) {
+                if (refItem.refType === 'LAYOUT' && refItem.params) {
+                    let params = JSON.parse(refItem.params);
+                    let {navBarFocal, navBarName} = params;
+                    if (navBarFocal && navBarFocal.uri) {
+                        return `<img src=${navBarFocal.uri} />`;
+                    } else {
+                        return navBarName;
+                    }
+                }
             }
         }
     };

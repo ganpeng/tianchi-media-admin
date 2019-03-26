@@ -140,7 +140,7 @@ export function promiseFileSize(files) {
  * 上传广告资源时候的校验方法
  */
 export function filterNotMatchFiles(files) {
-    let allowImageDimensions = [{width: 432, height: 198}, {width: 320, height: 140}, {width: 1920, height: 1080}];
+    let allowImageDimensions = [{width: 432, height: 198}, {width: 320, height: 140}, {width: 1200, height: 600}, {width: 1920, height: 1080}];
     let allowVideoDimensions = [{width: 1280, height: 720}];
     let allowGifDimensions = [{width: 432, height: 198}];
     let videoList = files.filter((obj) => {
@@ -177,6 +177,8 @@ export function filterNotMatchFiles(files) {
                 check320_140(item);
             } else if (item.demension.width === 1920 && item.demension.height === 1080) {
                 check1920_1080(item);
+            } else if (item.demension.width === 1200 && item.demension.height === 600) {
+                check1200_600(item);
             } else {
                  imageNotMatchedFiles.push({
                      name: item.file.name,
@@ -216,6 +218,17 @@ export function filterNotMatchFiles(files) {
         }
 
         function check1920_1080(obj) { // eslint-disable-line
+            if (obj.file.size <= 1024 * 1024) {
+                imageMatchedFiles.push(obj);
+            } else {
+                imageNotMatchedFiles.push({
+                    name: obj.file.name,
+                    message: '1920*1080尺寸的图片必须小于1M'
+                });
+            }
+        }
+
+        function check1200_600(obj) { // eslint-disable-line
             if (obj.file.size <= 1024 * 1024) {
                 imageMatchedFiles.push(obj);
             } else {

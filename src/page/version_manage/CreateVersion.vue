@@ -246,6 +246,7 @@ export default {
                 if (res.data[0].failCode === 0 || res.data[0].failCode === 3300) {
                     this.updateVersion({key: 'fullPackageUri', value: res.data[0].file.uri});
                     this.updateVersion({key: 'fullPackageMd5', value: res.data[0].file.key});
+                    this.updateVersion({key: 'packageSize', value: res.data[0].file.size});
                     this.$message({
                         type: 'success',
                         message: '文件上传成功'

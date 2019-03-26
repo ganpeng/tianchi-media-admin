@@ -15,6 +15,7 @@ const defaultVersion = {
     fullPackageUri: '', // 全量升级包地址
     fullPackageMd5: '', // 包的md5
     incrPackageUri: '', // 增量升级包地址
+    packageSize: '', // 包的大小
     allCompanyUpdate: false, // 是否全局升级
     districtCodeList: [], // 所属区域
     clientVersionStatsList: []

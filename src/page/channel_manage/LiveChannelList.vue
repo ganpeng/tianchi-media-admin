@@ -188,7 +188,13 @@
                 @select-all="selectAllHandler"
                 header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
                 <el-table-column type="selection" align="center"></el-table-column>
-                <el-table-column prop="no" align="center" width="60px" label="台号"></el-table-column>
+                <el-table-column prop="no" align="center" width="80px" label="台号">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.no}}</span>
+                        <span @click="displayVideoPlayer(scope.row)" v-if="scope.row.visible" class="display-btn"><svg-icon icon-class="channel_video_play"></svg-icon></span>
+                        <span v-else class="display-btn disabled"><svg-icon icon-class="channel_video_play"></svg-icon></span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="innerName" align="center" min-width="120px" label="名称">
                     <template slot-scope="scope">
                         <span @click="displayLiveChannel(scope.row.id)" class="ellipsis two name">
@@ -212,7 +218,7 @@
                 </el-table-column>
                 <el-table-column width="80px" align="center" label="关联">
                     <template slot-scope="scope">
-                        <span v-html="refCount(scope.row.refCount)"></span>
+                        <span @click="displayRelated(scope.row)" v-html="refCount(scope.row.refCount)"></span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="multicastIp" min-width="120px" align="center" label="IP"></el-table-column>
@@ -266,7 +272,7 @@
                                     </el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
-                            <span class="btn-text" @click="displayVideoPlayer(scope.row)">直播</span>
+                            <!-- <span class="btn-text" @click="displayVideoPlayer(scope.row)">直播</span> -->
                             <span class="btn-text" @click="editLiveChannel(scope.row.id)">编辑</span>
                             <span class="btn-text text-danger" @click="_deleteLiveChannel(scope.row)">删除</span>
                         </div>
@@ -284,19 +290,26 @@
             :total="pagination.total">
         </el-pagination>
         <display-video-dialog ref="displayVideoDialog" :url="url" :title="title"></display-video-dialog>
+        <display-related-dialog
+            type="FIGURE"
+            :currentItemInfo="currentItem"
+            ref="displayRelatedDialog">
+        </display-related-dialog>
     </div>
 </template>
 <script>
     import {mapGetters, mapActions, mapMutations} from 'vuex';
     import _ from 'lodash';
-    import DisplayVideoDialog from '../../components/custom_components/custom/DisplayVideoDialog';
+    import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
+    import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
 
     const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
     const x2js = new X2JS();
     export default {
         name: 'LiveChannelList',
         components: {
-            DisplayVideoDialog
+            DisplayVideoDialog,
+            DisplayRelatedDialog
         },
         data() {
             return {
@@ -331,7 +344,8 @@
                 ],
                 status: 0,
                 searchFieldVisible: false,
-                selectedChannelList: []
+                selectedChannelList: [],
+                currentItem: {}
             };
         },
         created() {
@@ -587,6 +601,7 @@
                     }
                 }
             },
+            // 天天影视，乐享视频，
             async multLowerFrameChannelHandler() {
                 let idList = this.selectedChannelList.map((item) => item.id);
                 let confirm = await this.$confirm(`您确定要禁播所选频道吗, 是否继续?`, '提示', {
@@ -603,6 +618,12 @@
                     } else {
                         this.$message.error('批量禁播失败');
                     }
+                }
+            },
+            displayRelated(item) {
+                if (item.refCount && item.refCount > 0) {
+                    this.currentItem = item;
+                    this.$refs.displayRelatedDialog.showDialog();
                 }
             }
         }
@@ -624,6 +645,12 @@
 
     .no {
         color: $dangerColor;
+    }
+    .display-btn {
+        cursor: pointer;
+        &.disabled {
+            opacity: 0.3;
+        }
     }
 </style>
 <style lang="scss">

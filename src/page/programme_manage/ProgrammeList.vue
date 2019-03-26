@@ -193,7 +193,7 @@
                     </el-table-column>
                     <el-table-column width="80px" align="center" label="关联">
                         <template slot-scope="scope">
-                            <span v-html="refCount(scope.row.refCount)"></span>
+                            <span @click="displayRelated(scope.row)" v-html="refCount(scope.row.refCount)"></span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="releaseAt" align="center" width="100px" label="上映时间">
@@ -266,6 +266,11 @@
             </el-pagination>
         </div>
         <preview-single-image :singleImage="previewImage"></preview-single-image>
+        <display-related-dialog
+            type="PROGRAMME"
+            :currentItemInfo="currentItem"
+            ref="displayRelatedDialog">
+        </display-related-dialog>
     </div>
 </template>
 <script>
@@ -274,11 +279,13 @@
     import _ from 'lodash';
     import XLSX from 'xlsx';
     import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
+    import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
 
     export default {
         name: 'ProgrammeList',
         components: {
-            PreviewSingleImage
+            PreviewSingleImage,
+            DisplayRelatedDialog
         },
         data() {
             return {
@@ -304,7 +311,8 @@
                     title: '',
                     display: false,
                     uri: ''
-                }
+                },
+                currentItem: {}
             };
         },
         created() {
@@ -638,6 +646,12 @@
                     name: 'ProgrammeImport'
                 });
                 window.open(routeData.href, '_blank');
+            },
+            displayRelated(item) {
+                if (item.refCount && item.refCount > 0) {
+                    this.currentItem = item;
+                    this.$refs.displayRelatedDialog.showDialog();
+                }
             }
         }
     };

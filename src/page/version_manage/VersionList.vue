@@ -161,7 +161,7 @@
                     </el-table-column>
                     <el-table-column align="center" label="升级包体积">
                         <template slot-scope="scope">
-                            {{hardwareType(scope.row.hardwareType)}}
+                            {{convertFileSize(scope.row.packageSize)}}
                         </template>
                     </el-table-column>
                     <el-table-column sortable align="center" prop="stbCount" label="设备数">
@@ -319,6 +319,9 @@ export default {
                 }
                 this.setList({list: sortedListByCreatedAt});
             }
+        },
+        convertFileSize(size) {
+            return this.$util.convertFileSize(size);
         }
     }
 };

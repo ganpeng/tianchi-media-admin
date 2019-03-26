@@ -122,7 +122,7 @@
                     </el-table-column>
                     <el-table-column width="80px" align="center" label="关联">
                         <template slot-scope="scope">
-                            <span v-html="refCount(scope.row.refCount)"></span>
+                            <span @click="displayRelated(scope.row)" v-html="refCount(scope.row.refCount)"></span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="area" align="center" label="地区">
@@ -174,6 +174,11 @@
             :total="pagination.total">
         </el-pagination>
         <preview-single-image :singleImage="previewImage"></preview-single-image>
+        <display-related-dialog
+            type="FIGURE"
+            :currentItemInfo="currentItem"
+            ref="displayRelatedDialog">
+        </display-related-dialog>
         <el-dialog
             title="上传人物表格"
             :visible.sync="fileUploadDialogVisible"
@@ -206,12 +211,14 @@
     import store from 'store';
     import _ from 'lodash';
     import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
+    import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
     import role from '../../util/config/role';
 
     export default {
         name: 'PersonList',
         components: {
-            PreviewSingleImage
+            PreviewSingleImage,
+            DisplayRelatedDialog
         },
         data() {
             return {
@@ -225,7 +232,8 @@
                 fileUploadDialogVisible: false,
                 fileList: [],
                 selectedVideoList: [],
-                uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token)
+                uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
+                currentItem: {}
             };
         },
         created() {
@@ -505,6 +513,12 @@
                     } else {
                         this.$message.error('批量删除失败');
                     }
+                }
+            },
+            displayRelated(item) {
+                if (item.refCount && item.refCount > 0) {
+                    this.currentItem = item;
+                    this.$refs.displayRelatedDialog.showDialog();
                 }
             }
         }

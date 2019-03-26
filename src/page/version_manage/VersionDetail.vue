@@ -62,7 +62,7 @@
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
                             <label class="label">升级包体积：</label>
-                            <span class="value">{{version.id}}</span>
+                            <span class="value">{{convertFileSize(version.packageSize)}}</span>
                         </div>
                     </li>
                     <li class="text-info-item">
@@ -147,6 +147,9 @@ export default {
         },
         toggleClickHandler() {
             this.showCompanyList = !this.showCompanyList;
+        },
+        convertFileSize(size) {
+            return this.$util.convertFileSize(size);
         }
     }
 };
