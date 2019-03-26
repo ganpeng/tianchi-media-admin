@@ -37,6 +37,7 @@
                 <el-date-picker
                     v-model="channelInfo.startDate"
                     type="date"
+                    :disabled="status.indexOf('EDIT') !== -1 && channelInfo.applyStatus === 'ACTIVE'"
                     value-format="timestamp"
                     size="medium"
                     placeholder="请选择日期">
@@ -44,6 +45,7 @@
                 <el-time-picker
                     v-model="channelInfo.startPoint"
                     value-format="timestamp"
+                    :disabled="status.indexOf('EDIT') !== -1 && channelInfo.applyStatus === 'ACTIVE'"
                     size="medium"
                     placeholder="请选择时间">
                 </el-time-picker>
@@ -581,7 +583,7 @@
                     return callback(new Error('请完整选择开始时间'));
                 } else if (!this.channelInfo.startDate && !this.channelInfo.startPoint) {
                     callback();
-                } else if ((parseInt(this.channelInfo.startDate) + this.getTimePointMilliseconds(this.channelInfo.startPoint)) < Date.now()) {
+                } else if (this.channelInfo.applyStatus !== 'ACTIVE' && (parseInt(this.channelInfo.startDate) + this.getTimePointMilliseconds(this.channelInfo.startPoint)) < Date.now()) {
                     return callback(new Error('开始时间应大于当前时间'));
                 } else {
                     callback();
@@ -1484,7 +1486,7 @@
     }
 
     .my-tags {
-        width: 300px;
+        max-width: 1050px;
     }
 
 </style>

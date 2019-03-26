@@ -10,13 +10,14 @@ import util from '../../util/extend';
 /**
  * 创建广告
  */
-export const createAD = ({name, desc, adType, applyDateBegin, applyDateEnd, categoryList, adMaterialList}) => {
+export const createAD = ({name, desc, adType, applyDateBegin, applyDateEnd, timeShift, categoryList, adMaterialList}) => {
     return service.post('/v1/ad/general-ad', {
         name,
         desc,
         adType,
         applyDateBegin,
         applyDateEnd,
+        timeShift,
         categoryList,
         adMaterialList
     });

@@ -28,24 +28,24 @@
                 <div class="upload-box">
                     <div @click="uploadImage('FOCUS')"
                          :class="{disabled:navBarInfo.type === 'WORDS' || !navBarInfo.type}">
-                        <img v-if="navBarInfo.focalImage.uri" :src="navBarInfo.focalImage.uri | imageUrl">
-                        <i v-else class="el-icon-plus"></i>
+                        <i class="el-icon-plus"></i>
                     </div>
                     <p>
                         <label>100-500 * 42</label>
                         <span>半落焦图</span>
                     </p>
+                    <img v-if="navBarInfo.focalImage.uri" :src="navBarInfo.focalImage.uri | imageUrl">
                 </div>
                 <div class="upload-box">
                     <div @click="uploadImage('NONE_FOCUS')"
                          :class="{disabled:navBarInfo.type === 'WORDS' || !navBarInfo.type}">
-                        <img v-if="navBarInfo.image.uri" :src="navBarInfo.image.uri | imageUrl">
-                        <i v-else class="el-icon-plus"></i>
+                        <i class="el-icon-plus"></i>
                     </div>
                     <p>
                         <label>100-500 * 42</label>
                         <span>非落焦图</span>
                     </p>
+                    <img v-if="navBarInfo.image.uri" :src="navBarInfo.image.uri | imageUrl">
                 </div>
                 <div class="upload-box">
                     <single-image-uploader
@@ -363,12 +363,19 @@
             margin-left: 120px;
             /*上传框*/
             .upload-box {
-                display: inline-block;
+                position: relative;
+                margin-bottom: 15px;
                 &:first-child {
                     margin-right: 30px;
                 }
                 .single-image-uploader-container {
                     display: none;
+                }
+                img {
+                    position: absolute;
+                    height: 42px;
+                    top: 0px;
+                    left: 120px;
                 }
                 div {
                     width: 100px;
@@ -379,9 +386,6 @@
                     text-align: center;
                     cursor: pointer;
                     overflow: hidden;
-                    img {
-                        height: 42px;
-                    }
                     i {
                         font-size: 20px;
                         color: #3E495E;
@@ -399,6 +403,7 @@
                 }
                 p {
                     margin-top: 7px;
+                    width: 100px;
                     label, span {
                         display: block;
                         text-align: center;
@@ -415,7 +420,7 @@
             margin-bottom: 40px;
             .el-radio-group {
                 margin-top: 14px;
-                margin-bottom: 60px;
+                margin-bottom: 120px;
                 width: 60px;
             }
             .el-radio {

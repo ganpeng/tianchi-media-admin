@@ -20,6 +20,7 @@
         data() {
             return {
                 adInfo: {
+                    timeShift: true,
                     adMaterialList: [],
                     categoryList: [],
                     adType: 'PAUSE'

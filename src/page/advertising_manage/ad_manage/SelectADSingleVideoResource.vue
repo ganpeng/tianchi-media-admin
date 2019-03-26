@@ -120,7 +120,7 @@
                     this.$message.warning('请选择相应的视频资源');
                     return false;
                 } else {
-                    return this.selectedResourceInfo;
+                    return [this.selectedResourceInfo];
                 }
             }
         }

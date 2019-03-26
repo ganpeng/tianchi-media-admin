@@ -22,7 +22,11 @@
                 adInfo: {
                     adMaterialList: [],
                     categoryList: [],
-                    adType: 'SCREEN_SAVER'
+                    adType: 'SCREEN_SAVER',
+                    applyBeginDate: '',
+                    applyBeginPoint: '',
+                    applyEndDate: '',
+                    applyEndPoint: ''
                 }
             };
         },
@@ -33,9 +37,17 @@
             init() {
                 this.$service.getADDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
-                        this.adInfo = response.data;
-                        this.adInfo.applyDateEnd = new Date(this.adInfo.applyDateEnd);
-                        this.adInfo.applyDateBegin = new Date(this.adInfo.applyDateBegin);
+                        for (let key in response.data) {
+                            this.adInfo[key] = response.data[key];
+                        }
+                        let startDate = new Date(this.adInfo.applyDateBegin);
+                        this.adInfo.applyBeginDate = this.adInfo.applyDateBegin - (startDate.getHours() * 60 * 60 + startDate.getMinutes() * 60 + startDate.getSeconds()) * 1000;
+                        let currentStartDate = new Date();
+                        this.adInfo.applyBeginPoint = currentStartDate.valueOf() - (currentStartDate.getHours() * 60 * 60 + currentStartDate.getMinutes() * 60 + currentStartDate.getSeconds()) * 1000 + (startDate.getHours() * 60 * 60 + startDate.getMinutes() * 60 + startDate.getSeconds()) * 1000;
+                        let endDate = new Date(this.adInfo.applyDateEnd);
+                        this.adInfo.applyEndDate = this.adInfo.applyDateEnd - (endDate.getHours() * 60 * 60 + endDate.getMinutes() * 60 + endDate.getSeconds()) * 1000;
+                        let currentEndDate = new Date();
+                        this.adInfo.applyEndPoint = currentEndDate.valueOf() - (currentEndDate.getHours() * 60 * 60 + currentEndDate.getMinutes() * 60 + currentEndDate.getSeconds()) * 1000 + (endDate.getHours() * 60 * 60 + endDate.getMinutes() * 60 + endDate.getSeconds()) * 1000;
                     }
                 });
             }

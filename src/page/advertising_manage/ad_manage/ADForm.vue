@@ -32,18 +32,45 @@
             </el-form-item>
             <el-form-item label="生效时间" prop="applyDateBegin" required>
                 <el-date-picker
-                    v-model="adInfo.applyDateBegin"
+                    v-model="adInfo.applyBeginDate"
+                    type="date"
+                    @change="validateSingleQuote('applyDateBegin')"
                     :disabled="status.indexOf('EDIT') !== -1 && adInfo.visible && adInfo.adStatus === 'ACTIVE'"
-                    type="datetime"
-                    placeholder="选择日期时间">
+                    value-format="timestamp"
+                    size="medium"
+                    placeholder="请选择生效日期">
                 </el-date-picker>
+                <el-time-picker
+                    v-model="adInfo.applyBeginPoint"
+                    value-format="timestamp"
+                    @change="validateSingleQuote('applyDateBegin')"
+                    :disabled="status.indexOf('EDIT') !== -1 && adInfo.visible && adInfo.adStatus === 'ACTIVE'"
+                    size="medium"
+                    placeholder="请选择生效时间">
+                </el-time-picker>
             </el-form-item>
             <el-form-item label="失效时间" prop="applyDateEnd" required>
                 <el-date-picker
-                    v-model="adInfo.applyDateEnd"
-                    type="datetime"
-                    placeholder="选择日期时间">
+                    v-model="adInfo.applyEndDate"
+                    type="date"
+                    @change="validateSingleQuote('applyDateEnd')"
+                    value-format="timestamp"
+                    size="medium"
+                    placeholder="请选择失效日期">
                 </el-date-picker>
+                <el-time-picker
+                    v-model="adInfo.applyEndPoint"
+                    value-format="timestamp"
+                    @change="validateSingleQuote('applyDateEnd')"
+                    size="medium"
+                    placeholder="请选择失效时间">
+                </el-time-picker>
+            </el-form-item>
+            <el-form-item label="时移回看" prop="timeShift" required v-if="status.indexOf('PAUSE') !== -1">
+                <el-radio-group v-model="adInfo.timeShift">
+                    <el-radio :label="true">是</el-radio>
+                    <el-radio :label="false">否</el-radio>
+                </el-radio-group>
             </el-form-item>
             <el-form-item
                 label="作用类别" prop="categoryList" required
@@ -275,30 +302,38 @@
                     callback();
                 }
             };
-            // 生效时间
+            // 生效开始时间
             let checkApplyDateBegin = (rule, value, callback) => {
-                if (!value || this.$util.isEmpty(value)) {
-                    return callback(new Error('生效时间不能为空'));
-                } else if (!this.isStartTimeFit(value) && !(this.status.indexOf('EDIT') !== -1 && this.adInfo.visible && this.adInfo.adStatus === 'ACTIVE')) {
-                    return callback(new Error('生效时间应大于当前时间'));
-                } else if (this.adInfo.applyDateEnd && this.adInfo.applyDateBegin >= this.adInfo.applyDateEnd) {
-                    return callback(new Error('生效时间应小于失效时间'));
-                } else if (this.adInfo.applyDateEnd && this.getConflictMessage(this.adInfo.applyDateBegin, this.adInfo.applyDateEnd)) {
-                    return callback(new Error(this.getConflictMessage(this.adInfo.applyDateBegin, this.adInfo.applyDateEnd)));
+                if (!this.adInfo.applyBeginDate || !this.adInfo.applyBeginPoint) {
+                    this.adInfo.applyDateBegin = '';
+                    return callback(new Error('请完整选择生效开始时间'));
                 } else {
-                    callback();
+                    this.adInfo.applyDateBegin = parseInt(this.adInfo.applyBeginDate) + this.getTimePointMilliseconds(this.adInfo.applyBeginPoint);
+                    if (!this.isStartTimeFit(this.adInfo.applyDateBegin) && !(this.status.indexOf('EDIT') !== -1 && this.adInfo.visible && this.adInfo.adStatus === 'ACTIVE')) {
+                        return callback(new Error('生效时间应大于当前时间'));
+                    } else if (this.adInfo.applyDateEnd && (this.adInfo.applyDateBegin >= this.adInfo.applyDateEnd)) {
+                        return callback(new Error('生效时间应小于失效时间'));
+                    } else if (this.adInfo.applyDateEnd && this.getConflictMessage(this.adInfo.applyDateBegin, this.adInfo.applyDateEnd)) {
+                        return callback(new Error(this.getConflictMessage(this.adInfo.applyDateBegin, this.adInfo.applyDateEnd)));
+                    } else {
+                        callback();
+                    }
                 }
             };
             // 失效时间
             let checkApplyDateEnd = (rule, value, callback) => {
-                if (!value || this.$util.isEmpty(value)) {
-                    return callback(new Error('失效时间不能为空'));
-                } else if (this.adInfo.applyDateBegin && this.adInfo.applyDateBegin >= this.adInfo.applyDateEnd) {
-                    return callback(new Error('失效时间应大于生效时间'));
-                } else if (this.adInfo.applyDateBegin && this.getConflictMessage(this.adInfo.applyDateBegin, this.adInfo.applyDateEnd)) {
-                    return callback(new Error(this.getConflictMessage(this.adInfo.applyDateBegin, this.adInfo.applyDateEnd)));
+                if (!this.adInfo.applyEndDate || !this.adInfo.applyEndPoint) {
+                    this.adInfo.applyDateEnd = '';
+                    return callback(new Error('请完整选择失效开始时间'));
                 } else {
-                    callback();
+                    this.adInfo.applyDateEnd = parseInt(this.adInfo.applyEndDate) + this.getTimePointMilliseconds(this.adInfo.applyEndPoint);
+                    if (this.adInfo.applyDateBegin && this.adInfo.applyDateBegin >= this.adInfo.applyDateEnd) {
+                        return callback(new Error('失效时间应大于生效时间'));
+                    } else if (this.adInfo.applyDateBegin && this.getConflictMessage(this.adInfo.applyDateBegin, this.adInfo.applyDateEnd)) {
+                        return callback(new Error(this.getConflictMessage(this.adInfo.applyDateBegin, this.adInfo.applyDateEnd)));
+                    } else {
+                        callback();
+                    }
                 }
             };
             let checkCategoryList = (rule, value, callback) => {
@@ -409,6 +444,9 @@
             this.init();
         },
         methods: {
+            validateSingleQuote(quote) {
+                this.$refs['adInfo'].validateField(quote);
+            },
             init() {
                 this.$util.toggleFixedBtnContainer();
                 this.$service.getADList({
@@ -433,6 +471,11 @@
                         }
                     });
                 }
+            },
+            // 将当前时间选择器的毫秒数改为只是小时、分钟、秒的毫秒数
+            getTimePointMilliseconds(milliseconds) {
+                let currentDate = new Date(milliseconds);
+                return (currentDate.getHours() * 60 * 60 + currentDate.getMinutes() * 60 + currentDate.getSeconds()) * 1000;
             },
             // 根据已上架的当前类型的广告列表检测当前设置是否有生效时间的冲突
             getConflictMessage(begin, end) {

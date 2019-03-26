@@ -37,7 +37,6 @@
                     </ul>
                     <ul class="info-list">
                         <li><span>内部名称：</span><label>{{channelInfo.innerName}}</label></li>
-                        <li><span>公共频道：</span><label>{{channelInfo.common ? '是':'否'}}</label></li>
                         <li><span>组播地址：</span><label>{{channelInfo.multicastIp}}</label></li>
                         <li><span>端口号：</span><label>{{channelInfo.multicastPort}}</label></li>
                         <li><span>tsID：</span><label>{{channelInfo.tsId ? channelInfo.tsId : '无' }}</label></li>
@@ -62,11 +61,9 @@
                         </label>
                     </li>
                     <li><span>播放时段：</span><label class="duration">{{channelInfo.duration}}</label></li>
-                    <li>
-                        <span>视频数量：</span>
-                        <label>
-                            {{channelInfo.carouselVideoList ? channelInfo.carouselVideoList.length : ''}}个
-                        </label>
+                    <li><span>公共频道：</span>
+                        <label class="is-common" v-if="channelInfo.common">是</label>
+                        <label v-else>否</label>
                     </li>
                 </ul>
             </div>
@@ -74,7 +71,7 @@
         <div class="seperator-line"></div>
         <div class="area-container">
             <h4 class="content-sub-title">
-                所属区域
+                所属区域&nbsp;&nbsp;
                 <span v-if="channelInfo.companyList.length > 0">{{channelInfo.companyList.length}}个</span>
                 <span v-if="channelInfo.companyList.length <= 0" class="toggle-btn disabled">
                     展开
@@ -99,7 +96,9 @@
             <div v-if="channelInfo.companyList.length > 0" class="seperator-line"></div>
         </div>
         <!--节目信息-->
-        <div class="content-sub-title">频道内节目</div>
+        <div class="content-sub-title">频道内节目&nbsp;&nbsp;&nbsp;&nbsp;
+            {{channelInfo.carouselVideoList ? channelInfo.carouselVideoList.length : '0'}}个
+        </div>
         <el-table
             header-row-class-name="common-table-header"
             row-class-name=video-row
@@ -346,18 +345,6 @@
                 font-size: 20px;
                 color: #FFFFFF;
             }
-            span {
-                display: inline-block;
-                margin-top: 9px;
-                margin-left: 20px;
-                height: 30px;
-                width: 100px;
-                line-height: 30px;
-                background: #D27B25;
-                border-radius: 4px;
-                font-size: 20px;
-                color: #FFFFFF;
-            }
             .start-time {
                 font-size: 14px;
                 color: #A8ABB3;
@@ -402,7 +389,7 @@
         .info-container {
             min-width: 1220px;
             margin-left: 260px;
-            height: 230px;
+            height: 202px;
             border-top: 1px solid #252D3F;
             > div {
                 display: inline-block;
@@ -442,6 +429,9 @@
                         display: inline-block;
                         font-size: 16px;
                         color: #A8ABB3;
+                        &.is-common {
+                            color: #3AC26F;
+                        }
                         &.protocol-type {
                             margin-right: 10px;
                         }
