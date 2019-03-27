@@ -77,9 +77,9 @@
         </div>
     </el-dialog>
 </template>
-
 <script>
-
+    import {mapGetters} from 'vuex';
+    import _ from 'lodash';
     export default {
         name: 'DisplayRelateDialog',
         props: {
@@ -100,6 +100,9 @@
             };
         },
         computed: {
+            ...mapGetters({
+                layout: 'pageLayout/layout'
+            }),
             getRelatedType() {
                 return (refItem) => {
                     switch (refItem.refType) {
@@ -179,42 +182,37 @@
             layoutRouter(refItem) {
                 if (refItem.refType === 'LAYOUT' && refItem.params) {
                     let params = JSON.parse(refItem.params);
-                    let {renderType, navBarId, sort} = params;
-                    sort = sort - 1;
-                    if (parseInt(sort) === 0) {
-                        this.$router.push({name: 'EditFixedModule', params: {navbarId: navBarId, index: sort}});
-                    } else {
-                        switch (renderType) {
-                            case 'FIGURE':
-                                this.$router.push({
-                                    name: 'PersonModule',
-                                    params: {navbarId: navBarId, index: sort, operator: 'edit'}
-                                });
-                                break;
-                            case 'SPECIAL':
-                                this.$router.push({
-                                    name: 'EditSpecialModule',
-                                    params: {navbarId: navBarId, index: sort, operator: 'edit'}
-                                });
-                                break;
-                            case 'PROGRAMME_SUBJECT':
-                                this.$router.push({
-                                    name: 'ProgrammeSubjectModule',
-                                    params: {navbarId: navBarId, index: sort, operator: 'edit'}
-                                });
-                                break;
-                            case 'FIGURE_SUBJECT':
-                                this.$router.push({
-                                    name: 'PersonSubjectModule',
-                                    params: {navbarId: navBarId, index: sort, operator: 'edit'}
-                                });
-                                break;
-                            case 'SHUFFLE':
-                                this.$router.push({
-                                    name: 'ShuffleModule',
-                                    params: {navbarId: navBarId, index: sort, operator: 'edit'}
-                                });
-                                break;
+                    let {renderType, navBarId} = params;
+                    if (refItem.refId && navBarId && _.get(this.layout, `${navBarId}.data`)) {
+                        let sort = _.get(this.layout, `${navBarId}.data`).findIndex((item) => {
+                            return item.id === refItem.refId;
+                        });
+
+                        if (sort < 0) {
+                            this.$message.error('该布局模块不存在');
+                            return false;
+                        }
+
+                        if (parseInt(sort) === 0) {
+                            this.$router.push({name: 'EditFixedModule', params: {navbarId: navBarId, index: sort}});
+                        } else {
+                            switch (renderType) {
+                                case 'FIGURE':
+                                    this.$router.push({name: 'PersonModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                    break;
+                                case 'SPECIAL':
+                                    this.$router.push({name: 'EditSpecialModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                    break;
+                                case 'PROGRAMME_SUBJECT':
+                                    this.$router.push({name: 'ProgrammeSubjectModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                    break;
+                                case 'FIGURE_SUBJECT':
+                                    this.$router.push({name: 'PersonSubjectModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                    break;
+                                case 'SHUFFLE':
+                                    this.$router.push({name: 'ShuffleModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                    break;
+                            }
                         }
                     }
                 }

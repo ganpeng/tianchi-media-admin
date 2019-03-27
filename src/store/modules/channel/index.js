@@ -25,7 +25,8 @@ let defaultSearchFields = {
     category: 'LIVE',
     common: undefined,
     visible: '',
-    protocolList: []
+    protocolList: [],
+    refCount: '' // 关联
 };
 
 let defaultPagination = {

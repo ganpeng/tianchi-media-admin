@@ -13,14 +13,19 @@
             :close-on-press-escape="false"
             :append-to-body="true">
             <div class="person-dialog-container">
-                <el-steps class="my-steps" align-center :active="active" finish-status="success">
+                <el-steps v-if="totalActive === 3" class="my-steps" align-center :active="active" finish-status="success">
                     <el-step title="选择节目"></el-step>
                     <el-step title="选择图片"></el-step>
                     <el-step title="设置角标"></el-step>
                     <el-step title="设置展示方式"></el-step>
                 </el-steps>
+                <el-steps v-else class="my-steps" align-center :active="active" finish-status="success">
+                    <el-step title="选择节目"></el-step>
+                    <el-step title="选择图片"></el-step>
+                    <el-step title="设置角标"></el-step>
+                </el-steps>
                 <div class="seperator-line"></div>
-                <div v-show="active === 0" class="step-one">
+                <div v-if="active === 0" class="step-one">
                     <div v-if="showExist">
                         <p class="table-title">已选择的节目</p>
                         <el-table
@@ -108,7 +113,7 @@
                             header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
                             <el-table-column  align="center" label="选择">
                                 <template slot-scope="scope">
-                                    <el-radio :value="getSquareProgrammeId" :label="scope.row.id" @input="setProgrammeSubjectHandler(scope.row)">&nbsp;</el-radio>
+                                    <el-radio :value="getSquareProgrammeId" :label="scope.row.id" @input="setProgrammeHandler(scope.row)">&nbsp;</el-radio>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="code" align="center" width="120px" label="节目编号">
@@ -174,7 +179,7 @@
                     </div>
 
                 </div>
-                <div v-show="active === 1" class="step-two">
+                <div v-if="active === 1" class="step-two">
                     <el-form class="my-el-form" status-icon label-width="120px" @submit.native.prevent>
                         <el-col :span="24">
                             <el-form-item label="非焦点图" required>
@@ -272,7 +277,7 @@
                         </el-col>
                     </el-form>
                 </div>
-                <div v-show="active === 3" class="step-three">
+                <div v-if="active === 3" class="step-four">
                     <el-form status-icon label-width="120px" class="my-el-form" @submit.native.prevent>
                         <el-col :span="12">
                             <el-form-item label="节目展示方式">
@@ -285,8 +290,8 @@
                 <div slot="footer" class="dialog-footer text-right margin-top-l">
                     <el-button @click="cancelHanlder">取 消</el-button>
                     <el-button v-show="active > 0" class="btn-style-three prev-btn" @click="prevBtnClickHandler">上一步</el-button>
-                    <el-button v-show="active < 3" class="btn-style-three next-btn" @click="nextBtnClickHandler">下一步</el-button>
-                    <el-button v-show="active === 3" type="primary" class="btn-style-two" @click="enterHandler">确 定</el-button>
+                    <el-button v-show="active < totalActive" class="btn-style-three next-btn" @click="nextBtnClickHandler">下一步</el-button>
+                    <el-button v-show="active === totalActive" type="primary" class="btn-style-two" @click="enterHandler">确 定</el-button>
                 </div>
             </div>
         </el-dialog>
@@ -321,6 +326,7 @@ export default {
             navbarId: '',
             index: 0,
             active: 0,
+            totalActive: 3,
             dialogVisible: false,
             showExist: false,
             category: '',
@@ -482,6 +488,12 @@ export default {
                         let res = await this.$service.getProgrammeInfo({id: this.getSquareProgrammeId});
                         if (res && res.code === 0) {
                             this.programme = res.data;
+                            let {programmeTemplate} = this.programme;
+                            if (programmeTemplate && programmeTemplate === 'NEWS') {
+                                this.totalActive = 2;
+                            } else {
+                                this.totalActive = 3;
+                            }
                             this.showExist = true;
                         }
                     }
@@ -522,7 +534,7 @@ export default {
             }
         },
         nextBtnClickHandler() {
-            if (this.active < 3) {
+            if (this.active < this.totalActive) {
                 if (this.active === 0) {
                     if (this.getSquareProgrammeId) {
                         this.active++;
@@ -543,13 +555,18 @@ export default {
             }
         },
         //  节目列表搜索
-        setProgrammeSubjectHandler(programme) {
+        setProgrammeHandler(programme) {
             let {id, name, desc, programmeTemplate} = programme;
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
             this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'desc', value: desc });
             if (programmeTemplate) {
                 this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'programmeTemplate', value: programmeTemplate });
+            }
+            if (programmeTemplate && programmeTemplate === 'NEWS') {
+                this.totalActive = 2;
+            } else {
+                this.totalActive = 3;
             }
             this.programme = programme;
         },
@@ -685,11 +702,16 @@ export default {
         },
         //  最后一步的确认处理函数
         enterHandler() {
-            if (this.getSquareProgrammeLayoutItemType) {
-                this.closeDialog();
+            if (this.totalActive === 3) {
+                if (this.getSquareProgrammeLayoutItemType) {
+                    this.closeDialog();
+                } else {
+                    this.$message.error('请选择节目展示方式');
+                    return false;
+                }
             } else {
-                this.$message.error('请选择节目展示方式');
-                return false;
+                this.setSquareProgrammeLayoutItemType('PROGRAMME_LIST');
+                this.closeDialog();
             }
         },
         cancelHanlder() {

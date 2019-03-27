@@ -106,7 +106,8 @@
             <el-button class="btn-style-two" type="primary" @click="saveHandler">保存</el-button>
         </div>
         <edit-filter :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectFilterDialog"></edit-filter>
-        <edit-programme-video :squareIndex="squareIndex" :layoutItemType="layoutItemType" :allowResolutions="allowResolutions" ref="selectProgrammeVideoDialog"></edit-programme-video>
+        <!-- <edit-programme-video :squareIndex="squareIndex" :layoutItemType="layoutItemType" :allowResolutions="allowResolutions" ref="selectProgrammeVideoDialog"></edit-programme-video> -->
+        <edit-programme-video :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeVideoDialog"></edit-programme-video>
 
         <!-- 新增 -->
         <programme-without4-step-dialog :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeDialog"></programme-without4-step-dialog>
@@ -262,8 +263,9 @@ export default {
                         this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
                         break;
                     case 'PROGRAMME_VIDEO':
-                        this.layoutItemType = 'PROGRAMME_LIST';
-                        this.$refs.selectProgrammeVideoDialog.showDialog('PROGRAMME_LIST', 'NEWS');
+                        // this.layoutItemType = 'PROGRAMME_LIST';
+                        // this.$refs.selectProgrammeVideoDialog.showDialog('PROGRAMME_LIST', 'NEWS');
+                        this.$refs.selectProgrammeVideoDialog.showDialog('PROGRAMME_VIDEO', 'NEWS');
                         break;
                     case 'PROGRAMME_SUBJECT':
                         this.$refs.selectProgrammeSubjectDialog.showDialog('PROGRAMME_SUBJECT');

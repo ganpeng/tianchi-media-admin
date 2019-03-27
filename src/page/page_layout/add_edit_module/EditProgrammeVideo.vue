@@ -443,10 +443,10 @@ export default {
             type: Number,
             default: 0
         },
-        layoutItemType: {
-            type: String,
-            default: 'PROGRAMME_VIDEO'
-        },
+        // layoutItemType: {
+        //     type: String,
+        //     default: 'PROGRAMME_VIDEO'
+        // },
         allowResolutions: {
             type: Array,
             default: () => []
@@ -465,7 +465,7 @@ export default {
             navbarId: '',
             index: 0,
             category: '',
-            layoutItemTypeOther: '',
+            layoutItemType: '',
             programme: {},
             previewImage: {
                 title: '',
@@ -590,7 +590,7 @@ export default {
         //  弹窗的操作
         async showDialog(layoutItemType, category) {
             try {
-                this.layoutItemTypeOther = layoutItemType;
+                this.layoutItemType = layoutItemType;
                 this.category = category;
 
                 this.dialogVisible = true;
@@ -608,7 +608,7 @@ export default {
             this.keyword = '';
             this.cateogry = '';
             this.showExist = '';
-            this.layoutItemTypeOther = '';
+            this.layoutItemType = '';
             this.previewImage = {
                 title: '',
                 display: false,
@@ -619,7 +619,7 @@ export default {
         },
         async dialogOpenHandler() {
             try {
-                if (this.layoutItemTypeOther !== _.get(this.layoutItem, 'layoutItemType')) {
+                if (this.layoutItemType !== 'PROGRAMME_VIDEO') {
                     this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
                 } else {
                     if (this.getSquareProgrammeVideoId && this.getSquareProgrammeId) {

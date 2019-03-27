@@ -34,6 +34,22 @@
                             </el-option>
                         </el-select>
                     </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">关联</label>
+                        <el-select
+                            :value="searchFields.refCount"
+                            filterable
+                            clearable
+                            placeholder="全部"
+                            @input="inputHandler($event, 'refCount')">
+                            <el-option
+                                v-for="(item, index) in [{name: '是', value: 1}, {name: '否', value: 0}]"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
                     <el-button class="btn-style-one" type="primary" @click="clearSearchFields">
                         <svg-icon icon-class="reset"></svg-icon>
                         重置

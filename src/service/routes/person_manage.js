@@ -10,9 +10,9 @@ export const createPerson = (person) => {
 /**
  * 获取人物列表
  */
-export const getPersonList = ({pageNum, pageSize, name, area, visible}) => {
+export const getPersonList = ({pageNum, pageSize, name, area, visible, refCount}) => {
     return service.get('/v1/content/figure/page', {
-        params: {pageNum, pageSize, name, area, visible}
+        params: {pageNum, pageSize, name, area, visible, refCount}
     });
 };
 

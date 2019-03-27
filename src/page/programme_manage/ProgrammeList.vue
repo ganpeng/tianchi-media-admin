@@ -105,6 +105,23 @@
                             </el-option>
                         </el-select>
                     </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">关联</label>
+                        <el-select
+                            :value="programmeSearchFields.refCount"
+                            clearable
+                            filterable
+                            @change="inputHandler($event, 'refCount')"
+                            placeholder="全部"
+                        >
+                            <el-option
+                                v-for="(item, index) in [{name: '是', value: 1}, {name: '否', value: 0}]"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
                 </div>
             </div>
             <div class="seperator-line"></div>
@@ -460,6 +477,10 @@
             },
             lowerFrameProgramme(programme) {
                 let {id, visible} = programme;
+                if (!_.get(programme, 'coverImage.uri') && !visible) {
+                    this.$message.error('没有封面图的节目不能上架');
+                    return false;
+                }
                 this.$confirm(`您确定要${visible ? '下架节目' : '上架节目'}吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

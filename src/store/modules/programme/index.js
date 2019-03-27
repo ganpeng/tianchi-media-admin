@@ -191,7 +191,8 @@ const defaultProgrammeSearchFields = {
     releaseAtEnd: '', //  结束的发行日期
     produceAreaList: '',
     programmeTypeIdList: '',
-    programmeCategoryIdList: ''
+    programmeCategoryIdList: '',
+    refCount: '' //  关联
 };
 
 const defaultGlobal = {

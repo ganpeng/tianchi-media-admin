@@ -128,6 +128,21 @@
                         </el-option>
                     </el-select>
                 </div>
+                <div class="search-field-item">
+                    <label class="search-field-item-label">关联</label>
+                    <el-select
+                        :value="searchFields.refCount"
+                        clearable
+                        placeholder="全部"
+                        @input="inputHandler($event, 'refCount')">
+                        <el-option
+                            v-for="(item, index) in [{name: '是', value: 1}, {name: '否', value: 0}]"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
             </div>
         </div>
         <div class="seperator-line"></div>
@@ -601,7 +616,7 @@
                     }
                 }
             },
-            // 天天影视，乐享视频，
+            // 天天影视，乐享视频, 吉美视频
             async multLowerFrameChannelHandler() {
                 let idList = this.selectedChannelList.map((item) => item.id);
                 let confirm = await this.$confirm(`您确定要禁播所选频道吗, 是否继续?`, '提示', {
