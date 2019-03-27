@@ -227,9 +227,9 @@
 </template>
 
 <script>
-    import SelectAdImageResource from './SelectADImageResource';
-    import SelectAdSingleVideoResource from './SelectADSingleVideoResource';
-    import SelectAdMultipleVideoResource from './SelectADMultipleVideoResource';
+    import SelectAdImageResource from './components/SelectADImageResource';
+    import SelectAdSingleVideoResource from './components/SelectADSingleVideoResource';
+    import SelectAdMultipleVideoResource from './components/SelectADMultipleVideoResource';
     import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import _ from 'lodash';

@@ -112,7 +112,7 @@
             initFilterParams(params) {
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
                 this.listQueryParams.channelIdList = params.channelIdList ? params.channelIdList : '';
-                this.listQueryParams.scheduled = params.scheduled ? params.scheduled : '';
+                this.listQueryParams.scheduled = params.scheduled !== '' ? params.scheduled : '';
                 this.listQueryParams.playStatus = params.playStatus ? params.playStatus : '';
             },
             init() {

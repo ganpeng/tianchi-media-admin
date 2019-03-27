@@ -94,7 +94,7 @@
         methods: {
             initFilterParams(params) {
                 this.listQueryParams.typeIdList = params.typeIdList ? params.typeIdList : [];
-                this.listQueryParams.visible = params.visible ? params.visible : '';
+                this.listQueryParams.visible = params.visible !== '' ? params.visible : '';
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
             },
             init() {

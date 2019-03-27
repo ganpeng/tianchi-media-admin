@@ -114,6 +114,20 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="关联">
+                    <el-select
+                        v-model="listQueryParams.refCount"
+                        clearable
+                        placeholder="请选择关联"
+                        @change="getChannelList(true)">
+                        <el-option
+                            v-for="(item, index) in refCountOptions"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
             </el-form>
         </div>
     </div>
@@ -132,9 +146,13 @@
                     protocolList: [],
                     companyCode: '',
                     visible: '',
-                    keyword: ''
+                    keyword: '',
+                    refCount: ''
                 },
                 protocolOptions: ['UDP', 'HLS'],
+                refCountOptions: [
+                    {name: '有', value: 1},
+                    {name: '无', value: 0}],
                 visibleOptions: [{
                     value: true,
                     label: '正常'
@@ -165,11 +183,12 @@
         methods: {
             initFilterParams(params) {
                 this.listQueryParams.typeIdList = params.typeIdList ? params.typeIdList : '';
-                this.listQueryParams.visible = params.visible ? params.visible : '';
+                this.listQueryParams.visible = params.visible !== '' ? params.visible : '';
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
-                this.listQueryParams.common = params.common ? params.common : '';
                 this.listQueryParams.protocolList = params.protocolList ? params.protocolList : '';
                 this.listQueryParams.companyCode = params.companyCode ? params.companyCode : '';
+                this.listQueryParams.refCount = params.refCount ? params.refCount : '';
+                this.listQueryParams.common = params.common !== '' ? params.common : '';
             },
             init() {
                 // 初始化频道类别列表

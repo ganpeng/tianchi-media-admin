@@ -1,4 +1,4 @@
-<!--选择广告资源多个视频组件-->
+<!--选择单个广告资源视频组件-->
 <template>
     <div id="select-ad-video">
         <div class="item-container">
@@ -16,10 +16,11 @@
                 </el-option>
             </el-select>
         </div>
-        <el-checkbox-group
-            v-model="selectedResourceIdList">
-            <el-checkbox
-                @change="checkVideo(item,$event)"
+        <el-radio-group
+            v-model="resourceId"
+            @change="setSelectedResource">
+            <el-radio
+                v-if="!!adOwnerId"
                 :label="item.id"
                 v-for="(item,index) in videoList"
                 :key="index">
@@ -34,8 +35,8 @@
                         <div>{{item.duration}}s&nbsp;&nbsp;&nbsp;&nbsp;{{item.size | convertFileSize}}</div>
                     </div>
                 </div>
-            </el-checkbox>
-        </el-checkbox-group>
+            </el-radio>
+        </el-radio-group>
         <display-video-dialog
             :url="url"
             :title="title"
@@ -46,10 +47,10 @@
 </template>
 
 <script>
-    import DisplayVideoDialog from '../../video_manage/DisplayVideoDialog';
+    import DisplayVideoDialog from '../../../video_manage/DisplayVideoDialog';
 
     export default {
-        name: 'SelectADMultipleVideoResource',
+        name: 'SelectADVideoResource',
         components: {
             DisplayVideoDialog
         },
@@ -64,8 +65,8 @@
                 url: '',
                 title: '',
                 displayVideoDialogVisible: false,
-                selectedResourceIdList: [],
-                selectedResourceList: [],
+                resourceId: '',
+                selectedResourceInfo: {},
                 adOwnerId: '',
                 ownerOptions: [],
                 videoList: []
@@ -75,17 +76,6 @@
             this.init();
         },
         methods: {
-            checkVideo(video, isAdd) {
-                if (isAdd) {
-                    this.selectedResourceList.push(video);
-                } else {
-                    for (let i = 0; i < this.selectedResourceList.length; i++) {
-                        if (this.selectedResourceList[i].id === video.id) {
-                            this.selectedResourceList.splice(i, 1);
-                        }
-                    }
-                }
-            },
             init() {
                 this.$service.getAdvertisingOwnerList({pageSize: 1000, pageNum: 0}).then(response => {
                     if (response && response.code === 0) {
@@ -126,11 +116,11 @@
                 this.displayVideoDialogVisible = status;
             },
             getVideoArrayInfo() {
-                if (this.selectedResourceIdList.length === 0) {
+                if (!this.resourceId) {
                     this.$message.warning('请选择相应的视频资源');
                     return false;
                 } else {
-                    return this.selectedResourceList;
+                    return [this.selectedResourceInfo];
                 }
             }
         }
@@ -154,15 +144,15 @@
         }
     }
 
-    .el-checkbox-group {
+    .el-radio-group {
         padding-bottom: 50px;
         margin-left: 40px;
         overflow: hidden;
-        .el-checkbox {
+        .el-radio {
             float: left;
             margin-right: 40px;
             margin-top: 30px;
-            & + .el-checkbox {
+            & + .el-radio {
                 margin-left: 0px;
             }
         }
@@ -212,10 +202,10 @@
 <style lang="scss">
 
     #select-ad-video {
-        .el-checkbox__input {
+        .el-radio__input {
             position: absolute;
-            top: 190px;
-            left: 85px;
+            top: 22px;
+            left: 5px;
         }
     }
 

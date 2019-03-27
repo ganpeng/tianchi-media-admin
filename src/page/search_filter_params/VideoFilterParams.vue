@@ -149,12 +149,12 @@
                 </el-form-item>
                 <el-form-item label="关联">
                     <el-select
-                        v-model="listQueryParams.related"
+                        v-model="listQueryParams.refCount"
                         clearable
                         placeholder="请选择关联"
                         @change="getVideoList(true)">
                         <el-option
-                            v-for="(item, index) in relatedOptions"
+                            v-for="(item, index) in refCountOptions"
                             :key="index"
                             :label="item.name"
                             :value="item.value">
@@ -183,12 +183,13 @@
                     originSiteId: '',
                     shareSiteId: '',
                     startedAt: '',
-                    endedAt: ''
+                    endedAt: '',
+                    refCount: ''
                 },
                 uploadRangeTime: [],
-                relatedOptions: [
-                    {name: '有', value: true},
-                    {name: '无', value: false}],
+                refCountOptions: [
+                    {name: '有', value: 1},
+                    {name: '无', value: 0}],
                 suffixOptions: role.VIDEO_SUFFIX_OPTIONS,
                 statusOptions: role.VIDEO_INJECTING_STATUS_OPTIONS,
                 downloadStatusOptions: role.VIDEO_DOWNLOAD_STATUS_OPTIONS,
@@ -215,6 +216,7 @@
                 this.listQueryParams.suffix = params.suffix ? params.suffix : '';
                 this.listQueryParams.originSiteId = params.originSiteId ? params.originSiteId : '';
                 this.listQueryParams.shareSiteId = params.shareSiteId ? params.shareSiteId : '';
+                this.listQueryParams.refCount = params.refCount ? params.refCount : '';
             },
             init() {
                 let that = this;
