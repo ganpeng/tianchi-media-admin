@@ -185,6 +185,7 @@
                 this.$emit('getADList', this.listQueryParams, isReset);
             },
             clearFilters() {
+                this.createRangeTime = [];
                 for (let key in this.listQueryParams) {
                     if (Array.isArray(this.listQueryParams[key])) {
                         this.listQueryParams[key] = [];
