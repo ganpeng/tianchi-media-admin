@@ -195,31 +195,6 @@
             :currentItemInfo="currentItem"
             ref="displayRelatedDialog">
         </display-related-dialog>
-        <el-dialog
-            title="上传人物表格"
-            :visible.sync="fileUploadDialogVisible"
-            :headers="uploadHeaders"
-            :show-close="true"
-            :before-close="closeFileUploadDialog"
-            :close-on-click-modal="false"
-            :close-on-press-escape="false">
-            <el-upload
-                class="upload-demo"
-                ref="upload"
-                :headers="uploadHeaders"
-                accept=".xlsx, .xls"
-                action="/admin/v1/content/figure/import"
-                :auto-upload="false"
-                :file-list="fileList"
-                :on-success="uploadSuccessHandler"
-                :with-credentials="true">
-                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-                    <el-button style="margin-left: 10px;" size="small" @click="submitUpload" type="success">点击上传</el-button>
-            </el-upload>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="closeFileUploadDialog">关闭</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 <script>
@@ -244,11 +219,7 @@
                     display: false,
                     uri: ''
                 },
-                //  人物导入
-                fileUploadDialogVisible: false,
-                fileList: [],
                 selectedVideoList: [],
-                uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
                 currentItem: {}
             };
         },
@@ -430,25 +401,6 @@
                 this.previewImage.title = image.name;
                 this.previewImage.display = true;
                 this.previewImage.uri = image.uri;
-            },
-            //  人物导入
-            submitUpload() {
-                this.$refs.upload.submit();
-            },
-            closeFileUploadDialog() {
-                this.fileUploadDialogVisible = false;
-                this.fileList = [];
-            },
-            showFileUploadDialog() {
-                this.fileUploadDialogVisible = true;
-            },
-            uploadSuccessHandler(res, file, fileList) {
-                if (res && res.code === 0) {
-                    this.$message.success('人物导入成功');
-                } else {
-                    this.$message.error('人物导入失败');
-                }
-                this.closeFileUploadDialog();
             },
             selectHandler(list, row) {
                 let isSelected = list.findIndex((item) => item.id === row.id) >= 0;

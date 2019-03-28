@@ -63,6 +63,7 @@ html, body {
     &.my-table-style {
         margin: 0;
         margin-bottom: 10px;
+        color: #A8ABB3;
     }
     &::before {
         background-color: #343d4f;
@@ -79,7 +80,8 @@ html, body {
             border: 1px solid #3E495E;
             .cell {
                 font-size: 18px;
-                color: #909399;
+                color: #A8ABB3;
+                // color: #909399;
             }
         }
     }
@@ -92,7 +94,7 @@ html, body {
         }
         td {
             font-size: 14px;
-            color: #909399;
+            // color: #909399;
             border: 1px solid #343d4f;
             span.name {
                 &:hover {
@@ -378,6 +380,9 @@ html, body {
     }
     &.el-button--text {
         font-size: 14px;
+    }
+    &+.el-button {
+        margin-left: 8px;
     }
 }
 

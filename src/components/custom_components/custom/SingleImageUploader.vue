@@ -3,9 +3,13 @@
         <div class="wrapper">
             <div v-if="showImage" :style="styleStr" v-show="uri" :class="['img-wrapper', showDelete ? 'hover' : '']">
                 <img :style="styleStr" :src="uri" alt="">
-                <span v-if="showDelete" @click.stop="deleteImage" class="delete-btn-one small delete-icon">
-                    &times;
+                <span v-if="showDelete" @click.stop="deleteImage" class="delete-icon">
+                    <svg-icon icon-class="remove_image_hover"></svg-icon>
+                    <svg-icon icon-class="remove_image_default"></svg-icon>
                 </span>
+                <!-- <span v-if="showDelete" @click.stop="deleteImage" class="delete-btn-one small delete-icon">
+                    &times;
+                </span> -->
             </div>
             <div class="uploader-wrapper">
                 <div class="uploader" :style="styleStr">
@@ -172,12 +176,33 @@
         position: absolute;
         top: 8px;
         right: 8px;
-        text-align: center;
+        cursor: pointer;
+        z-index: 1000000;
+        .svg-icon-remove_image_default,
+        .svg-icon-remove_image_hover {
+            width: 23px;
+            height: 23px;
+        }
+        .svg-icon-remove_image_default {
+            display: block;
+        }
+        .svg-icon-remove_image_hover {
+            display: none;
+        }
+        &:hover {
+            .svg-icon-remove_image_hover {
+                display: block;
+            }
+            .svg-icon-remove_image_default {
+                display: none;
+            }
+        }
     }
     &.hover {
         &:hover {
             background: #293550;
             opacity: 0.8;
+            border-radius: 8px;
             span.delete-icon {
                 display: block;
             }

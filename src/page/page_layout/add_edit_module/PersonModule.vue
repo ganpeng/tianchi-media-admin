@@ -325,8 +325,9 @@ export default {
         },
         displayImage(image) {
             this.previewImage.title = image.name;
-            this.previewImage.display = true;
             this.previewImage.uri = image.uri;
+            //  去掉预览
+            // this.previewImage.display = true;
         },
         //  动态的为符合条件的行添加class
         tableRowClassName({row, rowIndex}) {

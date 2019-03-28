@@ -469,7 +469,7 @@ export default {
         },
         async deleteLiveCategoryHandler(id) {
             try {
-                let answer = await this.$confirm('此操作将永久删除该节目类型, 是否继续?', '提示', {
+                let answer = await this.$confirm('此操作将永久删除该直播类型, 是否继续?', '提示', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
                             type: 'error'
@@ -519,7 +519,7 @@ export default {
         },
         async deleteCarouselCategoryHandler(id) {
             try {
-                let answer = await this.$confirm('此操作将永久删除该节目类型, 是否继续?', '提示', {
+                let answer = await this.$confirm('此操作将永久删除该轮播类型, 是否继续?', '提示', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
                             type: 'error'

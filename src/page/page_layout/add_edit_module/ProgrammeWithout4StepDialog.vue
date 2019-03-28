@@ -562,8 +562,9 @@ export default {
         //  查看图片
         displayImage(image) {
             this.previewImage.title = image.name;
-            this.previewImage.display = true;
             this.previewImage.uri = image.uri;
+            //  去掉预览
+            // this.previewImage.display = true;
         },
         //  图片上传成功之后的毁掉
         async uploadProgrammeCoverImageSuccessHandler(image) {
