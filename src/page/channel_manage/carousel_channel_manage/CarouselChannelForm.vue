@@ -953,14 +953,41 @@
             // 添加相应的视频
             appendVideo(selectedVideoList) {
                 for (let i = 0; i < selectedVideoList.length; i++) {
-                    selectedVideoList[i].storageVideoId = selectedVideoList[i].id;
+                    if (!selectedVideoList[i].storageVideoId) {
+                        selectedVideoList[i].storageVideoId = selectedVideoList[i].id;
+                    }
                     // 添加的视频统一设置 status 为 NORMAL
                     selectedVideoList[i].status = 'NORMAL';
                     // 添加的视频设置为默认正常
                     selectedVideoList[i].visible = true;
                     delete selectedVideoList[i].id;
                 }
-                this.currentSelectedVideoList = selectedVideoList;
+                // 对于新增的视频添加到index之后
+                let insertVideoArray = [];
+                for (let m = 0; m < selectedVideoList.length; m++) {
+                    let insertTag = true;
+                    for (let n = 0; n < this.currentSelectedVideoList.length; n++) {
+                        if (selectedVideoList[m].storageVideoId === this.currentSelectedVideoList[n].storageVideoId) {
+                            insertTag = false;
+                        }
+                    }
+                    if (insertTag) {
+                        insertVideoArray.push(selectedVideoList[m]);
+                    }
+                }
+                for (let k = 0; k < insertVideoArray.length; k++) {
+                    this.currentSelectedVideoList.splice(this.currentVideoIndex + k, 0, insertVideoArray[k]);
+                }
+                // 对删除的视频在列表中删除
+                let currentArray = [];
+                for (let z = 0; z < this.currentSelectedVideoList.length; z++) {
+                    for (let h = 0; h < selectedVideoList.length; h++) {
+                        if (this.currentSelectedVideoList[z].storageVideoId === selectedVideoList[h].storageVideoId) {
+                            currentArray.push(this.currentSelectedVideoList[z]);
+                        }
+                    }
+                }
+                this.currentSelectedVideoList = currentArray;
             },
             // 视频列表排序
             sortVideoList() {

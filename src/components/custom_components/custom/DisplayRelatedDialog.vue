@@ -80,6 +80,7 @@
 <script>
     import {mapGetters} from 'vuex';
     import _ from 'lodash';
+
     export default {
         name: 'DisplayRelateDialog',
         props: {
@@ -151,7 +152,6 @@
                         break;
                     case 'PRODUCT':
                         let productParams = JSON.parse(refItem.params);
-                        console.log(productParams);
                         switch (productParams.productCategory) {
                             case 'PROGRAMME':
                                 this.$router.push({name: 'EditProgrammeProduct', params: {id: refItem.refId}});
@@ -167,6 +167,11 @@
                         }
                         break;
                     case 'INTERCUT':
+                        let interCutParams = JSON.parse(refItem.params);
+                        if (Date.now() > interCutParams.startTime) {
+                            this.$message.warning('当前插播的状态为生效中或已失效，不能编辑');
+                            return;
+                        }
                         this.$router.push({name: 'EditInterCut', params: {id: refItem.refId}});
                         break;
                     default:
@@ -198,19 +203,34 @@
                         } else {
                             switch (renderType) {
                                 case 'FIGURE':
-                                    this.$router.push({name: 'PersonModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                    this.$router.push({
+                                        name: 'PersonModule',
+                                        params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                    });
                                     break;
                                 case 'SPECIAL':
-                                    this.$router.push({name: 'EditSpecialModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                    this.$router.push({
+                                        name: 'EditSpecialModule',
+                                        params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                    });
                                     break;
                                 case 'PROGRAMME_SUBJECT':
-                                    this.$router.push({name: 'ProgrammeSubjectModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                    this.$router.push({
+                                        name: 'ProgrammeSubjectModule',
+                                        params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                    });
                                     break;
                                 case 'FIGURE_SUBJECT':
-                                    this.$router.push({name: 'PersonSubjectModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                    this.$router.push({
+                                        name: 'PersonSubjectModule',
+                                        params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                    });
                                     break;
                                 case 'SHUFFLE':
-                                    this.$router.push({name: 'ShuffleModule', params: {navbarId: navBarId, index: sort, operator: 'edit'}});
+                                    this.$router.push({
+                                        name: 'ShuffleModule',
+                                        params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                    });
                                     break;
                             }
                         }

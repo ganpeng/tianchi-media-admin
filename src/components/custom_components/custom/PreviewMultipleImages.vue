@@ -8,11 +8,13 @@
         <div class="image-box">
             <img :src="currentImage.uri | imageUrl">
         </div>
-        <div class="scroll-btn left">
-            <i class="el-icon-arrow-left" @click="scrollImageList('LEFT')"></i>
+        <div class="scroll-btn left" @click="scrollImageList('LEFT')"
+             :class="{'disabled': previewMultipleImages.list.length === 1}">
+            <i class="el-icon-arrow-left"></i>
         </div>
-        <div class="scroll-btn right">
-            <i class="el-icon-arrow-right" @click="scrollImageList('RIGHT')"></i>
+        <div class="scroll-btn right" @click="scrollImageList('RIGHT')"
+             :class="{'disabled': previewMultipleImages.list.length === 1}">
+            <i class="el-icon-arrow-right"></i>
         </div>
         <i class="el-icon-close" @click="closePreview"></i>
     </div>
@@ -111,6 +113,16 @@
             cursor: pointer;
             &:hover {
                 color: $baseBlue;
+            }
+        }
+        &.disabled {
+            pointer-events: none;
+            i {
+                opacity: 0.3;
+                cursor: not-allowed;
+                &:hover {
+                    color: #fff;
+                }
             }
         }
     }

@@ -39,9 +39,8 @@
             <el-button
                 class="btn-style-one"
                 @click="getProgrammeList"
-                icon="el-icon-search"
-                type="primary"
-                plain>
+                type="primary">
+                <svg-icon icon-class="search"></svg-icon>
                 搜索
             </el-button>
         </div>
@@ -176,6 +175,9 @@
             margin-right: 20px;
             width: 180px;
         }
+        .svg-icon {
+            margin-right: 10px;
+        }
     }
 
 </style>
@@ -194,7 +196,7 @@
                 height: 20px;
                 width: 20px;
                 line-height: 20px;
-                background: #C0C4CC;
+                background: #A3D0FD;
             }
             &:hover {
                 .el-icon-close {

@@ -184,7 +184,6 @@
             width: 104px;
             border: 1px solid #3E495E;
             border-radius: 8px;
-            box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.50);
         }
         div {
             margin-left: 155px;

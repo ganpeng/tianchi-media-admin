@@ -14,9 +14,8 @@
             <el-button
                 class="btn-style-one"
                 @click="getVideoList"
-                icon="el-icon-search"
-                type="primary"
-                plain>
+                type="primary">
+                <svg-icon icon-class="search"></svg-icon>
                 搜索
             </el-button>
         </div>
@@ -390,6 +389,9 @@
         .el-input {
             margin-right: 20px;
             width: 180px;
+        }
+        .svg-icon {
+            margin-right: 10px;
         }
     }
 
