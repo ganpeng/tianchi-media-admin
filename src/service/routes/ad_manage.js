@@ -96,7 +96,7 @@ export const getADDetail = (id) => {
 /**
  * 修改广告信息
  */
-export const updateADInfo = ({id, name, desc, adType, applyDateBegin, applyDateEnd, categoryList, adMaterialList}) => {
+export const updateADInfo = ({id, name, desc, adType, applyDateBegin, applyDateEnd, categoryList, adMaterialList, timeShift}) => {
     return service.put(util.format('/v1/ad/general-ad/{0}', id), {
         id,
         name,
@@ -105,6 +105,7 @@ export const updateADInfo = ({id, name, desc, adType, applyDateBegin, applyDateE
         applyDateBegin,
         applyDateEnd,
         categoryList,
-        adMaterialList
+        adMaterialList,
+        timeShift
     });
 };

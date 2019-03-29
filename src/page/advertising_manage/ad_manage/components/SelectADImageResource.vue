@@ -1,6 +1,6 @@
 <!--选择广告资源图片组件-->
 <template>
-    <div id="select-ad-video">
+    <div id="select-ad-image">
         <div class="item-container">
             <label class="item-name">广告主</label>
             <el-select
@@ -108,7 +108,7 @@
 
 <style lang="scss" scoped>
 
-    #select-ad-video {
+    #select-ad-image {
         text-align: left;
     }
 
@@ -170,11 +170,11 @@
 
 <style lang="scss">
 
-    #select-ad-video {
+    #select-ad-image {
         .el-checkbox__input {
             position: absolute;
             top: 170px;
-            left: 90px;
+            left: 88px;
         }
     }
 
