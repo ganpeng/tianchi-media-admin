@@ -4,112 +4,122 @@
         <div class="table-container">
             <h2 class="content-title">搜索筛选</h2>
         </div>
-        <div class="search-field">
-            <div class="field-row">
-                <div class="search-field-item">
-                    <el-input
-                        :value="searchFields.keyword"
-                        placeholder="搜索你想要的信息"
-                        @input="inputHandler($event, 'keyword')"
-                        clearable
-                        class="border-input"
-                    >
-                    </el-input>
-                </div>
-                <el-button class="btn-style-one" @click="searchHandler" type="primary">
-                    <svg-icon icon-class="search"></svg-icon>
-                    搜索
-                </el-button>
-                <div class="search-field-item">
-                    <label class="search-field-item-label">类型</label>
-                    <el-select
-                        :value="searchFields.adType"
-                        clearable
-                        placeholder="全部"
-                        @input="inputHandler($event, 'adType')"
-                    >
-                        <el-option
-                            v-for="(item, index) in adTypeOptions"
-                            :key="index"
-                            :label="item.name"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="search-field-item">
-                    <label class="search-field-item-label">上下架</label>
-                    <el-select
-                        :value="searchFields.adVisible"
-                        clearable
-                        placeholder="全部"
-                        @input="inputHandler($event, 'adVisible')"
-                    >
-                        <el-option
-                            v-for="(item, index) in adVisibleOptions"
-                            :key="index"
-                            :label="item.name"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="search-field-item">
-                    <label class="search-field-item-label">状态</label>
-                    <el-select
-                        :value="searchFields.adStatus"
-                        clearable
-                        placeholder="全部"
-                        @input="inputHandler($event, 'adStatus')"
-                    >
-                        <el-option
-                            v-for="(item, index) in adStatusOptions"
-                            :key="index"
-                            :label="item.name"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <el-button class="btn-style-one" type="primary" @click="clearSearchFields">
-                    <svg-icon icon-class="reset"></svg-icon>
-                    重置
-                </el-button>
-                <span
-                    @click="toggleSearchField"
-                    :class="['el-dropdown-link', searchFieldVisible ? 'active' : '']">
-                    更多筛选<i v-if="searchFieldVisible" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
-                </span>
-            </div>
-            <div v-show="searchFieldVisible" class="field-row">
-                <div class="search-field-item">
-                    <label class="search-field-item-label">资源类型</label>
-                    <el-select
-                        :value="searchFields.mediaType"
-                        clearable
-                        placeholder="全部"
-                        @input="inputHandler($event, 'mediaType')"
-                    >
-                        <el-option
-                            v-for="(item, index) in mediaTypeOptions"
-                            :key="index"
-                            :label="item.name"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="search-field-item">
-                    <label class="search-field-item-label">创建时间</label>
-                    <el-date-picker
-                        :value="searchFields.dateRange"
-                        type="daterange"
-                        @input="inputHandler($event, 'dateRange')"
-                        value-format="timestamp"
-                        :unlink-panels="true"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期">
-                    </el-date-picker>
-                </div>
+        <!--筛选开始-->
+        <div class="ad-owner-search-container">
+            <div @keyup.enter="searchHandler" class="text-left filters-container">
+                <el-form :inline="true" class="filter-form">
+                    <el-form-item>
+                        <el-input
+                            :value="searchFields.keyword"
+                            placeholder="搜索你想要的信息"
+                            @input="inputHandler($event, 'keyword')"
+                            clearable
+                            class="border-input">
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button
+                            class="btn-style-one"
+                            @click="searchHandler"
+                            type="primary">
+                            <svg-icon icon-class="search"></svg-icon>
+                            搜索
+                        </el-button>
+                    </el-form-item>
+                    <el-form-item label="类型">
+                        <el-select
+                            :value="searchFields.adType"
+                            clearable
+                            placeholder="全部"
+                            @input="inputHandler($event, 'adType')">
+                            <el-option
+                                v-for="(item, index) in adTypeOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="上下架">
+                        <el-select
+                            :value="searchFields.adVisible"
+                            clearable
+                            placeholder="全部"
+                            @input="inputHandler($event, 'adVisible')">
+                            <el-option
+                                v-for="(item, index) in adVisibleOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="状态">
+                        <el-select
+                            :value="searchFields.adStatus"
+                            clearable
+                            placeholder="全部"
+                            @input="inputHandler($event, 'adStatus')">
+                            <el-option
+                                v-for="(item, index) in adStatusOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button
+                            class="btn-style-one"
+                            @click="clearSearchFields"
+                            type="primary">
+                            <svg-icon icon-class="reset"></svg-icon>
+                            重置
+                        </el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button
+                            type="text"
+                            @click="searchFieldVisible = !searchFieldVisible"
+                            class="more-filters"
+                            :class="{active:searchFieldVisible}">
+                            更多筛选
+                            <i class="el-icon-arrow-up" v-if="searchFieldVisible"></i>
+                            <i class="el-icon-arrow-down" v-else></i>
+                        </el-button>
+                    </el-form-item>
+                </el-form>
+                <el-form :inline="true" class="more-filter-box filter-form" v-if="searchFieldVisible">
+                    <el-form-item label="资源类型">
+                        <el-select
+                            :value="searchFields.mediaType"
+                            clearable
+                            placeholder="全部"
+                            @input="inputHandler($event, 'mediaType')">
+                            <el-option
+                                v-for="(item, index) in mediaTypeOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="创建时间">
+                        <el-date-picker
+                            :value="searchFields.dateRange"
+                            type="daterange"
+                            @input="inputHandler($event, 'dateRange')"
+                            value-format="timestamp"
+                            :unlink-panels="true"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-form>
             </div>
         </div>
+        <!--筛选结束-->
         <div class="seperator-line"></div>
         <div class="tabel-field">
             <h2 class="content-title">广告主列表</h2>
@@ -188,134 +198,170 @@
     </div>
 </template>
 <script>
-import {mapGetters, mapMutations, mapActions} from 'vuex';
-import _ from 'lodash';
-import role from '../../../util/config/role';
-export default {
-    name: 'AdvertisingOwnerList',
-    data() {
-        return {
-            searchFieldVisible: false,
-            adTypeOptions: role.AD_TYPE_OPTIONS,
-            adVisibleOptions: [
-                {
-                    name: '上架',
-                    value: true
-                },
-                {
-                    name: '下架',
-                    value: false
-                }
-            ],
-            adStatusOptions: role.AD_STATUS_OPTIONS,
-            mediaTypeOptions: [
-                {
-                    name: '视频',
-                    value: 'VIDEO'
-                },
-                {
-                    name: '图片',
-                    value: 'IMAGE'
-                }
-            ]
-        };
-    },
-    created() {
-        this.getAdvertisingOwnerList();
-    },
-    computed: {
-        ...mapGetters({
-            list: 'advertising/list',
-            pagination: 'advertising/pagination',
-            searchFields: 'advertising/searchFields'
-        })
-    },
-    methods: {
-        ...mapMutations({
-            updateSearchFields: 'advertising/updateSearchFields',
-            updatePagination: 'advertising/updatePagination',
-            resetSearchFields: 'advertising/resetSearchFields',
-            setList: 'advertising/setList'
-        }),
-        ...mapActions({
-            getAdvertisingOwnerList: 'advertising/getAdvertisingOwnerList'
-        }),
-        addAdvertisingOwner() {
-            let routeData = this.$router.resolve({
-                name: 'AddAdvertisingOwner'
-            });
-            window.open(routeData.href, '_blank');
+    import {mapGetters, mapMutations, mapActions} from 'vuex';
+    import _ from 'lodash';
+    import role from '../../../util/config/role';
+
+    export default {
+        name: 'AdvertisingOwnerList',
+        data() {
+            return {
+                searchFieldVisible: false,
+                adTypeOptions: role.AD_TYPE_OPTIONS,
+                adVisibleOptions: [
+                    {
+                        name: '上架',
+                        value: true
+                    },
+                    {
+                        name: '下架',
+                        value: false
+                    }
+                ],
+                adStatusOptions: role.AD_STATUS_OPTIONS,
+                mediaTypeOptions: [
+                    {
+                        name: '视频',
+                        value: 'VIDEO'
+                    },
+                    {
+                        name: '图片',
+                        value: 'IMAGE'
+                    }
+                ]
+            };
         },
-        editAdvertisingOwner(id) {
-            this.$router.push({name: 'EditAdvertisingOwner', params: {id}});
-        },
-        displayAdvertisingOwner(id) {
-            this.$router.push({name: 'DisplayAdvertisingOwner', params: {id}});
-        },
-        inputHandler(value, key) {
-            this.updateSearchFields({key, value});
-            if (key !== 'keyword') {
-                this.searchHandler();
-            }
-        },
-        searchHandler() {
-            this.updatePagination({key: 'pageNum', value: 1});
+        created() {
             this.getAdvertisingOwnerList();
         },
-        clearSearchFields() {
-            this.resetSearchFields();
-            this.getAdvertisingOwnerList();
+        computed: {
+            ...mapGetters({
+                list: 'advertising/list',
+                pagination: 'advertising/pagination',
+                searchFields: 'advertising/searchFields'
+            })
         },
-        handlePaginationChange(value, key) {
-            this.updatePagination({key, value});
-            this.getAdvertisingOwnerList();
-        },
-        toggleSearchField() {
-            this.searchFieldVisible = !this.searchFieldVisible;
-        },
-        sortChangeHandler(obj) {
-            let {prop, order} = obj;
-            if (prop === 'createdAt') {
-                let sortedListByCreatedAt = [];
-                if (order === 'ascending') {
-                    sortedListByCreatedAt = _.chain(this.list).sortBy('createdAt').value();
-                } else {
-                    sortedListByCreatedAt = _.chain(this.list).sortBy('createdAt').reverse().value();
+        methods: {
+            ...mapMutations({
+                updateSearchFields: 'advertising/updateSearchFields',
+                updatePagination: 'advertising/updatePagination',
+                resetSearchFields: 'advertising/resetSearchFields',
+                setList: 'advertising/setList'
+            }),
+            ...mapActions({
+                getAdvertisingOwnerList: 'advertising/getAdvertisingOwnerList'
+            }),
+            addAdvertisingOwner() {
+                let routeData = this.$router.resolve({
+                    name: 'AddAdvertisingOwner'
+                });
+                window.open(routeData.href, '_blank');
+            },
+            editAdvertisingOwner(id) {
+                this.$router.push({name: 'EditAdvertisingOwner', params: {id}});
+            },
+            displayAdvertisingOwner(id) {
+                this.$router.push({name: 'DisplayAdvertisingOwner', params: {id}});
+            },
+            inputHandler(value, key) {
+                this.updateSearchFields({key, value});
+                if (key !== 'keyword') {
+                    this.searchHandler();
                 }
-                this.setList({list: sortedListByCreatedAt});
-            }
-            if (prop === 'updatedAt') {
-                let sortedListByCreatedAt = [];
-                if (order === 'ascending') {
-                    sortedListByCreatedAt = _.chain(this.list).sortBy('updatedAt').value();
-                } else {
-                    sortedListByCreatedAt = _.chain(this.list).sortBy('updatedAt').reverse().value();
+            },
+            searchHandler() {
+                this.updatePagination({key: 'pageNum', value: 1});
+                this.getAdvertisingOwnerList();
+            },
+            clearSearchFields() {
+                this.resetSearchFields();
+                this.getAdvertisingOwnerList();
+            },
+            handlePaginationChange(value, key) {
+                this.updatePagination({key, value});
+                this.getAdvertisingOwnerList();
+            },
+            toggleSearchField() {
+                this.searchFieldVisible = !this.searchFieldVisible;
+            },
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'createdAt') {
+                    let sortedListByCreatedAt = [];
+                    if (order === 'ascending') {
+                        sortedListByCreatedAt = _.chain(this.list).sortBy('createdAt').value();
+                    } else {
+                        sortedListByCreatedAt = _.chain(this.list).sortBy('createdAt').reverse().value();
+                    }
+                    this.setList({list: sortedListByCreatedAt});
                 }
-                this.setList({list: sortedListByCreatedAt});
-            }
-        },
-        async deleteAdvertisingOwner(id) {
-            try {
-                let confirm = await this.$confirm(`您确定要删除广告主吗, 是否继续?`, '提示', {
+                if (prop === 'updatedAt') {
+                    let sortedListByCreatedAt = [];
+                    if (order === 'ascending') {
+                        sortedListByCreatedAt = _.chain(this.list).sortBy('updatedAt').value();
+                    } else {
+                        sortedListByCreatedAt = _.chain(this.list).sortBy('updatedAt').reverse().value();
+                    }
+                    this.setList({list: sortedListByCreatedAt});
+                }
+            },
+            async deleteAdvertisingOwner(id) {
+                try {
+                    let confirm = await this.$confirm(`您确定要删除广告主吗, 是否继续?`, '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'error'
                     });
-                if (confirm) {
-                    let res = await this.$service.deleteAdvertisingOwnerById(id);
-                    if (res && res.code === 0) {
-                        this.$message.success('删除成功');
-                        this.getAdvertisingOwnerList();
-                    } else {
-                        this.$message.error(res.message);
+                    if (confirm) {
+                        let res = await this.$service.deleteAdvertisingOwnerById(id);
+                        if (res && res.code === 0) {
+                            this.$message.success('删除成功');
+                            this.getAdvertisingOwnerList();
+                        } else {
+                            this.$message.error(res.message);
+                        }
                     }
+                } catch (err) {
+                    console.log(err);
                 }
-            } catch (err) {
-                console.log(err);
             }
         }
-    }
-};
+    };
 </script>
+
 <style lang="scss" scoped>
+
+    .ad-owner-search-container {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #252D3F;
+        .filters-container {
+            background: #2A3040;
+            border-radius: 8px;
+        }
+        .svg-icon {
+            margin-right: 10px;
+        }
+
+        // 按钮
+        .more-filters {
+            font-size: 12px;
+            color: #6F7480;
+            &.active {
+                color: #1989FA;
+                i {
+                    color: #6F7480;
+                }
+            }
+            i {
+                margin-left: 8px;
+            }
+        }
+
+        .more-filter-box {
+            background: #252C3D;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+    }
+
 </style>
