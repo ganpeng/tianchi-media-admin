@@ -4,7 +4,8 @@
             <ul class="image-list">
                 <li @click.stop="displayImage(index)" v-for="(image, index) in imageList" :key="image.id" class="image-item">
                     <div class="image-warpper">
-                        <img :src="image.uri" class="image" alt="">
+                        <!-- <img :src="image.uri" class="image" alt=""> -->
+                        <div class="image" :style="bgStyle(image.uri)"></div>
                         <div class="mask"></div>
                     </div>
                     <span v-if="!isUploading" @click.stop="deleteImage(image.id)" class="delete-icon">
@@ -106,6 +107,11 @@ export default {
             return this.fileList.filter((obj) => {
                 return obj.data.status === 1 || obj.data.status === 3;
             });
+        },
+        bgStyle() {
+            return (uri) => {
+                return `background-image: url(${uri});background-size:cover;background-repeat:no-repeat;background-position:center center;`;
+            };
         }
     },
     methods: {

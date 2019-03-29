@@ -10,9 +10,8 @@
             </ul>
             <div :class="[active === navList.length - 1 ? 'active' : '']"
                  class="user-info float-right clearfix">
-                <svg-icon
-                    icon-class="avatar_icon">
-                </svg-icon>
+                <svg-icon icon-class="avatar_icon"></svg-icon>
+                <svg-icon icon-class="avatar_icon_active"></svg-icon>
                 <label @click="changeActive(navList.length - 1)">{{name}}</label>
                 <div class="logout" @click="logout">
                     <svg-icon
@@ -285,7 +284,7 @@
                     height: 40px;
                     line-height: 40px;
                     border-radius: 20px;
-                    background: #252D3F;
+                    background: rgba(255,255,255,0.10);
                     font-size: 14px;
                     color: $navText;
                     text-align: center;
@@ -296,10 +295,22 @@
                         color: #fff;
                     }
                 }
+                .svg-icon-avatar_icon {
+                    display: block;
+                }
+                .svg-icon-avatar_icon_active {
+                    display: none;
+                }
                 &.active {
                     label {
                         background: #0062C4;
                         color: #fff;
+                    }
+                    .svg-icon-avatar_icon {
+                        display: none;
+                    }
+                    .svg-icon-avatar_icon_active {
+                        display: block;
                     }
                 }
                 .logout {

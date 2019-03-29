@@ -181,6 +181,11 @@ html, body {
                     border: 1px solid #3E495E;
                     border-radius: 8px;
                 }
+                .el-radio {
+                    .el-radio__label {
+                        display: none;
+                    }
+                }
             }
         }
     }

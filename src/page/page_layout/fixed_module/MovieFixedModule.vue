@@ -10,7 +10,7 @@
                 <div id="movie-top-left-field" :style="styleBgImageStr(movieActiveIndex)" class="wrapper">
                     <corner-mark :squareIndex="movieActiveIndex" :cornerMark="getLayoutItemCornerMark(navbarId, 0, movieActiveIndex)"></corner-mark>
                 </div>
-                <div class="wrapper">
+                <div class="wrapper middle-wrapper">
                     <div class="top-middle-field">
                         <div @click.stop="changeMovieActiveIndex(0)" :class="['top-middle-field-item', movieActiveIndex === 0 ? 'active' : '']">
                             <div class="movie-text-info">
@@ -354,15 +354,12 @@ export default {
                 &:first-child {
                     width: 56.5909%;
                     @include paddingBg(26.8181%);
-                    border-top-right-radius:0;
-                    border-bottom-right-radius:0;
                 }
                 &:nth-child(2) {
                     width: 21.5909%;
-                    margin-right: 2.2727%;
+                    margin-right: 2%;
+                    margin-left: 0.2727%;
                     @include paddingBg(26.8181%);
-                    border-top-left-radius:0;
-                    border-bottom-left-radius:0;
                 }
                 &:last-child {
                     width: 19.4318%;
@@ -374,11 +371,16 @@ export default {
                     justify-content: space-between;
                     width: 100%;
                     height: 100%;
+                    background-color: red;
                     .top-middle-field-item {
-                        @include paddingBg(30.5263%);
-                        border-radius: 0;
+                        // @include paddingBg(30.5263%);
+                        @include paddingBg(29%);
                         cursor: pointer;
                         color: #6F7480;
+                        border-radius: 0;
+                        & + .top-middle-field-item {
+                            margin-top: 2%;
+                        }
                         &:hover {
                             border: 1px solid #1989FA;
                         }
@@ -389,6 +391,10 @@ export default {
                         }
                     }
                 }
+            }
+            .middle-wrapper {
+                background-color: transparent!important;
+                border: none!important;
             }
             .movie-text-info {
                 position: absolute;
