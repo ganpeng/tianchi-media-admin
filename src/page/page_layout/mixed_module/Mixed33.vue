@@ -41,6 +41,7 @@
                             </el-button>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="CHANNEL">筛选</el-dropdown-item>
+                                <el-dropdown-item command="LINK">网页</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -57,6 +58,7 @@
                             </el-button>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="CHANNEL">筛选</el-dropdown-item>
+                                <el-dropdown-item command="LINK">网页</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -73,6 +75,7 @@
                             </el-button>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="CHANNEL">筛选</el-dropdown-item>
+                                <el-dropdown-item command="LINK">网页</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -91,6 +94,7 @@
                             </el-button>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="CHANNEL">筛选</el-dropdown-item>
+                                <el-dropdown-item command="LINK">网页</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -107,6 +111,7 @@
                             </el-button>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="CHANNEL">筛选</el-dropdown-item>
+                                <el-dropdown-item command="LINK">网页</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -123,6 +128,7 @@
                             </el-button>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="CHANNEL">筛选</el-dropdown-item>
+                                <el-dropdown-item command="LINK">网页</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -134,6 +140,13 @@
             :allowResolutions="allowResolutions"
             ref="selectFilterDialog">
         ></edit-filter>
+
+        <!-- 新增部分 -->
+        <link-dialog
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectLinkDialog">
+        ></link-dialog>
     </div>
 </template>
 <script>
@@ -142,12 +155,16 @@ import _ from 'lodash';
 import ShuffleBtn from './ShuffleBtn';
 import EditFilter from '../add_edit_module/EditFilter';
 import CornerMark from '../CornerMark';
+//  新增部分
+import LinkDialog from '../add_edit_module/LinkDialog';
 export default {
     name: 'Mixed33',
     components: {
         ShuffleBtn,
         EditFilter,
-        CornerMark
+        CornerMark,
+        //  新增
+        LinkDialog
     },
     props: {
         item: {
@@ -204,9 +221,13 @@ export default {
             saveLayoutToStore: 'pageLayout/saveLayoutToStore',
             insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex'
         }),
-        addShuffleLayout(layoutItemType, squareIndex) {
+        addShuffleLayout(command, squareIndex) {
             this.squareIndex = squareIndex;
-            this.$refs.selectFilterDialog.showDialog();
+            if (command === 'LINK') {
+                this.$refs.selectLinkDialog.showDialog(command);
+            } else {
+                this.$refs.selectFilterDialog.showDialog();
+            }
         },
         addLayout(type) {
             let {navbarId} = this.$route.params;

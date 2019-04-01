@@ -266,7 +266,7 @@
                         <template slot-scope="scope">
                             <div class="operator-btn-wrapper">
                                 <span class="btn-text" @click="editProgramme(scope.row.id)">编辑</span>
-                                <span class="btn-text text-danger" @click="_realDeleteProgramme(scope.row.id)">删除</span>
+                                <span :class="['btn-text', 'text-danger', scope.row.visible ? 'not-allowed' : '']" @click="_realDeleteProgramme(scope.row)">删除</span>
                             </div>
                         </template>
                     </el-table-column>
@@ -475,32 +475,46 @@
                         }
                     });
             },
-            lowerFrameProgramme(programme) {
-                let {id, visible} = programme;
-                if (!_.get(programme, 'coverImage.uri') && !visible) {
-                    this.$message.error('没有封面图的节目不能上架');
-                    return false;
-                }
-                this.$confirm(`您确定要${visible ? '下架节目' : '上架节目'}吗, 是否继续?`, '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'error'
-                }).then(() => {
-                    this.deleteProgramme(id)
-                        .then((res) => {
+            async lowerFrameProgramme(programme) {
+                try {
+                    let {id, visible, refCount} = programme;
+                    if (!_.get(programme, 'coverImage.uri') && !visible) {
+                        this.$message.error('没有封面图的节目不能上架');
+                        return false;
+                    }
+
+                    if (refCount > 0) {
+                        let confirm = await this.$confirm(`该节目已被关联，如需下架，请先解除其关联关系。`, '提示', {
+                            confirmButtonText: '去解除',
+                            cancelButtonText: '取消',
+                            type: 'error'
+                        });
+                        if (confirm) {
+                            this.displayRelated(programme);
+                        }
+                    } else {
+                        let confirm = await this.$confirm(`您确定要${visible ? '下架节目' : '上架节目'}吗, 是否继续?`, '提示', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'error'
+                        });
+
+                        if (confirm) {
+                            let res = await this.deleteProgramme(id);
                             if (res && res.code === 0) {
                                 this.$message.success(`节目${visible ? '下架' : '上架'}成功`);
-                                this.getProgrammeList()
-                                    .then((res) => {
-                                        if (res && res.code === 0) {
-                                            this.checkedVideoList();
-                                        }
-                                    });
+                                let res2 = await this.getProgrammeList();
+                                if (res2 && res2.code === 0) {
+                                    this.checkedVideoList();
+                                }
                             } else {
                                 this.$message.warning(this.lowerFrameProgrammeErrorHandler(res));
                             }
-                        });
-                }).catch(() => {});
+                        }
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
             },
             lowerFrameProgrammeErrorHandler(res) {
                 let {code, data, message} = res;
@@ -609,14 +623,18 @@
                         });
                 }).catch(() => {});
             },
-            _realDeleteProgramme(id) {
-                this.$confirm(`您确定要删除该节目吗, 是否继续?`, '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'error'
-                }).then(() => {
-                    this.realDeleteProgramme(id)
-                        .then((res) => {
+            async _realDeleteProgramme(programme) {
+                try {
+                    let {id, visible} = programme;
+                    if (!visible) {
+                        let confirm = await this.$confirm(`您确定要删除该节目吗, 是否继续?`, '提示', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'error'
+                        });
+
+                        if (confirm) {
+                            let res = await this.realDeleteProgramme(id);
                             if (res && res.code === 0) {
                                 this.$message.success({message: '节目删除成功'});
                                 this.getProgrammeList();
@@ -624,8 +642,11 @@
                                 let message = res.message || '节目删除失败';
                                 this.$message.error({message});
                             }
-                        });
-                }).catch(() => {});
+                        }
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
             },
             selectHandler(list, row) {
                 let isSelected = list.findIndex((item) => item.id === row.id) >= 0;

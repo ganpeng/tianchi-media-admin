@@ -9,7 +9,7 @@
                 </li>
             </ul>
             <div :class="[active === navList.length - 1 ? 'active' : '']"
-                 class="user-info float-right clearfix">
+                class="user-info float-right clearfix">
                 <svg-icon icon-class="avatar_icon"></svg-icon>
                 <svg-icon icon-class="avatar_icon_active"></svg-icon>
                 <label @click="changeActive(navList.length - 1)">{{name}}</label>

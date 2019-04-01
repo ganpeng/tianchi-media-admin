@@ -106,6 +106,13 @@
             :allowResolutions="allowResolutions"
             ref="selectFilterDialog">
         ></edit-filter>
+
+        <!-- 新增部分 -->
+        <link-dialog
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="selectLinkDialog">
+        ></link-dialog>
     </div>
 </template>
 <script>
@@ -116,6 +123,8 @@ import ChannelDialog from '../add_edit_module/ChannelDialog';
 import CornerMark from '../CornerMark';
 //  新增加的部分
 import EditFilter from '../add_edit_module/EditFilter';
+//  新增部分
+import LinkDialog from '../add_edit_module/LinkDialog';
 export default {
     name: 'Mixeds6',
     components: {
@@ -123,7 +132,10 @@ export default {
         ChannelDialog,
         CornerMark,
         //  新增加的部分
-        EditFilter
+        EditFilter,
+
+        // 2.2.0新增
+        LinkDialog
     },
     props: {
         item: {

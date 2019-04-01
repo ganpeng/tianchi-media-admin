@@ -18,6 +18,7 @@
             <el-dropdown-menu v-if="!onlyChannel" slot="dropdown">
                 <el-dropdown-item command="CHANNEL">频道</el-dropdown-item>
                 <el-dropdown-item command="FILTER">筛选</el-dropdown-item>
+                <el-dropdown-item command="LINK">网页</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
     </div>

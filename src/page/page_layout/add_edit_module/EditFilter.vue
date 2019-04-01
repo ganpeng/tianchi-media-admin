@@ -279,7 +279,7 @@
                 this.initSubject();
                 // 回填相应的数据
                 let _layoutItemType = _.get(this.layoutItem, 'layoutItemType');
-                if (!/_PROGRAMME_CATEGORY$/.test(_layoutItemType)) {
+                if (!/_PROGRAMME_CATEGORY$/.test(_layoutItemType) && !this.isAdd) {
                     this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
                 }
 
