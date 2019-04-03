@@ -219,12 +219,12 @@
                         :row-class-name="programmeTableRowClassName"
                         ref="multipleTable"
                         header-row-class-name="common-table-header" class="my-table-style" :data="programmeList" border>
-                        <el-table-column align="center" label="选择">
+                        <el-table-column min-width="40px" align="center" label="选择">
                             <template slot-scope="scope">
                                 <el-radio :value="getProgrammeId" :label="scope.row.id" @input="setProgrammeHandler(scope.row)">&nbsp;</el-radio>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="code" align="center" width="120px" label="节目编号">
+                        <el-table-column prop="code" align="center" min-width="120px" label="节目编号">
                             <template slot-scope="scope">
                                 {{scope.row.code | padEmpty}}
                             </template>

@@ -94,7 +94,7 @@
                         <span class="search-name my-ellipsis">{{item.name}}</span>
                         <span v-if="item.name && item.name.length > 11" class="ellipsis-content">{{item.name}}</span>
                     </div>
-                    <div class="hahaha">设备:{{item.stbCountByCompany}}&nbsp;&nbsp;升级率:{{item.updatedRatio ? `${item.updatedRatio}%` : ''}}</div>
+                    <div class="hahaha">设备:{{item.stbCountByCompany}}&nbsp;&nbsp;升级率:{{updatedRatio(item.updatedRatio)}}</div>
                 </li>
             </ul>
             <div v-if="version.clientVersionStatsList.length > 0" class="seperator-line"></div>
@@ -106,6 +106,7 @@
 </template>
 <script>
 import {mapGetters, mapActions} from 'vuex';
+import _ from 'lodash';
 export default {
     name: 'VersionDetail',
     data() {
@@ -122,6 +123,15 @@ export default {
         hardwareType() {
             return (hardwareType) => {
                 return hardwareType ? (hardwareType === 'HARDWARE_3796' ? '3796' : '3798') : '无';
+            };
+        },
+        updatedRatio() {
+            return (updatedRatio) => {
+                if (_.isNil(updatedRatio) || _.isNaN(updatedRatio)) {
+                    return '';
+                } else {
+                    return `${parseInt(updatedRatio) * 100}%`;
+                }
             };
         }
     },

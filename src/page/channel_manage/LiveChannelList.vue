@@ -258,7 +258,7 @@
                         {{scope.row.protocolList ? scope.row.protocolList.join(', ') : ''}}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="状态">
+                <el-table-column align="center" min-width="120px" label="启用/正常">
                     <template slot-scope="scope">
                         <input
                             class="my-switch switch-anim"

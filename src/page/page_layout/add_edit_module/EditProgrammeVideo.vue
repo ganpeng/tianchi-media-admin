@@ -619,7 +619,8 @@ export default {
         },
         async dialogOpenHandler() {
             try {
-                if (this.layoutItemType !== 'PROGRAMME_VIDEO') {
+                let _layoutItemType = _.get(this.layoutItem, 'layoutItemType');
+                if (this.layoutItemType !== _layoutItemType) {
                     this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
                 } else {
                     if (this.getSquareProgrammeVideoId && this.getSquareProgrammeId) {

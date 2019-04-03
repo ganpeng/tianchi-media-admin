@@ -155,7 +155,7 @@
                     </el-table-column>
                     <el-table-column min-width="120" align="center" label="所属区域">
                         <template slot-scope="scope">
-                            {{scope.row.currentHardVersion | padEmpty}}
+                            {{getDistrictName(scope.row.districtCode) | padEmpty}}
                         </template>
                     </el-table-column>
                     <el-table-column width="140" align="center" label="MAC地址">
@@ -215,6 +215,7 @@
 </template>
 <script>
     import {mapGetters, mapActions, mapMutations} from 'vuex';
+    import _ from 'lodash';
     import role from '@/util/config/role';
     export default {
         name: 'DeviceList',
@@ -254,6 +255,16 @@
             getType() {
                 return (type) => {
                     return type ? (type === 'HARDWARE_3796' ? '3796' : '3798') : '------';
+                };
+            },
+            getDistrictName() {
+                return (districtCode) => {
+                    if (_.isNil(districtCode)) {
+                        return '';
+                    } else {
+                        let district = this.filialeList.find((item) => item.code === districtCode);
+                        return _.get(district, 'name');
+                    }
                 };
             }
         },

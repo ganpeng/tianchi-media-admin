@@ -83,7 +83,7 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item ref="uploadItem" label="升级包">
+                    <el-form-item ref="uploadItem" label="升级包" prop="fullPackageUri">
                         <el-button class="float-left file btn-style-four">
                             <svg-icon icon-class="file"></svg-icon>
                             <input ref="versionUpload" type="file" accept=".zip, .apk" id="version-file-input">选择文件
@@ -153,7 +153,10 @@ export default {
                 productType: [{required: true, message: '请选择升级类型'}],
                 hardwareType: [{required: true, message: '请选择硬件类型'}],
                 forced: [{required: true, message: '请选择升级方式'}],
-                fullPackageUri: [{required: true, message: '请上传升级包'}]
+                fullPackageUri: [{required: true, message: '请上传升级包'}],
+                districtCodeList: [
+                    { required: true, message: '请选择所属区域' }
+                ]
             },
             productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
             forcedOptions: role.FORCED_OPTIONS,
@@ -247,16 +250,11 @@ export default {
                     this.updateVersion({key: 'fullPackageUri', value: res.data[0].file.uri});
                     this.updateVersion({key: 'fullPackageMd5', value: res.data[0].file.key});
                     this.updateVersion({key: 'packageSize', value: res.data[0].file.size});
-                    this.$message({
-                        type: 'success',
-                        message: '文件上传成功'
-                    });
+                    this.$refs.createVersion.clearValidate('fullPackageUri');
+                    this.$message.success('文件上传成功');
                 }
             } else {
-                this.$message({
-                    type: 'error',
-                    message: res.data[0].failReason
-                });
+                this.$message.error(res.data[0].failReason);
             }
         },
         selectAreaCodeHandler(company) {
