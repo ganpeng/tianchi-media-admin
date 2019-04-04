@@ -181,6 +181,8 @@
                         return '开机广告';
                     case 'PREPOSITION':
                         return '片头广告';
+                    case 'PAUSE':
+                        return '暂停广告';
                     default:
                         return '';
                 }

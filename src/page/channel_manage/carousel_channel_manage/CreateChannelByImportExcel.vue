@@ -147,7 +147,7 @@
                         '（必填）',
                         multicastPort: '组播端口\n' +
                         '（必填）',
-                        pushServer: '所属服务器\n' +
+                        serverGroup: '服务器组\n' +
                         '（必填）',
                         protocol: '推流方式\n' +
                         '（必填,支持多选，/隔开）',
@@ -169,7 +169,7 @@
                         recordPort: '1234',
                         multicastIp: '232.1.1.2',
                         multicastPort: '1234',
-                        pushServer: '192.168.0.2',
+                        serverGroup: 'group1',
                         protocol: 'HLS/UDP',
                         publicChannel: '否',
                         company: '073/099/3004',
@@ -185,7 +185,7 @@
                         recordPort: '1234',
                         multicastIp: '232.1.1.3',
                         multicastPort: '1234',
-                        pushServer: '192.168.0.3',
+                        serverGroup: 'group2',
                         protocol: 'HLS',
                         publicChannel: '是',
                         company: '若为公共频道，则这里无需填写',
@@ -199,7 +199,7 @@
                         transcribe: '',
                         multicastIp: '',
                         multicastPort: '',
-                        pushServer: '',
+                        serverGroup: '',
                         protocol: '',
                         logoUri: '',
                         '备注说明': ''
@@ -218,7 +218,7 @@
                         '（必填）',
                         tsId: 'tsid',
                         serviceId: 'serviceId',
-                        pushServer: '所属服务器\n' +
+                        serverGroup: '服务器组\n' +
                         '（必填）',
                         protocol: '推流方式\n' +
                         '（必填,支持多选，/隔开）',
@@ -240,7 +240,7 @@
                         multicastPort: '1234',
                         tsId: '202',
                         serviceId: '2002',
-                        pushServer: '192.168.0.2',
+                        serverGroup: 'group1',
                         protocol: 'HLS/UDP',
                         publicChannel: '否',
                         company: '073/099/3004',
@@ -255,7 +255,7 @@
                         multicastPort: '1234',
                         tsId: '203',
                         serviceId: '2003',
-                        pushServer: '192.168.0.3',
+                        serverGroup: 'group2',
                         protocol: 'HLS',
                         publicChannel: '是',
                         company: '若为公共频道，则这里无需填写',
@@ -474,7 +474,10 @@
                         }
                     }
                 }
-                // 所属服务器，只对轮播、直播都不验证
+                // 服务器组
+                if (this.$util.isEmpty(channel.serverGroup)) {
+                    message = message + '请设置频道的服务器组;';
+                }
                 // 频道封面
                 if (this.$util.isEmpty(channel.logoUri)) {
                     message = message + '请设置频道的封面图片;';

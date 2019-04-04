@@ -145,14 +145,14 @@
                                 recordPort: channel.recordPort,
                                 multicastIp: channel.multicastIp,
                                 multicastPort: channel.multicastPort,
-                                pushServer: channel.pushServer,
+                                serverGroup: channel.serverGroup,
                                 protocol: channel.protocolList ? channel.protocolList.join('/') : '',
                                 publicChannel: channel.common ? '是' : '否',
                                 company: company.slice(1)
                             };
                             exportChannelData.push(simpleChannel);
                         });
-                        // 目前可以修改的字段有编号、类型、组播地址、端口号、所属服务器、是否录制回看
+                        // 目前可以修改的字段有编号、类型、组播地址、端口号、服务器组、是否录制回看
                         let wb = XLSX.utils.book_new();
                         let newWsName = '表1';
                         let ws = XLSX.utils.json_to_sheet(exportChannelData);
@@ -326,12 +326,10 @@
                 } else if (!this.$util.isPort(channel.multicastPort)) {
                     message = message + '请填写正确的组播端口号;';
                 }
-                // 所属服务器，去掉直播频道的pushServer服务器
-                // if (this.$util.isEmpty(channel.pushServer)) {
-                //     message = message + '请填写所属服务器IP地址;';
-                // } else if (!this.$util.isIPAddress(channel.pushServer)) {
-                //     message = message + '请填写正确的所属服务器IP地址;';
-                // }
+                // 服务器组
+                if (this.$util.isEmpty(channel.serverGroup)) {
+                    message = message + '请填写服务器组;';
+                }
                 if (channel.transcribe !== '是' && channel.transcribe !== '否') {
                     message = message + '请正确填写是否回看服务;';
                 }

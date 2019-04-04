@@ -149,14 +149,14 @@
                                 multicastPort: channel.multicastPort,
                                 tsId: channel.tsId,
                                 serviceId: channel.serviceId,
-                                pushServer: channel.pushServer,
+                                serverGroup: channel.serverGroup,
                                 protocol: channel.protocolList ? channel.protocolList.join('/') : '',
                                 publicChannel: channel.common ? '是' : '否',
                                 company: company.slice(1)
                             };
                             exportChannelData.push(simpleChannel);
                         });
-                        // 目前可以修改的字段有编号、组播地址、端口号、tsId、serviceId、所属服务器
+                        // 目前可以修改的字段有编号、组播地址、端口号、tsId、serviceId、服务器组
                         let wb = XLSX.utils.book_new();
                         let newWsName = '表1';
                         let ws = XLSX.utils.json_to_sheet(exportChannelData);
@@ -336,9 +336,9 @@
                 if (!this.$util.isEmpty(channel.serviceId) && !this.$util.isChannelServiceId(channel.serviceId)) {
                     message = message + '请填写正确的serviceId;';
                 }
-                // 所属服务器
-                if (this.$util.isEmpty(channel.pushServer)) {
-                    message = message + '请填写所属服务器;';
+                // 服务器组
+                if (this.$util.isEmpty(channel.serverGroup)) {
+                    message = message + '请填写服务器组;';
                 }
                 if (message) {
                     this.channelList[index].message = '第' + (index + 1) + '个:' + message;
