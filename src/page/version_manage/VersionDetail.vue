@@ -37,6 +37,12 @@
                     </li>
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
+                            <label class="label">影响设备数：</label>
+                            <span class="value">{{influencingEquipmentNumber()}}</span>
+                        </div>
+                    </li>
+                    <li class="text-info-item">
+                        <div class="text-info-item-wrapper">
                             <label class="label">升级类型：</label>
                             <span class="value">{{version.productType === 'TV_LAUNCHER' ? '应用升级' : '系统升级'}}</span>
                         </div>
@@ -130,7 +136,12 @@ export default {
                 if (_.isNil(updatedRatio) || _.isNaN(updatedRatio)) {
                     return '';
                 } else {
-                    return `${parseInt(updatedRatio) * 100}%`;
+                    if (_.isInteger(updatedRatio)) {
+                        return `${updatedRatio * 100}%`;
+                    } else {
+                        let _updatedRatio = this.$util.bankersRounding(updatedRatio * 100, 2);
+                        return `${_updatedRatio}%`;
+                    }
                 }
             };
         }
@@ -154,6 +165,11 @@ export default {
         }),
         goBack() {
             this.$router.push({name: 'VersionList'});
+        },
+        influencingEquipmentNumber() {
+            return this.version.clientVersionStatsList.reduce((res, curr) => {
+                return res + curr.stbCountByCompany;
+            }, 0);
         },
         toggleClickHandler() {
             this.showCompanyList = !this.showCompanyList;

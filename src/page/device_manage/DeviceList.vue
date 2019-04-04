@@ -262,7 +262,7 @@
                     if (_.isNil(districtCode)) {
                         return '';
                     } else {
-                        let district = this.filialeList.find((item) => item.code === districtCode);
+                        let district = this.filialeList.find((item) => parseInt(item.code) === parseInt(districtCode));
                         return _.get(district, 'name');
                     }
                 };
