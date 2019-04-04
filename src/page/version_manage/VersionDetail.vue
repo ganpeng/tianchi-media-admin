@@ -31,7 +31,7 @@
                     </li>
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
-                            <label class="label">设备数：</label>
+                            <label class="label">已升级设备数：</label>
                             <span class="value">{{version.stbCount}}</span>
                         </div>
                     </li>

@@ -28,7 +28,7 @@
                     </el-steps>
                     <div class="seperator-line"></div>
                 </div>
-                <div v-show="active === 0" class="step-one">
+                <div v-if="active === 0" class="step-one">
                     <div v-if="showExist" class="exist-video-wrapper">
                         <p class="table-title">当前已选专题节目内包含的视频</p>
                         <el-table
@@ -213,7 +213,7 @@
                         </el-pagination>
                     </div>
                 </div>
-                <div v-show="active === 1" class="step-three">
+                <div v-if="active === 1" class="step-three">
                     <p class="table-title">当前已选专题内包含的节目</p>
                     <el-table
                         :row-class-name="programmeTableRowClassName"
@@ -243,7 +243,7 @@
                         </el-table-column>
                     </el-table>
                 </div>
-                <div v-show="active === 2" class="step-three">
+                <div v-if="active === 2" class="step-three">
                     <p class="table-title">当前已选节目内包含的视频</p>
                     <el-table
                         class="my-table-style"
@@ -370,7 +370,7 @@
                         </el-table-column>
                     </el-table>
                 </div>
-                <div v-show="active === 3" class="step-two">
+                <div v-if="active === 3" class="step-two">
                     <el-form class="my-el-form" style="margin-top:20px;" status-icon label-width="120px" @submit.native.prevent>
                         <el-col :span="24">
                             <el-form-item label="非焦点图" required>
@@ -414,7 +414,7 @@
                         </el-col>
                     </el-form>
                 </div>
-                <div v-show="active === 4" class="step-two">
+                <div v-if="active === 4" class="step-two">
                     <el-form status-icon label-width="120px" style="margin-top:20px;" class="my-el-form clearfix" @submit.native.prevent>
                         <el-col :span="14">
                             <el-form-item label="节目角标">
