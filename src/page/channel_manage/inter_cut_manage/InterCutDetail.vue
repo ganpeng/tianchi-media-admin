@@ -262,7 +262,7 @@
             },
             toInterCutList() {
                 this.$router.push({
-                    name: 'IterCutList'
+                    name: 'InterCutList'
                 });
             }
         }

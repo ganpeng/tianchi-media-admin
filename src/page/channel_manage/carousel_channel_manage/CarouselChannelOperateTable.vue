@@ -22,7 +22,7 @@
                 <template slot-scope="scope">
                     <span>{{scope.row.no}}</span>
                     <span @click="previewChannel(scope.row)"
-                          v-if="scope.row.visible && scope.row.applyStatus === 'ACTIVE'"
+                          v-if="scope.row.visible && scope.row.applyStatus !== 'WAITING'"
                           class="display-btn">
                         <svg-icon icon-class="channel_video_play"></svg-icon>
                     </span>

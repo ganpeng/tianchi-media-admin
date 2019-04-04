@@ -45,11 +45,12 @@ export const getInterCutList = ({keyword, channelIdList, scheduled, playStatus, 
 /**
  * 修改插播信息
  */
-export const updateInterCutInfo = ({id, name, scheduled, startTime, totalDuration, channelList, videoList}) => {
+export const updateInterCutInfo = ({id, name, createdAt, scheduled, startTime, totalDuration, channelList, videoList}) => {
     return service.put('/v1/live/inter-cut', {
         id,
         name,
         scheduled,
+        createdAt,
         startTime,
         totalDuration,
         channelList,
