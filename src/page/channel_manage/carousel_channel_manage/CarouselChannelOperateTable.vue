@@ -114,7 +114,7 @@
             <el-table-column
                 align="center"
                 min-width="100px"
-                label="启用/正常">
+                label="启用/禁用">
                 <template slot-scope="scope">
                     <input
                         class="my-switch switch-anim"

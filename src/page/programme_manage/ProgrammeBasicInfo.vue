@@ -16,7 +16,7 @@
                     <div class="left-side">
                         <span class="title">{{programme.name}}</span>
                         <span v-if="programme.releaseAt" class="release-at">[{{programme.releaseAt | formatDate('yyyy.MM.DD')}}]</span>
-                        <span class="score">{{programme.score}}</span>
+                        <span v-if="programme.score" class="score">{{programme.score}}</span>
                         <span v-if="isTvPlay && programme.totalSets" class="total-sets">{{programme.totalSets}}集</span>
                     </div>
                     <div class="date">
