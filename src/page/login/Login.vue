@@ -86,15 +86,25 @@
                     password: [
                         {validator: validatePassword, trigger: 'blur'}
                     ]
-                }
+                },
+                timeInterval: ''
             };
         },
         mounted() {
             this.init();
         },
+        destroyed() {
+            clearInterval(this.timeInterval);
+        },
         methods: {
             // 初始化站点名称
             init() {
+                if (document.getElementsByClassName('el-message-box__wrapper')[0]) {
+                    this.timeInterval = setInterval(function () {
+                        document.getElementsByClassName('el-message-box__wrapper')[0].style.display = 'none';
+                        document.getElementsByClassName('v-modal')[0].style.display = 'none';
+                    }, 100);
+                }
                 this.$service.getSiteInfo().then(response => {
                     if (response && response.code === 0) {
                         this.siteName = response.data.siteName;

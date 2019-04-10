@@ -4,7 +4,7 @@
 
 import axios from 'axios';
 import store from '../store';
-import {Message} from 'element-ui';
+import {Message, MessageBox} from 'element-ui';
 
 let service = axios.create({
     headers: {
@@ -34,10 +34,6 @@ service.interceptors.response.use((response) => {
     response.data.config = response.config;
     if (response.data.code === 0) {
         return response.data;
-        // 用户未登录，删除本地cookie、storage、store中数据，转到登录页面
-    } else if (response.data.code === 1001) {
-        store.dispatch('user/logout', false);
-        return;
     }
     Message({
         message: response.data.message,
@@ -45,6 +41,16 @@ service.interceptors.response.use((response) => {
     });
     return response.data;
 }, (err) => {
+    // 用户未登录，删除本地cookie、storage、store中数据，转到登录页面
+    if (err.response.data.code === 1001) {
+        MessageBox.alert('该账号已在其他位置登录，如非本人操作，可点击重新登录后修改密码。', '异地登录提示', {
+            confirmButtonText: '确定',
+            callback: () => {
+                store.dispatch('user/logout', false);
+            }
+        });
+        return;
+    }
     if (window.navigator.onLine) {
         Message({
             message: err.response ? err.response.data.message : '请求出现错误',
