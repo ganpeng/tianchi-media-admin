@@ -800,6 +800,21 @@ const PROGRAMME_ALLOW_PICTURE_DIMENSIONS = [
     }
 ];
 
+const APP_PROGRAMME_ALLOW_PICTURE_DIMENSIONS = [
+    {
+        width: 351,
+        height: 507
+    },
+    {
+        width: 1089,
+        height: 612
+    },
+    {
+        width: 540,
+        height: 303
+    }
+];
+
 const AD_TYPE_OPTIONS = [
     {
         name: '开机广告',
@@ -911,6 +926,8 @@ export default {
     LAYOUT_TEMPLATE_LIST,
     VIDEO_SUFFIX_OPTIONS,
     PROGRAMME_ALLOW_PICTURE_DIMENSIONS,
+    //  2.3.0新增
+    APP_PROGRAMME_ALLOW_PICTURE_DIMENSIONS,
 //  广告相关
     AD_TYPE_OPTIONS,
     AD_STATUS_OPTIONS

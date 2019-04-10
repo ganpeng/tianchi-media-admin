@@ -108,7 +108,10 @@ const defaultProgramme = {
     // 版权起止日期
     copyrightRange: [],
     // 当前选中的节目分类下的类型
-    currentTypeList: []
+    currentTypeList: [],
+
+    //  v2.3.0中新增加的字段
+    clientList: ['APP', 'TV'] // 客户端适用的字段
 };
 
 const defaultVideo = {

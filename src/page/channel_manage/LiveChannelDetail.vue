@@ -57,8 +57,8 @@
                         </li>
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
-                                <span class="label">所属服务器：</span>
-                                <span class="value">{{liveChannel.pushServer}}</span>
+                                <span class="label">所属组：</span>
+                                <span class="value">{{liveChannel.serverGroup}}</span>
                             </div>
                         </li>
                         <li class="text-info-item">
@@ -69,38 +69,38 @@
                         </li>
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
-                                <span class="label">是否回看：</span>
-                                <span class="value">{{liveChannel.record ? '是' : '否'}}</span>
-                            </div>
-                        </li>
-                        <li class="text-info-item">
-                            <div class="text-info-item-wrapper">
                                 <span class="label">公共频道：</span>
                                 <span class="value">{{liveChannel.common ? '是' : '否'}}</span>
                             </div>
                         </li>
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
-                                <span class="label">端口号：</span>
+                                <span class="label">组播端口：</span>
                                 <span class="value">{{liveChannel.multicastPort}}</span>
                             </div>
                         </li>
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
-                                <span class="label">录制IP：</span>
-                                <span class="value">{{liveChannel.recordIp}}</span>
+                                <span class="label">是否回看：</span>
+                                <span class="value">{{liveChannel.record ? '是' : '否'}}</span>
                             </div>
                         </li>
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
-                                <span class="label">录制端口：</span>
-                                <span class="value">{{liveChannel.recordPort}}</span>
+                                <span class="label">录制地址：</span>
+                                <span class="value">{{liveChannel.recordIp}}</span>
                             </div>
                         </li>
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
                                 <span class="label">videoPid：</span>
                                 <span class="value">{{liveChannel.videoPid ? liveChannel.videoPid : '无'}}</span>
+                            </div>
+                        </li>
+                        <li class="text-info-item">
+                            <div class="text-info-item-wrapper">
+                                <span class="label">录制端口：</span>
+                                <span class="value">{{liveChannel.recordPort}}</span>
                             </div>
                         </li>
                         <li class="text-info-item">

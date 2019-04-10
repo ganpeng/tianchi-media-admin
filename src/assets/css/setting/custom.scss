@@ -1709,11 +1709,11 @@ html, body {
             height: 278px;
         }
     }
-    .el-form-item__content {
-        // line-height: 34px;
-    }
     .el-input--prefix .el-input__inner {
         padding-left: 15px;
+    }
+    .el-checkbox {
+        padding: 0;
     }
 }
 

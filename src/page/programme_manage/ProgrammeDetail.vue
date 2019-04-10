@@ -428,6 +428,10 @@
                                 </el-input>
                             </el-col>
                         </el-form-item>
+                        <el-form-item label="适用客户端" prop="clientList">
+                            <el-checkbox :value="clientChecked('APP')" @change="clientCheckedHandler($event, 'APP')">APP</el-checkbox>
+                            <el-checkbox :value="clientChecked('TV')" @change="clientCheckedHandler($event, 'TV')">TV</el-checkbox>
+                        </el-form-item>
                         <el-form-item label="节目海报">
                             <p class="little-tips">(260*380)六分位图必传</p>
                         </el-form-item>
@@ -438,6 +442,19 @@
                                 :imageUploadedHandler="imageUploadedHandler"
                                 :allowResolutions="allowResolutions"
                                 :validator="imageUploadValidator"
+                            ></multi-image-uploader>
+                        </div>
+                        <!-- 新增加的移动端的图片 -->
+                        <el-form-item label="移动端图片">
+                            <p class="little-tips">(351*507, 1089*612)尺寸必传</p>
+                        </el-form-item>
+                        <div class="wrapper clearfix">
+                            <multi-image-uploader
+                                :imageList="programme.posterImageList"
+                                :deleteImageHandler="deleteImageHandler"
+                                :imageUploadedHandler="imageUploadedHandler"
+                                :allowResolutions="appAllowResolutions"
+                                :validator="appImageUploadValidator"
                             ></multi-image-uploader>
                         </div>
                     </el-col>
@@ -639,9 +656,6 @@
                     innerName: [
                         { required: true, message: '请输入内部节目名称' }
                     ],
-                    // desc: [
-                    //     { required: true, message: '请输入节目看点' }
-                    // ],
                     description: [
                         { required: true, message: '请输入节目简介' }
                     ],
@@ -660,6 +674,9 @@
                     ],
                     visible: [
                         { required: true, message: '请选择节目状态' }
+                    ],
+                    clientList: [
+                        { required: true, message: '请选择适用客户端' }
                     ]
                 }
             };
@@ -699,6 +716,16 @@
             },
             allowResolutions() {
                 return role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS;
+            },
+            appAllowResolutions() {
+                return role.APP_PROGRAMME_ALLOW_PICTURE_DIMENSIONS;
+            },
+            //  适用客户端
+            clientChecked() {
+                return (key) => {
+                    let index = this.programme.clientList.findIndex((item) => item === key);
+                    return index > -1;
+                };
             },
             //  拖拽排序的字段
             produceAreaList: {
@@ -1392,6 +1419,9 @@
                 }
                 return true;
             },
+            appImageUploadValidator(fileList) {
+                return true;
+            },
             markChangeHandler(checked, key) {
                 this.updateProgrammeMark({checked, key});
             },
@@ -1401,6 +1431,17 @@
                     delete cornerMark.rightTop;
                 }
                 this.updateProgramme({key: 'cornerMark', value: cornerMark});
+            },
+            //  适用客户端处理方法
+            clientCheckedHandler(value, key) {
+                let clientList = _.cloneDeep(this.programme.clientList);
+                if (value) {
+                    clientList.push(key);
+                } else {
+                    clientList = clientList.filter((item) => item !== key);
+                }
+                clientList = _.uniq(clientList);
+                this.updateProgramme({key: 'clientList', value: clientList});
             }
         }
     };

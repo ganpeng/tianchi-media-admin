@@ -616,7 +616,6 @@
                     }
                 }
             },
-            // 天天影视，乐享视频, 吉美视频
             async multLowerFrameChannelHandler() {
                 let idList = this.selectedChannelList.map((item) => item.id);
                 let confirm = await this.$confirm(`您确定要禁播所选频道吗, 是否继续?`, '提示', {
