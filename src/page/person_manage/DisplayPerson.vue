@@ -52,35 +52,30 @@
                 </p>
             </div>
         </div>
+        <div class="bg-image-container">
+            <h4 class="content-sub-title" style="margin-left:20px;">背景图</h4>
+            <single-poster v-if="person.backgroundImage" :img="person.backgroundImage"></single-poster>
+        </div>
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" @click="editPerson">编辑</el-button>
             <el-button class="btn-style-three" @click="goBack">返回列表</el-button>
         </div>
-        <preview-multiple-images :previewMultipleImages="previewImage"></preview-multiple-images>
     </div>
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import store from 'store';
-    import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import PersonDetail from './PersonDetail';
-    import Thumbnail from '../../components/custom_components/custom/Thumbnail';
+    import SinglePoster from 'sysComponents/custom_components/custom/SinglePoster';
     export default {
         name: 'DisplayPerson',
         components: {
             PersonDetail,
-            PreviewMultipleImages,
-            Thumbnail
+            SinglePoster
         },
         data() {
             return {
-                areaOptions: store.get('areaList'),
-                previewImage: {
-                    display: false,
-                    autoplay: false,
-                    activeIndex: 0,
-                    list: []
-                }
+                areaOptions: store.get('areaList')
             };
         },
         computed: {
@@ -98,11 +93,6 @@
             ...mapActions({
                 getPersonById: 'person/getPersonById'
             }),
-            displayImage(index) {
-                this.previewImage.display = true;
-                this.previewImage.list = this.person.posterImageList;
-                this.previewImage.activeIndex = index;
-            },
             appendImagePrefix(uri) {
                 let baseUri = window.localStorage.getItem('imageBaseUri');
                 return baseUri + uri;

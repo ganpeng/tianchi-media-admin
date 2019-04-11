@@ -437,7 +437,7 @@
                         </el-form-item>
                         <div class="wrapper clearfix">
                             <multi-image-uploader
-                                :imageList="programme.posterImageList"
+                                :imageList="tvImageList"
                                 :deleteImageHandler="deleteImageHandler"
                                 :imageUploadedHandler="imageUploadedHandler"
                                 :allowResolutions="allowResolutions"
@@ -450,7 +450,8 @@
                         </el-form-item>
                         <div class="wrapper clearfix">
                             <multi-image-uploader
-                                :imageList="programme.posterImageList"
+                                id="appImageUploader"
+                                :imageList="appImageList"
                                 :deleteImageHandler="deleteImageHandler"
                                 :imageUploadedHandler="imageUploadedHandler"
                                 :allowResolutions="appAllowResolutions"
@@ -848,16 +849,26 @@
             rightBottomDisabled() {
                 return !this.programme.score;
             },
-            markChecked() {
-                return (position) => {
-                    // let mark = _.get(this.programme, `cornerMark.${position}.caption`);
-                    let mark = _.get(this.cornerMark, `${position}.caption`);
-                    console.log(!!mark);
-                    return !!mark;
-                };
-            },
             rightTop() {
                 return _.get(this.programme, 'cornerMark.rightTop');
+            },
+            tvImageList() {
+                let list = this.programme.posterImageList.filter((posterImage) => {
+                    let index = role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS.findIndex((item) => {
+                        return parseInt(item.width) === parseInt(posterImage.width) && parseInt(item.height) === parseInt(posterImage.height);
+                    });
+                    return index > -1;
+                });
+                return list;
+            },
+            appImageList() {
+                let list = this.programme.posterImageList.filter((posterImage) => {
+                    let index = role.APP_PROGRAMME_ALLOW_PICTURE_DIMENSIONS.findIndex((item) => {
+                        return parseInt(item.width) === parseInt(posterImage.width) && parseInt(item.height) === parseInt(posterImage.height);
+                    });
+                    return index > -1;
+                });
+                return list;
             }
         },
         methods: {
@@ -1420,6 +1431,25 @@
                 return true;
             },
             appImageUploadValidator(fileList) {
+                let onlyFileListOne = fileList.filter((item) => {
+                    let {width, height} = item.demension;
+                    return parseInt(width) === 351 && parseInt(height) === 507;
+                });
+
+                let onlyFileListTwo = fileList.filter((item) => {
+                    let {width, height} = item.demension;
+                    return parseInt(width) === 1089 && parseInt(height) === 612;
+                });
+
+                if (onlyFileListOne.length > 1) {
+                    this.$message.error('“351*507尺寸图片只能上传一张');
+                    return false;
+                }
+
+                if (onlyFileListTwo.length > 1) {
+                    this.$message.error('1089*612尺寸图只能上传一张');
+                    return false;
+                }
                 return true;
             },
             markChangeHandler(checked, key) {

@@ -7,9 +7,6 @@
                     <svg-icon icon-class="remove_image_hover"></svg-icon>
                     <svg-icon icon-class="remove_image_default"></svg-icon>
                 </span>
-                <!-- <span v-if="showDelete" @click.stop="deleteImage" class="delete-btn-one small delete-icon">
-                    &times;
-                </span> -->
             </div>
             <div class="uploader-wrapper">
                 <div class="uploader" :style="styleStr">

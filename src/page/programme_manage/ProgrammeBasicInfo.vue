@@ -90,6 +90,12 @@
                                 {{programme.platformList.join(', ')}}
                             </span>
                         </div>
+                        <div class="attribute-item">
+                            <label class="label">适用客户端</label>
+                            <span class="value">
+                                {{programme.clientList.join(', ')}}
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="right-side">
@@ -122,12 +128,13 @@
             </div>
         </div>
         <div class="seperator-line"></div>
-        <div v-if="imageList.length > 0" class="other-poster">
+        <div v-if="tvImageList.length > 0" class="other-poster">
             <h4 class="content-sub-title" style="margin-left:20px;">其他海报</h4>
-                <thumbnail
-                    :removeSign="false"
-                    :imageList="imageList">
-                </thumbnail>
+            <thumbnail :removeSign="false" :imageList="tvImageList"></thumbnail>
+        </div>
+        <div v-if="appImageList.length > 0" class="other-poster">
+            <h4 class="content-sub-title" style="margin-left:20px;">APP海报</h4>
+            <thumbnail :removeSign="false" :imageList="appImageList"></thumbnail>
         </div>
     </div>
 </template>
@@ -135,6 +142,7 @@
     import {mapGetters} from 'vuex';
     import _ from 'lodash';
     import store from 'store';
+    import role from '@/util/config/role';
     import Thumbnail from '../../components/custom_components/custom/Thumbnail';
     export default {
         name: 'ProgrammeBasicInfo',
@@ -158,9 +166,24 @@
                 isSports: 'programme/isSports',
                 getAllRoleList: 'programme/getAllRoleList'
             }),
-            imageList() {
+            tvImageList() {
                 return this.programme.posterImageList.filter((image) => {
                     return parseInt(image.width) !== 260 && parseInt(image.height) !== 380;
+                }).filter((posterImage) => {
+                    let index = role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS.findIndex((item) => {
+                        return parseInt(item.width) === parseInt(posterImage.width) && parseInt(item.height) === parseInt(posterImage.height);
+                    });
+                    return index > -1;
+                });
+            },
+            appImageList() {
+                return this.programme.posterImageList.filter((image) => {
+                    return parseInt(image.width) !== 260 && parseInt(image.height) !== 380;
+                }).filter((posterImage) => {
+                    let index = role.APP_PROGRAMME_ALLOW_PICTURE_DIMENSIONS.findIndex((item) => {
+                        return parseInt(item.width) === parseInt(posterImage.width) && parseInt(item.height) === parseInt(posterImage.height);
+                    });
+                    return index > -1;
                 });
             },
             getMark() {

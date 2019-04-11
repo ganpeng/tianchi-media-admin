@@ -103,6 +103,17 @@
                     ></single-image-uploader>
                 </el-form-item>
             </el-col>
+            <el-col :span="24">
+                <el-form-item label="背景图片" required>
+                    <single-image-uploader
+                        id="bgImageUploader"
+                        :uri="person.backgroundImage ? person.backgroundImage.uri : ''"
+                        :deleteImage="deleteBackgroundImage"
+                        :uploadSuccessHandler="bgUploadSuccessHandler"
+                        :allowResolutions="[{width: 1125, height: 633}]"
+                    ></single-image-uploader>
+                </el-form-item>
+            </el-col>
         </el-form>
     </div>
 </template>
@@ -201,8 +212,14 @@ export default {
         uploadSuccessHandler(img) {
             this.updateCurrentPerson({key: 'avatarImage', value: img});
         },
+        bgUploadSuccessHandler(img) {
+            this.updateCurrentPerson({key: 'backgroundImage', value: img});
+        },
         deleteAvatarImage() {
             this.updateCurrentPerson({key: 'avatarImage', value: null});
+        },
+        deleteBackgroundImage() {
+            this.updateCurrentPerson({key: 'backgroundImage', value: null});
         },
         selectMainRoleHandler(mainRole) {
             this.addMainRoleToList({mainRole});

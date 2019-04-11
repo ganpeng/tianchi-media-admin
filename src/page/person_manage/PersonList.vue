@@ -130,6 +130,11 @@
                             {{cutStr20(scope.row.alias) | padEmpty}}
                         </template>
                     </el-table-column>
+                    <el-table-column align="center" label="背景">
+                        <template slot-scope="scope">
+                            {{scope.row.backgroundImage && scope.row.backgroundImage.uri ? '有' : '无'}}
+                        </template>
+                    </el-table-column>
                     <el-table-column label="照片" width="120px" align="center" >
                         <template slot-scope="scope">
                             <img v-if="scope.row.avatarImage" @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="100px" height="100px" class="person-image pointer" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">

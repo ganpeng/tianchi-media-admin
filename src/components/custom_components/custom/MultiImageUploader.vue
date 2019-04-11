@@ -4,7 +4,6 @@
             <ul class="image-list">
                 <li @click.stop="displayImage(index)" v-for="(image, index) in imageList" :key="image.id" class="image-item">
                     <div class="image-warpper">
-                        <!-- <img :src="image.uri" class="image" alt=""> -->
                         <div class="image" :style="bgStyle(image.uri)"></div>
                         <div class="mask"></div>
                     </div>
@@ -12,10 +11,6 @@
                         <svg-icon icon-class="remove_image_hover"></svg-icon>
                         <svg-icon icon-class="remove_image_default"></svg-icon>
                     </span>
-                    <!-- <span @click.stop="deleteImage(image.id)" class="delete-btn-one small delete-icon">
-                        &times;
-                    </span> -->
-                    <!-- <i @click.stop="deleteImage(image.id)" class="delete-icon el-tag__close el-icon-close"></i> -->
                     <p class="dimension-info">{{image.width}}*{{image.height}}</p>
                 </li>
                 <li :style="styleStr(obj.dataUri)" v-for="(obj, index) in showFileList" :key="index" class="image-item uploading-image-item">
@@ -23,10 +18,8 @@
                 </li>
                 <li v-show="!isUploading" class="image-item">
                     <div class="uploader">
-                        <label class="ui_button ui_button_primary" for="multi-image-uploader">
-                            <i class="el-icon-plus"></i>
-                        </label>
-                        <input ref="multiImageUploader" type="file" id="multi-image-uploader" multiple accept="image/*">
+                        <label class="ui_button ui_button_primary" :for="id"><i class="el-icon-plus"></i></label>
+                        <input ref="multiImageUploader" type="file" :id="id" multiple accept="image/*">
                     </div>
                 </li>
             </ul>
@@ -81,6 +74,10 @@ export default {
         allowResolutions: {
             type: Array,
             default: () => []
+        },
+        id: {
+            type: String,
+            default: 'multi-image-uploader'
         }
     },
     data() {
@@ -98,7 +95,7 @@ export default {
     },
     created() {
         this.$nextTick(() => {
-            let testUpload = document.querySelector('#multi-image-uploader');
+            let testUpload = document.querySelector(`#${this.id}`);
             testUpload.addEventListener('change', this.uploadChangeHandler.bind(this), false);
         });
     },
@@ -126,6 +123,7 @@ export default {
             let images = await promiseImageSize(e.target.files);
             let imagesWithDataUri = await readBlobAsDataURLFromList(images);
             let fileList = filterSizeMatchFiles(imagesWithDataUri, this.allowResolutions);
+            console.log(imagesWithDataUri);
             if (fileList.length === 0) {
                 this.$message.error('本次选择图片不符合尺寸要求');
                 this.resetInputField();
