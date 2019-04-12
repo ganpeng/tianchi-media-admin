@@ -380,11 +380,13 @@
                         <h2 class="content-sub-title">&nbsp;</h2>
                         <el-form-item label="节目角标">
                             <div v-if="showMark" class="mark-container">
+                                <!--
                                 <div class="mark-item">
                                     <el-checkbox v-model="cornerMark.leftTop" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
                                         左上角：播放平台
                                     </el-checkbox>
                                 </div>
+                                -->
                                 <div class="mark-item">
                                     右上角：
                                     <el-select
@@ -403,6 +405,23 @@
                                     </el-select>
                                 </div>
                                 <div class="mark-item">
+                                    右下角：
+                                    <el-select
+                                        @input="rightBottomMarkSelectHandler"
+                                        :value="rightBottom"
+                                        clearable
+                                        class="mark-select"
+                                        placeholder="请选择">
+                                        <el-option
+                                            v-for="(item, index) in rightBottomCustomMarkOptions"
+                                            :key="index"
+                                            :label="item.label"
+                                            :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <!--
+                                <div class="mark-item">
                                     <el-checkbox v-model="cornerMark.leftBottom" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
                                         左下角：更新
                                     </el-checkbox>
@@ -412,6 +431,7 @@
                                         右下角：评分
                                     </el-checkbox>
                                 </div>
+                                -->
                             </div>
                         </el-form-item>
                         <el-form-item label="节目状态" prop="visible">
@@ -618,7 +638,6 @@
                 size: dimension.PROGRAMME_DIMENSION,
                 customMarkOptions: [],
                 showMark: false,
-                // allowResolutions: role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS,
                 previewImage: {
                     display: false,
                     autoplay: false,
@@ -632,6 +651,16 @@
                     contestList: '赛事',
                     platformList: '播放平台'
                 },
+                rightBottomCustomMarkOptions: [
+                    {
+                        label: '更新',
+                        value: 'aaa'
+                    },
+                    {
+                        label: '评分',
+                        value: 'score'
+                    }
+                ],
                 programmeTemplateOptions: [
                     {
                         label: '电影',
@@ -852,6 +881,9 @@
             rightTop() {
                 return _.get(this.programme, 'cornerMark.rightTop');
             },
+            rightBottom() {
+                return _.get(this.programme, 'cornerMark.rightBottom');
+            },
             tvImageList() {
                 let list = this.programme.posterImageList.filter((posterImage) => {
                     let index = role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS.findIndex((item) => {
@@ -1017,9 +1049,9 @@
             },
             //  初始化角标状态
             initCornerMark(cornerMark) {
-                this.cornerMark.leftTop = this.getCornerMarkByPosition(cornerMark, 'leftTop');
+                // this.cornerMark.leftTop = this.getCornerMarkByPosition(cornerMark, 'leftTop');
+                // this.cornerMark.leftBottom = this.getCornerMarkByPosition(cornerMark, 'leftBottom');
                 this.cornerMark.rightTop = this.getCornerMarkByPosition(cornerMark, 'rightTop');
-                this.cornerMark.leftBottom = this.getCornerMarkByPosition(cornerMark, 'leftBottom');
                 this.cornerMark.rightBottom = this.getCornerMarkByPosition(cornerMark, 'rightBottom');
             },
             getCornerMarkByPosition(cornerMark, position) {
@@ -1461,6 +1493,9 @@
                     delete cornerMark.rightTop;
                 }
                 this.updateProgramme({key: 'cornerMark', value: cornerMark});
+            },
+            rightBottomMarkSelectHandler() {
+
             },
             //  适用客户端处理方法
             clientCheckedHandler(value, key) {

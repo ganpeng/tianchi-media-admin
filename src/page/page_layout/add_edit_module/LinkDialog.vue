@@ -23,6 +23,15 @@
                         @submit.native.prevent>
                         <el-col :span="8">
                             <el-form-item
+                                label="名称" prop="name">
+                                <el-input
+                                    placeholder="请输入网页名称"
+                                    clearable
+                                    v-model="form.name"
+                                >
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item
                                 label="网页地址" prop="link">
                                 <el-input
                                     placeholder="请输入网页地址"
@@ -79,7 +88,8 @@ export default {
             dialogVisible: false,
             layoutItemType: '',
             form: {
-                link: ''
+                link: '',
+                name: ''
             },
             inputRules: {
                 link: [
@@ -133,6 +143,7 @@ export default {
         },
         dialogOpenHandler() {
             this.form.link = this.getHref;
+            this.form.name = _.get(this.layoutItem, 'name');
             if (this.layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
                 this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
             }
@@ -141,14 +152,13 @@ export default {
             this.dialogVisible = false;
             this.layoutItemType = '';
         },
-        linkInputHandler(href) {
-        },
         async enterSuccessHandler() {
             try {
                 let valid = await this.$refs.linkForm.validate();
                 if (valid) {
                     if (_.get(this.layoutItem, 'coverImage.id')) {
                         let obj = {href: this.form.link};
+                        this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: this.form.name });
                         this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'params', value: JSON.stringify(obj) });
                         this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'LINK' });
                         this.closeDialog();

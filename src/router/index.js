@@ -135,6 +135,8 @@ import EditChannelSwitchAD from 'sysPage/advertising_manage/ad_manage/EditChanne
 import CreateProgrammeDetailAD from 'sysPage/advertising_manage/ad_manage/CreateProgrammeDetailAD';
 import EditProgrammeDetailAD from 'sysPage/advertising_manage/ad_manage/EditProgrammeDetailAD';
 import ADDetail from 'sysPage/advertising_manage/ad_manage/ADDetail';
+// 订单管理
+import OrderList from 'sysPage/order_manage/OrderList';
 
 Vue.use(Router);
 
@@ -880,6 +882,12 @@ let router = new Router({
                     path: '/site-manage/list',
                     name: 'SiteList',
                     component: SiteList
+                },
+                //  订单管理
+                {
+                    path: '/order-manage/list',
+                    name: 'OrderList',
+                    component: OrderList
                 }
             ]
         },
