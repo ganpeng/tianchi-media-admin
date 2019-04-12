@@ -89,6 +89,8 @@ import DuplicateList from 'sysPage/person_manage/DuplicateList';
 import Worktop from 'sysPage/worktop/Worktop';
 import ClientLogList from 'sysPage/client_log/ClientLogList';
 import GoodsList from 'sysPage/goods_manage/GoodsList';
+import CreateGoods from 'sysPage/goods_manage/CreateGoods';
+import EditGoods from 'sysPage/goods_manage/EditGoods';
 import Category from 'sysPage/category_manage/Category';
 import Search from 'sysPage/search_manage/Search';
 import PageLayout from 'sysPage/page_layout/PageLayout';
@@ -870,6 +872,18 @@ let router = new Router({
                     path: '/goods-manage/list',
                     name: 'GoodsList',
                     component: GoodsList
+                },
+                //  商品管理-创建商品
+                {
+                    path: '/goods-manage/create',
+                    name: 'CreateGoods',
+                    component: CreateGoods
+                },
+                //  商品管理-编辑商品
+                {
+                    path: '/goods-manage/edit',
+                    name: 'EditGoods',
+                    component: EditGoods
                 },
                 //  站点管理-配置站点
                 {

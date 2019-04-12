@@ -7,78 +7,20 @@
             v-on:getGoodsList="getGoodsList">
         </goods-filter-params>
         <div class="content-title">商品列表</div>
-        <el-table
-            :data="goodsList"
-            border
-            style="width: 100%">
-            <el-table-column
-                align="center"
-                prop="code"
-                width="120px"
-                label="编号">
-            </el-table-column>
-            <el-table-column
-                align="center"
-                prop="name"
-                min-width="220px"
-                label="商品名称">
-                <template slot-scope="scope">
-                <span class="ellipsis four">
-                    {{scope.row.name}}
-                </span>
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                min-width="140px"
-                prop="desc"
-                label="描述">
-                <template slot-scope="scope">
-                    <label>{{scope.row.desc}}</label>
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                prop="goodsList"
-                min-width="130px"
-                label="包含产品">
-                <template slot-scope="scope">
-                    <label v-if="scope.row.goodsList && scope.row.goodsList.length !== 0">
-                        {{scope.row.goodsList | jsonJoin('name') }}</label>
-                    <label v-else>------</label>
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                min-width="140px"
-                prop="status"
-                label="状态">
-            </el-table-column>
-            <el-table-column
-                align="center"
-                min-width="140px"
-                label="创建时间">
-                <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                min-width="140px"
-                label="更新时间">
-                <template slot-scope="scope">
-                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                min-width="140px"
-                label="失效时间">
-                <template slot-scope="scope">
-                    {{scope.row.loseEffectAt | formatDate('yyyy-MM-DD')}}
-                </template>
-            </el-table-column>
-        </el-table>
+        <div class="table-operator-field">
+            <div></div>
+            <el-button
+                class="btn-style-two contain-svg-icon"
+                @click="createGoods">
+                <svg-icon icon-class="add"></svg-icon>
+                添加
+            </el-button>
+        </div>
+        <goods-operate-table
+            ref="goodsOperateTable"
+            :goodsList="goodsList"
+            v-on:getGoodsList="getGoodsList">
+        </goods-operate-table>
         <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -92,12 +34,14 @@
 </template>
 
 <script>
-    import GoodsFilterParams from './GoodsFilterParams';
+    import GoodsFilterParams from '../search_filter_params/GoodsFilterParams';
+    import GoodsOperateTable from './components/GoodsOperateTable';
 
     export default {
-        name: 'SubjectList',
+        name: 'GoodsList',
         components: {
-            GoodsFilterParams
+            GoodsFilterParams,
+            GoodsOperateTable
         },
         data() {
             return {
@@ -145,6 +89,9 @@
                         this.total = response.data.total;
                     }
                 });
+            },
+            createGoods() {
+                this.$router.push({name: 'CreateGoods'});
             }
         }
     };
