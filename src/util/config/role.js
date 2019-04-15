@@ -544,6 +544,11 @@ const ASIDE_LIST = [
             text: '客户端日志',
             uri: '/clientlog/list',
             icon: 'aside_clientlog'
+        },
+        {
+            text: '存储空间',
+            uri: '/server/space',
+            icon: 'aside_clientlog'
         }
     ],
     [

@@ -139,6 +139,7 @@ import EditProgrammeDetailAD from 'sysPage/advertising_manage/ad_manage/EditProg
 import ADDetail from 'sysPage/advertising_manage/ad_manage/ADDetail';
 // 订单管理
 import OrderList from 'sysPage/order_manage/OrderList';
+import ServerSpace from 'sysPage/server_manage/ServerSpace';
 
 Vue.use(Router);
 
@@ -202,9 +203,6 @@ let router = new Router({
             path: '/layout',
             name: 'GlobalLayout',
             component: GlobalLayout,
-            // path: '/layout',
-            // name: 'Layout',
-            // component: Layout,
             // 首页
             children: [
                 {
@@ -235,6 +233,12 @@ let router = new Router({
                     path: '/modify-password',
                     name: 'ModifyPassword',
                     component: ModifyPassword
+                },
+                // 服务器存储空间
+                {
+                    path: '/server/space',
+                    name: 'ServerSpace',
+                    component: ServerSpace
                 },
                 // 管理员中心——管理员列表页面
                 {
