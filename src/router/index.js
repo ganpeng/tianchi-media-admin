@@ -3,17 +3,13 @@ import Router from 'vue-router';
 import store from '../store';
 import './reload';
 import Login from 'sysPage/login/Login';
-// import Layout from 'sysPage/layout/Layout';
 import GlobalLayout from 'sysPage/layout/GlobalLayout';
 import Home from 'sysPage/home/Home';
 import InfoSetting from 'sysPage/personal_center/InfoSetting';
 import MyInfo from 'sysPage/personal_center/MyInfo';
 import ModifyPassword from 'sysPage/personal_center/ModifyPassword';
-import UserList from 'sysPage/user_center/UserList';
-import CreateUser from 'sysPage/user_center/CreateUser';
-import EditUserInfo from 'sysPage/user_center/EditUserInfo';
-import UserDetailInfo from 'sysPage/user_center/UserDetailInfo';
-import Kits from 'sysPage/user_center/Kits';
+import UserList from 'sysPage/user_manage/UserList';
+import UserDetailInfo from 'sysPage/user_manage/UserDetail';
 import AdminList from 'sysPage/admin_manage/AdminList';
 import CreateAdmin from 'sysPage/admin_manage/CreateAdmin';
 import AdminDetail from 'sysPage/admin_manage/AdminDetail';
@@ -210,12 +206,6 @@ let router = new Router({
                     name: 'Home',
                     component: Home
                 },
-                // 项目小工具，上线时会删除
-                {
-                    path: '/kits',
-                    name: 'Kits',
-                    component: Kits
-                },
                 // 个人中心-我的信息
                 {
                     path: '/my-info',
@@ -269,18 +259,6 @@ let router = new Router({
                     path: '/user-center/list',
                     name: 'UserList',
                     component: UserList
-                },
-                // 用户中心-用户创建页面
-                {
-                    path: '/user-center/create',
-                    name: 'CreateUser',
-                    component: CreateUser
-                },
-                // 用户中心-用户编辑页面
-                {
-                    path: '/user-center/edit/:id',
-                    name: 'EditUserInfo',
-                    component: EditUserInfo
                 },
                 // 用户中心-用户详情页面
                 {
