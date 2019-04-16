@@ -155,72 +155,75 @@
     };
 </script>
 <style lang="scss" scoped>
-.wrapper {
-    display: flex;
-}
-.img-wrapper {
-    position: relative;
-    margin-right: 10px;
-    cursor: pointer;
-    img {
-        display: inline-block;
-        border: 1px solid #3E495E;
-        border-radius: 8px;
-        box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.50);
+    .wrapper {
+        display: flex;
     }
-    span.delete-icon {
-        display: none;
-        position: absolute;
-        top: 8px;
-        right: 8px;
+
+    .img-wrapper {
+        position: relative;
+        margin-right: 10px;
         cursor: pointer;
-        z-index: 1000000;
-        .svg-icon-remove_image_default,
-        .svg-icon-remove_image_hover {
-            width: 23px;
-            height: 23px;
+        img {
+            display: inline-block;
+            border: 1px solid #3E495E;
+            border-radius: 8px;
+            box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.50);
         }
-        .svg-icon-remove_image_default {
-            display: block;
-        }
-        .svg-icon-remove_image_hover {
+        span.delete-icon {
             display: none;
-        }
-        &:hover {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            cursor: pointer;
+            z-index: 1000000;
+            .svg-icon-remove_image_default,
             .svg-icon-remove_image_hover {
-                display: block;
+                width: 23px;
+                height: 23px;
             }
             .svg-icon-remove_image_default {
-                display: none;
-            }
-        }
-    }
-    &.hover {
-        &:hover {
-            background: #293550;
-            opacity: 0.8;
-            border-radius: 8px;
-            span.delete-icon {
                 display: block;
             }
+            .svg-icon-remove_image_hover {
+                display: none;
+            }
+            &:hover {
+                .svg-icon-remove_image_hover {
+                    display: block;
+                }
+                .svg-icon-remove_image_default {
+                    display: none;
+                }
+            }
         }
-    }
-}
-.uploader {
-    label {
-        &:hover {
-            border-color: $mainColor;
-            .el-icon-plus {
-                color: $mainColor;
+        &.hover {
+            &:hover {
+                background: #293550;
+                opacity: 0.8;
+                border-radius: 8px;
+                span.delete-icon {
+                    display: block;
+                }
             }
         }
     }
-}
-.image-dimension {
-    font-size: 12px;
-    height: 22px;
-    line-height: 22px;
-    color: #6F7480;
-    text-align: center;
-}
+
+    .uploader {
+        label {
+            &:hover {
+                border-color: $mainColor;
+                .el-icon-plus {
+                    color: $mainColor;
+                }
+            }
+        }
+    }
+
+    .image-dimension {
+        font-size: 12px;
+        height: 22px;
+        line-height: 22px;
+        color: #6F7480;
+        text-align: center;
+    }
 </style>

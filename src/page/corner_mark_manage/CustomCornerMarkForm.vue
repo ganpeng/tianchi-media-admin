@@ -18,16 +18,32 @@
             </el-input>
         </el-form-item>
         <el-form-item label="角标图片" prop="image" required>
-            <label> (大角标125*99，小角标76*46)</label>
-            <div>
+            <!--TV端-->
+            <label>大角标124*98，小角标76*46</label>
+            <div class="upload-container tv">
+                <div class="upload-box" @click="uploadImage('TV')">
+                    <i class="el-icon-plus"></i>
+                </div>
                 <div class="image-box" v-if="cornerMarkInfo.image && cornerMarkInfo.image.uri">
-                    <img :src="cornerMarkInfo.image ? cornerMarkInfo.image.uri : '' | imageUrl"
-                         :class="{little:cornerMarkInfo.image.width.toString() === '76'}">
+                    <img :src="cornerMarkInfo.image ? cornerMarkInfo.image.uri : '' | imageUrl">
+                    <label class="remove-btn" @click="removeImage('TV')">删除</label>
                 </div>
                 <single-image-uploader
+                    ref="singleImageUploader"
                     :allowResolutions="allowResolutions"
                     :uploadSuccessHandler="uploadSuccessHandler">
                 </single-image-uploader>
+            </div>
+            <!--APP端-->
+            <div class="upload-container app">
+                <div>大角标180*180，小角标90*48</div>
+                <div class="upload-box" @click="uploadImage('APP')">
+                    <i class="el-icon-plus"></i>
+                </div>
+                <div class="image-box" v-if="cornerMarkInfo.appImage && cornerMarkInfo.appImage.uri">
+                    <img :src="cornerMarkInfo.appImage ? cornerMarkInfo.appImage.uri : '' | imageUrl">
+                    <label class="remove-btn" @click="removeImage('APP')">删除</label>
+                </div>
             </div>
         </el-form-item>
     </el-form>
@@ -71,6 +87,13 @@
                         width: '',
                         height: ''
                     },
+                    appImage: {
+                        id: '',
+                        name: '',
+                        uri: '',
+                        width: '',
+                        height: ''
+                    },
                     markType: 'CUSTOM'
                 },
                 infoRules: {
@@ -81,7 +104,7 @@
                         {validator: checkImage, trigger: 'change'}
                     ]
                 },
-                allowResolutions: CORNER_MARK_DIMENSION
+                allowResolutions: CORNER_MARK_DIMENSION.tv
             };
         },
         methods: {
@@ -94,7 +117,36 @@
                 this.mode = 'EDIT';
             },
             uploadSuccessHandler(image) {
-                this.cornerMarkInfo.image = image;
+                if (this.allowResolutions === CORNER_MARK_DIMENSION.tv) {
+                    this.cornerMarkInfo.image = image;
+                } else {
+                    this.cornerMarkInfo.appImage = image;
+                }
+            },
+            removeImage(endName) {
+                switch (endName) {
+                    case 'TV':
+                        this.cornerMarkInfo.image = {};
+                        break;
+                    case 'APP':
+                        this.cornerMarkInfo.appImage = {};
+                        break;
+                    default:
+                        break;
+                }
+            },
+            uploadImage(endName) {
+                switch (endName) {
+                    case 'TV':
+                        this.allowResolutions = CORNER_MARK_DIMENSION.tv;
+                        break;
+                    case 'APP':
+                        this.allowResolutions = CORNER_MARK_DIMENSION.app;
+                        break;
+                    default:
+                        break;
+                }
+                this.$refs.singleImageUploader.$refs.singleImageUploader.click();
             },
             confirmCornerMark() {
                 this.$refs['subjectInfo'].validate((valid) => {
@@ -135,23 +187,61 @@
             font-size: 16px;
             color: #6F7480;
         }
+        .single-image-uploader-container {
+            display: inline-block;
+            visibility: hidden;
+        }
+    }
+
+    .upload-container {
+        overflow: hidden;
         .image-box {
             float: left;
-            margin-right: 20px;
-            width: 37.5px;
-            height: 29.7px;
+            display: flex;
+            position: relative;
+            margin-left: 20px;
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            justify-content: center;
+            align-items: center;
             img {
-                height: 100%;
-                width: 100%;
-                &.little {
-                    margin-top: 3px;
-                    width: 100%;
-                    height: 76%;
+                transform: scale(0.35, 0.35);
+            }
+            .remove-btn {
+                height: 20px;
+                line-height: 20px;
+                font-size: 14px;
+                position: absolute;
+                bottom: 0px;
+                left: 40px;
+                color: #f56c6c;
+                cursor: pointer;
+            }
+        }
+        .upload-box {
+            float: left;
+            padding: 0px 10px;
+            width: 130px;
+            height: 100px;
+            border: 1px solid #3E495E;
+            border-radius: 4px;
+            line-height: 100px;
+            cursor: pointer;
+            text-align: center;
+            i {
+                font-size: 24px;
+                color: #3E495E;
+            }
+            &:hover {
+                border-color: #1989FA;
+                i {
+                    color: #1989FA;
                 }
             }
         }
-        .single-image-uploader-container {
-            float: left;
+        &.app {
+            margin-top: 40px;
         }
     }
 

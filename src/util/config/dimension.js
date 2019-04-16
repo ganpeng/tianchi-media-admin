@@ -208,20 +208,29 @@ export const PROGRAMME_SUBJECT_DIMENSION = [
 /**
  * 2.0运营角标尺寸
  */
-export const CORNER_MARK_DIMENSION = [
-    {
-        // width: 125,
-        // height: 99,
+export const CORNER_MARK_DIMENSION = {
+    tv: [{
         width: 124,
         height: 98,
         styleName: '大角标'
     },
-    {
-        width: 76,
-        height: 46,
-        styleName: '小角标'
-    }
-];
+        {
+            width: 76,
+            height: 46,
+            styleName: '小角标'
+        }],
+    app: [{
+        width: 180,
+        height: 180,
+        styleName: '大角标'
+    },
+        {
+            width: 90,
+            height: 48,
+            styleName: '小角标'
+        }
+    ]
+};
 
 /**
  * 节目图片尺寸
