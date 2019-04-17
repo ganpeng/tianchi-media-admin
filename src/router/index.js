@@ -19,7 +19,6 @@ import ErrorNotFound from 'sysPage/error/404';
 import NavBarSetting from 'sysPage/nav_bar_manage/NavBarSetting';
 import CreateNavBar from 'sysPage/nav_bar_manage/CreateNavBar';
 import EditNavBar from 'sysPage/nav_bar_manage/EditNavBar';
-import NavBarLayoutSetting from 'sysPage/nav_bar_manage/NavBarLayoutSetting';
 import PersonList from 'sysPage/person_manage/PersonList';
 import CreatePerson from 'sysPage/person_manage/CreatePerson';
 import EditPerson from 'sysPage/person_manage/EditPerson';
@@ -29,11 +28,6 @@ import ProgrammeTypeManage from 'sysPage/programme_manage/ProgrammeTypeManage';
 import EditProgramme from 'sysPage/programme_manage/EditProgramme';
 import DisplayProgramme from 'sysPage/programme_manage/DisplayProgramme';
 import ProgrammeList from 'sysPage/programme_manage/ProgrammeList';
-import AppendProgramme from 'sysPage/layout_manage/AppendProgramme';
-import AppendSingleSubject from 'sysPage/layout_manage/AppendSingleSubject';
-import ModelAppendShuffle from 'sysPage/layout_manage/ModelAppendShuffle';
-import ModelAppendProgrammeSubject from 'sysPage/layout_manage/ModelAppendProgrammeSubject';
-import ModelAppendPersonSubject from 'sysPage/layout_manage/ModelAppendPersonSubject';
 // 专题模块
 import CreateProgrammeSubject from 'sysPage/subject_manage/CreateProgrammeSubject';
 import CreateFigureSubject from 'sysPage/subject_manage/CreateFigureSubject';
@@ -60,9 +54,6 @@ import CreateInterCut from 'sysPage/channel_manage/inter_cut_manage/CreateInterC
 import EditInterCut from 'sysPage/channel_manage/inter_cut_manage/EditInterCut';
 import InterCutDetail from 'sysPage/channel_manage/inter_cut_manage/InterCutDetail';
 import ChannelCategory from 'sysPage/channel_manage/ChannelCategory';
-import ModelAppendChannel from 'sysPage/layout_manage/ModelAppendChannel';
-import AppendChannel from 'sysPage/layout_manage/AppendChannel';
-import AppendViewChannel from 'sysPage/layout_manage/AppendViewChannel';
 import VersionList from 'sysPage/version_manage/VersionList';
 import VersionDetail from 'sysPage/version_manage/VersionDetail';
 import HotPerson from 'sysPage/person_manage/HotPerson';
@@ -283,60 +274,6 @@ let router = new Router({
                     path: '/nav-bar-manage/edit/:id',
                     name: 'EditNavBar',
                     component: EditNavBar
-                },
-                // 内容管理-栏目管理-布局设置
-                {
-                    path: '/nav-bar-manage/layout-setting/:navBarSignCode/:navBarId',
-                    name: 'NavBarLayoutSetting',
-                    component: NavBarLayoutSetting
-                },
-                // 内容管理-栏目管理-节目选择设置
-                {
-                    path: '/layout-manage/programme/:navBarId/:navBarSignCode/:model/:row/:index/:imageSpec',
-                    name: 'AppendProgramme',
-                    component: AppendProgramme
-                },
-                // 内容管理-栏目管理-单个推荐位选择专题
-                {
-                    path: '/layout-manage/append-single-subject/:navBarId/:navBarSignCode/:model/:row/:index/:imageSpec',
-                    name: 'AppendSingleSubject',
-                    component: AppendSingleSubject
-                },
-                // 内容管理-栏目管理-混排模块
-                {
-                    path: '/layout-manage/model-append-shuffle/:navBarId/:navBarSignCode/:model/:operate',
-                    name: 'ModelAppendShuffle',
-                    component: ModelAppendShuffle
-                },
-                // 内容管理-栏目管理-模块推荐位选择节目专题
-                {
-                    path: '/layout-manage/model-append-programme-subject/:navBarId/:navBarSignCode/:model/:operate',
-                    name: 'ModelAppendProgrammeSubject',
-                    component: ModelAppendProgrammeSubject
-                },
-                // 内容管理-栏目管理-模块推荐位选择人物专题
-                {
-                    path: '/layout-manage/model-append-person-subject/:navBarId/:navBarSignCode/:model/:operate',
-                    name: 'ModelAppendPersonSubject',
-                    component: ModelAppendPersonSubject
-                },
-                // 内容管理-栏目管理-单个频道设置
-                {
-                    path: '/layout-manage/append-channel/:navBarId/:navBarSignCode/:model/:row/:index/:imageSpec',
-                    name: 'AppendChannel',
-                    component: AppendChannel
-                },
-                // 内容管理-栏目管理-单个频道设置
-                {
-                    path: '/layout-manage/append-view-channel/:navBarId/:navBarSignCode',
-                    name: 'AppendViewChannel',
-                    component: AppendViewChannel
-                },
-                // 内容管理-栏目管理-模块频道管理
-                {
-                    path: '/layout-manage/model-append-channel/:navBarId/:navBarSignCode/:model/:operate',
-                    name: 'ModelAppendChannel',
-                    component: ModelAppendChannel
                 },
                 // 内容管理-专题管理-新增节目专题
                 {

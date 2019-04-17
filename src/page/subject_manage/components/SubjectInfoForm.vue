@@ -59,9 +59,15 @@
                     <el-radio :label="false">下架</el-radio>
                 </el-radio-group>
             </el-form-item>
+            <el-form-item label="适用客户端" prop="applicableClientList" required>
+                <el-checkbox-group v-model="subjectInfo.applicableClientList">
+                    <el-checkbox label="TV"></el-checkbox>
+                    <el-checkbox label="APP"></el-checkbox>
+                </el-checkbox-group>
+            </el-form-item>
             <!--设置节目专题封面图片-->
             <el-form-item
-                label="专题图片"
+                label="TV端海报"
                 required
                 prop="posterImageList"
                 class="image-setting-box"
@@ -69,15 +75,30 @@
                 <label class="tips"> (1920*1080 背景图必传)</label>
                 <multi-image-uploader
                     :imageList="subjectInfo.posterImageList"
-                    :deleteImageHandler="removePosterImage"
-                    :imageUploadedHandler="imageUploadedHandler"
-                    :allowResolutions="programmeAllowResolutions"
-                    :validator="imageUploadValidator">
+                    :deleteImageHandler="removePosterImageForTV"
+                    :imageUploadedHandlerForTV="imageUploadedHandlerForTV"
+                    :allowResolutions="programmeAllowResolutionsForTV"
+                    :validator="imageUploadValidatorForTV">
+                </multi-image-uploader>
+            </el-form-item>
+            <el-form-item
+                label="APP端海报"
+                required
+                prop="posterImageListForApp"
+                class="image-setting-box"
+                v-if="status === 'CREATE_PROGRAMME' || status === 'EDIT_PROGRAMME'">
+                <label class="tips"> (1125*2436 图必传)</label>
+                <multi-image-uploader
+                    :imageList="subjectInfo.posterImageListForApp"
+                    :deleteImageHandler="removePosterImageForApp"
+                    :imageUploadedHandler="imageUploadedHandlerForApp"
+                    :allowResolutions="programmeAllowResolutionsForApp"
+                    :validator="imageUploadValidatorForApp">
                 </multi-image-uploader>
             </el-form-item>
             <!--设置人物专题封面图片-->
             <el-form-item
-                label="专题图片"
+                label="TV端海报"
                 required
                 prop="posterImageList"
                 class="image-setting-box"
@@ -86,10 +107,25 @@
                 <multi-image-uploader
                     :imageList="subjectInfo.posterImageList"
                     :dimension="{width:'168',height:'180'}"
-                    :deleteImageHandler="removePosterImage"
-                    :imageUploadedHandler="imageUploadedHandler"
-                    :allowResolutions="figureAllowResolutions"
-                    :validator="imageUploadValidator">
+                    :deleteImageHandler="removePosterImageForTV"
+                    :imageUploadedHandler="imageUploadedHandlerForTV"
+                    :allowResolutions="figureAllowResolutionsForTV"
+                    :validator="imageUploadValidatorForTV">
+                </multi-image-uploader>
+            </el-form-item>
+            <el-form-item
+                label="APP端海报"
+                required
+                prop="posterImageListForApp"
+                class="image-setting-box"
+                v-if="status === 'CREATE_FIGURE' || status === 'EDIT_FIGURE'">
+                <label class="tips"> (1125*786 图必传)</label>
+                <multi-image-uploader
+                    :imageList="subjectInfo.posterImageListForApp"
+                    :deleteImageHandler="removePosterImageForApp"
+                    :imageUploadedHandler="imageUploadedHandlerForApp"
+                    :allowResolutions="figureAllowResolutionsForApp"
+                    :validator="imageUploadValidatorForApp">
                 </multi-image-uploader>
             </el-form-item>
             <!--专题关联节目-->
@@ -184,9 +220,9 @@
                     callback();
                 }
             };
-            let checkPosterImageList = (rule, value, callback) => {
+            let checkPosterImageListForTV = (rule, value, callback) => {
                 if (this.subjectInfo.posterImageList.length === 0) {
-                    return callback(new Error('请添加图片'));
+                    return callback(new Error('请添加TV端海报'));
                 }
                 if (this.status === 'CREATE_PROGRAMME' || this.status === 'EDIT_PROGRAMME') {
                     // 有且只有一个背景图
@@ -198,12 +234,12 @@
                     });
                     switch (m) {
                         case 0:
-                            return callback(new Error('请上传1920*1080专题背景图'));
+                            return callback(new Error('请上传1920*1080TV端专题背景图'));
                         case 1:
                             callback();
                             break;
                         default:
-                            return callback(new Error('1920*1080专题背景图有且只能有一张'));
+                            return callback(new Error('1920*1080TV端专题背景图有且只能有一张'));
                     }
                 }
                 if (this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE') {
@@ -216,19 +252,61 @@
                     });
                     switch (i) {
                         case 0:
-                            return callback(new Error('请上传260*600专题E图'));
+                            return callback(new Error('请上传260*600TV端专题E图'));
                         case 1:
                             callback();
                             break;
                         default:
-                            return callback(new Error('260*600专题E图有且只能有一张'));
+                            return callback(new Error('260*600TV端专题E图有且只能有一张'));
+                    }
+                }
+            };
+            let checkPosterImageListForApp = (rule, value, callback) => {
+                if (this.subjectInfo.posterImageListForApp.length === 0) {
+                    return callback(new Error('请添加App端海报'));
+                }
+                if (this.status === 'CREATE_PROGRAMME' || this.status === 'EDIT_PROGRAMME') {
+                    let m = 0;
+                    this.subjectInfo.posterImageListForApp.map(posterImage => {
+                        if (posterImage.width.toString() === '1125' && posterImage.height.toString() === '2436') {
+                            m++;
+                        }
+                    });
+                    switch (m) {
+                        case 0:
+                            return callback(new Error('请上传1125*2436App端专题海报'));
+                        case 1:
+                            callback();
+                            break;
+                        default:
+                            return callback(new Error('1125*2436App端专题海报有且只能有一张'));
+                    }
+                }
+                if (this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE') {
+                    // 有且只有一个
+                    let i = 0;
+                    this.subjectInfo.posterImageListForApp.map(posterImage => {
+                        if (posterImage.width.toString() === '1125' && posterImage.height.toString() === '786') {
+                            i++;
+                        }
+                    });
+                    switch (i) {
+                        case 0:
+                            return callback(new Error('请上传1125*786App端专题海报'));
+                        case 1:
+                            callback();
+                            break;
+                        default:
+                            return callback(new Error('1125*786App端专题海报有且只能有一张'));
                     }
                 }
             };
             return {
                 isLoading: false,
-                programmeAllowResolutions: PROGRAMME_SUBJECT_DIMENSION,
-                figureAllowResolutions: FIGURE_SUBJECT_DIMENSION,
+                programmeAllowResolutionsForTV: PROGRAMME_SUBJECT_DIMENSION.tv,
+                programmeAllowResolutionsForApp: PROGRAMME_SUBJECT_DIMENSION.app,
+                figureAllowResolutionsForTV: FIGURE_SUBJECT_DIMENSION.tv,
+                figureAllowResolutionsForApp: FIGURE_SUBJECT_DIMENSION.app,
                 programmeCategoryList: [],
                 programmeCategoryListOptions: [],
                 tagOptions: [],
@@ -243,7 +321,10 @@
                         {validator: checkVisible, trigger: 'change'}
                     ],
                     posterImageList: [
-                        {validator: checkPosterImageList, trigger: 'blur'}
+                        {validator: checkPosterImageListForTV, trigger: 'blur'}
+                    ],
+                    posterImageListForApp: [
+                        {validator: checkPosterImageListForApp, trigger: 'blur'}
                     ]
                 },
                 selectProgrammeVisible: false
@@ -321,7 +402,7 @@
                 });
             },
             // 成功上传图片
-            imageUploadedHandler(image) {
+            imageUploadedHandlerForTV(image) {
                 // 人物专题的唯一尺寸图片的替换
                 if (this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE') {
                     if (image.width.toString() === '260' && image.height.toString() === '600') {
@@ -358,32 +439,105 @@
                 }
                 this.subjectInfo.posterImageList = _.uniqBy(this.subjectInfo.posterImageList, 'id');
                 if (this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE') {
-                    this.resortImageList('260', '600');
+                    this.resortImageList('260', '600', 'TV');
                 } else {
-                    this.resortImageList('1920', '1080');
+                    this.resortImageList('1920', '1080', 'TV');
                 }
             },
-            resortImageList(width, height) {
-                // 人物专题根据尺寸将260*600的图片放置在数组前面,节目专题将1920*1080放在前面
+            // 成功上传图片
+            imageUploadedHandlerForApp(image) {
+                // 人物专题的唯一尺寸图片的替换
+                if (this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE') {
+                    if (image.width.toString() === '1125' && image.height.toString() === '786') {
+                        let tag = false;
+                        for (let i = 0; i < this.subjectInfo.posterImageListForApp.length; i++) {
+                            if (this.subjectInfo.posterImageListForApp[i].width.toString() === '1125' && this.subjectInfo.posterImageListForApp[i].height.toString() === '786') {
+                                this.subjectInfo.posterImageListForApp[i] = image;
+                                tag = true;
+                            }
+                        }
+                        if (tag === false) {
+                            this.subjectInfo.posterImageListForApp.push(image);
+                        }
+                    } else {
+                        this.subjectInfo.posterImageListForApp.push(image);
+                    }
+                }
+                // 节目专题的唯一尺寸图片的替换
+                if (this.status === 'CREATE_PROGRAMME' || this.status === 'EDIT_PROGRAMME') {
+                    if (image.width.toString() === '1125' && image.height.toString() === '2436') {
+                        let tag = false;
+                        for (let i = 0; i < this.subjectInfo.posterImageListForApp.length; i++) {
+                            if (this.subjectInfo.posterImageListForApp[i].width.toString() === '1125' && this.subjectInfo.posterImageListForApp[i].height.toString() === '2436') {
+                                this.subjectInfo.posterImageListForApp[i] = image;
+                                tag = true;
+                            }
+                        }
+                        if (tag === false) {
+                            this.subjectInfo.posterImageListForApp.push(image);
+                        }
+                    } else {
+                        this.subjectInfo.posterImageListForApp.push(image);
+                    }
+                }
+                this.subjectInfo.posterImageListForApp = _.uniqBy(this.subjectInfo.posterImageListForApp, 'id');
+                if (this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE') {
+                    this.resortImageList('1125', '786', 'APP');
+                } else {
+                    this.resortImageList('1125', '2436', 'APP');
+                }
+            },
+            resortImageList(width, height, endName) {
                 let featureImageArray = [];
-                for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
-                    if (this.subjectInfo.posterImageList[i].width.toString() === width && this.subjectInfo.posterImageList[i].height.toString() === height) {
-                        featureImageArray.push(this.subjectInfo.posterImageList[i]);
-                    }
+                switch (endName) {
+                    case 'TV':
+                        // 人物专题根据尺寸将260*600的图片放置在数组前面,节目专题将1920*1080放在前面
+                        for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
+                            if (this.subjectInfo.posterImageList[i].width.toString() === width && this.subjectInfo.posterImageList[i].height.toString() === height) {
+                                featureImageArray.push(this.subjectInfo.posterImageList[i]);
+                            }
+                        }
+                        this.removeFeatureImage(width, height, endName);
+                        this.subjectInfo.posterImageList = featureImageArray.concat(this.subjectInfo.posterImageList);
+                        break;
+                    case 'APP':
+                        for (let i = 0; i < this.subjectInfo.posterImageListForApp.length; i++) {
+                            if (this.subjectInfo.posterImageListForApp[i].width.toString() === width && this.subjectInfo.posterImageListForApp[i].height.toString() === height) {
+                                featureImageArray.push(this.subjectInfo.posterImageListForApp[i]);
+                            }
+                        }
+                        this.removeFeatureImage(width, height, endName);
+                        this.subjectInfo.posterImageListForApp = featureImageArray.concat(this.subjectInfo.posterImageListForApp);
+                        break;
+                    default:
+                        break;
                 }
-                this.removeFeatureImage(width, height);
-                this.subjectInfo.posterImageList = featureImageArray.concat(this.subjectInfo.posterImageList);
             },
-            removeFeatureImage(width, height) {
-                for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
-                    if (this.subjectInfo.posterImageList[i].width.toString() === width && this.subjectInfo.posterImageList[i].height.toString() === height) {
-                        this.subjectInfo.posterImageList.splice(i, 1);
-                        this.removeFeatureImage(width, height);
-                        return;
-                    }
+            removeFeatureImage(width, height, endName) {
+                switch (endName) {
+                    case 'TV':
+                        for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
+                            if (this.subjectInfo.posterImageList[i].width.toString() === width && this.subjectInfo.posterImageList[i].height.toString() === height) {
+                                this.subjectInfo.posterImageList.splice(i, 1);
+                                this.removeFeatureImage(width, height, endName);
+                                return;
+                            }
+                        }
+                        break;
+                    case 'APP':
+                        for (let i = 0; i < this.subjectInfo.posterImageListForApp.length; i++) {
+                            if (this.subjectInfo.posterImageListForApp[i].width.toString() === width && this.subjectInfo.posterImageListForApp[i].height.toString() === height) {
+                                this.subjectInfo.posterImageListForApp.splice(i, 1);
+                                this.removeFeatureImage(width, height, endName);
+                                return;
+                            }
+                        }
+                        break;
+                    default:
+                        break;
                 }
             },
-            imageUploadValidator(fileList) {
+            imageUploadValidatorForTV(fileList) {
                 let onlyFileListOne = fileList.filter((item) => {
                     let {width, height} = item.demension;
                     if (this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE') {
@@ -398,8 +552,23 @@
                 }
                 return true;
             },
+            imageUploadValidatorForApp(fileList) {
+                let onlyFileListOne = fileList.filter((item) => {
+                    let {width, height} = item.demension;
+                    if (this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE') {
+                        return parseInt(width) === 1125 && parseInt(height) === 786;
+                    } else {
+                        return parseInt(width) === 1125 && parseInt(height) === 2436;
+                    }
+                });
+                if (onlyFileListOne.length > 1) {
+                    this.$message.error(this.status === 'CREATE_FIGURE' || this.status === 'EDIT_FIGURE' ? '1125*786图只能上传一张' : '1125*2436图只能有上传一张');
+                    return false;
+                }
+                return true;
+            },
             // 删除封面图片
-            removePosterImage(imageId) {
+            removePosterImageForTV(imageId) {
                 let index;
                 for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
                     if (this.subjectInfo.posterImageList[i].id === imageId) {
@@ -407,6 +576,17 @@
                     }
                 }
                 this.subjectInfo.posterImageList.splice(index, 1);
+                this.$message.success('图片删除成功!');
+            },
+            // 删除封面图片
+            removePosterImageForApp(imageId) {
+                let index;
+                for (let i = 0; i < this.subjectInfo.posterImageListForApp.length; i++) {
+                    if (this.subjectInfo.posterImageListForApp[i].id === imageId) {
+                        index = i;
+                    }
+                }
+                this.subjectInfo.posterImageListForApp.splice(index, 1);
                 this.$message.success('图片删除成功!');
             },
             // 创建或更新专题
@@ -505,6 +685,12 @@
             width: 20px !important;
             height: 20px !important;
             fill: #1989FA;
+        }
+    }
+
+    .el-checkbox-group {
+        .el-checkbox {
+            padding: 0;
         }
     }
 

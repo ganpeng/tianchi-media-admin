@@ -20,7 +20,9 @@
         data() {
             return {
                 subjectInfo: {
-                    posterImageList: []
+                    posterImageList: [],
+                    posterImageListForApp: [],
+                    applicableClientList: []
                 }
             };
         },

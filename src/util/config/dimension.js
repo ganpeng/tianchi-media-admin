@@ -111,99 +111,147 @@ export const ALL_IMAGE_DIMENSIONS = [
 /**
  * 2.0人物专题封面尺寸
  */
-export const FIGURE_SUBJECT_DIMENSION = [
-    {
-        width: 560,
-        height: 600,
-        styleName: '专题A'
-    },
-    {
-        width: 410,
-        height: 472,
-        styleName: '专题D'
-    },
-    {
-        width: 260,
-        height: 600,
-        styleName: '专题E'
-    }
-];
+export const FIGURE_SUBJECT_DIMENSION = {
+    tv: [
+        {
+            width: 560,
+            height: 600,
+            styleName: '专题A'
+        },
+        {
+            width: 410,
+            height: 472,
+            styleName: '专题D'
+        },
+        {
+            width: 260,
+            height: 600,
+            styleName: '专题E'
+        }
+    ],
+    app: [
+        {
+            width: 1125,
+            height: 786,
+            styleName: ''
+        },
+        {
+            width: 1089,
+            height: 612,
+            styleName: ''
+        },
+        {
+            width: 540,
+            height: 303,
+            styleName: ''
+        },
+        {
+            width: 351,
+            height: 507,
+            styleName: ''
+        }
+    ]
+};
 
 /**
  * 2.0节目专题封面尺寸
  */
-export const PROGRAMME_SUBJECT_DIMENSION = [
-    {
-        width: 1920,
-        height: 1080,
-        styleName: '专题背景'
-    },
-    {
-        width: 410,
-        height: 472,
-        styleName: '专题D'
-    },
-    {
-        width: 1160,
-        height: 600,
-        styleName: '专题B'
-    },
-    {
-        width: 1310,
-        height: 472,
-        styleName: '专题C'
-    },
-    {
-        width: 860,
-        height: 440,
-        styleName: '横版A'
-    },
-    {
-        width: 560,
-        height: 300,
-        styleName: '横版B'
-    },
-    {
-        width: 560,
-        height: 720,
-        styleName: '竖版A'
-    },
-    {
-        width: 1160,
-        height: 300,
-        styleName: '横版C'
-    },
-    {
-        width: 260,
-        height: 380,
-        styleName: '竖版B'
-    },
-    {
-        width: 996,
-        height: 472,
-        styleName: '横版D'
-    },
-    {
-        width: 410,
-        height: 615,
-        styleName: '竖版C'
-    },
-    {
-        width: 342,
-        height: 472,
-        styleName: '竖版D'
-    },
-    {
-        width: 860,
-        height: 260,
-        styleName: '横版E'
-    },
-    {
-        width: 860,
-        height: 472,
-        styleName: '横版F'
-    }
-];
+export const PROGRAMME_SUBJECT_DIMENSION = {
+    tv: [
+        {
+            width: 1920,
+            height: 1080,
+            styleName: '专题背景'
+        },
+        {
+            width: 410,
+            height: 472,
+            styleName: '专题D'
+        },
+        {
+            width: 1160,
+            height: 600,
+            styleName: '专题B'
+        },
+        {
+            width: 1310,
+            height: 472,
+            styleName: '专题C'
+        },
+        {
+            width: 860,
+            height: 440,
+            styleName: '横版A'
+        },
+        {
+            width: 560,
+            height: 300,
+            styleName: '横版B'
+        },
+        {
+            width: 560,
+            height: 720,
+            styleName: '竖版A'
+        },
+        {
+            width: 1160,
+            height: 300,
+            styleName: '横版C'
+        },
+        {
+            width: 260,
+            height: 380,
+            styleName: '竖版B'
+        },
+        {
+            width: 996,
+            height: 472,
+            styleName: '横版D'
+        },
+        {
+            width: 410,
+            height: 615,
+            styleName: '竖版C'
+        },
+        {
+            width: 342,
+            height: 472,
+            styleName: '竖版D'
+        },
+        {
+            width: 860,
+            height: 260,
+            styleName: '横版E'
+        },
+        {
+            width: 860,
+            height: 472,
+            styleName: '横版F'
+        }
+    ],
+    app: [
+        {
+            width: 1125,
+            height: 2436,
+            styleName: ''
+        },
+        {
+            width: 1089,
+            height: 612,
+            styleName: ''
+        },
+        {
+            width: 540,
+            height: 303,
+            styleName: ''
+        },
+        {
+            width: 351,
+            height: 507,
+            styleName: ''
+        }
+    ]
+};
 
 /**
  * 2.0运营角标尺寸
