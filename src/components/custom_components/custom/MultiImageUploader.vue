@@ -123,7 +123,6 @@ export default {
             let images = await promiseImageSize(e.target.files);
             let imagesWithDataUri = await readBlobAsDataURLFromList(images);
             let fileList = filterSizeMatchFiles(imagesWithDataUri, this.allowResolutions);
-            console.log(imagesWithDataUri);
             if (fileList.length === 0) {
                 this.$message.error('本次选择图片不符合尺寸要求');
                 this.resetInputField();

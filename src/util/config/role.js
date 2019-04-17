@@ -529,6 +529,26 @@ const RECOMMEND_OPTIONS = [
     }
 ];
 
+//  节目板式选项
+const PROGRAMME_TEMPLATE_OPTIONS = [
+    {
+        label: '电影',
+        value: 'MOVIE'
+    },
+    {
+        label: '电视剧',
+        value: 'TV_DRAMA'
+    },
+    {
+        label: '新闻',
+        value: 'NEWS'
+    },
+    {
+        label: '综艺',
+        value: 'TV_SHOW'
+    }
+];
+
 // const defaultLayoutNavbarId = '5bf42d08b778252f2343eafe';
 
 const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', '广告管理', '站点管理', '配置中心', ''];
@@ -935,5 +955,7 @@ export default {
     APP_PROGRAMME_ALLOW_PICTURE_DIMENSIONS,
 //  广告相关
     AD_TYPE_OPTIONS,
-    AD_STATUS_OPTIONS
+    AD_STATUS_OPTIONS,
+// 节目板式
+    PROGRAMME_TEMPLATE_OPTIONS
 };

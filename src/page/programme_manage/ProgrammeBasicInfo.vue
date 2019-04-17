@@ -93,7 +93,7 @@
                         <div class="attribute-item">
                             <label class="label">适用客户端</label>
                             <span class="value">
-                                {{programme.clientList.join(', ')}}
+                                {{programme.applicableClientList.join(', ')}}
                             </span>
                         </div>
                     </div>
@@ -102,17 +102,19 @@
                     <div class="attribute-item mark">
                         <label class="label">角标</label>
                         <div class="mark-container">
+                            <!--
                             <div class="left-top">
                                 左上角
                                 <span>{{getMark('leftTop')}}</span>
                             </div>
-                            <div class="right-top">
-                                右上角
-                                <span>{{getMark('rightTop')}}</span>
-                            </div>
                             <div class="left-bottom">
                                 左下角
                                 <span>{{getMark('leftBottom')}}</span>
+                            </div>
+                            -->
+                            <div class="right-top">
+                                右上角
+                                <span>{{getMark('rightTop')}}</span>
                             </div>
                             <div class="right-bottom">
                                 右下角
@@ -177,18 +179,16 @@
                 });
             },
             appImageList() {
-                return this.programme.posterImageList.filter((image) => {
-                    return parseInt(image.width) !== 260 && parseInt(image.height) !== 380;
-                }).filter((posterImage) => {
-                    let index = role.APP_PROGRAMME_ALLOW_PICTURE_DIMENSIONS.findIndex((item) => {
-                        return parseInt(item.width) === parseInt(posterImage.width) && parseInt(item.height) === parseInt(posterImage.height);
-                    });
-                    return index > -1;
-                });
+                return this.programme.posterImageListForApp;
             },
             getMark() {
                 return (position) => {
-                    return _.get(this.programme, `cornerMark.${position}.caption`);
+                    if (position === 'rightTop') {
+                        return _.get(this.programme, `cornerMark.${position}.caption`);
+                    } else {
+                        return (_.get(this.programme, `cornerMark.rightBottom.caption`) ||
+                        _.get(this.programme, `cornerMark.leftBottom.caption`));
+                    }
                 };
             },
             getYear() {

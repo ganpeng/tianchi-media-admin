@@ -118,9 +118,7 @@
             }
         },
         methods: {
-            ...mapMutations({
-                addPosterImage: 'person/addPosterImage'
-            }),
+            ...mapMutations({}),
             beforeCloseHandler() {
                 this.cancelHandler();
             },

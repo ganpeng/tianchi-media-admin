@@ -448,7 +448,7 @@
                                 </el-input>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="适用客户端" prop="clientList">
+                        <el-form-item label="适用客户端" prop="applicableClientList">
                             <el-checkbox :value="clientChecked('APP')" @change="clientCheckedHandler($event, 'APP')">APP</el-checkbox>
                             <el-checkbox :value="clientChecked('TV')" @change="clientCheckedHandler($event, 'TV')">TV</el-checkbox>
                         </el-form-item>
@@ -472,8 +472,8 @@
                             <multi-image-uploader
                                 id="appImageUploader"
                                 :imageList="appImageList"
-                                :deleteImageHandler="deleteImageHandler"
-                                :imageUploadedHandler="imageUploadedHandler"
+                                :deleteImageHandler="deleteAppImageHandler"
+                                :imageUploadedHandler="appImageUploadHandler"
                                 :allowResolutions="appAllowResolutions"
                                 :validator="appImageUploadValidator"
                             ></multi-image-uploader>
@@ -605,7 +605,7 @@
                         this.getDict(categoryList);
                         this.getProgrammeVideoListById(id);
                         if (res[0] && res[0].code === 0) {
-                            this.initCornerMark(res[0].data.cornerMark);
+                            // this.initCornerMark(res[0].data.cornerMark);
                             this.getFeatureVideoList({id: id, pageSize: res[0].data.featureVideoCount});
                         }
                     });
@@ -623,12 +623,6 @@
         },
         data() {
             return {
-                cornerMark: {
-                    leftTop: false,
-                    rightTop: false,
-                    leftBottom: false,
-                    rightBottom: false
-                },
                 sortMessage: '',
                 isLoading: false,
                 videoUploadDialogVisible: false,
@@ -651,34 +645,6 @@
                     contestList: '赛事',
                     platformList: '播放平台'
                 },
-                rightBottomCustomMarkOptions: [
-                    {
-                        label: '更新',
-                        value: 'aaa'
-                    },
-                    {
-                        label: '评分',
-                        value: 'score'
-                    }
-                ],
-                programmeTemplateOptions: [
-                    {
-                        label: '电影',
-                        value: 'MOVIE'
-                    },
-                    {
-                        label: '电视剧',
-                        value: 'TV_DRAMA'
-                    },
-                    {
-                        label: '新闻',
-                        value: 'NEWS'
-                    },
-                    {
-                        label: '综艺',
-                        value: 'TV_SHOW'
-                    }
-                ],
                 rules: {
                     name: [
                         { required: true, message: '请输入节目名称' }
@@ -705,7 +671,7 @@
                     visible: [
                         { required: true, message: '请选择节目状态' }
                     ],
-                    clientList: [
+                    applicableClientList: [
                         { required: true, message: '请选择适用客户端' }
                     ]
                 }
@@ -724,6 +690,48 @@
                 isSports: 'programme/isSports',
                 areaLabel: 'programme/areaLabel'
             }),
+            //  右下角的角标处理逻辑
+            rightBottomCustomMarkOptions() {
+                let options = [];
+                let hasFeature = this.video.list.filter((item) => item.type === 'FEATURE').length > 0;
+                if (this.isShow) {
+                    if (hasFeature) {
+                        options.push({label: '更新至', value: 1});
+                    } else {
+                        options = options.filter((item) => item.value !== 1);
+                    }
+                } else {
+                    if (this.programme.totalSets) {
+                        options.push({label: '更新至', value: 1});
+                    } else {
+                        options = options.filter((item) => item.value !== 1);
+                    }
+                }
+
+                if (this.programme.score) {
+                    options.push({label: '评分', value: 2});
+                } else {
+                    options = options.filter((item) => item.value !== 2);
+                }
+                return options;
+            },
+            rightBottom() {
+                let value = '';
+                let leftBottom = _.get(this.programme, `cornerMark.leftBottom`);
+                let rightBottom = _.get(this.programme, `cornerMark.rightBottom`);
+                if (!_.isNull(leftBottom) && _.isNull(rightBottom)) {
+                    value = 1;
+                }
+
+                if (_.isNull(leftBottom) && !_.isNull(rightBottom)) {
+                    value = 2;
+                }
+                return value;
+            },
+            //  右下角角标处理逻辑结束
+            programmeTemplateOptions() {
+                return role.PROGRAMME_TEMPLATE_OPTIONS;
+            },
             getFeature() {
                 return this.video.list.filter((video) => {
                     return video.type === 'FEATURE';
@@ -753,7 +761,7 @@
             //  适用客户端
             clientChecked() {
                 return (key) => {
-                    let index = this.programme.clientList.findIndex((item) => item === key);
+                    let index = this.programme.applicableClientList.findIndex((item) => item === key);
                     return index > -1;
                 };
             },
@@ -875,15 +883,12 @@
                     return !this.programme.totalSets;
                 }
             },
-            rightBottomDisabled() {
-                return !this.programme.score;
-            },
             rightTop() {
                 return _.get(this.programme, 'cornerMark.rightTop');
             },
-            rightBottom() {
-                return _.get(this.programme, 'cornerMark.rightBottom');
-            },
+            // rightBottom() {
+            //     return _.get(this.programme, 'cornerMark.rightBottom');
+            // },
             tvImageList() {
                 let list = this.programme.posterImageList.filter((posterImage) => {
                     let index = role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS.findIndex((item) => {
@@ -894,12 +899,7 @@
                 return list;
             },
             appImageList() {
-                let list = this.programme.posterImageList.filter((posterImage) => {
-                    let index = role.APP_PROGRAMME_ALLOW_PICTURE_DIMENSIONS.findIndex((item) => {
-                        return parseInt(item.width) === parseInt(posterImage.width) && parseInt(item.height) === parseInt(posterImage.height);
-                    });
-                    return index > -1;
-                });
+                let list = this.programme.posterImageListForApp;
                 return list;
             }
         },
@@ -943,7 +943,9 @@
                 updateProgrammeMark: 'programme/updateProgrammeMark',
                 //  海报上传成功之后添加到海报列表中
                 addImageToPosterImageList: 'programme/addImageToPosterImageList',
-                deleteImageFromPosterImageListById: 'programme/deleteImageFromPosterImageListById'
+                deleteImageFromPosterImageListById: 'programme/deleteImageFromPosterImageListById',
+                addImageToPosterImageListForApp: 'programme/addImageToPosterImageListForApp',
+                deleteImageFromPosterImageListForAppById: 'programme/deleteImageFromPosterImageListForAppById'
             }),
             ...mapActions({
                 // 新加
@@ -1051,8 +1053,8 @@
             initCornerMark(cornerMark) {
                 // this.cornerMark.leftTop = this.getCornerMarkByPosition(cornerMark, 'leftTop');
                 // this.cornerMark.leftBottom = this.getCornerMarkByPosition(cornerMark, 'leftBottom');
-                this.cornerMark.rightTop = this.getCornerMarkByPosition(cornerMark, 'rightTop');
-                this.cornerMark.rightBottom = this.getCornerMarkByPosition(cornerMark, 'rightBottom');
+                // this.cornerMark.rightTop = this.getCornerMarkByPosition(cornerMark, 'rightTop');
+                // this.cornerMark.rightBottom = this.getCornerMarkByPosition(cornerMark, 'rightBottom');
             },
             getCornerMarkByPosition(cornerMark, position) {
                 let mark = _.get(cornerMark, `${position}.caption`);
@@ -1437,8 +1439,14 @@
             imageUploadedHandler(image) {
                 this.addImageToPosterImageList({image});
             },
+            appImageUploadHandler(image) {
+                this.addImageToPosterImageListForApp({image});
+            },
             deleteImageHandler(id) {
                 this.deleteImageFromPosterImageListById({id});
+            },
+            deleteAppImageHandler(id) {
+                this.deleteImageFromPosterImageListForAppById({id});
             },
             imageUploadValidator(fileList) {
                 let onlyFileListOne = fileList.filter((item) => {
@@ -1494,19 +1502,28 @@
                 }
                 this.updateProgramme({key: 'cornerMark', value: cornerMark});
             },
-            rightBottomMarkSelectHandler() {
-
+            rightBottomMarkSelectHandler(value) {
+                if (value === 1) {
+                    this.updateProgrammeMark({checked: true, key: 'leftBottom'});
+                    this.updateProgrammeMark({checked: false, key: 'rightBottom'});
+                } else if (value === 2) {
+                    this.updateProgrammeMark({checked: false, key: 'leftBottom'});
+                    this.updateProgrammeMark({checked: true, key: 'rightBottom'});
+                } else {
+                    this.updateProgrammeMark({checked: false, key: 'leftBottom'});
+                    this.updateProgrammeMark({checked: false, key: 'rightBottom'});
+                }
             },
             //  适用客户端处理方法
             clientCheckedHandler(value, key) {
-                let clientList = _.cloneDeep(this.programme.clientList);
+                let applicableClientList = _.cloneDeep(this.programme.applicableClientList);
                 if (value) {
-                    clientList.push(key);
+                    applicableClientList.push(key);
                 } else {
-                    clientList = clientList.filter((item) => item !== key);
+                    applicableClientList = applicableClientList.filter((item) => item !== key);
                 }
-                clientList = _.uniq(clientList);
-                this.updateProgramme({key: 'clientList', value: clientList});
+                applicableClientList = _.uniq(applicableClientList);
+                this.updateProgramme({key: 'applicableClientList', value: applicableClientList});
             }
         }
     };

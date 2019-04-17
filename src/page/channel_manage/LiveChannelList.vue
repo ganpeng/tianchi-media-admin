@@ -612,7 +612,7 @@
                         this.selectedChannelList = [];
                         this.getChannelList();
                     } else {
-                        this.$message.error('批量恢复失败');
+                        this.$message.error('频道批量恢复失败');
                     }
                 }
             },
@@ -624,13 +624,13 @@
                         type: 'error'
                     });
                 if (confirm) {
-                    let res = await this.$service.batchSetChannel({idList, visible: true});
+                    let res = await this.$service.batchSetChannel({idList, visible: false});
                     if (res && res.code === 0) {
                         this.$message.success(`频道批量禁播成功`);
                         this.selectedChannelList = [];
                         this.getChannelList();
                     } else {
-                        this.$message.error('批量禁播失败');
+                        this.$message.error('频道批量禁播失败');
                     }
                 }
             },

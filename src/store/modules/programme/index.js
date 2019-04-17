@@ -82,6 +82,8 @@ const defaultProgramme = {
     status: null,
     // 节目海报，json字符串存储，包含以下几个字段，fileId，uri，width，high")
     posterImageList: [],
+    //  app端节目图片
+    posterImageListForApp: [],
     // 相关人物
     figureList: [],
     //  figureListMap
@@ -111,7 +113,7 @@ const defaultProgramme = {
     currentTypeList: [],
 
     //  v2.3.0中新增加的字段
-    clientList: ['APP', 'TV'] // 客户端适用的字段
+    applicableClientList: ['APP', 'TV'] // 客户端适用的字段
 };
 
 const defaultVideo = {
@@ -679,12 +681,21 @@ const mutations = {
         }
         state.programme.posterImageList = _.uniqBy(state.programme.posterImageList, 'id');
     },
+    addImageToPosterImageListForApp(state, payload) {
+        let {image} = payload;
+        state.programme.posterImageListForApp.push(image);
+        state.programme.posterImageListForApp = _.uniqBy(state.programme.posterImageListForApp, 'id');
+    },
     deleteImageFromPosterImageListById(state, payload) {
         let {id} = payload;
         state.programme.posterImageList = state.programme.posterImageList.filter((image) => image.id !== id);
         if (id === state.programme.coverImage.id) {
             state.programme.coverImage = {};
         }
+    },
+    deleteImageFromPosterImageListForAppById(state, payload) {
+        let {id} = payload;
+        state.programme.posterImageListForApp = state.programme.posterImageListForApp.filter((image) => image.id !== id);
     },
     // 新加代码结束
     addPosterImage(state, payload) {
@@ -894,7 +905,8 @@ const mutations = {
                 markType
             };
         } else {
-            delete state.programme.cornerMark[key];
+            // delete state.programme.cornerMark[key];
+            state.programme.cornerMark[key] = null;
         }
     }
 };
