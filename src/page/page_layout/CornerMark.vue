@@ -1,15 +1,17 @@
 <template>
     <div class="mark-container">
+        <!--
         <div class="left-top-field">
             <img :src="getCornerMarkByKey('leftTop') | setPlatformImage" alt="">
         </div>
         <div v-if="getCornerMarkByKey('leftBottom')" class="left-bottom-field">
             {{getCornerMarkByKey('leftBottom')}}
         </div>
+        -->
         <div :style="rightTopStyle" class="right-top-field">
         </div>
-        <div v-if="getCornerMarkByKey('rightBottom')" class="right-bottom-field">
-            {{getCornerMarkByKey('rightBottom')}}
+        <div v-if="rightBottomText" class="right-bottom-field">
+            {{rightBottomText}}
         </div>
         <div class="mask"></div>
         <div class="layout-item-type-title">
@@ -90,16 +92,9 @@ export default {
                 return _.get(this.cornerMark, `${key}.caption`);
             };
         },
-        title() {
-            let programmeTemplate = _.get(this.cornerMark, `programmeTemplate`);
-            switch (programmeTemplate) {
-                case 'TV_DRAMA':
-                    return '集';
-                case 'TV_SHOW':
-                    return '期';
-                default:
-                    return '';
-            }
+        rightBottomText() {
+            let text = (_.get(this.cornerMark, 'leftBottom.caption') || _.get(this.cornerMark, 'rightBottom.caption'));
+            return text;
         }
     },
     created() {

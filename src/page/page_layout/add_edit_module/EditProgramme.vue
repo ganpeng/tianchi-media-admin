@@ -177,7 +177,6 @@
                             :total="programmePagination.total">
                         </el-pagination>
                     </div>
-
                 </div>
                 <div v-if="active === 1" class="step-two">
                     <el-form class="my-el-form" status-icon label-width="120px" @submit.native.prevent>
@@ -230,14 +229,6 @@
                                 <div class="page-layout-mark">
                                     <div class="mark-container">
                                         <div class="mark-item">
-                                            <el-checkbox v-if="markCheckedByKey('leftTop')" :checked="true" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
-                                                左上角：播放平台
-                                            </el-checkbox>
-                                            <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
-                                                左上角：播放平台
-                                            </el-checkbox>
-                                        </div>
-                                        <div class="mark-item">
                                                 右上角：
                                             <el-select
                                                 @input="customMarkSelectHandler"
@@ -254,22 +245,19 @@
                                             </el-select>
                                         </div>
                                         <div class="mark-item">
-                                            <div v-if="showLeftBottom">
-                                                <el-checkbox v-if="markCheckedByKey('leftBottom')" :checked="true" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
-                                                    左下角：更新
-                                                </el-checkbox>
-                                                <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
-                                                    左下角：更新
-                                                </el-checkbox>
-                                            </div>
-                                        </div>
-                                        <div class="mark-item">
-                                            <el-checkbox v-if="markCheckedByKey('rightBottom')" :checked="true" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
-                                                右下角：评分
-                                            </el-checkbox>
-                                            <el-checkbox v-else :checked="false" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
-                                                右下角：评分
-                                            </el-checkbox>
+                                                右下角：
+                                            <el-select
+                                                @input="rightBottomMarkSelectHandler"
+                                                :value="rightBottom"
+                                                clearable
+                                                placeholder="请选择">
+                                                <el-option
+                                                    v-for="(item, index) in rightBottomCustomMarkOptions"
+                                                    :key="index"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                                </el-option>
+                                            </el-select>
                                         </div>
                                     </div>
                                 </div>
@@ -371,36 +359,37 @@ export default {
                 return _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.${key}.uri`);
             };
         },
+        //  新的角标规则开始
+        rightBottomCustomMarkOptions() {
+            let options = [];
+            let {featureVideoCount, score, programmeTemplate} = this.programme;
+            if ((programmeTemplate === 'TV_SHOW' || programmeTemplate === 'TV_DRAMA') && featureVideoCount) {
+                options.push({label: '更新至', value: 1});
+            }
+            if (score) {
+                options.push({label: '评分', value: 2});
+            }
+            return options;
+        },
         rightTop() {
             let {rightTop} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
             return _.isEmpty(rightTop) ? {} : rightTop;
         },
-        showLeftBottom() {
-            let programmeTemplate = _.get(this.programme, 'programmeTemplate');
-            let flag = programmeTemplate === 'TV_DRAMA' || programmeTemplate === 'TV_SHOW';
-            return flag;
+        rightBottom() {
+            let value = '';
+            let {leftBottom, rightBottom} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
+            let leftBottomCaption = _.get(leftBottom, 'caption');
+            let rightBottomCaption = _.get(rightBottom, 'caption');
+            if (!_.isNull(leftBottomCaption) && _.isNull(rightBottomCaption)) {
+                value = 1;
+            }
+
+            if (_.isNull(leftBottomCaption) && !_.isNull(rightBottomCaption)) {
+                value = 2;
+            }
+            return value;
         },
-        leftTopDisabled() {
-            return _.get(this.programme, 'platformList.length') === 0;
-        },
-        leftBottomDisabled() {
-            return !(this.programme && this.programme.featureVideoCount);
-        },
-        rightBottomDisabled() {
-            return !(this.programme && this.programme.score);
-        },
-        rightBottomChecked() {
-            let cornerMark = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
-            let mark = _.get(cornerMark, `rightBottom.caption`);
-            return mark;
-        },
-        markCheckedByKey() {
-            return (key) => {
-                let cornerMark = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
-                let mark = _.get(cornerMark, `${key}.caption`);
-                return mark;
-            };
-        },
+        //  新的角标规则结束
         getSquareProgrammeId() {
             return _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.id`);
         },
@@ -636,8 +625,8 @@ export default {
             });
         },
         //  角标的相关操作
-        markChangeHandler(value, key) {
-            let {score, featureVideoCount, platformList, totalSets, programmeTemplate} = this.programme;
+        rightBottomMarkSelectHandler(value) {
+            let {score, featureVideoCount, totalSets, programmeTemplate} = this.programme;
             let leftBottomCaption = '';
             switch (programmeTemplate) {
                 case 'TV_DRAMA':
@@ -654,36 +643,51 @@ export default {
                 leftBottomCaption = `${totalSets}集全`;
             }
 
-            switch (key) {
-                case 'leftTop':
-                    this.updateLayoutItemCornerMarkByIndex({
-                        navbarId: this.navbarId,
-                        index: this.index,
-                        squareIndex: this.squareIndex,
-                        key: 'leftTop',
-                        value: value ? {caption: platformList[0]} : {}
-                    });
-                    break;
-                case 'leftBottom':
-                    this.updateLayoutItemCornerMarkByIndex({
-                        navbarId: this.navbarId,
-                        index: this.index,
-                        squareIndex: this.squareIndex,
-                        key: 'leftBottom',
-                        value: value ? {caption: leftBottomCaption} : {}
-                    });
-                    break;
-                case 'rightBottom':
-                    this.updateLayoutItemCornerMarkByIndex({
-                        navbarId: this.navbarId,
-                        index: this.index,
-                        squareIndex: this.squareIndex,
-                        key: 'rightBottom',
-                        value: value ? {caption: score} : {}
-                    });
-                    break;
-                default:
-                    throw new Error('角标key不存在');
+            if (value === 1) {
+                this.updateLayoutItemCornerMarkByIndex({
+                    navbarId: this.navbarId,
+                    index: this.index,
+                    squareIndex: this.squareIndex,
+                    key: 'leftBottom',
+                    value: {caption: leftBottomCaption}
+                });
+                this.updateLayoutItemCornerMarkByIndex({
+                    navbarId: this.navbarId,
+                    index: this.index,
+                    squareIndex: this.squareIndex,
+                    key: 'rightBottom',
+                    value: {caption: null}
+                });
+            } else if (value === 2) {
+                this.updateLayoutItemCornerMarkByIndex({
+                    navbarId: this.navbarId,
+                    index: this.index,
+                    squareIndex: this.squareIndex,
+                    key: 'rightBottom',
+                    value: {caption: score}
+                });
+                this.updateLayoutItemCornerMarkByIndex({
+                    navbarId: this.navbarId,
+                    index: this.index,
+                    squareIndex: this.squareIndex,
+                    key: 'leftBottom',
+                    value: {caption: null}
+                });
+            } else {
+                this.updateLayoutItemCornerMarkByIndex({
+                    navbarId: this.navbarId,
+                    index: this.index,
+                    squareIndex: this.squareIndex,
+                    key: 'leftBottom',
+                    value: {caption: null}
+                });
+                this.updateLayoutItemCornerMarkByIndex({
+                    navbarId: this.navbarId,
+                    index: this.index,
+                    squareIndex: this.squareIndex,
+                    key: 'rightBottom',
+                    value: {caption: null}
+                });
             }
         },
         customMarkSelectHandler(mark) {
