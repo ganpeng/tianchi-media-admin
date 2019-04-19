@@ -2,7 +2,6 @@
 <template>
     <div>
         <div class="seperator-line"></div>
-        <!--基本信息-->
         <el-form
             ref="channelInfo"
             :model="channelInfo"
@@ -112,22 +111,6 @@
             <el-form-item label="状态" prop="visible" required v-if="status === 'CREATE_CHANNEL'">
                 <label>禁播</label>
             </el-form-item>
-            <el-form-item label="状态" prop="visible" required v-if="status === 'EDIT_CHANNEL'">
-                <el-radio-group v-model="channelInfo.visible">
-                    <el-radio :label="true">正常</el-radio>
-                    <el-radio :label="false">禁播</el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item label="频道图" prop="logoUri" required>
-                <label class="tips">(260*260 频道图)</label>
-                <div>
-                    <img v-if="channelInfo.logoUri" :src="channelInfo.logoUri | imageUrl" class="logo-image">
-                    <single-image-uploader
-                        :allowResolutions="allowResolutions"
-                        :uploadSuccessHandler="uploadSuccessHandler">
-                    </single-image-uploader>
-                </div>
-            </el-form-item>
             <el-form-item label="公共频道" prop="common" required>
                 {{channelInfo.common ? '是' : '否'}}
             </el-form-item>
@@ -157,12 +140,36 @@
                        class="close-btn el-select__caret el-input__icon el-icon-circle-close is-show-close"></i>
                 </el-autocomplete>
             </el-form-item>
+            <el-form-item label="状态" prop="visible" required v-if="status === 'EDIT_CHANNEL'">
+                <el-radio-group v-model="channelInfo.visible">
+                    <el-radio :label="true">正常</el-radio>
+                    <el-radio :label="false">禁播</el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item label="频道图" prop="logoUri" required>
+                <label class="tips">(260*260 频道图)</label>
+                <div>
+                    <img v-if="channelInfo.logoUri" :src="channelInfo.logoUri | imageUrl" class="logo-image">
+                    <single-image-uploader
+                        :allowResolutions="allowResolutions"
+                        :uploadSuccessHandler="uploadSuccessHandler">
+                    </single-image-uploader>
+                </div>
+            </el-form-item>
         </el-form>
         <div class="seperator-line"></div>
         <!--频道节目信息-->
         <div class="text-left" v-if="status === 'EDIT_CHANNEL'">
             <h3 class="content-sub-title">频道节目信息</h3>
-            <ul>
+            <ul class="channel-info">
+                <li>
+                    <span>分组数量：</span>
+                    <label>{{carouselGroup.length}}组</label>
+                </li>
+                <li>
+                    <span>当前播放组：</span>
+                    <label>{{carouselGroup[0].name}}</label>
+                </li>
                 <li>
                     <span>当前播放：</span>
                     <label class="on-play">
@@ -171,15 +178,62 @@
                 </li>
                 <li>
                     <span>播放时段：</span>
-                    <label class="duration">{{channelInfo.duration}}</label></li>
-                <li>
-                    <span>视频个数：</span>
-                    <label class="count">
-                        {{currentSelectedVideoList ? currentSelectedVideoList.length : 0}}个
-                    </label>
+                    <label class="duration">{{channelInfo.duration}}</label>
                 </li>
             </ul>
             <div class="seperator-line"></div>
+        </div>
+        <!--分组与视频-->
+        <div class="content-sub-title">分组与视频
+            <el-button @click="addVideoGroup" class="contain-svg-icon btn-style-four">
+                <svg-icon icon-class="video"></svg-icon>
+                添加分组
+            </el-button>
+            <label class="data-show">共{{carouselGroup.length}}组，实际总播放时长24小时，视频总时长78小时。</label>
+        </div>
+        <div class="group-container">
+            <ul>
+                <li>
+                    <div class="header-box">
+                        <label>组1</label>
+                        <span>3小时</span>
+                    </div>
+                    <div class="content-box">
+                        <p class="name-box">
+                            <label>还珠格格第二部1-10</label>
+                            <span>
+                                <i class="el-icon-circle-close"></i>
+                            </span>
+                        </p>
+                        <p class="no-box">
+                            <label>10个视频</label>
+                            <span>编辑</span>
+                        </p>
+                        <p class="duration-box">
+                            <label>总时长9小时50分钟</label>
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="header-box">
+                        <label>组1</label>
+                        <span>3小时</span>
+                    </div>
+                    <div class="content-box">
+                        <p class="name-box">
+                            <label>还珠格格第二部1-10</label>
+                            <span><i class="el-icon-circle-close"></i></span>
+                        </p>
+                        <p class="no-box">
+                            <label>10个视频</label>
+                            <span>编辑</span>
+                        </p>
+                        <p class="duration-box">
+                            <label>总时长9小时50分钟</label>
+                        </p>
+                    </div>
+                </li>
+            </ul>
         </div>
         <!--频道内节目-->
         <div class="content-sub-title">频道内节目
@@ -645,7 +699,12 @@
                 }
             };
             return {
-                restaurants: [],
+                carouselGroup: [{
+                    name: '默认分组',
+                    duration: '',
+                    videoDuration: '',
+                    carouselVideoList: []
+                }],
                 isLoading: false,
                 displayNameSettingVisible: false,
                 sortToolVisible: true,
@@ -745,6 +804,9 @@
             this.init();
         },
         methods: {
+            addVideoGroup() {
+
+            },
             validateCompanyList() {
                 this.$refs['channelInfo'].validateField('companyList');
             },
@@ -1246,6 +1308,56 @@
 
 <style lang="scss" scoped>
 
+    .data-show {
+        padding: 2px 6px;
+        margin-left: 30px;
+        font-size: 14px;
+        color: #A8ABB3;
+        background: #252D3F;
+        border-radius: 10px;
+    }
+
+    .group-container {
+        ul {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow: hidden;
+            li {
+                margin-right: 10px;
+                .header-box {
+                    margin-bottom: 10px;
+                    display: flex;
+                    justify-content: space-between;
+                    label {
+                        padding: 2px 6px;
+                        font-size: 14px;
+                        color: #6F7480;
+                        background: #252D3F;
+                        border-radius: 10px;
+                    }
+                    span {
+                        padding: 2px 8px;
+                        font-size: 14px;
+                        color: #6F7480;
+                        background: #252D3F;
+                        border-radius: 10px;
+                    }
+                }
+                .content-box {
+                    width: 200px;
+                    height: 100px;
+                    background: #252D3F;
+                    border-radius: 8px;
+                    p {
+                        padding: 6px 10px;
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                }
+            }
+        }
+    }
+
     .el-date-picker {
         width: 230px;
     }
@@ -1417,14 +1529,14 @@
     }
 
     /*频道节目信息*/
-    ul {
+    ul.channel-info {
         padding-left: 40px;
         li {
             margin-bottom: 18px;
             span {
                 display: inline-block;
                 margin-right: 10px;
-                width: 80px;
+                width: 100px;
                 height: 22px;
                 font-size: 16px;
                 color: #A8ABB3;
@@ -1475,25 +1587,6 @@
         }
         .copy-btn {
             cursor: pointer;
-        }
-    }
-
-    // 操作
-    .operate-block {
-        position: fixed;
-        bottom: 10px;
-        left: 0px;
-        right: 0px;
-        margin: auto;
-        width: 500px;
-        height: 80px;
-        line-height: 90px;
-        background: #293550;
-        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.20);
-        border-radius: 8px;
-        z-index: 600;
-        .el-button:last-child {
-            margin-left: 40px;
         }
     }
 
