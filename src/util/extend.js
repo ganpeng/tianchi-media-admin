@@ -179,7 +179,7 @@ let util = {
             time = min + '分' + second + '秒';
             if (min > 60) {
                 min = parseInt(seconds / 60) % 60;
-                var hour = parseInt(parseInt(seconds / 60) / 60);
+                let hour = parseInt(parseInt(seconds / 60) / 60);
                 time = hour + '小时' + min + '分' + second + '秒';
                 if (hour > 24) {
                     hour = parseInt(parseInt(seconds / 60) / 60) % 24;

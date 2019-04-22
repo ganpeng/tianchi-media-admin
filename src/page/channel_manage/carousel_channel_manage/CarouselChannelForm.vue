@@ -189,47 +189,35 @@
                 <svg-icon icon-class="video"></svg-icon>
                 添加分组
             </el-button>
-            <label class="data-show">共{{carouselGroup.length}}组，实际总播放时长24小时，视频总时长78小时。</label>
+            <label class="data-show">共{{carouselGroup.length}}组，实际总播放时长{{carouselGroup |
+                getGroupDuration | fromSecondsToTime}}，视频总时长{{carouselGroup | getTotalVideoListDuration |
+                fromSecondsToTime}}。</label>
         </div>
         <div class="group-container">
-            <ul>
-                <li>
+            <ul id="group-list">
+                <li @click="selectCurrentGroup(index)"
+                    v-for="(item, index) in carouselGroup"
+                    :key="index">
                     <div class="header-box">
-                        <label>组1</label>
-                        <span>3小时</span>
+                        <label>组{{index + 1}}</label>
+                        <span v-if="item.duration">{{item.duration | fromSecondsToTime}}</span>
                     </div>
                     <div class="content-box">
                         <p class="name-box">
-                            <label>还珠格格第二部1-10</label>
+                            <label class="ellipsis one">{{item.name}}</label>
                             <span>
                                 <i class="el-icon-circle-close"></i>
                             </span>
                         </p>
                         <p class="no-box">
-                            <label>10个视频</label>
-                            <span>编辑</span>
+                            <label>
+                                {{item.carouselVideoList.length === 0 ? '暂无视频' : item.carouselVideoList.length + '个视频'}}
+                            </label>
+                            <span><svg-icon icon-class="edit"></svg-icon></span>
                         </p>
                         <p class="duration-box">
-                            <label>总时长9小时50分钟</label>
-                        </p>
-                    </div>
-                </li>
-                <li>
-                    <div class="header-box">
-                        <label>组1</label>
-                        <span>3小时</span>
-                    </div>
-                    <div class="content-box">
-                        <p class="name-box">
-                            <label>还珠格格第二部1-10</label>
-                            <span><i class="el-icon-circle-close"></i></span>
-                        </p>
-                        <p class="no-box">
-                            <label>10个视频</label>
-                            <span>编辑</span>
-                        </p>
-                        <p class="duration-box">
-                            <label>总时长9小时50分钟</label>
+                            <label v-if="item.carouselVideoList.length === 0">暂无视频时长</label>
+                            <label v-else>{{item.carouselVideoList | getCarouselVideoTime | fromSecondsToTime}}</label>
                         </p>
                     </div>
                 </li>
@@ -559,6 +547,38 @@
             v-on:closeDialog="sortDialogVisible = false"
             v-on:setSortedList="setSortedList">
         </sort-dialog>
+        <!--添加分组-->
+        <el-dialog
+            title="添加分组"
+            :close-on-click-modal=false
+            width="60%"
+            top="25vh"
+            custom-class="group-dialog"
+            :visible.sync="createGroupDialogVisible">
+            <el-form
+                v-if="createGroupDialogVisible"
+                :model="groupInfo"
+                ref="groupInfo"
+                :rules="groupInfoRules"
+                status-icon>
+                <el-form-item label="组名称" prop="name" required>
+                    <el-input
+                        v-model="groupInfo.name"
+                        placeholder="请输入组名称，12字以内">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="播放时长" prop="durationFormat">
+                    <el-input
+                        v-model="groupInfo.durationFormat"
+                        type="number"
+                        placeholder="请填写播放时长，例如'010023'">
+                    </el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="confirmGroup">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -698,7 +718,30 @@
                     callback();
                 }
             };
+            let checkGroupName = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('组名称不能为空'));
+                } else if (this.$util.trim(value).length > 12) {
+                    return callback(new Error('组名称不能超过12个字'));
+                } else {
+                    callback();
+                }
+            };
+            let checkDurationFormat = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    callback();
+                } else if (!/^[0-9]{6}$/.test(value)) {
+                    return callback(new Error('请填写6位数字作为能播放时长'));
+                } else {
+                    callback();
+                }
+            };
             return {
+                groupInfo: {
+                    name: '',
+                    durationFormat: ''
+                },
+                createGroupDialogVisible: false,
                 carouselGroup: [{
                     name: '默认分组',
                     duration: '',
@@ -789,8 +832,42 @@
                     logoUri: [
                         {validator: checkLogoUri, trigger: 'blur'}
                     ]
+                },
+                groupInfoRules: {
+                    name: [
+                        {validator: checkGroupName, trigger: 'blur'}
+                    ],
+                    durationFormat: [
+                        {validator: checkDurationFormat, trigger: 'blur'}
+                    ]
                 }
             };
+        },
+        filters: {
+            getCarouselVideoTime(videoList) {
+                let duration = 0;
+                for (let i = 0; i < videoList.length; i++) {
+                    duration = duration + videoList[i].takeTimeInSec;
+                }
+                return duration;
+            },
+            getGroupDuration(groupList) {
+                let duration = 0;
+                for (let i = 0; i < groupList.length; i++) {
+                    duration = duration + groupList[i].duration;
+                }
+                return duration;
+            },
+            // 获取视频列表总时间
+            getTotalVideoListDuration(groupList) {
+                let duration = 0;
+                for (let i = 0; i < groupList.length; i++) {
+                    for (let m = 0; m < groupList[i].carouselVideoList.length; m++) {
+                        duration = duration + groupList[i].carouselVideoList[m].takeTimeInSec;
+                    }
+                }
+                return duration;
+            }
         },
         computed: {
             getVideoUrl() {
@@ -804,33 +881,6 @@
             this.init();
         },
         methods: {
-            addVideoGroup() {
-
-            },
-            validateCompanyList() {
-                this.$refs['channelInfo'].validateField('companyList');
-            },
-            // 删除所有选中的区域码
-            removeAllCompany() {
-                this.channelInfo.companyList.splice(0);
-                this.channelInfo.common = false;
-                this.validateCompanyList();
-            },
-            // 删除区域码
-            removeCompany(company, index) {
-                this.channelInfo.companyList.splice(index, 1);
-                this.channelInfo.common = false;
-                this.validateCompanyList();
-            },
-            querySearch(queryString, cb) {
-                let results = queryString ? this.companyOptions.filter(this.createFilter(queryString)) : this.companyOptions;
-                cb(results);
-            },
-            createFilter(queryString) {
-                return (companyOptions) => {
-                    return (companyOptions.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-                };
-            },
             init() {
                 this.$util.toggleFixedBtnContainer();
                 this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
@@ -856,6 +906,8 @@
                 });
                 if (this.status === 'EDIT_CHANNEL') {
                     this.getChannelDetail();
+                } else {
+                    this.selectCurrentGroup(0);
                 }
             },
             getChannelDetail() {
@@ -884,7 +936,61 @@
                             }
                         });
                     }
+                    this.selectCurrentGroup(0);
                 });
+            },
+            confirmGroup() {
+                this.$refs['groupInfo'].validate((valid) => {
+                    if (valid) {
+                        this.carouselGroup.push({
+                            name: this.groupInfo.name,
+                            duration: parseInt(this.groupInfo.durationFormat.substring(0, 2) * 60 * 60) + parseInt(this.groupInfo.durationFormat.substring(2, 4) * 60) + parseInt(this.groupInfo.durationFormat.substring(4, 6)),
+                            durationFormat: this.groupInfo.durationFormat,
+                            videoDuration: '',
+                            carouselVideoList: []
+                        });
+                        this.createGroupDialogVisible = false;
+                        this.groupInfo.name = '';
+                        this.groupInfo.durationFormat = '';
+                    }
+                });
+            },
+            // 选择组
+            selectCurrentGroup(index) {
+                let nodes = this.$el.querySelectorAll('#group-list li');
+                for (let i = 0; i < nodes.length; i++) {
+                    nodes[i].className = '';
+                }
+                nodes[index].className = 'current-group';
+                // 设置当前视频列表
+                this.currentSelectedVideoList = this.carouselGroup[index].carouselVideoList;
+            },
+            addVideoGroup() {
+                this.createGroupDialogVisible = true;
+            },
+            validateCompanyList() {
+                this.$refs['channelInfo'].validateField('companyList');
+            },
+            // 删除所有选中的区域码
+            removeAllCompany() {
+                this.channelInfo.companyList.splice(0);
+                this.channelInfo.common = false;
+                this.validateCompanyList();
+            },
+            // 删除区域码
+            removeCompany(company, index) {
+                this.channelInfo.companyList.splice(index, 1);
+                this.channelInfo.common = false;
+                this.validateCompanyList();
+            },
+            querySearch(queryString, cb) {
+                let results = queryString ? this.companyOptions.filter(this.createFilter(queryString)) : this.companyOptions;
+                cb(results);
+            },
+            createFilter(queryString) {
+                return (companyOptions) => {
+                    return (companyOptions.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+                };
             },
             // 设置区域码，对全选进行处理
             setCompanies(item) {
@@ -1306,7 +1412,83 @@
     ;
 </script>
 
+<style lang="scss">
+
+    // 创建分组弹窗
+    .group-dialog {
+        width: 430px !important;
+        background: rgba(65, 74, 93, 0.90);
+        border: 1px solid rgba(99, 116, 151, 0.50);
+        box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.30);
+        border-radius: 4px;
+        .el-dialog__header {
+            padding: 0px;
+            height: 45px;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            line-height: 45px;
+            background: rgba(65, 74, 93, 0.90);
+            .el-dialog__title {
+                font-size: 18px;
+                color: #FFFFFF;
+            }
+            .el-dialog__headerbtn {
+                top: 14px;
+                font-size: 15px;
+                .el-dialog__close {
+                    color: #C35757;
+                    &:hover {
+                        color: #D0021B;
+                    }
+                }
+            }
+        }
+        .el-dialog__body {
+            .el-form {
+                margin-top: 0px;
+                .el-form-item__label {
+                    font-size: 14px;
+                    color: #A3D0FD;
+                }
+                .el-input {
+                    width: 280px;
+                    height: 34px;
+                    .el-input__inner {
+                        height: 34px;
+                        border: 1px solid #A3D0FD;
+                        &::-webkit-input-placeholder {
+                            color: rgb(99, 116, 151);
+                        }
+                    }
+                }
+                .el-form-item__error {
+                    padding-left: 86px;
+                }
+            }
+        }
+        .el-dialog__footer {
+            margin-top: 12px;
+            text-align: center;
+            .el-button {
+                width: 100px;
+                height: 40px;
+                &.el-button--default {
+                    color: #C35757;
+                }
+                &.el-button--default.el-button--primary {
+                    color: #A3D0FD;
+                }
+            }
+        }
+    }
+
+</style>
+
 <style lang="scss" scoped>
+
+    .form-block {
+        display: none;
+    }
 
     .data-show {
         padding: 2px 6px;
@@ -1324,6 +1506,48 @@
             overflow: hidden;
             li {
                 margin-right: 10px;
+                &.current-group {
+                    .header-box {
+                        label, span {
+                            color: #fff;
+                        }
+                    }
+                    .content-box {
+                        padding-bottom: 10px;
+                        background: #0062C4;
+                        &:hover {
+                            background: #0062C4;
+                        }
+                        .name-box {
+                            label {
+                                color: #FFFFFF;
+                            }
+                            span {
+                                visibility: visible;
+                            }
+                        }
+                        .no-box {
+                            margin-bottom: 5px;
+                            label {
+                                color: #A3D0FD;
+                            }
+                            span {
+                                visibility: visible;
+                                .svg-icon {
+                                    fill: #A3D0FD;
+                                }
+                            }
+                        }
+                        .duration-box {
+                            display: block;
+                            text-align: left;
+                            label {
+                                text-align: left;
+                                color: #A3D0FD;
+                            }
+                        }
+                    }
+                }
                 .header-box {
                     margin-bottom: 10px;
                     display: flex;
@@ -1345,13 +1569,68 @@
                 }
                 .content-box {
                     width: 200px;
-                    height: 100px;
+                    height: auto;
+                    padding: 10px 10px 15px 10px;
                     background: #252D3F;
                     border-radius: 8px;
+                    cursor: pointer;
+                    &:hover {
+                        background: #2E384D;
+                        .name-box {
+                            span {
+                                visibility: visible;
+                            }
+                        }
+                        .no-box {
+                            span {
+                                visibility: visible;
+                            }
+                        }
+                    }
                     p {
-                        padding: 6px 10px;
+                        height: 20px;
+                        line-height: 20px;
                         display: flex;
                         justify-content: space-between;
+                        cursor: pointer;
+                        label {
+                            cursor: pointer;
+                        }
+                        &.name-box {
+                            margin-bottom: 15px;
+                            label {
+                                width: 145px;
+                                font-size: 14px;
+                                color: #A8ABB3;
+                                text-align: left;
+                            }
+                            span {
+                                visibility: hidden;
+                                i {
+                                    font-size: 16px;
+                                    color: #C35757;
+                                    cursor: pointer;
+                                }
+                            }
+                        }
+                        &.no-box {
+                            label {
+                                font-size: 14px;
+                                color: #6F7480;
+                            }
+                            span {
+                                visibility: hidden;
+                                cursor: pointer;
+                                .svg-icon {
+                                    width: 13px !important;
+                                    height: 18px !important;
+                                    fill: #1989FA;
+                                }
+                            }
+                        }
+                        &.duration-box {
+                            display: none;
+                        }
                     }
                 }
             }
