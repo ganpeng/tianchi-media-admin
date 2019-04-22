@@ -52,10 +52,10 @@
             </el-button>
         </div>
         <div class="scroll-btn-container">
-            <a href="#" v-scroll-to="{el: '#top', offset: -50}">
+            <a class="top-btn" href="#" v-scroll-to="{el: '#top', offset: -50}">
                 <i class="el-icon-arrow-up"></i>
             </a>
-            <a href="#" v-scroll-to="'#bottom'">
+            <a class="bottom-btn" href="#" v-scroll-to="'#bottom'">
                 <i class="el-icon-arrow-down"></i>
             </a>
         </div>
@@ -121,6 +121,8 @@ export default {
     },
     async mounted() {
         init();
+        let content = document.querySelector('.content');
+        content.addEventListener('scroll', this.toggleTopBottomBtns.bind(this), false);
     },
     async created() {
         try {
@@ -293,6 +295,27 @@ export default {
         showSortViewHandler() {
             if (this.layoutList.length > 0) {
                 this.sortView = !this.sortView;
+            }
+        },
+        toggleTopBottomBtns() {
+            let content = document.querySelector('.content');
+            let topBtn = document.querySelector('.top-btn');
+            let bottomBtn = document.querySelector('.bottom-btn');
+            let isBottom = content.scrollHeight - content.scrollTop === content.clientHeight;
+            let isTop = content.scrollTop === 0;
+            if (isBottom) {
+                topBtn.style.display = 'block';
+                bottomBtn.style.display = 'none';
+            }
+
+            if (isTop) {
+                topBtn.style.display = 'none';
+                bottomBtn.style.display = 'block';
+            }
+
+            if (!isTop && !isBottom) {
+                topBtn.style.display = 'block';
+                bottomBtn.style.display = 'block';
             }
         }
     }
