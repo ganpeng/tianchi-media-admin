@@ -195,17 +195,16 @@
         </div>
         <div class="group-container">
             <ul id="group-list">
-                <li @click="selectCurrentGroup(index)"
-                    v-for="(item, index) in carouselGroup"
+                <li v-for="(item, index) in carouselGroup"
                     :key="index">
                     <div class="header-box">
                         <label>组{{index + 1}}</label>
                         <span v-if="item.duration">{{item.duration | fromSecondsToTime}}</span>
                     </div>
-                    <div class="content-box">
+                    <div class="content-box" @click="selectCurrentGroup(index)">
                         <p class="name-box">
                             <label class="ellipsis one">{{item.name}}</label>
-                            <span>
+                            <span v-if="carouselGroup.length !== 1" @click.stop="removeGroup(index)">
                                 <i class="el-icon-circle-close"></i>
                             </span>
                         </p>
@@ -213,7 +212,7 @@
                             <label>
                                 {{item.carouselVideoList.length === 0 ? '暂无视频' : item.carouselVideoList.length + '个视频'}}
                             </label>
-                            <span><svg-icon icon-class="edit"></svg-icon></span>
+                            <span @click.stop="editGroupInfo(index)"><svg-icon icon-class="edit"></svg-icon></span>
                         </p>
                         <p class="duration-box">
                             <label v-if="item.carouselVideoList.length === 0">暂无视频时长</label>
@@ -224,7 +223,24 @@
             </ul>
         </div>
         <!--频道内节目-->
-        <div class="content-sub-title">频道内节目
+        <div class="video-list-header">
+            <div class="group-video-info">
+                <div>
+                    <span>组{{currentCarouselGroup.index + 1}}</span><label>{{currentCarouselGroup.name}}</label>
+                </div>
+                <div>
+                    <label v-if="currentCarouselGroup.carouselVideoList.length === 0">暂无视频</label>
+                    <span v-if="currentCarouselGroup.carouselVideoList.length !== 0">播放时长</span><label
+                    v-if="currentCarouselGroup.carouselVideoList.length !== 0">{{currentCarouselGroup.duration |
+                    fromSecondsToTime}}</label>
+                </div>
+                <div>
+                    <label v-if="currentCarouselGroup.carouselVideoList.length === 0">暂无总时长</label>
+                    <span v-if="currentCarouselGroup.carouselVideoList.length !== 0">{{currentCarouselGroup.carouselVideoList.length}}个视频</span>
+                    <label v-if="currentCarouselGroup.carouselVideoList.length !== 0">
+                        总时长{{currentCarouselGroup.carouselVideoList | getCarouselVideoTime | fromSecondsToTime}}</label>
+                </div>
+            </div>
             <el-button @click="popAppendVideoDialogue(0)" class="contain-svg-icon btn-style-four">
                 <svg-icon icon-class="video"></svg-icon>
                 关联视频
@@ -739,12 +755,14 @@
             return {
                 groupInfo: {
                     name: '',
-                    durationFormat: ''
+                    durationFormat: '',
+                    index: ''
                 },
                 createGroupDialogVisible: false,
                 carouselGroup: [{
                     name: '默认分组',
                     duration: '',
+                    durationFormat: '',
                     videoDuration: '',
                     carouselVideoList: []
                 }],
@@ -781,6 +799,15 @@
                 sectionList: [{name: ''}],
                 typeOptions: [],
                 companyOptions: [],
+                // 当前选中的组
+                currentCarouselGroup: {
+                    name: '',
+                    duration: '',
+                    durationFormat: '',
+                    videoDuration: '',
+                    carouselVideoList: [],
+                    index: 0
+                },
                 // 当前的频道含有的视频列表
                 currentSelectedVideoList: [],
                 currentVideoIndex: '',
@@ -881,6 +908,27 @@
             this.init();
         },
         methods: {
+            removeGroup(index) {
+                this.carouselGroup.splice(index, 1);
+                this.$nextTick(function () {
+                    let nodes = this.$el.querySelectorAll('#group-list li');
+                    let selectTag = false;
+                    for (let i = 0; i < nodes.length; i++) {
+                        if (nodes[i].className === 'current-group') {
+                            selectTag = true;
+                        }
+                    }
+                    if (!selectTag) {
+                        this.selectCurrentGroup(0);
+                    }
+                });
+            },
+            editGroupInfo(index) {
+                this.groupInfo.name = this.carouselGroup[index].name;
+                this.groupInfo.durationFormat = this.carouselGroup[index].durationFormat;
+                this.groupInfo.index = index;
+                this.createGroupDialogVisible = true;
+            },
             init() {
                 this.$util.toggleFixedBtnContainer();
                 this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
@@ -942,16 +990,23 @@
             confirmGroup() {
                 this.$refs['groupInfo'].validate((valid) => {
                     if (valid) {
-                        this.carouselGroup.push({
-                            name: this.groupInfo.name,
-                            duration: parseInt(this.groupInfo.durationFormat.substring(0, 2) * 60 * 60) + parseInt(this.groupInfo.durationFormat.substring(2, 4) * 60) + parseInt(this.groupInfo.durationFormat.substring(4, 6)),
-                            durationFormat: this.groupInfo.durationFormat,
-                            videoDuration: '',
-                            carouselVideoList: []
-                        });
+                        if (this.groupInfo.index !== '') {
+                            this.carouselGroup[this.groupInfo.index].name = this.groupInfo.name;
+                            this.carouselGroup[this.groupInfo.index].durationFormat = this.groupInfo.durationFormat;
+                            this.carouselGroup[this.groupInfo.index].duration = parseInt(this.groupInfo.durationFormat.substring(0, 2) * 60 * 60) + parseInt(this.groupInfo.durationFormat.substring(2, 4) * 60) + parseInt(this.groupInfo.durationFormat.substring(4, 6));
+                        } else {
+                            this.carouselGroup.push({
+                                name: this.groupInfo.name,
+                                duration: parseInt(this.groupInfo.durationFormat.substring(0, 2) * 60 * 60) + parseInt(this.groupInfo.durationFormat.substring(2, 4) * 60) + parseInt(this.groupInfo.durationFormat.substring(4, 6)),
+                                durationFormat: this.groupInfo.durationFormat,
+                                videoDuration: '',
+                                carouselVideoList: []
+                            });
+                        }
                         this.createGroupDialogVisible = false;
                         this.groupInfo.name = '';
                         this.groupInfo.durationFormat = '';
+                        this.groupInfo.index = '';
                     }
                 });
             },
@@ -962,6 +1017,8 @@
                     nodes[i].className = '';
                 }
                 nodes[index].className = 'current-group';
+                this.currentCarouselGroup = this.carouselGroup[index];
+                this.currentCarouselGroup.index = index;
                 // 设置当前视频列表
                 this.currentSelectedVideoList = this.carouselGroup[index].carouselVideoList;
             },
@@ -1413,6 +1470,33 @@
 </script>
 
 <style lang="scss">
+
+    .video-list-header {
+        margin-bottom: 10px;
+        margin-top: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        .group-video-info {
+            display: flex;
+            div {
+                margin-left: 10px;
+                padding: 0px 10px;
+                height: 20px;
+                line-height: 20px;
+                background: #3E495E;
+                border-radius: 10px;
+                font-size: 14px;
+                color: #FFFFFF;
+                span {
+                    margin-right: 20px;
+                }
+            }
+        }
+        .el-button {
+            margin-right: 10px;
+        }
+    }
 
     // 创建分组弹窗
     .group-dialog {

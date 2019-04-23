@@ -170,7 +170,7 @@ let util = {
     },
     fromSecondsToTime(seconds) {
         if (!seconds) {
-            return 0;
+            return '0秒';
         }
         let time = parseInt(seconds) + '秒';
         if (parseInt(seconds) > 60) {
