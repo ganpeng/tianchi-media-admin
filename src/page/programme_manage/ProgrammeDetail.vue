@@ -452,31 +452,35 @@
                             <el-checkbox :value="clientChecked('APP')" @change="clientCheckedHandler($event, 'APP')">APP</el-checkbox>
                             <el-checkbox :value="clientChecked('TV')" @change="clientCheckedHandler($event, 'TV')">TV</el-checkbox>
                         </el-form-item>
-                        <el-form-item label="节目海报">
-                            <p class="little-tips">(260*380)六分位图必传</p>
-                        </el-form-item>
-                        <div class="wrapper clearfix">
-                            <multi-image-uploader
-                                :imageList="tvImageList"
-                                :deleteImageHandler="deleteImageHandler"
-                                :imageUploadedHandler="imageUploadedHandler"
-                                :allowResolutions="allowResolutions"
-                                :validator="imageUploadValidator"
-                            ></multi-image-uploader>
+                        <div v-if="showTvImages" class="tv-images">
+                            <el-form-item label="节目海报">
+                                <p class="little-tips">(260*380)六分位图必传</p>
+                            </el-form-item>
+                            <div class="wrapper clearfix">
+                                <multi-image-uploader
+                                    :imageList="tvImageList"
+                                    :deleteImageHandler="deleteImageHandler"
+                                    :imageUploadedHandler="imageUploadedHandler"
+                                    :allowResolutions="allowResolutions"
+                                    :validator="imageUploadValidator"
+                                ></multi-image-uploader>
+                            </div>
                         </div>
                         <!-- 新增加的移动端的图片 -->
-                        <el-form-item label="移动端图片">
-                            <p class="little-tips">(351*507, 1089*612)尺寸必传</p>
-                        </el-form-item>
-                        <div class="wrapper clearfix">
-                            <multi-image-uploader
-                                id="appImageUploader"
-                                :imageList="appImageList"
-                                :deleteImageHandler="deleteAppImageHandler"
-                                :imageUploadedHandler="appImageUploadHandler"
-                                :allowResolutions="appAllowResolutions"
-                                :validator="appImageUploadValidator"
-                            ></multi-image-uploader>
+                        <div v-if="showAppImages" class="app-images">
+                            <el-form-item label="移动端图片">
+                                <p class="little-tips">(351*507, 1089*612)尺寸必传</p>
+                            </el-form-item>
+                            <div class="wrapper clearfix">
+                                <multi-image-uploader
+                                    id="appImageUploader"
+                                    :imageList="appImageList"
+                                    :deleteImageHandler="deleteAppImageHandler"
+                                    :imageUploadedHandler="appImageUploadHandler"
+                                    :allowResolutions="appAllowResolutions"
+                                    :validator="appImageUploadValidator"
+                                ></multi-image-uploader>
+                            </div>
                         </div>
                     </el-col>
                 </el-form>
@@ -605,7 +609,6 @@
                         this.getDict(categoryList);
                         this.getProgrammeVideoListById(id);
                         if (res[0] && res[0].code === 0) {
-                            // this.initCornerMark(res[0].data.cornerMark);
                             this.getFeatureVideoList({id: id, pageSize: res[0].data.featureVideoCount});
                         }
                     });
@@ -765,6 +768,14 @@
                     return index > -1;
                 };
             },
+            showTvImages() {
+                let index = this.programme.applicableClientList.findIndex((item) => item === 'TV');
+                return index > -1;
+            },
+            showAppImages() {
+                let index = this.programme.applicableClientList.findIndex((item) => item === 'APP');
+                return index > -1;
+            },
             //  拖拽排序的字段
             produceAreaList: {
                 get() {
@@ -886,9 +897,6 @@
             rightTop() {
                 return _.get(this.programme, 'cornerMark.rightTop');
             },
-            // rightBottom() {
-            //     return _.get(this.programme, 'cornerMark.rightBottom');
-            // },
             tvImageList() {
                 let list = this.programme.posterImageList.filter((posterImage) => {
                     let index = role.PROGRAMME_ALLOW_PICTURE_DIMENSIONS.findIndex((item) => {
@@ -1048,17 +1056,6 @@
                 if (_prop.length > 0) {
                     this.$refs.createProgramForm.clearValidate(prop);
                 }
-            },
-            //  初始化角标状态
-            initCornerMark(cornerMark) {
-                // this.cornerMark.leftTop = this.getCornerMarkByPosition(cornerMark, 'leftTop');
-                // this.cornerMark.leftBottom = this.getCornerMarkByPosition(cornerMark, 'leftBottom');
-                // this.cornerMark.rightTop = this.getCornerMarkByPosition(cornerMark, 'rightTop');
-                // this.cornerMark.rightBottom = this.getCornerMarkByPosition(cornerMark, 'rightBottom');
-            },
-            getCornerMarkByPosition(cornerMark, position) {
-                let mark = _.get(cornerMark, `${position}.caption`);
-                return !!mark;
             },
             _createProgramme() {
                 this.$refs.createProgramForm.validate(value => {
@@ -1387,38 +1384,68 @@
                 this.previewImage.activeIndex = index;
             },
             checkImage(next) {
-                const {posterImageList, visible} = this.programme;
-                if (posterImageList && posterImageList.length < 1) {
-                    this.$message({type: 'error', message: '推荐位六分位图必须上传且只能上传一张'});
-                    return false;
+                const {posterImageList, posterImageListForApp, visible} = this.programme;
+
+                if (this.showTvImages) {
+                    if (posterImageList && posterImageList.length < 1) {
+                        this.$message({type: 'error', message: '推荐位六分位图必须上传且只能上传一张'});
+                        return false;
+                    }
+
+                    //  260 * 380 或者 230 * 450 必须传一张
+                    let sizeOne = posterImageList.findIndex((img) => {
+                        return (parseInt(img.width) === 260 && parseInt(img.height) === 380) ||
+                            (parseInt(img.width) === 240 && parseInt(img.height) === 350);
+                    });
+
+                    if (sizeOne < 0) {
+                        this.$message({type: 'error', message: '推荐位六分位图必须上传且只能上传一张'});
+                        return false;
+                    }
+
+                    // 设置默认图
+                    this.setCoverImage();
+                    if (_.isEmpty(this.programme.coverImage)) {
+                        this.$message({type: 'error', message: '请选择默认的节目海报'});
+                        return false;
+                    }
+
+                    if (visible === null) {
+                        this.$message.error('请选择上下架状态');
+                        return false;
+                    }
+
+                    if (visible && this.video.list.length === 0) {
+                        this.$message.error('上架节目的关联视频不能为空');
+                        return false;
+                    }
                 }
 
-                //  260 * 380 或者 230 * 450 必须传一张
-                let sizeOne = posterImageList.findIndex((img) => {
-                    return (parseInt(img.width) === 260 && parseInt(img.height) === 380) ||
-                           (parseInt(img.width) === 240 && parseInt(img.height) === 350);
-                });
+                if (this.showAppImages) {
+                    if (posterImageListForApp && posterImageListForApp.length < 1) {
+                        this.$message.error('“351*507”和“1089*612”是必传尺寸');
+                        return false;
+                    }
 
-                if (sizeOne < 0) {
-                    this.$message({type: 'error', message: '推荐位六分位图必须上传且只能上传一张'});
-                    return false;
-                }
+                    let sizeOneList = posterImageListForApp.filter((img) => {
+                        //  351*507
+                        return (parseInt(img.width) === 351 && parseInt(img.height) === 507);
+                    });
 
-                // 设置默认图
-                this.setCoverImage();
-                if (_.isEmpty(this.programme.coverImage)) {
-                    this.$message({type: 'error', message: '请选择默认的节目海报'});
-                    return false;
-                }
+                    let sizeTwoList = posterImageListForApp.filter((img) => {
+                        //  1089*612
+                        return (parseInt(img.width) === 1089 && parseInt(img.height) === 612);
+                    });
 
-                if (visible === null) {
-                    this.$message.error('请选择上下架状态');
-                    return false;
-                }
+                    if (sizeOneList.length !== 1) {
+                        this.$message.error('351*507尺寸的图片必须上传，并且只能上传一张');
+                        return false;
+                    }
 
-                if (visible && this.video.list.length === 0) {
-                    this.$message.error('上架节目的关联视频不能为空');
-                    return false;
+                    if (sizeTwoList.length !== 1) {
+                        this.$message.error('1089*612尺寸的图片必须上传，并且只能上传一张');
+                        return false;
+                    }
                 }
 
                 next();
