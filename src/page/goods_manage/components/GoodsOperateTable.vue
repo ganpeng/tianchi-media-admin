@@ -28,9 +28,9 @@
                 min-width="130px"
                 label="包含产品包">
                 <template slot-scope="scope">
-                    <label v-if="scope.row.goodsList && scope.row.goodsList.length !== 0">
-                        {{scope.row.goodsList | jsonJoin('name') }}</label>
-                    <label v-else>------</label>
+                    <span @click="checkGoodsList(scope.row)" class="ellipsis four name">
+                    查看
+                </span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -75,6 +75,23 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-dialog
+            title="产品列表"
+            :visible.sync="goodsListVisible"
+            :close-on-click-modal="false"
+            custom-class="normal-dialog goods-list"
+            width="40%">
+            <div class="batch-share-body" v-if="goodsListVisible">
+                <ul>
+                    <li v-for="(item, index) in currentGoodsList" :key="index">
+                        <el-tag type="info">{{item.name}}</el-tag>
+                    </li>
+                </ul>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="goodsListVisible = false">确定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -91,22 +108,34 @@
             }
         },
         data() {
-            return {};
+            return {
+                goodsListVisible: false,
+                currentGoodsList: []
+            };
         },
         methods: {
-            // 更改单个状态
             updateGoodsStatus(item) {
                 this.$confirm('此操作将' + (item.visible ? '下架' : '上架') + item.name + '商品, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$service.setGoodsVisible(item.id).then(response => {
+                    this.$service.setGoodsVisible({id: item.id, visible: !item.visible}).then(response => {
                         if (response && response.code === 0) {
                             this.$message.success('"' + item.name + '"商品' + (item.visible ? '下架成功' : '上架成功'));
                             item.visible = !item.visible;
                         }
                     });
+                });
+            },
+            checkGoodsList(goods) {
+                this.$service.getGoodsDetail(goods.id).then(response => {
+                    if (response && response.code === 0) {
+                        this.currentGoodsList = response.data.productList;
+                        this.goodsListVisible = true;
+                    } else {
+                        this.$message.warning('因请求问题，暂时未查看到对应产品列表');
+                    }
                 });
             },
             // 查看详情
@@ -127,5 +156,25 @@
 </script>
 
 <style lang="scss" scoped>
+
+    .operator-btn-wrapper {
+        span {
+            margin-left: 0px;
+        }
+    }
+
+    .goods-list {
+        ul {
+            text-align: left;
+            li {
+                display: inline-block;
+                margin-bottom: 10px;
+                .el-tag {
+                    border: none;
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
 
 </style>

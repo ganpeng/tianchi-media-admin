@@ -17,35 +17,37 @@
                     placeholder="请填写20个字以内的商品名称">
                 </el-input>
             </el-form-item>
-            <el-form-item label="广告描述" prop="desc" required>
+            <el-form-item label="商品描述" prop="description" required>
                 <el-input
-                    v-model="goodsInfo.desc"
+                    v-model="goodsInfo.description"
                     size="medium"
                     type="textarea"
                     :maxlength="300"
                     :rows="8"
                     placeholder="请填写商品描述，不超过300字">
                 </el-input>
-                <label class="textarea-tip">已输入{{goodsInfo.desc ? goodsInfo.desc.length : '0'}}/300字</label>
+                <label class="textarea-tip">已输入{{goodsInfo.description ? goodsInfo.description.length :
+                    '0'}}/300字</label>
             </el-form-item>
             <el-form-item label="商品金额" prop="price" required>
                 <el-input
                     v-model="goodsInfo.price"
                     size="medium"
+                    type="number"
                     clearable
                     placeholder="请填写商品包金额，保留小数点后两位">
                 </el-input>
             </el-form-item>
-            <el-form-item label="时长" prop="duration" required>
+            <el-form-item label="时长" prop="validityDays" required>
                 <el-select
-                    v-model="goodsInfo.duration"
+                    v-model="goodsInfo.validityDays"
                     size="medium"
                     placeholder="请选择时长">
                     <el-option
-                        v-for="item in durationOptions"
-                        :key="item.id"
+                        v-for="item in validityDaysOptions"
+                        :key="item.day"
                         :label="item.name"
-                        :value="item.id">
+                        :value="item.day">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -129,7 +131,7 @@
                     callback();
                 }
             };
-            let checkDuration = (rule, value, callback) => {
+            let checkValidityDays = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('请选择商品时长'));
                 } else {
@@ -154,38 +156,38 @@
                 isLoading: false,
                 goodsInfo: {
                     name: '',
-                    desc: '',
+                    description: '',
                     price: '',
-                    duration: '',
+                    validityDays: '',
                     productList: [],
                     visible: false
                 },
-                durationOptions: [{
+                validityDaysOptions: [{
                     name: '1个月',
-                    id: 0
+                    day: 30
                 }, {
                     name: '3个月',
-                    id: 1
+                    day: 90
                 }, {
                     name: '6个月',
-                    id: 2
+                    day: 180
                 }, {
                     name: '1年',
-                    id: 3
+                    day: 365
                 }],
                 productOptions: [],
                 infoRules: {
                     name: [
                         {validator: checkName, trigger: 'blur'}
                     ],
-                    desc: [
+                    description: [
                         {validator: checkDesc, trigger: 'blur'}
                     ],
                     price: [
                         {validator: checkPrice, trigger: 'blur'}
                     ],
-                    duration: [
-                        {validator: checkDuration, trigger: 'blur'}
+                    validityDays: [
+                        {validator: checkValidityDays, trigger: 'blur'}
                     ],
                     productList: [
                         {validator: checkProductList, trigger: 'blur'}
@@ -222,6 +224,7 @@
                         for (let key in response.data) {
                             this.goodsInfo[key] = response.data[key];
                         }
+                        this.goodsInfo.price = response.data.price / 100;
                     }
                 });
             },
@@ -282,7 +285,7 @@
                                 });
                                 break;
                             case 'EDIT_GOODS':
-                                this.$service.updateoodsInfo(this.goodsInfo).then(response => {
+                                this.$service.updateGoodsInfo(this.goodsInfo).then(response => {
                                     if (response && response.code === 0) {
                                         this.$message.success('保存商品信息成功');
                                         this.toGoodsList();
