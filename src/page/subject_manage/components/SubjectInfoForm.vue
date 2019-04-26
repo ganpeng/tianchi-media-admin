@@ -1,6 +1,6 @@
 <!--专题信息表单组件-->
 <template>
-    <div>
+    <div id="subject-container">
         <div class="seperator-line"></div>
         <div class="content-sub-title">专题基本信息</div>
         <el-form
@@ -74,6 +74,7 @@
                 v-if="status === 'CREATE_PROGRAMME' || status === 'EDIT_PROGRAMME'">
                 <label class="tips"> (1920*1080 背景图必传)</label>
                 <multi-image-uploader
+                    id="subject-programme-tv"
                     :imageList="subjectInfo.posterImageList"
                     :deleteImageHandler="removePosterImageForTV"
                     :imageUploadedHandlerForTV="imageUploadedHandlerForTV"
@@ -89,6 +90,7 @@
                 v-if="status === 'CREATE_PROGRAMME' || status === 'EDIT_PROGRAMME'">
                 <label class="tips"> (1125*2436 图必传)</label>
                 <multi-image-uploader
+                    id="subject-programme-app"
                     :imageList="subjectInfo.posterImageListForApp"
                     :deleteImageHandler="removePosterImageForApp"
                     :imageUploadedHandler="imageUploadedHandlerForApp"
@@ -105,6 +107,7 @@
                 v-if="status === 'CREATE_FIGURE' || status === 'EDIT_FIGURE'">
                 <label class="tips"> (260*600 专题E 必传)</label>
                 <multi-image-uploader
+                    id="subject-figure-tv"
                     :imageList="subjectInfo.posterImageList"
                     :dimension="{width:'168',height:'180'}"
                     :deleteImageHandler="removePosterImageForTV"
@@ -121,6 +124,7 @@
                 v-if="status === 'CREATE_FIGURE' || status === 'EDIT_FIGURE'">
                 <label class="tips"> (1125*786 图必传)</label>
                 <multi-image-uploader
+                    id="subject-figure-app"
                     :imageList="subjectInfo.posterImageListForApp"
                     :deleteImageHandler="removePosterImageForApp"
                     :imageUploadedHandler="imageUploadedHandlerForApp"
@@ -216,6 +220,13 @@
             let checkVisible = (rule, value, callback) => {
                 if (value === '' || value === undefined) {
                     return callback(new Error('请选择专题状态'));
+                } else {
+                    callback();
+                }
+            };
+            let checkApplicableClientList = (rule, value, callback) => {
+                if (!value[0]) {
+                    return callback(new Error('请选择适用客户端'));
                 } else {
                     callback();
                 }
@@ -319,6 +330,9 @@
                     ],
                     visible: [
                         {validator: checkVisible, trigger: 'change'}
+                    ],
+                    applicableClientList: [
+                        {validator: checkApplicableClientList, trigger: 'change'}
                     ],
                     posterImageList: [
                         {validator: checkPosterImageListForTV, trigger: 'blur'}
@@ -652,7 +666,7 @@
     }
 
     .image-setting-box {
-        margin-bottom: 0px;
+        margin-bottom: 30px;
         .tips {
             color: #A8ABB3;
         }
@@ -691,6 +705,25 @@
     .el-checkbox-group {
         .el-checkbox {
             padding: 0;
+        }
+    }
+
+</style>
+
+<style lang="scss">
+
+    #subject-container {
+        .el-radio__label {
+            padding-left: 20px;
+        }
+        .el-radio + .el-radio {
+            margin-left: 38px;
+        }
+        .el-checkbox__label {
+            padding-left: 20px;
+        }
+        .el-checkbox + .el-checkbox {
+            margin-left: 50px;
         }
     }
 

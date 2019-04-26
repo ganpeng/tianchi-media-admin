@@ -59,3 +59,10 @@ export const getServers = () => {
 export const getLiveUrlPrefix = () => {
     return service.get('/v1/sys/config/live/url-prefix');
 };
+
+/**
+ * 查询data分区剩余空间
+ */
+export const getServerSpace = () => {
+    return service.get('/v1/sys/server-resources/data/remaining?clusterName=STORAGE&&indicant=DATA_DISK');
+};

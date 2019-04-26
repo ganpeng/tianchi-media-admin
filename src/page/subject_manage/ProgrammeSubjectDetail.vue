@@ -18,8 +18,7 @@
         </div>
         <!--相关信息-->
         <div class="about-subject">
-            <img :src="subjectInfo.backgroundImage ? subjectInfo.backgroundImage.uri : '' | imageUrl"
-                 :alt="subjectInfo.backgroundImage ? subjectInfo.backgroundImage.name : ''">
+            <svg-icon icon-class="subject_placeholder"></svg-icon>
             <div>
                 <ul>
                     <li v-for="(item, index) in subjectInfo.programmeCategoryList"
@@ -27,8 +26,11 @@
                         {{item.name}}
                     </li>
                 </ul>
-                <p>节目数量</p>
-                <span>{{subjectInfo.subjectItemList.length}}个</span>
+                <p>包含内容</p>
+                <span>{{subjectInfo.subjectItemList.length}}个节目</span>
+                <p class="applicable-client-list">适用客户端</p>
+                <span>{{subjectInfo.applicableClientList[0]}}</span>
+                <span>{{subjectInfo.applicableClientList[1]}}</span>
             </div>
         </div>
         <!--其它海报-->
@@ -36,6 +38,13 @@
             <div class="content-sub-title">其它海报</div>
             <thumbnail
                 :imageList="subjectInfo.posterImageList"
+                :removeSign="false">
+            </thumbnail>
+        </div>
+        <div class="other-poster" v-if="subjectInfo.posterImageListForApp.length !== 0">
+            <div class="content-sub-title">APP端海报</div>
+            <thumbnail
+                :imageList="subjectInfo.posterImageListForApp"
                 :removeSign="false">
             </thumbnail>
         </div>
@@ -69,7 +78,10 @@
         data() {
             return {
                 subjectInfo: {
-                    subjectItemList: []
+                    subjectItemList: [],
+                    posterImageList: [],
+                    posterImageListForApp: [],
+                    applicableClientList: []
                 }
             };
         },
@@ -82,11 +94,6 @@
                 this.$service.getSubjectDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         this.subjectInfo = response.data;
-                        for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
-                            if (this.subjectInfo.posterImageList[i].width.toString() === '1920' && this.subjectInfo.posterImageList[i].height.toString() === '1080') {
-                                this.subjectInfo.posterImageList.splice(i, 1);
-                            }
-                        }
                     }
                 });
             },
@@ -111,8 +118,8 @@
         overflow: hidden;
         .subject-status {
             float: left;
-            margin-left: 174px;
-            margin-right: 190px;
+            margin-left: 30px;
+            margin-right: 40px;
             margin-top: 9px;
             height: 30px;
             width: 80px;
@@ -172,18 +179,15 @@
         border-bottom: 1px solid #252D3F;
         text-align: left;
         overflow: hidden;
-        img {
+        .svg-icon {
             position: absolute;
-            top: 0px;
+            top: 10px;
             left: 20px;
-            height: 216px;
-            width: 384px;
-            border: 1px solid #3E495E;
-            border-radius: 8px;
-            box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.50);
+            height: 200px !important;
+            width: 200px !important;
         }
         div {
-            margin-left: 443px;
+            margin-left: 240px;
             height: 230px;
             border-top: 1px solid #252D3F;
             ul {
@@ -206,9 +210,15 @@
                 font-size: 18px;
                 color: #A8ABB3;
             }
+            .applicable-client-list {
+                margin-top: 30px;
+            }
             span {
                 font-size: 14px;
                 color: #A8ABB3;
+                &:last-child {
+                    margin-left: 5px;
+                }
             }
         }
     }

@@ -236,6 +236,11 @@ export const PROGRAMME_SUBJECT_DIMENSION = {
             styleName: ''
         },
         {
+            width: 1125,
+            height: 612,
+            styleName: ''
+        },
+        {
             width: 1089,
             height: 612,
             styleName: ''

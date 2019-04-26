@@ -133,7 +133,18 @@
                 }
             };
         },
-        methods: {}
+        mounted() {
+            this.init();
+        },
+        methods: {
+            init() {
+                this.$service.getServerSpace().then(response => {
+                    if (response && response.code === 0) {
+
+                    }
+                });
+            }
+        }
     };
 </script>
 

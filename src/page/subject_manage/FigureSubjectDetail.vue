@@ -18,8 +18,7 @@
         </div>
         <!--相关信息-->
         <div class="about-subject">
-            <img :src="uniquePosterImage ? uniquePosterImage.uri : '' | imageUrl"
-                 :alt="uniquePosterImage ? uniquePosterImage.name : ''">
+            <svg-icon icon-class="subject_placeholder"></svg-icon>
             <div>
                 <ul>
                     <li v-for="(item, index) in subjectInfo.programmeCategoryList"
@@ -27,15 +26,25 @@
                         {{item.name}}
                     </li>
                 </ul>
-                <p>节目数量</p>
-                <span>{{subjectInfo.subjectItemList.length}}个</span>
+                <p>包含内容</p>
+                <span>{{subjectInfo.subjectItemList.length}}个节目</span>
+                <p class="applicable-client-list">适用客户端</p>
+                <span>{{subjectInfo.applicableClientList[0]}}</span>
+                <span>{{subjectInfo.applicableClientList[1]}}</span>
             </div>
         </div>
         <!--其它海报-->
         <div class="other-poster" v-if="subjectInfo.posterImageList.length !== 0">
-            <div class="content-sub-title">其它海报</div>
+            <div class="content-sub-title">TV端海报</div>
             <thumbnail
                 :imageList="subjectInfo.posterImageList"
+                :removeSign="false">
+            </thumbnail>
+        </div>
+        <div class="other-poster" v-if="subjectInfo.posterImageListForApp.length !== 0">
+            <div class="content-sub-title">APP端海报</div>
+            <thumbnail
+                :imageList="subjectInfo.posterImageListForApp"
                 :removeSign="false">
             </thumbnail>
         </div>
@@ -70,7 +79,9 @@
             return {
                 subjectInfo: {
                     subjectItemList: [],
-                    posterImageList: []
+                    posterImageList: [],
+                    posterImageListForApp: [],
+                    applicableClientList: []
                 },
                 uniquePosterImage: {}
             };
@@ -84,13 +95,6 @@
                 this.$service.getSubjectDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         this.subjectInfo = response.data;
-                        // 设置人物专题唯一的260*600的专题E封面
-                        for (let i = 0; i < this.subjectInfo.posterImageList.length; i++) {
-                            if (this.subjectInfo.posterImageList[i].width.toString() === '260' && this.subjectInfo.posterImageList[i].height.toString() === '600') {
-                                this.uniquePosterImage = this.subjectInfo.posterImageList[i];
-                                this.subjectInfo.posterImageList.splice(i, 1);
-                            }
-                        }
                     }
                 });
             },
@@ -176,18 +180,16 @@
         border-bottom: 1px solid #252D3F;
         text-align: left;
         overflow: hidden;
-        img {
+        .svg-icon {
             position: absolute;
-            top: 0px;
+            top: 10px;
             left: 20px;
-            height: 240px;
-            width: 104px;
-            border: 1px solid #3E495E;
-            border-radius: 8px;
+            height: 200px !important;
+            width: 200px !important;
         }
         div {
-            margin-left: 155px;
-            height: 250px;
+            margin-left: 240px;
+            height: 210px;
             border-top: 1px solid #252D3F;
             ul {
                 margin-top: 10px;
@@ -209,9 +211,15 @@
                 font-size: 18px;
                 color: #A8ABB3;
             }
+            .applicable-client-list {
+                margin-top: 30px;
+            }
             span {
                 font-size: 14px;
                 color: #A8ABB3;
+                &:last-child {
+                    margin-left: 5px;
+                }
             }
         }
     }
@@ -232,25 +240,6 @@
     // 专题内容
     .subject-content {
         margin-bottom: 160px;
-    }
-
-    // 操作
-    .operate-block {
-        position: fixed;
-        bottom: 10px;
-        left: 0px;
-        right: 0px;
-        margin: auto;
-        width: 500px;
-        height: 80px;
-        line-height: 90px;
-        background: #293550;
-        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.20);
-        border-radius: 8px;
-        z-index: 600;
-        .el-button:last-child {
-            margin-left: 40px;
-        }
     }
 
 </style>

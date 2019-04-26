@@ -13,12 +13,12 @@
                                 <i class="el-icon-circle-close" @click="removeCornerMark(item, index)"></i>
                             </div>
                             <p>
-                                <label class="corner-image-box">
+                                <label class="corner-image-box" v-if="item.image && item.image.uri">
                                     <img :src="item.image ? item.image.uri :''" :alt="item.caption"/>
                                     <span class="end-name">tv</span>
                                 </label>
-                                <label class="corner-image-box">
-                                    <img :src="item.image ? item.image.uri :''" :alt="item.caption"/>
+                                <label class="corner-image-box" v-if="item.appImage && item.appImage.uri">
+                                    <img :src="item.appImage ? item.appImage.uri :''" :alt="item.caption"/>
                                     <span class="end-name">app</span>
                                 </label>
                                 <i @click="openEditDialog(item)">编辑</i>
@@ -211,7 +211,7 @@
                             align-items: center;
                             overflow: visible;
                             img {
-                                transform: scale(0.4, 0.4);
+                                transform: scale(0.3, 0.3);
                             }
                             &:nth-child(2) {
                                 margin-left: 10px;

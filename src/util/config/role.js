@@ -568,7 +568,7 @@ const ASIDE_LIST = [
         {
             text: '存储空间',
             uri: '/server/space',
-            icon: 'aside_clientlog'
+            icon: 'aside_server'
         }
     ],
     [

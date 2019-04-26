@@ -47,8 +47,7 @@
                 <template slot-scope="scope">
                     <img :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl"
                          :alt="scope.row.coverImage.name"
-                         v-if="scope.row.coverImage"
-                         @click="previewSingleImage(scope.row.coverImage)">
+                         v-if="scope.row.coverImage">
                     <label v-else>------</label>
                 </template>
             </el-table-column>
@@ -133,9 +132,6 @@
                 </template>
             </el-table-column>
         </el-table>
-        <preview-single-image
-            :singleImage="singleImage">
-        </preview-single-image>
     </div>
 </template>
 
@@ -172,12 +168,7 @@
         },
         data() {
             return {
-                multipleSelection: [],
-                singleImage: {
-                    display: false,
-                    uri: '',
-                    title: ''
-                }
+                multipleSelection: []
             };
         },
         methods: {
@@ -326,11 +317,6 @@
             cancelLinkProgramme(index) {
                 this.$emit('cancelLinkProgramme', index);
             },
-            previewSingleImage(image) {
-                this.singleImage.title = image.name;
-                this.singleImage.uri = image.uri;
-                this.singleImage.display = true;
-            },
             // 获取当前选中的节目列表
             getSelectedProgramme() {
                 return this.multipleSelection;
@@ -346,7 +332,6 @@
         img {
             width: 70px;
             height: auto;
-            cursor: zoom-in;
         }
         .sort {
             span {

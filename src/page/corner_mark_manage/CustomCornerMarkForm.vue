@@ -69,7 +69,7 @@
                 }
             };
             let checkImage = (rule, value, callback) => {
-                if (this.$util.isEmpty(this.cornerMarkInfo.image.uri)) {
+                if (this.$util.isEmpty(this.cornerMarkInfo.image.uri) && this.$util.isEmpty(this.cornerMarkInfo.appImage.uri)) {
                     return callback(new Error('请上传角标图片'));
                 } else {
                     callback();
@@ -113,6 +113,9 @@
                 this.cornerMarkInfo.image.uri = cornerMark.image.uri;
                 this.cornerMarkInfo.image.width = cornerMark.image.width;
                 this.cornerMarkInfo.image.height = cornerMark.image.height;
+                this.cornerMarkInfo.appImage.uri = cornerMark.appImage.uri;
+                this.cornerMarkInfo.appImage.width = cornerMark.appImage.width;
+                this.cornerMarkInfo.appImage.height = cornerMark.appImage.height;
                 this.cornerMarkInfo.id = cornerMark.id;
                 this.mode = 'EDIT';
             },
