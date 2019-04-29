@@ -27,12 +27,13 @@ import * as advertisingOwner from './routes/advertisiing_owner_manage';
 import * as adRoutes from './routes/ad_manage';
 import * as interCutRoutes from './routes/inter_cut_manage';
 import * as goodsRoutes from './routes/goods_manage';
+import * as orderRoutes from './routes/order_manage';
 
 /**
  * The object including all service functions.
  * notice.Each module function should have a unique name. Otherwise，they will override each other.
  * @type {Object}
  */
-let service = Object.assign({}, deviceRoutes, adminRoutes, userRoutes, authorizeRoutes, personRoutes, navBarRoutes, programmeRoutes, uploadRoutes, liveChannelLayoutRoutes, programmeVideoRoutes, subjectRoutes, layoutRoutes, videoRoutes, channelRoutes, versionRoutes, productRoutes, siteRoutes, masterVideoRoutes, hotSearchRoutes, cornerMarkRoutes, pageLayoutRoutes, advertisingOwner, adRoutes, interCutRoutes, goodsRoutes);
+let service = Object.assign({}, deviceRoutes, adminRoutes, userRoutes, authorizeRoutes, personRoutes, navBarRoutes, programmeRoutes, uploadRoutes, liveChannelLayoutRoutes, programmeVideoRoutes, subjectRoutes, layoutRoutes, videoRoutes, channelRoutes, versionRoutes, productRoutes, siteRoutes, masterVideoRoutes, hotSearchRoutes, cornerMarkRoutes, pageLayoutRoutes, advertisingOwner, adRoutes, interCutRoutes, goodsRoutes, orderRoutes);
 
 export default service;

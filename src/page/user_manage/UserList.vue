@@ -93,12 +93,6 @@
                 this.listQueryParams.pageNum = pageNum;
                 this.getUserList();
             },
-            checkUserDetailInfo(row) {
-                this.$router.push({
-                    name: 'UserDetailInfo',
-                    params: {id: row.id}
-                });
-            },
             exportUserDataExcel() {
             }
         }

@@ -638,6 +638,11 @@ const ASIDE_LIST = [
             text: '用户管理',
             uri: '/user-center/list',
             icon: 'aside_user'
+        },
+        {
+            text: '订单管理',
+            uri: '/order-manage/list',
+            icon: 'aside_user'
         }
     ],
     [

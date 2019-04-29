@@ -127,6 +127,7 @@ import EditProgrammeDetailAD from 'sysPage/advertising_manage/ad_manage/EditProg
 import ADDetail from 'sysPage/advertising_manage/ad_manage/ADDetail';
 // 订单管理
 import OrderList from 'sysPage/order_manage/OrderList';
+import OrderDetail from 'sysPage/order_manage/OrderDetail';
 import ServerSpace from 'sysPage/server_manage/ServerSpace';
 
 Vue.use(Router);
@@ -828,6 +829,12 @@ let router = new Router({
                     path: '/order-manage/list',
                     name: 'OrderList',
                     component: OrderList
+                },
+                //  订单详情
+                {
+                    path: '/order-manage/detail/:id',
+                    name: 'OrderDetail',
+                    component: OrderDetail
                 }
             ]
         },

@@ -1,219 +1,120 @@
+<!--用户列表组件-->
 <template>
-    <!-- 订单管理列表 -->
     <div class="order-list-container">
         <div class="table-container">
-            <h2 class="content-title">搜索筛选</h2>
-            <div class="search-field">
-                <div class="field-row">
-                    <div class="search-field-item">
-                        <el-input
-                            :value="searchFields.keyword"
-                            clearable
-                            class="border-input"
-                            @input="inputHandler($event, 'keyword')"
-                            placeholder="搜索你想要的信息">
-                        </el-input>
-                    </div>
-                    <el-button class="btn-style-one" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">商品</label>
-                        <el-select
-                            :value="searchFields.visible"
-                            @change="inputHandler($event, 'visible')"
-                            clearable
-                            placeholder="全部">
-                            <el-option
-                                v-for="item in []"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">方式</label>
-                        <el-select
-                            :value="searchFields.visible"
-                            @change="inputHandler($event, 'visible')"
-                            clearable
-                            placeholder="全部">
-                            <el-option
-                                v-for="item in []"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">状态</label>
-                        <el-select
-                            :value="searchFields.visible"
-                            @change="inputHandler($event, 'visible')"
-                            clearable
-                            placeholder="全部">
-                            <el-option
-                                v-for="item in []"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
-                        <svg-icon
-                            icon-class="reset"
-                            class-name="svg-box">
-                        </svg-icon>
-                        重置
-                    </el-button>
-                    <span
-                        @click="toggleSearchField"
-                        :class="['el-dropdown-link', searchFieldVisible ? 'active' : '']">
-                        更多筛选<i v-if="searchFieldVisible" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
-                    </span>
-                </div>
-                <div v-show="searchFieldVisible" class="field-row">
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">提交时间</label>
-                        <el-date-picker
-                            :value="searchFields.dateRange"
-                            type="daterange"
-                            @input="inputHandler($event, 'dateRange')"
-                            value-format="timestamp"
-                            :unlink-panels="true"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期">
-                        </el-date-picker>
-                    </div>
-                </div>
-            </div>
+            <div class="content-title">搜索筛选</div>
+            <order-filter-params
+                ref="orderFilterParams"
+                v-on:getOrderList="getOrderList">
+            </order-filter-params>
             <div class="seperator-line"></div>
             <div class="table-field">
                 <h2 class="content-title">订单列表</h2>
-                <el-table
-                    row-class-name=''
-                    :header-row-class-name='"common-table-header"'
-                    class="my-table-style" :data="state.list" border>
-                    <el-table-column align="center" label="订单编号">
-                        <template slot-scope="scope">
-                            {{scope.row.id | padEmpty}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="提交时间">
-                        <template slot-scope="scope">
-                            {{scope.row.createdAt | formatDate('yyyy-MM-DD') | padEmpty}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="用户">
-                        <template slot-scope="scope">
-                            {{scope.row.apkVersion | padEmpty}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="商品包">
-                        <template slot-scope="scope">
-                            {{scope.row.apkVersionCode | padEmpty}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="订单金额">
-                        <template slot-scope="scope">
-                            {{scope.row.apkVersionCode | padEmpty}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="支付金额">
-                        <template slot-scope="scope">
-                            {{scope.row.mac | padEmpty}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="支付方式">
-                        <template slot-scope="scope">
-                            {{scope.row.no | padEmpty}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="状态">
-                        <template slot-scope="scope">
-                            {{scope.row.sdkVersion | padEmpty}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" width="120px" label="操作">
-                        <template slot-scope="scope">
-                            <div class="operator-btn-wrapper">
-                                <span class="btn-text" @click="display(scope.row.id)">查看</span>
-                            </div>
-                        </template>
-                    </el-table-column>
-                </el-table>
+                <div class="table-operator-field clearfix">
+                    <div class="float-left">
+                    </div>
+                    <div class="float-right">
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="exportOrderPartDataExcel">
+                            导出列表
+                        </el-button>
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="exportOrderAllDataExcel">
+                            导出全部
+                        </el-button>
+                    </div>
+                </div>
+                <order-operate-table
+                    :orderList="orderList">
+                </order-operate-table>
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="listQueryParams.pageNum"
+                    :page-sizes="[10, 20, 30, 50]"
+                    :page-size="listQueryParams.pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+                </el-pagination>
             </div>
         </div>
-        <el-pagination
-            @size-change="handlePaginationChange($event, 'pageSize')"
-            @current-change="handlePaginationChange($event, 'pageNum')"
-            :current-page="state.pagination.pageNum"
-            :page-sizes="[5, 10, 20, 30, 50]"
-            :page-size="state.pagination.pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="state.pagination.total">
-        </el-pagination>
     </div>
 </template>
+
 <script>
-import {mapActions, mapGetters, mapMutations} from 'vuex';
-export default {
-    name: 'OrderList',
-    data() {
-        return {
-            dialogVisible: false,
-            //  toggle搜索区域
-            searchFieldVisible: false,
-            errLog: {}
-        };
-    },
-    created() {
-        this.getClientErrorLogList();
-    },
-    computed: {
-        ...mapGetters({
-            state: 'clientErrorLog/state',
-            searchFields: 'clientErrorLog/searchFields'
-        })
-    },
-    methods: {
-        ...mapMutations({
-            updatePagination: 'clientErrorLog/updatePagination',
-            updateSearchFields: 'clientErrorLog/updateSearchFields',
-            resetSearchFields: 'clientErrorLog/resetSearchFields'
-        }),
-        ...mapActions({
-            getClientErrorLogList: 'clientErrorLog/getClientErrorLogList'
-        }),
-        toggleSearchField() {
-            this.searchFieldVisible = !this.searchFieldVisible;
+    import OrderFilterParams from '../search_filter_params/OrderFilterParams';
+    import OrderOperateTable from './components/OrderOperateTable';
+
+    export default {
+        name: 'OrderList',
+        components: {
+            OrderFilterParams,
+            OrderOperateTable
         },
-        display(id) {
-            let errLog = this.state.list.find((log) => log.id === id);
-            this.errLog = errLog;
-            this.dialogVisible = true;
+        data() {
+            return {
+                listQueryParams: {
+                    pageNum: 1,
+                    pageSize: 10
+                },
+                total: 0,
+                orderList: [
+                    {
+                        id: 1,
+                        userName: '更上一层楼'
+                    }
+                ]
+            };
         },
-        handlePaginationChange(value, key) {
-            this.updatePagination({key, value});
-            this.getClientErrorLogList();
+        mounted() {
+            this.init();
         },
-        inputHandler(value, key) {
-            this.updateSearchFields({key, value});
-            this.getClientErrorLogList();
-        },
-        searchHandler() {
-            this.getClientErrorLogList();
-        },
-        clearSearchFields() {
-            this.resetSearchFields();
-            this.getClientErrorLogList();
+        methods: {
+            init() {
+                if (this.$wsCache.localStorage.get('orderFilter')) {
+                    this.listQueryParams = this.$wsCache.localStorage.get('orderFilter');
+                    this.$refs.orderFilterParams.initFilterParams(this.listQueryParams);
+                }
+                this.getOrderList();
+            },
+            getOrderList(searchParams, isReset) {
+                if (searchParams) {
+                    for (let key in searchParams) {
+                        this.listQueryParams[key] = searchParams[key];
+                    }
+                }
+                if (isReset) {
+                    this.listQueryParams.pageNum = 1;
+                }
+                this.$service.getOrderList(this.listQueryParams).then(response => {
+                    if (response && response.code === 0) {
+                        this.orderList = response.data.list;
+                        this.total = response.data.total;
+                    }
+                });
+            },
+            handleSizeChange(pageSize) {
+                this.listQueryParams.pageSize = pageSize;
+                this.getOrderList();
+            },
+            handleCurrentChange(pageNum) {
+                this.listQueryParams.pageNum = pageNum;
+                this.getOrderList();
+            },
+            exportOrderPartDataExcel() {
+            },
+            exportOrderAllDataExcel() {
+            }
         }
-    }
-};
+    };
 </script>
+
 <style lang="scss" scoped>
+
+    .el-pagination {
+        margin-top: 10px;
+    }
+
 </style>
