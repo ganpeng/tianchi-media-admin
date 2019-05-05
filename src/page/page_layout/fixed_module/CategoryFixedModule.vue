@@ -114,7 +114,7 @@
     </div>
 </template>
 <script>
-import {mapGetters, mapMutations} from 'vuex';
+import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
 import EditFilter from '../add_edit_module/EditFilter';
 import CornerMark from '../CornerMark';
@@ -141,19 +141,14 @@ export default {
     },
     computed: {
         ...mapGetters({
-            layout: 'pageLayout/layout',
-            selectAll: 'pageLayout/selectAll'
+            selectAll: 'pageLayout/selectAll',
+            //  2.3.0新增
+            activeLayout: 'pageLayout/getActiveLayout'
         }),
-        getImageUriByKeyAndIndex() {
-            return (key, squareIndex) => {
-                let {navbarId} = this.$route.params;
-                let uri = _.get(this.layout, `${navbarId}.data.0.layoutItemMultiList.${squareIndex}.${key}.uri`);
-                return uri;
-            };
-        },
         styleBgImageStr() {
             return (squareIndex) => {
-                let bgStr = `background-image: url(${this.getImageUriByKeyAndIndex('coverImage', squareIndex)})`;
+                let url = _.get(this.activeLayout, `0.layoutItemMultiList.${squareIndex}.coverImage.uri`);
+                let bgStr = `background-image: url(${url})`;
                 return bgStr;
             };
         }
@@ -161,30 +156,57 @@ export default {
     data() {
         return {
             squareIndex: 0,
+            navbarId: '',
             allowResolutions: []
         };
     },
+    async created() {
+        try {
+            let {navbarId} = this.$route.params;
+            this.navbarId = navbarId;
+            if (this.isEdit) {
+                await this.getLayoutByNavbarId(navbarId);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    },
     methods: {
-        ...mapMutations({
-            saveLayoutToStore: 'pageLayout/saveLayoutToStore'
+        ...mapMutations({}),
+        ...mapActions({
+            //  2.3.0 新增的部分
+            getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
         }),
         editFixedModuleHandler() {
             let {navbarId} = this.$route.params;
-            this.$router.push({ name: 'EditFixedModule', params: {navbarId, index: 0} });
+            let id = _.get(this.activeLayout, '0.id');
+            this.$router.push({ name: 'EditFixedModule', params: {navbarId, index: 0}, query: {id} });
         },
         selectFilter(squareIndex) {
             this.squareIndex = squareIndex;
             this.setAllowResolutions(this.squareIndex);
             this.$refs.selectFilterDialog.showDialog('FILTER');
         },
-        saveHandler() {
-            let {navbarId} = this.$route.params;
-            if (!this.selectAll(navbarId, 0)) {
-                this.saveLayoutToStore(navbarId);
-                this.$message.success('保存成功');
-                this.$router.push({ name: 'PageLayout', params: {navbarId} });
-            } else {
-                this.$message.error('色块必须全部选择');
+        async saveHandler() {
+            try {
+                let {navbarId} = this.$route.params;
+                if (!this.selectAll(navbarId, 0)) {
+                    let {id} = this.$route.query;
+                    if (id) {
+                        let layoutBlock = this.activeLayout.find((item) => item.id === id);
+                        if (layoutBlock) {
+                            let putLayoutBlockRes = await this.$service.putLayoutBlock(id, layoutBlock);
+                            if (putLayoutBlockRes && putLayoutBlockRes.code === 0) {
+                                this.$message.success('保存成功');
+                                this.$router.push({ name: 'PageLayout', params: {navbarId} });
+                            }
+                        }
+                    }
+                } else {
+                    this.$message.error('色块必须全部选择');
+                }
+            } catch (err) {
+                console.log(err);
             }
         },
         addShuffleLayout(squareIndex) {

@@ -43,7 +43,9 @@ export default {
     computed: {
         ...mapGetters({
             getLayoutItemType: 'pageLayout/getLayoutItemType',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
+            //  2.3.0新增
+            activeLayout: 'pageLayout/getActiveLayout'
         }),
         layoutItemType() {
             let layoutItemType = '';

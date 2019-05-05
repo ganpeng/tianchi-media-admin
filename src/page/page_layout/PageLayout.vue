@@ -44,8 +44,8 @@
                 </el-dropdown-menu>
             </el-dropdown>
             <div class="center-btn">
-                <el-button class="btn-style-two" @click="saveLayoutHandler">保存</el-button>
-                <el-button v-if="getLayoutChangedByNavbarId" class="btn-style-three" @click="clearLayoutHandler">清除修改</el-button>
+                <!-- <el-button class="btn-style-two" @click="saveLayoutHandler">保存</el-button> -->
+                <!-- <el-button v-if="getLayoutChangedByNavbarId" class="btn-style-three" @click="clearLayoutHandler">清除修改</el-button> -->
             </div>
             <el-button @click="showSortViewHandler" :class="['my-add-cycle', layoutList.length <= 0 && 'disabled']">
                 <svg-icon icon-class="sort"></svg-icon>
@@ -110,13 +110,14 @@ export default {
     data() {
         return {
             activeId: '',
+            navbarId: '',
             layoutTemplate: '',
             sortView: false
         };
     },
     watch: {
         '$route' (to, from) {
-            this.updateLayout();
+            // this.updateLayout();
         }
     },
     async mounted() {
@@ -127,13 +128,16 @@ export default {
     async created() {
         try {
             let {navbarId} = this.$route.params;
+            this.navbarId = navbarId;
             let res = await this.getNavbarList();
+            await this.getLayoutByNavbarId(navbarId);
             if (res && res.code === 0) {
                 let navbar = this.navbarList.find((navbar) => navbar.id === navbarId);
                 this.activeId = navbarId;
                 this.layoutTemplate = navbar ? navbar.layoutTemplate : '';
                 //  重新跟新本地数据到vuex中
-                this.updateLayout();
+                // this.updateLayout();
+
                 this.$nextTick(() => {
                     this.setNavBarWidth();
                 });
@@ -151,33 +155,17 @@ export default {
         ...mapGetters({
             layout: 'pageLayout/layout',
             navbarList: 'pageLayout/navbarList',
-            getNavbarNameById: 'pageLayout/getNavbarNameById'
+            getNavbarNameById: 'pageLayout/getNavbarNameById',
+            //  2.3.0 新增
+            activeLayout: 'pageLayout/getActiveLayout'
         }),
         getNotFixedListByNavbarId() {
             let {navbarId} = this.$route.params;
             if (navbarId === 0) {
                 return [];
             } else {
-                if (this.layout && this.layout[navbarId] && this.layout[navbarId].data) {
-                    return this.layout[navbarId].data.filter((item, index) => {
-                        return index > 0;
-                    });
-                } else {
-                    return [];
-                }
+                return this.activeLayout.filter((item, index) => index > 0);
             }
-        },
-        getLayoutChangedByNavbarId() {
-            let {navbarId} = this.$route.params;
-            return _.get(this.layout, `${navbarId}.changed`);
-        },
-        getLayoutRenderTypeByNavbarId() {
-            let {navbarId} = this.$route.params;
-            return _.get(this.layout, `${navbarId}.renderType`);
-        },
-        getLayoutTemplateByNavbarId() {
-            let {navbarId} = this.$route.params;
-            return _.get(this.layout, `${navbarId}.layoutTemplate`);
         },
         navbarStyle() {
             return (navbar) => {
@@ -192,17 +180,15 @@ export default {
         },
         layoutList: {
             get() {
-                let {navbarId} = this.$route.params;
-                let data = _.get(this.layout, `${navbarId}.data`);
-                if (_.isArray(data)) {
-                    return data.filter((item, index) => index > 0);
+                if (_.isArray(this.activeLayout)) {
+                    return this.activeLayout.filter((item, index) => index > 0);
                 } else {
                     return [];
                 }
             },
             set(list) {
-                let {navbarId} = this.$route.params;
-                this.updateSortedList({navbarId, list});
+                let layout = [this.activeLayout[0], ...list];
+                this.setActiveLayout({layout});
             }
         }
     },
@@ -213,12 +199,17 @@ export default {
             saveLayoutToStore: 'pageLayout/saveLayoutToStore',
             saveLayoutToRemoteServer: 'pageLayout/saveLayoutToRemoteServer',
             toggleChangedByNavbarId: 'pageLayout/toggleChangedByNavbarId',
-            updateSortedList: 'pageLayout/updateSortedList'
+            updateSortedList: 'pageLayout/updateSortedList',
+            //  2.3.0 新增的部分
+            setActiveLayout: 'pageLayout/setActiveLayout'
         }),
         ...mapActions({
             getNavbarList: 'pageLayout/getNavbarList',
             getPageLayoutByNavbarId: 'pageLayout/getPageLayoutByNavbarId',
-            savePageLayoutByNavbarId: 'pageLayout/savePageLayoutByNavbarId'
+            savePageLayoutByNavbarId: 'pageLayout/savePageLayoutByNavbarId',
+
+            //  2.3.0 新增的部分
+            getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
         }),
         setNavBarWidth() {
             let columnsItem = document.querySelectorAll('.columns-item');
@@ -231,48 +222,11 @@ export default {
         },
         async columnsTabChangeHandler(id, layoutTemplate) {
             try {
+                this.setActiveLayout({layout: []});
                 this.activeId = id;
                 this.layoutTemplate = layoutTemplate;
                 this.$router.push({ name: 'PageLayout', params: {navbarId: id} });
-                if (this.getLayoutChangedByNavbarId) {
-                    let confirm = await this.$confirm(`此栏目有未保存的更改，是否现在保存?`, '提示', {
-                            confirmButtonText: '确定',
-                            cancelButtonText: '取消',
-                            type: 'error'
-                        });
-                        console.log(confirm);
-                    if (confirm) {
-                        this.clearLayoutHandler(); // 获取最新的栏目布局数据
-                    }
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        },
-        async saveLayoutHandler() {
-            try {
-                let {navbarId} = this.$route.params;
-                let res = await this.savePageLayoutByNavbarId(this.activeId);
-                if (res && res.code === 0) {
-                    if (navbarId) {
-                        this.saveLayoutToRemoteServer({navbarId, data: res.data});
-                    }
-                    this.$message.success('保存成功');
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        },
-        async clearLayoutHandler() {
-            try {
-                let {navbarId} = this.$route.params;
-                let res = await this.getPageLayoutByNavbarId(navbarId);
-                if (res && res.code === 0) {
-                    this.toggleChangedByNavbarId({
-                        navbarId,
-                        data: res.data
-                    });
-                }
+                await this.getLayoutByNavbarId(id);
             } catch (err) {
                 console.log(err);
             }
@@ -280,12 +234,10 @@ export default {
         addLayout(type) {
             let {navbarId} = this.$route.params;
             let index = _.get(this.layout, `${navbarId}.data.length`);
-            // let index = this.layout[navbarId].data.length;
             this.$util.layoutCommand({navbarId, index, type, router: this.$router});
         },
         sortedSaveHandler() {
-            let {navbarId} = this.$route.params;
-            this.saveLayoutToStore(navbarId);
+            console.log('aaaaa');
             this.$message.success('模块排序保存成功');
             this.closeSortViewHandler();
         },
@@ -303,19 +255,21 @@ export default {
             let bottomBtn = document.querySelector('.bottom-btn');
             let isBottom = content.scrollHeight - content.scrollTop === content.clientHeight;
             let isTop = content.scrollTop === 0;
-            if (isBottom) {
-                topBtn.style.display = 'block';
-                bottomBtn.style.display = 'none';
-            }
+            if (topBtn && bottomBtn) {
+                if (isBottom) {
+                    topBtn.style.display = 'block';
+                    bottomBtn.style.display = 'none';
+                }
 
-            if (isTop) {
-                topBtn.style.display = 'none';
-                bottomBtn.style.display = 'block';
-            }
+                if (isTop) {
+                    topBtn.style.display = 'none';
+                    bottomBtn.style.display = 'block';
+                }
 
-            if (!isTop && !isBottom) {
-                topBtn.style.display = 'block';
-                bottomBtn.style.display = 'block';
+                if (!isTop && !isBottom) {
+                    topBtn.style.display = 'block';
+                    bottomBtn.style.display = 'block';
+                }
             }
         }
     }

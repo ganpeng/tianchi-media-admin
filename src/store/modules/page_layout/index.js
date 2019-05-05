@@ -114,7 +114,7 @@ function initLayoutItemByLayoutItemType(layoutItemType) {
     return Object.assign({}, defaultLayoutItem, {layoutItemType});
 }
 
-let defaultLayoutItem = {
+const defaultLayoutItem = {
     desc: '',
     id: '',
     layoutItemType: '',
@@ -167,6 +167,7 @@ const defaultProgrammeSubject = {
 };
 
 const defaultState = {
+    activeLayout: [],
     navbarList: [],
     //  每个栏目的布局
     pageLayoutList: [],
@@ -213,20 +214,19 @@ const getters = {
     },
     getLayoutItemByNavbarId(state) {
         return (navbarId, index, squareIndex) => {
-            let obj = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}`);
+            let obj = _.get(state.activeLayout, `${index}.layoutItemMultiList.${squareIndex}`);
             return !_.isEmpty(obj) ? obj : {};
         };
     },
     getLayoutItemType(state) {
         return (navbarId, index, squareIndex) => {
-            let layoutItemType = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.layoutItemType`);
+            let layoutItemType = _.get(state.activeLayout, `${index}.layoutItemMultiList.${squareIndex}.layoutItemType`);
             return layoutItemType;
         };
     },
     getLayoutItemCornerMark(state) {
         return (navbarId, index, squareIndex) => {
-            let obj = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.cornerMark`);
-            // let obj = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}`);
+            let obj = _.get(state.activeLayout, `${index}.layoutItemMultiList.${squareIndex}.cornerMark`);
             return !_.isEmpty(obj) ? obj : {};
         };
     },
@@ -249,8 +249,8 @@ const getters = {
     },
     selectAll(state) {
         return (navbarId, index) => {
-            let layoutTemplate = _.get(state.layout, `${navbarId}.data.${index}.layoutTemplate`);
-            let layoutItemMultiList = _.get(state.layout, `${navbarId}.data.${index}.layoutItemMultiList`).filter((item) => item.layoutItemType !== 'ALL');
+            let layoutTemplate = _.get(state.activeLayout, `${index}.layoutTemplate`);
+            let layoutItemMultiList = _.get(state.activeLayout, `${index}.layoutItemMultiList`).filter((item) => item.layoutItemType !== 'ALL');
             let allFlag = false;
             if (layoutTemplate === 'LT_SN') {
                 allFlag = !(layoutItemMultiList.length > 0 && _.every(layoutItemMultiList, (item) => _.get(item, 'coverImage.uri')));
@@ -287,6 +287,16 @@ const getters = {
     //  节目专题列表
     programmeSubject(state) {
         return state.programmeSubject;
+    },
+    //  2.3.0 新的修改  ========================
+    getActiveLayout(state) {
+        return state.activeLayout;
+    },
+    getLayoutBlockItem(state) {
+        return (layoutBlockId, squareIndex) => {
+            let layoutBlock = state.activeLayout.find((item) => item.id === layoutBlockId);
+            return layoutBlock ? _.get(layoutBlock, `layoutItemMultiList.${squareIndex}`) : {};
+        };
     }
 };
 
@@ -314,8 +324,12 @@ const mutations = {
         _.set(state.layout, `${navbar.id}`, _.cloneDeep(obj));
     },
     updateLayoutItemByIndex(state, payload) {
-        let {index, navbarId, squareIndex, key, value} = payload;
-        _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList.${squareIndex}.${key}`, value);
+        let {squareIndex, key, value, layoutBlockId} = payload;
+        state.activeLayout.forEach((item, _index) => {
+            if (item.id === layoutBlockId) {
+                _.set(state.activeLayout, `${_index}.layoutItemMultiList.${squareIndex}.${key}`, value);
+            }
+        });
     },
     resetLayoutItemByIndex(state, payload) {
         let {index, navbarId, squareIndex} = payload;
@@ -407,12 +421,6 @@ const mutations = {
         let storeLayout = store.get('layoutStore');
         let layoutItemMultiList = _.get(storeLayout, `${navbarId}.data.${index}.layoutItemMultiList`);
         _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList`, layoutItemMultiList);
-        // if (layoutItemMultiList) {
-        //     _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList`, layoutItemMultiList);
-        // } else {
-        //     let _defaultLayoutItemMultiList = _.times(6, () => _.cloneDeep(defaultLayoutItem));
-        //     _.set(state.layout, `${navbarId}.data.${index}.layoutItemMultiList`, _defaultLayoutItemMultiList);
-        // }
     },
     toggleChangedByNavbarId(state, payload) {
         let {navbarId, data} = payload;
@@ -532,6 +540,35 @@ const mutations = {
         let {index, id, image} = payload;
         state.personSubjectModule.layoutItemMultiList[index]['id'] = id;
         state.personSubjectModule.layoutItemMultiList[index]['coverImage'] = image;
+    },
+    //  2.3.0 新的修改  ========================
+    setActiveLayout(state, payload) {
+        let {layout} = payload;
+        state.activeLayout = layout;
+    },
+    updateLayoutBlockById(state, payload) {
+        let {layoutBlockItem, layoutBlockId, squareIndex} = payload;
+        state.activeLayout = state.activeLayout.map((item) => {
+            if (item.id === layoutBlockId) {
+                item.layoutItemMultiList = item.layoutItemMultiList.map((_layoutBlockItem, index) => {
+                    if (index === squareIndex) {
+                        return layoutBlockItem;
+                    } else {
+                        return _layoutBlockItem;
+                    }
+                });
+            }
+            return item;
+        });
+    },
+    addLayoutBlockItemById(state, payload) {
+        let {layoutBlockItem, layoutBlockId} = payload;
+        state.activeLayout = state.activeLayout.map((item) => {
+            if (item.id === layoutBlockId) {
+                item.layoutItemMultiList.push(layoutBlockItem);
+            }
+            return item;
+        });
     }
 };
 
@@ -622,6 +659,18 @@ const actions = {
     async getCustomMarkList({commit, state}) {
         try {
             let res = await service.getCustomMarkList();
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    //  2.3.0 新的修改  ========================
+    async getLayoutByNavbarId({commit, state}, id) {
+        try {
+            let res = await service.getPageLayoutByNavbarId(id);
+            if (res && res.code === 0) {
+                commit('setActiveLayout', {layout: res.data});
+            }
             return res;
         } catch (err) {
             console.log(err);

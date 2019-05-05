@@ -135,7 +135,7 @@
 </template>
 <script>
 import _ from 'lodash';
-import {mapGetters, mapMutations} from 'vuex';
+import {mapGetters, mapMutations, mapActions} from 'vuex';
 import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
 import EditChannel from '../add_edit_module/EditChannel';
 import ProgrammeWithout4StepDialog from '../add_edit_module/ProgrammeWithout4StepDialog';
@@ -186,42 +186,45 @@ export default {
     },
     computed: {
         ...mapGetters({
-            layout: 'pageLayout/layout',
             selectAll: 'pageLayout/selectAll',
-            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark',
+            //  2.3.0新增
+            activeLayout: 'pageLayout/getActiveLayout'
         }),
-        getImageUriByKeyAndIndex() {
-            return (key, squareIndex) => {
-                let {navbarId} = this.$route.params;
-                let uri = _.get(this.layout, `${navbarId}.data.0.layoutItemMultiList.${squareIndex}.${key}.uri`);
-                return uri;
-            };
-        },
         styleBgImageStr() {
             return (squareIndex) => {
-                let bgStr = `background-image: url(${this.getImageUriByKeyAndIndex('coverImage', squareIndex)})`;
+                let url = _.get(this.activeLayout, `0.layoutItemMultiList.${squareIndex}.coverImage.uri`);
+                let bgStr = `background-image: url(${url})`;
                 return bgStr;
             };
         }
     },
-    created() {
-        let {navbarId} = this.$route.params;
-        this.navbarId = navbarId;
-        this.$service.getChannelLayout({navBarId: navbarId})
-            .then((res) => {
-                if (res && res.code === 0) {
-                    let obj = res.data.list[0];
-                    this.channel = obj && obj.channel ? obj.channel : {};
-                }
-            });
+    async created() {
+        try {
+            let {navbarId} = this.$route.params;
+            this.navbarId = navbarId;
+            let res = await this.$service.getChannelLayout({navBarId: navbarId});
+            if (this.isEdit) {
+                await this.getLayoutByNavbarId(navbarId);
+            }
+            if (res && res.code === 0) {
+                let obj = res.data.list[0];
+                this.channel = obj && obj.channel ? obj.channel : {};
+            }
+        } catch (err) {
+            console.log(err);
+        }
     },
     methods: {
-        ...mapMutations({
-            saveLayoutToStore: 'pageLayout/saveLayoutToStore'
+        ...mapMutations({}),
+        ...mapActions({
+            //  2.3.0 新增的部分
+            getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
         }),
         editFixedModuleHandler() {
             let {navbarId} = this.$route.params;
-            this.$router.push({ name: 'EditFixedModule', params: {navbarId, index: 0} });
+            let id = _.get(this.activeLayout, '0.id');
+            this.$router.push({ name: 'EditFixedModule', params: {navbarId, index: 0}, query: {id} });
         },
         selectChannel() {
             this.$refs.selectChannelDialog.showDialog('CHANNEL');
@@ -257,21 +260,33 @@ export default {
             this.$refs.selectFilterDialog.showDialog('FILTER');
         },
         async saveHandler() {
-            let {navbarId} = this.$route.params;
-            if (!this.selectAll(navbarId, 0)) {
-                this.saveLayoutToStore(navbarId);
+            try {
+                if (!this.selectAll(this.navbarId, 0)) {
+                    let {id} = this.$route.query;
+                    if (id) {
+                        let layoutBlock = this.activeLayout.find((item) => item.id === id);
+                        if (layoutBlock) {
+                            let putLayoutBlockRes = await this.$service.putLayoutBlock(id, layoutBlock);
+                            if (putLayoutBlockRes && putLayoutBlockRes.code === 0) {
+                                console.log('success');
+                            }
+                        }
+                    }
 
-                let res = await this.$service.postChannelLayout(this.reqBody);
-                if (res && res.code === 0) {
-                    console.log('直播频道保存成功');
+                    let res = await this.$service.postChannelLayout(this.reqBody);
+                    if (res && res.code === 0) {
+                        console.log('直播频道保存成功');
+                    } else {
+                        this.$message.error('直播频道保存失败');
+                    }
+
+                    this.$message.success('保存成功');
+                    this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
                 } else {
-                    this.$message.error('直播频道保存失败');
+                    this.$message.error('色块必须全部选择');
                 }
-
-                this.$message.success('保存成功');
-                this.$router.push({ name: 'PageLayout', params: {navbarId} });
-            } else {
-                this.$message.error('色块必须全部选择');
+            } catch (err) {
+                console.log(err);
             }
         },
         selectChannelSuccessHandler(reqBody) {

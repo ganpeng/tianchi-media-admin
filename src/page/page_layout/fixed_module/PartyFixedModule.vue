@@ -136,7 +136,7 @@
     </div>
 </template>
 <script>
-import {mapGetters, mapMutations} from 'vuex';
+import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
 import ProgrammeWithout4StepDialog from '../add_edit_module/ProgrammeWithout4StepDialog';
 import EditProgrammeSubject from '../add_edit_module/EditProgrammeSubject';
@@ -184,37 +184,42 @@ export default {
             allowResolutions: []
         };
     },
-    created() {
-        let {navbarId} = this.$route.params;
-        this.navbarId = navbarId;
+    async created() {
+        try {
+            let {navbarId} = this.$route.params;
+            this.navbarId = navbarId;
+            if (this.isEdit) {
+                await this.getLayoutByNavbarId(navbarId);
+            }
+        } catch (err) {
+            console.log(err);
+        }
     },
     computed: {
         ...mapGetters({
-            layout: 'pageLayout/layout',
             selectAll: 'pageLayout/selectAll',
-            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark',
+            //  2.3.0新增
+            activeLayout: 'pageLayout/getActiveLayout'
         }),
-        getImageUriByKeyAndIndex() {
-            return (key, squareIndex) => {
-                let {navbarId} = this.$route.params;
-                let uri = _.get(this.layout, `${navbarId}.data.0.layoutItemMultiList.${squareIndex}.${key}.uri`);
-                return uri;
-            };
-        },
         styleBgImageStr() {
             return (squareIndex) => {
-                let bgStr = `background-image: url(${this.getImageUriByKeyAndIndex('coverImage', squareIndex)})`;
+                let url = _.get(this.activeLayout, `0.layoutItemMultiList.${squareIndex}.coverImage.uri`);
+                let bgStr = `background-image: url(${url})`;
                 return bgStr;
             };
         }
     },
     methods: {
-        ...mapMutations({
-            saveLayoutToStore: 'pageLayout/saveLayoutToStore'
+        ...mapMutations({}),
+        ...mapActions({
+            //  2.3.0 新增的部分
+            getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
         }),
         editFixedModuleHandler() {
             let {navbarId} = this.$route.params;
-            this.$router.push({ name: 'EditFixedModule', params: {navbarId, index: 0} });
+            let id = _.get(this.activeLayout, '0.id');
+            this.$router.push({ name: 'EditFixedModule', params: {navbarId, index: 0}, query: {id} });
         },
         selectProgramme(squareIndex) {
             this.squareIndex = squareIndex;
@@ -238,14 +243,26 @@ export default {
             this.$refs.selectLinkDialog.showDialog('LINK');
         },
         //  新增结束
-        saveHandler() {
-            let {navbarId} = this.$route.params;
-            if (!this.selectAll(navbarId, 0)) {
-                this.saveLayoutToStore(navbarId);
-                this.$message.success('保存成功');
-                this.$router.push({ name: 'PageLayout', params: {navbarId} });
-            } else {
-                this.$message.error('色块必须全部选择');
+        async saveHandler() {
+            try {
+                let {navbarId} = this.$route.params;
+                if (!this.selectAll(navbarId, 0)) {
+                    let {id} = this.$route.query;
+                    if (id) {
+                        let layoutBlock = this.activeLayout.find((item) => item.id === id);
+                        if (layoutBlock) {
+                            let putLayoutBlockRes = await this.$service.putLayoutBlock(id, layoutBlock);
+                            if (putLayoutBlockRes && putLayoutBlockRes.code === 0) {
+                                this.$message.success('保存成功');
+                                this.$router.push({ name: 'PageLayout', params: {navbarId} });
+                            }
+                        }
+                    }
+                } else {
+                    this.$message.error('色块必须全部选择');
+                }
+            } catch (err) {
+                console.log(err);
             }
         },
         addShuffleLayout(squareIndex) {

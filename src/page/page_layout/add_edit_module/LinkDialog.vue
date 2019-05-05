@@ -46,7 +46,7 @@
                                 <single-image-uploader
                                     id="linkImageUploader"
                                     :showDelete="false"
-                                    :uri="layoutItem.coverImage ? layoutItem.coverImage.uri : ''"
+                                    :uri="coverImageUri"
                                     :uploadSuccessHandler="uploadLinkImageSuccessHandler"
                                     :allowResolutions="allowResolutions"
                                 ></single-image-uploader>
@@ -102,7 +102,11 @@ export default {
                         message: '请输入正确的网址'
                     }
                 ]
-            }
+            },
+
+            //  2.3.0 新增字段
+            layoutBlockId: '',
+            layoutBlockItemClone: null
         };
     },
     created() {
@@ -112,10 +116,12 @@ export default {
     },
     computed: {
         ...mapGetters({
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+            //  2.3.0 新增
+            activeLayout: 'pageLayout/getActiveLayout',
+            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem'
         }),
         getHref() {
-            let params = _.get(this.layoutItem, 'params');
+            let params = _.get(this.layoutBlockItemClone, 'params');
             if (params) {
                 try {
                     let href = _.get(JSON.parse(params), 'href');
@@ -125,42 +131,58 @@ export default {
                 }
             }
         },
-        layoutItem() {
-            let layoutItem = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
-            return layoutItem;
+        coverImageUri() {
+            return _.get(this.layoutBlockItemClone, 'coverImage.uri');
+        },
+        layoutBlockItem() {
+            return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
         }
     },
     methods: {
         ...mapMutations({
-            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
-            resetLayoutItemByIndex: 'pageLayout/resetLayoutItemByIndex',
-            cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex'
+            //  2.3.0新增
+            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById'
         }),
         //  弹窗控制方法
         async showDialog(layoutItemType) {
-            this.dialogVisible = true;
+            let {id} = this.$route.query;
             this.layoutItemType = layoutItemType;
+            this.layoutBlockId = id;
+            this.dialogVisible = true;
         },
         dialogOpenHandler() {
+            this.layoutBlockItemClone = _.cloneDeep(this.layoutBlockItem);
             this.form.link = this.getHref;
-            this.form.name = _.get(this.layoutItem, 'name');
-            if (this.layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
-                this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+            this.form.name = _.get(this.layoutBlockItemClone, 'name');
+            if (this.layoutItemType !== _.get(this.layoutBlockItemClone, 'layoutItemType')) {
+                this.layoutBlockItemClone = _.cloneDeep(this.$util.defaultLayoutBlock);
             }
         },
         closeDialog() {
             this.dialogVisible = false;
             this.layoutItemType = '';
+            this.layoutBlockId = '';
+            this.layoutBlockItemClone = null;
+        },
+        updateLayoutBlockItem(payload) {
+            let {key, value} = payload;
+            let _layoutBlockItemClone = Object.assign({}, this.layoutBlockItemClone, {[key]: value});
+            this.layoutBlockItemClone = _layoutBlockItemClone;
         },
         async enterSuccessHandler() {
             try {
                 let valid = await this.$refs.linkForm.validate();
                 if (valid) {
-                    if (_.get(this.layoutItem, 'coverImage.id')) {
+                    if (_.get(this.layoutBlockItemClone, 'coverImage.id')) {
                         let obj = {href: this.form.link};
-                        this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: this.form.name });
-                        this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'params', value: JSON.stringify(obj) });
-                        this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'LINK' });
+                        this.updateLayoutBlockItem({ key: 'name', value: this.form.name });
+                        this.updateLayoutBlockItem({ key: 'params', value: JSON.stringify(obj) });
+                        this.updateLayoutBlockItem({ key: 'layoutItemType', value: 'LINK' });
+                        this.updateLayoutBlockById({
+                            squareIndex: this.squareIndex,
+                            layoutBlockId: this.layoutBlockId,
+                            layoutBlockItem: this.layoutBlockItemClone
+                        });
                         this.closeDialog();
                     } else {
                         this.$message.error('请设置网页封面图');
@@ -172,10 +194,9 @@ export default {
             }
         },
         uploadLinkImageSuccessHandler(image) {
-            this.updateLayoutItemByIndex({ navbarId: this.navbarId, index: this.index, squareIndex: this.squareIndex, key: 'coverImage', value: image });
+            this.updateLayoutBlockItem({ key: 'coverImage', value: image });
         },
         cancelHanlder() {
-            this.cancelLayoutItemByIndex({navbarId: this.navbarId, index: this.index, squareIndex: this.squareIndex});
             this.closeDialog();
         }
     }

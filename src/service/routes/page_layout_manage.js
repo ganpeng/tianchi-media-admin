@@ -79,3 +79,32 @@ export const updateSubjectById = (id, subject) => {
 export const getCustomMarkList = () => {
     return service.get('/v1/content/mark/list?markType=CUSTOM');
 };
+
+//  2.3.0 版本新增加的修改
+/**
+ * 新增layoutBlock
+ */
+export const postLayoutBlock = (id, block) => {
+    return service.post(`/v1/content/layout-block?navBarId=${id}`, block);
+};
+
+/**
+ * 更新layoutBlock
+ */
+export const putLayoutBlock = (id, block) => {
+    return service.put(`/v1/content/layout-block/${id}`, block);
+};
+
+/**
+ * 根据id获取layoutBlock
+ */
+export const getLayoutBlockById = (id) => {
+    return service.get(`/v1/content/layout-block/${id}`);
+};
+
+/**
+ * 根据id删除layoutBlock
+ */
+export const deleteLayoutBlockById = (id) => {
+    return service.delete(`/v1/content/layout-block/${id}`);
+};

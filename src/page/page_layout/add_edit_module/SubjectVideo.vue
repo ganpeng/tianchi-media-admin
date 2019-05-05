@@ -465,7 +465,6 @@
                 </div>
             </div>
         </el-dialog>
-        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
         <display-video-dialog
             :url="url"
             :title="videoTitle"
@@ -478,7 +477,6 @@ import {mapGetters, mapActions, mapMutations} from 'vuex';
 import _ from 'lodash';
 import role from '@/util/config/role';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
-import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
 import SelectImage from './SelectImage';
 const ClipboardJS = require('clipboard');
@@ -495,7 +493,6 @@ export default {
         }
     },
     components: {
-        PreviewSingleImage,
         SingleImageUploader,
         DisplayVideoDialog,
         SelectImage
@@ -512,16 +509,14 @@ export default {
             programmeSubjectData: {},
             videoObj: {},
             customMarkOptions: [],
-            previewImage: {
-                title: '',
-                display: false,
-                uri: ''
-            },
             showExist: false,
             //  视频弹窗相关的属性
-            displayVideoDialogVisible: false,
             url: '',
-            videoTitle: ''
+            videoTitle: '',
+
+            //  2.3.0 新增字段
+            layoutBlockId: '',
+            layoutBlockItemClone: null
         };
     },
     created() {
@@ -535,52 +530,44 @@ export default {
             video: 'programme/video',
             layout: 'pageLayout/layout',
             programmeSubject: 'pageLayout/programmeSubject',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
-            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark',
+
+            //  2.3.0 新增
+            activeLayout: 'pageLayout/getActiveLayout',
+            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem'
         }),
-        layoutItem() {
-            let layoutItem = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
-            return layoutItem;
+        layoutBlockItem() {
+            return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
         },
         getImageIdByKey() {
             return (key) => {
-                return _.get(this.layoutItem, `${key}.id`);
+                return _.get(this.layoutBlockItemClone, `${key}.id`);
             };
         },
         getImageByKey() {
             return (key) => {
-                let {navbarId, index} = this.$route.params;
-                return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.${key}.uri`);
+                return _.get(this.layoutBlockItemClone, `${key}.uri`);
             };
         },
-        getSquareProgrammeId() {
-            let {navbarId, index} = this.$route.params;
-            return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.id`);
-        },
         getSquareProgrammeVideo() {
-            let {navbarId, index} = this.$route.params;
-            let params = _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.params`);
+            let params = _.get(this.layoutBlockItemClone, 'params');
             if (params) {
                 return [JSON.parse(params)];
             }
             return [];
         },
         getProgrammeVideoIdFromParams() {
-            let {navbarId, index} = this.$route.params;
-            let params = _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.params`);
+            let params = _.get(this.layoutBlockItemClone, 'params');
             if (params) {
                 return JSON.parse(params).id;
             }
             return false;
         },
         getSubjectId() {
-            let {navbarId, index} = this.$route.params;
-            return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.id`);
-            // return this.programmeSubjectData.id;
+            return _.get(this.layoutBlockItemClone, `id`);
         },
         getProgrammeIdFromParams() {
-            let {navbarId, index} = this.$route.params;
-            let params = _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.params`);
+            let params = _.get(this.layoutBlockItemClone, 'params');
             if (params) {
                 return JSON.parse(params).programmeId;
             }
@@ -591,10 +578,6 @@ export default {
         },
         getProgrammeVideoId() {
             return this.videoObj.id;
-        },
-        getSquareProgrammeLayoutItemType() {
-            let {navbarId, index} = this.$route.params;
-            return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.layoutItemType`);
         },
         //  视频相关的getter
         duration() {
@@ -629,12 +612,12 @@ export default {
             return options;
         },
         rightTop() {
-            let {rightTop} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
+            let rightTop = _.get(this.layoutBlockItemClone, 'cornerMark.rightTop');
             return _.isEmpty(rightTop) ? {} : rightTop;
         },
         rightBottom() {
             let value = '';
-            let {leftBottom, rightBottom} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
+            let {leftBottom, rightBottom} = _.get(this.layoutBlockItemClone, 'cornerMark');
             let leftBottomCaption = _.get(leftBottom, 'caption');
             let rightBottomCaption = _.get(rightBottom, 'caption');
             if (!_.isNull(leftBottomCaption) && _.isNull(rightBottomCaption)) {
@@ -659,14 +642,13 @@ export default {
     },
     methods: {
         ...mapMutations({
-            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
-            cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex',
-            resetLayoutItemByIndex: 'pageLayout/resetLayoutItemByIndex',
             //  新加节目专题相关
             resetProgrammeSubject: 'pageLayout/resetProgrammeSubject',
             updateProgrammeSubjectPagination: 'pageLayout/updateProgrammeSubjectPagination',
-            updateLayoutItemCornerMarkByIndex: 'pageLayout/updateLayoutItemCornerMarkByIndex',
-            updateProgrammeSubject: 'pageLayout/updateProgrammeSubject'
+            updateProgrammeSubject: 'pageLayout/updateProgrammeSubject',
+
+            //  2.3.0新增
+            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById'
         }),
         ...mapActions({
             getProgrammeVideoListById: 'programme/getProgrammeVideoListById',
@@ -693,6 +675,8 @@ export default {
         //  弹窗的操作
         async showDialog(layoutItemType, category) {
             try {
+                let {id} = this.$route.query;
+                this.layoutBlockId = id;
                 this.layoutItemType = layoutItemType;
                 this.category = category;
 
@@ -712,18 +696,18 @@ export default {
             this.cateogry = '';
             this.showExist = '';
             this.layoutItemType = '';
-            this.previewImage = {
-                title: '',
-                display: false,
-                uri: ''
-            };
+
+            this.layoutBlockId = '';
+            this.layoutBlockItemClone = null;
 
             window.removeEventListener('keyup', this.keyupHandler);
         },
         async dialogOpenHandler() {
             try {
-                if (this.layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
-                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+                this.layoutBlockItemClone = _.cloneDeep(this.layoutBlockItem);
+                let _layoutItemType = _.get(this.layoutBlockItemClone, 'layoutItemType');
+                if (this.layoutItemType !== _layoutItemType) {
+                    this.layoutBlockItemClone = _.cloneDeep(this.$util.defaultLayoutBlock);
                 } else {
                     if (this.getSubjectId && this.getProgrammeIdFromParams && this.getProgrammeVideoIdFromParams) {
                         let res = await this.$service.getProgrammeInfo({id: this.getProgrammeIdFromParams});
@@ -799,14 +783,18 @@ export default {
                 }
             }
         },
+        updateLayoutBlockItem(payload) {
+            let {key, value} = payload;
+            let _layoutBlockItemClone = Object.assign({}, this.layoutBlockItemClone, {[key]: value});
+            this.layoutBlockItemClone = _layoutBlockItemClone;
+        },
         setProgrammeSubjectHandler(programmeSubjectData) {
             let {id} = programmeSubjectData;
             this.programmeSubjectData = programmeSubjectData;
-            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
+            this.updateLayoutBlockItem({ key: 'id', value: id });
         },
         changeProgrammeSubjectHandler() {
-            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: '' });
-            this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+            this.layoutBlockItemClone = _.cloneDeep(this.$util.defaultLayoutBlock);
             this.showExist = false;
             this.active = 0;
         },
@@ -817,10 +805,8 @@ export default {
         },
         setProgrammeVideoHandler(video) {
             this.videoObj = _.cloneDeep(video);
-            // this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'params', value: JSON.stringify(video) });
         },
         programmeSubjectTableRowClassName({row, rowIndex}) {
-            // return row.id === this.getSquareProgrammeId ? 'checked' : '';
             return row.id === this.getSubjectId ? 'checked' : '';
         },
         programmeTableRowClassName({row, rowIndex}) {
@@ -828,13 +814,6 @@ export default {
         },
         videoTableRowClassName({row, rowIndex}) {
             return row.id === this.getProgrammeVideoIdFromParams ? 'checked' : '';
-        },
-        //  查看图片
-        displayImage(image) {
-            this.previewImage.title = image.name;
-            this.previewImage.uri = image.uri;
-            //  去掉预览
-            // this.previewImage.display = true;
         },
         //  图片上传成功之后的毁掉
         async uploadProgrammeCoverImageSuccessHandler(image) {
@@ -848,7 +827,7 @@ export default {
                     programme: {posterImageList: clonePosterImageList}
                 });
                 if (res && res.code === 0) {
-                    this.programme.posterImageList = _.cloneDeep(clonePosterImageList);
+                    this.programme = Object.assign({}, this.programme, {posterImageList: clonePosterImageList});
                 }
             } catch (err) {
                 console.log(err);
@@ -858,43 +837,30 @@ export default {
             this.uploadProgrammeCoverImageSuccessHandler(image);
         },
         changeCoverImageHandler(image) {
-            this.updateLayoutItemByIndex({
-                navbarId: this.navbarId,
-                index: this.index,
-                squareIndex: this.squareIndex,
-                key: 'coverImage',
-                value: image
-            });
+            this.updateLayoutBlockItem({ key: 'coverImage', value: image });
         },
         changeBgImageHandler(image) {
-            this.updateLayoutItemByIndex({
-                navbarId: this.navbarId,
-                index: this.index,
-                squareIndex: this.squareIndex,
-                key: 'coverImageBackground',
-                value: image
-            });
+            this.updateLayoutBlockItem({ key: 'coverImageBackground', value: image });
         },
         deleteBgImageHandler() {
-            this.updateLayoutItemByIndex({
-                navbarId: this.navbarId,
-                index: this.index,
-                squareIndex: this.squareIndex,
-                key: 'coverImageBackground',
-                value: null
-            });
+            this.updateLayoutBlockItem({ key: 'coverImageBackground', value: null });
         },
         //  最后一步的确认处理函数
         enterHandler() {
             // 设置layoutItemType为PROGRAMME_VIDEO
             if (this.getImageByKey('coverImage')) {
                 let {name, desc, programmeTemplate} = this.programme;
-                this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: this.layoutItemType });
-                this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: this.getSubjectId });
-                this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
-                this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'desc', value: desc });
-                this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'programmeTemplate', value: programmeTemplate });
-                this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'params', value: JSON.stringify(this.videoObj) });
+                this.updateLayoutBlockItem({ key: 'layoutItemType', value: this.layoutItemType });
+                this.updateLayoutBlockItem({ key: 'id', value: this.getSubjectId });
+                this.updateLayoutBlockItem({ key: 'name', value: name });
+                this.updateLayoutBlockItem({ key: 'desc', value: desc });
+                this.updateLayoutBlockItem({ key: 'programmeTemplate', value: programmeTemplate });
+                this.updateLayoutBlockItem({ key: 'params', value: JSON.stringify(this.videoObj) });
+                this.updateLayoutBlockById({
+                    squareIndex: this.squareIndex,
+                    layoutBlockId: this.layoutBlockId,
+                    layoutBlockItem: this.layoutBlockItemClone
+                });
                 this.showExist = true;
                 this.closeDialog();
             } else {
@@ -903,7 +869,6 @@ export default {
             }
         },
         cancelHanlder() {
-            this.cancelLayoutItemByIndex({navbarId: this.navbarId, index: this.index, squareIndex: this.squareIndex});
             this.closeDialog();
         },
         //  角标的相关操作
@@ -926,61 +891,42 @@ export default {
             }
 
             if (value === 1) {
-                this.updateLayoutItemCornerMarkByIndex({
-                    navbarId: this.navbarId,
-                    index: this.index,
-                    squareIndex: this.squareIndex,
-                    key: 'leftBottom',
-                    value: {caption: leftBottomCaption}
-                });
-                this.updateLayoutItemCornerMarkByIndex({
-                    navbarId: this.navbarId,
-                    index: this.index,
-                    squareIndex: this.squareIndex,
-                    key: 'rightBottom',
-                    value: {caption: null}
-                });
+                this.updateLayoutItemCornerMarkByIndex('leftBottom', Object.assign({}, value, {caption: leftBottomCaption}));
+                this.updateLayoutItemCornerMarkByIndex('rightBottom', Object.assign({}, value, {caption: null}));
             } else if (value === 2) {
-                this.updateLayoutItemCornerMarkByIndex({
-                    navbarId: this.navbarId,
-                    index: this.index,
-                    squareIndex: this.squareIndex,
-                    key: 'rightBottom',
-                    value: {caption: score}
-                });
-                this.updateLayoutItemCornerMarkByIndex({
-                    navbarId: this.navbarId,
-                    index: this.index,
-                    squareIndex: this.squareIndex,
-                    key: 'leftBottom',
-                    value: {caption: null}
-                });
+                this.updateLayoutItemCornerMarkByIndex('rightBottom', Object.assign({}, value, {caption: score}));
+                this.updateLayoutItemCornerMarkByIndex('leftBottom', Object.assign({}, value, {caption: null}));
             } else {
-                this.updateLayoutItemCornerMarkByIndex({
-                    navbarId: this.navbarId,
-                    index: this.index,
-                    squareIndex: this.squareIndex,
-                    key: 'leftBottom',
-                    value: {caption: null}
-                });
-                this.updateLayoutItemCornerMarkByIndex({
-                    navbarId: this.navbarId,
-                    index: this.index,
-                    squareIndex: this.squareIndex,
-                    key: 'rightBottom',
-                    value: {caption: null}
-                });
+                this.updateLayoutItemCornerMarkByIndex('leftBottom', Object.assign({}, value, {caption: null}));
+                this.updateLayoutItemCornerMarkByIndex('rightBottom', Object.assign({}, value, {caption: null}));
             }
         },
         customMarkSelectHandler(mark) {
-            let {navbarId, index} = this.$route.params;
-            this.updateLayoutItemCornerMarkByIndex({
-                navbarId,
-                index,
-                squareIndex: this.squareIndex,
-                key: 'rightTop',
-                value: _.isEmpty(mark) ? {} : mark
-            });
+            let value = _.isEmpty(mark) ? {} : mark;
+            this.updateLayoutItemCornerMarkByIndex('rightTop', value);
+        },
+        updateLayoutItemCornerMarkByIndex(key, value) {
+            let markType = '';
+            switch (key) {
+                case 'leftTop':
+                    markType = 'PLATFORM';
+                    break;
+                case 'leftBottom':
+                    markType = 'EPISODES_NUMBER';
+                    break;
+                case 'rightBottom':
+                    markType = 'SCORE';
+                    break;
+                case 'rightTop':
+                    markType = 'CUSTOM';
+                    break;
+                default:
+                    throw new Error('角标的key不存在');
+            }
+            let cornerMark = _.cloneDeep(this.layoutBlockItemClone.cornerMark);
+            let obj = Object.assign({}, value, {markType});
+            let newCornerMark = Object.assign({}, cornerMark, {[key]: obj});
+            this.updateLayoutBlockItem({key: 'cornerMark', value: newCornerMark});
         },
         //  视频列表相关的方法
         displayVideoPlayer(url, name) {
@@ -998,9 +944,6 @@ export default {
             clipboard.on('error', function(e) {
                 that.$message.error('视频链接复制失败');
             });
-        },
-        closeDisplayVideoDialog() {
-            this.displayVideoDialogVisible = false;
         }
     }
 };

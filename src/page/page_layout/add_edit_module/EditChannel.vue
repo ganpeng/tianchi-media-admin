@@ -108,10 +108,6 @@ export default {
         selectChannelHandler(channel) {
             this.channel = channel;
         },
-        //  图片上传成功之后的毁掉
-        uploadChannelCoverImageSuccessHandler(image) {
-            console.log(image);
-        },
         async enterHandler() {
             try {
                 let {navbarId} = this.$route.params;

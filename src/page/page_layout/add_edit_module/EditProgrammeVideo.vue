@@ -419,7 +419,6 @@
                 </div>
             </div>
         </el-dialog>
-        <preview-single-image :previewSingleImage="previewImage"></preview-single-image>
         <display-video-dialog
             :url="url"
             :title="videoTitle"
@@ -432,7 +431,6 @@ import {mapGetters, mapActions, mapMutations} from 'vuex';
 import _ from 'lodash';
 import role from '@/util/config/role';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
-import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
 import SelectImage from './SelectImage';
 const ClipboardJS = require('clipboard');
@@ -453,7 +451,6 @@ export default {
         }
     },
     components: {
-        PreviewSingleImage,
         SingleImageUploader,
         DisplayVideoDialog,
         SelectImage
@@ -467,17 +464,15 @@ export default {
             category: '',
             layoutItemType: '',
             programme: {},
-            previewImage: {
-                title: '',
-                display: false,
-                uri: ''
-            },
             showExist: false,
             //  视频弹窗相关的属性
-            displayVideoDialogVisible: false,
             url: '',
             videoTitle: '',
-            videoObj: {}
+            videoObj: {},
+
+            //  2.3.0 新增字段
+            layoutBlockId: '',
+            layoutBlockItemClone: null
         };
     },
     created() {
@@ -494,47 +489,40 @@ export default {
             typeList: 'programme/typeList',
             getChiefActor: 'programme/getChiefActor',
             video: 'programme/video',
-            layout: 'pageLayout/layout',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+
+            //  2.3.0 新增
+            activeLayout: 'pageLayout/getActiveLayout',
+            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem'
         }),
-        layoutItem() {
-            let layoutItem = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
-            return layoutItem;
+        layoutBlockItem() {
+            return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
         },
         getImageIdByKey() {
             return (key) => {
-                return _.get(this.layoutItem, `${key}.id`);
+                return _.get(this.layoutBlockItemClone, `${key}.id`);
             };
         },
         getImageByKey() {
             return (key) => {
-                let {navbarId, index} = this.$route.params;
-                return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.${key}.uri`);
+                return _.get(this.layoutBlockItemClone, `${key}.uri`);
             };
         },
         getSquareProgrammeId() {
-            let {navbarId, index} = this.$route.params;
-            return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.id`);
+            return _.get(this.layoutBlockItemClone, 'id');
         },
         getSquareProgrammeVideo() {
-            let {navbarId, index} = this.$route.params;
-            let params = _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.params`);
+            let params = _.get(this.layoutBlockItemClone, 'params');
             if (params) {
                 return [JSON.parse(params)];
             }
             return [];
         },
         getSquareProgrammeVideoId() {
-            let {navbarId, index} = this.$route.params;
-            let params = _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.params`);
+            let params = _.get(this.layoutBlockItemClone, 'params');
             if (params) {
                 return JSON.parse(params).id;
             }
             return false;
-        },
-        getSquareProgrammeLayoutItemType() {
-            let {navbarId, index} = this.$route.params;
-            return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.layoutItemType`);
         },
         //  视频相关的getter
         duration() {
@@ -569,9 +557,9 @@ export default {
             resetProgrammeSearchFields: 'programme/resetProgrammeSearchFields',
             updateProgrammePagination: 'programme/updateProgrammePagination',
             updateProgrammeSearchFields: 'programme/updateProgrammeSearchFields',
-            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
-            cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex',
-            resetLayoutItemByIndex: 'pageLayout/resetLayoutItemByIndex'
+
+            //  2.3.0新增
+            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById'
         }),
         ...mapActions({
             getProgrammeListIsVisible: 'programme/getProgrammeListIsVisible',
@@ -587,9 +575,16 @@ export default {
         searchFieldInputHandler(value, key) {
             this.updateProgrammeSearchFields({key, value});
         },
+        updateLayoutBlockItem(payload) {
+            let {key, value} = payload;
+            let _layoutBlockItemClone = Object.assign({}, this.layoutBlockItemClone, {[key]: value});
+            this.layoutBlockItemClone = _layoutBlockItemClone;
+        },
         //  弹窗的操作
         async showDialog(layoutItemType, category) {
             try {
+                let {id} = this.$route.query;
+                this.layoutBlockId = id;
                 this.layoutItemType = layoutItemType;
                 this.category = category;
 
@@ -609,19 +604,18 @@ export default {
             this.cateogry = '';
             this.showExist = '';
             this.layoutItemType = '';
-            this.previewImage = {
-                title: '',
-                display: false,
-                uri: ''
-            };
+
+            this.layoutBlockId = '';
+            this.layoutBlockItemClone = null;
 
             window.removeEventListener('keyup', this.keyupHandler);
         },
         async dialogOpenHandler() {
             try {
-                let _layoutItemType = _.get(this.layoutItem, 'layoutItemType');
+                this.layoutBlockItemClone = _.cloneDeep(this.layoutBlockItem);
+                let _layoutItemType = _.get(this.layoutBlockItemClone, 'layoutItemType');
                 if (this.layoutItemType !== _layoutItemType) {
-                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+                    this.layoutBlockItemClone = _.cloneDeep(this.$util.defaultLayoutBlock);
                 } else {
                     if (this.getSquareProgrammeVideoId && this.getSquareProgrammeId) {
                         await this.getProgrammeCategory();
@@ -698,24 +692,23 @@ export default {
             }
         },
         changeProgrammeHandler() {
-            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: '' });
-            this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+            this.layoutBlockItemClone = _.cloneDeep(this.$util.defaultLayoutBlock);
             this.showExist = false;
             this.active = 0;
         },
         setProgrammeHandler(programme) {
             let {id, name, desc, programmeTemplate} = programme;
-            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
-            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
-            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'desc', value: desc });
+            this.updateLayoutBlockItem({ key: 'id', value: id });
+            this.updateLayoutBlockItem({ key: 'name', value: name });
+            this.updateLayoutBlockItem({ key: 'desc', value: desc });
             if (programmeTemplate) {
-                this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'programmeTemplate', value: programmeTemplate });
+                this.updateLayoutBlockItem({ key: 'programmeTemplate', value: programmeTemplate });
             }
             this.programme = programme;
             this.getProgrammeVideoListById(id);
         },
         setProgrammeVideoHandler(video) {
-            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'params', value: JSON.stringify(video) });
+            this.updateLayoutBlockItem({ key: 'params', value: JSON.stringify(video) });
         },
         tableRowClassName({row, rowIndex}) {
             return row.id === this.getSquareProgrammeId ? 'checked' : '';
@@ -730,13 +723,6 @@ export default {
                 this.getProgrammeListIsVisible();
             }
         },
-        //  查看图片
-        displayImage(image) {
-            this.previewImage.title = image.name;
-            this.previewImage.uri = image.uri;
-            //  去掉预览
-            // this.previewImage.display = true;
-        },
         //  图片上传成功之后的毁掉
         async uploadProgrammeCoverImageSuccessHandler(image) {
             try {
@@ -749,7 +735,7 @@ export default {
                     programme: {posterImageList: clonePosterImageList}
                 });
                 if (res && res.code === 0) {
-                    this.programme.posterImageList = _.cloneDeep(clonePosterImageList);
+                    this.programme = Object.assign({}, this.programme, {posterImageList: clonePosterImageList});
                 }
             } catch (err) {
                 console.log(err);
@@ -759,37 +745,24 @@ export default {
             this.uploadProgrammeCoverImageSuccessHandler(image);
         },
         changeCoverImageHandler(image) {
-            this.updateLayoutItemByIndex({
-                navbarId: this.navbarId,
-                index: this.index,
-                squareIndex: this.squareIndex,
-                key: 'coverImage',
-                value: image
-            });
+            this.updateLayoutBlockItem({ key: 'coverImage', value: image });
         },
         changeBgImageHandler(image) {
-            this.updateLayoutItemByIndex({
-                navbarId: this.navbarId,
-                index: this.index,
-                squareIndex: this.squareIndex,
-                key: 'coverImageBackground',
-                value: image
-            });
+            this.updateLayoutBlockItem({ key: 'coverImageBackground', value: image });
         },
         deleteBgImageHandler() {
-            this.updateLayoutItemByIndex({
-                navbarId: this.navbarId,
-                index: this.index,
-                squareIndex: this.squareIndex,
-                key: 'coverImageBackground',
-                value: null
-            });
+            this.updateLayoutBlockItem({ key: 'coverImageBackground', value: null });
         },
         //  最后一步的确认处理函数
         enterHandler() {
             // 设置layoutItemType为PROGRAMME_VIDEO
             if (this.getImageByKey('coverImage')) {
-                this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: this.layoutItemType });
+                this.updateLayoutBlockItem({ key: 'layoutItemType', value: this.layoutItemType });
+                this.updateLayoutBlockById({
+                    squareIndex: this.squareIndex,
+                    layoutBlockId: this.layoutBlockId,
+                    layoutBlockItem: this.layoutBlockItemClone
+                });
                 this.showExist = true;
                 this.closeDialog();
             } else {
@@ -798,7 +771,6 @@ export default {
             }
         },
         cancelHanlder() {
-            this.cancelLayoutItemByIndex({navbarId: this.navbarId, index: this.index, squareIndex: this.squareIndex});
             this.closeDialog();
         },
         //  视频列表相关的方法
@@ -817,9 +789,6 @@ export default {
             clipboard.on('error', function(e) {
                 that.$message.error('视频链接复制失败');
             });
-        },
-        closeDisplayVideoDialog() {
-            this.displayVideoDialogVisible = false;
         }
     }
 };

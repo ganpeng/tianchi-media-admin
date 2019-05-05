@@ -478,6 +478,23 @@ let util = {
             }
         }
         return result;
+    },
+    //  页面布局默认的数据结构
+    defaultLayoutBlock: {
+        desc: '',
+        id: '',
+        layoutItemType: '',
+        programmeTemplate: null,
+        name: '',
+        params: '',
+        coverImage: {},
+        coverImageBackground: {},
+        cornerMark: {
+            leftTop: {},
+            leftBottom: {},
+            rightTop: {},
+            rightBottom: {}
+        }
     }
 };
 

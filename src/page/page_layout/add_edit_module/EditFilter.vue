@@ -147,7 +147,6 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer text-right margin-top-l">
-                <!-- <el-button @click="closeDialog">取 消</el-button> -->
                 <el-button type="primary" class="btn-style-two" @click="complete">确 定</el-button>
             </div>
         </el-dialog>
@@ -231,23 +230,26 @@
                 entertainmentList: [],
                 // 新增
                 navbarId: '',
-                index: 0
+                index: 0,
+
+                //  2.3.0 新增字段
+                layoutBlockId: '',
+                layoutBlockItemClone: null
             };
         },
         computed: {
             ...mapGetters({
-                layout: 'pageLayout/layout',
-                getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+                //  2.3.0 新增
+                activeLayout: 'pageLayout/getActiveLayout',
+                getLayoutBlockItem: 'pageLayout/getLayoutBlockItem'
             }),
+            layoutBlockItem() {
+                return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
+            },
             getImageByKey() {
                 return (key) => {
-                    let {navbarId, index} = this.$route.params;
-                    return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}.${key}.uri`);
+                    return _.get(this.layoutBlockItemClone, `${key}.uri`);
                 };
-            },
-            layoutItem() {
-                let layoutItem = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
-                return layoutItem;
             }
         },
         created() {
@@ -257,17 +259,15 @@
         },
         methods: {
             ...mapMutations({
-                updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
-                updateLayoutItemByKeys: 'pageLayout/updateLayoutItemByKeys',
-                addLayoutItemByIndex: 'pageLayout/addLayoutItemByIndex',
-                resetLayoutItemByIndex: 'pageLayout/resetLayoutItemByIndex'
+                // 2.3.0新增
+                updateLayoutBlockById: 'pageLayout/updateLayoutBlockById',
+                addLayoutBlockItemById: 'pageLayout/addLayoutBlockItemById'
             }),
             getOriginState() {
-                let {navbarId, index} = this.$route.params;
                 if (this.isAdd) {
                     return {};
                 } else {
-                    return _.get(this.layout, `${navbarId}.data.${index}.layoutItemMultiList.${this.squareIndex}`);
+                    return this.layoutBlockItemClone;
                 }
             },
             init() {
@@ -278,9 +278,11 @@
                 this.initGrade();
                 this.initSubject();
                 // 回填相应的数据
-                let _layoutItemType = _.get(this.layoutItem, 'layoutItemType');
+
+                this.layoutBlockItemClone = _.cloneDeep(this.layoutBlockItem);
+                let _layoutItemType = _.get(this.layoutBlockItemClone, 'layoutItemType');
                 if (!/_PROGRAMME_CATEGORY$/.test(_layoutItemType) && !this.isAdd) {
-                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+                    this.layoutBlockItemClone = _.cloneDeep(this.$util.defaultLayoutBlock);
                 }
 
                 if (this.getOriginState() && this.getOriginState().coverImage) {
@@ -439,31 +441,10 @@
             },
             // 添加封面图片
             addPosterImage(image) {
-                // this.coverImage = coverImage.posterImage;
-                let {navbarId, index} = this.$route.params;
                 this.coverImage = image;
-                if (!this.isAdd) {
-                    this.updateLayoutItemByIndex({
-                        index,
-                        navbarId,
-                        squareIndex: this.squareIndex,
-                        key: 'coverImage',
-                        value: image
-                    });
-                }
             },
             addBgPosterImage(image) {
-                let {navbarId, index} = this.$route.params;
                 this.coverImageBackground = image;
-                if (!this.isAdd) {
-                    this.updateLayoutItemByIndex({
-                        index,
-                        navbarId,
-                        squareIndex: this.squareIndex,
-                        key: 'coverImageBackground',
-                        value: image
-                    });
-                }
             },
             async complete() {
                 if (!this.categorySignCode) {
@@ -522,21 +503,13 @@
                         rightBottom: {}
                     }
                 };
-                let {navbarId, index} = this.$route.params;
-
                 if (this.isAdd) {
-                    this.addLayoutItemByIndex({
-                        index,
-                        navbarId,
-                        squareIndex: this.squareIndex,
-                        layoutItem: filterItem
-                    });
+                    this.addLayoutBlockItemById({layoutBlockId: this.layoutBlockId, layoutBlockItem: filterItem});
                 } else {
-                    this.updateLayoutItemByKeys({
-                        index,
-                        navbarId,
+                    this.updateLayoutBlockById({
                         squareIndex: this.squareIndex,
-                        layoutItem: filterItem
+                        layoutBlockId: this.layoutBlockId,
+                        layoutBlockItem: filterItem
                     });
                 }
                 this.$message.success('成功设置混排模块的筛选项');
@@ -547,6 +520,8 @@
                 this.init();
             },
             showDialog() {
+                let {id} = this.$route.query;
+                this.layoutBlockId = id;
                 this.dialogVisible = true;
             },
             closeDialog() {
@@ -597,6 +572,9 @@
                 this.coverImage = {};
                 this.coverImageBackground = {};
                 this.entertainmentList = [];
+
+                this.layoutBlockId = '';
+                this.layoutBlockItemClone = null;
             }
         }
     };

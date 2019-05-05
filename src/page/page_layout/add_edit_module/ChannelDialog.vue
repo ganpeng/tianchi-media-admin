@@ -14,9 +14,9 @@
             <div class="person-dialog-container">
                 <el-form class="my-el-form" label-width="100px" @submit.native.prevent>
                     <el-form-item label="频道" required>
-                        <div v-if="layoutItem.name" class="my-tags">
+                        <div v-if="layoutBlockItemClone.name" class="my-tags">
                             <el-tag :disable-transitions="false">
-                                {{layoutItem.name}}
+                                {{layoutBlockItemClone.name}}
                             </el-tag>
                         </div>
                         <channel-search
@@ -28,7 +28,7 @@
                         <single-image-uploader
                             id="programmeSubjectImageUploaderOne"
                             :showDelete="false"
-                            :uri="layoutItem.coverImage ? layoutItem.coverImage.uri : ''"
+                            :uri="layoutBlockItemClone.coverImage ? layoutBlockItemClone.coverImage.uri : ''"
                             :uploadSuccessHandler="uploadChannelCoverImageSuccessHandler"
                             :allowResolutions="allowResolutions"
                         ></single-image-uploader>
@@ -67,7 +67,11 @@ export default {
         return {
             dialogVisible: false,
             navbarId: '',
-            index: 0
+            index: 0,
+
+            //  2.3.0 新增字段
+            layoutBlockId: '',
+            layoutBlockItemClone: {}
         };
     },
     created() {
@@ -77,43 +81,58 @@ export default {
     },
     computed: {
         ...mapGetters({
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+            //  2.3.0 新增
+            activeLayout: 'pageLayout/getActiveLayout',
+            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem'
         }),
-        layoutItem() {
-            let layoutItem = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
-            return layoutItem;
+        layoutBlockItem() {
+            return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
         }
     },
     methods: {
         ...mapMutations({
-            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
-            resetLayoutItemByIndex: 'pageLayout/resetLayoutItemByIndex',
-            cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex'
+            //  2.3.0新增
+            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById'
         }),
         //  弹窗的操作
         async showDialog(layoutItemType) {
-            this.dialogVisible = true;
+            let {id} = this.$route.query;
             this.layoutItemType = layoutItemType;
+            this.layoutBlockId = id;
+            this.dialogVisible = true;
         },
         closeDialog() {
             this.dialogVisible = false;
+            this.layoutBlockId = '';
+            this.layoutBlockItemClone = {};
         },
         dialogOpenHandler() {
-            if (this.layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
-                this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+            this.layoutBlockItemClone = _.cloneDeep(this.layoutBlockItem);
+            if (this.layoutItemType !== _.get(this.layoutBlockItemClone, 'layoutItemType')) {
+                this.layoutBlockItemClone = _.cloneDeep(this.$util.defaultLayoutBlock);
             }
         },
+        updateLayoutBlockItem(payload) {
+            let {key, value} = payload;
+            let _layoutBlockItemClone = Object.assign({}, this.layoutBlockItemClone, {[key]: value});
+            this.layoutBlockItemClone = _layoutBlockItemClone;
+        },
         selectChannelHandler(channel) {
-            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: channel.id });
-            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: channel.name });
+            this.updateLayoutBlockItem({ key: 'id', value: channel.id });
+            this.updateLayoutBlockItem({ key: 'name', value: channel.name });
         },
         //  图片上传成功之后的毁掉
         uploadChannelCoverImageSuccessHandler(image) {
-            this.updateLayoutItemByIndex({ navbarId: this.navbarId, index: this.index, squareIndex: this.squareIndex, key: 'coverImage', value: image });
+            this.updateLayoutBlockItem({ key: 'coverImage', value: image });
         },
         enterHandler() {
-            if (_.get(this.layoutItem, 'coverImage.id')) {
-                this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'CHANNEL' });
+            if (_.get(this.layoutBlockItemClone, 'coverImage.id')) {
+                this.updateLayoutBlockItem({ key: 'layoutItemType', value: 'CHANNEL' });
+                this.updateLayoutBlockById({
+                    squareIndex: this.squareIndex,
+                    layoutBlockId: this.layoutBlockId,
+                    layoutBlockItem: this.layoutBlockItemClone
+                });
                 this.closeDialog();
             } else {
                 this.$message.error('请设置频道封面图');
@@ -121,7 +140,6 @@ export default {
             }
         },
         cancelHanlder() {
-            this.cancelLayoutItemByIndex({navbarId: this.navbarId, index: this.index, squareIndex: this.squareIndex});
             this.closeDialog();
         }
     }
