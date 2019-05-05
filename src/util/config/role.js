@@ -642,7 +642,7 @@ const ASIDE_LIST = [
         {
             text: '订单管理',
             uri: '/order-manage/list',
-            icon: 'aside_user'
+            icon: 'aside_order'
         }
     ],
     [

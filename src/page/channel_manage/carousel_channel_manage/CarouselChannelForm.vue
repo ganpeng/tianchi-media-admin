@@ -194,9 +194,9 @@
                 fromSecondsToTime}}。</label>
         </div>
         <div class="group-container">
-            <ul id="group-list">
+            <draggable element="ul" id="group-list" v-model="carouselGroup">
                 <li v-for="(item, index) in carouselGroup"
-                    :key="index">
+                    :key="index" :class="{'current-group':item.current}">
                     <div class="header-box">
                         <label>组{{index + 1}}</label>
                         <span v-if="item.duration">{{item.duration | fromSecondsToTime}}</span>
@@ -220,7 +220,7 @@
                         </p>
                     </div>
                 </li>
-            </ul>
+            </draggable>
         </div>
         <!--频道内节目-->
         <div class="video-list-header">
@@ -247,9 +247,9 @@
             </el-button>
         </div>
         <el-table
-            v-if="currentSelectedVideoList.length !== 0"
+            v-if="currentCarouselGroup.carouselVideoList.length !== 0"
             header-row-class-name="common-table-header"
-            :data="currentSelectedVideoList"
+            :data="currentCarouselGroup.carouselVideoList"
             row-class-name=video-larger-row
             border
             style="width: 100%">
@@ -369,7 +369,7 @@
                         type="checkbox"
                         v-model="scope.row.visible"
                         :checked="scope.row.visible"
-                        @click.prevent="updateVideoStatus(scope.row)"/>
+                        @click.prevent="updateVideoStatus(scope.row, scope.$index)"/>
                     <i v-if="scope.row.visible" class="on-the-shelf">正常</i>
                     <i v-else class="off-the-shelf">禁播</i>
                 </template>
@@ -413,7 +413,7 @@
             </el-table-column>
         </el-table>
         <!--排序工具-->
-        <div id="sort-tool" v-if="currentSelectedVideoList.length !== 0">
+        <div id="sort-tool" v-if="currentCarouselGroup.carouselVideoList.length !== 0">
             <div class="sort-header" @click="sortToolVisible = !sortToolVisible">
                 <label>排序工具</label>
                 <i class="el-icon-arrow-down" v-if="sortToolVisible"></i>
@@ -446,7 +446,7 @@
             </div>
         </div>
         <!--设置展示名称-->
-        <div id="display-name-setting" v-if="currentSelectedVideoList.length !== 0">
+        <div id="display-name-setting" v-if="currentCarouselGroup.carouselVideoList.length !== 0">
             <div class="display-name-header" @click="displayNameSettingVisible = !displayNameSettingVisible">
                 <label>设置展示名称</label>
                 <i class="el-icon-arrow-down" v-if="displayNameSettingVisible"></i>
@@ -547,7 +547,7 @@
             width="80%">
             <select-multiple-video
                 v-if="selectDialogVisible"
-                :currentSelectedVideoList="currentSelectedVideoList"
+                :currentSelectedVideoList="currentCarouselGroup.carouselVideoList"
                 v-on:appendVideo="appendVideo"
                 v-on:closeSelectVideoDialog="selectDialogVisible = false">
             </select-multiple-video>
@@ -556,7 +556,7 @@
             v-if="sortDialogVisible"
             :close-on-click-modal=false
             title="视频排序"
-            :sourceList="currentSelectedVideoList"
+            :sourceList="currentCarouselGroup.carouselVideoList"
             sortKey="sort"
             uniqueKey="storageVideoId"
             displayKey="name"
@@ -606,6 +606,7 @@
     import SortDialog from 'sysComponents/custom_components/custom/SortDialog';
     import {CHANNEL_LOGO_DIMENSION} from '@/util/config/dimension';
     import _ from 'lodash';
+    import draggable from 'vuedraggable';
 
     const ClipboardJS = require('clipboard');
 
@@ -624,7 +625,8 @@
             DisplayVideoDialog,
             SelectMultipleVideo,
             SortDialog,
-            SingleImageUploader
+            SingleImageUploader,
+            draggable
         },
         data() {
             let checkName = (rule, value, callback) => {
@@ -760,12 +762,95 @@
                 },
                 createGroupDialogVisible: false,
                 carouselGroup: [{
-                    name: '默认分组',
+                    name: '默认分组1',
                     duration: '',
                     durationFormat: '',
                     videoDuration: '',
                     carouselVideoList: []
-                }],
+                }, {
+                    name: '默认分组2',
+                    duration: '',
+                    durationFormat: '',
+                    videoDuration: '',
+                    carouselVideoList: []
+                },
+                    {
+                        name: '默认分组3',
+                        duration: '',
+                        durationFormat: '',
+                        videoDuration: '',
+                        carouselVideoList: []
+                    },
+                    {
+                        name: '默认分组4',
+                        duration: '',
+                        durationFormat: '',
+                        videoDuration: '',
+                        carouselVideoList: []
+                    },
+                    {
+                        name: '默认分组5',
+                        duration: '',
+                        durationFormat: '',
+                        videoDuration: '',
+                        carouselVideoList: []
+                    },
+                    {
+                        name: '默认分组6',
+                        duration: '',
+                        durationFormat: '',
+                        videoDuration: '',
+                        carouselVideoList: []
+                    },
+                    {
+                        name: '默认分组7',
+                        duration: '',
+                        durationFormat: '',
+                        videoDuration: '',
+                        carouselVideoList: []
+                    },
+                    {
+                        name: '默认分组8',
+                        duration: '',
+                        durationFormat: '',
+                        videoDuration: '',
+                        carouselVideoList: []
+                    },
+                    {
+                        name: '默认分组9',
+                        duration: '',
+                        durationFormat: '',
+                        videoDuration: '',
+                        carouselVideoList: []
+                    },
+                    {
+                        name: '默认分组10',
+                        duration: '',
+                        durationFormat: '',
+                        videoDuration: '',
+                        carouselVideoList: []
+                    },
+                    {
+                        name: '默认分组11',
+                        duration: '',
+                        durationFormat: '',
+                        videoDuration: '',
+                        carouselVideoList: []
+                    },
+                    {
+                        name: '默认分组12',
+                        duration: '',
+                        durationFormat: '',
+                        videoDuration: '',
+                        carouselVideoList: []
+                    },
+                    {
+                        name: '默认分组13',
+                        duration: '',
+                        durationFormat: '',
+                        videoDuration: '',
+                        carouselVideoList: []
+                    }],
                 isLoading: false,
                 displayNameSettingVisible: false,
                 sortToolVisible: true,
@@ -976,8 +1061,8 @@
                             let currentDate = new Date();
                             this.channelInfo.startPoint = currentDate.valueOf() - (currentDate.getHours() * 60 * 60 + currentDate.getMinutes() * 60 + currentDate.getSeconds()) * 1000 + (startDate.getHours() * 60 * 60 + startDate.getMinutes() * 60 + startDate.getSeconds()) * 1000;
                         }
-                        this.currentSelectedVideoList = response.data.carouselVideoList;
-                        this.currentSelectedVideoList.map(video => {
+                        this.currentCarouselGroup.carouselVideoList = response.data.carouselVideoList;
+                        this.currentCarouselGroup.carouselVideoList.map(video => {
                             if (video.onPlay) {
                                 this.channelInfo.currentProgramme = video.originName;
                                 this.channelInfo.duration = this.$util.formatDate(new Date(video.lastPlayTime), 'yyyy年MM月DD日HH时mm分SS秒') + '---' + this.$util.formatDate(new Date(video.lastPlayTime + video.takeTimeInSec * 1000), 'yyyy年MM月DD日HH时mm分SS秒');
@@ -1012,15 +1097,14 @@
             },
             // 选择组
             selectCurrentGroup(index) {
-                let nodes = this.$el.querySelectorAll('#group-list li');
-                for (let i = 0; i < nodes.length; i++) {
-                    nodes[i].className = '';
+                for (let i = 0; i < this.carouselGroup.length; i++) {
+                    this.carouselGroup[i].current = false;
                 }
-                nodes[index].className = 'current-group';
+                this.carouselGroup[index].current = true;
                 this.currentCarouselGroup = this.carouselGroup[index];
                 this.currentCarouselGroup.index = index;
                 // 设置当前视频列表
-                this.currentSelectedVideoList = this.carouselGroup[index].carouselVideoList;
+                // this.currentCarouselGroup.carouselVideoList = this.carouselGroup[index].carouselVideoList;
             },
             addVideoGroup() {
                 this.createGroupDialogVisible = true;
@@ -1064,11 +1148,7 @@
                     // 对非全选进行处理
                     this.channelInfo.companyList.push({id: item.id, name: item.name, code: item.code});
                     this.channelInfo.companyList = _.uniqBy(this.channelInfo.companyList, 'id');
-                    if (this.channelInfo.companyList.length !== (this.companyOptions.length - 1)) {
-                        this.channelInfo.common = false;
-                    } else {
-                        this.channelInfo.common = true;
-                    }
+                    this.channelInfo.common = this.channelInfo.companyList.length === this.companyOptions.length - 1;
                 }
                 this.validateCompanyList();
             },
@@ -1081,18 +1161,18 @@
                             this.$message.warning('当前视频不能向上移动');
                             return;
                         }
-                        let moveUpItem = this.currentSelectedVideoList.splice(index, 1)[0];
-                        this.currentSelectedVideoList.splice(index - 1, 0, moveUpItem);
+                        let moveUpItem = this.currentCarouselGroup.carouselVideoList.splice(index, 1)[0];
+                        this.currentCarouselGroup.carouselVideoList.splice(index - 1, 0, moveUpItem);
                         this.$message.success('"' + video.name + '"' + '已向上移动');
                         break;
                     // 下移
                     case 'DOWN':
-                        if (index === this.currentSelectedVideoList.length - 1) {
+                        if (index === this.currentCarouselGroup.carouselVideoList.length - 1) {
                             this.$message.warning('当前视频不能向下移动');
                             return;
                         }
-                        let moveDownItem = this.currentSelectedVideoList.splice(index, 1)[0];
-                        this.currentSelectedVideoList.splice(index + 1, 0, moveDownItem);
+                        let moveDownItem = this.currentCarouselGroup.carouselVideoList.splice(index, 1)[0];
+                        this.currentCarouselGroup.carouselVideoList.splice(index + 1, 0, moveDownItem);
                         this.$message.success('"' + video.name + '"' + '已向下移动');
                         break;
                     // 置顶
@@ -1101,18 +1181,18 @@
                             this.$message.warning('当前视频已在顶部');
                             return;
                         }
-                        let moveTopItem = this.currentSelectedVideoList.splice(index, 1)[0];
-                        this.currentSelectedVideoList.splice(0, 0, moveTopItem);
+                        let moveTopItem = this.currentCarouselGroup.carouselVideoList.splice(index, 1)[0];
+                        this.currentCarouselGroup.carouselVideoList.splice(0, 0, moveTopItem);
                         this.$message.success('"' + video.name + '"' + '已置顶');
                         break;
                     // 置底
                     case 'BOTTOM':
-                        if (index === this.currentSelectedVideoList.length - 1) {
+                        if (index === this.currentCarouselGroup.carouselVideoList.length - 1) {
                             this.$message.warning('当前视频已在底部');
                             return;
                         }
-                        let moveBottomItem = this.currentSelectedVideoList.splice(index, 1)[0];
-                        this.currentSelectedVideoList.splice(this.currentSelectedVideoList.length, 0, moveBottomItem);
+                        let moveBottomItem = this.currentCarouselGroup.carouselVideoList.splice(index, 1)[0];
+                        this.currentCarouselGroup.carouselVideoList.splice(this.currentCarouselGroup.carouselVideoList.length, 0, moveBottomItem);
                         this.$message.success('"' + video.name + '"' + '已置底');
                         break;
                     default:
@@ -1129,9 +1209,9 @@
             },
             // 根据视频展示名在文字的最后添加'-'
             insertShortLine() {
-                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
-                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(/([\u4e00-\u9fa5]+)/, '$1-');
-                    Vue.set(this.currentSelectedVideoList, i, this.currentSelectedVideoList[i]);
+                for (let i = 0; i < this.currentCarouselGroup.carouselVideoList.length; i++) {
+                    this.currentCarouselGroup.carouselVideoList[i].name = this.currentCarouselGroup.carouselVideoList[i].name.replace(/([\u4e00-\u9fa5]+)/, '$1-');
+                    Vue.set(this.currentCarouselGroup.carouselVideoList, i, this.currentCarouselGroup.carouselVideoList[i]);
                 }
                 this.$message({
                     message: '已根据视频展示名在文字的最后添加"-"',
@@ -1139,11 +1219,11 @@
                 });
             },
             setDisplayNameFromOriginName() {
-                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
-                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].originName.replace(this.originNameParams.prefix, '');
-                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(this.originNameParams.midWords, '');
-                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(this.originNameParams.suffix, '');
-                    Vue.set(this.currentSelectedVideoList, i, this.currentSelectedVideoList[i]);
+                for (let i = 0; i < this.currentCarouselGroup.carouselVideoList.length; i++) {
+                    this.currentCarouselGroup.carouselVideoList[i].name = this.currentCarouselGroup.carouselVideoList[i].originName.replace(this.originNameParams.prefix, '');
+                    this.currentCarouselGroup.carouselVideoList[i].name = this.currentCarouselGroup.carouselVideoList[i].name.replace(this.originNameParams.midWords, '');
+                    this.currentCarouselGroup.carouselVideoList[i].name = this.currentCarouselGroup.carouselVideoList[i].name.replace(this.originNameParams.suffix, '');
+                    Vue.set(this.currentCarouselGroup.carouselVideoList, i, this.currentCarouselGroup.carouselVideoList[i]);
                 }
                 this.$message({
                     message: '已根据删除文字部分填写完成视频展示名称',
@@ -1151,9 +1231,9 @@
                 });
             },
             removeDisplayNameNo() {
-                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
-                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(/\d+$/, '');
-                    Vue.set(this.currentSelectedVideoList, i, this.currentSelectedVideoList[i]);
+                for (let i = 0; i < this.currentCarouselGroup.carouselVideoList.length; i++) {
+                    this.currentCarouselGroup.carouselVideoList[i].name = this.currentCarouselGroup.carouselVideoList[i].name.replace(/\d+$/, '');
+                    Vue.set(this.currentCarouselGroup.carouselVideoList, i, this.currentCarouselGroup.carouselVideoList[i]);
                 }
                 this.$message({
                     message: '已删除展示名称后面的数字',
@@ -1161,9 +1241,9 @@
                 });
             },
             setDisplayNameFromSelf() {
-                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
-                    this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].name.replace(this.displayNameParams.words, this.displayNameParams.replacer);
-                    Vue.set(this.currentSelectedVideoList, i, this.currentSelectedVideoList[i]);
+                for (let i = 0; i < this.currentCarouselGroup.carouselVideoList.length; i++) {
+                    this.currentCarouselGroup.carouselVideoList[i].name = this.currentCarouselGroup.carouselVideoList[i].name.replace(this.displayNameParams.words, this.displayNameParams.replacer);
+                    Vue.set(this.currentCarouselGroup.carouselVideoList, i, this.currentCarouselGroup.carouselVideoList[i]);
                 }
                 this.$message({
                     message: '已根据填写的删除部分对展示名称进行了处理',
@@ -1191,8 +1271,8 @@
                 let insertVideoArray = [];
                 for (let m = 0; m < selectedVideoList.length; m++) {
                     let insertTag = true;
-                    for (let n = 0; n < this.currentSelectedVideoList.length; n++) {
-                        if (selectedVideoList[m].storageVideoId === this.currentSelectedVideoList[n].storageVideoId) {
+                    for (let n = 0; n < this.currentCarouselGroup.carouselVideoList.length; n++) {
+                        if (selectedVideoList[m].storageVideoId === this.currentCarouselGroup.carouselVideoList[n].storageVideoId) {
                             insertTag = false;
                         }
                     }
@@ -1201,24 +1281,34 @@
                     }
                 }
                 for (let k = 0; k < insertVideoArray.length; k++) {
-                    this.currentSelectedVideoList.splice(this.currentVideoIndex + k, 0, insertVideoArray[k]);
+                    this.currentCarouselGroup.carouselVideoList.splice(this.currentVideoIndex + k, 0, insertVideoArray[k]);
                 }
                 // 对删除的视频在列表中删除
                 let currentArray = [];
-                for (let z = 0; z < this.currentSelectedVideoList.length; z++) {
+                for (let z = 0; z < this.currentCarouselGroup.carouselVideoList.length; z++) {
                     for (let h = 0; h < selectedVideoList.length; h++) {
-                        if (this.currentSelectedVideoList[z].storageVideoId === selectedVideoList[h].storageVideoId) {
-                            currentArray.push(this.currentSelectedVideoList[z]);
+                        if (this.currentCarouselGroup.carouselVideoList[z].storageVideoId === selectedVideoList[h].storageVideoId) {
+                            currentArray.push(this.currentCarouselGroup.carouselVideoList[z]);
                         }
                     }
                 }
-                this.currentSelectedVideoList = currentArray;
+                // 检测当前视频列表中禁播的视频，在新的视频列表中禁播
+                for (let n = 0; n < this.currentCarouselGroup.carouselVideoList.length; n++) {
+                    if (!this.currentCarouselGroup.carouselVideoList[n].visible) {
+                        for (let j = 0; j < currentArray.length; j++) {
+                            if (currentArray[j].storageVideoId === this.currentCarouselGroup.carouselVideoList[n].storageVideoId) {
+                                currentArray[j].visible = false;
+                            }
+                        }
+                    }
+                }
+                this.currentCarouselGroup.carouselVideoList = currentArray;
             },
             // 视频列表排序
             sortVideoList() {
                 /** 在频道排序时，含有的视频必须有展示名称  */
-                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
-                    if (!this.currentSelectedVideoList[i].name) {
+                for (let i = 0; i < this.currentCarouselGroup.carouselVideoList.length; i++) {
+                    if (!this.currentCarouselGroup.carouselVideoList[i].name) {
                         this.$message({
                             message: '请先完整填写当前频道中的视频展示名称',
                             type: 'warning'
@@ -1230,13 +1320,13 @@
             },
             // 设置视频列表中每个视频的展示名称,'（高清）新还珠格格（收录）01&&新还珠格格-01.mpg'
             setVideoNameList() {
-                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
-                    if (this.currentSelectedVideoList[i].originName.indexOf('&&') === -1) {
-                        this.currentSelectedVideoList[i].name = '';
+                for (let i = 0; i < this.currentCarouselGroup.carouselVideoList.length; i++) {
+                    if (this.currentCarouselGroup.carouselVideoList[i].originName.indexOf('&&') === -1) {
+                        this.currentCarouselGroup.carouselVideoList[i].name = '';
                     } else {
-                        this.currentSelectedVideoList[i].name = this.currentSelectedVideoList[i].originName.split('&&')[1].split('.')[0];
+                        this.currentCarouselGroup.carouselVideoList[i].name = this.currentCarouselGroup.carouselVideoList[i].originName.split('&&')[1].split('.')[0];
                     }
-                    Vue.set(this.currentSelectedVideoList, i, this.currentSelectedVideoList[i]);
+                    Vue.set(this.currentCarouselGroup.carouselVideoList, i, this.currentCarouselGroup.carouselVideoList[i]);
                 }
                 this.$message({
                     message: '设置视频展示名称已完成',
@@ -1245,10 +1335,10 @@
             },
             revertVideoList() {
                 let array = [];
-                for (let i = this.currentSelectedVideoList.length - 1; i > -1; i--) {
-                    array.push(this.currentSelectedVideoList[i]);
+                for (let i = this.currentCarouselGroup.carouselVideoList.length - 1; i > -1; i--) {
+                    array.push(this.currentCarouselGroup.carouselVideoList[i]);
                 }
-                this.currentSelectedVideoList = array;
+                this.currentCarouselGroup.carouselVideoList = array;
                 this.$message({
                     message: '视频列表已反转',
                     type: 'success'
@@ -1271,8 +1361,8 @@
                     return;
                 }
                 // 检测是否完整填写展示名称
-                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
-                    if (!this.currentSelectedVideoList[i].name) {
+                for (let i = 0; i < this.currentCarouselGroup.carouselVideoList.length; i++) {
+                    if (!this.currentCarouselGroup.carouselVideoList[i].name) {
                         this.$message({
                             message: '请完整填写当前频道中的视频展示名称',
                             type: 'warning'
@@ -1281,10 +1371,10 @@
                     }
                 }
                 // 检测部的列表中的名称是否完整包含当前视频列表
-                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
+                for (let i = 0; i < this.currentCarouselGroup.carouselVideoList.length; i++) {
                     let tag = false;
                     for (let k = 0; k < this.sectionList.length; k++) {
-                        if (this.currentSelectedVideoList[i].name.split('-')[0] === this.sectionList[k].name) {
+                        if (this.currentCarouselGroup.carouselVideoList[i].name.split('-')[0] === this.sectionList[k].name) {
                             tag = true;
                         }
                     }
@@ -1301,13 +1391,13 @@
                 for (let k = 0; k < this.sectionList.length; k++) {
                     videoTwoDimension.push([]);
                     // 分析所有的视频是否属于当前的部的名称中，并添加
-                    for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
-                        if (this.currentSelectedVideoList[i].name.split('-')[0] === this.sectionList[k].name) {
-                            videoTwoDimension[k].push(this.currentSelectedVideoList[i]);
+                    for (let i = 0; i < this.currentCarouselGroup.carouselVideoList.length; i++) {
+                        if (this.currentCarouselGroup.carouselVideoList[i].name.split('-')[0] === this.sectionList[k].name) {
+                            videoTwoDimension[k].push(this.currentCarouselGroup.carouselVideoList[i]);
                         }
                     }
                 }
-                this.currentSelectedVideoList = this.sortTwoDimension(videoTwoDimension);
+                this.currentCarouselGroup.carouselVideoList = this.sortTwoDimension(videoTwoDimension);
                 this.$message('已完成根据部的名称列表以及视频展示名称对其进行排序');
             },
             sortTwoDimension(videoTwoDimension) {
@@ -1329,7 +1419,7 @@
             },
             // 设置排序完成的列表
             setSortedList(sortedList) {
-                this.currentSelectedVideoList = sortedList;
+                this.currentCarouselGroup.carouselVideoList = sortedList;
                 this.sortDialogVisible = false;
                 this.$message('视频列表排序成功');
             },
@@ -1346,13 +1436,14 @@
                 this.previewVideoInfo.visible = status;
             },
             // 禁播、恢复视频,当前正在播放视频可以禁播-2018.08.09
-            updateVideoStatus(videoItem) {
+            updateVideoStatus(videoItem, index) {
                 this.$confirm('是否确认' + (videoItem.visible ? '禁播' : '恢复') + '视频，此操作将在点击保存时生效，请知晓。', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
                     videoItem.visible = !videoItem.visible;
+                    Vue.set(this.currentCarouselGroup.carouselVideoList, index, videoItem);
                     this.$message.success((videoItem.visible ? '恢复' : '禁播') + '视频成功!');
                 }).catch(() => {
                     this.$message({
@@ -1368,7 +1459,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.currentSelectedVideoList.splice(index, 1);
+                    this.currentCarouselGroup.carouselVideoList.splice(index, 1);
                     this.$message({
                         type: 'success',
                         message: '删除成功!'
@@ -1385,7 +1476,7 @@
                 /** 在正常频道保存时，必须含有能正常播放的视频  */
                 if (this.channelInfo.visible) {
                     let tag = false;
-                    this.currentSelectedVideoList.map(video => {
+                    this.currentCarouselGroup.carouselVideoList.map(video => {
                         if (video.visible) {
                             tag = true;
                         }
@@ -1399,8 +1490,8 @@
                     }
                 }
                 /** 在频道保存时，含有的视频必须有展示名称  */
-                for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
-                    if (!this.currentSelectedVideoList[i].name) {
+                for (let i = 0; i < this.currentCarouselGroup.carouselVideoList.length; i++) {
+                    if (!this.currentCarouselGroup.carouselVideoList[i].name) {
                         this.$message({
                             message: '请完整填写当前频道中的视频展示名称',
                             type: 'warning'
@@ -1410,10 +1501,10 @@
                 }
                 this.$refs['channelInfo'].validate((valid) => {
                     if (valid) {
-                        for (let i = 0; i < this.currentSelectedVideoList.length; i++) {
-                            this.currentSelectedVideoList[i].sort = i;
+                        for (let i = 0; i < this.currentCarouselGroup.carouselVideoList.length; i++) {
+                            this.currentCarouselGroup.carouselVideoList[i].sort = i;
                         }
-                        this.channelInfo.carouselVideoList = this.currentSelectedVideoList;
+                        this.channelInfo.carouselVideoList = this.currentCarouselGroup.carouselVideoList;
                         this.channelInfo.typeList = [];
                         this.channelInfo.typeIdList.map(typeId => {
                             this.typeOptions.map(type => {
@@ -1473,7 +1564,7 @@
 
     .video-list-header {
         margin-bottom: 10px;
-        margin-top: 24px;
+        margin-top: 4px;
         display: flex;
         justify-content: space-between;
         align-items: baseline;
@@ -1583,11 +1674,13 @@
         border-radius: 10px;
     }
 
+    // 视频分组
     .group-container {
         ul {
+            padding-bottom: 20px;
             display: flex;
             flex-wrap: nowrap;
-            overflow: hidden;
+            overflow: scroll;
             li {
                 margin-right: 10px;
                 &.current-group {
