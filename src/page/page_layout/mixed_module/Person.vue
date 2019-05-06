@@ -85,15 +85,11 @@ export default {
     },
     computed: {
         ...mapGetters({
-            layout: 'pageLayout/layout',
-            getNavbarNameById: 'pageLayout/getNavbarNameById',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId'
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark',
+
+            //  2.3.0新增
+            activeLayout: 'pageLayout/getActiveLayout'
         }),
-        layoutItem() {
-            return (squareIndex) => {
-                return this.getLayoutItemByNavbarId(this.navbarId, this.index, squareIndex);
-            };
-        },
         getIconImageUri() {
             return (obj) => {
                 return _.get(obj, 'iconImage.uri');
@@ -101,18 +97,14 @@ export default {
         },
         styleBgImageStr() {
             return (squareIndex) => {
-                let uri = _.get(this.layoutItem(squareIndex), 'coverImage.uri');
-                let height = _.get(this.layoutItem(squareIndex), 'coverImage.height');
-                let bgStr = `background-image: url(${uri})`;
-                if (parseInt(height) === 280) {
-                    bgStr = `background-image: url(${uri});padding-bottom: 107.2963%;background-color: transparent;`;
-                }
+                let url = _.get(this.activeLayout, `${this.index}.layoutItemMultiList.${squareIndex}.coverImage.uri`);
+                let bgStr = `background-image: url(${url})`;
                 return bgStr;
             };
         },
         getPersonName() {
             return (squareIndex) => {
-                let name = _.get(this.layoutItem(squareIndex), 'name');
+                let name = _.get(this.activeLayout, `${this.index}.layoutItemMultiList.${squareIndex}.name`);
                 return name;
             };
         }
@@ -129,15 +121,15 @@ export default {
         },
         editHandler() {
             let {navbarId} = this.$route.params;
-            this.$router.push({ name: 'PersonModule', params: {navbarId, index: this.index, operator: 'edit'} });
+            let id = _.get(this.activeLayout, `${this.index}.id`);
+            this.$router.push({ name: 'PersonModule', params: {navbarId, index: this.index, operator: 'edit'}, query: {id} });
         },
         deleteHandler() {
             let {navbarId} = this.$route.params;
             this.$util.deleteLayoutItemHandler({navbarId, index: this.index});
         },
         gotoPersonDetail(squareIndex) {
-            let {navbarId} = this.$route.params;
-            let id = _.get(this.layout, `${navbarId}.data.${this.index}.layoutItemMultiList.${squareIndex}.id`);
+            let id = _.get(this.activeLayout, `${this.index}.layoutItemMultiList.${squareIndex}.id`);
             this.$router.push({ name: 'DisplayPerson', params: { id } });
         }
     }

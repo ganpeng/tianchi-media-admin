@@ -21,7 +21,7 @@
                     <el-form-item label="名称icon">
                         <single-image-uploader
                             :uri="layoutData.iconImage ? layoutData.iconImage.uri : ''"
-                            :deleteImage="deleteIconImage"
+                            :showDelete="false"
                             :uploadSuccessHandler="uploadSuccessHandler"
                             :allowResolutions="[{width: 82, height: 82}]"
                         ></single-image-uploader>
@@ -174,7 +174,6 @@
                 </div>
             </div>
         </el-dialog>
-        <preview-single-image :singleImage="previewImage"></preview-single-image>
     </div>
 </template>
 <script>
@@ -183,12 +182,10 @@ import _ from 'lodash';
 import draggable from 'vuedraggable';
 import store from 'store';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
-import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
 export default {
     name: 'PersonModule',
     components: {
         SingleImageUploader,
-        PreviewSingleImage,
         draggable
     },
     data() {
@@ -198,38 +195,34 @@ export default {
             selectPersonDialogVisible: false,
             tagsFieldVisible: false,
             title: '',
-            saveFlag: false, // 判断页面跳转之前如果没有点保存按钮的话，就删除新增的这个layoutItem
             areaOptions: store.get('areaList'),
-            previewImage: {
-                title: '',
-                display: false,
-                uri: ''
-            },
             inputRules: {
                 title: [
                     { required: true, message: '请输入人物模块名称' }
                 ]
             },
-            layoutItemMultiList: []
+            layoutItemMultiList: [],
+
+            //  2.3.0新增
+            layoutBlockId: ''
         };
     },
-    beforeRouteLeave(to, from, next) {
-        let {operator} = from.params;
-        if (!this.saveFlag && operator === 'add') {
-            this.deleteLayoutDataByIndex({navbarId: this.navbarId, index: this.index});
-            this.saveLayoutToStore();
-        }
-        next();
-    },
-    created() {
-        let {navbarId, index, operator} = this.$route.params;
-        this.navbarId = navbarId;
-        this.index = index;
+    async created() {
+        try {
+            let {id} = this.$route.query;
+            let {navbarId, index, operator} = this.$route.params;
+            this.navbarId = navbarId;
+            this.index = index;
+            this.layoutBlockId = id;
 
-        if (operator === 'add') {
-            this.title = '新增人物模块';
-        } else {
-            this.title = '编辑人物模块';
+            if (operator === 'edit') {
+                await this.getLayoutByNavbarId(navbarId);
+                this.title = '编辑人物模块';
+            } else {
+                this.title = '新增人物模块';
+            }
+        } catch (err) {
+            console.log(err);
         }
     },
     computed: {
@@ -240,11 +233,14 @@ export default {
             pagination: 'person/pagination',
             getNavbarNameById: 'pageLayout/getNavbarNameById',
             getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
-            getNavbarSignCodeById: 'pageLayout/getNavbarSignCodeById'
+            getNavbarSignCodeById: 'pageLayout/getNavbarSignCodeById',
+
+            //  2.3.0 新增
+            activeLayout: 'pageLayout/getActiveLayout'
         }),
         layoutData() {
-            let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
-            return layoutData;
+            let layoutBlock = _.get(this.activeLayout, `${this.index}`);
+            return layoutBlock || {};
         },
         checkIsChecked() {
             return (row) => {
@@ -273,10 +269,10 @@ export default {
         },
         personList: {
             get() {
-                return this.layoutData.layoutItemMultiList;
+                return _.get(this.layoutData, 'layoutItemMultiList') || [];
             },
             set(value) {
-                this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'layoutItemMultiList', value});
+                this.updateLayoutBlockDataById({ layoutBlockId: this.layoutBlockId, key: 'layoutItemMultiList', value });
             }
         }
     },
@@ -286,20 +282,18 @@ export default {
             resetPagination: 'person/resetPagination',
             resetSearchFields: 'person/resetSearchFields',
             updateSearchFields: 'person/updateSearchFields',
-            appendLayoutItem: 'pageLayout/appendLayoutItem',
-            saveLayoutToStore: 'pageLayout/saveLayoutToStore',
-            // 新加api
-            insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex',
-            updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey',
-            deleteLayoutItembyId: 'pageLayout/deleteLayoutItembyId',
-            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
-            cancelLayoutPersonItemByIndex: 'pageLayout/cancelLayoutPersonItemByIndex'
+
+            //  2.3.0新增
+            updateLayoutBlockDataById: 'pageLayout/updateLayoutBlockDataById'
         }),
         ...mapActions({
-            getPersonList: 'person/getPersonList'
+            getPersonList: 'person/getPersonList',
+
+            //  2.3.0 新增的部分
+            getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
         }),
         inputHandler(value, key) {
-            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key, value});
+            this.updateLayoutBlockDataById({ layoutBlockId: this.layoutBlockId, key, value });
         },
         keyupHandler(e) {
             if (e.keyCode === 13) {
@@ -322,12 +316,6 @@ export default {
             } else {
                 return code;
             }
-        },
-        displayImage(image) {
-            this.previewImage.title = image.name;
-            this.previewImage.uri = image.uri;
-            //  去掉预览
-            // this.previewImage.display = true;
         },
         //  动态的为符合条件的行添加class
         tableRowClassName({row, rowIndex}) {
@@ -357,13 +345,20 @@ export default {
                 let valid = await this.$refs.personModuleForm.validate();
                 if (valid) {
                     let signCode = this.getNavbarSignCodeById(this.navbarId);
+                    let {id} = this.$route.query;
                     if (signCode === 'CHILD') {
-                        this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'layoutTemplate', value: 'LT_KID_6'});
+                        this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'layoutTemplate', value: 'LT_KID_6'});
                     }
-                    this.saveLayoutToStore(this.navbarId);
-                    this.saveFlag = true;
-                    this.$message.success('保存成功');
-                    this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                    if (id) {
+                        let layoutBlock = this.activeLayout.find((item) => item.id === id);
+                        if (layoutBlock) {
+                            let putLayoutBlockRes = await this.$service.putLayoutBlock(id, layoutBlock);
+                            if (putLayoutBlockRes && putLayoutBlockRes.code === 0) {
+                                this.$message.success('保存成功');
+                                this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                            }
+                        }
+                    }
                 }
             } catch (err) {
                 console.log(err);
@@ -371,9 +366,9 @@ export default {
         },
         //  弹窗控制方法
         showSelectPersonDialog() {
-            let layoutData = _.get(this.layoutData, 'layoutItemMultiList');
-            if (layoutData) {
-                this.layoutItemMultiList = _.cloneDeep(layoutData);
+            let layoutItemMultiList = _.get(this.layoutData, 'layoutItemMultiList');
+            if (layoutItemMultiList) {
+                this.layoutItemMultiList = _.cloneDeep(layoutItemMultiList);
             }
             this.selectPersonDialogVisible = true;
             window.addEventListener('keyup', this.keyupHandler);
@@ -399,8 +394,7 @@ export default {
         },
         selectPersonEnterHandler() {
             if (this.layoutItemMultiList.length === 6) {
-                console.log(this.layoutItemMultiList);
-                this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'layoutItemMultiList', value: _.cloneDeep(this.layoutItemMultiList)});
+                this.updateLayoutBlockDataById({ layoutBlockId: this.layoutBlockId, key: 'layoutItemMultiList', value: _.cloneDeep(this.layoutItemMultiList) });
                 this.closeDialog();
             } else {
                 this.$message.error('必须选择6个人物');
@@ -418,10 +412,7 @@ export default {
         },
         //  长传icon的成功回调函数
         uploadSuccessHandler(image) {
-            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: image});
-        },
-        deleteIconImage() {
-            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: null});
+            this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'iconImage', value: image});
         },
         cancelHanlder() {
             this.closeDialog();

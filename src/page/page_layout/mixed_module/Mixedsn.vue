@@ -28,7 +28,7 @@
             </div>
         </div>
         <div class="content-field">
-            <div v-for="(item, index) in getLayoutItemMultiList(navbarId, index)" :key="index" class="wrapper">
+            <div v-for="(item, index) in getLayoutItemMultiList" :key="index" class="wrapper">
                 <div :style="styleBgImageStr(index)" class="field">
                     <corner-mark :squareIndex="index"></corner-mark>
                     <div v-if="isEdit" class="shuffle-btn-container">
@@ -107,24 +107,23 @@ export default {
     },
     computed: {
         ...mapGetters({
-            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
-            getLayoutItemMultiList: 'pageLayout/getLayoutItemMultiList'
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark',
+
+            //  2.3.0新增
+            activeLayout: 'pageLayout/getActiveLayout'
         }),
         getIconImageUri() {
             return (obj) => {
                 return _.get(obj, 'iconImage.uri');
             };
         },
-        layoutItem() {
-            return (squareIndex) => {
-                return this.getLayoutItemByNavbarId(this.navbarId, this.index, squareIndex);
-            };
+        getLayoutItemMultiList() {
+            return _.get(this.activeLayout, `${this.index}.layoutItemMultiList`);
         },
         styleBgImageStr() {
             return (squareIndex) => {
-                let uri = _.get(this.layoutItem(squareIndex), 'coverImage.uri');
-                let bgStr = `background-image: url(${uri})`;
+                let url = _.get(this.activeLayout, `${this.index}.layoutItemMultiList.${squareIndex}.coverImage.uri`);
+                let bgStr = `background-image: url(${url})`;
                 return bgStr;
             };
         }
@@ -154,7 +153,8 @@ export default {
         },
         editHandler() {
             let {navbarId} = this.$route.params;
-            this.$router.push({ name: 'ShuffleModule', params: {navbarId, index: this.index, operator: 'edit'} });
+            let id = _.get(this.activeLayout, `${this.index}.id`);
+            this.$router.push({ name: 'ShuffleModule', params: {navbarId, index: this.index, operator: 'edit'}, query: {id} });
         },
         deleteHandler() {
             let {navbarId} = this.$route.params;

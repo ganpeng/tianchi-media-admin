@@ -376,7 +376,6 @@ export default {
         },
         rightBottom() {
             let value = '';
-            // let {leftBottom, rightBottom} = this.getLayoutItemCornerMark(this.navbarId, this.index, this.squareIndex);
             let {leftBottom, rightBottom} = _.get(this.layoutBlockItemClone, 'cornerMark');
             let leftBottomCaption = _.get(leftBottom, 'caption');
             let rightBottomCaption = _.get(rightBottom, 'caption');

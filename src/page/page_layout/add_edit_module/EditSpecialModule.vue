@@ -3,24 +3,15 @@
         <h2 class="content-title">添加特殊模块</h2>
         <div class="seperator-line"></div>
         <div class="form-container">
-            <el-form :model="layoutData" status-icon ref="specialModuleForm"
+            <el-form :model="layoutBlock" status-icon ref="specialModuleForm"
                     label-width="120px"
                     @submit.native.prevent
                     class="form-block my-form">
                 <el-col :span="8">
-                    <!--
-                    <el-form-item label="模块名称" prop="title">
-                        <el-input
-                            :value="layoutData.title"
-                            @input="inputHandler($event, 'title')"
-                            placeholder="请输入模块名称"
-                        ></el-input>
-                    </el-form-item>
-                    -->
                     <el-form-item label="名称icon">
                         <single-image-uploader
-                            :uri="layoutData.iconImage ? layoutData.iconImage.uri : ''"
-                            :deleteImage="deleteIconImage"
+                            :uri="layoutBlock.iconImage ? layoutBlock.iconImage.uri : ''"
+                            :showDelete="false"
                             :uploadSuccessHandler="iconImageuploadSuccessHandler"
                             :allowResolutions="[{width: 82, height: 82}]"
                         ></single-image-uploader>
@@ -30,12 +21,10 @@
                     <el-col :span="12">
                         <el-form-item label="添加模块内容" required>
                             <div class="special-square-contianer">
-                                <!-- <div :style="styleBgImageStr(0)" @click="selectPersonSubject(0)" class="left-field"> -->
                                 <div :style="styleBgImageStr(0)" class="left-field">
                                     <corner-mark :squareIndex="0" :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                                     <shuffle-btn :addShuffleLayout="addShuffleLayout(0)"></shuffle-btn>
                                 </div>
-                                <!-- <div :style="styleBgImageStr(1)" @click="selectProgramme(1)" class="right-field"> -->
                                 <div :style="styleBgImageStr(1)" class="right-field">
                                     <corner-mark :squareIndex="1" :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
                                     <shuffle-btn :addShuffleLayout="addShuffleLayout(1)"></shuffle-btn>
@@ -88,7 +77,7 @@
     </div>
 </template>
 <script>
-import {mapGetters, mapMutations} from 'vuex';
+import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 import PersonSubjectDialog from './PersonSubjectDialog';
@@ -125,71 +114,74 @@ export default {
             squareIndex: 0,
             layoutItemType: '',
             saveFlag: false, // 判断页面跳转之前如果没有点保存按钮的话，就删除新增的这个layoutItem
-            allowResolutions: []
+            allowResolutions: [],
+
+            layoutBlockId: ''
         };
     },
-    beforeRouteLeave(to, from, next) {
-        let {operator} = from.params;
-        if (!this.saveFlag && operator === 'add') {
-            this.deleteLayoutDataByIndex({navbarId: this.navbarId, index: this.index});
-            this.saveLayoutToStore();
+    async created() {
+        try {
+            let {navbarId, index, operator} = this.$route.params;
+            let {id} = this.$route.query;
+            this.navbarId = navbarId;
+            this.index = index;
+            this.layoutBlockId = id;
+
+            if (operator === 'edit') {
+                await this.getLayoutByNavbarId(navbarId);
+            }
+        } catch (err) {
+            console.log(err);
         }
-        next();
-    },
-    created() {
-        let {navbarId, index} = this.$route.params;
-        this.navbarId = navbarId;
-        this.index = index;
     },
     computed: {
         ...mapGetters({
-            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
             selectAll: 'pageLayout/selectAll',
             getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark',
-            getLayoutItemType: 'pageLayout/getLayoutItemType'
+
+            //  2.3.0 新增
+            activeLayout: 'pageLayout/getActiveLayout'
         }),
-        layoutData() {
-            let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
-            return layoutData;
-        },
-        layoutItem() {
-            return (squareIndex) => {
-                return this.getLayoutItemByNavbarId(this.navbarId, this.index, squareIndex);
-            };
+        layoutBlock() {
+            let layoutBlock = _.get(this.activeLayout, `${this.index}`);
+            return layoutBlock || {};
         },
         styleBgImageStr() {
             return (squareIndex) => {
-                let uri = _.get(this.layoutItem(squareIndex), 'coverImage.uri');
-                let bgStr = `background-image: url(${uri})`;
+                let url = _.get(this.activeLayout, `${this.index}.layoutItemMultiList.${squareIndex}.coverImage.uri`);
+                let bgStr = `background-image: url(${url})`;
                 return bgStr;
             };
         }
     },
     methods: {
         ...mapMutations({
-            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
-            saveLayoutToStore: 'pageLayout/saveLayoutToStore',
-            updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey'
+            //  2.3.0新增
+            updateLayoutBlockDataById: 'pageLayout/updateLayoutBlockDataById'
         }),
-        inputHandler(value, key) {
-            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key, value});
-        },
+        ...mapActions({
+            //  2.3.0 新增的部分
+            getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
+        }),
         iconImageuploadSuccessHandler(image) {
-            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: image});
-        },
-        deleteIconImage() {
-            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: null});
+            this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'iconImage', value: image});
         },
         async saveHandler() {
             try {
                 let valid = await this.$refs.specialModuleForm.validate();
                 if (valid) {
                     if (!this.selectAll(this.navbarId, this.index)) {
-                        this.saveLayoutToStore(this.navbarId);
-                        this.saveFlag = true;
-                        this.$message.success('保存成功');
-                        this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                        let {id} = this.$route.query;
+                        if (id) {
+                            let layoutBlock = this.activeLayout.find((item) => item.id === id);
+                            if (layoutBlock) {
+                                let putLayoutBlockRes = await this.$service.putLayoutBlock(id, layoutBlock);
+                                if (putLayoutBlockRes && putLayoutBlockRes.code === 0) {
+                                    this.$message.success('保存成功');
+                                    this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                                }
+                            }
+                        }
                     } else {
                         this.$message.error('专题色块必须全部选择');
                     }
@@ -197,15 +189,6 @@ export default {
             } catch (err) {
                 console.log(err);
             }
-        },
-        selectPersonSubject() {
-            this.allowResolutions = [{width: 560, height: 600}];
-            this.$refs.personSubjectDialog.showDialog('FIGURE_SUBJECT');
-        },
-        selectProgramme(squareIndex) {
-            let layoutItemType = this.getLayoutItemType(this.navbarId, this.index, squareIndex);
-            this.allowResolutions = [{width: 1160, height: 600}];
-            this.$refs.selectProgrammeDialog.showDialog(layoutItemType);
         },
         addShuffleLayout(squareIndex) {
             return (layoutItemType) => {

@@ -77,7 +77,7 @@
                             :header-row-class-name='"common-table-header"' class="my-table-style" :data="personSubject.list" border>
                             <el-table-column align="center" width="60px" label="选择">
                                 <template slot-scope="scope">
-                                    <el-radio :disabled="disabled(scope.row)" :value="layoutItem.id" :label="scope.row.id" @input="setPersonSubjectHandler(scope.row)">&nbsp;</el-radio>
+                                    <el-radio :disabled="disabled(scope.row)" :value="layoutBlockItemClone.id" :label="scope.row.id" @input="setPersonSubjectHandler(scope.row)">&nbsp;</el-radio>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="id" align="center" width="120px" label="编号">
@@ -132,7 +132,7 @@
                                     <single-image-uploader
                                         id="personSubjectImageUploader"
                                         :showImage="false"
-                                        :uri="layoutItem.coverImage ? layoutItem.coverImage.uri : ''"
+                                        :uri="layoutBlockItemClone.coverImage ? layoutBlockItemClone.coverImage.uri : ''"
                                         :uploadSuccessHandler="uploadPersonSubjectCoverImageSuccessHandler"
                                         :allowResolutions="allowResolutions"
                                     ></single-image-uploader>
@@ -180,7 +180,11 @@ export default {
             layoutItemType: '',
             dialogVisible: false,
             active: 0,
-            personSubjectData: {}
+            personSubjectData: {},
+
+            //  2.3.0 新增字段
+            layoutBlockId: '',
+            layoutBlockItemClone: {}
         };
     },
     created() {
@@ -191,28 +195,30 @@ export default {
     computed: {
         ...mapGetters({
             personSubject: 'pageLayout/personSubject',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
-            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId'
+
+            //  2.3.0 新增
+            activeLayout: 'pageLayout/getActiveLayout',
+            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem'
         }),
-        layoutItem() {
-            let layoutItem = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
-            return layoutItem;
+        layoutBlockItem() {
+            return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
         },
         getImageIdByKey() {
             return (key) => {
-                return _.get(this.layoutItem, `${key}.id`);
+                return _.get(this.layoutBlockItemClone, `${key}.id`);
             };
         },
         disabled() {
             return (row) => {
-                let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
-                let list = layoutData.layoutItemMultiList.filter((item) => item.id !== this.personSubjectData.id);
+                let layoutBlock = this.activeLayout.find((item) => item.id === this.layoutBlockId);
+                let layoutItemMultiList = _.get(layoutBlock, `layoutItemMultiList`);
+                let list = layoutItemMultiList.filter((item) => item.id !== this.personSubjectData.id);
                 let index = list.findIndex((item) => item.id === row.id);
                 return index >= 0;
             };
         },
         checkedPersonSubjectList() {
-            let id = _.get(this.layoutItem, 'id');
+            let id = _.get(this.layoutBlockItemClone, 'id');
             if (id && !_.isEmpty(this.personSubjectData)) {
                 return [this.personSubjectData];
             } else {
@@ -235,10 +241,9 @@ export default {
             updatePersonSubject: 'pageLayout/updatePersonSubject',
             updatePersonSubjectPagination: 'pageLayout/updatePersonSubjectPagination',
             addImageToPersonSubjectListById: 'pageLayout/addImageToPersonSubjectListById',
-            //  人物模块中人物的添加删除结束
-            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
-            cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex',
-            resetLayoutItemByIndex: 'pageLayout/resetLayoutItemByIndex'
+
+            //  2.3.0新增
+            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById'
         }),
         ...mapActions({
             getPersonSubjectList: 'pageLayout/getPersonSubjectList',
@@ -255,12 +260,14 @@ export default {
         },
         //  动态的为符合条件的行添加class
         tableRowClassName({row, rowIndex}) {
-            return this.layoutItem.id === row.id ? 'checked' : '';
+            return this.layoutBlockItemClone.id === row.id ? 'checked' : '';
         },
         //  弹窗控制方法
         showDialog(layoutItemType) {
-            this.dialogVisible = true;
+            let {id} = this.$route.query;
+            this.layoutBlockId = id;
             this.layoutItemType = layoutItemType;
+            this.dialogVisible = true;
 
             window.addEventListener('keyup', this.keyupHandler);
         },
@@ -272,14 +279,19 @@ export default {
             this.layoutItemType = '';
             this.personSubjectData = {};
 
+            this.layoutBlockId = '';
+            this.layoutBlockItemClone = {};
+
             window.removeEventListener('keyup', this.keyupHandler);
         },
         async dialogOpenHandler() {
             try {
-                if (this.layoutItemType !== _.get(this.layoutItem, 'layoutItemType')) {
-                    this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+                this.layoutBlockItemClone = _.cloneDeep(this.layoutBlockItem);
+                let _layoutItemType = _.get(this.layoutBlockItemClone, 'layoutItemType');
+                if (this.layoutItemType !== _layoutItemType) {
+                    this.layoutBlockItemClone = _.cloneDeep(this.$util.defaultLayoutBlock);
                 } else {
-                    let id = _.get(this.layoutItem, 'id');
+                    let id = _.get(this.layoutBlockItemClone, 'id');
                     if (id) {
                         let res = await this.$service.getSubjectById(id);
                         if (res && res.code === 0) {
@@ -295,8 +307,13 @@ export default {
             }
         },
         changeProgrammeHandler() {
-            this.resetLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex });
+            this.layoutBlockItemClone = _.cloneDeep(this.$util.defaultLayoutBlock);
             this.showExist = false;
+        },
+        updateLayoutBlockItem(payload) {
+            let {key, value} = payload;
+            let _layoutBlockItemClone = Object.assign({}, this.layoutBlockItemClone, {[key]: value});
+            this.layoutBlockItemClone = _layoutBlockItemClone;
         },
         //  搜索人物的事件处理函数
         searchInputHandler(value, key) {
@@ -304,8 +321,13 @@ export default {
         },
         async enterSuccessHandler() {
             try {
-                if (_.get(this.layoutItem, 'coverImage.id')) {
-                    this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'FIGURE_SUBJECT' });
+                if (_.get(this.layoutBlockItemClone, 'coverImage.id')) {
+                    this.updateLayoutBlockItem({ key: 'layoutItemType', value: 'FIGURE_SUBJECT' });
+                    this.updateLayoutBlockById({
+                        squareIndex: this.squareIndex,
+                        layoutBlockId: this.layoutBlockId,
+                        layoutBlockItem: this.layoutBlockItemClone
+                    });
                     this.closeDialog();
                 } else {
                     this.$message.error('请设置推荐位海报');
@@ -326,7 +348,7 @@ export default {
         },
         nextBtnClickHandler() {
             if (this.active < 1) {
-                if (this.active === 0 && this.layoutItem.id) {
+                if (this.active === 0 && this.layoutBlockItemClone.id) {
                     this.active++;
                 } else {
                     this.$message.error('请选择人物专题');
@@ -336,18 +358,12 @@ export default {
         },
         setPersonSubjectHandler(personSubject) {
             let {id, name} = personSubject;
-            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
-            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
+            this.updateLayoutBlockItem({ key: 'id', value: id });
+            this.updateLayoutBlockItem({ key: 'name', value: name });
             this.personSubjectData = _.cloneDeep(personSubject);
         },
         changeCoverImageHandler(image) {
-            this.updateLayoutItemByIndex({
-                navbarId: this.navbarId,
-                index: this.index,
-                squareIndex: this.squareIndex,
-                key: 'coverImage',
-                value: image
-            });
+            this.updateLayoutBlockItem({ key: 'coverImage', value: image });
         },
         async uploadPersonSubjectCoverImageSuccessHandler(image) {
             try {
@@ -359,15 +375,13 @@ export default {
                     posterImageList: clonePosterImageList
                 });
                 if (res && res.code === 0) {
-                    // this.personSubjectData.posterImageList = _.cloneDeep(res.data.posterImageList);
-                    this.personSubjectData.posterImageList = _.cloneDeep(clonePosterImageList);
+                    this.personSubjectData = Object.assign({}, this.personSubjectData, {posterImageList: clonePosterImageList});
                 }
             } catch (err) {
                 console.log(err);
             }
         },
         cancelHanlder() {
-            this.cancelLayoutItemByIndex({navbarId: this.navbarId, index: this.index, squareIndex: this.squareIndex});
             this.closeDialog();
         }
     }

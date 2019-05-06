@@ -248,33 +248,27 @@ export default {
     },
     computed: {
         ...mapGetters({
-            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
-            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark',
+
+            //  2.3.0新增
+            activeLayout: 'pageLayout/getActiveLayout'
         }),
         getIconImageUri() {
             return (obj) => {
                 return _.get(obj, 'iconImage.uri');
             };
         },
-        layoutItem() {
-            return (squareIndex) => {
-                return this.getLayoutItemByNavbarId(this.navbarId, this.index, squareIndex);
-            };
-        },
         styleBgImageStr() {
             return (squareIndex) => {
-                let uri = _.get(this.layoutItem(squareIndex), 'coverImage.uri');
-                let bgStr = `background-image: url(${uri})`;
+                let url = _.get(this.activeLayout, `${this.index}.layoutItemMultiList.${squareIndex}.coverImage.uri`);
+                let bgStr = `background-image: url(${url})`;
                 return bgStr;
             };
         }
     },
     methods: {
         ...mapMutations({
-            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
-            saveLayoutToStore: 'pageLayout/saveLayoutToStore',
-            insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex'
+            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex'
         }),
         addShuffleLayout(squareIndex) {
             return (layoutItemType) => {
@@ -318,7 +312,8 @@ export default {
         },
         editHandler() {
             let {navbarId} = this.$route.params;
-            this.$router.push({ name: 'ShuffleModule', params: {navbarId, index: this.index, operator: 'edit'} });
+            let id = _.get(this.activeLayout, `${this.index}.id`);
+            this.$router.push({ name: 'ShuffleModule', params: {navbarId, index: this.index, operator: 'edit'}, query: {id} });
         },
         deleteHandler() {
             let {navbarId} = this.$route.params;

@@ -561,6 +561,15 @@ const mutations = {
             return item;
         });
     },
+    updateLayoutBlockDataById(state, payload) {
+        let {key, value, layoutBlockId} = payload;
+        state.activeLayout = state.activeLayout.map((item) => {
+            if (item.id === layoutBlockId) {
+                item[key] = value;
+            }
+            return item;
+        });
+    },
     addLayoutBlockItemById(state, payload) {
         let {layoutBlockItem, layoutBlockId} = payload;
         state.activeLayout = state.activeLayout.map((item) => {

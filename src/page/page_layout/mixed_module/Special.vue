@@ -66,34 +66,27 @@ export default {
     },
     computed: {
         ...mapGetters({
-            layout: 'pageLayout/layout',
-            getNavbarNameById: 'pageLayout/getNavbarNameById',
-            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark'
+            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark',
+
+            //  2.3.0新增
+            activeLayout: 'pageLayout/getActiveLayout'
         }),
         getIconImageUri() {
             return (obj) => {
                 return _.get(obj, 'iconImage.uri');
             };
         },
-        getImageUriByKeyAndIndex() {
-            return (key, squareIndex) => {
-                let {navbarId} = this.$route.params;
-                let uri = _.get(this.layout, `${navbarId}.data.${this.index}.layoutItemMultiList.${squareIndex}.${key}.uri`);
-                return uri;
-            };
-        },
         styleBgImageStr() {
             return (squareIndex) => {
-                let bgStr = `background-image: url(${this.getImageUriByKeyAndIndex('coverImage', squareIndex)})`;
+                let url = _.get(this.activeLayout, `${this.index}.layoutItemMultiList.${squareIndex}.coverImage.uri`);
+                let bgStr = `background-image: url(${url})`;
                 return bgStr;
             };
         }
     },
     methods: {
         ...mapMutations({
-            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
-            saveLayoutToStore: 'pageLayout/saveLayoutToStore',
-            insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex'
+            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex'
         }),
         addLayout(type) {
             let {navbarId} = this.$route.params;
@@ -101,12 +94,12 @@ export default {
         },
         editHandler() {
             let {navbarId} = this.$route.params;
-            this.$router.push({ name: 'EditSpecialModule', params: {navbarId, index: this.index, operator: 'edit'} });
+            let id = _.get(this.activeLayout, `${this.index}.id`);
+            this.$router.push({ name: 'EditSpecialModule', params: {navbarId, index: this.index, operator: 'edit'}, query: {id} });
         },
         deleteHandler() {
             let {navbarId} = this.$route.params;
             this.deleteLayoutDataByIndex({navbarId, index: this.index});
-            this.saveLayoutToStore();
         }
     }
 };
