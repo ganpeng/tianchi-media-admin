@@ -83,16 +83,23 @@ export default {
         ...mapGetters({
             //  2.3.0 新增
             activeLayout: 'pageLayout/getActiveLayout',
-            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem'
+            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem',
+            getLayoutBlockItemByIndex: 'pageLayout/getLayoutBlockItemByIndex'
         }),
         layoutBlockItem() {
-            return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
+            let {operator} = this.$route.params;
+            if (operator === 'edit') {
+                return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
+            } else {
+                return this.getLayoutBlockItemByIndex(this.index, this.squareIndex);
+            }
         }
     },
     methods: {
         ...mapMutations({
             //  2.3.0新增
-            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById'
+            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById',
+            updateLayoutBlockByIndex: 'pageLayout/updateLayoutBlockByIndex'
         }),
         //  弹窗的操作
         async showDialog(layoutItemType) {
@@ -128,11 +135,20 @@ export default {
         enterHandler() {
             if (_.get(this.layoutBlockItemClone, 'coverImage.id')) {
                 this.updateLayoutBlockItem({ key: 'layoutItemType', value: 'CHANNEL' });
-                this.updateLayoutBlockById({
-                    squareIndex: this.squareIndex,
-                    layoutBlockId: this.layoutBlockId,
-                    layoutBlockItem: this.layoutBlockItemClone
-                });
+                let {operator} = this.$route.params;
+                if (operator === 'edit') {
+                    this.updateLayoutBlockById({
+                        squareIndex: this.squareIndex,
+                        layoutBlockId: this.layoutBlockId,
+                        layoutBlockItem: this.layoutBlockItemClone
+                    });
+                } else {
+                    this.updateLayoutBlockByIndex({
+                        squareIndex: this.squareIndex,
+                        index: this.index,
+                        layoutBlockItem: this.layoutBlockItemClone
+                    });
+                }
                 this.closeDialog();
             } else {
                 this.$message.error('请设置频道封面图');

@@ -12,7 +12,6 @@
             :close-on-press-escape="false"
             :append-to-body="true">
             <div class="person-dialog-container">
-                <!-- <div class="seperator-line"></div> -->
                 <div v-if="showExist">
                     <p class="table-title">已选择的节目专题</p>
                     <el-table
@@ -72,7 +71,7 @@
                         :header-row-class-name='"common-table-header"' class="my-table-style" :data="personSubject.list" border>
                         <el-table-column align="center" width="60px" label="选择">
                             <template slot-scope="scope">
-                                <el-radio :disabled="disabled(scope.row)" :value="layoutItem.id" :label="scope.row.id" @input="setPersonSubjectHandler(scope.row)">&nbsp;</el-radio>
+                                <el-radio :disabled="disabled(scope.row)" :value="layoutBlockItemClone.id" :label="scope.row.id" @input="setPersonSubjectHandler(scope.row)">&nbsp;</el-radio>
                             </template>
                         </el-table-column>
                         <el-table-column prop="id" align="center" width="120px" label="编号">
@@ -144,39 +143,51 @@ export default {
             index: '',
             showExist: false,
             dialogVisible: false,
-            personSubjectData: {}
+            personSubjectData: {},
+
+            //  2.3.0 新增字段
+            layoutBlockId: '',
+            layoutBlockItemClone: {}
         };
     },
     created() {
         let {navbarId, index} = this.$route.params;
         this.navbarId = navbarId;
-        this.index = index;
+        this.index = parseInt(index);
     },
     computed: {
         ...mapGetters({
             personSubject: 'pageLayout/personSubject',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
-            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId'
+
+            //  2.3.0 新增
+            activeLayout: 'pageLayout/getActiveLayout',
+            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem',
+            getLayoutBlockItemByIndex: 'pageLayout/getLayoutBlockItemByIndex'
         }),
-        layoutItem() {
-            let layoutItem = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
-            return layoutItem;
+        layoutBlockItem() {
+            let {operator} = this.$route.params;
+            if (operator === 'edit') {
+                return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
+            } else {
+                return this.getLayoutBlockItemByIndex(this.index, this.squareIndex);
+            }
         },
         getImageIdByKey() {
             return (key) => {
-                return _.get(this.layoutItem, `${key}.id`);
+                return _.get(this.layoutBlockItemClone, `${key}.id`);
             };
         },
         disabled() {
             return (row) => {
-                let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
-                let list = layoutData.layoutItemMultiList.filter((item) => item.id !== this.personSubjectData.id);
+                let layoutBlock = this.activeLayout.find((item) => item.id === this.layoutBlockId);
+                let layoutItemMultiList = _.get(layoutBlock, `layoutItemMultiList`);
+                let list = layoutItemMultiList.filter((item) => item.id !== this.personSubjectData.id);
                 let index = list.findIndex((item) => item.id === row.id);
                 return index >= 0;
             };
         },
         checkedPersonSubjectList() {
-            let id = _.get(this.layoutItem, 'id');
+            let id = _.get(this.layoutBlockItemClone, 'id');
             if (id && !_.isEmpty(this.personSubjectData)) {
                 return [this.personSubjectData];
             } else {
@@ -189,10 +200,10 @@ export default {
             resetPersonSubject: 'pageLayout/resetPersonSubject',
             updatePersonSubject: 'pageLayout/updatePersonSubject',
             updatePersonSubjectPagination: 'pageLayout/updatePersonSubjectPagination',
-            addImageToPersonSubjectListById: 'pageLayout/addImageToPersonSubjectListById',
-            //  人物模块中人物的添加删除结束
-            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
-            cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex'
+
+            //  2.3.0新增
+            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById',
+            updateLayoutBlockByIndex: 'pageLayout/updateLayoutBlockByIndex'
         }),
         ...mapActions({
             getPersonSubjectList: 'pageLayout/getPersonSubjectList',
@@ -209,10 +220,17 @@ export default {
         },
         //  动态的为符合条件的行添加class
         tableRowClassName({row, rowIndex}) {
-            return this.layoutItem.id === row.id ? 'checked' : '';
+            return this.layoutBlockItemClone.id === row.id ? 'checked' : '';
+        },
+        updateLayoutBlockItem(payload) {
+            let {key, value} = payload;
+            let _layoutBlockItemClone = Object.assign({}, this.layoutBlockItemClone, {[key]: value});
+            this.layoutBlockItemClone = _layoutBlockItemClone;
         },
         //  弹窗控制方法
         showDialog() {
+            let {id} = this.$route.query;
+            this.layoutBlockId = id;
             this.dialogVisible = true;
 
             window.addEventListener('keyup', this.keyupHandler);
@@ -223,11 +241,15 @@ export default {
             this.showExist = false;
             this.personSubjectData = {};
 
+            this.layoutBlockId = '';
+            this.layoutBlockItemClone = {};
+
             window.removeEventListener('keyup', this.keyupHandler);
         },
         async dialogOpenHandler() {
             try {
-                let id = _.get(this.layoutItem, 'id');
+                this.layoutBlockItemClone = _.cloneDeep(this.layoutBlockItem);
+                let id = _.get(this.layoutBlockItemClone, 'id');
                 if (id) {
                     let res = await this.$service.getSubjectById(id);
                     if (res && res.code === 0) {
@@ -251,8 +273,22 @@ export default {
         },
         async enterSuccessHandler() {
             try {
-                if (_.get(this.layoutItem, 'coverImage.id')) {
-                    this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'layoutItemType', value: 'FIGURE_SUBJECT' });
+                if (_.get(this.layoutBlockItemClone, 'coverImage.id')) {
+                    this.updateLayoutBlockItem({ key: 'layoutItemType', value: 'FIGURE_SUBJECT' });
+                    let {operator} = this.$route.params;
+                    if (operator === 'edit') {
+                        this.updateLayoutBlockById({
+                            squareIndex: this.squareIndex,
+                            layoutBlockId: this.layoutBlockId,
+                            layoutBlockItem: this.layoutBlockItemClone
+                        });
+                    } else {
+                        this.updateLayoutBlockByIndex({
+                            squareIndex: this.squareIndex,
+                            index: this.index,
+                            layoutBlockItem: this.layoutBlockItemClone
+                        });
+                    }
                     this.closeDialog();
                 } else {
                     this.$message.error('请设置推荐位海报');
@@ -271,14 +307,13 @@ export default {
                 return parseInt(image.width) === 260 && parseInt(image.height) === 600;
             });
             if (coverImage) {
-                this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'coverImage', value: coverImage });
+                this.updateLayoutBlockItem({ key: 'coverImage', value: coverImage });
             }
-            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'id', value: id });
-            this.updateLayoutItemByIndex({ index: this.index, navbarId: this.navbarId, squareIndex: this.squareIndex, key: 'name', value: name });
+            this.updateLayoutBlockItem({ key: 'id', value: id });
+            this.updateLayoutBlockItem({ key: 'name', value: name });
             this.personSubjectData = _.cloneDeep(personSubject);
         },
         cancelHanlder() {
-            this.cancelLayoutItemByIndex({navbarId: this.navbarId, index: this.index, squareIndex: this.squareIndex});
             this.closeDialog();
         }
     }

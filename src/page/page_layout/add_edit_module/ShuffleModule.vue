@@ -3,7 +3,7 @@
         <h2 class="content-title">{{title}}</h2>
         <div class="seperator-line"></div>
         <div class="form-container">
-            <el-form :model="layoutData"
+            <el-form :model="layoutBlock"
                     :rules="inputRules"
                     status-icon
                     ref="shuffleModuleForm"
@@ -11,24 +11,24 @@
                     @submit.native.prevent
                     class="form-block my-form">
                 <el-col :span="8">
-                    <el-form-item v-if="layoutData.layoutTemplate === 'LT_3_3'" label="模块名称">
+                    <el-form-item v-if="layoutBlock.layoutTemplate === 'LT_3_3'" label="模块名称">
                         <el-input
-                            :value="layoutData.title"
+                            :value="layoutBlock.title"
                             @input="inputHandler($event, 'title')"
                             placeholder="请输入模块名称"
                         ></el-input>
                     </el-form-item>
                     <el-form-item v-else label="模块名称" prop="title">
                         <el-input
-                            :value="layoutData.title"
+                            :value="layoutBlock.title"
                             @input="inputHandler($event, 'title')"
                             placeholder="请输入模块名称"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="名称icon">
                         <single-image-uploader
-                            :uri="layoutData.iconImage ? layoutData.iconImage.uri : ''"
-                            :deleteImage="deleteIconImage"
+                            :uri="layoutBlock.iconImage ? layoutBlock.iconImage.uri : ''"
+                            :showDelete="false"
                             :uploadSuccessHandler="iconImageuploadSuccessHandler"
                             :allowResolutions="[{width: 82, height: 82}]"
                         ></single-image-uploader>
@@ -38,7 +38,7 @@
                     <el-col :span="12">
                         <el-form-item class="template-select" label="模块板式" prop="layoutTemplate">
                             <el-select
-                                :value="layoutData.layoutTemplate"
+                                :value="layoutBlock.layoutTemplate"
                                 @input="templateInputHandler($event)"
                                 clearable
                                 placeholder="请选择模块板式">
@@ -66,52 +66,52 @@
                             <mixed114
                                 :isEdit="true"
                                 :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_1_1_4'"
+                                v-if="layoutBlock.layoutTemplate === 'LT_1_1_4'"
                             ></mixed114>
                             <mixed22
                                 :isEdit="true"
                                 :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_SN'"
+                                v-if="layoutBlock.layoutTemplate === 'LT_SN'"
                             ></mixed22>
                             <mixed23
                                 :isEdit="true"
                                 :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_2_3'"
+                                v-if="layoutBlock.layoutTemplate === 'LT_2_3'"
                             ></mixed23>
                             <mixed26
                                 :isEdit="true"
                                 :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_2_6'"
+                                v-if="layoutBlock.layoutTemplate === 'LT_2_6'"
                             ></mixed26>
                             <mixed32
                                 :isEdit="true"
                                 :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_3_2'"
+                                v-if="layoutBlock.layoutTemplate === 'LT_3_2'"
                             ></mixed32>
                             <mixed33
                                 :isEdit="true"
                                 :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_3_3'"
+                                v-if="layoutBlock.layoutTemplate === 'LT_3_3'"
                             ></mixed33>
                             <mixed4
                                 :isEdit="true"
                                 :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_4'"
+                                v-if="layoutBlock.layoutTemplate === 'LT_4'"
                             ></mixed4>
                             <mixed66
                                 :isEdit="true"
                                 :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_6_6'"
+                                v-if="layoutBlock.layoutTemplate === 'LT_6_6'"
                             ></mixed66>
                             <mixeds6
                                 :isEdit="true"
                                 :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_S6'"
+                                v-if="layoutBlock.layoutTemplate === 'LT_S6'"
                             ></mixeds6>
                             <mixedsn
                                 :isEdit="true"
                                 :index="index"
-                                v-if="layoutData.layoutTemplate === 'LT_SN'"
+                                v-if="layoutBlock.layoutTemplate === 'LT_SN'"
                             ></mixedsn>
                         </el-form-item>
                     </el-col>
@@ -134,7 +134,7 @@
     </div>
 </template>
 <script>
-import {mapGetters, mapMutations} from 'vuex';
+import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 import PersonSubjectDialog from './PersonSubjectDialog';
@@ -249,47 +249,48 @@ export default {
                 layoutTemplate: [
                     { required: true, message: '请选择混排模块板式' }
                 ]
-            }
+            },
+
+            //  2.3.0新增
+            layoutBlockId: ''
         };
     },
-    beforeRouteLeave(to, from, next) {
-        let {operator} = from.params;
-        if (!this.saveFlag && operator === 'add') {
-            this.deleteLayoutDataByIndex({navbarId: this.navbarId, index: this.index});
-            this.saveLayoutToStore();
-        }
-        next();
-    },
-    created() {
-        let {navbarId, index, operator} = this.$route.params;
-        this.navbarId = navbarId;
-        this.index = parseInt(index);
+    async created() {
+        try {
+            let {navbarId, index, operator} = this.$route.params;
+            this.navbarId = navbarId;
+            this.index = parseInt(index);
 
-        if (operator === 'add') {
-            this.title = '添加混排模块';
-        } else {
-            this.title = '编辑混排模块';
+            await this.getLayoutByNavbarId(navbarId);
+
+            if (operator === 'edit') {
+                let {id} = this.$route.query;
+                this.layoutBlockId = id;
+                this.title = '编辑混排模块';
+            } else {
+                this.title = '添加混排模块';
+                this.layoutBlockId = _.uniqueId('layoutBlockId');
+                this.insertLayoutBlockByIndex({index, navbarId, renderType: 'SHUFFLE', layoutTemplate: '', layoutBlockId: this.layoutBlockId});
+            }
+        } catch (err) {
+            console.log(err);
         }
     },
     computed: {
         ...mapGetters({
-            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
-            selectAll: 'pageLayout/selectAll'
+            selectAll: 'pageLayout/selectAll',
+
+            //  2.3.0 新增
+            activeLayout: 'pageLayout/getActiveLayout'
         }),
-        layoutData() {
-            let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
-            return layoutData;
-        },
-        layoutItem() {
-            return (squareIndex) => {
-                return this.getLayoutItemByNavbarId(this.navbarId, this.index, squareIndex);
-            };
+        layoutBlock() {
+            let layoutBlock = _.get(this.activeLayout, `${this.index}`);
+            return layoutBlock || {};
         },
         styleBgImageStr() {
             return (squareIndex) => {
-                let uri = _.get(this.layoutItem(squareIndex), 'coverImage.uri');
-                let bgStr = `background-image: url(${uri})`;
+                let url = _.get(this.activeLayout, `${this.index}.layoutItemMultiList.${squareIndex}.coverImage.uri`);
+                let bgStr = `background-image: url(${url})`;
                 return bgStr;
             };
         }
@@ -297,31 +298,41 @@ export default {
     methods: {
         ...mapMutations({
             deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
-            saveLayoutToStore: 'pageLayout/saveLayoutToStore',
-            updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey'
+
+            //  2.3.0新增
+            updateLayoutBlockDataById: 'pageLayout/updateLayoutBlockDataById',
+            insertLayoutBlockByIndex: 'pageLayout/insertLayoutBlockByIndex'
+        }),
+        ...mapActions({
+            //  2.3.0 新增的部分
+            getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
         }),
         inputHandler(value, key) {
-            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key, value});
+            this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key, value});
         },
         templateInputHandler(value) {
-            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'layoutTemplate', value});
+            this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'layoutTemplate', value});
             this.setLayoutItemMultiList(value);
         },
         iconImageuploadSuccessHandler(image) {
-            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: image});
-        },
-        deleteIconImage() {
-            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: null});
+            this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'iconImage', value: image});
         },
         async saveHandler() {
             try {
                 let valid = await this.$refs.shuffleModuleForm.validate();
                 if (valid) {
                     if (!this.selectAll(this.navbarId, this.index)) {
-                        this.saveLayoutToStore(this.navbarId);
-                        this.saveFlag = true;
-                        this.$message.success('保存成功');
-                        this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                        let {id} = this.$route.query;
+                        if (id) {
+                            let layoutBlock = this.activeLayout.find((item) => item.id === id);
+                            if (layoutBlock) {
+                                let putLayoutBlockRes = await this.$service.putLayoutBlock(id, layoutBlock);
+                                if (putLayoutBlockRes && putLayoutBlockRes.code === 0) {
+                                    this.$message.success('保存成功');
+                                    this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                                }
+                            }
+                        }
                     } else {
                         this.$message.error('专题色块必须全部选择');
                     }
@@ -329,14 +340,6 @@ export default {
             } catch (err) {
                 console.log(err);
             }
-        },
-        selectPersonSubject() {
-            this.allowResolutions = [{width: 560, height: 600}];
-            this.$refs.personSubjectDialog.showDialog();
-        },
-        selectProgramme() {
-            this.allowResolutions = [{width: 1160, height: 600}];
-            this.$refs.selectProgrammeDialog.showDialog();
         },
         optionMouseoverHandler(item) {
             this.templateIcon = item.icon;
@@ -349,73 +352,64 @@ export default {
         setLayoutItemMultiList(value) {
             switch (value) {
                 case 'LT_2_3':
-                    this.updateLayoutDataByKey({
-                        navbarId: this.navbarId,
-                        index: this.index,
+                    this.updateLayoutBlockDataById({
+                        layoutBlockId: this.layoutBlockId,
                         key: 'layoutItemMultiList',
                         value: _.times(5, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_2_6':
-                    this.updateLayoutDataByKey({
-                        navbarId: this.navbarId,
-                        index: this.index,
+                    this.updateLayoutBlockDataById({
+                        layoutBlockId: this.layoutBlockId,
                         key: 'layoutItemMultiList',
                         value: _.times(8, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_3_2':
-                    this.updateLayoutDataByKey({
-                        navbarId: this.navbarId,
-                        index: this.index,
+                    this.updateLayoutBlockDataById({
+                        layoutBlockId: this.layoutBlockId,
                         key: 'layoutItemMultiList',
                         value: _.times(5, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_3_3':
-                    this.updateLayoutDataByKey({
-                        navbarId: this.navbarId,
-                        index: this.index,
+                    this.updateLayoutBlockDataById({
+                        layoutBlockId: this.layoutBlockId,
                         key: 'layoutItemMultiList',
                         value: _.times(6, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_6_6':
-                    this.updateLayoutDataByKey({
-                        navbarId: this.navbarId,
-                        index: this.index,
+                    this.updateLayoutBlockDataById({
+                        layoutBlockId: this.layoutBlockId,
                         key: 'layoutItemMultiList',
                         value: _.times(12, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_1_1_4':
-                    this.updateLayoutDataByKey({
-                        navbarId: this.navbarId,
-                        index: this.index,
+                    this.updateLayoutBlockDataById({
+                        layoutBlockId: this.layoutBlockId,
                         key: 'layoutItemMultiList',
                         value: _.times(6, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_4':
-                    this.updateLayoutDataByKey({
-                        navbarId: this.navbarId,
-                        index: this.index,
+                    this.updateLayoutBlockDataById({
+                        layoutBlockId: this.layoutBlockId,
                         key: 'layoutItemMultiList',
                         value: _.times(4, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_S6':
-                    this.updateLayoutDataByKey({
-                        navbarId: this.navbarId,
-                        index: this.index,
+                    this.updateLayoutBlockDataById({
+                        layoutBlockId: this.layoutBlockId,
                         key: 'layoutItemMultiList',
                         value: _.times(6, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_SN':
-                    this.updateLayoutDataByKey({
-                        navbarId: this.navbarId,
-                        index: this.index,
+                    this.updateLayoutBlockDataById({
+                        layoutBlockId: this.layoutBlockId,
                         key: 'layoutItemMultiList',
                         value: []
                     });

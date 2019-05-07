@@ -492,10 +492,16 @@ export default {
 
             //  2.3.0 新增
             activeLayout: 'pageLayout/getActiveLayout',
-            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem'
+            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem',
+            getLayoutBlockItemByIndex: 'pageLayout/getLayoutBlockItemByIndex'
         }),
         layoutBlockItem() {
-            return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
+            let {operator} = this.$route.params;
+            if (operator === 'edit') {
+                return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
+            } else {
+                return this.getLayoutBlockItemByIndex(this.index, this.squareIndex);
+            }
         },
         getImageIdByKey() {
             return (key) => {
@@ -559,7 +565,8 @@ export default {
             updateProgrammeSearchFields: 'programme/updateProgrammeSearchFields',
 
             //  2.3.0新增
-            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById'
+            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById',
+            updateLayoutBlockByIndex: 'pageLayout/updateLayoutBlockByIndex'
         }),
         ...mapActions({
             getProgrammeListIsVisible: 'programme/getProgrammeListIsVisible',
@@ -758,11 +765,20 @@ export default {
             // 设置layoutItemType为PROGRAMME_VIDEO
             if (this.getImageByKey('coverImage')) {
                 this.updateLayoutBlockItem({ key: 'layoutItemType', value: this.layoutItemType });
-                this.updateLayoutBlockById({
-                    squareIndex: this.squareIndex,
-                    layoutBlockId: this.layoutBlockId,
-                    layoutBlockItem: this.layoutBlockItemClone
-                });
+                let {operator} = this.$route.params;
+                if (operator === 'edit') {
+                    this.updateLayoutBlockById({
+                        squareIndex: this.squareIndex,
+                        layoutBlockId: this.layoutBlockId,
+                        layoutBlockItem: this.layoutBlockItemClone
+                    });
+                } else {
+                    this.updateLayoutBlockByIndex({
+                        squareIndex: this.squareIndex,
+                        index: this.index,
+                        layoutBlockItem: this.layoutBlockItemClone
+                    });
+                }
                 this.showExist = true;
                 this.closeDialog();
             } else {

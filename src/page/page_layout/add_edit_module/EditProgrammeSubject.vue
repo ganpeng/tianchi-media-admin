@@ -246,10 +246,16 @@ export default {
 
             //  2.3.0 新增
             activeLayout: 'pageLayout/getActiveLayout',
-            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem'
+            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem',
+            getLayoutBlockItemByIndex: 'pageLayout/getLayoutBlockItemByIndex'
         }),
         layoutBlockItem() {
-            return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
+            let {operator} = this.$route.params;
+            if (operator === 'edit') {
+                return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
+            } else {
+                return this.getLayoutBlockItemByIndex(this.index, this.squareIndex);
+            }
         },
         getImageIdByKey() {
             return (key) => {
@@ -296,7 +302,8 @@ export default {
             resetLayoutItemByIndex: 'pageLayout/resetLayoutItemByIndex',
 
             //  2.3.0新增
-            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById'
+            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById',
+            updateLayoutBlockByIndex: 'pageLayout/updateLayoutBlockByIndex'
         }),
         ...mapActions({
             getProgrammeSubjectList: 'pageLayout/getProgrammeSubjectList',
@@ -472,11 +479,20 @@ export default {
         //  最后一步的确认处理函数
         enterHandler() {
             this.updateLayoutBlockItem({ key: 'layoutItemType', value: 'PROGRAMME_SUBJECT' });
-            this.updateLayoutBlockById({
-                squareIndex: this.squareIndex,
-                layoutBlockId: this.layoutBlockId,
-                layoutBlockItem: this.layoutBlockItemClone
-            });
+            let {operator} = this.$route.params;
+            if (operator === 'edit') {
+                this.updateLayoutBlockById({
+                    squareIndex: this.squareIndex,
+                    layoutBlockId: this.layoutBlockId,
+                    layoutBlockItem: this.layoutBlockItemClone
+                });
+            } else {
+                this.updateLayoutBlockByIndex({
+                    squareIndex: this.squareIndex,
+                    index: this.index,
+                    layoutBlockItem: this.layoutBlockItemClone
+                });
+            }
             this.closeDialog();
         },
         cancelHanlder() {

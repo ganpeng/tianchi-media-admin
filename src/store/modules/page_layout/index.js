@@ -297,6 +297,12 @@ const getters = {
             let layoutBlock = state.activeLayout.find((item) => item.id === layoutBlockId);
             return layoutBlock ? _.get(layoutBlock, `layoutItemMultiList.${squareIndex}`) : {};
         };
+    },
+    getLayoutBlockItemByIndex(state) {
+        return (index, squareIndex) => {
+            console.log(_.get(state.activeLayout, `${index}.layoutItemMultiList.${squareIndex}`));
+            return _.get(state.activeLayout, `${index}.layoutItemMultiList.${squareIndex}`) || {};
+        };
     }
 };
 
@@ -561,6 +567,23 @@ const mutations = {
             return item;
         });
     },
+    updateLayoutBlockByIndex(state, payload) {
+        let {layoutBlockItem, index, squareIndex} = payload;
+        console.log(layoutBlockItem);
+        console.log(index);
+        state.activeLayout = state.activeLayout.map((item, _index) => {
+            if (_index === index) {
+                item.layoutItemMultiList = item.layoutItemMultiList.map((_layoutBlockItem, __index) => {
+                    if (__index === squareIndex) {
+                        return layoutBlockItem;
+                    } else {
+                        return _layoutBlockItem;
+                    }
+                });
+            }
+            return item;
+        });
+    },
     updateLayoutBlockDataById(state, payload) {
         let {key, value, layoutBlockId} = payload;
         state.activeLayout = state.activeLayout.map((item) => {
@@ -578,6 +601,26 @@ const mutations = {
             }
             return item;
         });
+    },
+    insertLayoutBlockByIndex(state, payload) {
+        let {index, layoutTemplate, renderType, navbarId, layoutBlockId} = payload;
+        let layoutBlockDefault = {
+            layoutTemplate: '',
+            subjectId: '',
+            iconImage: {},
+            title: '',
+            layoutItemMultiList: []
+        };
+        let navbar = state.navbarList.find((navbar) => navbar.id === navbarId);
+        let layoutBlock = Object.assign({}, layoutBlockDefault, {
+            id: layoutBlockId,
+            layoutTemplate,
+            navBarId: navbarId,
+            navBarName: _.get(navbar, 'name'),
+            renderType
+        });
+
+        state.activeLayout.splice(index, 0, layoutBlock);
     }
 };
 

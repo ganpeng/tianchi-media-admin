@@ -241,10 +241,16 @@
             ...mapGetters({
                 //  2.3.0 新增
                 activeLayout: 'pageLayout/getActiveLayout',
-                getLayoutBlockItem: 'pageLayout/getLayoutBlockItem'
+                getLayoutBlockItem: 'pageLayout/getLayoutBlockItem',
+                getLayoutBlockItemByIndex: 'pageLayout/getLayoutBlockItemByIndex'
             }),
             layoutBlockItem() {
-                return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
+                let {operator} = this.$route.params;
+                if (operator === 'edit') {
+                    return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
+                } else {
+                    return this.getLayoutBlockItemByIndex(this.index, this.squareIndex);
+                }
             },
             getImageByKey() {
                 return (key) => {
@@ -255,13 +261,14 @@
         created() {
             let {navbarId, index} = this.$route.params;
             this.navbarId = navbarId;
-            this.index = index;
+            this.index = parseInt(index);
         },
         methods: {
             ...mapMutations({
                 // 2.3.0新增
                 updateLayoutBlockById: 'pageLayout/updateLayoutBlockById',
-                addLayoutBlockItemById: 'pageLayout/addLayoutBlockItemById'
+                addLayoutBlockItemById: 'pageLayout/addLayoutBlockItemById',
+                updateLayoutBlockByIndex: 'pageLayout/updateLayoutBlockByIndex'
             }),
             getOriginState() {
                 if (this.isAdd) {
@@ -506,11 +513,20 @@
                 if (this.isAdd) {
                     this.addLayoutBlockItemById({layoutBlockId: this.layoutBlockId, layoutBlockItem: filterItem});
                 } else {
-                    this.updateLayoutBlockById({
-                        squareIndex: this.squareIndex,
-                        layoutBlockId: this.layoutBlockId,
-                        layoutBlockItem: filterItem
-                    });
+                    let {operator} = this.$route.params;
+                    if (operator === 'edit') {
+                        this.updateLayoutBlockById({
+                            squareIndex: this.squareIndex,
+                            layoutBlockId: this.layoutBlockId,
+                            layoutBlockItem: filterItem
+                        });
+                    } else {
+                        this.updateLayoutBlockByIndex({
+                            squareIndex: this.squareIndex,
+                            index: this.index,
+                            layoutBlockItem: filterItem
+                        });
+                    }
                 }
                 this.$message.success('成功设置混排模块的筛选项');
                 this.closeDialog();

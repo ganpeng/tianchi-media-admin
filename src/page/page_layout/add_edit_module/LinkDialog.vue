@@ -112,13 +112,14 @@ export default {
     created() {
         let {navbarId, index} = this.$route.params;
         this.navbarId = navbarId;
-        this.index = index;
+        this.index = parseInt(index);
     },
     computed: {
         ...mapGetters({
             //  2.3.0 新增
             activeLayout: 'pageLayout/getActiveLayout',
-            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem'
+            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem',
+            getLayoutBlockItemByIndex: 'pageLayout/getLayoutBlockItemByIndex'
         }),
         getHref() {
             let params = _.get(this.layoutBlockItemClone, 'params');
@@ -135,13 +136,19 @@ export default {
             return _.get(this.layoutBlockItemClone, 'coverImage.uri');
         },
         layoutBlockItem() {
-            return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
+            let {operator} = this.$route.params;
+            if (operator === 'edit') {
+                return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
+            } else {
+                return this.getLayoutBlockItemByIndex(this.index, this.squareIndex);
+            }
         }
     },
     methods: {
         ...mapMutations({
             //  2.3.0新增
-            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById'
+            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById',
+            updateLayoutBlockByIndex: 'pageLayout/updateLayoutBlockByIndex'
         }),
         //  弹窗控制方法
         async showDialog(layoutItemType) {
@@ -178,11 +185,20 @@ export default {
                         this.updateLayoutBlockItem({ key: 'name', value: this.form.name });
                         this.updateLayoutBlockItem({ key: 'params', value: JSON.stringify(obj) });
                         this.updateLayoutBlockItem({ key: 'layoutItemType', value: 'LINK' });
-                        this.updateLayoutBlockById({
-                            squareIndex: this.squareIndex,
-                            layoutBlockId: this.layoutBlockId,
-                            layoutBlockItem: this.layoutBlockItemClone
-                        });
+                        let {operator} = this.$route.params;
+                        if (operator === 'edit') {
+                            this.updateLayoutBlockById({
+                                squareIndex: this.squareIndex,
+                                layoutBlockId: this.layoutBlockId,
+                                layoutBlockItem: this.layoutBlockItemClone
+                            });
+                        } else {
+                            this.updateLayoutBlockByIndex({
+                                squareIndex: this.squareIndex,
+                                index: this.index,
+                                layoutBlockItem: this.layoutBlockItemClone
+                            });
+                        }
                         this.closeDialog();
                     } else {
                         this.$message.error('请设置网页封面图');

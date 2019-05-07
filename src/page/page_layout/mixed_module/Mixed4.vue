@@ -232,7 +232,9 @@ export default {
         },
         addLayout(type) {
             let {navbarId} = this.$route.params;
-            this.$util.layoutCommand({navbarId, index: this.index, type, router: this.$router});
+            let id = _.get(this.activeLayout, `${this.index}.id`);
+            this.$router.push({ name: 'ShuffleModule', params: {navbarId, index: this.index, operator: 'add'}, query: {id} });
+            // this.$util.layoutCommand({navbarId, index: this.index, type, router: this.$router});
         },
         editHandler() {
             let {navbarId} = this.$route.params;

@@ -337,16 +337,19 @@ export default {
             categoryListString: 'programme/categoryListString',
             typeList: 'programme/typeList',
             getChiefActor: 'programme/getChiefActor',
-            layout: 'pageLayout/layout',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
-            getLayoutItemCornerMark: 'pageLayout/getLayoutItemCornerMark',
 
             //  2.3.0 新增
             activeLayout: 'pageLayout/getActiveLayout',
-            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem'
+            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem',
+            getLayoutBlockItemByIndex: 'pageLayout/getLayoutBlockItemByIndex'
         }),
         layoutBlockItem() {
-            return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
+            let {operator} = this.$route.params;
+            if (operator === 'edit') {
+                return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
+            } else {
+                return this.getLayoutBlockItemByIndex(this.index, this.squareIndex);
+            }
         },
         getImageIdByKey() {
             return (key) => {
@@ -418,12 +421,10 @@ export default {
             resetProgrammeSearchFields: 'programme/resetProgrammeSearchFields',
             updateProgrammePagination: 'programme/updateProgrammePagination',
             updateProgrammeSearchFields: 'programme/updateProgrammeSearchFields',
-            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
-            cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex',
-            resetLayoutItemByIndex: 'pageLayout/resetLayoutItemByIndex',
 
             //  2.3.0新增
-            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById'
+            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById',
+            updateLayoutBlockByIndex: 'pageLayout/updateLayoutBlockByIndex'
         }),
         ...mapActions({
             getProgrammeListIsVisible: 'programme/getProgrammeListIsVisible',
@@ -669,11 +670,20 @@ export default {
         enterHandler() {
             if (this.totalActive === 3) {
                 if (this.getSquareProgrammeLayoutItemType) {
-                    this.updateLayoutBlockById({
-                        squareIndex: this.squareIndex,
-                        layoutBlockId: this.layoutBlockId,
-                        layoutBlockItem: this.layoutBlockItemClone
-                    });
+                    let {operator} = this.$route.params;
+                    if (operator === 'edit') {
+                        this.updateLayoutBlockById({
+                            squareIndex: this.squareIndex,
+                            layoutBlockId: this.layoutBlockId,
+                            layoutBlockItem: this.layoutBlockItemClone
+                        });
+                    } else {
+                        this.updateLayoutBlockByIndex({
+                            squareIndex: this.squareIndex,
+                            index: this.index,
+                            layoutBlockItem: this.layoutBlockItemClone
+                        });
+                    }
                     this.closeDialog();
                 } else {
                     this.$message.error('请选择节目展示方式');
@@ -681,11 +691,20 @@ export default {
                 }
             } else {
                 this.updateLayoutBlockItem({key: 'layoutItemType', value: 'PROGRAMME_LIST'});
-                this.updateLayoutBlockById({
-                    squareIndex: this.squareIndex,
-                    layoutBlockId: this.layoutBlockId,
-                    layoutBlockItem: this.layoutBlockItemClone
-                });
+                let {operator} = this.$route.params;
+                if (operator === 'edit') {
+                    this.updateLayoutBlockById({
+                        squareIndex: this.squareIndex,
+                        layoutBlockId: this.layoutBlockId,
+                        layoutBlockItem: this.layoutBlockItemClone
+                    });
+                } else {
+                    this.updateLayoutBlockByIndex({
+                        squareIndex: this.squareIndex,
+                        index: this.index,
+                        layoutBlockItem: this.layoutBlockItemClone
+                    });
+                }
                 this.closeDialog();
             }
         },

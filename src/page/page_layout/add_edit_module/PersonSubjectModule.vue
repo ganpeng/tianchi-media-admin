@@ -3,7 +3,7 @@
         <h2 class="content-title">{{title}}</h2>
         <div class="seperator-line"></div>
         <div class="form-container">
-            <el-form :model="layoutData"
+            <el-form :model="layoutBlock"
                     :rules="inputRules"
                     status-icon
                     ref="personSubjectModuleForm"
@@ -13,7 +13,7 @@
                 <el-col :span="8">
                     <el-form-item label="人物专题名称" prop="title">
                         <el-input
-                            :value="layoutData.title"
+                            :value="layoutBlock.title"
                             @input="inputHandler($event, 'title')"
                             placeholder="请输入人物专题名称"
                         ></el-input>
@@ -21,8 +21,8 @@
                     <el-form-item label="名称icon">
                         <single-image-uploader
                             id="personSubjectIconUploader"
-                            :deleteImage="deleteIconImage"
-                            :uri="layoutData.iconImage ? layoutData.iconImage.uri : ''"
+                            :showDelete="false"
+                            :uri="layoutBlock.iconImage ? layoutBlock.iconImage.uri : ''"
                             :uploadSuccessHandler="iconImageuploadSuccessHandler"
                             :allowResolutions="[{width: 82, height: 82}]"
                         ></single-image-uploader>
@@ -55,7 +55,7 @@
     </div>
 </template>
 <script>
-import {mapGetters, mapMutations} from 'vuex';
+import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
 import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 import OneStepPersonSubjectDialog from './OneStepPersonSubjectDialog';
@@ -70,81 +70,86 @@ export default {
             navbarId: '',
             index: '',
             title: '',
-            saveFlag: false, // 判断页面跳转之前如果没有点保存按钮的话，就删除新增的这个layoutItem
             allowResolutions: [],
             squareIndex: 0,
             inputRules: {
                 title: [
                     { required: true, message: '请输入专题模块名称' }
                 ]
-            }
+            },
+
+            //  2.3.0新增
+            layoutBlockId: ''
         };
     },
-    beforeRouteLeave(to, from, next) {
-        let {operator} = from.params;
-        if (!this.saveFlag && operator === 'add') {
-            this.deleteLayoutDataByIndex({navbarId: this.navbarId, index: this.index});
-            this.saveLayoutToStore();
-        }
-        next();
-    },
-    created() {
-        let {navbarId, index, operator} = this.$route.params;
-        this.navbarId = navbarId;
-        this.index = index;
-        if (operator === 'add') {
-            this.title = '新增人物专题模块';
-        } else {
-            this.title = '编辑人物专题模块';
+    async created() {
+        try {
+            let {id} = this.$route.query;
+            let {navbarId, index, operator} = this.$route.params;
+            this.navbarId = navbarId;
+            this.index = index;
+            this.layoutBlockId = id;
+
+            if (operator === 'edit') {
+                await this.getLayoutByNavbarId(navbarId);
+                this.title = '编辑人物专题模块';
+            } else {
+                this.title = '新增人物专题模块';
+            }
+        } catch (err) {
+            console.log(err);
         }
     },
     computed: {
         ...mapGetters({
-            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
-            selectAll: 'pageLayout/selectAll'
+            selectAll: 'pageLayout/selectAll',
+
+            //  2.3.0 新增
+            activeLayout: 'pageLayout/getActiveLayout'
         }),
-        layoutData() {
-            let layoutData = this.getLayoutDataByNavbarId(this.navbarId, this.index);
-            return layoutData;
-        },
-        layoutItem() {
-            return (squareIndex) => {
-                return this.getLayoutItemByNavbarId(this.navbarId, this.index, squareIndex);
-            };
+        layoutBlock() {
+            let layoutBlock = _.get(this.activeLayout, `${this.index}`);
+            return layoutBlock || {};
         },
         styleBgImageStr() {
             return (squareIndex) => {
-                let uri = _.get(this.layoutItem(squareIndex), 'coverImage.uri');
-                let bgStr = `background-image: url(${uri})`;
+                let url = _.get(this.activeLayout, `${this.index}.layoutItemMultiList.${squareIndex}.coverImage.uri`);
+                let bgStr = `background-image: url(${url})`;
                 return bgStr;
             };
         }
     },
     methods: {
         ...mapMutations({
-            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
-            saveLayoutToStore: 'pageLayout/saveLayoutToStore',
-            updateLayoutDataByKey: 'pageLayout/updateLayoutDataByKey'
+            //  2.3.0新增
+            updateLayoutBlockDataById: 'pageLayout/updateLayoutBlockDataById'
+        }),
+        ...mapActions({
+            //  2.3.0 新增的部分
+            getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
         }),
         inputHandler(value, key) {
-            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key, value});
+            this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key, value});
         },
         iconImageuploadSuccessHandler(image) {
-            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: image});
-        },
-        deleteIconImage() {
-            this.updateLayoutDataByKey({navbarId: this.navbarId, index: this.index, key: 'iconImage', value: null});
+            this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'iconImage', value: image});
         },
         async saveHandler() {
             try {
                 let valid = await this.$refs.personSubjectModuleForm.validate();
                 if (valid) {
                     if (!this.selectAll(this.navbarId, this.index)) {
-                        this.saveLayoutToStore(this.navbarId);
-                        this.saveFlag = true;
-                        this.$message.success('保存成功');
-                        this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                        let {id} = this.$route.query;
+                        if (id) {
+                            let layoutBlock = this.activeLayout.find((item) => item.id === id);
+                            if (layoutBlock) {
+                                let putLayoutBlockRes = await this.$service.putLayoutBlock(id, layoutBlock);
+                                if (putLayoutBlockRes && putLayoutBlockRes.code === 0) {
+                                    this.$message.success('保存成功');
+                                    this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                                }
+                            }
+                        }
                     } else {
                         this.$message.error('专题色块必须全部选择');
                     }
