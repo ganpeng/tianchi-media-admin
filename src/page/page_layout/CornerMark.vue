@@ -1,13 +1,5 @@
 <template>
     <div class="mark-container">
-        <!--
-        <div class="left-top-field">
-            <img :src="getCornerMarkByKey('leftTop') | setPlatformImage" alt="">
-        </div>
-        <div v-if="getCornerMarkByKey('leftBottom')" class="left-bottom-field">
-            {{getCornerMarkByKey('leftBottom')}}
-        </div>
-        -->
         <div :style="rightTopStyle" class="right-top-field">
         </div>
         <div v-if="rightBottomText" class="right-bottom-field">
@@ -42,8 +34,6 @@ export default {
     },
     computed: {
         ...mapGetters({
-            getLayoutItemType: 'pageLayout/getLayoutItemType',
-            getLayoutItemByNavbarId: 'pageLayout/getLayoutItemByNavbarId',
             //  2.3.0新增
             activeLayout: 'pageLayout/getActiveLayout'
         }),
@@ -52,9 +42,8 @@ export default {
             let params = '';
 
             if (this.navbarId && _.isNumber(this.index) && _.isNumber(this.squareIndex)) {
-                let layoutItem = this.getLayoutItemByNavbarId(this.navbarId, this.index, this.squareIndex);
-                layoutItemType = this.getLayoutItemType(this.navbarId, this.index, this.squareIndex);
-                params = _.get(layoutItem, 'params');
+                layoutItemType = _.get(this.activeLayout, `${this.index}.layoutItemMultiList.${this.squareIndex}.layoutItemType`);
+                params = _.get(this.activeLayout, `${this.index}.layoutItemMultiList.${this.squareIndex}.params`);
             }
 
             if (layoutItemType === 'PROGRAMME_SUBJECT') {

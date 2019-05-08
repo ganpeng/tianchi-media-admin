@@ -300,7 +300,6 @@ const getters = {
     },
     getLayoutBlockItemByIndex(state) {
         return (index, squareIndex) => {
-            console.log(_.get(state.activeLayout, `${index}.layoutItemMultiList.${squareIndex}`));
             return _.get(state.activeLayout, `${index}.layoutItemMultiList.${squareIndex}`) || {};
         };
     }
@@ -569,8 +568,6 @@ const mutations = {
     },
     updateLayoutBlockByIndex(state, payload) {
         let {layoutBlockItem, index, squareIndex} = payload;
-        console.log(layoutBlockItem);
-        console.log(index);
         state.activeLayout = state.activeLayout.map((item, _index) => {
             if (_index === index) {
                 item.layoutItemMultiList = item.layoutItemMultiList.map((_layoutBlockItem, __index) => {
@@ -593,6 +590,15 @@ const mutations = {
             return item;
         });
     },
+    updateLayoutBlockDataByIndex(state, payload) {
+        let {key, value, index} = payload;
+        state.activeLayout = state.activeLayout.map((item, _index) => {
+            if (index === _index) {
+                item[key] = value;
+            }
+            return item;
+        });
+    },
     addLayoutBlockItemById(state, payload) {
         let {layoutBlockItem, layoutBlockId} = payload;
         state.activeLayout = state.activeLayout.map((item) => {
@@ -603,7 +609,7 @@ const mutations = {
         });
     },
     insertLayoutBlockByIndex(state, payload) {
-        let {index, layoutTemplate, renderType, navbarId, layoutBlockId} = payload;
+        let {index, layoutTemplate, renderType, navbarId, layoutItemMultiList} = payload;
         let layoutBlockDefault = {
             layoutTemplate: '',
             subjectId: '',
@@ -613,11 +619,11 @@ const mutations = {
         };
         let navbar = state.navbarList.find((navbar) => navbar.id === navbarId);
         let layoutBlock = Object.assign({}, layoutBlockDefault, {
-            id: layoutBlockId,
             layoutTemplate,
             navBarId: navbarId,
             navBarName: _.get(navbar, 'name'),
-            renderType
+            renderType,
+            layoutItemMultiList
         });
 
         state.activeLayout.splice(index, 0, layoutBlock);

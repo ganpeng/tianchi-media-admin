@@ -269,8 +269,7 @@ export default {
                 this.title = '编辑混排模块';
             } else {
                 this.title = '添加混排模块';
-                this.layoutBlockId = _.uniqueId('layoutBlockId');
-                this.insertLayoutBlockByIndex({index, navbarId, renderType: 'SHUFFLE', layoutTemplate: '', layoutBlockId: this.layoutBlockId});
+                this.insertLayoutBlockByIndex({index, navbarId, renderType: 'SHUFFLE', layoutTemplate: ''});
             }
         } catch (err) {
             console.log(err);

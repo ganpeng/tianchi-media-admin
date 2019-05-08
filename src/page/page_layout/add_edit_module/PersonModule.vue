@@ -3,7 +3,7 @@
         <h2 class="content-title">{{title}}</h2>
         <div class="seperator-line"></div>
         <div class="form-container">
-            <el-form :model="layoutData"
+            <el-form :model="layoutBlock"
                     :rules="inputRules"
                     status-icon
                     ref="personModuleForm"
@@ -13,14 +13,14 @@
                 <el-col :span="8">
                     <el-form-item label="人物模块名称" prop="title" required>
                         <el-input
-                            :value="layoutData.title"
+                            :value="layoutBlock.title"
                             @input="inputHandler($event, 'title')"
                             placeholder="请输入人物姓名"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="名称icon">
                         <single-image-uploader
-                            :uri="layoutData.iconImage ? layoutData.iconImage.uri : ''"
+                            :uri="layoutBlock.iconImage ? layoutBlock.iconImage.uri : ''"
                             :showDelete="false"
                             :uploadSuccessHandler="uploadSuccessHandler"
                             :allowResolutions="[{width: 82, height: 82}]"
@@ -231,14 +231,12 @@ export default {
             list: 'person/list',
             mainRoleLabel: 'person/mainRoleLabel',
             pagination: 'person/pagination',
-            getNavbarNameById: 'pageLayout/getNavbarNameById',
-            getLayoutDataByNavbarId: 'pageLayout/getLayoutDataByNavbarId',
             getNavbarSignCodeById: 'pageLayout/getNavbarSignCodeById',
 
             //  2.3.0 新增
             activeLayout: 'pageLayout/getActiveLayout'
         }),
-        layoutData() {
+        layoutBlock() {
             let layoutBlock = _.get(this.activeLayout, `${this.index}`);
             return layoutBlock || {};
         },
@@ -269,7 +267,7 @@ export default {
         },
         personList: {
             get() {
-                return _.get(this.layoutData, 'layoutItemMultiList') || [];
+                return _.get(this.layoutBlock, 'layoutItemMultiList') || [];
             },
             set(value) {
                 this.updateLayoutBlockDataById({ layoutBlockId: this.layoutBlockId, key: 'layoutItemMultiList', value });
@@ -366,7 +364,7 @@ export default {
         },
         //  弹窗控制方法
         showSelectPersonDialog() {
-            let layoutItemMultiList = _.get(this.layoutData, 'layoutItemMultiList');
+            let layoutItemMultiList = _.get(this.layoutBlock, 'layoutItemMultiList');
             if (layoutItemMultiList) {
                 this.layoutItemMultiList = _.cloneDeep(layoutItemMultiList);
             }

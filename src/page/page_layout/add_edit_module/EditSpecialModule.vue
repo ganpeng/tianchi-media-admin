@@ -1,6 +1,6 @@
 <template>
     <div class="edit-special-module-container">
-        <h2 class="content-title">添加特殊模块</h2>
+        <h2 class="content-title">{{title}}</h2>
         <div class="seperator-line"></div>
         <div class="form-container">
             <el-form :model="layoutBlock" status-icon ref="specialModuleForm"
@@ -74,6 +74,13 @@
             :allowResolutions="allowResolutions"
             ref="selectChannelDialog">
         ></channel-dialog>
+
+        <!--  2.2.0 新增 -->
+        <subject-video
+            :squareIndex="squareIndex"
+            :allowResolutions="allowResolutions"
+            ref="subjectVideoDialog"
+        ></subject-video>
     </div>
 </template>
 <script>
@@ -92,6 +99,9 @@ import LinkDialog from '../add_edit_module/LinkDialog';
 import EditFilter from '../add_edit_module/EditFilter';
 import ChannelDialog from '../add_edit_module/ChannelDialog';
 
+//  2.2.0新增
+import SubjectVideo from '../add_edit_module/SubjectVideo';
+
 export default {
     name: 'EditSpecialModule',
     components: {
@@ -105,12 +115,17 @@ export default {
         EditProgrammeVideo,
         LinkDialog,
         EditFilter,
-        ChannelDialog
+        ChannelDialog,
+
+        //  2.2.0新增
+        SubjectVideo
     },
     data() {
         return {
+            title: '',
             navbarId: '',
             index: '',
+            operator: '',
             squareIndex: 0,
             layoutItemType: '',
             saveFlag: false, // 判断页面跳转之前如果没有点保存按钮的话，就删除新增的这个layoutItem
@@ -122,13 +137,25 @@ export default {
     async created() {
         try {
             let {navbarId, index, operator} = this.$route.params;
-            let {id} = this.$route.query;
             this.navbarId = navbarId;
-            this.index = index;
-            this.layoutBlockId = id;
+            this.index = parseInt(index);
+            this.operator = operator;
 
-            if (operator === 'edit') {
-                await this.getLayoutByNavbarId(navbarId);
+            await this.getLayoutByNavbarId(navbarId);
+
+            if (this.operator === 'edit') {
+                let {id} = this.$route.query;
+                this.layoutBlockId = id;
+                this.title = '编辑特殊模块';
+            } else {
+                this.title = '添加特殊模块';
+                this.insertLayoutBlockByIndex({
+                    index,
+                    navbarId,
+                    renderType: 'SPECIAL',
+                    layoutTemplate: 'LT_SP_2',
+                    layoutItemMultiList: _.times(2, () => _.cloneDeep(this.$util.defaultLayoutBlock))
+                });
             }
         } catch (err) {
             console.log(err);
@@ -157,29 +184,44 @@ export default {
     methods: {
         ...mapMutations({
             //  2.3.0新增
-            updateLayoutBlockDataById: 'pageLayout/updateLayoutBlockDataById'
+            updateLayoutBlockDataById: 'pageLayout/updateLayoutBlockDataById',
+            updateLayoutBlockDataByIndex: 'pageLayout/updateLayoutBlockDataByIndex',
+            insertLayoutBlockByIndex: 'pageLayout/insertLayoutBlockByIndex'
         }),
         ...mapActions({
             //  2.3.0 新增的部分
             getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
         }),
         iconImageuploadSuccessHandler(image) {
-            this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'iconImage', value: image});
+            if (this.operator === 'edit') {
+                this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'iconImage', value: image});
+            } else {
+                this.updateLayoutBlockDataByIndex({index: this.index, key: 'iconImage', value: image});
+            }
         },
         async saveHandler() {
             try {
                 let valid = await this.$refs.specialModuleForm.validate();
                 if (valid) {
                     if (!this.selectAll(this.navbarId, this.index)) {
-                        let {id} = this.$route.query;
-                        if (id) {
-                            let layoutBlock = this.activeLayout.find((item) => item.id === id);
+                        if (this.operator === 'edit') {
+                            let layoutBlock = this.activeLayout.find((item) => item.id === this.layoutBlockId);
                             if (layoutBlock) {
-                                let putLayoutBlockRes = await this.$service.putLayoutBlock(id, layoutBlock);
+                                let putLayoutBlockRes = await this.$service.putLayoutBlock(this.layoutBlockId, layoutBlock);
                                 if (putLayoutBlockRes && putLayoutBlockRes.code === 0) {
                                     this.$message.success('保存成功');
                                     this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
                                 }
+                            }
+                        } else {
+                            this.updateLayoutBlockDataByIndex({index: this.index, key: 'sort', value: this.index});
+                            let layoutBlock = _.get(this.activeLayout, `${this.index}`);
+                            if (layoutBlock) {
+                                    let postLayoutBlockRes = await this.$service.postLayoutBlock(this.navbarId, layoutBlock);
+                                    if (postLayoutBlockRes && postLayoutBlockRes.code === 0) {
+                                        this.$message.success('保存成功');
+                                        this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                                    }
                             }
                         }
                     } else {
@@ -226,6 +268,10 @@ export default {
                         break;
                     case 'CHANNEL':
                         this.$refs.selectChannelDialog.showDialog('CHANNEL');
+                        break;
+                        //  2.2.0新增
+                    case 'SUBJECT_VIDEO':
+                        this.$refs.subjectVideoDialog.showDialog('SUBJECT_VIDEO');
                         break;
                     default:
                         throw new Error('layoutItemType类型错误');

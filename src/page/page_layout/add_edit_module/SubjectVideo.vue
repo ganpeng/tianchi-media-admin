@@ -503,6 +503,7 @@ export default {
             dialogVisible: false,
             navbarId: '',
             index: 0,
+            operator: '',
             category: '',
             layoutItemType: '',
             programme: {},
@@ -520,9 +521,10 @@ export default {
         };
     },
     created() {
-        let {navbarId, index} = this.$route.params;
+        let {navbarId, index, operator} = this.$route.params;
         this.navbarId = navbarId;
         this.index = parseInt(index);
+        this.operator = operator;
     },
     computed: {
         ...mapGetters({
@@ -648,7 +650,8 @@ export default {
             updateProgrammeSubject: 'pageLayout/updateProgrammeSubject',
 
             //  2.3.0新增
-            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById'
+            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById',
+            updateLayoutBlockByIndex: 'pageLayout/updateLayoutBlockByIndex'
         }),
         ...mapActions({
             getProgrammeVideoListById: 'programme/getProgrammeVideoListById',
@@ -847,7 +850,6 @@ export default {
         },
         //  最后一步的确认处理函数
         enterHandler() {
-            // 设置layoutItemType为PROGRAMME_VIDEO
             if (this.getImageByKey('coverImage')) {
                 let {name, desc, programmeTemplate} = this.programme;
                 this.updateLayoutBlockItem({ key: 'layoutItemType', value: this.layoutItemType });
@@ -856,11 +858,19 @@ export default {
                 this.updateLayoutBlockItem({ key: 'desc', value: desc });
                 this.updateLayoutBlockItem({ key: 'programmeTemplate', value: programmeTemplate });
                 this.updateLayoutBlockItem({ key: 'params', value: JSON.stringify(this.videoObj) });
-                this.updateLayoutBlockById({
-                    squareIndex: this.squareIndex,
-                    layoutBlockId: this.layoutBlockId,
-                    layoutBlockItem: this.layoutBlockItemClone
-                });
+                if (this.operator === 'edit') {
+                    this.updateLayoutBlockById({
+                        squareIndex: this.squareIndex,
+                        layoutBlockId: this.layoutBlockId,
+                        layoutBlockItem: this.layoutBlockItemClone
+                    });
+                } else {
+                    this.updateLayoutBlockByIndex({
+                        squareIndex: this.squareIndex,
+                        index: this.index,
+                        layoutBlockItem: this.layoutBlockItemClone
+                    });
+                }
                 this.showExist = true;
                 this.closeDialog();
             } else {

@@ -54,53 +54,85 @@ export default {
         return {
             navbarId: '',
             index: 0,
-            dialogVisible: false
+            operator: '',
+            dialogVisible: false,
+
+            //  2.3.0 新增字段
+            layoutBlockId: '',
+            layoutBlockItemClone: null
         };
     },
     created() {
-        let {navbarId, index} = this.$route.params;
+        let {navbarId, index, operator} = this.$route.params;
         this.navbarId = navbarId;
         this.index = parseInt(index);
+        this.operator = operator;
     },
     computed: {
         ...mapGetters({
-            layout: 'pageLayout/layout'
+            getChiefActor: 'programme/getChiefActor',
+
+            //  2.3.0 新增
+            activeLayout: 'pageLayout/getActiveLayout',
+            getLayoutBlockItem: 'pageLayout/getLayoutBlockItem',
+            getLayoutBlockItemByIndex: 'pageLayout/getLayoutBlockItemByIndex'
         }),
+        layoutBlockItem() {
+            if (this.operator === 'edit') {
+                return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
+            } else {
+                return this.getLayoutBlockItemByIndex(this.index, this.squareIndex);
+            }
+        },
         getImageByKey() {
             return (key) => {
-                return _.get(this.layout, `${this.navbarId}.data.${this.index}.layoutItemMultiList.${this.squareIndex}.${key}.uri`);
+                return _.get(this.layoutBlockItemClone, `${key}.uri`);
             };
         }
     },
     methods: {
         ...mapMutations({
-            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex'
+            //  2.3.0新增
+            updateLayoutBlockById: 'pageLayout/updateLayoutBlockById',
+            updateLayoutBlockByIndex: 'pageLayout/updateLayoutBlockByIndex'
         }),
+        updateLayoutBlockItem(payload) {
+            let {key, value} = payload;
+            let _layoutBlockItemClone = Object.assign({}, this.layoutBlockItemClone, {[key]: value});
+            this.layoutBlockItemClone = _layoutBlockItemClone;
+        },
         //  弹窗的操作
         showDialog(category) {
+            let {id} = this.$route.query;
+            this.layoutBlockId = id;
             this.dialogVisible = true;
+            this.layoutBlockItemClone = _.cloneDeep(this.layoutBlockItem);
         },
         closeDialog() {
             this.dialogVisible = false;
+
+            this.layoutBlockId = '';
+            this.layoutBlockItemClone = null;
         },
         enterHandler() {
-            this.updateLayoutItemByIndex({
-                navbarId: this.navbarId,
-                index: this.index,
-                squareIndex: this.squareIndex,
-                key: 'layoutItemType',
-                value: 'ALL'
-            });
+            this.updateLayoutBlockItem({ key: 'layoutItemType', value: 'ALL' });
+            if (this.operator === 'edit') {
+                this.updateLayoutBlockById({
+                    squareIndex: this.squareIndex,
+                    layoutBlockId: this.layoutBlockId,
+                    layoutBlockItem: this.layoutBlockItemClone
+                });
+            } else {
+                this.updateLayoutBlockByIndex({
+                    squareIndex: this.squareIndex,
+                    index: this.index,
+                    layoutBlockItem: this.layoutBlockItemClone
+                });
+            }
             this.closeDialog();
         },
         uploadAllCoverImageSuccessHandler(image) {
-            this.updateLayoutItemByIndex({
-                navbarId: this.navbarId,
-                index: this.index,
-                squareIndex: this.squareIndex,
-                key: 'coverImage',
-                value: image
-            });
+            this.updateLayoutBlockItem({ key: 'coverImage', value: image });
         }
     }
 };

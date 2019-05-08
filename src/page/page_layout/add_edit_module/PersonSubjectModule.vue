@@ -84,17 +84,25 @@ export default {
     },
     async created() {
         try {
-            let {id} = this.$route.query;
             let {navbarId, index, operator} = this.$route.params;
             this.navbarId = navbarId;
-            this.index = index;
-            this.layoutBlockId = id;
+            this.index = parseInt(index);
+
+            await this.getLayoutByNavbarId(navbarId);
 
             if (operator === 'edit') {
-                await this.getLayoutByNavbarId(navbarId);
+                let {id} = this.$route.query;
+                this.layoutBlockId = id;
                 this.title = '编辑人物专题模块';
             } else {
                 this.title = '新增人物专题模块';
+                this.insertLayoutBlockByIndex({
+                    index,
+                    navbarId,
+                    renderType: 'FIGURE_SUBJECT',
+                    layoutTemplate: 'LT_FS_6',
+                    layoutItemMultiList: _.times(6, () => _.cloneDeep(this.$util.defaultLayoutBlock))
+                });
             }
         } catch (err) {
             console.log(err);
@@ -122,32 +130,44 @@ export default {
     methods: {
         ...mapMutations({
             //  2.3.0新增
-            updateLayoutBlockDataById: 'pageLayout/updateLayoutBlockDataById'
+            updateLayoutBlockDataByIndex: 'pageLayout/updateLayoutBlockDataByIndex',
+            insertLayoutBlockByIndex: 'pageLayout/insertLayoutBlockByIndex'
         }),
         ...mapActions({
             //  2.3.0 新增的部分
             getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
         }),
         inputHandler(value, key) {
-            this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key, value});
+            this.updateLayoutBlockDataByIndex({index: this.index, key, value});
         },
         iconImageuploadSuccessHandler(image) {
-            this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'iconImage', value: image});
+            this.updateLayoutBlockDataByIndex({index: this.index, key: 'iconImage', value: image});
         },
         async saveHandler() {
             try {
                 let valid = await this.$refs.personSubjectModuleForm.validate();
                 if (valid) {
                     if (!this.selectAll(this.navbarId, this.index)) {
-                        let {id} = this.$route.query;
-                        if (id) {
-                            let layoutBlock = this.activeLayout.find((item) => item.id === id);
-                            if (layoutBlock) {
-                                let putLayoutBlockRes = await this.$service.putLayoutBlock(id, layoutBlock);
-                                if (putLayoutBlockRes && putLayoutBlockRes.code === 0) {
-                                    this.$message.success('保存成功');
-                                    this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                        if (this.operator === 'edit') {
+                            if (this.layoutBlockId) {
+                                let layoutBlock = this.activeLayout.find((item) => item.id === this.layoutBlockId);
+                                if (layoutBlock) {
+                                    let putLayoutBlockRes = await this.$service.putLayoutBlock(this.layoutBlockId, layoutBlock);
+                                    if (putLayoutBlockRes && putLayoutBlockRes.code === 0) {
+                                        this.$message.success('保存成功');
+                                        this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                                    }
                                 }
+                            }
+                        } else {
+                            this.updateLayoutBlockDataByIndex({index: this.index, key: 'sort', value: this.index});
+                            let layoutBlock = _.get(this.activeLayout, `${this.index}`);
+                            if (layoutBlock) {
+                                    let postLayoutBlockRes = await this.$service.postLayoutBlock(this.navbarId, layoutBlock);
+                                    if (postLayoutBlockRes && postLayoutBlockRes.code === 0) {
+                                        this.$message.success('保存成功');
+                                        this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                                    }
                             }
                         }
                     } else {

@@ -191,9 +191,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations({
-            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex'
-        }),
+        ...mapMutations({}),
         addShuffleLayout(squareIndex) {
             return (layoutItemType) => {
                 this.squareIndex = squareIndex;
@@ -233,8 +231,25 @@ export default {
         addLayout(type) {
             let {navbarId} = this.$route.params;
             let id = _.get(this.activeLayout, `${this.index}.id`);
-            this.$router.push({ name: 'ShuffleModule', params: {navbarId, index: this.index, operator: 'add'}, query: {id} });
-            // this.$util.layoutCommand({navbarId, index: this.index, type, router: this.$router});
+            switch (type) {
+                case 'SHUFFLE':
+                    this.$router.push({name: 'ShuffleModule', params: {navbarId, index: this.index, operator: 'add'}, query: {id}});
+                    break;
+                case 'FIGURE':
+                    this.$router.push({name: 'PersonModule', params: {navbarId, index: this.index, operator: 'add'}, query: {id}});
+                    break;
+                case 'SPECIAL':
+                    this.$router.push({name: 'EditSpecialModule', params: {navbarId, index: this.index, operator: 'add'}, query: {id}});
+                    break;
+                case 'FIGURE_SUBJECT':
+                    this.$router.push({name: 'PersonSubjectModule', params: {navbarId, index: this.index, operator: 'add'}, query: {id}});
+                    break;
+                case 'PROGRAMME_SUBJECT':
+                    this.$router.push({name: 'ProgrammeSubjectModule', params: {navbarId, index: this.index, operator: 'add'}, query: {id}});
+                    break;
+                default:
+                    throw new Error('类型错误');
+            }
         },
         editHandler() {
             let {navbarId} = this.$route.params;

@@ -310,6 +310,7 @@ export default {
         return {
             navbarId: '',
             index: 0,
+            operator: '',
             active: 0,
             totalActive: 3,
             dialogVisible: false,
@@ -325,9 +326,10 @@ export default {
         };
     },
     created() {
-        let {navbarId, index} = this.$route.params;
+        let {navbarId, index, operator} = this.$route.params;
         this.navbarId = navbarId;
         this.index = parseInt(index);
+        this.operator = operator;
     },
     computed: {
         ...mapGetters({
@@ -344,8 +346,7 @@ export default {
             getLayoutBlockItemByIndex: 'pageLayout/getLayoutBlockItemByIndex'
         }),
         layoutBlockItem() {
-            let {operator} = this.$route.params;
-            if (operator === 'edit') {
+            if (this.operator === 'edit') {
                 return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
             } else {
                 return this.getLayoutBlockItemByIndex(this.index, this.squareIndex);
@@ -670,14 +671,14 @@ export default {
         enterHandler() {
             if (this.totalActive === 3) {
                 if (this.getSquareProgrammeLayoutItemType) {
-                    let {operator} = this.$route.params;
-                    if (operator === 'edit') {
+                    if (this.operator === 'edit') {
                         this.updateLayoutBlockById({
                             squareIndex: this.squareIndex,
                             layoutBlockId: this.layoutBlockId,
                             layoutBlockItem: this.layoutBlockItemClone
                         });
                     } else {
+                        console.log('aaaaa');
                         this.updateLayoutBlockByIndex({
                             squareIndex: this.squareIndex,
                             index: this.index,
@@ -691,8 +692,7 @@ export default {
                 }
             } else {
                 this.updateLayoutBlockItem({key: 'layoutItemType', value: 'PROGRAMME_LIST'});
-                let {operator} = this.$route.params;
-                if (operator === 'edit') {
+                if (this.operator === 'edit') {
                     this.updateLayoutBlockById({
                         squareIndex: this.squareIndex,
                         layoutBlockId: this.layoutBlockId,
