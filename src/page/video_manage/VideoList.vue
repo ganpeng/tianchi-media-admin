@@ -51,19 +51,19 @@
                         <el-button
                             class="btn-style-two contain-svg-icon"
                             @click="goToVideoUploadPage">
-                            <svg-icon icon-class="import_pp"></svg-icon>
+                            <svg-icon icon-class="inject_video"></svg-icon>
                             注入视频
                         </el-button>
                         <el-button
                             class="btn-style-two contain-svg-icon"
                             @click="toDiffTime">
-                            <svg-icon icon-class="add"></svg-icon>
+                            <svg-icon icon-class="check_length"></svg-icon>
                             检查时长
                         </el-button>
                         <el-button
                             class="btn-style-two contain-svg-icon"
                             @click="toDownloadVideoList">
-                            <svg-icon icon-class="add"></svg-icon>
+                            <svg-icon icon-class="download_video"></svg-icon>
                             下载列表
                         </el-button>
                         <!--拉取视频（配置完成的子站）-->
@@ -71,7 +71,7 @@
                             v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
                             class="btn-style-two contain-svg-icon"
                             @click="openPullVideoDialog">
-                            <svg-icon icon-class="add"></svg-icon>
+                            <svg-icon icon-class="pull_video"></svg-icon>
                             拉取视频
                         </el-button>
                     </div>

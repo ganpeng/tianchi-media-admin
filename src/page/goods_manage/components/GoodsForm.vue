@@ -31,6 +31,7 @@
             </el-form-item>
             <el-form-item label="商品金额" prop="price" required>
                 <el-input
+                    @blur="fixGoodsPrice"
                     v-model="goodsInfo.price"
                     size="medium"
                     type="number"
@@ -202,6 +203,9 @@
             this.init();
         },
         methods: {
+            fixGoodsPrice() {
+                this.goodsInfo.price = parseFloat(this.goodsInfo.price).toFixed(2);
+            },
             init() {
                 this.$util.toggleFixedBtnContainer();
                 this.$service.getProductList({

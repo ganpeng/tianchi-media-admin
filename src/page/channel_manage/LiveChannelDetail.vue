@@ -21,7 +21,7 @@
                             <el-dropdown
                                 @command="programmePageOperator($event)" placement="bottom">
                                 <el-button class="btn-style-two contain-svg-icon">
-                                    <svg-icon icon-class="programme_page"></svg-icon>
+                                    <svg-icon icon-class="check_playbill"></svg-icon>
                                     节目单
                                     <svg-icon icon-class="arrow_down"></svg-icon>
                                 </el-button>

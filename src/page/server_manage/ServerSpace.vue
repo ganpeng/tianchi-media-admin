@@ -2,7 +2,9 @@
 <template>
     <div>
         <div class="content-title">存储空间</div>
-        <v-chart :options="serverData"/>
+        <div class="text-center">
+            <v-chart :options="serverData"/>
+        </div>
         <el-table
             :data="serverList"
             border
@@ -63,12 +65,6 @@
             'v-chart': ECharts
         },
         data() {
-            let data = [];
-            for (let i = 0; i <= 360; i++) {
-                let t = i / 180 * Math.PI;
-                let r = Math.sin(2 * t) * Math.cos(2 * t);
-                data.push([r, i]);
-            }
             return {
                 serverList: [
                     {
@@ -110,12 +106,16 @@
                         left: 'left',
                         data: ['已用空间', '可用空间', '预留空间']
                     },
+                    label: {
+                        fontSize: 14
+                    },
                     series: [
                         {
                             name: '所有存储空间',
                             type: 'pie',
                             radius: '55%',
-                            center: ['50%', '60%'],
+                            center: ['50%', '50%'],
+                            color: ['rgb(0,98,196)', 'rgb(116,194,146)', 'rgb(0,143,196)'],
                             data: [
                                 {value: 4048, name: '已用空间'},
                                 {value: 2000, name: '可用空间'},
@@ -151,6 +151,7 @@
 <style scoped lang="less">
 
     .echarts {
+        display: inline-block;
         width: 400px;
         height: 400px;
     }

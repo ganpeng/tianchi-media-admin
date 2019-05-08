@@ -76,7 +76,8 @@
                 <span
                     @click="toggleSearchField"
                     :class="['el-dropdown-link', searchFieldVisible ? 'active' : '']">
-                    更多筛选<i v-if="searchFieldVisible" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
+                    更多筛选<i v-if="searchFieldVisible" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i v-else
+                                                                                                                  class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
                 </span>
             </div>
             <div v-show="searchFieldVisible" class="field-row">
@@ -193,7 +194,7 @@
                     <el-button
                         class="btn-style-two contain-svg-icon"
                         @click="gotoBlankPage('LiveChannelImport')">
-                        <svg-icon icon-class="import_pp"></svg-icon>
+                        <svg-icon icon-class="upload_playbill"></svg-icon>
                         节目单
                     </el-button>
                 </div>
@@ -206,7 +207,8 @@
                 <el-table-column prop="no" align="center" width="80px" label="台号">
                     <template slot-scope="scope">
                         <span>{{scope.row.no}}</span>
-                        <span @click="displayVideoPlayer(scope.row)" v-if="scope.row.visible" class="display-btn"><svg-icon icon-class="channel_video_play"></svg-icon></span>
+                        <span @click="displayVideoPlayer(scope.row)" v-if="scope.row.visible" class="display-btn"><svg-icon
+                            icon-class="channel_video_play"></svg-icon></span>
                         <span v-else class="display-btn disabled"><svg-icon icon-class="channel_video_play"></svg-icon></span>
                     </template>
                 </el-table-column>
@@ -601,10 +603,10 @@
             async multUpFrameChannelHandler() {
                 let idList = this.selectedChannelList.map((item) => item.id);
                 let confirm = await this.$confirm(`您确定要恢复所选频道吗, 是否继续?`, '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'error'
-                    });
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                });
                 if (confirm) {
                     let res = await this.$service.batchSetChannel({idList, visible: true});
                     if (res && res.code === 0) {
@@ -619,10 +621,10 @@
             async multLowerFrameChannelHandler() {
                 let idList = this.selectedChannelList.map((item) => item.id);
                 let confirm = await this.$confirm(`您确定要禁播所选频道吗, 是否继续?`, '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'error'
-                    });
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                });
                 if (confirm) {
                     let res = await this.$service.batchSetChannel({idList, visible: false});
                     if (res && res.code === 0) {
@@ -653,6 +655,7 @@
         font-size: 14px;
         background: transparent;
     }
+
     .yes {
         color: $successColor;
     }
@@ -660,6 +663,7 @@
     .no {
         color: $dangerColor;
     }
+
     .display-btn {
         cursor: pointer;
         &.disabled {
@@ -668,17 +672,18 @@
     }
 </style>
 <style lang="scss">
-#channel-operator {
-    .el-dropdown {
-        border: none;
-        width: 70px;
-        height: 18px;
-        line-height: 18px;
+    #channel-operator {
+        .el-dropdown {
+            border: none;
+            width: 70px;
+            height: 18px;
+            line-height: 18px;
+        }
     }
-}
-#multi-selecter {
-    input {
-        height: 34px!important;
+
+    #multi-selecter {
+        input {
+            height: 34px !important;
+        }
     }
-}
 </style>

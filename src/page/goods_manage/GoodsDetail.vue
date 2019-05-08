@@ -17,7 +17,7 @@
         </div>
         <!--相关信息-->
         <div class="about-channel">
-            <svg-icon icon-class="goods_list"></svg-icon>
+            <svg-icon icon-class="goods_placeholder"></svg-icon>
             <div class="info-container">
                 <div>
                     <ul class="info-list">
@@ -209,7 +209,7 @@
                     margin-bottom: 8px;
                     span {
                         display: inline-block;
-                        width: 110px;
+                        width: 60px;
                         text-align: right;
                         padding-right: 10px;
                         font-size: 16px;

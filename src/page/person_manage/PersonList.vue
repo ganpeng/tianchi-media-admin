@@ -101,7 +101,7 @@
                         <el-button
                             class="btn-style-two contain-svg-icon"
                             @click="getDuplicateListHandler">
-                            <svg-icon icon-class="export"></svg-icon>
+                            <svg-icon icon-class="duplication"></svg-icon>
                             查重
                         </el-button>
                     </div>
@@ -109,7 +109,8 @@
                 <el-table
                     @select="selectHandler"
                     @select-all="selectAllHandler"
-                    :row-class-name='"figure-row"' :header-row-class-name='"common-table-header"' class="my-table-style" :data="list" border>
+                    :row-class-name='"figure-row"' :header-row-class-name='"common-table-header"' class="my-table-style"
+                    :data="list" border>
                     <el-table-column type="selection" align="center"></el-table-column>
                     <el-table-column prop="id" align="center" width="120px" label="编号">
                         <template slot-scope="scope">
@@ -135,9 +136,12 @@
                             {{scope.row.backgroundImage && scope.row.backgroundImage.uri ? '有' : '无'}}
                         </template>
                     </el-table-column>
-                    <el-table-column label="照片" width="120px" align="center" >
+                    <el-table-column label="照片" width="120px" align="center">
                         <template slot-scope="scope">
-                            <img v-if="scope.row.avatarImage" @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )" width="100px" height="100px" class="person-image pointer" :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">
+                            <img v-if="scope.row.avatarImage"
+                                 @click="displayImage(scope.row.avatarImage ? scope.row.avatarImage : {} )"
+                                 width="100px" height="100px" class="person-image pointer"
+                                 :src="scope.row.avatarImage ? scope.row.avatarImage.uri :'' | imageUrl" alt="">
                             <span v-else>------</span>
                         </template>
                     </el-table-column>
@@ -309,10 +313,10 @@
             },
             // 跳转到详情页面
             displayPerson(userId) {
-                this.$router.push({ name: 'DisplayPerson', params: { id: userId } });
+                this.$router.push({name: 'DisplayPerson', params: {id: userId}});
             },
             editPerson(userId) {
-                this.$router.push({ name: 'EditPerson', params: { id: userId } });
+                this.$router.push({name: 'EditPerson', params: {id: userId}});
             },
             handlePaginationChange(value, key) {
                 this.updatePagination({value, key});
@@ -335,20 +339,21 @@
                     return false;
                 }
                 this.$confirm(`您确定要${visible ? '下架人物' : '上架人物'}吗, 是否继续?`, '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'error'
-                    }).then(() => {
-                        this.lowerFramePerson(id)
-                            .then((res) => {
-                                if (res && res.code === 0) {
-                                    this.$message.success(`人物${visible ? '下架' : '上架'}成功`);
-                                    this.getPersonList({isProgramme: false});
-                                } else {
-                                    this.$message.error(this.lowerFramePersonErrorHandler(res));
-                                }
-                            });
-                    }).catch(() => {});
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.lowerFramePerson(id)
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                this.$message.success(`人物${visible ? '下架' : '上架'}成功`);
+                                this.getPersonList({isProgramme: false});
+                            } else {
+                                this.$message.error(this.lowerFramePersonErrorHandler(res));
+                            }
+                        });
+                }).catch(() => {
+                });
             },
             lowerFramePersonErrorHandler(res) {
                 let {code, data, message} = res;
@@ -376,30 +381,30 @@
             },
             _deletePerson(id) {
                 this.$confirm(`您确定要删除该人物吗, 是否继续?`, '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'error'
-                    }).then(() => {
-                        this.deletePerson(id)
-                            .then((res) => {
-                                if (res && res.code === 0) {
-                                    this.$message.success('人物删除成功');
-                                    this.getPersonList({isProgramme: false});
-                                } else {
-                                    let msg = res.message || '人物删除失败';
-                                    this.$message.error(msg);
-                                }
-                            });
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.deletePerson(id)
+                        .then((res) => {
+                            if (res && res.code === 0) {
+                                this.$message.success('人物删除成功');
+                                this.getPersonList({isProgramme: false});
+                            } else {
+                                let msg = res.message || '人物删除失败';
+                                this.$message.error(msg);
+                            }
                         });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
                     });
+                });
             },
             // 重复人物查询
             getDuplicateListHandler() {
-                this.$router.push({ name: 'DuplicateList' });
+                this.$router.push({name: 'DuplicateList'});
             },
             // 放大预览图片
             displayImage(image) {
@@ -437,10 +442,10 @@
             async multUpFramePersonHandler() {
                 let idList = this.selectedVideoList.map((item) => item.id);
                 let confirm = await this.$confirm(`您确定要上架所有人物吗, 是否继续?`, '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'error'
-                    });
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                });
                 if (confirm) {
                     let res = await this.$service.batchLowerUpFramePerson(idList, true);
                     if (res && res.code === 0) {
@@ -455,10 +460,10 @@
             async multLowerFramePersonHandler() {
                 let idList = this.selectedVideoList.map((item) => item.id);
                 let confirm = await this.$confirm(`您确定要下架所选人物吗, 是否继续?`, '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'error'
-                    });
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                });
                 if (confirm) {
                     let res = await this.$service.batchLowerUpFramePerson(idList, false);
                     if (res && res.code === 0) {
@@ -473,10 +478,10 @@
             async batchDeletPersonHandler() {
                 let idList = _.uniq(this.selectedVideoList.map((item) => item.id));
                 let confirm = await this.$confirm(`您确定要删除所选人物吗, 是否继续?`, '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'error'
-                    });
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                });
                 if (confirm) {
                     let res = await this.$service.batchDeletePerson(idList);
                     if (res && res.code === 0) {
@@ -498,13 +503,14 @@
     };
 </script>
 <style scoped lang="less">
-.btn-style-one {
-    margin-left: 10px;
-}
-.person-image {
-    width: 80px;
-    height: 80px;
-    border: 1px solid #3E495E;
-    border-radius: 8px;
-}
+    .btn-style-one {
+        margin-left: 10px;
+    }
+
+    .person-image {
+        width: 80px;
+        height: 80px;
+        border: 1px solid #3E495E;
+        border-radius: 8px;
+    }
 </style>

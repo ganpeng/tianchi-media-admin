@@ -1257,6 +1257,14 @@
             },
             // 添加相应的视频
             appendVideo(selectedVideoList) {
+                // 设置视频状态
+                this.currentCarouselGroup.carouselVideoList.map(currentVideo => {
+                    selectedVideoList.map(selectVideo => {
+                        if (currentVideo.code === selectVideo.code) {
+                            selectVideo.visible = currentVideo.visible;
+                        }
+                    });
+                });
                 for (let i = 0; i < selectedVideoList.length; i++) {
                     if (!selectedVideoList[i].storageVideoId) {
                         selectedVideoList[i].storageVideoId = selectedVideoList[i].id;
@@ -1264,7 +1272,9 @@
                     // 添加的视频统一设置 status 为 NORMAL
                     selectedVideoList[i].status = 'NORMAL';
                     // 添加的视频设置为默认正常
-                    selectedVideoList[i].visible = true;
+                    if (selectedVideoList[i].visible !== false) {
+                        selectedVideoList[i].visible = true;
+                    }
                     delete selectedVideoList[i].id;
                 }
                 // 对于新增的视频添加到index之后
