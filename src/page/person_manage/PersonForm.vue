@@ -103,6 +103,7 @@
                     ></single-image-uploader>
                 </el-form-item>
             </el-col>
+            <!--
             <el-col :span="24">
                 <el-form-item label="背景图片" required>
                     <single-image-uploader
@@ -114,6 +115,7 @@
                     ></single-image-uploader>
                 </el-form-item>
             </el-col>
+            -->
         </el-form>
     </div>
 </template>

@@ -145,7 +145,26 @@ export default {
         },
         addLayout(type) {
             let {navbarId} = this.$route.params;
-            this.$util.layoutCommand({navbarId, index: this.index, type, router: this.$router});
+            let id = _.get(this.activeLayout, `${this.index}.id`);
+            switch (type) {
+                case 'SHUFFLE':
+                    this.$router.push({name: 'ShuffleModule', params: {navbarId, index: this.index, operator: 'add'}, query: {id}});
+                    break;
+                case 'FIGURE':
+                    this.$router.push({name: 'PersonModule', params: {navbarId, index: this.index, operator: 'add'}, query: {id}});
+                    break;
+                case 'SPECIAL':
+                    this.$router.push({name: 'EditSpecialModule', params: {navbarId, index: this.index, operator: 'add'}, query: {id}});
+                    break;
+                case 'FIGURE_SUBJECT':
+                    this.$router.push({name: 'PersonSubjectModule', params: {navbarId, index: this.index, operator: 'add'}, query: {id}});
+                    break;
+                case 'PROGRAMME_SUBJECT':
+                    this.$router.push({name: 'ProgrammeSubjectModule', params: {navbarId, index: this.index, operator: 'add'}, query: {id}});
+                    break;
+                default:
+                    throw new Error('类型错误');
+            }
         },
         addFilterLayout() {
             this.isAdd = true;
@@ -157,8 +176,8 @@ export default {
             this.$router.push({ name: 'ShuffleModule', params: {navbarId, index: this.index, operator: 'edit'}, query: {id} });
         },
         deleteHandler() {
-            let {navbarId} = this.$route.params;
-            this.$util.deleteLayoutItemHandler({navbarId, index: this.index});
+            let id = _.get(this.activeLayout, `${this.index}.id`);
+            this.$util.deleteLayoutItemHandler(id);
         }
     }
 };

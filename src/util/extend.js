@@ -1,5 +1,6 @@
 import store from 'store';
 import _ from 'lodash';
+import 'babel-polyfill';
 import constants from './constants';
 import {Message, MessageBox} from 'element-ui';
 import service from '../service/index';
@@ -385,20 +386,25 @@ let util = {
                 throw new Error('类型错误');
         }
     },
-    deleteLayoutItemHandler({navbarId, index}) {
-        MessageBox.confirm('您确定要删除该板式吗？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'error'
-        }).then(() => {
-            vuexStore.commit('pageLayout/deleteLayoutDataByIndex', {navbarId, index});
-            vuexStore.commit('pageLayout/saveLayoutToStore');
-        }).catch(() => {
-            Message({
-                message: '已取消删除',
-                type: 'info'
+    async deleteLayoutItemHandler(id) {
+        try {
+            let confirm = await MessageBox.confirm('您确定要删除该板式吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'error'
             });
-        });
+            if (confirm) {
+                let res = await service.deleteLayoutBlockById(id);
+                if (res && res.code === 0) {
+                    vuexStore.commit('pageLayout/setActiveLayout', {layout: res.data});
+                    Message.success('删除成功');
+                } else {
+                    Message.error('删除成功');
+                }
+            }
+        } catch (err) {
+            console.log(err);
+        }
     },
     cutStr(str, len) {
         let charLength = 0;

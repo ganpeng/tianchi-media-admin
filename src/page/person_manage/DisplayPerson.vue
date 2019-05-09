@@ -52,10 +52,12 @@
                 </p>
             </div>
         </div>
+        <!--
         <div class="bg-image-container">
             <h4 class="content-sub-title" style="margin-left:20px;">背景图</h4>
             <single-poster v-if="person.backgroundImage" :img="person.backgroundImage"></single-poster>
         </div>
+        -->
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" @click="editPerson">编辑</el-button>
             <el-button class="btn-style-three" @click="goBack">返回列表</el-button>

@@ -191,7 +191,8 @@ export default {
             this.$router.push({ name: 'ProgrammeSubjectModule', params: {navbarId: this.navbarId, index: this.index, operator: 'edit'}, query: {id} });
         },
         deleteHandler() {
-            this.$util.deleteLayoutItemHandler({navbarId: this.navbarId, index: this.index});
+            let id = _.get(this.activeLayout, `${this.index}.id`);
+            this.$util.deleteLayoutItemHandler(id);
         }
     }
 };

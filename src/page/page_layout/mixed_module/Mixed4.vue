@@ -257,8 +257,8 @@ export default {
             this.$router.push({ name: 'ShuffleModule', params: {navbarId, index: this.index, operator: 'edit'}, query: {id} });
         },
         deleteHandler() {
-            let {navbarId} = this.$route.params;
-            this.$util.deleteLayoutItemHandler({navbarId, index: this.index});
+            let id = _.get(this.activeLayout, `${this.index}.id`);
+            this.$util.deleteLayoutItemHandler(id);
         }
     }
 };
