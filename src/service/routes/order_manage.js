@@ -10,14 +10,14 @@ import _ from 'lodash';
 /**
  * 获取订单信息列表
  */
-export const getOrderList = ({keyword, productId, payWay, status, pageNum, pageSize, commitAtStart, commitAtEnd}) => {
+export const getOrderList = ({keyword, commodityId, paymentMethod, orderStatus, pageNum, pageSize, createdAtStart, createdAtEnd}) => {
     let params = {
         keyword,
-        productId,
-        payWay,
-        status,
-        commitAtStart,
-        commitAtEnd,
+        commodityId,
+        paymentMethod,
+        orderStatus,
+        createdAtStart,
+        createdAtEnd,
         pageNum: pageNum - 1,
         pageSize
     };

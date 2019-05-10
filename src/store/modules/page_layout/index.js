@@ -614,8 +614,7 @@ const mutations = {
             layoutTemplate: '',
             subjectId: '',
             iconImage: {},
-            title: '',
-            layoutItemMultiList: []
+            title: ''
         };
         let navbar = state.navbarList.find((navbar) => navbar.id === navbarId);
         let layoutBlock = Object.assign({}, layoutBlockDefault, {
@@ -623,7 +622,7 @@ const mutations = {
             navBarId: navbarId,
             navBarName: _.get(navbar, 'name'),
             renderType,
-            layoutItemMultiList
+            layoutItemMultiList: layoutItemMultiList || []
         });
 
         state.activeLayout.splice(index, 0, layoutBlock);

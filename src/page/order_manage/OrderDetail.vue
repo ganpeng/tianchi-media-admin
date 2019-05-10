@@ -6,33 +6,31 @@
         <div>
             <div id="order-status">
                 <label>20190324100501001</label>
-                <span class="success">成功</span>
-                <span class="fail">失败</span>
-                <span class="waiting">待支付</span>
+                <span :class="orderStatus(orderInfo.orderStatus).className">{{orderStatus(orderInfo.orderStatus).text}}</span>
             </div>
             <div class="seperator-line"></div>
             <div id="order-info">
                 <ul>
                     <li>
                         <label>产品包：</label>
-                        <span>节目尊享包</span>
+                        <span>{{orderInfo.subjectName}}</span>
                     </li>
                     <li>
                         <label>订单类型：</label>
-                        <span>普通订单</span>
+                        <span>普通类型</span>
                     </li>
                     <li>
                         <label>支付提交时间：</label>
-                        <span>2019.03.24  10:05:01</span>
+                        <span>{{orderInfo.createdAt | formatDate('yyyy-MM-DD')}}</span>
                     </li>
                     <li>
                         <label>支付完成时间：</label>
-                        <span>2019.03.24  10:05:01</span>
+                        <span>{{orderInfo.createdAt | formatDate('yyyy-MM-DD')}}</span>
                     </li>
                 </ul>
                 <div class="user-info">
                     <label>用户：</label>
-                    <span>18500197330</span>
+                    <span>{{orderInfo.userName}}</span>
                     <span class="name" @click="toUserDetail">查看</span>
                 </div>
             </div>
@@ -44,11 +42,11 @@
                         <svg-icon icon-class="alipay" v-if="false"></svg-icon>
                     </label>
                     <label>订单金额</label>
-                    <span>￥198</span>
+                    <span>￥{{orderInfo.totalAmount | changeMoney}}</span>
                 </div>
                 <div>
                     <label>实付金额</label>
-                    <span>￥198</span>
+                    <span>￥{{orderInfo.totalAmount | changeMoney}}</span>
                 </div>
             </div>
         </div>
@@ -69,6 +67,38 @@
         mounted() {
             this.init();
             this.$util.toggleFixedBtnContainer();
+        },
+        computed: {
+            orderStatus() {
+                return (type) => {
+                    let className = '';
+                    let text = '';
+                    switch (type) {
+                        case 'EXPIRED':
+                            className = 'fail';
+                            text = '失效';
+                            break;
+                        case 'CREATED':
+                            className = 'waiting';
+                            text = '待支付';
+                            break;
+                        case 'PAID':
+                            className = 'success';
+                            text = '成功';
+                            break;
+                        case 'PAID_FAILED':
+                            className = 'success';
+                            text = '付款失败';
+                            break;
+                        default:
+                            break;
+                    }
+                    return {
+                        className,
+                        text
+                    };
+                };
+            }
         },
         methods: {
             init() {
@@ -96,7 +126,6 @@
         }
     };
 </script>
-
 <style lang="scss" scoped>
 
     #order-status {

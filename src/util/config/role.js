@@ -883,6 +883,18 @@ const AD_STATUS_OPTIONS = [
     }
 ];
 
+const PAY_WAY_OPTIONS = [
+    {label: '支付宝', value: 'ALIPAY'},
+    {label: '微信', value: 'WXPAY'}
+];
+
+const PAY_STATUS_OPTIONS = [
+    {label: '待付款', value: 'CREATED'},
+    {label: '付款成功', value: 'PAID'},
+    {label: '付款失败', value: 'PAID_FAILED'},
+    {label: '失效', value: 'EXPIRED'}
+];
+
 //  推荐专题（背景渲染） SUBJECT,
 // 推荐节目PROGRAMME PROGRAMME,
 //  节目列表页面 PROGRAMME_LIST,
@@ -962,5 +974,8 @@ export default {
     AD_TYPE_OPTIONS,
     AD_STATUS_OPTIONS,
 // 节目板式
-    PROGRAMME_TEMPLATE_OPTIONS
+    PROGRAMME_TEMPLATE_OPTIONS,
+//  支付相关
+    PAY_WAY_OPTIONS,
+    PAY_STATUS_OPTIONS
 };

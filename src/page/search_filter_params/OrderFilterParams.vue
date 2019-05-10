@@ -23,7 +23,7 @@
                 </el-form-item>
                 <el-form-item label="商品">
                     <el-select
-                        v-model="listQueryParams.productId"
+                        v-model="listQueryParams.commodityId"
                         @change="getOrderList(true)"
                         clearable
                         filterable
@@ -38,7 +38,7 @@
                 </el-form-item>
                 <el-form-item label="方式">
                     <el-select
-                        v-model="listQueryParams.payWay"
+                        v-model="listQueryParams.paymentMethod"
                         @change="getOrderList(true)"
                         clearable
                         placeholder="全部">
@@ -52,7 +52,7 @@
                 </el-form-item>
                 <el-form-item label="状态">
                     <el-select
-                        v-model="listQueryParams.status"
+                        v-model="listQueryParams.orderStatus"
                         @change="getOrderList(true)"
                         clearable
                         placeholder="全部">
@@ -103,28 +103,23 @@
 </template>
 <script>
 
+    import role from '../../util/config/role';
     export default {
         name: 'OrderFilterParams',
         data() {
             return {
                 listQueryParams: {
                     keyword: '',
-                    productId: '',
-                    status: '',
-                    payWay: '',
-                    commitAtStart: '',
-                    commitAtEnd: ''
+                    commodityId: '',
+                    orderStatus: '',
+                    paymentMethod: '',
+                    createdAtStart: '',
+                    createdAtEnd: ''
                 },
                 commitDateRange: [],
                 productOptions: [],
-                payWayOptions: [
-                    {label: '支付宝', value: 1},
-                    {label: '微信', value: 2}],
-                statusOptions: [
-                    {label: '待付款', value: 1},
-                    {label: '付款成功', value: 2},
-                    {label: '付款失败', value: 3},
-                    {label: '失效', value: 4}],
+                payWayOptions: role.PAY_WAY_OPTIONS,
+                statusOptions: role.PAY_STATUS_OPTIONS,
                 moreFilters: false
             };
         },
@@ -145,20 +140,20 @@
             },
             initFilterParams(params) {
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
-                this.listQueryParams.productId = params.productId !== '' ? params.productId : '';
-                this.listQueryParams.status = params.status ? params.status : '';
-                this.listQueryParams.payWay = params.payWay ? params.payWay : '';
-                this.listQueryParams.commitAtStart = params.commitAtStart ? params.commitAtStart : '';
-                this.listQueryParams.commitAtEnd = params.commitAtEnd ? params.commitAtEnd : '';
-                this.commitDateRange = params.commitAtStart ? [params.commitAtStart, params.commitAtEnd] : [];
+                this.listQueryParams.commodityId = params.commodityId !== '' ? params.commodityId : '';
+                this.listQueryParams.orderStatus = params.orderStatus ? params.orderStatus : '';
+                this.listQueryParams.paymentMethod = params.paymentMethod ? params.paymentMethod : '';
+                this.listQueryParams.createdAtStart = params.createdAtStart ? params.createdAtStart : '';
+                this.listQueryParams.createdAtEnd = params.createdAtEnd ? params.createdAtEnd : '';
+                this.commitDateRange = params.createdAtStart ? [params.createdAtStart, params.createdAtEnd] : [];
             },
             getOrderList(isReset) {
                 if (this.commitDateRange && this.commitDateRange.length === 2) {
-                    this.listQueryParams.commitAtStart = this.commitDateRange[0];
-                    this.listQueryParams.commitAtEnd = this.commitDateRange[1];
+                    this.listQueryParams.createdAtStart = this.commitDateRange[0];
+                    this.listQueryParams.createdAtEnd = this.commitDateRange[1];
                 } else {
-                    this.listQueryParams.commitAtStart = '';
-                    this.listQueryParams.commitAtEnd = '';
+                    this.listQueryParams.createdAtStart = '';
+                    this.listQueryParams.createdAtEnd = '';
                 }
                 this.$emit('getOrderList', this.listQueryParams, isReset);
             },

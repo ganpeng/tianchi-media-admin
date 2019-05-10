@@ -254,9 +254,22 @@ export default {
                     throw new Error('类型错误');
             }
         },
-        sortedSaveHandler() {
-            this.$message.success('模块排序保存成功');
-            this.closeSortViewHandler();
+        async sortedSaveHandler() {
+            try {
+                let layoutBlockSortVoList = this.activeLayout.map((item, index) => {
+                    return {
+                        layoutBlockId: item.id,
+                        sort: index
+                    };
+                });
+                let res = await this.$service.sortLayoutBlock(layoutBlockSortVoList);
+                if (res && res.code === 0) {
+                    this.$message.success('模块排序保存成功');
+                    this.closeSortViewHandler();
+                }
+            } catch (err) {
+                console.log(err);
+            }
         },
         closeSortViewHandler() {
             this.sortView = false;

@@ -108,3 +108,10 @@ export const getLayoutBlockById = (id) => {
 export const deleteLayoutBlockById = (id) => {
     return service.delete(`/v1/content/layout-block/${id}`);
 };
+
+/**
+ * 模块排序
+ */
+export const sortLayoutBlock = (layoutBlockSortVoList) => {
+    return service.put('/v1/content/layout-block/sort', layoutBlockSortVoList);
+};

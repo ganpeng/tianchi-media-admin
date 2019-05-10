@@ -209,17 +209,18 @@ export default {
     },
     async created() {
         try {
-            let {id} = this.$route.query;
             let {navbarId, index, operator} = this.$route.params;
             this.navbarId = navbarId;
-            this.index = index;
-            this.layoutBlockId = id;
+            this.index = parseInt(index);
+            await this.getLayoutByNavbarId(navbarId);
 
             if (operator === 'edit') {
-                await this.getLayoutByNavbarId(navbarId);
+                let {id} = this.$route.query;
+                this.layoutBlockId = id;
                 this.title = '编辑人物模块';
             } else {
                 this.title = '新增人物模块';
+                this.insertLayoutBlockByIndex({index, navbarId, renderType: 'FIGURE', layoutTemplate: 'LT_F_6'});
             }
         } catch (err) {
             console.log(err);
@@ -270,7 +271,7 @@ export default {
                 return _.get(this.layoutBlock, 'layoutItemMultiList') || [];
             },
             set(value) {
-                this.updateLayoutBlockDataById({ layoutBlockId: this.layoutBlockId, key: 'layoutItemMultiList', value });
+                this.updateLayoutBlockDataByIndex({ index: this.index, key: 'layoutItemMultiList', value });
             }
         }
     },
@@ -282,7 +283,9 @@ export default {
             updateSearchFields: 'person/updateSearchFields',
 
             //  2.3.0新增
-            updateLayoutBlockDataById: 'pageLayout/updateLayoutBlockDataById'
+            updateLayoutBlockDataById: 'pageLayout/updateLayoutBlockDataById',
+            updateLayoutBlockDataByIndex: 'pageLayout/updateLayoutBlockDataByIndex',
+            insertLayoutBlockByIndex: 'pageLayout/insertLayoutBlockByIndex'
         }),
         ...mapActions({
             getPersonList: 'person/getPersonList',
@@ -291,7 +294,11 @@ export default {
             getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
         }),
         inputHandler(value, key) {
-            this.updateLayoutBlockDataById({ layoutBlockId: this.layoutBlockId, key, value });
+            if (this.operator === 'edit') {
+                this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key, value});
+            } else {
+                this.updateLayoutBlockDataByIndex({index: this.index, key, value});
+            }
         },
         keyupHandler(e) {
             if (e.keyCode === 13) {
@@ -343,18 +350,31 @@ export default {
                 let valid = await this.$refs.personModuleForm.validate();
                 if (valid) {
                     let signCode = this.getNavbarSignCodeById(this.navbarId);
-                    let {id} = this.$route.query;
                     if (signCode === 'CHILD') {
-                        this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'layoutTemplate', value: 'LT_KID_6'});
+                        if (this.operator === 'edit') {
+                            this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'layoutTemplate', value: 'LT_KID_6'});
+                        } else {
+                            this.updateLayoutBlockDataByIndex({index: this.index, key: 'layoutTemplate', value: 'LT_KID_6'});
+                        }
                     }
-                    if (id) {
-                        let layoutBlock = this.activeLayout.find((item) => item.id === id);
+                    if (this.operator === 'edit') {
+                        let layoutBlock = this.activeLayout.find((item) => item.id === this.layoutBlockId);
                         if (layoutBlock) {
-                            let putLayoutBlockRes = await this.$service.putLayoutBlock(id, layoutBlock);
+                            let putLayoutBlockRes = await this.$service.putLayoutBlock(this.layoutBlockId, layoutBlock);
                             if (putLayoutBlockRes && putLayoutBlockRes.code === 0) {
                                 this.$message.success('保存成功');
                                 this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
                             }
+                        }
+                    } else {
+                        this.updateLayoutBlockDataByIndex({index: this.index, key: 'sort', value: this.index});
+                        let layoutBlock = _.get(this.activeLayout, `${this.index}`);
+                        if (layoutBlock) {
+                                let postLayoutBlockRes = await this.$service.postLayoutBlock(this.navbarId, layoutBlock);
+                                if (postLayoutBlockRes && postLayoutBlockRes.code === 0) {
+                                    this.$message.success('保存成功');
+                                    this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                                }
                         }
                     }
                 }
@@ -392,7 +412,11 @@ export default {
         },
         selectPersonEnterHandler() {
             if (this.layoutItemMultiList.length === 6) {
-                this.updateLayoutBlockDataById({ layoutBlockId: this.layoutBlockId, key: 'layoutItemMultiList', value: _.cloneDeep(this.layoutItemMultiList) });
+                if (this.operator === 'edit') {
+                    this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'layoutItemMultiList', value: _.cloneDeep(this.layoutItemMultiList)});
+                } else {
+                    this.updateLayoutBlockDataByIndex({index: this.index, key: 'layoutItemMultiList', value: _.cloneDeep(this.layoutItemMultiList)});
+                }
                 this.closeDialog();
             } else {
                 this.$message.error('必须选择6个人物');
@@ -410,7 +434,11 @@ export default {
         },
         //  长传icon的成功回调函数
         uploadSuccessHandler(image) {
-            this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'iconImage', value: image});
+            if (this.operator === 'edit') {
+                this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'iconImage', value: image});
+            } else {
+                this.updateLayoutBlockDataByIndex({index: this.index, key: 'iconImage', value: image});
+            }
         },
         cancelHanlder() {
             this.closeDialog();

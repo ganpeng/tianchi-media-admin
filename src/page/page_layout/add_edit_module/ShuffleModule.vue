@@ -296,10 +296,9 @@ export default {
     },
     methods: {
         ...mapMutations({
-            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
-
             //  2.3.0新增
-            updateLayoutBlockDataById: 'pageLayout/updateLayoutBlockDataById',
+            // updateLayoutBlockDataById: 'pageLayout/updateLayoutBlockDataById',
+            updateLayoutBlockDataByIndex: 'pageLayout/updateLayoutBlockDataByIndex',
             insertLayoutBlockByIndex: 'pageLayout/insertLayoutBlockByIndex'
         }),
         ...mapActions({
@@ -307,31 +306,40 @@ export default {
             getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
         }),
         inputHandler(value, key) {
-            this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key, value});
+            this.updateLayoutBlockDataByIndex({index: this.index, key, value});
         },
         templateInputHandler(value) {
-            this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'layoutTemplate', value});
+            this.updateLayoutBlockDataByIndex({index: this.index, key: 'layoutTemplate', value});
             this.setLayoutItemMultiList(value);
         },
         iconImageuploadSuccessHandler(image) {
-            this.updateLayoutBlockDataById({layoutBlockId: this.layoutBlockId, key: 'iconImage', value: image});
+            this.updateLayoutBlockDataByIndex({index: this.index, key: 'iconImage', value: image});
         },
         async saveHandler() {
             try {
                 let valid = await this.$refs.shuffleModuleForm.validate();
                 if (valid) {
                     if (!this.selectAll(this.navbarId, this.index)) {
-                        let {id} = this.$route.query;
-                        if (id) {
-                            let layoutBlock = this.activeLayout.find((item) => item.id === id);
-                            if (layoutBlock) {
-                                let putLayoutBlockRes = await this.$service.putLayoutBlock(id, layoutBlock);
-                                if (putLayoutBlockRes && putLayoutBlockRes.code === 0) {
+                    if (this.operator === 'edit') {
+                        let layoutBlock = this.activeLayout.find((item) => item.id === this.layoutBlockId);
+                        if (layoutBlock) {
+                            let putLayoutBlockRes = await this.$service.putLayoutBlock(this.layoutBlockId, layoutBlock);
+                            if (putLayoutBlockRes && putLayoutBlockRes.code === 0) {
+                                this.$message.success('保存成功');
+                                this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                            }
+                        }
+                    } else {
+                        this.updateLayoutBlockDataByIndex({index: this.index, key: 'sort', value: this.index});
+                        let layoutBlock = _.get(this.activeLayout, `${this.index}`);
+                        if (layoutBlock) {
+                                let postLayoutBlockRes = await this.$service.postLayoutBlock(this.navbarId, layoutBlock);
+                                if (postLayoutBlockRes && postLayoutBlockRes.code === 0) {
                                     this.$message.success('保存成功');
                                     this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
                                 }
-                            }
                         }
+                    }
                     } else {
                         this.$message.error('专题色块必须全部选择');
                     }
@@ -351,64 +359,64 @@ export default {
         setLayoutItemMultiList(value) {
             switch (value) {
                 case 'LT_2_3':
-                    this.updateLayoutBlockDataById({
-                        layoutBlockId: this.layoutBlockId,
+                    this.updateLayoutBlockDataByIndex({
+                        index: this.index,
                         key: 'layoutItemMultiList',
                         value: _.times(5, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_2_6':
-                    this.updateLayoutBlockDataById({
-                        layoutBlockId: this.layoutBlockId,
+                    this.updateLayoutBlockDataByIndex({
+                        index: this.index,
                         key: 'layoutItemMultiList',
                         value: _.times(8, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_3_2':
-                    this.updateLayoutBlockDataById({
-                        layoutBlockId: this.layoutBlockId,
+                    this.updateLayoutBlockDataByIndex({
+                        index: this.index,
                         key: 'layoutItemMultiList',
                         value: _.times(5, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_3_3':
-                    this.updateLayoutBlockDataById({
-                        layoutBlockId: this.layoutBlockId,
+                    this.updateLayoutBlockDataByIndex({
+                        index: this.index,
                         key: 'layoutItemMultiList',
                         value: _.times(6, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_6_6':
-                    this.updateLayoutBlockDataById({
-                        layoutBlockId: this.layoutBlockId,
+                    this.updateLayoutBlockDataByIndex({
+                        index: this.index,
                         key: 'layoutItemMultiList',
                         value: _.times(12, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_1_1_4':
-                    this.updateLayoutBlockDataById({
-                        layoutBlockId: this.layoutBlockId,
+                    this.updateLayoutBlockDataByIndex({
+                        index: this.index,
                         key: 'layoutItemMultiList',
                         value: _.times(6, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_4':
-                    this.updateLayoutBlockDataById({
-                        layoutBlockId: this.layoutBlockId,
+                    this.updateLayoutBlockDataByIndex({
+                        index: this.index,
                         key: 'layoutItemMultiList',
                         value: _.times(4, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_S6':
-                    this.updateLayoutBlockDataById({
-                        layoutBlockId: this.layoutBlockId,
+                    this.updateLayoutBlockDataByIndex({
+                        index: this.index,
                         key: 'layoutItemMultiList',
                         value: _.times(6, () => _.cloneDeep(defaultLayoutItem))
                     });
                     break;
                 case 'LT_SN':
-                    this.updateLayoutBlockDataById({
-                        layoutBlockId: this.layoutBlockId,
+                    this.updateLayoutBlockDataByIndex({
+                        index: this.index,
                         key: 'layoutItemMultiList',
                         value: []
                     });
