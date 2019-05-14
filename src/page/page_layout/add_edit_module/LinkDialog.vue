@@ -110,9 +110,10 @@ export default {
         };
     },
     created() {
-        let {navbarId, index} = this.$route.params;
+        let {navbarId, index, operator} = this.$route.params;
         this.navbarId = navbarId;
         this.index = parseInt(index);
+        this.operator = operator;
     },
     computed: {
         ...mapGetters({
@@ -136,8 +137,7 @@ export default {
             return _.get(this.layoutBlockItemClone, 'coverImage.uri');
         },
         layoutBlockItem() {
-            let {operator} = this.$route.params;
-            if (operator === 'edit') {
+            if (this.operator === 'edit') {
                 return this.getLayoutBlockItem(this.layoutBlockId, this.squareIndex);
             } else {
                 return this.getLayoutBlockItemByIndex(this.index, this.squareIndex);
@@ -185,8 +185,7 @@ export default {
                         this.updateLayoutBlockItem({ key: 'name', value: this.form.name });
                         this.updateLayoutBlockItem({ key: 'params', value: JSON.stringify(obj) });
                         this.updateLayoutBlockItem({ key: 'layoutItemType', value: 'LINK' });
-                        let {operator} = this.$route.params;
-                        if (operator === 'edit') {
+                        if (this.operator === 'edit') {
                             this.updateLayoutBlockById({
                                 squareIndex: this.squareIndex,
                                 layoutBlockId: this.layoutBlockId,

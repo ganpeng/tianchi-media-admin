@@ -24,6 +24,13 @@
             align="center"
             min-width="120px"
             label="用户">
+            <template slot-scope="scope">
+                <span
+                    @click="toOrderDetail(scope.row)"
+                    class="ellipsis three">
+                    {{scope.row.userName | padEmpty}}
+                </span>
+            </template>
         </el-table-column>
         <el-table-column
             prop="subjectName"

@@ -7,7 +7,7 @@
                     :style="navbarStyle(navbar)"
                     v-for="(navbar) in navbarList"
                     :key="navbar.id"
-                    @click="columnsTabChangeHandler(navbar.id, navbar.layoutTemplate)"
+                    @click="columnsTabChangeHandler(navbar)"
                     :class="['columns-item', activeId === navbar.id ? 'active' : '']">
                     {{navbar.name}}
                 </li>
@@ -98,7 +98,7 @@ import BScroll from 'better-scroll';
 
 import FixedLayout from './FixedLayout';
 import OtherLayout from './OtherLayout';
-import init from '../../util/init';
+import {initLayoutItemByLayoutItemType} from '../../util/init';
 
 export default {
     name: 'PageLayout',
@@ -121,7 +121,6 @@ export default {
         }
     },
     async mounted() {
-        init();
         let content = document.querySelector('.content');
         content.addEventListener('scroll', this.toggleTopBottomBtns.bind(this), false);
     },
@@ -130,11 +129,19 @@ export default {
             let {navbarId} = this.$route.params;
             this.navbarId = navbarId;
             let res = await this.getNavbarList();
-            await this.getLayoutByNavbarId(navbarId);
+            let activeLayoutRes = await this.getLayoutByNavbarId(navbarId);
             if (res && res.code === 0) {
                 let navbar = this.navbarList.find((navbar) => navbar.id === navbarId);
                 this.activeId = navbarId;
-                this.layoutTemplate = navbar ? navbar.layoutTemplate : '';
+                this.layoutTemplate = _.get(navbar, 'layoutTemplate');
+                if (_.isArray(activeLayoutRes) && activeLayoutRes.length === 0) {
+                    let layout = initLayoutItemByLayoutItemType({
+                        layoutTemplate: navbar.layoutTemplate,
+                        navBarId: navbar.id,
+                        navBarName: navbar.name
+                    });
+                    this.setActiveLayout({layout});
+                }
                 //  重新跟新本地数据到vuex中
                 // this.updateLayout();
 
@@ -220,13 +227,27 @@ export default {
             }, 0);
             columnsList.style.width = `${width + 20}px`;
         },
-        async columnsTabChangeHandler(id, layoutTemplate) {
+        async columnsTabChangeHandler(navbar) {
             try {
                 this.setActiveLayout({layout: []});
-                this.activeId = id;
-                this.layoutTemplate = layoutTemplate;
-                this.$router.push({ name: 'PageLayout', params: {navbarId: id} });
-                await this.getLayoutByNavbarId(id);
+                this.activeId = navbar.id;
+                this.layoutTemplate = navbar.layoutTemplate;
+                let res = await this.getLayoutByNavbarId(navbar.id);
+                if (res && res.code === 0) {
+                    if (_.isArray(res.data) && res.data.length === 0) {
+                        let layout = initLayoutItemByLayoutItemType({
+                            layoutTemplate: navbar.layoutTemplate,
+                            navBarId: navbar.id,
+                            navBarName: navbar.name
+                        });
+                        console.log('aaa');
+                        console.log(this.activeLayout);
+                        this.setActiveLayout({layout});
+                        console.log(this.activeLayout);
+                        console.log('aaa');
+                    }
+                }
+                this.$router.push({ name: 'PageLayout', params: {navbarId: navbar.id} });
             } catch (err) {
                 console.log(err);
             }

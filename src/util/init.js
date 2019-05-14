@@ -73,7 +73,7 @@ function getPagelayoutList(navbarList) {
     }));
 }
 
-function initLayoutItemByLayoutItemType({layoutTemplate, navBarId, navBarName}) {
+export function initLayoutItemByLayoutItemType({layoutTemplate, navBarId, navBarName}) {
     switch (layoutTemplate) {
         case 'FS_0':
             return [Object.assign({}, _.cloneDeep(defaultLayoutData), {
