@@ -767,90 +767,7 @@
                     durationFormat: '',
                     videoDuration: '',
                     carouselVideoList: []
-                }, {
-                    name: '默认分组2',
-                    duration: '',
-                    durationFormat: '',
-                    videoDuration: '',
-                    carouselVideoList: []
-                },
-                    {
-                        name: '默认分组3',
-                        duration: '',
-                        durationFormat: '',
-                        videoDuration: '',
-                        carouselVideoList: []
-                    },
-                    {
-                        name: '默认分组4',
-                        duration: '',
-                        durationFormat: '',
-                        videoDuration: '',
-                        carouselVideoList: []
-                    },
-                    {
-                        name: '默认分组5',
-                        duration: '',
-                        durationFormat: '',
-                        videoDuration: '',
-                        carouselVideoList: []
-                    },
-                    {
-                        name: '默认分组6',
-                        duration: '',
-                        durationFormat: '',
-                        videoDuration: '',
-                        carouselVideoList: []
-                    },
-                    {
-                        name: '默认分组7',
-                        duration: '',
-                        durationFormat: '',
-                        videoDuration: '',
-                        carouselVideoList: []
-                    },
-                    {
-                        name: '默认分组8',
-                        duration: '',
-                        durationFormat: '',
-                        videoDuration: '',
-                        carouselVideoList: []
-                    },
-                    {
-                        name: '默认分组9',
-                        duration: '',
-                        durationFormat: '',
-                        videoDuration: '',
-                        carouselVideoList: []
-                    },
-                    {
-                        name: '默认分组10',
-                        duration: '',
-                        durationFormat: '',
-                        videoDuration: '',
-                        carouselVideoList: []
-                    },
-                    {
-                        name: '默认分组11',
-                        duration: '',
-                        durationFormat: '',
-                        videoDuration: '',
-                        carouselVideoList: []
-                    },
-                    {
-                        name: '默认分组12',
-                        duration: '',
-                        durationFormat: '',
-                        videoDuration: '',
-                        carouselVideoList: []
-                    },
-                    {
-                        name: '默认分组13',
-                        duration: '',
-                        durationFormat: '',
-                        videoDuration: '',
-                        carouselVideoList: []
-                    }],
+                }],
                 isLoading: false,
                 displayNameSettingVisible: false,
                 sortToolVisible: true,
@@ -1061,13 +978,7 @@
                             let currentDate = new Date();
                             this.channelInfo.startPoint = currentDate.valueOf() - (currentDate.getHours() * 60 * 60 + currentDate.getMinutes() * 60 + currentDate.getSeconds()) * 1000 + (startDate.getHours() * 60 * 60 + startDate.getMinutes() * 60 + startDate.getSeconds()) * 1000;
                         }
-                        this.currentCarouselGroup.carouselVideoList = response.data.carouselVideoList;
-                        this.currentCarouselGroup.carouselVideoList.map(video => {
-                            if (video.onPlay) {
-                                this.channelInfo.currentProgramme = video.originName;
-                                this.channelInfo.duration = this.$util.formatDate(new Date(video.lastPlayTime), 'yyyy年MM月DD日HH时mm分SS秒') + '---' + this.$util.formatDate(new Date(video.lastPlayTime + video.takeTimeInSec * 1000), 'yyyy年MM月DD日HH时mm分SS秒');
-                            }
-                        });
+                        this.carouselGroup = response.data.carouselGroupList;
                     }
                     this.selectCurrentGroup(0);
                 });
@@ -1484,37 +1395,39 @@
             // 保存频道信息
             saveChannelInfo() {
                 /** 在正常频道保存时，必须含有能正常播放的视频  */
-                if (this.channelInfo.visible) {
-                    let tag = false;
-                    this.currentCarouselGroup.carouselVideoList.map(video => {
-                        if (video.visible) {
-                            tag = true;
-                        }
-                    });
-                    if (!tag) {
-                        this.$message({
-                            message: '正常状态的频道内需含有非禁播状态的视频',
-                            type: 'warning'
-                        });
-                        return;
-                    }
-                }
-                /** 在频道保存时，含有的视频必须有展示名称  */
-                for (let i = 0; i < this.currentCarouselGroup.carouselVideoList.length; i++) {
-                    if (!this.currentCarouselGroup.carouselVideoList[i].name) {
-                        this.$message({
-                            message: '请完整填写当前频道中的视频展示名称',
-                            type: 'warning'
-                        });
-                        return;
-                    }
-                }
+                // if (this.channelInfo.visible) {
+                //     let tag = false;
+                //     this.currentCarouselGroup.carouselVideoList.map(video => {
+                //         if (video.visible) {
+                //             tag = true;
+                //         }
+                //     });
+                //     if (!tag) {
+                //         this.$message({
+                //             message: '正常状态的频道内需含有非禁播状态的视频',
+                //             type: 'warning'
+                //         });
+                //         return;
+                //     }
+                // }
+                // /** 在频道保存时，含有的视频必须有展示名称  */
+                // for (let i = 0; i < this.currentCarouselGroup.carouselVideoList.length; i++) {
+                //     if (!this.currentCarouselGroup.carouselVideoList[i].name) {
+                //         this.$message({
+                //             message: '请完整填写当前频道中的视频展示名称',
+                //             type: 'warning'
+                //         });
+                //         return;
+                //     }
+                // }
                 this.$refs['channelInfo'].validate((valid) => {
                     if (valid) {
-                        for (let i = 0; i < this.currentCarouselGroup.carouselVideoList.length; i++) {
-                            this.currentCarouselGroup.carouselVideoList[i].sort = i;
+                        for (let i = 0; i < this.carouselGroup.length; i++) {
+                            for (let k = 0; k < this.carouselGroup[i].carouselVideoList.length; k++) {
+                                this.carouselGroup[i].carouselVideoList[k].sort = k;
+                            }
                         }
-                        this.channelInfo.carouselVideoList = this.currentCarouselGroup.carouselVideoList;
+                        this.channelInfo.carouselGroupList = this.carouselGroup;
                         this.channelInfo.typeList = [];
                         this.channelInfo.typeIdList.map(typeId => {
                             this.typeOptions.map(type => {
@@ -1670,10 +1583,6 @@
 </style>
 
 <style lang="scss" scoped>
-
-    .form-block {
-        display: none;
-    }
 
     .data-show {
         padding: 2px 6px;
