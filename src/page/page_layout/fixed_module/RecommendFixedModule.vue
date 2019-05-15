@@ -204,9 +204,6 @@ export default {
             let {navbarId} = this.$route.params;
             this.navbarId = navbarId;
             let res = await this.$service.getChannelLayout({navBarId: navbarId});
-            if (this.isEdit) {
-                await this.getLayoutByNavbarId(navbarId);
-            }
             if (res && res.code === 0) {
                 let obj = res.data.list[0];
                 this.channel = obj && obj.channel ? obj.channel : {};

@@ -191,11 +191,6 @@ const getters = {
             return navbar;
         };
     },
-    getLayoutTemplateByNavbarId(state) {
-        return (id) => {
-            return _.get(state.layout, `${id}.layoutTemplate`);
-        };
-    },
     getNavbarSignCodeById(state) {
         return (id) => {
             return _.get(state.layout, `${id}.signCode`);
@@ -301,6 +296,12 @@ const getters = {
     getLayoutBlockItemByIndex(state) {
         return (index, squareIndex) => {
             return _.get(state.activeLayout, `${index}.layoutItemMultiList.${squareIndex}`) || {};
+        };
+    },
+    getLayoutTemplateByNavbarId(state) {
+        return (id) => {
+            let layoutBlock = state.activeLayout.find((item) => item.id === id);
+            return _.get(layoutBlock, `layoutTemplate`);
         };
     }
 };

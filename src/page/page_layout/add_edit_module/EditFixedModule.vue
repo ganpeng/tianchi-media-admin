@@ -4,7 +4,7 @@
         <div class="seperator-line"></div>
         <fixed-layout
             :isEdit="true"
-            :layoutTemplate="getLayoutTemplateByNavbarId(navbarId)"
+            :layoutTemplate="layoutTemplate"
         ></fixed-layout>
     </div>
 </template>
@@ -18,11 +18,21 @@ export default {
     },
     data() {
         return {
-            navbarId: this.$route.params.navbarId
+            navbarId: '',
+            layoutTemplate: ''
         };
     },
-    created() {
-        this.getNavbarList();
+    async created() {
+        try {
+            let {navbarId} = this.$route.params;
+            let {id} = this.$route.query;
+            this.navbarId = navbarId;
+            await this.getNavbarList();
+            await this.getLayoutByNavbarId(navbarId);
+            this.layoutTemplate = this.getLayoutTemplateByNavbarId(id);
+        } catch (err) {
+            console.log(err);
+        }
     },
     computed: {
         ...mapGetters({
@@ -31,7 +41,9 @@ export default {
     },
     methods: {
         ...mapActions({
-            getNavbarList: 'pageLayout/getNavbarList'
+            getNavbarList: 'pageLayout/getNavbarList',
+            //  2.3.0 新增的部分
+            getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
         })
     }
 };

@@ -98,7 +98,6 @@ import BScroll from 'better-scroll';
 
 import FixedLayout from './FixedLayout';
 import OtherLayout from './OtherLayout';
-import {initLayoutItemByLayoutItemType} from '../../util/init';
 
 export default {
     name: 'PageLayout',
@@ -129,21 +128,11 @@ export default {
             let {navbarId} = this.$route.params;
             this.navbarId = navbarId;
             let res = await this.getNavbarList();
-            let activeLayoutRes = await this.getLayoutByNavbarId(navbarId);
+            await this.getLayoutByNavbarId(navbarId);
             if (res && res.code === 0) {
                 let navbar = this.navbarList.find((navbar) => navbar.id === navbarId);
                 this.activeId = navbarId;
                 this.layoutTemplate = _.get(navbar, 'layoutTemplate');
-                if (_.isArray(activeLayoutRes) && activeLayoutRes.length === 0) {
-                    let layout = initLayoutItemByLayoutItemType({
-                        layoutTemplate: navbar.layoutTemplate,
-                        navBarId: navbar.id,
-                        navBarName: navbar.name
-                    });
-                    this.setActiveLayout({layout});
-                }
-                //  重新跟新本地数据到vuex中
-                // this.updateLayout();
 
                 this.$nextTick(() => {
                     this.setNavBarWidth();
@@ -232,22 +221,8 @@ export default {
                 this.setActiveLayout({layout: []});
                 this.activeId = navbar.id;
                 this.layoutTemplate = navbar.layoutTemplate;
-                let res = await this.getLayoutByNavbarId(navbar.id);
-                if (res && res.code === 0) {
-                    if (_.isArray(res.data) && res.data.length === 0) {
-                        let layout = initLayoutItemByLayoutItemType({
-                            layoutTemplate: navbar.layoutTemplate,
-                            navBarId: navbar.id,
-                            navBarName: navbar.name
-                        });
-                        console.log('aaa');
-                        console.log(this.activeLayout);
-                        this.setActiveLayout({layout});
-                        console.log(this.activeLayout);
-                        console.log('aaa');
-                    }
-                }
                 this.$router.push({ name: 'PageLayout', params: {navbarId: navbar.id} });
+                await this.getLayoutByNavbarId(navbar.id);
             } catch (err) {
                 console.log(err);
             }

@@ -187,9 +187,6 @@ export default {
         try {
             let {navbarId} = this.$route.params;
             this.navbarId = navbarId;
-            if (this.isEdit) {
-                await this.getLayoutByNavbarId(navbarId);
-            }
         } catch (err) {
             console.log(err);
         }
