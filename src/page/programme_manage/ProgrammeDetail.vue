@@ -380,13 +380,6 @@
                         <h2 class="content-sub-title">&nbsp;</h2>
                         <el-form-item label="节目角标">
                             <div v-if="showMark" class="mark-container">
-                                <!--
-                                <div class="mark-item">
-                                    <el-checkbox v-model="cornerMark.leftTop" @change="markChangeHandler($event, 'leftTop')" :disabled="leftTopDisabled">
-                                        左上角：播放平台
-                                    </el-checkbox>
-                                </div>
-                                -->
                                 <div class="mark-item">
                                     右上角：
                                     <el-select
@@ -420,18 +413,6 @@
                                         </el-option>
                                     </el-select>
                                 </div>
-                                <!--
-                                <div class="mark-item">
-                                    <el-checkbox v-model="cornerMark.leftBottom" @change="markChangeHandler($event, 'leftBottom')" :disabled="leftBottomDisabled">
-                                        左下角：更新
-                                    </el-checkbox>
-                                </div>
-                                <div class="mark-item">
-                                    <el-checkbox v-model="cornerMark.rightBottom" @change="markChangeHandler($event, 'rightBottom')" :disabled="rightBottomDisabled">
-                                        右下角：评分
-                                    </el-checkbox>
-                                </div>
-                                -->
                             </div>
                         </el-form-item>
                         <el-form-item label="节目状态" prop="visible">
@@ -451,6 +432,29 @@
                         <el-form-item label="适用客户端" prop="applicableClientList">
                             <el-checkbox :value="clientChecked('APP')" @change="clientCheckedHandler($event, 'APP')">APP</el-checkbox>
                             <el-checkbox :value="clientChecked('TV')" @change="clientCheckedHandler($event, 'TV')">TV</el-checkbox>
+                        </el-form-item>
+                        <el-form-item label="付费情况" prop="paymentType">
+                            <el-select
+                                :value="programme.paymentType"
+                                clearable
+                                placeholder="请选择"
+                                @input="inputHandler($event, 'paymentType')"
+                            >
+                                <el-option
+                                    v-for="item in paymentOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item v-if="programme.paymentType === 'EXTRAS'" label="付费金额" prop="price">
+                            <el-input
+                                :disabled="readonly"
+                                placeholder="请填写金额，小数点后保留两位小数"
+                                @input="inputHandler($event, 'price')"
+                                :value="programme.price">
+                            </el-input>
                         </el-form-item>
                         <div v-if="showTvImages" class="tv-images">
                             <el-form-item label="节目海报">
@@ -632,6 +636,7 @@
                 createPersonDialogVisible: false,
                 sortDialogVisible: false,
                 subjectOptions: role.SUBJECT,
+                paymentOptions: role.PAYMENT_OPTIONS,
                 size: dimension.PROGRAMME_DIMENSION,
                 customMarkOptions: [],
                 showMark: false,
@@ -657,6 +662,12 @@
                     ],
                     description: [
                         { required: true, message: '请输入节目简介' }
+                    ],
+                    price: [
+                        { required: true, message: '请输入金额' }
+                    ],
+                    paymentType: [
+                        { required: true, message: '请选择付费情况' }
                     ],
                     score: [
                         { validator: checkScore }

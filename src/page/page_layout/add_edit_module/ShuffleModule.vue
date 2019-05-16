@@ -236,6 +236,7 @@ export default {
         return {
             navbarId: '',
             index: 0,
+            operator: '',
             title: '',
             saveFlag: false, // 判断页面跳转之前如果没有点保存按钮的话，就删除新增的这个layoutItem
             allowResolutions: [],
@@ -260,10 +261,11 @@ export default {
             let {navbarId, index, operator} = this.$route.params;
             this.navbarId = navbarId;
             this.index = parseInt(index);
+            this.operator = operator;
 
             await this.getLayoutByNavbarId(navbarId);
 
-            if (operator === 'edit') {
+            if (this.operator === 'edit') {
                 let {id} = this.$route.query;
                 this.layoutBlockId = id;
                 this.title = '编辑混排模块';
@@ -320,26 +322,26 @@ export default {
                 let valid = await this.$refs.shuffleModuleForm.validate();
                 if (valid) {
                     if (!this.selectAll(this.navbarId, this.index)) {
-                    if (this.operator === 'edit') {
-                        let layoutBlock = this.activeLayout.find((item) => item.id === this.layoutBlockId);
-                        if (layoutBlock) {
-                            let putLayoutBlockRes = await this.$service.putLayoutBlock(this.layoutBlockId, layoutBlock);
-                            if (putLayoutBlockRes && putLayoutBlockRes.code === 0) {
-                                this.$message.success('保存成功');
-                                this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
-                            }
-                        }
-                    } else {
-                        this.updateLayoutBlockDataByIndex({index: this.index, key: 'sort', value: this.index});
-                        let layoutBlock = _.get(this.activeLayout, `${this.index}`);
-                        if (layoutBlock) {
-                                let postLayoutBlockRes = await this.$service.postLayoutBlock(this.navbarId, layoutBlock);
-                                if (postLayoutBlockRes && postLayoutBlockRes.code === 0) {
+                        if (this.operator === 'edit') {
+                            let layoutBlock = this.activeLayout.find((item) => item.id === this.layoutBlockId);
+                            if (layoutBlock) {
+                                let putLayoutBlockRes = await this.$service.putLayoutBlock(this.layoutBlockId, layoutBlock);
+                                if (putLayoutBlockRes && putLayoutBlockRes.code === 0) {
                                     this.$message.success('保存成功');
                                     this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
                                 }
+                            }
+                        } else {
+                            this.updateLayoutBlockDataByIndex({index: this.index, key: 'sort', value: this.index});
+                            let layoutBlock = _.get(this.activeLayout, `${this.index}`);
+                            if (layoutBlock) {
+                                    let postLayoutBlockRes = await this.$service.postLayoutBlock(this.navbarId, layoutBlock);
+                                    if (postLayoutBlockRes && postLayoutBlockRes.code === 0) {
+                                        this.$message.success('保存成功');
+                                        this.$router.push({ name: 'PageLayout', params: {navbarId: this.navbarId} });
+                                    }
+                            }
                         }
-                    }
                     } else {
                         this.$message.error('专题色块必须全部选择');
                     }

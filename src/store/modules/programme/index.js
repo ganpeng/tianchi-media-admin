@@ -39,8 +39,6 @@ const defaultProgramme = {
     playCountBasic: '',
     // 实际播放量
     playCountReal: '',
-    // 价格
-    price: '',
     // 发布时间
     releaseAt: '',
     // 发布地区
@@ -113,7 +111,11 @@ const defaultProgramme = {
     currentTypeList: [],
 
     //  v2.3.0中新增加的字段
-    applicableClientList: ['APP', 'TV'] // 客户端适用的字段
+    applicableClientList: ['APP', 'TV'], // 客户端适用的字段
+
+    //  v2.3.6中新增字段
+    price: '', // 单点付费金额
+    paymentType: 'FREE' // 支付情况字段
 };
 
 const defaultVideo = {

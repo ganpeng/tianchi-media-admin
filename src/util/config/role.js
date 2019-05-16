@@ -895,6 +895,21 @@ const PAY_STATUS_OPTIONS = [
     {label: '失效', value: 'EXPIRED'}
 ];
 
+const PAYMENT_OPTIONS = [
+    {
+        label: 'VIP',
+        value: 'VIP'
+    },
+    {
+        label: '单点付费',
+        value: 'EXTRAS'
+    },
+    {
+        label: '免费',
+        value: 'FREE'
+    }
+];
+
 //  推荐专题（背景渲染） SUBJECT,
 // 推荐节目PROGRAMME PROGRAMME,
 //  节目列表页面 PROGRAMME_LIST,
@@ -977,5 +992,6 @@ export default {
     PROGRAMME_TEMPLATE_OPTIONS,
 //  支付相关
     PAY_WAY_OPTIONS,
-    PAY_STATUS_OPTIONS
+    PAY_STATUS_OPTIONS,
+    PAYMENT_OPTIONS
 };
