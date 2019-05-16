@@ -140,13 +140,13 @@
                        class="close-btn el-select__caret el-input__icon el-icon-circle-close is-show-close"></i>
                 </el-autocomplete>
             </el-form-item>
-            <el-form-item label="状态" prop="visible" required v-if="status === 'EDIT_CHANNEL'">
+            <el-form-item label="状态" prop="visible" required v-if="status === 'EDIT_CHANNEL'" class="channel-status">
                 <el-radio-group v-model="channelInfo.visible">
                     <el-radio :label="true">正常</el-radio>
                     <el-radio :label="false">禁播</el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item label="频道图" prop="logoUri" required>
+            <el-form-item label="频道图" prop="logoUri" required class="channel-logo">
                 <label class="tips">(260*260 频道图)</label>
                 <div>
                     <img v-if="channelInfo.logoUri" :src="channelInfo.logoUri | imageUrl" class="logo-image">
@@ -156,33 +156,34 @@
                     </single-image-uploader>
                 </div>
             </el-form-item>
+            <el-form-item class="channel-onplay-info" label-width="20px">
+                <!--频道节目信息-->
+                <div class="text-left" v-if="status === 'EDIT_CHANNEL'">
+                    <h3 class="content-sub-title">频道节目信息</h3>
+                    <ul class="channel-info">
+                        <li>
+                            <span>分组数量：</span>
+                            <label>{{carouselGroup.length}}组</label>
+                        </li>
+                        <li>
+                            <span>当前播放组：</span>
+                            <label>{{channelInfo.onPlayGroupName ? channelInfo.onPlayGroupName : '暂无当前播放组'}}</label>
+                        </li>
+                        <li>
+                            <span>当前播放：</span>
+                            <label class="on-play">
+                                {{channelInfo.onPlayVideoName ? channelInfo.onPlayVideoName : '暂无当前播放节目'}}
+                            </label>
+                        </li>
+                        <li>
+                            <span>播放时段：</span>
+                            <label class="duration">{{channelInfo.onPlayDuration}}</label>
+                        </li>
+                    </ul>
+                </div>
+            </el-form-item>
         </el-form>
         <div class="seperator-line"></div>
-        <!--频道节目信息-->
-        <div class="text-left" v-if="status === 'EDIT_CHANNEL'">
-            <h3 class="content-sub-title">频道节目信息</h3>
-            <ul class="channel-info">
-                <li>
-                    <span>分组数量：</span>
-                    <label>{{carouselGroup.length}}组</label>
-                </li>
-                <li>
-                    <span>当前播放组：</span>
-                    <label>{{carouselGroup[0].name}}</label>
-                </li>
-                <li>
-                    <span>当前播放：</span>
-                    <label class="on-play">
-                        {{channelInfo.currentProgramme ? channelInfo.currentProgramme : '暂无当前播放节目'}}
-                    </label>
-                </li>
-                <li>
-                    <span>播放时段：</span>
-                    <label class="duration">{{channelInfo.duration}}</label>
-                </li>
-            </ul>
-            <div class="seperator-line"></div>
-        </div>
         <!--分组与视频-->
         <div class="content-sub-title">分组与视频
             <el-button @click="addVideoGroup" class="contain-svg-icon btn-style-four">
@@ -796,7 +797,10 @@
                     pushServer: '',
                     serverGroup: '', // 新加字段
                     visible: false,
-                    logoUri: ''
+                    logoUri: '',
+                    onPlayGroupName: '',
+                    onPlayVideoName: '',
+                    onPlayDuration: ''
                 },
                 sectionList: [{name: ''}],
                 typeOptions: [],
@@ -979,6 +983,17 @@
                             this.channelInfo.startPoint = currentDate.valueOf() - (currentDate.getHours() * 60 * 60 + currentDate.getMinutes() * 60 + currentDate.getSeconds()) * 1000 + (startDate.getHours() * 60 * 60 + startDate.getMinutes() * 60 + startDate.getSeconds()) * 1000;
                         }
                         this.carouselGroup = response.data.carouselGroupList;
+                        // 设置频道节目信息
+                        for (let i = 0; i < this.carouselGroup.length; i++) {
+                            if (this.carouselGroup[i].onPlay) {
+                                this.channelInfo.onPlayGroupName = this.carouselGroup[i].name;
+                                this.carouselGroup[i].carouselVideoList.map(video => {
+                                    if (video.onPlay) {
+                                        this.channelInfo.onPlayVideoName = video.originName;
+                                    }
+                                });
+                            }
+                        }
                     }
                     this.selectCurrentGroup(0);
                 });
@@ -1014,8 +1029,6 @@
                 this.carouselGroup[index].current = true;
                 this.currentCarouselGroup = this.carouselGroup[index];
                 this.currentCarouselGroup.index = index;
-                // 设置当前视频列表
-                // this.currentCarouselGroup.carouselVideoList = this.carouselGroup[index].carouselVideoList;
             },
             addVideoGroup() {
                 this.createGroupDialogVisible = true;
@@ -1394,32 +1407,29 @@
             },
             // 保存频道信息
             saveChannelInfo() {
-                /** 在正常频道保存时，必须含有能正常播放的视频  */
-                // if (this.channelInfo.visible) {
-                //     let tag = false;
-                //     this.currentCarouselGroup.carouselVideoList.map(video => {
-                //         if (video.visible) {
-                //             tag = true;
-                //         }
-                //     });
-                //     if (!tag) {
-                //         this.$message({
-                //             message: '正常状态的频道内需含有非禁播状态的视频',
-                //             type: 'warning'
-                //         });
-                //         return;
-                //     }
-                // }
-                // /** 在频道保存时，含有的视频必须有展示名称  */
-                // for (let i = 0; i < this.currentCarouselGroup.carouselVideoList.length; i++) {
-                //     if (!this.currentCarouselGroup.carouselVideoList[i].name) {
-                //         this.$message({
-                //             message: '请完整填写当前频道中的视频展示名称',
-                //             type: 'warning'
-                //         });
-                //         return;
-                //     }
-                // }
+                /** 不能存在空的视频组，分组中的视频不能全部为禁播状态  */
+                for (let i = 0; i < this.carouselGroup.length; i++) {
+                    if (this.carouselGroup[i].carouselVideoList.length === 0) {
+                        this.$message.warning('"' + this.carouselGroup[i].name + '"分组没有视频，暂时不能保存');
+                        return;
+                    } else {
+                        let ableTag = false;
+                        for (let k = 0; k < this.carouselGroup[i].carouselVideoList.length; k++) {
+                            if (this.carouselGroup[i].carouselVideoList[k].visible) {
+                                ableTag = true;
+                            }
+                            // 视频必须含有展示名称
+                            if (!this.carouselGroup[i].carouselVideoList[k].name) {
+                                this.$message.warning('"' + this.carouselGroup[i].name + '"分组-' + this.carouselGroup[i].carouselVideoList[k].originName + '视频没有展示名称，暂时不能保存');
+                                return;
+                            }
+                        }
+                        if (!ableTag) {
+                            this.$message.warning('"' + this.carouselGroup[i].name + '"分组视频都为禁播状态，暂时不能保存');
+                            return;
+                        }
+                    }
+                }
                 this.$refs['channelInfo'].validate((valid) => {
                     if (valid) {
                         for (let i = 0; i < this.carouselGroup.length; i++) {
@@ -1583,6 +1593,34 @@
 </style>
 
 <style lang="scss" scoped>
+
+    .el-form {
+        position: relative;
+        width: 1240px;
+        .channel-status {
+            position: absolute;
+            top: 0px;
+            right: 327px;
+            border-left: 1px solid #252D3F;
+        }
+        .channel-logo {
+            position: absolute;
+            top: 50px;
+            right: 279px;
+            border-left: 1px solid #252D3F;
+        }
+        .channel-onplay-info {
+            position: absolute;
+            top: 200px;
+            right: 0px;
+            width: 580px;
+            border-top: 1px solid #252D3F;
+            border-left: 1px solid #252D3F;
+            li {
+                margin-bottom: 0px;
+            }
+        }
+    }
 
     .data-show {
         padding: 2px 6px;

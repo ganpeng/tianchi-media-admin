@@ -42,6 +42,10 @@
                         <li><span>tsID：</span><label>{{channelInfo.tsId ? channelInfo.tsId : '无' }}</label></li>
                         <li><span>serviceID：</span><label>{{channelInfo.serviceId ? channelInfo.serviceId :'无'}}</label>
                         </li>
+                        <li><span>公共频道：</span>
+                            <label class="is-common" v-if="channelInfo.common">是</label>
+                            <label v-else>否</label>
+                        </li>
                     </ul>
                 </div>
                 <ul class="info-list right-info">
@@ -55,16 +59,18 @@
                     </li>
                     <li><span>服务器组：</span><label>{{channelInfo.serverGroup}}</label></li>
                     <li>
-                        <span>当前播放：</span>
+                        <span>当前播放组：</span>
                         <label class="on-play">
-                            {{channelInfo.currentProgramme ? channelInfo.currentProgramme : '暂无当前播放节目'}}
+                            {{channelInfo.onPlayGroupName ? channelInfo.onPlayGroupName : '暂无当前播放组'}}
                         </label>
                     </li>
-                    <li><span>播放时段：</span><label class="duration">{{channelInfo.duration}}</label></li>
-                    <li><span>公共频道：</span>
-                        <label class="is-common" v-if="channelInfo.common">是</label>
-                        <label v-else>否</label>
+                    <li>
+                        <span>当前播放：</span>
+                        <label class="on-play">
+                            {{channelInfo.onPlayVideoName ? channelInfo.onPlayVideoName : '暂无当前播放节目'}}
+                        </label>
                     </li>
+                    <li><span>播放时段：</span><label class="duration">{{channelInfo.onPlayDuration}}</label></li>
                 </ul>
             </div>
         </div>
@@ -95,46 +101,101 @@
             </ul>
             <div v-if="channelInfo.companyList.length > 0" class="seperator-line"></div>
         </div>
-        <!--节目信息-->
-        <div class="content-sub-title">频道内节目&nbsp;&nbsp;&nbsp;&nbsp;
-            {{channelInfo.carouselVideoList ? channelInfo.carouselVideoList.length : '0'}}个
+        <!--分组与视频-->
+        <div class="content-sub-title">分组与视频
+            <label class="data-show">共{{carouselGroup.length}}组，实际总播放时长{{carouselGroup |
+                getGroupDuration | fromSecondsToTime}}，视频总时长{{carouselGroup | getTotalVideoListDuration |
+                fromSecondsToTime}}。</label>
+        </div>
+        <div class="group-container">
+            <ul>
+                <li v-for="(item, index) in carouselGroup"
+                    :key="index" :class="{'current-group':item.current}">
+                    <div class="header-box">
+                        <label>组{{index + 1}}</label>
+                        <span v-if="item.duration">{{item.duration | fromSecondsToTime}}</span>
+                    </div>
+                    <div class="content-box" @click="selectCurrentGroup(index)">
+                        <p class="name-box">
+                            <label class="ellipsis one">{{item.name}}</label>
+                            <span v-if="carouselGroup.length !== 1">
+                                <i class="el-icon-circle-close" v-show="false"></i>
+                            </span>
+                        </p>
+                        <p class="no-box">
+                            <label>
+                                {{item.carouselVideoList.length === 0 ? '暂无视频' : item.carouselVideoList.length + '个视频'}}
+                            </label>
+                            <span><svg-icon icon-class="edit" v-show="false"></svg-icon></span>
+                        </p>
+                        <p class="duration-box">
+                            <label v-if="item.carouselVideoList.length === 0">暂无视频时长</label>
+                            <label v-else>{{item.carouselVideoList | getCarouselVideoTime | fromSecondsToTime}}</label>
+                        </p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!--频道内节目-->
+        <div class="video-list-header">
+            <div class="group-video-info">
+                <div>
+                    <span>组{{currentCarouselGroup.index + 1}}</span><label>{{currentCarouselGroup.name}}</label>
+                </div>
+                <div>
+                    <label v-if="currentCarouselGroup.carouselVideoList.length === 0">暂无视频</label>
+                    <span v-if="currentCarouselGroup.carouselVideoList.length !== 0">播放时长</span><label
+                    v-if="currentCarouselGroup.carouselVideoList.length !== 0">{{currentCarouselGroup.duration |
+                    fromSecondsToTime}}</label>
+                </div>
+                <div>
+                    <label v-if="currentCarouselGroup.carouselVideoList.length === 0">暂无总时长</label>
+                    <span v-if="currentCarouselGroup.carouselVideoList.length !== 0">{{currentCarouselGroup.carouselVideoList.length}}个视频</span>
+                    <label v-if="currentCarouselGroup.carouselVideoList.length !== 0">
+                        总时长{{currentCarouselGroup.carouselVideoList | getCarouselVideoTime | fromSecondsToTime}}</label>
+                </div>
+            </div>
         </div>
         <el-table
+            v-if="currentCarouselGroup.carouselVideoList.length !== 0"
             header-row-class-name="common-table-header"
-            row-class-name=video-row
-            :data="channelInfo.carouselVideoList"
+            :data="currentCarouselGroup.carouselVideoList"
+            row-class-name=video-larger-row
             border
             style="width: 100%">
             <el-table-column
-                width="50px"
+                width="60px"
                 align="center"
-                label="序号">
+                label="顺序">
                 <template slot-scope="scope">
-                    <label>{{scope.$index + 1}}</label>
+                    {{scope.$index + 1}}
                 </template>
             </el-table-column>
             <el-table-column
-                align="center"
                 width="120px"
+                align="center"
                 prop="code"
                 label="ID">
             </el-table-column>
             <el-table-column
+                prop="originName"
+                min-width="210px"
                 align="center"
-                prop="name"
-                min-width="230px"
-                label="展示名">
+                label="文件名">
             </el-table-column>
             <el-table-column
+                prop="name"
+                min-width="360px"
                 align="center"
-                prop="originName"
-                min-width="420px"
-                label="文件名">
+                label="展示名">
+                <template slot-scope="scope">
+                    {{scope.row.name}}
+                </template>
             </el-table-column>
             <el-table-column
                 prop="link"
                 align="center"
-                width="240px"
+                max-width="210px"
                 label="预览">
                 <template slot-scope="scope">
                     <div class="btn-icon-container">
@@ -142,8 +203,8 @@
                             v-if="scope.row.m3u8For4K"
                             type="text"
                             size="small"
-                            @click="displayVideo(scope.row.m3u8For4K,scope.row.originName)"
-                        >4K
+                            @click="displayVideo(scope.row.m3u8For4K,scope.row.originName)">
+                            4K
                         </el-button>
                         <svg-icon
                             v-if="scope.row.m3u8For4K"
@@ -157,8 +218,8 @@
                             v-if="scope.row.m3u8For1080P"
                             type="text"
                             size="small"
-                            @click="displayVideo(scope.row.m3u8For1080P,scope.row.originName)"
-                        >1080
+                            @click="displayVideo(scope.row.m3u8For1080P,scope.row.originName)">
+                            1080
                         </el-button>
                         <svg-icon
                             v-if="scope.row.m3u8For1080P"
@@ -172,8 +233,8 @@
                             v-if="scope.row.m3u8For720P"
                             type="text"
                             size="small"
-                            @click="displayVideo(scope.row.m3u8For720P,scope.row.originName)"
-                        >720
+                            @click="displayVideo(scope.row.m3u8For720P,scope.row.originName)">
+                            720
                         </el-button>
                         <svg-icon
                             v-if="scope.row.m3u8For720P"
@@ -187,8 +248,8 @@
                             v-if="scope.row.m3u8For480P"
                             type="text"
                             size="small"
-                            @click="displayVideo(scope.row.m3u8For480P,scope.row.originName)"
-                        >480
+                            @click="displayVideo(scope.row.m3u8For480P,scope.row.originName)">
+                            480
                         </el-button>
                         <svg-icon
                             v-if="scope.row.m3u8For480P"
@@ -200,14 +261,21 @@
                 </template>
             </el-table-column>
             <el-table-column
+                prop="takeTimeInSec"
+                width="90px"
                 align="center"
-                width="100px"
-                label="视频状态">
+                label="时长">
                 <template slot-scope="scope">
-                    <div class="operator-btn-wrapper">
-                        <i class="btn-text text-normal" v-if="scope.row.visible">正常</i>
-                        <i class="btn-text text-danger" v-else>禁播</i>
-                    </div>
+                    {{scope.row.takeTimeInSec | fromSecondsToTime}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                width="60px"
+                align="center"
+                label="状态">
+                <template slot-scope="scope">
+                    <i v-if="scope.row.visible" class="on-the-shelf">正常</i>
+                    <i v-else class="off-the-shelf">禁播</i>
                 </template>
             </el-table-column>
         </el-table>
@@ -239,14 +307,71 @@
             return {
                 showCompanyList: true,
                 channelInfo: {
-                    companyList: []
+                    category: 'CAROUSEL',
+                    typeIdList: [],
+                    common: false,
+                    companyList: [],
+                    startTime: '',
+                    startDate: '',
+                    startPoint: '',
+                    protocolList: [],
+                    multicastIp: '',
+                    pushServer: '',
+                    serverGroup: '', // 新加字段
+                    visible: false,
+                    logoUri: '',
+                    onPlayGroupName: '',
+                    onPlayVideoName: '',
+                    onPlayDuration: ''
                 },
                 previewVideoInfo: {
                     url: '',
                     title: '',
                     visible: false
-                }
+                },
+                // 当前选中的组
+                currentCarouselGroup: {
+                    name: '',
+                    duration: '',
+                    durationFormat: '',
+                    videoDuration: '',
+                    carouselVideoList: [],
+                    index: 0
+                },
+                carouselGroup: [{
+                    name: '默认分组1',
+                    duration: '',
+                    durationFormat: '',
+                    videoDuration: '',
+                    carouselVideoList: []
+                }]
             };
+        },
+        filters: {
+            getCarouselVideoTime(videoList) {
+                let duration = 0;
+                for (let i = 0; i < videoList.length; i++) {
+                    duration = duration + videoList[i].takeTimeInSec;
+                }
+                return duration;
+            },
+            getGroupDuration(groupList) {
+                let duration = 0;
+                for (let i = 0; i < groupList.length; i++) {
+                    duration = duration + groupList[i].duration;
+                }
+                return duration;
+            },
+            // 获取视频列表总时间
+            getTotalVideoListDuration(groupList) {
+                let duration = 0;
+                for (let i = 0; i < groupList.length; i++) {
+                    for (let m = 0; m < groupList[i].carouselVideoList.length; m++) {
+                        duration = duration + groupList[i].carouselVideoList[m].takeTimeInSec;
+                    }
+                }
+                return duration;
+            }
         },
         computed: {
             getVideoUrl() {
@@ -264,14 +389,35 @@
                 this.$util.toggleFixedBtnContainer();
                 this.$service.getChannelDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
-                        this.channelInfo = response.data;
-                        this.channelInfo.carouselVideoList.map(video => {
-                            if (video.onPlay) {
-                                this.channelInfo.currentProgramme = video.originName;
-                                this.channelInfo.duration = this.$util.formatDate(new Date(video.lastPlayTime), 'yyyy年MM月DD日HH时mm分SS秒') + '---' + this.$util.formatDate(new Date(video.lastPlayTime + video.takeTimeInSec * 1000), 'yyyy年MM月DD日HH时mm分SS秒');
+                        for (let key in response.data) {
+                            if (!(key === 'protocolList' && !response.data.protocolList)) {
+                                this.channelInfo[key] = response.data[key];
                             }
+                            this.channelInfo.common = !!this.channelInfo.common;
+                        }
+                        response.data.typeList.map(type => {
+                            this.channelInfo.typeIdList.push(type.id);
                         });
+                        if (this.channelInfo.startTime) {
+                            let startDate = new Date(this.channelInfo.startTime);
+                            this.channelInfo.startDate = this.channelInfo.startTime - (startDate.getHours() * 60 * 60 + startDate.getMinutes() * 60 + startDate.getSeconds()) * 1000;
+                            let currentDate = new Date();
+                            this.channelInfo.startPoint = currentDate.valueOf() - (currentDate.getHours() * 60 * 60 + currentDate.getMinutes() * 60 + currentDate.getSeconds()) * 1000 + (startDate.getHours() * 60 * 60 + startDate.getMinutes() * 60 + startDate.getSeconds()) * 1000;
+                        }
+                        this.carouselGroup = response.data.carouselGroupList;
+                        // 设置频道节目信息
+                        for (let i = 0; i < this.carouselGroup.length; i++) {
+                            if (this.carouselGroup[i].onPlay) {
+                                this.channelInfo.onPlayGroupName = this.carouselGroup[i].name;
+                                this.carouselGroup[i].carouselVideoList.map(video => {
+                                    if (video.onPlay) {
+                                        this.channelInfo.onPlayVideoName = video.originName;
+                                    }
+                                });
+                            }
+                        }
                     }
+                    this.selectCurrentGroup(0);
                 });
                 let that = this;
                 let clipboard = new ClipboardJS('.copy-btn');
@@ -282,6 +428,15 @@
                 clipboard.on('error', function (e) {
                     that.$message.error('视频链接复制失败');
                 });
+            },
+            // 选择组
+            selectCurrentGroup(index) {
+                for (let i = 0; i < this.carouselGroup.length; i++) {
+                    this.carouselGroup[i].current = false;
+                }
+                this.carouselGroup[index].current = true;
+                this.currentCarouselGroup = this.carouselGroup[index];
+                this.currentCarouselGroup.index = index;
             },
             // 预览视频
             displayVideo(url, title) {
@@ -312,6 +467,182 @@
 </script>
 
 <style lang="scss" scoped>
+
+    .video-list-header {
+        margin-bottom: 10px;
+        margin-top: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        .group-video-info {
+            display: flex;
+            div {
+                margin-left: 10px;
+                padding: 0px 10px;
+                height: 20px;
+                line-height: 20px;
+                background: #3E495E;
+                border-radius: 10px;
+                font-size: 14px;
+                color: #FFFFFF;
+                span {
+                    margin-right: 20px;
+                }
+            }
+        }
+        .el-button {
+            margin-right: 10px;
+        }
+    }
+
+    // 视频分组
+    .group-container {
+        ul {
+            padding-bottom: 20px;
+            display: flex;
+            flex-wrap: nowrap;
+            overflow: scroll;
+            li {
+                margin-right: 10px;
+                &.current-group {
+                    .header-box {
+                        label, span {
+                            color: #fff;
+                        }
+                    }
+                    .content-box {
+                        padding-bottom: 10px;
+                        background: #0062C4;
+                        &:hover {
+                            background: #0062C4;
+                        }
+                        .name-box {
+                            label {
+                                color: #FFFFFF;
+                            }
+                            span {
+                                visibility: visible;
+                            }
+                        }
+                        .no-box {
+                            margin-bottom: 5px;
+                            label {
+                                color: #A3D0FD;
+                            }
+                            span {
+                                visibility: visible;
+                                .svg-icon {
+                                    fill: #A3D0FD;
+                                }
+                            }
+                        }
+                        .duration-box {
+                            display: block;
+                            text-align: left;
+                            label {
+                                text-align: left;
+                                color: #A3D0FD;
+                            }
+                        }
+                    }
+                }
+                .header-box {
+                    margin-bottom: 10px;
+                    display: flex;
+                    justify-content: space-between;
+                    label {
+                        padding: 2px 6px;
+                        font-size: 14px;
+                        color: #6F7480;
+                        background: #252D3F;
+                        border-radius: 10px;
+                    }
+                    span {
+                        padding: 2px 8px;
+                        font-size: 14px;
+                        color: #6F7480;
+                        background: #252D3F;
+                        border-radius: 10px;
+                    }
+                }
+                .content-box {
+                    width: 200px;
+                    height: auto;
+                    padding: 10px 10px 15px 10px;
+                    background: #252D3F;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    &:hover {
+                        background: #2E384D;
+                        .name-box {
+                            span {
+                                visibility: visible;
+                            }
+                        }
+                        .no-box {
+                            span {
+                                visibility: visible;
+                            }
+                        }
+                    }
+                    p {
+                        height: 20px;
+                        line-height: 20px;
+                        display: flex;
+                        justify-content: space-between;
+                        cursor: pointer;
+                        label {
+                            cursor: pointer;
+                        }
+                        &.name-box {
+                            margin-bottom: 15px;
+                            label {
+                                width: 145px;
+                                font-size: 14px;
+                                color: #A8ABB3;
+                                text-align: left;
+                            }
+                            span {
+                                visibility: hidden;
+                                i {
+                                    font-size: 16px;
+                                    color: #C35757;
+                                    cursor: pointer;
+                                }
+                            }
+                        }
+                        &.no-box {
+                            label {
+                                font-size: 14px;
+                                color: #6F7480;
+                            }
+                            span {
+                                visibility: hidden;
+                                cursor: pointer;
+                                .svg-icon {
+                                    width: 13px !important;
+                                    height: 18px !important;
+                                    fill: #1989FA;
+                                }
+                            }
+                        }
+                        &.duration-box {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .data-show {
+        padding: 2px 6px;
+        margin-left: 30px;
+        font-size: 14px;
+        color: #A8ABB3;
+        background: #252D3F;
+        border-radius: 10px;
+    }
 
     // 频道题目
     .detail-title-block {
@@ -389,7 +720,7 @@
         .info-container {
             min-width: 1220px;
             margin-left: 260px;
-            height: 202px;
+            height: 235px;
             border-top: 1px solid #252D3F;
             > div {
                 display: inline-block;
