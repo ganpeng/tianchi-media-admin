@@ -122,6 +122,23 @@
                             </el-option>
                         </el-select>
                     </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">支付</label>
+                        <el-select
+                            :value="programmeSearchFields.paymentType"
+                            clearable
+                            filterable
+                            @change="inputHandler($event, 'paymentType')"
+                            placeholder="全部"
+                        >
+                            <el-option
+                                v-for="(item, index) in paymentOptions"
+                                :key="index"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
                 </div>
             </div>
             <div class="seperator-line"></div>
@@ -213,6 +230,16 @@
                             <span @click="displayRelated(scope.row)" v-html="refCount(scope.row.refCount)"></span>
                         </template>
                     </el-table-column>
+                    <el-table-column width="80px" align="center" label="会员">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.paymentType === 'VIP' ? '是' : '否'}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="80px" align="center" label="单点">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.price ? scope.row.price / 100 : '否'}}</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="releaseAt" align="center" width="100px" label="上映时间">
                         <template slot-scope="scope">
                             {{ scope.row.releaseAt | formatDate('yyyy-MM-DD') | padEmpty}}
@@ -295,6 +322,7 @@
     import store from 'store';
     import _ from 'lodash';
     import XLSX from 'xlsx';
+    import role from '@/util/config/role';
     import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
     import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
 
@@ -370,6 +398,9 @@
                         return `<span class="name">${refCount}</span>`;
                     }
                 };
+            },
+            paymentOptions() {
+                return role.PAYMENT_OPTIONS;
             }
         },
         beforeRouteLeave(to, from, next) {

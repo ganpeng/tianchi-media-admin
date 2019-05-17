@@ -199,7 +199,8 @@ const defaultProgrammeSearchFields = {
     produceAreaList: '',
     programmeTypeIdList: '',
     programmeCategoryIdList: '',
-    refCount: '' //  关联
+    refCount: '', //  关联
+    paymentType: '' // 支付情况
 };
 
 const defaultGlobal = {
@@ -926,6 +927,7 @@ function formatProgramme(programme, state) {
         featureVideoCount: list.filter((video) => video.type === 'FEATURE').length,
         // 人物
         licence: programme.licence === '' ? null : programme.licence,
+        price: programme.price * 100,
         figureList: [].concat(programme.leadActor.map((item) => {
             let obj = {};
             obj.role = 'ACTOR';
@@ -1001,7 +1003,8 @@ function serializeProgrammData(programme, state) {
         scenarist,
         directorResult,
         leadActorResult,
-        scenaristResult
+        scenaristResult,
+        price: programme.price / 100
     });
     return res;
 }
@@ -1175,8 +1178,7 @@ const actions = {
             let programme = formatProgramme(state.programme, state);
             let res = await service.createProgramme(programme);
             return res;
-        } catch (err) {
-        }
+        } catch (err) {}
     },
     /**
      * 根据节目的id更新节目信息

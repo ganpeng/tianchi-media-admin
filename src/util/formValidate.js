@@ -24,6 +24,21 @@ export const checkScore = (rule, value, callback) => {
     }
 };
 
+export const checkPrice = (rule, value, callback) => {
+    if (!_.isEmpty(value)) {
+        if (!_.isNumber(parseFloat(value))) {
+            callback(new Error('请输入数字值'));
+        } else {
+            if (String(value).split('.')[1] && String(value).split('.')[1].length > 2) {
+                return callback(new Error('金额只能输入两位小数'));
+            }
+            callback();
+        }
+    } else {
+        callback();
+    }
+};
+
 /**
  * 分类校验
  */

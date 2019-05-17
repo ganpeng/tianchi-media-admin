@@ -451,6 +451,7 @@
                         <el-form-item v-if="programme.paymentType === 'EXTRAS'" label="付费金额" prop="price">
                             <el-input
                                 :disabled="readonly"
+                                type="number"
                                 placeholder="请填写金额，小数点后保留两位小数"
                                 @input="inputHandler($event, 'price')"
                                 :value="programme.price">
@@ -549,7 +550,7 @@
     import role from '@/util/config/role';
     import PersonSelect from './PersonSelect';
     import ProgrammeBasicInfo from './ProgrammeBasicInfo';
-    import {checkScore, checkCategory, checkPositiveInteger} from '@/util/formValidate';
+    import {checkScore, checkCategory, checkPositiveInteger, checkPrice} from '@/util/formValidate';
     import UploadProgrammeVideoDialog from './UploadProgrammeVideoDialog';
 
     //  新加
@@ -664,7 +665,8 @@
                         { required: true, message: '请输入节目简介' }
                     ],
                     price: [
-                        { required: true, message: '请输入金额' }
+                        { required: true, message: '请输入金额' },
+                        { validator: checkPrice }
                     ],
                     paymentType: [
                         { required: true, message: '请选择付费情况' }
@@ -983,6 +985,9 @@
                 getProgrammeAndGetProgrammeCategory: 'programme/getProgrammeAndGetProgrammeCategory',
                 getFeatureVideoList: 'programme/getFeatureVideoList'
             }),
+            getPrice(value) {
+                return this.$util.bankersRounding(value / 100, 2);
+            },
             //  人物搜索
             selectChiefActorHandler(person) {
                 this.addPersonByRole({role: 'leadActor', person});

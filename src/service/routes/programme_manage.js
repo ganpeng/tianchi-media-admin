@@ -12,7 +12,7 @@ export const createProgramme = (programme) => {
 /**
  * 获取节目列表
  */
-export const getProgrammeList = ({pageNum, pageSize, keyword, releaseAtStart, releaseAtEnd, produceAreaList, programmeCategoryIdList, programmeTypeIdList, visible, refCount}) => {
+export const getProgrammeList = ({pageNum, pageSize, keyword, releaseAtStart, releaseAtEnd, produceAreaList, programmeCategoryIdList, programmeTypeIdList, visible, refCount, paymentType}) => {
     const params = {
         pageNum,
         pageSize,
@@ -23,7 +23,8 @@ export const getProgrammeList = ({pageNum, pageSize, keyword, releaseAtStart, re
         programmeCategoryIdList,
         programmeTypeIdList,
         visible,
-        refCount
+        refCount,
+        paymentType
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {

@@ -902,7 +902,7 @@ const PAY_STATUS_OPTIONS = [
 
 const PAYMENT_OPTIONS = [
     {
-        label: 'VIP',
+        label: '会员可看',
         value: 'VIP'
     },
     {
@@ -910,7 +910,7 @@ const PAYMENT_OPTIONS = [
         value: 'EXTRAS'
     },
     {
-        label: '免费',
+        label: '免费节目',
         value: 'FREE'
     }
 ];

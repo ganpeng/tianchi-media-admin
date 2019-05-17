@@ -91,11 +91,20 @@
                             </span>
                         </div>
                         <div class="attribute-item">
+                            <label class="label">付费情况</label>
+                            <span class="value">
+                                {{paymentTypeLabel(programme.paymentType)}}
+                                {{programme.paymentType === 'EXTRAS' && programme.price}}
+                            </span>
+                        </div>
+                        <!--
+                        <div class="attribute-item">
                             <label class="label">适用客户端</label>
                             <span class="value">
                                 {{programme.applicableClientList.join(', ')}}
                             </span>
                         </div>
+                        -->
                     </div>
                 </div>
                 <div class="right-side">
@@ -210,6 +219,12 @@
             fixedEmptyValue() {
                 return (value) => {
                     return _.isEmpty(value) ? '无' : value;
+                };
+            },
+            paymentTypeLabel() {
+                return (value) => {
+                    let payment = role.PAYMENT_OPTIONS.find((item) => item.value === value);
+                    return _.get(payment, 'label');
                 };
             }
         }

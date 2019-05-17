@@ -238,6 +238,11 @@
                         <span @click="displayRelated(scope.row)" v-html="refCount(scope.row.refCount)"></span>
                     </template>
                 </el-table-column>
+                <el-table-column width="80px" align="center" label="会员">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.paymentType === 'VIP' ? '是' : '否'}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="multicastIp" min-width="120px" align="center" label="IP"></el-table-column>
                 <el-table-column prop="multicastPort" width="100px" align="center" label="端口"></el-table-column>
                 <el-table-column prop="serverGroup" align="center" min-width="120px" label="服务器组"></el-table-column>

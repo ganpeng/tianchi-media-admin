@@ -118,6 +118,10 @@
                         :allowResolutions="[{width: 260, height: 260}]"
                     ></single-image-uploader>
                 </el-form-item>
+                <el-form-item label="会员" prop="paymentType">
+                    <el-radio @input="inputHandler('VIP', 'paymentType')" :value="liveChannel.paymentType" :label="'VIP'">是</el-radio>
+                    <el-radio @input="inputHandler('FREE', 'paymentType')" :value="liveChannel.paymentType" :label="'FREE'">否</el-radio>
+                </el-form-item>
                 <el-form-item label="公共频道">
                     <span>{{liveChannel.common ? '是' : '否'}}</span>
                 </el-form-item>
@@ -196,6 +200,9 @@ export default {
                 ],
                 record: [
                     { required: true, message: '请选择是否录制直播回看' }
+                ],
+                paymentType: [
+                    { required: true, message: '请选择是否为会员' }
                 ],
                 typeList: [
                     { required: true, message: '请选择直播频道类别' }
