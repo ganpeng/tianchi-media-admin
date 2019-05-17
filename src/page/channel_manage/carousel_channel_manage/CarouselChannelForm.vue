@@ -177,7 +177,10 @@
                         </li>
                         <li>
                             <span>播放时段：</span>
-                            <label class="duration">{{channelInfo.onPlayDuration}}</label>
+                            <label class="duration">
+                                {{channelInfo.onPlayDurationStart | formatDate('yyyy年MM月DD日HH时mm分SS秒')}} -
+                                {{channelInfo.onPlayDurationEnd | formatDate('yyyy年MM月DD日HH时mm分SS秒')}}
+                            </label>
                         </li>
                     </ul>
                 </div>
@@ -800,7 +803,8 @@
                     logoUri: '',
                     onPlayGroupName: '',
                     onPlayVideoName: '',
-                    onPlayDuration: ''
+                    onPlayDurationStart: '',
+                    onPlayDurationEnd: ''
                 },
                 sectionList: [{name: ''}],
                 typeOptions: [],
@@ -990,6 +994,9 @@
                                 this.carouselGroup[i].carouselVideoList.map(video => {
                                     if (video.onPlay) {
                                         this.channelInfo.onPlayVideoName = video.originName;
+                                        // 设置播放时段
+                                        this.channelInfo.onPlayDurationStart = video.lastPlayTime;
+                                        this.channelInfo.onPlayDurationEnd = video.lastPlayTime + video.takeTimeInSec * 1000;
                                     }
                                 });
                             }

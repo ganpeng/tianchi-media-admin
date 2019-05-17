@@ -44,34 +44,6 @@
             prop="fullAddress"
             label="注册来源">
         </el-table-column>
-        <el-table-column
-            align="center"
-            width="120px"
-            label="注册时间">
-            <template slot-scope="scope">
-                {{scope.row.registeredAt | formatDate('yyyy-MM-DD')}}
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            width="120px"
-            label="最后登录">
-            <template slot-scope="scope">
-                {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="status"
-            width="120px"
-            label="APP版本">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="status"
-            width="120px"
-            label="TV版本">
-        </el-table-column>
     </el-table>
 </template>
 

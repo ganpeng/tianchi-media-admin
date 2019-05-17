@@ -35,17 +35,17 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="APP版本">
+                <el-form-item label="会员">
                     <el-select
-                        v-model="listQueryParams.appVersion"
+                        v-model="listQueryParams.vipStatus"
                         @change="getUserList(true)"
                         clearable
                         placeholder="全部">
                         <el-option
-                            v-for="item in appVersionList"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.code">
+                            v-for="item in vipStatusOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -107,17 +107,6 @@
                         end-placeholder="结束日期">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="最后登录">
-                    <el-date-picker
-                        v-model="loginDateRange"
-                        type="daterange"
-                        @change="getUserList(true)"
-                        value-format="timestamp"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期">
-                    </el-date-picker>
-                </el-form-item>
             </el-form>
         </div>
     </div>
@@ -134,16 +123,16 @@
                     registeredAtStart: '',
                     registeredAtEnd: '',
                     memberAtStart: '',
-                    memberAtEnd: '',
-                    loginAtStart: '',
-                    loginAtEnd: ''
+                    memberAtEnd: ''
                 },
                 registeredDateRange: [],
                 memberDateRange: [],
-                loginDateRange: [],
                 appVersionList: [],
                 tvVersionList: [],
                 caStatusOptions: [
+                    {label: '有', value: true},
+                    {label: '无', value: false}],
+                vipStatusOptions: [
                     {label: '有', value: true},
                     {label: '无', value: false}],
                 moreFilters: false
@@ -165,9 +154,6 @@
                 this.listQueryParams.memberAtStart = params.memberAtStart ? params.memberAtStart : '';
                 this.listQueryParams.memberAtEnd = params.memberAtEnd ? params.memberAtEnd : '';
                 this.memberDateRange = params.memberAtStart ? [params.memberAtStart, params.memberAtEnd] : [];
-                this.listQueryParams.loginAtStart = params.loginAtStart ? params.loginAtStart : '';
-                this.listQueryParams.loginAtEnd = params.loginAtEnd ? params.loginAtEnd : '';
-                this.loginDateRange = params.loginAtStart ? [params.loginAtStart, params.loginAtEnd] : [];
             },
             getUserList(isReset) {
                 if (this.registeredDateRange && this.registeredDateRange.length === 2) {
@@ -189,7 +175,6 @@
                 }
                 this.registeredDateRange = [];
                 this.memberDateRange = [];
-                this.loginDateRange = [];
                 this.getUserList();
             }
         }

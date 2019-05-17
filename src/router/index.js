@@ -75,10 +75,16 @@ import RecordProductDetail from 'sysPage/product_manage/record_product/RecordPro
 import DuplicateList from 'sysPage/person_manage/DuplicateList';
 import Worktop from 'sysPage/worktop/Worktop';
 import ClientLogList from 'sysPage/client_log/ClientLogList';
+// 商品
 import GoodsList from 'sysPage/goods_manage/GoodsList';
 import GoodsDetail from 'sysPage/goods_manage/GoodsDetail';
 import CreateGoods from 'sysPage/goods_manage/CreateGoods';
 import EditGoods from 'sysPage/goods_manage/EditGoods';
+// 套餐
+import ComboList from 'sysPage/combo_manage/ComboList';
+import ComboDetail from 'sysPage/combo_manage/ComboDetail';
+import CreateCombo from 'sysPage/combo_manage/CreateCombo';
+import EditCombo from 'sysPage/combo_manage/EditCombo';
 import Category from 'sysPage/category_manage/Category';
 import Search from 'sysPage/search_manage/Search';
 import PageLayout from 'sysPage/page_layout/PageLayout';
@@ -811,6 +817,30 @@ let router = new Router({
                     path: '/goods-manage/edit/:id',
                     name: 'EditGoods',
                     component: EditGoods
+                },
+                //  套餐管理-套餐列表
+                {
+                    path: '/combo-manage/list',
+                    name: 'ComboList',
+                    component: ComboList
+                },
+                //  套餐管理-套餐详情
+                {
+                    path: '/combo-manage/detail/:id',
+                    name: 'ComboDetail',
+                    component: ComboDetail
+                },
+                //  套餐管理-套餐商品
+                {
+                    path: '/combo-manage/create',
+                    name: 'CreateCombo',
+                    component: CreateCombo
+                },
+                //  套餐管理-套餐商品
+                {
+                    path: '/combo-manage/edit/:id',
+                    name: 'EditCombo',
+                    component: EditCombo
                 },
                 //  站点管理-配置站点
                 {

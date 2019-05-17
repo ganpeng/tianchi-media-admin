@@ -10,17 +10,6 @@
             <div class="seperator-line"></div>
             <div class="table-field">
                 <h2 class="content-title">用户列表</h2>
-                <div class="table-operator-field clearfix">
-                    <div class="float-left">
-                    </div>
-                    <div class="float-right">
-                        <el-button
-                            class="btn-style-two contain-svg-icon"
-                            @click="exportUserDataExcel">
-                            导出全部
-                        </el-button>
-                    </div>
-                </div>
                 <user-operate-table
                     :userList="userList">
                 </user-operate-table>
@@ -92,8 +81,6 @@
             handleCurrentChange(pageNum) {
                 this.listQueryParams.pageNum = pageNum;
                 this.getUserList();
-            },
-            exportUserDataExcel() {
             }
         }
     };

@@ -148,7 +148,7 @@
             };
             let checkVisible = (rule, value, callback) => {
                 if (value === '' || value === undefined) {
-                    return callback(new Error('请选择专题状态'));
+                    return callback(new Error('请选择商品状态'));
                 } else {
                     callback();
                 }
