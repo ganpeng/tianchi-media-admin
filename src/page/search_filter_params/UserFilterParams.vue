@@ -23,12 +23,12 @@
                 </el-form-item>
                 <el-form-item label="CA">
                     <el-select
-                        v-model="listQueryParams.caStatus"
+                        v-model="listQueryParams.caNoAvailable"
                         @change="getUserList(true)"
                         clearable
                         placeholder="全部">
                         <el-option
-                            v-for="item in caStatusOptions"
+                            v-for="item in caNoAvailableOptions"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -37,12 +37,12 @@
                 </el-form-item>
                 <el-form-item label="会员">
                     <el-select
-                        v-model="listQueryParams.vipStatus"
+                        v-model="listQueryParams.isVip"
                         @change="getUserList(true)"
                         clearable
                         placeholder="全部">
                         <el-option
-                            v-for="item in vipStatusOptions"
+                            v-for="item in isVipOptions"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -57,9 +57,9 @@
                         placeholder="全部">
                         <el-option
                             v-for="item in tvVersionList"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.code">
+                            :key="item.versionCode"
+                            :label="item.version"
+                            :value="item.versionCode">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -87,7 +87,7 @@
             <el-form :inline="true" class="more-filter-box filter-form" v-if="moreFilters">
                 <el-form-item label="会员到期">
                     <el-date-picker
-                        v-model="memberDateRange"
+                        v-model="vipDateRange"
                         type="daterange"
                         @change="getUserList(true)"
                         value-format="timestamp"
@@ -119,20 +119,21 @@
             return {
                 listQueryParams: {
                     keyword: '',
-                    caStatus: '',
+                    caNoAvailable: '',
+                    isVip: '',
+                    tvVersion: '',
                     registeredAtStart: '',
                     registeredAtEnd: '',
-                    memberAtStart: '',
-                    memberAtEnd: ''
+                    vipExpireAtStart: '',
+                    vipExpireAtEnd: ''
                 },
                 registeredDateRange: [],
-                memberDateRange: [],
-                appVersionList: [],
+                vipDateRange: [],
                 tvVersionList: [],
-                caStatusOptions: [
+                caNoAvailableOptions: [
                     {label: '有', value: true},
                     {label: '无', value: false}],
-                vipStatusOptions: [
+                isVipOptions: [
                     {label: '有', value: true},
                     {label: '无', value: false}],
                 moreFilters: false
@@ -143,17 +144,23 @@
         },
         methods: {
             init() {
+                this.$service.getVersionList({pageNum: 0, pageSize: 1000}).then(response => {
+                    if (response && response.code === 0) {
+                        this.tvVersionList = response.data.list;
+                    }
+                });
             },
             initFilterParams(params) {
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
-                this.listQueryParams.caStatus = params.caStatus !== '' ? params.caStatus : '';
-                this.listQueryParams.category = params.category ? params.category : '';
+                this.listQueryParams.caNoAvailable = params.caNoAvailable !== '' ? params.caNoAvailable : '';
+                this.listQueryParams.isVip = params.isVip !== '' ? params.isVip : '';
+                this.listQueryParams.tvVersion = params.tvVersion !== '' ? params.tvVersion : '';
                 this.listQueryParams.registeredAtStart = params.registeredAtStart ? params.registeredAtStart : '';
                 this.listQueryParams.registeredAtEnd = params.registeredAtEnd ? params.registeredAtEnd : '';
                 this.registeredDateRange = params.registeredAtStart ? [params.registeredAtStart, params.registeredAtEnd] : [];
-                this.listQueryParams.memberAtStart = params.memberAtStart ? params.memberAtStart : '';
-                this.listQueryParams.memberAtEnd = params.memberAtEnd ? params.memberAtEnd : '';
-                this.memberDateRange = params.memberAtStart ? [params.memberAtStart, params.memberAtEnd] : [];
+                this.listQueryParams.vipExpireAtStart = params.vipExpireAtStart ? params.vipExpireAtStart : '';
+                this.listQueryParams.vipExpireAtEnd = params.vipExpireAtEnd ? params.vipExpireAtEnd : '';
+                this.vipDateRange = params.vipExpireAtStart ? [params.vipExpireAtStart, params.vipExpireAtEnd] : [];
             },
             getUserList(isReset) {
                 if (this.registeredDateRange && this.registeredDateRange.length === 2) {
@@ -162,6 +169,13 @@
                 } else {
                     this.listQueryParams.registeredAtStart = '';
                     this.listQueryParams.registeredAtEnd = '';
+                }
+                if (this.vipDateRange && this.vipDateRange.length === 2) {
+                    this.listQueryParams.vipExpireAtStart = this.vipDateRange[0];
+                    this.listQueryParams.vipExpireAtEnd = this.vipDateRange[1];
+                } else {
+                    this.listQueryParams.vipExpireAtStart = '';
+                    this.listQueryParams.vipExpireAtEnd = '';
                 }
                 this.$emit('getUserList', this.listQueryParams, isReset);
             },
@@ -174,7 +188,7 @@
                     }
                 }
                 this.registeredDateRange = [];
-                this.memberDateRange = [];
+                this.vipDateRange = [];
                 this.getUserList();
             }
         }

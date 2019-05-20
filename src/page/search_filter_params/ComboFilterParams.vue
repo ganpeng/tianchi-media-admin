@@ -73,9 +73,9 @@
                     createdAtStart: '',
                     createdAtEnd: '',
                     keyword: '',
-                    visible: ''
+                    visible: '',
+                    validityDays: ''
                 },
-                createRangeTime: [],
                 validityDaysOptions: [{
                     name: '1个月',
                     day: 30
@@ -103,24 +103,16 @@
         methods: {
             initFilterParams(params) {
                 this.listQueryParams.visible = params.visible !== '' ? params.visible : '';
-                this.createRangeTime = params.createdAtStart ? [params.createdAtStart, params.createdAtEnd] : [];
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
+                this.listQueryParams.validityDays = params.validityDays ? params.validityDays : '';
             },
             getComboList(isReset) {
-                if (this.createRangeTime && this.createRangeTime.length === 2) {
-                    this.listQueryParams.createdAtStart = this.createRangeTime[0];
-                    this.listQueryParams.createdAtEnd = this.createRangeTime[1];
-                } else {
-                    this.listQueryParams.createdAtStart = '';
-                    this.listQueryParams.createdAtEnd = '';
-                }
                 this.$emit('getComboList', this.listQueryParams, isReset);
             },
             clearFilters() {
                 for (let key in this.listQueryParams) {
                     this.listQueryParams[key] = '';
                 }
-                this.createRangeTime = [];
                 this.getComboList(true);
             }
         }

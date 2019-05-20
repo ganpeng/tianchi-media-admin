@@ -24,11 +24,12 @@ export const createCombo = ({name, price, validityDays, description, visible}) =
 /**
  * 获取套餐列表
  */
-export const getComboList = ({keyword, createdAtStart, createdAtEnd, pageNum, pageSize, visible}) => {
+export const getComboList = ({keyword, validityDays, createdAtStart, createdAtEnd, pageNum, pageSize, visible}) => {
     const params = {
         pageNum: pageNum - 1,
         pageSize,
         keyword,
+        validityDays,
         createdAtStart: createdAtStart ? new Date(createdAtStart).getTime() : '',
         createdAtEnd: createdAtEnd ? new Date(createdAtEnd).getTime() : '',
         visible

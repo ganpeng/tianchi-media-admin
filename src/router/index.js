@@ -9,7 +9,7 @@ import InfoSetting from 'sysPage/personal_center/InfoSetting';
 import MyInfo from 'sysPage/personal_center/MyInfo';
 import ModifyPassword from 'sysPage/personal_center/ModifyPassword';
 import UserList from 'sysPage/user_manage/UserList';
-import UserDetailInfo from 'sysPage/user_manage/UserDetail';
+import UserDetail from 'sysPage/user_manage/UserDetail';
 import AdminList from 'sysPage/admin_manage/AdminList';
 import CreateAdmin from 'sysPage/admin_manage/CreateAdmin';
 import AdminDetail from 'sysPage/admin_manage/AdminDetail';
@@ -262,8 +262,8 @@ let router = new Router({
                 // 用户中心-用户详情页面
                 {
                     path: '/user-center/detail/:id',
-                    name: 'UserDetailInfo',
-                    component: UserDetailInfo
+                    name: 'UserDetail',
+                    component: UserDetail
                 },
                 // 内容管理-栏目管理-栏目项设置
                 {

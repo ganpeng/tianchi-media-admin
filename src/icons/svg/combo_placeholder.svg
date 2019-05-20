@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="212px" height="212px" viewBox="0 0 212 212" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>套餐占位icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0.473933649" width="200" height="199.052133" rx="8"></rect>
+        <filter x="-3.9%" y="-3.9%" width="109.7%" height="109.7%" filterUnits="objectBoundingBox" id="filter-3">
+            <feMorphology radius="1.20000005" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="2" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="3-30-套餐管理-套餐详情-3.0-" transform="translate(-238.000000, -167.000000)">
+            <g id="套餐占位icon" transform="translate(242.000000, 171.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Mask" fill-rule="nonzero">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-1"></use>
+                    <rect stroke="#3E495E" stroke-width="1.20000005" fill="#2A3040" fill-rule="evenodd" x="-0.600000024" y="-0.126066375" width="201.2" height="200.252133" rx="8"></rect>
+                </g>
+                <g id="套餐icon" mask="url(#mask-2)" fill="#6F7480">
+                    <g transform="translate(50.000000, 51.000000)">
+                        <polygon id="Rectangle" fill-opacity="0.5" points="88.352657 0.0967520255 90.1885342 5.14654466 81.4097196 7.39806375 80.5461218 7.39806375 80.5461218 8.31077186 79.7115859 8.31077186 79.7115859 9.58930122 79.7115859 95.1584804 74.7733143 95.1584804 74.7733143 6.00977768 75.2196998 5.14654466 76.5199747 5.14654466 76.5199747 3.59242156 77.5938921 3.59242156"></polygon>
+                        <polygon id="Rectangle" fill-opacity="0.5" points="50.0819563 18.6152705 99.4646724 18.6152705 93.2918328 98.8621841 56.2547958 98.8621841"></polygon>
+                        <rect id="Rectangle" x="50.0819563" y="18.6152705" width="49.382716" height="6.17283951"></rect>
+                        <path d="M1.2345679,72.9362582 C1.23614918,72.9287267 1.23773405,72.9211976 1.23932251,72.9136711 C3.43759102,62.4977383 12.5161825,56.8868755 31.5634334,56.8868755 C50.6060813,56.8868755 59.6848927,62.495026 61.8859572,72.9061185 C61.8880832,72.9161741 61.8902015,72.9262206 61.8923122,72.9362582 L1.23456789,72.9362582 Z" id="Combined-Shape"></path>
+                        <path d="M6.79012346,77.7777778 L57.4074074,77.7777778 C59.11199,77.7777778 60.4938272,79.159615 60.4938272,80.8641975 C60.4938272,82.5687801 59.11199,83.9506173 57.4074074,83.9506173 L6.79012346,83.9506173 C5.0855409,83.9506173 3.7037037,82.5687801 3.7037037,80.8641975 C3.7037037,79.159615 5.0855409,77.7777778 6.79012346,77.7777778 Z" id="Rectangle-Copy-64"></path>
+                        <path d="M4.05404433,88.8888889 L59.0728312,88.8888889 C60.9256384,88.8888889 62.4276353,91.0998284 62.4276353,93.8271605 C62.4276353,96.5544926 60.9256384,98.7654321 59.0728312,98.7654321 L4.05404433,98.7654321 C2.2012372,98.7654321 0.699240254,96.5544926 0.699240254,93.8271605 C0.699240254,91.0998284 2.2012372,88.8888889 4.05404433,88.8888889 Z" id="Rectangle-Copy-63"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

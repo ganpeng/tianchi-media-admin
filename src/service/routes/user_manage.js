@@ -47,12 +47,16 @@ export const updateUser = ({
 /**
  * 获取用户信息列表
  */
-export const getUserList = ({keyword, districtCode, registeredAtStart, registeredAtEnd, pageNum, pageSize}) => {
+export const getUserList = ({keyword, caNoAvailable, isVip, tvVersion, registeredAtStart, registeredAtEnd, vipExpireAtStart, vipExpireAtEnd, pageNum, pageSize}) => {
     let params = {
         keyword,
-        districtCode,
+        caNoAvailable,
+        isVip,
+        tvVersion,
         registeredAtStart,
         registeredAtEnd,
+        vipExpireAtStart,
+        vipExpireAtEnd,
         pageNum: pageNum - 1,
         pageSize
     };
