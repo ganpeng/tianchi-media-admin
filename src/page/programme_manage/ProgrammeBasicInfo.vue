@@ -94,7 +94,7 @@
                             <label class="label">付费情况</label>
                             <span class="value">
                                 {{paymentTypeLabel(programme.paymentType)}}
-                                {{programme.paymentType === 'EXTRAS' && programme.price}}
+                                {{programme.paymentType === 'EXTRAS' ? programme.price : ''}}
                             </span>
                         </div>
                         <!--
