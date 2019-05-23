@@ -678,7 +678,6 @@ export default {
                             layoutBlockItem: this.layoutBlockItemClone
                         });
                     } else {
-                        console.log('aaaaa');
                         this.updateLayoutBlockByIndex({
                             squareIndex: this.squareIndex,
                             index: this.index,

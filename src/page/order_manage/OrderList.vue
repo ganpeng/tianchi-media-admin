@@ -63,7 +63,7 @@
                         prop="subjectName"
                         align="center"
                         min-width="120px"
-                        label="商品包">
+                        label="商品">
                     </el-table-column>
                     <el-table-column
                         align="center"

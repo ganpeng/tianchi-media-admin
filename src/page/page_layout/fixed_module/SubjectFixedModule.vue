@@ -184,27 +184,6 @@ export default {
             let id = _.get(this.activeLayout, '0.id');
             this.$router.push({ name: 'EditFixedModule', params: {navbarId, index: 0}, query: {id} });
         },
-        selectProgramme(squareIndex) {
-            this.squareIndex = squareIndex;
-            this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectProgrammeDialog.showDialog('PROGRAMME');
-        },
-        selectProgrammeSubject(squareIndex) {
-            this.squareIndex = squareIndex;
-            this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectProgrammeSubjectDialog.showDialog('PROGRAMME_SUBJECT');
-        },
-        //  新增
-        selectProgrammeVideo(squareIndex) {
-            this.squareIndex = squareIndex;
-            this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectProgrammeVideoDialog.showDialog('PROGRAMME_VIDEO');
-        },
-        selectLink(squareIndex) {
-            this.squareIndex = squareIndex;
-            this.setAllowResolutions(this.squareIndex);
-            this.$refs.selectLinkDialog.showDialog('LINK');
-        },
         //  新增结束
         async saveHandler() {
             try {

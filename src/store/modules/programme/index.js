@@ -525,6 +525,9 @@ const mutations = {
     updateProgramme(state, payload) {
         let {key, value} = payload;
         state.programme[key] = value;
+        if (key === 'paymentType' && value !== 'EXTRAS') {
+            state.programme.price = 0;
+        }
     },
     updateProgrammeVisible(state) {
         state.programme.visible = !state.programme.visible;

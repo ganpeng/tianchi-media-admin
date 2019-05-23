@@ -294,6 +294,7 @@ export default {
         return {
             navbarId: '',
             index: 0,
+            operator: '',
             active: 0,
             dialogVisible: false,
             showExist: false,
@@ -307,9 +308,10 @@ export default {
         };
     },
     created() {
-        let {navbarId, index} = this.$route.params;
+        let {navbarId, index, operator} = this.$route.params;
         this.navbarId = navbarId;
         this.index = parseInt(index);
+        this.operator = operator;
     },
     computed: {
         ...mapGetters({
@@ -647,8 +649,7 @@ export default {
         //  最后一步的确认处理函数
         enterHandler() {
             this.updateLayoutBlockItem({key: 'layoutItemType', value: 'PROGRAMME'});
-            let {operator} = this.$route.params;
-            if (operator === 'edit') {
+            if (this.operator === 'edit') {
                 this.updateLayoutBlockById({
                     squareIndex: this.squareIndex,
                     layoutBlockId: this.layoutBlockId,
