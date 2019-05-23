@@ -74,7 +74,7 @@ export const deleteChannelById = (id) => {
 /**
  * 获取频道的列表
  */
-export const getChannelList = ({pageNum, pageSize, record, keyword, typeIdList, visible, category, common, companyCode, protocolList, refCount}) => {
+export const getChannelList = ({pageNum, pageSize, record, keyword, typeIdList, visible, category, common, companyCode, protocolList, refCount, paymentType}) => {
     let params = {
         pageNum,
         pageSize,
@@ -86,7 +86,8 @@ export const getChannelList = ({pageNum, pageSize, record, keyword, typeIdList, 
         common,
         companyCode,
         protocolList,
-        refCount
+        refCount,
+        paymentType
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {

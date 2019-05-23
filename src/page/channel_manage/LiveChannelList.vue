@@ -144,6 +144,21 @@
                         </el-option>
                     </el-select>
                 </div>
+                <div class="search-field-item">
+                    <label class="search-field-item-label">会员</label>
+                    <el-select
+                        :value="searchFields.paymentType"
+                        clearable
+                        placeholder="全部"
+                        @input="inputHandler($event, 'paymentType')">
+                        <el-option
+                            v-for="(item, index) in [{name: '是', value: 'VIP'}, {name: '否', value: 'FREE'}]"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
             </div>
         </div>
         <div class="seperator-line"></div>

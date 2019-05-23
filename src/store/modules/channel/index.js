@@ -26,7 +26,8 @@ let defaultSearchFields = {
     common: undefined,
     visible: '',
     protocolList: [],
-    refCount: '' // 关联
+    refCount: '', // 关联
+    paymentType: ''
 };
 
 let defaultPagination = {
