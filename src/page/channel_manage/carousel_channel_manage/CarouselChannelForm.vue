@@ -108,8 +108,11 @@
                     placeholder="请填写所属服务器组">
                 </el-input>
             </el-form-item>
-            <el-form-item label="状态" prop="visible" required v-if="status === 'CREATE_CHANNEL'">
-                <label>禁播</label>
+            <el-form-item label="会员" prop="paymentType" required>
+                <el-radio-group v-model="channelInfo.paymentType">
+                    <el-radio label="VIP">是</el-radio>
+                    <el-radio label="FREE">否</el-radio>
+                </el-radio-group>
             </el-form-item>
             <el-form-item label="公共频道" prop="common" required>
                 {{channelInfo.common ? '是' : '否'}}
@@ -139,6 +142,9 @@
                        @click="removeAllCompany"
                        class="close-btn el-select__caret el-input__icon el-icon-circle-close is-show-close"></i>
                 </el-autocomplete>
+            </el-form-item>
+            <el-form-item label="状态" prop="visible" required v-if="status === 'CREATE_CHANNEL'" class="channel-status">
+                <label>禁播</label>
             </el-form-item>
             <el-form-item label="状态" prop="visible" required v-if="status === 'EDIT_CHANNEL'" class="channel-status">
                 <el-radio-group v-model="channelInfo.visible">
@@ -674,6 +680,13 @@
                     callback();
                 }
             };
+            let checkPaymentType = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('请选择会员情况'));
+                } else {
+                    callback();
+                }
+            };
             let checkStartTime = (rule, value, callback) => {
                 if ((this.channelInfo.startDate && !this.channelInfo.startPoint) || (!this.channelInfo.startDate && this.channelInfo.startPoint)) {
                     return callback(new Error('请完整选择开始时间'));
@@ -799,6 +812,7 @@
                     multicastIp: '',
                     pushServer: '',
                     serverGroup: '', // 新加字段
+                    paymentType: '',
                     visible: false,
                     logoUri: '',
                     onPlayGroupName: '',
@@ -862,6 +876,9 @@
                     ],
                     pushServer: [
                         {validator: checkPushServer, trigger: 'blur'}
+                    ],
+                    paymentType: [
+                        {validator: checkPaymentType, trigger: 'change'}
                     ],
                     serverGroup: [ // 新加校验
                         {required: true, message: '请输入所属服务器组'}
@@ -1560,6 +1577,7 @@
         }
         .el-dialog__body {
             .el-form {
+                width: 386px !important;
                 margin-top: 0px;
                 .el-form-item__label {
                     font-size: 14px;

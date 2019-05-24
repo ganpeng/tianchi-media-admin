@@ -138,6 +138,8 @@
                         '（必填）',
                         type: '频道类别（请确保类别已建好）\n' +
                         '（必填）',
+                        vip: '会员频道\n' +
+                        '（必填）',
                         transcribe: '提供回看服务（必选）',
                         recordIp: '录制组播地址（必填）如果此流为清流，则此字段不用填写。\n' +
                         '如果该频道不录制，此字段也不用填写',
@@ -164,6 +166,7 @@
                         innerName: 'CCTV1',
                         no: '814',
                         type: '体育',
+                        vip: '是',
                         transcribe: '是',
                         recordIp: '232.1.1.2',
                         recordPort: '1234',
@@ -180,6 +183,7 @@
                         innerName: '东方（上海）卫视',
                         no: '813',
                         type: '娱乐/体育',
+                        vip: '否',
                         transcribe: '否',
                         recordIp: '232.1.1.3',
                         recordPort: '1234',
@@ -196,6 +200,7 @@
                         innerName: '',
                         no: '',
                         type: '',
+                        vip: '',
                         transcribe: '',
                         multicastIp: '',
                         multicastPort: '',
@@ -211,6 +216,8 @@
                         no: '频道编号\n' +
                         '（必填）',
                         type: '频道类别（请确保类别已建好）\n' +
+                        '（必填）',
+                        vip: '会员频道\n' +
                         '（必填）',
                         multicastIp: '组播地址\n' +
                         '（必填）',
@@ -236,6 +243,7 @@
                         innerName: '新片速递',
                         no: '814',
                         type: '体育',
+                        vip: '是',
                         multicastIp: '232.1.1.2',
                         multicastPort: '1234',
                         tsId: '202',
@@ -251,6 +259,7 @@
                         innerName: '射雕英雄传剧场',
                         no: '813',
                         type: '娱乐/体育',
+                        vip: '否',
                         multicastIp: '232.1.1.3',
                         multicastPort: '1234',
                         tsId: '203',
@@ -329,6 +338,8 @@
                     this.channelList[i].protocolList = this.channelList[i].protocol.split('/');
                     // 设置是否为公共频道
                     this.channelList[i].common = this.channelList[i].publicChannel === '是';
+                    // 设置是否为VIP 会员频道
+                    this.channelList[i].paymentType = this.channelList[i].vip === '是' ? 'VIP' : 'FREE';
                     // 设置区域码companyList，非公共频道对区域码不做处理
                     this.channelList[i].companyList = [];
                     if (!this.channelList[i].common) {
@@ -405,6 +416,10 @@
                     message = message + '请填写频道类别;';
                 } else if (!this.isChannelTypeExist(channel.type)) {
                     message = message + '频道类别不存在;';
+                }
+                // 是否为VIP 会员频道
+                if (channel.vip !== '是' && channel.vip !== '否') {
+                    message = message + '请正确填写是否为会员频道;';
                 }
                 // 只有直播频道含有回看服务以及录制Ip、录制端口
                 if (this.$route.params.category === 'LIVE') {

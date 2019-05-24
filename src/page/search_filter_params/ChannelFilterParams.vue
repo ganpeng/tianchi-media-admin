@@ -128,6 +128,20 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="会员">
+                    <el-select
+                        v-model="listQueryParams.paymentType"
+                        clearable
+                        placeholder="请选择会员"
+                        @change="getChannelList(true)">
+                        <el-option
+                            v-for="(item, index) in paymentTypeOptions"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
             </el-form>
         </div>
     </div>
@@ -147,7 +161,8 @@
                     companyCode: '',
                     visible: '',
                     keyword: '',
-                    refCount: ''
+                    refCount: '',
+                    paymentType: ''
                 },
                 protocolOptions: ['UDP', 'HLS'],
                 refCountOptions: [
@@ -165,6 +180,13 @@
                     name: '是'
                 }, {
                     value: false,
+                    name: '否'
+                }],
+                paymentTypeOptions: [{
+                    value: 'VIP',
+                    name: '是'
+                }, {
+                    value: 'FREE',
                     name: '否'
                 }],
                 companyList: [],
@@ -188,6 +210,7 @@
                 this.listQueryParams.protocolList = params.protocolList ? params.protocolList : '';
                 this.listQueryParams.companyCode = params.companyCode ? params.companyCode : '';
                 this.listQueryParams.refCount = params.refCount ? params.refCount : '';
+                this.listQueryParams.paymentType = params.paymentType ? params.paymentType : '';
                 this.listQueryParams.common = params.common !== '' ? params.common : '';
             },
             init() {

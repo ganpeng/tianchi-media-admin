@@ -60,6 +60,16 @@
                 </template>
             </el-table-column>
             <el-table-column
+                width="60px"
+                prop="paymentType"
+                align="center"
+                label="会员">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.paymentType === 'VIP'">是</span>
+                    <span v-else>否</span>
+                </template>
+            </el-table-column>
+            <el-table-column
                 align="center"
                 min-width="120px"
                 prop="multicastIp"

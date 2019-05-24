@@ -17,39 +17,42 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                prop="groupName"
-                min-width="220px"
+                prop="clusterName"
+                min-width="120px"
                 label="组">
             </el-table-column>
             <el-table-column
-                min-width="60px"
-                prop="serverNo"
+                min-width="120px"
+                prop="hostname"
                 align="center"
                 label="服务器">
             </el-table-column>
             <el-table-column
                 align="center"
                 min-width="140px"
-                prop="totalSpace"
+                prop="value.total"
                 label="全部空间">
+                <template slot-scope="scope">
+                    {{(scope.row.value ? scope.row.value.total : 0) | convertFileSize}}
+                </template>
             </el-table-column>
             <el-table-column
                 align="center"
-                prop="usedSpace"
+                prop="value.used"
                 min-width="140px"
                 label="已使用空间">
+                <template slot-scope="scope">
+                    {{(scope.row.value ? scope.row.value.used : 0) | convertFileSize}}
+                </template>
             </el-table-column>
             <el-table-column
                 align="center"
-                prop="unusedSpace"
+                prop="value.free"
                 min-width="130px"
                 label="未使用空间">
-            </el-table-column>
-            <el-table-column
-                align="center"
-                prop="reservedSpace"
-                min-width="130px"
-                label="预留空间">
+                <template slot-scope="scope">
+                    {{(scope.row.value ? scope.row.value.free : 0) | convertFileSize}}
+                </template>
             </el-table-column>
         </el-table>
     </div>
@@ -66,32 +69,7 @@
         },
         data() {
             return {
-                serverList: [
-                    {
-                        groupName: 'Group1',
-                        serverNo: '01',
-                        totalSpace: '1024GB',
-                        usedSpace: '1000GB',
-                        unusedSpace: '12GB',
-                        reservedSpace: '12GB'
-                    },
-                    {
-                        groupName: 'Group1',
-                        serverNo: '01',
-                        totalSpace: '1024GB',
-                        usedSpace: '1000GB',
-                        unusedSpace: '12GB',
-                        reservedSpace: '12GB'
-                    },
-                    {
-                        groupName: 'Group1',
-                        serverNo: '01',
-                        totalSpace: '1024GB',
-                        usedSpace: '1000GB',
-                        unusedSpace: '12GB',
-                        reservedSpace: '12GB'
-                    }
-                ],
+                serverList: [],
                 serverData: {
                     title: {
                         text: '所有存储空间',
@@ -104,7 +82,7 @@
                     legend: {
                         orient: 'vertical',
                         left: 'left',
-                        data: ['已用空间', '可用空间', '预留空间']
+                        data: ['已用空间', '可用空间']
                     },
                     label: {
                         fontSize: 14
@@ -115,11 +93,10 @@
                             type: 'pie',
                             radius: '55%',
                             center: ['50%', '50%'],
-                            color: ['rgb(0,98,196)', 'rgb(116,194,146)', 'rgb(0,143,196)'],
+                            color: ['rgb(0,98,196)', 'rgb(116,194,146)'],
                             data: [
-                                {value: 4048, name: '已用空间'},
-                                {value: 2000, name: '可用空间'},
-                                {value: 1000, name: '预留空间'}
+                                {value: 0, name: '已用空间'},
+                                {value: 0, name: '可用空间'}
                             ],
                             itemStyle: {
                                 emphasis: {
@@ -140,7 +117,9 @@
             init() {
                 this.$service.getServerSpace().then(response => {
                     if (response && response.code === 0) {
-
+                        this.serverList = response.data.serverResourcesVoList;
+                        this.serverData.series[0].data[0].value = response.data.used;
+                        this.serverData.series[0].data[1].value = response.data.free;
                     }
                 });
             }

@@ -31,18 +31,29 @@
         </el-table-column>
         <el-table-column
             align="center"
-            prop="fullAddress"
+            prop="caNoExpireAt"
             label="CA到期日">
+            <template slot-scope="scope">
+                <div v-if="scope.row.caNoExpireAt">{{scope.row.caNoExpireAt | formatDate('yyyy-MM-DD')}}</div>
+                <div v-else>/</div>
+            </template>
         </el-table-column>
         <el-table-column
             align="center"
-            prop="ownDistrict"
+            prop="vip"
             label="会员">
+            <template slot-scope="scope">
+                <div>{{scope.row.vip ? '是' : '否'}}</div>
+            </template>
         </el-table-column>
         <el-table-column
             align="center"
-            prop="fullAddress"
+            prop="vipExpireAt"
             label="会员到期日">
+            <template slot-scope="scope">
+                <div v-if="scope.row.vipExpireAt">{{scope.row.vipExpireAt | formatDate('yyyy-MM-DD')}}</div>
+                <div v-else>/</div>
+            </template>
         </el-table-column>
         <el-table-column
             align="center"

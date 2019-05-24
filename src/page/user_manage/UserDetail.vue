@@ -5,27 +5,26 @@
         <div class="seperator-line"></div>
         <div id="detail-title-block">
             <div class="float-left">
-                <svg-icon icon-class="user_vip"></svg-icon>
-                <label>15022547876</label>
-                <svg-icon icon-class="user_app"></svg-icon>
+                <svg-icon icon-class="user_vip" v-if="userInfo.vip"></svg-icon>
+                <label>{{userInfo.mobile}}</label>
                 <svg-icon icon-class="user_tv"></svg-icon>
-                <span>ID:123456789087654323456</span>
+                <span>ID:{{this.$route.params.id}}</span>
             </div>
-            <i>注册于2018.10.01</i>
+            <i>注册于{{userInfo.registeredAt | formatDate('yyyy-MM-DD')}}</i>
         </div>
         <div class="seperator-line"></div>
         <ul id="other-info">
             <li>
                 <span>CA卡号：</span>
-                <label>123456787654</label>
+                <label>{{userInfo.caNo}}</label>
             </li>
-            <li>
+            <li v-if="userInfo.caNoExpireAt">
                 <span>CA到期日：</span>
-                <label>2019.07.24</label>
+                <label>{{userInfo.caNoExpireAt | formatDate('yyyy-MM-DD')}}</label>
             </li>
-            <li>
+            <li v-if="userInfo.vipExpireAt">
                 <span>会员到期日：</span>
-                <label>2019.07.24</label>
+                <label>{{userInfo.vipExpireAt | formatDate('yyyy-MM-DD')}}</label>
             </li>
             <li>
                 <span>TV版本：</span>
@@ -34,60 +33,18 @@
         </ul>
         <div class="seperator-line"></div>
         <div id="stb-info">
-            <ul>
+            <ul v-for="(item, index) in userInfo.stbList" :key="index">
                 <li>
                     <span>设备1MAC：</span>
-                    <label>24:f6:77:16:82:51</label>
+                    <label>{{item.mac}}</label>
                 </li>
                 <li>
                     <span>设备1版本：</span>
-                    <label>1.1.0</label>
+                    <label>{{item.currentVersionCode}}</label>
                 </li>
                 <li>
                     <span>设备1最后登录：</span>
-                    <label>2019.07.24</label>
-                </li>
-            </ul>
-            <ul>
-                <li>
-                    <span>设备1MAC：</span>
-                    <label>24:f6:77:16:82:51</label>
-                </li>
-                <li>
-                    <span>设备1版本：</span>
-                    <label>1.1.0</label>
-                </li>
-                <li>
-                    <span>设备1最后登录：</span>
-                    <label>2019.07.24</label>
-                </li>
-            </ul>
-            <ul>
-                <li>
-                    <span>设备1MAC：</span>
-                    <label>24:f6:77:16:82:51</label>
-                </li>
-                <li>
-                    <span>设备1版本：</span>
-                    <label>1.1.0</label>
-                </li>
-                <li>
-                    <span>设备1最后登录：</span>
-                    <label>2019.07.24</label>
-                </li>
-            </ul>
-            <ul>
-                <li>
-                    <span>设备1MAC：</span>
-                    <label>24:f6:77:16:82:51</label>
-                </li>
-                <li>
-                    <span>设备1版本：</span>
-                    <label>1.1.0</label>
-                </li>
-                <li>
-                    <span>设备1最后登录：</span>
-                    <label>2019.07.24</label>
+                    <label>{{item.lastOnlineTime | formatDate('yyyy-MM-DD')}}</label>
                 </li>
             </ul>
         </div>
@@ -98,20 +55,22 @@
             style="width: 100%">
             <el-table-column
                 align="center"
-                prop="code"
+                prop="no"
                 width="120px"
                 label="订单编号">
                 <template slot-scope="scope">
                 <span @click="toOrderDetail(scope.row)" class="ellipsis four name">
-                    {{scope.row.code}}
+                    {{scope.row.no}}
                 </span>
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
-                prop="name"
                 min-width="220px"
                 label="用户账号">
+                <template slot-scope="scope">
+                    <span>{{userInfo.mobile}}</span>
+                </template>
             </el-table-column>
             <el-table-column
                 align="center"
@@ -123,38 +82,51 @@
             </el-table-column>
             <el-table-column
                 min-width="100px"
-                prop="price"
+                prop="totalAmount"
                 align="center"
                 label="订单金额">
-            </el-table-column>
-            <el-table-column
-                align="center"
-                min-width="140px"
-                prop="itemCount"
-                label="支付方式">
                 <template slot-scope="scope">
-                    <svg-icon icon-class="alipay"></svg-icon>
-                    <svg-icon icon-class="wechat"></svg-icon>
+                    {{scope.row.totalAmount / 100}} 元
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
-                prop="category"
                 min-width="140px"
-                label="商品包/套餐">
+                prop="paymentMethod"
+                label="支付方式">
+                <template slot-scope="scope">
+                    <svg-icon icon-class="wechat" v-if="scope.row.paymentMethod === 'WXPAY'"></svg-icon>
+                    <svg-icon icon-class="alipay" v-if="scope.row.paymentMethod === 'ALIPAY'"></svg-icon>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                prop="subjectName"
+                min-width="140px"
+                label="套餐/单点">
             </el-table-column>
             <el-table-column
                 align="center"
                 min-width="140px"
+                prop="orderStatus"
                 label="状态">
                 <template slot-scope="scope">
-                    <i class="status-deleting">待支付</i>
-                    <i class="status-normal">成功</i>
-                    <i class="status-abnormal">失败</i>
+                    <i class="status-deleting" v-if="scope.row.orderStatus === 'CREATED'">待支付</i>
+                    <i class="status-normal" v-if="scope.row.orderStatus === 'PAID'">成功</i>
+                    <i class="status-abnormal" v-if="scope.row.orderStatus === 'PAID_FAILED'">失败</i>
+                    <i class="status-initiating" v-if="scope.row.orderStatus === 'EXPIRED'">过期</i>
                 </template>
             </el-table-column>
         </el-table>
-        <div class="seperator-line"></div>
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="listQueryParams.pageNum"
+            :page-sizes="[10, 20, 30, 50]"
+            :page-size="listQueryParams.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total">
+        </el-pagination>
         <div class="fixed-btn-container">
             <el-button class="btn-style-three" @click="toUserList" plain>返回列表</el-button>
         </div>
@@ -168,7 +140,13 @@
         data() {
             return {
                 userInfo: {},
-                orderList: [{code: 111111}]
+                orderList: [],
+                listQueryParams: {
+                    pageNum: 1,
+                    pageSize: 10,
+                    userId: this.$route.params.id
+                },
+                total: 0
             };
         },
         mounted() {
@@ -182,12 +160,29 @@
                         this.userInfo = response.data;
                     }
                 });
+                this.getOrderList();
+            },
+            getOrderList() {
+                this.$service.getOrderList(this.listQueryParams).then(response => {
+                    if (response && response.code === 0) {
+                        this.orderList = response.data.list;
+                        this.total = response.data.total;
+                    }
+                });
             },
             toUserList() {
                 this.$router.push({name: 'UserList'});
             },
             toOrderDetail(item) {
                 this.$router.push({name: 'OrderDetail', params: {id: item.id}});
+            },
+            handleSizeChange(pageSize) {
+                this.listQueryParams.pageSize = pageSize;
+                this.getOrderList();
+            },
+            handleCurrentChange(pageNum) {
+                this.listQueryParams.pageNum = pageNum;
+                this.getOrderList();
             }
         }
     };

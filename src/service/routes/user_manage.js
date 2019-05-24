@@ -69,7 +69,7 @@ export const getUserList = ({keyword, caNoAvailable, isVip, tvVersion, registere
 /**
  * 根据Id获取平台管理员详细信息
  */
-export const getUserInfoById = ({id}) => {
+export const getUserInfoById = (id) => {
     return service.get(util.format('/v1/user/{0}', id));
 };
 

@@ -76,6 +76,11 @@
                             {{channelInfo.onPlayDurationEnd | formatDate('yyyy年MM月DD日HH时mm分SS秒')}}
                         </label>
                     </li>
+                    <li>
+                        <span>会员：</span>
+                        <label class="is-common" v-if="channelInfo.paymentType === 'VIP'">是</label>
+                        <label v-else>否</label>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -328,7 +333,8 @@
                     onPlayGroupName: '',
                     onPlayVideoName: '',
                     onPlayDurationStart: '',
-                    onPlayDurationEnd: ''
+                    onPlayDurationEnd: '',
+                    paymentType: ''
                 },
                 previewVideoInfo: {
                     url: '',

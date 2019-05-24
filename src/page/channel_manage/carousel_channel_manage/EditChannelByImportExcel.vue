@@ -145,6 +145,7 @@
                                 innerName: channel.innerName,
                                 no: channel.no,
                                 type: type.slice(1),
+                                vip: channel.paymentType === 'VIP' ? '是' : '否',
                                 multicastIp: channel.multicastIp,
                                 multicastPort: channel.multicastPort,
                                 tsId: channel.tsId,
@@ -228,6 +229,7 @@
                 delete channelInfo.innerName;
                 delete channelInfo.name;
                 channelInfo.common = channelInfo.publicChannel === '是';
+                channelInfo.paymentType = channelInfo.vip === '是' ? 'VIP' : 'FREE';
                 channelInfo.typeList = [];
                 // 设置type
                 let typeList = channelInfo.type.split('/');
@@ -288,6 +290,10 @@
                     message = message + '请填写频道类别;';
                 } else if (!this.isChannelTypeExist(channel.type)) {
                     message = message + '频道类别不存在;';
+                }
+                // 是否为VIP 会员频道
+                if (channel.vip !== '是' && channel.vip !== '否') {
+                    message = message + '请正确填写是否为公共频道;';
                 }
                 // 推流方式
                 if (this.$util.isEmpty(channel.protocol)) {
