@@ -103,3 +103,14 @@ export const updateProductInfo = ({id, category, name, description, contentIdLis
 export const setProductVisible = ({id}) => {
     return service.patch(util.format('/v1/product/{0}/visible', id));
 };
+
+/**
+ * 获取会员套餐列表
+ */
+export const getMemberShipSchemeList = (params) => {
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/user/membership-scheme/page?${paramsStr}`);
+};

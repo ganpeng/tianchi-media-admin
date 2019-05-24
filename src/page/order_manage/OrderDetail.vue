@@ -30,8 +30,8 @@
                 </ul>
                 <div class="user-info">
                     <label>用户：</label>
-                    <span>{{orderInfo.userName}}</span>
-                    <span class="name" @click="toUserDetail">查看</span>
+                    <span>{{getUserPropByKey('name')}}</span>
+                    <span v-if="getUserPropByKey('id')" class="name" @click="toUserDetail">查看</span>
                 </div>
             </div>
             <div class="seperator-line"></div>
@@ -56,7 +56,7 @@
     </div>
 </template>
 <script>
-
+    import _ from 'lodash';
     export default {
         name: 'OrderDetailInfo',
         data() {
@@ -98,6 +98,11 @@
                         text
                     };
                 };
+            },
+            getUserPropByKey() {
+                return (key) => {
+                    return _.get(this.orderInfo, `userInfo.${key}`);
+                };
             }
         },
         methods: {
@@ -118,7 +123,10 @@
                 );
             },
             toUserDetail() {
-
+                let id = _.get(this.orderInfo, 'userInfo.id');
+                if (id) {
+                    this.$router.push({ name: 'UserDetail', params: {id} });
+                }
             },
             toOrderList() {
                 this.$router.push({name: 'OrderList'});

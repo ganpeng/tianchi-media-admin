@@ -23,7 +23,7 @@
                 </el-form-item>
                 <el-form-item label="商品">
                     <el-select
-                        v-model="listQueryParams.commodityId"
+                        v-model="listQueryParams.membershipSchemeId"
                         @change="getOrderList(true)"
                         clearable
                         filterable
@@ -110,7 +110,7 @@
             return {
                 listQueryParams: {
                     keyword: '',
-                    commodityId: '',
+                    membershipSchemeId: '',
                     orderStatus: '',
                     paymentMethod: '',
                     createdAtStart: '',
@@ -128,10 +128,9 @@
         },
         methods: {
             init() {
-                this.$service.getProductList({
+                this.$service.getComboList({
                     pageNum: 1,
-                    pageSize: 10000,
-                    orderList: 'ID_DESC'
+                    pageSize: 10000
                 }).then(response => {
                     if (response && response.code === 0) {
                         this.productOptions = response.data.list;
@@ -140,7 +139,7 @@
             },
             initFilterParams(params) {
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
-                this.listQueryParams.commodityId = params.commodityId !== '' ? params.commodityId : '';
+                this.listQueryParams.membershipSchemeId = params.membershipSchemeId !== '' ? params.membershipSchemeId : '';
                 this.listQueryParams.orderStatus = params.orderStatus ? params.orderStatus : '';
                 this.listQueryParams.paymentMethod = params.paymentMethod ? params.paymentMethod : '';
                 this.listQueryParams.createdAtStart = params.createdAtStart ? params.createdAtStart : '';

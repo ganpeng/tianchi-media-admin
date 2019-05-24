@@ -55,7 +55,7 @@
                             <span
                                 @click="toOrderDetail(scope.row)"
                                 class="ellipsis three">
-                                {{scope.row.userName | padEmpty}}
+                                {{scope.row.userInfo.name | padEmpty}}
                             </span>
                         </template>
                     </el-table-column>
