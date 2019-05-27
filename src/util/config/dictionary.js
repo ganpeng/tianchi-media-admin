@@ -162,7 +162,42 @@ const CLASS_FILTER_DICTIONARY = {
             name: '分类'
         }],
     // 党建
-    COMMUNIST_PARTY_BUILD: null
+    COMMUNIST_PARTY_BUILD: null,
+    //  二人转
+    ER_REN_ZHUAN: [
+        {
+            type: 'CLASS',
+            name: '分类'
+        }
+    ],
+    //  吉林旅游
+    JILIN_TRAVEL: [
+        {
+            type: 'CLASS',
+            name: '分类'
+        }
+    ],
+    //  高清4K
+    HD_4K: [
+        {
+            type: 'CLASS',
+            name: '分类'
+        }
+    ],
+    //  生活
+    LIFE: [
+        {
+            type: 'CLASS',
+            name: '分类'
+        }
+    ],
+    //  抖音
+    DOUYIN: [
+        {
+            type: 'CLASS',
+            name: '分类'
+        }
+    ],
 };
 
 export default {CLASS_FILTER_DICTIONARY};
