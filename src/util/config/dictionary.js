@@ -197,7 +197,7 @@ const CLASS_FILTER_DICTIONARY = {
             type: 'CLASS',
             name: '分类'
         }
-    ],
+    ]
 };
 
 export default {CLASS_FILTER_DICTIONARY};

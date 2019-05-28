@@ -157,16 +157,15 @@
             :total="pagination.total">
         </el-pagination>
         <display-video-dialog
+            ref="displayVideoDialog"
             :url="url"
-            :title="title"
-            :displayVideoDialogVisible="displayVideoDialogVisible"
-            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
+            :title="title">
         </display-video-dialog>
     </div>
 </template>
 <script>
     import {mapGetters, mapMutations, mapActions} from 'vuex';
-    import DisplayVideoDialog from '../video_manage/DisplayVideoDialog';
+    import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
 
     const ClipboardJS = require('clipboard');
     export default {
@@ -299,10 +298,10 @@
                 this.displayVideoDialogVisible = status;
             },
             displayVideoPlayer(url, name) {
-                this.displayVideoDialogVisible = true;
                 let baseUri = window.localStorage.getItem('videoBaseUri');
                 this.url = `${baseUri}${url}`;
                 this.title = name;
+                this.$refs.displayVideoDialog.showDialog();
             }
         }
     };
