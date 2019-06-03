@@ -661,9 +661,9 @@
                     innerName: [
                         { required: true, message: '请输入内部节目名称' }
                     ],
-                    description: [
-                        { required: true, message: '请输入节目简介' }
-                    ],
+                    // description: [
+                    //     { required: true, message: '请输入节目简介' }
+                    // ],
                     price: [
                         { required: true, message: '请输入金额' },
                         { validator: checkPrice }
