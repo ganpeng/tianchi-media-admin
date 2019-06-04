@@ -38,11 +38,11 @@
                                         type="textarea"
                                         :disabled="readonly"
                                         @input="inputHandler($event, 'description')"
-                                        :maxlength="200"
+                                        :maxlength="300"
                                         placeholder="请输入内容"
                                         :value="programme.description">
                                     </el-input>
-                                    <span class="desc-prompt">已输入{{programme.description.length}}/200字</span>
+                                    <span class="desc-prompt">已输入{{programme.description.length}}/300字</span>
                                 </div>
                             </el-form-item>
                             <el-form-item label="上映时间" prop="releaseAt">
