@@ -84,7 +84,6 @@
             </el-form-item>
             <el-form-item
                 label="APP端海报"
-                required
                 prop="posterImageListForApp"
                 class="image-setting-box"
                 v-if="status === 'CREATE_PROGRAMME' || status === 'EDIT_PROGRAMME'">
@@ -118,7 +117,6 @@
             </el-form-item>
             <el-form-item
                 label="APP端海报"
-                required
                 prop="posterImageListForApp"
                 class="image-setting-box"
                 v-if="status === 'CREATE_FIGURE' || status === 'EDIT_FIGURE'">
@@ -273,6 +271,10 @@
                 }
             };
             let checkPosterImageListForApp = (rule, value, callback) => {
+                if (this.subjectInfo.applicableClientList.toString().indexOf('APP') === -1) {
+                    callback();
+                    return;
+                }
                 if (this.subjectInfo.posterImageListForApp.length === 0) {
                     return callback(new Error('请添加App端海报'));
                 }
