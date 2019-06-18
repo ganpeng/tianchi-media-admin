@@ -77,7 +77,7 @@
                     id="subject-programme-tv"
                     :imageList="subjectInfo.posterImageList"
                     :deleteImageHandler="removePosterImageForTV"
-                    :imageUploadedHandlerForTV="imageUploadedHandlerForTV"
+                    :imageUploadedHandler="imageUploadedHandlerForTV"
                     :allowResolutions="programmeAllowResolutionsForTV"
                     :validator="imageUploadValidatorForTV">
                 </multi-image-uploader>
