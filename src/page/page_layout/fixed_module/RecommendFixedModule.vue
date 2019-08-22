@@ -11,7 +11,7 @@
                     <div class="left-field">
                         <div v-if="isEdit" style="width: 150px" class="btn-wrapper">
                             <p class="text">设置直播频道</p>
-                            <el-button @click="selectChannel" class="btn-style-two">
+                            <el-button @click="selectLiveChannel" class="btn-style-two">
                                 选择
                             </el-button>
                         </div>
@@ -101,7 +101,7 @@
         </div>
         <programme-without4-step-dialog :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeDialog"></programme-without4-step-dialog>
         <edit-programme-subject :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeSubjectDialog"></edit-programme-subject>
-        <edit-channel :selectChannelSuccessHandler="selectChannelSuccessHandler" ref="selectChannelDialog"></edit-channel>
+        <edit-channel :selectChannelSuccessHandler="selectChannelSuccessHandler" ref="changeLiveChannelDialog"></edit-channel>
         <!-- 新增 -->
         <edit-programme-video :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeVideoDialog"></edit-programme-video>
         <link-dialog
@@ -223,8 +223,8 @@ export default {
             let id = _.get(this.activeLayout, '0.id');
             this.$router.push({ name: 'EditFixedModule', params: {navbarId, index: 0}, query: {id} });
         },
-        selectChannel() {
-            this.$refs.selectChannelDialog.showDialog('CHANNEL');
+        selectLiveChannel() {
+            this.$refs.changeLiveChannelDialog.showDialog('CHANNEL');
         },
         selectProgramme(squareIndex) {
             this.squareIndex = squareIndex;
