@@ -27,8 +27,9 @@ const FILTERS = {
         return str.slice(1);
     },
     imageUrl(uri) {
-        let baseUri = window.localStorage.getItem('imageBaseUri');
-        return baseUri + uri;
+        // let baseUri = window.localStorage.getItem('imageBaseUri');
+        // return baseUri + uri;
+        return uri;
     },
     // 展示节目中不同类型人物列表
     displayFigures(figureMap, figureKey) {
@@ -61,8 +62,9 @@ const FILTERS = {
         return value === '' || value === undefined || value === null ? '------' : value;
     },
     fileUrl(uri) {
-        let baseUri = window.localStorage.getItem('imageBaseUri');
-        return `${baseUri}${uri}`;
+        // let baseUri = window.localStorage.getItem('imageBaseUri');
+        // return `${baseUri}${uri}`;
+        return uri;
     },
     convertFileSize(size) {
         return util.convertFileSize(size);

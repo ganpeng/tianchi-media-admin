@@ -176,6 +176,7 @@ export default {
         return {
             navbarId: '',
             index: '',
+            operator: '',
             showExist: false,
             layoutItemType: '',
             dialogVisible: false,
@@ -188,9 +189,10 @@ export default {
         };
     },
     created() {
-        let {navbarId, index} = this.$route.params;
+        let {navbarId, index, operator} = this.$route.params;
         this.navbarId = navbarId;
         this.index = parseInt(index);
+        this.operator = operator;
     },
     computed: {
         ...mapGetters({
@@ -333,8 +335,7 @@ export default {
             try {
                 if (_.get(this.layoutBlockItemClone, 'coverImage.id')) {
                     this.updateLayoutBlockItem({ key: 'layoutItemType', value: 'FIGURE_SUBJECT' });
-                    let {operator} = this.$route.params;
-                    if (operator === 'edit') {
+                    if (this.operator === 'edit') {
                         this.updateLayoutBlockById({
                             squareIndex: this.squareIndex,
                             layoutBlockId: this.layoutBlockId,

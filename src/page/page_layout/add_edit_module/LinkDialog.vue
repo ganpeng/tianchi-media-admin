@@ -85,6 +85,7 @@ export default {
         return {
             navbarId: '',
             index: 0,
+            operator: '',
             dialogVisible: false,
             layoutItemType: '',
             form: {

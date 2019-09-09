@@ -69,6 +69,7 @@ export default {
         return {
             navbarId: '',
             index: '',
+            operator: '',
             title: '',
             allowResolutions: [],
             squareIndex: 0,
@@ -87,6 +88,7 @@ export default {
             let {navbarId, index, operator} = this.$route.params;
             this.navbarId = navbarId;
             this.index = parseInt(index);
+            this.operator = operator;
 
             await this.getLayoutByNavbarId(navbarId);
 

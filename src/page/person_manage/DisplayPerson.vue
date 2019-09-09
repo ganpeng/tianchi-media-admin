@@ -10,7 +10,7 @@
                         {{person.visible ? '上架' : '下架'}}
                     </span>
                 </div>
-                <img v-if="person.avatarImage" :src="person.avatarImage.uri | fileUrl" alt="" width="200" height="200">
+                <img v-if="person.avatarImage" :src="person.avatarImage.uri" alt="" width="200" height="200">
                 <div v-else class="default-person-image">
                     <svg-icon icon-class="person_avatar"></svg-icon>
                 </div>
@@ -95,10 +95,6 @@
             ...mapActions({
                 getPersonById: 'person/getPersonById'
             }),
-            appendImagePrefix(uri) {
-                let baseUri = window.localStorage.getItem('imageBaseUri');
-                return baseUri + uri;
-            },
             areaLabel(code) {
                 let reg = /^\d+(\.\d+)?$/;
                 if (reg.test(code)) {

@@ -192,6 +192,7 @@ export default {
         return {
             navbarId: '', //  缓存navbarId
             index: '', //  缓存的index
+            operator: '',
             selectPersonDialogVisible: false,
             tagsFieldVisible: false,
             title: '',
@@ -212,6 +213,7 @@ export default {
             let {navbarId, index, operator} = this.$route.params;
             this.navbarId = navbarId;
             this.index = parseInt(index);
+            this.operator = operator;
             await this.getLayoutByNavbarId(navbarId);
 
             if (operator === 'edit') {
