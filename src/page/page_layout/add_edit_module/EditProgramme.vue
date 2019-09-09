@@ -195,8 +195,17 @@
                                         :showImage="false"
                                         :uri="getImageByKey('coverImage') || ''"
                                         :uploadSuccessHandler="uploadProgrammeCoverImageSuccessHandler"
+                                        :allowResolutions="matchedProgrammeList"
+                                    ></single-image-uploader>
+                                    <!--
+                                    <single-image-uploader
+                                        id="programmeImageUploaderOne"
+                                        :showImage="false"
+                                        :uri="getImageByKey('coverImage') || ''"
+                                        :uploadSuccessHandler="uploadProgrammeCoverImageSuccessHandler"
                                         :allowResolutions="allowResolutions"
                                     ></single-image-uploader>
+                                    -->
                                 </div>
                             </el-form-item>
                             <el-form-item label="焦点图">
@@ -215,7 +224,7 @@
                                         :showImage="false"
                                         :uri="getImageByKey('coverImageBackground') || ''"
                                         :uploadSuccessHandler="uploadProgrammeBgImageSuccessHandler"
-                                        :allowResolutions="allowResolutions"
+                                        :allowResolutions="matchedProgrammeList"
                                     ></single-image-uploader>
                                 </div>
                             </el-form-item>
@@ -409,9 +418,12 @@ export default {
         matchedProgrammeList() {
             let posterProgrammeList = _.get(this.programme, 'posterImageList') || [];
             let matchedProgrammeList = posterProgrammeList.filter((image) => {
-                let width = _.get(this.allowResolutions, '0.width');
-                let height = _.get(this.allowResolutions, '0.height');
-                return parseInt(image.width) === parseInt(width) && parseInt(image.height) === parseInt(height);
+                let _index = this.allowResolutions.findIndex((innerImage) => {
+                    let width = _.get(innerImage, 'width');
+                    let height = _.get(innerImage, 'height');
+                    return parseInt(image.width) === parseInt(width) && parseInt(image.height) === parseInt(height);
+                });
+                return _index >= 0;
             });
             return matchedProgrammeList;
         }

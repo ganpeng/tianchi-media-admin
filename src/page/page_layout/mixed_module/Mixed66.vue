@@ -239,7 +239,7 @@ export default {
             navbarId: '',
             squareIndex: 0,
             layoutItemType: '',
-            allowResolutions: [{width: 260, height: 380}]
+            allowResolutions: [{width: 260, height: 380}, {width: 240, height: 350}]
         };
     },
     created() {

@@ -1,12 +1,20 @@
 <template>
     <div class="select-image-container" id="select-image">
         <div class="wrapper">
+            <div v-for="(image, index) in images" :key="index" :style="styleStr(index)" class="img-wrapper">
+                <img :style="styleStr(index)" :src="image.uri" alt="">
+                <p class="image-dimension">{{images[index].width}}*{{images[index].height}}</p>
+                <el-radio :name="name" @change="changeImageHandler(image)" :value="id" :label="image.id">&nbsp;</el-radio>
+                <i v-if="id === image.id && showDeleteImageBtn" @click="deleteImage" class="el-icon-error"></i>
+            </div>
+            <!--  修改之前
             <div v-for="(image, index) in images" :key="index" :style="styleStr" class="img-wrapper">
                 <img :style="styleStr" :src="image.uri" alt="">
                 <p class="image-dimension">{{allowResolutions[0].width}}*{{allowResolutions[0].height}}</p>
                 <el-radio :name="name" @change="changeImageHandler(image)" :value="id" :label="image.id">&nbsp;</el-radio>
                 <i v-if="id === image.id && showDeleteImageBtn" @click="deleteImage" class="el-icon-error"></i>
             </div>
+            -->
         </div>
     </div>
 </template>
@@ -44,12 +52,22 @@ export default {
         }
     },
     computed: {
+        //  修改之前
+        // styleStr() {
+        //     if (this.allowResolutions[0]) {
+        //         return `width:${this.allowResolutions[0].width * 0.3}px;height:${this.allowResolutions[0].height * 0.3}px;`;
+        //     } else {
+        //         return '';
+        //     }
+        // }
         styleStr() {
-            if (this.allowResolutions[0]) {
-                return `width:${this.allowResolutions[0].width * 0.3}px;height:${this.allowResolutions[0].height * 0.3}px;`;
-            } else {
-                return '';
-            }
+            return (index) => {
+                if (this.images[index]) {
+                    return `width:${this.images[index].width * 0.3}px;height:${this.images[index].height * 0.3}px;`;
+                } else {
+                    return '';
+                }
+            };
         }
     },
     data() {

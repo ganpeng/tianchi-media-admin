@@ -234,9 +234,12 @@ export default {
         matchedProgrammeList() {
             let posterImageList = _.get(this.personSubjectData, 'posterImageList') || [];
             let matchedProgrammeList = posterImageList.filter((image) => {
-                let width = _.get(this.allowResolutions, '0.width');
-                let height = _.get(this.allowResolutions, '0.height');
-                return parseInt(image.width) === parseInt(width) && parseInt(image.height) === parseInt(height);
+                let _index = this.allowResolutions.findIndex((innerImage) => {
+                    let width = _.get(innerImage, 'width');
+                    let height = _.get(innerImage, 'height');
+                    return parseInt(image.width) === parseInt(width) && parseInt(image.height) === parseInt(height);
+                });
+                return _index >= 0;
             });
             return matchedProgrammeList;
         }

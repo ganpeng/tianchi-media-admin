@@ -16,7 +16,8 @@
                     <input name="file" ref="singleImageUploader" :disabled="isUploading" class="el-upload__input"
                            type="file" :id="id" accept="image/*">
                 </div>
-                <p class="image-dimension">{{allowResolutions[0].width}}*{{allowResolutions[0].height}}</p>
+                <!-- <p class="image-dimension">{{allowResolutions[0].width}}*{{allowResolutions[0].height}}</p> -->
+                <p class="image-dimension">{{imageDimensionStr}}</p>
             </div>
         </div>
     </div>
@@ -95,6 +96,15 @@
                     }
                 } else {
                     return `width:${this.dimension.width}px;height:${this.dimension.height}px;`;
+                }
+            },
+            imageDimensionStr() {
+                let width = _.get(this.allowResolutions, '0.width');
+                let height = _.get(this.allowResolutions, '0.height');
+                if (width && height) {
+                    return `${this.allowResolutions[0].width}*${this.allowResolutions[0].height}`;
+                } else {
+                    return '';
                 }
             }
         },
