@@ -1003,7 +1003,14 @@
                             let currentDate = new Date();
                             this.channelInfo.startPoint = currentDate.valueOf() - (currentDate.getHours() * 60 * 60 + currentDate.getMinutes() * 60 + currentDate.getSeconds()) * 1000 + (startDate.getHours() * 60 * 60 + startDate.getMinutes() * 60 + startDate.getSeconds()) * 1000;
                         }
-                        this.carouselGroup = response.data.carouselGroupList;
+                        // 处理添加默认分组问题
+                        this.carouselGroup = response.data.carouselGroupList.length === 0 ? [{
+                            name: '默认分组1',
+                            duration: '',
+                            durationFormat: '',
+                            videoDuration: '',
+                            carouselVideoList: []
+                        }] : response.data.carouselGroupList;
                         // 设置频道节目信息
                         for (let i = 0; i < this.carouselGroup.length; i++) {
                             if (this.carouselGroup[i].onPlay) {
