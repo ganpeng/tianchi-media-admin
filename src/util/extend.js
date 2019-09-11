@@ -501,6 +501,18 @@ let util = {
             rightTop: {},
             rightBottom: {}
         }
+    },
+    checkSize(img) {
+        return (parseInt(img.width) === 240 && parseInt(img.height) === 350) || (parseInt(img.width) === 260 && parseInt(img.height) === 380);
+    },
+    imageWidth240AndWidth260NoRepeat(image, imageList) {
+        if (util.checkSize(image)) {
+            return imageList.filter((img) => {
+                return !util.checkSize(img);
+            });
+        } else {
+            return imageList;
+        }
     }
 };
 

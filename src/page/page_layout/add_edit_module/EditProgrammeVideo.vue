@@ -384,7 +384,7 @@
                                         :showImage="false"
                                         :uri="getImageByKey('coverImage') || ''"
                                         :uploadSuccessHandler="uploadProgrammeCoverImageSuccessHandler"
-                                        :allowResolutions="matchedProgrammeList"
+                                        :allowResolutions="matchedOrAllow"
                                     ></single-image-uploader>
                                 </div>
                             </el-form-item>
@@ -404,7 +404,7 @@
                                         :showImage="false"
                                         :uri="getImageByKey('coverImageBackground') || ''"
                                         :uploadSuccessHandler="uploadProgrammeBgImageSuccessHandler"
-                                        :allowResolutions="matchedProgrammeList"
+                                        :allowResolutions="matchedOrAllow"
                                     ></single-image-uploader>
                                 </div>
                             </el-form-item>
@@ -558,6 +558,14 @@ export default {
                 return _index >= 0;
             });
             return matchedProgrammeList;
+        },
+        matchedOrAllow() {
+            let size = this.matchedProgrammeList.length === 0 ? this.allowResolutions : _.cloneDeep(this.matchedProgrammeList).map((image) => {
+                image.width = parseInt(image.width);
+                image.height = parseInt(image.height);
+                return image;
+            });
+            return size;
         }
     },
     methods: {
@@ -737,13 +745,17 @@ export default {
         async uploadProgrammeCoverImageSuccessHandler(image) {
             try {
                 let {id, posterImageList} = this.programme;
-                let clonePosterImageList = _.cloneDeep(posterImageList);
+                // let clonePosterImageList = _.cloneDeep(posterImageList);
+                let clonePosterImageList = this.$util.imageWidth240AndWidth260NoRepeat(image, _.cloneDeep(posterImageList));
                 clonePosterImageList.push(image);
                 clonePosterImageList = _.uniqBy(clonePosterImageList, 'id');
-                let res = await this.$service.updatePartProgrammeInfo({
-                    id,
-                    programme: {posterImageList: clonePosterImageList}
-                });
+                let programme = {
+                    posterImageList: clonePosterImageList
+                };
+                if (this.$util.checkSize(image)) {
+                    programme.coverImage = image;
+                }
+                let res = await this.$service.updatePartProgrammeInfo({ id, programme });
                 if (res && res.code === 0) {
                     this.programme = Object.assign({}, this.programme, {posterImageList: clonePosterImageList});
                 }
