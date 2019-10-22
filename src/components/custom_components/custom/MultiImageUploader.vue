@@ -36,7 +36,7 @@ import {
     promiseImageSize,
     filterFile,
     filterSizeMatchFiles,
-    getImageDemensionByName,
+    // getImageDemensionByName,
     readBlobAsDataURLFromList
 } from '../../../util/upload';
 import PreviewMultipleImages from './PreviewMultipleImages';
@@ -167,8 +167,8 @@ export default {
                 //  上传成功 0 成功, 1 等待, 2 失败 3 正在上传
                 if (res && (res.code === 0)) {
                     if (res.data[0] && (res.data[0].failCode === 0 || res.data[0].failCode === 3300)) {
-                        let {uri, originName, id} = res.data[0].image;
-                        let {width, height} = getImageDemensionByName(this.fileList, originName);
+                        let {uri, originName, id, width, height} = res.data[0].image;
+                        // let {width, height} = getImageDemensionByName(this.fileList, originName);
                         let obj = {id, uri, width, height, name: originName};
                         this.imageUploadedHandler(obj);
                     } else {
