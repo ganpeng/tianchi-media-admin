@@ -8,67 +8,56 @@ import qs from 'querystring';
 import _ from 'lodash';
 
 /**
- * 创建商品
+ * 创建部门
  */
-export const createGoods = ({name, price, validityDays, description, productList, visible}) => {
-    return service.post('/v1/commodity', {
+export const createDepartment = ({name, description, adminList}) => {
+    return service.post('/v1/department', {
         name,
-        price: price * 100,
-        validityDays,
-        priceUnit: 'CENT',
         description,
-        productList,
-        visible
+        adminList
     });
 };
 
 /**
- * 获取商品列表
+ * 获取部门列表
  */
-export const getGoodsList = ({keyword, productId, createdAtStart, createdAtEnd, pageNum, pageSize, visible}) => {
+export const getDepartmentList = ({keyword, id, pageNum, pageSize}) => {
     const params = {
         pageNum: pageNum - 1,
         pageSize,
         keyword,
-        productId,
-        createdAtStart: createdAtStart ? new Date(createdAtStart).getTime() : '',
-        createdAtEnd: createdAtEnd ? new Date(createdAtEnd).getTime() : '',
-        visible
+        id
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
         return item !== '' && item !== undefined;
     }));
 
-    return service.get(`/v1/commodity/page?${paramsStr}`);
+    return service.get(`/v1/department/page?${paramsStr}`);
 };
 
 /**
- * 修改商品信息
+ * 修改部门信息
  */
-export const updateGoodsInfo = ({id, name, price, validityDays, description, productList, visible}) => {
-    return service.put('/v1/commodity', {
+export const updateDepartmentInfo = ({id, name, description, adminList}) => {
+    return service.put('/v1/department', {
         id,
         name,
-        price: price * 100,
-        validityDays,
-        priceUnit: 'CENT',
         description,
-        productList,
-        visible
+        adminList
     });
 };
 
 /**
  * 获取详情
  */
-export const getGoodsDetail = (id) => {
-    return service.get(util.format('/v1/commodity/{0}', id));
+export const getDepartmentDetail = (id) => {
+    return service.get(util.format('/v1/department/{0}', id));
 };
 
 /**
- * 商品的上下架
+ * 部门的删除
  */
-export const setGoodsVisible = ({id, visible}) => {
-    return service.patch(util.format('/v1/commodity/{0}?visible={1}', id, visible));
+export const setDepartmentVisible = (id) => {
+    return service.delete(util.format('/v1/department/{0}', id));
 };

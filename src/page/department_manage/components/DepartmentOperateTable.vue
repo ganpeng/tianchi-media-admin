@@ -26,19 +26,15 @@
                 align="center"
                 prop="departmentList"
                 min-width="130px"
-                label="包含产品包">
+                label="成员数量">
                 <template slot-scope="scope">
-                    <span @click="checkDepartmentList(scope.row)" class="ellipsis four name">
-                    查看
-                </span>
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
                 min-width="140px"
-                label="更新时间">
+                label="负责人">
                 <template slot-scope="scope">
-                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -52,16 +48,9 @@
             <el-table-column
                 align="center"
                 min-width="140px"
-                label="状态">
+                label="更新时间">
                 <template slot-scope="scope">
-                    <input
-                        class="my-switch switch-anim"
-                        type="checkbox"
-                        v-model="scope.row.visible"
-                        :checked="scope.row.visible"
-                        @click.prevent="updateDepartmentStatus(scope.row)"/>
-                    <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
-                    <i v-else class="off-the-shelf">已下架</i>
+                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -71,27 +60,11 @@
                 <template slot-scope="scope">
                     <div class="operator-btn-wrapper">
                         <span class="btn-text" @click="editDepartment(scope.row)">编辑</span>
+                        <span class="btn-text text-danger" @click="removeDepartment(scope.row)">删除</span>
                     </div>
                 </template>
             </el-table-column>
         </el-table>
-        <el-dialog
-            title="产品列表"
-            :visible.sync="departmentListVisible"
-            :close-on-click-modal="false"
-            custom-class="normal-dialog department-list"
-            width="40%">
-            <div class="batch-share-body" v-if="departmentListVisible">
-                <ul>
-                    <li v-for="(item, index) in currentDepartmentList" :key="index">
-                        <el-tag type="info">{{item.name}}</el-tag>
-                    </li>
-                </ul>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="departmentListVisible = false">确定</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 
@@ -108,37 +81,9 @@
             }
         },
         data() {
-            return {
-                departmentListVisible: false,
-                currentDepartmentList: []
-            };
+            return {};
         },
         methods: {
-            updateDepartmentStatus(item) {
-                this.$confirm('此操作将' + (item.visible ? '下架' : '上架') + item.name + '部门, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.$service.setDepartmentVisible({id: item.id, visible: !item.visible}).then(response => {
-                        if (response && response.code === 0) {
-                            this.$message.success('"' + item.name + '"部门' + (item.visible ? '下架成功' : '上架成功'));
-                            item.visible = !item.visible;
-                        }
-                    });
-                });
-            },
-            checkDepartmentList(department) {
-                this.$service.getDepartmentDetail(department.id).then(response => {
-                    if (response && response.code === 0) {
-                        this.currentDepartmentList = response.data.productList;
-                        this.departmentListVisible = true;
-                    } else {
-                        this.$message.warning('因请求问题，暂时未查看到对应产品列表');
-                    }
-                });
-            },
-            // 查看详情
             toDepartmentDetail(item) {
                 this.$router.push({
                     name: 'DepartmentDetail',
@@ -149,6 +94,26 @@
                 this.$router.push({
                     name: 'EditDepartment',
                     params: {id: item.id}
+                });
+            },
+            removeDepartment(item) {
+                if (item.visible) {
+                    this.$message.warning('当前专题处于上架状态，请下架之后再进行删除操作');
+                    return;
+                }
+                this.$confirm('此操作将删除' + item.name + '专题, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$service.deleteSubject(item.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('"' + item.name + '"' + '专题删除成功!');
+                            this.$emit('getSubjectList');
+                            this.multipleSelection = [];
+                            this.$emit('setBatchDisabledStatus', true);
+                        }
+                    });
                 });
             }
         }

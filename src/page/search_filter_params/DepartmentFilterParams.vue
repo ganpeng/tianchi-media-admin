@@ -9,7 +9,7 @@
                         @change="getDepartmentList(true)"
                         clearable
                         class="border-input"
-                        placeholder="商品编号、名称等">
+                        placeholder="请输入需要查找的信息">
                     </el-input>
                 </el-form-item>
                 <el-form-item>
@@ -45,31 +45,6 @@
                         重置
                     </el-button>
                 </el-form-item>
-                <el-form-item>
-                    <el-button
-                        type="text"
-                        @click="moreFilters = !moreFilters"
-                        class="more-filters"
-                        :class="{active:moreFilters}">
-                        更多筛选
-                        <i class="el-icon-arrow-up" v-if="moreFilters"></i>
-                        <i class="el-icon-arrow-down" v-else></i>
-                    </el-button>
-                </el-form-item>
-            </el-form>
-            <el-form :inline="true" class="more-filter-box filter-form" v-if="moreFilters">
-                <el-form-item label="创建时间">
-                    <el-date-picker
-                        prefix-icon="0"
-                        v-model="createRangeTime"
-                        type="daterange"
-                        @change="getDepartmentList(true)"
-                        value-format="timestamp"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期">
-                    </el-date-picker>
-                </el-form-item>
             </el-form>
         </div>
     </div>
@@ -81,23 +56,11 @@
         name: 'DepartmentFilterParams',
         data() {
             return {
-                moreFilters: false,
                 listQueryParams: {
-                    createdAtStart: '',
-                    createdAtEnd: '',
                     keyword: '',
-                    productId: '',
-                    visible: ''
+                    productId: ''
                 },
-                productOptions: [],
-                createRangeTime: [],
-                visibleOptions: [{
-                    value: true,
-                    label: '已上架'
-                }, {
-                    value: false,
-                    label: '已下架'
-                }]
+                productOptions: []
             };
         },
         mounted() {
@@ -116,28 +79,16 @@
                 });
             },
             initFilterParams(params) {
-                this.listQueryParams.visible = params.visible !== '' ? params.visible : '';
-                this.listQueryParams.createdAtStart = params.createdAtStart ? params.createdAtStart : '';
-                this.listQueryParams.createdAtEnd = params.createdAtEnd ? params.createdAtEnd : '';
-                this.createRangeTime = params.createdAtStart ? [params.createdAtStart, params.createdAtEnd] : [];
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
                 this.listQueryParams.productId = params.productId ? params.productId : '';
             },
             getDepartmentList(isReset) {
-                if (this.createRangeTime && this.createRangeTime.length === 2) {
-                    this.listQueryParams.createdAtStart = this.createRangeTime[0];
-                    this.listQueryParams.createdAtEnd = this.createRangeTime[1];
-                } else {
-                    this.listQueryParams.createdAtStart = '';
-                    this.listQueryParams.createdAtEnd = '';
-                }
                 this.$emit('getDepartmentList', this.listQueryParams, isReset);
             },
             clearFilters() {
                 for (let key in this.listQueryParams) {
                     this.listQueryParams[key] = '';
                 }
-                this.createRangeTime = [];
                 this.getDepartmentList(true);
             }
         }

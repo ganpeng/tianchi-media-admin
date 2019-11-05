@@ -3,6 +3,8 @@
  */
 
 import service from '../config';
+import qs from 'querystring';
+import _ from 'lodash';
 import util from '../../util/extend';
 
 /**
@@ -16,7 +18,17 @@ export const createAdmin = ({email, mobile, name}) => {
  * 获取平台管理员信息列表
  */
 export const getAdminList = ({pageNum, pageSize, keyword}) => {
-    return service.get(util.format('/v1/admin/page?pageNum={0}&pageSize={1}&keyword={2}', pageNum - 1, pageSize, keyword));
+    const params = {
+        keyword,
+        pageSize,
+        pageNum: pageNum - 1
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/admin/page?${paramsStr}`);
 };
 
 /**

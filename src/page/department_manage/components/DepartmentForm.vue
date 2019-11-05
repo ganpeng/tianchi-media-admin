@@ -43,16 +43,16 @@
                        class="close-btn el-select__caret el-input__icon el-icon-circle-close is-show-close"></i>
                 </el-autocomplete>
             </el-form-item>
-            <el-form-item label="部门描述" prop="description">
+            <el-form-item label="部门描述" prop="remark">
                 <el-input
-                    v-model="departmentInfo.description"
+                    v-model="departmentInfo.remark"
                     size="medium"
                     type="textarea"
                     :maxlength="600"
                     :rows="8"
-                    placeholder="请填写部门描述，不超过300字">
+                    placeholder="请填写部门描述，不超过600字">
                 </el-input>
-                <label class="textarea-tip">已输入{{departmentInfo.description ? departmentInfo.description.length :
+                <label class="textarea-tip">已输入{{departmentInfo.remark ? departmentInfo.remark.length :
                     '0'}}/600字</label>
             </el-form-item>
         </el-form>
@@ -108,7 +108,7 @@
                 isLoading: false,
                 departmentInfo: {
                     name: '',
-                    description: '',
+                    remark: '',
                     adminList: []
                 },
                 adminOptions: [],
@@ -116,7 +116,7 @@
                     name: [
                         {validator: checkName, trigger: 'blur'}
                     ],
-                    description: [
+                    remark: [
                         {validator: checkDesc, trigger: 'blur'}
                     ],
                     adminList: [
@@ -133,8 +133,7 @@
                 this.$util.toggleFixedBtnContainer();
                 this.$service.getAdminList({
                     pageNum: 1,
-                    pageSize: 10000,
-                    orderList: 'ID_DESC'
+                    pageSize: 10000
                 }).then(response => {
                     if (response && response.code === 0) {
                         this.adminOptions = response.data.list;
