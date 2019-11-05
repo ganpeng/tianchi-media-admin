@@ -118,9 +118,9 @@
             };
             let checkDesc = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    return callback(new Error('请填写广告描述'));
+                    return callback(new Error('请填写商品描述'));
                 } else if (this.$util.trim(value).length > 300) {
-                    return callback(new Error('广告描述不能超过300字'));
+                    return callback(new Error('商品描述不能超过300字'));
                 } else {
                     callback();
                 }

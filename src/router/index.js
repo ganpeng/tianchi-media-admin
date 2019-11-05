@@ -80,6 +80,11 @@ import GoodsList from 'sysPage/goods_manage/GoodsList';
 import GoodsDetail from 'sysPage/goods_manage/GoodsDetail';
 import CreateGoods from 'sysPage/goods_manage/CreateGoods';
 import EditGoods from 'sysPage/goods_manage/EditGoods';
+// 部门
+import DepartmentList from 'sysPage/department_manage/DepartmentList';
+import DepartmentDetail from 'sysPage/department_manage/DepartmentDetail';
+import CreateDepartment from 'sysPage/department_manage/CreateDepartment';
+import EditDepartment from 'sysPage/department_manage/EditDepartment';
 // 套餐
 import ComboList from 'sysPage/combo_manage/ComboList';
 import ComboDetail from 'sysPage/combo_manage/ComboDetail';
@@ -865,6 +870,30 @@ let router = new Router({
                     path: '/order-manage/detail/:id',
                     name: 'OrderDetail',
                     component: OrderDetail
+                },
+                //  部门管理-部门列表
+                {
+                    path: '/department-manage/list',
+                    name: 'DepartmentList',
+                    component: DepartmentList
+                },
+                //  部门管理-部门详情
+                {
+                    path: '/department-manage/detail/:id',
+                    name: 'DepartmentDetail',
+                    component: DepartmentDetail
+                },
+                //  部门管理-创建部门
+                {
+                    path: '/department-manage/create',
+                    name: 'CreateDepartment',
+                    component: CreateDepartment
+                },
+                //  部门管理-编辑部门
+                {
+                    path: '/department-manage/edit/:id',
+                    name: 'EditDepartment',
+                    component: EditDepartment
                 }
             ]
         },
