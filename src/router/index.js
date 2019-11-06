@@ -85,6 +85,11 @@ import DepartmentList from 'sysPage/department_manage/DepartmentList';
 import DepartmentDetail from 'sysPage/department_manage/DepartmentDetail';
 import CreateDepartment from 'sysPage/department_manage/CreateDepartment';
 import EditDepartment from 'sysPage/department_manage/EditDepartment';
+// 角色
+import RoleList from 'sysPage/role_manage/RoleList';
+import RoleDetail from 'sysPage/role_manage/RoleDetail';
+import CreateRole from 'sysPage/role_manage/CreateRole';
+import EditRole from 'sysPage/role_manage/EditRole';
 // 套餐
 import ComboList from 'sysPage/combo_manage/ComboList';
 import ComboDetail from 'sysPage/combo_manage/ComboDetail';
@@ -894,6 +899,30 @@ let router = new Router({
                     path: '/department-manage/edit/:id',
                     name: 'EditDepartment',
                     component: EditDepartment
+                },
+                //  角色管理-角色列表
+                {
+                    path: '/role-manage/list',
+                    name: 'RoleList',
+                    component: RoleList
+                },
+                //  角色管理-角色详情
+                {
+                    path: '/role-manage/detail/:id',
+                    name: 'RoleDetail',
+                    component: RoleDetail
+                },
+                //  角色管理-创建角色
+                {
+                    path: '/role-manage/create',
+                    name: 'CreateRole',
+                    component: CreateRole
+                },
+                //  角色管理-编辑角色
+                {
+                    path: '/role-manage/edit/:id',
+                    name: 'EditRole',
+                    component: EditRole
                 }
             ]
         },

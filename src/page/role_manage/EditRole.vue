@@ -1,20 +1,20 @@
-<!--编辑商品的组件-->
+<!--编辑角色的组件-->
 <template>
     <div>
-        <div class="content-title">编辑商品</div>
-        <goods-form
-            status="EDIT_GOODS">
-        </goods-form>
+        <div class="content-title">编辑角色</div>
+        <role-form
+            status="EDIT_ROLE">
+        </role-form>
     </div>
 </template>
 
 <script>
-    import GoodsForm from './components/RoleForm';
+    import RoleForm from './components/RoleForm';
 
     export default {
-        name: 'EditGoods',
+        name: 'EditRole',
         components: {
-            GoodsForm
+            RoleForm
         },
         data() {
             return {};

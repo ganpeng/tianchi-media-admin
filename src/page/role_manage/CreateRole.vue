@@ -1,20 +1,20 @@
-<!--新建商品的组件-->
+<!--新建角色的组件-->
 <template>
     <div>
-        <div class="content-title">添加商品</div>
-        <goods-form
-            status="CREATE_GOODS">
-        </goods-form>
+        <div class="content-title">添加角色</div>
+        <role-form
+            status="CREATE_ROLE">
+        </role-form>
     </div>
 </template>
 
 <script>
-    import GoodsForm from './components/RoleForm';
+    import RoleForm from './components/RoleForm';
 
     export default {
-        name: 'CreateGoods',
+        name: 'CreateRole',
         components: {
-            GoodsForm
+            RoleForm
         },
         data() {
             return {};

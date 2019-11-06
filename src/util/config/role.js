@@ -667,6 +667,11 @@ const ASIDE_LIST = [
             text: '部门管理',
             uri: '/department-manage/list',
             icon: 'aside_admin'
+        },
+        {
+            text: '角色管理',
+            uri: '/role-manage/list',
+            icon: 'aside_admin'
         }
     ],
     [
