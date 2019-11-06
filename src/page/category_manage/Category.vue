@@ -16,17 +16,43 @@
             <div class="tab-content">
                 <div v-if="activeTabIndex === 0" class="programme-content clearfix">
                     <div class="left-tab">
+                        <el-button
+                            v-if="!editCategory"
+                            class="btn-style-two contain-svg-icon"
+                            @click="addNewProgrammeCategoryHandler">
+                            <svg-icon icon-class="add"></svg-icon>
+                            新增分类
+                        </el-button>
                         <div class="category-tab-wrapper">
                             <ul class="category-tab-list">
                                 <li
                                     v-for="(category, index) in programmeCategory"
                                     :key="index"
                                     :class="['category-tab-item', programmeCategoryActiveIndex === index ? 'active' : '']"
-                                    @click="changeProgrammeCategoryTabHandler(index)"
                                 >
-                                    {{category.name}}
+                                    <div
+                                        v-if="!category.edit"
+                                        class="display-wrapper">
+                                        <span
+                                            @dblclick.prevent.stop="toggleCategoryEditHandler(index)"
+                                            @click="changeProgrammeCategoryTabHandler(index)">{{category.name}}
+                                        </span>
+                                        <i v-if="editCategory" @click.prevent="deleteProgrammeCategoryHandler(index)" class="el-tag__close el-icon-close"></i>
+                                    </div>
+                                    <div v-else class="edit-wrapper">
+                                        <el-input
+                                            :value="category.inputValue"
+                                            @input="programmeCategoryInputValueChangeHandler($event, index)"
+                                        ></el-input>
+                                        <i @click="editProgrammeCategoryNameHandler(index)" class="save-btn text-success el-icon-success"></i>
+                                    </div>
                                 </li>
                             </ul>
+                        </div>
+                        <div class="edit-category-btn-wrapper">
+                            <span class="btn-text text-primary" @click="toggleEditCategoryHandler">
+                                {{editCategory ? '确定' : '编辑分类'}}
+                            </span>
                         </div>
                     </div>
                     <div class="right-content">
@@ -34,14 +60,25 @@
                         <div class="seperator-line"></div>
                         <div class="my-tags big">
                             <draggable v-model="activeProgrammeCategoryList">
-                                <el-tag
-                                    :key="index"
+                                <div :key="index"
                                     v-for="(type, index) in activeProgrammeCategoryList"
-                                    closable
-                                    :disable-transitions="false"
-                                    @close="deleteProgrammeTypeHandler(type.id)">
-                                    {{type.name}}
-                                </el-tag>
+                                    class="tag-wrapper">
+                                    <el-tag
+                                        v-if="!type.edit"
+                                        closable
+                                        :disable-transitions="false"
+                                        v-on:dblclick.native="toggleTypeEditHandler(type.id)"
+                                        @close="deleteProgrammeTypeHandler(type.id)">
+                                        {{type.name}}
+                                    </el-tag>
+                                    <div v-else class="type-input-wrapper">
+                                        <el-input
+                                            :value="type.inputValue"
+                                            @input="typeInputValueChangeHandler($event, type)"
+                                        ></el-input>
+                                        <i @click="editTypeNameHandler(type.id)" class="save-btn text-success el-icon-success"></i>
+                                    </div>
+                                </div>
                                 <el-input
                                     v-model="value"
                                     clearable
@@ -251,7 +288,8 @@ export default {
             value: '',
             activeTabIndex: 0,
             programmeCategoryActiveIndex: 0,
-            tabList: ['节目类型', '直播类型', '轮播类型']
+            tabList: ['节目类型', '直播类型', '轮播类型'],
+            editCategory: false
         };
     },
     created() {
@@ -271,7 +309,9 @@ export default {
             checkLiveCategoryIsExist: 'category/checkLiveCategoryIsExist',
             checkCarouselCategoryIsExist: 'category/checkCarouselCategoryIsExist',
             //  区域搜索
-            areaLabel: 'programme/areaLabel'
+            areaLabel: 'programme/areaLabel',
+            //  dev_v2.5
+            programmeCategoryIsEdit: 'category/programmeCategoryIsEdit'
         }),
         activeProgrammeCategoryList: {
             get() {
@@ -332,7 +372,17 @@ export default {
             setCategoryGroupList: 'category/setCategoryGroupList',
             addCategoryGroupToList: 'category/addCategoryGroupToList',
             deleteCategoryGroupByIndex: 'category/deleteCategoryGroupByIndex',
-            updateCategoryGroupList: 'category/updateCategoryGroupList'
+            updateCategoryGroupList: 'category/updateCategoryGroupList',
+            // v2.5
+            typeInputValueUpdate: 'category/typeInputValueUpdate',
+            typeNameUpdate: 'category/typeNameUpdate',
+            toggleTypeEdit: 'category/toggleTypeEdit',
+            addNewProgrammeCategory: 'category/addNewProgrammeCategory',
+            deleteProgrammeCategory: 'category/deleteProgrammeCategory',
+            toggleCategoryEdit: 'category/toggleCategoryEdit',
+            programmeCategoryInputValueUpdate: 'category/programmeCategoryInputValueUpdate',
+            programmeCategoryNameUpdate: 'category/programmeCategoryNameUpdate',
+            resetAllEdit: 'category/resetAllEdit'
         }),
         ...mapActions({
             getLiveChannelCategory: 'category/getLiveChannelCategory',
@@ -355,6 +405,7 @@ export default {
             let obj = this.programmeCategory[this.programmeCategoryActiveIndex];
             let id = _.get(obj, 'id');
             this.getProgrammeTypeGroupListById(id);
+            this.resetAllEdit();
         },
         fetchCategoryByIndex(index) {
             switch (index) {
@@ -632,6 +683,71 @@ export default {
         gotoBlankPage() {
             let routeData = this.$router.resolve({name: 'CreateProgramme'});
             window.open(routeData.href, '_blank');
+        },
+        //  v2.5新增内容
+        editTypeNameHandler(id) {
+            this.typeNameUpdate({id, index: this.programmeCategoryActiveIndex});
+        },
+        typeInputValueChangeHandler(value, type) {
+            this.typeInputValueUpdate({value, type, index: this.programmeCategoryActiveIndex});
+        },
+        toggleTypeEditHandler(id) {
+            if (!this.programmeCategoryIsEdit) {
+                this.toggleTypeEdit({id, index: this.programmeCategoryActiveIndex});
+            }
+        },
+        async addNewProgrammeCategoryHandler() {
+            try {
+                let {value} = await this.$prompt(`请输入新分类`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /\S/,
+                    inputErrorMessage: `分类不能为空`
+                });
+                if (value) {
+                    let category = {
+                        id: this.getUniqueKey,
+                        name: value,
+                        inputValue: value,
+                        edit: false,
+                        programmeTypeList: []
+                    };
+                    this.addNewProgrammeCategory({programmeCategory: category});
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        async deleteProgrammeCategoryHandler(index) {
+            try {
+                let confirm = await this.$confirm(`您确定要删除该分类吗, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                });
+                if (confirm) {
+                    this.deleteProgrammeCategory({index});
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        toggleCategoryEditHandler(index) {
+            if (this.editCategory && !this.programmeCategoryIsEdit) {
+                this.toggleCategoryEdit({index});
+            }
+        },
+        programmeCategoryInputValueChangeHandler(value, index) {
+            this.programmeCategoryInputValueUpdate({value, index});
+        },
+        editProgrammeCategoryNameHandler(index) {
+            this.programmeCategoryNameUpdate({index});
+        },
+        toggleEditCategoryHandler() {
+            if (this.editCategory) {
+                this.resetAllEdit();
+            }
+            this.editCategory = !this.editCategory;
         }
     }
 };
@@ -708,13 +824,66 @@ export default {
                         color: #fff;
                         border-bottom: 1px solid $mainColor;
                     }
+                    .el-icon-close {
+                        border-radius: 50%;
+                        text-align: center;
+                        position: relative;
+                        cursor: pointer;
+                        font-size: 12px;
+                        height: 16px;
+                        width: 16px;
+                        line-height: 16px;
+                        vertical-align: middle;
+                        top: -1px;
+                        right: -5px;
+                        color: #2A3040;
+                        background: #6F7480;;
+                        &:before {
+                            content: "\E60F";
+                            display: block;
+                        }
+                        &:hover {
+                            background: #C35757;
+                        }
+                    }
+                    .edit-wrapper {
+                        position: relative;
+                        .save-btn {
+                            position: absolute;
+                            right: 6px;
+                            top: 50%;
+                            transform: translateY(-50%);
+                        }
+                    }
                 }
             }
+        }
+        .edit-category-btn-wrapper {
+            width: 120px;
+            cursor: pointer;
+            margin-top: 40px;
         }
     }
     .right-content {
         overflow: hidden;
         padding-left: 20px;
+        .type-input-wrapper {
+            position: relative;
+            margin-top: 20px;
+            margin-right: 10px;
+            .el-input {
+                .el-input__inner {
+                    height: 34px;
+                    line-height: 34px;
+                }
+            }
+            .save-btn {
+                position: absolute;
+                top: 50%;
+                right: 10px;
+                transform: translateY(-50%);
+            }
+        }
     }
 }
 .category-group-list-wrapper {

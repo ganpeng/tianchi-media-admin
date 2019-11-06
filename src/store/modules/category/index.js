@@ -49,12 +49,33 @@ const getters = {
             let hasIndex = state.carouselChannelCategory.findIndex((type) => type.name === name);
             return hasIndex > -1;
         };
+    },
+    //  dev_v2.5新增
+    programmeCategoryIsEdit(state) {
+        let list = state.programmeCategory.reduce((res, curr) => {
+            res.push(curr);
+            res = _.concat(res, curr.programmeTypeList);
+            return res;
+        }, []);
+        let index = list.findIndex((item) => item.edit);
+        return index >= 0;
     }
 };
 
 const mutations = {
     setProgrammeCategory(state, payload) {
-        state.programmeCategory = payload.programmeCategory;
+        let programmeCategory = payload.programmeCategory.map((item) => {
+            item.edit = false;
+            item.inputValue = item.name;
+            item.programmeTypeList = item.programmeTypeList.map((innerItem) => {
+                innerItem.edit = false;
+                innerItem.inputValue = innerItem.name;
+                return innerItem;
+            });
+            return item;
+        });
+        state.programmeCategory = programmeCategory;
+        // state.programmeCategory = payload.programmeCategory;
     },
     setLiveChannelCategory(state, payload) {
         state.liveChannelCategory = payload.liveChannelCategory;
@@ -128,6 +149,81 @@ const mutations = {
     updateCategoryGroupList(state, payload) {
         let {index, categoryGroup} = payload;
         state.categoryGroupList[index] = categoryGroup;
+    },
+    //  v2.5新增内容
+    typeInputValueUpdate(state, payload) {
+        let {index, type, value} = payload;
+        state.programmeCategory[index].programmeTypeList = state.programmeCategory[index].programmeTypeList.map((item) => {
+            if (item.id === type.id) {
+                item.inputValue = value;
+            }
+            return item;
+        });
+    },
+    typeNameUpdate(state, payload) {
+        let {index, id} = payload;
+        state.programmeCategory[index].programmeTypeList = state.programmeCategory[index].programmeTypeList.map((item) => {
+            if (item.id === id) {
+                item.name = item.inputValue;
+                item.edit = false;
+            }
+            return item;
+        });
+    },
+    toggleTypeEdit(state, payload) {
+        let {index, id} = payload;
+        state.programmeCategory[index].programmeTypeList = state.programmeCategory[index].programmeTypeList.map((item) => {
+            if (item.id === id) {
+                item.edit = true;
+            }
+            return item;
+        });
+    },
+    addNewProgrammeCategory(state, payload) {
+        let {programmeCategory} = payload;
+        state.programmeCategory.push(programmeCategory);
+    },
+    deleteProgrammeCategory(state, payload) {
+        let {index} = payload;
+        state.programmeCategory.splice(index, 1);
+    },
+    toggleCategoryEdit(state, payload) {
+        let {index} = payload;
+        state.programmeCategory = state.programmeCategory.map((item, _index) => {
+            if (_index === index) {
+                item.edit = true;
+            }
+            return item;
+        });
+    },
+    programmeCategoryInputValueUpdate(state, payload) {
+        let {value, index} = payload;
+        state.programmeCategory = state.programmeCategory.map((item, _index) => {
+            if (index === _index) {
+                item.inputValue = value;
+            }
+            return item;
+        });
+    },
+    programmeCategoryNameUpdate(state, payload) {
+        let {index} = payload;
+        state.programmeCategory = state.programmeCategory.map((item, _index) => {
+            if (index === _index) {
+                item.name = item.inputValue;
+                item.edit = false;
+            }
+            return item;
+        });
+    },
+    resetAllEdit(state) {
+        state.programmeCategory = state.programmeCategory.map((item) => {
+            item.edit = false;
+            item.programmeTypeList = item.programmeTypeList.map((innerItem) => {
+                innerItem.edit = false;
+                return innerItem;
+            });
+            return item;
+        });
     }
 };
 
