@@ -95,6 +95,7 @@
                             <span class="file-percent" v-show="percent !== 0">{{percent}}%</span>
                         </span>
                     </el-form-item>
+                    <!--
                     <el-form-item label="公共频道">
                         <span>{{version.allCompanyUpdate ? '是' : '否'}}</span>
                     </el-form-item>
@@ -115,6 +116,7 @@
                             :clearHandler="clearCompanyListHandler"
                         ></area-code-search>
                     </el-form-item>
+                    -->
                 </el-form>
             </el-col>
         </div>
