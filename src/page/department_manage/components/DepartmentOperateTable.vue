@@ -28,6 +28,7 @@
                 min-width="130px"
                 label="成员数量">
                 <template slot-scope="scope">
+                    {{scope.row.adminNumber}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -35,7 +36,15 @@
                 min-width="140px"
                 label="负责人">
                 <template slot-scope="scope">
-                    {{scope.row.adminList | jsonJoin(',')}}
+                    {{scope.row.adminNameList}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="140px"
+                label="部门描述">
+                <template slot-scope="scope">
+                    <label class="ellipsis one">{{scope.row.remark}}</label>
                 </template>
             </el-table-column>
             <el-table-column
@@ -98,21 +107,15 @@
                 });
             },
             removeDepartment(item) {
-                if (item.visible) {
-                    this.$message.warning('当前专题处于上架状态，请下架之后再进行删除操作');
-                    return;
-                }
-                this.$confirm('此操作将删除' + item.name + '专题, 是否继续?', '提示', {
+                this.$confirm('此操作将删除' + item.name + '部门, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$service.deleteSubject(item.id).then(response => {
+                    this.$service.removeDepartment(item.id).then(response => {
                         if (response && response.code === 0) {
-                            this.$message.success('"' + item.name + '"' + '专题删除成功!');
-                            this.$emit('getSubjectList');
-                            this.multipleSelection = [];
-                            this.$emit('setBatchDisabledStatus', true);
+                            this.$message.success('"' + item.name + '"' + '部门删除成功!');
+                            this.$emit('getDepartmentList');
                         }
                     });
                 });

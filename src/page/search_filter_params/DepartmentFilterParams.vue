@@ -21,29 +21,14 @@
                         搜索
                     </el-button>
                 </el-form-item>
-                <el-form-item label="部门">
-                    <el-select
-                        v-model="listQueryParams.id"
+                <el-form-item v-show="false">
+                    <el-input
+                        v-model="listQueryParams.keyword"
                         @change="getDepartmentList(true)"
-                        filterable
                         clearable
-                        placeholder="全部">
-                        <el-option
-                            v-for="item in departmentOptions"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-button
-                        class="btn-style-one"
-                        @click="clearFilters"
-                        type="primary">
-                        <svg-icon icon-class="reset"></svg-icon>
-                        重置
-                    </el-button>
+                        class="border-input"
+                        placeholder="请输入需要查找的信息">
+                    </el-input>
                 </el-form-item>
             </el-form>
         </div>
@@ -57,8 +42,7 @@
         data() {
             return {
                 listQueryParams: {
-                    keyword: '',
-                    id: ''
+                    keyword: ''
                 },
                 departmentOptions: []
             };
@@ -79,16 +63,9 @@
             },
             initFilterParams(params) {
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
-                this.listQueryParams.id = params.id ? params.id : '';
             },
             getDepartmentList(isReset) {
                 this.$emit('getDepartmentList', this.listQueryParams, isReset);
-            },
-            clearFilters() {
-                for (let key in this.listQueryParams) {
-                    this.listQueryParams[key] = '';
-                }
-                this.getDepartmentList(true);
             }
         }
     };
