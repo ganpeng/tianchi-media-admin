@@ -1,26 +1,26 @@
-<!--商品管理-商品列表-->
+<!--角色管理-角色列表-->
 <template>
     <div>
         <div class="content-title">搜索筛选</div>
-        <goods-filter-params
-            ref="goodsFilterParams"
-            v-on:getGoodsList="getGoodsList">
-        </goods-filter-params>
-        <div class="content-title">商品列表</div>
+        <role-filter-params
+            ref="roleFilterParams"
+            v-on:getRoleList="getRoleList">
+        </role-filter-params>
+        <div class="content-title">角色列表</div>
         <div class="table-operator-field">
             <div></div>
             <el-button
                 class="btn-style-two contain-svg-icon"
-                @click="createGoods">
+                @click="createRole">
                 <svg-icon icon-class="add"></svg-icon>
                 添加
             </el-button>
         </div>
-        <goods-operate-table
-            ref="goodsOperateTable"
-            :goodsList="goodsList"
-            v-on:getGoodsList="getGoodsList">
-        </goods-operate-table>
+        <role-operate-table
+            ref="roleOperateTable"
+            :roleList="roleList"
+            v-on:getRoleList="getRoleList">
+        </role-operate-table>
         <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -34,14 +34,14 @@
 </template>
 
 <script>
-    import GoodsFilterParams from '../search_filter_params/GoodsFilterParams';
-    import GoodsOperateTable from './components/RoleOperateTable';
+    import RoleFilterParams from '../search_filter_params/RoleFilterParams';
+    import RoleOperateTable from './components/RoleOperateTable';
 
     export default {
-        name: 'GoodsList',
+        name: 'RoleList',
         components: {
-            GoodsFilterParams,
-            GoodsOperateTable
+            RoleFilterParams,
+            RoleOperateTable
         },
         data() {
             return {
@@ -50,7 +50,7 @@
                     pageSize: 10
                 },
                 total: 0,
-                goodsList: []
+                roleList: []
             };
         },
         mounted() {
@@ -58,21 +58,21 @@
         },
         methods: {
             init() {
-                if (this.$wsCache.localStorage.get('goodsFilter')) {
-                    this.listQueryParams = this.$wsCache.localStorage.get('goodsFilter');
-                    this.$refs.goodsFilterParams.initFilterParams(this.listQueryParams);
+                if (this.$wsCache.localStorage.get('roleFilter')) {
+                    this.listQueryParams = this.$wsCache.localStorage.get('roleFilter');
+                    this.$refs.roleFilterParams.initFilterParams(this.listQueryParams);
                 }
-                this.getGoodsList();
+                this.getRoleList();
             },
             handleSizeChange(pageSize) {
                 this.listQueryParams.pageSize = pageSize;
-                this.getGoodsList();
+                this.getRoleList();
             },
             handleCurrentChange(pageNum) {
                 this.listQueryParams.pageNum = pageNum;
-                this.getGoodsList();
+                this.getRoleList();
             },
-            getGoodsList(searchParams, isReset) {
+            getRoleList(searchParams, isReset) {
                 // 设置请求参数
                 if (searchParams) {
                     for (let key in searchParams) {
@@ -82,16 +82,16 @@
                 if (isReset) {
                     this.listQueryParams.pageNum = 1;
                 }
-                this.$wsCache.localStorage.set('goodsFilter', this.listQueryParams);
-                this.$service.getGoodsList(this.listQueryParams).then(response => {
+                this.$wsCache.localStorage.set('roleFilter', this.listQueryParams);
+                this.$service.getRoleList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
-                        this.goodsList = response.data.list;
+                        this.roleList = response.data.list;
                         this.total = response.data.total;
                     }
                 });
             },
-            createGoods() {
-                this.$router.push({name: 'CreateGoods'});
+            createRole() {
+                this.$router.push({name: 'CreateRole'});
             }
         }
     };

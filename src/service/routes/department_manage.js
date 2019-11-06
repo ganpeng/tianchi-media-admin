@@ -10,10 +10,10 @@ import _ from 'lodash';
 /**
  * 创建部门
  */
-export const createDepartment = ({name, description, adminList}) => {
+export const createDepartment = ({name, remark, adminList}) => {
     return service.post('/v1/department', {
         name,
-        description,
+        remark,
         adminList
     });
 };
@@ -21,12 +21,11 @@ export const createDepartment = ({name, description, adminList}) => {
 /**
  * 获取部门列表
  */
-export const getDepartmentList = ({keyword, id, pageNum, pageSize}) => {
+export const getDepartmentList = ({keyword, pageNum, pageSize}) => {
     const params = {
         pageNum: pageNum - 1,
         pageSize,
-        keyword,
-        id
+        keyword
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
@@ -39,11 +38,11 @@ export const getDepartmentList = ({keyword, id, pageNum, pageSize}) => {
 /**
  * 修改部门信息
  */
-export const updateDepartmentInfo = ({id, name, description, adminList}) => {
-    return service.put('/v1/department', {
+export const updateDepartmentInfo = ({id, name, remark, adminList}) => {
+    return service.put('/v1/department/' + id, {
         id,
         name,
-        description,
+        remark,
         adminList
     });
 };
@@ -58,6 +57,6 @@ export const getDepartmentDetail = (id) => {
 /**
  * 部门的删除
  */
-export const setDepartmentVisible = (id) => {
+export const removeDepartment = (id) => {
     return service.delete(util.format('/v1/department/{0}', id));
 };

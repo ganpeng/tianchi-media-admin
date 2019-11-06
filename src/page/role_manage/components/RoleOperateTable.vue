@@ -1,8 +1,8 @@
-<!--商品列表项组件-->
+<!--角色列表项组件-->
 <template>
     <div>
         <el-table
-            :data="goodsList"
+            :data="roleList"
             border
             style="width: 100%">
             <el-table-column
@@ -17,20 +17,25 @@
                 min-width="220px"
                 label="名称">
                 <template slot-scope="scope">
-                <span @click="toGoodsDetail(scope.row)" class="ellipsis four name">
+                <span @click="toRoleDetail(scope.row)" class="ellipsis four name">
                     {{scope.row.name}}
                 </span>
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
-                prop="goodsList"
+                prop="roleList"
                 min-width="130px"
-                label="包含产品包">
+                label="成员数量">
                 <template slot-scope="scope">
-                    <span @click="checkGoodsList(scope.row)" class="ellipsis four name">
-                    查看
-                </span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                prop="roleList"
+                min-width="130px"
+                label="描述">
+                <template slot-scope="scope">
                 </template>
             </el-table-column>
             <el-table-column
@@ -59,7 +64,7 @@
                         type="checkbox"
                         v-model="scope.row.visible"
                         :checked="scope.row.visible"
-                        @click.prevent="updateGoodsStatus(scope.row)"/>
+                        @click.prevent="updateRoleStatus(scope.row)"/>
                     <i v-if="scope.row.visible" class="on-the-shelf">已上架</i>
                     <i v-else class="off-the-shelf">已下架</i>
                 </template>
@@ -70,37 +75,21 @@
                 width="110px">
                 <template slot-scope="scope">
                     <div class="operator-btn-wrapper">
-                        <span class="btn-text" @click="editGoods(scope.row)">编辑</span>
+                        <span class="btn-text" @click="editRole(scope.row)">编辑</span>
+                        <span class="btn-text text-danger" @click="removeRole(scope.row)">删除</span>
                     </div>
                 </template>
             </el-table-column>
         </el-table>
-        <el-dialog
-            title="产品列表"
-            :visible.sync="goodsListVisible"
-            :close-on-click-modal="false"
-            custom-class="normal-dialog goods-list"
-            width="40%">
-            <div class="batch-share-body" v-if="goodsListVisible">
-                <ul>
-                    <li v-for="(item, index) in currentGoodsList" :key="index">
-                        <el-tag type="info">{{item.name}}</el-tag>
-                    </li>
-                </ul>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="goodsListVisible = false">确定</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 
 <script>
 
     export default {
-        name: 'GoodsOperateTable',
+        name: 'RoleOperateTable',
         props: {
-            goodsList: {
+            roleList: {
                 type: Array,
                 default: function () {
                     return [];
@@ -109,46 +98,56 @@
         },
         data() {
             return {
-                goodsListVisible: false,
-                currentGoodsList: []
+                roleListVisible: false,
+                currentRoleList: []
             };
         },
         methods: {
-            updateGoodsStatus(item) {
-                this.$confirm('此操作将' + (item.visible ? '下架' : '上架') + item.name + '商品, 是否继续?', '提示', {
+            updateRoleStatus(item) {
+                this.$confirm('此操作将' + (item.visible ? '下架' : '上架') + item.name + '角色, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$service.setGoodsVisible({id: item.id, visible: !item.visible}).then(response => {
+                    this.$service.setRoleVisible({id: item.id, visible: !item.visible}).then(response => {
                         if (response && response.code === 0) {
-                            this.$message.success('"' + item.name + '"商品' + (item.visible ? '下架成功' : '上架成功'));
+                            this.$message.success('"' + item.name + '"角色' + (item.visible ? '下架成功' : '上架成功'));
                             item.visible = !item.visible;
                         }
                     });
                 });
             },
-            checkGoodsList(goods) {
-                this.$service.getGoodsDetail(goods.id).then(response => {
-                    if (response && response.code === 0) {
-                        this.currentGoodsList = response.data.productList;
-                        this.goodsListVisible = true;
-                    } else {
-                        this.$message.warning('因请求问题，暂时未查看到对应产品列表');
-                    }
-                });
-            },
             // 查看详情
-            toGoodsDetail(item) {
+            toRoleDetail(item) {
                 this.$router.push({
-                    name: 'GoodsDetail',
+                    name: 'RoleDetail',
                     params: {id: item.id}
                 });
             },
-            editGoods(item) {
+            editRole(item) {
                 this.$router.push({
-                    name: 'EditGoods',
+                    name: 'EditRole',
                     params: {id: item.id}
+                });
+            },
+            removeRole(item) {
+                if (item.visible) {
+                    this.$message.warning('当前专题处于上架状态，请下架之后再进行删除操作');
+                    return;
+                }
+                this.$confirm('此操作将删除' + item.name + '专题, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$service.deleteSubject(item.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('"' + item.name + '"' + '专题删除成功!');
+                            this.$emit('getSubjectList');
+                            this.multipleSelection = [];
+                            this.$emit('setBatchDisabledStatus', true);
+                        }
+                    });
                 });
             }
         }
@@ -163,7 +162,7 @@
         }
     }
 
-    .goods-list {
+    .role-list {
         ul {
             text-align: left;
             li {
