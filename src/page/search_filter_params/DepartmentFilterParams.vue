@@ -23,13 +23,13 @@
                 </el-form-item>
                 <el-form-item label="部门">
                     <el-select
-                        v-model="listQueryParams.productId"
+                        v-model="listQueryParams.id"
                         @change="getDepartmentList(true)"
                         filterable
                         clearable
                         placeholder="全部">
                         <el-option
-                            v-for="item in productOptions"
+                            v-for="item in departmentOptions"
                             :key="item.id"
                             :label="item.name"
                             :value="item.id">
@@ -58,9 +58,9 @@
             return {
                 listQueryParams: {
                     keyword: '',
-                    productId: ''
+                    id: ''
                 },
-                productOptions: []
+                departmentOptions: []
             };
         },
         mounted() {
@@ -68,19 +68,18 @@
         },
         methods: {
             init() {
-                this.$service.getProductList({
+                this.$service.getDepartmentList({
                     pageNum: 1,
-                    pageSize: 10000,
-                    orderList: 'ID_DESC'
+                    pageSize: 10000
                 }).then(response => {
                     if (response && response.code === 0) {
-                        this.productOptions = response.data.list;
+                        this.departmentOptions = response.data.list;
                     }
                 });
             },
             initFilterParams(params) {
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
-                this.listQueryParams.productId = params.productId ? params.productId : '';
+                this.listQueryParams.id = params.id ? params.id : '';
             },
             getDepartmentList(isReset) {
                 this.$emit('getDepartmentList', this.listQueryParams, isReset);

@@ -7,7 +7,7 @@
             style="width: 100%">
             <el-table-column
                 align="center"
-                prop="code"
+                prop="id"
                 width="120px"
                 label="编号">
             </el-table-column>
@@ -35,6 +35,7 @@
                 min-width="140px"
                 label="负责人">
                 <template slot-scope="scope">
+                    {{scope.row.adminList | jsonJoin(',')}}
                 </template>
             </el-table-column>
             <el-table-column
