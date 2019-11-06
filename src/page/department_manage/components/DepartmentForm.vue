@@ -137,7 +137,6 @@
                 }).then(response => {
                     if (response && response.code === 0) {
                         this.adminOptions = response.data.list;
-                        this.adminOptions.unshift({id: '0', name: '全选'});
                     }
                 });
                 if (this.status === 'EDIT_DEPARTMENT') {
@@ -175,22 +174,12 @@
             },
             // 设置负责人，对全选进行处理
             setAdmins(item) {
-                // 对全选进行处理
-                if (item.name === '全选') {
-                    this.departmentInfo.adminList.splice(0);
-                    this.adminOptions.map(admin => {
-                        if (admin.name !== '全选') {
-                            this.departmentInfo.adminList.push(admin);
-                        }
-                    });
-                } else {
-                    // 对非全选进行处理
-                    this.departmentInfo.adminList.push({
-                        id: item.id,
-                        name: item.name
-                    });
-                    this.departmentInfo.adminList = _.uniqBy(this.departmentInfo.adminList, 'id');
-                }
+                // 对非全选进行处理
+                this.departmentInfo.adminList.push({
+                    id: item.id,
+                    name: item.name
+                });
+                this.departmentInfo.adminList = _.uniqBy(this.departmentInfo.adminList, 'id');
                 this.validateAdminList();
             },
             // 保存
