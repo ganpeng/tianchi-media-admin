@@ -37,7 +37,7 @@
                                             @dblclick.prevent.stop="toggleCategoryEditHandler(index)"
                                             @click="changeProgrammeCategoryTabHandler(index)">{{category.name}}
                                         </span>
-                                        <i v-if="editCategory" @click.prevent="deleteProgrammeCategoryHandler(index)" class="el-tag__close el-icon-close"></i>
+                                        <i v-if="editCategory" @click.prevent="deleteProgrammeCategoryHandler(category, index)" class="el-tag__close el-icon-close"></i>
                                     </div>
                                     <div v-else class="edit-wrapper">
                                         <el-input
@@ -208,14 +208,25 @@
                     <div class="seperator-line"></div>
                     <div class="my-tags big">
                         <draggable v-model="liveChannelCategoryList">
-                            <el-tag
-                                :key="index"
+                            <div :key="index"
                                 v-for="(category, index) in liveChannelCategoryList"
-                                closable
-                                :disable-transitions="false"
-                                @close="deleteLiveCategoryHandler(category.id)">
-                                {{category.name}}
-                            </el-tag>
+                                class="tag-wrapper">
+                                <el-tag
+                                    v-if="!category.edit"
+                                    closable
+                                    :disable-transitions="false"
+                                    v-on:dblclick.native="toggleLiveCategoryEditHandler(category.id)"
+                                    @close="deleteLiveCategoryHandler(category.id)">
+                                    {{category.name}}
+                                </el-tag>
+                                <div v-else class="type-input-wrapper">
+                                    <el-input
+                                        :value="category.inputValue"
+                                        @input="liveCategoryInputValueChangeHandler($event, category)"
+                                    ></el-input>
+                                    <i @click="editLiveCategoryNameHandler(category.id)" class="save-btn text-success el-icon-success"></i>
+                                </div>
+                            </div>
                             <el-input
                                 clearable
                                 class="type-input"
@@ -235,14 +246,25 @@
                     <div class="seperator-line"></div>
                     <div class="my-tags big">
                         <draggable v-model="carouselChannelCategoryList">
-                            <el-tag
-                                :key="index"
+                            <div :key="index"
                                 v-for="(category, index) in carouselChannelCategoryList"
-                                closable
-                                :disable-transitions="false"
-                                @close="deleteCarouselCategoryHandler(category.id)">
-                                {{category.name}}
-                            </el-tag>
+                                class="tag-wrapper">
+                                <el-tag
+                                    v-if="!category.edit"
+                                    closable
+                                    :disable-transitions="false"
+                                    v-on:dblclick.native="toggleCarouselCategoryEditHandler(category.id)"
+                                    @close="deleteCarouselCategoryHandler(category.id)">
+                                    {{category.name}}
+                                </el-tag>
+                                <div v-else class="type-input-wrapper">
+                                    <el-input
+                                        :value="category.inputValue"
+                                        @input="carouselCategoryInputValueChangeHandler($event, category)"
+                                    ></el-input>
+                                    <i @click="editCarouselCategoryNameHandler(category.id)" class="save-btn text-success el-icon-success"></i>
+                                </div>
+                            </div>
                             <el-input
                                 clearable
                                 class="type-input"
@@ -382,7 +404,15 @@ export default {
             toggleCategoryEdit: 'category/toggleCategoryEdit',
             programmeCategoryInputValueUpdate: 'category/programmeCategoryInputValueUpdate',
             programmeCategoryNameUpdate: 'category/programmeCategoryNameUpdate',
-            resetAllEdit: 'category/resetAllEdit'
+            resetAllEdit: 'category/resetAllEdit',
+            //  v2.5 直播相关
+            toggleLiveCategoryEdit: 'category/toggleLiveCategoryEdit',
+            liveCategoryInputValueUpdate: 'category/liveCategoryInputValueUpdate',
+            liveCategoryNameUpdate: 'category/liveCategoryNameUpdate',
+            //  v2.5 轮播相关
+            toggleCarouselCategoryEdit: 'category/toggleCarouselCategoryEdit',
+            carouselCategoryInputValueUpdate: 'category/carouselCategoryInputValueUpdate',
+            carouselCategoryNameUpdate: 'category/carouselCategoryNameUpdate'
         }),
         ...mapActions({
             getLiveChannelCategory: 'category/getLiveChannelCategory',
@@ -394,7 +424,9 @@ export default {
             getChannelCategory: 'category/getChannelCategory',
             saveProgrammeCategory: 'category/saveProgrammeCategory',
             getProgrammeTypeGroupListById: 'category/getProgrammeTypeGroupListById',
-            postProgrammeTypeGroupListById: 'category/postProgrammeTypeGroupListById'
+            postProgrammeTypeGroupListById: 'category/postProgrammeTypeGroupListById',
+            // dev_v2.5 新增
+            deleteProgrammeCategoryById: 'category/deleteProgrammeCategoryById'
         }),
         changeTabHandler(index) {
             this.activeTabIndex = index;
@@ -718,7 +750,7 @@ export default {
                 console.log(err);
             }
         },
-        async deleteProgrammeCategoryHandler(index) {
+        async deleteProgrammeCategoryHandler(category, index) {
             try {
                 let confirm = await this.$confirm(`您确定要删除该分类吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
@@ -726,7 +758,11 @@ export default {
                     type: 'error'
                 });
                 if (confirm) {
-                    this.deleteProgrammeCategory({index});
+                    if (/^category_/.test(category.id)) {
+                        this.deleteProgrammeCategory({index});
+                    } else {
+                        this.deleteProgrammeCategoryById(category.id);
+                    }
                 }
             } catch (err) {
                 console.log(err);
@@ -748,6 +784,26 @@ export default {
                 this.resetAllEdit();
             }
             this.editCategory = !this.editCategory;
+        },
+        //  直播相关
+        toggleLiveCategoryEditHandler(id) {
+            this.toggleLiveCategoryEdit({id});
+        },
+        liveCategoryInputValueChangeHandler(value, liveCategory) {
+            this.liveCategoryInputValueUpdate({value, id: liveCategory.id});
+        },
+        editLiveCategoryNameHandler(id) {
+            this.liveCategoryNameUpdate({id});
+        },
+        //  轮播相关
+        toggleCarouselCategoryEditHandler(id) {
+            this.toggleCarouselCategoryEdit({id});
+        },
+        carouselCategoryInputValueChangeHandler(value, liveCategory) {
+            this.carouselCategoryInputValueUpdate({value, id: liveCategory.id});
+        },
+        editCarouselCategoryNameHandler(id) {
+            this.carouselCategoryNameUpdate({id});
         }
     }
 };
@@ -883,6 +939,25 @@ export default {
                 right: 10px;
                 transform: translateY(-50%);
             }
+        }
+    }
+}
+.live-channel-content, .carousel-channel-content {
+    .type-input-wrapper {
+        position: relative;
+        margin-top: 20px;
+        margin-right: 10px;
+        .el-input {
+            .el-input__inner {
+                height: 34px;
+                line-height: 34px;
+            }
+        }
+        .save-btn {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
         }
     }
 }

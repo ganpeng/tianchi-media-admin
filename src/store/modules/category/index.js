@@ -187,6 +187,10 @@ const mutations = {
         let {index} = payload;
         state.programmeCategory.splice(index, 1);
     },
+    deleteProgrammeCategoryById(state, payload) {
+        let {id} = payload;
+        state.programmeCategory = state.programmeCategory.filter((item) => item.id !== id);
+    },
     toggleCategoryEdit(state, payload) {
         let {index} = payload;
         state.programmeCategory = state.programmeCategory.map((item, _index) => {
@@ -224,6 +228,64 @@ const mutations = {
             });
             return item;
         });
+    },
+    //  直播频道
+    toggleLiveCategoryEdit(state, payload) {
+        let {id} = payload;
+        state.liveChannelCategory = state.liveChannelCategory.map((item) => {
+            if (item.id === id) {
+                item.edit = true;
+            }
+            return item;
+        });
+    },
+    liveCategoryInputValueUpdate(state, payload) {
+        let {value, id} = payload;
+        state.liveChannelCategory = state.liveChannelCategory.map((item) => {
+            if (item.id === id) {
+                item.inputValue = value;
+            }
+            return item;
+        });
+    },
+    liveCategoryNameUpdate(state, payload) {
+        let {id} = payload;
+        state.liveChannelCategory = state.liveChannelCategory.map((item) => {
+            if (item.id === id) {
+                item.name = item.inputValue;
+                item.edit = false;
+            }
+            return item;
+        });
+    },
+    //  轮播相关
+    toggleCarouselCategoryEdit(state, payload) {
+        let {id} = payload;
+        state.carouselChannelCategory = state.carouselChannelCategory.map((item) => {
+            if (item.id === id) {
+                item.edit = true;
+            }
+            return item;
+        });
+    },
+    carouselCategoryInputValueUpdate(state, payload) {
+        let {value, id} = payload;
+        state.carouselChannelCategory = state.carouselChannelCategory.map((item) => {
+            if (item.id === id) {
+                item.inputValue = value;
+            }
+            return item;
+        });
+    },
+    carouselCategoryNameUpdate(state, payload) {
+        let {id} = payload;
+        state.carouselChannelCategory = state.carouselChannelCategory.map((item) => {
+            if (item.id === id) {
+                item.name = item.inputValue;
+                item.edit = false;
+            }
+            return item;
+        });
     }
 };
 
@@ -233,8 +295,18 @@ const actions = {
         try {
             let res = await service.getChannelType({});
             if (res && res.code === 0) {
-                let liveChannelCategory = res.data.filter((item) => item.category === 'LIVE');
-                let carouselChannelCategory = res.data.filter((item) => item.category === 'CAROUSEL');
+                let liveChannelCategory = res.data.filter((item) => item.category === 'LIVE')
+                                                  .map((item) => {
+                                                      item.edit = false;
+                                                      item.inputValue = item.name;
+                                                      return item;
+                                                  });
+                let carouselChannelCategory = res.data.filter((item) => item.category === 'CAROUSEL')
+                                                      .map((item) => {
+                                                          item.edit = false;
+                                                          item.inputValue = item.name;
+                                                          return item;
+                                                      });
                 commit('setLiveChannelCategory', {liveChannelCategory});
                 commit('setCarouselChannelCategory', {carouselChannelCategory});
             }
@@ -297,6 +369,9 @@ const actions = {
         try {
             let categoryList = _.cloneDeep(state.programmeCategory);
             categoryList.forEach((item) => {
+                if (/^category_/.test(item.id)) {
+                    delete item.id;
+                }
                 item.programmeTypeList.forEach((innerItem) => {
                     if (/^category_/.test(innerItem.id)) {
                         delete innerItem.id;
@@ -305,6 +380,16 @@ const actions = {
             });
             let res = await service.updateProgrammeCategory({categoryList});
             return res;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    async deleteProgrammeCategoryById({commit}, id) {
+        try {
+            let res = await service.deleteProgrammeCategoryById(id);
+            if (res && res.code === 0) {
+                commit('deleteProgrammeCategoryById', {id});
+            }
         } catch (err) {
             console.log(err);
         }
