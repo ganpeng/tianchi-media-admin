@@ -18,7 +18,9 @@ const defaultVersion = {
     packageSize: '', // 包的大小
     allCompanyUpdate: false, // 是否全局升级
     districtCodeList: [], // 所属区域
-    clientVersionStatsList: []
+    clientVersionStatsList: [],
+    //  dev_v2.5 新增
+    updateType: ''
 };
 
 const defaultSearchFields = {

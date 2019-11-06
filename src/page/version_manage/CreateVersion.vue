@@ -6,7 +6,7 @@
         <div class="form-container">
             <el-col :span="8">
                 <el-form :model="version" :rules="infoRules" status-icon ref="createVersion"
-                        label-width="100px"
+                        label-width="140px"
                         @submit.native.prevent
                         class="form-block my-form">
                     <el-form-item label="版本名称" prop="version">
@@ -83,6 +83,47 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item label="升级依据" prop="updateType">
+                        <el-select
+                            clearable
+                            filterable
+                            :value="version.updateType"
+                            placeholder="请选择升级方式"
+                            @input="inputHandler($event, 'updateType')"
+                        >
+                            <el-option
+                                v-for="(item, index) in updateTypeOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item v-if="version.updateType" label="升级范围文件" prop="districtCodeList">
+                        <div class="wrapper clearfix">
+                            <div class="file float-left">
+                                <input
+                                    ref="districtUpload"
+                                    type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                    id="version-district-file-input">选择范围文件
+
+                            </div>
+                            <span class="float-left">{{districtFile.name}}</span>
+                            <span class="pointer moban" @click="exportTemplate" >模版文件</span>
+                        </div>
+                    </el-form-item>
+                    <el-form-item v-else label="升级范围文件">
+                        <div class="wrapper clearfix">
+                            <div class="file float-left">
+                                <input
+                                    ref="districtUpload"
+                                    type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                    id="version-district-file-input">选择范围文件
+                            </div>
+                            <span class="float-left">{{districtFile.name}}</span>
+                            <span class="pointer moban" @click="exportTemplate" >模版文件</span>
+                        </div>
+                    </el-form-item>
                     <el-form-item ref="uploadItem" label="升级包" prop="fullPackageUri">
                         <el-button class="float-left file btn-style-four">
                             <svg-icon icon-class="file"></svg-icon>
@@ -95,6 +136,7 @@
                             <span class="file-percent" v-show="percent !== 0">{{percent}}%</span>
                         </span>
                     </el-form-item>
+                    <!--
                     <el-form-item label="公共频道">
                         <span>{{version.allCompanyUpdate ? '是' : '否'}}</span>
                     </el-form-item>
@@ -115,6 +157,7 @@
                             :clearHandler="clearCompanyListHandler"
                         ></area-code-search>
                     </el-form-item>
+                    -->
                 </el-form>
             </el-col>
         </div>
@@ -127,7 +170,9 @@
 <script>
 import axios from 'axios';
 import _ from 'lodash';
+import XLSX from 'xlsx';
 import {mapGetters, mapMutations, mapActions} from 'vuex';
+
 import role from '@/util/config/role';
 import AreaCodeSearch from './AreaCodeSearch';
 
@@ -154,27 +199,46 @@ export default {
                 hardwareType: [{required: true, message: '请选择硬件类型'}],
                 forced: [{required: true, message: '请选择升级方式'}],
                 fullPackageUri: [{required: true, message: '请上传升级包'}],
-                districtCodeList: [
-                    { required: true, message: '请选择所属区域' }
-                ]
+                districtCodeList: [ { required: true, message: '请选择所属区域' } ]
             },
             productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
             forcedOptions: role.FORCED_OPTIONS,
             hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS,
             percent: 0,
-            file: {}
+            file: {},
+            //  dev_v2.5 新增逻辑
+            districtFile: {},
+            updateTypeOptions: [
+                {
+                    name: 'CA号',
+                    value: 'CA_NO'
+                },
+                {
+                    name: 'SN号',
+                    value: 'SN_NO'
+                },
+                {
+                    name: 'DISTRICT号',
+                    value: 'DISTRICT_NO'
+                }
+            ]
         };
     },
     mounted() {
         this.$util.toggleFixedBtnContainer();
     },
-    created() {
-        this.resetVersion();
-        this.getFilialeList();
-        this.$nextTick(() => {
+    async created() {
+        try {
+            this.resetVersion();
+            this.getFilialeList();
+            await this.$nextTick();
             let uploadInputFile = document.querySelector('#version-file-input');
+            let districtUploadInputFile = document.querySelector('#version-district-file-input');
             uploadInputFile.addEventListener('input', this.uploadChangeHandler);
-        });
+            districtUploadInputFile.addEventListener('input', this.districtUploadHandler);
+        } catch (err) {
+            console.log(err);
+        }
     },
     computed: {
         ...mapGetters({
@@ -272,6 +336,53 @@ export default {
         },
         clearCompanyListHandler() {
             this.updateVersion({key: 'districtCodeList', value: []});
+        },
+        // dev_v2.5 新增逻辑
+        async districtUploadHandler(e) {
+            try {
+                let file = e.target.files[0];
+                let workbook = await this.readWorkbookFromLocalFile(file);
+                let sheetNames = workbook.SheetNames; // 工作表名称集合
+                let worksheet = workbook.Sheets[sheetNames[0]]; // 这里我们只读取第一张sheet
+                let resJson = XLSX.utils.sheet_to_json(worksheet);
+                this.districtFile = file;
+                let districtCodeList = resJson.map((item) => item.value);
+                this.updateVersion({key: 'districtCodeList', value: districtCodeList});
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        readWorkbookFromLocalFile(file) {
+            return new Promise((resolve) => {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    let data = e.target.result;
+                    let workbook = XLSX.read(data, {type: 'binary'});
+                    resolve(workbook);
+                };
+                reader.readAsBinaryString(file);
+            });
+        },
+        exportTemplate() {
+            let wb = XLSX.utils.book_new();
+            let newWsName = '表1';
+            let wsData = [
+                {
+                    no: '1',
+                    value: '8512010000123458',
+                    说明: 'B2 单元格填写 0 为全部 value'
+                }, {
+                    no: '2',
+                    value: '8512010000123458',
+                    说明: 'B2 单元格未填写则在导入时报错“value 不存在，无法导入”'
+                }, {
+                    no: '3',
+                    value: '8512010000123458',
+                    说明: 'value 可以为 CA卡号和 SN（设备序列号）的任何一种，但不能两个都有'
+                }];
+            let ws = XLSX.utils.json_to_sheet(wsData);
+            XLSX.utils.book_append_sheet(wb, ws, newWsName);
+            XLSX.writeFile(wb, '范围文件模版.xlsx');
         }
     }
 };
@@ -290,5 +401,34 @@ export default {
     .file-percent {
         margin-left: 10px;
     }
+}
+.moban {
+    margin-left: 10px;
+    color: #409EFF;
+}
+.file {
+    position: relative;
+    display: inline-block;
+    background: #409EFF;
+    border: 1px solid #409EFF;
+    border-radius: 3px;
+    font-size: 12px;
+    line-height: 34px;
+    padding: 0px 15px;
+    overflow: hidden;
+    color: #fff;
+    text-decoration: none;
+    text-indent: 0;
+    margin-right: 10px;
+}
+.file input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    width: 80px;
+    height: 34px;
+    opacity: 0;
+    cursor: pointer;
 }
 </style>

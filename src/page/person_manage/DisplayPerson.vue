@@ -52,12 +52,18 @@
                 </p>
             </div>
         </div>
-        <!--
-        <div class="bg-image-container">
-            <h4 class="content-sub-title" style="margin-left:20px;">背景图</h4>
-            <single-poster v-if="person.backgroundImage" :img="person.backgroundImage"></single-poster>
+        <div class="seperator-line"></div>
+        <div class="programme-list-container">
+            <h4 class="content-sub-title" style="margin-left:20px;">节目</h4>
+            <!-- <single-poster v-if="person.backgroundImage" :img="person.backgroundImage"></single-poster> -->
+            <ul class="programme-list">
+                <li @click="gotoProgrammeDetail(programme.id)" v-for="(programme, index) in person.programmeList" :key="index" class="programme-item">
+                    <img :src="programme.coverImage.uri" alt="">
+                    <p class="name">{{programme.name}}</p>
+                </li>
+            </ul>
         </div>
-        -->
+
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" @click="editPerson">编辑</el-button>
             <el-button class="btn-style-three" @click="goBack">返回列表</el-button>
@@ -110,6 +116,9 @@
             },
             goBack() {
                 this.$router.back();
+            },
+            gotoProgrammeDetail(id) {
+                this.$router.push({ name: 'DisplayProgramme', params: { id } });
             }
         }
     };
@@ -128,5 +137,25 @@
 .bak-btn {
     position: absolute;
     bottom: 164px;
+}
+.programme-list-container {
+    .programme-list {
+        .programme-item {
+            float: left;
+            width: 260px;
+            margin-right: 10px;
+            cursor: pointer;
+            img {
+                display: block;
+                width: 260px;
+                height: 380px;
+                margin-bottom: 20px;
+                background: #2A3040;
+                border: 1px solid #3E495E;
+                border-radius: 8px;
+                box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.5);
+            }
+        }
+    }
 }
 </style>
