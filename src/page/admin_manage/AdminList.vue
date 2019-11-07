@@ -14,7 +14,8 @@
                         class="border-input">
                     </el-input>
                 </div>
-                <el-button class="btn-style-one" @click="getAdminList" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                <el-button class="btn-style-one" @click="getAdminList" icon="el-icon-search" type="primary" plain>搜索
+                </el-button>
             </div>
         </div>
         <div class="seperator-line"></div>
@@ -26,7 +27,7 @@
                     <el-button
                         class="btn-style-two contain-svg-icon"
                         @click="createAdmin">
-                            <svg-icon icon-class="add"></svg-icon>
+                        <svg-icon icon-class="add"></svg-icon>
                         添加
                     </el-button>
                 </div>
@@ -121,7 +122,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-sizes="[10, 20, 30, 50]"
+            :page-sizes="[5, 10, 20, 50, 100, 200, 500]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="totalAmount">

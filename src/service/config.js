@@ -42,7 +42,7 @@ service.interceptors.response.use((response) => {
     return response.data;
 }, (err) => {
     // 用户未登录，删除本地cookie、storage、store中数据，转到登录页面
-    if (err.response.data.code === 1001) {
+    if (err.response && err.response.data.code === 1001) {
         MessageBox.alert('该账号已在其他位置登录，如非本人操作，可点击重新登录后修改密码。', '异地登录提示', {
             confirmButtonText: '确定',
             callback: () => {

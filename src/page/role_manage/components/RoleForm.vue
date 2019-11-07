@@ -73,6 +73,13 @@
                 </el-tree>
             </el-form-item>
         </el-form>
+        <div class="buttons">
+            <el-button @click="getCheckedNodes">通过 node 获取</el-button>
+            <el-button @click="getCheckedKeys">通过 key 获取</el-button>
+            <el-button @click="setCheckedNodes">通过 node 设置</el-button>
+            <el-button @click="setCheckedKeys">通过 key 设置</el-button>
+            <el-button @click="resetChecked">清空</el-button>
+        </div>
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="saveRoleInfo" :loading="isLoading">保存</el-button>
             <el-button class="btn-style-three" @click="toRoleList" plain>返回列表</el-button>
@@ -511,96 +518,96 @@
                             id: 50306,
                             label: '删除选中角色'
                         }]
-                    }, {
-                        id: 6,
+                    }]
+                }, {
+                    id: 6,
+                    label: '产品管理',
+                    children: [{
+                        id: 601,
                         label: '产品管理',
                         children: [{
-                            id: 601,
-                            label: '产品管理',
-                            children: [{
-                                id: 60101,
-                                label: '添加产品包'
-                            }, {
-                                id: 60102,
-                                label: '编辑产品包'
-                            }, {
-                                id: 60103,
-                                label: '上架产品包、下架产品包'
-                            }]
+                            id: 60101,
+                            label: '添加产品包'
                         }, {
-                            id: 602,
-                            label: '商品管理'
+                            id: 60102,
+                            label: '编辑产品包'
                         }, {
-                            id: 603,
-                            label: '套餐管理',
-                            children: [{
-                                id: 60301,
-                                label: '添加套餐'
-                            }, {
-                                id: 60302,
-                                label: '编辑套餐'
-                            }, {
-                                id: 60303,
-                                label: '上架套餐、下架套餐'
-                            }]
+                            id: 60103,
+                            label: '上架产品包、下架产品包'
                         }]
                     }, {
-                        id: 7,
+                        id: 602,
+                        label: '商品管理'
+                    }, {
+                        id: 603,
+                        label: '套餐管理',
+                        children: [{
+                            id: 60301,
+                            label: '添加套餐'
+                        }, {
+                            id: 60302,
+                            label: '编辑套餐'
+                        }, {
+                            id: 60303,
+                            label: '上架套餐、下架套餐'
+                        }]
+                    }]
+                }, {
+                    id: 7,
+                    label: '广告管理',
+                    children: [{
+                        id: 701,
+                        label: '广告主管理',
+                        children: [{
+                            id: 70101,
+                            label: '添加广告主'
+                        }, {
+                            id: 70102,
+                            label: '编辑广告主'
+                        }, {
+                            id: 70103,
+                            label: '删除广告主'
+                        }]
+                    }, {
+                        id: 702,
                         label: '广告管理',
                         children: [{
-                            id: 701,
-                            label: '广告主管理',
-                            children: [{
-                                id: 70101,
-                                label: '添加广告主'
-                            }, {
-                                id: 70102,
-                                label: '编辑广告主'
-                            }, {
-                                id: 70103,
-                                label: '删除广告主'
-                            }]
+                            id: 70201,
+                            label: '添加广告'
                         }, {
-                            id: 702,
-                            label: '广告管理',
-                            children: [{
-                                id: 70201,
-                                label: '添加广告'
-                            }, {
-                                id: 70202,
-                                label: '编辑广告'
-                            }, {
-                                id: 70203,
-                                label: '删除广告'
-                            }, {
-                                id: 70204,
-                                label: '上架广告、下架广告'
-                            }]
+                            id: 70202,
+                            label: '编辑广告'
+                        }, {
+                            id: 70203,
+                            label: '删除广告'
+                        }, {
+                            id: 70204,
+                            label: '上架广告、下架广告'
                         }]
-                    }, {
-                        id: 8,
-                        label: '站点管理',
+                    }]
+                }, {
+                    id: 8,
+                    label: '站点管理',
+                    children: [{
+                        id: 801,
+                        label: '站点列表',
                         children: [{
-                            id: 801,
-                            label: '站点列表',
-                            children: [{
-                                id: 80101,
-                                label: '添加站点'
-                            }, {
-                                id: 80102,
-                                label: '编辑站点'
-                            }, {
-                                id: 80103,
-                                label: '删除站点'
-                            }]
+                            id: 80101,
+                            label: '添加站点'
+                        }, {
+                            id: 80102,
+                            label: '编辑站点'
+                        }, {
+                            id: 80103,
+                            label: '删除站点'
                         }]
-                    }, {
-                        id: 9,
-                        label: '配置中心 -> 子站点',
-                        children: [{
-                            id: 901,
-                            label: '站点配置'
-                        }]
+                    }]
+                }, {
+                    id: 9,
+                    label: '配置中心 -> 子站点',
+                    children: [{
+                        id: 901,
+                        label: '站点配置'
                     }]
                 }],
                 defaultProps: {
@@ -635,6 +642,27 @@
             this.init();
         },
         methods: {
+            getCheckedNodes() {
+                console.log(this.$refs.authorityTree.getCheckedNodes());
+            },
+            getCheckedKeys() {
+                console.log(this.$refs.authorityTree.getCheckedKeys());
+            },
+            setCheckedNodes() {
+                this.$refs.authorityTree.setCheckedNodes([{
+                    id: 5,
+                    label: '二级 2-1'
+                }, {
+                    id: 9,
+                    label: '三级 1-1-1'
+                }]);
+            },
+            setCheckedKeys() {
+                this.$refs.authorityTree.setCheckedKeys([3]);
+            },
+            resetChecked() {
+                this.$refs.authorityTree.setCheckedKeys([]);
+            },
             init() {
                 this.$util.toggleFixedBtnContainer();
                 this.$service.getAdminList({

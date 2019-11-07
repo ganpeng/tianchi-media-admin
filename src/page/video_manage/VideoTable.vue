@@ -604,7 +604,7 @@
                             this.$message.success('正在拉取视频到本站，请关注其状态更改');
                         } else if (response && response.code === 0 && response.data.length !== 0) {
                             // 批量上传存在有特殊情况说明
-                            let message = '当前上传视频含有如下问题：';
+                            let message = '当前视频含有如下问题：';
                             response.data.map(video => {
                                 message = message + '[' + video.originName + ']视频问题：' + video.failReason + ';';
                             });

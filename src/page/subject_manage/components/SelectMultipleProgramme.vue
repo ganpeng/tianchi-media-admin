@@ -52,9 +52,10 @@
             v-on:setSelectedProgrammeList="setSelectedProgrammeList">
         </programme-operate-table>
         <el-pagination
+            @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="pageNum"
-            :page-sizes="[5]"
+            :page-sizes="[5, 10, 20, 50, 100, 200, 500]"
             :page-size="listQueryParams.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
@@ -130,6 +131,10 @@
             // 获取选择的节目列表
             getSelectedProgrammeList() {
                 return this.$refs.programmeOperateTable.getSelectedProgramme();
+            },
+            handleSizeChange(pageSize) {
+                this.listQueryParams.pageSize = pageSize;
+                this.getProgrammeList();
             }
         }
     };
@@ -204,9 +209,6 @@
                     color: #409EFF;
                 }
             }
-        }
-        .el-pagination__sizes {
-            display: none;
         }
     }
 

@@ -149,7 +149,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="pageNum"
-            :page-sizes="[5, 20, 50,100,200]"
+            :page-sizes="[5, 10, 20, 50, 100, 200, 500]"
             :page-size="queryParams.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
@@ -422,9 +422,6 @@
 <style lang="scss">
 
     #select-multiple-video {
-        .el-pagination__sizes {
-            display: none;
-        }
     }
 
 </style>
