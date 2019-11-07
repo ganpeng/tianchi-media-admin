@@ -72,6 +72,13 @@ export const updateProgrammeCategory = ({categoryList}) => {
 };
 
 /**
+ * 根据分类id删除分类
+ */
+export const deleteProgrammeCategoryById = (id) => {
+    return service.delete(`/v1/content/programme-category/${id}`);
+};
+
+/**
  * 获取节目的标签列表
  */
 export const getProgrammeTagList = () => {
