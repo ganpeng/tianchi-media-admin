@@ -26,7 +26,7 @@
                                     <span @click="retryInjectSelectedVideoHandler">批量重试</span>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
-                                    <span @click="exportSelectedVideoHandler">批量导出</span>
+                                    <span @click="exportSelectedVideoHandler">导出选中</span>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
                                     <span @click="deleteVideoList">批量删除</span>
@@ -48,6 +48,10 @@
                                 <el-dropdown-item
                                     v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable">
                                     <span @click="batchPullVideoFromMainSite">重试拉取</span>
+                                </el-dropdown-item>
+                                <!-- 后端导出全部的视频列表 -->
+                                <el-dropdown-item>
+                                    <span @click="exportAllVideoHandler">导出全部</span>
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
@@ -108,7 +112,7 @@
                                 <span @click="retryInjectSelectedVideoHandler">批量重试</span>
                             </el-dropdown-item>
                             <el-dropdown-item>
-                                <span @click="exportSelectedVideoHandler">批量导出</span>
+                                <span @click="exportSelectedVideoHandler">导出选中</span>
                             </el-dropdown-item>
                             <el-dropdown-item>
                                 <span @click="deleteVideoList">批量删除</span>
@@ -130,6 +134,10 @@
                             <el-dropdown-item
                                 v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable">
                                 <span @click="batchPullVideoFromMainSite">重试拉取</span>
+                            </el-dropdown-item>
+                            <!-- 后端导出全部的视频列表 -->
+                            <el-dropdown-item>
+                                <span @click="exportAllVideoHandler">导出全部</span>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -394,6 +402,10 @@
                 } else {
                     this.$message.warning('不存在可以重新拉取的视频');
                 }
+            },
+            // 后端导出全部视频的EXCEL列表
+            exportAllVideoHandler() {
+
             },
             // 拉取主站的视频到子站(只存在于子站)
             pullVideoFromMaster(videoList) {

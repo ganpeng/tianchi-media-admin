@@ -24,6 +24,9 @@
                             <el-dropdown-item>
                                 <span @click="batchSetStatus(false)">批量禁播</span>
                             </el-dropdown-item>
+                            <el-dropdown-item>
+                                <span @click="exportAllChannel">导出全部</span>
+                            </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
@@ -58,7 +61,7 @@
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="pageNum"
-                :page-sizes="[10, 20, 50, 100, 200, 500]"
+                :page-sizes="[5, 10, 20, 50, 100, 200, 500]"
                 :page-size="listQueryParams.pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="total">
@@ -77,6 +80,9 @@
                         </el-dropdown-item>
                         <el-dropdown-item>
                             <span @click="batchSetStatus(false)">批量禁播</span>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <span @click="exportAllChannel">导出全部</span>
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -152,6 +158,10 @@
             handleCurrentChange(pageNum) {
                 this.pageNum = pageNum;
                 this.getChannelList();
+            },
+            // 导出全部轮播EXCEL列表
+            exportAllChannel() {
+
             },
             createChannelByImportExcel() {
                 let routeData = this.$router.resolve({
