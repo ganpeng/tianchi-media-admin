@@ -166,6 +166,23 @@
                                 <div>{{item.size | convertFileSize}}</div>
                                 <div>{{item.advertiserName}}</div>
                             </div>
+                            <div
+                                v-if="setAdVisible"
+                                class="set-dropdown-wrapper">
+                                <el-dropdown
+                                    class="set-dropdown"
+                                    @command="setAD($event, item)" placement="bottom">
+                                    <el-button class="btn-style-two contain-svg-icon">
+                                        设置为
+                                        <svg-icon icon-class="arrow_down"></svg-icon>
+                                    </el-button>
+                                    <el-dropdown-menu slot="dropdown">
+                                        <el-dropdown-item command="LINK">网页</el-dropdown-item>
+                                        <el-dropdown-item command="PROGRAMME">节目</el-dropdown-item>
+                                        <el-dropdown-item command="VIP">会员购买</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
+                            </div>
                         </div>
                     </div>
                     <ul>
@@ -223,6 +240,10 @@
         <preview-multiple-images
             :previewMultipleImages="previewImage">
         </preview-multiple-images>
+
+        <!-- dev_v2.5 -->
+        <link-dialog ref="linkDialog" :setAdSuccess="setAdSuccess"></link-dialog>
+        <programme-dialog ref="programmeDialog" :setAdSuccess="setAdSuccess"></programme-dialog>
     </div>
 </template>
 
@@ -234,6 +255,10 @@
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import _ from 'lodash';
 
+    //  dev_v2.5 新增
+    import LinkDialog from './setAdDialog/LinkDialog';
+    import ProgrammeDialog from './setAdDialog/ProgrammeDialog';
+
     export default {
         name: 'ADForm',
         components: {
@@ -241,7 +266,10 @@
             SelectAdSingleVideoResource,
             SelectAdMultipleVideoResource,
             DisplayVideoDialog,
-            PreviewMultipleImages
+            PreviewMultipleImages,
+            //  dev_v2.5
+            LinkDialog,
+            ProgrammeDialog
         },
         /* status: 'CREATE_BOOT_AD'代表创建开机广告 */
         props: {
@@ -438,6 +466,12 @@
                     duration = duration + parseInt(video.duration);
                 });
                 return duration;
+            },
+            setAdVisible() {
+                return this.status === 'CREATE_SCREEN_SAVER_AD' ||
+                       this.status === 'EDIT_SCREEN_SAVER_AD' ||
+                       this.status === 'CREATE_PROGRAMME_DETAIL_AD' ||
+                       this.status === 'EDIT_PROGRAMME_DETAIL_AD';
             }
         },
         mounted() {
@@ -656,6 +690,24 @@
                 }
                 this.previewImage.list = this.adInfo.adMaterialList;
                 this.previewImage.activeIndex = index;
+            },
+            //  dev_v2.5新增逻辑
+            setAD(command, adMaterial) {
+                switch (command) {
+                    case 'LINK':
+                        this.$refs.linkDialog.showDialog(command, adMaterial);
+                        break;
+                    case 'PROGRAMME':
+                        this.$refs.programmeDialog.showDialog(command, adMaterial);
+                        break;
+                    case 'VIP':
+                        break;
+                    default:
+                        break;
+                }
+            },
+            setAdSuccess(data) {
+                console.log(data);
             }
         }
     };
@@ -859,10 +911,16 @@
                     color: #A8ABB3;
                 }
             }
+            .set-dropdown-wrapper {
+                display: flex;
+                justify-content: center;
+                margin: 10px 0;
+            }
         }
         ul {
             display: inline-block;
-            margin-top: 20px;
+            // margin-top: 20px;
+            margin-top: 60px;
             min-width: 170px;
             padding-bottom: 10px;
             padding-right: 25px;
