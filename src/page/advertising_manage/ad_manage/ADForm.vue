@@ -165,6 +165,8 @@
                                 <div>{{item.width}}*{{item.height}}</div>
                                 <div>{{item.size | convertFileSize}}</div>
                                 <div>{{item.advertiserName}}</div>
+                                <div>{{setLabel(item.visitType)}}</div>
+                                <div>{{targetUrl(item)}}</div>
                             </div>
                             <div
                                 v-if="setAdVisible"
@@ -179,7 +181,7 @@
                                     <el-dropdown-menu slot="dropdown">
                                         <el-dropdown-item command="LINK">网页</el-dropdown-item>
                                         <el-dropdown-item command="PROGRAMME">节目</el-dropdown-item>
-                                        <el-dropdown-item command="VIP">会员购买</el-dropdown-item>
+                                        <el-dropdown-item command="VIP_BUY">会员购买</el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
                             </div>
@@ -472,6 +474,35 @@
                        this.status === 'EDIT_SCREEN_SAVER_AD' ||
                        this.status === 'CREATE_PROGRAMME_DETAIL_AD' ||
                        this.status === 'EDIT_PROGRAMME_DETAIL_AD';
+            },
+            setLabel() {
+                return (visitType) => {
+                    switch (visitType) {
+                        case 'LINK':
+                            return '设置为网页';
+                        case 'PROGRAMME':
+                            return '设置为节目';
+                        case 'VIP_BUY':
+                            return '设置为会员购买';
+                        default:
+                            return '';
+                    }
+                };
+            },
+            targetUrl() {
+                return (adMaterial) => {
+                    let {visitType, targetUrl} = adMaterial;
+                    switch (visitType) {
+                        case 'LINK':
+                            return targetUrl;
+                        case 'PROGRAMME':
+                            return targetUrl === null || targetUrl === '' ? '' : _.get(JSON.parse(targetUrl), 'name');
+                        case 'VIP_BUY':
+                            return '';
+                        default:
+                            return '';
+                    }
+                };
             }
         },
         mounted() {
@@ -693,6 +724,7 @@
             },
             //  dev_v2.5新增逻辑
             setAD(command, adMaterial) {
+                let index = this.adInfo.adMaterialList.findIndex((item) => item.id === adMaterial.id);
                 switch (command) {
                     case 'LINK':
                         this.$refs.linkDialog.showDialog(command, adMaterial);
@@ -700,14 +732,20 @@
                     case 'PROGRAMME':
                         this.$refs.programmeDialog.showDialog(command, adMaterial);
                         break;
-                    case 'VIP':
+                    case 'VIP_BUY':
+                        _.set(this.adInfo.adMaterialList, `${index}.visitType`, command);
                         break;
                     default:
                         break;
                 }
             },
             setAdSuccess(data) {
-                console.log(data);
+                let {command, value, adMaterial: {id}} = data;
+                let index = this.adInfo.adMaterialList.findIndex((item) => item.id === id);
+                if (index >= 0) {
+                    _.set(this.adInfo.adMaterialList, `${index}.visitType`, command);
+                    _.set(this.adInfo.adMaterialList, `${index}.targetUrl`, value);
+                }
             }
         }
     };
@@ -920,7 +958,7 @@
         ul {
             display: inline-block;
             // margin-top: 20px;
-            margin-top: 60px;
+            margin-top: 100px;
             min-width: 170px;
             padding-bottom: 10px;
             padding-right: 25px;

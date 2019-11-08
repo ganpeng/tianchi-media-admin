@@ -211,7 +211,7 @@ export default {
                 this.setAdSuccess({
                     command: this.command,
                     adMaterial: this.adMaterial,
-                    value: this.programme
+                    value: JSON.stringify(this.programme)
                 });
                 this.closeDialog();
             } else {
