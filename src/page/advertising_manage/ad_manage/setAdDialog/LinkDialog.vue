@@ -56,7 +56,7 @@ export default {
             dialogVisible: false,
             form: { link: '' },
             inputRules: {
-                link: [{ required: true, message: '请输入网页地址' }, { pattern: /^https?:\/\// }]
+                link: [{ required: true, message: '请输入网页地址' }, { pattern: /^https?:\/\//, message: '输入的网址格式不正确' }]
             },
             command: '',
             adMaterial: {}

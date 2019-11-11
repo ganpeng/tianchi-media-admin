@@ -187,7 +187,7 @@
                             </div>
                         </div>
                     </div>
-                    <ul>
+                    <ul :class="[setAdVisible && 'set-ad']">
                         <li><label>总体积</label><span>{{resourceSize | convertFileSize}}</span></li>
                         <li>
                             <label>广告主</label>
@@ -957,13 +957,15 @@
         }
         ul {
             display: inline-block;
-            // margin-top: 20px;
-            margin-top: 100px;
+            margin-top: 20px;
             min-width: 170px;
             padding-bottom: 10px;
             padding-right: 25px;
             border: 1px solid #3E495E;
             border-radius: 8px;
+            &.set-ad {
+                margin-top: 100px;
+            }
             li {
                 margin-left: 11px;
                 margin-bottom: 15px;

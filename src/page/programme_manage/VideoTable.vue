@@ -150,10 +150,12 @@
             </el-table-column>
         </el-table>
         <el-pagination
+            @size-change="handlePaginationChange($event, 'pageSize')"
             @current-change="handlePaginationChange($event, 'pageNum')"
             :current-page="pagination.pageNum"
+            :page-sizes="[] | pageSizes"
             :page-size="pagination.pageSize"
-            layout="total, prev, pager, next, jumper"
+            layout="total, sizes, prev, pager, next, jumper"
             :total="pagination.total">
         </el-pagination>
         <display-video-dialog

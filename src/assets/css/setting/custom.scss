@@ -1498,6 +1498,15 @@ html, body {
         .seperator-line {
             border-bottom: 1px solid #3E495E;
         }
+        .el-pagination {
+            .el-select {
+                .el-input__inner {
+                    color: #6F7480;
+                    background-color: transparent;
+                    border: 1px solid #6F7480;
+                }
+            }
+        }
     }
 }
 

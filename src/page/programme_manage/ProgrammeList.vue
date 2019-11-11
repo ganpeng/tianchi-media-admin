@@ -299,11 +299,12 @@
                     </el-table-column>
                 </el-table>
             </div>
+                <!-- :page-sizes="[10, 30, 50, 100, 200, 300,500]" -->
             <el-pagination
                 @size-change="handlePaginationChange($event, 'pageSize')"
                 @current-change="handlePaginationChange($event, 'pageNum')"
                 :current-page="programmePagination.pageNum"
-                :page-sizes="[10, 30, 50, 100, 200, 300,500]"
+                :page-sizes="[] | pageSizes"
                 :page-size="programmePagination.pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="programmePagination.total">
