@@ -61,10 +61,10 @@
                 },
                 visibleOptions: [{
                     value: true,
-                    label: '已上架'
+                    label: '已启用'
                 }, {
                     value: false,
-                    label: '已下架'
+                    label: '已禁用'
                 }]
             };
         },

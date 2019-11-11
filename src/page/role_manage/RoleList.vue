@@ -18,10 +18,10 @@
                             </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item>
-                            <span @click="batchShelve">禁用选中</span>
+                            <span @click="batchShelve">启用选中</span>
                         </el-dropdown-item>
                         <el-dropdown-item>
-                            <span @click="batchUnShelve">启用选中</span>
+                            <span @click="batchUnShelve">禁用选中</span>
                         </el-dropdown-item>
                         <el-dropdown-item>
                             <span @click="batchRemove">删除选中</span>
@@ -61,10 +61,10 @@
             </span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item>
-                        <span @click="batchShelve">禁用选中</span>
+                        <span @click="batchShelve">启用选中</span>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                        <span @click="batchUnShelve">启用选中</span>
+                        <span @click="batchUnShelve">禁用选中</span>
                     </el-dropdown-item>
                     <el-dropdown-item>
                         <span @click="batchRemove">删除选中</span>
@@ -87,6 +87,7 @@
         },
         data() {
             return {
+                isDisabled: true,
                 listQueryParams: {
                     pageNum: 1,
                     pageSize: 10
@@ -105,6 +106,9 @@
                     this.$refs.roleFilterParams.initFilterParams(this.listQueryParams);
                 }
                 this.getRoleList();
+            },
+            setBatchDisabledStatus(isDisabled) {
+                this.isDisabled = isDisabled;
             },
             handleSizeChange(pageSize) {
                 this.listQueryParams.pageSize = pageSize;
