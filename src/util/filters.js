@@ -80,6 +80,9 @@ const FILTERS = {
             num = num.replace(regexp, '$1');
             return num;
         }
+    },
+    pageSizes() {
+        return [10, 30, 50, 100, 200, 300,500];
     }
 };
 

@@ -165,10 +165,29 @@
                                 <div>{{item.width}}*{{item.height}}</div>
                                 <div>{{item.size | convertFileSize}}</div>
                                 <div>{{item.advertiserName}}</div>
+                                <div>{{setLabel(item.visitType)}}</div>
+                                <div>{{targetUrl(item)}}</div>
+                            </div>
+                            <div
+                                v-if="setAdVisible"
+                                class="set-dropdown-wrapper">
+                                <el-dropdown
+                                    class="set-dropdown"
+                                    @command="setAD($event, item)" placement="bottom">
+                                    <el-button class="btn-style-two contain-svg-icon">
+                                        设置为
+                                        <svg-icon icon-class="arrow_down"></svg-icon>
+                                    </el-button>
+                                    <el-dropdown-menu slot="dropdown">
+                                        <el-dropdown-item command="LINK">网页</el-dropdown-item>
+                                        <el-dropdown-item command="PROGRAMME">节目</el-dropdown-item>
+                                        <el-dropdown-item command="VIP_BUY">会员购买</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
                             </div>
                         </div>
                     </div>
-                    <ul>
+                    <ul :class="[setAdVisible && 'set-ad']">
                         <li><label>总体积</label><span>{{resourceSize | convertFileSize}}</span></li>
                         <li>
                             <label>广告主</label>
@@ -223,6 +242,10 @@
         <preview-multiple-images
             :previewMultipleImages="previewImage">
         </preview-multiple-images>
+
+        <!-- dev_v2.5 -->
+        <link-dialog ref="linkDialog" :setAdSuccess="setAdSuccess"></link-dialog>
+        <programme-dialog ref="programmeDialog" :setAdSuccess="setAdSuccess"></programme-dialog>
     </div>
 </template>
 
@@ -234,6 +257,10 @@
     import PreviewMultipleImages from 'sysComponents/custom_components/custom/PreviewMultipleImages';
     import _ from 'lodash';
 
+    //  dev_v2.5 新增
+    import LinkDialog from './setAdDialog/LinkDialog';
+    import ProgrammeDialog from './setAdDialog/ProgrammeDialog';
+
     export default {
         name: 'ADForm',
         components: {
@@ -241,7 +268,10 @@
             SelectAdSingleVideoResource,
             SelectAdMultipleVideoResource,
             DisplayVideoDialog,
-            PreviewMultipleImages
+            PreviewMultipleImages,
+            //  dev_v2.5
+            LinkDialog,
+            ProgrammeDialog
         },
         /* status: 'CREATE_BOOT_AD'代表创建开机广告 */
         props: {
@@ -438,6 +468,41 @@
                     duration = duration + parseInt(video.duration);
                 });
                 return duration;
+            },
+            setAdVisible() {
+                return this.status === 'CREATE_SCREEN_SAVER_AD' ||
+                       this.status === 'EDIT_SCREEN_SAVER_AD' ||
+                       this.status === 'CREATE_PROGRAMME_DETAIL_AD' ||
+                       this.status === 'EDIT_PROGRAMME_DETAIL_AD';
+            },
+            setLabel() {
+                return (visitType) => {
+                    switch (visitType) {
+                        case 'LINK':
+                            return '设置为网页';
+                        case 'PROGRAMME':
+                            return '设置为节目';
+                        case 'VIP_BUY':
+                            return '设置为会员购买';
+                        default:
+                            return '';
+                    }
+                };
+            },
+            targetUrl() {
+                return (adMaterial) => {
+                    let {visitType, targetUrl} = adMaterial;
+                    switch (visitType) {
+                        case 'LINK':
+                            return targetUrl;
+                        case 'PROGRAMME':
+                            return targetUrl === null || targetUrl === '' ? '' : _.get(JSON.parse(targetUrl), 'name');
+                        case 'VIP_BUY':
+                            return '';
+                        default:
+                            return '';
+                    }
+                };
             }
         },
         mounted() {
@@ -656,6 +721,31 @@
                 }
                 this.previewImage.list = this.adInfo.adMaterialList;
                 this.previewImage.activeIndex = index;
+            },
+            //  dev_v2.5新增逻辑
+            setAD(command, adMaterial) {
+                let index = this.adInfo.adMaterialList.findIndex((item) => item.id === adMaterial.id);
+                switch (command) {
+                    case 'LINK':
+                        this.$refs.linkDialog.showDialog(command, adMaterial);
+                        break;
+                    case 'PROGRAMME':
+                        this.$refs.programmeDialog.showDialog(command, adMaterial);
+                        break;
+                    case 'VIP_BUY':
+                        _.set(this.adInfo.adMaterialList, `${index}.visitType`, command);
+                        break;
+                    default:
+                        break;
+                }
+            },
+            setAdSuccess(data) {
+                let {command, value, adMaterial: {id}} = data;
+                let index = this.adInfo.adMaterialList.findIndex((item) => item.id === id);
+                if (index >= 0) {
+                    _.set(this.adInfo.adMaterialList, `${index}.visitType`, command);
+                    _.set(this.adInfo.adMaterialList, `${index}.targetUrl`, value);
+                }
             }
         }
     };
@@ -859,6 +949,11 @@
                     color: #A8ABB3;
                 }
             }
+            .set-dropdown-wrapper {
+                display: flex;
+                justify-content: center;
+                margin: 10px 0;
+            }
         }
         ul {
             display: inline-block;
@@ -868,6 +963,9 @@
             padding-right: 25px;
             border: 1px solid #3E495E;
             border-radius: 8px;
+            &.set-ad {
+                margin-top: 100px;
+            }
             li {
                 margin-left: 11px;
                 margin-bottom: 15px;
