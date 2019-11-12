@@ -3,8 +3,14 @@
     <div>
         <el-table
             :data="adminList"
+            @selection-change="handleSelectionChange"
             border
             style="width: 100%">
+            <el-table-column
+                type="selection"
+                align="center"
+                width="60px">
+            </el-table-column>
             <el-table-column
                 align="center"
                 prop="id"
@@ -118,10 +124,19 @@
         },
         data() {
             return {
-                currentAdminList: []
+                multipleSelection: []
             };
         },
         methods: {
+            // 勾选专题
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+                if (this.multipleSelection.length === 0) {
+                    this.$emit('setBatchDisabledStatus', true);
+                } else {
+                    this.$emit('setBatchDisabledStatus', false);
+                }
+            },
             // 禁用确认
             disabledConfirm(userId, userStatus) {
                 this.$confirm('此操作将禁用该账号, 是否继续?', '提示', {
@@ -162,6 +177,30 @@
                         }
                         this.$emit('getAdminList');
                     }
+                });
+            },
+            batchUpdateStatus(visible) {
+                if (!this.multipleSelection || this.multipleSelection.length === 0) {
+                    this.$message.warning('请先选择管理员');
+                    return;
+                }
+                this.$confirm('此操作将批量' + (visible ? '启用' : '禁用') + '管理员, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let idList = [];
+                    this.multipleSelection.map(item => {
+                        idList.push(item.id);
+                    });
+                    this.$service.batchUpdateAdminStatus({idList, visible}).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('管理员批量' + (visible ? '启用' : '禁用') + '成功!');
+                            this.$emit('getAdminList');
+                            this.multipleSelection = [];
+                            this.$emit('setBatchDisabledStatus', true);
+                        }
+                    });
                 });
             },
             // 查看详情
