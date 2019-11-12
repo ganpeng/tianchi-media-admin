@@ -83,13 +83,13 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="升级依据" prop="updateType">
+                    <el-form-item label="升级依据" prop="UpdateAccord">
                         <el-select
                             clearable
                             filterable
-                            :value="version.updateType"
+                            :value="version.UpdateAccord"
                             placeholder="请选择升级方式"
-                            @input="inputHandler($event, 'updateType')"
+                            @input="inputHandler($event, 'UpdateAccord')"
                         >
                             <el-option
                                 v-for="(item, index) in updateTypeOptions"
@@ -99,7 +99,7 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item v-if="version.updateType" label="升级范围文件" prop="districtCodeList">
+                    <el-form-item v-if="version.UpdateAccord" label="升级范围文件" prop="districtCodeList">
                         <div class="wrapper clearfix">
                             <div class="file float-left">
                                 <input
@@ -209,17 +209,17 @@ export default {
             //  dev_v2.5 新增逻辑
             districtFile: {},
             updateTypeOptions: [
+                // {
+                //     name: 'DISTRICT号',
+                //     value: 'DISTRICT_NO'
+                // },
                 {
                     name: 'CA号',
-                    value: 'CA_NO'
+                    value: 'CA'
                 },
                 {
                     name: 'SN号',
-                    value: 'SN_NO'
-                },
-                {
-                    name: 'DISTRICT号',
-                    value: 'DISTRICT_NO'
+                    value: 'SN'
                 }
             ]
         };
@@ -250,17 +250,19 @@ export default {
             updateVersion: 'version/updateVersion',
             resetVersion: 'version/resetVersion',
             addCompanyToList: 'version/addCompanyToList',
-            deleteCompanyFromList: 'version/deleteCompanyFromList'
+            deleteCompanyFromList: 'version/deleteCompanyFromList',
+            addBatch: 'version/addBatch',
+            replaceBatch: 'version/replaceBatch'
         }),
         ...mapActions({
-            postVersion: 'version/postVersion',
+            newPostVersion: 'version/newPostVersion',
             getFilialeList: 'version/getFilialeList'
         }),
         async createVersionHandler() {
             try {
                 let valid = await this.$refs.createVersion.validate();
                 if (valid) {
-                    let res = await this.postVersion();
+                    let res = await this.newPostVersion();
                     if (res && res.code === 0) {
                         this.gotoList();
                         this.$message.success('保存成功');
@@ -346,8 +348,8 @@ export default {
                 let worksheet = workbook.Sheets[sheetNames[0]]; // 这里我们只读取第一张sheet
                 let resJson = XLSX.utils.sheet_to_json(worksheet);
                 this.districtFile = file;
-                let districtCodeList = resJson.map((item) => item.value);
-                this.updateVersion({key: 'districtCodeList', value: districtCodeList});
+                let codeList = resJson.map((item) => item.value);
+                this.addBatch({codeList});
             } catch (err) {
                 console.log(err);
             }

@@ -189,6 +189,7 @@ const mutations = {
     },
     deleteProgrammeCategoryById(state, payload) {
         let {id} = payload;
+        console.log(state.programmeCategory);
         state.programmeCategory = state.programmeCategory.filter((item) => item.id !== id);
     },
     toggleCategoryEdit(state, payload) {
@@ -390,6 +391,7 @@ const actions = {
             if (res && res.code === 0) {
                 commit('deleteProgrammeCategoryById', {id});
             }
+            return res;
         } catch (err) {
             console.log(err);
         }

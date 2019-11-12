@@ -372,8 +372,12 @@ export default {
             return (id) => {
                 let obj = this.programmeCategory[this.programmeCategoryActiveIndex];
                 let activeProgrammeCategoryList = _.get(obj, 'programmeTypeList');
-                let type = activeProgrammeCategoryList.find((item) => item.id === id);
-                return _.get(type, 'name') || '';
+                if (_.isArray(activeProgrammeCategoryList)) {
+                    let type = activeProgrammeCategoryList.find((item) => item.id === id);
+                    return _.get(type, 'name') || '';
+                } else {
+                    return '';
+                }
             };
         },
         getUniqueKey() {
@@ -436,7 +440,11 @@ export default {
             this.programmeCategoryActiveIndex = index;
             let obj = this.programmeCategory[this.programmeCategoryActiveIndex];
             let id = _.get(obj, 'id');
-            this.getProgrammeTypeGroupListById(id);
+            if (id && !(/^category_/.test(id))) {
+                this.getProgrammeTypeGroupListById(id);
+            } else {
+                this.setCategoryGroupList({categoryGroupList: []});
+            }
             this.resetAllEdit();
         },
         fetchCategoryByIndex(index) {
@@ -760,8 +768,16 @@ export default {
                 if (confirm) {
                     if (/^category_/.test(category.id)) {
                         this.deleteProgrammeCategory({index});
+                        if (index === this.programmeCategoryActiveIndex) {
+                            this.changeProgrammeCategoryTabHandler(0);
+                        }
                     } else {
-                        this.deleteProgrammeCategoryById(category.id);
+                        let res = await this.deleteProgrammeCategoryById(category.id);
+                        if (res && res.code === 0) {
+                            if (index === this.programmeCategoryActiveIndex) {
+                                this.changeProgrammeCategoryTabHandler(0);
+                            }
+                        }
                     }
                 }
             } catch (err) {
