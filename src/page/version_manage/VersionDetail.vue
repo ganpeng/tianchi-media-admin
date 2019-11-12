@@ -12,6 +12,8 @@
                 <div class="title-wrapper">
                     <div class="left-side">
                         <span class="title">{{version.version}}</span>
+                        <span @click="launchVersion(version.id)" v-if="version.releaseStatus === 'RELEASED'" class="status text-primary">撤回</span>
+                        <span v-if="version.releaseStatus === 'WITHDRAW'" class="status">已撤回</span>
                     </div>
                     <div class="right-wrapper">
                         <div class="date">
@@ -73,6 +75,25 @@
                     </li>
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
+                            <label class="label">升级依据：</label>
+                            <span class="value">{{version.updateAccord}}</span>
+                        </div>
+                    </li>
+                    <li class="text-info-item">
+                        <div class="text-info-item-wrapper">
+                            <label class="label">升级包：</label>
+                            <span class="value download-patch">
+                                <a v-if="version.fullPackageUri"
+                                    class="text-primary"
+                                    style="color: #1989FA;"
+                                    :href="packageUrl(version.fullPackageUri)">
+                                    点击下载
+                                </a>
+                            </span>
+                        </div>
+                    </li>
+                    <li class="text-info-item">
+                        <div class="text-info-item-wrapper">
                             <label class="label">升级说明：</label>
                             <span class="value">{{version.updateLog}}</span>
                         </div>
@@ -81,6 +102,7 @@
             </div>
         </div>
         <div class="seperator-line"></div>
+        <!--
         <div v-if="version.clientVersionStatsList.length > 0" class="area-container">
             <h4 class="content-sub-title">
                 所属区域
@@ -105,13 +127,43 @@
             </ul>
             <div v-if="version.clientVersionStatsList.length > 0" class="seperator-line"></div>
         </div>
+        -->
+        <div class="range-file-container">
+            <h4 class="content-sub-title">升级范围文件</h4>
+            <el-table
+                header-row-class-name="common-table-header"
+                class="my-table-style" :data="version.batchList || []" border>
+                <el-table-column align="center" width="120px" label="升级日期">
+                    <template slot-scope="scope">
+                        {{scope.row.createdAt  | formatDate('yyyy-MM-DD')}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="升级依据" width="120px" align="center">
+                    <template slot-scope="scope">
+                        {{scope.row.haha || version.updateAccord}}
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" width="120px" label="状态">
+                    <template slot-scope="scope">
+                        {{releaseStatus(scope.row.releaseStatus)}}
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" label="操作">
+                    <template slot-scope="scope">
+                        <div class="operator-btn-wrapper">
+                            <span class="btn-text text-primary" @click="downloadBatch(scope.row)">下载</span>
+                        </div>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
         <div class="fixed-btn-container">
             <el-button class="btn-style-three" @click="goBack">返回列表</el-button>
         </div>
     </div>
 </template>
 <script>
-import {mapGetters, mapActions} from 'vuex';
+import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
 export default {
     name: 'VersionDetail',
@@ -144,6 +196,26 @@ export default {
                     }
                 }
             };
+        },
+        releaseStatus() {
+            return (status) => {
+                switch (status) {
+                    case 'PRE_RELEASED':
+                        return '未发布';
+                    case 'RELEASED':
+                        return '已发布';
+                    case 'WITHDRAW':
+                        return '已撤回';
+                    default:
+                        return '';
+                }
+            };
+        },
+        packageUrl(uri) {
+            return (uri) => {
+                let baseUri = window.localStorage.getItem('videoBaseUri');
+                return `${baseUri}${uri}`;
+            };
         }
     },
     mounted() {
@@ -160,6 +232,9 @@ export default {
         }
     },
     methods: {
+        ...mapMutations({
+            updateVersion: 'version/updateVersion'
+        }),
         ...mapActions({
             getVersionById: 'version/getVersionById'
         }),
@@ -176,6 +251,27 @@ export default {
         },
         convertFileSize(size) {
             return this.$util.convertFileSize(size);
+        },
+        //  dev_v2.5 新增
+        async launchVersion(id) {
+            try {
+                let confirm = await this.$confirm(`您确定要撤回当前版本吗, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                });
+                if (confirm) {
+                    let res = await this.$service.launchVersion(id, 'WITHDRAW');
+                    if (res && res.code === 0) {
+                        this.updateVersion({key: 'releaseStatus', value: 'WITHDRAW'});
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        async downloadBatch(batch) {
+            console.log(batch);
         }
     }
 };
@@ -191,6 +287,18 @@ export default {
         box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.5);
     }
 }
+
+.status {
+    margin-left: 20px;
+    &.text-primary {
+        cursor: pointer;
+    }
+}
+
+.my-table-style {
+    width: 500px;
+}
+
 .text-info {
     display: flex;
     flex-wrap: wrap;

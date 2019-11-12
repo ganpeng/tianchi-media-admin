@@ -20,7 +20,7 @@ const defaultVersion = {
     districtCodeList: [], // 所属区域
     clientVersionStatsList: [],
     //  dev_v2.5 新增
-    UpdateAccord: '', //  CA 或者 SN
+    updateAccord: '', //  CA 或者 SN
     batchList: []
 };
 
@@ -114,7 +114,7 @@ const mutations = {
     updateVersion(state, payload) {
         let {key, value} = payload;
         state.version[key] = value;
-        if (key === 'UpdateAccord' && value === '') {
+        if (key === 'updateAccord' && value === '') {
             state.version.districtCodeList = [];
         }
     },
@@ -168,8 +168,8 @@ function checkCompanyListIsAll(source, target) {
 function formatVersion(version) {
     let versionCopy = _.cloneDeep(version);
 
-    if (!versionCopy.UpdateAccord) {
-        delete versionCopy.UpdateAccord;
+    if (!versionCopy.updateAccord) {
+        delete versionCopy.updateAccord;
         delete versionCopy.batchList;
     }
 
