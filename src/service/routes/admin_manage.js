@@ -17,9 +17,12 @@ export const createAdmin = ({email, mobile, name, remark, departmentList, roleLi
 /**
  * 获取平台管理员信息列表
  */
-export const getAdminList = ({pageNum, pageSize, keyword}) => {
+export const getAdminList = ({keyword, departmentId, roleId, status, pageNum, pageSize}) => {
     const params = {
         keyword,
+        departmentId,
+        roleId,
+        status,
         pageSize,
         pageNum: pageNum - 1
     };
@@ -36,6 +39,23 @@ export const getAdminList = ({pageNum, pageSize, keyword}) => {
  */
 export const getAdminInfo = ({id}) => {
     return service.get(util.format('/v1/admin/{0}', id));
+};
+
+/**
+ * 删除单个管理员
+ * @param id The id of admin.
+ */
+export const removeAdmin = (id) => {
+    return service.delete('/v1/admin/' + id);
+};
+
+/**
+ * 批量启用或者禁用管理员
+ * @param idList The idList of admin.
+ * @param status The status of admin.
+ */
+export const batchUpdateAdminStatus = ({idList, status}) => {
+    return service.patch('/v1/admin/batch/status?status=' + status, idList);
 };
 
 /**
@@ -67,7 +87,7 @@ export const updateAdminInfo = ({id, email, mobile, name, remark, departmentList
 };
 
 /**
- * 重置平台管理员密码
+ * 重置平台管理员密码为 123456
  */
 export const resetAdminPassword = ({id}) => {
     return service.patch(util.format('/v1/admin/{0}/password', id));
