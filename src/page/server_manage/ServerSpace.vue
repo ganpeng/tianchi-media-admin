@@ -5,56 +5,9 @@
         <div class="text-center">
             <v-chart :options="serverData"/>
         </div>
-        <el-table
-            :data="serverList"
-            border
-            style="width: 100%">
-            <el-table-column
-                type="index"
-                align="center"
-                width="80"
-                label="序号">
-            </el-table-column>
-            <el-table-column
-                align="center"
-                prop="clusterName"
-                min-width="120px"
-                label="组">
-            </el-table-column>
-            <el-table-column
-                min-width="120px"
-                prop="hostname"
-                align="center"
-                label="服务器">
-            </el-table-column>
-            <el-table-column
-                align="center"
-                min-width="140px"
-                prop="value.total"
-                label="全部空间">
-                <template slot-scope="scope">
-                    {{(scope.row.value ? scope.row.value.total : 0) | convertFileSize}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                prop="value.used"
-                min-width="140px"
-                label="已使用空间">
-                <template slot-scope="scope">
-                    {{(scope.row.value ? scope.row.value.used : 0) | convertFileSize}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                prop="value.free"
-                min-width="130px"
-                label="未使用空间">
-                <template slot-scope="scope">
-                    {{(scope.row.value ? scope.row.value.free : 0) | convertFileSize}}
-                </template>
-            </el-table-column>
-        </el-table>
+        <div class="text-center">
+            <ve-histogram :data="chartData" :settings="chartSettings"></ve-histogram>
+        </div>
     </div>
 </template>
 
@@ -68,6 +21,9 @@
             'v-chart': ECharts
         },
         data() {
+            this.chartSettings = {
+                stack: {'服务器': ['已用空间', '可用空间', '预留空间']}
+            };
             return {
                 serverList: [],
                 serverData: {
@@ -107,6 +63,17 @@
                             }
                         }
                     ]
+                },
+                chartData: {
+                    columns: ['名称', '已用空间', '可用空间', '预留空间'],
+                    rows: [
+                        {'名称': '1/1', '已用空间': 1393, '可用空间': 1093, '预留空间': 2000},
+                        {'名称': '1/2', '已用空间': 3530, '可用空间': 3230, '预留空间': 0.26},
+                        {'名称': '1/3', '已用空间': 2923, '可用空间': 2623, '预留空间': 0.76},
+                        {'名称': '1/4', '已用空间': 1723, '可用空间': 1423, '预留空间': 0.49},
+                        {'名称': '1/5', '已用空间': 3792, '可用空间': 3492, '预留空间': 0.323},
+                        {'名称': '1/6', '已用空间': 4593, '可用空间': 4293, '预留空间': 0.78}
+                    ]
                 }
             };
         },
@@ -133,6 +100,17 @@
         display: inline-block;
         width: 400px;
         height: 400px;
+    }
+
+    .ve-histogram {
+        background-color: white;
+        display: inline-block;
+        width: 600px !important;
+        height: 400px;
+        * {
+            width: 600px !important;
+            height: 400px;
+        }
     }
 
 </style>

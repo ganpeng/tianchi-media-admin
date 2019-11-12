@@ -15,6 +15,7 @@ import '@/util/filters';
 import '@/util/directives';
 import 'sysComponents/custom_components/global/install';
 import './icons';
+import VCharts from 'v-charts';
 import dragula from 'dragula';
 import wsCache from '@/util/webStorage';
 
@@ -29,6 +30,7 @@ Vue.prototype.$service = service;
 Vue.prototype.$util = util;
 Vue.prototype.$dragula = dragula;
 Vue.prototype.$wsCache = wsCache;
+Vue.use(VCharts);
 
 window.eventBus = new Vue(); // 注册全局事件对象
 
