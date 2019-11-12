@@ -1,33 +1,60 @@
-<!--角色详情页面-->
+<!--商品详情页面-->
 <template>
     <div>
-        <div class="content-title">角色详情</div>
+        <div class="content-title">商品详情</div>
         <div class="seperator-line"></div>
         <!--轮播信息-->
         <div class="detail-title-block">
-            <div class="channel-status shelve" v-if="roleInfo.visible">上架</div>
+            <div class="channel-status shelve" v-if="goodsInfo.visible">上架</div>
             <div class="channel-status un-shelve" v-else>下架</div>
             <div class="title">
-                <label>{{roleInfo.name}}</label>
+                <label>{{goodsInfo.name}}</label>
             </div>
             <div class="channel-time">
-                <div>创建于{{roleInfo.createdAt | formatDate('yyyy.MM.DD')}}</div>
-                <div>更新于{{roleInfo.updatedAt | formatDate('yyyy.MM.DD')}}</div>
+                <div>创建于{{goodsInfo.createdAt | formatDate('yyyy.MM.DD')}}</div>
+                <div>更新于{{goodsInfo.updatedAt | formatDate('yyyy.MM.DD')}}</div>
             </div>
         </div>
         <!--相关信息-->
         <div class="about-channel">
-            <svg-icon icon-class="role_placeholder"></svg-icon>
+            <svg-icon icon-class="goods_placeholder"></svg-icon>
             <div class="info-container">
                 <div>
                     <ul class="info-list">
-                        <li><span>名称：</span><label>{{roleInfo.roleName}}</label></li>
-                        <li><span>描述：</span><label>{{roleInfo.roleDesc}}</label></li>
+                        <li><span>价格：</span><label>{{goodsInfo.price/100}}元</label></li>
+                        <li><span>时长：</span><label>{{goodsInfo.validityDays | getGoodsDuration}}</label></li>
+                        <li><span>描述：</span><label>{{goodsInfo.description}}</label></li>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="seperator-line"></div>
+        <div class="area-container">
+            <h4 class="content-sub-title">
+                产品列表&nbsp;&nbsp;
+                <span v-if="goodsInfo.productList.length > 0">{{goodsInfo.productList.length}}个</span>
+                <span v-if="goodsInfo.productList.length <= 0" class="toggle-btn disabled">
+                    展开
+                    <i class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
+                </span>
+                <span v-if="goodsInfo.productList.length > 0" @click="showProductList = !showProductList"
+                      :class="['toggle-btn', showProductList ? 'is-active' : '']">
+                    {{showProductList ? '收起' : '展开'}}
+                    <i v-if="showProductList" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i>
+                    <i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
+                </span>
+            </h4>
+            <ul v-if="showProductList" class="search-list clearfix">
+                <li v-for="(item, index) in goodsInfo.productList" :key="index" :class="['search-item']">
+                    <div class="wrapper">
+                        <span class="index">{{index + 1}}</span>
+                        <span class="search-name my-ellipsis">{{item.name}}</span>
+                        <span v-if="item.name.length > 11" class="ellipsis-content">{{item.name}}</span>
+                    </div>
+                </li>
+            </ul>
+            <div v-if="goodsInfo.productList.length > 0" class="seperator-line"></div>
+        </div>
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="editInfo">编辑</el-button>
             <el-button class="btn-style-three" @click="toGoodsList" plain>返回列表</el-button>
@@ -42,12 +69,29 @@
         data() {
             return {
                 showProductList: true,
-                roleInfo: {
-                    roleName: '',
-                    roleDesc: '',
+                goodsInfo: {
+                    name: '',
+                    description: '',
+                    price: '',
+                    validityDays: '',
+                    productList: [],
                     visible: false
                 }
             };
+        },
+        filters: {
+            getGoodsDuration(days) {
+                switch (days) {
+                    case 30:
+                        return '一个月';
+                    case 90:
+                        return '三个月';
+                    case 180:
+                        return '半年';
+                    case 365:
+                        return '一年';
+                }
+            }
         },
         mounted() {
             this.init();
@@ -55,10 +99,10 @@
         methods: {
             init() {
                 this.$util.toggleFixedBtnContainer();
-                this.$service.getRoleDetail(this.$route.params.id).then(response => {
+                this.$service.getGoodsDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         for (let key in response.data) {
-                            this.roleInfo[key] = response.data[key];
+                            this.goodsInfo[key] = response.data[key];
                         }
                     }
                 });
@@ -66,13 +110,13 @@
             // 编辑轮播频道
             editInfo() {
                 this.$router.push({
-                    name: 'EditRole',
+                    name: 'EditGoods',
                     params: {id: this.$route.params.id}
                 });
             },
             toGoodsList() {
                 this.$router.push({
-                    name: 'RoleList'
+                    name: 'GoodsList'
                 });
             }
         }

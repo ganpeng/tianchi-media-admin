@@ -1,12 +1,12 @@
-<!--角色列表搜索参数设置组件-->
+<!--管理员列表搜索参数设置组件-->
 <template>
-    <div class="goods-search-container">
-        <div @keyup.enter="getRoleList" class="text-left filters-container">
+    <div class="admin-search-container">
+        <div @keyup.enter="getAdminList" class="text-left filters-container">
             <el-form :inline="true" class="filter-form">
                 <el-form-item>
                     <el-input
                         v-model="listQueryParams.keyword"
-                        @change="getRoleList(true)"
+                        @change="getAdminList(true)"
                         clearable
                         class="border-input"
                         placeholder="请输入需要查找的信息">
@@ -15,16 +15,46 @@
                 <el-form-item>
                     <el-button
                         class="btn-style-one"
-                        @click="getRoleList(false)"
+                        @click="getAdminList(false)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
                     </el-button>
                 </el-form-item>
+                <el-form-item label="部门">
+                    <el-select
+                        v-model="listQueryParams.departmentId"
+                        @change="getAdminList(true)"
+                        filterable
+                        clearable
+                        placeholder="全部">
+                        <el-option
+                            v-for="item in departmentOptions"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="角色">
+                    <el-select
+                        v-model="listQueryParams.roleId"
+                        @change="getAdminList(true)"
+                        filterable
+                        clearable
+                        placeholder="全部">
+                        <el-option
+                            v-for="item in roleOptions"
+                            :key="item.id"
+                            :label="item.roleName"
+                            :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="状态">
                     <el-select
                         v-model="listQueryParams.visible"
-                        @change="getRoleList(true)"
+                        @change="getAdminList(true)"
                         clearable
                         placeholder="全部">
                         <el-option
@@ -52,13 +82,19 @@
 <script>
 
     export default {
-        name: 'RoleFilterParams',
+        name: 'AdminFilterParams',
         data() {
             return {
+                moreFilters: false,
                 listQueryParams: {
                     keyword: '',
+                    departmentId: '',
+                    roleId: '',
                     visible: ''
                 },
+                departmentOptions: [],
+                roleOptions: [],
+                createRangeTime: [],
                 visibleOptions: [{
                     value: true,
                     label: '已启用'
@@ -73,19 +109,37 @@
         },
         methods: {
             init() {
+                this.$service.getDepartmentList({
+                    pageNum: 1,
+                    pageSize: 10000
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.departmentOptions = response.data.list;
+                    }
+                });
+                this.$service.getRoleList({
+                    pageNum: 1,
+                    pageSize: 10000
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.roleOptions = response.data.list;
+                    }
+                });
             },
             initFilterParams(params) {
-                this.listQueryParams.visible = params.visible !== '' ? params.visible : '';
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
+                this.listQueryParams.departmentId = params.departmentId ? params.departmentId : '';
+                this.listQueryParams.roleId = params.roleId ? params.roleId : '';
+                this.listQueryParams.visible = params.visible !== '' ? params.visible : '';
             },
-            getRoleList(isReset) {
-                this.$emit('getRoleList', this.listQueryParams, isReset);
+            getAdminList(isReset) {
+                this.$emit('getAdminList', this.listQueryParams, isReset);
             },
             clearFilters() {
                 for (let key in this.listQueryParams) {
                     this.listQueryParams[key] = '';
                 }
-                this.getRoleList(true);
+                this.getAdminList(true);
             }
         }
     };
@@ -93,7 +147,7 @@
 
 <style lang="scss" scoped>
 
-    .goods-search-container {
+    .admin-search-container {
         padding-bottom: 20px;
         border-bottom: 1px solid #252D3F;
         .filters-container {

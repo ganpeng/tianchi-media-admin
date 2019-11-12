@@ -35,12 +35,16 @@
                         <span class="value">{{adminInfo.mobile | padEmpty}}</span>
                     </div>
                     <div class="attribute-item">
-                        <label class="item-label">固话:</label>
-                        <span class="value">{{adminInfo.telephone | padEmpty}}</span>
+                        <label class="item-label">部门:</label>
+                        <span class="value">{{adminInfo.departmentList | jsonJoin('name')}}</span>
                     </div>
                     <div class="attribute-item">
-                        <label class="item-label">最后登录:</label>
-                        <span class="value">{{adminInfo.lastLoginAt}}</span>
+                        <label class="item-label">角色:</label>
+                        <span class="value">{{adminInfo.roleList[0].roleName}}</span>
+                    </div>
+                    <div class="attribute-item">
+                        <label class="item-label">备注:</label>
+                        <span class="value">{{adminInfo.remark}}</span>
                     </div>
                 </div>
             </div>
@@ -59,10 +63,10 @@
                     name: '',
                     email: '',
                     mobile: '',
-                    telephone: '',
+                    departmentList: [],
+                    roleList: [{}],
                     createdAt: '',
-                    status: 'NORMAL',
-                    imageUrl: ''
+                    status: 'NORMAL'
                 }
             };
         },
@@ -96,14 +100,11 @@
     };
 </script>
 <style lang="scss" scoped>
-.attributes {
-    .attribute-item {
-        &:last-child {
-            margin-top: 70px;
-        }
-        .item-label {
-            width: 80px;
+    .attributes {
+        .attribute-item {
+            .item-label {
+                width: 80px;
+            }
         }
     }
-}
 </style>
