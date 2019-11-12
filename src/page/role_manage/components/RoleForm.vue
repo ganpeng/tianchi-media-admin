@@ -47,13 +47,6 @@
                 </el-tree>
             </el-form-item>
         </el-form>
-        <div class="buttons">
-            <el-button @click="getCheckedNodes">通过 node 获取</el-button>
-            <el-button @click="getCheckedKeys">通过 key 获取</el-button>
-            <el-button @click="setCheckedNodes">通过 node 设置</el-button>
-            <el-button @click="setCheckedKeys">通过 key 设置</el-button>
-            <el-button @click="resetChecked">清空</el-button>
-        </div>
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="saveRoleInfo" :loading="isLoading">保存</el-button>
             <el-button class="btn-style-three" @click="toRoleList" plain>返回列表</el-button>
@@ -140,27 +133,6 @@
             this.init();
         },
         methods: {
-            getCheckedNodes() {
-                console.log(this.$refs.authorityTree.getCheckedNodes());
-            },
-            getCheckedKeys() {
-                console.log(this.$refs.authorityTree.getCheckedKeys());
-            },
-            setCheckedNodes() {
-                this.$refs.authorityTree.setCheckedNodes([{
-                    id: 5,
-                    label: '二级 2-1'
-                }, {
-                    id: 9,
-                    label: '三级 1-1-1'
-                }]);
-            },
-            setCheckedKeys() {
-                this.$refs.authorityTree.setCheckedKeys([3]);
-            },
-            resetChecked() {
-                this.$refs.authorityTree.setCheckedKeys([]);
-            },
             init() {
                 this.$util.toggleFixedBtnContainer();
                 this.$service.getAthorityTree().then(response => {
@@ -178,8 +150,12 @@
                         for (let key in response.data) {
                             this.roleInfo[key] = response.data[key];
                         }
+                        let idList = [];
+                        this.roleInfo.resourceList.map(role => {
+                            idList.push(role.id);
+                        });
                         this.$nextTick(function () {
-                            this.$refs.authorityTree.setCheckedNodes(this.roleInfo.treeResourceList);
+                            this.$refs.authorityTree.setCheckedKeys(idList);
                         });
                     }
                 });

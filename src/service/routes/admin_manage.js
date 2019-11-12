@@ -10,8 +10,8 @@ import util from '../../util/extend';
 /**
  * 添加平台管理员
  */
-export const createAdmin = ({email, mobile, name}) => {
-    return service.post('/v1/admin', {email, mobile, name});
+export const createAdmin = ({email, mobile, name, remark, departmentList, roleList}) => {
+    return service.post('/v1/admin', {email, mobile, name, remark, departmentList, roleList});
 };
 
 /**
@@ -62,8 +62,8 @@ export const updateAdminSelfPassword = ({password, newPassword}) => {
 /**
  * 修改平台管理员信息
  */
-export const updateAdminInfo = ({id, email, telephone, mobile, name}) => {
-    return service.put(util.format('/v1/admin/{0}', id), {email, telephone, mobile, name});
+export const updateAdminInfo = ({id, email, mobile, name, remark, departmentList, roleList}) => {
+    return service.put(util.format('/v1/admin/{0}', id), {id, email, mobile, name, remark, departmentList, roleList});
 };
 
 /**

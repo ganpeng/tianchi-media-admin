@@ -1,0 +1,206 @@
+<!--管理员列表项组件-->
+<template>
+    <div>
+        <el-table
+            :data="adminList"
+            border
+            style="width: 100%">
+            <el-table-column
+                align="center"
+                prop="id"
+                width="120px"
+                label="编号">
+            </el-table-column>
+            <el-table-column
+                align="center"
+                prop="name"
+                min-width="220px"
+                label="姓名">
+                <template slot-scope="scope">
+                <span @click="toAdminDetail(scope.row)" class="ellipsis four name">
+                    {{scope.row.name}}
+                </span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                prop="email"
+                min-width="130px"
+                label="邮箱">
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="140px"
+                prop="mobile"
+                label="手机">
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="140px"
+                prop="department"
+                label="部门">
+                <template slot-scope="scope">
+                    {{scope.row.departmentList | jsonJoin('name')}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="140px"
+                prop="roleName"
+                label="角色">
+                <template slot-scope="scope">
+                    {{scope.row.roleList[0].roleName}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                label="状态">
+                <template slot-scope="scope">
+                    <input
+                        class="my-switch switch-anim"
+                        type="checkbox"
+                        v-if="scope.row.status === 'NORMAL'"
+                        :checked="scope.row.status === 'NORMAL'"
+                        @click.prevent="disabledConfirm(scope.row.id, scope.row.status)"/>
+                    <input
+                        class="my-switch switch-anim"
+                        type="checkbox"
+                        v-if="scope.row.status !== 'NORMAL'"
+                        :checked="scope.row.status === 'NORMAL'"
+                        @click.prevent="recoverConfirm(scope.row.id, scope.row.status)"/>
+                    <i v-if="scope.row.status === 'NORMAL'" class="on-the-shelf">正常</i>
+                    <i v-else class="off-the-shelf">禁用</i>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="140px"
+                label="创建时间">
+                <template slot-scope="scope">
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="140px"
+                label="更新时间">
+                <template slot-scope="scope">
+                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                label="操作"
+                width="90px">
+                <template slot-scope="scope">
+                    <div class="operator-btn-wrapper">
+                        <span class="btn-text" @click="editAdmin(scope.row)">编辑</span>
+                        <span class="text-danger" @click="editAdmin(scope.row)">删除</span>
+                        <div class="text-danger" @click="editAdmin(scope.row)">重置密码</div>
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+</template>
+
+<script>
+
+    export default {
+        name: 'AdminOperateTable',
+        props: {
+            adminList: {
+                type: Array,
+                default: function () {
+                    return [];
+                }
+            }
+        },
+        data() {
+            return {
+                currentAdminList: []
+            };
+        },
+        methods: {
+            // 禁用确认
+            disabledConfirm(userId, userStatus) {
+                this.$confirm('此操作将禁用该账号, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.setAdminStatus(userId, userStatus);
+                }).catch(() => {
+                });
+            },
+            // 恢复确认
+            recoverConfirm(userId, userStatus) {
+                this.$confirm('此操作将恢复该账号, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.setAdminStatus(userId, userStatus);
+                }).catch(() => {
+                });
+            },
+            // 禁用或恢复管理员账号状态
+            setAdminStatus(userId, userStatus) {
+                let status = userStatus === 'NORMAL' ? 'FORBIDDEN' : 'NORMAL';
+                this.$service.setAdminStatus({id: userId, status: status}).then(response => {
+                    if (response && response.code === 0) {
+                        if (userStatus === 'NORMAL') {
+                            this.$message({
+                                type: 'success',
+                                message: '禁用成功!'
+                            });
+                        } else {
+                            this.$message({
+                                type: 'success',
+                                message: '恢复成功!'
+                            });
+                        }
+                        this.$emit('getAdminList');
+                    }
+                });
+            },
+            // 查看详情
+            toAdminDetail(item) {
+                this.$router.push({
+                    name: 'AdminDetail',
+                    params: {id: item.id}
+                });
+            },
+            editAdmin(item) {
+                this.$router.push({
+                    name: 'EditAdmin',
+                    params: {id: item.id}
+                });
+            }
+        }
+    };
+</script>
+
+<style lang="scss" scoped>
+
+    .operator-btn-wrapper {
+        span {
+            margin-left: 0px;
+        }
+    }
+
+    .admin-list {
+        ul {
+            text-align: left;
+            li {
+                display: inline-block;
+                margin-bottom: 10px;
+                .el-tag {
+                    border: none;
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+
+</style>
