@@ -3,8 +3,14 @@
     <div>
         <el-table
             :data="adminList"
+            @selection-change="handleSelectionChange"
             border
             style="width: 100%">
+            <el-table-column
+                type="selection"
+                align="center"
+                width="60px">
+            </el-table-column>
             <el-table-column
                 align="center"
                 prop="id"
@@ -49,7 +55,7 @@
                 prop="roleName"
                 label="角色">
                 <template slot-scope="scope">
-                    {{scope.row.roleList[0].roleName}}
+                    {{scope.row.roleList[0] && scope.row.roleList[0].roleName}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -95,8 +101,8 @@
                 <template slot-scope="scope">
                     <div class="operator-btn-wrapper">
                         <span class="btn-text" @click="editAdmin(scope.row)">编辑</span>
-                        <span class="text-danger" @click="editAdmin(scope.row)">删除</span>
-                        <div class="text-danger" @click="editAdmin(scope.row)">重置密码</div>
+                        <span class="btn-text text-danger" @click="removeAdmin(scope.row)">删除</span>
+                        <span class="btn-text text-danger" @click="resetPassword(scope.row)">重置密码</span>
                     </div>
                 </template>
             </el-table-column>
@@ -118,10 +124,19 @@
         },
         data() {
             return {
-                currentAdminList: []
+                multipleSelection: []
             };
         },
         methods: {
+            // 勾选专题
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+                if (this.multipleSelection.length === 0) {
+                    this.$emit('setBatchDisabledStatus', true);
+                } else {
+                    this.$emit('setBatchDisabledStatus', false);
+                }
+            },
             // 禁用确认
             disabledConfirm(userId, userStatus) {
                 this.$confirm('此操作将禁用该账号, 是否继续?', '提示', {
@@ -164,6 +179,31 @@
                     }
                 });
             },
+            batchUpdateStatus(visible) {
+                if (!this.multipleSelection || this.multipleSelection.length === 0) {
+                    this.$message.warning('请先选择管理员');
+                    return;
+                }
+                this.$confirm('此操作将批量' + (visible ? '启用' : '禁用') + '管理员, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let idList = [];
+                    this.multipleSelection.map(item => {
+                        idList.push(item.id);
+                    });
+                    let status = visible ? 'NORMAL' : 'FORBIDDEN';
+                    this.$service.batchUpdateAdminStatus({idList, status}).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('管理员批量' + (visible ? '启用' : '禁用') + '成功!');
+                            this.$emit('getAdminList');
+                            this.multipleSelection = [];
+                            this.$emit('setBatchDisabledStatus', true);
+                        }
+                    });
+                });
+            },
             // 查看详情
             toAdminDetail(item) {
                 this.$router.push({
@@ -176,6 +216,39 @@
                     name: 'EditAdmin',
                     params: {id: item.id}
                 });
+            },
+            removeAdmin(item) {
+                if (item.status === 'NORMAL') {
+                    this.$message.warning('当前专题处于启用状态，请禁用之后再进行删除操作');
+                    return;
+                }
+                this.$confirm('此操作将删除' + item.name + '管理员, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$service.removeAdmin(item.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('"' + item.name + '"' + '管理员删除成功!');
+                            this.$emit('getAdminList');
+                            this.multipleSelection = [];
+                            this.$emit('setBatchDisabledStatus', true);
+                        }
+                    });
+                });
+            },
+            resetPassword(item) {
+                this.$confirm('此操作将重置' + item.name + '管理员的密码, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$service.resetAdminPassword(item.id).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('"' + item.name + '"' + '管理员密码重置成功!');
+                        }
+                    });
+                });
             }
         }
     };
@@ -186,20 +259,6 @@
     .operator-btn-wrapper {
         span {
             margin-left: 0px;
-        }
-    }
-
-    .admin-list {
-        ul {
-            text-align: left;
-            li {
-                display: inline-block;
-                margin-bottom: 10px;
-                .el-tag {
-                    border: none;
-                    margin-right: 10px;
-                }
-            }
         }
     }
 

@@ -8,7 +8,24 @@
         </admin-filter-params>
         <div class="content-title">管理员列表</div>
         <div class="table-operator-field">
-            <div></div>
+            <div>
+                <el-dropdown
+                    trigger="hover"
+                    class="my-dropdown"
+                    :class="{'is-disabled':isDisabled}">
+                            <span class="el-dropdown-link">
+                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>
+                            <span @click="batchShelve">启用选中</span>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <span @click="batchUnShelve">禁用选中</span>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </div>
             <el-button
                 class="btn-style-two contain-svg-icon"
                 @click="createAdmin">
@@ -19,7 +36,8 @@
         <admin-operate-table
             ref="adminOperateTable"
             :adminList="adminList"
-            v-on:getAdminList="getAdminList">
+            v-on:getAdminList="getAdminList"
+            v-on:setBatchDisabledStatus="setBatchDisabledStatus">
         </admin-operate-table>
         <el-pagination
             @size-change="handleSizeChange"
@@ -30,6 +48,24 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
         </el-pagination>
+        <div class="text-left table-dropdow-box">
+            <el-dropdown
+                trigger="hover"
+                class="my-dropdown"
+                :class="{'is-disabled':isDisabled}">
+            <span class="el-dropdown-link">
+                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item>
+                        <span @click="batchShelve">启用选中</span>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                        <span @click="batchUnShelve">禁用选中</span>
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </div>
     </div>
 </template>
 
@@ -50,7 +86,8 @@
                     pageSize: 10
                 },
                 total: 0,
-                adminList: []
+                adminList: [],
+                isDisabled: true
             };
         },
         mounted() {
@@ -64,6 +101,9 @@
                 }
                 this.getAdminList();
             },
+            setBatchDisabledStatus(isDisabled) {
+                this.isDisabled = isDisabled;
+            },
             handleSizeChange(pageSize) {
                 this.listQueryParams.pageSize = pageSize;
                 this.getAdminList();
@@ -71,6 +111,14 @@
             handleCurrentChange(pageNum) {
                 this.listQueryParams.pageNum = pageNum;
                 this.getAdminList();
+            },
+            // 批量上架
+            batchShelve() {
+                this.$refs.adminOperateTable.batchUpdateStatus(true);
+            },
+            // 批量下架
+            batchUnShelve() {
+                this.$refs.adminOperateTable.batchUpdateStatus(false);
             },
             getAdminList(searchParams, isReset) {
                 // 设置请求参数

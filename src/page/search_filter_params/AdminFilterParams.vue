@@ -53,12 +53,12 @@
                 </el-form-item>
                 <el-form-item label="状态">
                     <el-select
-                        v-model="listQueryParams.visible"
+                        v-model="listQueryParams.status"
                         @change="getAdminList(true)"
                         clearable
                         placeholder="全部">
                         <el-option
-                            v-for="item in visibleOptions"
+                            v-for="item in statusOptions"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -90,16 +90,16 @@
                     keyword: '',
                     departmentId: '',
                     roleId: '',
-                    visible: ''
+                    status: ''
                 },
                 departmentOptions: [],
                 roleOptions: [],
                 createRangeTime: [],
-                visibleOptions: [{
-                    value: true,
+                statusOptions: [{
+                    value: 'NORMAL',
                     label: '已启用'
                 }, {
-                    value: false,
+                    value: 'FORBIDDEN',
                     label: '已禁用'
                 }]
             };
@@ -130,7 +130,7 @@
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
                 this.listQueryParams.departmentId = params.departmentId ? params.departmentId : '';
                 this.listQueryParams.roleId = params.roleId ? params.roleId : '';
-                this.listQueryParams.visible = params.visible !== '' ? params.visible : '';
+                this.listQueryParams.status = params.status ? params.status : '';
             },
             getAdminList(isReset) {
                 this.$emit('getAdminList', this.listQueryParams, isReset);

@@ -49,14 +49,22 @@
                 </div>
             </div>
         </div>
+        <div class="seperator-line" id="divider"></div>
+        <admin-login-table></admin-login-table>
         <div class="fixed-btn-container">
             <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
         </div>
     </div>
 </template>
+
 <script>
+    import AdminLoginTable from './components/AdminLoginTable';
+
     export default {
         name: 'AdminDetail',
+        components: {
+            AdminLoginTable
+        },
         data() {
             return {
                 adminInfo: {
@@ -100,11 +108,16 @@
     };
 </script>
 <style lang="scss" scoped>
+
     .attributes {
         .attribute-item {
             .item-label {
                 width: 80px;
             }
         }
+    }
+
+    #divider {
+        margin: 50px 0px;
     }
 </style>
