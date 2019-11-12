@@ -20,7 +20,8 @@ const defaultVersion = {
     districtCodeList: [], // 所属区域
     clientVersionStatsList: [],
     //  dev_v2.5 新增
-    updateType: ''
+    UpdateAccord: '', //  CA 或者 SN
+    batchList: []
 };
 
 const defaultSearchFields = {
@@ -113,6 +114,9 @@ const mutations = {
     updateVersion(state, payload) {
         let {key, value} = payload;
         state.version[key] = value;
+        if (key === 'UpdateAccord' && value === '') {
+            state.version.districtCodeList = [];
+        }
     },
     resetVersion(state) {
         state.version = _.cloneDeep(defaultVersion);
@@ -141,6 +145,16 @@ const mutations = {
         });
         let flag = checkCompanyListIsAll(state.version.districtCodeList, state.filialeList);
         state.version.allCompanyUpdate = flag;
+    },
+    //  dev_v2.5 新增逻辑
+    addBatch(state, payload) {
+        let {codeList} = payload;
+        state.version.batchList.push({codeList, createdAt: '', releaseStatus: 'DRAFT'});
+    },
+    replaceBatch(state, payload) {
+        let {index, codeList} = payload;
+        _.set(state.version.batchList, `${index}`, {
+            codeList, createdAt: '', releaseStatus: 'DRAFT'});
     }
 };
 
@@ -152,6 +166,17 @@ function checkCompanyListIsAll(source, target) {
 }
 
 function formatVersion(version) {
+    let versionCopy = _.cloneDeep(version);
+
+    if (!versionCopy.UpdateAccord) {
+        delete versionCopy.UpdateAccord;
+        delete versionCopy.batchList;
+    }
+
+    if (!versionCopy.hardwareType) {
+        delete versionCopy.hardwareType;
+    }
+
     return Object.assign({}, version, {
         forced: version.forced === 1
     });
@@ -163,15 +188,32 @@ const actions = {
             if (!isLoading) {
                 isLoading = true;
                 let version = _.cloneDeep(formatVersion(state.version));
-                if (version.allCompanyUpdate) {
-                    delete version.districtCodeList;
-                } else {
-                    version.districtCodeList = version.districtCodeList.map((item) => item.code);
-                }
+                // if (version.allCompanyUpdate) {
+                //     delete version.districtCodeList;
+                // } else {
+                //     version.districtCodeList = version.districtCodeList.map((item) => item.code);
+                // }
                 if (version.productType === 'TV_LAUNCHER') {
                     delete version.hardwareType;
                 }
                 let res = await service.postVersion(version);
+                isLoading = false;
+                return res;
+            }
+        } catch (err) {
+            console.log(err);
+            isLoading = false;
+        }
+    },
+    async newPostVersion({commit, state}) {
+        try {
+            if (!isLoading) {
+                isLoading = true;
+                let version = _.cloneDeep(formatVersion(state.version));
+                if (version.productType === 'TV_LAUNCHER') {
+                    delete version.hardwareType;
+                }
+                let res = await service.newPostVersion(version);
                 isLoading = false;
                 return res;
             }
@@ -208,6 +250,14 @@ const actions = {
             if (res && res.code === 0) {
                 commit('setVersion', {version: Object.assign({districtCodeList: [], clientVersionStatsList: []}, res.data)});
             }
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    async deleteVersionById({commit, state}, id) {
+        try {
+            let res = await service.deleteVersionById(id);
+            return res;
         } catch (err) {
             console.log(err);
         }

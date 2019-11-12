@@ -174,6 +174,14 @@
                             {{scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
                         </template>
                     </el-table-column>
+                    <el-table-column align="center" width="120px" label="操作">
+                        <template slot-scope="scope">
+                            <div class="operator-btn-wrapper">
+                                <span class="btn-text" @click="editVersion(scope.row.id)">编辑</span>
+                                <span class="btn-text text-danger" @click="deleteVersion(scope.row.id)">删除</span>
+                            </div>
+                        </template>
+                    </el-table-column>
                 </el-table>
             </div>
         </div>
@@ -248,7 +256,8 @@ export default {
         ...mapActions({
             postVersion: 'version/postVersion',
             getVersionList: 'version/getVersionList',
-            getFilialeList: 'channel/getFilialeList'
+            getFilialeList: 'channel/getFilialeList',
+            deleteVersionById: 'version/deleteVersionById'
         }),
         createVersion() {
             this.$router.push({name: 'CreateVersion'});
@@ -322,6 +331,28 @@ export default {
         },
         convertFileSize(size) {
             return this.$util.convertFileSize(size);
+        },
+        //  dev_v2.5 新增
+        editVersion(id) {
+        },
+        async deleteVersion(id) {
+            try {
+                let confirm = await this.$confirm(`您确定要删除当前版本吗, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                });
+                if (confirm) {
+                    let res = await this.deleteVersionById(id);
+                    if (res && res.code === 0) {
+                        this.getVersionList();
+                    } else {
+                        this.$message.error('删除失败');
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
         }
     }
 };
