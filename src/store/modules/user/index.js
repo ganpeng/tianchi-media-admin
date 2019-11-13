@@ -8,7 +8,8 @@ import init from '@/util/init';
 
 const state = {
     name: '',
-    token: ''
+    token: '',
+    reset: ''
 };
 
 const getters = {
@@ -33,6 +34,14 @@ const mutations = {
             Cookies.remove('token');
         }
         state.token = data;
+    },
+    setReset(state, data) {
+        if (data) {
+            Cookies.set('reset', data);
+        } else {
+            Cookies.remove('reset');
+        }
+        state.reset = data;
     }
 };
 
@@ -49,13 +58,13 @@ const actions = {
                     // 设置user模块
                     commit('setName', data.name);
                     commit('setToken', data.token);
+                    commit('setReset', data.reset);
                     // 获取区域列表
-                    service.fetchAreaList()
-                        .then((res) => {
-                            if (res && res.code === 0) {
-                                wsCache.localStorage.set('areaList', res.data);
-                            }
-                        });
+                    service.fetchAreaList().then((res) => {
+                        if (res && res.code === 0) {
+                            wsCache.localStorage.set('areaList', res.data);
+                        }
+                    });
                     // 当前环境的域名
                     let currentDomain = window.location.protocol + '//' + window.location.host;
                     // 设置图片的根路径为当前地址域名
@@ -84,6 +93,7 @@ const actions = {
         // 清除cookie,跳转到登录页面
         commit('setName', '');
         commit('setToken', '');
+        commit('setReset', '');
         wsCache.localStorage.clearAll();
         store.commit('layout/setState', {navBarList: []});
         //  清除上传视频的所有数据
@@ -101,6 +111,13 @@ const actions = {
         return new Promise((resolve) => {
             commit('setName', userInfo.name);
             commit('setToken', userInfo.token);
+            commit('setReset', userInfo.reset);
+            resolve();
+        });
+    },
+    setReset({commit}, resetValue) {
+        return new Promise((resolve) => {
+            commit('setReset', resetValue);
             resolve();
         });
     }

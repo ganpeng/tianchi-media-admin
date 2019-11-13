@@ -3,10 +3,13 @@
     <div>
         <div class="content-title">存储空间</div>
         <div class="text-center">
-            <v-chart :options="serverData"/>
+            <ve-pie :data="chartDataAll" :legend="legend"></ve-pie>
+            <div>剩余空间还可存储 {{remainHour}} 小时的视频</div>
+            <div>注：按照 3.6 GB/小时计算</div>
         </div>
         <div class="text-center">
-            <ve-histogram :data="chartData" :settings="chartSettings"></ve-histogram>
+            <ve-histogram :data="chartData" :settings="chartSettings" :textStyle="textStyle"
+                          :legend="legend"></ve-histogram>
         </div>
     </div>
 </template>
@@ -25,54 +28,38 @@
                 stack: {'服务器': ['已用空间', '可用空间', '预留空间']}
             };
             return {
-                serverList: [],
-                serverData: {
-                    title: {
-                        text: '所有存储空间',
-                        x: 'center'
-                    },
-                    tooltip: {
-                        trigger: 'item',
-                        formatter: '{a} <br/>{b} : {c} ({d}%)'
-                    },
-                    legend: {
-                        orient: 'vertical',
-                        left: 'left',
-                        data: ['已用空间', '可用空间']
-                    },
-                    label: {
-                        fontSize: 14
-                    },
-                    series: [
-                        {
-                            name: '所有存储空间',
-                            type: 'pie',
-                            radius: '55%',
-                            center: ['50%', '50%'],
-                            color: ['rgb(0,98,196)', 'rgb(116,194,146)'],
-                            data: [
-                                {value: 0, name: '已用空间'},
-                                {value: 0, name: '可用空间'}
-                            ],
-                            itemStyle: {
-                                emphasis: {
-                                    shadowBlur: 10,
-                                    shadowOffsetX: 0,
-                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                                }
-                            }
+                xAxis: {
+                    axisLine: {
+                        lineStyle: {
+                            width: 50
                         }
-                    ]
+                    },
+                    axisTick: {
+                        lineStyle: {
+                            width: 50
+                        }
+                    }
                 },
+                textStyle: {
+                    color: '#fff'
+                },
+                legend: {
+                    textStyle: {
+                        color: '#fff'
+                    }
+                },
+                remainHour: 0,
+                serverList: [],
                 chartData: {
                     columns: ['名称', '已用空间', '可用空间', '预留空间'],
+                    rows: []
+                },
+                chartDataAll: {
+                    columns: ['空间', '大小'],
                     rows: [
-                        {'名称': '1/1', '已用空间': 1393, '可用空间': 1093, '预留空间': 2000},
-                        {'名称': '1/2', '已用空间': 3530, '可用空间': 3230, '预留空间': 0.26},
-                        {'名称': '1/3', '已用空间': 2923, '可用空间': 2623, '预留空间': 0.76},
-                        {'名称': '1/4', '已用空间': 1723, '可用空间': 1423, '预留空间': 0.49},
-                        {'名称': '1/5', '已用空间': 3792, '可用空间': 3492, '预留空间': 0.323},
-                        {'名称': '1/6', '已用空间': 4593, '可用空间': 4293, '预留空间': 0.78}
+                        {'空间': '已用空间', '大小': 1393},
+                        {'空间': '可用空间', '大小': 3530},
+                        {'空间': '预留空间', '大小': 2923}
                     ]
                 }
             };
@@ -84,11 +71,26 @@
             init() {
                 this.$service.getServerSpace().then(response => {
                     if (response && response.code === 0) {
-                        this.serverList = response.data.serverResourcesVoList;
-                        this.serverData.series[0].data[0].value = response.data.used;
-                        this.serverData.series[0].data[1].value = response.data.free;
+                        this.serverList = response.data.serverResourcesList;
+                        this.remainHour = response.data.remainHour;
+                        this.chartDataAll.rows[0]['大小'] = this.convertToGB(response.data.used);
+                        this.chartDataAll.rows[1]['大小'] = this.convertToGB(response.data.free);
+                        this.chartDataAll.rows[2]['大小'] = this.convertToGB(response.data.reserve);
+                        let data = [];
+                        this.serverList.map(item => {
+                            data.push({
+                                '名称': item.hostname,
+                                '已用空间': this.convertToGB(item.value.used),
+                                '可用空间': this.convertToGB(item.value.free),
+                                '预留空间': this.convertToGB(item.value.reserve)
+                            });
+                        });
+                        this.chartData.rows = data;
                     }
                 });
+            },
+            convertToGB(value) {
+                return (value / 1024 / 1024 / 1024).toFixed(0);
             }
         }
     };
@@ -103,13 +105,13 @@
     }
 
     .ve-histogram {
-        background-color: white;
+        margin-top: 80px;
         display: inline-block;
         width: 600px !important;
-        height: 400px;
+        height: 600px !important;
         * {
             width: 600px !important;
-            height: 400px;
+            height: 600px !important;
         }
     }
 
