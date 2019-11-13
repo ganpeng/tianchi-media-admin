@@ -49,3 +49,10 @@ export const getClientErrorLogList = (params) => {
 export const deleteVersionById = (id) => {
     return service.delete(`/v1/sys/client-version?id=${id}`);
 };
+
+/**
+ * 发布，撤回
+ */
+export const launchVersion = (id, releaseStatus) => {
+    return service.put(`/v1/sys/client-version/launch?id=${id}&releaseStatus=${releaseStatus}`);
+};

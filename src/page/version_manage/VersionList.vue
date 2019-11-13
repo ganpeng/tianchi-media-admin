@@ -153,20 +153,28 @@
                             {{hardwareType(scope.row.hardwareType)}}
                         </template>
                     </el-table-column>
+                    <!--
                     <el-table-column align="center" width="120px" label="升级包下载">
+                        <template slot-scope="scope">
+                        </template>
+                    </el-table-column>
+                    -->
+                    <el-table-column align="center" width="140px" label="升级包">
                         <template slot-scope="scope">
                             <a v-if="scope.row.fullPackageUri" class="text-primary"
                                :href="packageUrl(scope.row.fullPackageUri)">{{scope.row.version}}</a>
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="升级包体积">
-                        <template slot-scope="scope">
+                            <br />
                             {{convertFileSize(scope.row.packageSize)}}
                         </template>
                     </el-table-column>
-                    <el-table-column sortable align="center" prop="stbCount" label="设备数">
+                    <el-table-column sortable align="center" width="120px" prop="stbCount" label="设备数">
                         <template slot-scope="scope">
                             {{scope.row.stbCount}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="状态">
+                        <template slot-scope="scope">
+                            {{releaseStatus(scope.row.releaseStatus)}}
                         </template>
                     </el-table-column>
                     <el-table-column width="120px" align="center" label="发布时间" prop="releaseAt">
@@ -174,11 +182,12 @@
                             {{scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" width="120px" label="操作">
+                    <el-table-column align="center" width="190px" label="操作">
                         <template slot-scope="scope">
                             <div class="operator-btn-wrapper">
                                 <span class="btn-text" @click="editVersion(scope.row.id)">编辑</span>
-                                <span class="btn-text text-danger" @click="deleteVersion(scope.row.id)">删除</span>
+                                <span v-if="scope.row.releaseStatus === 'PRE_RELEASED'" class="btn-text" @click="releaseVersion(scope.row.id)">发布</span>
+                                <span v-if="scope.row.releaseStatus === 'PRE_RELEASED'" class="btn-text text-danger" @click="deleteVersion(scope.row.id)">删除</span>
                             </div>
                         </template>
                     </el-table-column>
@@ -240,6 +249,20 @@ export default {
             } else {
                 return this.filialeList;
             }
+        },
+        releaseStatus() {
+            return (status) => {
+                switch (status) {
+                    case 'PRE_RELEASED':
+                        return '未发布';
+                    case 'RELEASED':
+                        return '已发布';
+                    case 'WITHDRAW':
+                        return '已撤回';
+                    default:
+                        return '';
+                }
+            };
         }
     },
     methods: {
@@ -334,6 +357,16 @@ export default {
         },
         //  dev_v2.5 新增
         editVersion(id) {
+        },
+        async releaseVersion(id) {
+            try {
+                let res = await this.$service.launchVersion(id, 'RELEASED');
+                if (res && res.code === 0) {
+                    this.getVersionList();
+                }
+            } catch (err) {
+                console.log(err);
+            }
         },
         async deleteVersion(id) {
             try {

@@ -83,13 +83,13 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="升级依据" prop="UpdateAccord">
+                    <el-form-item label="升级依据" prop="updateAccord">
                         <el-select
                             clearable
                             filterable
-                            :value="version.UpdateAccord"
+                            :value="version.updateAccord"
                             placeholder="请选择升级方式"
-                            @input="inputHandler($event, 'UpdateAccord')"
+                            @input="inputHandler($event, 'updateAccord')"
                         >
                             <el-option
                                 v-for="(item, index) in updateTypeOptions"
@@ -99,7 +99,7 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item v-if="version.UpdateAccord" label="升级范围文件" prop="districtCodeList">
+                    <el-form-item v-if="version.updateAccord" label="升级范围文件" prop="districtCodeList">
                         <div class="wrapper clearfix">
                             <div class="file float-left">
                                 <input

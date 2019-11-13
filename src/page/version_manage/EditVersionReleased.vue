@@ -5,7 +5,7 @@
 </template>
 <script>
 export default {
-    name: 'EditVersionRelease'
+    name: 'EditVersionReleased'
 };
 </script>
 <style lang="scss" scoped>
