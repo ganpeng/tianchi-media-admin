@@ -9,12 +9,16 @@ import init from '@/util/init';
 const state = {
     name: '',
     token: '',
-    reset: ''
+    reset: '',
+    roleList: []
 };
 
 const getters = {
     name(state) {
         return state.name;
+    },
+    roleList(state) {
+        return state.roleList;
     }
 };
 
@@ -42,6 +46,12 @@ const mutations = {
             Cookies.remove('reset');
         }
         state.reset = data;
+    },
+    setRoleList(state, data) {
+        if (data) {
+            wsCache.localStorage.set('roleList', data);
+        }
+        state.roleList = data;
     }
 };
 
@@ -59,6 +69,7 @@ const actions = {
                     commit('setName', data.name);
                     commit('setToken', data.token);
                     commit('setReset', data.reset);
+                    commit('setRoleList', data.roleList);
                     // 获取区域列表
                     service.fetchAreaList().then((res) => {
                         if (res && res.code === 0) {
@@ -112,6 +123,7 @@ const actions = {
             commit('setName', userInfo.name);
             commit('setToken', userInfo.token);
             commit('setReset', userInfo.reset);
+            commit('setRoleList', userInfo.roleList);
             resolve();
         });
     },

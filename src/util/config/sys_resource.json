@@ -1,0 +1,484 @@
+{
+    "RECORDS": [
+        {
+            "id": "134",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:advertiser:add",
+            "resource_name": "广告主添加",
+            "resource_url": "[/v1/ad/advertiser]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "广告主",
+            "secondary_menu": "广告管理"
+        },
+        {
+            "id": "135",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:advertiser:put",
+            "resource_name": "广告主编辑",
+            "resource_url": "[/v1/ad/advertiser]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "广告主",
+            "secondary_menu": "广告管理"
+        },
+        {
+            "id": "136",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:advertiser:delete",
+            "resource_name": "广告主删除",
+            "resource_url": "[/v1/ad/advertiser/{id}]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "广告主",
+            "secondary_menu": "广告管理"
+        },
+        {
+            "id": "137",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:generalAd:add",
+            "resource_name": "广告增加",
+            "resource_url": "[/v1/ad/general-ad]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "广告",
+            "secondary_menu": "广告管理"
+        },
+        {
+            "id": "138",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:generalAd:put",
+            "resource_name": "广告修改",
+            "resource_url": "[/v1/ad/general-ad/{id}]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "广告",
+            "secondary_menu": "广告管理"
+        },
+        {
+            "id": "139",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:generalAd:delete",
+            "resource_name": "广告删除",
+            "resource_url": "[/v1/ad/general-ad/{id}]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "广告",
+            "secondary_menu": "广告管理"
+        },
+        {
+            "id": "140",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:generalAd:visible",
+            "resource_name": "广告上下架",
+            "resource_url": "[/v1/ad/general-ad/{id}/visible]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "广告",
+            "secondary_menu": "广告管理"
+        },
+        {
+            "id": "141",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:commodity:add",
+            "resource_name": "商品添加",
+            "resource_url": "[/v1/commodity]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "商品管理",
+            "secondary_menu": "产品管理"
+        },
+        {
+            "id": "142",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:commodity:put",
+            "resource_name": "商品编辑",
+            "resource_url": "[/v1/commodity]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "商品管理",
+            "secondary_menu": "产品管理"
+        },
+        {
+            "id": "143",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:commodity:visible",
+            "resource_name": "商品上下架",
+            "resource_url": "[/v1/commodity/{id}]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "商品管理",
+            "secondary_menu": "产品管理"
+        },
+        {
+            "id": "144",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:product:add",
+            "resource_name": "产品添加",
+            "resource_url": "[/v1/product]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "产品管理",
+            "secondary_menu": "产品管理"
+        },
+        {
+            "id": "145",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:product:put",
+            "resource_name": "产品修改",
+            "resource_url": "[/v1/product/{id}]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "产品管理",
+            "secondary_menu": "产品管理"
+        },
+        {
+            "id": "146",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:figure:add",
+            "resource_name": "添加人物",
+            "resource_url": "[/v1/content/figure]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "147",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:figure:export",
+            "resource_name": "人物导出",
+            "resource_url": "[/v1/content/figure/excel]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "148",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:figure:put",
+            "resource_name": "人物修改",
+            "resource_url": "[/v1/content/figure/{id}]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "149",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:figure:delete",
+            "resource_name": "人物删除",
+            "resource_url": "[/v1/content/figure/{id}]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "150",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:figure:batchDelete",
+            "resource_name": "批量删除人物",
+            "resource_url": "[/v1/content/figure]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "151",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:figure:batchVisible",
+            "resource_name": "人物批量上下架",
+            "resource_url": "[/v1/content/figure/visible]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "152",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:figure:visible",
+            "resource_name": "人物上下架",
+            "resource_url": "[/v1/content/figure/{id}/visible]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "153",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:figure:import",
+            "resource_name": "人物批量导入",
+            "resource_url": "[/v1/content/figure/import]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "154",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:layoutBlock:add",
+            "resource_name": "模块添加",
+            "resource_url": "[/v1/content/layout-block]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "模块管理"
+        },
+        {
+            "id": "155",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:layoutBlock:put",
+            "resource_name": "模块编辑",
+            "resource_url": "[/v1/content/layout-block/{id}]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "模块管理"
+        },
+        {
+            "id": "156",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:layoutBlock:delete",
+            "resource_name": "模块删除",
+            "resource_url": "[/v1/content/layout-block/{id}]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "模块管理"
+        },
+        {
+            "id": "157",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:layout_block:put",
+            "resource_name": "标签修改",
+            "resource_url": "[/v1/content/mark]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "标签管理"
+        },
+        {
+            "id": "158",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:mark:add",
+            "resource_name": "模块标签",
+            "resource_url": "[/v1/content/mark]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "标签管理"
+        },
+        {
+            "id": "159",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:layout_block:delete",
+            "resource_name": "标签删除",
+            "resource_url": "[/v1/content/mark/{id}]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "标签管理"
+        },
+        {
+            "id": "160",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:navBar:add",
+            "resource_name": "栏目添加",
+            "resource_url": "[/v1/content/nav-bar]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "栏目管理"
+        },
+        {
+            "id": "161",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:navBar:put",
+            "resource_name": "栏目修改",
+            "resource_url": "[/v1/content/nav-bar]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "栏目管理"
+        },
+        {
+            "id": "162",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:programme:add",
+            "resource_name": "节目添加",
+            "resource_url": "[/v1/content/programme]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
+        },
+        {
+            "id": "163",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:programme:put",
+            "resource_name": "节目修改",
+            "resource_url": "[/v1/content/programme/{id}]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
+        },
+        {
+            "id": "164",
+            "created_at": "30/10/2019 15:08:52",
+            "permission": "content:programme:visible",
+            "resource_name": "节目上下架",
+            "resource_url": "[/v1/content/programme/{id}/visible]",
+            "updated_at": "30/10/2019 15:08:52",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
+        },
+        {
+            "id": "165",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:programme:batchVisible",
+            "resource_name": "节目批量上下加",
+            "resource_url": "[/v1/content/programme/visible]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
+        },
+        {
+            "id": "166",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:programme:delete",
+            "resource_name": "节目删除",
+            "resource_url": "[/v1/content/programme/{id}]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
+        },
+        {
+            "id": "167",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:programme:batchDelete",
+            "resource_name": "节目批量删除",
+            "resource_url": "[/v1/content/programme]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
+        },
+        {
+            "id": "168",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:subject:add",
+            "resource_name": "专题添加",
+            "resource_url": "[/v1/content/subject]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "内容管理",
+            "secondary_menu": "专题管理"
+        },
+        {
+            "id": "169",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:subject:patch",
+            "resource_name": "专题修改",
+            "resource_url": "[/v1/content/subject/{id}]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "内容管理",
+            "secondary_menu": "专题管理"
+        },
+        {
+            "id": "170",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:subject:visible",
+            "resource_name": "专题上下架",
+            "resource_url": "[/v1/content/subject/{id}/visible]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "内容管理",
+            "secondary_menu": "专题管理"
+        },
+        {
+            "id": "171",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:subject:batchVisible",
+            "resource_name": "专题批量上下架",
+            "resource_url": "[/v1/content/subject/visible]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "内容管理",
+            "secondary_menu": "专题管理"
+        },
+        {
+            "id": "172",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:channel:add",
+            "resource_name": "频道新增",
+            "resource_url": "[/v1/live/channel]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "内容管理",
+            "secondary_menu": "频道管理"
+        },
+        {
+            "id": "173",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:channel:put",
+            "resource_name": "频道修改",
+            "resource_url": "[/v1/live/channel/{id}]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "内容管理",
+            "secondary_menu": "频道管理"
+        },
+        {
+            "id": "174",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:channel:visible",
+            "resource_name": "频道上下架",
+            "resource_url": "[/v1/live/channel/{id}/visible]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "内容管理",
+            "secondary_menu": "频道管理"
+        },
+        {
+            "id": "175",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:channel:batchVisible",
+            "resource_name": "频道批量上下架",
+            "resource_url": "[/v1/live/channel/visible]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "内容管理",
+            "secondary_menu": "频道管理"
+        },
+        {
+            "id": "176",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:channel:delete",
+            "resource_name": "频道删除",
+            "resource_url": "[/v1/live/channel/{id}]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "内容管理",
+            "secondary_menu": "频道管理"
+        },
+        {
+            "id": "177",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:clientVersion:add",
+            "resource_name": "版本增加",
+            "resource_url": "[/v1/sys/client-version]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "版本设备",
+            "secondary_menu": "版本管理"
+        },
+        {
+            "id": "178",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:clientVersion:put",
+            "resource_name": "版本编辑",
+            "resource_url": "[/v1/sys/client-version/{id}]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "版本设备",
+            "secondary_menu": "版本管理"
+        },
+        {
+            "id": "179",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:membershipScheme:add",
+            "resource_name": "套餐添加",
+            "resource_url": "[/v1/user/membership-scheme]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "套餐管理",
+            "secondary_menu": "产品管理"
+        },
+        {
+            "id": "180",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:membershipScheme:put",
+            "resource_name": "套餐修改",
+            "resource_url": "[/v1/user/membership-scheme]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "套餐管理",
+            "secondary_menu": "产品管理"
+        },
+        {
+            "id": "181",
+            "created_at": "30/10/2019 15:08:53",
+            "permission": "content:membershipScheme:visible",
+            "resource_name": "套餐上下架",
+            "resource_url": "[/v1/user/membership-scheme/{id}]",
+            "updated_at": "30/10/2019 15:08:53",
+            "main_menu": "套餐管理",
+            "secondary_menu": "产品管理"
+        }
+    ]
+}
