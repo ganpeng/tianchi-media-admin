@@ -869,6 +869,12 @@ let router = new Router({
                     name: 'EditCombo',
                     component: EditCombo
                 },
+                //  套餐管理-套餐图管理
+                {
+                    path: '/combopicture-manage/list',
+                    name: 'ComboPicture',
+                    component: () => import('@/page/combo_manage/ComboPicture')
+                },
                 //  站点管理-配置站点
                 {
                     path: '/site-manage/config',
