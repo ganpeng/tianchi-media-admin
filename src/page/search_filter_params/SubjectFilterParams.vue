@@ -175,6 +175,17 @@
                 });
             },
             getSubjectList(isReset) {
+                if (!this.$authority.isHasAuthority('content:subject:page')) {
+                    for (let key in this.listQueryParams) {
+                        if (Array.isArray(this.listQueryParams[key])) {
+                            this.listQueryParams[key] = [];
+                        } else {
+                            this.listQueryParams[key] = '';
+                        }
+                    }
+                    this.createRangeTime = [];
+                    return;
+                }
                 if (this.createRangeTime && this.createRangeTime.length === 2) {
                     this.listQueryParams.createdAtBegin = this.createRangeTime[0];
                     this.listQueryParams.createdAtEnd = this.createRangeTime[1];

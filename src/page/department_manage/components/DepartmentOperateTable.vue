@@ -95,18 +95,27 @@
         },
         methods: {
             toDepartmentDetail(item) {
+                if (!this.$authority.isHasAuthority('admin:department:get')) {
+                    return;
+                }
                 this.$router.push({
                     name: 'DepartmentDetail',
                     params: {id: item.id}
                 });
             },
             editDepartment(item) {
+                if (!this.$authority.isHasAuthority('admin:department:put')) {
+                    return;
+                }
                 this.$router.push({
                     name: 'EditDepartment',
                     params: {id: item.id}
                 });
             },
             removeDepartment(item) {
+                if (!this.$authority.isHasAuthority('admin:department:delete')) {
+                    return;
+                }
                 this.$confirm('此操作将删除' + item.name + '部门, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

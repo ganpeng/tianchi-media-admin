@@ -473,6 +473,9 @@
             },
             // 重新注入视频
             retryInjectSingleVideo(videoList, index) {
+                if (!this.$authority.isHasAuthority('storage:video:add')) {
+                    return;
+                }
                 this.$service.retryInjectVideo({
                     id: videoList[index].id,
                     host: videoList[index].host,
@@ -495,6 +498,9 @@
             },
             // 批量下载视频文件
             downloadSelectedTsVideo() {
+                if (!this.$authority.isHasAuthority('storage:video:batchDownload')) {
+                    return;
+                }
                 // 对选择的视频列表进行检测，注入成功或拉取成功或上传成功的视频文件才能批量下载
                 let videoList = this.$refs.videoTable.getSelectedVideoList();
                 for (let i = 0; i < videoList.length; i++) {
@@ -539,6 +545,9 @@
             },
             // 批量删除视频
             deleteVideoList() {
+                if (!this.$authority.isHasAuthority('storage:video:batchDelete')) {
+                    return;
+                }
                 // 对选择的视频列表进行检测，在拉取中和下载中状态的视频不能删除
                 let videoList = this.$refs.videoTable.getSelectedVideoList();
                 for (let i = 0; i < videoList.length; i++) {
@@ -623,6 +632,9 @@
             },
             // 跳转到上传视频页面
             goToVideoUploadPage() {
+                if (!this.$authority.isHasAuthority('storage:video:add')) {
+                    return;
+                }
                 let routeData = this.$router.resolve({
                     name: 'VideoImport'
                 });
@@ -634,6 +646,9 @@
             },
             // 跳转到检查时长列表页面
             toDiffTime() {
+                if (!this.$authority.isHasAuthority('storage:video:durationCheck')) {
+                    return;
+                }
                 this.$router.push({name: 'DiffTimeVideoList'});
             }
         }

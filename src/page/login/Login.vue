@@ -119,12 +119,8 @@
                 this.$refs.login.validate((valid) => {
                     if (valid) {
                         this.$store.dispatch('user/login', this.formData).then(response => {
-                            if (response && response.code === 0) {
-                                if (response.data.reset === 1) {
-                                    this.$router.push({name: 'ForceResetPassword'});
-                                } else {
-                                    this.$router.push({name: 'Home'});
-                                }
+                            if (response) {
+                                this.$router.push({name: 'Home'});
                             }
                         });
                     } else {

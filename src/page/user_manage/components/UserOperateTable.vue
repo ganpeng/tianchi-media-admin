@@ -89,6 +89,9 @@
         },
         methods: {
             toUserDetail(item) {
+                if (!this.$authority.isHasAuthority('user:user:get')) {
+                    return;
+                }
                 this.$router.push({
                     name: 'UserDetail',
                     params: {id: item.id}

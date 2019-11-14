@@ -139,6 +139,9 @@
                 });
             },
             createAdmin() {
+                if (!this.$authority.isHasAuthority('admin:admin:add')) {
+                    return;
+                }
                 this.$router.push({name: 'CreateAdmin'});
             }
         }

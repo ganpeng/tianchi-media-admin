@@ -91,6 +91,9 @@
                 });
             },
             createDepartment() {
+                if (!this.$authority.isHasAuthority('admin:department:add')) {
+                    return;
+                }
                 this.$router.push({name: 'CreateDepartment'});
             }
         }

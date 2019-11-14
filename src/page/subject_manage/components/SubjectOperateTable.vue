@@ -148,6 +148,9 @@
             },
             // 更改单个专题状态
             updateSubjectStatus(item) {
+                if (!this.$authority.isHasAuthority('content:subject:visible')) {
+                    return;
+                }
                 this.$confirm('此操作将' + (item.visible ? '下架' : '上架') + item.name + '专题, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -163,6 +166,9 @@
             },
             // 删除单个专题,只有下架的专题才能删除
             removeSubject(item) {
+                if (!this.$authority.isHasAuthority('content:subject:delete')) {
+                    return;
+                }
                 if (item.visible) {
                     this.$message.warning('当前专题处于上架状态，请下架之后再进行删除操作');
                     return;
@@ -184,6 +190,9 @@
             },
             // 批量上下架，已上架的可以继续上架
             batchUpdateStatus(visible) {
+                if (!this.$authority.isHasAuthority('content:subject:batchVisible')) {
+                    return;
+                }
                 if (!this.multipleSelection || this.multipleSelection.length === 0) {
                     this.$message.warning('请先选择专题');
                     return;
@@ -209,6 +218,9 @@
             },
             // 批量删除专题，只有已下架的专题才能删除
             batchRemove() {
+                if (!this.$authority.isHasAuthority('content:subject:batchDelete')) {
+                    return;
+                }
                 if (!this.multipleSelection || this.multipleSelection.length === 0) {
                     this.$message.warning('请先选择专题');
                     return;
@@ -240,6 +252,9 @@
             },
             // 查看专题详情
             toSubjectDetail(item) {
+                if (!this.$authority.isHasAuthority('content:subject:get')) {
+                    return;
+                }
                 this.$router.push({
                     name: item.category === 'FIGURE' ? 'FigureSubjectDetail' : 'ProgrammeSubjectDetail',
                     params: {id: item.id}
@@ -247,6 +262,9 @@
             },
             // 编辑某一个专题
             editSubject(item) {
+                if (!this.$authority.isHasAuthority('content:subject:patch')) {
+                    return;
+                }
                 this.$router.push({
                     name: item.category === 'FIGURE' ? 'EditFigureSubject' : 'EditProgrammeSubject',
                     params: {id: item.id}

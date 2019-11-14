@@ -93,6 +93,9 @@
                 });
             },
             updateNavBarSetting() {
+                if (!this.$authority.isHasAuthority('content:navBar:list')) {
+                    return;
+                }
                 this.$service.setNavBarList(this.previewNavBarList).then(response => {
                     if (response && response.code === 0) {
                         this.$message.success('成功更新栏目列表');
@@ -100,6 +103,9 @@
                 });
             },
             createNavBar() {
+                if (!this.$authority.isHasAuthority('content:navBar:add')) {
+                    return;
+                }
                 this.$router.push({name: 'CreateNavBar'});
             },
             // 预览栏目调整情况
@@ -116,6 +122,9 @@
                 this.previewNavBarList = array;
             },
             toEditNavBar(id) {
+                if (!this.$authority.isHasAuthority('content:navBar:put')) {
+                    return;
+                }
                 this.$router.push({name: 'EditNavBar', params: {id: id}});
             }
         }

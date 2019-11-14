@@ -15,7 +15,7 @@
                 <el-form-item>
                     <el-button
                         class="btn-style-one"
-                        @click="getDepartmentList(false)"
+                        @click="getDepartmentList(true)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
@@ -65,6 +65,11 @@
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
             },
             getDepartmentList(isReset) {
+                if (isReset) {
+                    if (!this.$authority.isHasAuthority('admin:department:page')) {
+                        return;
+                    }
+                }
                 this.$emit('getDepartmentList', this.listQueryParams, isReset);
             }
         }

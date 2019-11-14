@@ -139,6 +139,9 @@
             },
             // 禁用确认
             disabledConfirm(userId, userStatus) {
+                if (!this.$authority.isHasAuthority('admin:admin:visible')) {
+                    return;
+                }
                 this.$confirm('此操作将禁用该账号, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -150,6 +153,9 @@
             },
             // 恢复确认
             recoverConfirm(userId, userStatus) {
+                if (!this.$authority.isHasAuthority('admin:admin:visible')) {
+                    return;
+                }
                 this.$confirm('此操作将恢复该账号, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -180,6 +186,9 @@
                 });
             },
             batchUpdateStatus(visible) {
+                if (!this.$authority.isHasAuthority('admin:admin:batchVisible')) {
+                    return;
+                }
                 if (!this.multipleSelection || this.multipleSelection.length === 0) {
                     this.$message.warning('请先选择管理员');
                     return;
@@ -206,18 +215,27 @@
             },
             // 查看详情
             toAdminDetail(item) {
+                if (!this.$authority.isHasAuthority('admin:admin:get')) {
+                    return;
+                }
                 this.$router.push({
                     name: 'AdminDetail',
                     params: {id: item.id}
                 });
             },
             editAdmin(item) {
+                if (!this.$authority.isHasAuthority('admin:admin:put')) {
+                    return;
+                }
                 this.$router.push({
                     name: 'EditAdmin',
                     params: {id: item.id}
                 });
             },
             removeAdmin(item) {
+                if (!this.$authority.isHasAuthority('admin:admin:delete')) {
+                    return;
+                }
                 if (item.status === 'NORMAL') {
                     this.$message.warning('当前专题处于启用状态，请禁用之后再进行删除操作');
                     return;
@@ -238,6 +256,9 @@
                 });
             },
             resetPassword(item) {
+                if (!this.$authority.isHasAuthority('admin:admin:resetPassword')) {
+                    return;
+                }
                 this.$confirm('此操作将重置' + item.name + '管理员的密码, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

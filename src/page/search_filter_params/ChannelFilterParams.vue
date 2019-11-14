@@ -15,7 +15,7 @@
                 <el-form-item>
                     <el-button
                         class="btn-style-one"
-                        @click="getChannelList(false)"
+                        @click="getChannelList(true)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
@@ -228,6 +228,19 @@
                 });
             },
             getChannelList(isReset) {
+                if (isReset) {
+                    if (!this.$authority.isHasAuthority('content:channel:page')) {
+                        for (let key in this.listQueryParams) {
+                            if (Array.isArray(this.listQueryParams[key])) {
+                                this.listQueryParams[key] = [];
+                            } else {
+                                this.listQueryParams[key] = '';
+                            }
+                        }
+                        this.listQueryParams.category = 'CAROUSEL';
+                        return;
+                    }
+                }
                 if (this.listQueryParams.common) {
                     this.listQueryParams.companyCode = '';
                 }

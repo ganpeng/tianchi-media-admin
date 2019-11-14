@@ -226,6 +226,9 @@
             },
             // 更改状态
             updateChannelStatus(channelInfo) {
+                if (!this.$authority.isHasAuthority('content:channel:visible')) {
+                    return;
+                }
                 let operateWords = channelInfo.visible ? '禁播' : '恢复';
                 this.$confirm('此操作将' + operateWords + channelInfo.innerName + '频道, 是否继续?', '提示', {
                     confirmButtonText: '确定',
@@ -261,6 +264,9 @@
             },
             // 删除单个频道
             removeChannel(channelInfo) {
+                if (!this.$authority.isHasAuthority('content:channel:delete')) {
+                    return;
+                }
                 if (channelInfo.visible) {
                     this.$message.warning('由于' + channelInfo.innerName + '频道为正常状态，暂时不能删除');
                     return;
@@ -293,6 +299,9 @@
             },
             // 批量上下架
             batchUpdateStatus(visible) {
+                if (!this.$authority.isHasAuthority('content:channel:batchVisible')) {
+                    return;
+                }
                 if (!this.multipleSelection || this.multipleSelection.length === 0) {
                     this.$message.warning('请先选择频道');
                     return;
@@ -321,12 +330,18 @@
                 });
             },
             toChannelDetail(item) {
+                if (!this.$authority.isHasAuthority('content:channel:get')) {
+                    return;
+                }
                 this.$router.push({
                     name: 'CarouselChannelDetail',
                     params: {id: item.id}
                 });
             },
             editChannelInfo(item) {
+                if (!this.$authority.isHasAuthority('content:channel:put')) {
+                    return;
+                }
                 this.$router.push({
                     name: 'EditCarouselChannel',
                     params: {id: item.id}
