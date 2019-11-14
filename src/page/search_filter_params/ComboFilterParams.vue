@@ -15,7 +15,7 @@
                 <el-form-item>
                     <el-button
                         class="btn-style-one"
-                        @click="getComboList(false)"
+                        @click="getComboList(true)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
@@ -107,6 +107,14 @@
                 this.listQueryParams.validityDays = params.validityDays ? params.validityDays : '';
             },
             getComboList(isReset) {
+                if (isReset) {
+                    if (!this.$authority.isHasAuthority('user:membershipScheme:page')) {
+                        for (let key in this.listQueryParams) {
+                            this.listQueryParams[key] = '';
+                        }
+                        return;
+                    }
+                }
                 this.$emit('getComboList', this.listQueryParams, isReset);
             },
             clearFilters() {

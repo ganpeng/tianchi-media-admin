@@ -115,6 +115,9 @@
         },
         methods: {
             updateGoodsStatus(item) {
+                if (!this.$authority.isHasAuthority('bo:commodity:visible')) {
+                    return;
+                }
                 this.$confirm('此操作将' + (item.visible ? '下架' : '上架') + item.name + '商品, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -140,12 +143,18 @@
             },
             // 查看详情
             toGoodsDetail(item) {
+                if (!this.$authority.isHasAuthority('bo:commodity:get')) {
+                    return;
+                }
                 this.$router.push({
                     name: 'GoodsDetail',
                     params: {id: item.id}
                 });
             },
             editGoods(item) {
+                if (!this.$authority.isHasAuthority('bo:commodity:put')) {
+                    return;
+                }
                 this.$router.push({
                     name: 'EditGoods',
                     params: {id: item.id}

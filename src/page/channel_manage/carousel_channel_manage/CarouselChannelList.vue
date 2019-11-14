@@ -181,6 +181,9 @@
                 this.$refs.channelOperateTable.batchUpdateStatus(visible);
             },
             createCarouselChannel() {
+                if (!this.$authority.isHasAuthority('content:channel:add')) {
+                    return;
+                }
                 let routeData = this.$router.resolve({
                     name: 'CreateCarouselChannel'
                 });

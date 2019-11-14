@@ -137,6 +137,9 @@
                 });
             },
             createRole() {
+                if (!this.$authority.isHasAuthority('admin:role:add')) {
+                    return;
+                }
                 this.$router.push({name: 'CreateRole'});
             },
             // 批量上架

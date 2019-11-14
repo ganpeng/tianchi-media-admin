@@ -69,6 +69,9 @@
             };
         },
         mounted() {
+            if (!this.$authority.isHasAuthority('content:mark:list')) {
+                return;
+            }
             this.getCornerMarkList();
         },
         methods: {
@@ -83,10 +86,16 @@
                 });
             },
             openCreateDialog() {
+                if (!this.$authority.isHasAuthority('content:mark:add')) {
+                    return;
+                }
                 this.dialogTitle = '创建角标';
                 this.cornerMarkDialogVisible = true;
             },
             openEditDialog(item) {
+                if (!this.$authority.isHasAuthority('content:mark:put')) {
+                    return;
+                }
                 this.dialogTitle = '编辑角标';
                 this.cornerMarkDialogVisible = true;
                 this.$nextTick(function () {
@@ -102,6 +111,9 @@
                 this.getCornerMarkList();
             },
             removeCornerMark(item) {
+                if (!this.$authority.isHasAuthority('content:mark:delete')) {
+                    return;
+                }
                 this.$confirm('此操作将删除角标, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

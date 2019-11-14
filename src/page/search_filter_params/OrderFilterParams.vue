@@ -15,7 +15,7 @@
                 <el-form-item>
                     <el-button
                         class="btn-style-one"
-                        @click="getOrderList(false)"
+                        @click="getOrderList(true)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
@@ -104,6 +104,7 @@
 <script>
 
     import role from '../../util/config/role';
+
     export default {
         name: 'OrderFilterParams',
         data() {
@@ -147,6 +148,19 @@
                 this.commitDateRange = params.createdAtStart ? [params.createdAtStart, params.createdAtEnd] : [];
             },
             getOrderList(isReset) {
+                if (isReset) {
+                    if (!this.$authority.isHasAuthority('user:order:page')) {
+                        for (let key in this.listQueryParams) {
+                            if (Array.isArray(this.listQueryParams[key])) {
+                                this.listQueryParams[key] = [];
+                            } else {
+                                this.listQueryParams[key] = '';
+                            }
+                        }
+                        this.commitDateRange = [];
+                        return;
+                    }
+                }
                 if (this.commitDateRange && this.commitDateRange.length === 2) {
                     this.listQueryParams.createdAtStart = this.commitDateRange[0];
                     this.listQueryParams.createdAtEnd = this.commitDateRange[1];

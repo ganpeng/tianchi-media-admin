@@ -15,7 +15,7 @@
                 <el-form-item>
                     <el-button
                         class="btn-style-one"
-                        @click="getVideoList(false)"
+                        @click="getVideoList(true)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
@@ -236,6 +236,15 @@
                 }, 10000);
             },
             getVideoList(isReset) {
+                if (isReset) {
+                    if (!this.$authority.isHasAuthority('storage:video:page') && isReset) {
+                        for (let key in this.listQueryParams) {
+                            this.listQueryParams[key] = '';
+                        }
+                        this.uploadRangeTime = [];
+                        return;
+                    }
+                }
                 if (this.uploadRangeTime && this.uploadRangeTime.length === 2) {
                     this.listQueryParams.startedAt = this.uploadRangeTime[0];
                     this.listQueryParams.endedAt = this.uploadRangeTime[1];

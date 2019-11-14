@@ -10,7 +10,8 @@ const state = {
     name: '',
     token: '',
     reset: '',
-    roleList: []
+    roleList: [],
+    role: []
 };
 
 const getters = {
@@ -19,6 +20,9 @@ const getters = {
     },
     roleList(state) {
         return state.roleList;
+    },
+    role(state) {
+        return state.role;
     }
 };
 
@@ -52,6 +56,12 @@ const mutations = {
             wsCache.localStorage.set('roleList', data);
         }
         state.roleList = data;
+    },
+    setRole(state, data) {
+        if (data) {
+            wsCache.localStorage.set('role', data);
+        }
+        state.role = data;
     }
 };
 
@@ -70,6 +80,7 @@ const actions = {
                     commit('setToken', data.token);
                     commit('setReset', data.reset);
                     commit('setRoleList', data.roleList);
+                    commit('setRole', data.role);
                     // 获取区域列表
                     service.fetchAreaList().then((res) => {
                         if (res && res.code === 0) {
@@ -105,6 +116,8 @@ const actions = {
         commit('setName', '');
         commit('setToken', '');
         commit('setReset', '');
+        commit('setRoleList', '');
+        commit('setRole', '');
         wsCache.localStorage.clearAll();
         store.commit('layout/setState', {navBarList: []});
         //  清除上传视频的所有数据
@@ -124,6 +137,7 @@ const actions = {
             commit('setToken', userInfo.token);
             commit('setReset', userInfo.reset);
             commit('setRoleList', userInfo.roleList);
+            commit('setRole', userInfo.role);
             resolve();
         });
     },

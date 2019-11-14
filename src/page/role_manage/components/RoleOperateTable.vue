@@ -106,6 +106,9 @@
         },
         methods: {
             updateRoleStatus(item) {
+                if (!this.$authority.isHasAuthority('admin:role:visible')) {
+                    return;
+                }
                 this.$confirm('此操作将' + (item.visible ? '禁用' : '启用') + item.roleName + '角色, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -121,6 +124,9 @@
             },
             // 批量上下架，已上架的可以继续上架
             batchUpdateStatus(visible) {
+                if (!this.$authority.isHasAuthority('admin:role:batchVisible')) {
+                    return;
+                }
                 if (!this.multipleSelection || this.multipleSelection.length === 0) {
                     this.$message.warning('请先选择角色');
                     return;
@@ -146,12 +152,18 @@
             },
             // 查看详情
             toRoleDetail(item) {
+                if (!this.$authority.isHasAuthority('admin:role:get')) {
+                    return;
+                }
                 this.$router.push({
                     name: 'RoleDetail',
                     params: {id: item.id}
                 });
             },
             editRole(item) {
+                if (!this.$authority.isHasAuthority('admin:role:put')) {
+                    return;
+                }
                 this.$router.push({
                     name: 'EditRole',
                     params: {id: item.id}
@@ -167,6 +179,9 @@
                 }
             },
             removeRole(item) {
+                if (!this.$authority.isHasAuthority('admin:role:delete')) {
+                    return;
+                }
                 if (item.visible) {
                     this.$message.warning('当前角色处于启用状态，请禁用之后再进行删除操作');
                     return;
@@ -187,6 +202,9 @@
                 });
             },
             batchRemove() {
+                if (!this.$authority.isHasAuthority('admin:role:batchDelete')) {
+                    return;
+                }
                 if (!this.multipleSelection || this.multipleSelection.length === 0) {
                     this.$message.warning('请先选择角色');
                     return;

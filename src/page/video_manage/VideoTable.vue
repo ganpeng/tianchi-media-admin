@@ -658,6 +658,9 @@
             },
             // 删除视频文件
             deleteVideo(video) {
+                if (!this.$authority.isHasAuthority('storage:video:delete')) {
+                    return;
+                }
                 this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -688,6 +691,9 @@
             },
             // 重试注入视频
             retryInjectSingleVideo(video) {
+                if (!this.$authority.isHasAuthority('storage:video:retry')) {
+                    return;
+                }
                 this.$service.retryInjectVideo({
                     id: video.id,
                     host: video.host,

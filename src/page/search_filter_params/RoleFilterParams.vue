@@ -15,7 +15,7 @@
                 <el-form-item>
                     <el-button
                         class="btn-style-one"
-                        @click="getRoleList(false)"
+                        @click="getRoleList(true)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
@@ -69,16 +69,21 @@
             };
         },
         mounted() {
-            this.init();
         },
         methods: {
-            init() {
-            },
             initFilterParams(params) {
                 this.listQueryParams.visible = params.visible !== '' ? params.visible : '';
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
             },
             getRoleList(isReset) {
+                if (isReset) {
+                    if (!this.$authority.isHasAuthority('admin:role:page')) {
+                        for (let key in this.listQueryParams) {
+                            this.listQueryParams[key] = '';
+                        }
+                        return;
+                    }
+                }
                 this.$emit('getRoleList', this.listQueryParams, isReset);
             },
             clearFilters() {

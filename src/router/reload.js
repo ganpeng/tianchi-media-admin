@@ -14,7 +14,8 @@ if (Cookies.get('token') && !store.state.user.token) {
         name: Cookies.get('name'),
         token: Cookies.get('token'),
         reset: Cookies.get('reset'),
-        roleList: wsCache.localStorage.get('roleList')
+        roleList: wsCache.localStorage.get('roleList'),
+        role: wsCache.localStorage.get('role')
     });
     // 设置localStorage中的系统信息
     if (wsCache.localStorage.get('layout')) {

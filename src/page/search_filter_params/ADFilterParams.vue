@@ -15,7 +15,7 @@
                 <el-form-item>
                     <el-button
                         class="btn-style-one"
-                        @click="getADList(false)"
+                        @click="getADList(true)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
@@ -158,7 +158,6 @@
             };
         },
         mounted() {
-            this.init();
         },
         methods: {
             initFilterParams(params) {
@@ -171,10 +170,12 @@
                 this.listQueryParams.createdAtEnd = params.createdAtEnd ? params.createdAtEnd : '';
                 this.createRangeTime = params.createdAtStart ? [params.createdAtStart, params.createdAtEnd] : [];
             },
-            init() {
-
-            },
             getADList(isReset) {
+                if (isReset) {
+                    if (!this.$authority.isHasAuthority('ad:generalAd:page')) {
+                        return;
+                    }
+                }
                 if (this.createRangeTime && this.createRangeTime.length === 2) {
                     this.listQueryParams.createdAtStart = this.createRangeTime[0];
                     this.listQueryParams.createdAtEnd = this.createRangeTime[1];

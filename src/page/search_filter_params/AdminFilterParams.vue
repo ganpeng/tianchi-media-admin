@@ -15,7 +15,7 @@
                 <el-form-item>
                     <el-button
                         class="btn-style-one"
-                        @click="getAdminList(false)"
+                        @click="getAdminList(true)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
@@ -133,6 +133,14 @@
                 this.listQueryParams.status = params.status ? params.status : '';
             },
             getAdminList(isReset) {
+                if (isReset) {
+                    if (!this.$authority.isHasAuthority('admin:admin:page')) {
+                        for (let key in this.listQueryParams) {
+                            this.listQueryParams[key] = '';
+                        }
+                        return;
+                    }
+                }
                 this.$emit('getAdminList', this.listQueryParams, isReset);
             },
             clearFilters() {

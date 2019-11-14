@@ -15,7 +15,7 @@
                 <el-form-item>
                     <el-button
                         class="btn-style-one"
-                        @click="getUserList(false)"
+                        @click="getUserList(true)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
@@ -163,6 +163,20 @@
                 this.vipDateRange = params.vipExpireAtStart ? [params.vipExpireAtStart, params.vipExpireAtEnd] : [];
             },
             getUserList(isReset) {
+                if (isReset) {
+                    if (!this.$authority.isHasAuthority('user:user:page')) {
+                        for (let key in this.listQueryParams) {
+                            if (Array.isArray(this.listQueryParams[key])) {
+                                this.listQueryParams[key] = [];
+                            } else {
+                                this.listQueryParams[key] = '';
+                            }
+                        }
+                        this.registeredDateRange = [];
+                        this.vipDateRange = [];
+                        return;
+                    }
+                }
                 if (this.registeredDateRange && this.registeredDateRange.length === 2) {
                     this.listQueryParams.registeredAtStart = this.registeredDateRange[0];
                     this.listQueryParams.registeredAtEnd = this.registeredDateRange[1];

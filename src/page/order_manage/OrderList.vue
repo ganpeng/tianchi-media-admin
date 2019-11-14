@@ -193,6 +193,9 @@
                 this.getOrderList();
             },
             toOrderDetail(item) {
+                if (!this.$authority.isHasAuthority('user:order:get')) {
+                    return;
+                }
                 this.$router.push({name: 'OrderDetail', params: {id: item.id}});
             },
             handleSelectionChange(val) {
