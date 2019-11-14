@@ -16,7 +16,7 @@
                     </div>
                     <el-button
                         class="btn-style-one"
-                        @click="getProductList(false)"
+                        @click="getProductList(true)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
@@ -217,6 +217,16 @@
         },
         methods: {
             getProductList(isReset) {
+                if (isReset) {
+                    if (!this.$authority.isHasAuthority('bo:product:page')) {
+                        this.listQueryParams.keyword = '';
+                        this.listQueryParams.productCategory = '';
+                        this.listQueryParams.createdAtStart = '';
+                        this.listQueryParams.createdAtEnd = '';
+                        this.createRangeTime = [];
+                        return;
+                    }
+                }
                 if (this.createRangeTime && this.createRangeTime.length === 2) {
                     this.listQueryParams.createdAtStart = this.createRangeTime[0];
                     this.listQueryParams.createdAtEnd = this.createRangeTime[1];
@@ -252,6 +262,9 @@
                 }
             },
             editProductInfo(item) {
+                if (!this.$authority.isHasAuthority('bo:product:put')) {
+                    return;
+                }
                 let routeName = '';
                 switch (item.category) {
                     case 'PROGRAMME_CATEGORY':
@@ -289,6 +302,9 @@
             },
             // 查询产品详情
             checkProductDetail(item) {
+                if (!this.$authority.isHasAuthority('bo:product:get')) {
+                    return;
+                }
                 let routeName = '';
                 switch (item.category) {
                     case 'PROGRAMME_CATEGORY':
@@ -310,6 +326,9 @@
             },
             // 设置产品包的上下架
             updateProductStatus(item) {
+                if (!this.$authority.isHasAuthority('bo:product:visible')) {
+                    return;
+                }
                 this.$confirm('此操作将' + (item.visible ? '下架该产品包' : '上架该产品包') + ', 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
@@ -323,14 +342,13 @@
                         }
                     });
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消' + (item.visible ? '下架' : '上架' + item.name + '产品包')
-                    });
                 });
             },
             // 创建产品包
             createProduct(command) {
+                if (!this.$authority.isHasAuthority('bo:product:add')) {
+                    return;
+                }
                 switch (command) {
                     case 'PROGRAMME_CATEGORY':
                         this.$router.push({name: 'CreateCategoryProduct'});

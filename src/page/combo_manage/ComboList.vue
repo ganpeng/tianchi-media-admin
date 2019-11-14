@@ -91,6 +91,9 @@
                 });
             },
             createCombo() {
+                if (!this.$authority.isHasAuthority('user:membershipScheme:add')) {
+                    return;
+                }
                 this.$router.push({name: 'CreateCombo'});
             }
         }

@@ -88,7 +88,7 @@
                     type="checkbox"
                     v-model="scope.row.visible"
                     :checked="scope.row.visible"
-                    @click.prevent="updateProductStatus(scope.row)"/>
+                    @click.prevent="updateADStatus(scope.row)"/>
                 <i v-if="scope.row.visible" class="on-the-shelf shelf"
                    :class="{'disabled':(!scope.row.visible || scope.row.visible && scope.row.adStatus === 'EXPIRED')}">已上架</i>
                 <i v-else class="off-the-shelf shelf"
@@ -192,6 +192,9 @@
                 this.$emit('getADList', this.listQueryParams, true);
             },
             editADInfo(item) {
+                if (!this.$authority.isHasAuthority('storage:video:retry')) {
+                    return;
+                }
                 let routeName = '';
                 switch (item.adType) {
                     case 'PROGRAMME_DETAIL':
@@ -222,10 +225,16 @@
             },
             // 查询广告详情
             checkADDetail(item) {
+                if (!this.$authority.isHasAuthority('ad:generalAd:get')) {
+                    return;
+                }
                 this.$router.push({name: 'ADDetail', params: {id: item.id}});
             },
             // 未生效的广告可以删除
             removeAD(item) {
+                if (!this.$authority.isHasAuthority('ad:generalAd:delete')) {
+                    return;
+                }
                 this.$confirm('此操作将删除' + item.name + '广告, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -240,7 +249,10 @@
                 });
             },
             // 设置产品包的上下架
-            updateProductStatus(item) {
+            updateADStatus(item) {
+                if (!this.$authority.isHasAuthority('ad:generalAd:visible')) {
+                    return;
+                }
                 if (!item.visible) {
                     this.$message.warning('已下架的广告不能再次上架');
                     return;

@@ -15,7 +15,7 @@
                 <el-form-item>
                     <el-button
                         class="btn-style-one"
-                        @click="getGoodsList(false)"
+                        @click="getGoodsList(true)"
                         type="primary">
                         <svg-icon icon-class="search"></svg-icon>
                         搜索
@@ -138,6 +138,15 @@
                 this.listQueryParams.productId = params.productId ? params.productId : '';
             },
             getGoodsList(isReset) {
+                if (isReset) {
+                    if (!this.$authority.isHasAuthority('bo:commodity:page')) {
+                        for (let key in this.listQueryParams) {
+                            this.listQueryParams[key] = '';
+                        }
+                        this.createRangeTime = [];
+                        return;
+                    }
+                }
                 if (this.createRangeTime && this.createRangeTime.length === 2) {
                     this.listQueryParams.createdAtStart = this.createRangeTime[0];
                     this.listQueryParams.createdAtEnd = this.createRangeTime[1];

@@ -106,6 +106,9 @@
             },
             // 创建广告
             createAD(command) {
+                if (!this.$authority.isHasAuthority('ad:generalAd:put')) {
+                    return;
+                }
                 switch (command) {
                     case 'BOOT_AD':
                         this.$router.push({name: 'CreateBootAD'});

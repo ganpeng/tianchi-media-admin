@@ -91,6 +91,9 @@
                 });
             },
             createGoods() {
+                if (!this.$authority.isHasAuthority('bo:commodity:add')) {
+                    return;
+                }
                 this.$router.push({name: 'CreateGoods'});
             }
         }

@@ -64,6 +64,9 @@
                 this.siteInfo.siteToken = (this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteName) ? this.$wsCache.localStorage.get('siteInfo').siteToken : '';
             },
             configSite() {
+                if (!this.$authority.isHasAuthority('sys:sysConfig:patch')) {
+                    return;
+                }
                 this.$refs['siteInfo'].validate((valid) => {
                     if (valid) {
                         this.$service.configSiteToken({siteToken: this.siteInfo.siteToken}).then(response => {
