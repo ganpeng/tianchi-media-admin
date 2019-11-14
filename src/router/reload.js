@@ -12,7 +12,9 @@ if (Cookies.get('token') && !store.state.user.token) {
     // 设置cookie中的系统用户信息
     store.dispatch('user/reLogin', {
         name: Cookies.get('name'),
-        token: Cookies.get('token')
+        token: Cookies.get('token'),
+        reset: Cookies.get('reset'),
+        roleList: wsCache.localStorage.get('roleList')
     });
     // 设置localStorage中的系统信息
     if (wsCache.localStorage.get('layout')) {

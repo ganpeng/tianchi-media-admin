@@ -158,6 +158,9 @@
             },
             // 创建专题
             createSubject(command) {
+                if (!this.$authority.isHasAuthority('content:subject:add')) {
+                    return;
+                }
                 let routeData = this.$router.resolve({
                     name: command === 'PROGRAMME' ? 'CreateProgrammeSubject' : 'CreateFigureSubject'
                 });

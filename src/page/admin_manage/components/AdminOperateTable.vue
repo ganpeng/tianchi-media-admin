@@ -243,7 +243,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$service.resetAdminPassword(item.id).then(response => {
+                    this.$service.resetAdminPassword({id: item.id}).then(response => {
                         if (response && response.code === 0) {
                             this.$message.success('"' + item.name + '"' + '管理员密码重置成功!');
                         }

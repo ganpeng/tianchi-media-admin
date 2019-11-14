@@ -3,58 +3,14 @@
     <div>
         <div class="content-title">存储空间</div>
         <div class="text-center">
-            <v-chart :options="serverData"/>
+            <ve-pie :data="chartDataAll" :legend="legend"></ve-pie>
+            <div>剩余空间还可存储 {{remainHour}} 小时的视频</div>
+            <div>注：按照 3.6 GB/小时计算</div>
         </div>
-        <el-table
-            :data="serverList"
-            border
-            style="width: 100%">
-            <el-table-column
-                type="index"
-                align="center"
-                width="80"
-                label="序号">
-            </el-table-column>
-            <el-table-column
-                align="center"
-                prop="clusterName"
-                min-width="120px"
-                label="组">
-            </el-table-column>
-            <el-table-column
-                min-width="120px"
-                prop="hostname"
-                align="center"
-                label="服务器">
-            </el-table-column>
-            <el-table-column
-                align="center"
-                min-width="140px"
-                prop="value.total"
-                label="全部空间">
-                <template slot-scope="scope">
-                    {{(scope.row.value ? scope.row.value.total : 0) | convertFileSize}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                prop="value.used"
-                min-width="140px"
-                label="已使用空间">
-                <template slot-scope="scope">
-                    {{(scope.row.value ? scope.row.value.used : 0) | convertFileSize}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                prop="value.free"
-                min-width="130px"
-                label="未使用空间">
-                <template slot-scope="scope">
-                    {{(scope.row.value ? scope.row.value.free : 0) | convertFileSize}}
-                </template>
-            </el-table-column>
-        </el-table>
+        <div class="text-center">
+            <ve-histogram :data="chartData" :settings="chartSettings" :textStyle="textStyle"
+                          :legend="legend"></ve-histogram>
+        </div>
     </div>
 </template>
 
@@ -68,44 +24,42 @@
             'v-chart': ECharts
         },
         data() {
+            this.chartSettings = {
+                stack: {'服务器': ['已用空间', '可用空间', '预留空间']}
+            };
             return {
-                serverList: [],
-                serverData: {
-                    title: {
-                        text: '所有存储空间',
-                        x: 'center'
-                    },
-                    tooltip: {
-                        trigger: 'item',
-                        formatter: '{a} <br/>{b} : {c} ({d}%)'
-                    },
-                    legend: {
-                        orient: 'vertical',
-                        left: 'left',
-                        data: ['已用空间', '可用空间']
-                    },
-                    label: {
-                        fontSize: 14
-                    },
-                    series: [
-                        {
-                            name: '所有存储空间',
-                            type: 'pie',
-                            radius: '55%',
-                            center: ['50%', '50%'],
-                            color: ['rgb(0,98,196)', 'rgb(116,194,146)'],
-                            data: [
-                                {value: 0, name: '已用空间'},
-                                {value: 0, name: '可用空间'}
-                            ],
-                            itemStyle: {
-                                emphasis: {
-                                    shadowBlur: 10,
-                                    shadowOffsetX: 0,
-                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                                }
-                            }
+                xAxis: {
+                    axisLine: {
+                        lineStyle: {
+                            width: 50
                         }
+                    },
+                    axisTick: {
+                        lineStyle: {
+                            width: 50
+                        }
+                    }
+                },
+                textStyle: {
+                    color: '#fff'
+                },
+                legend: {
+                    textStyle: {
+                        color: '#fff'
+                    }
+                },
+                remainHour: 0,
+                serverList: [],
+                chartData: {
+                    columns: ['名称', '已用空间', '可用空间', '预留空间'],
+                    rows: []
+                },
+                chartDataAll: {
+                    columns: ['空间', '大小'],
+                    rows: [
+                        {'空间': '已用空间', '大小': 1393},
+                        {'空间': '可用空间', '大小': 3530},
+                        {'空间': '预留空间', '大小': 2923}
                     ]
                 }
             };
@@ -117,11 +71,26 @@
             init() {
                 this.$service.getServerSpace().then(response => {
                     if (response && response.code === 0) {
-                        this.serverList = response.data.serverResourcesVoList;
-                        this.serverData.series[0].data[0].value = response.data.used;
-                        this.serverData.series[0].data[1].value = response.data.free;
+                        this.serverList = response.data.serverResourcesList;
+                        this.remainHour = response.data.remainHour;
+                        this.chartDataAll.rows[0]['大小'] = this.convertToGB(response.data.used);
+                        this.chartDataAll.rows[1]['大小'] = this.convertToGB(response.data.free);
+                        this.chartDataAll.rows[2]['大小'] = this.convertToGB(response.data.reserve);
+                        let data = [];
+                        this.serverList.map(item => {
+                            data.push({
+                                '名称': item.hostname,
+                                '已用空间': this.convertToGB(item.value.used),
+                                '可用空间': this.convertToGB(item.value.free),
+                                '预留空间': this.convertToGB(item.value.reserve)
+                            });
+                        });
+                        this.chartData.rows = data;
                     }
                 });
+            },
+            convertToGB(value) {
+                return (value / 1024 / 1024 / 1024).toFixed(0);
             }
         }
     };
@@ -133,6 +102,17 @@
         display: inline-block;
         width: 400px;
         height: 400px;
+    }
+
+    .ve-histogram {
+        margin-top: 80px;
+        display: inline-block;
+        width: 600px !important;
+        height: 600px !important;
+        * {
+            width: 600px !important;
+            height: 600px !important;
+        }
     }
 
 </style>

@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import store from '../store';
 import './reload';
 import Login from 'sysPage/login/Login';
+import ForceResetPassword from 'sysPage/login/ForceResetPassword';
 import GlobalLayout from 'sysPage/layout/GlobalLayout';
 import Home from 'sysPage/home/Home';
 import InfoSetting from 'sysPage/personal_center/InfoSetting';
@@ -161,6 +162,12 @@ let router = new Router({
             alias: '/login',
             name: 'Login',
             component: Login
+        },
+        // 强制更改密码页面
+        {
+            path: '/force-reset-password',
+            name: 'ForceResetPassword',
+            component: ForceResetPassword
         },
         // 轮播频道-批量创建轮播频道
         {
@@ -982,16 +989,31 @@ router.beforeEach((to, from, next) => {
         next();
         // 白名单但是存在token,跳转到首页,防止手动更改url
     } else if (routerUtil.isWhitePage(to.name) && store.state.user.token) {
-        next({name: 'Home'});
+        // 如果重置密码reset为1，需要强制重置密码
+        if (parseInt(store.state.user.reset) === 1 && to.name !== 'ForceResetPassword') {
+            next({name: 'ForceResetPassword'});
+        } else {
+            next({name: 'Home'});
+        }
         // 非白名单且不存在token，跳转到登录页面
     } else if (!store.state.user.token) {
         next({name: 'Login'});
         // 非白名单、存在token、存在跳转路由，直接跳转
     } else if (to.name) {
-        next();
+        // 如果重置密码reset为1，需要强制重置密码
+        if (parseInt(store.state.user.reset) === 1 && to.name !== 'ForceResetPassword') {
+            next({name: 'ForceResetPassword'});
+        } else {
+            next();
+        }
         // 非白名单、存在token、不存在跳转路由，跳转到404页面
     } else {
-        next({name: 'ErrorNotFound'});
+        // 如果重置密码reset为1，需要强制重置密码
+        if (parseInt(store.state.user.reset) === 1 && to.name !== 'ForceResetPassword') {
+            next({name: 'ForceResetPassword'});
+        } else {
+            next({name: 'ErrorNotFound'});
+        }
     }
     next();
 });

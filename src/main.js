@@ -11,10 +11,12 @@ import 'assets/css/global.less';
 import 'assets/css/global.scss';
 import 'babel-polyfill';
 import util from '@/util/extend';
+import authority from '@/util/authority';
 import '@/util/filters';
 import '@/util/directives';
 import 'sysComponents/custom_components/global/install';
 import './icons';
+import VCharts from 'v-charts';
 import dragula from 'dragula';
 import wsCache from '@/util/webStorage';
 
@@ -27,8 +29,10 @@ Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.prototype.$service = service;
 Vue.prototype.$util = util;
+Vue.prototype.$authority = authority;
 Vue.prototype.$dragula = dragula;
 Vue.prototype.$wsCache = wsCache;
+Vue.use(VCharts);
 
 window.eventBus = new Vue(); // 注册全局事件对象
 
