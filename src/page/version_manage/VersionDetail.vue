@@ -102,32 +102,6 @@
             </div>
         </div>
         <div class="seperator-line"></div>
-        <!--
-        <div v-if="version.clientVersionStatsList.length > 0" class="area-container">
-            <h4 class="content-sub-title">
-                所属区域
-                <span v-if="version.clientVersionStatsList.length > 0">{{version.clientVersionStatsList.length}}个</span>
-                <span v-if="version.clientVersionStatsList.length <= 0" class="toggle-btn disabled">
-                    展开<i class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
-                </span>
-                <span v-if="version.clientVersionStatsList.length > 0" @click="toggleClickHandler" :class="['toggle-btn', showCompanyList ? 'is-active' : '']">
-                    {{showCompanyList ? '收起' : '展开'}}
-                    <i v-if="showCompanyList" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
-                </span>
-            </h4>
-            <ul v-if="showCompanyList" class="search-list clearfix">
-                <li v-for="(item, index) in version.clientVersionStatsList" :key="index" :class="['search-item']">
-                    <div class="wrapper">
-                        <span class="index">{{index + 1}}</span>
-                        <span class="search-name my-ellipsis">{{item.name}}</span>
-                        <span v-if="item.name && item.name.length > 11" class="ellipsis-content">{{item.name}}</span>
-                    </div>
-                    <div class="hahaha">设备:{{item.stbCountByCompany}}&nbsp;&nbsp;升级率:{{updatedRatio(item.updatedRatio)}}</div>
-                </li>
-            </ul>
-            <div v-if="version.clientVersionStatsList.length > 0" class="seperator-line"></div>
-        </div>
-        -->
         <div class="range-file-container">
             <h4 class="content-sub-title">升级范围文件</h4>
             <el-table
@@ -151,20 +125,23 @@
                 <el-table-column align="center" label="操作">
                     <template slot-scope="scope">
                         <div class="operator-btn-wrapper">
-                            <span class="btn-text text-primary" @click="downloadBatch(scope.row)">下载</span>
+                            <span class="btn-text text-primary" @click="downloadBatchFile(scope.row)">下载</span>
                         </div>
                     </template>
                 </el-table-column>
             </el-table>
         </div>
         <div class="fixed-btn-container">
+            <el-button class="btn-style-two" type="primary" @click="gotoEdit">编辑</el-button>
             <el-button class="btn-style-three" @click="goBack">返回列表</el-button>
         </div>
     </div>
 </template>
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex';
+import XLSX from 'xlsx';
 import _ from 'lodash';
+
 export default {
     name: 'VersionDetail',
     data() {
@@ -270,8 +247,27 @@ export default {
                 console.log(err);
             }
         },
-        async downloadBatch(batch) {
-            console.log(batch);
+        downloadBatchFile(batch) {
+            let wb = XLSX.utils.book_new();
+            let newWsName = '表1';
+            let {createdAt, codeList} = batch;
+            let wsData = codeList.map((code, index) => {
+                return {
+                    no: index,
+                    value: code
+                };
+            });
+            let ws = XLSX.utils.json_to_sheet(wsData);
+            XLSX.utils.book_append_sheet(wb, ws, newWsName);
+            XLSX.writeFile(wb, `范围文件${createdAt}.xlsx`);
+        },
+        gotoEdit() {
+            let {id, releaseStatus} = this.version;
+            if (releaseStatus === 'PRE_RELEASED') {
+                this.$router.push({name: 'EditVersion', params: {id}});
+            } else {
+                this.$router.push({name: 'EditVersionReleased', params: {id}});
+            }
         }
     }
 };

@@ -56,3 +56,10 @@ export const deleteVersionById = (id) => {
 export const launchVersion = (id, releaseStatus) => {
     return service.put(`/v1/sys/client-version/launch?id=${id}&releaseStatus=${releaseStatus}`);
 };
+
+/**
+ * 编辑版本
+ */
+export const editVersionById = (version) => {
+    return service.put(`/v1/sys/client-version/edit`, version);
+};

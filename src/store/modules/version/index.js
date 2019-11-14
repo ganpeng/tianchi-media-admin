@@ -149,12 +149,11 @@ const mutations = {
     //  dev_v2.5 新增逻辑
     addBatch(state, payload) {
         let {codeList} = payload;
-        state.version.batchList.push({codeList, createdAt: '', releaseStatus: 'DRAFT'});
+        state.version.batchList.push({codeList});
     },
     replaceBatch(state, payload) {
         let {index, codeList} = payload;
-        _.set(state.version.batchList, `${index}`, {
-            codeList, createdAt: '', releaseStatus: 'DRAFT'});
+        _.set(state.version.batchList, `${index}`, {codeList});
     }
 };
 
@@ -179,6 +178,12 @@ function formatVersion(version) {
 
     return Object.assign({}, version, {
         forced: version.forced === 1
+    });
+}
+
+function filterVersion(version) {
+    return Object.assign({}, version, {
+        forced: version.forced ? 1 : 0
     });
 }
 
@@ -248,8 +253,21 @@ const actions = {
         try {
             let res = await service.getVersionById(id);
             if (res && res.code === 0) {
-                commit('setVersion', {version: Object.assign({districtCodeList: [], clientVersionStatsList: []}, res.data)});
+                commit('setVersion', {
+                    version: Object.assign({
+                        districtCodeList: [],
+                        clientVersionStatsList: []
+                    }, filterVersion(res.data))});
             }
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    async editVersionById({commit, state}, id) {
+        try {
+            let version = _.cloneDeep(formatVersion(state.version));
+            let res = await service.editVersionById(Object.assign({}, version, {id}));
+            return res;
         } catch (err) {
             console.log(err);
         }

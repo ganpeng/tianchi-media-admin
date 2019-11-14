@@ -138,7 +138,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="版本号" align="center" prop="versionCode"></el-table-column>
-                    <el-table-column align="center" label="升级类型">
+                    <el-table-column align="center" width="120px" label="升级类型">
                         <template slot-scope="scope">
                             {{scope.row.productType === 'TV_LAUNCHER' ? '应用升级' : '系统升级'}}
                         </template>
@@ -148,17 +148,11 @@
                             {{scope.row.forced ? '强制升级' : '选择升级'}}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" label="硬件类型">
+                    <el-table-column align="center" width="120px" label="硬件类型">
                         <template slot-scope="scope">
                             {{hardwareType(scope.row.hardwareType)}}
                         </template>
                     </el-table-column>
-                    <!--
-                    <el-table-column align="center" width="120px" label="升级包下载">
-                        <template slot-scope="scope">
-                        </template>
-                    </el-table-column>
-                    -->
                     <el-table-column align="center" width="140px" label="升级包">
                         <template slot-scope="scope">
                             <a v-if="scope.row.fullPackageUri" class="text-primary"
@@ -185,7 +179,7 @@
                     <el-table-column align="center" width="190px" label="操作">
                         <template slot-scope="scope">
                             <div class="operator-btn-wrapper">
-                                <span class="btn-text" @click="editVersion(scope.row.id)">编辑</span>
+                                <span v-if="scope.row.releaseStatus !== 'WITHDRAW'" class="btn-text" @click="editVersion(scope.row)">编辑</span>
                                 <span v-if="scope.row.releaseStatus === 'PRE_RELEASED'" class="btn-text" @click="releaseVersion(scope.row.id)">发布</span>
                                 <span v-if="scope.row.releaseStatus === 'PRE_RELEASED'" class="btn-text text-danger" @click="deleteVersion(scope.row.id)">删除</span>
                             </div>
@@ -356,7 +350,13 @@ export default {
             return this.$util.convertFileSize(size);
         },
         //  dev_v2.5 新增
-        editVersion(id) {
+        editVersion(version) {
+            let {id, releaseStatus} = version;
+            if (releaseStatus === 'PRE_RELEASED') {
+                this.$router.push({name: 'EditVersion', params: {id}});
+            } else {
+                this.$router.push({name: 'EditVersionReleased', params: {id}});
+            }
         },
         async releaseVersion(id) {
             try {

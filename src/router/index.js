@@ -638,6 +638,16 @@ let router = new Router({
                     component: CreateVersion
                 },
                 {
+                    path: '/manage-version/edit/:id',
+                    name: 'EditVersion',
+                    component: () => import('@/page/version_manage/EditVersion')
+                },
+                {
+                    path: '/manage-version/edit-released/:id',
+                    name: 'EditVersionReleased',
+                    component: () => import('@/page/version_manage/EditVersionReleased')
+                },
+                {
                     path: '/manage-version/display/:id',
                     name: 'VersionDetail',
                     component: VersionDetail
