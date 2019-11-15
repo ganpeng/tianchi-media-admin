@@ -63,3 +63,17 @@ export const launchVersion = (id, releaseStatus) => {
 export const editVersionById = (version) => {
     return service.put(`/v1/sys/client-version/edit`, version);
 };
+
+/**
+ * 保存套餐图
+ */
+export const putImagePackage = (data) => {
+    return service.put(`/v1/content/image-package`, data);
+};
+
+/**
+ * 获取套餐图
+ */
+export const getImagePackage = () => {
+    return service.get(`/v1/content/image-package`);
+};

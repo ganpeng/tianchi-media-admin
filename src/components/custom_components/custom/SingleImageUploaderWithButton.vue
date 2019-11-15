@@ -61,7 +61,11 @@
                 if (this.allowFileList) {
                     fileList = this.allowFileList(images);
                 } else {
-                    fileList = filterSizeMatchFiles(images, this.allowResolutions);
+                    if (this.allowResolutions.length > 0) {
+                        fileList = filterSizeMatchFiles(images, this.allowResolutions);
+                    } else {
+                        fileList = images;
+                    }
                 }
                 if (fileList.length === 0) {
                     this.$message.error('本次选择图片不符合尺寸要求');
