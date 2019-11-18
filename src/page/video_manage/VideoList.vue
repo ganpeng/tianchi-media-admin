@@ -405,7 +405,16 @@
             },
             // 后端导出全部视频的EXCEL列表
             exportAllVideoHandler() {
-
+                this.$service.exportAllVideoListExcel().then(response => {
+                    console.log('下载');
+                    console.log(response);
+                    let aLink = document.createElement('a');
+                    let blob = new Blob([response], {type: 'application/vnd.ms-excel'});
+                    aLink.href = URL.createObjectURL(blob);
+                    aLink.setAttribute('download', '所有视频表_' + new Date() + '.xlsx');
+                    aLink.click();
+                    this.$refs.loadElement.appendChild(aLink);
+                });
             },
             // 拉取主站的视频到子站(只存在于子站)
             pullVideoFromMaster(videoList) {

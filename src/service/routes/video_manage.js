@@ -98,6 +98,15 @@ export const exportTsVideos = ({videoIdList, isRetry}) => {
 };
 
 /**
+ * 导出全部视频列表的EXCEL
+ */
+export const exportAllVideoListExcel = () => {
+    return service.post('/v1/storage/video/export/excel', {}, {
+        baseURL: '/storage'
+    });
+};
+
+/**
  * 获取所有时长不一致视频的列表
  */
 export const getDurationDiffVideoList = ({durationDiffGt, durationDiffLt, keyword, startedAt, endedAt, pageNum, pageSize}) => {
