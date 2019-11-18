@@ -360,9 +360,17 @@ export default {
         },
         async releaseVersion(id) {
             try {
-                let res = await this.$service.launchVersion(id, 'RELEASED');
-                if (res && res.code === 0) {
-                    this.getVersionList();
+                let confirm = await this.$confirm(`您确定要发布该版本吗, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                });
+
+                if (confirm) {
+                    let res = await this.$service.launchVersion(id, 'RELEASED');
+                    if (res && res.code === 0) {
+                        this.getVersionList();
+                    }
                 }
             } catch (err) {
                 console.log(err);

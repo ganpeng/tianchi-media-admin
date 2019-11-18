@@ -100,10 +100,12 @@
                         </div>
                         <div class="ad-desc">
                             <div class="ellipsis one">{{item.name}}</div>
+                            <div v-if="setAdVisible(adInfo.adType)">{{setLabel(item.visitType)}}</div>
+                            <div v-if="setAdVisible(adInfo.adType)">{{targetUrl(item)}}</div>
                         </div>
                     </div>
                 </div>
-                <ul>
+                <ul :class="[setAdVisible(adInfo.adType) && 'set-ad']">
                     <li><label>总体积</label><span>{{resourceSize | convertFileSize}}</span></li>
                     <li>
                         <label>广告主</label>
@@ -208,6 +210,41 @@
                     duration = duration + parseInt(video.duration);
                 });
                 return duration;
+            },
+            setAdVisible() {
+                return (adType) => {
+                    return adType === 'PROGRAMME_DETAIL' ||
+                        adType === 'SCREEN_SAVER';
+                };
+            },
+            setLabel() {
+                return (visitType) => {
+                    switch (visitType) {
+                        case 'LINK':
+                            return '设置为网页';
+                        case 'PROGRAMME':
+                            return '设置为节目';
+                        case 'VIP_BUY':
+                            return '设置为会员购买';
+                        default:
+                            return '';
+                    }
+                };
+            },
+            targetUrl() {
+                return (adMaterial) => {
+                    let {visitType, targetUrl} = adMaterial;
+                    switch (visitType) {
+                        case 'LINK':
+                            return targetUrl;
+                        case 'PROGRAMME':
+                            return targetUrl === null || targetUrl === '' ? '' : _.get(JSON.parse(targetUrl), 'name');
+                        case 'VIP_BUY':
+                            return '';
+                        default:
+                            return '';
+                    }
+                };
             }
         },
         methods: {
@@ -569,6 +606,9 @@
             padding-right: 25px;
             border: 1px solid #3E495E;
             border-radius: 8px;
+            &.set-ad {
+                margin-top: 100px;
+            }
             li {
                 margin-left: 11px;
                 margin-bottom: 15px;
