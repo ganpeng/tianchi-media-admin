@@ -1,1204 +1,1304 @@
 {
     "RECORDS": [
         {
-            "id": "50",
-            "created_at": "13/11/2019 21:41:22",
-            "main_menu": "广告管理",
+            "id": "182",
+            "created_at": "15/11/2019 17:15:05",
             "permission": "ad:advertiser:add",
             "resource_name": "添加广告主",
             "resource_url": "[/v1/ad/advertiser]",
-            "secondary_menu": "广告主",
-            "updated_at": "13/11/2019 21:41:22"
+            "updated_at": "15/11/2019 17:15:05",
+            "main_menu": "广告管理",
+            "secondary_menu": "广告主"
         },
         {
-            "id": "51",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "广告管理",
+            "id": "183",
+            "created_at": "15/11/2019 17:15:05",
             "permission": "ad:advertiser:put",
             "resource_name": "编辑广告主",
             "resource_url": "[/v1/ad/advertiser]",
-            "secondary_menu": "广告主",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:05",
+            "main_menu": "广告管理",
+            "secondary_menu": "广告主"
         },
         {
-            "id": "52",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "广告管理",
+            "id": "184",
+            "created_at": "15/11/2019 17:15:05",
             "permission": "ad:advertiser:get",
             "resource_name": "广告主详情",
             "resource_url": "[/v1/ad/advertiser/{id}]",
-            "secondary_menu": "广告主",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:05",
+            "main_menu": "广告管理",
+            "secondary_menu": "广告主"
         },
         {
-            "id": "53",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "广告管理",
+            "id": "185",
+            "created_at": "15/11/2019 17:15:05",
             "permission": "ad:advertiser:delete",
             "resource_name": "删除广告主",
             "resource_url": "[/v1/ad/advertiser/{id}]",
-            "secondary_menu": "广告主",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:05",
+            "main_menu": "广告管理",
+            "secondary_menu": "广告主"
         },
         {
-            "id": "54",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "广告管理",
+            "id": "186",
+            "created_at": "15/11/2019 17:15:05",
             "permission": "ad:advertiser:page",
             "resource_name": "搜索筛选",
             "resource_url": "[/v1/ad/advertiser/page]",
-            "secondary_menu": "广告主",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:05",
+            "main_menu": "广告管理",
+            "secondary_menu": "广告主"
         },
         {
-            "id": "55",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "广告管理",
-            "permission": "ad:generalAd:add",
-            "resource_name": "添加广告",
-            "resource_url": "[/v1/ad/general-ad]",
-            "secondary_menu": "广告",
-            "updated_at": "13/11/2019 21:41:23"
-        },
-        {
-            "id": "56",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "广告管理",
+            "id": "187",
+            "created_at": "15/11/2019 17:15:05",
             "permission": "ad:generalAd:put",
             "resource_name": "编辑广告",
             "resource_url": "[/v1/ad/general-ad/{id}]",
-            "secondary_menu": "广告",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:05",
+            "main_menu": "广告管理",
+            "secondary_menu": "广告"
         },
         {
-            "id": "57",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "广告管理",
+            "id": "188",
+            "created_at": "15/11/2019 17:15:05",
             "permission": "ad:generalAd:delete",
             "resource_name": "删除广告",
             "resource_url": "[/v1/ad/general-ad/{id}]",
-            "secondary_menu": "广告",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:05",
+            "main_menu": "广告管理",
+            "secondary_menu": "广告"
         },
         {
-            "id": "58",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "广告管理",
+            "id": "189",
+            "created_at": "15/11/2019 17:15:05",
             "permission": "ad:generalAd:get",
             "resource_name": "广告详情",
             "resource_url": "[/v1/ad/general-ad/{id}]",
-            "secondary_menu": "广告",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:05",
+            "main_menu": "广告管理",
+            "secondary_menu": "广告"
         },
         {
-            "id": "59",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "广告管理",
+            "id": "190",
+            "created_at": "15/11/2019 17:15:05",
             "permission": "ad:generalAd:page",
             "resource_name": "搜索筛选",
             "resource_url": "[/v1/ad/general-ad/page]",
-            "secondary_menu": "广告",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:05",
+            "main_menu": "广告管理",
+            "secondary_menu": "广告"
         },
         {
-            "id": "60",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "广告管理",
+            "id": "191",
+            "created_at": "15/11/2019 17:15:05",
             "permission": "ad:generalAd:visible",
             "resource_name": "上下架",
             "resource_url": "[/v1/ad/general-ad/{id}/visible]",
-            "secondary_menu": "广告",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:05",
+            "main_menu": "广告管理",
+            "secondary_menu": "广告"
         },
         {
-            "id": "61",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "192",
+            "created_at": "15/11/2019 17:15:05",
+            "permission": "ad:generalAd:add",
+            "resource_name": "添加广告",
+            "resource_url": "[/v1/ad/general-ad]",
+            "updated_at": "15/11/2019 17:15:05",
+            "main_menu": "广告管理",
+            "secondary_menu": "广告"
+        },
+        {
+            "id": "193",
+            "created_at": "15/11/2019 17:15:05",
             "permission": "admin:admin:put",
             "resource_name": "编辑管理员",
             "resource_url": "[/v1/admin/{id}]",
-            "secondary_menu": "管理员",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:05",
+            "main_menu": "管理员",
+            "secondary_menu": "管理员"
         },
         {
-            "id": "62",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "194",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:admin:get",
             "resource_name": "管理员详情",
             "resource_url": "[/v1/admin/{id}]",
-            "secondary_menu": "管理员",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "管理员"
         },
         {
-            "id": "63",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "195",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:admin:add",
             "resource_name": "添加管理员",
             "resource_url": "[/v1/admin]",
-            "secondary_menu": "管理员",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "管理员"
         },
         {
-            "id": "64",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "196",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:admin:visible",
             "resource_name": "禁用启用",
             "resource_url": "[/v1/admin/{id}/status]",
-            "secondary_menu": "管理员",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "管理员"
         },
         {
-            "id": "65",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "197",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:admin:resetPassword",
             "resource_name": "重置密码",
             "resource_url": "[/v1/admin/{id}/password]",
-            "secondary_menu": "管理员",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "管理员"
         },
         {
-            "id": "66",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "198",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:admin:putPassword",
             "resource_name": "修改密码",
             "resource_url": "[/v1/admin/self/password]",
-            "secondary_menu": "管理员",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "管理员"
         },
         {
-            "id": "67",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "199",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:admin:page",
             "resource_name": "搜索筛选",
             "resource_url": "[/v1/admin/page]",
-            "secondary_menu": "管理员",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "管理员"
         },
         {
-            "id": "68",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "200",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:admin:delete",
             "resource_name": "删除管理员",
             "resource_url": "[/v1/admin/{id}]",
-            "secondary_menu": "管理员",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "管理员"
         },
         {
-            "id": "69",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "201",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:admin:batchVisible",
             "resource_name": "批量禁用启用",
             "resource_url": "[/v1/admin/batch/status]",
-            "secondary_menu": "管理员",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "管理员"
         },
         {
-            "id": "70",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "202",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:department:add",
             "resource_name": "添加部门",
             "resource_url": "[/v1/department]",
-            "secondary_menu": "部门管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "部门管理"
         },
         {
-            "id": "71",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "203",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:department:put",
             "resource_name": "编辑部门",
             "resource_url": "[/v1/department/{id}]",
-            "secondary_menu": "部门管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "部门管理"
         },
         {
-            "id": "72",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "204",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:department:get",
             "resource_name": "部门详情",
             "resource_url": "[/v1/department/{id}]",
-            "secondary_menu": "部门管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "部门管理"
         },
         {
-            "id": "73",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "205",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:department:page",
             "resource_name": "搜索筛选",
             "resource_url": "[/v1/department/page]",
-            "secondary_menu": "部门管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "部门管理"
         },
         {
-            "id": "74",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "206",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:department:delete",
             "resource_name": "删除部门",
             "resource_url": "[/v1/department/{id}]",
-            "secondary_menu": "部门管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "部门管理"
         },
         {
-            "id": "75",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "207",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:role:put",
             "resource_name": "编辑角色",
             "resource_url": "[/v1/sys_role/{id}]",
-            "secondary_menu": "角色管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "角色管理"
         },
         {
-            "id": "76",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "208",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:role:delete",
             "resource_name": "删除角色",
             "resource_url": "[/v1/sys_role/{id}]",
-            "secondary_menu": "角色管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "角色管理"
         },
         {
-            "id": "77",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "209",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:role:add",
             "resource_name": "添加角色",
             "resource_url": "[/v1/sys_role]",
-            "secondary_menu": "角色管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "角色管理"
         },
         {
-            "id": "78",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "210",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:role:get",
             "resource_name": "角色详情",
             "resource_url": "[/v1/sys_role/{id}]",
-            "secondary_menu": "角色管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "角色管理"
         },
         {
-            "id": "79",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "211",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:role:visible",
             "resource_name": "禁用启用",
             "resource_url": "[/v1/sys_role/{id}/visible]",
-            "secondary_menu": "角色管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "角色管理"
         },
         {
-            "id": "80",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "212",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:role:batchVisible",
             "resource_name": "批量禁用启用",
             "resource_url": "[/v1/sys_role/visible]",
-            "secondary_menu": "角色管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "角色管理"
         },
         {
-            "id": "81",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "213",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:role:page",
             "resource_name": "搜索筛选",
             "resource_url": "[/v1/sys_role/page]",
-            "secondary_menu": "角色管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "角色管理"
         },
         {
-            "id": "82",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "管理员",
+            "id": "214",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "admin:role:batchDelete",
             "resource_name": "批量删除",
             "resource_url": "[/v1/sys_role]",
-            "secondary_menu": "角色管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "管理员",
+            "secondary_menu": "角色管理"
         },
         {
-            "id": "83",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "产品管理",
+            "id": "215",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "bo:commodity:add",
             "resource_name": "添加商品",
             "resource_url": "[/v1/commodity]",
-            "secondary_menu": "商品管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "产品管理",
+            "secondary_menu": "商品管理"
         },
         {
-            "id": "84",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "产品管理",
+            "id": "216",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "bo:commodity:put",
             "resource_name": "编辑商品",
             "resource_url": "[/v1/commodity]",
-            "secondary_menu": "商品管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "产品管理",
+            "secondary_menu": "商品管理"
         },
         {
-            "id": "85",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "产品管理",
+            "id": "217",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "bo:commodity:visible",
             "resource_name": "上下架",
             "resource_url": "[/v1/commodity/{id}]",
-            "secondary_menu": "商品管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "产品管理",
+            "secondary_menu": "商品管理"
         },
         {
-            "id": "86",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "产品管理",
+            "id": "218",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "bo:commodity:get",
             "resource_name": "商品详情",
             "resource_url": "[/v1/commodity/{id}]",
-            "secondary_menu": "商品管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "产品管理",
+            "secondary_menu": "商品管理"
         },
         {
-            "id": "87",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "产品管理",
+            "id": "219",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "bo:commodity:page",
             "resource_name": "搜索筛选",
             "resource_url": "[/v1/commodity/page]",
-            "secondary_menu": "商品管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "产品管理",
+            "secondary_menu": "商品管理"
         },
         {
-            "id": "88",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "产品管理",
+            "id": "220",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "bo:product:add",
             "resource_name": "产品添加",
             "resource_url": "[/v1/product]",
-            "secondary_menu": "产品管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "产品管理",
+            "secondary_menu": "产品管理"
         },
         {
-            "id": "89",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "产品管理",
+            "id": "221",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "bo:product:put",
             "resource_name": "产品修改",
             "resource_url": "[/v1/product/{id}]",
-            "secondary_menu": "产品管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "产品管理",
+            "secondary_menu": "产品管理"
         },
         {
-            "id": "90",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "产品管理",
+            "id": "222",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "bo:product:visible",
             "resource_name": "上下架",
             "resource_url": "[/v1/product/{id}/visible]",
-            "secondary_menu": "产品管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "产品管理",
+            "secondary_menu": "产品管理"
         },
         {
-            "id": "91",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "产品管理",
+            "id": "223",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "bo:product:get",
             "resource_name": "产品详情",
             "resource_url": "[/v1/product/{id}]",
-            "secondary_menu": "产品管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "产品管理",
+            "secondary_menu": "产品管理"
         },
         {
-            "id": "92",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "产品管理",
+            "id": "224",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "bo:product:page",
             "resource_name": "搜索筛选",
             "resource_url": "[/v1/product/page]",
-            "secondary_menu": "产品管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "产品管理",
+            "secondary_menu": "产品管理"
         },
         {
-            "id": "93",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "内容管理",
+            "id": "225",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "content:figure:visible",
             "resource_name": "上下架",
             "resource_url": "[/v1/content/figure/{id}/visible]",
-            "secondary_menu": "人物管理",
-            "updated_at": "13/11/2019 21:41:23"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
         },
         {
-            "id": "94",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "内容管理",
-            "permission": "content:figure:add",
-            "resource_name": "添加人物",
-            "resource_url": "[/v1/content/figure]",
-            "secondary_menu": "人物管理",
-            "updated_at": "13/11/2019 21:41:23"
-        },
-        {
-            "id": "95",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "内容管理",
-            "permission": "content:figure:export",
-            "resource_name": "导出人物",
-            "resource_url": "[/v1/content/figure/excel]",
-            "secondary_menu": "人物管理",
-            "updated_at": "13/11/2019 21:41:23"
-        },
-        {
-            "id": "96",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "内容管理",
-            "permission": "content:figure:put",
-            "resource_name": "编辑人物",
-            "resource_url": "[/v1/content/figure/{id}]",
-            "secondary_menu": "人物管理",
-            "updated_at": "13/11/2019 21:41:23"
-        },
-        {
-            "id": "97",
-            "created_at": "13/11/2019 21:41:23",
-            "main_menu": "内容管理",
-            "permission": "content:figure:get",
-            "resource_name": "人物详情",
-            "resource_url": "[/v1/content/figure/{id}]",
-            "secondary_menu": "人物管理",
-            "updated_at": "13/11/2019 21:41:23"
-        },
-        {
-            "id": "98",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
-            "permission": "content:figure:page",
-            "resource_name": "搜索筛选",
-            "resource_url": "[/v1/content/figure/page]",
-            "secondary_menu": "人物管理",
-            "updated_at": "13/11/2019 21:41:24"
-        },
-        {
-            "id": "99",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
-            "permission": "content:figure:delete",
-            "resource_name": "删除人物",
-            "resource_url": "[/v1/content/figure/{id}]",
-            "secondary_menu": "人物管理",
-            "updated_at": "13/11/2019 21:41:24"
-        },
-        {
-            "id": "100",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
-            "permission": "content:figure:batchDelete",
-            "resource_name": "批量删除",
-            "resource_url": "[/v1/content/figure]",
-            "secondary_menu": "人物管理",
-            "updated_at": "13/11/2019 21:41:24"
-        },
-        {
-            "id": "101",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
-            "permission": "content:figure:batchVisible",
-            "resource_name": "批量上下架",
-            "resource_url": "[/v1/content/figure/visible]",
-            "secondary_menu": "人物管理",
-            "updated_at": "13/11/2019 21:41:24"
-        },
-        {
-            "id": "102",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "226",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "content:figure:import",
             "resource_name": "批量导入",
             "resource_url": "[/v1/content/figure/import]",
-            "secondary_menu": "人物管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
         },
         {
-            "id": "103",
-            "created_at": "13/11/2019 21:41:24",
+            "id": "227",
+            "created_at": "15/11/2019 17:15:06",
+            "permission": "content:figure:add",
+            "resource_name": "添加人物",
+            "resource_url": "[/v1/content/figure]",
+            "updated_at": "15/11/2019 17:15:06",
             "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "228",
+            "created_at": "15/11/2019 17:15:06",
+            "permission": "content:figure:export",
+            "resource_name": "导出人物",
+            "resource_url": "[/v1/content/figure/excel]",
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "229",
+            "created_at": "15/11/2019 17:15:06",
+            "permission": "content:figure:put",
+            "resource_name": "编辑人物",
+            "resource_url": "[/v1/content/figure/{id}]",
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "230",
+            "created_at": "15/11/2019 17:15:06",
+            "permission": "content:figure:get",
+            "resource_name": "人物详情",
+            "resource_url": "[/v1/content/figure/{id}]",
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "231",
+            "created_at": "15/11/2019 17:15:06",
+            "permission": "content:figure:page",
+            "resource_name": "搜索筛选",
+            "resource_url": "[/v1/content/figure/page]",
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "232",
+            "created_at": "15/11/2019 17:15:06",
+            "permission": "content:figure:delete",
+            "resource_name": "删除人物",
+            "resource_url": "[/v1/content/figure/{id}]",
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "233",
+            "created_at": "15/11/2019 17:15:06",
+            "permission": "content:figure:batchDelete",
+            "resource_name": "批量删除",
+            "resource_url": "[/v1/content/figure]",
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "234",
+            "created_at": "15/11/2019 17:15:06",
+            "permission": "content:figure:batchVisible",
+            "resource_name": "批量上下架",
+            "resource_url": "[/v1/content/figure/visible]",
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "人物管理"
+        },
+        {
+            "id": "235",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "content:hotSearch:list",
             "resource_name": "热搜列表",
             "resource_url": "[/v1/content/hot-search]",
-            "secondary_menu": "搜索管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "搜索管理"
         },
         {
-            "id": "104",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "236",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "content:hotSearch:add",
             "resource_name": "添加热搜",
             "resource_url": "[/v1/content/hot-search]",
-            "secondary_menu": "搜索管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "搜索管理"
         },
         {
-            "id": "105",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "237",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "content:layoutBlock:add",
             "resource_name": "模块添加",
             "resource_url": "[/v1/content/layout-block]",
-            "secondary_menu": "页面布局",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "页面布局"
         },
         {
-            "id": "106",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "238",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "content:layoutBlock:put",
             "resource_name": "编辑模块",
             "resource_url": "[/v1/content/layout-block/{id}]",
-            "secondary_menu": "页面布局",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "页面布局"
         },
         {
-            "id": "107",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "239",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "content:layoutBlock:sort",
             "resource_name": "模块排序",
             "resource_url": "[/v1/content/layout-block/sort]",
-            "secondary_menu": "页面布局",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "页面布局"
         },
         {
-            "id": "108",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
-            "permission": "content:mark:add",
-            "resource_name": "模块角标",
-            "resource_url": "[/v1/content/mark]",
-            "secondary_menu": "角标管理",
-            "updated_at": "13/11/2019 21:41:24"
-        },
-        {
-            "id": "109",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "240",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "content:mark:put",
             "resource_name": "编辑角标",
             "resource_url": "[/v1/content/mark]",
-            "secondary_menu": "角标管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "角标管理"
         },
         {
-            "id": "110",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "241",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "content:mark:list",
             "resource_name": "角标列表",
             "resource_url": "[/v1/content/mark/list]",
-            "secondary_menu": "角标管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "角标管理"
         },
         {
-            "id": "111",
-            "created_at": "13/11/2019 21:41:24",
+            "id": "242",
+            "created_at": "15/11/2019 17:15:06",
+            "permission": "content:mark:add",
+            "resource_name": "模块角标",
+            "resource_url": "[/v1/content/mark]",
+            "updated_at": "15/11/2019 17:15:06",
             "main_menu": "内容管理",
+            "secondary_menu": "角标管理"
+        },
+        {
+            "id": "243",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "content:mark:delete",
             "resource_name": "删除角标",
             "resource_url": "[/v1/content/mark/{id}]",
-            "secondary_menu": "角标管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "角标管理"
         },
         {
-            "id": "112",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
-            "permission": "content:navBar:add",
-            "resource_name": "添加栏目",
-            "resource_url": "[/v1/content/nav-bar]",
-            "secondary_menu": "栏目管理",
-            "updated_at": "13/11/2019 21:41:24"
-        },
-        {
-            "id": "113",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "244",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "content:navBar:put",
             "resource_name": "编辑栏目",
             "resource_url": "[/v1/content/nav-bar]",
-            "secondary_menu": "栏目管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "栏目管理"
         },
         {
-            "id": "114",
-            "created_at": "13/11/2019 21:41:24",
+            "id": "245",
+            "created_at": "15/11/2019 17:15:06",
+            "permission": "content:navBar:add",
+            "resource_name": "添加栏目",
+            "resource_url": "[/v1/content/nav-bar]",
+            "updated_at": "15/11/2019 17:15:06",
             "main_menu": "内容管理",
+            "secondary_menu": "栏目管理"
+        },
+        {
+            "id": "246",
+            "created_at": "15/11/2019 17:15:06",
             "permission": "content:navBar:list",
             "resource_name": "栏目列表",
             "resource_url": "[/v1/content/nav-bar]",
-            "secondary_menu": "栏目管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:06",
+            "main_menu": "内容管理",
+            "secondary_menu": "栏目管理"
         },
         {
-            "id": "115",
-            "created_at": "13/11/2019 21:41:24",
+            "id": "247",
+            "created_at": "15/11/2019 17:15:07",
+            "permission": "content:programmeCategory:addAndPut",
+            "resource_name": "添加编辑类型类别",
+            "resource_url": "[/v1/content/programme-category]",
+            "updated_at": "15/11/2019 17:15:07",
             "main_menu": "内容管理",
+            "secondary_menu": "类型管理"
+        },
+        {
+            "id": "248",
+            "created_at": "15/11/2019 17:15:07",
+            "permission": "content:programmeCategory:list",
+            "resource_name": "类型类别列表",
+            "resource_url": "[/v1/content/programme-category]",
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "类型管理"
+        },
+        {
+            "id": "249",
+            "created_at": "15/11/2019 17:15:07",
+            "permission": "content:programmeCategory:delete",
+            "resource_name": "删除类型类别",
+            "resource_url": "[/v1/content/programme-category/{categoryId}]",
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "类型管理"
+        },
+        {
+            "id": "250",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:programme:batchDelete",
             "resource_name": "批量删除",
             "resource_url": "[/v1/content/programme]",
-            "secondary_menu": "节目管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
         },
         {
-            "id": "116",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
-            "permission": "content:programme:import",
-            "resource_name": "导入节目",
-            "resource_url": "[/v1/content/programme/import]",
-            "secondary_menu": "节目管理",
-            "updated_at": "13/11/2019 21:41:24"
-        },
-        {
-            "id": "117",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "251",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:programme:add",
             "resource_name": "添加节目",
             "resource_url": "[/v1/content/programme]",
-            "secondary_menu": "节目管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
         },
         {
-            "id": "118",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "252",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:programme:put",
             "resource_name": "编辑节目",
             "resource_url": "[/v1/content/programme/{id}]",
-            "secondary_menu": "节目管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
         },
         {
-            "id": "119",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "253",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:programme:visible",
             "resource_name": "上下架",
             "resource_url": "[/v1/content/programme/{id}/visible]",
-            "secondary_menu": "节目管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
         },
         {
-            "id": "120",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "254",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:programme:batchVisible",
             "resource_name": "批量上下加",
             "resource_url": "[/v1/content/programme/visible]",
-            "secondary_menu": "节目管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
         },
         {
-            "id": "121",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "255",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:programme:delete",
             "resource_name": "删除节目",
             "resource_url": "[/v1/content/programme/{id}]",
-            "secondary_menu": "节目管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
         },
         {
-            "id": "122",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "256",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:programme:get",
             "resource_name": "节目详情",
             "resource_url": "[/v1/content/programme/{id}]",
-            "secondary_menu": "节目管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
         },
         {
-            "id": "123",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "257",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:programme:page",
             "resource_name": "搜索筛选",
             "resource_url": "[/v1/content/programme/page]",
-            "secondary_menu": "节目管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
         },
         {
-            "id": "124",
-            "created_at": "13/11/2019 21:41:24",
+            "id": "258",
+            "created_at": "15/11/2019 17:15:07",
+            "permission": "content:programme:import",
+            "resource_name": "导入节目",
+            "resource_url": "[/v1/content/programme/import]",
+            "updated_at": "15/11/2019 17:15:07",
             "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
+        },
+        {
+            "id": "259",
+            "created_at": "15/11/2019 17:15:07",
+            "permission": "content:programmeTypeGroup:delete",
+            "resource_name": "删除类型组",
+            "resource_url": "[/v1/content/programme-type-group/list]",
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "类型管理"
+        },
+        {
+            "id": "260",
+            "created_at": "15/11/2019 17:15:07",
+            "permission": "content:programmeTypeGroup:addAndPut",
+            "resource_name": "添加编辑类型组",
+            "resource_url": "[/v1/content/programme-type-group]",
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "类型管理"
+        },
+        {
+            "id": "261",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:subject:get",
             "resource_name": "专题详情",
             "resource_url": "[/v1/content/subject/{id}]",
-            "secondary_menu": "专题管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "专题管理"
         },
         {
-            "id": "125",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "262",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:subject:add",
             "resource_name": "添加专题",
             "resource_url": "[/v1/content/subject]",
-            "secondary_menu": "专题管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "专题管理"
         },
         {
-            "id": "126",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "263",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:subject:patch",
             "resource_name": "编辑专题",
             "resource_url": "[/v1/content/subject/{id}]",
-            "secondary_menu": "专题管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "专题管理"
         },
         {
-            "id": "127",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "264",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:subject:visible",
             "resource_name": "上下架",
             "resource_url": "[/v1/content/subject/{id}/visible]",
-            "secondary_menu": "专题管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "专题管理"
         },
         {
-            "id": "128",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "265",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:subject:batchVisible",
             "resource_name": "批量上下架",
             "resource_url": "[/v1/content/subject/visible]",
-            "secondary_menu": "专题管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "专题管理"
         },
         {
-            "id": "129",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "266",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:subject:page",
             "resource_name": "搜索筛选",
             "resource_url": "[/v1/content/subject/page]",
-            "secondary_menu": "专题管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "专题管理"
         },
         {
-            "id": "130",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "267",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:subject:delete",
             "resource_name": "删除专题",
             "resource_url": "[/v1/content/subject/{id}]",
-            "secondary_menu": "专题管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "专题管理"
         },
         {
-            "id": "131",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "268",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:subject:batchDelete",
             "resource_name": "批量删除",
             "resource_url": "[/v1/content/subject]",
-            "secondary_menu": "专题管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "专题管理"
         },
         {
-            "id": "132",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "269",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:programme:liveProgrammeList",
             "resource_name": "节目单预览",
             "resource_url": "[/v1/live/channel-programme/list]",
-            "secondary_menu": "节目管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
         },
         {
-            "id": "133",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "270",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:programme:liveProgrammeImport",
             "resource_name": "导入节目单",
             "resource_url": "[/v1/live/channel-programme/list]",
-            "secondary_menu": "节目管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "节目管理"
         },
         {
-            "id": "134",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "271",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:channel:get",
             "resource_name": "频道详情",
             "resource_url": "[/v1/live/channel/{id}]",
-            "secondary_menu": "频道管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "频道管理"
         },
         {
-            "id": "135",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "272",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:channel:add",
             "resource_name": "添加频道",
             "resource_url": "[/v1/live/channel]",
-            "secondary_menu": "频道管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "频道管理"
         },
         {
-            "id": "136",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "273",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:channel:put",
             "resource_name": "编辑频道",
             "resource_url": "[/v1/live/channel/{id}]",
-            "secondary_menu": "频道管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "频道管理"
         },
         {
-            "id": "137",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "274",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:channel:visible",
             "resource_name": "上下架",
             "resource_url": "[/v1/live/channel/{id}/visible]",
-            "secondary_menu": "频道管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "频道管理"
         },
         {
-            "id": "138",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "275",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:channel:batchVisible",
             "resource_name": "批量上下架",
             "resource_url": "[/v1/live/channel/visible]",
-            "secondary_menu": "频道管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "频道管理"
         },
         {
-            "id": "139",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "276",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:channel:delete",
             "resource_name": "删除频道",
             "resource_url": "[/v1/live/channel/{id}]",
-            "secondary_menu": "频道管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "频道管理"
         },
         {
-            "id": "140",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "内容管理",
+            "id": "277",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "content:channel:page",
             "resource_name": "搜索筛选",
             "resource_url": "[/v1/live/channel/page]",
-            "secondary_menu": "频道管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "内容管理",
+            "secondary_menu": "频道管理"
         },
         {
-            "id": "141",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "用户管理",
+            "id": "278",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "user:order:get",
             "resource_name": "订单详情",
             "resource_url": "[/v1/order/{id}]",
-            "secondary_menu": "订单管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "用户管理",
+            "secondary_menu": "订单管理"
         },
         {
-            "id": "142",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "用户管理",
+            "id": "279",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "user:order:page",
             "resource_name": "筛选搜索",
             "resource_url": "[/v1/order/page]",
-            "secondary_menu": "订单管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "用户管理",
+            "secondary_menu": "订单管理"
         },
         {
-            "id": "143",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "首页",
+            "id": "280",
+            "created_at": "15/11/2019 17:15:07",
+            "permission": "sys:clientVersion:page",
+            "resource_name": "筛选搜索",
+            "resource_url": "[/v1/sys/client-version/page]",
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "版本设备",
+            "secondary_menu": "版本管理"
+        },
+        {
+            "id": "281",
+            "created_at": "15/11/2019 17:15:07",
+            "permission": "sys:clientVersion:launch",
+            "resource_name": "发布撤回版本",
+            "resource_url": "[/v1/sys/client-version/launch]",
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "版本设备",
+            "secondary_menu": "版本管理"
+        },
+        {
+            "id": "282",
+            "created_at": "15/11/2019 17:15:07",
+            "permission": "sys:clientVersion:add",
+            "resource_name": "添加版本",
+            "resource_url": "[/v1/sys/client-version/addVersion]",
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "版本设备",
+            "secondary_menu": "版本管理"
+        },
+        {
+            "id": "283",
+            "created_at": "15/11/2019 17:15:07",
+            "permission": "sys:clientVersion:delete",
+            "resource_name": "删除版本",
+            "resource_url": "[/v1/sys/client-version]",
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "版本设备",
+            "secondary_menu": "版本管理"
+        },
+        {
+            "id": "284",
+            "created_at": "15/11/2019 17:15:07",
+            "permission": "sys:clientVersion:put",
+            "resource_name": "编辑版本",
+            "resource_url": "[/v1/sys/client-version/edit]",
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "版本设备",
+            "secondary_menu": "版本管理"
+        },
+        {
+            "id": "285",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "sys:serverResource:get",
             "resource_name": "查看服务器参数",
             "resource_url": "[/v1/sys/server-resources/data/remaining]",
-            "secondary_menu": "存储空间",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "首页",
+            "secondary_menu": "存储空间"
         },
         {
-            "id": "144",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "站点管理",
+            "id": "286",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "sys:site:put",
             "resource_name": "编辑站点",
             "resource_url": "[/v1/sys/site]",
-            "secondary_menu": "站点列表",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "站点管理",
+            "secondary_menu": "站点列表"
         },
         {
-            "id": "145",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "站点管理",
+            "id": "287",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "sys:site:add",
             "resource_name": "添加站点",
             "resource_url": "[/v1/sys/site]",
-            "secondary_menu": "站点列表",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "站点管理",
+            "secondary_menu": "站点列表"
         },
         {
-            "id": "146",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "站点管理",
+            "id": "288",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "sys:site:delete",
             "resource_name": "删除站点",
             "resource_url": "[/v1/sys/site/{id}]",
-            "secondary_menu": "站点列表",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "站点管理",
+            "secondary_menu": "站点列表"
         },
         {
-            "id": "147",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "站点管理",
+            "id": "289",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "sys:site:page",
             "resource_name": "搜索筛选",
             "resource_url": "[/v1/sys/site/page]",
-            "secondary_menu": "站点列表",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "站点管理",
+            "secondary_menu": "站点列表"
         },
         {
-            "id": "148",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "配置中心",
+            "id": "290",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "sys:sysConfig:patch",
             "resource_name": "站点配置",
             "resource_url": "[/v1/sys/system-config/site-token]",
-            "secondary_menu": "站点配置",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "配置中心",
+            "secondary_menu": "站点配置"
         },
         {
-            "id": "149",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "产品管理",
-            "permission": "user:membershipScheme:add",
-            "resource_name": "添加套餐",
-            "resource_url": "[/v1/user/membership-scheme]",
-            "secondary_menu": "套餐管理",
-            "updated_at": "13/11/2019 21:41:24"
-        },
-        {
-            "id": "150",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "产品管理",
-            "permission": "user:membershipScheme:put",
-            "resource_name": "编辑套餐",
-            "resource_url": "[/v1/user/membership-scheme]",
-            "secondary_menu": "套餐管理",
-            "updated_at": "13/11/2019 21:41:24"
-        },
-        {
-            "id": "151",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "产品管理",
-            "permission": "user:membershipScheme:get",
-            "resource_name": "套餐详情",
-            "resource_url": "[/v1/user/membership-scheme/{id}]",
-            "secondary_menu": "套餐管理",
-            "updated_at": "13/11/2019 21:41:24"
-        },
-        {
-            "id": "152",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "产品管理",
+            "id": "291",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "user:membershipScheme:visible",
             "resource_name": "上下架",
             "resource_url": "[/v1/user/membership-scheme/{id}]",
-            "secondary_menu": "套餐管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "产品管理",
+            "secondary_menu": "套餐管理"
         },
         {
-            "id": "153",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "产品管理",
+            "id": "292",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "user:membershipScheme:page",
             "resource_name": "搜索筛选",
             "resource_url": "[/v1/user/membership-scheme/page]",
-            "secondary_menu": "套餐管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "产品管理",
+            "secondary_menu": "套餐管理"
         },
         {
-            "id": "154",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "首页",
+            "id": "293",
+            "created_at": "15/11/2019 17:15:07",
+            "permission": "user:membershipScheme:add",
+            "resource_name": "添加套餐",
+            "resource_url": "[/v1/user/membership-scheme]",
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "产品管理",
+            "secondary_menu": "套餐管理"
+        },
+        {
+            "id": "294",
+            "created_at": "15/11/2019 17:15:07",
+            "permission": "user:membershipScheme:put",
+            "resource_name": "编辑套餐",
+            "resource_url": "[/v1/user/membership-scheme]",
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "产品管理",
+            "secondary_menu": "套餐管理"
+        },
+        {
+            "id": "295",
+            "created_at": "15/11/2019 17:15:07",
+            "permission": "user:membershipScheme:get",
+            "resource_name": "套餐详情",
+            "resource_url": "[/v1/user/membership-scheme/{id}]",
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "产品管理",
+            "secondary_menu": "套餐管理"
+        },
+        {
+            "id": "296",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "user:stbLog:page",
             "resource_name": "搜索筛选",
             "resource_url": "[/v1/stb/crash-log/page]",
-            "secondary_menu": "客户端日志",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "首页",
+            "secondary_menu": "客户端日志"
         },
         {
-            "id": "155",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "版本设备",
-            "permission": "user:stb:get",
-            "resource_name": "设备详情",
-            "resource_url": "[/v1/stb/{id}]",
-            "secondary_menu": "设备管理",
-            "updated_at": "13/11/2019 21:41:24"
-        },
-        {
-            "id": "156",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "版本设备",
+            "id": "297",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "user:stb:visible",
             "resource_name": "禁用启用",
             "resource_url": "[/v1/stb/status]",
-            "secondary_menu": "设备管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "版本设备",
+            "secondary_menu": "设备管理"
         },
         {
-            "id": "157",
-            "created_at": "13/11/2019 21:41:24",
+            "id": "298",
+            "created_at": "15/11/2019 17:15:07",
+            "permission": "user:stb:get",
+            "resource_name": "设备详情",
+            "resource_url": "[/v1/stb/{id}]",
+            "updated_at": "15/11/2019 17:15:07",
             "main_menu": "版本设备",
+            "secondary_menu": "设备管理"
+        },
+        {
+            "id": "299",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "user:stb:put",
             "resource_name": "编辑设备",
             "resource_url": "[/v1/stb/{id}]",
-            "secondary_menu": "设备管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "版本设备",
+            "secondary_menu": "设备管理"
         },
         {
-            "id": "158",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "版本设备",
+            "id": "300",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "user:stb:add",
             "resource_name": "添加设备",
             "resource_url": "[/v1/stb]",
-            "secondary_menu": "设备管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "版本设备",
+            "secondary_menu": "设备管理"
         },
         {
-            "id": "159",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "版本设备",
+            "id": "301",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "user:stb:page",
             "resource_name": "搜索筛选",
             "resource_url": "[/v1/stb/page]",
-            "secondary_menu": "设备管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "版本设备",
+            "secondary_menu": "设备管理"
         },
         {
-            "id": "160",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "版本设备",
+            "id": "302",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "user:stb:delete",
             "resource_name": "删除设备",
             "resource_url": "[/v1/stb/{id}]",
-            "secondary_menu": "设备管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "版本设备",
+            "secondary_menu": "设备管理"
         },
         {
-            "id": "161",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "用户管理",
+            "id": "303",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "user:user:get",
             "resource_name": "用户详情",
             "resource_url": "[/v1/user/{id}]",
-            "secondary_menu": "用户管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "用户管理",
+            "secondary_menu": "用户管理"
         },
         {
-            "id": "162",
-            "created_at": "13/11/2019 21:41:24",
-            "main_menu": "用户管理",
+            "id": "304",
+            "created_at": "15/11/2019 17:15:07",
             "permission": "user:user:page",
             "resource_name": "筛选搜索",
             "resource_url": "[/v1/user/page]",
-            "secondary_menu": "用户管理",
-            "updated_at": "13/11/2019 21:41:24"
+            "updated_at": "15/11/2019 17:15:07",
+            "main_menu": "用户管理",
+            "secondary_menu": "用户管理"
         },
         {
-            "id": "163",
-            "created_at": "13/11/2019 21:45:22",
-            "main_menu": "内容管理",
+            "id": "305",
+            "created_at": "15/11/2019 17:21:25",
             "permission": "storage:video:add",
             "resource_name": "注入视频",
             "resource_url": "[/v1/storage/video]",
-            "secondary_menu": "视频管理",
-            "updated_at": "13/11/2019 21:45:22"
+            "updated_at": "15/11/2019 17:21:25",
+            "main_menu": "内容管理",
+            "secondary_menu": "视频管理"
         },
         {
-            "id": "164",
-            "created_at": "13/11/2019 21:45:22",
-            "main_menu": "内容管理",
+            "id": "306",
+            "created_at": "15/11/2019 17:21:25",
             "permission": "storage:video:page",
             "resource_name": "搜索筛选",
             "resource_url": "[/v1/storage/video/page]",
-            "secondary_menu": "视频管理",
-            "updated_at": "13/11/2019 21:45:22"
+            "updated_at": "15/11/2019 17:21:25",
+            "main_menu": "内容管理",
+            "secondary_menu": "视频管理"
         },
         {
-            "id": "165",
-            "created_at": "13/11/2019 21:45:22",
-            "main_menu": "内容管理",
+            "id": "307",
+            "created_at": "15/11/2019 17:21:25",
             "permission": "storage:video:durationCheck",
             "resource_name": "检查时长",
             "resource_url": "[/v1/storage/video/duration-diff/page]",
-            "secondary_menu": "视频管理",
-            "updated_at": "13/11/2019 21:45:22"
+            "updated_at": "15/11/2019 17:21:25",
+            "main_menu": "内容管理",
+            "secondary_menu": "视频管理"
         },
         {
-            "id": "166",
-            "created_at": "13/11/2019 21:45:22",
-            "main_menu": "内容管理",
+            "id": "308",
+            "created_at": "15/11/2019 17:21:25",
             "permission": "storage:video:delete",
             "resource_name": "删除视频",
             "resource_url": "[/v1/storage/video/{id}]",
-            "secondary_menu": "视频管理",
-            "updated_at": "13/11/2019 21:45:22"
+            "updated_at": "15/11/2019 17:21:25",
+            "main_menu": "内容管理",
+            "secondary_menu": "视频管理"
         },
         {
-            "id": "167",
-            "created_at": "13/11/2019 21:45:22",
-            "main_menu": "内容管理",
+            "id": "309",
+            "created_at": "15/11/2019 17:21:25",
             "permission": "storage:video:retry",
             "resource_name": "注入重试",
             "resource_url": "[/v1/storage/video/retry/{id}]",
-            "secondary_menu": "视频管理",
-            "updated_at": "13/11/2019 21:45:22"
+            "updated_at": "15/11/2019 17:21:25",
+            "main_menu": "内容管理",
+            "secondary_menu": "视频管理"
         },
         {
-            "id": "168",
-            "created_at": "13/11/2019 21:45:22",
-            "main_menu": "内容管理",
+            "id": "310",
+            "created_at": "15/11/2019 17:21:25",
             "permission": "storage:video:batchDelete",
             "resource_name": "批量删除",
             "resource_url": "[/v1/storage/video/delete]",
-            "secondary_menu": "视频管理",
-            "updated_at": "13/11/2019 21:45:22"
+            "updated_at": "15/11/2019 17:21:25",
+            "main_menu": "内容管理",
+            "secondary_menu": "视频管理"
         },
         {
-            "id": "169",
-            "created_at": "13/11/2019 21:45:22",
-            "main_menu": "内容管理",
+            "id": "311",
+            "created_at": "15/11/2019 17:21:25",
             "permission": "storage:video:batchDownload",
             "resource_name": "批量下载",
             "resource_url": "[/v1/storage/video/export]",
-            "secondary_menu": "视频管理",
-            "updated_at": "13/11/2019 21:45:22"
+            "updated_at": "15/11/2019 17:21:25",
+            "main_menu": "内容管理",
+            "secondary_menu": "视频管理"
         }
     ]
 }
