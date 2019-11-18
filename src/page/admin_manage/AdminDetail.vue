@@ -50,7 +50,18 @@
             </div>
         </div>
         <div class="seperator-line" id="divider"></div>
-        <admin-login-table></admin-login-table>
+        <admin-login-table
+            :logList="logList">
+        </admin-login-table>
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="listQueryParams.pageNum"
+            :page-sizes="[5, 10, 20, 50, 100, 200, 500]"
+            :page-size="listQueryParams.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total">
+        </el-pagination>
         <div class="fixed-btn-container">
             <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
         </div>
@@ -75,7 +86,14 @@
                     roleList: [{}],
                     createdAt: '',
                     status: 'NORMAL'
-                }
+                },
+                listQueryParams: {
+                    id: this.$route.params.id,
+                    pageNum: 1,
+                    pageSize: 10
+                },
+                total: 0,
+                logList: []
             };
         },
         filters: {
@@ -93,10 +111,27 @@
         methods: {
             initInfo() {
                 this.$service.getAdminInfo({id: this.$route.params.id}).then(response => {
-                    if (response) {
+                    if (response && response.code === 0) {
                         this.adminInfo = response.data;
                     }
                 });
+                this.getAdminLoginLog();
+            },
+            getAdminLoginLog() {
+                this.$service.getAdminLoginLog(this.listQueryParams).then(response => {
+                    if (response && response.code === 0) {
+                        this.logList = response.data.list;
+                        this.total = response.data.total;
+                    }
+                });
+            },
+            handleSizeChange(pageSize) {
+                this.listQueryParams.pageSize = pageSize;
+                this.getAdminLoginLog();
+            },
+            handleCurrentChange(pageNum) {
+                this.listQueryParams.pageNum = pageNum;
+                this.getAdminLoginLog();
             },
             toEdit() {
                 this.$router.push({name: 'EditAdmin', params: {id: this.$route.params.id}});
@@ -119,5 +154,9 @@
 
     #divider {
         margin: 50px 0px;
+    }
+
+    .el-pagination {
+        margin-top: 10px;
     }
 </style>

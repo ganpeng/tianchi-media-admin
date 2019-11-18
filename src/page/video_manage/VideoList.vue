@@ -406,8 +406,6 @@
             // 后端导出全部视频的EXCEL列表
             exportAllVideoHandler() {
                 this.$service.exportAllVideoListExcel().then(response => {
-                    console.log('下载');
-                    console.log(response);
                     let aLink = document.createElement('a');
                     let blob = new Blob([response], {type: 'application/vnd.ms-excel'});
                     aLink.href = URL.createObjectURL(blob);

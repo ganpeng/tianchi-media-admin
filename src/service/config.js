@@ -35,10 +35,13 @@ service.interceptors.response.use((response) => {
     if (response.data.code === 0) {
         return response.data;
     }
-    Message({
-        message: response.data.message,
-        type: 'warning'
-    });
+    // 去除下载媒体流的信息提示
+    if (response.data.config.responseType !== 'blob') {
+        Message({
+            message: response.data.message,
+            type: 'warning'
+        });
+    }
     return response.data;
 }, (err) => {
     // 用户未登录，删除本地cookie、storage、store中数据，转到登录页面

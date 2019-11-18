@@ -99,3 +99,20 @@ export const resetAdminPassword = ({id}) => {
 export const setAdminStatus = ({id, status}) => {
     return service.patch(util.format('/v1/admin/{0}/status?status={1}', id, status));
 };
+
+/**
+ * 获取平台管理员登录日志信息
+ */
+export const getAdminLoginLog = ({id, pageNum, pageSize}) => {
+    const params = {
+        id,
+        pageSize,
+        pageNum: pageNum - 1
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/log?${paramsStr}`);
+};
