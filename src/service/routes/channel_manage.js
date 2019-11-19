@@ -160,3 +160,12 @@ export const searchCarouselChannelList = (keyword) => {
 export const getFilialeList = () => {
     return service.get('/v1/company/list');
 };
+
+/**
+ * 导出全部频道列表的EXCEL
+ */
+export const exportAllChannelListExcel = ({channelCategory}) => {
+    return service.post('/v1/live/channel/export?channelCategory=' + channelCategory, 0, {
+        responseType: 'blob'
+    });
+};

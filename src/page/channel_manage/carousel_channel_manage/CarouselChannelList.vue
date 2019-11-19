@@ -161,7 +161,14 @@
             },
             // 导出全部轮播EXCEL列表
             exportAllChannel() {
-
+                this.$service.exportAllChannelListExcel({channelCategory: 'CAROUSEL'}).then(response => {
+                    let aLink = document.createElement('a');
+                    let blob = new Blob([response], {type: 'application/vnd.ms-excel'});
+                    aLink.href = URL.createObjectURL(blob);
+                    aLink.setAttribute('download', '所有轮播频道表_' + new Date() + '.xlsx');
+                    aLink.click();
+                    this.$refs.loadElement.appendChild(aLink);
+                });
             },
             createChannelByImportExcel() {
                 let routeData = this.$router.resolve({
