@@ -405,6 +405,9 @@
             },
             // 后端导出全部视频的EXCEL列表
             exportAllVideoHandler() {
+                if (!this.$authority.isHasAuthority('storage:video:export')) {
+                    return;
+                }
                 this.$service.exportAllVideoListExcel().then(response => {
                     let aLink = document.createElement('a');
                     let blob = new Blob([response], {type: 'application/vnd.ms-excel'});

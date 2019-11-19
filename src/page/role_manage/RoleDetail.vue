@@ -1,6 +1,6 @@
 <!--角色详情页面-->
 <template>
-    <div>
+    <div id="role-detail-page-container">
         <div class="content-title">角色详情</div>
         <div class="seperator-line"></div>
         <!--轮播信息-->
@@ -27,7 +27,21 @@
                 </div>
             </div>
         </div>
+        <div class="content-title">权限</div>
+        <div class="first-level-block" v-for="firstItem  in treeResourceList" :key="firstItem.label">
+            <div class="first-level">{{firstItem.label}}</div>
+            <div v-for="secondItem  in firstItem.children" :key="secondItem.label" class="second-level-block">
+                <div class="second-level">{{secondItem.label}}</div>
+                <div class="third-level-block">
+                    <div v-for="thirdItem  in secondItem.children" :key="thirdItem.label">
+                        <label class="third-level">{{thirdItem.label}}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="seperator-line"></div>
+        <div class="content-title">管理员列表</div>
+        <role-admin-table :roleAdminList="roleAdminList"></role-admin-table>
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="editInfo">编辑</el-button>
             <el-button class="btn-style-three" @click="toGoodsList" plain>返回列表</el-button>
@@ -36,17 +50,23 @@
 </template>
 
 <script>
+    import RoleAdminTable from './components/RoleAdminTable';
 
     export default {
         name: 'GoodsDetail',
+        components: {
+            RoleAdminTable
+        },
         data() {
             return {
+                treeResourceList: [],
                 showProductList: true,
                 roleInfo: {
                     roleName: '',
                     roleDesc: '',
                     visible: false
-                }
+                },
+                roleAdminList: []
             };
         },
         mounted() {
@@ -60,6 +80,8 @@
                         for (let key in response.data) {
                             this.roleInfo[key] = response.data[key];
                         }
+                        this.roleAdminList = response.data.adminList;
+                        this.treeResourceList = response.data.treeResourceList;
                     }
                 });
             },
@@ -80,6 +102,32 @@
 </script>
 
 <style lang="scss" scoped>
+
+    .first-level-block {
+        padding-left: 20px;
+        text-align: left;
+        margin-bottom: 30px;
+        .first-level {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .second-level-block {
+            padding-left: 20px;
+            .second-level {
+                font-size: 16px;
+                margin: 6px 0px;
+            }
+        }
+        .third-level-block {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            div {
+                margin-right: 20px;
+            }
+        }
+    }
 
     // 频道题目
     .detail-title-block {

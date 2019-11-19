@@ -161,6 +161,9 @@
             },
             // 导出全部轮播EXCEL列表
             exportAllChannel() {
+                if (!this.$authority.isHasAuthority('content:channel:export')) {
+                    return;
+                }
                 this.$service.exportAllChannelListExcel({channelCategory: 'CAROUSEL'}).then(response => {
                     let aLink = document.createElement('a');
                     let blob = new Blob([response], {type: 'application/vnd.ms-excel'});

@@ -9,7 +9,7 @@ import _ from 'lodash';
 /**
  * 获取角色权限树
  */
-export const getAthorityTree = () => {
+export const getAuthorityTree = () => {
     return service.get('/v1/sys_resource');
 };
 
