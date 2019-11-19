@@ -386,6 +386,10 @@
             };
         },
         created() {
+            if (!this.$authority.isHasAuthority('content:channel:page')) {
+                return;
+            }
+
             this.getChannelType();
             this.getChannelList();
             this.getFilialeList();
@@ -440,15 +444,24 @@
                 getFilialeList: 'channel/getFilialeList'
             }),
             clearSearchFields() {
+                if (!this.$authority.isHasAuthority('content:channel:page')) {
+                    return;
+                }
                 this.resetSearchFields();
                 this.getChannelList();
             },
             keyupHandler(e) {
+                if (!this.$authority.isHasAuthority('content:channel:page')) {
+                    return;
+                }
                 if (e.keyCode === 13) {
                     this.searchHandler();
                 }
             },
             handlePaginationChange(value, key) {
+                if (!this.$authority.isHasAuthority('content:channel:page')) {
+                    return;
+                }
                 this.updatePagination({value, key});
                 if (key === 'pageSize') {
                     window.localStorage.setItem('channelPageSize', value);
@@ -456,12 +469,16 @@
                 this.getChannelList();
             },
             editChannelByImportExcel() {
-                let routeData = this.$router.resolve({
-                    name: 'EditLiveChannelByImportExcel'
-                });
+                if (!this.$authority.isHasAuthority('content:channel:put')) {
+                    return;
+                }
+                let routeData = this.$router.resolve({ name: 'EditLiveChannelByImportExcel' });
                 window.open(routeData.href, '_blank');
             },
             previewChannelPage(id, name, flag) {
+                if (!this.$authority.isHasAuthority('content:programme:liveProgrammeList')) {
+                    return;
+                }
                 this.getChannelPageById(id)
                     .then((res) => {
                         if (res && res.code === 0) {
@@ -502,6 +519,9 @@
                 aLink.dispatchEvent(event);
             },
             inputHandler(value, key) {
+                if (!this.$authority.isHasAuthority('content:channel:page')) {
+                    return;
+                }
                 this.updateSearchFields({key, value});
                 if (key !== 'keyword') {
                     this.updatePagination({key: 'pageNum', value: 1});
@@ -510,6 +530,9 @@
             },
             async _deleteLiveChannel(channel) {
                 try {
+                    if (!this.$authority.isHasAuthority('content:channel:delete')) {
+                        return;
+                    }
                     let {id, visible} = channel;
                     if (visible) {
                         this.$message.warning('该频道为正常状态，暂时不能删除');
@@ -535,6 +558,9 @@
             },
             async _lowerFrameLiveChannel(channel) {
                 try {
+                    if (!this.$authority.isHasAuthority('content:channel:visible')) {
+                        return;
+                    }
                     let {id, visible} = channel;
                     let message = `${visible ? '禁播' : '恢复'}`;
                     let confirm = await this.$confirm(`此操作将${message}该频道, 是否继续?`, '提示', {
@@ -556,21 +582,30 @@
                 }
             },
             createLiveChannel() {
+                if (!this.$authority.isHasAuthority('content:channel:add')) {
+                    return;
+                }
                 let routeData = this.$router.resolve({name: 'CreateLiveChannel'});
                 window.open(routeData.href, '_blank');
             },
             editLiveChannel(id) {
+                if (!this.$authority.isHasAuthority('content:channel:put')) {
+                    return;
+                }
                 this.$router.push({name: 'EditLiveChannel', params: {id}});
             },
             // 批量创建直播频道
             createChannelByImportExcel() {
-                let routeData = this.$router.resolve({
-                    name: 'CreateChannelByImportExcel',
-                    params: {category: 'LIVE'}
-                });
+                if (!this.$authority.isHasAuthority('content:channel:add')) {
+                    return;
+                }
+                let routeData = this.$router.resolve({ name: 'CreateChannelByImportExcel', params: {category: 'LIVE'} });
                 window.open(routeData.href, '_blank');
             },
             searchHandler() {
+                if (!this.$authority.isHasAuthority('content:channel:page')) {
+                    return;
+                }
                 this.updatePagination({key: 'pageNum', value: 1});
                 this.getChannelList();
             },
@@ -585,6 +620,9 @@
                 return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
             },
             gotoBlankPage(name) {
+                if (!this.$authority.isHasAuthority('content:programme:liveProgrammeList')) {
+                    return;
+                }
                 let routeData = this.$router.resolve({name});
                 window.open(routeData.href, '_blank');
             },
@@ -595,6 +633,9 @@
                 this.$refs.displayVideoDialog.showDialog();
             },
             displayLiveChannel(id) {
+                if (!this.$authority.isHasAuthority('content:channel:get')) {
+                    return;
+                }
                 this.$router.push({name: 'LiveChannelDetail', params: {id}});
             },
             toggleSearchField() {
@@ -621,6 +662,9 @@
                 }
             },
             async multUpFrameChannelHandler() {
+                if (!this.$authority.isHasAuthority('content:channel:batchVisible')) {
+                    return;
+                }
                 let idList = this.selectedChannelList.map((item) => item.id);
                 let confirm = await this.$confirm(`您确定要恢复所选频道吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
@@ -639,6 +683,9 @@
                 }
             },
             async multLowerFrameChannelHandler() {
+                if (!this.$authority.isHasAuthority('content:channel:batchVisible')) {
+                    return;
+                }
                 let idList = this.selectedChannelList.map((item) => item.id);
                 let confirm = await this.$confirm(`您确定要禁播所选频道吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',

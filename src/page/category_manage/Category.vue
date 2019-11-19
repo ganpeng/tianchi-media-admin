@@ -315,6 +315,9 @@ export default {
         };
     },
     created() {
+        if (!this.$authority.isHasAuthority('content:programmeCategory:list')) {
+            return;
+        }
         this.fetchCategoryByIndex(this.activeTabIndex);
     },
     mounted() {
@@ -490,6 +493,9 @@ export default {
         //  节目类型管理部分开始
         async deleteProgrammeTypeHandler(id) {
             try {
+                if (!this.$authority.isHasAuthority('content:programmeCategory:delete')) {
+                    return;
+                }
                 let answer = await this.$confirm('此操作将永久删除该节目类型, 是否继续?', '提示', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
@@ -517,6 +523,9 @@ export default {
             }
         },
         addProgrammeCategoryHandler(name) {
+            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                return;
+            }
             let isExist = this.checkProgrammeCategoryIsExist(name, this.programmeCategoryActiveIndex);
             if (isExist) {
                 this.$message.error(`${name}类型已经存在`);
@@ -527,6 +536,9 @@ export default {
         },
         async saveProgrammeCategoryHandler() {
             try {
+                if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                    return;
+                }
                 let res = await this.saveProgrammeCategory();
                 if (res && res.code === 0) {
                     // 重新赋值类型别表
@@ -550,6 +562,9 @@ export default {
         //  节目类型管理部分结束
         //  直播类型管理开始
         addLiveCategoryHandler(name) {
+            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                return;
+            }
             let isExist = this.checkLiveCategoryIsExist(name);
             if (isExist) {
                 this.$message.error(`${name}类型已经存在`);
@@ -560,6 +575,9 @@ export default {
         },
         async deleteLiveCategoryHandler(id) {
             try {
+                if (!this.$authority.isHasAuthority('content:programmeCategory:delete')) {
+                    return;
+                }
                 let answer = await this.$confirm('此操作将永久删除该直播类型, 是否继续?', '提示', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
@@ -588,6 +606,9 @@ export default {
         },
         async saveLiveCategoryHandler() {
             try {
+                if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                    return;
+                }
                 let res = await this.saveChannelCategory();
                 if (res && res.code === 0) {
                     this.$message.success('保存成功');
@@ -600,6 +621,9 @@ export default {
         //  直播类型管理结束
         //  轮播类型管理开始
         addCarouselCategoryHandler(name) {
+            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                return;
+            }
             let isExist = this.checkCarouselCategoryIsExist(name);
             if (isExist) {
                 this.$message.error(`${name}类型已经存在`);
@@ -610,6 +634,9 @@ export default {
         },
         async deleteCarouselCategoryHandler(id) {
             try {
+                if (!this.$authority.isHasAuthority('content:programmeCategory:delete')) {
+                    return;
+                }
                 let answer = await this.$confirm('此操作将永久删除该轮播类型, 是否继续?', '提示', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
@@ -638,6 +665,9 @@ export default {
         },
         async saveCarouselCategoryHandler() {
             try {
+                if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                    return;
+                }
                 let res = await this.saveChannelCategory();
                 if (res && res.code === 0) {
                     this.$message.success('保存成功');
@@ -649,6 +679,9 @@ export default {
         },
         //  轮播类型管理结束
         addCategoryHandler(e) {
+            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                return;
+            }
             let name = e.target.value;
             if (name) {
                 switch (this.activeTabIndex) {
@@ -668,16 +701,26 @@ export default {
         },
         //  保存节目类型组
         addCategoryGroup() {
+            if (!this.$authority.isHasAuthority('content:programmeTypeGroup:addAndPut')) {
+                return;
+            }
+
             this.resetCategoryGroup();
             this.showCategoryGroupDialog();
         },
         editCategoryGroupByIndex(index) {
+            if (!this.$authority.isHasAuthority('content:programmeTypeGroup:addAndPut')) {
+                return;
+            }
             let categoryGroup = this.categoryGroupList[index];
             this.categoryGroup = _.cloneDeep(categoryGroup);
             this.index = index;
             this.showCategoryGroupDialog();
         },
         showCategoryGroupDialog() {
+            if (!this.$authority.isHasAuthority('content:programmeTypeGroup:addAndPut')) {
+                return;
+            }
             this.categoryGroupDialog = true;
             if (this.index) {
                 this.categoryGroupTitle = '编辑';
@@ -690,6 +733,9 @@ export default {
             this.index = null;
         },
         saveCategoryGroupHandler() {
+            if (!this.$authority.isHasAuthority('content:programmeTypeGroup:addAndPut')) {
+                return;
+            }
             let categoryGroup = _.cloneDeep(this.categoryGroup);
             if (!_.get(categoryGroup, 'name')) {
                 this.$message.error('请输入类型组名称');
@@ -703,6 +749,9 @@ export default {
             this.hideCategoryGroupDialog();
         },
         deleteCategoryGroupByIndexHandler(index) {
+            if (!this.$authority.isHasAuthority('content:programmeTypeGroup:delete')) {
+                return;
+            }
             this.deleteCategoryGroupByIndex({index});
         },
         resetCategoryGroup() {
@@ -726,18 +775,27 @@ export default {
         },
         //  v2.5新增内容
         editTypeNameHandler(id) {
+            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                return;
+            }
             this.typeNameUpdate({id, index: this.programmeCategoryActiveIndex});
         },
         typeInputValueChangeHandler(value, type) {
             this.typeInputValueUpdate({value, type, index: this.programmeCategoryActiveIndex});
         },
         toggleTypeEditHandler(id) {
+            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                return;
+            }
             if (!this.programmeCategoryIsEdit) {
                 this.toggleTypeEdit({id, index: this.programmeCategoryActiveIndex});
             }
         },
         async addNewProgrammeCategoryHandler() {
             try {
+                if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                    return;
+                }
                 let {value} = await this.$prompt(`请输入新分类`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -760,6 +818,9 @@ export default {
         },
         async deleteProgrammeCategoryHandler(category, index) {
             try {
+                if (!this.$authority.isHasAuthority('content:programmeCategory:delete')) {
+                    return;
+                }
                 let confirm = await this.$confirm(`您确定要删除该分类吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -785,6 +846,9 @@ export default {
             }
         },
         toggleCategoryEditHandler(index) {
+            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                return;
+            }
             if (this.editCategory && !this.programmeCategoryIsEdit) {
                 this.toggleCategoryEdit({index});
             }
@@ -793,9 +857,15 @@ export default {
             this.programmeCategoryInputValueUpdate({value, index});
         },
         editProgrammeCategoryNameHandler(index) {
+            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                return;
+            }
             this.programmeCategoryNameUpdate({index});
         },
         toggleEditCategoryHandler() {
+            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                return;
+            }
             if (this.editCategory) {
                 this.resetAllEdit();
             }
@@ -803,22 +873,34 @@ export default {
         },
         //  直播相关
         toggleLiveCategoryEditHandler(id) {
+            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                return;
+            }
             this.toggleLiveCategoryEdit({id});
         },
         liveCategoryInputValueChangeHandler(value, liveCategory) {
             this.liveCategoryInputValueUpdate({value, id: liveCategory.id});
         },
         editLiveCategoryNameHandler(id) {
+            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                return;
+            }
             this.liveCategoryNameUpdate({id});
         },
         //  轮播相关
         toggleCarouselCategoryEditHandler(id) {
+            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                return;
+            }
             this.toggleCarouselCategoryEdit({id});
         },
         carouselCategoryInputValueChangeHandler(value, liveCategory) {
             this.carouselCategoryInputValueUpdate({value, id: liveCategory.id});
         },
         editCarouselCategoryNameHandler(id) {
+            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+                return;
+            }
             this.carouselCategoryNameUpdate({id});
         }
     }

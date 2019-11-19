@@ -190,6 +190,9 @@ export default {
         };
     },
     created() {
+        if (!this.$authority.isHasAuthority('user:stbLog:page')) {
+            return;
+        }
         this.getClientErrorLogList();
     },
     computed: {
@@ -213,17 +216,29 @@ export default {
             this.dialogVisible = true;
         },
         handlePaginationChange(value, key) {
+            if (!this.$authority.isHasAuthority('user:stbLog:page')) {
+                return;
+            }
             this.updatePagination({key, value});
             this.getClientErrorLogList();
         },
         inputHandler(value, key) {
+            if (!this.$authority.isHasAuthority('user:stbLog:page')) {
+                return;
+            }
             this.updateSearchFields({key, value});
             this.getClientErrorLogList();
         },
         searchHandler() {
+            if (!this.$authority.isHasAuthority('user:stbLog:page')) {
+                return;
+            }
             this.getClientErrorLogList();
         },
         clearSearchFields() {
+            if (!this.$authority.isHasAuthority('user:stbLog:page')) {
+                return;
+            }
             this.resetSearchFields();
             this.getClientErrorLogList();
         }

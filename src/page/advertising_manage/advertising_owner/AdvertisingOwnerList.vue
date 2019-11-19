@@ -252,32 +252,51 @@
                 getAdvertisingOwnerList: 'advertising/getAdvertisingOwnerList'
             }),
             addAdvertisingOwner() {
-                let routeData = this.$router.resolve({
-                    name: 'AddAdvertisingOwner'
-                });
+                if (!this.$authority.isHasAuthority('ad:advertiser:add')) {
+                    return;
+                }
+                let routeData = this.$router.resolve({ name: 'AddAdvertisingOwner' });
                 window.open(routeData.href, '_blank');
             },
             editAdvertisingOwner(id) {
+                if (!this.$authority.isHasAuthority('ad:advertiser:put')) {
+                    return;
+                }
                 this.$router.push({name: 'EditAdvertisingOwner', params: {id}});
             },
             displayAdvertisingOwner(id) {
+                if (!this.$authority.isHasAuthority('ad:advertiser:get')) {
+                    return;
+                }
                 this.$router.push({name: 'DisplayAdvertisingOwner', params: {id}});
             },
             inputHandler(value, key) {
+                if (!this.$authority.isHasAuthority('ad:advertiser:page')) {
+                    return;
+                }
                 this.updateSearchFields({key, value});
                 if (key !== 'keyword') {
                     this.searchHandler();
                 }
             },
             searchHandler() {
+                if (!this.$authority.isHasAuthority('ad:advertiser:page')) {
+                    return;
+                }
                 this.updatePagination({key: 'pageNum', value: 1});
                 this.getAdvertisingOwnerList();
             },
             clearSearchFields() {
+                if (!this.$authority.isHasAuthority('ad:advertiser:page')) {
+                    return;
+                }
                 this.resetSearchFields();
                 this.getAdvertisingOwnerList();
             },
             handlePaginationChange(value, key) {
+                if (!this.$authority.isHasAuthority('ad:advertiser:page')) {
+                    return;
+                }
                 this.updatePagination({key, value});
                 this.getAdvertisingOwnerList();
             },
@@ -307,6 +326,9 @@
             },
             async deleteAdvertisingOwner(id) {
                 try {
+                    if (!this.$authority.isHasAuthority('ad:advertiser:delete')) {
+                        return;
+                    }
                     let confirm = await this.$confirm(`您确定要删除广告主吗, 是否继续?`, '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',

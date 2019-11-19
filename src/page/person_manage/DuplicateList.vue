@@ -163,21 +163,6 @@
                 deletePerson: 'person/deletePerson',
                 getDuplicateList: 'person/getDuplicateList'
             }),
-            searchHandler() {
-                this.resetDuplicatePagination();
-                this.getDuplicateList({isProgramme: false});
-            },
-            clearSearchFields() {
-                this.resetSearchFields();
-            },
-            keyupHandler(e) {
-                if (e.keyCode === 13) {
-                    this.getDuplicateList();
-                }
-            },
-            createPerson() {
-                this.$router.push({ name: 'CreatePerson' });
-            },
             areaLabel(code) {
                 let reg = /^\d+(\.\d+)?$/;
                 if (reg.test(code)) {
@@ -190,21 +175,57 @@
             cutStr20(value) {
                 return this.$util.cutStr(value, 19);
             },
+            searchHandler() {
+                if (!this.$authority.isHasAuthority('content:figure:page')) {
+                    return;
+                }
+                this.resetDuplicatePagination();
+                this.getDuplicateList({isProgramme: false});
+            },
+            keyupHandler(e) {
+                if (!this.$authority.isHasAuthority('content:figure:page')) {
+                    return;
+                }
+                if (e.keyCode === 13) {
+                    this.getDuplicateList();
+                }
+            },
+            createPerson() {
+                if (!this.$authority.isHasAuthority('content:figure:add')) {
+                    return;
+                }
+                this.$router.push({ name: 'CreatePerson' });
+            },
             // 跳转到详情页面
             displayPerson(userId) {
+                if (!this.$authority.isHasAuthority('content:figure:get')) {
+                    return;
+                }
                 this.$router.push({ name: 'DisplayPerson', params: { id: userId } });
             },
             editPerson(userId) {
+                if (!this.$authority.isHasAuthority('content:figure:put')) {
+                    return;
+                }
                 this.$router.push({ name: 'EditPerson', params: { id: userId } });
             },
             handlePaginationChange(value, key) {
+                if (!this.$authority.isHasAuthority('content:figure:page')) {
+                    return;
+                }
                 this.updateDuplicatePagination({value, key});
                 this.getDuplicateList();
             },
             inputHandler(value, key) {
+                if (!this.$authority.isHasAuthority('content:figure:page')) {
+                    return;
+                }
                 this.updateDuplicateSearchFields({key, value});
             },
             _lowerFramePerson(person) {
+                if (!this.$authority.isHasAuthority('content:figure:visible')) {
+                    return;
+                }
                 let {id, visible} = person;
                 this.$confirm(`您确定要${visible ? '下架人物' : '上架人物'}吗, 是否继续?`, '提示', {
                         confirmButtonText: '确定',
@@ -252,6 +273,9 @@
                 }
             },
             _deletePerson(id) {
+                if (!this.$authority.isHasAuthority('content:figure:delete')) {
+                    return;
+                }
                 this.$confirm(`您确定要删除该人物吗, 是否继续?`, '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
@@ -274,10 +298,6 @@
                         });
                     });
             },
-            // 重复人物查询
-            getDuplicateListHandler() {
-                this.getDuplicateList();
-            },
             // 放大预览图片
             displayImage(image) {
                 this.previewImage.title = image.name;
@@ -286,31 +306,6 @@
             },
             goBack() {
                 this.$router.back();
-            },
-            //  人物导入
-            submitUpload() {
-                this.$refs.upload.submit();
-            },
-            closeFileUploadDialog() {
-                this.fileUploadDialogVisible = false;
-                this.fileList = [];
-            },
-            showFileUploadDialog() {
-                this.fileUploadDialogVisible = true;
-            },
-            uploadSuccessHandler(res, file, fileList) {
-                if (res && res.code === 0) {
-                    this.$message({
-                        type: 'success',
-                        message: '人物导入成功'
-                    });
-                } else {
-                    this.$message({
-                        type: 'error',
-                        message: '人物导入失败'
-                    });
-                }
-                this.closeFileUploadDialog();
             }
         }
     };

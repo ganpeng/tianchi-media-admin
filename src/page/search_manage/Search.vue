@@ -45,13 +45,19 @@ export default {
             isEdit: false
         };
     },
-    created() {
-        this.$service.getHotSearch()
-            .then((res) => {
-                if (res && res.code === 0) {
-                    this.list = res.data;
-                }
-            });
+    async created() {
+        try {
+            if (!this.$authority.isHasAuthority('content:hotSearch:list')) {
+                return;
+            }
+
+            let res = await this.$service.getHotSearch();
+            if (res && res.code === 0) {
+                this.list = res.data;
+            }
+        } catch (err) {
+            console.log(err);
+        }
     },
     mounted() {
         this.$util.toggleFixedBtnContainer();
@@ -79,6 +85,9 @@ export default {
         },
         async saveSearchHandler() {
             try {
+                if (!this.$authority.isHasAuthority('content:hotSearch:add')) {
+                    return;
+                }
                 let emptyIndex = this.list.findIndex((item) => item.name === '');
                 if (emptyIndex >= 0) {
                     this.$message.error('热搜关键字不能为空');

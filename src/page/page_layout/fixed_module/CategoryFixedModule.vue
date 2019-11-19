@@ -175,6 +175,9 @@ export default {
             getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
         }),
         editFixedModuleHandler() {
+            if (!this.$authority.isHasAuthority('content:layoutBlock:put')) {
+                return;
+            }
             let {navbarId} = this.$route.params;
             let id = _.get(this.activeLayout, '0.id');
             this.$router.push({ name: 'EditFixedModule', params: {navbarId, index: 0}, query: {id} });
@@ -186,6 +189,9 @@ export default {
         },
         async saveHandler() {
             try {
+                if (!this.$authority.isHasAuthority('content:layoutBlock:add')) {
+                    return;
+                }
                 let {navbarId} = this.$route.params;
                 if (!this.selectAll(navbarId, 0)) {
                     let {id} = this.$route.query;
@@ -208,6 +214,9 @@ export default {
         },
         addShuffleLayout(squareIndex) {
             return (layoutItemType) => {
+                if (!this.$authority.isHasAuthority('content:layoutBlock:add')) {
+                    return;
+                }
                 this.squareIndex = squareIndex;
                 this.layoutItemType = layoutItemType;
                 this.setAllowResolutions(this.squareIndex);
