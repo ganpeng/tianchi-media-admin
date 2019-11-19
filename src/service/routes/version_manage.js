@@ -77,3 +77,10 @@ export const putImagePackage = (data) => {
 export const getImagePackage = () => {
     return service.get(`/v1/content/image-package`);
 };
+
+/**
+ * 获取版本号
+ */
+export const getVersionCode = () => {
+    return service.get(`/v1/admin/version`);
+};

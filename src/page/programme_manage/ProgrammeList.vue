@@ -189,6 +189,12 @@
                             <svg-icon icon-class="export"></svg-icon>
                             导出
                         </el-button>
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="exportAllProgrammeExcel">
+                            <svg-icon icon-class="export"></svg-icon>
+                            导出全部
+                        </el-button>
                     </div>
                 </div>
                 <el-table
@@ -768,6 +774,17 @@
                 if (item.refCount && item.refCount > 0) {
                     this.currentItem = item;
                     this.$refs.displayRelatedDialog.showDialog();
+                }
+            },
+            async exportAllProgrammeExcel() {
+                try {
+                    if (!this.$authority.isHasAuthority('content:programme:export')) {
+                        return;
+                    }
+                    let res = await this.$service.exportAllProgramme();
+                    this.$util.downloadFile(res, `全部节目.xlsx`);
+                } catch (err) {
+                    console.log(err);
                 }
             }
         }

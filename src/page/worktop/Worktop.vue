@@ -30,6 +30,7 @@
                 <svg-icon icon-class="aside_logo"></svg-icon>
                 <span>后台操作系统</span>
             </div>
+            <div class="version-code">Version: {{versionCode}}</div>
             <div class="info">
                 <p class="address">北京朝阳区东三环中路9号 3302/3304</p>
                 <p class="name">&copy;2018 北京天驰传媒股份有限公司 保留所有权</p>
@@ -44,6 +45,7 @@ export default {
     data() {
         let style = 'font-size:18px;display:block;text-align:right;';
         return {
+            versionCode: '',
             shortCutList: [
                 {
                     title: '上传视频',
@@ -102,6 +104,16 @@ export default {
                 }
             ]
         };
+    },
+    async created() {
+        try {
+            let res = await this.$service.getVersionCode();
+            if (res && res.code === 0) {
+                this.versionCode = res.data;
+            }
+        } catch (err) {
+            console.log(err);
+        }
     },
     methods: {
         gotoBlankPage(name) {

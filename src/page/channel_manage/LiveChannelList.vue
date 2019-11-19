@@ -202,6 +202,12 @@
                     </el-button>
                     <el-button
                         class="btn-style-two contain-svg-icon"
+                        @click="exportAllLiveChannelExcelHandler">
+                        <svg-icon icon-class="export"></svg-icon>
+                        全部导出
+                    </el-button>
+                    <el-button
+                        class="btn-style-two contain-svg-icon"
                         @click="editChannelByImportExcel">
                         <svg-icon icon-class="edit"></svg-icon>
                         修改
@@ -707,6 +713,17 @@
                 if (item.refCount && item.refCount > 0) {
                     this.currentItem = item;
                     this.$refs.displayRelatedDialog.showDialog();
+                }
+            },
+            async exportAllLiveChannelExcelHandler() {
+                try {
+                    if (!this.$authority.isHasAuthority('content:channel:export')) {
+                        return;
+                    }
+                    let res = await this.$service.exportAllChannelListExcel({channelCategory: 'LIVE'});
+                    this.$util.downloadFile(res, `全部直播频道.xlsx`);
+                } catch (err) {
+                    console.log(err);
                 }
             }
         }
