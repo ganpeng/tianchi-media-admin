@@ -135,7 +135,7 @@
         methods: {
             init() {
                 this.$util.toggleFixedBtnContainer();
-                this.$service.getAthorityTree().then(response => {
+                this.$service.getAuthorityTree().then(response => {
                     if (response && response.code === 0) {
                         this.data = response.data;
                     }
@@ -166,7 +166,6 @@
                     if (valid) {
                         // 编辑权限列表
                         let idList = this.$refs.authorityTree.getCheckedKeys();
-                        console.log(idList);
                         this.roleInfo.resourceList = [];
                         idList.map(id => {
                             if (id) {
