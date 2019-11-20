@@ -271,6 +271,10 @@ export default {
             this.sortView = false;
         },
         showSortViewHandler() {
+            if (!this.$authority.isHasAuthority('content:layoutBlock:sort')) {
+                return;
+            }
+
             if (this.layoutList.length > 0) {
                 this.sortView = !this.sortView;
             }

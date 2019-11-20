@@ -189,6 +189,12 @@
                             <svg-icon icon-class="export"></svg-icon>
                             导出
                         </el-button>
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="exportAllProgrammeExcel">
+                            <svg-icon icon-class="export"></svg-icon>
+                            导出全部
+                        </el-button>
                     </div>
                 </div>
                 <el-table
@@ -428,6 +434,9 @@
                 batchDeleteProgrammes: 'programme/batchDeleteProgrammes'
             }),
             keyupHandler(e) {
+                if (!this.$authority.isHasAuthority('content:programme:page')) {
+                    return;
+                }
                 if (e.keyCode === 13) {
                     this.getProgrammeList()
                         .then((res) => {
@@ -438,12 +447,30 @@
                 }
             },
             createProgramme() {
+                if (!this.$authority.isHasAuthority('content:programme:add')) {
+                    return;
+                }
                 let routeData = this.$router.resolve({
                     name: 'CreateProgramme'
                 });
                 window.open(routeData.href, '_blank');
             },
+            editProgramme(id) {
+                if (!this.$authority.isHasAuthority('content:programme:put')) {
+                    return;
+                }
+                this.$router.push({name: 'EditProgramme', params: {id}});
+            },
+            displayProgramme(id) {
+                if (!this.$authority.isHasAuthority('content:programme:get')) {
+                    return;
+                }
+                this.$router.push({name: 'DisplayProgramme', params: {id}});
+            },
             clearSearchFields() {
+                if (!this.$authority.isHasAuthority('content:programme:page')) {
+                    return;
+                }
                 this.resetProgrammeSearchFields();
                 this.getProgrammeList()
                     .then((res) => {
@@ -452,13 +479,10 @@
                         }
                     });
             },
-            editProgramme(id) {
-                this.$router.push({name: 'EditProgramme', params: {id}});
-            },
-            displayProgramme(id) {
-                this.$router.push({name: 'DisplayProgramme', params: {id}});
-            },
             inputHandler(value, key) {
+                if (!this.$authority.isHasAuthority('content:programme:page')) {
+                    return;
+                }
                 this.updateProgrammeSearchFields({key, value});
                 if (key === 'programmeCategoryIdList') {
                     this.updateProgrammeSearchFields({key: 'programmeTypeIdList', value: ''});
@@ -469,6 +493,9 @@
                 }
             },
             searchHandler() {
+                if (!this.$authority.isHasAuthority('content:programme:page')) {
+                    return;
+                }
                 this.updateProgrammePagination({key: 'pageNum', value: 1});
                 this.getProgrammeList()
                     .then((res) => {
@@ -496,6 +523,9 @@
                 this.previewImage.uri = image.uri;
             },
             handlePaginationChange(value, key) {
+                if (!this.$authority.isHasAuthority('content:programme:page')) {
+                    return;
+                }
                 this.updateProgrammePagination({key, value});
                 if (key === 'pageSize') {
                     window.localStorage.setItem('programmePageSize', value);
@@ -509,6 +539,9 @@
             },
             async lowerFrameProgramme(programme) {
                 try {
+                    if (!this.$authority.isHasAuthority('content:programme:visible')) {
+                        return;
+                    }
                     let {id, visible, refCount} = programme;
                     if (!_.get(programme, 'coverImage.uri') && !visible) {
                         this.$message.error('没有封面图的节目不能上架');
@@ -567,6 +600,9 @@
                 }
             },
             multUpFrameProgrammeHandler() {
+                if (!this.$authority.isHasAuthority('content:programme:batchVisible')) {
+                    return;
+                }
                 let idList = this.selectedVideoList.map((item) => item.id);
                 this.$confirm(`您确定要上架选中的节目吗?`, '提示', {
                     confirmButtonText: '确定',
@@ -600,6 +636,9 @@
                 }).catch(() => {});
             },
             multLowerFrameProgrammeHandler() {
+                if (!this.$authority.isHasAuthority('content:programme:batchVisible')) {
+                    return;
+                }
                 let idList = this.selectedVideoList.map((item) => item.id);
                 this.$confirm(`您确定要下架选中的节目吗?`, '提示', {
                     confirmButtonText: '确定',
@@ -633,6 +672,9 @@
                 }).catch(() => {});
             },
             batchDeletProgrammeHandler() {
+                if (!this.$authority.isHasAuthority('content:programme:batchDelete')) {
+                    return;
+                }
                 let idList = this.selectedVideoList.map((item) => item.id);
                 this.$confirm(`您确定要删除选中的节目吗?`, '提示', {
                     confirmButtonText: '确定',
@@ -657,6 +699,9 @@
             },
             async _realDeleteProgramme(programme) {
                 try {
+                    if (!this.$authority.isHasAuthority('content:programme:delete')) {
+                        return;
+                    }
                     let {id, visible} = programme;
                     if (!visible) {
                         let confirm = await this.$confirm(`您确定要删除该节目吗, 是否继续?`, '提示', {
@@ -716,6 +761,10 @@
                 this.searchFieldVisible = !this.searchFieldVisible;
             },
             gotoProgrammeImportPage() {
+                if (!this.$authority.isHasAuthority('content:programme:import')) {
+                    return;
+                }
+
                 let routeData = this.$router.resolve({
                     name: 'ProgrammeImport'
                 });
@@ -725,6 +774,17 @@
                 if (item.refCount && item.refCount > 0) {
                     this.currentItem = item;
                     this.$refs.displayRelatedDialog.showDialog();
+                }
+            },
+            async exportAllProgrammeExcel() {
+                try {
+                    if (!this.$authority.isHasAuthority('content:programme:export')) {
+                        return;
+                    }
+                    let res = await this.$service.exportAllProgramme();
+                    this.$util.downloadFile(res, `全部节目.xlsx`);
+                } catch (err) {
+                    console.log(err);
                 }
             }
         }

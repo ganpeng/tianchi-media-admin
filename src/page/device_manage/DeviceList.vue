@@ -114,12 +114,14 @@
                 <div class="table-operator-field clearfix">
                     <div class="float-left"></div>
                     <div class="float-right">
+                        <!--
                         <el-button
                             disabled
                             class="btn-style-two contain-svg-icon">
                                 <svg-icon icon-class="add"></svg-icon>
                             添加
                         </el-button>
+                        -->
                     </div>
                 </div>
                 <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
@@ -189,16 +191,16 @@
                             <i v-else class="off-the-shelf">禁用</i>
                         </template>
                     </el-table-column>
+                    <!--
                     <el-table-column align="center" width="120px" label="操作">
                         <template slot-scope="scope">
                             <div class="operator-btn-wrapper">
-                                <!-- <span class="btn-text">编辑</span>
-                                <span class="btn-text text-danger">删除</span> -->
                                 <span class="btn-text" @click="editDevice(scope.row.id)">编辑</span>
                                 <span class="btn-text text-danger" @click="deleteDeviceHandler(scope.row.id)">删除</span>
                             </div>
                         </template>
                     </el-table-column>
+                    -->
                 </el-table>
             </div>
         </div>
@@ -231,6 +233,9 @@
             };
         },
         created() {
+            if (!this.$authority.isHasAuthority('user:stb:page')) {
+                return;
+            }
             this.getDeviceList();
             this.getFilialeList();
             window.addEventListener('keyup', this.keyupHandler);
@@ -286,25 +291,40 @@
                 getFilialeList: 'channel/getFilialeList'
             }),
             clearSearchFields() {
+                if (!this.$authority.isHasAuthority('user:stb:page')) {
+                    return;
+                }
                 this.resetSearchFields();
             },
             keyupHandler(e) {
                 if (e.keyCode === 13) {}
             },
             handlePaginationChange(value, key) {
+                if (!this.$authority.isHasAuthority('user:stb:page')) {
+                    return;
+                }
                 this.updatePagination({key, value});
                 this.getDeviceList();
             },
             inputSearchFieldHandler(value, key) {
+                if (!this.$authority.isHasAuthority('user:stb:page')) {
+                    return;
+                }
                 this.updateSearchFields({key, value});
                 if (key !== 'no') {
                     this.getDeviceList();
                 }
             },
             searchHandler() {
+                if (!this.$authority.isHasAuthority('user:stb:page')) {
+                    return;
+                }
                 this.getDeviceList();
             },
             createDevice() {
+                if (!this.$authority.isHasAuthority('user:stb:page')) {
+                    return;
+                }
                 this.$router.push({name: 'CreateDevice'});
             },
             editDevice(id) {
@@ -314,6 +334,9 @@
                 this.searchFieldVisible = !this.searchFieldVisible;
             },
             toggleStatusHandler(id) {
+                if (!this.$authority.isHasAuthority('user:stb:visible')) {
+                    return;
+                }
                 let _device = this.list.find((device) => device.id === id);
                 let isForbidden = _device.status !== 'NORMAL';
                 this.$confirm(`您确定要${isForbidden ? '恢复设备' : '禁用设备'}吗, 是否继续?`, '提示', {

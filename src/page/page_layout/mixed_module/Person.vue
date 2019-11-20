@@ -112,6 +112,9 @@ export default {
     methods: {
         ...mapMutations({}),
         addLayout(type) {
+            if (!this.$authority.isHasAuthority('content:layoutBlock:add')) {
+                return;
+            }
             let {navbarId} = this.$route.params;
             let id = _.get(this.activeLayout, `${this.index}.id`);
             switch (type) {
@@ -135,15 +138,24 @@ export default {
             }
         },
         editHandler() {
+            if (!this.$authority.isHasAuthority('content:layoutBlock:put')) {
+                return;
+            }
             let {navbarId} = this.$route.params;
             let id = _.get(this.activeLayout, `${this.index}.id`);
             this.$router.push({ name: 'PersonModule', params: {navbarId, index: this.index, operator: 'edit'}, query: {id} });
         },
         deleteHandler() {
+            if (!this.$authority.isHasAuthority('content:layoutBlock:put')) {
+                return;
+            }
             let id = _.get(this.activeLayout, `${this.index}.id`);
             this.$util.deleteLayoutItemHandler(id);
         },
         gotoPersonDetail(squareIndex) {
+            if (!this.$authority.isHasAuthority('content:figure:get')) {
+                return;
+            }
             let id = _.get(this.activeLayout, `${this.index}.layoutItemMultiList.${squareIndex}.id`);
             this.$router.push({ name: 'DisplayPerson', params: { id } });
         }

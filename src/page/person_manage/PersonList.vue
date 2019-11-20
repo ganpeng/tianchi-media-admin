@@ -281,23 +281,66 @@
                 getDuplicateList: 'person/getDuplicateList'
             }),
             clearSearchFields() {
+                if (!this.$authority.isHasAuthority('content:figure:page')) {
+                    return;
+                }
                 this.resetSearchFields();
                 this.getPersonList({isProgramme: false});
             },
             searchHandler() {
+                if (!this.$authority.isHasAuthority('content:figure:page')) {
+                    return;
+                }
                 this.updatePagination({key: 'pageNum', value: 1});
                 this.getPersonList({isProgramme: false});
             },
             keyupHandler(e) {
+                if (!this.$authority.isHasAuthority('content:figure:page')) {
+                    return;
+                }
                 if (e.keyCode === 13) {
                     this.getPersonList({isProgramme: false});
                 }
             },
             createPerson() {
-                let routeData = this.$router.resolve({
-                    name: 'CreatePerson'
-                });
+                if (!this.$authority.isHasAuthority('content:figure:add')) {
+                    return;
+                }
+                let routeData = this.$router.resolve({ name: 'CreatePerson' });
                 window.open(routeData.href, '_blank');
+            },
+            // 跳转到详情页面
+            displayPerson(userId) {
+                if (!this.$authority.isHasAuthority('content:figure:get')) {
+                    return;
+                }
+                this.$router.push({name: 'DisplayPerson', params: {id: userId}});
+            },
+            editPerson(userId) {
+                if (!this.$authority.isHasAuthority('content:figure:put')) {
+                    return;
+                }
+                this.$router.push({name: 'EditPerson', params: {id: userId}});
+            },
+            handlePaginationChange(value, key) {
+                if (!this.$authority.isHasAuthority('content:figure:page')) {
+                    return;
+                }
+                this.updatePagination({value, key});
+                if (key === 'pageSize') {
+                    window.localStorage.setItem('personPageSize', value);
+                }
+                this.getPersonList({isProgramme: false});
+            },
+            inputHandler(value, key) {
+                if (!this.$authority.isHasAuthority('content:figure:page')) {
+                    return;
+                }
+                this.updateSearchFields({key, value});
+                if (key !== 'name') {
+                    this.updatePagination({key: 'pageNum', value: 1});
+                    this.getPersonList({isProgramme: false});
+                }
             },
             areaLabel(code) {
                 let reg = /^\d+(\.\d+)?$/;
@@ -311,28 +354,11 @@
             cutStr20(value) {
                 return this.$util.cutStr(value, 19);
             },
-            // 跳转到详情页面
-            displayPerson(userId) {
-                this.$router.push({name: 'DisplayPerson', params: {id: userId}});
-            },
-            editPerson(userId) {
-                this.$router.push({name: 'EditPerson', params: {id: userId}});
-            },
-            handlePaginationChange(value, key) {
-                this.updatePagination({value, key});
-                if (key === 'pageSize') {
-                    window.localStorage.setItem('personPageSize', value);
-                }
-                this.getPersonList({isProgramme: false});
-            },
-            inputHandler(value, key) {
-                this.updateSearchFields({key, value});
-                if (key !== 'name') {
-                    this.updatePagination({key: 'pageNum', value: 1});
-                    this.getPersonList({isProgramme: false});
-                }
-            },
             _lowerFramePerson(person) {
+                if (!this.$authority.isHasAuthority('content:figure:visible')) {
+                    return;
+                }
+
                 let {id, visible, avatarImage} = person;
                 if (!_.get(avatarImage, 'uri') && !visible) {
                     this.$message.error('没有图片的人物不能上架');
@@ -380,6 +406,9 @@
                 }
             },
             _deletePerson(id) {
+                if (!this.$authority.isHasAuthority('content:figure:delete')) {
+                    return;
+                }
                 this.$confirm(`您确定要删除该人物吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -433,13 +462,17 @@
                 }
             },
             gotoPersonImportPage() {
-                let routeData = this.$router.resolve({
-                    name: 'PersonImport'
-                });
+                if (!this.$authority.isHasAuthority('content:figure:import')) {
+                    return;
+                }
+                let routeData = this.$router.resolve({ name: 'PersonImport' });
                 window.open(routeData.href, '_blank');
             },
             //  批量操作
             async multUpFramePersonHandler() {
+                if (!this.$authority.isHasAuthority('content:figure:batchVisible')) {
+                    return;
+                }
                 let idList = this.selectedVideoList.map((item) => item.id);
                 let confirm = await this.$confirm(`您确定要上架所有人物吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
@@ -458,6 +491,9 @@
                 }
             },
             async multLowerFramePersonHandler() {
+                if (!this.$authority.isHasAuthority('content:figure:batchVisible')) {
+                    return;
+                }
                 let idList = this.selectedVideoList.map((item) => item.id);
                 let confirm = await this.$confirm(`您确定要下架所选人物吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
@@ -476,6 +512,9 @@
                 }
             },
             async batchDeletPersonHandler() {
+                if (!this.$authority.isHasAuthority('content:figure:batchDelete')) {
+                    return;
+                }
                 let idList = _.uniq(this.selectedVideoList.map((item) => item.id));
                 let confirm = await this.$confirm(`您确定要删除所选人物吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',

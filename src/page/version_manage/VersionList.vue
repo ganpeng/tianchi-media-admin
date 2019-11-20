@@ -277,9 +277,15 @@ export default {
             deleteVersionById: 'version/deleteVersionById'
         }),
         createVersion() {
+            if (!this.$authority.isHasAuthority('sys:clientVersion:add')) {
+                return;
+            }
             this.$router.push({name: 'CreateVersion'});
         },
         displayVersion(id) {
+            if (!this.$authority.isHasAuthority('sys:clientVersion:get')) {
+                return;
+            }
             this.$router.push({name: 'VersionDetail', params: {id}});
         },
         toggleSearchField() {
@@ -289,10 +295,16 @@ export default {
             return hardwareType ? (hardwareType === 'HARDWARE_3796' ? '3796' : '3798') : '------';
         },
         clearSearchFields() {
+            if (!this.$authority.isHasAuthority('sys:clientVersion:page')) {
+                return;
+            }
             this.resetSearchFields();
             this.getVersionList();
         },
         keyupHandler(e) {
+            if (!this.$authority.isHasAuthority('sys:clientVersion:page')) {
+                return;
+            }
             if (e.keyCode === 13) {
                 this.getVersionList();
             }
@@ -302,6 +314,9 @@ export default {
         },
         // 跳转到详情页面
         handlePaginationChange(value, key) {
+            if (!this.$authority.isHasAuthority('sys:clientVersion:page')) {
+                return;
+            }
             this.updatePagination({value, key});
             if (key === 'pageSize') {
                 window.localStorage.setItem('versionPageSize', value);
@@ -309,30 +324,13 @@ export default {
             this.getVersionList();
         },
         inputHandler(value, key) {
+            if (!this.$authority.isHasAuthority('sys:clientVersion:page')) {
+                return;
+            }
             this.updateSearchFields({key, value});
             if (key !== 'keyword') {
                 this.getVersionList();
             }
-        },
-        submitVersionHandler() {
-            this.$refs.versionForm.$refs.createVersion.validate(value => {
-                if (value) {
-                    if (this.version.fullPackageUri) {
-                        this.postVersion()
-                            .then((res) => {
-                                if (res && res.code === 0) {
-                                    this.resetVersion();
-                                    this.closeVersionFormDialog();
-                                    this.getVersionList();
-                                } else {
-                                    this.$message.error('新增版本失败');
-                                }
-                            });
-                    } else {
-                        this.$message.error('请上传文件');
-                    }
-                }
-            });
         },
         sortChangeHandler(obj) {
             let {prop, order} = obj;
@@ -351,6 +349,9 @@ export default {
         },
         //  dev_v2.5 新增
         editVersion(version) {
+            if (!this.$authority.isHasAuthority('sys:clientVersion:put')) {
+                return;
+            }
             let {id, releaseStatus} = version;
             if (releaseStatus === 'PRE_RELEASED') {
                 this.$router.push({name: 'EditVersion', params: {id}});
@@ -360,12 +361,14 @@ export default {
         },
         async releaseVersion(id) {
             try {
+                if (!this.$authority.isHasAuthority('sys:clientVersion:launch')) {
+                    return;
+                }
                 let confirm = await this.$confirm(`您确定要发布该版本吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'error'
                 });
-
                 if (confirm) {
                     let res = await this.$service.launchVersion(id, 'RELEASED');
                     if (res && res.code === 0) {
@@ -378,6 +381,9 @@ export default {
         },
         async deleteVersion(id) {
             try {
+                if (!this.$authority.isHasAuthority('sys:clientVersion:delete')) {
+                    return;
+                }
                 let confirm = await this.$confirm(`您确定要删除当前版本吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

@@ -201,3 +201,12 @@ export const batchDeleteProgrammes = (idList) => {
 export const editEmptyProgrammeVideo = (id) => {
     return service.delete(`/v1/content/programme/video/all/${id}`);
 };
+
+/**
+ * 节目全部导出
+ */
+export const exportAllProgramme = () => {
+    return service.post(`/v1/content/programme/export`, null, {
+        responseType: 'blob'
+    });
+};
