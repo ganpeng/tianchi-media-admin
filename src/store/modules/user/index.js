@@ -11,7 +11,7 @@ const state = {
     token: '',
     reset: '',
     roleList: [],
-    role: []
+    role: ''
 };
 
 const getters = {
