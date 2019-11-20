@@ -117,16 +117,49 @@ export default {
     },
     methods: {
         gotoBlankPage(name) {
-            let routeData = null;
-            if (name === 'CreateChannelByImportExcel') {
-                routeData = this.$router.resolve({
-                   name: 'CreateChannelByImportExcel',
-                   params: {category: 'CAROUSEL'}
-               });
-            } else {
-                routeData = this.$router.resolve({ name });
+            let flag = this.authFilter(name);
+            if (flag) {
+                let routeData = null;
+                if (name === 'CreateChannelByImportExcel') {
+                    routeData = this.$router.resolve({
+                    name: 'CreateChannelByImportExcel',
+                    params: {category: 'CAROUSEL'}
+                });
+                } else {
+                    routeData = this.$router.resolve({ name });
+                }
+                window.open(routeData.href, '_blank');
             }
-            window.open(routeData.href, '_blank');
+        },
+        authFilter(name) {
+            switch (name) {
+                case 'VideoImport':
+                    return this.$authority.isHasAuthority('storage:video:add');
+                case 'CreateProgramme':
+                    return this.$authority.isHasAuthority('content:programme:add');
+                case 'CreateProgrammeSubject':
+                    return this.$authority.isHasAuthority('content:subject:add');
+                case 'CreateFigureSubject':
+                    return this.$authority.isHasAuthority('content:subject:add');
+                case 'CreateLiveChannel':
+                    return this.$authority.isHasAuthority('content:channel:add');
+                case 'CreateCarouselChannel':
+                    return this.$authority.isHasAuthority('content:channel:add');
+                case 'CreatePerson':
+                    return this.$authority.isHasAuthority('content:figure:add');
+                case 'CreateVersion':
+                    return this.$authority.isHasAuthority('sys:clientVersion:add');
+                case 'PersonImport':
+                    return this.$authority.isHasAuthority('content:figure:import');
+                case 'ProgrammeImport':
+                    return this.$authority.isHasAuthority('content:programme:import');
+                case 'LiveChannelImport':
+                    return this.$authority.isHasAuthority('content:programme:liveProgrammeImport');
+                case 'CreateChannelByImportExcel':
+                    return this.$authority.isHasAuthority('content:channel:add');
+                default:
+                    return false;
+            }
         }
     }
 };
