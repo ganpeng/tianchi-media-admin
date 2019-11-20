@@ -149,6 +149,7 @@
                         for (let key in response.data) {
                             this.departmentInfo[key] = response.data[key];
                         }
+                        this.departmentInfo.adminList = this.departmentInfo.adminList.filter(admin => admin.administrative);
                     }
                 });
             },
