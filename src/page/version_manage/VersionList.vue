@@ -163,7 +163,7 @@
                     </el-table-column>
                     <el-table-column sortable align="center" width="120px" prop="stbCount" label="设备数">
                         <template slot-scope="scope">
-                            {{scope.row.stbCount}}
+                            {{getCount(scope.row.stbCount)}}
                         </template>
                     </el-table-column>
                     <el-table-column align="center" label="状态">
@@ -230,6 +230,13 @@ export default {
             searchFields: 'version/searchFields',
             filialeList: 'channel/filialeList'
         }),
+        getCount() {
+            return (version) => {
+                let installed = _.get(version, 'installed') || 0;
+                let stdCount = _.get(version, 'stdCount') || 0;
+                return `${installed} / ${stdCount}`;
+            };
+        },
         packageUrl(uri) {
             return (uri) => {
                 let baseUri = window.localStorage.getItem('videoBaseUri');

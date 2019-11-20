@@ -165,8 +165,8 @@
                                 <div>{{item.width}}*{{item.height}}</div>
                                 <div>{{item.size | convertFileSize}}</div>
                                 <div>{{item.advertiserName}}</div>
-                                <div>{{setLabel(item.visitType)}}</div>
-                                <div>{{targetUrl(item)}}</div>
+                                <div class="set-label" :title="setLabel(item.visitType)">{{setLabel(item.visitType)}}</div>
+                                <div class="target-url" :title="targetUrl(item)">{{targetUrl(item)}}</div>
                             </div>
                             <div
                                 v-if="setAdVisible"
@@ -941,12 +941,20 @@
             }
             .ad-desc {
                 margin-top: 105px;
+                cursor: default;
                 div {
                     height: 20px;
                     line-height: 20px;
                     text-align: center;
                     font-size: 12px;
                     color: #A8ABB3;
+                }
+                .target-url,
+                .set-label {
+                    width: 100%;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
                 }
             }
             .set-dropdown-wrapper {

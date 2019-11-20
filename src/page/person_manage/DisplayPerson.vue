@@ -142,13 +142,13 @@
     .programme-list {
         .programme-item {
             float: left;
-            width: 260px;
+            width: 172px;
             margin-right: 10px;
             cursor: pointer;
             img {
                 display: block;
-                width: 260px;
-                height: 380px;
+                width: 172px;
+                height: 250px;
                 margin-bottom: 20px;
                 background: #2A3040;
                 border: 1px solid #3E495E;

@@ -100,8 +100,8 @@
                         </div>
                         <div class="ad-desc">
                             <div class="ellipsis one">{{item.name}}</div>
-                            <div v-if="setAdVisible(adInfo.adType)">{{setLabel(item.visitType)}}</div>
-                            <div v-if="setAdVisible(adInfo.adType)">{{targetUrl(item)}}</div>
+                            <div class="set-label" :title="setLabel(item.visitType)" v-if="setAdVisible(adInfo.adType)">{{setLabel(item.visitType)}}</div>
+                            <div class="target-url" :title="targetUrl(item)" v-if="setAdVisible(adInfo.adType)">{{targetUrl(item)}}</div>
                         </div>
                     </div>
                 </div>
@@ -587,6 +587,7 @@
             }
             .ad-desc {
                 margin-top: 105px;
+                cursor: default;
                 div {
                     margin: 0px 10px;
                     height: 20px;
@@ -594,6 +595,13 @@
                     text-align: center;
                     font-size: 12px;
                     color: #A8ABB3;
+                }
+                .target-url,
+                .set-label {
+                    width: 100%;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
                 }
             }
         }
