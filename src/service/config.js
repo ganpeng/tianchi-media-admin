@@ -37,13 +37,21 @@ service.interceptors.response.use((response) => {
     }
     // 去除下载媒体流的信息提示
     if (response.data.config.responseType !== 'blob') {
-        Message({
-            message: response.data.message,
-            type: 'warning'
-        });
+        if (response.data.code === 1023) {
+            Message({
+                message: '暂无权限，请联系管理员',
+                type: 'warning'
+            });
+        } else {
+            Message({
+                message: response.data.message,
+                type: 'warning'
+            });
+        }
     }
     return response.data;
 }, (err) => {
+    console.log('err');
     // 用户未登录，删除本地cookie、storage、store中数据，转到登录页面
     if (err.response && err.response.data.code === 1001) {
         MessageBox.alert('该账号已在其他位置登录，如非本人操作，可点击重新登录后修改密码。', '异地登录提示', {

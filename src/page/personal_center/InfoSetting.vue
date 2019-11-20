@@ -19,8 +19,11 @@
                 <el-form-item label="手机" prop="mobile" required>
                     <el-input v-model="updateInfo.mobile" placeholder="请输入手机号" clearable></el-input>
                 </el-form-item>
-                <el-form-item label="电话" prop="telephone">
-                    <el-input v-model="updateInfo.telephone" placeholder="请输入电话号" clearable></el-input>
+                <el-form-item label="部门">
+                    <div>无法编辑自己的部门，请联系超级管理员更改</div>
+                </el-form-item>
+                <el-form-item label="角色">
+                    <div>无法编辑自己的角色，请联系超级管理员更改</div>
                 </el-form-item>
             </el-form>
             <div class="upload-box" @click="showMessage">

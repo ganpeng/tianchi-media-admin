@@ -2,12 +2,12 @@
 <template>
     <div>
         <div class="content-title">存储空间</div>
-        <div class="text-center">
+        <div class="text-center" v-if="serveShow">
             <ve-pie :data="chartDataAll" :legend="legend"></ve-pie>
             <div>剩余空间还可存储 {{remainHour}} 小时的视频</div>
             <div>注：按照 3.6 GB/小时计算</div>
         </div>
-        <div class="text-center">
+        <div class="text-center" v-if="serveShow">
             <ve-histogram :data="chartData" :settings="chartSettings" :textStyle="textStyle"
                           :legend="legend"></ve-histogram>
         </div>
@@ -28,6 +28,7 @@
                 stack: {'服务器': ['已用空间', '可用空间', '预留空间']}
             };
             return {
+                serveShow: true,
                 xAxis: {
                     axisLine: {
                         lineStyle: {
@@ -86,6 +87,8 @@
                             });
                         });
                         this.chartData.rows = data;
+                    } else if (response && response.code === 1023) {
+                        this.serveShow = false;
                     }
                 });
             },

@@ -5,11 +5,12 @@
         <div class="seperator-line"></div>
         <div class="common-details">
             <div class="poster-section person">
-                <div class="visible-wrapper"></div>
+                <div class="visible-wrapper" :class="{'active':isAdmin}">超级管理员</div>
                 <svg-icon icon-class="person_avatar"></svg-icon>
             </div>
             <div class="info-section">
-                <el-button type="primary" class="btn-style-two edit-btn" @click="editInfo">编辑</el-button>
+                <el-button type="primary" class="btn-style-two edit-btn" @click="editInfo" v-if="!isAdmin">编辑
+                </el-button>
                 <div class="title-wrapper">
                     <span class="title">{{info.name ? info.name : '我'}}</span>
                     <div class="date">
@@ -19,20 +20,38 @@
                     </div>
                 </div>
                 <div class="seperator-line"></div>
-                <div class="attributes">
-                    <div class="attribute-item">
-                        <div class="item-label" id="email-label">
-                            <svg-icon icon-class="email_info"></svg-icon>
-                            邮箱
+                <div class="attributes" id="attributes-block">
+                    <div>
+                        <div class="attribute-item">
+                            <div class="item-label" id="email-label">
+                                <svg-icon icon-class="email_info"></svg-icon>
+                                邮箱
+                            </div>
+                            <div class="value">{{info.email | padEmpty}}</div>
                         </div>
-                        <div class="value">{{info.email | padEmpty}}</div>
+                        <div class="attribute-item">
+                            <div class="item-label" id="phone-label">
+                                <svg-icon icon-class="phone_info"></svg-icon>
+                                手机
+                            </div>
+                            <div class="value">{{info.mobile | padEmpty}}</div>
+                        </div>
                     </div>
-                    <div class="attribute-item">
-                        <div class="item-label" id="phone-label">
-                            <svg-icon icon-class="phone_info"></svg-icon>
-                            手机
+                    <div v-if="!isAdmin">
+                        <div class="attribute-item">
+                            <div class="item-label" id="department-label">
+                                <svg-icon icon-class="phone_info"></svg-icon>
+                                部门
+                            </div>
+                            <div class="value">{{info.departmentList | jsonJoin('name')}}</div>
                         </div>
-                        <div class="value">{{info.mobile | padEmpty}}</div>
+                        <div class="attribute-item">
+                            <div class="item-label" id="role-label">
+                                <svg-icon icon-class="phone_info"></svg-icon>
+                                角色
+                            </div>
+                            <div class="value">{{info.roleList | jsonJoin('roleName')}}</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -41,11 +60,11 @@
 </template>
 
 <script>
-
     export default {
         name: 'MyInfo',
         data() {
             return {
+                isAdmin: this.$store.getters['user/role'] === 'ADMIN',
                 info: {}
             };
         },
@@ -70,6 +89,27 @@
 
 <style lang="scss" scoped>
 
+    .visible-wrapper {
+        margin-left: 40px;
+        width: 120px;
+        border-radius: 8px;
+        font-size: 20px;
+        text-align: center;
+        color: #fff;
+        background: #3AC26F;
+        visibility: hidden;
+        &.active {
+            visibility: visible;
+        }
+    }
+
+    #attributes-block {
+        display: flex;
+        > div {
+            margin-right: 50px;
+        }
+    }
+
     .info-section {
         position: relative;
         .edit-btn {
@@ -87,7 +127,7 @@
     .my-info-container {
         .attribute-item {
             margin-bottom: 20px;
-            #email-label, #phone-label {
+            #email-label, #phone-label, #department-label, #role-label {
                 font-size: 16px;
                 color: #A8ABB3;
                 width: auto;

@@ -40,7 +40,7 @@
                     </div>
                     <div class="attribute-item">
                         <label class="item-label">角色:</label>
-                        <span class="value">{{adminInfo.roleList[0].roleName}}</span>
+                        <span class="value" v-if="adminInfo.roleList[0]">{{adminInfo.roleList[0].roleName}}</span>
                     </div>
                     <div class="attribute-item">
                         <label class="item-label">备注:</label>
