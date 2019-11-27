@@ -26,7 +26,7 @@
                             </el-form-item>
                             <el-form-item label="节目看点" prop="desc">
                                 <el-input
-                                    :maxlength="9"
+                                    :maxlength="15"
                                     :value="programme.desc"
                                     :disabled="readonly"
                                     @input="inputHandler($event, 'desc')"
