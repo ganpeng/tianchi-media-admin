@@ -184,6 +184,9 @@
                             <el-dropdown-item>
                                 <span @click="multLowerFrameChannelHandler">批量禁播</span>
                             </el-dropdown-item>
+                            <el-dropdown-item>
+                                <span @click="exportAllLiveChannelExcelHandler">全部导出</span>
+                            </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
@@ -200,12 +203,14 @@
                         <svg-icon icon-class="import"></svg-icon>
                         导入
                     </el-button>
+                    <!--
                     <el-button
                         class="btn-style-two contain-svg-icon"
                         @click="exportAllLiveChannelExcelHandler">
                         <svg-icon icon-class="export"></svg-icon>
                         全部导出
                     </el-button>
+                    -->
                     <el-button
                         class="btn-style-two contain-svg-icon"
                         @click="editChannelByImportExcel">

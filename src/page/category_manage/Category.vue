@@ -16,6 +16,7 @@
             <div class="tab-content">
                 <div v-if="activeTabIndex === 0" class="programme-content clearfix">
                     <div class="left-tab">
+                        <!--
                         <el-button
                             v-if="!editCategory"
                             class="btn-style-two contain-svg-icon"
@@ -23,6 +24,7 @@
                             <svg-icon icon-class="add"></svg-icon>
                             新增分类
                         </el-button>
+                        -->
                         <div class="category-tab-wrapper">
                             <ul class="category-tab-list">
                                 <li
@@ -49,11 +51,13 @@
                                 </li>
                             </ul>
                         </div>
+                        <!--
                         <div class="edit-category-btn-wrapper">
                             <span class="btn-text text-primary" @click="toggleEditCategoryHandler">
                                 {{editCategory ? '确定' : '编辑分类'}}
                             </span>
                         </div>
+                        -->
                     </div>
                     <div class="right-content">
                         <h3 class="content-sub-title">类型</h3>
@@ -784,12 +788,12 @@ export default {
             this.typeInputValueUpdate({value, type, index: this.programmeCategoryActiveIndex});
         },
         toggleTypeEditHandler(id) {
-            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
-                return;
-            }
-            if (!this.programmeCategoryIsEdit) {
-                this.toggleTypeEdit({id, index: this.programmeCategoryActiveIndex});
-            }
+            // if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+            //     return;
+            // }
+            // if (!this.programmeCategoryIsEdit) {
+            //     this.toggleTypeEdit({id, index: this.programmeCategoryActiveIndex});
+            // }
         },
         async addNewProgrammeCategoryHandler() {
             try {
@@ -846,12 +850,12 @@ export default {
             }
         },
         toggleCategoryEditHandler(index) {
-            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
-                return;
-            }
-            if (this.editCategory && !this.programmeCategoryIsEdit) {
-                this.toggleCategoryEdit({index});
-            }
+            // if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+            //     return;
+            // }
+            // if (this.editCategory && !this.programmeCategoryIsEdit) {
+            //     this.toggleCategoryEdit({index});
+            // }
         },
         programmeCategoryInputValueChangeHandler(value, index) {
             this.programmeCategoryInputValueUpdate({value, index});
@@ -873,10 +877,10 @@ export default {
         },
         //  直播相关
         toggleLiveCategoryEditHandler(id) {
-            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
-                return;
-            }
-            this.toggleLiveCategoryEdit({id});
+            // if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+            //     return;
+            // }
+            // this.toggleLiveCategoryEdit({id});
         },
         liveCategoryInputValueChangeHandler(value, liveCategory) {
             this.liveCategoryInputValueUpdate({value, id: liveCategory.id});
@@ -889,10 +893,10 @@ export default {
         },
         //  轮播相关
         toggleCarouselCategoryEditHandler(id) {
-            if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
-                return;
-            }
-            this.toggleCarouselCategoryEdit({id});
+            // if (!this.$authority.isHasAuthority('content:programmeCategory:addAndPut')) {
+            //     return;
+            // }
+            // this.toggleCarouselCategoryEdit({id});
         },
         carouselCategoryInputValueChangeHandler(value, liveCategory) {
             this.carouselCategoryInputValueUpdate({value, id: liveCategory.id});
