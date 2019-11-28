@@ -30,7 +30,14 @@
         </div>
         <div v-show="showHeaderAndAside" class="aside">
             <div class="logo">
-                <svg-icon icon-class="aside_logo"></svg-icon>
+                <span @click="toggleTvApp(false)" :class="['tv-btn', !appActive && 'active']">
+                    <svg-icon v-if="appActive" icon-class="tv_icon"></svg-icon>
+                    <svg-icon v-else icon-class="tv_icon_active"></svg-icon>
+                </span>
+                <span @click="toggleTvApp(true)" :class="['app-btn', appActive && 'active']">
+                    <svg-icon v-if="appActive" icon-class="app_icon_active"></svg-icon>
+                    <svg-icon v-else icon-class="app_icon"></svg-icon>
+                </span>
             </div>
             <ul class="aside-list">
                 <li v-if="index === active" v-for="(asides, index) in asideList" :key="index" class="aside-item">
@@ -65,12 +72,13 @@
     import {mapGetters, mapActions} from 'vuex';
     import _ from 'lodash';
     import role from '@/util/config/role';
+    import {routes, appRoutes, createRouter} from '@/router';
 
     export default {
         data() {
             return {
-                navList: role.NAV_LIST,
-                asideList: role.ASIDE_LIST,
+                // navList: role.NAV_LIST,
+                // asideList: role.ASIDE_LIST,
                 layoutId: '',
                 active: 0,
                 defaultActive: '',
@@ -79,13 +87,21 @@
                 left: 200,
                 showHeaderAndAside: true,
                 isCenterSite: !!(this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteMasterEnable),
-                siteName: ''
+                siteName: '',
+                // dev_v2.6
+                appActive: false
             };
         },
         computed: {
             ...mapGetters({
                 name: 'user/name'
-            })
+            }),
+            asideList() {
+                return this.appActive ? role.APP_ASIDE_LIST : role.ASIDE_LIST;
+            },
+            navList() {
+                return this.appActive ? role.APP_NAV_LIST : role.NAV_LIST;
+            }
         },
         mounted() {
             let content = document.querySelector('.content');
@@ -201,6 +217,19 @@
                     this.$router.push({name: 'ConfigSite'});
                 } else {
                     this.$router.push({name: 'SiteList'});
+                }
+            },
+            //  dev_v2.6
+            toggleTvApp(flag) {
+                this.appActive = flag;
+                if (this.appActive) {
+                    this.$router.matcher = createRouter([]).matcher;
+                    this.$router.addRoutes(appRoutes);
+                    this.$router.push({name: 'AppPageLayout'});
+                } else {
+                    this.$router.matcher = createRouter([]).matcher;
+                    this.$router.addRoutes(routes);
+                    this.$router.push({name: 'Home'});
                 }
             }
         }
@@ -344,16 +373,34 @@
             width: 200px;
             background-image: linear-gradient(90deg, #152036 0%, #252F46 100%);
             .logo {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
                 width: 200px;
-                height: 110px;
-                background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.00) 0%, #000000 100%);
-                .svg-icon {
-                    position: absolute;
-                    left: 50%;
-                    top: 60px;
-                    transform: translate(-50%, -40px);
-                    width: 160px;
-                    height: 38px;
+                height: $headerHeight;
+                span {
+                    flex: 1;
+                    height: $headerHeight;
+                    line-height: $headerHeight;
+                    cursor: pointer;
+                }
+                .app-btn {
+                    &.active {
+                        background: #0062C4;
+                    }
+                    .svg-icon {
+                        width: 14px;
+                        height: 20px;
+                    }
+                }
+                .tv-btn {
+                    &.active {
+                        background: $mainColor;
+                    }
+                    .svg-icon {
+                        width: 20px;
+                        height: 16px;
+                    }
                 }
             }
         }
@@ -377,6 +424,7 @@
     }
 
     .aside-list {
+        margin-top: 50px;
         .el-menu-item {
             display: flex;
             align-items: center;

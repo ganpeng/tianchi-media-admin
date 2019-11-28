@@ -549,10 +549,8 @@ const PROGRAMME_TEMPLATE_OPTIONS = [
     }
 ];
 
-// const defaultLayoutNavbarId = '5bf42d08b778252f2343eafe';
-
+//  和选项菜单有关的常量
 const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', '广告管理', '站点管理', '配置中心', ''];
-
 const ASIDE_LIST = [
     [
         {
@@ -735,6 +733,47 @@ const ASIDE_LIST = [
         }
     ]
 ];
+
+const APP_NAV_LIST = ['内容管理', '版本设备', ''];
+const APP_ASIDE_LIST = [
+    [
+        {
+            text: '页面布局',
+            uri: '/app-page-layout',
+            icon: 'aside_layout'
+        },
+        {
+            text: '栏目管理',
+            uri: '/nav-bar-manage/setting',
+            icon: 'aside_column'
+        },
+        {
+            text: '搜索管理',
+            uri: '/search-manage',
+            icon: 'search'
+        }
+    ],
+    [
+        {
+            text: '版本管理',
+            uri: '/manage-version/list',
+            icon: 'shortcut_version'
+        }
+    ],
+    [
+        {
+            text: '基本信息',
+            uri: '/my-info',
+            icon: 'basic_info'
+        },
+        {
+            text: '修改密码',
+            uri: '/modify-password',
+            icon: 'modify_password'
+        }
+    ]
+];
+//  和选项菜单有关的常量结束
 
 const LAYOUT_TEMPLATE_LIST = [
     {
@@ -1013,5 +1052,8 @@ export default {
 //  支付相关
     PAY_WAY_OPTIONS,
     PAY_STATUS_OPTIONS,
-    PAYMENT_OPTIONS
+    PAYMENT_OPTIONS,
+//  dev_v2.6新增
+    APP_NAV_LIST,
+    APP_ASIDE_LIST
 };
