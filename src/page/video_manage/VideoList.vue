@@ -352,11 +352,11 @@
             },
             // 拉取主站的视频到子站(只存在于子站)
             pullVideoFromMaster(videoList) {
-                let videoIdList = [];
-                videoList.map(video => {
-                    videoIdList.push(video.id);
-                });
-                this.$service.batchPullVideoFromMaster({videoIdList}).then(response => {
+                // let videoIdList = [];
+                // videoList.map(video => {
+                //     videoIdList.push(video.id);
+                // });
+                this.$service.batchPullVideoFromMaster({videoList}).then(response => {
                     if (response && response.code === 0 && response.data.length === 0) {
                         this.$message.success('正在拉取视频到本站，请关注其状态更改');
                     } else if (response && response.code === 0 && response.data.length !== 0) {
