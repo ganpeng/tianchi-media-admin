@@ -35,10 +35,8 @@
 import draggable from 'vuedraggable';
 import _ from 'lodash';
 export default {
-    name: 'Search',
-    components: {
-        draggable
-    },
+    name: 'AppSearch',
+    components: { draggable },
     data() {
         return {
             list: [],

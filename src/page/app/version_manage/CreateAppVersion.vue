@@ -177,7 +177,7 @@ import role from '@/util/config/role';
 import AreaCodeSearch from './AreaCodeSearch';
 
 export default {
-    name: 'CreateVersion',
+    name: 'CreateAppVersion',
     components: {AreaCodeSearch},
     data() {
         let checkVersionCode = (rule, value, callback) => {

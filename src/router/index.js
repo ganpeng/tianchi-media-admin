@@ -945,6 +945,63 @@ export const routes = [
                 path: '/role-manage/edit/:id',
                 name: 'EditRole',
                 component: EditRole
+            },
+            //   dev_v2.6 新增的路由
+            // app端内容管理-栏目管理-栏目项设置
+            {
+                path: '/app-nav-bar-manage/setting',
+                name: 'AppNavBarSetting',
+                component: () => import('@/page/app/navbar_manage/AppNavBarSetting')
+            },
+            // 内容管理-栏目管理-新增
+            {
+                path: '/app-nav-bar-manage/create',
+                name: 'AppCreateNavBar',
+                component: () => import('@/page/app/navbar_manage/AppCreateNavBar')
+            },
+            // 内容管理-栏目管理-编辑
+            {
+                path: '/app-nav-bar-manage/edit/:id',
+                name: 'AppEditNavBar',
+                component: () => import('@/page/app/navbar_manage/AppEditNavBar')
+            },
+            //  版本管理
+            {
+                path: '/manage-app-version/list',
+                name: 'AppVersionList',
+                component: () => import('@/page/app/version_manage/AppVersionList')
+            },
+            {
+                path: '/manage-app-version/create',
+                name: 'CreateAppVersion',
+                component: () => import('@/page/app/version_manage/CreateAppVersion')
+            },
+            {
+                path: '/manage-app-version/edit/:id',
+                name: 'EditAppVersion',
+                component: () => import('@/page/app/version_manage/EditAppVersion')
+            },
+            {
+                path: '/manage-app-version/edit-released/:id',
+                name: 'EditVersionReleased',
+                component: () => import('@/page/app/version_manage/EditAppVersionReleased')
+            },
+            {
+                path: '/manage-app-version/display/:id',
+                name: 'AppVersionDetail',
+                component: () => import('@/page/app/version_manage/AppVersionDetail')
+            },
+            //  搜索管理
+            {
+                path: '/manage-app-search',
+                name: 'AppSearch',
+                component: () => import('@/page/app/search_manage/AppSearch')
+            },
+            //  页面布局
+            {
+                path: '/app-page-layout/:navbarId',
+                name: 'AppPageLayout',
+                component: () => import('@/page/app/page_layout/AppPageLayout')
             }
         ]
     },

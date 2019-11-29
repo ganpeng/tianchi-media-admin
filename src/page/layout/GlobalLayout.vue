@@ -77,8 +77,6 @@
     export default {
         data() {
             return {
-                // navList: role.NAV_LIST,
-                // asideList: role.ASIDE_LIST,
                 layoutId: '',
                 active: 0,
                 defaultActive: '',
@@ -109,17 +107,17 @@
         },
         async created() {
             try {
-                let {active, activePath} = this.getActivePath();
-                this.active = active;
-                this.defaultActive = activePath;
+                let isApp = window.localStorage.getItem('isApp');
+                this.appActive = isApp;
+
+                if (this.appActive) {
+                    await this.appMenuInit();
+                } else {
+                    await this.tvMenuInit();
+                }
+
                 this.setMinHeight();
                 window.addEventListener('resize', this.setMinHeight, false);
-                // this.hideHeaderAndAside();
-                let res = await this.getNavbarList();
-                if (res && res.code === 0) {
-                    let recomendNavbar = res.data.find((item) => item.name === '推荐');
-                    this.layoutId = recomendNavbar.id || _.get(res.data, '2.id');
-                }
             } catch (err) {
                 console.log(err);
             }
@@ -129,6 +127,36 @@
             ...mapActions({
                 getNavbarList: 'pageLayout/getNavbarList'
             }),
+            async tvMenuInit() {
+                try {
+                    console.log('tv');
+                    let {active, activePath} = this.getActivePath();
+                    this.active = active;
+                    this.defaultActive = activePath;
+                    let res = await this.getNavbarList();
+                    if (res && res.code === 0) {
+                        let recomendNavbar = res.data.find((item) => item.name === '推荐');
+                        this.layoutId = recomendNavbar.id || _.get(res.data, '2.id');
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            },
+            async appMenuInit() {
+                try {
+                    console.log('app');
+                    let {active, activePath} = this.getActivePath();
+                    this.active = active;
+                    this.defaultActive = activePath;
+                    let res = await this.getNavbarList();
+                    if (res && res.code === 0) {
+                        let recomendNavbar = res.data.find((item) => item.name === '推荐');
+                        this.layoutId = recomendNavbar.id || _.get(res.data, '2.id');
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            },
             initSiteInfo() {
                 // 初始化站点名称
                 this.$service.getSiteInfo().then(response => {
@@ -179,19 +207,6 @@
             logout() {
                 this.$store.dispatch('user/logout', true);
             },
-            hideHeaderAndAside() {
-                let allowList = ['ProgrammeImport', 'PersonImport', 'LiveChannelImport', 'VideoImport'];
-                let {name} = this.$route;
-                if (allowList.indexOf(name) > -1) {
-                    this.top = 0;
-                    this.left = 0;
-                    this.showHeaderAndAside = false;
-                } else {
-                    this.top = 60;
-                    this.left = 200;
-                    this.showHeaderAndAside = true;
-                }
-            },
             toggleFixedBtnContainer() {
                 let content = document.querySelector('.content');
                 let fixedBtnContainer = document.querySelector('.fixed-btn-container');
@@ -206,7 +221,7 @@
             },
             menuChangeHandler(pathObj) {
                 let path = _.get(pathObj, 'uri');
-                if (path === '/page-layout') {
+                if (path === '/page-layout' || path === '/app-page-layout') {
                     path = `${path}/${this.layoutId}`;
                 }
                 this.$router.push({path});
@@ -222,15 +237,27 @@
             //  dev_v2.6
             toggleTvApp(flag) {
                 this.appActive = flag;
+                window.localStorage.setItem('isApp', flag);
+                this.changeRoutes();
+            },
+            changeRoutes() {
                 if (this.appActive) {
                     this.$router.matcher = createRouter([]).matcher;
                     this.$router.addRoutes(appRoutes);
-                    this.$router.push({name: 'AppPageLayout'});
+                    this.$router.push({name: 'AppPageLayout', params: {navbarId: '11111'}});
                 } else {
                     this.$router.matcher = createRouter([]).matcher;
                     this.$router.addRoutes(routes);
-                    this.$router.push({name: 'Home'});
+                    this.$router.push({name: 'Worktop'});
                 }
+            },
+            changeToAppRoutes() {
+                this.$router.matcher = createRouter([]).matcher;
+                this.$router.addRoutes(appRoutes);
+            },
+            changeToTvRoutes() {
+                this.$router.matcher = createRouter([]).matcher;
+                this.$router.addRoutes(routes);
             }
         }
     };

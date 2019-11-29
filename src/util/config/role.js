@@ -744,19 +744,19 @@ const APP_ASIDE_LIST = [
         },
         {
             text: '栏目管理',
-            uri: '/nav-bar-manage/setting',
+            uri: '/app-nav-bar-manage/setting',
             icon: 'aside_column'
         },
         {
             text: '搜索管理',
-            uri: '/search-manage',
+            uri: '/app-search-manage',
             icon: 'search'
         }
     ],
     [
         {
             text: '版本管理',
-            uri: '/manage-version/list',
+            uri: '/manage-app-version/list',
             icon: 'shortcut_version'
         }
     ],

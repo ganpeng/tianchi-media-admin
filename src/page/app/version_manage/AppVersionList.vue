@@ -204,7 +204,7 @@ import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
 import role from '@/util/config/role';
 export default {
-    name: 'VersionList',
+    name: 'AppVersionList',
     data() {
         return {
             //  toggle搜索区域

@@ -166,7 +166,7 @@ import XLSX from 'xlsx';
 import _ from 'lodash';
 
 export default {
-    name: 'EditVersionReleased',
+    name: 'EditAppVersionReleased',
     data() {
         return {
             currentLiveChannel: {},

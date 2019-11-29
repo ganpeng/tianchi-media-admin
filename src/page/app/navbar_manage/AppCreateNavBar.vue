@@ -1,10 +1,10 @@
-<!--2.0编辑栏目组件-->
+<!--2.0添加栏目组件-->
 <template>
     <div>
-        <div class="content-title">编辑栏目</div>
+        <div class="content-title">添加栏目</div>
         <div class="seperator-line"></div>
         <nav-bar-form
-            status="EDIT">
+            status="CREATE">
         </nav-bar-form>
     </div>
 </template>
@@ -13,7 +13,7 @@
     import NavBarForm from './NavBarForm';
 
     export default {
-        name: 'EditNavNar',
+        name: 'AppCreateNavNar',
         components: {
             NavBarForm
         }

@@ -47,7 +47,7 @@
 
 <script>
     export default {
-        name: 'NavBarSetting',
+        name: 'AppNavBarSetting',
         data() {
             return {
                 navBarList: [],
