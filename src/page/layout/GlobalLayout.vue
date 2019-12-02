@@ -2,7 +2,8 @@
     <div class="app-container">
         <div v-show="showHeaderAndAside" class="header clearfix">
             <ul class="nav-list clearfix float-left" :class="{'is-center-site' :isCenterSite}">
-                <li v-if="index !== navList.length - 1" v-for="(item, index) in navList" :key="index"
+                <!-- <li v-if="index !== navList.length - 1" v-for="(item, index) in navList" :key="index" -->
+                <li v-for="(item, index) in activeNavList" :key="index"
                     :class="['nav-item', active === index ? 'active' : '']"
                     @click="changeActive(index)">
                     {{item}}
@@ -39,6 +40,7 @@
                     <svg-icon v-else icon-class="app_icon"></svg-icon>
                 </span>
             </div>
+            <!--
             <ul class="aside-list">
                 <li v-if="index === active" v-for="(asides, index) in asideList" :key="index" class="aside-item">
                     <el-menu
@@ -60,6 +62,20 @@
                     </el-menu>
                 </li>
             </ul>
+            -->
+            <div class="aside-list">
+                <ul class="el-menu">
+                    <li v-for="(item, index) in activeAsideList"
+                        :key="index"
+                        @click="menuChangeHandler(item)"
+                        :class="['el-menu-item', defaultActive === item.uri && 'is-active']">
+                        <svg-icon
+                            :icon-class="item.icon">
+                        </svg-icon>
+                        <span slot="title">{{item.text}}</span>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div :style="contentStyleStr()" id="global-content" class="content">
             <div class="content-wrapper" :style="`min-height: ${minHeight}px`">
@@ -71,8 +87,8 @@
 <script>
     import {mapGetters, mapActions} from 'vuex';
     import _ from 'lodash';
+    import store from 'store';
     import role from '@/util/config/role';
-    import {routes, appRoutes, createRouter} from '@/router';
 
     export default {
         data() {
@@ -90,6 +106,13 @@
                 appActive: false
             };
         },
+        watch: {
+            $route(to, from) {
+                let {active, activePath} = this.getActivePath();
+                this.active = active;
+                this.defaultActive = activePath;
+            }
+        },
         computed: {
             ...mapGetters({
                 name: 'user/name'
@@ -99,6 +122,12 @@
             },
             navList() {
                 return this.appActive ? role.APP_NAV_LIST : role.NAV_LIST;
+            },
+            activeNavList() {
+                return this.navList.filter((_, index) => index !== this.navList.length - 1);
+            },
+            activeAsideList() {
+                return this.asideList[this.active];
             }
         },
         mounted() {
@@ -107,14 +136,10 @@
         },
         async created() {
             try {
-                let isApp = window.localStorage.getItem('isApp');
+                let isApp = store.get('isApp');
                 this.appActive = isApp;
-
-                if (this.appActive) {
-                    await this.appMenuInit();
-                } else {
-                    await this.tvMenuInit();
-                }
+                //  菜单初始化
+                await this.menuInit();
 
                 this.setMinHeight();
                 window.addEventListener('resize', this.setMinHeight, false);
@@ -127,31 +152,16 @@
             ...mapActions({
                 getNavbarList: 'pageLayout/getNavbarList'
             }),
-            async tvMenuInit() {
+            async menuInit() {
                 try {
-                    console.log('tv');
-                    let {active, activePath} = this.getActivePath();
-                    this.active = active;
-                    this.defaultActive = activePath;
                     let res = await this.getNavbarList();
                     if (res && res.code === 0) {
                         let recomendNavbar = res.data.find((item) => item.name === '推荐');
                         this.layoutId = recomendNavbar.id || _.get(res.data, '2.id');
-                    }
-                } catch (err) {
-                    console.log(err);
-                }
-            },
-            async appMenuInit() {
-                try {
-                    console.log('app');
-                    let {active, activePath} = this.getActivePath();
-                    this.active = active;
-                    this.defaultActive = activePath;
-                    let res = await this.getNavbarList();
-                    if (res && res.code === 0) {
-                        let recomendNavbar = res.data.find((item) => item.name === '推荐');
-                        this.layoutId = recomendNavbar.id || _.get(res.data, '2.id');
+
+                        let {active, activePath} = this.getActivePath();
+                        this.active = active;
+                        this.defaultActive = activePath;
                     }
                 } catch (err) {
                     console.log(err);
@@ -196,6 +206,7 @@
                 } else {
                     this.active = index;
                     let newPath = this.asideList[this.active][0].uri;
+                    console.log(newPath);
                     this.defaultActive = newPath;
                     this.$router.push(newPath);
                 }
@@ -236,28 +247,13 @@
             },
             //  dev_v2.6
             toggleTvApp(flag) {
+                store.set('isApp', flag);
                 this.appActive = flag;
-                window.localStorage.setItem('isApp', flag);
-                this.changeRoutes();
-            },
-            changeRoutes() {
-                if (this.appActive) {
-                    this.$router.matcher = createRouter([]).matcher;
-                    this.$router.addRoutes(appRoutes);
-                    this.$router.push({name: 'AppPageLayout', params: {navbarId: '11111'}});
+                if (flag) {
+                    this.$router.push({path: `/app-nav-bar-manage/setting`});
                 } else {
-                    this.$router.matcher = createRouter([]).matcher;
-                    this.$router.addRoutes(routes);
-                    this.$router.push({name: 'Worktop'});
+                    this.$router.push({path: `/worktop-manage`});
                 }
-            },
-            changeToAppRoutes() {
-                this.$router.matcher = createRouter([]).matcher;
-                this.$router.addRoutes(appRoutes);
-            },
-            changeToTvRoutes() {
-                this.$router.matcher = createRouter([]).matcher;
-                this.$router.addRoutes(routes);
             }
         }
     };

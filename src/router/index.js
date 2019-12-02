@@ -983,7 +983,7 @@ export const routes = [
             },
             {
                 path: '/manage-app-version/edit-released/:id',
-                name: 'EditVersionReleased',
+                name: 'EditAppVersionReleased',
                 component: () => import('@/page/app/version_manage/EditAppVersionReleased')
             },
             {
@@ -993,7 +993,7 @@ export const routes = [
             },
             //  搜索管理
             {
-                path: '/manage-app-search',
+                path: '/app-search-manage',
                 name: 'AppSearch',
                 component: () => import('@/page/app/search_manage/AppSearch')
             },
@@ -1023,119 +1023,7 @@ export const routes = [
     }
 ];
 
-export const appRoutes = [
-    // 登录页面
-    {
-        path: '/',
-        alias: '/login',
-        name: 'Login',
-        component: Login
-    },
-    // 网站内容结构
-    {
-        path: '/layout',
-        name: 'GlobalLayout',
-        component: GlobalLayout,
-        // 首页
-        children: [
-            // 个人中心-我的信息
-            {
-                path: '/my-info',
-                name: 'MyInfo',
-                component: MyInfo
-            },
-            // 个人中心-信息设置页面
-            {
-                path: '/info-setting',
-                name: 'InfoSetting',
-                component: InfoSetting
-            },
-            // 个人中心-修改密码页面
-            {
-                path: '/modify-password',
-                name: 'ModifyPassword',
-                component: ModifyPassword
-            },
-            // 内容管理-栏目管理-栏目项设置
-            {
-                path: '/nav-bar-manage/setting',
-                name: 'NavBarSetting',
-                component: NavBarSetting
-            },
-            // 内容管理-栏目管理-新增
-            {
-                path: '/nav-bar-manage/create',
-                name: 'CreateNavBar',
-                component: CreateNavBar
-            },
-            // 内容管理-栏目管理-编辑
-            {
-                path: '/nav-bar-manage/edit/:id',
-                name: 'EditNavBar',
-                component: EditNavBar
-            },
-            //  版本管理
-            {
-                path: '/manage-version/list',
-                name: 'VersionList',
-                component: VersionList
-            },
-            {
-                path: '/manage-version/create',
-                name: 'CreateVersion',
-                component: CreateVersion
-            },
-            {
-                path: '/manage-version/edit/:id',
-                name: 'EditVersion',
-                component: () => import('@/page/version_manage/EditVersion')
-            },
-            {
-                path: '/manage-version/edit-released/:id',
-                name: 'EditVersionReleased',
-                component: () => import('@/page/version_manage/EditVersionReleased')
-            },
-            {
-                path: '/manage-version/display/:id',
-                name: 'VersionDetail',
-                component: VersionDetail
-            },
-            //  页面布局
-            {
-                path: '/app-page-layout/:navbarId',
-                name: 'AppPageLayout',
-                component: () => import('@/page/app/page_layout/AppPageLayout')
-            },
-            {
-                path: '/page-layout/:navbarId/edit-fixed/:index',
-                name: 'EditFixedModule',
-                component: EditFixedModule
-            }
-        ]
-    },
-    // 错误页面布局
-    {
-        path: '/error-layout',
-        name: 'ErrorLayout',
-        component:
-        ErrorLayout,
-        // 404页面
-        children: [
-            {
-                path: '/error/404',
-                name: 'ErrorNotFound',
-                component: ErrorNotFound
-            }
-        ]
-    }
-];
-
 const router = new Router({
-    mode: 'history',
-    routes
-});
-
-export const createRouter = routes => new Router({
     mode: 'history',
     routes
 });

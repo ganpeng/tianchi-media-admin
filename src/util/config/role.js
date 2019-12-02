@@ -738,14 +738,14 @@ const APP_NAV_LIST = ['内容管理', '版本设备', ''];
 const APP_ASIDE_LIST = [
     [
         {
-            text: '页面布局',
-            uri: '/app-page-layout',
-            icon: 'aside_layout'
-        },
-        {
             text: '栏目管理',
             uri: '/app-nav-bar-manage/setting',
             icon: 'aside_column'
+        },
+        {
+            text: '页面布局',
+            uri: '/app-page-layout',
+            icon: 'aside_layout'
         },
         {
             text: '搜索管理',
