@@ -162,7 +162,13 @@ const CLASS_FILTER_DICTIONARY = {
             name: '分类'
         }],
     // 党建
-    COMMUNIST_PARTY_BUILD: null,
+    // COMMUNIST_PARTY_BUILD: null,  // 这是原来的，我不知道为什么是null，现在改成如下形式
+    COMMUNIST_PARTY_BUILD: [
+        {
+            type: 'CLASS',
+            name: '分类'
+        }
+    ],
     //  二人转
     ER_REN_ZHUAN: [
         {
