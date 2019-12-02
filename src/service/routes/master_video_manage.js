@@ -18,8 +18,8 @@ export const batchPushVideoToMaster = ({videoIdList}) => {
 /**
  * 子站从主站批量拉取视频
  */
-export const batchPullVideoFromMaster = ({videoIdList}) => {
-    return service.put('/v1/storage/master/video/pull', videoIdList, {
+export const batchPullVideoFromMaster = ({videoList}) => {
+    return service.put('/v1/storage/master/video/pull', videoList, {
         baseURL: '/storage'
     });
 };
