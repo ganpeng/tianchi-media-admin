@@ -44,6 +44,11 @@
                                     v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable">
                                     <span @click="batchPushToMaster">上传主站</span>
                                 </el-dropdown-item>
+                                <!--重试拉取（子站）-->
+                                <el-dropdown-item
+                                    v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable">
+                                    <span @click="batchPullVideoFromMainSite">重试拉取</span>
+                                </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -120,6 +125,11 @@
                             <el-dropdown-item
                                 v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable">
                                 <span @click="batchPushToMaster">上传主站</span>
+                            </el-dropdown-item>
+                            <!--重试拉取（子站）-->
+                            <el-dropdown-item
+                                v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable">
+                                <span @click="batchPullVideoFromMainSite">重试拉取</span>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -372,6 +382,41 @@
                         });
                     }
                 });
+            },
+            // 批量拉取主站的视频到子站（只有在当前视频是以前拉取过的且失败的才能重新拉取）
+            batchPullVideoFromMainSite() {
+                // 对选择的视频列表进行检测，拉取失败的视频可以重新拉取
+                let videoList = this.$refs.videoTable.getSelectedVideoList();
+                for (let i = 0; i < videoList.length; i++) {
+                    if (videoList[i].downloadStatus !== 'FAILED') {
+                        this.$message.warning('重试拉取仅支持拉取失败的视频');
+                        return;
+                    }
+                }
+                // let videoIdList = [];
+                // videoList.forEach(function (item) {
+                //     videoIdList.push(item.id);
+                // });
+                if (videoList.length > 0) {
+                    this.$service.batchPullVideoFromMaster({videoList}).then(response => {
+                        if (response && response.code === 0 && response.data.length === 0) {
+                            this.$message.success('正在拉取视频到本站，请关注其状态更改');
+                        } else if (response && response.code === 0 && response.data.length !== 0) {
+                            // 批量上传存在有特殊情况说明
+                            let message = '当前视频含有如下问题：';
+                            response.data.map(video => {
+                                message = message + '[' + video.originName + ']视频问题：' + video.failReason + ';';
+                            });
+                            this.$message({
+                                type: 'error',
+                                message: message,
+                                duration: 5000
+                            });
+                        }
+                    });
+                } else {
+                    this.$message.warning('不存在可以重新拉取的视频');
+                }
             },
             // 注入失败视频----批量重试
             retryInjectSelectedVideoHandler() {
