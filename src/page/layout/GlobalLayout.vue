@@ -206,7 +206,6 @@
                 } else {
                     this.active = index;
                     let newPath = this.asideList[this.active][0].uri;
-                    console.log(newPath);
                     this.defaultActive = newPath;
                     this.$router.push(newPath);
                 }

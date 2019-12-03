@@ -5,7 +5,7 @@
         <ul class="preview-list">
             <li v-for="(item, index) in previewNavBarList.map((item) => item.visible)" :key="index">
                 <label v-if="item.name">{{item.name}}</label>
-                <label v-else><img :src="item.image.uri | imageUrl"></label>
+                <label v-else><img :src="previewNavBarItemImage | imageUrl"></label>
             </li>
         </ul>
         <div class="content-title">栏目调整</div>
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+    import _ from 'lodash';
     export default {
         name: 'AppNavBarSetting',
         data() {
@@ -56,6 +57,13 @@
         },
         mounted() {
             this.init();
+        },
+        computed: {
+            previewNavBarItemImage() {
+                return (item) => {
+                    return _.get(item, 'image.uri');
+                };
+            }
         },
         methods: {
             init() {
