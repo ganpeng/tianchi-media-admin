@@ -153,8 +153,6 @@ const CLASS_FILTER_DICTIONARY = {
             type: 'FIGURE',
             name: '人物'
         }],
-    // 幽默
-    HUMOROUS: null,
     // 科普中国
     CHINA_SCIENCE: [
         {
