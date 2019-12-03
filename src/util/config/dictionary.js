@@ -169,6 +169,13 @@ const CLASS_FILTER_DICTIONARY = {
             name: '分类'
         }
     ],
+    //  幽默
+    HUMOROUS: [
+        {
+            type: 'CLASS',
+            name: '分类'
+        }
+    ],
     //  二人转
     ER_REN_ZHUAN: [
         {
