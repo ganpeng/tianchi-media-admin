@@ -20,7 +20,7 @@
                     </svg-icon>
                 </div>
             </div>
-            <div class="float-right">
+            <div v-if="!appActive" class="float-right">
                 <el-button
                     type="text"
                     class="site-name"
