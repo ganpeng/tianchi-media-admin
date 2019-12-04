@@ -245,7 +245,7 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="name" align="center" min-width="120px" label="展示名">
+                <el-table-column prop="name" align="center" min-width="100px" label="展示名">
                     <template slot-scope="scope">
                         <span @click="displayLiveChannel(scope.row.id)" class="ellipsis two name">
                             {{scope.row.name}}
@@ -259,12 +259,12 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column width="80px" align="center" label="关联">
+                <el-table-column width="60px" align="center" label="关联">
                     <template slot-scope="scope">
                         <span @click="displayRelated(scope.row)" v-html="refCount(scope.row.refCount)"></span>
                     </template>
                 </el-table-column>
-                <el-table-column width="80px" align="center" label="会员">
+                <el-table-column width="60px" align="center" label="会员">
                     <template slot-scope="scope">
                         <span>{{scope.row.paymentType === 'VIP' ? '是' : '否'}}</span>
                     </template>
@@ -289,6 +289,11 @@
                 <el-table-column align="center" width="120px" label="推流方式">
                     <template slot-scope="scope">
                         {{scope.row.protocolList ? scope.row.protocolList.join(', ') : ''}}
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" width="120px" label="适用客户端">
+                    <template slot-scope="scope">
+                        {{scope.row.applicableClientList ? scope.row.applicableClientList.join(', ') : ''}}
                     </template>
                 </el-table-column>
                 <el-table-column align="center" min-width="120px" label="启用/禁用">

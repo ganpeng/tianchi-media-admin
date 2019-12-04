@@ -112,13 +112,19 @@
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
                                 <span class="label">推流方式：</span>
-                                <span class="value">{{liveChannel.protocolList.join(' ')}}</span>
+                                <span class="value">{{liveChannel.protocolList ? liveChannel.protocolList.join(' ') : ''}}</span>
                             </div>
                         </li>
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
                                 <span class="label">会员：</span>
                                 <span class="value">{{liveChannel.paymentType === 'VIP' ? '是' : '否' }}</span>
+                            </div>
+                        </li>
+                        <li class="text-info-item">
+                            <div class="text-info-item-wrapper">
+                                <span class="label">适用客户端：</span>
+                                <span class="value">{{liveChannel.applicableClientList ? liveChannel.applicableClientList.join(', ') : ''}}</span>
                             </div>
                         </li>
                     </ul>

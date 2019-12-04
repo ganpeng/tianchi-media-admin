@@ -46,6 +46,16 @@
                             <label class="is-common" v-if="channelInfo.common">是</label>
                             <label v-else>否</label>
                         </li>
+                        <!--  dev_v2.6 新增 -->
+                        <li>
+                            <span>适用客户端：</span>
+                            <label
+                                class="protocol-type"
+                                v-for="(item,index) in channelInfo.applicableClientList || []"
+                                :key="index">
+                                {{item}}
+                            </label>
+                        </li>
                     </ul>
                 </div>
                 <ul class="info-list right-info">
@@ -334,7 +344,8 @@
                     onPlayVideoName: '',
                     onPlayDurationStart: '',
                     onPlayDurationEnd: '',
-                    paymentType: ''
+                    paymentType: '',
+                    applicableClientList: [] //  dev_v2.6 新增字段
                 },
                 previewVideoInfo: {
                     url: '',
@@ -718,7 +729,7 @@
     // 相关信息
     .about-channel {
         position: relative;
-        padding-bottom: 12px;
+        padding-bottom: 32px;
         border-bottom: 1px solid #252D3F;
         text-align: left;
         overflow: hidden;

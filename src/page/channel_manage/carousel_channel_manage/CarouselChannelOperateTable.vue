@@ -91,6 +91,11 @@
                            :key="index">{{item}}</label>
                 </template>
             </el-table-column>
+            <el-table-column align="center" min-width="120px" label="适用客户端">
+                <template slot-scope="scope">
+                    {{scope.row.applicableClientList ? scope.row.applicableClientList.join(', ') : ''}}
+                </template>
+            </el-table-column>
             <el-table-column
                 align="center"
                 min-width="180px"
