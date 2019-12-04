@@ -621,7 +621,7 @@
                 }
             },
             async multUpFrameChannelHandler() {
-                let idList = this.selectedChannelList.map((item) => item.id);
+                let idList = this.selectedChannelList.filter((item) => !item.visible).map((item) => item.id);
                 let confirm = await this.$confirm(`您确定要恢复所选频道吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -639,7 +639,7 @@
                 }
             },
             async multLowerFrameChannelHandler() {
-                let idList = this.selectedChannelList.map((item) => item.id);
+                let idList = this.selectedChannelList.filter((item) => item.visible).map((item) => item.id);
                 let confirm = await this.$confirm(`您确定要禁播所选频道吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
