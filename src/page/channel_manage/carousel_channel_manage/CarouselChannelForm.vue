@@ -79,7 +79,7 @@
                 </el-input>
             </el-form-item>
             <el-form-item label="推流方式" prop="protocolList" required>
-                <el-checkbox-group v-model="channelInfo.protocolList">
+                <el-checkbox-group @change="protocolListChangeHandler" v-model="channelInfo.protocolList">
                     <el-checkbox label="HLS"></el-checkbox>
                     <el-checkbox label="UDP"></el-checkbox>
                 </el-checkbox-group>
@@ -113,6 +113,12 @@
                     <el-radio label="VIP">是</el-radio>
                     <el-radio label="FREE">否</el-radio>
                 </el-radio-group>
+            </el-form-item>
+            <el-form-item label="适用客户端" prop="applicableClientList">
+                <el-checkbox-group v-model="channelInfo.applicableClientList">
+                    <el-checkbox label="TV"></el-checkbox>
+                    <el-checkbox :disabled="appDisabled" label="APP"></el-checkbox>
+                </el-checkbox-group>
             </el-form-item>
             <el-form-item label="公共频道" prop="common" required>
                 {{channelInfo.common ? '是' : '否'}}
@@ -818,7 +824,8 @@
                     onPlayGroupName: '',
                     onPlayVideoName: '',
                     onPlayDurationStart: '',
-                    onPlayDurationEnd: ''
+                    onPlayDurationEnd: '',
+                    applicableClientList: [] //  dev_v2.6 新增
                 },
                 sectionList: [{name: ''}],
                 typeOptions: [],
@@ -885,6 +892,9 @@
                     ],
                     logoUri: [
                         {validator: checkLogoUri, trigger: 'blur'}
+                    ],
+                    applicableClientList: [
+                        {required: true, message: '请选择适用客户端'}
                     ]
                 },
                 groupInfoRules: {
@@ -929,6 +939,10 @@
                     let baseUri = window.localStorage.getItem('videoBaseUri');
                     return `${baseUri}${uri}`;
                 };
+            },
+            appDisabled() {
+                let hlsIndex = this.channelInfo.protocolList.findIndex((item) => item === 'HLS');
+                return hlsIndex === -1;
             }
         },
         mounted() {
@@ -1518,6 +1532,13 @@
             },
             toChannelList() {
                 this.$router.push({name: 'CarouselChannelList'});
+            },
+            //  dev_v2.6 新增方法
+            protocolListChangeHandler() {
+                if (this.appDisabled) {
+                    let applicableClientList = this.channelInfo.applicableClientList.filter((item) => item !== 'APP');
+                    this.channelInfo.applicableClientList = applicableClientList;
+                }
             }
         }
     }

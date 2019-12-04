@@ -52,7 +52,7 @@
                     >
                     </el-input>
                 </el-form-item>
-                <el-form-item label="推流方式" prop="protocolList">
+                <el-form-item ref="protocolListFormItem" label="推流方式" prop="protocolList">
                     <el-checkbox :value="methodsChecked('HLS')" @change="methodsHandler($event, 'HLS')">HLS</el-checkbox>
                     <el-checkbox :value="methodsChecked('UDP')" @change="methodsHandler($event, 'UDP')">UDP</el-checkbox>
                 </el-form-item>
@@ -124,6 +124,10 @@
                 </el-form-item>
                 <el-form-item label="公共频道">
                     <span>{{liveChannel.common ? '是' : '否'}}</span>
+                </el-form-item>
+                <el-form-item ref="applicableClientListFormItem" label="适用客户端" prop="applicableClientList">
+                    <el-checkbox :value="clientChecked('TV')" @change="clientCheckedHandler($event, 'TV')">TV</el-checkbox>
+                    <el-checkbox :disabled="appDisabled" :value="clientChecked('APP')" @change="clientCheckedHandler($event, 'APP')">APP</el-checkbox>
                 </el-form-item>
                 <el-form-item label="区域码" prop="companyList" style="min-width:1050px;">
                     <div class="my-tags">
@@ -215,6 +219,10 @@ export default {
                 ],
                 logoUri: [
                     { required: true, message: '请上传直播频道logo' }
+                ],
+                //  dev_v2.6 新增
+                applicableClientList: [
+                    { required: true, message: '请选择适用客户端' }
                 ]
             }
         };
@@ -238,6 +246,17 @@ export default {
                 let index = this.liveChannel.protocolList.findIndex((item) => item === key);
                 return index > -1;
             };
+        },
+        //  dev_v2.6 适用客户端
+        clientChecked() {
+            return (key) => {
+                let index = this.liveChannel.applicableClientList.findIndex((item) => item === key);
+                return index > -1;
+            };
+        },
+        appDisabled() {
+            let hlsIndex = this.liveChannel.protocolList.findIndex((item) => item === 'HLS');
+            return hlsIndex === -1;
         }
     },
     created() {
@@ -266,6 +285,14 @@ export default {
             }
             protocolList = _.uniq(protocolList);
             this.updateLiveChannel({key: 'protocolList', value: protocolList});
+            if (this.liveChannel.protocolList.length > 0) {
+                this.$refs.protocolListFormItem.clearValidate();
+            }
+
+            if (this.appDisabled) {
+                let applicableClientList = this.liveChannel.applicableClientList.filter((item) => item !== 'APP');
+                this.updateLiveChannel({key: 'applicableClientList', value: applicableClientList});
+            }
         },
         selectLiveCategoryHandler(liveCategory) {
             this.addLiveCategoryToList({liveCategory});
@@ -295,6 +322,20 @@ export default {
         },
         clearCompanyListHandler() {
             this.updateLiveChannel({key: 'companyList', value: []});
+        },
+        //  dev_v2.6 适用客户端处理方法
+        clientCheckedHandler(value, key) {
+            let applicableClientList = _.cloneDeep(this.liveChannel.applicableClientList);
+            if (value) {
+                applicableClientList.push(key);
+            } else {
+                applicableClientList = applicableClientList.filter((item) => item !== key);
+            }
+            applicableClientList = _.uniq(applicableClientList);
+            this.updateLiveChannel({key: 'applicableClientList', value: applicableClientList});
+            if (this.liveChannel.applicableClientList.length > 0) {
+                this.$refs.applicableClientListFormItem.clearValidate();
+            }
         }
     }
 };
