@@ -167,6 +167,9 @@
                                 <el-dropdown-item>
                                     <span @click="batchDeletProgrammeHandler">批量删除</span>
                                 </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span @click="exportAllProgrammeExcel">导出全部</span>
+                                </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -724,6 +727,14 @@
                 if (item.refCount && item.refCount > 0) {
                     this.currentItem = item;
                     this.$refs.displayRelatedDialog.showDialog();
+                }
+            },
+            async exportAllProgrammeExcel() {
+                try {
+                    let res = await this.$service.exportAllProgramme();
+                    this.$util.downloadFile(res, `全部节目.xlsx`);
+                } catch (err) {
+                    console.log(err);
                 }
             }
         }
