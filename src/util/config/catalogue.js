@@ -137,7 +137,9 @@ const CATALOGUE_CONFIG_MAP = {
         allExist: true
     },
     // 党建
-    COMMUNIST_PARTY_BUILD: null
+    COMMUNIST_PARTY_BUILD: null,
+    // 幽默
+    HUMOROUS: null
 };
 
 export default CATALOGUE_CONFIG_MAP;

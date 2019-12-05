@@ -153,8 +153,6 @@ const CLASS_FILTER_DICTIONARY = {
             type: 'FIGURE',
             name: '人物'
         }],
-    // 幽默
-    HUMOROUS: null,
     // 科普中国
     CHINA_SCIENCE: [
         {
@@ -162,7 +160,20 @@ const CLASS_FILTER_DICTIONARY = {
             name: '分类'
         }],
     // 党建
-    COMMUNIST_PARTY_BUILD: null,
+    // COMMUNIST_PARTY_BUILD: null,  // 这是原来的，我不知道为什么是null，现在改成如下形式
+    COMMUNIST_PARTY_BUILD: [
+        {
+            type: 'CLASS',
+            name: '分类'
+        }
+    ],
+    //  幽默
+    HUMOROUS: [
+        {
+            type: 'CLASS',
+            name: '分类'
+        }
+    ],
     //  二人转
     ER_REN_ZHUAN: [
         {

@@ -1289,19 +1289,23 @@
             },
             async visibleHandler(value, key) {
                 try {
-                    let {id} = this.$route.params;
-                    if (this.status === 2 && !value) {
-                        let res = await this.deleteProgramme(id);
-                        if (res && res.code === 0) {
-                            this.updateProgramme({key, value});
-                        } else {
-                            this.$message.warning(this.$util.lowerFrameProgrammeErrorHandler(res));
-                            return false;
-                        }
-                        return false;
-                    } else {
+                    // let {id} = this.$route.params;
+                    // if (this.status === 2) {
+                    //     let {visible} = this.programme;
+                    //     if (!value && visible) {
+                    //         let res = await this.deleteProgramme(id);
+                    //         if (res && res.code === 0) {
+                    //             this.updateProgramme({key, value: !visible});
+                    //         } else {
+                    //             this.$message.warning(this.$util.lowerFrameProgrammeErrorHandler(res));
+                    //             return false;
+                    //         }
+                    //     } else {
+                    //         this.updateProgramme({key, value: !visible});
+                    //     }
+                    // } else {
                         this.updateProgramme({key, value});
-                    }
+                    // }
                 } catch (err) {
                     console.log(err);
                 }
@@ -1433,6 +1437,11 @@
 
                     if (visible && this.video.list.length === 0) {
                         this.$message.error('上架节目的关联视频不能为空');
+                        return false;
+                    }
+
+                    if (visible && this.video.list.filter((item) => item.type === 'FEATURE').length === 0) {
+                        this.$message.error('上架节目的关联视频正片不能为空');
                         return false;
                     }
                 }
