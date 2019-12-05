@@ -1,7 +1,8 @@
 /**
  * @fileOverview Define the API functions of navigation bar module
  */
-
+import qs from 'querystring';
+import _ from 'lodash';
 import service from '../config';
 import util from '../../util/extend';
 
@@ -41,3 +42,44 @@ export const updateNavBar = ({id, name, focalImage, image, signCode, layoutTempl
         layoutTemplate
     });
 };
+
+//  移动端的栏目管理接口开始
+/**
+ * 更新移动端navbar信息
+ */
+export const patchAppNavBar = (navBar) => {
+    return service.patch(`/v1/mobile/content/nav-bar`, navBar);
+};
+
+/**
+ * 新增移动端navbar
+ */
+export const createAppNavBar = (navBar) => {
+    return service.post(`/v1/mobile/content/nav-bar`, navBar);
+};
+
+/**
+ * 全量更新navbar
+ */
+export const putAppNavBar = (navBar) => {
+    return service.put(`/v1/mobile/content/nav-bar`, navBar);
+};
+
+/**
+ * 获取移动端navbar列表
+ */
+export const getAppNavBarList = (params) => {
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/mobile/content/nav-bar/list?${paramsStr}`);
+};
+
+/**
+ * 根据id查询移动端的navbar
+ */
+export const getAppNavBarById = (id) => {
+    return service.get(`/v1/mobile/content/nav-bar/${id}`);
+};
+//  移动端的栏目管理接口结束
