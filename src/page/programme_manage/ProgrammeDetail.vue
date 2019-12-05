@@ -1289,7 +1289,7 @@
             },
             async visibleHandler(value, key) {
                 try {
-                    let {id} = this.$route.params;
+                    // let {id} = this.$route.params;
                     // if (this.status === 2) {
                     //     let {visible} = this.programme;
                     //     if (!value && visible) {
