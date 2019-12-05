@@ -1435,6 +1435,11 @@
                         this.$message.error('上架节目的关联视频不能为空');
                         return false;
                     }
+
+                    if (visible && this.video.list.filter((item) => item.type === 'FEATURE').length === 0) {
+                        this.$message.error('上架节目的关联视频正片不能为空');
+                        return false;
+                    }
                 }
 
                 if (this.showAppImages) {
