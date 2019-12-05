@@ -1290,18 +1290,22 @@
             async visibleHandler(value, key) {
                 try {
                     let {id} = this.$route.params;
-                    if (this.status === 2) {
-                        let {visible} = this.programme;
-                        let res = await this.deleteProgramme(id);
-                        if (res && res.code === 0) {
-                            this.updateProgramme({key, value: !visible});
-                        } else {
-                            this.$message.warning(this.$util.lowerFrameProgrammeErrorHandler(res));
-                            return false;
-                        }
-                    } else {
+                    // if (this.status === 2) {
+                    //     let {visible} = this.programme;
+                    //     if (!value && visible) {
+                    //         let res = await this.deleteProgramme(id);
+                    //         if (res && res.code === 0) {
+                    //             this.updateProgramme({key, value: !visible});
+                    //         } else {
+                    //             this.$message.warning(this.$util.lowerFrameProgrammeErrorHandler(res));
+                    //             return false;
+                    //         }
+                    //     } else {
+                    //         this.updateProgramme({key, value: !visible});
+                    //     }
+                    // } else {
                         this.updateProgramme({key, value});
-                    }
+                    // }
                 } catch (err) {
                     console.log(err);
                 }
