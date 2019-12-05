@@ -114,7 +114,7 @@
                 if (!this.$authority.isHasAuthority('content:navBar:add')) {
                     return;
                 }
-                this.$router.push({name: 'CreateNavBar'});
+                this.$router.push({name: 'AppCreateNavBar'});
             },
             // 预览栏目调整情况
             preview() {

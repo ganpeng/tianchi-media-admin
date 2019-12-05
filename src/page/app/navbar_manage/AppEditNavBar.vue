@@ -3,20 +3,18 @@
     <div>
         <div class="content-title">编辑栏目</div>
         <div class="seperator-line"></div>
-        <nav-bar-form
+        <app-nav-bar-form
             status="EDIT">
-        </nav-bar-form>
+        </app-nav-bar-form>
     </div>
 </template>
 
 <script>
-    import NavBarForm from './NavBarForm';
+    import AppNavBarForm from './AppNavBarForm';
 
     export default {
         name: 'AppEditNavNar',
-        components: {
-            NavBarForm
-        }
+        components: { AppNavBarForm }
     };
 </script>
 

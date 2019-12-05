@@ -3,20 +3,17 @@
     <div>
         <div class="content-title">添加栏目</div>
         <div class="seperator-line"></div>
-        <nav-bar-form
+        <app-nav-bar-form
             status="CREATE">
-        </nav-bar-form>
+        </app-nav-bar-form>
     </div>
 </template>
 
 <script>
-    import NavBarForm from './NavBarForm';
-
+    import AppNavBarForm from './AppNavBarForm';
     export default {
         name: 'AppCreateNavNar',
-        components: {
-            NavBarForm
-        }
+        components: { AppNavBarForm }
     };
 </script>
 

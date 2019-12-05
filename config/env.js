@@ -39,6 +39,9 @@ switch (npmEventName) {
     case 'dev:demo':
         h5NginxProxyTarget = 'http://demo2-admin.tianchiapi.com';
         break;
+    case 'dev:honghe':
+        h5NginxProxyTarget = 'http://honghe-admin.tianchiapi.com';
+        break;
     case 'dev:lian':
         h5NginxProxyTarget = 'http://10.0.3.147:8100';
         break;
