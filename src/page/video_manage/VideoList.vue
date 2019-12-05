@@ -49,6 +49,10 @@
                                     v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable">
                                     <span @click="batchPullVideoFromMainSite">重试拉取</span>
                                 </el-dropdown-item>
+                                <!-- 后端导出全部的视频列表 -->
+                                <el-dropdown-item>
+                                    <span @click="exportAllVideoHandler">导出全部</span>
+                                </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -130,6 +134,10 @@
                             <el-dropdown-item
                                 v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable">
                                 <span @click="batchPullVideoFromMainSite">重试拉取</span>
+                            </el-dropdown-item>
+                            <!-- 后端导出全部的视频列表 -->
+                            <el-dropdown-item>
+                                <span @click="exportAllVideoHandler">导出全部</span>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -321,6 +329,17 @@
                         this.batchShareSiteIdList = [];
                         this.batchShareDialogVisible = false;
                     }
+                });
+            },
+            // 后端导出全部视频的EXCEL列表
+            exportAllVideoHandler() {
+                this.$service.exportAllVideoListExcel().then(response => {
+                    let aLink = document.createElement('a');
+                    let blob = new Blob([response], {type: 'application/vnd.ms-excel'});
+                    aLink.href = URL.createObjectURL(blob);
+                    aLink.setAttribute('download', '所有视频表_' + new Date() + '.xlsx');
+                    aLink.click();
+                    this.$refs.loadElement.appendChild(aLink);
                 });
             },
             // 批量上传主站——将本地视频上传至主站(只存在于子站)
