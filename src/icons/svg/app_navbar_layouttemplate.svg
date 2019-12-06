@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="130px" height="234px" viewBox="0 0 130 234" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60.1 (88133) - https://sketch.com -->
+    <title>首页推荐版式</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="07-03栏目管理-添加首页栏目" transform="translate(-350.000000, -251.000000)" fill-rule="nonzero">
+            <g id="首页推荐版式" transform="translate(350.000000, 251.000000)">
+                <rect id="Rectangle" stroke="#3E495E" stroke-width="0.5" x="0.25" y="0.75" width="129.5" height="232.5" rx="10"></rect>
+                <rect id="Rectangle" fill="#2A3040" x="18" y="25" width="94" height="60" rx="2"></rect>
+                <rect id="Rectangle-Copy-9" fill="#2A3040" opacity="0.5" x="10" y="155" width="110" height="60" rx="2"></rect>
+                <rect id="Rectangle-Copy-4" fill="#2A3040" opacity="0.5" x="10" y="90" width="54" height="29" rx="2"></rect>
+                <rect id="Rectangle-Copy-7" fill="#2A3040" opacity="0.5" x="10" y="121" width="54" height="29" rx="2"></rect>
+                <rect id="Rectangle-Copy-6" fill="#2A3040" opacity="0.5" x="66" y="90" width="54" height="29" rx="2"></rect>
+                <rect id="Rectangle-Copy-8" fill="#2A3040" opacity="0.5" x="66" y="121" width="54" height="29" rx="2"></rect>
+                <path d="M116,25 L125,25 L125,25 L125,85 L116,85 C114.895431,85 114,84.1045695 114,83 L114,27 C114,25.8954305 114.895431,25 116,25 Z" id="Rectangle-Copy-2" fill="#2A3040"></path>
+                <path d="M7,25 L16,25 L16,25 L16,85 L7,85 C5.8954305,85 5,84.1045695 5,83 L5,27 C5,25.8954305 5.8954305,25 7,25 Z" id="Rectangle-Copy-3" fill="#2A3040" transform="translate(10.500000, 55.000000) scale(-1, 1) translate(-10.500000, -55.000000) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

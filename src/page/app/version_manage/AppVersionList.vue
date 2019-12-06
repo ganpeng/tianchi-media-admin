@@ -287,13 +287,13 @@ export default {
             if (!this.$authority.isHasAuthority('sys:clientVersion:add')) {
                 return;
             }
-            this.$router.push({name: 'CreateVersion'});
+            this.$router.push({name: 'CreateAppVersion'});
         },
         displayVersion(id) {
             if (!this.$authority.isHasAuthority('sys:clientVersion:get')) {
                 return;
             }
-            this.$router.push({name: 'VersionDetail', params: {id}});
+            this.$router.push({name: 'AppVersionDetail', params: {id}});
         },
         toggleSearchField() {
             this.searchFieldVisible = !this.searchFieldVisible;
@@ -361,9 +361,9 @@ export default {
             }
             let {id, releaseStatus} = version;
             if (releaseStatus === 'PRE_RELEASED') {
-                this.$router.push({name: 'EditVersion', params: {id}});
+                this.$router.push({name: 'EditAppVersion', params: {id}});
             } else {
-                this.$router.push({name: 'EditVersionReleased', params: {id}});
+                this.$router.push({name: 'EditAppVersionReleased', params: {id}});
             }
         },
         async releaseVersion(id) {

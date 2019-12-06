@@ -8,30 +8,76 @@
                         <el-input v-model="navbar.name" placeholder="请输入栏目名称"></el-input>
                     </el-form-item>
                     <el-form-item label="栏目板式" prop="layoutTemplate">
-                        <el-radio v-model="navbar.layoutTemplate" label="M_FS_0">&nbsp;</el-radio>
-                        <svg-icon icon-class="model_child"></svg-icon>
+                        <el-radio v-model="navbar.layoutTemplate" label="M_FS_1">首页板式</el-radio><br>
+                        <svg-icon icon-class="app_navbar_layouttemplate"></svg-icon>
                     </el-form-item>
                 </el-col>
             </el-form>
+        </div>
+        <div class="fixed-btn-container">
+            <el-button class="btn-style-two" type="primary" @click="createAppNavBar">保存</el-button>
+            <el-button class="btn-style-three" @click="toAppNavBarSetting">返回</el-button>
         </div>
     </div>
 </template>
 <script>
 export default {
     name: 'AppNavBarForm',
+    props: ['status'],
     data() {
         return {
             navbar: {
                 name: '',
-                layoutTemplate: 'M_FS_0'
+                layoutTemplate: 'M_FS_1',
+                applicableClientList: ['APP']
             },
             inputRules: {}
         };
+    },
+    async created() {
+        try {
+            let {id} = this.$route.params;
+            let res = await this.$service.getAppNavBarById(id);
+            if (res && res.code === 0) {
+                this.navbar = res.data;
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    methods: {
+        async createAppNavBar() {
+            try {
+                if (this.status === 'CREATE') {
+                    let res = await this.$service.createAppNavBar(this.navbar);
+                    if (res && res.code === 0) {
+                        this.toAppNavBarSetting();
+                    } else {
+                        this.$message.error(`栏目保存失败`);
+                    }
+                } else {
+                    let res = await this.$service.patchAppNavBar(this.navbar);
+                    if (res && res.code === 0) {
+                        this.toAppNavBarSetting();
+                    } else {
+                        this.$message.error(`栏目保存失败`);
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        toAppNavBarSetting() {
+            this.$router.push({name: 'AppNavBarSetting'});
+        }
     }
 };
 </script>
 <style lang="scss" scoped>
 .app-navbar-form-container {
-
+    .svg-icon {
+        width: 130px;
+        height: 234px;
+    }
 }
 </style>

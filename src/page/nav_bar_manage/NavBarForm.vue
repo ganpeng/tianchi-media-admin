@@ -178,7 +178,8 @@
                     // 非落焦图
                     image: {},
                     signCode: '',
-                    layoutTemplate: ''
+                    layoutTemplate: '',
+                    applicableClientList: ['TV']
                 },
                 programmeCategoryListOptions: [],
                 infoRules: {

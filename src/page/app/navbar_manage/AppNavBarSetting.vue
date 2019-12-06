@@ -3,42 +3,34 @@
     <div>
         <div class="content-title">栏目预览</div>
         <ul class="preview-list">
-            <li v-for="(item, index) in previewNavBarList.map((item) => item.visible)" :key="index">
-                <label v-if="item.name">{{item.name}}</label>
-                <label v-else><img :src="previewNavBarItemImage | imageUrl"></label>
+            <li v-for="(item, index) in visibleNavbarList" :key="index">
+                <label>{{item.name}}</label>
             </li>
         </ul>
         <div class="content-title">栏目调整</div>
-        <ul class="operate-list" id="operate-list">
+        <draggable filter=".ignore-element" element="ul" class="operate-list" v-model="navBarList">
             <li v-for="(item, index) in navBarList"
                 :key="index"
-                :data-id="item.id"
-                :class="{'invisible-item':!item.visible}">
+                :class="[!item.visible && 'invisible-item', 'handle']">
                 <div>
-                    <label v-if="item.name">{{item.name}}</label>
-                    <label v-else><img :src="item.image.uri | imageUrl"></label>
+                    <label>{{item.name}}</label>
                     <i class="el-icon-circle-close"
-                       @click="removeNavBar(item, index)"
-                       v-if="item.type === 'CUSTOM'">
+                        @click="removeNavBar(item, index)">
                     </i>
                 </div>
                 <p>
-                    <label
-                        v-if="item.type === 'CUSTOM'"
-                        class="edit"
-                        @click="toEditNavBar(item.id)">
+                    <label class="edit" @click="toEditNavBar(item.id)">
                         编辑
                     </label>
-                    <input v-if="item.type === 'CUSTOM'"
-                           class="my-switch switch-anim"
-                           type="checkbox"
-                           v-model="item.visible"/>
+                    <input class="my-switch switch-anim" type="checkbox"
+                        :checked="item.visible"
+                        @click="toggleNavbarVisible(index)"/>
                 </p>
             </li>
-            <li class="upload-box" @click="createNavBar">
+            <li class="upload-box ignore-element" @click="createNavBar">
                 <i class="el-icon-plus"></i>
             </li>
-        </ul>
+        </draggable>
         <div class="operate-block text-center">
             <el-button type="primary" @click="updateNavBarSetting" class="btn-style-two">保存</el-button>
         </div>
@@ -46,29 +38,28 @@
 </template>
 
 <script>
-    import _ from 'lodash';
+    // import _ from 'lodash';
+    import draggable from 'vuedraggable';
     export default {
         name: 'AppNavBarSetting',
+        components: {draggable},
         data() {
             return {
-                navBarList: [],
-                previewNavBarList: []
+                navBarList: []
             };
         },
         mounted() {
             this.init();
         },
         computed: {
-            previewNavBarItemImage() {
-                return (item) => {
-                    return _.get(item, 'image.uri');
-                };
+            visibleNavbarList() {
+                return this.navBarList.filter((item) => item.visible);
             }
         },
         methods: {
             init() {
                 let that = this;
-                this.getNavBarList();
+                this.getAppNavBarList();
                 this.$dragula([document.getElementById('operate-list')], {
                     moves: function (el) {
                         return !el.classList.contains('upload-box');
@@ -81,11 +72,13 @@
                     that.preview();
                 });
             },
-            getNavBarList() {
-                this.$service.getNavbarList().then(response => {
+            getAppNavBarList() {
+                let params = {
+                    applicableClient: 'APP'
+                };
+                this.$service.getAppNavBarList(params).then(response => {
                     if (response && response.code === 0) {
                         this.navBarList = response.data;
-                        this.previewNavBarList = response.data.slice(0);
                     }
                 });
             },
@@ -96,44 +89,46 @@
                     type: 'warning'
                 }).then(() => {
                     this.navBarList.splice(index, 1);
-                    this.previewNavBarList.splice(index, 1);
                     this.$message.success('栏目在本地已删除，可点击保存按钮生效');
                 });
             },
-            updateNavBarSetting() {
-                if (!this.$authority.isHasAuthority('content:navBar:list')) {
-                    return;
-                }
-                this.$service.setNavBarList(this.previewNavBarList).then(response => {
-                    if (response && response.code === 0) {
-                        this.$message.success('成功更新栏目列表');
+            async updateNavBarSetting() {
+                try {
+                    if (!this.$authority.isHasAuthority('content:navBar:list')) {
+                        return false;
                     }
-                });
+
+                    let res = await this.$service.putAppNavBar(this.navBarList);
+                    if (res && res.code === 0) {
+                        this.$message.success(`保存成功`);
+                    } else {
+                        this.$message.error(`保存失败`);
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
             },
             createNavBar() {
                 if (!this.$authority.isHasAuthority('content:navBar:add')) {
-                    return;
+                    return false;
                 }
                 this.$router.push({name: 'AppCreateNavBar'});
             },
-            // 预览栏目调整情况
-            preview() {
-                let nodes = this.$el.querySelectorAll('#operate-list li');
-                let array = [];
-                for (let i = 0; i < nodes.length; i++) {
-                    for (let k = 0; k < this.navBarList.length; k++) {
-                        if (nodes[i].getAttribute('data-id') === this.navBarList[k].id) {
-                            array.push(this.navBarList[k]);
-                        }
-                    }
-                }
-                this.previewNavBarList = array;
-            },
             toEditNavBar(id) {
                 if (!this.$authority.isHasAuthority('content:navBar:put')) {
-                    return;
+                    return false;
                 }
-                this.$router.push({name: 'EditNavBar', params: {id: id}});
+
+                this.$router.push({name: 'AppEditNavBar', params: {id: id}});
+            },
+            toggleNavbarVisible(index) {
+                this.navBarList = this.navBarList.map((item, _index) => {
+                    if (index === _index) {
+                        item.visible = !item.visible;
+                    }
+                    return item;
+                });
+                console.log(this.navBarList);
             }
         }
     };

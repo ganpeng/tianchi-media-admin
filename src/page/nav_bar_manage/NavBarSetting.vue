@@ -4,8 +4,7 @@
         <div class="content-title">栏目预览</div>
         <ul class="preview-list">
             <li v-for="(item, index) in previewNavBarList" :key="index" v-if="item.visible">
-                <label v-if="item.name">{{item.name}}</label>
-                <label v-else><img :src="item.image.uri | imageUrl"></label>
+                <label>{{item.name}}</label>
             </li>
         </ul>
         <div class="content-title">栏目调整</div>
@@ -15,8 +14,7 @@
                 :data-id="item.id"
                 :class="{'invisible-item':!item.visible}">
                 <div>
-                    <label v-if="item.name">{{item.name}}</label>
-                    <label v-else><img :src="item.image.uri | imageUrl"></label>
+                    <label>{{item.name}}</label>
                     <i class="el-icon-circle-close"
                        @click="removeNavBar(item, index)"
                        v-if="item.type === 'CUSTOM'">

@@ -32,14 +32,15 @@ export const getNavBarDetail = (id) => {
 /**
  * 修改栏目信息
  */
-export const updateNavBar = ({id, name, focalImage, image, signCode, layoutTemplate}) => {
+export const updateNavBar = ({id, name, focalImage, image, signCode, layoutTemplate, applicableClientList}) => {
     return service.patch('/v1/content/nav-bar', {
         id,
         name,
         focalImage,
         image,
         signCode,
-        layoutTemplate
+        layoutTemplate,
+        applicableClientList
     });
 };
 
