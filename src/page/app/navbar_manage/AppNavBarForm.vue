@@ -28,6 +28,7 @@ export default {
         return {
             navbar: {
                 name: '',
+                type: 'SYSTEM', //  SYSTEM, CUSTOM
                 layoutTemplate: 'M_FS_1',
                 applicableClientList: ['APP']
             },
@@ -36,10 +37,12 @@ export default {
     },
     async created() {
         try {
-            let {id} = this.$route.params;
-            let res = await this.$service.getAppNavBarById(id);
-            if (res && res.code === 0) {
-                this.navbar = res.data;
+            if (this.status === 'EDIT') {
+                let {id} = this.$route.params;
+                let res = await this.$service.getAppNavBarById(id);
+                if (res && res.code === 0) {
+                    this.navbar = res.data;
+                }
             }
         } catch (err) {
             console.log(err);

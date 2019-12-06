@@ -14,15 +14,15 @@
                 :class="[!item.visible && 'invisible-item', 'handle']">
                 <div>
                     <label>{{item.name}}</label>
-                    <i class="el-icon-circle-close"
+                    <i v-if="item.type === 'CUSTOM'" class="el-icon-circle-close"
                         @click="removeNavBar(item, index)">
                     </i>
                 </div>
                 <p>
-                    <label class="edit" @click="toEditNavBar(item.id)">
+                    <label v-if="item.type === 'CUSTOM'" class="edit" @click="toEditNavBar(item.id)">
                         编辑
                     </label>
-                    <input class="my-switch switch-anim" type="checkbox"
+                    <input v-if="item.type === 'CUSTOM'" class="my-switch switch-anim" type="checkbox"
                         :checked="item.visible"
                         @click="toggleNavbarVisible(index)"/>
                 </p>
@@ -38,7 +38,6 @@
 </template>
 
 <script>
-    // import _ from 'lodash';
     import draggable from 'vuedraggable';
     export default {
         name: 'AppNavBarSetting',
@@ -48,8 +47,8 @@
                 navBarList: []
             };
         },
-        mounted() {
-            this.init();
+        created() {
+            this.getAppNavBarList();
         },
         computed: {
             visibleNavbarList() {
@@ -57,40 +56,32 @@
             }
         },
         methods: {
-            init() {
-                let that = this;
-                this.getAppNavBarList();
-                this.$dragula([document.getElementById('operate-list')], {
-                    moves: function (el) {
-                        return !el.classList.contains('upload-box');
-                    },
-                    accepts: function (el, target, source, sibling) {
-                        return !!sibling;
-                    },
-                    direction: 'horizontal'
-                }).on('drop', function () {
-                    that.preview();
-                });
-            },
-            getAppNavBarList() {
-                let params = {
-                    applicableClient: 'APP'
-                };
-                this.$service.getAppNavBarList(params).then(response => {
-                    if (response && response.code === 0) {
-                        this.navBarList = response.data;
+            async getAppNavBarList() {
+                try {
+                    let params = { applicableClient: 'APP' };
+                    let res = await this.$service.getAppNavBarList(params);
+                    if (res && res.code === 0) {
+                        this.navBarList = res.data;
                     }
-                });
+                } catch (err) {
+                    console.log(err);
+                }
             },
-            removeNavBar(item, index) {
-                this.$confirm('删除栏目后该栏目将不会在客户端中展示，可能会造成用户无法观看等问题，是否确认删除？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.navBarList.splice(index, 1);
-                    this.$message.success('栏目在本地已删除，可点击保存按钮生效');
-                });
+            async removeNavBar(item, index) {
+                try {
+                    let confirm = await this.$confirm('删除栏目后该栏目将不会在客户端中展示，可能会造成用户无法观看等问题，是否确认删除？', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    });
+
+                    if (confirm) {
+                        this.navBarList = this.navBarList.filter((item, _index) => _index !== index);
+                        this.$message.success('栏目在本地已删除，可点击保存按钮生效');
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
             },
             async updateNavBarSetting() {
                 try {
@@ -128,7 +119,6 @@
                     }
                     return item;
                 });
-                console.log(this.navBarList);
             }
         }
     };
