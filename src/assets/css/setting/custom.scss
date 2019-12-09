@@ -49,6 +49,7 @@ html, body {
         line-height: 18px;
     }
     &::before {
+        display: none;
         content: '';
     }
 }

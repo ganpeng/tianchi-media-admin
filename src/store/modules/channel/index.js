@@ -165,6 +165,13 @@ const mutations = {
     updateLiveChannel(state, payload) {
         let {key, value} = payload;
         state.liveChannel[key] = value;
+        if (key === 'protocolList' && value.indexOf('HLS') === -1) {
+            state.liveChannel.transcode = false;
+            state.liveChannel.volume = '';
+        }
+        if (key === 'transcode' && !value) {
+            state.liveChannel.volume = '';
+        }
     },
     resetLiveChannel(state) {
         state.liveChannel = _.cloneDeep(defaultLiveChannel);
