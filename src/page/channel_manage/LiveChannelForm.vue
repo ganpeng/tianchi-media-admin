@@ -56,6 +56,18 @@
                     <el-checkbox :value="methodsChecked('HLS')" @change="methodsHandler($event, 'HLS')">HLS</el-checkbox>
                     <el-checkbox :value="methodsChecked('UDP')" @change="methodsHandler($event, 'UDP')">UDP</el-checkbox>
                 </el-form-item>
+                <el-form-item label="服务器转码" prop="transcode">
+                    <el-radio @input="inputHandler(true, 'transcode')" :value="liveChannel.transcode" :label="true">是</el-radio>
+                    <el-radio @input="inputHandler(false, 'transcode')" :value="liveChannel.transcode" :label="false">否</el-radio>
+                </el-form-item>
+                <el-form-item v-if="showVolume" label="转码音量" prop="volume">
+                    <el-input
+                        placeholder="请输入转码音量"
+                        :value="liveChannel.volume"
+                        @input="inputHandler($event, 'volume')"
+                    >
+                    </el-input>
+                </el-form-item>
                 <el-form-item label="录制IP" prop="recordIp">
                     <el-input
                         placeholder="请输入录制IP"

@@ -61,7 +61,10 @@ let defaultLiveChannel = {
     companyList: [],
     protocolList: [],
     visible: false, // 是否上下架
-    paymentType: 'FREE'
+    paymentType: 'FREE',
+    //  红河新增
+    transcode: false,
+    volume: ''
 };
 
 const defaultState = {
@@ -321,7 +324,16 @@ const actions = {
                 if (_.isNull(res.data.protocolList)) {
                     res.data.protocolList = [];
                 }
-                commit('setLiveChannel', {liveChannel: Object.assign({}, state.liveChannel, {record: null, protocolList: [], companyList: []}, res.data)});
+                commit('setLiveChannel', {
+                    liveChannel: Object.assign({},
+                        state.liveChannel,
+                        {
+                            record: null,
+                            protocolList: [],
+                            companyList: [],
+                            transcode: false,
+                            volume: ''
+                        }, res.data)});
                 return res;
             }
         } catch (err) {
