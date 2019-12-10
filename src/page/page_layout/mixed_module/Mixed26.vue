@@ -238,9 +238,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations({
-            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex'
-        }),
+        ...mapMutations({}),
         addShuffleLayout(squareIndex) {
             return (layoutItemType) => {
                 if (!this.$authority.isHasAuthority('content:layoutBlock:add')) {

@@ -76,18 +76,11 @@ export default {
         return {};
     },
     computed: {
-        ...mapGetters({
-            // layout: 'pageLayout/layout'
-        })
+        ...mapGetters({})
     },
     methods: {
-        ...mapMutations({
-            setLayoutDataByIndex: 'pageLayout/setLayoutDataByIndex',
-            saveLayoutToStore: 'pageLayout/saveLayoutToStore'
-        }),
-        ...mapActions({
-            getPageLayoutByNavbarId: 'pageLayout/getPageLayoutByNavbarId'
-        })
+        ...mapMutations({}),
+        ...mapActions({})
     }
 };
 </script>

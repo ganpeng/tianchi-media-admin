@@ -88,7 +88,7 @@
 import draggable from 'vuedraggable';
 import {mapGetters, mapActions, mapMutations} from 'vuex';
 import _ from 'lodash';
-// import BScroll from 'better-scroll';
+import BScroll from 'better-scroll';
 
 export default {
     name: 'AppPageLayout',
@@ -106,30 +106,28 @@ export default {
     },
     async created() {
         try {
-            // let {navbarId} = this.$route.params;
-            // this.navbarId = navbarId;
-            // let res = await this.getNavbarList();
-            // await this.getLayoutByNavbarId(navbarId);
-            // if (res && res.code === 0) {
-            //     let navbar = this.navbarList.find((navbar) => navbar.id === navbarId);
-            //     this.activeId = navbarId;
+            let {navbarId} = this.$route.params;
+            this.navbarId = navbarId;
+            let res = await this.getAppNavbarList();
+            await this.getLayoutByNavbarId(navbarId);
+            if (res && res.code === 0) {
+                // let navbar = this.navbarList.find((navbar) => navbar.id === navbarId);
+                this.activeId = navbarId;
+                await this.$nextTick();
+                this.setNavBarWidth();
 
-            //     this.$nextTick(() => {
-            //         this.setNavBarWidth();
-            //     });
-            //     new BScroll(this.$refs.wrapperBox, {  // eslint-disable-line
-            //         click: true,
-            //         scrollX: true,
-            //         eventPassthrough: 'vertical'
-            //     });
-            // }
+                new BScroll(this.$refs.wrapperBox, {  // eslint-disable-line
+                    click: true,
+                    scrollX: true,
+                    eventPassthrough: 'vertical'
+                });
+            }
         } catch (err) {
             console.log(err);
         }
     },
     computed: {
         ...mapGetters({
-            layout: 'pageLayout/layout',
             navbarList: 'pageLayout/navbarList',
             //  2.3.0 新增
             activeLayout: 'pageLayout/getActiveLayout'

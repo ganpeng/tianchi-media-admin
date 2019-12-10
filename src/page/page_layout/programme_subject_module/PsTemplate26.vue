@@ -186,11 +186,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations({
-            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
-            saveLayoutToStore: 'pageLayout/saveLayoutToStore',
-            insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex'
-        }),
+        ...mapMutations({}),
         addShuffleLayout(squareIndex) {
             return (layoutItemType) => {
                 if (!this.$authority.isHasAuthority('content:layoutBlock:add')) {

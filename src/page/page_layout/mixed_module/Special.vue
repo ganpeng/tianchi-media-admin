@@ -85,9 +85,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations({
-            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex'
-        }),
+        ...mapMutations({}),
         addLayout(type) {
             if (!this.$authority.isHasAuthority('content:layoutBlock:add')) {
                 return;

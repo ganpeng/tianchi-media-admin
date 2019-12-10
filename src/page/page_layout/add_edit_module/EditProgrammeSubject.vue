@@ -296,13 +296,10 @@ export default {
     },
     methods: {
         ...mapMutations({
-            updateLayoutItemByIndex: 'pageLayout/updateLayoutItemByIndex',
             resetProgrammeSubject: 'pageLayout/resetProgrammeSubject',
             updateProgrammeSubject: 'pageLayout/updateProgrammeSubject',
-            cancelLayoutItemByIndex: 'pageLayout/cancelLayoutItemByIndex',
             updateProgrammeSubjectPagination: 'pageLayout/updateProgrammeSubjectPagination',
             updateLayoutItemCornerMarkByIndex: 'pageLayout/updateLayoutItemCornerMarkByIndex',
-            resetLayoutItemByIndex: 'pageLayout/resetLayoutItemByIndex',
 
             //  2.3.0新增
             updateLayoutBlockById: 'pageLayout/updateLayoutBlockById',

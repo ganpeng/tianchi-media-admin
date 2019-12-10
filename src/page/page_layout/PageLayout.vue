@@ -114,11 +114,6 @@ export default {
             sortView: false
         };
     },
-    watch: {
-        '$route' (to, from) {
-            // this.updateLayout();
-        }
-    },
     async mounted() {
         let content = document.querySelector('.content');
         content.addEventListener('scroll', this.toggleTopBottomBtns.bind(this), false);
@@ -151,7 +146,6 @@ export default {
         ...mapGetters({
             layout: 'pageLayout/layout',
             navbarList: 'pageLayout/navbarList',
-            getNavbarNameById: 'pageLayout/getNavbarNameById',
             //  2.3.0 新增
             activeLayout: 'pageLayout/getActiveLayout'
         }),
@@ -190,20 +184,11 @@ export default {
     },
     methods: {
         ...mapMutations({
-            insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex',
-            updateLayout: 'pageLayout/updateLayout',
-            saveLayoutToStore: 'pageLayout/saveLayoutToStore',
-            saveLayoutToRemoteServer: 'pageLayout/saveLayoutToRemoteServer',
-            toggleChangedByNavbarId: 'pageLayout/toggleChangedByNavbarId',
-            updateSortedList: 'pageLayout/updateSortedList',
             //  2.3.0 新增的部分
             setActiveLayout: 'pageLayout/setActiveLayout'
         }),
         ...mapActions({
             getNavbarList: 'pageLayout/getNavbarList',
-            getPageLayoutByNavbarId: 'pageLayout/getPageLayoutByNavbarId',
-            savePageLayoutByNavbarId: 'pageLayout/savePageLayoutByNavbarId',
-
             //  2.3.0 新增的部分
             getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
         }),

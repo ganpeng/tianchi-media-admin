@@ -129,11 +129,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations({
-            deleteLayoutDataByIndex: 'pageLayout/deleteLayoutDataByIndex',
-            saveLayoutToStore: 'pageLayout/saveLayoutToStore',
-            insertLayoutDataByIndex: 'pageLayout/insertLayoutDataByIndex'
-        }),
+        ...mapMutations({}),
         editFilterLayout(command, squareIndex) {
             if (!this.$authority.isHasAuthority('content:layoutBlock:put')) {
                 return;

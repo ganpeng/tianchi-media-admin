@@ -18,13 +18,6 @@ export const getPageLayoutByNavbarId = (id) => {
 };
 
 /**
- * 根据navbar的id保存该栏目下的布局
- */
-export const savePageLayoutByNavbarId = (id, layoutBlockVoList) => {
-    return service.post(`/v1/content/layout-block?navBarId=${id}`, layoutBlockVoList);
-};
-
-/**
  * 根据navbar的id保存栏目布局
  */
 export const postPageLayoutByNavbarId = (id, layoutBlockVoList) => {
@@ -115,3 +108,13 @@ export const deleteLayoutBlockById = (id) => {
 export const sortLayoutBlock = (layoutBlockSortVoList) => {
     return service.put('/v1/content/layout-block/sort', layoutBlockSortVoList);
 };
+
+//  移动端页面布局接口
+/**
+ * 获取移动端栏目列表
+ */
+export const getAppNavbarList = (status) => {
+    let releaseStatus = status || 'RELEASED';
+    return service.get(`/v1/mobile/content/nav-bar/list?releaseStatus=${releaseStatus}`);
+};
+//  移动端页面布局接口结束

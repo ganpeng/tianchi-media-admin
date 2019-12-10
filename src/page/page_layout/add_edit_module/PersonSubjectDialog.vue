@@ -251,7 +251,6 @@ export default {
             resetPersonSubject: 'pageLayout/resetPersonSubject',
             updatePersonSubject: 'pageLayout/updatePersonSubject',
             updatePersonSubjectPagination: 'pageLayout/updatePersonSubjectPagination',
-            addImageToPersonSubjectListById: 'pageLayout/addImageToPersonSubjectListById',
 
             //  2.3.0新增
             updateLayoutBlockById: 'pageLayout/updateLayoutBlockById',

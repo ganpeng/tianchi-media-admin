@@ -102,7 +102,7 @@ const actions = {
                         });
 
                     //  登录成功后初始化页面布局的数据结构
-                    init();
+                    init()
                 }
                 resolve(res);
             }).catch(err => {
