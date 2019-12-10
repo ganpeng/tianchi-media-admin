@@ -84,7 +84,7 @@ export default {
             };
         },
         rightBottomText() {
-            let text = (_.get(this.cornerMark, 'leftBottom.caption') || _.get(this.cornerMark, 'rightBottom.caption'));
+            let text = _.get(this.cornerMark, 'rightBottom.caption') || _.get(this.cornerMark, 'leftBottom.caption');
             return text;
         }
     },

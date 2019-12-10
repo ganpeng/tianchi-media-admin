@@ -365,12 +365,14 @@ export default {
             let {leftBottom, rightBottom} = _.get(this.layoutBlockItemClone, 'cornerMark');
             let leftBottomCaption = _.get(leftBottom, 'caption');
             let rightBottomCaption = _.get(rightBottom, 'caption');
-            if (!_.isNull(leftBottomCaption) && _.isNull(rightBottomCaption)) {
-                value = 1;
-            }
-
-            if (_.isNull(leftBottomCaption) && !_.isNull(rightBottomCaption)) {
+            if (!_.isNull(rightBottomCaption)) {
                 value = 2;
+            } else {
+                if (!_.isNull(leftBottomCaption)) {
+                    value = 1;
+                } else {
+                    value = '';
+                }
             }
             return value;
         },
