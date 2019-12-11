@@ -1665,7 +1665,7 @@
 
     // 视频分组
     .group-container {
-        ul {
+        > div {
             padding-bottom: 20px;
             display: flex;
             flex-wrap: nowrap;
