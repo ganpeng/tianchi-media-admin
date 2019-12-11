@@ -2,28 +2,22 @@ import _ from 'lodash';
 import store from 'store';
 import service from '../../../service';
 
-const defaultLayoutItem = {
-    desc: '',
-    id: '',
-    layoutItemType: '',
-    programmeTemplate: null,
-    name: '',
-    params: '',
-    coverImage: {},
-    coverImageBackground: {},
-    cornerMark: {
-        leftTop: {},
-        leftBottom: {},
-        rightTop: {},
-        rightBottom: {}
-    }
-};
-
-const defaultPagination = {
-    pageNum: 1,
-    pageSize: 10,
-    total: 0
-};
+// const defaultLayoutItem = {
+//     desc: '',
+//     id: '',
+//     layoutItemType: '',
+//     programmeTemplate: null,
+//     name: '',
+//     params: '',
+//     coverImage: {},
+//     coverImageBackground: {},
+//     cornerMark: {
+//         leftTop: {},
+//         leftBottom: {},
+//         rightTop: {},
+//         rightBottom: {}
+//     }
+// };
 
 const defaultState = {
     activeLayout: [],
@@ -224,9 +218,9 @@ const actions = {
         }
     },
     //  2.3.0 新的修改  ========================
-    async getLayoutByNavbarId({commit, state}, id) {
+    async getAppLayoutByNavbarId({commit, state}, id) {
         try {
-            let res = await service.getPageLayoutByNavbarId(id);
+            let res = await service.getAppLayoutByNavbarId(id);
             if (res && res.code === 0) {
                 commit('setActiveLayout', {layout: res.data});
             }

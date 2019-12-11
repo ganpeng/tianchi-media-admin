@@ -139,8 +139,11 @@
                 let isApp = store.get('isApp');
                 this.appActive = isApp;
                 //  菜单初始化
-                await this.menuInit();
-
+                if (this.appActive) {
+                    await this.appMenuInit();
+                } else {
+                    await this.menuInit();
+                }
                 this.setMinHeight();
                 window.addEventListener('resize', this.setMinHeight, false);
             } catch (err) {
@@ -150,11 +153,27 @@
         },
         methods: {
             ...mapActions({
-                getNavbarList: 'pageLayout/getNavbarList'
+                getNavbarList: 'pageLayout/getNavbarList',
+                getAppNavbarList: 'appPageLayout/getAppNavbarList'
             }),
             async menuInit() {
                 try {
                     let res = await this.getNavbarList();
+                    if (res && res.code === 0) {
+                        let recomendNavbar = res.data.find((item) => item.name === '推荐');
+                        this.layoutId = recomendNavbar.id || _.get(res.data, '2.id');
+
+                        let {active, activePath} = this.getActivePath();
+                        this.active = active;
+                        this.defaultActive = activePath;
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            },
+            async appMenuInit() {
+                try {
+                    let res = await this.getAppNavbarList();
                     if (res && res.code === 0) {
                         let recomendNavbar = res.data.find((item) => item.name === '推荐');
                         this.layoutId = recomendNavbar.id || _.get(res.data, '2.id');

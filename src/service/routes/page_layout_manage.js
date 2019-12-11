@@ -117,4 +117,11 @@ export const getAppNavbarList = (status) => {
     let releaseStatus = status || 'RELEASED';
     return service.get(`/v1/mobile/content/nav-bar/list?releaseStatus=${releaseStatus}`);
 };
+
+/**
+ * 根据navbar的id获取栏目布局
+ */
+export const getAppLayoutByNavbarId = (id) => {
+    return service.get(`/v1/mobile/content/layout-block?navBarId=${id}`);
+};
 //  移动端页面布局接口结束

@@ -15,9 +15,8 @@
         </div>
         <div class="seperator-line"></div>
         <div class="page-layout-content">
-            <!--
             <fixed-layout
-                :layoutTemplate="layoutTemplate"
+                :layoutTemplate="'M_FS_1'"
             ></fixed-layout>
             <other-layout
                 v-for="(item, index) in getNotFixedListByNavbarId"
@@ -27,7 +26,6 @@
                 :renderType="item.renderType"
                 :layoutTemplate="item.layoutTemplate"
             ></other-layout>
-            -->
             <div id="bottom"></div>
         </div>
         <div class="fixed-btn-container">
@@ -90,9 +88,12 @@ import {mapGetters, mapActions, mapMutations} from 'vuex';
 import _ from 'lodash';
 import BScroll from 'better-scroll';
 
+import FixedLayout from './FixedLayout';
+import OtherLayout from './OtherLayout';
+
 export default {
     name: 'AppPageLayout',
-    components: { draggable },
+    components: { draggable, FixedLayout, OtherLayout },
     data() {
         return {
             activeId: '',
@@ -109,9 +110,8 @@ export default {
             let {navbarId} = this.$route.params;
             this.navbarId = navbarId;
             let res = await this.getAppNavbarList();
-            await this.getLayoutByNavbarId(navbarId);
+            await this.getAppLayoutByNavbarId(navbarId);
             if (res && res.code === 0) {
-                // let navbar = this.navbarList.find((navbar) => navbar.id === navbarId);
                 this.activeId = navbarId;
                 await this.$nextTick();
                 this.setNavBarWidth();
@@ -128,9 +128,9 @@ export default {
     },
     computed: {
         ...mapGetters({
-            navbarList: 'pageLayout/navbarList',
+            navbarList: 'appPageLayout/navbarList',
             //  2.3.0 新增
-            activeLayout: 'pageLayout/getActiveLayout'
+            activeLayout: 'appPageLayout/getActiveLayout'
         }),
         getNotFixedListByNavbarId() {
             let {navbarId} = this.$route.params;
@@ -168,12 +168,12 @@ export default {
     methods: {
         ...mapMutations({
             //  2.3.0 新增的部分
-            setActiveLayout: 'pageLayout/setActiveLayout'
+            setActiveLayout: 'appPageLayout/setActiveLayout'
         }),
         ...mapActions({
-            getNavbarList: 'pageLayout/getNavbarList',
+            getAppNavbarList: 'appPageLayout/getAppNavbarList',
             //  2.3.0 新增的部分
-            getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
+            getAppLayoutByNavbarId: 'appPageLayout/getAppLayoutByNavbarId'
         }),
         setNavBarWidth() {
             let columnsItem = document.querySelectorAll('.columns-item');
@@ -188,9 +188,8 @@ export default {
             try {
                 this.setActiveLayout({layout: []});
                 this.activeId = navbar.id;
-                this.layoutTemplate = navbar.layoutTemplate;
-                this.$router.push({ name: 'PageLayout', params: {navbarId: navbar.id} });
-                await this.getLayoutByNavbarId(navbar.id);
+                this.$router.push({ name: 'AppPageLayout', params: {navbarId: navbar.id} });
+                await this.getAppLayoutByNavbarId(navbar.id);
             } catch (err) {
                 console.log(err);
             }
