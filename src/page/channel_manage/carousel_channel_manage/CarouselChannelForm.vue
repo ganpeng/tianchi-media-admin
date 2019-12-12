@@ -915,7 +915,6 @@
             getGroupDuration(groupList) {
                 let duration = 0;
                 for (let i = 0; i < groupList.length; i++) {
-                    console.log(groupList[i].duration);
                     if (isNaN(groupList[i].duration) || groupList[i].duration === null || groupList[i].duration === undefined) {
                         for (let m = 0; m < groupList[i].carouselVideoList.length; m++) {
                             duration = duration + groupList[i].carouselVideoList[m].takeTimeInSec;
