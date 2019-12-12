@@ -5,10 +5,10 @@ export const MAIN_ROLE_OPTIONS = [
         value: 'DIRECTOR',
         label: '导演'
     },
-    {
-        value: 'ACTOR',
-        label: '主演'
-    },
+    // {
+    //     value: 'ACTOR',
+    //     label: '主演'
+    // },
     {
         value: 'ACTOR',
         label: '演员'

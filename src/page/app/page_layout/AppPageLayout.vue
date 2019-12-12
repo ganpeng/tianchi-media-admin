@@ -1,5 +1,5 @@
 <template>
-    <div id="page-layout-container" class="page-layout-container">
+    <div id="page-layout-container" class="app-page-layout-container">
         <div id="top"></div>
         <div class="columns-container wrapper" ref="wrapperBox">
             <ul class="columns-list clearfix content">
@@ -323,7 +323,9 @@ export default {
     justify-content: space-around;
 }
 
-.page-layout-container {
+.app-page-layout-container {
+    width: 1200px;
+    margin: 0 auto;
     position: relative;
     .layout-sort {
         position: fixed;
