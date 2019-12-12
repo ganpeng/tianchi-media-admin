@@ -979,7 +979,7 @@
                 if (min.toString().length === 1) {
                     min = '0' + min.toString();
                 }
-                let seconds = duration % 3600;
+                let seconds = duration % 60;
                 if (seconds.toString().length === 1) {
                     seconds = '0' + seconds.toString();
                 }
