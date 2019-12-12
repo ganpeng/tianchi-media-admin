@@ -204,7 +204,7 @@
                 fromSecondsToTime}}。</label>
         </div>
         <div class="group-container">
-            <draggable element="ul" id="group-list" v-model="carouselGroup">
+            <draggable tag="ul" id="group-list" v-model="carouselGroup">
                 <li v-for="(item, index) in carouselGroup"
                     :key="index" :class="{'current-group':item.current}">
                     <div class="header-box">
@@ -1665,7 +1665,7 @@
 
     // 视频分组
     .group-container {
-        ul {
+        > div {
             padding-bottom: 20px;
             display: flex;
             flex-wrap: nowrap;
