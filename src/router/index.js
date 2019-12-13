@@ -1002,6 +1002,11 @@ export const routes = [
                 path: '/app-page-layout/:navbarId',
                 name: 'AppPageLayout',
                 component: () => import('@/page/app/page_layout/AppPageLayout')
+            },
+            {
+                path: '/app-page-layout/:navbarId/edit-fixed/:index',
+                name: 'EditAppFixedModule',
+                component: () => import('@/page/app/page_layout/add_edit_module/EditAppFixedModule')
             }
         ]
     },

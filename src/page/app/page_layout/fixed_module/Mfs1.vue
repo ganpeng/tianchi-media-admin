@@ -1,17 +1,32 @@
 <template>
     <div class="banner-container">
+        <div v-if="!isEdit" class="btn-field text-right">
+            <el-button @click="editFixedModuleHandler" class="btn-style-five">
+                <svg-icon icon-class="edit"></svg-icon>
+            </el-button>
+        </div>
         <flickity ref="flickity" :options="flickityOptions">
             <div v-for="(banner, index) in bannerList" :key="index" class="carousel-cell">{{banner.index}}</div>
         </flickity>
     </div>
 </template>
 <script>
+import {mapGetters} from 'vuex';
+import _ from 'lodash';
 import Flickity from 'vue-flickity';
 export default {
     name: 'Mfs1',
     components: {Flickity},
+    props: {
+        isEdit: {
+            type: Boolean,
+            default: false
+        }
+    },
     data() {
         return {
+            squareIndex: 0,
+            navbarId: '',
             flickityOptions: {
                 initialIndex: 1,
                 prevNextButtons: false,
@@ -31,8 +46,24 @@ export default {
             ]
         };
     },
-    created() {
-
+    async created() {
+        try {
+            let {navbarId} = this.$route.params;
+            this.navbarId = navbarId;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    computed: {
+        ...mapGetters({
+            activeLayout: 'appPageLayout/activeLayout'
+        })
+    },
+    methods: {
+        editFixedModuleHandler() {
+            let id = _.get(this.activeLayout, '0.id');
+            this.$router.push({ name: 'EditAppFixedModule', params: {navbarId: this.navbarId, index: 0}, query: {id} });
+        }
     }
 };
 </script>
@@ -40,7 +71,11 @@ export default {
 .banner-container {
     position: relative;
     height: 510px;
-    margin-top: 60px;
+    .btn-field {
+        margin: 10px 0 10px 0;
+        display: flex;
+        justify-content: flex-end;
+    }
     .carousel-cell {
         width: 900px;
         height: 510px;
