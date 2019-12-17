@@ -124,4 +124,11 @@ export const getAppNavbarList = (status) => {
 export const getAppLayoutByNavbarId = (id) => {
     return service.get(`/v1/mobile/content/layout-block?navBarId=${id}`);
 };
+
+/**
+ * 保存layoutblock
+ */
+export const putAppLayoutBlock = (id, block) => {
+    return service.put(`/v1/mobile/content/layout-block/${id}`, block);
+};
 //  移动端页面布局接口结束

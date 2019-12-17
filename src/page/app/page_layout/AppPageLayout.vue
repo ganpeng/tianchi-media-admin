@@ -130,7 +130,7 @@ export default {
         ...mapGetters({
             navbarList: 'appPageLayout/navbarList',
             //  2.3.0 新增
-            activeLayout: 'appPageLayout/getActiveLayout'
+            activeLayout: 'appPageLayout/activeLayout'
         }),
         getNotFixedListByNavbarId() {
             let {navbarId} = this.$route.params;

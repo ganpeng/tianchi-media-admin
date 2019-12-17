@@ -350,16 +350,6 @@ export default {
     background-position: center center;
     border-radius: 8px;
 }
-@mixin toggleBtn() {
-    .el-button {
-        display: none;
-    }
-    &:hover {
-        .el-button {
-            display: block;
-        }
-    }
-}
 
 @mixin btnWrapper() {
     .btn-wrapper {

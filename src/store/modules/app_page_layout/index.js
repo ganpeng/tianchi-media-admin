@@ -2,28 +2,39 @@ import _ from 'lodash';
 import store from 'store';
 import service from '../../../service';
 
-// const defaultLayoutItem = {
-//     desc: '',
-//     id: '',
-//     layoutItemType: '',
-//     programmeTemplate: null,
-//     name: '',
-//     params: '',
-//     coverImage: {},
-//     coverImageBackground: {},
-//     cornerMark: {
-//         leftTop: {},
-//         leftBottom: {},
-//         rightTop: {},
-//         rightBottom: {}
-//     }
-// };
+let defaultLayoutData = {
+    iconImage: {},
+    layoutItemMultiList: [],
+    layoutTemplate: 'M_FS_1',
+    navBarId: '',
+    navBarName: '',
+    renderType: 'SHUFFLE',
+    subjectId: '',
+    title: ''
+};
+
+const defaultLayoutItem = {
+    desc: '',
+    id: '',
+    layoutItemType: 'PROGRAMME',
+    programmeTemplate: null,
+    name: '',
+    params: '',
+    coverImage: {},
+    coverImageBackground: {},
+    cornerMark: {
+        leftTop: {},
+        leftBottom: {},
+        rightTop: {},
+        rightBottom: {}
+    }
+};
 
 const defaultState = {
     activeLayout: [],
     navbarList: [],
     //  每个栏目的布局
-    layout: store.get('layoutStore') || {}
+    layout: store.get('appLayoutStore') || {}
 };
 
 const state = _.cloneDeep(defaultState);
@@ -45,22 +56,11 @@ const getters = {
     },
     selectAll(state) {
         return (navbarId, index) => {
-            let layoutTemplate = _.get(state.activeLayout, `${index}.layoutTemplate`);
-            let layoutItemMultiList = _.get(state.activeLayout, `${index}.layoutItemMultiList`).filter((item) => item.layoutItemType !== 'ALL');
+            let layoutItemMultiList = _.get(state.activeLayout, `${index}.layoutItemMultiList`);
             let allFlag = false;
-            if (layoutTemplate === 'LT_SN') {
-                allFlag = !(layoutItemMultiList.length > 0 && _.every(layoutItemMultiList, (item) => _.get(item, 'coverImage.uri')));
-            } else if (layoutTemplate === 'LT_3_3' || layoutTemplate === 'FS_6' || layoutTemplate === 'FS_3') {
-                allFlag = !_.every(layoutItemMultiList, (item) => _.get(item, 'coverImage.uri'));
-            } else {
-                allFlag = _.some(layoutItemMultiList, (item) => {
-                    if (item.layoutItemType === 'LINK' || /_PROGRAMME_CATEGORY$/.test(item.layoutItemType)) {
-                        return !_.get(item, 'coverImage.uri');
-                    } else {
-                        return !item.id || !_.get(item, 'coverImage.uri');
-                    }
-                });
-            }
+            allFlag = _.some(layoutItemMultiList, (item) => {
+                    return !item.id || !_.get(item, 'coverImage.uri');
+            });
             return allFlag;
         };
     },
@@ -68,7 +68,7 @@ const getters = {
         return state.layout;
     },
     //  2.3.0 新的修改  ========================
-    getActiveLayout(state) {
+    activeLayout(state) {
         return state.activeLayout;
     },
     getLayoutBlockItem(state) {
@@ -222,7 +222,19 @@ const actions = {
         try {
             let res = await service.getAppLayoutByNavbarId(id);
             if (res && res.code === 0) {
-                commit('setActiveLayout', {layout: res.data});
+                if (res.data.length === 0) {
+                    let navbar = state.navbarList.find((item) => item.id === id);
+                    if (navbar) {
+                        let activeLayout = [Object.assign({}, _.cloneDeep(defaultLayoutData), {
+                            layoutItemMultiList: _.times(3, () => _.cloneDeep(defaultLayoutItem)),
+                            navBarId: navbar.id,
+                            navBarName: navbar.name
+                        })];
+                        commit('setActiveLayout', {layout: activeLayout});
+                    }
+                } else {
+                    commit('setActiveLayout', {layout: res.data});
+                }
             }
             return res;
         } catch (err) {
