@@ -3,9 +3,12 @@
         <div class="content-title">编辑首页推荐固定模块</div>
         <div class="seperator-line"></div>
         <div class="content">
-            <ul class="block-cell-list">
+            <ul v-if="isRecommend" class="block-cell-list">
                 <li class="block-cell-item">
-
+                    <el-button @click="selectLiveChannel" class="btn-style-two">
+                        设置直播频道
+                    </el-button>
+                    {{this.channel.name}}
                 </li>
                 <li class="block-cell-item hide"></li>
                 <li class="block-cell-item hide"></li>
@@ -46,6 +49,7 @@
             <el-button class="btn-style-two" type="primary" @click="saveHandler">保存</el-button>
         </div>
         <add-programme :squareIndex="squareIndex" :allowResolutions="allowResolutions" ref="selectProgrammeDialog"></add-programme>
+        <edit-app-channel ref="changeLiveChannelDialog" :selectChannelSuccessHandler="selectChannelSuccessHandler"></edit-app-channel>
     </div>
 </template>
 <script>
@@ -54,15 +58,19 @@ import _ from 'lodash';
 import AddProgramme from './AddProgramme';
 import AddBtn from '../AddBtn';
 import CornerMark from '@/page/page_layout/CornerMark';
+import EditAppChannel from './EditAppChannel';
 export default {
     name: 'EditAppFixedModule',
-    components: {AddProgramme, AddBtn, CornerMark},
+    components: {AddProgramme, AddBtn, CornerMark, EditAppChannel},
     data() {
         return {
             squareIndex: 0,
             navbarId: '',
             layoutItemType: '',
-            allowResolutions: []
+            allowResolutions: [],
+            // 直播频道相关
+            reqBody: [],
+            channel: {}
         };
     },
     async created() {
@@ -88,6 +96,10 @@ export default {
                 let bgStr = `background-image: url(${url})`;
                 return bgStr;
             };
+        },
+        isRecommend() {
+            let {isRecommend} = this.$route.query;
+            return isRecommend;
         }
     },
     methods: {
@@ -95,6 +107,15 @@ export default {
             getAppNavbarList: 'appPageLayout/getAppNavbarList',
             getAppLayoutByNavbarId: 'appPageLayout/getAppLayoutByNavbarId'
         }),
+        //  直播频道相关
+        selectLiveChannel() {
+            this.$refs.changeLiveChannelDialog.showDialog();
+        },
+        selectChannelSuccessHandler(reqBody) {
+            let channel = _.get(reqBody, '0.channel');
+            this.reqBody = _.cloneDeep(reqBody);
+            this.channel = _.cloneDeep(channel);
+        },
         addLayoutItem(squareIndex) {
             return (layoutItemType) => {
                 if (!this.$authority.isHasAuthority('content:layoutBlock:add')) {
@@ -136,8 +157,17 @@ export default {
                         if (layoutBlock) {
                             let res = await this.$service.putAppLayoutBlock(id, layoutBlock);
                             if (res && res.code === 0) {
-                                this.$message.success('保存成功');
-                                this.$router.push({ name: 'AppPageLayout', params: {navbarId: this.navbarId} });
+                                if (this.isRecommend) {
+                                    let channelRes = await this.$service.postAppChannelLayout(this.reqBody);
+                                    if (channelRes && channelRes.code === 0) {
+                                        this.$message.success('保存成功');
+                                        this.$router.push({ name: 'AppPageLayout', params: {navbarId: this.navbarId} });
+                                    } else {
+                                        this.$message.error('直播频道保存失败');
+                                    }
+                                } else {
+                                    this.$router.push({ name: 'AppPageLayout', params: {navbarId: this.navbarId} });
+                                }
                             }
                         }
                     }

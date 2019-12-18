@@ -21,4 +21,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.fixed-layout-container {
+    overflow: hidden;
+}
 </style>

@@ -1007,6 +1007,11 @@ export const routes = [
                 path: '/app-page-layout/:navbarId/edit-fixed/:index',
                 name: 'EditAppFixedModule',
                 component: () => import('@/page/app/page_layout/add_edit_module/EditAppFixedModule')
+            },
+            {
+                path: '/app-page-layout/:navbarId/:operator/shuffle/:index',
+                name: 'AppShuffleModule',
+                component: () => import('@/page/app/page_layout/add_edit_module/AppShuffleModule')
             }
         ]
     },

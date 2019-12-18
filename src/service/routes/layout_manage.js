@@ -67,3 +67,27 @@ export const getChannelLayout = ({navBarId, releaseStatus, pageNum, pageSize}) =
     }));
     return service.get(`/v1/ad/channel-layout/page?${paramsStr}`);
 };
+
+//  dev_v2.6移动端
+/**
+ * 设置移动端直播频道
+ */
+export const postAppChannelLayout = (reqBody) => {
+    return service.put(`/v1/mobile/ad/channel-layout`, reqBody);
+};
+
+/**
+ * 获取移动端直播频道
+ */
+export const getAppChannelLayout = ({navBarId, releaseStatus, pageNum, pageSize}) => {
+    const params = {
+        navBarId,
+        releaseStatus,
+        pageNum,
+        pageSize
+    };
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+    return service.get(`/v1/mobile/ad/channel-layout/page?${paramsStr}`);
+};

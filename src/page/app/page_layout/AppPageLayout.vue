@@ -199,19 +199,7 @@ export default {
             let index = this.activeLayout.length;
             switch (type) {
                 case 'SHUFFLE':
-                    this.$router.push({name: 'ShuffleModule', params: {navbarId, index, operator: 'add'}});
-                    break;
-                case 'FIGURE':
-                    this.$router.push({name: 'PersonModule', params: {navbarId, index, operator: 'add'}});
-                    break;
-                case 'SPECIAL':
-                    this.$router.push({name: 'EditSpecialModule', params: {navbarId, index, operator: 'add'}});
-                    break;
-                case 'FIGURE_SUBJECT':
-                    this.$router.push({name: 'PersonSubjectModule', params: {navbarId, index, operator: 'add'}});
-                    break;
-                case 'PROGRAMME_SUBJECT':
-                    this.$router.push({name: 'ProgrammeSubjectModule', params: {navbarId, index, operator: 'add'}});
+                    this.$router.push({name: 'AppShuffleModule', params: {navbarId, index, operator: 'add'}});
                     break;
                 default:
                     throw new Error('类型错误');

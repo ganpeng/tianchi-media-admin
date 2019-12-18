@@ -126,7 +126,14 @@ export const getAppLayoutByNavbarId = (id) => {
 };
 
 /**
- * 保存layoutblock
+ * 新增移动端layoutBlock
+ */
+export const postAppLayoutBlock = (id, block) => {
+    return service.post(`/v1/mobile/content/layout-block?navBarId=${id}`, block);
+};
+
+/**
+ * 编辑移动端layoutblock
  */
 export const putAppLayoutBlock = (id, block) => {
     return service.put(`/v1/mobile/content/layout-block/${id}`, block);

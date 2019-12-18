@@ -7,6 +7,18 @@
         </div>
         <div class="swiper-wrapper">
             <swiper class="swiper-container" :options="swiperOption">
+                <swiper-slide class="swiper-slide-one" v-if="isRecommend" key="10000000">
+                        <div class="channel">
+                            <img :src="channel.logoUri" alt="">
+                            <div class="text-info">
+                                <p class="title">当前直播频道</p>
+                                <p class="name">{{channel.no}}&nbsp;&nbsp;{{channel.name}}</p>
+                            </div>
+                        </div>
+                        <div class="live">
+                            <svg-icon icon-class="live"></svg-icon>
+                        </div>
+                </swiper-slide>
                 <swiper-slide v-for="(banner, index) in bannerList" :key="index">
                     <span class="inner-bg" :style="styleBgImageStr(index)">
                         <span class="programme-name">
@@ -37,6 +49,7 @@ export default {
     },
     data() {
         return {
+            channel: {},
             swiperOption: {
                 slidesPerView: 1,
                 spaceBetween: 20,
@@ -51,6 +64,18 @@ export default {
             }
         };
     },
+    async created() {
+        try {
+            let {navbarId} = this.$route.params;
+            let res = await this.$service.getAppChannelLayout({navBarId: navbarId});
+            if (res && res.code === 0) {
+                let obj = res.data.list[0];
+                this.channel = obj && obj.channel ? obj.channel : {};
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    },
     computed: {
         ...mapGetters({
             activeLayout: 'appPageLayout/activeLayout'
@@ -62,6 +87,10 @@ export default {
                 return bgStr;
             };
         },
+        isRecommend() {
+            let isRecommend = _.get(this.activeLayout, '0.navBarName') === '推荐';
+            return isRecommend;
+        },
         bannerList() {
             let bannerList = _.get(this.activeLayout, '0.layoutItemMultiList');
             return bannerList || [];
@@ -71,7 +100,7 @@ export default {
         editFixedModuleHandler() {
             let id = _.get(this.activeLayout, '0.id');
             let {navbarId} = this.$route.params;
-            this.$router.push({ name: 'EditAppFixedModule', params: {navbarId, index: 0}, query: {id} });
+            this.$router.push({ name: 'EditAppFixedModule', params: {navbarId, index: 0}, query: {id, isRecommend: this.isRecommend} });
         }
     }
 };
@@ -119,6 +148,56 @@ export default {
         height: 510px;
         background-color:rgba(37,45,63,0.5);
         border-radius:10px;
+        &.swiper-slide-one {
+            position: relative;
+            .live {
+                position: absolute;
+                bottom: 30px;
+                right: 30px;
+                .svg-icon {
+                    width: 120px;
+                    height: 66px;
+                }
+            }
+            .text {
+                font-size: 24px;
+                color: #6F7480;
+            }
+            //  频道样式
+            .channel {
+                position: absolute;
+                display: flex;
+                top: 20px;
+                left: 20px;
+                img {
+                    display: block;
+                    width: 200px;
+                    height: 200px;
+                    margin-right: 30px;
+                    border-radius: 8px;
+                }
+                .text-info {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: flex-start;
+                    .title {
+                        font-size: 16px;
+                        line-height: 22px;
+                        color: #6F7480;
+                        border-bottom: 1px solid #6F7480;
+                    }
+                    .name {
+                        border: 1px solid #1989FA;
+                        border-radius: 8px;
+                        font-size: 22px;
+                        color: #1989FA;
+                        padding: 6px 10px;
+                        margin-top: 20px;
+                    }
+                }
+            }
+        }
     }
     .swiper-pagination-bullets {
         width: auto;
