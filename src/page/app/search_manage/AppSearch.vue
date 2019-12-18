@@ -49,7 +49,7 @@ export default {
                 return;
             }
 
-            let res = await this.$service.getHotSearch();
+            let res = await this.$service.getAppHotSearch();
             if (res && res.code === 0) {
                 this.list = res.data;
             }
@@ -95,7 +95,7 @@ export default {
                     item.sort = index;
                     return item;
                 });
-                let res = await this.$service.postHotSearch(hotSearchList);
+                let res = await this.$service.postAppHotSearch(hotSearchList);
                 if (res && res.code === 0) {
                     this.$message.success('保存成功');
                     this.isEdit = false;

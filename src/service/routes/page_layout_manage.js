@@ -138,4 +138,18 @@ export const postAppLayoutBlock = (id, block) => {
 export const putAppLayoutBlock = (id, block) => {
     return service.put(`/v1/mobile/content/layout-block/${id}`, block);
 };
+
+/**
+ * 移动端模块排序
+ */
+export const sortAppLayoutBlock = (layoutBlockSortVoList) => {
+    return service.put('/v1/mobile/content/layout-block/sort', layoutBlockSortVoList);
+};
+
+/**
+ * 根据id删除移动端layoutBlock
+ */
+export const deleteAppLayoutBlockById = (id) => {
+    return service.delete(`/v1/mobile/content/layout-block/${id}`);
+};
 //  移动端页面布局接口结束

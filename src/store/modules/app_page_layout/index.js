@@ -54,6 +54,12 @@ const getters = {
             return !_.isEmpty(obj) ? obj : {};
         };
     },
+    getLayoutItemDetail(state) {
+        return (navbarId, index, squareIndex) => {
+            let obj = _.get(state.activeLayout, `${index}.layoutItemMultiList.${squareIndex}`);
+            return !_.isEmpty(obj) ? obj : {};
+        };
+    },
     selectAll(state) {
         return (navbarId, index) => {
             let layoutItemMultiList = _.get(state.activeLayout, `${index}.layoutItemMultiList`);

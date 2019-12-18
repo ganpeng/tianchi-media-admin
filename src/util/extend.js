@@ -293,6 +293,26 @@ let util = {
             console.log(err);
         }
     },
+    async deleteAppLayoutItemHandler(id) {
+        try {
+            let confirm = await MessageBox.confirm('您确定要删除该板式吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'error'
+            });
+            if (confirm) {
+                let res = await service.deleteAppLayoutBlockById(id);
+                if (res && res.code === 0) {
+                    vuexStore.commit('appPageLayout/setActiveLayout', {layout: res.data});
+                    Message.success('删除成功');
+                } else {
+                    Message.error('删除成功');
+                }
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    },
     cutStr(str, len) {
         let charLength = 0;
         if (!str) {

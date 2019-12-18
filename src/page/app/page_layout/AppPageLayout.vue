@@ -213,7 +213,7 @@ export default {
                         sort: index
                     };
                 });
-                let res = await this.$service.sortLayoutBlock(layoutBlockSortVoList);
+                let res = await this.$service.sortAppLayoutBlock(layoutBlockSortVoList);
                 if (res && res.code === 0) {
                     this.$message.success('模块排序保存成功');
                     this.closeSortViewHandler();

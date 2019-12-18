@@ -26,21 +26,21 @@
         <div class="content-field">
             <div class="wrapper">
                 <div :style="styleBgImageStr(0)" class="field-1">
-                    <corner-mark :squareIndex="0" :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
+                    <corner-mark :squareIndex="0" :layoutItem="getLayoutItemDetail(navbarId, index, 0)" :cornerMark="getLayoutItemCornerMark(navbarId, index, 0)"></corner-mark>
                     <add-btn
                         v-if="isEdit"
                         :addLayoutItem="addLayoutItem(0)"
                     ></add-btn>
                 </div>
                 <div :style="styleBgImageStr(1)" class="field-1">
-                    <corner-mark :squareIndex="1" :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
+                    <corner-mark :squareIndex="1" :layoutItem="getLayoutItemDetail(navbarId, index, 1)" :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
                     <add-btn
                         v-if="isEdit"
                         :addLayoutItem="addLayoutItem(1)"
                     ></add-btn>
                 </div>
                 <div :style="styleBgImageStr(2)" class="field-1">
-                    <corner-mark :squareIndex="2" :cornerMark="getLayoutItemCornerMark(navbarId, index, 2)"></corner-mark>
+                    <corner-mark :squareIndex="2" :layoutItem="getLayoutItemDetail(navbarId, index, 2)" :cornerMark="getLayoutItemCornerMark(navbarId, index, 2)"></corner-mark>
                     <add-btn
                         v-if="isEdit"
                         :addLayoutItem="addLayoutItem(2)"
@@ -49,21 +49,21 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(3)" class="field-1">
-                    <corner-mark :squareIndex="3" :cornerMark="getLayoutItemCornerMark(navbarId, index, 3)"></corner-mark>
+                    <corner-mark :squareIndex="3" :layoutItem="getLayoutItemDetail(navbarId, index, 3)" :cornerMark="getLayoutItemCornerMark(navbarId, index, 3)"></corner-mark>
                     <add-btn
                         v-if="isEdit"
                         :addLayoutItem="addLayoutItem(3)"
                     ></add-btn>
                 </div>
                 <div :style="styleBgImageStr(4)" class="field-1">
-                    <corner-mark :squareIndex="4" :cornerMark="getLayoutItemCornerMark(navbarId, index, 4)"></corner-mark>
+                    <corner-mark :squareIndex="4" :layoutItem="getLayoutItemDetail(navbarId, index, 4)" :cornerMark="getLayoutItemCornerMark(navbarId, index, 4)"></corner-mark>
                     <add-btn
                         v-if="isEdit"
                         :addLayoutItem="addLayoutItem(4)"
                     ></add-btn>
                 </div>
                 <div :style="styleBgImageStr(5)" class="field-1">
-                    <corner-mark :squareIndex="5" :cornerMark="getLayoutItemCornerMark(navbarId, index, 5)"></corner-mark>
+                    <corner-mark :squareIndex="5" :layoutItem="getLayoutItemDetail(navbarId, index, 5)" :cornerMark="getLayoutItemCornerMark(navbarId, index, 5)"></corner-mark>
                     <add-btn
                         v-if="isEdit"
                         :addLayoutItem="addLayoutItem(5)"
@@ -83,7 +83,7 @@ import {mapGetters, mapMutations} from 'vuex';
 import _ from 'lodash';
 import AddBtn from '../AddBtn';
 import AddProgramme from '../add_edit_module/AddProgramme';
-import CornerMark from '@/page/page_layout/CornerMark';
+import CornerMark from '@/page/app/page_layout/CornerMark';
 export default {
     name: 'Mixed33',
     components: { AddBtn, AddProgramme, CornerMark },
@@ -116,6 +116,7 @@ export default {
     computed: {
         ...mapGetters({
             getLayoutItemCornerMark: 'appPageLayout/getLayoutItemCornerMark',
+            getLayoutItemDetail: 'appPageLayout/getLayoutItemDetail',
             //  2.3.0新增
             activeLayout: 'appPageLayout/activeLayout'
         }),
@@ -177,7 +178,7 @@ export default {
                 return;
             }
             let id = _.get(this.activeLayout, `${this.index}.id`);
-            this.$util.deleteLayoutItemHandler(id);
+            this.$util.deleteAppLayoutItemHandler(id);
         }
     }
 };
@@ -201,7 +202,7 @@ export default {
         width: 996px;
         .wrapper {
             display: flex;
-            margin-bottom: 1.8%;
+            margin-bottom: 75px;
             .field-1 {
                 flex: 1;
                 @include paddingBg(44.97%);

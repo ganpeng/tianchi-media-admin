@@ -57,7 +57,7 @@ import {mapActions, mapGetters} from 'vuex';
 import _ from 'lodash';
 import AddProgramme from './AddProgramme';
 import AddBtn from '../AddBtn';
-import CornerMark from '@/page/page_layout/CornerMark';
+import CornerMark from '@/page/app/page_layout/CornerMark';
 import EditAppChannel from './EditAppChannel';
 export default {
     name: 'EditAppFixedModule',
