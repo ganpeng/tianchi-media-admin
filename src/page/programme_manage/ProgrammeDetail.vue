@@ -457,7 +457,8 @@
                                 :value="programme.price">
                             </el-input>
                         </el-form-item>
-                        <div v-if="showTvImages" class="tv-images">
+                        <!-- <div v-if="showTvImages" class="tv-images"> -->
+                        <div class="tv-images">
                             <el-form-item label="节目海报">
                                 <p class="little-tips">(260*380)六分位图必传</p>
                             </el-form-item>
@@ -472,9 +473,10 @@
                             </div>
                         </div>
                         <!-- 新增加的移动端的图片 -->
-                        <div v-if="showAppImages" class="app-images">
+                        <!-- <div v-if="showAppImages" class="app-images"> -->
+                        <div class="app-images">
                             <el-form-item label="移动端图片">
-                                <p class="little-tips">(351*507, 1089*612)尺寸必传</p>
+                                <p class="little-tips">(384*561, 330*186)</p>
                             </el-form-item>
                             <div class="wrapper clearfix">
                                 <multi-image-uploader
@@ -483,7 +485,6 @@
                                     :deleteImageHandler="deleteAppImageHandler"
                                     :imageUploadedHandler="appImageUploadHandler"
                                     :allowResolutions="appAllowResolutions"
-                                    :validator="appImageUploadValidator"
                                 ></multi-image-uploader>
                             </div>
                         </div>
@@ -920,7 +921,13 @@
                 return list;
             },
             appImageList() {
-                let list = this.programme.posterImageListForApp;
+                let list = [];
+                if (_.get(this.programme, 'coverImageForApp.id')) {
+                    list.push(this.programme.coverImageForApp);
+                }
+                if (_.get(this.programme, 'horizontalCoverImageForApp.id')) {
+                    list.push(this.programme.horizontalCoverImageForApp);
+                }
                 return list;
             }
         },
@@ -966,7 +973,10 @@
                 addImageToPosterImageList: 'programme/addImageToPosterImageList',
                 deleteImageFromPosterImageListById: 'programme/deleteImageFromPosterImageListById',
                 addImageToPosterImageListForApp: 'programme/addImageToPosterImageListForApp',
-                deleteImageFromPosterImageListForAppById: 'programme/deleteImageFromPosterImageListForAppById'
+                deleteImageFromPosterImageListForAppById: 'programme/deleteImageFromPosterImageListForAppById',
+                //  dev_v2.6 新增
+                setImageForApp: 'programme/setImageForApp',
+                clearImageForApp: 'programme/clearImageForApp'
             }),
             ...mapActions({
                 // 新加
@@ -1483,13 +1493,15 @@
                 this.addImageToPosterImageList({image});
             },
             appImageUploadHandler(image) {
-                this.addImageToPosterImageListForApp({image});
+                this.setImageForApp({image});
+                // this.addImageToPosterImageListForApp({image});
             },
             deleteImageHandler(id) {
                 this.deleteImageFromPosterImageListById({id});
             },
             deleteAppImageHandler(id) {
-                this.deleteImageFromPosterImageListForAppById({id});
+                this.clearImageForApp({id});
+                // this.deleteImageFromPosterImageListForAppById({id});
             },
             imageUploadValidator(fileList) {
                 let onlyFileListOne = fileList.filter((item) => {

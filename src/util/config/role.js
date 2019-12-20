@@ -891,16 +891,12 @@ const PROGRAMME_ALLOW_PICTURE_DIMENSIONS = [
 
 const APP_PROGRAMME_ALLOW_PICTURE_DIMENSIONS = [
     {
-        width: 351,
-        height: 507
+        width: 384,
+        height: 561
     },
     {
-        width: 1089,
-        height: 612
-    },
-    {
-        width: 540,
-        height: 303
+        width: 330,
+        height: 186
     }
 ];
 

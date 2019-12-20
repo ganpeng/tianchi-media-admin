@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-import Mfs1 from './fixed_module/MFS1';
+import Mfs1 from './fixed_module/Mfs1';
 export default {
     name: 'FixedLayout',
     components: {Mfs1},

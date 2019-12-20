@@ -33,7 +33,7 @@
                     ></add-btn>
                 </div>
                 <div :style="styleBgImageStr(1)" class="field-1">
-                    <corner-mark :squareIndex="1" :layoutItem="getLayoutItemDetail(navbarId, index, 0)" :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
+                    <corner-mark :squareIndex="1" :layoutItem="getLayoutItemDetail(navbarId, index, 1)" :cornerMark="getLayoutItemCornerMark(navbarId, index, 1)"></corner-mark>
                     <add-btn
                         v-if="isEdit"
                         :addLayoutItem="addLayoutItem(1)"
@@ -42,14 +42,14 @@
             </div>
             <div class="wrapper">
                 <div :style="styleBgImageStr(2)" class="field-1">
-                    <corner-mark :squareIndex="2" :layoutItem="getLayoutItemDetail(navbarId, index, 0)" :cornerMark="getLayoutItemCornerMark(navbarId, index, 2)"></corner-mark>
+                    <corner-mark :squareIndex="2" :layoutItem="getLayoutItemDetail(navbarId, index, 2)" :cornerMark="getLayoutItemCornerMark(navbarId, index, 2)"></corner-mark>
                     <add-btn
                         v-if="isEdit"
                         :addLayoutItem="addLayoutItem(2)"
                     ></add-btn>
                 </div>
                 <div :style="styleBgImageStr(3)" class="field-1">
-                    <corner-mark :squareIndex="3" :layoutItem="getLayoutItemDetail(navbarId, index, 0)" :cornerMark="getLayoutItemCornerMark(navbarId, index, 3)"></corner-mark>
+                    <corner-mark :squareIndex="3" :layoutItem="getLayoutItemDetail(navbarId, index, 3)" :cornerMark="getLayoutItemCornerMark(navbarId, index, 3)"></corner-mark>
                     <add-btn
                         v-if="isEdit"
                         :addLayoutItem="addLayoutItem(3)"

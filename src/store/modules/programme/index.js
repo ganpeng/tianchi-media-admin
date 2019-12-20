@@ -115,7 +115,11 @@ const defaultProgramme = {
 
     //  v2.3.6中新增字段
     price: '', // 单点付费金额
-    paymentType: 'FREE' // 支付情况字段
+    paymentType: 'FREE', // 支付情况字段
+
+    // dev_v2.6 新增
+    coverImageForApp: {}, //  移动端六分位图片
+    horizontalCoverImageForApp: {}// 移动端横版海报图
 };
 
 const defaultVideo = {
@@ -914,6 +918,27 @@ const mutations = {
             // delete state.programme.cornerMark[key];
             state.programme.cornerMark[key] = null;
         }
+    },
+    //  dev_v2.6新增
+    setImageForApp(state, payload) {
+        let {image} = payload;
+        if (parseInt(image.width) === 384 && parseInt(image.height) === 561) {
+            state.programme.coverImageForApp = image;
+        }
+
+        if (parseInt(image.width) === 330 && parseInt(image.height) === 186) {
+            state.programme.horizontalCoverImageForApp = image;
+        }
+    },
+    clearImageForApp(state, payload) {
+        let {id} = payload;
+        if (id === _.get(state.programme, 'coverImageForApp.id')) {
+            state.programme.coverImageForApp = {};
+        }
+
+        if (id === _.get(state.programme, 'horizontalCoverImageForApp.id')) {
+            state.programme.horizontalCoverImageForApp = {};
+        }
     }
 };
 
@@ -1007,7 +1032,9 @@ function serializeProgrammData(programme, state) {
         directorResult,
         leadActorResult,
         scenaristResult,
-        price: programme.price / 100
+        price: programme.price / 100,
+        coverImageForApp: programme.coverImageForApp || {}, // 移动端6分位
+        horizontalCoverImageForApp: programme.horizontalCoverImageForApp || {} // 横版海报
     });
     return res;
 }
