@@ -415,7 +415,8 @@ export default {
 
             //  2.3.0新增
             updateLayoutBlockById: 'appPageLayout/updateLayoutBlockById',
-            updateLayoutBlockByIndex: 'appPageLayout/updateLayoutBlockByIndex'
+            updateLayoutBlockByIndex: 'appPageLayout/updateLayoutBlockByIndex',
+            addLayoutBlockByIndex: 'appPageLayout/addLayoutBlockByIndex'
         }),
         ...mapActions({
             getProgrammeListIsVisible: 'programme/getProgrammeListIsVisible',
@@ -570,7 +571,6 @@ export default {
         async uploadProgrammeCoverImageSuccessHandler(image) {
             try {
                 let {id, posterImageList} = this.programme;
-                // let clonePosterImageList = _.cloneDeep(posterImageList);
                 let clonePosterImageList = this.$util.imageWidth240AndWidth260NoRepeat(image, _.cloneDeep(posterImageList));
                 clonePosterImageList.push(image);
                 clonePosterImageList = _.uniqBy(clonePosterImageList, 'id');
@@ -671,11 +671,18 @@ export default {
                     layoutBlockItem: this.layoutBlockItemClone
                 });
             } else {
-                this.updateLayoutBlockByIndex({
-                    squareIndex: this.squareIndex,
-                    index: this.index,
-                    layoutBlockItem: this.layoutBlockItemClone
-                });
+                if (this.index === 0 && this.squareIndex > 2) {
+                    this.addLayoutBlockByIndex({
+                        index: this.index,
+                        layoutBlockItem: this.layoutBlockItemClone
+                    });
+                } else {
+                    this.updateLayoutBlockByIndex({
+                        squareIndex: this.squareIndex,
+                        index: this.index,
+                        layoutBlockItem: this.layoutBlockItemClone
+                    });
+                }
             }
             this.closeDialog();
         },

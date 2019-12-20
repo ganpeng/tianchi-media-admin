@@ -84,3 +84,57 @@ export const getImagePackage = () => {
 export const getVersionCode = () => {
     return service.get(`/v1/admin/version`);
 };
+
+//  移动端开始
+/**
+ * 新增版本
+ */
+export const postAppVersion = (version) => {
+    return service.post(`/v1/mobile/sys/client-version`, version);
+};
+
+/**
+ * dev_v2.5 新增版本
+ */
+export const newAppPostVersion = (version) => {
+    return service.post(`/v1/mobile/sys/client-version/addVersion`, version);
+};
+
+/**
+ * 获取版本列表
+ */
+export const getAppVersionList = (params) => {
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+    return service.get(`/v1/mobile/sys/client-version/page?${paramsStr}`);
+};
+
+/**
+ * 根据版本id获取版本
+ */
+export const getAppVersionById = (id) => {
+    return service.get(`/v1/mobile/sys/client-version/${id}`);
+};
+
+/**
+ * 根据版本的id删除版本
+ */
+export const deleteAppVersionById = (id) => {
+    return service.delete(`/v1/mobile/sys/client-version?id=${id}`);
+};
+
+/**
+ * 发布，撤回
+ */
+export const launchAppVersion = (id, releaseStatus) => {
+    return service.put(`/v1/mobile/sys/client-version/launch?id=${id}&releaseStatus=${releaseStatus}`);
+};
+
+/**
+ * 编辑版本
+ */
+export const editAppVersionById = (version) => {
+    return service.put(`/v1/mobile/sys/client-version/edit`, version);
+};
+// 移动端结束

@@ -248,12 +248,23 @@
                     }
                 }
             },
-            menuChangeHandler(pathObj) {
-                let path = _.get(pathObj, 'uri');
-                if (path === '/page-layout' || path === '/app-page-layout') {
-                    path = `${path}/${this.layoutId}`;
+            async menuChangeHandler(pathObj) {
+                try {
+                    let path = _.get(pathObj, 'uri');
+                    if (path === '/page-layout' || path === '/app-page-layout') {
+                        if (this.appActive) {
+                            await this.appMenuInit();
+                        } else {
+                            await this.menuInit();
+                        }
+                        path = `${path}/${this.layoutId}`;
+                        this.$router.push({path});
+                    } else {
+                        this.$router.push({path});
+                    }
+                } catch (err) {
+                    console.log(err);
                 }
-                this.$router.push({path});
             },
             // 如果是子站，点击跳转到设置子站点页面;中心站点跳转到站点列表
             toConfigSite() {

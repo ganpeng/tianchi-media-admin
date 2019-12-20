@@ -35,7 +35,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-            filialeList: 'version/filialeList'
+            filialeList: 'appVersion/filialeList'
         })
     },
     methods: {

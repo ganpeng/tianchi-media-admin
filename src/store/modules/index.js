@@ -15,6 +15,7 @@ import category from './category';
 import pageLayout from './page_layout';
 import advertising from './advertising';
 import appPageLayout from './app_page_layout';
+import appVersion from './app_version';
 
 export default {
     permission,
@@ -32,5 +33,6 @@ export default {
     category,
     pageLayout,
     advertising,
-    appPageLayout
+    appPageLayout,
+    appVersion
 };

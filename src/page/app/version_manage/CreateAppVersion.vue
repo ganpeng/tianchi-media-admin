@@ -116,19 +116,19 @@ export default {
     name: 'CreateAppVersion',
     components: {AreaCodeSearch},
     data() {
-        let checkVersionCode = (rule, value, callback) => {
-            let reg = /^\+?[1-9][0-9]*$/;
-            if (!reg.test(value)) {
-                callback(new Error('只能输入大于0的整数'));
-            }
-            callback();
-        };
+        // let checkVersionCode = (rule, value, callback) => {
+        //     let reg = /^\+?[1-9][0-9]*$/;
+        //     if (!reg.test(value)) {
+        //         callback(new Error('只能输入大于0的整数'));
+        //     }
+        //     callback();
+        // };
         return {
             infoRules: {
                 version: [{required: true, message: '请输入版本名称'}],
                 versionCode: [
-                    {required: true, message: '请输入版本号'},
-                    {validator: checkVersionCode}
+                    {required: true, message: '请输入版本号'}
+                    // {validator: checkVersionCode}
                 ],
                 updateLog: [{required: true, message: '请输入版本说明'}],
                 productType: [{required: true, message: '请选择升级类型'}],
@@ -159,21 +159,21 @@ export default {
     },
     computed: {
         ...mapGetters({
-            version: 'version/version'
+            version: 'appVersion/version'
         })
     },
     methods: {
         ...mapMutations({
-            updateVersion: 'version/updateVersion',
-            resetVersion: 'version/resetVersion',
-            addCompanyToList: 'version/addCompanyToList',
-            deleteCompanyFromList: 'version/deleteCompanyFromList',
-            addBatch: 'version/addBatch',
-            replaceBatch: 'version/replaceBatch'
+            updateVersion: 'appVersion/updateVersion',
+            resetVersion: 'appVersion/resetVersion',
+            addCompanyToList: 'appVersion/addCompanyToList',
+            deleteCompanyFromList: 'appVersion/deleteCompanyFromList',
+            addBatch: 'appVersion/addBatch',
+            replaceBatch: 'appVersion/replaceBatch'
         }),
         ...mapActions({
-            newPostVersion: 'version/newPostVersion',
-            getFilialeList: 'version/getFilialeList'
+            newPostVersion: 'appVersion/newAppPostVersion',
+            getFilialeList: 'appVersion/getFilialeList'
         }),
         async createVersionHandler() {
             try {
@@ -190,7 +190,7 @@ export default {
             }
         },
         gotoList() {
-            this.$router.push({name: 'VersionList'});
+            this.$router.push({name: 'AppVersionList'});
         },
         inputHandler(value, key) {
             this.updateVersion({key, value});

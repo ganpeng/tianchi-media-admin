@@ -2,33 +2,33 @@ import _ from 'lodash';
 import store from 'store';
 import service from '../../../service';
 
-let defaultLayoutData = {
-    iconImage: {},
-    layoutItemMultiList: [],
-    layoutTemplate: 'M_FS_1',
-    navBarId: '',
-    navBarName: '',
-    renderType: 'SHUFFLE',
-    subjectId: '',
-    title: ''
-};
+// let defaultLayoutData = {
+//     iconImage: {},
+//     layoutItemMultiList: [],
+//     layoutTemplate: 'M_FS_1',
+//     navBarId: '',
+//     navBarName: '',
+//     renderType: 'SHUFFLE',
+//     subjectId: '',
+//     title: ''
+// };
 
-const defaultLayoutItem = {
-    desc: '',
-    id: '',
-    layoutItemType: 'PROGRAMME',
-    programmeTemplate: null,
-    name: '',
-    params: '',
-    coverImage: {},
-    coverImageBackground: {},
-    cornerMark: {
-        leftTop: {},
-        leftBottom: {},
-        rightTop: {},
-        rightBottom: {}
-    }
-};
+// const defaultLayoutItem = {
+//     desc: '',
+//     id: '',
+//     layoutItemType: 'PROGRAMME',
+//     programmeTemplate: null,
+//     name: '',
+//     params: '',
+//     coverImage: {},
+//     coverImageBackground: {},
+//     cornerMark: {
+//         leftTop: {},
+//         leftBottom: {},
+//         rightTop: {},
+//         rightBottom: {}
+//     }
+// };
 
 const defaultState = {
     activeLayout: [],
@@ -154,6 +154,12 @@ const mutations = {
             return item;
         });
     },
+    addLayoutBlockByIndex(state, payload) {
+        let {layoutBlockItem, index} = payload;
+        let layoutItemMultiList = _.get(state.activeLayout, `${index}.layoutItemMultiList`);
+        layoutItemMultiList.push(layoutBlockItem);
+        _.set(state.activeLayout, `${index}.layoutItemMultiList`, layoutItemMultiList);
+    },
     updateLayoutBlockDataById(state, payload) {
         let {key, value, layoutBlockId} = payload;
         state.activeLayout = state.activeLayout.map((item) => {
@@ -228,19 +234,7 @@ const actions = {
         try {
             let res = await service.getAppLayoutByNavbarId(id);
             if (res && res.code === 0) {
-                if (res.data.length === 0) {
-                    let navbar = state.navbarList.find((item) => item.id === id);
-                    if (navbar) {
-                        let activeLayout = [Object.assign({}, _.cloneDeep(defaultLayoutData), {
-                            layoutItemMultiList: _.times(3, () => _.cloneDeep(defaultLayoutItem)),
-                            navBarId: navbar.id,
-                            navBarName: navbar.name
-                        })];
-                        commit('setActiveLayout', {layout: activeLayout});
-                    }
-                } else {
-                    commit('setActiveLayout', {layout: res.data});
-                }
+                commit('setActiveLayout', {layout: res.data});
             }
             return res;
         } catch (err) {

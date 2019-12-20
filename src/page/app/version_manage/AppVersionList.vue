@@ -81,22 +81,6 @@
                         </el-select>
                     </div>
                     <div class="search-field-item">
-                        <label class="search-field-item-label">区域</label>
-                        <el-select
-                            :value="searchFields.companyCode"
-                            clearable
-                            placeholder="全部"
-                            @input="inputHandler($event, 'companyCode')"
-                        >
-                            <el-option
-                                v-for="(item, index) in companyOptions"
-                                :key="index"
-                                :label="item.name"
-                                :value="item.code">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="search-field-item">
                         <label class="search-field-item-label">时间</label>
                         <el-date-picker
                             :value="searchFields.dateRange"
@@ -179,7 +163,7 @@
                     <el-table-column align="center" width="190px" label="操作">
                         <template slot-scope="scope">
                             <div class="operator-btn-wrapper">
-                                <span v-if="scope.row.releaseStatus !== 'WITHDRAW'" class="btn-text" @click="editVersion(scope.row)">编辑</span>
+                                <span v-if="scope.row.releaseStatus === 'PRE_RELEASED'" class="btn-text" @click="editVersion(scope.row)">编辑</span>
                                 <span v-if="scope.row.releaseStatus === 'PRE_RELEASED'" class="btn-text" @click="releaseVersion(scope.row.id)">发布</span>
                                 <span v-if="scope.row.releaseStatus === 'PRE_RELEASED'" class="btn-text text-danger" @click="deleteVersion(scope.row.id)">删除</span>
                             </div>
@@ -224,10 +208,10 @@ export default {
     },
     computed: {
         ...mapGetters({
-            list: 'version/list',
-            version: 'version/version',
-            pagination: 'version/pagination',
-            searchFields: 'version/searchFields',
+            list: 'appVersion/list',
+            version: 'appVersion/version',
+            pagination: 'appVersion/pagination',
+            searchFields: 'appVersion/searchFields',
             filialeList: 'channel/filialeList'
         }),
         getCount() {
@@ -242,14 +226,6 @@ export default {
                 let baseUri = window.localStorage.getItem('videoBaseUri');
                 return `${baseUri}${uri}`;
             };
-        },
-        companyOptions() {
-            let {allCompanyUpdate} = this.searchFields;
-            if (allCompanyUpdate) {
-                return [];
-            } else {
-                return this.filialeList;
-            }
         },
         releaseStatus() {
             return (status) => {
@@ -268,20 +244,20 @@ export default {
     },
     methods: {
         ...mapMutations({
-            updateSearchFields: 'version/updateSearchFields',
-            updatePagination: 'version/updatePagination',
-            resetVersion: 'version/resetVersion',
-            resetPagination: 'version/resetPagination',
-            resetSearchFields: 'version/resetSearchFields',
-            setVersion: 'version/setVersion',
-            resetState: 'version/resetState',
-            setList: 'version/setList'
+            updateSearchFields: 'appVersion/updateSearchFields',
+            updatePagination: 'appVersion/updatePagination',
+            resetVersion: 'appVersion/resetVersion',
+            resetPagination: 'appVersion/resetPagination',
+            resetSearchFields: 'appVersion/resetSearchFields',
+            setVersion: 'appVersion/setVersion',
+            resetState: 'appVersion/resetState',
+            setList: 'appVersion/setList'
         }),
         ...mapActions({
-            postVersion: 'version/postVersion',
-            getVersionList: 'version/getVersionList',
+            postVersion: 'appVersion/postAppVersion',
+            getVersionList: 'appVersion/getAppVersionList',
             getFilialeList: 'channel/getFilialeList',
-            deleteVersionById: 'version/deleteVersionById'
+            deleteVersionById: 'appVersion/deleteAppVersionById'
         }),
         createVersion() {
             if (!this.$authority.isHasAuthority('sys:clientVersion:add')) {

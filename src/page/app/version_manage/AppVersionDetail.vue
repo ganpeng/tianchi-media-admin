@@ -102,37 +102,8 @@
             </div>
         </div>
         <div class="seperator-line"></div>
-        <div class="range-file-container">
-            <h4 class="content-sub-title">升级范围文件</h4>
-            <el-table
-                header-row-class-name="common-table-header"
-                class="my-table-style" :data="version.batchList || []" border>
-                <el-table-column align="center" width="120px" label="升级日期">
-                    <template slot-scope="scope">
-                        {{scope.row.createdAt  | formatDate('yyyy-MM-DD')}}
-                    </template>
-                </el-table-column>
-                <el-table-column label="升级依据" width="120px" align="center">
-                    <template slot-scope="scope">
-                        {{scope.row.haha || version.updateAccord}}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" width="120px" label="状态">
-                    <template slot-scope="scope">
-                        {{releaseStatus(scope.row.releaseStatus)}}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="操作">
-                    <template slot-scope="scope">
-                        <div class="operator-btn-wrapper">
-                            <span class="btn-text text-primary" @click="downloadBatchFile(scope.row)">下载</span>
-                        </div>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </div>
         <div class="fixed-btn-container">
-            <el-button class="btn-style-two" type="primary" @click="gotoEdit">编辑</el-button>
+            <el-button v-if="version.releaseStatus !== 'PRE_RELEASED'" class="btn-style-two" type="primary" @click="gotoEdit">编辑</el-button>
             <el-button class="btn-style-three" @click="goBack">返回列表</el-button>
         </div>
     </div>
@@ -152,7 +123,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-            version: 'version/version',
+            version: 'appVersion/version',
             filialeList: 'channel/filialeList'
         }),
         hardwareType() {
@@ -210,13 +181,13 @@ export default {
     },
     methods: {
         ...mapMutations({
-            updateVersion: 'version/updateVersion'
+            updateVersion: 'appVersion/updateVersion'
         }),
         ...mapActions({
-            getVersionById: 'version/getVersionById'
+            getVersionById: 'appVersion/getAppVersionById'
         }),
         goBack() {
-            this.$router.push({name: 'VersionList'});
+            this.$router.push({name: 'AppVersionList'});
         },
         influencingEquipmentNumber() {
             return this.version.clientVersionStatsList.reduce((res, curr) => {
@@ -264,9 +235,9 @@ export default {
         gotoEdit() {
             let {id, releaseStatus} = this.version;
             if (releaseStatus === 'PRE_RELEASED') {
-                this.$router.push({name: 'EditVersion', params: {id}});
+                this.$router.push({name: 'EditAppVersion', params: {id}});
             } else {
-                this.$router.push({name: 'EditVersionReleased', params: {id}});
+                this.$router.push({name: 'EditAppVersionReleased', params: {id}});
             }
         }
     }

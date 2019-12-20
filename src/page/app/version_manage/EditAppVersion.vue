@@ -168,7 +168,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-            version: 'version/version'
+            version: 'appVersion/version'
         }),
         releaseStatus() {
             return (status) => {
@@ -187,17 +187,17 @@ export default {
     },
     methods: {
         ...mapMutations({
-            updateVersion: 'version/updateVersion',
-            resetVersion: 'version/resetVersion',
-            addCompanyToList: 'version/addCompanyToList',
-            deleteCompanyFromList: 'version/deleteCompanyFromList',
-            addBatch: 'version/addBatch',
-            replaceBatch: 'version/replaceBatch'
+            updateVersion: 'appVersion/updateVersion',
+            resetVersion: 'appVersion/resetVersion',
+            addCompanyToList: 'appVersion/addCompanyToList',
+            deleteCompanyFromList: 'appVersion/deleteCompanyFromList',
+            addBatch: 'appVersion/addBatch',
+            replaceBatch: 'appVersion/replaceBatch'
         }),
         ...mapActions({
-            getFilialeList: 'version/getFilialeList',
-            getVersionById: 'version/getVersionById',
-            editVersionById: 'version/editVersionById'
+            getFilialeList: 'appVersion/getFilialeList',
+            getVersionById: 'appVersion/getAppVersionById',
+            editVersionById: 'appVersion/editAppVersionById'
         }),
         async createVersionHandler() {
             try {
@@ -214,7 +214,7 @@ export default {
             }
         },
         gotoList() {
-            this.$router.push({name: 'VersionList'});
+            this.$router.push({name: 'AppVersionList'});
         },
         inputHandler(value, key) {
             this.updateVersion({key, value});

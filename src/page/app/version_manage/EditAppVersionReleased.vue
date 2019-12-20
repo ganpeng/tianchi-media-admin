@@ -155,7 +155,6 @@
             </el-table>
         </div>
         <div class="fixed-btn-container">
-            <el-button class="btn-style-two" type="primary" @click="editVersionHandler">编辑</el-button>
             <el-button class="btn-style-three" @click="gotoList" plain>返回列表</el-button>
         </div>
     </div>
@@ -176,7 +175,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-            version: 'version/version',
+            version: 'appVersion/version',
             filialeList: 'channel/filialeList'
         }),
         hardwareType() {
@@ -237,15 +236,15 @@ export default {
     },
     methods: {
         ...mapMutations({
-            updateVersion: 'version/updateVersion',
-            addBatch: 'version/addBatch'
+            updateVersion: 'appVersion/updateVersion',
+            addBatch: 'appVersion/addBatch'
         }),
         ...mapActions({
-            getVersionById: 'version/getVersionById',
-            editVersionById: 'version/editVersionById'
+            getVersionById: 'appVersion/getVersionById',
+            editVersionById: 'appVersion/editVersionById'
         }),
         gotoList() {
-            this.$router.push({name: 'VersionList'});
+            this.$router.push({name: 'AppVersionList'});
         },
         influencingEquipmentNumber() {
             return this.version.clientVersionStatsList.reduce((res, curr) => {
