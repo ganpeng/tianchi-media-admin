@@ -140,7 +140,7 @@
         </div>
         <div class="seperator-line"></div>
         <div v-if="tvImageList.length > 0" class="other-poster">
-            <h4 class="content-sub-title" style="margin-left:20px;">其他海报</h4>
+            <h4 class="content-sub-title" style="margin-left:20px;">TV端海报</h4>
             <thumbnail :removeSign="false" :imageList="tvImageList"></thumbnail>
         </div>
         <div v-if="appImageList.length > 0" class="other-poster">
@@ -188,7 +188,14 @@
                 });
             },
             appImageList() {
-                return this.programme.posterImageListForApp;
+                let list = [];
+                if (_.get(this.programme, 'coverImageForApp.id')) {
+                    list.push(this.programme.coverImageForApp);
+                }
+                if (_.get(this.programme, 'horizontalCoverImageForApp.id')) {
+                    list.push(this.programme.horizontalCoverImageForApp);
+                }
+                return list;
             },
             getMark() {
                 return (position) => {

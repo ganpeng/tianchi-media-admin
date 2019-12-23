@@ -8,16 +8,16 @@
         <div class="swiper-wrapper">
             <swiper class="swiper-container" :options="swiperOption">
                 <swiper-slide class="swiper-slide-one" v-if="isRecommend" key="10000000">
-                        <div class="channel">
-                            <img :src="channel.logoUri" alt="">
-                            <div class="text-info">
-                                <p class="title">当前直播频道</p>
-                                <p class="name">{{channel.no}}&nbsp;&nbsp;{{channel.name}}</p>
-                            </div>
+                    <div class="channel">
+                        <img :src="channel.logoUri" alt="">
+                        <div class="text-info">
+                            <p class="title">当前直播频道</p>
+                            <p class="name">{{channel.no}}&nbsp;&nbsp;{{channel.name}}</p>
                         </div>
-                        <div class="live">
-                            <svg-icon icon-class="live"></svg-icon>
-                        </div>
+                    </div>
+                    <div class="live">
+                        <svg-icon icon-class="live"></svg-icon>
+                    </div>
                 </swiper-slide>
                 <swiper-slide v-for="(banner, index) in bannerList" :key="index">
                     <span class="inner-bg" :style="styleBgImageStr(index)">

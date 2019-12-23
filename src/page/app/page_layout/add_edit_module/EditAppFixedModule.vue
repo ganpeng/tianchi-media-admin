@@ -15,50 +15,22 @@
                 <li class="block-cell-item hide"></li>
                 <li class="block-cell-item hide"></li>
             </ul>
-            <ul class="block-cell-list">
-                <li :style="styleBgImageStr(0)" class="block-cell-item">
+
+            <draggable filter=".ignore-element" element="ul" class="block-cell-list" v-model="layoutItemMultiList">
+                <li v-for="(layoutItem, index) in layoutItemMultiList" :style="styleBgImageStr(index)" :key="index" class="block-cell-item">
                     <div class="mask"></div>
-                    <corner-mark :squareIndex="0" :layoutItem="getLayoutItemDetail(navbarId, 0, 0)" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 0)"></corner-mark>
+                    <corner-mark :squareIndex="index" :layoutItem="getLayoutItemDetail(navbarId, 0, index)" :cornerMark="getLayoutItemCornerMark(navbarId, 0, index)"></corner-mark>
                     <add-btn
-                        :addLayoutItem="addLayoutItem(0)"
+                        :addLayoutItem="addLayoutItem(index)"
                     ></add-btn>
+                    <span v-if="layoutItemMultiList.length > 3" @click="deleteLayoutItemHandler(index)" class="delete-btn">
+                        <svg-icon icon-class="remove_image_default"></svg-icon>
+                    </span>
                 </li>
-                <li :style="styleBgImageStr(1)"  class="block-cell-item">
-                    <div class="mask"></div>
-                    <corner-mark :squareIndex="1" :layoutItem="getLayoutItemDetail(navbarId, 0, 1)" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 1)"></corner-mark>
-                    <add-btn
-                        :addLayoutItem="addLayoutItem(1)"
-                    ></add-btn>
+                <li v-if="layoutItemMultiList.length < 5" class="upload-box ignore-element block-cell-item" @click="createLayoutItem">
+                    <i class="el-icon-plus plus-icon"></i>
                 </li>
-                <li :style="styleBgImageStr(2)" class="block-cell-item">
-                    <div class="mask"></div>
-                    <corner-mark :squareIndex="2" :layoutItem="getLayoutItemDetail(navbarId, 0, 2)" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 2)"></corner-mark>
-                    <add-btn
-                        :addLayoutItem="addLayoutItem(2)"
-                    ></add-btn>
-                </li>
-                <li :style="styleBgImageStr(3)" class="block-cell-item">
-                    <div class="mask"></div>
-                    <corner-mark :squareIndex="3" :layoutItem="getLayoutItemDetail(navbarId, 0, 3)" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 3)"></corner-mark>
-                    <add-btn
-                        v-if="layoutItemBlockLength >= 3"
-                        :addLayoutItem="addLayoutItem(3)"
-                    ></add-btn>
-                </li>
-            </ul>
-            <ul class="block-cell-list">
-                <li :style="styleBgImageStr(4)" class="block-cell-item">
-                    <div class="mask"></div>
-                    <corner-mark :squareIndex="4" :layoutItem="getLayoutItemDetail(navbarId, 0, 4)" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 4)"></corner-mark>
-                    <add-btn
-                        v-if="layoutItemBlockLength >= 4"
-                        :addLayoutItem="addLayoutItem(4)"
-                    ></add-btn>
-                </li>
-                <li class="block-cell-item hide"></li>
-                <li class="block-cell-item hide"></li>
-                <li class="block-cell-item hide"></li>
-            </ul>
+            </draggable>
         </div>
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="saveHandler">保存</el-button>
@@ -68,7 +40,8 @@
     </div>
 </template>
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import {mapActions, mapGetters, mapMutations} from 'vuex';
+import draggable from 'vuedraggable';
 import _ from 'lodash';
 import AddProgramme from './AddProgramme';
 import AddBtn from '../AddBtn';
@@ -76,7 +49,7 @@ import CornerMark from '@/page/app/page_layout/CornerMark';
 import EditAppChannel from './EditAppChannel';
 export default {
     name: 'EditAppFixedModule',
-    components: {AddProgramme, AddBtn, CornerMark, EditAppChannel},
+    components: {draggable, AddProgramme, AddBtn, CornerMark, EditAppChannel},
     data() {
         return {
             squareIndex: 0,
@@ -133,9 +106,21 @@ export default {
         layoutItemBlockLength() {
             let length = _.get(this.activeLayout, `0.layoutItemMultiList.length`);
             return length || 0;
+        },
+        layoutItemMultiList: {
+            get() {
+                return _.get(this.activeLayout, `0.layoutItemMultiList`);
+            },
+            set(value) {
+                this.updateLayoutBlockDataByIndex({ key: 'layoutItemMultiList', index: 0, value });
+            }
         }
     },
     methods: {
+        ...mapMutations({
+            addDetaultLayoutBlockByIndex: 'appPageLayout/addDetaultLayoutBlockByIndex',
+            updateLayoutBlockDataByIndex: 'appPageLayout/updateLayoutBlockDataByIndex'
+        }),
         ...mapActions({
             getAppNavbarList: 'appPageLayout/getAppNavbarList',
             getAppLayoutByNavbarId: 'appPageLayout/getAppLayoutByNavbarId'
@@ -210,6 +195,26 @@ export default {
             } catch (err) {
                 console.log(err);
             }
+        },
+        createLayoutItem() {
+            if (this.layoutItemMultiList.length < 5) {
+                this.addDetaultLayoutBlockByIndex();
+            }
+        },
+        async deleteLayoutItemHandler(squareIndex) {
+            try {
+                let confirm = await this.$confirm(`您确定要删除该模块吗, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                });
+                if (confirm) {
+                    let layoutItemMultiList = this.layoutItemMultiList.filter((item, index) => index !== squareIndex);
+                    this.updateLayoutBlockDataByIndex({ key: 'layoutItemMultiList', index: 0, value: layoutItemMultiList });
+                }
+            } catch (err) {
+                console.log(err);
+            }
         }
     }
 };
@@ -232,9 +237,12 @@ export default {
         margin-top: 20px;
         .block-cell-list {
             display: flex;
+            flex-wrap: wrap;
             margin-bottom: 1.77%;
             .block-cell-item {
-                flex: 1;
+                // flex: 1;
+                width: 23%;
+                margin-bottom: 75px;
                 @include paddingBg(13.34%);
                 .mask {
                     display: none;
@@ -250,13 +258,60 @@ export default {
                 &.hide {
                     visibility: hidden;
                 }
+                .delete-btn {
+                    display: none;
+                    position: absolute;
+                    top: 20px;
+                    left: 20px;
+                    cursor: pointer;
+                    .svg-icon {
+                        width: 23px;
+                        height: 23px;
+                    }
+                }
             }
-            .block-cell-item + .block-cell-item {
+            .block-cell-item {
                 margin-left: 1.77%;
+                &.ignore-element {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 110px;
+                    height: 110px;
+                    min-width: 110px;
+                    border: 1px solid #3E495E;
+                    border-radius: 4px;
+                    background: transparent;
+                    margin: 0 0 10px 0;
+                    cursor: pointer;
+                    padding-bottom: 0;
+                    margin-left: 1.77%;
+                    .svg-icon {
+                        fill: #3E495E;
+                        width: 20px;
+                        height: 20px;
+                    }
+                    .plus-icon {
+                        font-size: 20px;
+                        color: #3E495E;
+                    }
+                    &:hover {
+                        border-color: $mainColor;
+                        .plus-icon {
+                            color: $mainColor;
+                        }
+                    }
+                }
+            }
+            .block-cell-item:nth-of-type(4n + 1) {
+                margin-left: 0;
             }
             .block-cell-item:hover {
                 .mask {
                     display: block!important;
+                }
+                .delete-btn {
+                    display: block;
                 }
             }
             .channel {

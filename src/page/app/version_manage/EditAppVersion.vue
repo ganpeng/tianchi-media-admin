@@ -199,20 +199,6 @@ export default {
             getVersionById: 'appVersion/getAppVersionById',
             editVersionById: 'appVersion/editAppVersionById'
         }),
-        async createVersionHandler() {
-            try {
-                let valid = await this.$refs.createVersion.validate();
-                if (valid) {
-                    let res = await this.newPostVersion();
-                    if (res && res.code === 0) {
-                        this.gotoList();
-                        this.$message.success('保存成功');
-                    }
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        },
         gotoList() {
             this.$router.push({name: 'AppVersionList'});
         },
@@ -283,11 +269,14 @@ export default {
         // dev_v2.5 新增逻辑
         async editVersionHandler() {
             try {
-                let {id} = this.$route.params;
-                if (id) {
-                    let res = await this.editVersionById(id);
-                    if (res && res.code === 0) {
-                        this.gotoList();
+                let valid = await this.$refs.createVersion.validate();
+                if (valid) {
+                    let {id} = this.$route.params;
+                    if (id) {
+                        let res = await this.editVersionById(id);
+                        if (res && res.code === 0) {
+                            this.gotoList();
+                        }
                     }
                 }
             } catch (err) {

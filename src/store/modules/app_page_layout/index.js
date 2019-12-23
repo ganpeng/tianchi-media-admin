@@ -13,22 +13,22 @@ import service from '../../../service';
 //     title: ''
 // };
 
-// const defaultLayoutItem = {
-//     desc: '',
-//     id: '',
-//     layoutItemType: 'PROGRAMME',
-//     programmeTemplate: null,
-//     name: '',
-//     params: '',
-//     coverImage: {},
-//     coverImageBackground: {},
-//     cornerMark: {
-//         leftTop: {},
-//         leftBottom: {},
-//         rightTop: {},
-//         rightBottom: {}
-//     }
-// };
+const defaultLayoutItem = {
+    desc: '',
+    id: '',
+    layoutItemType: 'PROGRAMME',
+    programmeTemplate: null,
+    name: '',
+    params: '',
+    coverImage: {},
+    coverImageBackground: {},
+    cornerMark: {
+        leftTop: {},
+        leftBottom: {},
+        rightTop: {},
+        rightBottom: {}
+    }
+};
 
 const defaultState = {
     activeLayout: [],
@@ -159,6 +159,11 @@ const mutations = {
         let layoutItemMultiList = _.get(state.activeLayout, `${index}.layoutItemMultiList`);
         layoutItemMultiList.push(layoutBlockItem);
         _.set(state.activeLayout, `${index}.layoutItemMultiList`, layoutItemMultiList);
+    },
+    addDetaultLayoutBlockByIndex(state) {
+        let layoutItemMultiList = _.get(state.activeLayout, `0.layoutItemMultiList`);
+        layoutItemMultiList.push(_.cloneDeep(defaultLayoutItem));
+        _.set(state.activeLayout, `0.layoutItemMultiList`, layoutItemMultiList);
     },
     updateLayoutBlockDataById(state, payload) {
         let {key, value, layoutBlockId} = payload;
