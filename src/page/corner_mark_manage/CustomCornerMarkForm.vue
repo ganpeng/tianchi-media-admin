@@ -31,7 +31,7 @@
             </div>
             <!--APP端-->
             <div v-if="visibleAppImage" class="upload-container app">
-                <div>移动端角标：大角标180*180，小角标90*48</div>
+                <div>移动端角标：小角标90*48</div>
                 <div class="upload-box" @click="uploadImage('APP')">
                     <i class="el-icon-plus"></i>
                 </div>
