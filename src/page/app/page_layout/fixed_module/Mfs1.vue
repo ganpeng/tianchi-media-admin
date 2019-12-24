@@ -54,6 +54,7 @@ export default {
                 slidesPerView: 1,
                 spaceBetween: 20,
                 centeredSlides: true,
+                autoplay: 5000,
                 pagination: {
                     el: '.swiper-pagination',
                     clickable: true,
@@ -108,7 +109,7 @@ export default {
 <style lang="scss" scoped>
 .banner-container {
     position: relative;
-    height: 510px;
+    overflow: hidden;
     .btn-field {
         margin: 10px 0 10px 0;
         display: flex;
@@ -116,7 +117,6 @@ export default {
     }
     .swiper-wrapper {
         width: 1200px;
-        overflow: hidden;
         .swiper-container {
             position: relative;
             width: 900px;
@@ -145,7 +145,7 @@ export default {
 .banner-container {
     .swiper-slide {
         width: 900px!important;
-        height: 510px;
+        height: 510px!important;
         background-color:rgba(37,45,63,0.5);
         border-radius:10px;
         &.swiper-slide-one {

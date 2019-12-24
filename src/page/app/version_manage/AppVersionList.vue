@@ -19,22 +19,6 @@
                         搜索
                     </el-button>
                     <div class="search-field-item">
-                        <label class="search-field-item-label">类型</label>
-                        <el-select
-                            :value="searchFields.productType"
-                            filterable
-                            clearable
-                            @input="inputHandler($event, 'productType')"
-                            placeholder="全部">
-                            <el-option
-                                v-for="(item, index) in productTypeOptions"
-                                :key="index"
-                                :label="item.name"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="search-field-item">
                         <label class="search-field-item-label">方式</label>
                         <el-select
                             :value="searchFields.forced"
@@ -44,36 +28,6 @@
                             placeholder="全部">
                             <el-option
                                 v-for="(item, index) in forcedOptions"
-                                :key="index"
-                                :label="item.name"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
-                        <svg-icon icon-class="reset"></svg-icon>
-                        重置
-                    </el-button>
-                    <span
-                        @click="toggleSearchField"
-                        :class="{active:searchFieldVisible}"
-                        class="more-filters">
-                        更多筛选
-                        <i class="el-icon-arrow-up" v-if="searchFieldVisible"></i>
-                        <i class="el-icon-arrow-down" v-else></i>
-                    </span>
-                </div>
-                <div v-show="searchFieldVisible" class="field-row">
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">公共频道</label>
-                        <el-select
-                            :value="searchFields.allCompanyUpdate"
-                            clearable
-                            placeholder="全部"
-                            @input="inputHandler($event, 'allCompanyUpdate')"
-                        >
-                            <el-option
-                                v-for="(item, index) in [{name: '是', value: true}, {name: '否', value: false}]"
                                 :key="index"
                                 :label="item.name"
                                 :value="item.value">
@@ -94,6 +48,10 @@
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </div>
+                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
+                        <svg-icon icon-class="reset"></svg-icon>
+                        重置
+                    </el-button>
                 </div>
             </div>
             <div class="seperator-line"></div>
@@ -122,19 +80,9 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="版本号" align="center" prop="versionCode"></el-table-column>
-                    <el-table-column align="center" width="120px" label="升级类型">
-                        <template slot-scope="scope">
-                            {{scope.row.productType === 'TV_LAUNCHER' ? '应用升级' : '系统升级'}}
-                        </template>
-                    </el-table-column>
                     <el-table-column width="120px" align="center" label="升级方式">
                         <template slot-scope="scope">
                             {{scope.row.forced ? '强制升级' : '选择升级'}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" width="120px" label="硬件类型">
-                        <template slot-scope="scope">
-                            {{hardwareType(scope.row.hardwareType)}}
                         </template>
                     </el-table-column>
                     <el-table-column align="center" width="140px" label="升级包">

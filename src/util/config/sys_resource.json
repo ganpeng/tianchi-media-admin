@@ -1319,6 +1319,16 @@
             "resource_url": "[/v1/user/page]",
             "secondary_menu": "用户管理",
             "updated_at": "19/11/2019 11:38:56"
+        },
+        {
+            "id": "439",
+            "created_at": "19/11/2019 11:38:56",
+            "main_menu": "移动管理",
+            "permission": "app:all",
+            "resource_name": "移动管理",
+            "resource_url": "[/v1/app/all]",
+            "secondary_menu": "移动管理",
+            "updated_at": "19/11/2019 11:38:56"
         }
     ]
 }

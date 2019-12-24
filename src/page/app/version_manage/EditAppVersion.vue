@@ -36,38 +36,6 @@
                                 @input="inputHandler($event, 'updateLog')"
                             ></el-input>
                         </el-form-item>
-                        <el-form-item label="升级类型" prop="productType">
-                            <el-select
-                                clearable
-                                filterable
-                                :value="version.productType"
-                                placeholder="请选择升级类型"
-                                @input="inputHandler($event, 'productType')"
-                            >
-                                <el-option
-                                    v-for="(item, index) in productTypeOptions"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item v-if="version.productType === 'TV_ROM_3798'" label="硬件类型" prop="hardwareType">
-                            <el-select
-                                clearable
-                                filterable
-                                :value="version.hardwareType"
-                                placeholder="请选择升级类型"
-                                @input="inputHandler($event, 'hardwareType')"
-                            >
-                                <el-option
-                                    v-for="(item, index) in hardwareTypeOptions"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
                         <el-form-item label="升级方式" prop="forced">
                             <el-select
                                 clearable
@@ -107,9 +75,8 @@
     </div>
 </template>
 <script>
-import axios from 'axios';
-import _ from 'lodash';
 import {mapGetters, mapMutations, mapActions} from 'vuex';
+import axios from 'axios';
 
 import role from '@/util/config/role';
 import AreaCodeSearch from './AreaCodeSearch';
@@ -133,14 +100,10 @@ export default {
                     {validator: checkVersionCode}
                 ],
                 updateLog: [{required: true, message: '请输入版本说明'}],
-                productType: [{required: true, message: '请选择升级类型'}],
-                hardwareType: [{required: true, message: '请选择硬件类型'}],
                 forced: [{required: true, message: '请选择升级方式'}],
                 fullPackageUri: [{required: true, message: '请上传升级包'}]
             },
-            productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
             forcedOptions: role.FORCED_OPTIONS,
-            hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS,
             percent: 0,
             file: {}
         };
@@ -151,7 +114,6 @@ export default {
     async created() {
         try {
             this.resetVersion();
-            this.getFilialeList();
             await this.$nextTick();
 
             //  获取版本信息
@@ -188,14 +150,9 @@ export default {
     methods: {
         ...mapMutations({
             updateVersion: 'appVersion/updateVersion',
-            resetVersion: 'appVersion/resetVersion',
-            addCompanyToList: 'appVersion/addCompanyToList',
-            deleteCompanyFromList: 'appVersion/deleteCompanyFromList',
-            addBatch: 'appVersion/addBatch',
-            replaceBatch: 'appVersion/replaceBatch'
+            resetVersion: 'appVersion/resetVersion'
         }),
         ...mapActions({
-            getFilialeList: 'appVersion/getFilialeList',
             getVersionById: 'appVersion/getAppVersionById',
             editVersionById: 'appVersion/editAppVersionById'
         }),
@@ -249,22 +206,6 @@ export default {
             } else {
                 this.$message.error(res.data[0].failReason);
             }
-        },
-        selectAreaCodeHandler(company) {
-            this.addCompanyToList({company});
-            this.clearvaidatorByProp('districtCodeList');
-        },
-        deleteCompanyHandler(company) {
-            this.deleteCompanyFromList({company});
-        },
-        clearvaidatorByProp(prop) {
-            let _prop = _.get(this.version, prop);
-            if (_prop.length > 0) {
-                this.$refs.createVersion.clearValidate(prop);
-            }
-        },
-        clearCompanyListHandler() {
-            this.updateVersion({key: 'districtCodeList', value: []});
         },
         // dev_v2.5 新增逻辑
         async editVersionHandler() {

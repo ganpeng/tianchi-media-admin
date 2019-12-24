@@ -279,7 +279,11 @@
                 store.set('isApp', flag);
                 this.appActive = flag;
                 if (flag) {
-                    this.$router.push({path: `/app-nav-bar-manage/setting`});
+                    if (!this.$authority.isHasAuthority('app:all')) {
+                        return false;
+                    } else {
+                        this.$router.push({path: `/app-nav-bar-manage/setting`});
+                    }
                 } else {
                     this.$router.push({path: `/worktop-manage`});
                 }

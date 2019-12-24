@@ -19,8 +19,8 @@
         </el-form-item>
         <el-form-item label="角标图片" prop="image" required>
             <!--TV端-->
-            <label>大角标124*98，小角标76*46</label>
-            <div class="upload-container tv">
+            <div v-if="visibleTvImage" class="upload-container tv">
+                <div>TV端角标：大角标124*98，小角标76*46</div>
                 <div class="upload-box" @click="uploadImage('TV')">
                     <i class="el-icon-plus"></i>
                 </div>
@@ -28,15 +28,10 @@
                     <img :src="cornerMarkInfo.image ? cornerMarkInfo.image.uri : '' | imageUrl">
                     <label class="remove-btn" @click="removeImage('TV')">删除</label>
                 </div>
-                <single-image-uploader
-                    ref="singleImageUploader"
-                    :allowResolutions="allowResolutions"
-                    :uploadSuccessHandler="uploadSuccessHandler">
-                </single-image-uploader>
             </div>
             <!--APP端-->
-            <div class="upload-container app">
-                <div>大角标180*180，小角标90*48</div>
+            <div v-if="visibleAppImage" class="upload-container app">
+                <div>移动端角标：大角标180*180，小角标90*48</div>
                 <div class="upload-box" @click="uploadImage('APP')">
                     <i class="el-icon-plus"></i>
                 </div>
@@ -45,11 +40,17 @@
                     <label class="remove-btn" @click="removeImage('APP')">删除</label>
                 </div>
             </div>
+            <single-image-uploader
+                ref="singleImageUploader"
+                :allowResolutions="allowResolutions"
+                :uploadSuccessHandler="uploadSuccessHandler">
+            </single-image-uploader>
         </el-form-item>
     </el-form>
 </template>
 
 <script>
+    import _ from 'lodash';
     import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
     import {CORNER_MARK_DIMENSION} from '@/util/config/dimension';
 
@@ -106,6 +107,20 @@
                 },
                 allowResolutions: CORNER_MARK_DIMENSION.tv
             };
+        },
+        computed: {
+            visibleTvImage() {
+                let width = _.get(this.cornerMarkInfo, 'appImage.width');
+                let height = _.get(this.cornerMarkInfo, 'appImage.height');
+
+                return !(parseInt(width) === 90 && parseInt(height) === 48);
+            },
+            visibleAppImage() {
+                let width = _.get(this.cornerMarkInfo, 'image.width');
+                let height = _.get(this.cornerMarkInfo, 'image.height');
+
+                return !(parseInt(width) === 124 && parseInt(height) === 98);
+            }
         },
         methods: {
             initCornerMark(cornerMark) {

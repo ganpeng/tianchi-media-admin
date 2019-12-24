@@ -45,38 +45,14 @@
                     </li>
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
-                            <label class="label">升级类型：</label>
-                            <span class="value">{{version.productType === 'TV_LAUNCHER' ? '应用升级' : '系统升级'}}</span>
-                        </div>
-                    </li>
-                    <li class="text-info-item">
-                        <div class="text-info-item-wrapper">
-                            <label class="label">全局升级：</label>
-                            <span class="value">{{version.allCompanyUpdate ? '是' : '否'}}</span>
-                        </div>
-                    </li>
-                    <li class="text-info-item">
-                        <div class="text-info-item-wrapper">
                             <label class="label">升级方式：</label>
                             <span class="value">{{version.forced ? '强制升级' : '选择升级'}}</span>
                         </div>
                     </li>
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
-                            <label class="label">硬件类型：</label>
-                            <span class="value">{{hardwareType(version.hardwareType)}}</span>
-                        </div>
-                    </li>
-                    <li class="text-info-item">
-                        <div class="text-info-item-wrapper">
                             <label class="label">升级包体积：</label>
                             <span class="value">{{convertFileSize(version.packageSize)}}</span>
-                        </div>
-                    </li>
-                    <li class="text-info-item">
-                        <div class="text-info-item-wrapper">
-                            <label class="label">升级依据：</label>
-                            <span class="value">{{version.updateAccord}}</span>
                         </div>
                     </li>
                     <li class="text-info-item">
@@ -110,39 +86,21 @@
 </template>
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex';
-import XLSX from 'xlsx';
-import _ from 'lodash';
 
 export default {
     name: 'AppVersionDetail',
     data() {
         return {
-            currentLiveChannel: {},
             showCompanyList: true
         };
     },
     computed: {
         ...mapGetters({
-            version: 'appVersion/version',
-            filialeList: 'channel/filialeList'
+            version: 'appVersion/version'
         }),
         hardwareType() {
             return (hardwareType) => {
                 return hardwareType ? (hardwareType === 'HARDWARE_3796' ? '3796' : '3798') : '无';
-            };
-        },
-        updatedRatio() {
-            return (updatedRatio) => {
-                if (_.isNil(updatedRatio) || _.isNaN(updatedRatio)) {
-                    return '';
-                } else {
-                    if (_.isInteger(updatedRatio)) {
-                        return `${updatedRatio * 100}%`;
-                    } else {
-                        let _updatedRatio = this.$util.bankersRounding(updatedRatio * 100, 2);
-                        return `${_updatedRatio}%`;
-                    }
-                }
             };
         },
         releaseStatus() {
@@ -194,9 +152,6 @@ export default {
                 return res + curr.stbCountByCompany;
             }, 0);
         },
-        toggleClickHandler() {
-            this.showCompanyList = !this.showCompanyList;
-        },
         convertFileSize(size) {
             return this.$util.convertFileSize(size);
         },
@@ -217,20 +172,6 @@ export default {
             } catch (err) {
                 console.log(err);
             }
-        },
-        downloadBatchFile(batch) {
-            let wb = XLSX.utils.book_new();
-            let newWsName = '表1';
-            let {createdAt, codeList} = batch;
-            let wsData = codeList.map((code, index) => {
-                return {
-                    no: index,
-                    value: code
-                };
-            });
-            let ws = XLSX.utils.json_to_sheet(wsData);
-            XLSX.utils.book_append_sheet(wb, ws, newWsName);
-            XLSX.writeFile(wb, `范围文件${createdAt}.xlsx`);
         },
         gotoEdit() {
             let {id, releaseStatus} = this.version;

@@ -45,38 +45,14 @@
                     </li>
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
-                            <label class="label">升级类型：</label>
-                            <span class="value">{{version.productType === 'TV_LAUNCHER' ? '应用升级' : '系统升级'}}</span>
-                        </div>
-                    </li>
-                    <li class="text-info-item">
-                        <div class="text-info-item-wrapper">
-                            <label class="label">全局升级：</label>
-                            <span class="value">{{version.allCompanyUpdate ? '是' : '否'}}</span>
-                        </div>
-                    </li>
-                    <li class="text-info-item">
-                        <div class="text-info-item-wrapper">
                             <label class="label">升级方式：</label>
                             <span class="value">{{version.forced ? '强制升级' : '选择升级'}}</span>
                         </div>
                     </li>
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
-                            <label class="label">硬件类型：</label>
-                            <span class="value">{{hardwareType(version.hardwareType)}}</span>
-                        </div>
-                    </li>
-                    <li class="text-info-item">
-                        <div class="text-info-item-wrapper">
                             <label class="label">升级包体积：</label>
                             <span class="value">{{convertFileSize(version.packageSize)}}</span>
-                        </div>
-                    </li>
-                    <li class="text-info-item">
-                        <div class="text-info-item-wrapper">
-                            <label class="label">升级依据：</label>
-                            <span class="value">{{version.updateAccord}}</span>
                         </div>
                     </li>
                     <li class="text-info-item">
@@ -101,59 +77,6 @@
                 </ul>
             </div>
         </div>
-        <div class="seperator-line"></div>
-        <div class="range-file-container">
-            <h4 class="content-sub-title">升级范围文件</h4>
-            <div class="select-wrapper">
-                <div v-if="version.updateAccord" class="wrapper clearfix">
-                    <div class="file float-left">
-                        <input
-                            ref="districtUpload"
-                            type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                            id="version-district-file-input">选择范围文件
-
-                    </div>
-                    <span class="float-left">{{districtFile.name}}</span>
-                    <span class="pointer moban" @click="exportTemplate" >模版文件</span>
-                </div>
-                <div v-else class="wrapper clearfix">
-                    <div class="file float-left">
-                        <input
-                            ref="districtUpload"
-                            type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                            id="version-district-file-input">选择范围文件
-                    </div>
-                    <span class="float-left">{{districtFile.name}}</span>
-                    <span class="pointer moban" @click="exportTemplate" >模版文件</span>
-                </div>
-            </div>
-            <el-table
-                header-row-class-name="common-table-header"
-                class="my-table-style" :data="version.batchList || []" border>
-                <el-table-column align="center" width="120px" label="升级日期">
-                    <template slot-scope="scope">
-                        {{scope.row.createdAt  | formatDate('yyyy-MM-DD')}}
-                    </template>
-                </el-table-column>
-                <el-table-column label="升级依据" width="120px" align="center">
-                    <template slot-scope="scope">
-                        {{scope.row.haha || version.updateAccord}}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" width="120px" label="状态">
-                    <template slot-scope="scope">
-                        {{releaseStatus(scope.row.releaseStatus)}}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="操作">
-                    <template slot-scope="scope">
-                        <div class="operator-btn-wrapper">
-                            <span class="btn-text text-primary" @click="downloadBatchFile(scope.row)">下载</span>
-                        </div>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </div>
         <div class="fixed-btn-container">
             <el-button class="btn-style-three" @click="gotoList" plain>返回列表</el-button>
         </div>
@@ -161,42 +84,13 @@
 </template>
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex';
-import XLSX from 'xlsx';
-import _ from 'lodash';
 
 export default {
     name: 'EditAppVersionReleased',
-    data() {
-        return {
-            currentLiveChannel: {},
-            showCompanyList: true,
-            districtFile: {}
-        };
-    },
     computed: {
         ...mapGetters({
-            version: 'appVersion/version',
-            filialeList: 'channel/filialeList'
+            version: 'appVersion/version'
         }),
-        hardwareType() {
-            return (hardwareType) => {
-                return hardwareType ? (hardwareType === 'HARDWARE_3796' ? '3796' : '3798') : '无';
-            };
-        },
-        updatedRatio() {
-            return (updatedRatio) => {
-                if (_.isNil(updatedRatio) || _.isNaN(updatedRatio)) {
-                    return '';
-                } else {
-                    if (_.isInteger(updatedRatio)) {
-                        return `${updatedRatio * 100}%`;
-                    } else {
-                        let _updatedRatio = this.$util.bankersRounding(updatedRatio * 100, 2);
-                        return `${_updatedRatio}%`;
-                    }
-                }
-            };
-        },
         releaseStatus() {
             return (status) => {
                 switch (status) {
@@ -227,9 +121,6 @@ export default {
             if (id) {
                 await this.getVersionById(id);
             }
-
-            let districtUploadInputFile = document.querySelector('#version-district-file-input');
-            districtUploadInputFile.addEventListener('input', this.districtUploadHandler);
         } catch (err) {
             console.log(err);
         }
@@ -251,9 +142,6 @@ export default {
                 return res + curr.stbCountByCompany;
             }, 0);
         },
-        toggleClickHandler() {
-            this.showCompanyList = !this.showCompanyList;
-        },
         convertFileSize(size) {
             return this.$util.convertFileSize(size);
         },
@@ -269,82 +157,6 @@ export default {
                     let res = await this.$service.launchVersion(id, 'WITHDRAW');
                     if (res && res.code === 0) {
                         this.updateVersion({key: 'releaseStatus', value: 'WITHDRAW'});
-                    }
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        },
-        async downloadBatch(batch) {
-            console.log(batch);
-        },
-        downloadBatchFile(batch) {
-            let wb = XLSX.utils.book_new();
-            let newWsName = '表1';
-            let {createdAt, codeList} = batch;
-            let wsData = codeList.map((code, index) => {
-                return {
-                    no: index,
-                    value: code
-                };
-            });
-            let ws = XLSX.utils.json_to_sheet(wsData);
-            XLSX.utils.book_append_sheet(wb, ws, newWsName);
-            XLSX.writeFile(wb, `范围文件${createdAt}.xlsx`);
-        },
-        exportTemplate() {
-            let wb = XLSX.utils.book_new();
-            let newWsName = '表1';
-            let wsData = [
-                {
-                    no: '1',
-                    value: '8512010000123458',
-                    说明: 'B2 单元格填写 0 为全部 value'
-                }, {
-                    no: '2',
-                    value: '8512010000123458',
-                    说明: 'B2 单元格未填写则在导入时报错“value 不存在，无法导入”'
-                }, {
-                    no: '3',
-                    value: '8512010000123458',
-                    说明: 'value 可以为 CA卡号和 SN（设备序列号）的任何一种，但不能两个都有'
-                }];
-            let ws = XLSX.utils.json_to_sheet(wsData);
-            XLSX.utils.book_append_sheet(wb, ws, newWsName);
-            XLSX.writeFile(wb, '范围文件模版.xlsx');
-        },
-        async districtUploadHandler(e) {
-            try {
-                let file = e.target.files[0];
-                let workbook = await this.readWorkbookFromLocalFile(file);
-                let sheetNames = workbook.SheetNames; // 工作表名称集合
-                let worksheet = workbook.Sheets[sheetNames[0]]; // 这里我们只读取第一张sheet
-                let resJson = XLSX.utils.sheet_to_json(worksheet);
-                this.districtFile = file;
-                let codeList = resJson.map((item) => item.value);
-                this.addBatch({codeList});
-            } catch (err) {
-                console.log(err);
-            }
-        },
-        readWorkbookFromLocalFile(file) {
-            return new Promise((resolve) => {
-                let reader = new FileReader();
-                reader.onload = function(e) {
-                    let data = e.target.result;
-                    let workbook = XLSX.read(data, {type: 'binary'});
-                    resolve(workbook);
-                };
-                reader.readAsBinaryString(file);
-            });
-        },
-        async editVersionHandler() {
-            try {
-                let {id} = this.$route.params;
-                if (id) {
-                    let res = await this.editVersionById(id);
-                    if (res && res.code === 0) {
-                        this.gotoList();
                     }
                 }
             } catch (err) {

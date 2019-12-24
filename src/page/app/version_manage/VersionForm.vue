@@ -30,38 +30,6 @@
                     @input="inputHandler($event, 'updateLog')"
                 ></el-input>
             </el-form-item>
-            <el-form-item label="升级类型" prop="productType">
-                <el-select
-                    clearable
-                    filterable
-                    :value="version.productType"
-                    placeholder="请选择升级类型"
-                    @input="inputHandler($event, 'productType')"
-                >
-                    <el-option
-                        v-for="(item, index) in productTypeOptions"
-                        :key="index"
-                        :label="item.name"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item v-if="version.productType === 'TV_ROM_3798'" label="硬件类型" prop="hardwareType">
-                <el-select
-                    clearable
-                    filterable
-                    :value="version.hardwareType"
-                    placeholder="请选择升级类型"
-                    @input="inputHandler($event, 'hardwareType')"
-                >
-                    <el-option
-                        v-for="(item, index) in hardwareTypeOptions"
-                        :key="index"
-                        :label="item.name"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
             <el-form-item label="升级方式" prop="forced">
                 <el-select
                     clearable
@@ -143,16 +111,12 @@ export default {
                     {validator: checkVersionCode}
                 ],
                 updateLog: [{required: true, message: '请输入版本说明'}],
-                productType: [{required: true, message: '请选择升级类型'}],
-                hardwareType: [{required: true, message: '请选择硬件类型'}],
                 forced: [{required: true, message: '请选择升级方式'}],
                 fullPackageUri: [{required: true, message: '请上传升级包'}]
             },
             percent: 0,
             file: {},
-            productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
-            forcedOptions: role.FORCED_OPTIONS,
-            hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS
+            forcedOptions: role.FORCED_OPTIONS
         };
     },
     created() {

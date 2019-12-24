@@ -15,7 +15,6 @@
                 <li class="block-cell-item hide"></li>
                 <li class="block-cell-item hide"></li>
             </ul>
-
             <draggable filter=".ignore-element" element="ul" class="block-cell-list" v-model="layoutItemMultiList">
                 <li v-for="(layoutItem, index) in layoutItemMultiList" :style="styleBgImageStr(index)" :key="index" class="block-cell-item">
                     <div class="mask"></div>
@@ -165,9 +164,6 @@ export default {
         },
         async saveHandler() {
             try {
-                if (!this.$authority.isHasAuthority('content:layoutBlock:add')) {
-                    return;
-                }
                 if (!this.selectAll(this.navbarId, 0)) {
                     let {id} = this.$route.query;
                     if (id) {
