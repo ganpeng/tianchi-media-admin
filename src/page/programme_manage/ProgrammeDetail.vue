@@ -1410,7 +1410,7 @@
                 this.previewImage.activeIndex = index;
             },
             checkImage(next) {
-                const {posterImageList, posterImageListForApp, visible} = this.programme;
+                const {posterImageList, visible} = this.programme;
 
                 if (this.showTvImages) {
                     if (posterImageList && posterImageList.length < 1) {

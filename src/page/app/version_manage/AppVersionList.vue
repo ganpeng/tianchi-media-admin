@@ -208,15 +208,9 @@ export default {
             deleteVersionById: 'appVersion/deleteAppVersionById'
         }),
         createVersion() {
-            if (!this.$authority.isHasAuthority('sys:clientVersion:add')) {
-                return;
-            }
             this.$router.push({name: 'CreateAppVersion'});
         },
         displayVersion(id) {
-            if (!this.$authority.isHasAuthority('sys:clientVersion:get')) {
-                return;
-            }
             this.$router.push({name: 'AppVersionDetail', params: {id}});
         },
         toggleSearchField() {
@@ -226,16 +220,10 @@ export default {
             return hardwareType ? (hardwareType === 'HARDWARE_3796' ? '3796' : '3798') : '------';
         },
         clearSearchFields() {
-            if (!this.$authority.isHasAuthority('sys:clientVersion:page')) {
-                return;
-            }
             this.resetSearchFields();
             this.getVersionList();
         },
         keyupHandler(e) {
-            if (!this.$authority.isHasAuthority('sys:clientVersion:page')) {
-                return;
-            }
             if (e.keyCode === 13) {
                 this.getVersionList();
             }
@@ -245,9 +233,6 @@ export default {
         },
         // 跳转到详情页面
         handlePaginationChange(value, key) {
-            if (!this.$authority.isHasAuthority('sys:clientVersion:page')) {
-                return;
-            }
             this.updatePagination({value, key});
             if (key === 'pageSize') {
                 window.localStorage.setItem('versionPageSize', value);
@@ -255,9 +240,6 @@ export default {
             this.getVersionList();
         },
         inputHandler(value, key) {
-            if (!this.$authority.isHasAuthority('sys:clientVersion:page')) {
-                return;
-            }
             this.updateSearchFields({key, value});
             if (key !== 'keyword') {
                 this.getVersionList();
@@ -280,9 +262,6 @@ export default {
         },
         //  dev_v2.5 新增
         editVersion(version) {
-            if (!this.$authority.isHasAuthority('sys:clientVersion:put')) {
-                return;
-            }
             let {id, releaseStatus} = version;
             if (releaseStatus === 'PRE_RELEASED') {
                 this.$router.push({name: 'EditAppVersion', params: {id}});
@@ -292,9 +271,6 @@ export default {
         },
         async releaseVersion(id) {
             try {
-                if (!this.$authority.isHasAuthority('sys:clientVersion:launch')) {
-                    return;
-                }
                 let confirm = await this.$confirm(`您确定要发布该版本吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -312,9 +288,6 @@ export default {
         },
         async deleteVersion(id) {
             try {
-                if (!this.$authority.isHasAuthority('sys:clientVersion:delete')) {
-                    return;
-                }
                 let confirm = await this.$confirm(`您确定要删除当前版本吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
