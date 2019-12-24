@@ -1446,34 +1446,6 @@
                         return false;
                     }
                 }
-
-                if (this.showAppImages) {
-                    if (posterImageListForApp && posterImageListForApp.length < 1) {
-                        this.$message.error('“351*507”和“1089*612”是必传尺寸');
-                        return false;
-                    }
-
-                    let sizeOneList = posterImageListForApp.filter((img) => {
-                        //  351*507
-                        return (parseInt(img.width) === 351 && parseInt(img.height) === 507);
-                    });
-
-                    let sizeTwoList = posterImageListForApp.filter((img) => {
-                        //  1089*612
-                        return (parseInt(img.width) === 1089 && parseInt(img.height) === 612);
-                    });
-
-                    if (sizeOneList.length !== 1) {
-                        this.$message.error('351*507尺寸的图片必须上传，并且只能上传一张');
-                        return false;
-                    }
-
-                    if (sizeTwoList.length !== 1) {
-                        this.$message.error('1089*612尺寸的图片必须上传，并且只能上传一张');
-                        return false;
-                    }
-                }
-
                 next();
             },
             getVideoListName(list) {
