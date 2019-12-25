@@ -137,8 +137,10 @@
             uploadSuccessHandler(image) {
                 if (this.allowResolutions === CORNER_MARK_DIMENSION.tv) {
                     this.cornerMarkInfo.image = image;
+                    this.cornerMarkInfo.appImage = {};
                 } else {
                     this.cornerMarkInfo.appImage = image;
+                    this.cornerMarkInfo.image = {};
                 }
             },
             removeImage(endName) {
