@@ -1127,15 +1127,26 @@ const actions = {
     /**
      * 获取已经上架的节目列表
      */
-    async getProgrammeListIsVisible({commit, state}) {
+    async getProgrammeListIsVisible({commit, state}, applicableClientList) {
         try {
             if (!isLoading) {
                 isLoading = true;
-                let params = Object.assign({}, state.searchFields, {
-                    pageSize: state.pagination.pageSize,
-                    pageNum: state.pagination.pageNum - 1,
-                    visible: true
-                });
+                let params = {};
+                if (applicableClientList) {
+                    params = Object.assign({}, state.searchFields, {
+                        pageSize: state.pagination.pageSize,
+                        pageNum: state.pagination.pageNum - 1,
+                        applicableClientList,
+                        visible: true
+                    });
+                } else {
+                    params = Object.assign({}, state.searchFields, {
+                        pageSize: state.pagination.pageSize,
+                        pageNum: state.pagination.pageNum - 1,
+                        visible: true
+                    });
+                }
+                console.log(params);
                 let res = await service.getProgrammeList(params);
                 if (res && res.code === 0) {
                     let {pageNum, pageSize, total, list} = res.data;

@@ -298,7 +298,6 @@ export default {
             active: 0,
             dialogVisible: false,
             showExist: false,
-            category: '',
             layoutItemType: '',
             programme: {},
             customMarkOptions: [],
@@ -420,7 +419,6 @@ export default {
         }),
         ...mapActions({
             getProgrammeListIsVisible: 'programme/getProgrammeListIsVisible',
-            getProgrammeListIsVisibleByNews: 'programme/getProgrammeListIsVisibleByNews',
             getProgrammeCategory: 'programme/getProgrammeCategory',
             getCustomMarkList: 'appPageLayout/getCustomMarkList'
         }),
@@ -438,11 +436,10 @@ export default {
             this.layoutBlockItemClone = _layoutBlockItemClone;
         },
         //  弹窗的操作
-        async showDialog(layoutItemType, category) {
+        async showDialog(layoutItemType) {
             try {
                 let {id} = this.$route.query;
                 this.layoutItemType = layoutItemType;
-                this.category = category;
                 this.layoutBlockId = id;
                 this.dialogVisible = true;
 
@@ -456,7 +453,6 @@ export default {
             this.resetProgrammeSearchFields();
             this.dialogVisible = false;
             this.active = 0;
-            this.category = '';
             this.showExist = false;
             this.layoutItemType = '';
             this.programme = {};
@@ -490,11 +486,7 @@ export default {
 
                 this.updateProgrammePagination({key: 'pageSize', value: 5});
                 await this.getProgrammeCategory();
-                if (this.category) {
-                    await this.getProgrammeListIsVisibleByNews();
-                } else {
-                    await this.getProgrammeListIsVisible();
-                }
+                await this.getProgrammeListIsVisible(['APP']);
             } catch (err) {
                 console.log(err);
             }
@@ -506,11 +498,7 @@ export default {
         // 弹窗的操作结束
         handlePaginationChange(value, key) {
             this.updateProgrammePagination({key, value});
-            if (this.category) {
-                this.getProgrammeListIsVisibleByNews();
-            } else {
-                this.getProgrammeListIsVisible();
-            }
+            this.getProgrammeListIsVisible(['APP']);
         },
         //  上下步的处理方法
         prevBtnClickHandler() {
@@ -561,11 +549,7 @@ export default {
             return row.id === this.getSquareProgrammeId ? 'checked' : '';
         },
         searchEnterHandler() {
-            if (this.category) {
-                this.getProgrammeListIsVisibleByNews();
-            } else {
-                this.getProgrammeListIsVisible();
-            }
+            this.getProgrammeListIsVisible(['APP']);
         },
         //  图片上传成功之后的毁掉
         async uploadProgrammeCoverImageSuccessHandler(image) {
