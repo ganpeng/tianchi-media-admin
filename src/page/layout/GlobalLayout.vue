@@ -131,11 +131,13 @@
             }
         },
         mounted() {
-            let content = document.querySelector('.content');
-            content.addEventListener('scroll', this.toggleFixedBtnContainer.bind(this), false);
         },
         async created() {
             try {
+                await this.$nextTick();
+                let content = document.querySelector('.content');
+                content.addEventListener('scroll', this.toggleFixedBtnContainer.bind(this), false);
+
                 let isApp = store.get('isApp');
                 this.appActive = isApp;
                 //  菜单初始化

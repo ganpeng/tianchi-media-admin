@@ -19,7 +19,7 @@
         </el-form-item>
         <el-form-item label="角标图片" prop="image" required>
             <!--TV端-->
-            <div v-if="visibleTvImage" class="upload-container tv">
+            <div class="upload-container tv">
                 <div>TV端角标：大角标124*98，小角标76*46</div>
                 <div class="upload-box" @click="uploadImage('TV')">
                     <i class="el-icon-plus"></i>
@@ -135,12 +135,20 @@
                 this.mode = 'EDIT';
             },
             uploadSuccessHandler(image) {
-                if (this.allowResolutions === CORNER_MARK_DIMENSION.tv) {
+                let imageWidth = _.get(image, 'width');
+                let imageHeight = _.get(image, 'height');
+                if (parseInt(imageWidth) === 90 && parseInt(imageHeight) === 48) {
+                    this.cornerMarkInfo.appImage = image;
+                    let width = _.get(this.cornerMarkInfo, 'image.width');
+                    let height = _.get(this.cornerMarkInfo, 'image.height');
+                    if (parseInt(width) === 124 && parseInt(height) === 98) {
+                        this.cornerMarkInfo.image = {};
+                    }
+                } else if (parseInt(imageWidth) === 124 && parseInt(imageHeight) === 98) {
                     this.cornerMarkInfo.image = image;
                     this.cornerMarkInfo.appImage = {};
                 } else {
-                    this.cornerMarkInfo.appImage = image;
-                    this.cornerMarkInfo.image = {};
+                    this.cornerMarkInfo.image = image;
                 }
             },
             removeImage(endName) {
@@ -155,19 +163,34 @@
                         break;
                 }
             },
-            uploadImage(endName) {
-                switch (endName) {
-                    case 'TV':
+            uploadImage(type) {
+                if (type === 'TV') {
+                    let width = _.get(this.cornerMarkInfo, 'appImage.width');
+                    let height = _.get(this.cornerMarkInfo, 'appImage.height');
+                    if (parseInt(width) === 90 && parseInt(height) === 48) {
+                        this.allowResolutions = CORNER_MARK_DIMENSION.tv.filter((item) => parseInt(item.width) === 76 && parseInt(item.height) === 46);
+                    } else {
                         this.allowResolutions = CORNER_MARK_DIMENSION.tv;
-                        break;
-                    case 'APP':
-                        this.allowResolutions = CORNER_MARK_DIMENSION.app;
-                        break;
-                    default:
-                        break;
+                    }
+                } else {
+                    this.allowResolutions = CORNER_MARK_DIMENSION.app;
                 }
+
                 this.$refs.singleImageUploader.$refs.singleImageUploader.click();
             },
+            // uploadImage(endName) {
+            //     switch (endName) {
+            //         case 'TV':
+            //             this.allowResolutions = CORNER_MARK_DIMENSION.tv;
+            //             break;
+            //         case 'APP':
+            //             this.allowResolutions = CORNER_MARK_DIMENSION.app;
+            //             break;
+            //         default:
+            //             break;
+            //     }
+            //     this.$refs.singleImageUploader.$refs.singleImageUploader.click();
+            // },
             confirmCornerMark() {
                 this.$refs['subjectInfo'].validate((valid) => {
                     if (valid) {

@@ -378,6 +378,10 @@
                     </el-col>
                     <el-col :span="12">
                         <h2 class="content-sub-title">&nbsp;</h2>
+                        <el-form-item label="适用客户端" prop="applicableClientList">
+                            <el-checkbox :value="clientChecked('APP')" @change="clientCheckedHandler($event, 'APP')">APP</el-checkbox>
+                            <el-checkbox :value="clientChecked('TV')" @change="clientCheckedHandler($event, 'TV')">TV</el-checkbox>
+                        </el-form-item>
                         <el-form-item label="节目角标">
                             <div v-if="showMark" class="mark-container">
                                 <div class="mark-item">
@@ -390,7 +394,7 @@
                                         class="mark-select"
                                         placeholder="请选择">
                                         <el-option
-                                            v-for="item in customMarkOptions"
+                                            v-for="item in filterCustomMarkOptions"
                                             :key="item.id"
                                             :label="item.caption"
                                             :value="item">
@@ -428,10 +432,6 @@
                                     :value="programme.updateRule">
                                 </el-input>
                             </el-col>
-                        </el-form-item>
-                        <el-form-item label="适用客户端" prop="applicableClientList">
-                            <el-checkbox :value="clientChecked('APP')" @change="clientCheckedHandler($event, 'APP')">APP</el-checkbox>
-                            <el-checkbox :value="clientChecked('TV')" @change="clientCheckedHandler($event, 'TV')">TV</el-checkbox>
                         </el-form-item>
                         <el-form-item label="付费情况" prop="paymentType">
                             <el-select
@@ -473,7 +473,6 @@
                             </div>
                         </div>
                         <!-- 新增加的移动端的图片 -->
-                        <!-- <div v-if="showAppImages" class="app-images"> -->
                         <div class="app-images">
                             <el-form-item label="移动端图片">
                                 <p class="little-tips">(384*561, 330*186)</p>
@@ -707,6 +706,22 @@
                 isSports: 'programme/isSports',
                 areaLabel: 'programme/areaLabel'
             }),
+            // 角标下拉选项
+            filterCustomMarkOptions() {
+                if (this.withApp && !this.showTvImages) {
+                    return this.customMarkOptions.filter((item) => _.get(item, 'appImage.id'));
+                }
+
+                if (!this.withApp && this.showTvImages) {
+                    return this.customMarkOptions.filter((item) => _.get(item, 'image.id'));
+                }
+
+                if (this.withApp && this.showTvImages) {
+                    return this.customMarkOptions;
+                }
+
+                return [];
+            },
             //  右下角的角标处理逻辑
             rightBottomCustomMarkOptions() {
                 let options = [];
@@ -786,7 +801,7 @@
                 let index = this.programme.applicableClientList.findIndex((item) => item === 'TV');
                 return index > -1;
             },
-            showAppImages() {
+            withApp() {
                 let index = this.programme.applicableClientList.findIndex((item) => item === 'APP');
                 return index > -1;
             },
