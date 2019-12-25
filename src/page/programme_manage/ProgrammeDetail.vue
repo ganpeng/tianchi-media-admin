@@ -709,11 +709,11 @@
             // 角标下拉选项
             filterCustomMarkOptions() {
                 if (this.withApp && !this.showTvImages) {
-                    return this.customMarkOptions.filter((item) => _.get(item, 'appImage.id'));
+                    return this.customMarkOptions.filter((item) => _.get(item, 'appImage.uri'));
                 }
 
                 if (!this.withApp && this.showTvImages) {
-                    return this.customMarkOptions.filter((item) => _.get(item, 'image.id'));
+                    return this.customMarkOptions.filter((item) => _.get(item, 'image.uri'));
                 }
 
                 if (this.withApp && this.showTvImages) {
