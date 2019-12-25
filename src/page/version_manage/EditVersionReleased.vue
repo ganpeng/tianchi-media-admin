@@ -155,7 +155,7 @@
             </el-table>
         </div>
         <div class="fixed-btn-container">
-            <el-button class="btn-style-two" type="primary" @click="editVersionHandler">编辑</el-button>
+            <el-button class="btn-style-two" type="primary" @click="editVersionHandler">保存</el-button>
             <el-button class="btn-style-three" @click="gotoList" plain>返回列表</el-button>
         </div>
     </div>
